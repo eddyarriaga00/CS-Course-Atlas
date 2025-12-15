@@ -4,182 +4,81 @@
 [![GitHub Stars](https://img.shields.io/github/stars/your-username/java-dsa-learning-hub?style=for-the-badge)](https://github.com/eddyarriaga00/Java-DSA-Helper/stargazers)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
-> **Master Data Structures & Algorithms with Interactive Learning**
+> **Master Data Structures & Algorithms with interactive Java-first learning.**
 
-A comprehensive, interactive learning platform designed specifically for students learning Data Structures and Algorithms in Java. Features bite-sized modules, interactive code examples, quizzes, flashcards, and a beautiful dark/light mode interface.
+Comprehensive modules with runnable code, per-module flashcards, quizzes, glossary links, and a sandbox powered by the Piston API. Built for CS students who want clean explanations, pseudocode, and multi-language examples without leaving the browser.
 
-## 🚀 Features
+## 🧭 Table of Contents
+- [Features](#-features)
+- [Live Demo & Quick Start](#-live-demo--quick-start)
+- [How the Platform Works](#-how-the-platform-works)
+- [Customization](#-customization)
+- [Tech Stack](#-tech-stack)
+- [Roadmap](#-roadmap)
+- [Support](#-support)
+- [Contact](#-contact)
 
-### 📚 **Interactive Learning Modules**
-- **20+ comprehensive modules** covering essential DSA topics
-- **Multiple programming languages** support (Java, Python, C++, JavaScript)
-- **Code visualization** with syntax highlighting
-- **Expandable code examples** with detailed explanations
-- **Comment toggle** for cleaner code viewing
-- **Pseudocode mode** for language-agnostic learning
+## ✨ Features
+- **Interactive modules (20+)** with expanded explanations, step-by-step code breakdowns, and runnable samples.
+- **Multi-language code** (Java, Python, C++, JavaScript) with comments + pseudocode mode and comment toggles.
+- **Quiz engine**: 15-question banks per module, 4 random per attempt, 100% required to complete.
+- **Flashcards & glossary**: Module-tied flashcards plus a searchable glossary with highlighted matches.
+- **Progression tools**: Achievements, focus timer, streaks, study plan prompts, daily challenges, and insights.
+- **Java playground**: Preloaded module snippets (auto-stubs `main` when missing), Piston API ready; reset/copy/run buttons included.
+- **Pagination**: Module grid paginates (5 per page) to keep the page compact on all devices.
+- **Accessibility & UX**: Dark/light themes, accent options, font scaling, compact layout, keyboard/Esc/backdrop closing for modals.
+- **Responsive**: Optimized for laptops, tablets, and phones.
 
-### 🎯 **Learning Tools**
-- **Interactive Flashcards** - Review key concepts with spaced repetition
-- **Practice Quizzes** - Test your knowledge with multiple-choice questions
-- **Progress Tracking** - Visual progress indicators for each module
-- **Glossary** - Quick reference for important terms and definitions
-- **Difficulty Levels** - Beginner, Intermediate, and Advanced content
+## 🚀 Live Demo & Quick Start
+Live site: **https://eddyarriaga00.github.io/Java-DSA-Helper/**
 
-### 🎨 **User Experience**
-- **Dark/Light Mode** - Toggle between themes for comfortable studying
-- **Responsive Design** - Works perfectly on desktop, tablet, and mobile
-- **Search & Filter** - Find specific topics or difficulty levels quickly
-- **Modern UI** - Clean, professional interface with smooth animations
-- **Accessibility** - Built with screen readers and keyboard navigation in mind
-
-### 📖 **Covered Topics**
-- Arrays and Strings
-- Linked Lists
-- Stacks and Queues
-- Trees and Binary Search Trees
-- Hash Tables
-- Sorting Algorithms
-- Graph Algorithms
-- Dynamic Programming
-- And much more!
-
-## 🛠️ Technologies Used
-
-- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **Styling**: Custom CSS with Tailwind-inspired utility classes
-- **Fonts**: Inter (Google Fonts)
-- **Icons**: Unicode Emojis
-- **Hosting**: GitHub Pages compatible
-
-## 🚀 Quick Start
-
-### 1. Clone the Repository
+Local run:
 ```bash
-git clone https://eddyarriaga00.github.io/Java-DSA-Helper/.git
-cd java-dsa-learning-hub
-```
-### 2. Open Locally
-```bash
-# Simply open index.html in your browser
-open index.html
-
-# Or serve with a local server (recommended)
-python -m http.server 8000
-# Then visit http://localhost:8000
+git clone https://github.com/eddyarriaga00/Java-DSA-Helper.git
+cd Java-DSA-Helper
+open index.html   # or python -m http.server 8000
 ```
 
-## 📱 Screenshots
+Java runner (optional): set `CODE_RUNNER_ENDPOINT` and `CODE_RUNNER_VERSION` in `js/script.js` to point to your Piston or local runner if you want playground execution offline.
 
-### Light Mode
-![Light Mode Dashboard](https://via.placeholder.com/800x400/ffffff/000000?text=Light+Mode+Dashboard)
-
-### Dark Mode
-![Dark Mode Dashboard](https://via.placeholder.com/800x400/1a1a1a/ffffff?text=Dark+Mode+Dashboard)
-
-### Interactive Code Examples
-![Code Examples](https://via.placeholder.com/800x400/f8f9fa/333333?text=Interactive+Code+Examples)
-
-## 🎯 How to Use
-
-### For Students
-1. **Browse Modules** - Start with beginner topics and progress to advanced
-2. **Study Code** - Toggle between languages and enable/disable comments
-3. **Take Quizzes** - Test your understanding after each module
-4. **Use Flashcards** - Review concepts with spaced repetition
-5. **Track Progress** - Monitor your learning journey
-
-### For Educators
-1. **Assign Modules** - Direct students to specific topics
-2. **Create Study Plans** - Use the difficulty levels to structure courses
-3. **Monitor Progress** - Students can share their completion status
-4. **Supplement Lectures** - Use as homework or in-class activities
+## 🎯 How the Platform Works
+- **Modules**: Organized beginner → advanced, paginated 5 per page. Each module has multi-language code, a detailed breakdown, resources, and runnable Java samples.
+- **Playground**: Load any module sample from the dropdown, edit, run, copy output, or reset. Samples include a `main` method stub if one was missing.
+- **Quizzes**: Generated from module descriptions, topics, code breakdowns, resources, glossary terms, and flashcards. Four random questions per attempt; perfect score marks completion.
+- **Flashcards/Glossary**: Per-module decks and a global glossary keep definitions aligned with quizzes and modules.
+- **Progress & Insights**: Tracks completion, streaks, focus time, daily challenges, study plans, and achievements. Settings persist locally (theme, comments, pseudocode, density, etc.).
 
 ## 🔧 Customization
+- **Add modules**: Extend the `modules` array in `js/script.js` (title, description, topics, codeExamples, explanation, resources, codeBreakdown). Java samples auto-stub `main` if absent.
+- **Adjust themes**: Tweak CSS variables in `css/styles.css` for surfaces, accents, and typography. Accent themes are selectable in-app.
+- **Runner**: Point `CODE_RUNNER_ENDPOINT` to your own Piston-compatible runner to execute playground code offline.
 
-### Adding New Modules
-Edit `script.js` and add to the `modules` array:
+## 🛠 Tech Stack
+- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
+- **Styling**: Custom CSS with Tailwind-inspired utilities
+- **Fonts**: Inter (Google Fonts)
+- **Icons**: Emoji-based
+- **Hosting**: GitHub Pages–ready, zero build step
 
-```javascript
-{
-    id: 'your-module-id',
-    title: 'Your Module Title',
-    description: 'Module description...',
-    difficulty: 'beginner', // beginner, intermediate, advanced
-    topics: ['Topic 1', 'Topic 2'],
-    codeExamples: {
-        java: 'your java code...',
-        python: 'your python code...'
-    },
-    explanation: 'Detailed explanation...',
-    resources: ['Resource 1', 'Resource 2']
-}
-```
+## 🗺 Roadmap (snapshot)
+- More language snippets for advanced modules
+- Additional runnable samples and challenges
+- Optional timed quizzes and coding prompts
+- Offline/PWA enhancements
 
-### Customizing Themes
-Modify the CSS variables in `styles.css`:
-
-```css
-:root {
-    --primary-color: #your-color;
-    --secondary-color: #your-color;
-    /* ... other variables */
-}
-```
-
-## 🤝 Contributing
-
-### Ways to Contribute
-- 🐛 **Report Bugs** - Found an issue? Let us know!
-- ✨ **Suggest Features** - Have ideas for improvements?
-- 📖 **Improve Content** - Add new modules or enhance existing ones
-- 🎨 **Design Improvements** - Make the UI even better
-- 🌍 **Translations** - Help make this accessible worldwide
-
-## 📊 Project Statistics
-
-- **20+ Learning Modules**
-- **100+ Code Examples**
-- **50+ Quiz Questions**
-- **30+ Flashcards**
-- **4 Programming Languages**
-- **Mobile Responsive**
-- **Zero Dependencies**
-
-## 🗺️ Roadmap
-
-### Version 2.0 (Work in Progress)
-- [ ] **More Languages** - Add C#, Go, Rust support
-- [ ] **Video Integration** - Embed explanatory videos
-- [ ] **User Accounts** - Save progress across devices
-- [ ] **Social Features** - Share progress, compete with friends
-- [ ] **Advanced Quizzes** - Coding challenges and timed tests
-- [ ] **Offline Mode** - Progressive Web App capabilities
-- [ ] **AI-Powered Hints** - Smart suggestions for struggling students
-- [ ] **Adaptive Learning** - Personalized learning paths
-- [ ] **Live Coding** - Interactive code playground
-- [ ] **Community Hub** - Discussion forums and peer help
-
-## 💝 Support the Project
-If you find this project helpful, please consider:
-
-- ⭐ **Star this repository**
-- 🐛 **Report issues** you encounter
-- ☕ **Buy me a coffee** - [PayPal Donation](https://www.paypal.com/paypalme/delamainn)
-- 💖 **Sponsor development** - [GitHub Sponsors](https://github.com/sponsors/eddyarriaga00/)
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+## 💝 Support
+- ⭐ Star the repo
+- 🐛 Open issues/PRs for bugs or content fixes
+- ☕ Donate: [PayPal](https://www.paypal.com/paypalme/delamainn)
+- ❤️ Sponsor: [GitHub Sponsors](https://github.com/sponsors/eddyarriaga00/)
 
 ## 📞 Contact
-
-- **Creator**: Eddy Arriaga-Barrientos
-- **GitHub**: [eddyarriaga00](https://github.com/eddyarriaga00/)
-- **Email**: eddyarriaga123@gmail.com
+- **Creator**: Eddy Arriaga-Barrientos  
+- **GitHub**: [eddyarriaga00](https://github.com/eddyarriaga00/)  
+- **Email**: eddyarriaga123@gmail.com  
 - **LinkedIn**: [Eddy Arriaga](https://linkedin.com/in/eddy-arriaga/)
 
 ---
-
 <div align="center">
 
 **Made with ❤️ for CS students worldwide**

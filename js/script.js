@@ -37,6 +37,7 @@ const appState = {
     cardDensity: 'standard',
     studyPlan: null,
     accountProfile: null,
+    currentModulePage: 1,
     playground: {
         code: '',
         sample: DEFAULT_PLAYGROUND_SAMPLE,
@@ -53,6 +54,20 @@ const CONSTANTS = {
     TRUNCATE_INDICATOR: '\n\n// ... (click Expand to see full code)',
     TOTAL_MODULES: 34
 };
+
+const QUIZ_CONFIG = {
+    poolSize: 15,
+    questionsPerAttempt: 4
+};
+
+const MODULES_PER_PAGE = 5;
+
+const DEFAULT_DISTRACTOR_TEXTS = [
+    'Review the glossary entry for clarity.',
+    'Revisit the flashcards for this module.',
+    'Trace through the annotated code example.',
+    'Discuss this concept with a peer.'
+];
 
 const STORAGE_KEYS = {
     STUDY_METRICS: 'javaDSAStudyMetrics',
@@ -199,10 +214,11 @@ function buildPlaygroundSnippetLibrary(modulesList = []) {
     modulesList.forEach(module => {
         const javaSource = (module.codeExamples && module.codeExamples.java) || module.codeExample || '';
         if (!javaSource || typeof javaSource !== 'string') return;
+        const code = ensureRunnableJava(javaSource, module.title);
         const snippetId = `module-${module.id}`;
         snippets[snippetId] = {
             label: `${module.title}`,
-            code: javaSource.trim()
+            code: code.trim()
         };
     });
     return snippets;
@@ -830,1052 +846,9 @@ const glossaryCategories = [
 
 
 // Quiz Data
-const quizData = {
-    'arrays-strings': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "What is the time complexity of accessing an element in an array by its index?",
-                    options: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
-                    correct: 0,
-                    explanation: "Random access arrays compute the memory address via base + index × element_size, so lookup cost is constant."
-                },
-                {
-                    id: 2,
-                    question: "Which technique is most efficient for checking if a string is a palindrome?",
-                    options: ["Reverse and compare", "Two pointers", "Recursion", "Stack-based approach"],
-                    correct: 1,
-                    explanation: "Two pointers toggled inward compare characters in O(n) time while keeping O(1) extra memory."
-                },
-                {
-                    id: 3,
-                    question: "Sliding window works best when:",
-                    options: ["You need factorial permutations", "The subarray size or constraint can be updated incrementally", "Data is a tree", "The input is immutable"],
-                    correct: 1,
-                    explanation: "Sliding windows reuse previous work (add/remove elements) making contiguous-range problems linear rather than quadratic."
-                }
-            ]
-        }]
-    },
-    'linked-lists': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Why can linked lists grow or shrink more easily than arrays?",
-                    options: ["They use less memory", "Elements live on the heap and nodes connect via pointers", "They store indices", "They are cache-optimized"],
-                    correct: 1,
-                    explanation: "Each node is dynamically allocated and linked, so insertions/deletions adjust pointers without shifting contiguous memory."
-                },
-                {
-                    id: 2,
-                    question: "Floyd's cycle detection works because the fast pointer:",
-                    options: ["Moves randomly", "Moves twice as fast and therefore laps the slow pointer in a cycle", "Starts at the cycle entry", "Checks node values"],
-                    correct: 1,
-                    explanation: "The fast pointer gains one node on the slow pointer each iteration, so they eventually meet if a loop exists."
-                },
-                {
-                    id: 3,
-                    question: "Reversing a singly linked list in-place requires:",
-                    options: ["Three pointers to rewire next references iteratively", "Recursive stack only", "Changing head value only", "Doubly linked nodes"],
-                    correct: 0,
-                    explanation: "Prev/current/nextTemp allow you to redirect each node's next pointer while progressing through the list once."
-                }
-            ]
-        }]
-    },
-    'stacks-queues': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Which data structure best validates balanced parentheses?",
-                    options: ["Stack", "Queue", "Set", "Heap"],
-                    correct: 0,
-                    explanation: "A stack mirrors nesting depth—push for '(' and pop for ')'—so mismatches surface immediately."
-                },
-                {
-                    id: 2,
-                    question: "Why does BFS depend on FIFO order?",
-                    options: ["It mimics recursion", "It must explore closest nodes first", "It sorts nodes", "It caches edges"],
-                    correct: 1,
-                    explanation: "Level-order exploration requires removing nodes in the same order they were discovered, which a queue guarantees."
-                },
-                {
-                    id: 3,
-                    question: "Implementing a queue with two stacks yields what amortized complexity for enqueue/dequeue?",
-                    options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
-                    correct: 0,
-                    explanation: "While elements occasionally move between stacks, each element is transferred at most twice, leading to amortized O(1)."
-                }
-            ]
-        }]
-    },
-    'trees-basics': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "The height of a binary tree equals:",
-                    options: ["Total nodes", "Edges on the longest root-to-leaf path", "Number of leaves", "Depth of minimum node"],
-                    correct: 1,
-                    explanation: "Height measures the depth of the deepest leaf and dictates recursion depth and balance reasoning."
-                },
-                {
-                    id: 2,
-                    question: "In-order traversal of a BST yields:",
-                    options: ["Random order", "Sorted ascending keys", "Post-order sequence", "Only leaf nodes"],
-                    correct: 1,
-                    explanation: "Left subtree < root < right subtree, so visiting them in that order produces sorted keys."
-                },
-                {
-                    id: 3,
-                    question: "A full binary tree is defined by:",
-                    options: ["Every node has 0 or 2 children", "Perfect balance", "Only leaves at last level", "All nodes same value"],
-                    correct: 0,
-                    explanation: "Full trees forbid nodes with a single child, which helps when reasoning about structure or converting to arrays."
-                }
-            ]
-        }]
-    },
-    'hash-tables': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "The load factor of a hash table measures:",
-                    options: ["Average probe length", "Entries divided by bucket count", "Number of collisions", "Memory usage"],
-                    correct: 1,
-                    explanation: "Load factor α = n / m drives when to resize; keeping α bounded retains O(1) average operations."
-                },
-                {
-                    id: 2,
-                    question: "Separate chaining stores collisions by:",
-                    options: ["Linear probing", "Arrays of buckets stored on disk", "Secondary structures (lists/trees) per bucket", "Doubling key size"],
-                    correct: 2,
-                    explanation: "Each bucket points to a linked list or balanced tree containing all keys hashing to that bucket."
-                },
-                {
-                    id: 3,
-                    question: "Open addressing requires careful handling of deletes because:",
-                    options: ["Memory leaks occur", "Removed slots break probe sequences unless marked as tombstones", "Load factor resets", "Keys resort automatically"],
-                    correct: 1,
-                    explanation: "Linear/quad probing relies on contiguous probes; marking deleted slots prevents search termination before real entries."
-                }
-            ]
-        }]
-    },
-    'heaps': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "A binary heap is stored efficiently in an array because:",
-                    options: ["It sorts automatically", "Parent/child indices follow simple math (i→2i+1/2i+2)", "It needs pointers", "Heapify needs recursion"],
-                    correct: 1,
-                    explanation: "Heap nodes correspond to contiguous indices, so tree relationships derive from arithmetic rather than explicit references."
-                },
-                {
-                    id: 2,
-                    question: "Build-heap via bottom-up heapify runs in:",
-                    options: ["O(n)", "O(n log n)", "O(log n)", "O(1)"],
-                    correct: 0,
-                    explanation: "Most nodes are near the leaves, so their heapify cost is small; summing costs yields linear time."
-                },
-                {
-                    id: 3,
-                    question: "Heaps underpin priority queues because they:",
-                    options: ["Maintain strict sorting", "Allow fast retrieval and adjustment of highest-priority element", "Use BST rotations", "Guarantee O(1) deletion"],
-                    correct: 1,
-                    explanation: "The max/min sits at the root (O(1) access) and adjustments only traverse tree height (O(log n))."
-                }
-            ]
-        }]
-    },
-    'sorting-algorithms': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Which algorithm is stable and always O(n log n)?",
-                    options: ["Merge Sort", "Quick Sort", "Heap Sort", "Shell Sort"],
-                    correct: 0,
-                    explanation: "Merge sort splits/merges deterministically so runtime never degrades to quadratic and ties preserve order."
-                },
-                {
-                    id: 2,
-                    question: "Why does quick sort degrade on already sorted arrays with naive pivot choice?",
-                    options: ["Recursion depth stays constant", "Partitions become unbalanced (n-1 vs 0 elements)", "Randomization fails", "It copies too much"],
-                    correct: 1,
-                    explanation: "Picking first or last element as pivot yields worst-case recursion depth n and total work O(n²)."
-                },
-                {
-                    id: 3,
-                    question: "Counting/Radix sorts beat comparison sorts when:",
-                    options: ["Keys have bounded integer ranges or fixed digit count", "Data is unsorted text", "Floating numbers appear", "You need in-place sort"],
-                    correct: 0,
-                    explanation: "They leverage key structure instead of comparisons, achieving near O(n) time when the domain is limited."
-                }
-            ]
-        }]
-    },
-    'searching-algorithms': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Binary search requires:",
-                    options: ["Linked lists", "Sorted random-access collection", "Hash table", "Tree"],
-                    correct: 1,
-                    explanation: "Halving the search space depends on direct indexing; without sorted order halving is meaningless."
-                },
-                {
-                    id: 2,
-                    question: "Interpolation search excels when:",
-                    options: ["Keys are uniformly distributed numbers", "Data is unsorted", "Strings contain duplicates", "You need recursion"],
-                    correct: 0,
-                    explanation: "The probe position is estimated proportional to value; uniform numeric distributions make this guess accurate."
-                },
-                {
-                    id: 3,
-                    question: "Exponential search is helpful because it:",
-                    options: ["Avoids recursion", "Quickly finds bounds in infinite or unknown-length arrays before binary searching", "Sorts data", "Builds heaps"],
-                    correct: 1,
-                    explanation: "It doubles the index until the target is within range, then performs binary search inside that window."
-                }
-            ]
-        }]
-    },
-    'recursion': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "A base case prevents:",
-                    options: ["Compilation errors", "Infinite recursion and stack overflow", "Tail-call optimization", "Caching"],
-                    correct: 1,
-                    explanation: "Without a terminating condition, calls never stop and the stack eventually exhausts memory."
-                },
-                {
-                    id: 2,
-                    question: "Recursion tree analysis helps by:",
-                    options: ["Comparing algorithms to loops", "Visualizing how many subcalls occur at each level and summing total cost", "Reducing memory", "Guaranteeing optimality"],
-                    correct: 1,
-                    explanation: "Drawing branches per call clarifies total work, which is critical for Master Theorem intuition."
-                },
-                {
-                    id: 3,
-                    question: "Tail recursion allows compilers to:",
-                    options: ["Parallelize automatically", "Reuse the same stack frame for the recursive call", "Skip base cases", "Memoize results"],
-                    correct: 1,
-                    explanation: "If the recursive call is the final action, the current frame need not persist, so optimized runtimes reuse it."
-                }
-            ]
-        }]
-    },
-    'dynamic-programming': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Dynamic programming relies on:",
-                    options: ["Independent subproblems", "Overlapping subproblems and optimal substructure", "Random choices", "Greedy proofs"],
-                    correct: 1,
-                    explanation: "DP caches solutions because subproblems repeat, and combining optimal sub-solutions yields a global optimum."
-                },
-                {
-                    id: 2,
-                    question: "Memoization differs from tabulation because it:",
-                    options: ["Requires iteration", "Evaluates subproblems lazily via recursion and caching", "Uses more memory", "Needs sorted input"],
-                    correct: 1,
-                    explanation: "Top-down memoization only solves subproblems that appear, mirroring the recursive structure exactly."
-                },
-                {
-                    id: 3,
-                    question: "Identifying DP state involves:",
-                    options: ["Finding loops", "Choosing variables that uniquely represent a subproblem", "Sorting arrays", "Optimizing constants"],
-                    correct: 1,
-                    explanation: "State dimensions encode parameters that differentiate subproblems; without clear state boundaries caching fails."
-                }
-            ]
-        }]
-    },
-    'greedy-algorithms': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "The greedy-choice property means:",
-                    options: ["Choices are random", "A locally optimal choice leads to a globally optimal solution", "Problem uses DP", "Inputs are sorted"],
-                    correct: 1,
-                    explanation: "Only when local decisions never preclude optimality can a greedy approach be correct."
-                },
-                {
-                    id: 2,
-                    question: "Huffman coding is greedy because it:",
-                    options: ["Uses recursion", "Repeatedly merges the two least frequent symbols to build an optimal prefix tree", "Sorts words lexicographically", "Requires dynamic programming"],
-                    correct: 1,
-                    explanation: "The algorithm always picks the cheapest two nodes to combine, and this strategy is provably optimal."
-                },
-                {
-                    id: 3,
-                    question: "Counterexamples are crucial when studying greedy algorithms because they:",
-                    options: ["Prove algorithm works", "Demonstrate a single failing case invalidates correctness", "Improve runtime", "Reduce memory"],
-                    correct: 1,
-                    explanation: "Showing one input where greedy fails is enough to reject the algorithm for the general problem."
-                }
-            ]
-        }]
-    },
-    'graph-algorithms': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Breadth-first search on an unweighted graph gives shortest paths because:",
-                    options: ["It uses recursion", "It explores vertices in increasing distance from the source", "It stores parents", "It visits each vertex once"],
-                    correct: 1,
-                    explanation: "By expanding level by level via a queue, the first time you reach a node is the shortest path length."
-                },
-                {
-                    id: 2,
-                    question: "Dijkstra's algorithm fails with negative edges because:",
-                    options: ["Heaps cannot store negatives", "A node may be finalized before discovering a cheaper path through a negative edge", "Graphs become cyclic", "It requires sorted edges"],
-                    correct: 1,
-                    explanation: "Once a vertex is extracted from the min-heap it's assumed optimal; negative edges can invalidate that assumption."
-                },
-                {
-                    id: 3,
-                    question: "Topological ordering exists only for:",
-                    options: ["Undirected graphs", "Connected graphs", "Directed acyclic graphs", "Weighted trees"],
-                    correct: 2,
-                    explanation: "Any directed cycle makes it impossible to linearize edges such that prerequisites precede dependents."
-                }
-            ]
-        }]
-    },
-    'segment-trees': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Segment trees answer range sum queries in O(log n) because:",
-                    options: [
-                        "They precompute every possible subarray",
-                        "Each query visits only the nodes whose segments exactly cover the range",
-                        "They store prefix sums only",
-                        "They rely on hashing collisions"
-                    ],
-                    correct: 1,
-                    explanation: "A range decomposes into at most two segments per depth, so the traversal grows with tree height not array length."
-                },
-                {
-                    id: 2,
-                    question: "Fenwick (Binary Indexed) trees are a good alternative when:",
-                    options: [
-                        "You need range minimum queries",
-                        "You only require prefix sums + point updates and prefer simpler code",
-                        "The array never changes",
-                        "You must handle 2D grids"
-                    ],
-                    correct: 1,
-                    explanation: "Fenwick trees have smaller memory footprints for prefix sums, but they cannot handle arbitrary range combinations or min/max as flexibly."
-                },
-                {
-                    id: 3,
-                    question: "Point updates in a segment tree work by:",
-                    options: [
-                        "Rebuilding the entire tree",
-                        "Adjusting the leaf value and recomputing parent aggregates on the path to the root",
-                        "Modifying only sibling nodes",
-                        "Using BFS over all nodes"
-                    ],
-                    correct: 1,
-                    explanation: "Only ancestors of the updated index need to change, so each update touches O(log n) nodes."
-                }
-            ]
-        }]
-    },
-    'disjoint-set-union': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Path compression speeds up find operations by:",
-                    options: [
-                        "Caching adjacency lists",
-                        "Rewriting each visited node to point directly at the root",
-                        "Adding more recursion",
-                        "Sorting the nodes"
-                    ],
-                    correct: 1,
-                    explanation: "Flattening the trees ensures later finds jump straight to the representative, approaching inverse Ackermann time."
-                },
-                {
-                    id: 2,
-                    question: "Union by rank (or size) keeps the structure shallow by:",
-                    options: [
-                        "Always attaching higher index under lower index",
-                        "Linking the smaller tree beneath the taller/larger tree",
-                        "Adding random parents",
-                        "Using heaps"
-                    ],
-                    correct: 1,
-                    explanation: "Favoring the taller tree prevents height blowups, making finds nearly constant time."
-                },
-                {
-                    id: 3,
-                    question: "Kruskal's MST algorithm relies on DSU to:",
-                    options: [
-                        "Pick the next lightest edge",
-                        "Detect whether adding an edge would form a cycle",
-                        "Sort the vertices",
-                        "Compute shortest paths"
-                    ],
-                    correct: 1,
-                    explanation: "Before accepting an edge, DSU checks if the endpoints already share a set; if so the edge is skipped."
-                }
-            ]
-        }]
-    },
-    'string-patterns': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "The LPS array used by KMP stores:",
-                    options: [
-                        "Longest prefix that is also a proper suffix for each prefix",
-                        "Hash values of substrings",
-                        "Positions of spaces",
-                        "Only suffix lengths"
-                    ],
-                    correct: 0,
-                    explanation: "Knowing the longest border tells the matcher how far it can shift without losing confirmed characters."
-                },
-                {
-                    id: 2,
-                    question: "When a mismatch happens after j matches in KMP, you:",
-                    options: [
-                        "Restart from the next character in both text and pattern",
-                        "Reset j to lps[j-1] while keeping the text index in place",
-                        "Skip ahead by pattern length",
-                        "Switch to brute force"
-                    ],
-                    correct: 1,
-                    explanation: "The prefix table gives the size of the next best border so you reuse prior comparisons instead of rescanning text."
-                },
-                {
-                    id: 3,
-                    question: "Rolling-hash approaches such as Rabin-Karp beat KMP when:",
-                    options: [
-                        "You scan one deterministic pattern",
-                        "You need to match many patterns simultaneously or slide over multiple substrings quickly",
-                        "The alphabet has size one",
-                        "You must find palindromes"
-                    ],
-                    correct: 1,
-                    explanation: "Hashing lets you compare many windows cheaply before verifying, which shines for multi-pattern search."
-                }
-            ]
-        }]
-    },
-    'algorithm-analysis': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Big-O expresses:",
-                    options: ["Exact runtime", "Upper bound on asymptotic growth", "Best-case behavior", "Only space complexity"],
-                    correct: 1,
-                    explanation: "Big-O gives an asymptotic ceiling, ignoring constants and lower-order terms."
-                },
-                {
-                    id: 2,
-                    question: "Amortized analysis is useful when:",
-                    options: ["All operations cost the same", "Expensive operations are rare and average cost stays low", "Randomization is used", "Parallelism is required"],
-                    correct: 1,
-                    explanation: "By averaging total cost over a sequence, we show operations like dynamic array resize stay O(1) amortized."
-                },
-                {
-                    id: 3,
-                    question: "If an algorithm has nested loops each running n times, the time complexity is:",
-                    options: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
-                    correct: 3,
-                    explanation: "An outer loop of n iterations containing an inner loop of n iterations leads to n × n operations."
-                }
-            ]
-        }]
-    },
-    'tries': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Trie lookups depend on:",
-                    options: ["Number of keys", "Length of the search string", "Hash values", "Balancing rotations"],
-                    correct: 1,
-                    explanation: "Operations traverse one level per character, so complexity is O(L) independent of stored key count."
-                },
-                {
-                    id: 2,
-                    question: "Edges in a trie typically represent:",
-                    options: ["Whole words", "Single characters or digits", "Hash collisions", "Node depth"],
-                    correct: 1,
-                    explanation: "Each edge corresponds to the next symbol in a key, gradually spelling out stored entries."
-                },
-                {
-                    id: 3,
-                    question: "Word termination flags are required because:",
-                    options: ["They speed up traversal", "Many keys share prefixes, so you need to mark where a valid word ends", "They ensure balance", "They compress memory"],
-                    correct: 1,
-                    explanation: "Without explicit end markers, prefixes couldn't represent keys distinct from longer words."
-                }
-            ]
-        }]
-    },
-    'union-find': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Path compression improves which operation?",
-                    options: ["Union", "Find", "Initialization", "Deletion"],
-                    correct: 1,
-                    explanation: "After a find, each node rewires directly to the root, flattening future traversals."
-                },
-                {
-                    id: 2,
-                    question: "Union by rank/size keeps trees shallow by:",
-                    options: ["Sorting nodes", "Attaching the smaller tree beneath the larger root", "Randomly merging sets", "Rehashing elements"],
-                    correct: 1,
-                    explanation: "Always linking the shorter tree under the taller one limits height growth."
-                },
-                {
-                    id: 3,
-                    question: "Kruskal’s MST algorithm uses union-find to:",
-                    options: ["Sort edges", "Detect when adding an edge would create a cycle", "Relax distances", "Count components"],
-                    correct: 1,
-                    explanation: "Before adding an edge, Kruskal checks whether its endpoints are already connected; union-find tracks that connectivity."
-                }
-            ]
-        }]
-    },
-    'segment-trees': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Segment trees shine when you need:",
-                    options: ["Only point queries", "Range queries/updates over an array in logarithmic time", "Graph traversal", "String parsing"],
-                    correct: 1,
-                    explanation: "Each node stores aggregate info for a range, so queries touch O(log n) segments."
-                },
-                {
-                    id: 2,
-                    question: "Lazy propagation allows you to:",
-                    options: ["Delete nodes", "Defer pushing range updates to children until necessary", "Balance the tree", "Reduce depth"],
-                    correct: 1,
-                    explanation: "Instead of visiting all descendants immediately, lazy tags record pending updates, preserving O(log n) complexity."
-                },
-                {
-                    id: 3,
-                    question: "Building a segment tree from scratch costs:",
-                    options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
-                    correct: 2,
-                    explanation: "Each element contributes to O(1) nodes, resulting in linear construction time."
-                }
-            ]
-        }]
-    },
-    'binary-indexed-trees': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Fenwick trees are ideal for:",
-                    options: ["Graph adjacency", "Prefix sums and point updates in O(log n)", "Sorting strings", "Tree traversals"],
-                    correct: 1,
-                    explanation: "They maintain cumulative frequency using bit operations to jump between responsible nodes."
-                },
-                {
-                    id: 2,
-                    question: "The least significant set bit (LSB) is used to:",
-                    options: ["Choose pivots", "Move to parent/child indices covering the next range chunk", "Check parity", "Compress data"],
-                    correct: 1,
-                    explanation: "Adding the LSB moves upward, subtracting moves downward along the implicit tree."
-                },
-                {
-                    id: 3,
-                    question: "Compared to segment trees, BITs are:",
-                    options: ["Harder to code", "Simpler for 1D prefix problems but limited to certain operations", "Always faster", "More memory hungry"],
-                    correct: 1,
-                    explanation: "Fenwick trees excel for prefix aggregates and point updates but cannot handle arbitrary range updates without tweaks."
-                }
-            ]
-        }]
-    },
-    'advanced-trees': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "AVL trees maintain balance by ensuring:",
-                    options: ["Red-black coloring", "Height difference between children is at most 1", "Keys remain sorted", "Root stays median"],
-                    correct: 1,
-                    explanation: "Each node stores heights; rotations restore the invariant when the difference exceeds one."
-                },
-                {
-                    id: 2,
-                    question: "Red-Black trees guarantee logarithmic height because:",
-                    options: ["All nodes are black", "Every root-to-leaf path contains the same number of black nodes", "They use hashing", "They rebuild often"],
-                    correct: 1,
-                    explanation: "The black-height property ensures no path is more than twice as long as another."
-                },
-                {
-                    id: 3,
-                    question: "Splay trees are unique because they:",
-                    options: ["Require coloring", "Move recently accessed nodes to the root via rotations", "Use heaps", "Need extra memory"],
-                    correct: 1,
-                    explanation: "Splaying promotes locality—frequently accessed nodes become easier to reach."
-                }
-            ]
-        }]
-    },
-    'string-algorithms': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "KMP avoids re-checking characters by:",
-                    options: ["Hashing strings", "Using the LPS (longest prefix-suffix) table to know where to resume", "Sorting substrings", "Using recursion"],
-                    correct: 1,
-                    explanation: "When a mismatch occurs, the prefix table tells you the longest prefix equal to a suffix to continue matching efficiently."
-                },
-                {
-                    id: 2,
-                    question: "Rabin-Karp leverages rolling hashes to:",
-                    options: ["Guarantee collision-free results", "Compare substring hashes in O(1) and verify only on matches", "Sort strings lexicographically", "Use tries"],
-                    correct: 1,
-                    explanation: "Efficient hash updates allow scanning multiple positions quickly while verifying when hashes match."
-                },
-                {
-                    id: 3,
-                    question: "Suffix arrays paired with LCP arrays help:",
-                    options: ["Solve shortest path", "Find repeating substrings efficiently by checking adjacent suffixes' longest common prefixes", "Convert to tries", "Balance BSTs"],
-                    correct: 1,
-                    explanation: "Once suffixes are sorted, neighboring entries share large prefixes; the LCP array quantifies those lengths for queries."
-                }
-            ]
-        }]
-    },
-    'computational-geometry': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Orientation tests using cross products determine:",
-                    options: ["Distance between points", "Whether three points make clockwise, counter-clockwise, or collinear turns", "Convex hull area", "Edge weights"],
-                    correct: 1,
-                    explanation: "The sign of the cross product indicates the turn direction, which is fundamental for hulls and intersection tests."
-                },
-                {
-                    id: 2,
-                    question: "Graham scan builds a convex hull by:",
-                    options: ["Dynamic programming", "Sorting points by angle from a pivot and maintaining a stack of hull vertices", "Binary search", "Divide and conquer"],
-                    correct: 1,
-                    explanation: "After sorting, points that cause clockwise turns are popped, leaving the convex envelope."
-                },
-                {
-                    id: 3,
-                    question: "Sweep-line algorithms process geometry by:",
-                    options: ["Random sampling", "Moving a line across the plane and handling events in sorted order while tracking active segments", "Brute force", "Only using grids"],
-                    correct: 1,
-                    explanation: "The sweep line converts geometric problems into ordered events, enabling efficient detection of intersections or coverage."
-                }
-            ]
-        }]
-    },
-    'number-theory': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "The Euclidean algorithm computes:",
-                    options: ["Prime factors", "GCD by repeated remainder operations", "LCM", "Modular exponentiation"],
-                    correct: 1,
-                    explanation: "Repeatedly replacing (a, b) with (b, a mod b) quickly finds the greatest common divisor."
-                },
-                {
-                    id: 2,
-                    question: "Modular exponentiation via repeated squaring is efficient because it:",
-                    options: ["Avoids multiplication", "Reduces exponentiation to O(log b) multiplications while applying modulus each step", "Needs primes only", "Uses floating point"],
-                    correct: 1,
-                    explanation: "By squaring intermediate results and reducing modulo m, numbers stay small and operations drop to logarithmic count."
-                },
-                {
-                    id: 3,
-                    question: "The Sieve of Eratosthenes marks composites by:",
-                    options: ["Dividing by primes repeatedly", "Marking multiples of each prime starting at p²", "Random testing", "Using recursion"],
-                    correct: 1,
-                    explanation: "Multiples below p² were already marked by smaller primes, so starting at p² avoids redundant work."
-                }
-            ]
-        }]
-    },
-    'bit-manipulation': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Expression x & (-x) isolates:",
-                    options: ["Most significant bit", "Least significant set bit", "Parity", "All ones"],
-                    correct: 1,
-                    explanation: "Two's complement negation flips bits and adds one, leaving only the lowest set bit when ANDed."
-                },
-                {
-                    id: 2,
-                    question: "XOR is handy for finding a single unique element because:",
-                    options: ["It sorts values", "a ^ a = 0 so duplicates cancel, leaving the odd-occurring value", "It shifts bits", "It multiplies values"],
-                    correct: 1,
-                    explanation: "Pairing duplicates removes them from the accumulator, revealing the lone number."
-                },
-                {
-                    id: 3,
-                    question: "To set bit i of integer n you can:",
-                    options: ["n &= ~(1 << i)", "n |= (1 << i)", "n ^= (1 << i)", "n >>= i"],
-                    correct: 1,
-                    explanation: "OR with a mask containing only bit i ensures that bit becomes 1 without affecting others."
-                }
-            ]
-        }]
-    },
-    'java-basics': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Java's char type stores:",
-                    options: ["8-bit ASCII", "16-bit UTF-16 code units", "32-bit Unicode", "Only digits"],
-                    correct: 1,
-                    explanation: "char is an unsigned 16-bit value capable of representing UTF-16 units, enabling Unicode support."
-                },
-                {
-                    id: 2,
-                    question: "Java passes everything by:",
-                    options: ["Reference", "Value (object references themselves are copied)", "Pointer arithmetic", "Copy-on-write"],
-                    correct: 1,
-                    explanation: "Even though objects are manipulated indirectly, the reference value is passed by value."
-                },
-                {
-                    id: 3,
-                    question: "The keyword final on a variable means:",
-                    options: ["Immutable object", "Reference cannot be reassigned after initialization", "Static binding", "Thread-safe access"],
-                    correct: 1,
-                    explanation: "final stops reassignment; for objects it locks the reference, not the object's internal state."
-                }
-            ]
-        }]
-    },
-    'control-flow': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "The enhanced for-each loop cannot safely:",
-                    options: ["Iterate arrays", "Remove elements while iterating", "Read values", "Handle collections"],
-                    correct: 1,
-                    explanation: "Modifying the underlying collection structure triggers ConcurrentModificationException; use iterators instead."
-                },
-                {
-                    id: 2,
-                    question: "Modern switch expressions (Java 14+) allow:",
-                    options: ["Returning values via -> syntax", "Only integers", "Fallthrough by default", "Polymorphic dispatch"],
-                    correct: 0,
-                    explanation: "Switch expressions evaluate to a value, letting you assign results directly."
-                },
-                {
-                    id: 3,
-                    question: "A do-while loop differs because:",
-                    options: ["It checks condition first", "It guarantees the body executes at least once", "It is faster", "It only works with ints"],
-                    correct: 1,
-                    explanation: "Condition evaluation occurs after the body, ensuring at least one iteration."
-                }
-            ]
-        }]
-    },
-    'oop-basics': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Encapsulation means:",
-                    options: ["Public fields only", "Bundling data and behavior with restricted access", "Multiple inheritance", "Runtime polymorphism"],
-                    correct: 1,
-                    explanation: "Objects hide their state by exposing controlled interfaces."
-                },
-                {
-                    id: 2,
-                    question: "Polymorphism lets you:",
-                    options: ["Avoid inheritance", "Treat different subclass instances via a common supertype interface", "Optimize memory", "Disable overriding"],
-                    correct: 1,
-                    explanation: "Dynamic dispatch ensures the correct overridden method executes based on runtime type."
-                },
-                {
-                    id: 3,
-                    question: "final classes cannot be:",
-                    options: ["Instantiated", "Subclassed", "Used", "Serialized"],
-                    correct: 1,
-                    explanation: "Marking a class final prevents other classes from extending it."
-                }
-            ]
-        }]
-    },
-    'exception-handling': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Checked exceptions must be:",
-                    options: ["Ignored", "Handled with try/catch or declared with throws", "Converted to runtime exceptions automatically", "Thrown only by JVM"],
-                    correct: 1,
-                    explanation: "The compiler enforces that checked exceptions are either caught or declared."
-                },
-                {
-                    id: 2,
-                    question: "Finally blocks execute except when:",
-                    options: ["Return is used", "System.exit or catastrophic VM failure occurs", "Exception thrown", "Break executes"],
-                    correct: 1,
-                    explanation: "Normal path or exceptions still run finally, but VM termination prevents it."
-                },
-                {
-                    id: 3,
-                    question: "Try-with-resources automatically:",
-                    options: ["Retries operations", "Closes AutoCloseable resources after the block even on exceptions", "Makes code faster", "Handles unchecked exceptions"],
-                    correct: 1,
-                    explanation: "Resources declared in the try statement are closed deterministically, reducing boilerplate."
-                }
-            ]
-        }]
-    },
-    'collections-framework': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "LinkedHashMap maintains:",
-                    options: ["Sorted order", "Insertion order via a doubly linked list of entries", "Random iteration", "Thread safety"],
-                    correct: 1,
-                    explanation: "It combines a hash table with a linked list to preserve predictable iteration order."
-                },
-                {
-                    id: 2,
-                    question: "ArrayList is preferable to LinkedList when:",
-                    options: ["Frequent head insertions occur", "Random access dominates operations", "Memory is tight", "You need lock-free behavior"],
-                    correct: 1,
-                    explanation: "ArrayList provides O(1) get/set while LinkedList must traverse nodes."
-                },
-                {
-                    id: 3,
-                    question: "ConcurrentHashMap scales by:",
-                    options: ["Using a single global lock", "Segmenting buckets/using striped locks and allowing lock-free reads", "Copying on write", "Sorting keys"],
-                    correct: 1,
-                    explanation: "It minimizes contention by locking only portions of the map or using CAS for writes."
-                }
-            ]
-        }]
-    },
-    'file-io': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Buffered streams speed IO because they:",
-                    options: ["Encrypt data", "Batch reads/writes in memory, reducing system calls", "Use multithreading", "Skip disk"],
-                    correct: 1,
-                    explanation: "Fewer trips to the OS block device drastically reduce overhead."
-                },
-                {
-                    id: 2,
-                    question: "Try-with-resources is ideal for IO since it:",
-                    options: ["Makes files optional", "Automatically closes streams even when exceptions occur", "Retries operations", "Caches bytes"],
-                    correct: 1,
-                    explanation: "Resources implementing AutoCloseable are cleaned up without manual finally blocks."
-                },
-                {
-                    id: 3,
-                    question: "The java.nio.file.Files utility provides:",
-                    options: ["Database connections", "Modern path handling, metadata, and atomic move/copy helpers", "Network protocols", "Only synchronous IO"],
-                    correct: 1,
-                    explanation: "NIO's Files class includes convenience methods for interacting with the filesystem safely."
-                }
-            ]
-        }]
-    },
-    'multithreading': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "synchronized in Java ensures:",
-                    options: ["Order of thread execution", "Mutual exclusion and visibility for a block/object monitor", "Faster code", "Automatic deadlock prevention"],
-                    correct: 1,
-                    explanation: "It acquires the intrinsic lock and establishes happens-before relationships."
-                },
-                {
-                    id: 2,
-                    question: "Executors simplify concurrency by:",
-                    options: ["Eliminating threads", "Managing thread pools and decoupling task submission from execution", "Enforcing parallel streams", "Replacing interrupts"],
-                    correct: 1,
-                    explanation: "You submit Runnable/Callable tasks; the executor handles scheduling and lifecycle."
-                },
-                {
-                    id: 3,
-                    question: "volatile guarantees:",
-                    options: ["Atomicity of compound actions", "Visibility/no reordering of reads and writes", "Lock-free algorithms", "Lower memory usage"],
-                    correct: 1,
-                    explanation: "volatile fields are read/written directly to main memory, preventing stale values."
-                }
-            ]
-        }]
-    },
-    'design-patterns': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "The Singleton pattern ensures:",
-                    options: ["Multiple instances", "Exactly one instance with global access", "Loose coupling", "Observer behavior"],
-                    correct: 1,
-                    explanation: "It hides constructors and exposes a single accessor for the lone instance."
-                },
-                {
-                    id: 2,
-                    question: "Strategy pattern enables:",
-                    options: ["Multiple inheritance", "Swapping algorithms at runtime via a common interface", "Event notification", "Adapting interfaces"],
-                    correct: 1,
-                    explanation: "Clients can inject different behavior objects without changing the context code."
-                },
-                {
-                    id: 3,
-                    question: "Observer pattern decouples components by:",
-                    options: ["Sharing state globally", "Letting subjects publish events to subscribed observers", "Copying data", "Using inheritance"],
-                    correct: 1,
-                    explanation: "Observers register for updates and subjects notify them when state changes."
-                }
-            ]
-        }]
-    },
-    'lambda-streams': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "A functional interface contains:",
-                    options: ["Multiple abstract methods", "Exactly one abstract method (plus optional defaults)", "No methods", "Only static methods"],
-                    correct: 1,
-                    explanation: "Single Abstract Method interfaces (SAM) are lambda compatible."
-                },
-                {
-                    id: 2,
-                    question: "Which stream operation is terminal?",
-                    options: ["map", "filter", "collect", "peek"],
-                    correct: 2,
-                    explanation: "collect triggers evaluation and gathers results, closing the stream pipeline."
-                },
-                {
-                    id: 3,
-                    question: "Streams should not be reused because:",
-                    options: ["They copy data", "Terminal operations consume them and mark them closed", "They leak memory", "They are slow"],
-                    correct: 1,
-                    explanation: "Once a terminal operation executes, further use throws IllegalStateException."
-                }
-            ]
-        }]
-    },
-    'generics': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Type erasure means that:",
-                    options: ["Generics persist at runtime", "Generic type info is removed during compilation and replaced with bounds/casts", "Generics cannot be nested", "Only primitives allowed"],
-                    correct: 1,
-                    explanation: "The JVM sees raw types; the compiler enforces type safety and inserts casts."
-                },
-                {
-                    id: 2,
-                    question: "The wildcard ? extends T allows you to:",
-                    options: ["Insert arbitrary T values", "Read T or subclasses safely but not insert arbitrary values", "Modify list freely", "Use primitives"],
-                    correct: 1,
-                    explanation: "Producer Extends: treat the structure as a producer; writes are unsafe except null."
-                },
-                {
-                    id: 3,
-                    question: "Generic methods differ from generic classes because they:",
-                    options: ["Require inheritance", "Declare their own type parameters independent of the class", "Only work in interfaces", "Need reflection"],
-                    correct: 1,
-                    explanation: "Method-level generics introduce <T> before the return type, enabling flexible reuse."
-                }
-            ]
-        }]
-    },
-    'testing-junit': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "@BeforeEach in JUnit 5 runs:",
-                    options: ["Once per class", "Before every @Test to reset fixtures", "After tests", "Only on failure"],
-                    correct: 1,
-                    explanation: "Each test gets a fresh setup so state does not leak."
-                },
-                {
-                    id: 2,
-                    question: "assertThrows is used to:",
-                    options: ["Compare objects", "Verify a lambda throws a specific exception type", "Skip tests", "Measure runtime"],
-                    correct: 1,
-                    explanation: "It ensures the provided executable raises the expected exception."
-                },
-                {
-                    id: 3,
-                    question: "Parameterized tests allow you to:",
-                    options: ["Mock dependencies", "Run the same logic with multiple inputs from sources like @CsvSource", "Parallelize automatically", "Disable assertions"],
-                    correct: 1,
-                    explanation: "Junit feeds different argument sets to one test method, reducing duplication."
-                }
-            ]
-        }]
-    },
-    'jdbc-basics': {
-        parts: [{
-            questions: [
-                {
-                    id: 1,
-                    question: "Which JDBC object executes SQL statements?",
-                    options: ["Connection", "Statement/PreparedStatement", "ResultSet", "DriverManager"],
-                    correct: 1,
-                    explanation: "PreparedStatement compiles SQL with parameters and sends it over an active Connection."
-                },
-                {
-                    id: 2,
-                    question: "Prepared statements help prevent SQL injection because they:",
-                    options: ["Encrypt traffic", "Separate query structure from user parameters", "Use hashing", "Auto-escape strings"],
-                    correct: 1,
-                    explanation: "Parameters are bound, so input cannot alter the SQL command structure."
-                },
-                {
-                    id: 3,
-                    question: "Calling ResultSet.next() returns false when:",
-                    options: ["Column is null", "Cursor moves past the last row", "Transaction commits", "Statement closes"],
-                    correct: 1,
-                    explanation: "next() advances the cursor; when there are no more rows it returns false."
-                }
-            ]
-        }]
-    }
-};
+let quizData = {};
+
+
 // Modules Data (Complete with ALL LANGUAGES)
 const modules = [
     {
@@ -3837,6 +2810,12 @@ public class OopDemo {
         difficulty: 'beginner',
         topics: ['Try-Catch', 'Finally Block', 'Custom Exceptions', 'Throws', 'Exception Types'],
         codeExample: `// Exception Handling with narration.
+class InvalidAgeException extends Exception {
+    InvalidAgeException(String message) {
+        super(message);
+    }
+}
+
 public class ExceptionExample {
     // Handles both the happy path and divide-by-zero failure.
     public static void divide(int a, int b) {
@@ -3857,12 +2836,25 @@ public class ExceptionExample {
         }
         System.out.println("Validated age: " + age);
     }
+
+    public static void main(String[] args) {
+        divide(10, 2);  // Works
+        divide(5, 0);   // Triggers ArithmeticException
+
+        try {
+            validateAge(-5); // Triggers our custom checked exception
+        } catch (InvalidAgeException e) {
+            System.out.println("Caught custom exception: " + e.getMessage());
+        }
+    }
 }
 `,
         explanation: `You will categorize checked vs unchecked exceptions, design custom hierarchies, and use try-with-resources for safe cleanup. Realistic scenarios cover logging, wrapping exceptions to add context, and establishing global handlers to keep apps resilient.`,
         codeBreakdown: [
             { label: 'divide', detail: 'Wraps risky arithmetic in try/catch and shows how finally executes regardless of success.' },
-            { label: 'validateAge', detail: 'Illustrates how to throw a custom checked exception with a helpful message.' }
+            { label: 'validateAge', detail: 'Illustrates how to throw a custom checked exception with a helpful message.' },
+            { label: 'InvalidAgeException', detail: 'Custom checked exception extends Exception and carries a human-friendly message.' },
+            { label: 'main', detail: 'Runs happy-path division, a divide-by-zero failure, and a negative-age check to exercise both catch blocks.' }
         ],
         resources: [
             { text: 'Oracle Java Tutorials – Exceptions', url: 'https://docs.oracle.com/javase/tutorial/essential/exceptions/' },
@@ -4941,6 +3933,7 @@ if (luminaryLevel) {
 }
 
 const flashcardDecks = generateFlashcardDecks(modules, baseFlashcards);
+quizData = buildModuleQuizBanks(modules, flashcardDecks, glossaryTerms);
 
 const dailyChallenges = [
     {
@@ -5096,6 +4089,269 @@ function generateFlashcardDecks(modulesData, generalCards = []) {
     return deckCollection;
 }
 
+function pickRandomItems(array = [], count = 1, exclude = []) {
+    const excludeSet = new Set(exclude);
+    const available = array.filter(item => item && !excludeSet.has(item));
+    const shuffled = shuffleArray(available);
+    return shuffled.slice(0, Math.min(count, shuffled.length));
+}
+
+function getResourceText(resource) {
+    if (!resource) return '';
+    if (typeof resource === 'string') return resource;
+    return resource.text || resource.url || '';
+}
+
+function createQuestion(questionText, correctOption, distractorOptions = [], explanation = '') {
+    if (!questionText || !correctOption) return null;
+    const used = new Set([correctOption]);
+    const options = [correctOption];
+    distractorOptions.forEach(option => {
+        if (!option || used.has(option) || options.length >= 4) return;
+        options.push(option);
+        used.add(option);
+    });
+    let fillerIndex = 0;
+    while (options.length < 4) {
+        const filler = DEFAULT_DISTRACTOR_TEXTS[fillerIndex % DEFAULT_DISTRACTOR_TEXTS.length];
+        fillerIndex++;
+        if (used.has(filler)) continue;
+        options.push(filler);
+        used.add(filler);
+    }
+    const shuffled = shuffleArray(options);
+    return {
+        question: questionText,
+        options: shuffled,
+        correct: shuffled.indexOf(correctOption),
+        explanation: explanation || 'This detail comes directly from the module walkthrough or glossary.'
+    };
+}
+
+function ensureRunnableJava(code, moduleTitle = 'Module') {
+    if (/public\s+static\s+void\s+main\s*\(/i.test(code)) {
+        return code;
+    }
+    const stub = `
+
+class Main {
+    public static void main(String[] args) {
+        System.out.println("Loaded ${moduleTitle} sample. Add method calls or tests here.");
+    }
+}
+`;
+    return `${code.trim()}\n${stub}`;
+}
+
+function dedupeQuestions(questions = []) {
+    const seen = new Set();
+    return questions.filter(question => {
+        if (!question || !question.question) return false;
+        const key = question.question.trim();
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+    });
+}
+
+function findGlossaryMatches(module, glossaryList = []) {
+    const haystack = [
+        module.title,
+        module.description,
+        module.explanation,
+        ...(module.topics || [])
+    ].join(' ').toLowerCase();
+    return glossaryList.filter(term => {
+        const value = term.term?.toLowerCase();
+        return value && haystack.includes(value);
+    });
+}
+
+function buildDifficultyQuestion(module) {
+    if (!module.difficulty) return null;
+    const label = module.difficulty.charAt(0).toUpperCase() + module.difficulty.slice(1);
+    const difficulties = ['Beginner', 'Intermediate', 'Advanced'];
+    const distractors = pickRandomItems(difficulties.filter(item => item !== label), 3);
+    return createQuestion(
+        `How is ${module.title} categorized in the curriculum?`,
+        label,
+        distractors,
+        `${module.title} is intentionally presented at the ${label.toLowerCase()} level so you can plan your learning pace.`
+    );
+}
+
+function buildDescriptionQuestion(module, modulesList) {
+    if (!module.description) return null;
+    const distractors = pickRandomItems(
+        modulesList.filter(other => other.id !== module.id).map(other => other.description).filter(Boolean),
+        3
+    );
+    return createQuestion(
+        `Which summary best matches ${module.title}?`,
+        module.description,
+        distractors,
+        module.description
+    );
+}
+
+function buildExplanationQuestion(module, modulesList) {
+    const detail = module.explanation || module.description;
+    if (!detail) return null;
+    const distractors = pickRandomItems(
+        modulesList.filter(other => other.id !== module.id).map(other => other.explanation || other.description).filter(Boolean),
+        3
+    );
+    return createQuestion(
+        `Why is ${module.title} an important stop on your Java DSA roadmap?`,
+        detail,
+        distractors,
+        detail
+    );
+}
+
+function buildResourceQuestion(module, resource, resourcePool) {
+    const resourceText = getResourceText(resource);
+    if (!resourceText) return null;
+    const distractors = pickRandomItems(
+        resourcePool.filter(item => item !== resourceText),
+        3
+    );
+    return createQuestion(
+        `Which supporting resource is listed under ${module.title}?`,
+        resourceText,
+        distractors,
+        `This link is surfaced directly under ${module.title}'s resources list.`
+    );
+}
+
+function buildTopicQuestion(module, topic, modulesList) {
+    if (!topic) return null;
+    const distractors = pickRandomItems(
+        modulesList.filter(other => other.id !== module.id).map(other => other.title),
+        3
+    );
+    return createQuestion(
+        `Which module should you revisit to strengthen ${topic}?`,
+        module.title,
+        distractors,
+        `${topic} is one of the highlighted topics for ${module.title}.`
+    );
+}
+
+function buildBreakdownQuestion(module, breakdown, breakdownPool) {
+    if (!breakdown?.detail) return null;
+    const distractors = pickRandomItems(
+        breakdownPool.filter(item => item !== breakdown.detail),
+        3
+    );
+    return createQuestion(
+        `In ${module.title}, what does the ${breakdown.label} walkthrough emphasize?`,
+        breakdown.detail,
+        distractors,
+        breakdown.detail
+    );
+}
+
+function buildGlossaryDefinitionQuestion(term, glossaryList) {
+    if (!term?.definition) return null;
+    const distractors = pickRandomItems(
+        glossaryList.filter(entry => entry.term !== term.term).map(entry => entry.definition),
+        3
+    );
+    return createQuestion(
+        `According to the glossary, what does ${term.term} mean?`,
+        term.definition,
+        distractors,
+        term.definition
+    );
+}
+
+function buildFlashcardQuestion(module, card, answerPool) {
+    if (!card?.question || !card?.answer) return null;
+    const distractors = pickRandomItems(
+        answerPool.filter(answer => answer !== card.answer),
+        3
+    );
+    return createQuestion(
+        card.question,
+        card.answer,
+        distractors,
+        `This matches the flashcard explanation for ${module.title}.`
+    );
+}
+
+function ensureQuestionPool(pool, module, modulesList) {
+    const builders = [
+        () => buildDescriptionQuestion(module, modulesList),
+        () => buildExplanationQuestion(module, modulesList),
+        () => buildDifficultyQuestion(module)
+    ];
+    let attempts = 0;
+    while (pool.length < QUIZ_CONFIG.poolSize && attempts < 20) {
+        const candidate = builders[attempts % builders.length]();
+        attempts++;
+        if (!candidate) continue;
+        if (pool.some(existing => existing.question === candidate.question)) continue;
+        pool.push(candidate);
+    }
+    return pool;
+}
+
+function buildModuleQuizBanks(modulesList, deckCollection, glossaryList) {
+    const resourcePool = modulesList.flatMap(module => (module.resources || []).map(getResourceText)).filter(Boolean);
+    const breakdownPool = modulesList.flatMap(module => (module.codeBreakdown || []).map(entry => entry.detail)).filter(Boolean);
+    const answerPool = Object.entries(deckCollection)
+        .filter(([deckId]) => deckId !== 'general' && deckId !== 'all')
+        .flatMap(([, cards]) => cards.map(card => card.answer).filter(Boolean));
+
+    const quizBank = {};
+
+    modulesList.forEach(module => {
+        const moduleQuestions = [];
+        moduleQuestions.push(buildDifficultyQuestion(module));
+        moduleQuestions.push(buildDescriptionQuestion(module, modulesList));
+        moduleQuestions.push(buildExplanationQuestion(module, modulesList));
+
+        (module.resources || []).forEach(resource => {
+            moduleQuestions.push(buildResourceQuestion(module, resource, resourcePool));
+        });
+
+        (module.topics || []).forEach(topic => {
+            moduleQuestions.push(buildTopicQuestion(module, topic, modulesList));
+        });
+
+        (module.codeBreakdown || []).forEach(breakdown => {
+            moduleQuestions.push(buildBreakdownQuestion(module, breakdown, breakdownPool));
+        });
+
+        const glossaryMatches = findGlossaryMatches(module, glossaryList);
+        glossaryMatches.forEach(term => {
+            moduleQuestions.push(buildGlossaryDefinitionQuestion(term, glossaryList));
+        });
+
+        (deckCollection[module.id] || []).forEach(card => {
+            moduleQuestions.push(buildFlashcardQuestion(module, card, answerPool));
+        });
+
+        const cleaned = dedupeQuestions(moduleQuestions.filter(Boolean));
+        const completed = ensureQuestionPool(cleaned, module, modulesList);
+        const finalQuestions = shuffleArray(completed)
+            .slice(0, QUIZ_CONFIG.poolSize)
+            .map((question, index) => ({
+                ...question,
+                id: `${module.id}-q${index + 1}`
+            }));
+
+        quizBank[module.id] = {
+            parts: [
+                { questions: finalQuestions }
+            ]
+        };
+    });
+
+    return quizBank;
+}
+
 function getFlashcardDeck(moduleId) {
     if (moduleId === 'general') {
         return flashcardDecks.general || [];
@@ -5113,7 +4369,7 @@ function getFlashcardDeck(moduleId) {
     return flashcardDecks[moduleId] || [];
 }
 
-function shuffleArray(array) {
+function shuffleArray(array = []) {
     const cloned = [...array];
     for (let i = cloned.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -5767,9 +5023,16 @@ function renderModules() {
         searchResultsCount.style.display = 'none';
     }
 
+    const totalPages = Math.max(1, Math.ceil(filteredModules.length / MODULES_PER_PAGE));
+    if (appState.currentModulePage > totalPages) {
+        appState.currentModulePage = totalPages;
+    }
+    const startIndex = (appState.currentModulePage - 1) * MODULES_PER_PAGE;
+    const pageModules = filteredModules.slice(startIndex, startIndex + MODULES_PER_PAGE);
+
     const difficultyOrder = ['beginner', 'intermediate', 'advanced'];
     const groupedContent = difficultyOrder.map(level => {
-        const bucket = filteredModules.filter(module => module.difficulty === level);
+        const bucket = pageModules.filter(module => module.difficulty === level);
         if (!bucket.length) return '';
         const meta = DIFFICULTY_SECTIONS[level] || { label: level, icon: '📘' };
         return `
@@ -5779,7 +5042,7 @@ function renderModules() {
             </div>
         `;
     }).join('');
-    const otherModules = filteredModules.filter(module => !difficultyOrder.includes(module.difficulty));
+    const otherModules = pageModules.filter(module => !difficultyOrder.includes(module.difficulty));
     const otherSection = otherModules.length ? `
         <div class="module-section">
             <div class="module-section-heading">🧭 Additional Modules</div>
@@ -5795,6 +5058,7 @@ function renderModules() {
         </div>
     `;
 
+    renderPagination(totalPages);
     renderInsights();
 }
 
@@ -5914,6 +5178,34 @@ function buildModuleCard(module) {
             </div>
         </div>
     `;
+}
+
+function renderPagination(totalPages) {
+    const containers = [
+        document.getElementById('modules-pagination'),
+        document.getElementById('modules-pagination-top')
+    ].filter(Boolean);
+    if (!containers.length) return;
+
+    const buildButtons = () => {
+        if (totalPages <= 1) return '';
+        const buttons = [];
+        for (let page = 1; page <= totalPages; page++) {
+            const isActive = page === appState.currentModulePage;
+            buttons.push(`
+                <button data-page="${page}" class="px-3 py-1.5 rounded-lg text-sm font-semibold border ${isActive ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'}">
+                    ${page}
+                </button>
+            `);
+        }
+        return buttons.join('');
+    };
+
+    const markup = buildButtons();
+    containers.forEach(container => {
+        container.innerHTML = markup;
+        container.classList.toggle('hidden', !markup);
+    });
 }
 
 function getAchievementState() {
@@ -6224,24 +5516,24 @@ function toggleCompletion(moduleId) {
 
 // Modal Functions
 function openSettings() {
-    document.getElementById('settings-modal').style.display = 'flex';
+    openModal('settings-modal');
 }
 
 function closeSettings() {
-    document.getElementById('settings-modal').style.display = 'none';
+    closeModal('settings-modal');
 }
 
 function openGlossary() {
-    document.getElementById('glossary-modal').style.display = 'flex';
+    openModal('glossary-modal');
     renderGlossary();
 }
 
 function closeGlossary() {
-    document.getElementById('glossary-modal').style.display = 'none';
+    closeModal('glossary-modal');
 }
 
 function openFlashcards() {
-    document.getElementById('flashcards-modal').style.display = 'flex';
+    openModal('flashcards-modal');
     populateFlashcardModuleSelect();
     const moduleSelect = document.getElementById('flashcard-module-select');
     if (moduleSelect) {
@@ -6252,19 +5544,55 @@ function openFlashcards() {
     } else {
         renderFlashcard();
     }
+    const moduleLabel = document.getElementById('flashcard-module-label');
+    if (moduleLabel) {
+        const currentModule = modules.find(m => m.id === appState.selectedFlashcardModule);
+        moduleLabel.textContent = currentModule ? currentModule.title : 'All Modules';
+    }
 }
 
 function closeFlashcards() {
-    document.getElementById('flashcards-modal').style.display = 'none';
+    closeModal('flashcards-modal');
+}
+
+const MODAL_IDS = [
+    'settings-modal',
+    'glossary-modal',
+    'flashcards-modal',
+    'quiz-modal',
+    'study-plan-modal',
+    'account-modal',
+    'support-modal'
+];
+
+function bindClick(id, handler) {
+    const el = document.getElementById(id);
+    if (!el || typeof handler !== 'function') return null;
+    el.addEventListener('click', handler);
+    return el;
+}
+
+function openModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.style.display = 'flex';
+}
+
+function closeModal(id) {
+    const modal = document.getElementById(id);
+    if (modal) modal.style.display = 'none';
+}
+
+function closeAllModals() {
+    MODAL_IDS.forEach(closeModal);
 }
 
 function openStudyPlanModal() {
-    document.getElementById('study-plan-modal').style.display = 'flex';
+    openModal('study-plan-modal');
     resetStudyPlanSelection();
 }
 
 function closeStudyPlanModal() {
-    document.getElementById('study-plan-modal').style.display = 'none';
+    closeModal('study-plan-modal');
 }
 
 function resetStudyPlanSelection() {
@@ -6315,7 +5643,7 @@ function maybePromptStudyPlan(moduleId) {
 }
 
 function openAccountModal() {
-    document.getElementById('account-modal').style.display = 'flex';
+    openModal('account-modal');
     const profile = appState.accountProfile || {};
     document.getElementById('account-name').value = profile.name || '';
     document.getElementById('account-email').value = profile.email || '';
@@ -6323,7 +5651,7 @@ function openAccountModal() {
 }
 
 function closeAccountModal() {
-    document.getElementById('account-modal').style.display = 'none';
+    closeModal('account-modal');
 }
 
 async function saveAccountProfile() {
@@ -6375,11 +5703,11 @@ function openSupportModal(moduleId = null) {
     }
     document.getElementById('support-topic').value = '';
     document.getElementById('support-message').value = '';
-    modal.style.display = 'flex';
+    openModal('support-modal');
 }
 
 function closeSupportModal() {
-    document.getElementById('support-modal').style.display = 'none';
+    closeModal('support-modal');
 }
 
 function submitSupportRequest(event) {
@@ -6503,23 +5831,30 @@ function populateFlashcardModuleSelect() {
 // Quiz Functions
 function openQuiz(moduleId) {
     const quiz = quizData[moduleId];
-    if (!quiz || !quiz.parts[0].questions.length) return;
+    const questionPool = quiz?.parts?.[0]?.questions || [];
+    if (!quiz || !questionPool.length) return;
+
+    const selection = pickRandomItems(
+        questionPool,
+        Math.min(QUIZ_CONFIG.questionsPerAttempt, questionPool.length)
+    );
 
     appState.currentQuiz = {
         moduleId,
-        questions: quiz.parts[0].questions,
+        questions: selection,
+        questionPool,
         currentQuestion: 0,
         answers: [],
         showResults: false,
         score: 0
     };
 
-    document.getElementById('quiz-modal').style.display = 'flex';
+    openModal('quiz-modal');
     renderQuiz();
 }
 
 function closeQuiz() {
-    document.getElementById('quiz-modal').style.display = 'none';
+    closeModal('quiz-modal');
     appState.currentQuiz = null;
 }
 
@@ -6637,14 +5972,20 @@ function nextQuestion() {
         appState.currentQuiz.currentQuestion++;
         renderQuiz();
     } else {
-        // Calculate score and show results
         const score = appState.currentQuiz.answers.reduce((acc, answer, index) => {
             return acc + (answer === appState.currentQuiz.questions[index].correct ? 1 : 0);
         }, 0);
+        const total = appState.currentQuiz.questions.length;
+        const perfectScore = score === total;
 
         appState.currentQuiz.showResults = true;
         appState.currentQuiz.score = score;
-        markQuizCompleted(appState.currentQuiz.moduleId);
+
+        if (perfectScore) {
+            markQuizCompleted(appState.currentQuiz.moduleId);
+        } else {
+            showToast?.('Score 100% to mark this quiz as complete.', 'info');
+        }
         renderQuiz();
     }
 }
@@ -6660,7 +6001,15 @@ function prevQuestion() {
 
 function restartQuiz() {
     if (!appState.currentQuiz) return;
-
+    const pool =
+        appState.currentQuiz.questionPool ||
+        quizData[appState.currentQuiz.moduleId]?.parts?.[0]?.questions ||
+        [];
+    const selection = pickRandomItems(
+        pool,
+        Math.min(QUIZ_CONFIG.questionsPerAttempt, pool.length)
+    );
+    appState.currentQuiz.questions = selection;
     appState.currentQuiz.currentQuestion = 0;
     appState.currentQuiz.answers = [];
     appState.currentQuiz.showResults = false;
@@ -6689,6 +6038,7 @@ function resetProgress() {
         appState.dailyChallengeId = null;
         appState.dailyChallengeDate = null;
         appState.studyTipId = null;
+        appState.currentModulePage = 1;
 
         // Reset UI
         document.getElementById('search-input').value = '';
@@ -6739,24 +6089,24 @@ function init() {
     document.getElementById('difficulty-filter').value = appState.difficultyFilter;
 
     // Add event listeners
-    document.getElementById('settings-btn').addEventListener('click', openSettings);
-    document.getElementById('close-settings').addEventListener('click', closeSettings);
-    document.getElementById('save-settings').addEventListener('click', closeSettings);
+    bindClick('settings-btn', openSettings);
+    bindClick('close-settings', closeSettings);
+    bindClick('save-settings', closeSettings);
 
-    document.getElementById('glossary-btn').addEventListener('click', openGlossary);
-    document.getElementById('close-glossary').addEventListener('click', closeGlossary);
+    bindClick('glossary-btn', openGlossary);
+    bindClick('close-glossary', closeGlossary);
 
-    document.getElementById('flashcards-btn').addEventListener('click', openFlashcards);
-    document.getElementById('close-flashcards').addEventListener('click', closeFlashcards);
+    bindClick('flashcards-btn', openFlashcards);
+    bindClick('close-flashcards', closeFlashcards);
 
-    document.getElementById('close-quiz').addEventListener('click', closeQuiz);
+    bindClick('close-quiz', closeQuiz);
 
-    document.getElementById('account-btn').addEventListener('click', openAccountModal);
-    document.getElementById('close-account').addEventListener('click', closeAccountModal);
-    document.getElementById('save-account').addEventListener('click', saveAccountProfile);
+    bindClick('account-btn', openAccountModal);
+    bindClick('close-account', closeAccountModal);
+    bindClick('save-account', saveAccountProfile);
 
-    document.getElementById('close-study-plan').addEventListener('click', closeStudyPlanModal);
-    document.getElementById('save-study-plan').addEventListener('click', saveStudyPlan);
+    bindClick('close-study-plan', closeStudyPlanModal);
+    bindClick('save-study-plan', saveStudyPlan);
     const planCtaButton = document.getElementById('insight-plan-cta');
     if (planCtaButton) {
         planCtaButton.addEventListener('click', openStudyPlanModal);
@@ -6770,10 +6120,13 @@ function init() {
         });
     });
 
-    document.getElementById('close-support').addEventListener('click', closeSupportModal);
-    document.getElementById('support-form').addEventListener('submit', submitSupportRequest);
+    bindClick('close-support', closeSupportModal);
+    const supportForm = document.getElementById('support-form');
+    if (supportForm) {
+        supportForm.addEventListener('submit', submitSupportRequest);
+    }
 
-    document.getElementById('reset-btn').addEventListener('click', resetProgress);
+    bindClick('reset-btn', resetProgress);
 
     const studyToggleButton = document.getElementById('study-session-toggle');
     if (studyToggleButton) {
@@ -6781,18 +6134,34 @@ function init() {
     }
 
     // Dark mode toggle
-    document.getElementById('dark-mode-toggle').addEventListener('click', () => {
+    bindClick('dark-mode-toggle', () => {
         appState.darkMode = !appState.darkMode;
         updateDarkMode();
         saveToLocalStorage();
     });
 
     // Comments toggle
-    document.getElementById('comments-toggle').addEventListener('click', () => {
+    bindClick('comments-toggle', () => {
         appState.showComments = !appState.showComments;
         updateCommentsToggle();
         renderModules();
         saveToLocalStorage();
+    });
+
+    // Close modals on backdrop click
+    document.querySelectorAll('.modal-backdrop').forEach(modal => {
+        modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                closeModal(modal.id);
+            }
+        });
+    });
+
+    // Close all modals with Escape
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closeAllModals();
+        }
     });
 
     const hideCompletedToggle = document.getElementById('hide-completed-toggle');
@@ -6800,6 +6169,7 @@ function init() {
         hideCompletedToggle.addEventListener('click', () => {
             appState.hideCompletedModules = !appState.hideCompletedModules;
             updateHideCompletedToggle();
+            appState.currentModulePage = 1;
             renderModules();
             saveToLocalStorage();
         });
@@ -6818,12 +6188,14 @@ function init() {
     // Search and filter
     document.getElementById('search-input').addEventListener('input', (e) => {
         appState.searchTerm = e.target.value;
+        appState.currentModulePage = 1;
         renderModules();
         saveToLocalStorage();
     });
 
     document.getElementById('difficulty-filter').addEventListener('change', (e) => {
         appState.difficultyFilter = e.target.value;
+        appState.currentModulePage = 1;
         renderModules();
         saveToLocalStorage();
     });
@@ -6832,6 +6204,21 @@ function init() {
     document.getElementById('glossary-search').addEventListener('input', (e) => {
         appState.glossarySearch = e.target.value;
         renderGlossary();
+    });
+
+    const paginationContainers = [
+        document.getElementById('modules-pagination'),
+        document.getElementById('modules-pagination-top')
+    ].filter(Boolean);
+    paginationContainers.forEach(container => {
+        container.addEventListener('click', (event) => {
+            const target = event.target.closest('[data-page]');
+            if (!target) return;
+            const page = Number(target.dataset.page);
+            if (Number.isFinite(page)) {
+                setModulePage(page);
+            }
+        });
     });
 
     // Flashcard event listeners
@@ -7621,9 +7008,20 @@ function debouncedSearch(searchTerm) {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
         appState.searchTerm = searchTerm;
+        appState.currentModulePage = 1;
         renderModules();
         saveToLocalStorage();
     }, 300);
+}
+
+function setModulePage(page) {
+    const filtered = filterModules();
+    const totalPages = Math.max(1, Math.ceil(filtered.length / MODULES_PER_PAGE));
+    const nextPage = Math.min(Math.max(1, page), totalPages);
+    if (nextPage === appState.currentModulePage) return;
+    appState.currentModulePage = nextPage;
+    renderModules();
+    saveToLocalStorage();
 }
 
 // Mobile detection and optimization
@@ -7747,8 +7145,8 @@ function endStudySession(options = {}) {
 
 // Enhanced quiz functionality
 function getQuizStats() {
-    const quizData = JSON.parse(localStorage.getItem('dsaHubQuizStats') || '{}');
-    return quizData;
+    const storedStats = JSON.parse(localStorage.getItem('dsaHubQuizStats') || '{}');
+    return storedStats;
 }
 
 function saveQuizResult(moduleId, score, totalQuestions) {

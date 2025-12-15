@@ -24,19 +24,19 @@
                     </p>
                 </div>
                 <div id="header-buttons" class="flex flex-wrap gap-1.5 sm:gap-2 w-full sm:w-auto justify-start sm:justify-end transition-all duration-300 order-3 sm:order-2">
-                    <button id="flashcards-btn" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm">
+                    <button id="flashcards-btn" type="button" onclick="openFlashcards()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm">
                         🎯 <span class="hidden xs:inline">Flashcards</span><span class="xs:hidden">Cards</span>
                     </button>
-                    <button id="glossary-btn" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm">
+                    <button id="glossary-btn" type="button" onclick="openGlossary()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm">
                         📚 <span class="hidden xs:inline">Glossary</span><span class="xs:hidden">Terms</span>
                     </button>
-                    <button id="settings-btn" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm">
+                    <button id="settings-btn" type="button" onclick="openSettings()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm">
                         ⚙️ <span class="hidden sm:inline">Settings</span>
                     </button>
-                    <button id="reset-btn" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm">
+                    <button id="reset-btn" type="button" onclick="resetProgress()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm">
                         🔄 <span class="hidden sm:inline">Reset</span>
                     </button>
-                    <button id="account-btn" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg transition-all duration-200 flex items-center gap-1 font-medium shadow hover:shadow-md text-xs sm:text-sm">
+                    <button id="account-btn" type="button" onclick="openAccountModal()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg transition-all duration-200 flex items-center gap-1 font-medium shadow hover:shadow-md text-xs sm:text-sm">
                         👤 <span class="hidden sm:inline">Account</span>
                     </button>
                 </div>
@@ -152,25 +152,6 @@
                 </div>
                 <p id="study-tip-text" class="text-sm text-slate-700 leading-relaxed"></p>
             </div>
-        </div>
-
-        <!-- Search and Filter - Tighter Spacing -->
-        <div id="search-section" class="panel-surface rounded-xl p-4 sm:p-5 mb-5 sm:mb-6 shadow-xl section-spacing">
-            <h3 class="text-lg sm:text-xl font-semibold mb-3 text-indigo-600 section-heading">Find Your Learning Path</h3>
-            <div class="flex flex-col gap-3">
-                <div class="w-full">
-                    <input type="text" id="search-input" placeholder="Search modules by title, description, or topics..." class="w-full px-3 py-2 sm:py-2.5 rounded-lg border transition-all duration-200 text-sm sm:text-base bg-white border-slate-300 text-slate-900 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
-                </div>
-                <div class="w-full sm:w-auto">
-                    <select id="difficulty-filter" class="w-full sm:w-48 px-3 py-2 sm:py-2.5 rounded-lg border transition-all duration-200 text-sm sm:text-base bg-white border-slate-300 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
-                        <option value="all">All Levels</option>
-                        <option value="beginner">Beginner</option>
-                        <option value="intermediate">Intermediate</option>
-                        <option value="advanced">Advanced</option>
-                    </select>
-                </div>
-            </div>
-            <div id="search-results-count" class="mt-2 sm:mt-3 text-xs sm:text-sm text-slate-600" style="display: none;"></div>
         </div>
 
         <!-- Insights Section -->
@@ -341,10 +322,34 @@
             </div>
         </section>
 
+        <!-- Search and Filter - Tighter Spacing -->
+        <div id="search-section" class="panel-surface rounded-xl p-4 sm:p-5 mb-5 sm:mb-6 shadow-xl section-spacing">
+            <h3 class="text-lg sm:text-xl font-semibold mb-3 text-indigo-600 section-heading">Find Your Learning Path</h3>
+            <div class="flex flex-col gap-3">
+                <div class="w-full flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2">
+                    <div class="flex-1">
+                        <input type="text" id="search-input" placeholder="Search modules by title, description, or topics..." class="w-full px-3 py-2 sm:py-2.5 rounded-lg border transition-all duration-200 text-sm sm:text-base bg-white border-slate-300 text-slate-900 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <select id="difficulty-filter" class="w-full sm:w-48 px-3 py-2 sm:py-2.5 rounded-lg border transition-all duration-200 text-sm sm:text-base bg-white border-slate-300 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+                            <option value="all">All Levels</option>
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                        <div id="modules-pagination-top" class="hidden lg:flex items-center gap-1"></div>
+                    </div>
+                </div>
+            </div>
+            <div id="search-results-count" class="mt-2 sm:mt-3 text-xs sm:text-sm text-slate-600" style="display: none;"></div>
+        </div>
+
         <!-- Modules Grid - Optimized Spacing -->
+        <div id="modules-pagination-top" class="flex flex-wrap items-center justify-center gap-2 mb-4"></div>
         <div id="modules-grid" class="section-spacing modules-responsive-grid">
             <!-- Modules will be populated by JavaScript -->
         </div>
+        <div id="modules-pagination" class="flex flex-wrap items-center justify-center gap-2 mb-6"></div>
 
         <!-- Footer - Reduced Padding -->
         <footer id="main-footer" class="bg-white border-slate-200 rounded-xl p-4 sm:p-6 mt-6 sm:mt-8 shadow-xl border section-spacing">
@@ -396,7 +401,7 @@
 
     <!-- Modals -->
     <!-- Settings Modal -->
-    <div id="settings-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+    <div id="settings-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
         <div class="modal-panel rounded-2xl w-full max-w-md shadow-2xl bg-white text-slate-900 border border-slate-200">
             <div class="flex justify-between items-center p-6 border-b border-slate-200">
                 <h3 class="text-2xl font-semibold text-indigo-600">Settings</h3>
@@ -494,7 +499,7 @@
     </div>
 
     <!-- Glossary Modal -->
-    <div id="glossary-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+    <div id="glossary-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
         <div class="modal-panel rounded-2xl w-full max-w-5xl shadow-2xl flex flex-col bg-white text-slate-900 border border-slate-200" style="max-height: 90vh;">
             <div class="flex justify-between items-center p-6 border-b border-slate-200">
                 <h3 class="text-3xl font-semibold text-indigo-600">📚 Java DSA Glossary</h3>
@@ -517,7 +522,7 @@
     </div>
 
     <!-- Flashcards Modal -->
-    <div id="flashcards-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+    <div id="flashcards-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
         <div class="rounded-2xl w-full max-w-4xl shadow-2xl bg-white text-slate-900 border border-slate-200">
             <div class="flex justify-between items-center p-6 border-b border-slate-200">
                 <h3 class="text-3xl font-semibold text-indigo-600">🎯 DSA Flashcards</h3>
@@ -536,28 +541,37 @@
                         <p id="flashcard-session-meta" class="text-xs text-slate-500 leading-snug">Pick a module to begin.</p>
                     </div>
                 </div>
-                <div class="text-center mb-6">
-                    <span id="flashcard-counter" class="text-sm px-3 py-1 rounded-full bg-slate-100 text-slate-500">Card 1 of 8</span>
-                </div>
-                <div id="flashcard-content" class="rounded-2xl p-8 min-h-80 flex flex-col justify-center cursor-pointer transition-all duration-300 hover:shadow-lg border bg-slate-50 border-slate-200 hover:border-slate-300">
-                    <!-- Flashcard content will be populated by JavaScript -->
-                </div>
-                <div class="flex justify-between items-center mt-8">
-                    <button id="prev-flashcard" class="bg-slate-500 hover:bg-slate-600 text-white px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5">← Previous</button>
-                    <div class="flex gap-3">
-                        <button id="toggle-flashcard-answer" class="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5">Show Answer</button>
+                <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
+                    <div class="flex items-center gap-2">
+                        <span id="flashcard-counter" class="flashcard-pill">Card 1 of 8</span>
+                        <span id="flashcard-module-label" class="flashcard-pill">All Modules</span>
                     </div>
-                    <button id="next-flashcard" class="bg-slate-500 hover:bg-slate-600 text-white px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5">Next →</button>
+                    <div class="flex items-center gap-2">
+                        <button id="prev-flashcard" class="bg-slate-500 hover:bg-slate-600 text-white px-4 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5">← Prev</button>
+                        <button id="next-flashcard" class="bg-slate-500 hover:bg-slate-600 text-white px-4 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5">Next →</button>
+                        <button id="random-flashcard" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5">🔀 Random</button>
+                    </div>
                 </div>
-                <div class="mt-6 text-center">
-                    <button id="random-flashcard" class="bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-xl transition-all duration-200 font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5">🔀 Random Card</button>
+
+                <div class="flashcards-grid mb-4">
+                    <div class="flashcard-shell cursor-pointer" id="flashcard-content">
+                        <!-- Flashcard content populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="flashcard-controls">
+                    <button id="toggle-flashcard-answer" class="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5">Show Answer</button>
+                    <div class="flex gap-2">
+                        <span class="flashcard-pill" id="flashcard-progress-pill">0 / 20 in session</span>
+                        <span class="flashcard-pill" id="flashcard-mode-pill">Tap to flip</span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <!-- Quiz Modal -->
-    <div id="quiz-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+    <div id="quiz-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
         <div class="rounded-2xl w-full max-w-4xl shadow-2xl bg-white text-slate-900 border border-slate-200 max-h-90vh overflow-y-auto">
             <div class="flex justify-between items-center p-6 border-b border-slate-200">
                 <h3 id="quiz-title" class="text-2xl font-semibold text-indigo-600">🧠 Quiz</h3>
@@ -570,7 +584,7 @@
     </div>
 
     <!-- Study Plan Modal -->
-    <div id="study-plan-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+    <div id="study-plan-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
         <div class="modal-panel rounded-2xl w-full max-w-xl shadow-2xl bg-white text-slate-900 border border-slate-200">
             <div class="flex justify-between items-center p-6 border-b border-slate-200">
                 <h3 class="text-2xl font-semibold text-indigo-600">Build Your Study Plan</h3>
@@ -613,7 +627,7 @@
     </div>
 
     <!-- Account Modal -->
-    <div id="account-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+    <div id="account-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
         <div class="modal-panel rounded-2xl w-full max-w-md shadow-2xl bg-white text-slate-900 border border-slate-200">
             <div class="flex justify-between items-center p-6 border-b border-slate-200">
                 <h3 class="text-2xl font-semibold text-indigo-600">Create Account</h3>
@@ -646,7 +660,7 @@
     </div>
 
     <!-- Support Modal -->
-    <div id="support-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+    <div id="support-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
         <div class="modal-panel rounded-2xl w-full max-w-lg shadow-2xl bg-white text-slate-900 border border-slate-200">
             <div class="flex justify-between items-center p-6 border-b border-slate-200">
                 <h3 class="text-2xl font-semibold text-indigo-600">Student Support</h3>
