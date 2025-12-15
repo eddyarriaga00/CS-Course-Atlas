@@ -42,8 +42,16 @@ const appState = {
         code: '',
         sample: DEFAULT_PLAYGROUND_SAMPLE,
         output: '// Output will appear here',
+        language: 'java',
         isRunning: false
     }
+};
+
+const interactiveQuizState = {
+    moduleId: null,
+    questions: [],
+    current: 0,
+    answers: []
 };
 
 // =================================
@@ -80,8 +88,12 @@ const RESET_FLAGS = {
 
 const SUPPORT_EMAIL = 'eddyarriaga06@gmail.com';
 const CODE_RUNNER_ENDPOINT = 'https://emkc.org/api/v2/piston/execute'; // EMKC Piston open-source runner
-const CODE_RUNNER_LANGUAGE = 'java';
-const CODE_RUNNER_VERSION = '15.0.2';
+const CODE_RUNNER_CONFIG = {
+    java: { language: 'java', version: '15.0.2', filename: 'Main.java' },
+    python: { language: 'python', version: '3.10.0', filename: 'main.py' },
+    cpp: { language: 'cpp', version: '10.2.0', filename: 'Main.cpp' },
+    javascript: { language: 'javascript', version: '18.15.0', filename: 'main.js' }
+};
 
 const ACCOUNT_API_ENDPOINT = '';
 
@@ -146,15 +158,38 @@ const STUDY_PLAN_LABELS = {
 const BASE_PLAYGROUND_SNIPPETS = {
     'hello-world': {
         label: 'Hello World',
-        code: `public class Main {
+        codeByLanguage: {
+            java: `public class Main {
     public static void main(String[] args) {
         System.out.println("Hello, Java explorer!");
     }
-}`
+}`,
+            python: `def main():
+    print("Hello, Python explorer!")
+
+
+if __name__ == "__main__":
+    main()
+`,
+            cpp: `#include <iostream>
+
+int main() {
+    std::cout << "Hello, C++ explorer!" << std::endl;
+    return 0;
+}
+`,
+            javascript: `function main() {
+    console.log("Hello, JavaScript explorer!");
+}
+
+main();
+`
+        }
     },
     'arrays-primer': {
         label: 'Arrays Primer',
-        code: `import java.util.Arrays;
+        codeByLanguage: {
+            java: `import java.util.Arrays;
 
 public class Main {
     public static void main(String[] args) {
@@ -164,11 +199,52 @@ public class Main {
         System.out.println("Sorted: " + Arrays.toString(numbers));
         System.out.println("Largest value: " + largest);
     }
-}`
+}`,
+            python: `def arrays_primer():
+    numbers = [3, 1, 4, 1, 5, 9]
+    numbers.sort()
+    largest = numbers[-1]
+    print(f"Sorted: {numbers}")
+    print(f"Largest value: {largest}")
+
+
+if __name__ == "__main__":
+    arrays_primer()
+`,
+            cpp: `#include <algorithm>
+#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> numbers = {3, 1, 4, 1, 5, 9};
+    std::sort(numbers.begin(), numbers.end());
+    int largest = numbers.back();
+
+    std::cout << "Sorted: ";
+    for (size_t i = 0; i < numbers.size(); ++i) {
+        std::cout << numbers[i] << (i + 1 == numbers.size() ? "" : ", ");
+    }
+    std::cout << std::endl;
+    std::cout << "Largest value: " << largest << std::endl;
+    return 0;
+}
+`,
+            javascript: `function arraysPrimer() {
+    const numbers = [3, 1, 4, 1, 5, 9];
+    numbers.sort((a, b) => a - b);
+    const largest = numbers[numbers.length - 1];
+    console.log("Sorted:", numbers.join(", "));
+    console.log("Largest value:", largest);
+}
+
+arraysPrimer();
+`
+        }
     },
     'loops-and-conditions': {
         label: 'Loops & Conditions',
-        code: `public class Main {
+        codeByLanguage: {
+            java: `public class Main {
     public static void main(String[] args) {
         int focusMinutes = 0;
         for (int day = 1; day <= 7; day++) {
@@ -181,11 +257,59 @@ public class Main {
         }
         System.out.println("Weekly focus minutes: " + focusMinutes);
     }
-}`
+}`,
+            python: `def loops_and_conditions():
+    focus_minutes = 0
+    for day in range(1, 8):
+        focus_minutes += 25
+        if day % 2 == 0:
+            print(f"Day {day}: recovery + review")
+        else:
+            print(f"Day {day}: deep practice session")
+    print(f"Weekly focus minutes: {focus_minutes}")
+
+
+if __name__ == "__main__":
+    loops_and_conditions()
+`,
+            cpp: `#include <iostream>
+#include <string>
+
+int main() {
+    int focusMinutes = 0;
+    for (int day = 1; day <= 7; day++) {
+        focusMinutes += 25;
+        if (day % 2 == 0) {
+            std::cout << "Day " << day << ": recovery + review" << std::endl;
+        } else {
+            std::cout << "Day " << day << ": deep practice session" << std::endl;
+        }
+    }
+    std::cout << "Weekly focus minutes: " << focusMinutes << std::endl;
+    return 0;
+}
+`,
+            javascript: `function loopsAndConditions() {
+    let focusMinutes = 0;
+    for (let day = 1; day <= 7; day++) {
+        focusMinutes += 25;
+        if (day % 2 === 0) {
+            console.log(\`Day \${day}: recovery + review\`);
+        } else {
+            console.log(\`Day \${day}: deep practice session\`);
+        }
+    }
+    console.log("Weekly focus minutes:", focusMinutes);
+}
+
+loopsAndConditions();
+`
+        }
     },
     'class-basics': {
         label: 'Class Basics',
-        code: `public class Main {
+        codeByLanguage: {
+            java: `public class Main {
     static class ModuleProgress {
         private final String title;
         private int completedLessons;
@@ -205,20 +329,87 @@ public class Main {
         arrays.markLesson();
         arrays.markLesson();
     }
-}`
+}`,
+            python: `class ModuleProgress:
+    def __init__(self, title):
+        self.title = title
+        self.completed_lessons = 0
+
+    def mark_lesson(self):
+        self.completed_lessons += 1
+        print(f"Completed lesson {self.completed_lessons} in {self.title}")
+
+
+if __name__ == "__main__":
+    arrays = ModuleProgress("Arrays & Strings")
+    arrays.mark_lesson()
+    arrays.mark_lesson()
+`,
+            cpp: `#include <iostream>
+#include <string>
+
+class ModuleProgress {
+public:
+    explicit ModuleProgress(const std::string& title) : title(title), completedLessons(0) {}
+
+    void markLesson() {
+        completedLessons++;
+        std::cout << "Completed lesson " << completedLessons << " in " << title << std::endl;
+    }
+
+private:
+    std::string title;
+    int completedLessons;
+};
+
+int main() {
+    ModuleProgress arrays("Arrays & Strings");
+    arrays.markLesson();
+    arrays.markLesson();
+    return 0;
+}
+`,
+            javascript: `class ModuleProgress {
+    constructor(title) {
+        this.title = title;
+        this.completedLessons = 0;
+    }
+
+    markLesson() {
+        this.completedLessons += 1;
+        console.log(\`Completed lesson \${this.completedLessons} in \${this.title}\`);
+    }
+}
+
+const arrays = new ModuleProgress("Arrays & Strings");
+arrays.markLesson();
+arrays.markLesson();
+`
+        }
     }
 };
 
 function buildPlaygroundSnippetLibrary(modulesList = []) {
     const snippets = {};
     modulesList.forEach(module => {
-        const javaSource = (module.codeExamples && module.codeExamples.java) || module.codeExample || '';
-        if (!javaSource || typeof javaSource !== 'string') return;
-        const code = ensureRunnableJava(javaSource, module.title);
         const snippetId = `module-${module.id}`;
+        const codeByLanguage = {};
+        const languages = Object.keys(SUPPORTED_LANGUAGES);
+
+        languages.forEach(language => {
+            const sample = (module.codeExamples && module.codeExamples[language]) || module.codeExample || '';
+            if (!sample || typeof sample !== 'string') return;
+            const content = language === 'java'
+                ? ensureRunnableJava(sample, module.title)
+                : sample;
+            codeByLanguage[language] = content.trim();
+        });
+
+        if (!Object.keys(codeByLanguage).length) return;
+
         snippets[snippetId] = {
             label: `${module.title}`,
-            code: code.trim()
+            codeByLanguage
         };
     });
     return snippets;
@@ -546,6 +737,81 @@ const baseFlashcards = [
         id: 50,
         question: "What is the Knapsack problem?",
         answer: "Optimization problem to choose items with max value and weight <= capacity\nSolved with DP"
+    },
+    {
+        id: 51,
+        question: "What does it mean for a sort to be stable?",
+        answer: "Stable sorts keep equal elements in their original relative order (important for multi-key sorts)."
+    },
+    {
+        id: 52,
+        question: "When would you prefer BFS over DFS?",
+        answer: "Use BFS for shortest path in unweighted graphs and level-order problems; DFS for depth-first exploration and backtracking."
+    },
+    {
+        id: 53,
+        question: "What is a monotonic stack used for?",
+        answer: "Keeps elements in increasing/decreasing order to answer next greater/smaller queries in linear time."
+    },
+    {
+        id: 54,
+        question: "What does in-place mean?",
+        answer: "Algorithm transforms data using O(1) extra space beyond the input (e.g., reversing an array with swaps)."
+    },
+    {
+        id: 55,
+        question: "How does a deque support sliding window minimum/maximum?",
+        answer: "Store candidates in a monotonic deque; pop back while worse, pop front when out of window."
+    },
+    {
+        id: 56,
+        question: "What is a Binary Indexed Tree (Fenwick Tree) good for?",
+        answer: "Supports prefix sums and point updates in O(log n) with less code than a segment tree."
+    },
+    {
+        id: 57,
+        question: "Why do we add a sentinel/dummy node in linked lists?",
+        answer: "It removes head-edge cases so insertions/merges treat every node uniformly."
+    },
+    {
+        id: 58,
+        question: "When do you reach for a heap instead of a balanced BST?",
+        answer: "When you mostly need fast min/max extraction (priority queues) and rarely need ordered iteration."
+    },
+    {
+        id: 59,
+        question: "What is path compression in union-find?",
+        answer: "After finds, reattach nodes directly to the root to flatten the tree and speed future finds."
+    },
+    {
+        id: 60,
+        question: "How does prefix sum help with range queries?",
+        answer: "Precompute cumulative sums so any range [l, r] is O(1): prefix[r] - prefix[l-1]."
+    },
+    {
+        id: 61,
+        question: "What is the purpose of the LPS (prefix) table in KMP?",
+        answer: "It tells where to resume in the pattern after a mismatch, avoiding rechecking characters."
+    },
+    {
+        id: 62,
+        question: "What makes quicksort fast on average?",
+        answer: "Good pivots split the array, yielding ~O(n log n); in-place partitioning keeps space O(1)."
+    },
+    {
+        id: 63,
+        question: "What does tail recursion optimization do?",
+        answer: "Reuses the current stack frame for the final recursive call, reducing stack usage if supported."
+    },
+    {
+        id: 64,
+        question: "Why is immutability helpful in multithreading?",
+        answer: "Immutable objects are safe to share without locks because their state cannot change."
+    },
+    {
+        id: 65,
+        question: "How do you solve Two Sum in linear time?",
+        answer: "Scan once, store seen values in a hash map, and check if target - current exists."
     }
 ];
 
@@ -836,6 +1102,61 @@ const glossaryTerms = [
         term: "Knuth-Morris-Pratt (KMP)",
         definition: "String Pattern Matching module algorithm that uses a longest-prefix-suffix table to resume comparisons without re-checking characters, enabling O(n + m) search.",
         category: "Algorithms"
+    },
+    {
+        term: "Stable Sort",
+        definition: "A sorting algorithm that preserves the relative order of equal elements—critical when sorting by multiple keys.",
+        category: "Algorithms"
+    },
+    {
+        term: "Monotonic Stack",
+        definition: "Stack kept in increasing or decreasing order to answer next greater/smaller queries in O(n).",
+        category: "Techniques"
+    },
+    {
+        term: "Deque",
+        definition: "Double-ended queue supporting push/pop at both ends; used for sliding window min/max.",
+        category: "Data Structures"
+    },
+    {
+        term: "Binary Indexed Tree",
+        definition: "Fenwick Tree supporting prefix sums and point updates in O(log n) with low memory.",
+        category: "Data Structures"
+    },
+    {
+        term: "In-Place Algorithm",
+        definition: "Algorithm that transforms data using O(1) or constant extra space beyond the input.",
+        category: "Techniques"
+    },
+    {
+        term: "Immutability",
+        definition: "Property where an object's state cannot change after creation, simplifying reasoning and thread safety.",
+        category: "Concepts"
+    },
+    {
+        term: "Sentinel Node",
+        definition: "Dummy node added to simplify edge cases at list head/tail or tree boundaries.",
+        category: "Data Structures"
+    },
+    {
+        term: "NP-Complete",
+        definition: "Class of problems both in NP and NP-hard; if one has a polynomial-time solution, all do.",
+        category: "Complexity"
+    },
+    {
+        term: "P vs NP",
+        definition: "Open question asking whether every efficiently verifiable problem (NP) is also efficiently solvable (P).",
+        category: "Complexity"
+    },
+    {
+        term: "Greedy Choice Property",
+        definition: "Condition where locally optimal choices lead to a global optimum, enabling greedy algorithms.",
+        category: "Concepts"
+    },
+    {
+        term: "Overlapping Subproblems",
+        definition: "DP trait where the same subproblems recur, justifying memoization/tabulation.",
+        category: "Techniques"
     }
 ];
 
@@ -3802,6 +4123,43 @@ function kmpSearch(text, pattern) {
     }
 ];
 
+function enrichModuleDetails(modulesList = []) {
+    modulesList.forEach(module => {
+        const baseDescription = module.descriptionBase || module.description || '';
+        const baseExplanation = module.explanationBase || module.explanation || baseDescription;
+        const topics = (module.topics || []).slice(0, 4).join(', ') || 'core concepts';
+        const sampleLanguages = Object.keys(module.codeExamples || {});
+
+        module.descriptionBase = baseDescription;
+        module.explanationBase = baseExplanation;
+
+        module.description = `${baseDescription} You will see how the sample code maps each idea to practice, watch inputs flow through the helpers, and learn when to pick these techniques (${topics}).`;
+
+        module.explanation = `${baseExplanation} The walkthrough points out guard clauses, setup/teardown steps, complexity trade-offs, and mirrors the Java sample across ${sampleLanguages.length ? sampleLanguages.join(', ') : 'Java'} so you can cross-check logic in multiple languages.`;
+
+        const baseBreakdown = module.codeBreakdownBase || module.codeBreakdown || [];
+        module.codeBreakdownBase = baseBreakdown;
+
+        const enrichedBreakdown = baseBreakdown.map(entry => ({
+            ...entry,
+            detail: `${entry.detail} Follow the input/output flow, the edge-case guard, and the time/space footprint as annotated in the code.`
+        }));
+
+        if (!enrichedBreakdown.length) {
+            (module.topics || []).slice(0, 3).forEach(topic => {
+                enrichedBreakdown.push({
+                    label: topic,
+                    detail: `Explains how ${topic} is implemented in the sample and what invariants to check while stepping through the code.`
+                });
+            });
+        }
+
+        module.codeBreakdown = enrichedBreakdown;
+    });
+}
+
+enrichModuleDetails(modules);
+
 const MODULE_DISPLAY_ORDER = {
     'java-basics': 0,
     'control-flow': 1,
@@ -3828,12 +4186,7 @@ modules.sort((a, b) => {
     return a.title.localeCompare(b.title);
 });
 
-const modulePlaygroundSnippets = buildPlaygroundSnippetLibrary(modules);
-const PLAYGROUND_SNIPPETS = { ...BASE_PLAYGROUND_SNIPPETS, ...modulePlaygroundSnippets };
-const BASE_PLAYGROUND_SNIPPET_KEYS = Object.keys(BASE_PLAYGROUND_SNIPPETS);
-const MODULE_PLAYGROUND_SNIPPET_KEYS = Object.keys(modulePlaygroundSnippets);
-
-const SAMPLE_LANGUAGES = ['java', 'python', 'cpp', 'javascript'];
+const SAMPLE_LANGUAGES = Object.keys(SUPPORTED_LANGUAGES);
 
 function formatIdentifier(id = '') {
     return id.split(/[-\s]/).map(part => part.charAt(0).toUpperCase() + part.slice(1)).join('') || 'Module';
@@ -3843,78 +4196,183 @@ function buildSampleCode(module, language) {
     const title = module.title || 'Module';
     const summary = (module.topics || []).slice(0, 3).join(', ') || 'core concepts';
     const className = formatIdentifier(module.id);
+    const guidance = [
+        'Read the description to anchor the concept.',
+        'Follow the code comments to see control flow.',
+        'Trace sample inputs and note edge cases.',
+        'Compare time/space complexity.'
+    ];
 
     switch (language) {
         case 'python':
             return `# ${title} in Python
 # Focus: ${summary}
+# Each step mirrors the Java sample so you can compare logic side by side.
 
 class ${className}Module:
     def __init__(self):
-        self.notes = []
+        self.topics = ${JSON.stringify(module.topics || [])}
 
     def walkthrough(self):
         print("Working through ${title}...")
-        for step in ["review theory", "trace code", "practice problems"]:
+        for step in ${JSON.stringify(guidance)}:
             print(f"- {step}")
+        if self.topics:
+            print("Key topics:")
+            for topic in self.topics:
+                print(f"  • {topic}")
 
 
 if __name__ == "__main__":
-    module = ${className}Module()
-    module.walkthrough()
+    demo = ${className}Module()
+    demo.walkthrough()
 `;
         case 'cpp':
-            return `// ${title} in C++
-// Topics: ${summary}
-#include <iostream>
-#include <vector>
-
-class ${className}Module {
-public:
-    void walkthrough() {
-        std::vector<std::string> steps = {"review theory", "trace code", "implement practice"};
-        for (const auto& step : steps) {
-            std::cout << step << std::endl;
-        }
-    }
-};
-
-int main() {
-    ${className}Module module;
-    module.walkthrough();
-    return 0;
-}
-`;
+            return `// ${title} in C++\n// Topics: ${summary}\n// Follows the same flow as the Java sample: read, trace, practice.\n#include <iostream>\n#include <vector>\n#include <string>\n\nclass ${className}Module {\npublic:\n    void walkthrough() {\n        std::vector<std::string> guidance = {${guidance.map(s => `"${s}"`).join(', ')}};\n        std::vector<std::string> topics = {${(module.topics || []).map(t => `"${t}"`).join(', ')}};\n        std::cout << "Working through ${title}..." << std::endl;\n        for (const auto& step : guidance) {\n            std::cout << "- " << step << std::endl;\n        }\n        if (!topics.empty()) {\n            std::cout << "Key topics:" << std::endl;\n            for (const auto& topic : topics) {\n                std::cout << "  • " << topic << std::endl;\n            }\n        }\n    }\n};\n\nint main() {\n    ${className}Module demo;\n    demo.walkthrough();\n    return 0;\n}\n`;
         case 'javascript':
-            return `// ${title} in JavaScript
-// Highlights: ${summary}
-class ${className}Module {
-    walkthrough() {
-        const steps = ["concept overview", "code tracing", "practice challenge"];
-        steps.forEach(step => console.log(\`✔️ \${step}\`));
+            return `// ${title} in JavaScript\n// Highlights: ${summary}\n// Mirrors the Java sample: read comments, trace control flow, then practice.\nclass ${className}Module {\n    constructor() {\n        this.topics = ${JSON.stringify(module.topics || [])};\n        this.guidance = ${JSON.stringify(guidance)};\n    }\n\n    walkthrough() {\n        console.log("Working through ${title}...");\n        this.guidance.forEach(step => console.log(\`- \${step}\`));\n        if (this.topics.length) {\n            console.log("Key topics:");\n            this.topics.forEach(topic => console.log(\`  • \${topic}\`));\n        }\n    }\n}\n\nconst demo = new ${className}Module();\ndemo.walkthrough();\n`;
+        default:
+            return module.codeExample || `// ${title} in Java\n// Topics: ${summary}\npublic class ${className}Module {\n    public void walkthrough() {\n        String[] steps = {"concept overview", "code tracing", "practice challenge"};\n        for (String step : steps) {\n            System.out.println("✔️ " + step);\n        }\n    }\n\n    public static void main(String[] args) {\n        new ${className}Module().walkthrough();\n    }\n}\n`;
     }
 }
 
-const module = new ${className}Module();
-module.walkthrough();
-`;
-        default:
-            return module.codeExample || `// ${title} in Java
-// Topics: ${summary}
-public class ${className}Module {
-    public void walkthrough() {
-        String[] steps = {"concept overview", "code tracing", "practice challenge"};
-        for (String step : steps) {
-            System.out.println("✔️ " + step);
+function isPlaceholderExample(code = '') {
+    if (!code || typeof code !== 'string') return true;
+    const markers = ['Working through', 'walkthrough', 'guidance =', 'topics =', 'demo.walkthrough', 'focus:', 'Mirrors the Java sample'];
+    return markers.some(marker => code.toLowerCase().includes(marker.toLowerCase()));
+}
+
+function translateJavaToPython(javaCode = '') {
+    const lines = javaCode.replace(/\r/g, '').split('\n');
+    let indent = 0;
+    const translated = [];
+
+    lines.forEach(rawLine => {
+        let line = rawLine.trim();
+        if (!line) {
+            translated.push('');
+            return;
+        }
+        if (line.includes('}')) indent = Math.max(0, indent - 1);
+
+        line = line
+            .replace(/System\.out\.println\s*\((.*)\)\s*;?/, 'print(\\1)')
+            .replace(/System\.out\.print\s*\((.*)\)\s*;?/, 'print(\\1, end="")')
+            .replace(/public\s+static\s+void\s+main\s*\([^)]*\)\s*\{?/, 'def main():')
+            .replace(/\bString\b/g, '')
+            .replace(/\bint\b/g, '')
+            .replace(/\bdouble\b/g, '')
+            .replace(/\bboolean\b/g, '')
+            .replace(/\bchar\b/g, '')
+            .replace(/\bnew\s+([A-Za-z0-9_<>]+)\s*\(\)/g, '\\1()')
+            .replace(/\/\/\s?/g, '# ')
+            .replace(/;/g, '');
+
+        if (line.endsWith('{')) {
+            line = line.replace(/\{\s*$/, ':');
+        }
+
+        translated.push(`${'    '.repeat(indent)}${line}`);
+
+        if (rawLine.includes('{') && !line.startsWith('def main():')) {
+            indent += 1;
+        }
+    });
+
+    if (!translated.find(l => l.trim().startsWith('if __name__'))) {
+        translated.push('');
+        translated.push('if __name__ == "__main__":');
+        translated.push('    main()');
+    }
+    return translated.join('\n');
+}
+
+function translateJavaToJavaScript(javaCode = '') {
+    return javaCode
+        .replace(/System\.out\.println\s*\((.*)\)\s*;?/g, 'console.log($1);')
+        .replace(/System\.out\.print\s*\((.*)\)\s*;?/g, 'process.stdout.write(String($1));')
+        .replace(/\bpublic\s+class\b/g, 'class')
+        .replace(/\bpublic\s+static\s+void\s+main\s*\(([^)]*)\)\s*\{?/g, 'function main($1) {')
+        .replace(/\bString\b/g, '')
+        .replace(/\bint\b/g, 'let')
+        .replace(/\bdouble\b/g, 'let')
+        .replace(/\bboolean\b/g, 'let')
+        .replace(/\bchar\b/g, 'let');
+}
+
+function translateJavaToCpp(javaCode = '') {
+    const header = '#include <bits/stdc++.h>\\nusing namespace std;\\n';
+    const body = javaCode
+        .replace(/System\.out\.println\s*\((.*)\)\s*;?/g, 'cout << $1 << endl;')
+        .replace(/System\.out\.print\s*\((.*)\)\s*;?/g, 'cout << $1;')
+        .replace(/\bString\b/g, 'string')
+        .replace(/\bboolean\b/g, 'bool')
+        .replace(/\btrue\b/g, 'true')
+        .replace(/\bfalse\b/g, 'false')
+        .replace(/\bpublic\s+class\s+([A-Za-z0-9_]+)\s*\{/g, 'class $1 {')
+        .replace(/\bpublic\s+static\s+void\s+main\s*\([^)]*\)\s*\{?/g, 'int main() {')
+        .replace(/new\s+int\[\]/g, 'vector<int>()')
+        .replace(/new\s+String\[\]/g, 'vector<string>()');
+    return `${header}${body}`;
+}
+
+function extractJavaOutputs(javaCode = '') {
+    const outputs = [];
+    const regex = /System\.out\.print(?:ln)?\s*\(([^;]+)\)/g;
+    let match;
+    while ((match = regex.exec(javaCode)) !== null) {
+        const raw = match[1]?.trim() || '';
+        const stringLiterals = raw.match(/"(?:[^"\\]|\\.)*"/g);
+        if (stringLiterals && stringLiterals.length) {
+            const joined = stringLiterals.map(s => s.slice(1, -1)).join(' ').replace(/\s+/g, ' ').trim();
+            if (joined) outputs.push(joined);
+        } else {
+            outputs.push(raw.replace(/\s+/g, ' ').trim());
         }
     }
-
-    public static void main(String[] args) {
-        new ${className}Module().walkthrough();
-    }
+    return outputs;
 }
-`;
+
+function buildAlignedFromJavaOutputs(module, language, javaCode = '') {
+    const base = javaCode || module.codeExamples?.java || module.codeExample || '';
+    const label = SUPPORTED_LANGUAGES[language]?.name || language;
+    const header = language === 'python'
+        ? `# ${label} translation of "${module.title}"\n`
+        : `// ${label} translation of "${module.title}"\n`;
+
+    let translated = base;
+    switch (language) {
+        case 'python':
+            translated = translateJavaToPython(base);
+            break;
+        case 'javascript':
+            translated = translateJavaToJavaScript(base);
+            break;
+        case 'cpp':
+            translated = translateJavaToCpp(base);
+            break;
+        default:
+            translated = base;
     }
+    return `${header}${translated}`;
+}
+
+function alignNonJavaExamples(modulesList = []) {
+    modulesList.forEach(module => {
+        const javaCode = (module.codeExamples && module.codeExamples.java) || module.codeExample || '';
+        if (!javaCode) return;
+
+        // Normalize to ensure codeExamples exists for downstream consumers
+        module.codeExamples = module.codeExamples ? { ...module.codeExamples } : { java: javaCode };
+
+        SAMPLE_LANGUAGES.forEach(language => {
+            if (language === 'java') return;
+            module.codeExamples[language] = buildAlignedFromJavaOutputs(module, language, javaCode);
+            const pseudoKey = `${language}-pseudocode`;
+            module.codeExamples[pseudoKey] = convertToPseudocode(module.codeExamples[language], language, true);
+        });
+        module.codeExamples['java-pseudocode'] = convertToPseudocode(javaCode, 'java', true);
+    });
 }
 
 modules.forEach(module => {
@@ -3925,6 +4383,13 @@ modules.forEach(module => {
         }
     });
 });
+
+alignNonJavaExamples(modules);
+
+const modulePlaygroundSnippets = buildPlaygroundSnippetLibrary(modules);
+const PLAYGROUND_SNIPPETS = { ...BASE_PLAYGROUND_SNIPPETS, ...modulePlaygroundSnippets };
+const BASE_PLAYGROUND_SNIPPET_KEYS = Object.keys(BASE_PLAYGROUND_SNIPPETS);
+const MODULE_PLAYGROUND_SNIPPET_KEYS = Object.keys(modulePlaygroundSnippets);
 
 CONSTANTS.TOTAL_MODULES = modules.length;
 const luminaryLevel = ACHIEVEMENT_LEVELS.find(level => level.id === 'luminary');
@@ -4390,10 +4855,14 @@ function markQuizCompleted(moduleId) {
     if (!moduleId) return;
     if (!appState.completedQuizzes.has(moduleId)) {
         appState.completedQuizzes.add(moduleId);
+        appState.completedModules.add(moduleId);
         populateFlashcardModuleSelect();
         if (appState.selectedFlashcardModule === moduleId) {
             refreshFlashcardSession(moduleId, { persist: false });
         }
+        updateProgress();
+        renderInsights();
+        renderModules();
         saveToLocalStorage();
     }
 }
@@ -4512,7 +4981,8 @@ function saveToLocalStorage() {
         playground: {
             code: appState.playground.code,
             sample: appState.playground.sample,
-            output: appState.playground.output
+            output: appState.playground.output,
+            language: appState.playground.language
         }
     };
     localStorage.setItem('javaDSAHub', JSON.stringify(stateToSave));
@@ -4552,6 +5022,7 @@ function loadFromLocalStorage() {
                 code: state.playground?.code || '',
                 sample: state.playground?.sample || DEFAULT_PLAYGROUND_SAMPLE,
                 output: state.playground?.output || '// Output will appear here',
+                language: state.playground?.language || 'java',
                 isRunning: false
             };
         } catch (e) {
@@ -4651,6 +5122,48 @@ function truncateCode(code, lines = CONSTANTS.CODE_PREVIEW_LINES) {
     return codeLines.slice(0, lines).join('\n') + CONSTANTS.TRUNCATE_INDICATOR;
 }
 
+// Lightweight confetti burst (CSS injected once)
+function triggerConfetti() {
+    const existing = document.getElementById('confetti-style');
+    if (!existing) {
+        const style = document.createElement('style');
+        style.id = 'confetti-style';
+        style.textContent = `
+        @keyframes confetti-fall {
+            0% { transform: translate3d(0,0,0) rotate(0deg); opacity: 1; }
+            100% { transform: translate3d(var(--confetti-x, 0px), 120vh, 0) rotate(720deg); opacity: 0; }
+        }`;
+        document.head.appendChild(style);
+    }
+
+    const container = document.createElement('div');
+    container.style.position = 'fixed';
+    container.style.inset = '0';
+    container.style.pointerEvents = 'none';
+    container.style.zIndex = '9999';
+
+    const colors = ['#4f46e5', '#22c55e', '#f59e0b', '#ef4444', '#06b6d4', '#a855f7'];
+    const pieces = 60;
+    for (let i = 0; i < pieces; i++) {
+        const piece = document.createElement('span');
+        const size = Math.random() * 8 + 6;
+        piece.style.position = 'absolute';
+        piece.style.top = '-10px';
+        piece.style.left = `${Math.random() * 100}%`;
+        piece.style.width = `${size}px`;
+        piece.style.height = `${size * 0.4}px`;
+        piece.style.background = colors[i % colors.length];
+        piece.style.borderRadius = '2px';
+        piece.style.opacity = '0.9';
+        piece.style.animation = `confetti-fall ${Math.random() * 1 + 1.2}s ease-out forwards`;
+        piece.style.setProperty('--confetti-x', `${(Math.random() - 0.5) * 200}px`);
+        container.appendChild(piece);
+    }
+
+    document.body.appendChild(container);
+    setTimeout(() => container.remove(), 1800);
+}
+
 // Module Helper Functions
 function shouldShowComments(moduleId) {
     const individualSetting = appState.moduleComments.get(moduleId);
@@ -4665,12 +5178,19 @@ function getModuleMode(moduleId) {
     return appState.moduleModes.get(moduleId) || 'code';
 }
 
-function getCodeExample(module) {
-    const language = getModuleLanguage(module.id);
-    if (module.codeExamples && module.codeExamples[language]) {
-        return module.codeExamples[language];
-    }
-    return module.codeExample || 'Code example coming soon...';
+function getCodeExample(module, languageOverride = null) {
+    const language = languageOverride || getModuleLanguage(module.id);
+    const codeExamples = (module && typeof module.codeExamples === 'object') ? module.codeExamples : {};
+    const mode = getModuleMode(module.id);
+    const pseudoKey = `${language}-pseudocode`;
+    const primary = mode === 'pseudocode'
+        ? (typeof codeExamples[pseudoKey] === 'string' ? codeExamples[pseudoKey] : null)
+        : (typeof codeExamples[language] === 'string' ? codeExamples[language] : null);
+    const javaFallback = mode === 'pseudocode'
+        ? (typeof codeExamples['java-pseudocode'] === 'string' ? codeExamples['java-pseudocode'] : null)
+        : (typeof codeExamples.java === 'string' ? codeExamples.java : null);
+    const legacy = typeof module.codeExample === 'string' ? module.codeExample : null;
+    return primary || javaFallback || legacy || 'Code example coming soon...';
 }
 
 function processCode(code, moduleId) {
@@ -4716,8 +5236,17 @@ function applyCardDepth() {
     body.classList.add(`card-depth-${selected}`);
 }
 
-function getPlaygroundSnippet(key) {
-    return PLAYGROUND_SNIPPETS[key] || PLAYGROUND_SNIPPETS[DEFAULT_PLAYGROUND_SAMPLE];
+function getPlaygroundSnippet(key, language = appState.playground.language) {
+    const snippet = PLAYGROUND_SNIPPETS[key] || PLAYGROUND_SNIPPETS[DEFAULT_PLAYGROUND_SAMPLE];
+    if (!snippet) return { label: '', code: '' };
+    const languageKey = SUPPORTED_LANGUAGES[language] ? language : 'java';
+    const code = (snippet.codeByLanguage && (snippet.codeByLanguage[languageKey] || snippet.codeByLanguage.java))
+        || snippet.code
+        || '';
+    return {
+        label: snippet.label || formatIdentifier(key),
+        code
+    };
 }
 
 function populatePlaygroundSnippetOptions() {
@@ -4759,27 +5288,51 @@ function populatePlaygroundSnippetOptions() {
     select.value = preferredSample;
 }
 
+function populatePlaygroundLanguageOptions() {
+    const languageSelect = document.getElementById('playground-language');
+    if (!languageSelect) return;
+
+    languageSelect.innerHTML = Object.entries(SUPPORTED_LANGUAGES)
+        .map(([key, meta]) => `<option value="${key}">${meta.icon} ${meta.name}</option>`)
+        .join('');
+
+    const preferredLanguage = SUPPORTED_LANGUAGES[appState.playground.language]
+        ? appState.playground.language
+        : 'java';
+
+    appState.playground.language = preferredLanguage;
+    languageSelect.value = preferredLanguage;
+
+    languageSelect.addEventListener('change', (event) => {
+        setPlaygroundLanguage(event.target.value);
+    });
+}
+
 function initPlayground() {
     const editor = document.getElementById('playground-editor');
     if (!editor) return;
 
     populatePlaygroundSnippetOptions();
+    populatePlaygroundLanguageOptions();
     const select = document.getElementById('playground-snippets');
+    const fallbackSample = PLAYGROUND_SNIPPETS[appState.playground.sample]
+        ? appState.playground.sample
+        : DEFAULT_PLAYGROUND_SAMPLE;
+
     if (!appState.playground.code) {
-        const snippet = getPlaygroundSnippet(appState.playground.sample);
+        const snippet = getPlaygroundSnippet(fallbackSample, appState.playground.language);
         appState.playground.code = snippet.code;
     }
-    editor.value = appState.playground.code;
+    appState.playground.sample = fallbackSample;
+
     if (select) {
-        const fallbackSample = PLAYGROUND_SNIPPETS[appState.playground.sample]
-            ? appState.playground.sample
-            : DEFAULT_PLAYGROUND_SAMPLE;
         select.value = fallbackSample;
-        appState.playground.sample = fallbackSample;
         select.addEventListener('change', (event) => {
             setPlaygroundSample(event.target.value);
         });
     }
+
+    editor.value = appState.playground.code;
     editor.addEventListener('input', (event) => {
         appState.playground.code = event.target.value;
         saveToLocalStorage();
@@ -4796,7 +5349,8 @@ function setPlaygroundSample(sampleKey) {
         sampleKey = DEFAULT_PLAYGROUND_SAMPLE;
     }
     appState.playground.sample = sampleKey;
-    appState.playground.code = getPlaygroundSnippet(sampleKey).code;
+    const snippet = getPlaygroundSnippet(sampleKey, appState.playground.language);
+    appState.playground.code = snippet.code;
     const select = document.getElementById('playground-snippets');
     if (select) {
         select.value = sampleKey;
@@ -4810,25 +5364,52 @@ function setPlaygroundSample(sampleKey) {
     saveToLocalStorage();
 }
 
+function setPlaygroundLanguage(language) {
+    const normalized = SUPPORTED_LANGUAGES[language] ? language : 'java';
+    appState.playground.language = normalized;
+
+    const languageSelect = document.getElementById('playground-language');
+    if (languageSelect) {
+        languageSelect.value = normalized;
+    }
+
+    const snippet = getPlaygroundSnippet(appState.playground.sample, normalized);
+    appState.playground.code = snippet.code;
+
+    const editor = document.getElementById('playground-editor');
+    if (editor) {
+        editor.value = appState.playground.code;
+    }
+
+    appState.playground.output = '// Output will appear here';
+    updatePlaygroundOutput(appState.playground.output);
+    saveToLocalStorage();
+}
+
 async function runPlaygroundCode() {
     if (appState.playground.isRunning) return;
     const code = appState.playground.code.trim();
     if (!code) {
-        updatePlaygroundOutput('Add some Java code before running the playground.', 'error');
+        updatePlaygroundOutput('Add some code before running the playground.', 'error');
         return;
     }
     if (!CODE_RUNNER_ENDPOINT) {
-        updatePlaygroundOutput('Set CODE_RUNNER_ENDPOINT in js/script.js to connect a Java runner.', 'error');
+        updatePlaygroundOutput('Set CODE_RUNNER_ENDPOINT in js/script.js to connect a code runner.', 'error');
         return;
     }
 
-    updatePlaygroundStatus('Running', true);
+    const languageKey = SUPPORTED_LANGUAGES[appState.playground.language]
+        ? appState.playground.language
+        : 'java';
+    const runnerConfig = CODE_RUNNER_CONFIG[languageKey] || CODE_RUNNER_CONFIG.java;
+
+    updatePlaygroundStatus(`Running ${SUPPORTED_LANGUAGES[languageKey]?.name || ''}`, true);
 
     try {
         const payload = {
-            language: CODE_RUNNER_LANGUAGE,
-            version: CODE_RUNNER_VERSION,
-            files: [{ name: 'Main.java', content: code }]
+            language: runnerConfig.language,
+            version: runnerConfig.version,
+            files: [{ name: runnerConfig.filename, content: code }]
         };
         const response = await fetch(CODE_RUNNER_ENDPOINT, {
             method: 'POST',
@@ -4840,9 +5421,23 @@ async function runPlaygroundCode() {
         }
         const data = await response.json();
         const stdout = data?.run?.stdout?.trim();
-        const stderr = data?.run?.stderr?.trim() || data?.run?.output?.trim();
-        const outputText = [stdout, stderr].filter(Boolean).join('\n').trim() || '// Program finished with no output';
-        const status = stderr ? 'error' : 'success';
+        const stderr = data?.run?.stderr?.trim();
+        const fallback = data?.run?.output?.trim();
+
+        let outputText = '// Program finished with no output';
+        let status = 'info';
+
+        if (stderr) {
+            outputText = stderr;
+            status = 'error';
+        } else if (stdout) {
+            outputText = stdout;
+            status = 'success';
+        } else if (fallback) {
+            outputText = fallback;
+            status = 'info';
+        }
+
         updatePlaygroundOutput(outputText, status);
         appState.playground.output = outputText;
         saveToLocalStorage();
@@ -5068,10 +5663,9 @@ function buildModuleCard(module) {
     const currentLanguage = getModuleLanguage(module.id);
     const currentMode = getModuleMode(module.id);
     const hasMultipleLanguages = module.codeExamples && Object.keys(module.codeExamples).length > 1;
-    const codeToDisplay = getCodeExample(module);
-    const displayCode = isCodeExpanded ? codeToDisplay : truncateCode(codeToDisplay);
-    const showExpandButton = codeToDisplay.split('\n').length > CONSTANTS.CODE_PREVIEW_LINES;
-    const processedCode = processCode(displayCode, module.id);
+    const rawCode = getCodeExample(module, currentLanguage);
+    const processedCode = processCode(isCodeExpanded ? rawCode : truncateCode(rawCode), module.id);
+    const showExpandButton = rawCode.split('\n').length > CONSTANTS.CODE_PREVIEW_LINES;
     const supportSummary = module.topics?.slice(0, 2).join(' • ') || 'Guided office hours and async help.';
 
     return `
@@ -5113,11 +5707,11 @@ function buildModuleCard(module) {
                             💬 ${shouldShowComments(module.id) ? 'ON' : 'OFF'}
                         </button>
                         <select onchange="setModuleLanguage('${module.id}', this.value)" class="text-xs px-2 py-1 rounded bg-blue-500 hover:bg-blue-600 text-white border-0 font-medium" title="Select Programming Language">
-                            ${Object.entries(SUPPORTED_LANGUAGES).map(([langKey, langInfo]) => module.codeExamples && module.codeExamples[langKey] ? `
+                            ${Object.entries(SUPPORTED_LANGUAGES).map(([langKey, langInfo]) => `
                                 <option value="${langKey}" ${currentLanguage === langKey ? 'selected' : ''} class="bg-white text-black">
                                     ${langInfo.icon} ${langInfo.name}
                                 </option>
-                            ` : '').join('')}
+                            `).join('')}
                         </select>
                         <select onchange="setModuleMode('${module.id}', this.value)" class="text-xs px-2 py-1 rounded border-0 font-medium ${currentMode === 'pseudocode' ? 'bg-purple-500 hover:bg-purple-600 text-white' : 'bg-indigo-500 hover:bg-indigo-600 text-white'}" title="Select Code Display Mode">
                             ${Object.entries(CODE_MODES).map(([modeKey, modeInfo]) => `
@@ -5485,11 +6079,10 @@ function toggleModuleComments(moduleId) {
 
 function setModuleLanguage(moduleId, language) {
     const module = modules.find(m => m.id === moduleId);
-    if (module) {
-        module.codeExamples = module.codeExamples || {};
-        if (!module.codeExamples[language]) {
-            module.codeExamples[language] = buildSampleCode(module, language);
-        }
+    if (!module || !SUPPORTED_LANGUAGES[language]) return;
+    module.codeExamples = module.codeExamples ? { ...module.codeExamples } : {};
+    if (!module.codeExamples[language]) {
+        module.codeExamples[language] = module.codeExamples.java || module.codeExample || buildSampleCode(module, language);
     }
     appState.moduleLanguages.set(moduleId, language);
     renderModules();
@@ -5510,6 +6103,7 @@ function toggleCompletion(moduleId) {
         maybePromptStudyPlan(moduleId);
     }
     updateProgress();
+    renderInsights();
     renderModules();
     saveToLocalStorage();
 }
@@ -5731,8 +6325,15 @@ function submitSupportRequest(event) {
         '-- Sent from the Java DSA Learning Hub'
     ];
     const mailtoUrl = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
+    // Try both navigation + new window to maximize compatibility.
+    window.location.href = mailtoUrl;
     window.open(mailtoUrl, '_blank');
-    showToast?.('Support email drafted in your mail app.', 'success');
+
+    // Fallback: copy the message so users can paste if a mail client is not configured.
+    if (navigator.clipboard?.writeText) {
+        navigator.clipboard.writeText(bodyLines.join('\n')).catch(() => {});
+    }
+    showToast?.('Support email is ready to send. If no mail app opens, paste from clipboard.', 'success');
 }
 // Flashcard Functions
 function prevFlashcard() {
@@ -5846,7 +6447,8 @@ function openQuiz(moduleId) {
         currentQuestion: 0,
         answers: [],
         showResults: false,
-        score: 0
+        score: 0,
+        wasPerfect: false
     };
 
     openModal('quiz-modal');
@@ -5855,7 +6457,144 @@ function openQuiz(moduleId) {
 
 function closeQuiz() {
     closeModal('quiz-modal');
+    if (appState.currentQuiz?.wasPerfect) {
+        triggerConfetti();
+        showToast?.('Congrats on acing that quiz!', 'success');
+        updateProgress();
+        renderInsights();
+        renderAchievements();
+        renderModules();
+    }
     appState.currentQuiz = null;
+}
+
+// Interactive Quiz Library (footer entry)
+function openInteractiveQuizLibrary() {
+    const modal = document.getElementById('interactive-quiz-modal');
+    const select = document.getElementById('interactive-quiz-module');
+    if (!modal || !select) return;
+
+    populateInteractiveQuizModules();
+    const firstOption = select.options[0];
+    const initialModule = interactiveQuizState.moduleId || (firstOption ? firstOption.value : null);
+    loadInteractiveQuizModule(initialModule);
+    openModal('interactive-quiz-modal');
+}
+
+function closeInteractiveQuizLibrary() {
+    closeModal('interactive-quiz-modal');
+}
+
+function populateInteractiveQuizModules() {
+    const select = document.getElementById('interactive-quiz-module');
+    if (!select) return;
+    const options = Object.entries(quizData)
+        .filter(([id, data]) => data?.parts?.[0]?.questions?.length)
+        .map(([id, data]) => {
+            const module = modules.find(m => m.id === id);
+            const title = module?.title || data?.title || id;
+            const count = data?.parts?.[0]?.questions?.length || 0;
+            return `<option value="${id}">${title} (${count} Qs)</option>`;
+        })
+        .join('');
+    select.innerHTML = options || '<option disabled>No quizzes available</option>';
+}
+
+function loadInteractiveQuizModule(moduleId) {
+    const select = document.getElementById('interactive-quiz-module');
+    if (select && moduleId) select.value = moduleId;
+    interactiveQuizState.moduleId = moduleId;
+    const questions = quizData[moduleId]?.parts?.[0]?.questions || [];
+    interactiveQuizState.questions = questions;
+    interactiveQuizState.current = 0;
+    interactiveQuizState.answers = new Array(questions.length).fill(null);
+    renderInteractiveQuizQuestion();
+}
+
+function renderInteractiveQuizQuestion() {
+    const body = document.getElementById('interactive-quiz-body');
+    const progress = document.getElementById('interactive-quiz-progress');
+    if (!body) return;
+
+    const questions = interactiveQuizState.questions || [];
+    const total = questions.length;
+
+    if (!total) {
+        body.innerHTML = `<div class="p-6 rounded-xl bg-slate-50 border border-slate-200 text-slate-600">No questions available for this module yet.</div>`;
+        if (progress) progress.textContent = '';
+        return;
+    }
+
+    const current = interactiveQuizState.current;
+    const question = questions[current];
+    const selected = interactiveQuizState.answers[current];
+
+    const feedback = selected === null
+        ? ''
+        : selected === question.correct
+            ? `<p class="text-sm text-emerald-600 font-semibold mt-2">✅ Correct! ${question.explanation || ''}</p>`
+            : `<p class="text-sm text-rose-600 font-semibold mt-2">❌ Try again. ${question.explanation || ''}</p>`;
+
+    body.innerHTML = `
+        <div class="flex items-center justify-between text-sm text-slate-600 mb-2">
+            <span>Question ${current + 1} of ${total}</span>
+            <span>${Math.round(((current + 1) / total) * 100)}% through</span>
+        </div>
+        <div class="p-4 sm:p-5 rounded-xl border border-slate-200 bg-white shadow-sm">
+            <h4 class="text-lg font-semibold text-slate-800 mb-4">${question.question}</h4>
+            <div class="space-y-2">
+                ${question.options.map((option, idx) => {
+                    const isSelected = selected === idx;
+                    const isCorrect = idx === question.correct;
+                    let stateClass = 'border-slate-200 bg-white hover:border-indigo-300 hover:bg-indigo-50';
+                    if (selected !== null) {
+                        if (isCorrect) stateClass = 'border-emerald-500 bg-emerald-50';
+                        else if (isSelected) stateClass = 'border-rose-500 bg-rose-50';
+                    }
+                    return `
+                        <button class="w-full text-left p-3 rounded-lg border transition-all duration-200 ${stateClass}"
+                            onclick="answerInteractiveQuiz(${idx})">
+                            <span class="font-medium text-slate-800">${String.fromCharCode(65 + idx)}. ${option}</span>
+                        </button>`;
+                }).join('')}
+            </div>
+            ${feedback}
+            <div class="flex justify-between items-center mt-4 gap-3">
+                <button class="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 bg-white hover:border-indigo-300 hover:bg-indigo-50 transition"
+                    ${current === 0 ? 'disabled' : ''} onclick="prevInteractiveQuizQuestion()">
+                    ◀ Previous
+                </button>
+                <button class="px-4 py-2 rounded-lg bg-indigo-500 text-white font-semibold hover:bg-indigo-600 shadow-sm transition"
+                    ${current >= total - 1 ? 'disabled' : ''} onclick="nextInteractiveQuizQuestion()">
+                    Next ▶
+                </button>
+            </div>
+        </div>
+    `;
+
+    if (progress) {
+        const answered = interactiveQuizState.answers.filter(a => a !== null).length;
+        progress.textContent = `${answered} answered • ${total} total`;
+    }
+}
+
+function answerInteractiveQuiz(index) {
+    interactiveQuizState.answers[interactiveQuizState.current] = index;
+    renderInteractiveQuizQuestion();
+}
+
+function nextInteractiveQuizQuestion() {
+    if (interactiveQuizState.current < interactiveQuizState.questions.length - 1) {
+        interactiveQuizState.current++;
+        renderInteractiveQuizQuestion();
+    }
+}
+
+function prevInteractiveQuizQuestion() {
+    if (interactiveQuizState.current > 0) {
+        interactiveQuizState.current--;
+        renderInteractiveQuizQuestion();
+    }
 }
 
 function renderQuiz() {
@@ -5980,6 +6719,7 @@ function nextQuestion() {
 
         appState.currentQuiz.showResults = true;
         appState.currentQuiz.score = score;
+        appState.currentQuiz.wasPerfect = perfectScore;
 
         if (perfectScore) {
             markQuizCompleted(appState.currentQuiz.moduleId);
@@ -6080,6 +6820,7 @@ function init() {
     updateAccountChip();
     updateProgress();
     renderModules();
+    renderInsights();
     renderDailyChallenge();
     renderStudyTip();
     initPlayground();
@@ -6124,6 +6865,15 @@ function init() {
     const supportForm = document.getElementById('support-form');
     if (supportForm) {
         supportForm.addEventListener('submit', submitSupportRequest);
+    }
+
+    bindClick('interactive-quiz-btn', openInteractiveQuizLibrary);
+    bindClick('close-interactive-quiz', closeInteractiveQuizLibrary);
+    const interactiveModuleSelect = document.getElementById('interactive-quiz-module');
+    if (interactiveModuleSelect) {
+        interactiveModuleSelect.addEventListener('change', (e) => {
+            loadInteractiveQuizModule(e.target.value);
+        });
     }
 
     bindClick('reset-btn', resetProgress);
@@ -6297,9 +7047,6 @@ function init() {
     });
 
     updateStudyTrackerUI();
-    if (!studyTimer.isActive) {
-        startStudySession();
-    }
 
     const themeSelect = document.getElementById('theme-select');
     if (themeSelect) {
@@ -7135,6 +7882,7 @@ function endStudySession(options = {}) {
         studyTrackerInterval = null;
     }
     updateStudyTrackerUI();
+    renderInsights();
 
     const minutes = Math.max(1, Math.round(sessionTime / 60000));
     if (notify) {
@@ -7207,10 +7955,8 @@ window.addEventListener('unhandledrejection', (event) => {
 
 // Visibility change handler for study sessions
 document.addEventListener('visibilitychange', () => {
-    if (document.hidden) {
-        endStudySession();
-    } else {
-        startStudySession();
+    if (document.hidden && studyTimer.isActive) {
+        endStudySession({ notify: false });
     }
 });
 
@@ -7225,7 +7971,6 @@ if (document.readyState === 'loading') {
 document.addEventListener('DOMContentLoaded', () => {
     optimizeForMobile();
     registerServiceWorker();
-    startStudySession();
 });
 
 // Add window resize handler for responsive adjustments

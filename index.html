@@ -30,6 +30,9 @@
                     <button id="glossary-btn" type="button" onclick="openGlossary()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm">
                         📚 <span class="hidden xs:inline">Glossary</span><span class="xs:hidden">Terms</span>
                     </button>
+                    <button id="interactive-quiz-btn" type="button" onclick="openInteractiveQuizLibrary()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm">
+                        🧠 <span class="hidden xs:inline">Interactive Quizzes</span><span class="xs:hidden">Quizzes</span>
+                    </button>
                     <button id="settings-btn" type="button" onclick="openSettings()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm">
                         ⚙️ <span class="hidden sm:inline">Settings</span>
                     </button>
@@ -282,8 +285,8 @@
         <section id="playground-section" class="content-backdrop rounded-2xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl border border-white/40 section-spacing">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
                 <div>
-                    <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading glow-text">Java Practice Playground</h3>
-                    <p class="text-sm text-slate-600">Type small Java programs, run them through the sandbox API, and iterate quickly without leaving the page.</p>
+                    <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading glow-text">Code Playground</h3>
+                    <p class="text-sm text-slate-600">Run quick Java, Python, C++, or JavaScript snippets through the sandbox API and iterate without leaving the page.</p>
                 </div>
                 <div id="playground-status" class="text-xs px-3 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold uppercase tracking-wider text-center">Idle</div>
             </div>
@@ -291,17 +294,25 @@
                 <div class="playground-card">
                     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2 mb-3">
                         <div>
-                            <p class="text-xs uppercase tracking-wide text-slate-500 font-semibold">Java Scratchpad</p>
-                            <p class="text-sm text-slate-600">Everything compiles inside one <code>Main</code> class, just like coding interview sandboxes.</p>
+                            <p class="text-xs uppercase tracking-wide text-slate-500 font-semibold">Code Scratchpad</p>
+                            <p class="text-sm text-slate-600">Java runs inside a <code>Main</code> class; other languages map to a single file for quick iteration.</p>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <label for="playground-snippets" class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Load sample</label>
-                            <select id="playground-snippets" class="text-sm rounded-lg border border-slate-300 px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30">
-                                <option value="hello-world">Loading samples...</option>
-                            </select>
+                        <div class="flex flex-wrap items-center gap-2 justify-end">
+                            <div class="flex items-center gap-2">
+                                <label for="playground-language" class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Language</label>
+                                <select id="playground-language" class="text-sm rounded-lg border border-slate-300 px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30">
+                                    <option>Loading...</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label for="playground-snippets" class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Load sample</label>
+                                <select id="playground-snippets" class="text-sm rounded-lg border border-slate-300 px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30">
+                                    <option value="hello-world">Loading samples...</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                    <textarea id="playground-editor" spellcheck="false" class="playground-editor" aria-label="Java playground editor"></textarea>
+                    <textarea id="playground-editor" spellcheck="false" class="playground-editor" aria-label="Playground editor"></textarea>
                     <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 mt-3">
                         <button id="playground-run" class="purple-glow-button px-4 py-2 w-full sm:w-auto text-sm font-semibold flex items-center justify-center gap-1">
                             ▶️ Run Code
@@ -337,7 +348,6 @@
                             <option value="intermediate">Intermediate</option>
                             <option value="advanced">Advanced</option>
                         </select>
-                        <div id="modules-pagination-top" class="hidden lg:flex items-center gap-1"></div>
                     </div>
                 </div>
             </div>
@@ -357,15 +367,17 @@
                 <div>
                     <h4 class="font-semibold text-indigo-600 mb-2 sm:mb-3 text-base section-heading">📖 Study Tools</h4>
                     <div class="space-y-1 sm:space-y-2">
-                        <button class="footer-link block text-left hover:text-indigo-600 transition-colors duration-200 text-sm" onclick="openFlashcards()">
-                            🎯 Practice Flashcards
-                        </button>
-                        <button class="footer-link block text-left hover:text-indigo-600 transition-colors duration-200 text-sm" onclick="openGlossary()">
-                            📚 DSA Glossary
-                        </button>
-                        <div class="text-slate-600 text-sm">🧠 Interactive Quizzes</div>
-                    </div>
+                    <button class="footer-link block text-left hover:text-indigo-600 transition-colors duration-200 text-sm" onclick="openFlashcards()">
+                        🎯 Practice Flashcards
+                    </button>
+                    <button class="footer-link block text-left hover:text-indigo-600 transition-colors duration-200 text-sm" onclick="openGlossary()">
+                        📚 DSA Glossary
+                    </button>
+                    <button class="footer-link block text-left hover:text-indigo-600 transition-colors duration-200 text-sm" onclick="openInteractiveQuizLibrary()">
+                        🧠 Interactive Quizzes
+                    </button>
                 </div>
+            </div>
                 <div>
                     <h4 class="font-semibold text-indigo-600 mb-2 sm:mb-3 text-base section-heading">🚀 Features</h4>
                     <div class="space-y-1 sm:space-y-2 text-slate-600 text-sm">
@@ -684,6 +696,34 @@
                     <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl font-medium">Send Support Request</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Interactive Quiz Library Modal -->
+    <div id="interactive-quiz-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+        <div class="modal-panel rounded-2xl w-full max-w-5xl shadow-2xl bg-white text-slate-900 border border-slate-200">
+            <div class="flex justify-between items-center p-6 border-b border-slate-200">
+                <div>
+                    <p class="text-xs uppercase tracking-wide text-slate-500 font-semibold">Quick Practice</p>
+                    <h3 class="text-2xl font-semibold text-indigo-600">Interactive Quizzes</h3>
+                    <p class="text-sm text-slate-600">Pick any module, answer each question with instant feedback, and revisit explanations.</p>
+                </div>
+                <button id="close-interactive-quiz" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700">×</button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="flex flex-col lg:flex-row lg:items-center gap-3">
+                    <div class="flex-1">
+                        <label for="interactive-quiz-module" class="font-semibold text-slate-800 text-sm mb-1 block">Module</label>
+                        <select id="interactive-quiz-module" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40"></select>
+                    </div>
+                    <div class="w-full lg:w-auto">
+                        <div id="interactive-quiz-progress" class="text-sm text-slate-600"></div>
+                    </div>
+                </div>
+                <div id="interactive-quiz-body" class="space-y-3">
+                    <!-- Question content injected via JS -->
+                </div>
+            </div>
         </div>
     </div>
 

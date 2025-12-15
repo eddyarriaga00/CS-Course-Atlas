@@ -24,7 +24,7 @@ Comprehensive modules with runnable code, per-module flashcards, quizzes, glossa
 - **Quiz engine**: 15-question banks per module, 4 random per attempt, 100% required to complete.
 - **Flashcards & glossary**: Module-tied flashcards plus a searchable glossary with highlighted matches.
 - **Progression tools**: Achievements, focus timer, streaks, study plan prompts, daily challenges, and insights.
-- **Java playground**: Preloaded module snippets (auto-stubs `main` when missing), Piston API ready; reset/copy/run buttons included.
+- **Code playground (Java/Python/C++/JS)**: Language dropdown with preloaded module snippets (auto-stubs `main` when missing), Piston API ready; reset/copy/run buttons included.
 - **Pagination**: Module grid paginates (5 per page) to keep the page compact on all devices.
 - **Accessibility & UX**: Dark/light themes, accent options, font scaling, compact layout, keyboard/Esc/backdrop closing for modals.
 - **Responsive**: Optimized for laptops, tablets, and phones.
@@ -39,7 +39,7 @@ cd Java-DSA-Helper
 open index.html   # or python -m http.server 8000
 ```
 
-Java runner (optional): set `CODE_RUNNER_ENDPOINT` and `CODE_RUNNER_VERSION` in `js/script.js` to point to your Piston or local runner if you want playground execution offline.
+Runner (optional): set `CODE_RUNNER_ENDPOINT` and adjust `CODE_RUNNER_CONFIG` (language/version/filenames) in `js/script.js` to point to your Piston or local runner if you want playground execution offline.
 
 ## 🎯 How the Platform Works
 - **Modules**: Organized beginner → advanced, paginated 5 per page. Each module has multi-language code, a detailed breakdown, resources, and runnable Java samples.
