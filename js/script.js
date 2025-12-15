@@ -64,7 +64,7 @@ const RESET_FLAGS = {
 };
 
 const SUPPORT_EMAIL = 'eddyarriaga06@gmail.com';
-const CODE_RUNNER_ENDPOINT = 'https://emkc.org/api/v2/piston/execute';
+const CODE_RUNNER_ENDPOINT = 'https://emkc.org/api/v2/piston/execute'; // EMKC Piston open-source runner
 const CODE_RUNNER_LANGUAGE = 'java';
 const CODE_RUNNER_VERSION = '15.0.2';
 
@@ -5388,6 +5388,7 @@ function initPlayground() {
         if (!PLAYGROUND_SNIPPETS[select.value]) {
             select.value = appState.playground.sample;
         }
+        select.value = appState.playground.sample;
         select.addEventListener('change', (event) => {
             setPlaygroundSample(event.target.value);
         });
