@@ -7547,15 +7547,16 @@ function updateHeaderShrink() {
     const title = document.getElementById('main-title');
     const subtitle = document.getElementById('main-subtitle');
     const buttons = document.getElementById('header-buttons');
+    const chip = document.getElementById('account-chip');
     const inner = header?.querySelector('.header-inner');
 
-    const progress = Math.min(appState.scrollY / 160, 1);
+    const progress = Math.min(appState.scrollY / 120, 1);
     const isScrolled = appState.scrollY > 10;
-    const isCollapsed = appState.scrollY > 40;
-    const isFullyShrunken = appState.scrollY > 120;
+    const isCollapsed = appState.scrollY > 20;
+    const isFullyShrunken = appState.scrollY > 90;
 
     // Header padding - smaller values for optimization
-    const paddingY = Math.max(10 - progress * 6, 4);
+    const paddingY = Math.max(10 - progress * 7, 3);
     if (inner) {
         inner.style.paddingTop = `${paddingY}px`;
         inner.style.paddingBottom = `${paddingY}px`;
@@ -7566,7 +7567,7 @@ function updateHeaderShrink() {
     header.classList.toggle('header-collapsed', isCollapsed);
 
     // Title scale
-    title.style.transform = isFullyShrunken ? 'scale(0.92)' : 'scale(1)';
+    title.style.transform = isFullyShrunken ? 'scale(0.9)' : 'scale(1)';
 
     // Subtitle opacity
     const subtitleOpacity = Math.max(1 - progress * 1.8, 0);
@@ -7581,6 +7582,10 @@ function updateHeaderShrink() {
     buttons.style.opacity = buttonOpacity;
     buttons.style.transform = `scale(${buttonScale})`;
     buttons.style.transformOrigin = 'top right';
+    if (chip) {
+        chip.style.opacity = isCollapsed ? 0 : 1;
+        chip.style.transform = isCollapsed ? 'translateY(-6px)' : 'translateY(0)';
+    }
 
     // Add/remove shadow
     if (isScrolled) {
