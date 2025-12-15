@@ -103,6 +103,40 @@ body.dark #playground-section {
     gap: clamp(1rem, 2vw, 1.5rem);
 }
 
+.playground-selectors {
+    width: 100%;
+    justify-content: flex-end;
+}
+
+@media (max-width: 640px) {
+    .playground-selectors {
+        justify-content: space-between;
+    }
+    .playground-selectors label {
+        min-width: 64px;
+    }
+    .playground-selectors select {
+        width: 140px;
+    }
+    #main-header .header-control {
+        padding: 0.45rem 0.65rem;
+    }
+    #main-header {
+        backdrop-filter: blur(10px);
+    }
+}
+
+@media (max-width: 480px) {
+    .playground-selectors {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    .playground-selectors select {
+        width: 100%;
+    }
+}
+
 .playground-card {
     background: linear-gradient(145deg, var(--surface-primary), var(--surface-secondary));
     border: 1px solid var(--surface-border);
@@ -296,6 +330,7 @@ body {
     color: var(--text-primary-color);
     position: relative;
     min-height: 100vh;
+    scroll-behavior: smooth;
 }
 
 /* Background animation keyframes */
