@@ -404,15 +404,15 @@ body.dark .prompt-solution {
     #main-header.header-collapsed {
         padding-top: 0 !important;
         padding-bottom: 0 !important;
-        min-height: 38px;
+        min-height: 28px;
     }
     #main-header.header-collapsed .header-inner {
-        padding-top: 1px !important;
-        padding-bottom: 1px !important;
-        gap: 2px;
+        padding-top: 0px !important;
+        padding-bottom: 0px !important;
+        gap: 1px;
     }
     #main-header.header-collapsed #header-buttons {
-        transform: scale(0.65);
+        transform: scale(0.55);
         transform-origin: top right;
     }
     .prompt-modal-panel {
@@ -442,9 +442,9 @@ body.dark .prompt-solution {
         line-height: 1.05;
     }
     .header-collapsed .header-control {
-        padding-block: 4px;
-        padding-inline: 9px;
-        font-size: 0.72rem;
+        padding-block: 3px;
+        padding-inline: 8px;
+        font-size: 0.7rem;
     }
 }
 
@@ -1079,9 +1079,9 @@ body.dark .hero-section p {
 }
 
 .header-collapsed .header-inner {
-    padding-top: 2px;
-    padding-bottom: 2px;
-    gap: 4px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    gap: 3px;
 }
 
 .header-collapsed .header-brand h1 {
@@ -1099,7 +1099,7 @@ body.dark .hero-section p {
 }
 
 .header-collapsed #header-buttons {
-    transform: scale(0.8);
+    transform: scale(0.75);
     transform-origin: top right;
 }
 
@@ -1116,7 +1116,7 @@ body.dark .hero-section p {
 .header-collapsed {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
-    min-height: 44px;
+    min-height: 32px;
 }
 
 .account-chip {
