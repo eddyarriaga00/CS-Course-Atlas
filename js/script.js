@@ -35,9 +35,12 @@ const appState = {
     hideCompletedModules: false,
     compactLayout: false,
     cardDensity: 'standard',
+    reduceMotion: false,
+    highContrast: false,
     studyPlan: null,
     accountProfile: null,
     currentModulePage: 1,
+    promptTimers: new Map(),
     playground: {
         code: '',
         sample: DEFAULT_PLAYGROUND_SAMPLE,
@@ -79,8 +82,12 @@ const DEFAULT_DISTRACTOR_TEXTS = [
 
 const STORAGE_KEYS = {
     STUDY_METRICS: 'javaDSAStudyMetrics',
-    STUDY_HABIT: 'javaDSAStudyHabit'
+    STUDY_HABIT: 'javaDSAStudyHabit',
+    NOTES: 'javaDSANotes'
 };
+
+const INLINE_GLOSSARY_LIMIT = 60;
+const TIMED_PROMPT_SECONDS = 20 * 60;
 
 const RESET_FLAGS = {
     STUDY_TIMES: 'javaDSAResetTimesV2'
@@ -131,6 +138,97 @@ const ACCENT_THEME_OPTIONS = ['indigo', 'emerald', 'amber', 'rose'];
 const ACCENT_THEME_CLASSES = ACCENT_THEME_OPTIONS.map(option => `accent-${option}`);
 const CARD_DEPTH_OPTIONS = ['flat', 'standard', 'lifted'];
 const CARD_DEPTH_CLASSES = CARD_DEPTH_OPTIONS.map(option => `card-depth-${option}`);
+const INTERVIEW_PAGE_SIZE = 2;
+let interviewPage = 1;
+
+const interviewExamples = [
+    {
+        id: 'two-sum',
+        title: 'Two Sum (Hash Map)',
+        language: 'Java',
+        difficulty: 'Easy',
+        code: `class TwoSum {
+    public int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> seen = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (seen.containsKey(complement)) {
+                return new int[]{seen.get(complement), i};
+            }
+            seen.put(nums[i], i);
+        }
+        return new int[]{-1, -1};
+    }
+}`
+    },
+    {
+        id: 'valid-parens',
+        title: 'Valid Parentheses (Stack)',
+        language: 'Java',
+        difficulty: 'Easy',
+        code: `class Solution {
+    public boolean isValid(String s) {
+        Map<Character, Character> pairs = Map.of(')', '(', ']', '[', '}', '{');
+        Deque<Character> stack = new ArrayDeque<>();
+        for (char c : s.toCharArray()) {
+            if (pairs.containsKey(c)) {
+                if (stack.isEmpty() || stack.pop() != pairs.get(c)) return false;
+            } else {
+                stack.push(c);
+            }
+        }
+        return stack.isEmpty();
+    }
+}`
+    },
+    {
+        id: 'merge-intervals',
+        title: 'Merge Intervals',
+        language: 'Java',
+        difficulty: 'Medium',
+        code: `class Solution {
+    public int[][] merge(int[][] intervals) {
+        Arrays.sort(intervals, Comparator.comparingInt(a -> a[0]));
+        List<int[]> merged = new ArrayList<>();
+        for (int[] interval : intervals) {
+            if (merged.isEmpty() || merged.get(merged.size() - 1)[1] < interval[0]) {
+                merged.add(interval);
+            } else {
+                merged.get(merged.size() - 1)[1] =
+                    Math.max(merged.get(merged.size() - 1)[1], interval[1]);
+            }
+        }
+        return merged.toArray(new int[merged.size()][]);
+    }
+}`
+    },
+    {
+        id: 'bfs-level-order',
+        title: 'Binary Tree Level Order (BFS)',
+        language: 'Java',
+        difficulty: 'Medium',
+        code: `class Solution {
+    public List<List<Integer>> levelOrder(TreeNode root) {
+        List<List<Integer>> levels = new ArrayList<>();
+        if (root == null) return levels;
+        Queue<TreeNode> q = new ArrayDeque<>();
+        q.offer(root);
+        while (!q.isEmpty()) {
+            int size = q.size();
+            List<Integer> level = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                TreeNode node = q.poll();
+                level.add(node.val);
+                if (node.left != null) q.offer(node.left);
+                if (node.right != null) q.offer(node.right);
+            }
+            levels.add(level);
+        }
+        return levels;
+    }
+}`
+    }
+];
 const DIFFICULTY_SECTIONS = {
     beginner: { label: 'Beginner Track', icon: '🌱' },
     intermediate: { label: 'Intermediate Trail', icon: '⚙️' },
@@ -1157,7 +1255,70 @@ const glossaryTerms = [
         term: "Overlapping Subproblems",
         definition: "DP trait where the same subproblems recur, justifying memoization/tabulation.",
         category: "Techniques"
-    }
+    },
+    // Arrays & Strings module (20 terms)
+    { term: "Two-Pointer Swap", definition: "Use a left/right index to swap mirrored characters or values in-place.", category: "Arrays & Strings (Module)" },
+    { term: "Sliding Window Min/Max", definition: "Maintain window bounds while updating a running best (count, sum, freq).", category: "Arrays & Strings (Module)" },
+    { term: "Prefix Check", definition: "Verify a string starts with a pattern before further processing.", category: "Arrays & Strings (Module)" },
+    { term: "Suffix Check", definition: "Confirm trailing characters match a pattern (file extensions, endings).", category: "Arrays & Strings (Module)" },
+    { term: "Char Frequency Map", definition: "Hash map counting occurrences of characters for anagram or uniqueness checks.", category: "Arrays & Strings (Module)" },
+    { term: "Distinct Window", definition: "Sliding window ensuring all characters are unique before expansion.", category: "Arrays & Strings (Module)" },
+    { term: "Palindrome Normalization", definition: "Lowercase and strip non-alphanumerics prior to palindrome testing.", category: "Arrays & Strings (Module)" },
+    { term: "In-Place Reverse", definition: "Swap ends of an array/string without allocating extra memory.", category: "Arrays & Strings (Module)" },
+    { term: "Merge Two Sorted Arrays", definition: "Walk two sorted arrays to build a combined sorted result in linear time.", category: "Arrays & Strings (Module)" },
+    { term: "Two-Sum with Hashing", definition: "Store complements in a map to find pairs summing to a target in O(n).", category: "Arrays & Strings (Module)" },
+    { term: "Kadane’s Algorithm", definition: "Track running max subarray sum with O(1) extra space.", category: "Arrays & Strings (Module)" },
+    { term: "Dutch Flag Partition", definition: "Three-way partitioning to group values (e.g., 0/1/2) in one pass.", category: "Arrays & Strings (Module)" },
+    { term: "Substring Search", definition: "Scan for a pattern in text; naive, KMP, or sliding window approaches.", category: "Arrays & Strings (Module)" },
+    { term: "Rotation Check", definition: "Determine if one string is a rotation of another using concatenation.", category: "Arrays & Strings (Module)" },
+    { term: "Prefix Sum Array", definition: "Cumulative sums enabling O(1) range queries after O(n) setup.", category: "Arrays & Strings (Module)" },
+    { term: "Balanced Brackets (String)", definition: "Verify bracket order using a stack and mapping of open→close.", category: "Arrays & Strings (Module)" },
+    { term: "Array Deduplication", definition: "Remove duplicates by overwriting in-place with two pointers.", category: "Arrays & Strings (Module)" },
+    { term: "Stable Sort by Key", definition: "Sort by secondary key while keeping equal primary-order intact.", category: "Arrays & Strings (Module)" },
+    { term: "Character Classification", definition: "Check char type (alpha, digit, whitespace) before processing.", category: "Arrays & Strings (Module)" },
+    { term: "Run-Length Encoding", definition: "Compress repeated characters as count+char while scanning once.", category: "Arrays & Strings (Module)" },
+    // Stacks & Queues module (20 terms)
+    { term: "Push/Pop Semantics", definition: "Stack operations adding/removing from the same end (LIFO).", category: "Stacks & Queues (Module)" },
+    { term: "Peek Safety", definition: "Check emptiness before peeking to avoid exceptions.", category: "Stacks & Queues (Module)" },
+    { term: "Queue Enqueue/Dequeue", definition: "FIFO operations add to back, remove from front.", category: "Stacks & Queues (Module)" },
+    { term: "Deque for Sliding Window", definition: "Use a monotonic deque to track best candidates per window.", category: "Stacks & Queues (Module)" },
+    { term: "Min Stack", definition: "Augment stack to retrieve current minimum in O(1).", category: "Stacks & Queues (Module)" },
+    { term: "Undo Stack", definition: "Store prior states to roll back changes (text editors, commands).", category: "Stacks & Queues (Module)" },
+    { term: "BFS Queue", definition: "Breadth-first traversal uses a queue to visit neighbors level by level.", category: "Stacks & Queues (Module)" },
+    { term: "Prefix Evaluation", definition: "Evaluate prefix expressions using a stack (operators before operands).", category: "Stacks & Queues (Module)" },
+    { term: "Infix to Postfix", definition: "Convert expressions with a stack to manage operator precedence.", category: "Stacks & Queues (Module)" },
+    { term: "Parentheses Validation", definition: "Use a stack of opens to ensure each close matches type/order.", category: "Stacks & Queues (Module)" },
+    { term: "Circular Queue", definition: "Fixed-size queue that wraps indices to reuse freed slots.", category: "Stacks & Queues (Module)" },
+    { term: "Queue Backpressure", definition: "Slow producers when consumer lags to avoid overflow.", category: "Stacks & Queues (Module)" },
+    { term: "DFS with Stack", definition: "Iterative DFS using an explicit stack instead of recursion.", category: "Stacks & Queues (Module)" },
+    { term: "Call Stack Frames", definition: "Each function call pushes a frame; recursion deepens the stack.", category: "Stacks & Queues (Module)" },
+    { term: "Top of Stack (TOS)", definition: "Pointer/index to the next push/pop position.", category: "Stacks & Queues (Module)" },
+    { term: "Queue Throughput", definition: "Rate of items processed per time unit; impacted by batching.", category: "Stacks & Queues (Module)" },
+    { term: "Priority Queue via Heap", definition: "Back a priority queue with a heap for O(log n) updates.", category: "Stacks & Queues (Module)" },
+    { term: "Monotonic Increasing Stack", definition: "Stack that keeps elements in non-decreasing order to find next greater.", category: "Stacks & Queues (Module)" },
+    { term: "Queue Drain", definition: "Process all items until empty; common in event loops.", category: "Stacks & Queues (Module)" },
+    { term: "Stack Overflow (Recursion)", definition: "Exceeding call stack depth causes a runtime stack overflow error.", category: "Stacks & Queues (Module)" },
+    // Searching Algorithms module (20 terms)
+    { term: "Binary Search Invariant", definition: "Maintain sorted half where target can still exist; shrink bounds accordingly.", category: "Searching Algorithms (Module)" },
+    { term: "Mid Overflow Guard", definition: "Compute mid as left + (right-left)/2 to avoid integer overflow.", category: "Searching Algorithms (Module)" },
+    { term: "Lower Bound", definition: "First index where value is not less than target (>=).", category: "Searching Algorithms (Module)" },
+    { term: "Upper Bound", definition: "First index where value is greater than target (>).", category: "Searching Algorithms (Module)" },
+    { term: "Infinite Array Search", definition: "Expand bounds exponentially, then binary search within.", category: "Searching Algorithms (Module)" },
+    { term: "Rotated Array Search", definition: "Binary search while detecting which half is sorted each step.", category: "Searching Algorithms (Module)" },
+    { term: "2D Matrix Search", definition: "Treat rows/cols as sorted lists; walk from corner or flatten index math.", category: "Searching Algorithms (Module)" },
+    { term: "Interpolation Search", definition: "Estimate position by value distribution; good for uniformly distributed data.", category: "Searching Algorithms (Module)" },
+    { term: "Ternary Search", definition: "Split search space into three parts for unimodal functions.", category: "Searching Algorithms (Module)" },
+    { term: "Exponential Search", definition: "Double range size until surpassing target, then binary search range.", category: "Searching Algorithms (Module)" },
+    { term: "Jump Search", definition: "Skip ahead fixed steps, then linear scan within the block.", category: "Searching Algorithms (Module)" },
+    { term: "Binary Search on Answer", definition: "Search over solution space (e.g., capacity, time) not just array indices.", category: "Searching Algorithms (Module)" },
+    { term: "Monotonic Predicate", definition: "Condition that flips once; enables binary search over answers.", category: "Searching Algorithms (Module)" },
+    { term: "Peak Element Search", definition: "Find local maximum by comparing mid with neighbors; narrow to uphill side.", category: "Searching Algorithms (Module)" },
+    { term: "Bitonic Array Search", definition: "Find peak in a bitonic array then binary search both halves.", category: "Searching Algorithms (Module)" },
+    { term: "Nearest Value Search", definition: "Return closest element; track best candidate during binary search.", category: "Searching Algorithms (Module)" },
+    { term: "Duplicate Handling", definition: "Adjust bounds carefully when equals appear to avoid infinite loops.", category: "Searching Algorithms (Module)" },
+    { term: "Search Insert Position", definition: "Return index where target would be inserted to keep order.", category: "Searching Algorithms (Module)" },
+    { term: "Frequency Binary Search", definition: "Count occurrences by finding first and last positions via binary search.", category: "Searching Algorithms (Module)" },
+    { term: "Binary Search Templates", definition: "Predefined loop patterns to avoid off-by-one errors.", category: "Searching Algorithms (Module)" }
 ];
 
 const glossaryCategories = [
@@ -1178,6 +1339,18 @@ const modules = [
         description: 'We slow down every array and string helper so you see why guards exist, how loops scan data, and how pointer swaps work. Each method is annotated with plain-English comments plus a bullet-by-bullet breakdown under the code block, perfect for a first pass through Java collections.',
         difficulty: 'beginner',
         topics: ['Array Traversal', 'String Methods', 'Two Pointers', 'Sliding Window', 'Array Sorting'],
+        interviewPrompts: [
+            {
+                title: 'Two Sum Variants',
+                prompt: 'Given an array of integers and a target, return indices of two numbers adding to target. Follow up: return all unique pairs. Aim for O(n) with extra space.',
+                durationMinutes: 20
+            },
+            {
+                title: 'Longest Unique Substring',
+                prompt: 'Find the length of the longest substring without repeating characters. Explain your sliding window and how you track last-seen indices.',
+                durationMinutes: 20
+            }
+        ],
         codeExamples: {
             java: `// ArraysAndStrings demonstrates three starter utilities.
 // Every method explains *why* each line exists so you can trace the logic.
@@ -1412,6 +1585,18 @@ const isPalindromeFunctional = str => {
         description: 'Line-by-line narration shows how `reverseList` flips `next` pointers, how Floyd\'s tortoise–hare loop guard works inside `hasCycle`, and how the dummy node plus pointer weaving in `mergeTwoLists` prevents null-pointer bugs.',
         difficulty: 'intermediate',
         topics: ['Singly Linked Lists', 'Doubly Linked Lists', 'Cycle Detection', 'List Reversal', 'Merge Operations'],
+        interviewPrompts: [
+            {
+                title: 'Reverse in K-Groups',
+                prompt: 'Given the head of a linked list, reverse nodes in groups of k and return the modified list. Keep O(1) extra space and describe edge cases.',
+                durationMinutes: 25
+            },
+            {
+                title: 'Cycle Start Detection',
+                prompt: 'Detect if a cycle exists and return the node where the cycle begins. Use O(1) space and explain the math behind the meeting point.',
+                durationMinutes: 20
+            }
+        ],
         codeExamples: {
             java: `// Linked List implementation and operations
 class ListNode {
@@ -4976,6 +5161,8 @@ function saveToLocalStorage() {
         hideCompletedModules: appState.hideCompletedModules,
         compactLayout: appState.compactLayout,
         cardDensity: appState.cardDensity,
+        reduceMotion: appState.reduceMotion,
+        highContrast: appState.highContrast,
         studyPlan: appState.studyPlan,
         accountProfile: appState.accountProfile,
         playground: {
@@ -5016,6 +5203,8 @@ function loadFromLocalStorage() {
             appState.hideCompletedModules = Boolean(state.hideCompletedModules);
             appState.compactLayout = Boolean(state.compactLayout);
             appState.cardDensity = state.cardDensity || 'standard';
+            appState.reduceMotion = Boolean(state.reduceMotion);
+            appState.highContrast = Boolean(state.highContrast);
             appState.studyPlan = state.studyPlan || null;
             appState.accountProfile = state.accountProfile || null;
             appState.playground = {
@@ -5234,6 +5423,939 @@ function applyCardDepth() {
     CARD_DEPTH_CLASSES.forEach(cls => body.classList.remove(cls));
     const selected = CARD_DEPTH_OPTIONS.includes(appState.cardDensity) ? appState.cardDensity : 'standard';
     body.classList.add(`card-depth-${selected}`);
+}
+
+function applyReducedMotion() {
+    document.body.classList.toggle('reduce-motion', !!appState.reduceMotion);
+}
+
+function applyHighContrast() {
+    document.body.classList.toggle('high-contrast', !!appState.highContrast);
+}
+
+// Inline glossary popover
+let glossaryPopoverEl = null;
+
+function ensureGlossaryPopover() {
+    if (glossaryPopoverEl) return glossaryPopoverEl;
+    glossaryPopoverEl = document.createElement('div');
+    glossaryPopoverEl.className = 'glossary-popover';
+    glossaryPopoverEl.setAttribute('role', 'tooltip');
+    glossaryPopoverEl.style.display = 'block';
+    document.body.appendChild(glossaryPopoverEl);
+    return glossaryPopoverEl;
+}
+
+function showGlossaryPopover(target) {
+    const term = target?.dataset?.glossaryTerm;
+    if (!term) return;
+    const entry = getGlossaryEntry(term);
+    if (!entry) return;
+    const pop = ensureGlossaryPopover();
+    pop.innerHTML = `<strong>${escapeHtml(entry.term)}</strong><br>${escapeHtml(entry.definition)}`;
+    pop.classList.add('visible');
+    const rect = target.getBoundingClientRect();
+    const top = rect.top + window.scrollY - pop.offsetHeight - 10;
+    const left = rect.left + window.scrollX + (rect.width / 2) - (pop.offsetWidth / 2);
+    pop.style.top = `${Math.max(8, top)}px`;
+    pop.style.left = `${Math.max(8, left)}px`;
+}
+
+function hideGlossaryPopover() {
+    if (glossaryPopoverEl) {
+        glossaryPopoverEl.classList.remove('visible');
+    }
+}
+
+function attachInlineGlossaryHandlers() {
+    document.body.removeEventListener('click', handleGlossaryClick, true);
+    document.body.removeEventListener('mouseover', handleGlossaryHover, true);
+    document.body.removeEventListener('mouseout', handleGlossaryLeave, true);
+    document.body.addEventListener('click', handleGlossaryClick, true);
+    document.body.addEventListener('mouseover', handleGlossaryHover, true);
+    document.body.addEventListener('mouseout', handleGlossaryLeave, true);
+}
+
+function handleGlossaryHover(event) {
+    const target = event.target.closest('.glossary-inline');
+    if (!target) return;
+    showGlossaryPopover(target);
+}
+
+function handleGlossaryLeave(event) {
+    if (!event.target.closest('.glossary-inline')) return;
+    hideGlossaryPopover();
+}
+
+function handleGlossaryClick(event) {
+    const target = event.target.closest('.glossary-inline');
+    if (!target) return;
+    event.stopPropagation();
+    showGlossaryPopover(target);
+    setTimeout(() => hideGlossaryPopover(), 2200);
+}
+
+function updateToggleState(toggleId, sliderId, isOn) {
+    const toggle = document.getElementById(toggleId);
+    const slider = document.getElementById(sliderId);
+    if (!toggle || !slider) return;
+    toggle.classList.toggle('bg-indigo-600', isOn);
+    toggle.classList.toggle('bg-slate-300', !isOn);
+    slider.classList.toggle('translate-x-7', isOn);
+    slider.classList.toggle('translate-x-0.5', !isOn);
+}
+
+// Complexity visualizer
+function computeOps(n, complexity, constant = 1) {
+    switch (complexity) {
+        case 'constant': return constant;
+        case 'log': return constant * Math.max(1, Math.log2(Math.max(1, n)));
+        case 'linear': return constant * n;
+        case 'nlogn': return constant * n * Math.max(1, Math.log2(Math.max(1, n)));
+        case 'quadratic': return constant * n * n;
+        default: return constant * n;
+    }
+}
+
+function initComplexityVisualizer() {
+    const nInput = document.getElementById('complexity-n');
+    const levelInput = document.getElementById('complexity-level');
+    const presetSelect = document.getElementById('complexity-preset');
+    const helpEl = document.getElementById('complexity-help');
+    const opsEl = document.getElementById('complexity-ops');
+    const opsNote = document.getElementById('complexity-ops-note');
+    const spaceEl = document.getElementById('complexity-space-usage');
+    const spaceNote = document.getElementById('complexity-space-note');
+    const summary = document.getElementById('complexity-summary');
+    const nValue = document.getElementById('complexity-n-value');
+    const logValue = document.getElementById('complexity-log-value');
+    const labelEl = document.getElementById('complexity-label');
+
+    const levels = [
+        { key: 'constant', label: 'O(1)' },
+        { key: 'log', label: 'O(log n)' },
+        { key: 'linear', label: 'O(n)' },
+        { key: 'nlogn', label: 'O(n log n)' },
+        { key: 'quadratic', label: 'O(n²)' }
+    ];
+
+    const presetMap = {
+        constant: { level: 1, help: 'Hash map lookups or direct indexing run in constant time.' },
+        log: { level: 2, help: 'Binary search and balanced trees shrink the search space each step.' },
+        linear: { level: 3, help: 'Linear scans touch each element once (arrays, strings).' },
+        nlogn: { level: 4, help: 'Efficient sorts (merge/quick/heap) and many divide-and-conquer routines.' },
+        quadratic: { level: 5, help: 'Nested loops (brute-force pairs) grow quickly—optimize if possible.' }
+    };
+
+    if (!nInput || !levelInput) return;
+
+    function update() {
+        const n = Number(nInput.value) || 1;
+        const levelIndex = Math.min(levels.length - 1, Math.max(0, (Number(levelInput.value) || 1) - 1));
+        const { key, label } = levels[levelIndex];
+        const ops = Math.round(computeOps(n, key, 1));
+        const spaceUnits = Math.round(computeOps(n, key, 1));
+        if (opsEl) opsEl.textContent = `${ops.toLocaleString()} ops`;
+        if (spaceEl) spaceEl.textContent = `${spaceUnits.toLocaleString()} units`;
+        if (opsNote) opsNote.textContent = `Assuming ${label} growth.`;
+        if (spaceNote) spaceNote.textContent = `Space mirrors ${label} for n items.`;
+        if (summary) summary.textContent = `n=${n.toLocaleString()} • ${label}`;
+        if (nValue) nValue.textContent = n.toLocaleString();
+        if (logValue) logValue.textContent = Math.max(1, Math.round(Math.log2(Math.max(1, n)))).toLocaleString();
+        if (labelEl) labelEl.textContent = label;
+    }
+
+    if (presetSelect) {
+        presetSelect.addEventListener('change', (e) => {
+            const selected = e.target.value;
+            const preset = presetMap[selected];
+            if (preset) {
+                levelInput.value = preset.level;
+                if (helpEl) helpEl.textContent = preset.help;
+                update();
+            }
+        });
+    }
+
+    [nInput, levelInput].forEach(el => {
+        el.addEventListener('input', update);
+        el.addEventListener('change', update);
+    });
+    update();
+}
+
+// Interview examples copy
+function copyExample(elementId) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    const text = el.textContent || '';
+    navigator.clipboard.writeText(text).then(() => {
+        showToast?.('Example copied!', 'success');
+    }).catch(() => showToast?.('Copy failed. Select and copy manually.', 'error'));
+}
+
+function renderInterviewExamples(page = interviewPage) {
+    const grid = document.getElementById('interview-examples-grid');
+    if (!grid) return;
+    const totalPages = Math.max(1, Math.ceil(interviewExamples.length / INTERVIEW_PAGE_SIZE));
+    interviewPage = Math.min(totalPages, Math.max(1, page));
+    const start = (interviewPage - 1) * INTERVIEW_PAGE_SIZE;
+    const current = interviewExamples.slice(start, start + INTERVIEW_PAGE_SIZE);
+    grid.innerHTML = current.map(example => `
+        <div class="interview-card">
+            <div class="flex items-center justify-between mb-2">
+                <div class="flex flex-col">
+                    <span class="font-semibold text-slate-800">${escapeHtml(example.title)}</span>
+                    <span class="text-[11px] uppercase tracking-wide text-slate-500">${escapeHtml(example.language)} · ${escapeHtml(example.difficulty)}</span>
+                </div>
+                <button onclick="copyExample('example-${example.id}')" class="text-xs px-2 py-1 rounded bg-indigo-500 text-white">Copy</button>
+            </div>
+            <pre class="interview-pre" id="example-${example.id}">${escapeHtml(example.code)}</pre>
+        </div>
+    `).join('');
+    renderInterviewPagination(totalPages);
+}
+
+function renderInterviewPagination(totalPages) {
+    const container = document.getElementById('interview-pagination');
+    if (!container) return;
+    container.innerHTML = Array.from({ length: totalPages }, (_, idx) => {
+        const page = idx + 1;
+        const active = page === interviewPage;
+        return `<button class="interview-page ${active ? 'active' : ''}" data-page="${page}">${page}</button>`;
+    }).join('');
+}
+
+// Notes
+function loadNotes() {
+    try {
+        const saved = localStorage.getItem(STORAGE_KEYS.NOTES);
+        return saved || '';
+    } catch {
+        return '';
+    }
+}
+
+function saveNotes() {
+    const textarea = document.getElementById('notes-input');
+    if (!textarea) return;
+    try {
+        localStorage.setItem(STORAGE_KEYS.NOTES, textarea.value);
+        showToast?.('Notes saved locally.', 'success');
+    } catch {
+        showToast?.('Unable to save notes locally.', 'error');
+    }
+}
+
+function downloadNotes() {
+    const textarea = document.getElementById('notes-input');
+    if (!textarea) return;
+    const blob = new Blob([textarea.value || ''], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'java-dsa-notes.txt';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+}
+
+// Data Structure Playground
+const dsState = {
+    active: 'array',
+    array: [],
+    stack: [],
+    queue: [],
+    heap: [],
+    graph: { nodes: [], edges: [] },
+    trie: {},
+    tree: null,
+    hashing: null,
+    heapsort: null,
+    rbtree: null,
+    circuits: null,
+    greedy: null,
+    visualN: 8
+};
+
+const dsConfigs = {
+    array: {
+        label: 'Array',
+        ops: [
+            { label: 'Load sample', action: () => { dsState.array = [2, 4, 7, 9, 13]; } },
+            { label: 'Append example', action: () => dsState.array.push(21) },
+            { label: 'Remove last', action: () => dsState.array.pop() }
+        ],
+        complexity: 'Access O(1), Insert/Remove end O(1) amortized'
+    },
+    stack: {
+        label: 'Stack',
+        ops: [
+            { label: 'Load call stack sample', action: () => { dsState.stack = ['main', 'dfs', 'visit']; } },
+            { label: 'Push frame', action: () => dsState.stack.push('helper()') },
+            { label: 'Pop frame', action: () => dsState.stack.pop() }
+        ],
+        complexity: 'Push/Pop O(1)'
+    },
+    queue: {
+        label: 'Queue',
+        ops: [
+            { label: 'Load print queue', action: () => { dsState.queue = ['docA', 'docB', 'docC']; } },
+            { label: 'Enqueue job', action: () => dsState.queue.push('docX') },
+            { label: 'Dequeue job', action: () => dsState.queue.shift() }
+        ],
+        complexity: 'Enqueue/Dequeue O(1) amortized'
+    },
+    heap: {
+        label: 'Min-Heap',
+        ops: [
+            { label: 'Load priorities', action: () => { dsState.heap = []; [5, 9, 12, 20, 3].forEach(v => heapInsert(v)); } },
+            { label: 'Insert priority', action: () => heapInsert(7) },
+            { label: 'Extract min', action: () => heapExtractMin() }
+        ],
+        complexity: 'Insert/Extract O(log n); Peek O(1)'
+    },
+    graph: {
+        label: 'Graph',
+        ops: [
+            { label: 'Load sample graph', action: () => { dsState.graph = { nodes: ['A', 'B', 'C', 'D'], edges: [['A', 'B'], ['B', 'C'], ['A', 'D']] }; } },
+            { label: 'Add node', action: () => addGraphNode() },
+            { label: 'Add edge', action: () => addGraphEdge() }
+        ],
+        complexity: 'Adjacency list: Add edge O(1); traversal O(V+E)'
+    },
+    trie: {
+        label: 'Trie',
+        ops: [
+            { label: 'Load sample words', action: () => loadSampleTrie() },
+            { label: 'Insert word', action: () => insertTrieWord(sampleWord()) },
+            { label: 'Reset', action: () => { dsState.trie = {}; } }
+        ],
+        complexity: 'Insert/Lookup O(L) where L = word length'
+    },
+    tree: {
+        label: 'Binary Tree',
+        ops: [
+            { label: 'Load sample tree', action: () => loadSampleTree() },
+            { label: 'Insert node', action: () => insertTreeValue(randomValue()) },
+            { label: 'Reset', action: () => { dsState.tree = null; } }
+        ],
+        complexity: 'Insert/Search O(log n) avg; Traversal O(n)'
+    },
+    hashing: {
+        label: 'Hashing',
+        ops: [
+            { label: 'Load sample table', action: () => { dsState.hashing = createSampleHash(); } },
+            { label: 'Insert key', action: () => insertHashKey(sampleWord()) },
+            { label: 'Reset', action: () => { dsState.hashing = createSampleHash(); } }
+        ],
+        complexity: 'Average O(1) lookup/insert; collisions handled with chaining'
+    },
+    heapsort: {
+        label: 'Heap Sort',
+        ops: [
+            { label: 'Load unsorted', action: () => { dsState.heapsort = { input: [7, 1, 9, 3, 6, 2], sorted: [], heapBuilt: false }; } },
+            { label: 'Heapify + extract', action: () => runHeapSortStep() },
+            { label: 'Reset', action: () => { dsState.heapsort = { input: [7, 1, 9, 3, 6, 2], sorted: [], heapBuilt: false }; } }
+        ],
+        complexity: 'O(n log n) time; O(1) extra space'
+    },
+    rbtree: {
+        label: 'Red-Black Tree',
+        ops: [
+            { label: 'Load balanced sample', action: () => { dsState.rbtree = createSampleRBTree(); } },
+            { label: 'Insert node', action: () => insertRBValue(randomValue()) },
+            { label: 'Reset', action: () => { dsState.rbtree = createSampleRBTree(); } }
+        ],
+        complexity: 'Insert/Search O(log n) guaranteed via balancing'
+    },
+    circuits: {
+        label: 'Circuits (Topo)',
+        ops: [
+            { label: 'Load DAG sample', action: () => { dsState.circuits = createSampleCircuit(); } },
+            { label: 'Add gate', action: () => addCircuitGate() },
+            { label: 'Reset', action: () => { dsState.circuits = createSampleCircuit(); } }
+        ],
+        complexity: 'Topological order O(V+E)'
+    },
+    greedy: {
+        label: 'Greedy',
+        ops: [
+            { label: 'Load intervals', action: () => { dsState.greedy = createSampleGreedy(); } },
+            { label: 'Pick optimal', action: () => pickGreedyInterval() },
+            { label: 'Reset', action: () => { dsState.greedy = createSampleGreedy(); } }
+        ],
+        complexity: 'Sort O(n log n) + selection O(n)'
+    }
+};
+
+const dsComplexityMap = {
+    array: 'linear',
+    stack: 'constant',
+    queue: 'constant',
+    heap: 'log',
+    graph: 'linear',
+    trie: 'linear',
+    tree: 'log',
+    hashing: 'constant',
+    heapsort: 'nlogn',
+    rbtree: 'log',
+    circuits: 'linear',
+    greedy: 'nlogn'
+};
+
+function randomValue() {
+    return Math.floor(Math.random() * 99) + 1;
+}
+
+function heapInsert(val) {
+    dsState.heap.push(val);
+    let i = dsState.heap.length - 1;
+    while (i > 0) {
+        const p = Math.floor((i - 1) / 2);
+        if (dsState.heap[p] <= dsState.heap[i]) break;
+        [dsState.heap[p], dsState.heap[i]] = [dsState.heap[i], dsState.heap[p]];
+        i = p;
+    }
+}
+
+function heapExtractMin() {
+    if (!dsState.heap.length) return null;
+    const min = dsState.heap[0];
+    const last = dsState.heap.pop();
+    if (dsState.heap.length) {
+        dsState.heap[0] = last;
+        let i = 0;
+        while (true) {
+            const l = i * 2 + 1;
+            const r = i * 2 + 2;
+            let smallest = i;
+            if (l < dsState.heap.length && dsState.heap[l] < dsState.heap[smallest]) smallest = l;
+            if (r < dsState.heap.length && dsState.heap[r] < dsState.heap[smallest]) smallest = r;
+            if (smallest === i) break;
+            [dsState.heap[i], dsState.heap[smallest]] = [dsState.heap[smallest], dsState.heap[i]];
+            i = smallest;
+        }
+    }
+    return min;
+}
+
+function addGraphNode() {
+    const id = `N${dsState.graph.nodes.length + 1}`;
+    dsState.graph.nodes.push(id);
+}
+
+function addGraphEdge() {
+    if (dsState.graph.nodes.length < 2) return;
+    const [a, b] = dsState.graph.nodes.slice(-2);
+    dsState.graph.edges.push([a, b]);
+}
+
+function insertTrieWord(word = sampleWord()) {
+    let node = dsState.trie;
+    for (const ch of word) {
+        node.children = node.children || {};
+        node.children[ch] = node.children[ch] || {};
+        node = node.children[ch];
+    }
+    node.isEnd = true;
+}
+
+function loadSampleTrie() {
+    dsState.trie = {};
+    ['code', 'stack', 'queue', 'tree'].forEach(w => insertTrieWord(w));
+}
+
+function createSampleHash() {
+    const buckets = Array.from({ length: 5 }, () => []);
+    ['map', 'stack', 'queue', 'tree'].forEach(key => insertHashKey(key, buckets));
+    return { buckets };
+}
+
+function hashKey(key, size = 5) {
+    let hash = 0;
+    for (const ch of key) {
+        hash = (hash * 31 + ch.charCodeAt(0)) % size;
+    }
+    return hash;
+}
+
+function insertHashKey(key, buckets = dsState.hashing?.buckets) {
+    const table = buckets || (dsState.hashing && dsState.hashing.buckets);
+    if (!table) return;
+    const idx = hashKey(key, table.length);
+    table[idx].push(key);
+    dsState.hashing = { buckets: table };
+}
+
+function runHeapSortStep() {
+    if (!dsState.heapsort) {
+        dsState.heapsort = { input: [7, 1, 9, 3, 6, 2], sorted: [] };
+    }
+    const { input, sorted } = dsState.heapsort;
+    if (!input.length && dsState.heap.length === 0) return;
+    // Build heap on first call
+    if (!dsState.heapsort.heapBuilt) {
+        dsState.heap = [];
+        input.forEach(v => heapInsert(v));
+        dsState.heapsort.heapBuilt = true;
+    }
+    const min = heapExtractMin();
+    if (min !== null && min !== undefined) {
+        sorted.push(min);
+    }
+    dsState.heapsort.input = dsState.heap.slice();
+    dsState.heapsort.sorted = sorted;
+}
+
+function sampleWord() {
+    const words = ['code', 'tree', 'heap', 'stack', 'queue', 'graph'];
+    return words[Math.floor(Math.random() * words.length)];
+}
+
+function loadSampleTree() {
+    dsState.tree = {
+        value: 8,
+        left: { value: 4, left: { value: 2 }, right: { value: 6 } },
+        right: { value: 12, left: { value: 10 }, right: { value: 14 } }
+    };
+}
+
+function insertTreeValue(val) {
+    if (!dsState.tree) {
+        dsState.tree = { value: val };
+        return;
+    }
+    let node = dsState.tree;
+    while (node) {
+        if (val < node.value) {
+            if (!node.left) {
+                node.left = { value: val };
+                return;
+            }
+            node = node.left;
+        } else {
+            if (!node.right) {
+                node.right = { value: val };
+                return;
+            }
+            node = node.right;
+        }
+    }
+}
+
+function setActiveStructure(key) {
+    dsState.active = key;
+    ensureSampleData(key);
+    renderDSPlayground();
+}
+
+function renderDSPlayground() {
+    const tabs = document.getElementById('ds-tabs');
+    const controls = document.getElementById('ds-controls');
+    const stateEl = document.getElementById('ds-state');
+    const complexityEl = document.getElementById('ds-complexity');
+    const visualEl = document.getElementById('ds-visual');
+    const nSlider = document.getElementById('ds-complexity-n');
+    const quickSummary = document.getElementById('ds-complexity-summary');
+    const quickOps = document.getElementById('ds-complexity-ops');
+    const quickLabel = document.getElementById('ds-complexity-label');
+    if (!tabs || !controls || !stateEl || !complexityEl) return;
+
+    ensureSampleData(dsState.active);
+
+    tabs.innerHTML = Object.entries(dsConfigs).map(([key, cfg]) => `
+        <button class="px-3 py-1 rounded-lg text-sm font-semibold ${dsState.active === key ? 'bg-indigo-500 text-white' : 'bg-slate-200 text-slate-800'}"
+            onclick="setActiveStructure('${key}')">${cfg.label}</button>
+    `).join('');
+
+    const cfg = dsConfigs[dsState.active];
+    controls.innerHTML = cfg.ops.map(op => `
+        <button class="w-full px-3 py-2 rounded-lg text-sm font-semibold bg-white border border-slate-200 hover:border-indigo-300"
+            onclick="performDSOp('${dsState.active}', '${op.label}')">${op.label}</button>
+    `).join('');
+
+    let stateText = '';
+    switch (dsState.active) {
+        case 'array':
+            stateText = JSON.stringify(dsState.array);
+            break;
+        case 'stack':
+            stateText = `Top -> ${JSON.stringify(dsState.stack.slice().reverse())}`;
+            break;
+        case 'queue':
+            stateText = `Front -> ${JSON.stringify(dsState.queue)}`;
+            break;
+        case 'heap':
+            stateText = `Heap array: ${JSON.stringify(dsState.heap)}`;
+            break;
+        case 'graph':
+            stateText = `Nodes: ${dsState.graph.nodes.join(', ')}\nEdges: ${dsState.graph.edges.map(e => `${e[0]}-${e[1]}`).join(', ')}`;
+            break;
+        case 'trie':
+            stateText = JSON.stringify(dsState.trie, null, 2);
+            break;
+        case 'tree':
+            stateText = `Nodes (in-order approx): ${JSON.stringify(listTreeValues(dsState.tree))}`;
+            break;
+        case 'hashing':
+            stateText = (dsState.hashing?.buckets || []).map((bucket, idx) => `Bucket ${idx}: ${bucket.join(', ') || 'empty'}`).join('\n');
+            break;
+        case 'heapsort':
+            stateText = `Heap array: ${JSON.stringify(dsState.heap || [])}\nSorted out: ${JSON.stringify(dsState.heapsort?.sorted || [])}`;
+            break;
+        case 'rbtree':
+            stateText = `Nodes: ${treeLevels(dsState.rbtree).flat().map(n => `${n.value}(${n.color || 'black'})`).join(', ')}`;
+            break;
+        case 'circuits':
+            stateText = `Gates: ${(dsState.circuits?.gates || []).join(', ')}\nEdges: ${(dsState.circuits?.edges || []).map(e => `${e[0]}->${e[1]}`).join(', ')}`;
+            break;
+        case 'greedy':
+            stateText = `Intervals: ${(dsState.greedy?.intervals || []).map(iv => `[${iv[0]},${iv[1]}]`).join(' ')}\nChosen: ${(dsState.greedy?.chosen || []).join(' ')}`;
+            break;
+        default:
+            stateText = '';
+    }
+    stateEl.textContent = stateText || 'No data yet.';
+    complexityEl.textContent = cfg.complexity;
+
+    if (visualEl) {
+        visualEl.innerHTML = buildDSVisual(dsState.active);
+    }
+
+    if (nSlider && quickSummary && quickOps && quickLabel) {
+        const activeKey = dsState.active;
+        if (!nSlider.dataset.bound) {
+            nSlider.addEventListener('input', () => {
+                dsState.visualN = Number(nSlider.value) || dsState.visualN;
+                renderDSPlayground();
+            });
+            nSlider.dataset.bound = 'true';
+        }
+        const n = Number(nSlider.value) || dsState.visualN || 8;
+        dsState.visualN = n;
+        const complexityKey = dsComplexityMap[activeKey] || 'linear';
+        const labelMap = {
+            constant: 'O(1)',
+            log: 'O(log n)',
+            linear: 'O(n)',
+            nlogn: 'O(n log n)',
+            quadratic: 'O(n²)'
+        };
+        const ops = Math.round(computeOps(n, complexityKey, 1));
+        quickSummary.textContent = `n=${n} • ${labelMap[complexityKey] || 'O(n)'}`;
+        quickOps.textContent = `${ops.toLocaleString()} ops`;
+        quickLabel.textContent = labelMap[complexityKey] || '';
+    }
+}
+
+function performDSOp(structKey, opLabel) {
+    const cfg = dsConfigs[structKey];
+    if (!cfg) return;
+    const op = cfg.ops.find(o => o.label === opLabel);
+    if (op) op.action();
+    renderDSPlayground();
+}
+
+function buildDSVisual(structKey) {
+    switch (structKey) {
+        case 'stack': {
+            if (!dsState.stack.length) return '<div class="text-xs text-slate-400">Stack is empty</div>';
+            const items = dsState.stack.map(val => `<div class="ds-box">${val}</div>`).join('');
+            return `<div class="text-[11px] uppercase text-emerald-200 font-semibold">Top</div><div class="ds-stack">${items}</div><div class="text-[11px] uppercase text-slate-400 font-semibold">Bottom</div>`;
+        }
+        case 'queue': {
+            if (!dsState.queue.length) return '<div class="text-xs text-slate-400">Queue is empty</div>';
+            const items = dsState.queue.map(val => `<div class="ds-box">${val}</div>`).join('');
+            return `<div class="ds-queue">${items}</div><div class="flex justify-between text-[11px] text-slate-300 mt-1"><span>Front</span><span>Back</span></div>`;
+        }
+        case 'array': {
+            if (!dsState.array.length) return '<div class="text-xs text-slate-400">Array is empty</div>';
+            const items = dsState.array.map((val, idx) => `<div class="ds-box">${idx}: ${val}</div>`).join('');
+            return `<div class="ds-array">${items}</div>`;
+        }
+        case 'heap': {
+            if (!dsState.heap.length) return '<div class="text-xs text-slate-400">Heap is empty</div>';
+            const items = dsState.heap.map((val, idx) => `<div class="ds-box">${val} <span class="text-[10px] opacity-70">(${idx})</span></div>`).join('');
+            return `<div class="ds-heap">${items}</div>`;
+        }
+        case 'graph': {
+            if (!dsState.graph.nodes.length) return '<div class="text-xs text-slate-400">Graph is empty</div>';
+            const nodes = dsState.graph.nodes.map(n => `<span class="ds-graph-node">${n}</span>`).join('');
+            const edges = dsState.graph.edges.map(e => `${e[0]} — ${e[1]}`).join(', ');
+            return `<div class="ds-graph-nodes">${nodes}</div><div class="ds-graph-edges mt-1">Edges: ${edges || 'None'}</div>`;
+        }
+        case 'trie': {
+            const hasNodes = Object.keys(dsState.trie).length;
+            const words = hasNodes ? listTrieWords(dsState.trie) : [];
+            const content = hasNodes ? words.join(', ') : 'Insert a word to see the trie grow.';
+            return `<div class="ds-trie text-xs whitespace-pre-wrap">Words: ${escapeHtml(content)}</div>`;
+        }
+        case 'tree': {
+            return buildTreeVisual(dsState.tree);
+        }
+        case 'hashing': {
+            if (!dsState.hashing || !dsState.hashing.buckets) return '<div class="text-xs text-slate-400">Hash table empty</div>';
+            return `
+                <div class="space-y-1">
+                    ${dsState.hashing.buckets.map((bucket, idx) => `
+                        <div class="flex items-center gap-2">
+                            <span class="text-[11px] text-slate-300 font-semibold">Bucket ${idx}</span>
+                            <div class="ds-array">${bucket.map(key => `<div class="ds-box">${escapeHtml(key)}</div>`).join('') || '<span class="text-xs text-slate-500">empty</span>'}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        case 'hashing': {
+            if (!dsState.hashing || !dsState.hashing.buckets) return '<div class="text-xs text-slate-400">Hash table empty</div>';
+            return `
+                <div class="space-y-1">
+                    ${dsState.hashing.buckets.map((bucket, idx) => `
+                        <div class="flex items-center gap-2">
+                            <span class="text-[11px] text-slate-300 font-semibold">Bucket ${idx}</span>
+                            <div class="ds-array">${bucket.map(key => `<div class="ds-box">${escapeHtml(key)}</div>`).join('') || '<span class="text-xs text-slate-500">empty</span>'}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+        case 'heapsort': {
+            const data = dsState.heapsort || { input: [], sorted: [] };
+            const inputBoxes = (data.input || []).map(v => `<div class="ds-box">${v}</div>`).join('');
+            const sortedBoxes = (data.sorted || []).map(v => `<div class="ds-box">${v}</div>`).join('');
+            return `
+                <div class="space-y-2">
+                    <div>
+                        <div class="text-[11px] text-slate-300 uppercase font-semibold">Current Heap Array</div>
+                        <div class="ds-array">${inputBoxes || '<span class="text-xs text-slate-500">empty</span>'}</div>
+                    </div>
+                    <div>
+                        <div class="text-[11px] text-emerald-200 uppercase font-semibold">Sorted Output</div>
+                        <div class="ds-array">${sortedBoxes || '<span class="text-xs text-slate-500">empty</span>'}</div>
+                    </div>
+                </div>
+            `;
+        }
+        case 'rbtree': {
+            const tree = dsState.rbtree || createSampleRBTree();
+            const levels = treeLevels(tree);
+            return `
+                <div class="space-y-2">
+                    ${levels.map(level => `
+                        <div class="flex justify-center gap-2">
+                            ${level.map(n => `<div class="ds-box" style="background:${n.color === 'red' ? 'rgba(239, 68, 68, 0.22)' : 'rgba(59, 130, 246, 0.18)'};border-color:${n.color === 'red' ? 'rgba(239,68,68,0.5)' : 'rgba(59,130,246,0.35)'}">${n.value}</div>`).join('')}
+                        </div>
+                    `).join('')}
+                    <div class="text-[11px] text-slate-300">Balanced red/black tree</div>
+                </div>
+            `;
+        }
+        case 'circuits': {
+            const data = dsState.circuits || createSampleCircuit();
+            const gates = data.gates || [];
+            return `
+                <div class="space-y-2">
+                    <div class="flex flex-wrap gap-2">
+                        ${gates.map(g => `<div class="ds-box">${escapeHtml(g)}</div>`).join('')}
+                    </div>
+                    <div class="text-[11px] text-slate-300">Edges: ${data.edges.map(e => `${e[0]}→${e[1]}`).join(', ') || 'none'}</div>
+                </div>
+            `;
+        }
+        case 'greedy': {
+            const data = dsState.greedy || createSampleGreedy();
+            const intervals = data.intervals || [];
+            const chosen = data.chosen || [];
+            return `
+                <div class="space-y-2">
+                    <div class="text-[11px] text-slate-300 uppercase font-semibold">Intervals (start, end)</div>
+                    <div class="flex flex-wrap gap-2">
+                        ${intervals.map(iv => {
+                            const tag = `${iv[0]},${iv[1]}`;
+                            const picked = chosen.includes(tag);
+                            return `<div class="ds-box" style="background:${picked ? 'rgba(52,211,153,0.2)' : 'rgba(255,255,255,0.12)'}">${iv[0]}-${iv[1]}</div>`;
+                        }).join('')}
+                    </div>
+                    <div class="text-[11px] text-emerald-200">Greedy picks non-overlapping shortest finishing times.</div>
+                </div>
+            `;
+        }
+        default:
+            return '<div class="text-xs text-slate-400">Choose a structure to visualize.</div>';
+    }
+}
+
+function ensureSampleData(key) {
+    switch (key) {
+        case 'array':
+            if (!dsState.array.length) dsState.array = [2, 4, 7, 9, 13];
+            break;
+        case 'stack':
+            if (!dsState.stack.length) dsState.stack = ['main', 'dfs'];
+            break;
+        case 'queue':
+            if (!dsState.queue.length) dsState.queue = ['docA', 'docB'];
+            break;
+        case 'heap':
+            if (!dsState.heap.length) {
+                dsState.heap = [];
+                [5, 9, 12, 20, 3].forEach(v => heapInsert(v));
+            }
+            break;
+        case 'graph':
+            if (!dsState.graph.nodes.length) {
+                dsState.graph = { nodes: ['A', 'B', 'C'], edges: [['A', 'B'], ['B', 'C']] };
+            }
+            break;
+        case 'trie':
+            if (!Object.keys(dsState.trie).length) {
+                loadSampleTrie();
+            }
+            break;
+        case 'tree':
+            if (!dsState.tree) {
+                loadSampleTree();
+            }
+            break;
+        case 'hashing':
+            if (!dsState.hashing) {
+                dsState.hashing = createSampleHash();
+            }
+            break;
+        case 'heapsort':
+            if (!dsState.heapsort) {
+                dsState.heapsort = { input: [7, 1, 9, 3, 6], sorted: [], heapBuilt: false };
+            }
+            break;
+        case 'rbtree':
+            if (!dsState.rbtree) {
+                dsState.rbtree = createSampleRBTree();
+            }
+            break;
+        case 'circuits':
+            if (!dsState.circuits) {
+                dsState.circuits = createSampleCircuit();
+            }
+            break;
+        case 'greedy':
+            if (!dsState.greedy) {
+                dsState.greedy = createSampleGreedy();
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+function listTrieWords(node = dsState.trie, prefix = '', words = []) {
+    if (!node) return words;
+    if (node.isEnd) words.push(prefix);
+    const children = node.children || {};
+    Object.keys(children).forEach(ch => listTrieWords(children[ch], prefix + ch, words));
+    return words;
+}
+
+function buildTreeVisual(tree = dsState.tree) {
+    if (!tree) return '<div class="text-xs text-slate-400">Tree is empty</div>';
+    const levels = [];
+    const queue = [{ node: tree, depth: 0 }];
+    while (queue.length) {
+        const { node, depth } = queue.shift();
+        levels[depth] = levels[depth] || [];
+        levels[depth].push(node);
+        if (node.left) queue.push({ node: node.left, depth: depth + 1 });
+        if (node.right) queue.push({ node: node.right, depth: depth + 1 });
+    }
+    return `
+        <div class="space-y-2">
+            ${levels.map((level, idx) => `
+                <div class="flex justify-center gap-2">
+                    ${level.map(n => `<div class="ds-box">${n.value}</div>`).join('')}
+                </div>
+            `).join('')}
+            <div class="text-[11px] text-slate-300">Level order · ${levels.length} levels</div>
+        </div>
+    `;
+}
+
+function listTreeValues(tree, arr = []) {
+    if (!tree) return arr;
+    if (tree.left) listTreeValues(tree.left, arr);
+    arr.push(tree.value);
+    if (tree.right) listTreeValues(tree.right, arr);
+    return arr;
+}
+
+function treeLevels(tree) {
+    if (!tree) return [];
+    const levels = [];
+    const queue = [{ node: tree, depth: 0 }];
+    while (queue.length) {
+        const { node, depth } = queue.shift();
+        levels[depth] = levels[depth] || [];
+        levels[depth].push(node);
+        if (node.left) queue.push({ node: node.left, depth: depth + 1 });
+        if (node.right) queue.push({ node: node.right, depth: depth + 1 });
+    }
+    return levels;
+}
+
+function createSampleRBTree() {
+    return {
+        value: 10,
+        color: 'black',
+        left: { value: 5, color: 'red', left: { value: 3, color: 'black' }, right: { value: 7, color: 'black' } },
+        right: { value: 15, color: 'red', left: { value: 13, color: 'black' }, right: { value: 18, color: 'black' } }
+    };
+}
+
+function insertRBValue(val) {
+    if (!dsState.rbtree) {
+        dsState.rbtree = createSampleRBTree();
+    }
+    // Simplified insert: append to rightmost for visualization only
+    let node = dsState.rbtree;
+    while (node.right) node = node.right;
+    node.right = { value: val, color: 'red' };
+}
+
+function createSampleCircuit() {
+    return {
+        gates: ['Input A', 'Input B', 'AND', 'NOT', 'Output'],
+        edges: [['Input A', 'AND'], ['Input B', 'AND'], ['AND', 'NOT'], ['NOT', 'Output']]
+    };
+}
+
+function addCircuitGate() {
+    if (!dsState.circuits) dsState.circuits = createSampleCircuit();
+    const idx = dsState.circuits.gates.length + 1;
+    const name = `Gate ${idx}`;
+    dsState.circuits.gates.push(name);
+    if (dsState.circuits.gates.length > 1) {
+        const prev = dsState.circuits.gates[dsState.circuits.gates.length - 2];
+        dsState.circuits.edges.push([prev, name]);
+    }
+}
+
+function createSampleGreedy() {
+    return { intervals: [[1, 3], [2, 4], [3, 5], [0, 6], [5, 7]], chosen: [] };
+}
+
+function pickGreedyInterval() {
+    if (!dsState.greedy) dsState.greedy = createSampleGreedy();
+    const { intervals } = dsState.greedy;
+    const sorted = intervals.slice().sort((a, b) => a[1] - b[1]);
+    const chosen = [];
+    let lastEnd = -Infinity;
+    sorted.forEach(iv => {
+        if (iv[0] >= lastEnd) {
+            chosen.push(`${iv[0]},${iv[1]}`);
+            lastEnd = iv[1];
+        }
+    });
+    dsState.greedy.chosen = chosen;
 }
 
 function getPlaygroundSnippet(key, language = appState.playground.language) {
@@ -5501,6 +6623,10 @@ function updateProgress() {
         `${appState.completedModules.size} of ${CONSTANTS.TOTAL_MODULES} modules completed`;
     document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
     document.getElementById('progress-percentage').textContent = `${progressPercentage}%`;
+    const goalEl = document.getElementById('progress-goal');
+    if (goalEl) {
+        goalEl.textContent = `Goal: Complete all ${CONSTANTS.TOTAL_MODULES} modules`;
+    }
 
     renderAchievements();
 }
@@ -5667,6 +6793,35 @@ function buildModuleCard(module) {
     const processedCode = processCode(isCodeExpanded ? rawCode : truncateCode(rawCode), module.id);
     const showExpandButton = rawCode.split('\n').length > CONSTANTS.CODE_PREVIEW_LINES;
     const supportSummary = module.topics?.slice(0, 2).join(' • ') || 'Guided office hours and async help.';
+const bonusBlock = module.interviewPrompts && module.interviewPrompts.length ? `
+        <div class="module-bonus-card">
+            <div class="flex items-center justify-between mb-2">
+                <span class="font-semibold text-indigo-600 text-sm">Bonus: Timed Interview Practice</span>
+                <span class="text-[11px] px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 font-semibold uppercase tracking-wide">2 prompts</span>
+            </div>
+            <div class="space-y-2">
+                ${module.interviewPrompts.slice(0, 2).map((prompt, idx) => `
+                    <div class="p-2 rounded-lg border border-slate-200 bg-white timed-prompt-card">
+                        <div class="flex items-center justify-between gap-2">
+                            <span class="text-sm font-semibold text-slate-800">${escapeHtml(prompt.title)}</span>
+                            <button class="text-xs px-2 py-1 rounded bg-indigo-500 hover:bg-indigo-600 text-white" onclick="startTimedPrompt('${module.id}', ${idx})">
+                                ⏱ ${prompt.durationMinutes || 20} min
+                            </button>
+                        </div>
+                        <p class="text-xs text-slate-600 mt-1">${escapeHtml(prompt.prompt)}</p>
+                        <p class="text-[11px] text-emerald-600 mt-1" id="prompt-timer-${module.id}-${idx}"></p>
+                    </div>
+                `).join('')}
+            </div>
+        </div>
+    ` : '';
+    const visualKey = getModuleVisualKey(module);
+    const visualLink = visualKey ? `
+        <button class="text-xs px-2.5 py-1 rounded font-semibold visual-link"
+            onclick="openPlaygroundStructure('${visualKey}')">
+            🔍 View visual in playground
+        </button>
+    ` : '';
 
     return `
         <div id="module-${module.id}" data-module-card="${module.id}" class="module-card bg-white border-slate-200 rounded-xl p-4 sm:p-6 shadow-xl border hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
@@ -5676,7 +6831,10 @@ function buildModuleCard(module) {
                     ${module.difficulty}
                 </span>
             </div>
-            <p class="text-slate-600 mb-3 sm:mb-4 text-sm sm:text-base leading-relaxed">${module.description}</p>
+            <div class="flex flex-wrap gap-2 mb-2">
+                ${visualLink}
+            </div>
+            <p class="text-slate-600 mb-3 sm:mb-4 text-sm sm:text-base leading-relaxed">${wrapGlossaryInline(module.description)}</p>
             <div class="mb-3 sm:mb-4">
                 <h4 class="font-semibold mb-2 text-slate-800 text-sm">Topics Covered:</h4>
                 <div class="flex flex-wrap gap-1 sm:gap-1.5">
@@ -5736,6 +6894,7 @@ function buildModuleCard(module) {
             <div class="bg-indigo-50 border-indigo-200 border-l-4 border-l-indigo-500 p-3 sm:p-4 mb-3 sm:mb-4 rounded-r-lg">
                 <div class="whitespace-pre-line text-xs sm:text-sm text-slate-800">${module.explanation}</div>
             </div>
+            ${bonusBlock}
             ${module.codeBreakdown && module.codeBreakdown.length ? `
                 <div class="code-breakdown-card">
                     <h4>🧠 Code Breakdown</h4>
@@ -5772,6 +6931,29 @@ function buildModuleCard(module) {
             </div>
         </div>
     `;
+}
+
+function getModuleVisualKey(module) {
+    const text = `${module.id || ''} ${module.title || ''} ${(module.topics || []).join(' ')}`.toLowerCase();
+    if (text.includes('hash')) return 'hashing';
+    if (text.includes('heap')) return 'heap';
+    if (text.includes('stack')) return 'stack';
+    if (text.includes('queue')) return 'queue';
+    if (text.includes('graph')) return 'graph';
+    if (text.includes('trie')) return 'trie';
+    if (text.includes('tree') || text.includes('bst') || text.includes('avl') || text.includes('red-black')) return 'tree';
+    if (text.includes('sort')) return 'heapsort';
+    if (text.includes('greedy')) return 'greedy';
+    return null;
+}
+
+function openPlaygroundStructure(structKey) {
+    if (!dsConfigs[structKey]) return;
+    setActiveStructure(structKey);
+    const el = document.getElementById('ds-playground');
+    if (el) {
+        el.scrollIntoView({ behavior: appState.reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    }
 }
 
 function renderPagination(totalPages) {
@@ -5892,6 +7074,25 @@ function highlightGlossaryText(text, searchTerm) {
     return safe.replace(pattern, '<span class="glossary-highlight">$1</span>');
 }
 
+function wrapGlossaryInline(text = '') {
+    if (!text || typeof text !== 'string') return text;
+    const termsToLink = glossaryTerms.slice(0, INLINE_GLOSSARY_LIMIT);
+    let output = escapeHtml(text);
+    termsToLink.forEach(term => {
+        const pattern = new RegExp(`\\b(${escapeRegExp(term.term)})\\b`, 'i');
+        output = output.replace(
+            pattern,
+            `<span class="glossary-inline" data-glossary-term="${escapeHtml(term.term)}"><strong><em>$1</em></strong></span>`
+        );
+    });
+    return output;
+}
+
+function getGlossaryEntry(term = '') {
+    const normalized = term.trim().toLowerCase();
+    return glossaryTerms.find(entry => entry.term.toLowerCase() === normalized);
+}
+
 function renderGlossaryFilters() {
     const container = document.getElementById('glossary-categories');
     if (!container) return;
@@ -5951,13 +7152,13 @@ function renderGlossary() {
     const highlightTerm = appState.glossarySearch.trim();
     content.innerHTML = filteredTerms.map(item => `
         <div class="p-4 rounded-xl border transition-all duration-200 hover:shadow-lg bg-slate-50 border-slate-200 hover:bg-white">
-            <div class="flex justify-between items-start mb-2">
+            <div class="flex justify-between items-start mb-2 gap-2">
                 <h4 class="font-semibold text-lg text-indigo-600">${highlightGlossaryText(item.term, highlightTerm)}</h4>
-                <span class="text-xs px-2 py-1 rounded-full bg-indigo-100 text-indigo-700">
+                <span class="text-xs px-2 py-1 rounded-full bg-indigo-100 text-indigo-700 whitespace-nowrap">
                     ${escapeHtml(item.category)}
                 </span>
             </div>
-            <p class="text-sm leading-relaxed text-slate-800">${highlightGlossaryText(item.definition, highlightTerm)}</p>
+            <p class="text-sm leading-relaxed text-slate-800 mb-2">${highlightGlossaryText(item.definition, highlightTerm)}</p>
         </div>
     `).join('');
 }
@@ -6106,6 +7307,99 @@ function toggleCompletion(moduleId) {
     renderInsights();
     renderModules();
     saveToLocalStorage();
+}
+
+const promptIntervals = new Map();
+const promptWorkspaceState = {
+    moduleId: null,
+    promptIndex: 0,
+    solution: '',
+    language: 'java',
+    notes: ''
+};
+
+function startTimedPrompt(moduleId, promptIndex = 0) {
+    const module = modules.find(m => m.id === moduleId);
+    if (!module || !module.interviewPrompts || !module.interviewPrompts[promptIndex]) return;
+    const targetId = `prompt-timer-${moduleId}-${promptIndex}`;
+    const display = document.getElementById(targetId);
+    if (!display) return;
+
+    if (promptIntervals.has(targetId)) {
+        clearInterval(promptIntervals.get(targetId));
+        promptIntervals.delete(targetId);
+    }
+
+    let remaining = (module.interviewPrompts[promptIndex].durationMinutes || 20) * 60;
+    display.textContent = `Timer started: ${Math.ceil(remaining / 60)} min`;
+
+    const interval = setInterval(() => {
+        remaining -= 1;
+        if (remaining <= 0) {
+            clearInterval(interval);
+            promptIntervals.delete(targetId);
+            display.textContent = '⏱ Time! Review your solution and complexity.';
+            showToast?.('Time is up! Reflect on your approach and complexity.', 'info');
+        } else {
+            const mins = Math.floor(remaining / 60);
+            const secs = remaining % 60;
+            display.textContent = `⏳ ${mins}m ${secs.toString().padStart(2, '0')}s left`;
+        }
+    }, 1000);
+
+    promptIntervals.set(targetId, interval);
+    openPromptWorkspace(moduleId, promptIndex);
+}
+
+function openPromptWorkspace(moduleId, promptIndex = 0) {
+    const module = modules.find(m => m.id === moduleId);
+    const prompt = module?.interviewPrompts?.[promptIndex];
+    const modal = document.getElementById('prompt-workspace-modal');
+    if (!module || !prompt || !modal) return;
+
+    const lang = getModuleLanguage(moduleId) || 'java';
+    const solution = prompt.solution || getCodeExample(module, lang) || '';
+    const notes = prompt.solutionNotes || 'Review the reference solution and compare complexity and edge cases.';
+    promptWorkspaceState.moduleId = moduleId;
+    promptWorkspaceState.promptIndex = promptIndex;
+    promptWorkspaceState.solution = solution;
+    promptWorkspaceState.language = lang;
+    promptWorkspaceState.notes = notes;
+
+    const title = document.getElementById('prompt-workspace-title');
+    const meta = document.getElementById('prompt-workspace-meta');
+    const promptText = document.getElementById('prompt-workspace-prompt');
+    const input = document.getElementById('prompt-workspace-input');
+    const solutionEl = document.getElementById('prompt-workspace-solution');
+    const notesEl = document.getElementById('prompt-workspace-notes');
+    const langPill = document.getElementById('prompt-workspace-language');
+
+    if (title) title.textContent = prompt.title || 'Interview Prompt';
+    if (meta) meta.textContent = `${module.title} • ${lang.toUpperCase()} • ${prompt.durationMinutes || 20} min`;
+    if (promptText) promptText.textContent = prompt.prompt || '';
+    if (input) input.value = '';
+    if (solutionEl) solutionEl.textContent = 'Submit to reveal the reference solution.';
+    if (notesEl) notesEl.textContent = '';
+    if (langPill) langPill.textContent = lang.toUpperCase();
+
+    modal.classList.remove('hidden');
+}
+
+function closePromptWorkspace() {
+    const modal = document.getElementById('prompt-workspace-modal');
+    if (modal) modal.classList.add('hidden');
+}
+
+function submitPromptWorkspace() {
+    const solutionEl = document.getElementById('prompt-workspace-solution');
+    const notesEl = document.getElementById('prompt-workspace-notes');
+    if (solutionEl) {
+        solutionEl.textContent = promptWorkspaceState.solution || 'Reference solution unavailable.';
+    }
+    if (notesEl && notesEl.textContent.trim().length === 0) {
+        notesEl.textContent = promptWorkspaceState.notes || '';
+    }
+    showToast?.('Compare your code with the reference and note differences.', 'info');
 }
 
 // Modal Functions
@@ -6813,10 +8107,14 @@ function init() {
     applyAccentTheme();
     applyCompactLayout();
     applyCardDepth();
+    applyReducedMotion();
+    applyHighContrast();
     updateDarkMode();
     updateCommentsToggle();
     updateHideCompletedToggle();
     updateCompactLayoutToggle();
+    updateToggleState('reduce-motion-toggle', 'reduce-motion-slider', appState.reduceMotion);
+    updateToggleState('high-contrast-toggle', 'high-contrast-slider', appState.highContrast);
     updateAccountChip();
     updateProgress();
     renderModules();
@@ -6824,10 +8122,18 @@ function init() {
     renderDailyChallenge();
     renderStudyTip();
     initPlayground();
+    initComplexityVisualizer();
+    renderDSPlayground();
+    renderInterviewExamples();
+    attachInlineGlossaryHandlers();
 
     // Set initial form values
     document.getElementById('search-input').value = appState.searchTerm;
     document.getElementById('difficulty-filter').value = appState.difficultyFilter;
+    const notesInput = document.getElementById('notes-input');
+    if (notesInput) {
+        notesInput.value = loadNotes();
+    }
 
     // Add event listeners
     bindClick('settings-btn', openSettings);
@@ -6878,9 +8184,38 @@ function init() {
 
     bindClick('reset-btn', resetProgress);
 
+    const reduceMotionToggle = document.getElementById('reduce-motion-toggle');
+    if (reduceMotionToggle) {
+        reduceMotionToggle.addEventListener('click', () => {
+            appState.reduceMotion = !appState.reduceMotion;
+            applyReducedMotion();
+            updateToggleState('reduce-motion-toggle', 'reduce-motion-slider', appState.reduceMotion);
+            saveToLocalStorage();
+        });
+    }
+
+    const highContrastToggle = document.getElementById('high-contrast-toggle');
+    if (highContrastToggle) {
+        highContrastToggle.addEventListener('click', () => {
+            appState.highContrast = !appState.highContrast;
+            applyHighContrast();
+            updateToggleState('high-contrast-toggle', 'high-contrast-slider', appState.highContrast);
+            saveToLocalStorage();
+        });
+    }
+
     const studyToggleButton = document.getElementById('study-session-toggle');
     if (studyToggleButton) {
         studyToggleButton.addEventListener('click', toggleManualStudySession);
+    }
+
+    const saveNotesBtn = document.getElementById('save-notes');
+    if (saveNotesBtn) {
+        saveNotesBtn.addEventListener('click', saveNotes);
+    }
+    const downloadNotesBtn = document.getElementById('download-notes');
+    if (downloadNotesBtn) {
+        downloadNotesBtn.addEventListener('click', downloadNotes);
     }
 
     // Dark mode toggle
@@ -6970,6 +8305,26 @@ function init() {
             }
         });
     });
+
+    const interviewPagination = document.getElementById('interview-pagination');
+    if (interviewPagination) {
+        interviewPagination.addEventListener('click', (event) => {
+            const target = event.target.closest('[data-page]');
+            if (!target) return;
+            const page = Number(target.dataset.page);
+            if (Number.isFinite(page)) {
+                renderInterviewExamples(page);
+            }
+        });
+    }
+
+    bindClick('prompt-workspace-submit', submitPromptWorkspace);
+    const promptModal = document.getElementById('prompt-workspace-modal');
+    if (promptModal) {
+        promptModal.addEventListener('click', (e) => {
+            if (e.target === promptModal) closePromptWorkspace();
+        });
+    }
 
     // Flashcard event listeners
     document.getElementById('prev-flashcard').addEventListener('click', prevFlashcard);
@@ -7163,22 +8518,10 @@ function saveStudyHabit() {
 }
 
 function ensureStudyTimesReset() {
-    try {
-        if (localStorage.getItem(RESET_FLAGS.STUDY_TIMES) === 'done') {
-            return;
-        }
-    } catch (error) {
-        console.warn('Unable to read reset flag:', error);
-    }
     studyMetrics = { totalTimeMs: 0, todayMs: 0, todayDate: null };
     saveStudyMetrics();
     studyHabit = { streak: 0, lastDate: null, longestStreak: 0 };
     saveStudyHabit();
-    try {
-        localStorage.setItem(RESET_FLAGS.STUDY_TIMES, 'done');
-    } catch (error) {
-        console.warn('Unable to persist reset flag:', error);
-    }
 }
 
 function updateStudyHabit(sessionTime) {
