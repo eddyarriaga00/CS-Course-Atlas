@@ -7551,13 +7551,13 @@ function updateHeaderShrink() {
     const chip = document.getElementById('account-chip');
     const inner = header?.querySelector('.header-inner');
 
-    const progress = Math.min(appState.scrollY / 80, 1);
+    const progress = Math.min(appState.scrollY / 60, 1);
     const isScrolled = appState.scrollY > 10;
-    const isCollapsed = appState.scrollY > 20;
-    const isFullyShrunken = appState.scrollY > 60;
+    const isCollapsed = appState.scrollY > 10;
+    const isFullyShrunken = appState.scrollY > 40;
 
     // Header padding - smaller values for optimization
-    const paddingY = Math.max(10 - progress * 8, 2);
+    const paddingY = Math.max(10 - progress * 9, 1.5);
     if (inner) {
         inner.style.paddingTop = `${paddingY}px`;
         inner.style.paddingBottom = `${paddingY}px`;
@@ -7579,7 +7579,7 @@ function updateHeaderShrink() {
 
     // Buttons
     const buttonOpacity = Math.max(1 - progress * 1.4, 0);
-    const buttonScale = Math.max(1 - progress * 0.35, 0.7);
+    const buttonScale = Math.max(1 - progress * 0.4, 0.65);
     buttons.style.opacity = buttonOpacity;
     buttons.style.transform = `scale(${buttonScale})`;
     buttons.style.transformOrigin = 'top right';

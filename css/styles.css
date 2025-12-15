@@ -404,14 +404,16 @@ body.dark .prompt-solution {
     #main-header.header-collapsed {
         padding-top: 0 !important;
         padding-bottom: 0 !important;
+        min-height: 38px;
     }
     #main-header.header-collapsed .header-inner {
-        padding-top: 2px !important;
-        padding-bottom: 2px !important;
-        gap: 4px;
+        padding-top: 1px !important;
+        padding-bottom: 1px !important;
+        gap: 2px;
     }
     #main-header.header-collapsed #header-buttons {
-        transform: scale(0.72);
+        transform: scale(0.65);
+        transform-origin: top right;
     }
     .prompt-modal-panel {
         margin: 6vh 10px;
@@ -436,7 +438,13 @@ body.dark .prompt-solution {
         gap: 6px;
     }
     .header-brand h1 {
-        font-size: clamp(1rem, 5vw, 1.35rem);
+        font-size: clamp(0.9rem, 3.5vw, 1.05rem);
+        line-height: 1.05;
+    }
+    .header-collapsed .header-control {
+        padding-block: 4px;
+        padding-inline: 9px;
+        font-size: 0.72rem;
     }
 }
 
@@ -1053,6 +1061,7 @@ body.dark .hero-section p {
     padding-top: 10px;
     padding-bottom: 10px;
     transition: padding 0.25s ease, gap 0.25s ease;
+    gap: 6px;
 }
 
 .header-brand {
@@ -1070,12 +1079,13 @@ body.dark .hero-section p {
 }
 
 .header-collapsed .header-inner {
-    padding-top: 4px;
-    padding-bottom: 4px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    gap: 4px;
 }
 
 .header-collapsed .header-brand h1 {
-    font-size: clamp(1rem, 3vw, 1.3rem) !important;
+    font-size: clamp(0.95rem, 3.5vw, 1.2rem) !important;
     transform: translateY(1px);
     line-height: 1.05;
 }
@@ -1089,7 +1099,7 @@ body.dark .hero-section p {
 }
 
 .header-collapsed #header-buttons {
-    transform: scale(0.82);
+    transform: scale(0.8);
     transform-origin: top right;
 }
 
@@ -1098,9 +1108,15 @@ body.dark .hero-section p {
 }
 
 .header-collapsed .header-control {
-    padding-top: 6px;
-    padding-bottom: 6px;
-    font-size: 0.78rem;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 0.76rem;
+}
+
+.header-collapsed {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    min-height: 44px;
 }
 
 .account-chip {
@@ -1832,6 +1848,7 @@ body.dark .purple-glow-button {
     border-bottom: 1px solid var(--surface-border);
     box-shadow: var(--shadow-card);
     color: var(--text-primary-color);
+    transition: padding 0.2s ease, min-height 0.2s ease;
 }
 
 #main-header h1,
