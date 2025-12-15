@@ -318,6 +318,7 @@ body.dark .visual-link {
     position: fixed;
     inset: 0;
     z-index: 60;
+    overflow-y: auto;
 }
 .prompt-modal.hidden {
     display: none;
@@ -331,6 +332,7 @@ body.dark .visual-link {
     position: relative;
     max-width: 1100px;
     margin: 4vh auto;
+    width: calc(100% - 20px);
     background: var(--surface-primary);
     border: 1px solid var(--surface-border);
     border-radius: 16px;
@@ -339,6 +341,7 @@ body.dark .visual-link {
     z-index: 61;
     max-height: calc(100vh - 32px);
     overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 .prompt-close {
     background: transparent;
@@ -398,10 +401,23 @@ body.dark .prompt-solution {
 }
 
 @media (max-width: 640px) {
+    #main-header.header-collapsed {
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+    }
+    #main-header.header-collapsed .header-inner {
+        padding-top: 2px !important;
+        padding-bottom: 2px !important;
+        gap: 4px;
+    }
+    #main-header.header-collapsed #header-buttons {
+        transform: scale(0.72);
+    }
     .prompt-modal-panel {
         margin: 6vh 10px;
         padding: 0.9rem;
         max-height: calc(100vh - 24px);
+        width: calc(100% - 12px);
     }
     .prompt-editor,
     .prompt-solution {
@@ -418,6 +434,9 @@ body.dark .prompt-solution {
     }
     #header-buttons {
         gap: 6px;
+    }
+    .header-brand h1 {
+        font-size: clamp(1rem, 5vw, 1.35rem);
     }
 }
 

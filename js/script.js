@@ -6,7 +6,7 @@
 const DEFAULT_PLAYGROUND_SAMPLE = 'hello-world';
 
 const appState = {
-    darkMode: false,
+    darkMode: true,
     showComments: true,
     completedModules: new Set(),
     completedQuizzes: new Set(),
@@ -6018,7 +6018,8 @@ function loadFromLocalStorage() {
     if (saved) {
         try {
             const state = JSON.parse(saved);
-            appState.darkMode = state.darkMode || false;
+            const savedDarkMode = state.darkMode;
+            appState.darkMode = savedDarkMode === undefined ? true : Boolean(savedDarkMode);
             appState.showComments = state.showComments !== undefined ? state.showComments : true;
             appState.completedModules = new Set(state.completedModules || []);
             appState.expandedCode = new Set(state.expandedCode || []);
@@ -7550,13 +7551,13 @@ function updateHeaderShrink() {
     const chip = document.getElementById('account-chip');
     const inner = header?.querySelector('.header-inner');
 
-    const progress = Math.min(appState.scrollY / 120, 1);
+    const progress = Math.min(appState.scrollY / 80, 1);
     const isScrolled = appState.scrollY > 10;
     const isCollapsed = appState.scrollY > 20;
-    const isFullyShrunken = appState.scrollY > 90;
+    const isFullyShrunken = appState.scrollY > 60;
 
     // Header padding - smaller values for optimization
-    const paddingY = Math.max(10 - progress * 7, 3);
+    const paddingY = Math.max(10 - progress * 8, 2);
     if (inner) {
         inner.style.paddingTop = `${paddingY}px`;
         inner.style.paddingBottom = `${paddingY}px`;
@@ -7567,7 +7568,7 @@ function updateHeaderShrink() {
     header.classList.toggle('header-collapsed', isCollapsed);
 
     // Title scale
-    title.style.transform = isFullyShrunken ? 'scale(0.9)' : 'scale(1)';
+    title.style.transform = isFullyShrunken ? 'scale(0.88)' : 'scale(1)';
 
     // Subtitle opacity
     const subtitleOpacity = Math.max(1 - progress * 1.8, 0);
