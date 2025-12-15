@@ -128,7 +128,7 @@ const STUDY_PLAN_LABELS = {
     }
 };
 
-const PLAYGROUND_SNIPPETS = {
+const BASE_PLAYGROUND_SNIPPETS = {
     'hello-world': {
         label: 'Hello World',
         code: `public class Main {
@@ -193,6 +193,20 @@ public class Main {
 }`
     }
 };
+
+function buildPlaygroundSnippetLibrary(modulesList = []) {
+    const snippets = {};
+    modulesList.forEach(module => {
+        const javaSource = (module.codeExamples && module.codeExamples.java) || module.codeExample || '';
+        if (!javaSource || typeof javaSource !== 'string') return;
+        const snippetId = `module-${module.id}`;
+        snippets[snippetId] = {
+            label: `${module.title}`,
+            code: javaSource.trim()
+        };
+    });
+    return snippets;
+}
 
 async function fakeAccountAPI(payload) {
     if (ACCOUNT_API_ENDPOINT) {
@@ -2101,7 +2115,7 @@ const isPalindromeFunctional = str => {
     {
         id: 'linked-lists',
         title: 'Linked Lists',
-        description: 'We narrate every pointer move in `reverseList`, `hasCycle`, and `mergeTwoLists`, showing how temp nodes, tortoise–hare detection, and dummy heads keep lists consistent.',
+        description: 'Line-by-line narration shows how `reverseList` flips `next` pointers, how Floyd\'s tortoise–hare loop guard works inside `hasCycle`, and how the dummy node plus pointer weaving in `mergeTwoLists` prevents null-pointer bugs.',
         difficulty: 'intermediate',
         topics: ['Singly Linked Lists', 'Doubly Linked Lists', 'Cycle Detection', 'List Reversal', 'Merge Operations'],
         codeExamples: {
@@ -2367,8 +2381,17 @@ class LinkedListOperations {
     }
 }`
         },
-        explanation: `Linked lists provide dynamic memory allocation and efficient insertion/deletion at any position. Unlike arrays, they don\'t require contiguous memory but sacrifice random access. Understanding pointer manipulation and edge cases (null checks, single nodes) is crucial for mastering linked list algorithms.`,
-        resources: ['Linked List Visualization', 'Floyd\'s Cycle Detection', 'Pointer Manipulation Guide']
+        explanation: `We slow down every pointer mutation: storing \`nextTemp\`, rerouting \`current.next\`, advancing slow/fast pointers, and stitching two sorted lists together with a dummy head so you can reason about ownership and edge cases (empty lists, one node, intersecting chains).`,
+        codeBreakdown: [
+            { label: 'reverseList', detail: 'Introduces a prev pointer, stores the next node, rewires the current link, then advances both pointers until the list flips.' },
+            { label: 'hasCycle', detail: 'Uses slow/fast pointers to detect loops; the sample explains why moving two steps vs one guarantees a meeting point when a cycle exists.' },
+            { label: 'mergeTwoLists', detail: 'Builds a dummy node so you always have a stable head reference while weaving the smaller node from either list into the result.' }
+        ],
+        resources: [
+            { text: 'Linked List Animations - VisuAlgo', url: 'https://visualgo.net/en/list' },
+            { text: "Floyd's Cycle Detection - GeeksforGeeks", url: 'https://www.geeksforgeeks.org/detect-loop-in-a-linked-list/' },
+            { text: 'Merge Two Sorted Lists Walkthrough - LeetCode Discuss', url: 'https://leetcode.com/problems/merge-two-sorted-lists/solutions/' }
+        ]
     },
     // Additional modules (blank templates as in original)
     {
@@ -2453,7 +2476,7 @@ public class StackQueueDemo {
     {
         id: 'trees-basics',
         title: 'Binary Trees',
-        description: 'Follow `insertRecursive`, `inorder`, and `levelOrderTraversal` to see how the BST is built, how DFS prints sorted values, and how a queue drives breadth-first output.',
+        description: 'The walkthrough pauses inside `insertRecursive`, `inorder`, and `levelOrderTraversal` so you can watch how new nodes find their spot, how recursive DFS prints sorted data, and how the queue-driven BFS fans through each level.',
         difficulty: 'intermediate',
         topics: ['Tree Traversal', 'Binary Search Trees', 'Tree Height', 'Path Problems', 'Tree Construction'],
         codeExample: `// Binary tree traversals and insert in Java
@@ -2516,13 +2539,22 @@ public class BinaryTree {
         bst.levelOrderTraversal();
     }
 }`,
-        explanation: `You will practice building binary trees from traversal lists, executing DFS traversals iteratively, and reasoning about height and balance. The section also demystifies BST invariants, common recursion templates, and how to restructure trees for path-sum, diameter, and serialization problems.`,
-        resources: ['Tree Traversals', 'BST Operations']
+        explanation: `We draw the BST invariant at every recursive call so you see why values smaller than the current node drift left and larger values drift right. Then we highlight how inorder guarantees sorted output, why queues help with BFS level markers, and how to adapt the same patterns to path-sum or serialization tasks.`,
+        codeBreakdown: [
+            { label: 'insertRecursive', detail: 'Checks whether to branch left or right, creates a node when it reaches null, and returns the rebuilt subtree to the parent call.' },
+            { label: 'inorder', detail: 'Visits left subtree, logs the current value, then visits the right subtree to yield ascending output in a BST.' },
+            { label: 'levelOrderTraversal', detail: 'Uses a queue to pop the current node and push children so values stream out level by level.' }
+        ],
+        resources: [
+            { text: 'Binary Tree Traversals - Programiz', url: 'https://www.programiz.com/dsa/tree-traversal' },
+            { text: 'BST Visualizer - VisuAlgo', url: 'https://visualgo.net/en/bst' },
+            { text: 'Breadth First Search for Trees - GeeksforGeeks', url: 'https://www.geeksforgeeks.org/level-order-tree-traversal/' }
+        ]
     },
     {
         id: 'hash-tables',
         title: 'Hash Tables and Maps',
-        description: 'We count characters with `HashMap.merge` and then peel back a custom `SimpleHashTable` that hashes keys, stores chained entries, and resolves collisions bucket by bucket.',
+        description: 'First we trace how `HashMap.merge` updates a character-frequency map, then we build a lightweight `SimpleHashTable` so you can watch hashing, bucket selection, and collision resolution happen in slow motion.',
         difficulty: 'intermediate',
         topics: ['Hash Functions', 'Collision Resolution', 'HashMap Operations', 'Hash Sets', 'Load Factor'],
         codeExample: `// Frequency counter using HashMap and simple custom hash table
@@ -2591,13 +2623,22 @@ public class HashTableDemo {
         System.out.println(table.get(\"java\").orElse(\"Not found\")); // Coffee language
     }
 }`,
-        explanation: `We cover how good hash functions minimize collisions, why load factor matters, and when to choose chaining vs. open addressing. Practical labs include frequency maps, LRU caches, and dictionary-based deduplication so you can confidently use HashMap/HashSet in coding interviews.`,
-        resources: ['Hash Function Design', 'Collision Handling']
+        explanation: `Zoomed-in commentary shows how a string key becomes a bucket index, what happens when two keys collide, and how chaining keeps entries accessible. You will also compare average-case O(1) operations with worst-case O(n) scans, tweak load factors, and reason about when to reach for LinkedHashMap or TreeMap.`,
+        codeBreakdown: [
+            { label: 'countLetters', detail: 'Uses HashMap.merge to increment counts atomically, demonstrating why hash tables shine for aggregations.' },
+            { label: 'SimpleHashTable.put', detail: 'Computes the bucket, scans for an existing key, then either updates the value or appends a new entry.' },
+            { label: 'SimpleHashTable.get', detail: 'Reuses the same hash -> bucket mapping to locate entries and wraps the answer in Optional for safe reads.' }
+        ],
+        resources: [
+            { text: 'Hash Table Basics - Programiz', url: 'https://www.programiz.com/dsa/hash-table' },
+            { text: 'Java HashMap Tutorial - Baeldung', url: 'https://www.baeldung.com/java-hashmap' },
+            { text: 'Collision Resolution Strategies - GeeksforGeeks', url: 'https://www.geeksforgeeks.org/collision-resolution-techniques/' }
+        ]
     },
     {
         id: 'heaps',
         title: 'Heaps and Priority Queues',
-        description: 'First `priorityQueueDemo` shows the library min-heap, then `heapify`/`buildMinHeap` rebuild the structure from an array so you can trace index math, swaps, and bottom-up heap construction.',
+        description: '`priorityQueueDemo` confirms how Java\'s PriorityQueue pops the smallest element, then `heapify`/`buildMinHeap` rebuild the structure from an array so you can trace the parent/child index math, swaps, and bubbling logic yourself.',
         difficulty: 'intermediate',
         topics: ['Min Heap', 'Max Heap', 'Heap Operations', 'Heapify', 'Priority Queues'],
         codeExample: `// Min-heap using PriorityQueue plus manual heapify
@@ -2645,13 +2686,22 @@ public class HeapExamples {
         System.out.println(\"Heapified array: \" + Arrays.toString(arr));
     }
 }`,
-        explanation: `Heaps guarantee log n insert/delete while always exposing the next highest or lowest priority element. You will implement binary heaps from scratch, trace heapify, compare min/max structures, and apply them to Dijkstra, streaming medians, and scheduling simulations.`,
-        resources: ['Heap Properties', 'Priority Queue Applications']
+        explanation: `We highlight the array representation (parent i -> children 2i+1 / 2i+2), explain why heapify works from the last parent backwards, and compare the ergonomics of the library queue vs manual implementations. Practice prompts connect heaps to scheduling, streaming medians, and graph algorithms.`,
+        codeBreakdown: [
+            { label: 'priorityQueueDemo', detail: "Uses Java's PriorityQueue to show automatic heap ordering and repeated poll behavior." },
+            { label: 'heapify', detail: 'Looks at both children, finds the smallest, swaps as needed, and recurses until the subtree satisfies the heap property.' },
+            { label: 'buildMinHeap', detail: 'Starts at the last non-leaf index and calls heapify on each parent so the structure stabilizes in O(n) time.' }
+        ],
+        resources: [
+            { text: 'Binary Heap Tutorial - GeeksforGeeks', url: 'https://www.geeksforgeeks.org/binary-heap/' },
+            { text: 'PriorityQueue API - Oracle Docs', url: 'https://docs.oracle.com/javase/8/docs/api/java/util/PriorityQueue.html' },
+            { text: 'Heap Visualization - VisuAlgo', url: 'https://visualgo.net/en/heap' }
+        ]
     },
     {
         id: 'sorting-algorithms',
         title: 'Sorting Algorithms',
-        description: '`bubbleSort`, `mergeSort`, and `quickSort` live in one class, letting us highlight each loop condition, partition, and merge so the control flow behind every comparison is crystal clear.',
+        description: '`bubbleSort`, `mergeSort`, and `quickSort` live in one class so we can pause after each comparison, swap, merge, and pivot partition to explain exactly why elements move the way they do.',
         difficulty: 'intermediate',
         topics: ['Bubble Sort', 'Merge Sort', 'Quick Sort', 'Heap Sort', 'Radix Sort'],
         codeExample: `// Detailed sorting implementations with analysis
@@ -2733,8 +2783,17 @@ public class SortingAlgorithms {
         System.out.println(\"Merge Sort: \" + Arrays.toString(other));
     }
 }`,
-        explanation: `This module compares comparison-based sorts (quick, merge, heap) with non-comparison sorts like counting and radix, emphasizing stability and memory trade-offs. Step-by-step traces and code exercises help you recognize when to favor O(n log n) strategies vs linear-time specialized sorts.`,
-        resources: ['Sorting Comparisons', 'Algorithm Complexity']
+        explanation: `We annotate inner loops, highlight invariants (left side already sorted, pivot partitioned, temp array holding the merge), and summarize time/space costs so you can instantly match a real problem with the right sorting strategy.`,
+        codeBreakdown: [
+            { label: 'bubbleSort', detail: 'Nested loops bubble the largest value to the end, and the swapped flag explains the early exit optimization.' },
+            { label: 'mergeSort', detail: 'Splits the array, recurses, and merges using a helper buffer so you see how stable merging works.' },
+            { label: 'quickSort', detail: 'Chooses a pivot, partitions the array in place, then recurses on the subarrays to finish in average O(n log n).' }
+        ],
+        resources: [
+            { text: 'Sorting Algorithm Visualizer - VisuAlgo', url: 'https://visualgo.net/en/sorting' },
+            { text: 'Sorting Summary Table - GeeksforGeeks', url: 'https://www.geeksforgeeks.org/sorting-algorithms/' },
+            { text: 'Merge vs Quick Sort - Baeldung', url: 'https://www.baeldung.com/cs/merge-sort-vs-quicksort' }
+        ]
     },
     {
         id: 'searching-algorithms',
@@ -4751,6 +4810,37 @@ function kmpSearch(text, pattern) {
     }
 ];
 
+const MODULE_DISPLAY_ORDER = {
+    'java-basics': 0,
+    'control-flow': 1,
+    'oop-basics': 2,
+    'exception-handling': 3,
+    'arrays-strings': 4,
+    'stacks-queues': 5,
+    'linked-lists': 6,
+    'trees-basics': 7,
+    'hash-tables': 8,
+    'heaps': 9,
+    'sorting-algorithms': 10,
+    'searching-algorithms': 11
+};
+
+const DIFFICULTY_RANK = { beginner: 0, intermediate: 1, advanced: 2 };
+
+modules.sort((a, b) => {
+    const priorityA = MODULE_DISPLAY_ORDER[a.id] ?? Number.MAX_SAFE_INTEGER;
+    const priorityB = MODULE_DISPLAY_ORDER[b.id] ?? Number.MAX_SAFE_INTEGER;
+    if (priorityA !== priorityB) return priorityA - priorityB;
+    const diffRank = (DIFFICULTY_RANK[a.difficulty] ?? 99) - (DIFFICULTY_RANK[b.difficulty] ?? 99);
+    if (diffRank !== 0) return diffRank;
+    return a.title.localeCompare(b.title);
+});
+
+const modulePlaygroundSnippets = buildPlaygroundSnippetLibrary(modules);
+const PLAYGROUND_SNIPPETS = { ...BASE_PLAYGROUND_SNIPPETS, ...modulePlaygroundSnippets };
+const BASE_PLAYGROUND_SNIPPET_KEYS = Object.keys(BASE_PLAYGROUND_SNIPPETS);
+const MODULE_PLAYGROUND_SNIPPET_KEYS = Object.keys(modulePlaygroundSnippets);
+
 const SAMPLE_LANGUAGES = ['java', 'python', 'cpp', 'javascript'];
 
 function formatIdentifier(id = '') {
@@ -5374,10 +5464,50 @@ function getPlaygroundSnippet(key) {
     return PLAYGROUND_SNIPPETS[key] || PLAYGROUND_SNIPPETS[DEFAULT_PLAYGROUND_SAMPLE];
 }
 
+function populatePlaygroundSnippetOptions() {
+    const select = document.getElementById('playground-snippets');
+    if (!select) return;
+
+    const optionGroups = [];
+
+    if (BASE_PLAYGROUND_SNIPPET_KEYS.length) {
+        const baseOptions = BASE_PLAYGROUND_SNIPPET_KEYS.map(key => {
+            const snippet = BASE_PLAYGROUND_SNIPPETS[key];
+            const label = snippet?.label || formatIdentifier(key);
+            return `<option value="${key}">${label}</option>`;
+        }).join('');
+        optionGroups.push(`<optgroup label="Starter Samples">${baseOptions}</optgroup>`);
+    }
+
+    const moduleOptions = modules
+        .map((module, index) => {
+            const snippetKey = `module-${module.id}`;
+            if (!modulePlaygroundSnippets[snippetKey]) return null;
+            return `<option value="${snippetKey}">${index + 1}. ${module.title}</option>`;
+        })
+        .filter(Boolean)
+        .join('');
+
+    if (moduleOptions) {
+        optionGroups.push(`<optgroup label="Module Walkthroughs">${moduleOptions}</optgroup>`);
+    }
+
+    if (!optionGroups.length) {
+        optionGroups.push('<option value="hello-world">Hello World</option>');
+    }
+
+    select.innerHTML = optionGroups.join('');
+    const preferredSample = PLAYGROUND_SNIPPETS[appState.playground.sample]
+        ? appState.playground.sample
+        : DEFAULT_PLAYGROUND_SAMPLE;
+    select.value = preferredSample;
+}
+
 function initPlayground() {
     const editor = document.getElementById('playground-editor');
     if (!editor) return;
 
+    populatePlaygroundSnippetOptions();
     const select = document.getElementById('playground-snippets');
     if (!appState.playground.code) {
         const snippet = getPlaygroundSnippet(appState.playground.sample);
@@ -5385,10 +5515,11 @@ function initPlayground() {
     }
     editor.value = appState.playground.code;
     if (select) {
-        if (!PLAYGROUND_SNIPPETS[select.value]) {
-            select.value = appState.playground.sample;
-        }
-        select.value = appState.playground.sample;
+        const fallbackSample = PLAYGROUND_SNIPPETS[appState.playground.sample]
+            ? appState.playground.sample
+            : DEFAULT_PLAYGROUND_SAMPLE;
+        select.value = fallbackSample;
+        appState.playground.sample = fallbackSample;
         select.addEventListener('change', (event) => {
             setPlaygroundSample(event.target.value);
         });
