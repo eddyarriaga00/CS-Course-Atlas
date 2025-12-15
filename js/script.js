@@ -3,6 +3,8 @@
 // =================================
 // GLOBAL STATE
 // =================================
+const DEFAULT_PLAYGROUND_SAMPLE = 'hello-world';
+
 const appState = {
     darkMode: false,
     showComments: true,
@@ -34,7 +36,13 @@ const appState = {
     compactLayout: false,
     cardDensity: 'standard',
     studyPlan: null,
-    accountProfile: null
+    accountProfile: null,
+    playground: {
+        code: '',
+        sample: DEFAULT_PLAYGROUND_SAMPLE,
+        output: '// Output will appear here',
+        isRunning: false
+    }
 };
 
 // =================================
@@ -50,6 +58,15 @@ const STORAGE_KEYS = {
     STUDY_METRICS: 'javaDSAStudyMetrics',
     STUDY_HABIT: 'javaDSAStudyHabit'
 };
+
+const RESET_FLAGS = {
+    STUDY_TIMES: 'javaDSAResetTimesV2'
+};
+
+const SUPPORT_EMAIL = 'eddyarriaga06@gmail.com';
+const CODE_RUNNER_ENDPOINT = 'https://emkc.org/api/v2/piston/execute';
+const CODE_RUNNER_LANGUAGE = 'java';
+const CODE_RUNNER_VERSION = '15.0.2';
 
 const ACCOUNT_API_ENDPOINT = '';
 
@@ -108,6 +125,72 @@ const STUDY_PLAN_LABELS = {
         visual: 'Visual',
         practice: 'Practice Heavy',
         blended: 'Blended Approach'
+    }
+};
+
+const PLAYGROUND_SNIPPETS = {
+    'hello-world': {
+        label: 'Hello World',
+        code: `public class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello, Java explorer!");
+    }
+}`
+    },
+    'arrays-primer': {
+        label: 'Arrays Primer',
+        code: `import java.util.Arrays;
+
+public class Main {
+    public static void main(String[] args) {
+        int[] numbers = {3, 1, 4, 1, 5, 9};
+        Arrays.sort(numbers);
+        int largest = numbers[numbers.length - 1];
+        System.out.println("Sorted: " + Arrays.toString(numbers));
+        System.out.println("Largest value: " + largest);
+    }
+}`
+    },
+    'loops-and-conditions': {
+        label: 'Loops & Conditions',
+        code: `public class Main {
+    public static void main(String[] args) {
+        int focusMinutes = 0;
+        for (int day = 1; day <= 7; day++) {
+            focusMinutes += 25;
+            if (day % 2 == 0) {
+                System.out.println("Day " + day + ": recovery + review");
+            } else {
+                System.out.println("Day " + day + ": deep practice session");
+            }
+        }
+        System.out.println("Weekly focus minutes: " + focusMinutes);
+    }
+}`
+    },
+    'class-basics': {
+        label: 'Class Basics',
+        code: `public class Main {
+    static class ModuleProgress {
+        private final String title;
+        private int completedLessons;
+
+        ModuleProgress(String title) {
+            this.title = title;
+        }
+
+        void markLesson() {
+            completedLessons++;
+            System.out.println("Completed lesson " + completedLessons + " in " + title);
+        }
+    }
+
+    public static void main(String[] args) {
+        ModuleProgress arrays = new ModuleProgress("Arrays & Strings");
+        arrays.markLesson();
+        arrays.markLesson();
+    }
+}`
     }
 };
 
@@ -692,6 +775,36 @@ const glossaryTerms = [
     {
         term: "Prim’s Algorithm",
         definition: "Greedy algorithm that grows a minimum spanning tree from a starting node.",
+        category: "Algorithms"
+    },
+    {
+        term: "Two-Pointer Technique",
+        definition: "Method highlighted in the Arrays & Strings module: move two indices (start/end or slow/fast) through a collection to compare mirrored values, reverse data, or skip work in O(n) time.",
+        category: "Techniques"
+    },
+    {
+        term: "Dummy Head Node",
+        definition: "Linked Lists module pattern where an extra node sits before the real head so insert/merge operations treat every node uniformly without special cases.",
+        category: "Data Structures"
+    },
+    {
+        term: "Sliding Window",
+        definition: "Technique from the queues/stacks and searching modules: keep a moving subarray/substring window, expanding/shrinking it to maintain constraints (e.g., sum, frequency) in linear time.",
+        category: "Techniques"
+    },
+    {
+        term: "Segment Tree",
+        definition: "Advanced data structure taught in Segment Trees & Range Queries that stores aggregated values for array segments so range queries and point updates run in O(log n).",
+        category: "Data Structures"
+    },
+    {
+        term: "Disjoint Set Union (Union-Find)",
+        definition: "Structure used in the Disjoint Set Union module to track connectivity between elements using path compression and union-by-rank for near-O(1) find/union.",
+        category: "Data Structures"
+    },
+    {
+        term: "Knuth-Morris-Pratt (KMP)",
+        definition: "String Pattern Matching module algorithm that uses a longest-prefix-suffix table to resume comparisons without re-checking characters, enabling O(n + m) search.",
         category: "Algorithms"
     }
 ];
@@ -1754,57 +1867,61 @@ const modules = [
     {
         id: 'arrays-strings',
         title: 'Arrays and Strings',
-        description: 'This walkthrough dissects the `findMax`, `reverseString`, and `isPalindrome` helpers so you can watch loops, boundary guards, and two-pointer swaps combine into real array/string utilities.',
+        description: 'We slow down every array and string helper so you see why guards exist, how loops scan data, and how pointer swaps work. Each method is annotated with plain-English comments plus a bullet-by-bullet breakdown under the code block, perfect for a first pass through Java collections.',
         difficulty: 'beginner',
         topics: ['Array Traversal', 'String Methods', 'Two Pointers', 'Sliding Window', 'Array Sorting'],
         codeExamples: {
-            java: `// Array and String fundamentals
+            java: `// ArraysAndStrings demonstrates three starter utilities.
+// Every method explains *why* each line exists so you can trace the logic.
 public class ArraysAndStrings {
     
-    // Find maximum element in array
+    // Finds the largest value by scanning left to right once.
+    // Time: O(n), Space: O(1) because we only track the best-so-far value.
     public static int findMax(int[] arr) {
+        // Defensive check: an empty array has no max, so we signal with MIN_VALUE.
         if (arr.length == 0) return Integer.MIN_VALUE;
         
-        int max = arr[0]; // Initialize with first element
+        int max = arr[0]; // Start by assuming the first element is the answer.
         for (int i = 1; i < arr.length; i++) {
             if (arr[i] > max) {
-                max = arr[i]; // Update maximum
+                max = arr[i]; // Whenever we discover something larger, record it.
             }
         }
-        return max;
+        return max; // After the loop finishes the best value lives here.
     }
     
-    // Reverse a string using two pointers
+    // Reverses a string by swapping symmetric characters.
     public static String reverseString(String str) {
-        char[] chars = str.toCharArray();
-        int left = 0, right = chars.length - 1;
+        char[] chars = str.toCharArray(); // Strings are immutable, so work on a char array.
+        int left = 0, right = chars.length - 1; // Two pointers move toward the centre.
         
         while (left < right) {
-            // Swap characters
+            // Swap the characters at the current pointers.
             char temp = chars[left];
             chars[left] = chars[right];
             chars[right] = temp;
             
-            left++;  // Move pointers toward center
+            left++;          // Moving the pointers shrinks the window.
             right--;
         }
         
-        return new String(chars);
+        return new String(chars); // Convert the mutated array back to a String.
     }
     
-    // Check if string is palindrome
+    // Returns true only when the cleaned string reads the same forward/backward.
     public static boolean isPalindrome(String str) {
+        // Normalize by removing punctuation/spacing differences.
         str = str.toLowerCase().replaceAll("[^a-z0-9]", "");
-        int left = 0, right = str.length() - 1;
+        int left = 0, right = str.length() - 1; // Compare mirrored characters.
         
         while (left < right) {
             if (str.charAt(left) != str.charAt(right)) {
-                return false; // Characters don't match
+                return false; // As soon as we find a mismatch the string is not a palindrome.
             }
             left++;
             right--;
         }
-        return true; // All characters matched
+        return true; // All mirrored pairs matched, so the string is a palindrome.
     }
 }`,
             cpp: `// Array and String fundamentals in C++
@@ -1970,17 +2087,15 @@ const isPalindromeFunctional = str => {
 };`
         },
         explanation: `Arrays and strings form the foundation of programming. Arrays provide indexed access to elements, while strings are sequences of characters. Key concepts include traversal patterns, the two-pointer technique for efficient processing, and understanding how memory layout affects performance. These data structures appear in countless real-world applications.`,
+        codeBreakdown: [
+            { label: 'findMax', detail: 'Shows how to seed an answer with the first element, loop through the rest, and update the running best when a larger value appears.' },
+            { label: 'reverseString', detail: 'Demonstrates the two-pointer technique: convert to a char array, swap mirrored characters, and walk the pointers toward the centre.' },
+            { label: 'isPalindrome', detail: 'Explains preprocessing (lowercase + alphanumeric), then compares mirrored characters to confirm the string reads the same both ways.' }
+        ],
         resources: [
-            'JUnit 5 Guide',  // Plain text
-            {
-                text: 'Official JUnit Documentation',
-                url: 'youtube.com'
-            },
-            'Test Driven Development',  // Plain text
-            {
-                text: 'Martin Fowler - Test Pyramid',
-                url: 'https://martinfowler.com/articles/practical-test-pyramid.html'
-            }
+            { text: 'Oracle Java Arrays Tutorial', url: 'https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html' },
+            { text: 'Two Pointer Technique Guide – GeeksforGeeks', url: 'https://www.geeksforgeeks.org/two-pointers-technique/' },
+            { text: 'String Algorithm Patterns (CP-Algorithms)', url: 'https://cp-algorithms.com/string/' }
         ],
     },
     {
@@ -2259,25 +2374,29 @@ class LinkedListOperations {
     {
         id: 'stacks-queues',
         title: 'Stacks and Queues',
-        description: 'The `ArrayStack` and `ArrayQueue` wrappers expose each push/pop/peek and enqueue/dequeue call so you can see how ArrayDeque underpins both LIFO and FIFO flows in `main`.',
+        description: 'We treat stacks and queues like story problems: every method describes the data movement and why errors are thrown. The walkthrough compares LIFO vs FIFO behavior, visualizes each push/pop/enqueue/dequeue, and finishes with usage tips (undo buffers vs schedulers).',
         difficulty: 'beginner',
         topics: ['Stack Operations', 'Queue Operations', 'Deque', 'Priority Queue', 'Applications'],
-        codeExample: `// Simple Stack and Queue implementations in Java
+        codeExample: `// Simple Stack and Queue implementations in Java.
+// ArrayDeque gives us both LIFO and FIFO behaviour without writing array math by hand.
 import java.util.ArrayDeque;
 import java.util.NoSuchElementException;
 
 class ArrayStack<E> {
     private final ArrayDeque<E> data = new ArrayDeque<>();
 
+    // Adds an element to the *top* of the stack.
     public void push(E value) {
-        data.push(value); // O(1)
+        data.push(value); // O(1) because ArrayDeque stores a pointer to the current head.
     }
 
+    // Removes and returns the most recent element.
     public E pop() {
         if (data.isEmpty()) throw new NoSuchElementException("Stack empty");
-        return data.pop();
+        return data.pop(); // ArrayDeque throws if empty, so we guard first.
     }
 
+    // Looks at the top element without removing it.
     public E peek() {
         return data.peek();
     }
@@ -2286,13 +2405,15 @@ class ArrayStack<E> {
 class ArrayQueue<E> {
     private final ArrayDeque<E> data = new ArrayDeque<>();
 
+    // Adds to the *tail* to preserve FIFO ordering.
     public void enqueue(E value) {
-        data.offer(value); // adds to tail
+        data.offer(value); // offer adds to the back of the deque.
     }
 
+    // Removes from the *head* because the oldest element leaves first.
     public E dequeue() {
         if (data.isEmpty()) throw new NoSuchElementException("Queue empty");
-        return data.poll(); // removes from head
+        return data.poll(); // poll returns null when empty, but we already guarded.
     }
 
     public int size() {
@@ -2302,21 +2423,32 @@ class ArrayQueue<E> {
 
 public class StackQueueDemo {
     public static void main(String[] args) {
+        // Demonstrate stack usage.
         ArrayStack<Integer> stack = new ArrayStack<>();
         stack.push(10);
         stack.push(20);
-        System.out.println("Stack peek: " + stack.peek()); // 20
-        System.out.println("Stack pop: " + stack.pop());   // 20
+        System.out.println("Stack peek: " + stack.peek()); // Shows the top without removing it (20).
+        System.out.println("Stack pop: " + stack.pop());   // Removes 20 and prints it.
 
+        // Demonstrate queue usage.
         ArrayQueue<String> queue = new ArrayQueue<>();
         queue.enqueue("Alice");
         queue.enqueue("Bob");
-        System.out.println("Queue dequeue: " + queue.dequeue()); // Alice
-        System.out.println("Queue size: " + queue.size());       // 1
+        System.out.println("Queue dequeue: " + queue.dequeue()); // Alice leaves first.
+        System.out.println("Queue size: " + queue.size());       // Shows remaining items.
     }
 }`,
         explanation: `Stacks model LIFO flows used in call stacks, undo buffers, and expression evaluation, while queues deliver FIFO order for schedulers, BFS, and streaming pipelines. This lesson contrasts their implementations (array vs. linked), explains amortized push/pop/enqueue costs, and walks through real interview problems like balanced parentheses, sliding windows, and task queues.`,
-        resources: ['Stack Applications', 'Queue Implementations']
+        codeBreakdown: [
+            { label: 'ArrayStack', detail: 'push adds to the top, pop removes from the top, and peek inspects the next value. Guards explain how to handle empty structures.' },
+            { label: 'ArrayQueue', detail: 'enqueue places elements at the back, dequeue removes from the front, and size helps drive UI counters.' },
+            { label: 'StackQueueDemo', detail: 'Sequences through both abstractions so you can watch how the operations interleave in a single main method.' }
+        ],
+        resources: [
+            { text: 'Visualizing Stack & Queue Operations – VisuAlgo', url: 'https://visualgo.net/en/list' },
+            { text: 'Java ArrayDeque Official Docs', url: 'https://docs.oracle.com/javase/8/docs/api/java/util/ArrayDeque.html' },
+            { text: 'Stack vs Queue Cheat Sheet – GeeksforGeeks', url: 'https://www.geeksforgeeks.org/stack-vs-queue-data-structures/' }
+        ]
     },
     {
         id: 'trees-basics',
@@ -2607,38 +2739,46 @@ public class SortingAlgorithms {
     {
         id: 'searching-algorithms',
         title: 'Searching Algorithms',
-        description: 'Linear, binary, and exponential search are implemented side by side, so we break down pointer shifts, boundary tests, and the final `Arrays.binarySearch` call that finishes the exponential window.',
+        description: 'Linear, binary, and exponential search are implemented side by side with narrated pointer movements, annotated boundary updates, and a recap of when to choose each strategy.',
         difficulty: 'beginner',
         topics: ['Linear Search', 'Binary Search', 'Interpolation Search', 'Exponential Search'],
-        codeExample: `// Searching utilities highlighting multiple techniques
+        codeExample: `// Searching utilities highlighting multiple techniques.
+// Read the comments top-to-bottom to follow how the pointers move.
 import java.util.Arrays;
 
 public class SearchingAlgorithms {
 
+    // Walks each element until it finds the target or reaches the end.
     public static int linearSearch(int[] arr, int target) {
         for (int i = 0; i < arr.length; i++) {
-            if (arr[i] == target) return i;
+            if (arr[i] == target) return i; // Break out as soon as we see the target.
         }
-        return -1;
+        return -1; // Not found.
     }
 
+    // Binary search halves the search space on every comparison.
     public static int binarySearch(int[] arr, int target) {
         int left = 0, right = arr.length - 1;
         while (left <= right) {
             int mid = left + (right - left) / 2;
-            if (arr[mid] == target) return mid;
-            if (arr[mid] < target) left = mid + 1;
-            else right = mid - 1;
+            if (arr[mid] == target) return mid; // Found it!
+            if (arr[mid] < target) {
+                left = mid + 1; // Toss the left half, keep searching the right half.
+            } else {
+                right = mid - 1; // Toss the right half, search the left half.
+            }
         }
-        return -1;
+        return -1; // The pointers crossed, so the target is absent.
     }
 
+    // Exponential search finds a reasonable window, then reuses binary search.
     public static int exponentialSearch(int[] arr, int target) {
-        if (arr.length == 0) return -1;
-        int bound = 1;
+        if (arr.length == 0) return -1; // Nothing to do.
+        int bound = 1; // Start by looking at index 1 (after index 0).
         while (bound < arr.length && arr[bound] < target) {
-            bound *= 2;
+            bound *= 2; // Double the range until we overshoot the target.
         }
+        // Search the window [bound / 2, bound] because the target must be inside it.
         return Arrays.binarySearch(arr, bound / 2, Math.min(bound + 1, arr.length), target);
     }
 
@@ -2650,7 +2790,16 @@ public class SearchingAlgorithms {
     }
 }`,
         explanation: `Beyond linear search, you will master binary search patterns on arrays, answer-range problems, and implicit search spaces such as answer-guessing or peak finding. We also cover interpolation/exponential search and how to adapt search templates to rotated arrays and matrix traversal.`,
-        resources: ['Binary Search Guide', 'Search Optimization']
+        codeBreakdown: [
+            { label: 'linearSearch', detail: 'Use when input is tiny or unsorted. The loop simply compares every element with the target.' },
+            { label: 'binarySearch', detail: 'Ideal for sorted arrays. Watch how the left/right pointers shrink the search window by half each iteration.' },
+            { label: 'exponentialSearch', detail: 'Perfect when the length is unknown (streams/infinite arrays). Quickly find bounds, then reuse binary search inside them.' }
+        ],
+        resources: [
+            { text: 'Binary Search Illustrated – Khan Academy', url: 'https://www.khanacademy.org/computing/computer-science/algorithms/binary-search/a/binary-search' },
+            { text: 'Searching Algorithms Overview – GeeksforGeeks', url: 'https://www.geeksforgeeks.org/searching-algorithms/' },
+            { text: 'Exponential Search Explained – Programiz', url: 'https://www.programiz.com/dsa/exponential-search' }
+        ]
     },
     {
         id: 'recursion',
@@ -3485,46 +3634,57 @@ public class BitManipulation {
     {
         id: 'java-basics',
         title: 'Java Fundamentals',
-        description: '`JavaBasics` wires up fields via a constructor, exposes `getInfo`, and creates an instance in `main`, breaking down how objects store state and expose behavior.',
+        description: 'We linger on the basics: fields, constructors, getters, and the `main` method. Every line spells out what the JVM is doing so absolute beginners can connect the dots between syntax and mental models.',
         difficulty: 'beginner',
         topics: ['Variables', 'Data Types', 'Methods', 'Classes', 'Objects'],
-        codeExample: `// Java Basics - Variables and Methods
+        codeExample: `// JavaBasics demonstrates how a class stores state and exposes behaviour.
+// Follow the numbered comments to see the life cycle of an object.
 public class JavaBasics {
-    // Instance variables
+    // 1️⃣ Instance variables belong to each object made from this class.
     private String name;
     private int age;
     
-    // Constructor
+    // 2️⃣ Constructors run when you call "new" and allow you to provide initial values.
     public JavaBasics(String name, int age) {
         this.name = name;
         this.age = age;
     }
     
-    // Method with return value
+    // 3️⃣ Instance methods can use those fields to compute friendly strings.
     public String getInfo() {
         return "Name: " + name + ", Age: " + age;
     }
     
-    // Static method
+    // 4️⃣ The JVM starts executing in main. We create an object and call its method.
     public static void main(String[] args) {
         JavaBasics person = new JavaBasics("Alice", 25);
         System.out.println(person.getInfo());
     }
 }`,
         explanation: `This primer explains the JVM model, primitive vs reference types, memory layout, and how to structure small programs with packages and build tools. Each topic is paired with short exercises so you can move from syntax memorization to writing idiomatic Java.`,
-        resources: ['Java Documentation', 'Oracle Java Tutorials', 'Java Syntax Guide']
+        codeBreakdown: [
+            { label: 'Fields', detail: 'Represent the data every instance remembers (name and age).' },
+            { label: 'Constructor', detail: 'Runs once per object to copy parameters into the fields.' },
+            { label: 'getInfo', detail: 'Demonstrates string concatenation and returning values.' },
+            { label: 'main', detail: 'Shows how to instantiate the class and call methods.' }
+        ],
+        resources: [
+            { text: 'Oracle Java Tutorials – Language Basics', url: 'https://docs.oracle.com/javase/tutorial/java/nutsandbolts/' },
+            { text: 'Java Classes and Objects – W3Schools', url: 'https://www.w3schools.com/java/java_classes.asp' },
+            { text: 'Understanding main() in Java – Baeldung', url: 'https://www.baeldung.com/java-main-method' }
+        ]
     },
 
     {
         id: 'control-flow',
         title: 'Control Flow Statements',
-        description: '`ControlFlow.main` chains an if/else ladder, classic for loop, and enhanced for loop so you can trace how each branch or counter drives console output.',
+        description: 'We narrate the entire method: how if/else chooses a branch, how classic for loops change counters, how enhanced for loops iterate arrays, and what happens if you accidentally create infinite loops.',
         difficulty: 'beginner',
         topics: ['If-Else', 'For Loops', 'While Loops', 'Switch', 'Break/Continue'],
-        codeExample: `// Control Flow Examples
+        codeExample: `// Control Flow Examples with detailed narration.
 public class ControlFlow {
     public static void main(String[] args) {
-        // If-else example
+        // 1️⃣ If/else ladder chooses exactly one branch.
         int score = 85;
         if (score >= 90) {
             System.out.println("A grade");
@@ -3534,12 +3694,12 @@ public class ControlFlow {
             System.out.println("C grade or below");
         }
         
-        // For loop example
+        // 2️⃣ Standard for loop: init → condition check → body → increment.
         for (int i = 1; i <= 5; i++) {
             System.out.println("Count: " + i);
         }
         
-        // Enhanced for loop
+        // 3️⃣ Enhanced for loop reads "for each number in numbers".
         int[] numbers = {1, 2, 3, 4, 5};
         for (int num : numbers) {
             System.out.println("Number: " + num);
@@ -3547,74 +3707,109 @@ public class ControlFlow {
     }
 }`,
         explanation: `We relate each control structure to real scenarios (validation, accumulation, menu handling) and highlight pitfalls like infinite loops or fall-through switches. Flowchart exercises plus debugging tips reinforce how to trace program execution step by step.`,
-        resources: ['Java Control Statements', 'Loop Examples', 'Conditional Logic']
+        codeBreakdown: [
+            { label: 'If/Else', detail: 'Selects exactly one path based on the score variable.' },
+            { label: 'Classic For Loop', detail: 'Initialises i, checks the condition, runs the body, then increments i.' },
+            { label: 'Enhanced For Loop', detail: 'Iterates an array without manual index tracking, perfect for read-only loops.' }
+        ],
+        resources: [
+            { text: 'Oracle Docs – Control Flow Statements', url: 'https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html' },
+            { text: 'Java Loops Made Easy – LearnJava', url: 'https://www.learnjavaonline.org/en/Loops' },
+            { text: 'Understanding If/Else – Baeldung', url: 'https://www.baeldung.com/java-if-else' }
+        ]
     },
 
     {
         id: 'oop-basics',
         title: 'Object-Oriented Programming',
-        description: 'An abstract `Animal` defines shared state/behavior, `Dog` overrides `makeSound`, and the inherited `sleep` method demonstrates encapsulation and polymorphism in one snippet.',
+        description: 'We zoom in on encapsulation, inheritance, and polymorphism. Comments spell out why `Animal` is abstract, how `Dog` reuses and overrides behaviour, and what happens when you call methods through the base type.',
         difficulty: 'beginner',
         topics: ['Encapsulation', 'Inheritance', 'Polymorphism', 'Abstraction', 'Interfaces'],
-        codeExample: `
-        // OOP Concepts
+        codeExample: `// OOP Concepts with heavy narration.
 abstract class Animal {
-    protected String name;
+    protected String name; // Shared state for all subclasses.
     
     public Animal(String name) {
-        this.name = name;
+        this.name = name; // Constructor ensures every animal has a name.
     }
     
-    public abstract void makeSound();
+    public abstract void makeSound(); // Subclasses must explain how they sound.
     
     public void sleep() {
-        System.out.println(name + " is sleeping");
+        System.out.println(name + " is sleeping"); // Concrete behaviour shared by all animals.
     }
 }
 
 class Dog extends Animal {
     public Dog(String name) {
-        super(name);
+        super(name); // Reuse the parent constructor.
     }
     
     @Override
     public void makeSound() {
-        System.out.println(name + " says Woof!");
+        System.out.println(name + " says Woof!"); // Polymorphic behaviour unique to Dog.
+    }
+}
+
+public class OopDemo {
+    public static void main(String[] args) {
+        Animal pet = new Dog("Luna"); // Reference type is Animal, object type is Dog.
+        pet.makeSound(); // Calls Dog.makeSound thanks to dynamic dispatch.
+        pet.sleep();     // Inherited method defined in Animal.
     }
 }`,
         explanation: `Encapsulation, inheritance, and polymorphism are demonstrated with cohesive mini-systems (bank accounts, game entities) so you see how design choices affect flexibility. Interfaces vs abstract classes, composition-over-inheritance, and SOLID principles round out the lesson.`,
-        resources: ['OOP in Java', 'Inheritance Examples', 'Interface vs Abstract']
+        codeBreakdown: [
+            { label: 'Animal', detail: 'Abstract base class that defines what every animal must know/do (name + makeSound + sleep).' },
+            { label: 'Dog', detail: 'Concrete subclass that reuses the constructor and overrides makeSound.' },
+            { label: 'OopDemo', detail: 'Shows how polymorphism lets us treat a Dog as its base type while still running Dog-specific code.' }
+        ],
+        resources: [
+            { text: 'Oracle Java Tutorials – Object-Oriented Concepts', url: 'https://docs.oracle.com/javase/tutorial/java/concepts/' },
+            { text: 'GeeksforGeeks – OOP in Java', url: 'https://www.geeksforgeeks.org/object-oriented-programming-oops-concept-in-java/' },
+            { text: 'Abstract Classes vs Interfaces – Baeldung', url: 'https://www.baeldung.com/java-interfaces-vs-abstract-classes' }
+        ]
     },
 
     {
         id: 'exception-handling',
         title: 'Exception Handling',
-        description: '`divide` wraps division in try/catch/finally while `validateAge` throws a custom exception, showing exactly how execution moves through error paths and cleanup blocks.',
+        description: 'We narrate how try/catch/finally sequences execute (success vs failure) and how to throw your own checked exception with meaningful context.',
         difficulty: 'beginner',
         topics: ['Try-Catch', 'Finally Block', 'Custom Exceptions', 'Throws', 'Exception Types'],
-        codeExample: `
-        // Exception Handling
+        codeExample: `// Exception Handling with narration.
 public class ExceptionExample {
+    // Handles both the happy path and divide-by-zero failure.
     public static void divide(int a, int b) {
         try {
-            int result = a / b;
+            int result = a / b; // May throw ArithmeticException if b == 0.
             System.out.println("Result: " + result);
         } catch (ArithmeticException e) {
             System.out.println("Error: Cannot divide by zero!");
         } finally {
-            System.out.println("Division operation completed.");
+            System.out.println("Division operation completed."); // Always runs.
         }
     }
     
-    // Custom exception
+    // Demonstrates throwing your own checked exception.
     public static void validateAge(int age) throws InvalidAgeException {
         if (age < 0) {
             throw new InvalidAgeException("Age cannot be negative");
         }
+        System.out.println("Validated age: " + age);
     }
-}`,
+}
+`,
         explanation: `You will categorize checked vs unchecked exceptions, design custom hierarchies, and use try-with-resources for safe cleanup. Realistic scenarios cover logging, wrapping exceptions to add context, and establishing global handlers to keep apps resilient.`,
-        resources: ['Java Exceptions', 'Error Handling Best Practices']
+        codeBreakdown: [
+            { label: 'divide', detail: 'Wraps risky arithmetic in try/catch and shows how finally executes regardless of success.' },
+            { label: 'validateAge', detail: 'Illustrates how to throw a custom checked exception with a helpful message.' }
+        ],
+        resources: [
+            { text: 'Oracle Java Tutorials – Exceptions', url: 'https://docs.oracle.com/javase/tutorial/essential/exceptions/' },
+            { text: 'Guide to Java Exception Handling – Baeldung', url: 'https://www.baeldung.com/java-exceptions' },
+            { text: 'Custom Exception Patterns – GeeksforGeeks', url: 'https://www.geeksforgeeks.org/user-defined-custom-exception-in-java/' }
+        ]
     },
 
     // INTERMEDIATE CONCEPTS
@@ -4773,10 +4968,15 @@ function generateFlashcardDecks(modulesData, generalCards = []) {
         });
 
         if (resources.length) {
+            const resourceText = resources.map(resource => {
+                if (typeof resource === 'string') return resource;
+                if (resource.text) return resource.text;
+                return resource.url || 'Resource';
+            }).join(', ');
             cards.push({
                 moduleId: module.id,
                 question: `Name a supporting resource for ${module.title}.`,
-                answer: resources.join(', ')
+                answer: resourceText
             });
         }
 
@@ -4962,7 +5162,12 @@ function saveToLocalStorage() {
         compactLayout: appState.compactLayout,
         cardDensity: appState.cardDensity,
         studyPlan: appState.studyPlan,
-        accountProfile: appState.accountProfile
+        accountProfile: appState.accountProfile,
+        playground: {
+            code: appState.playground.code,
+            sample: appState.playground.sample,
+            output: appState.playground.output
+        }
     };
     localStorage.setItem('javaDSAHub', JSON.stringify(stateToSave));
 }
@@ -4997,6 +5202,12 @@ function loadFromLocalStorage() {
             appState.cardDensity = state.cardDensity || 'standard';
             appState.studyPlan = state.studyPlan || null;
             appState.accountProfile = state.accountProfile || null;
+            appState.playground = {
+                code: state.playground?.code || '',
+                sample: state.playground?.sample || DEFAULT_PLAYGROUND_SAMPLE,
+                output: state.playground?.output || '// Output will appear here',
+                isRunning: false
+            };
         } catch (e) {
             console.error('Failed to load saved state:', e);
         }
@@ -5157,6 +5368,134 @@ function applyCardDepth() {
     CARD_DEPTH_CLASSES.forEach(cls => body.classList.remove(cls));
     const selected = CARD_DEPTH_OPTIONS.includes(appState.cardDensity) ? appState.cardDensity : 'standard';
     body.classList.add(`card-depth-${selected}`);
+}
+
+function getPlaygroundSnippet(key) {
+    return PLAYGROUND_SNIPPETS[key] || PLAYGROUND_SNIPPETS[DEFAULT_PLAYGROUND_SAMPLE];
+}
+
+function initPlayground() {
+    const editor = document.getElementById('playground-editor');
+    if (!editor) return;
+
+    const select = document.getElementById('playground-snippets');
+    if (!appState.playground.code) {
+        const snippet = getPlaygroundSnippet(appState.playground.sample);
+        appState.playground.code = snippet.code;
+    }
+    editor.value = appState.playground.code;
+    if (select) {
+        if (!PLAYGROUND_SNIPPETS[select.value]) {
+            select.value = appState.playground.sample;
+        }
+        select.addEventListener('change', (event) => {
+            setPlaygroundSample(event.target.value);
+        });
+    }
+    editor.addEventListener('input', (event) => {
+        appState.playground.code = event.target.value;
+        saveToLocalStorage();
+    });
+    document.getElementById('playground-run')?.addEventListener('click', runPlaygroundCode);
+    document.getElementById('playground-reset')?.addEventListener('click', resetPlaygroundEditor);
+    document.getElementById('playground-copy')?.addEventListener('click', copyPlaygroundOutput);
+    updatePlaygroundOutput(appState.playground.output || '// Output will appear here');
+    updatePlaygroundStatus('Idle', false);
+}
+
+function setPlaygroundSample(sampleKey) {
+    if (!PLAYGROUND_SNIPPETS[sampleKey]) {
+        sampleKey = DEFAULT_PLAYGROUND_SAMPLE;
+    }
+    appState.playground.sample = sampleKey;
+    appState.playground.code = getPlaygroundSnippet(sampleKey).code;
+    const select = document.getElementById('playground-snippets');
+    if (select) {
+        select.value = sampleKey;
+    }
+    const editor = document.getElementById('playground-editor');
+    if (editor) {
+        editor.value = appState.playground.code;
+    }
+    appState.playground.output = '// Output will appear here';
+    updatePlaygroundOutput(appState.playground.output);
+    saveToLocalStorage();
+}
+
+async function runPlaygroundCode() {
+    if (appState.playground.isRunning) return;
+    const code = appState.playground.code.trim();
+    if (!code) {
+        updatePlaygroundOutput('Add some Java code before running the playground.', 'error');
+        return;
+    }
+    if (!CODE_RUNNER_ENDPOINT) {
+        updatePlaygroundOutput('Set CODE_RUNNER_ENDPOINT in js/script.js to connect a Java runner.', 'error');
+        return;
+    }
+
+    updatePlaygroundStatus('Running', true);
+
+    try {
+        const payload = {
+            language: CODE_RUNNER_LANGUAGE,
+            version: CODE_RUNNER_VERSION,
+            files: [{ name: 'Main.java', content: code }]
+        };
+        const response = await fetch(CODE_RUNNER_ENDPOINT, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        if (!response.ok) {
+            throw new Error(`Runner responded with ${response.status}`);
+        }
+        const data = await response.json();
+        const stdout = data?.run?.stdout?.trim();
+        const stderr = data?.run?.stderr?.trim() || data?.run?.output?.trim();
+        const outputText = [stdout, stderr].filter(Boolean).join('\n').trim() || '// Program finished with no output';
+        const status = stderr ? 'error' : 'success';
+        updatePlaygroundOutput(outputText, status);
+        appState.playground.output = outputText;
+        saveToLocalStorage();
+    } catch (error) {
+        updatePlaygroundOutput(`Unable to reach the runner (${error.message}). Make sure you are online or configure a local endpoint.`, 'error');
+    } finally {
+        updatePlaygroundStatus('Idle', false);
+    }
+}
+
+function resetPlaygroundEditor() {
+    setPlaygroundSample(appState.playground.sample);
+}
+
+function updatePlaygroundOutput(text, status = 'info') {
+    const outputEl = document.getElementById('playground-output');
+    if (!outputEl) return;
+    outputEl.textContent = text;
+    outputEl.classList.remove('success', 'error');
+    if (status === 'success') outputEl.classList.add('success');
+    if (status === 'error') outputEl.classList.add('error');
+}
+
+function updatePlaygroundStatus(label, running) {
+    const statusEl = document.getElementById('playground-status');
+    if (statusEl) {
+        statusEl.textContent = running ? 'Running...' : label;
+        statusEl.classList.toggle('bg-emerald-100', running);
+        statusEl.classList.toggle('text-emerald-700', running);
+        statusEl.classList.toggle('bg-slate-100', !running);
+        statusEl.classList.toggle('text-slate-600', !running);
+    }
+    appState.playground.isRunning = running;
+}
+
+function copyPlaygroundOutput() {
+    const outputEl = document.getElementById('playground-output');
+    if (!outputEl) return;
+    navigator.clipboard.writeText(outputEl.textContent || '')
+        .then(() => showToast?.('Playground output copied!', 'success'))
+        .catch(() => showToast?.('Copy failed. Select the text and copy manually.', 'error'));
 }
 
 function applyFontScale() {
@@ -5407,6 +5746,14 @@ function buildModuleCard(module) {
             <div class="bg-indigo-50 border-indigo-200 border-l-4 border-l-indigo-500 p-3 sm:p-4 mb-3 sm:mb-4 rounded-r-lg">
                 <div class="whitespace-pre-line text-xs sm:text-sm text-slate-800">${module.explanation}</div>
             </div>
+            ${module.codeBreakdown && module.codeBreakdown.length ? `
+                <div class="code-breakdown-card">
+                    <h4>🧠 Code Breakdown</h4>
+                    <ul>
+                        ${module.codeBreakdown.map(item => `<li><strong>${escapeHtml(item.label)}:</strong> ${escapeHtml(item.detail)}</li>`).join('')}
+                    </ul>
+                </div>
+            ` : ''}
             <div class="module-support-panel">
                 <p>Student Support • ${supportSummary}</p>
                 <button type="button" class="support-button" onclick="openSupportModal('${module.id}')">📣 Contact Student Support</button>
@@ -5913,7 +6260,19 @@ function submitSupportRequest(event) {
         return;
     }
     closeSupportModal();
-    showToast?.(`Support request queued for ${modules.find(m => m.id === moduleId)?.title || 'module'}.`, 'success');
+    const moduleTitle = modules.find(m => m.id === moduleId)?.title || 'General Module';
+    const subject = `[Java DSA Support] ${topic}`;
+    const bodyLines = [
+        `Module: ${moduleTitle} (${moduleId || 'n/a'})`,
+        `Topic: ${topic}`,
+        '',
+        message,
+        '',
+        '-- Sent from the Java DSA Learning Hub'
+    ];
+    const mailtoUrl = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
+    window.open(mailtoUrl, '_blank');
+    showToast?.('Support email drafted in your mail app.', 'success');
 }
 // Flashcard Functions
 function prevFlashcard() {
@@ -6221,6 +6580,10 @@ function resetProgress() {
 function init() {
     // Load saved state
     loadFromLocalStorage();
+    ensureStudyTimesReset();
+    studyTimer.startTime = null;
+    studyTimer.totalTime = studyMetrics.totalTimeMs || 0;
+    studyTimer.isActive = false;
 
     // Apply loaded state to UI
     applyFontScale();
@@ -6237,6 +6600,7 @@ function init() {
     renderModules();
     renderDailyChallenge();
     renderStudyTip();
+    initPlayground();
 
     // Set initial form values
     document.getElementById('search-input').value = appState.searchTerm;
@@ -6530,6 +6894,25 @@ function loadStudyHabit() {
 
 function saveStudyHabit() {
     localStorage.setItem(STORAGE_KEYS.STUDY_HABIT, JSON.stringify(studyHabit));
+}
+
+function ensureStudyTimesReset() {
+    try {
+        if (localStorage.getItem(RESET_FLAGS.STUDY_TIMES) === 'done') {
+            return;
+        }
+    } catch (error) {
+        console.warn('Unable to read reset flag:', error);
+    }
+    studyMetrics = { totalTimeMs: 0, todayMs: 0, todayDate: null };
+    saveStudyMetrics();
+    studyHabit = { streak: 0, lastDate: null, longestStreak: 0 };
+    saveStudyHabit();
+    try {
+        localStorage.setItem(RESET_FLAGS.STUDY_TIMES, 'done');
+    } catch (error) {
+        console.warn('Unable to persist reset flag:', error);
+    }
 }
 
 function updateStudyHabit(sessionTime) {

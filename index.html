@@ -297,6 +297,53 @@
             </div>
         </section>
 
+        <!-- Java Playground -->
+        <section id="playground-section" class="content-backdrop rounded-2xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl border border-white/40 section-spacing">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
+                <div>
+                    <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading glow-text">Java Practice Playground</h3>
+                    <p class="text-sm text-slate-600">Type small Java programs, run them through the sandbox API, and iterate quickly without leaving the page.</p>
+                </div>
+                <div id="playground-status" class="text-xs px-3 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold uppercase tracking-wider text-center">Idle</div>
+            </div>
+            <div class="playground-grid">
+                <div class="playground-card">
+                    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2 mb-3">
+                        <div>
+                            <p class="text-xs uppercase tracking-wide text-slate-500 font-semibold">Java Scratchpad</p>
+                            <p class="text-sm text-slate-600">Everything compiles inside one <code>Main</code> class, just like coding interview sandboxes.</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <label for="playground-snippets" class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Load sample</label>
+                            <select id="playground-snippets" class="text-sm rounded-lg border border-slate-300 px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30">
+                                <option value="hello-world">Hello World</option>
+                                <option value="arrays-primer">Arrays Primer</option>
+                                <option value="loops-and-conditions">Loops & Conditions</option>
+                                <option value="class-basics">Class Basics</option>
+                            </select>
+                        </div>
+                    </div>
+                    <textarea id="playground-editor" spellcheck="false" class="playground-editor" aria-label="Java playground editor"></textarea>
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 mt-3">
+                        <button id="playground-run" class="purple-glow-button px-4 py-2 w-full sm:w-auto text-sm font-semibold flex items-center justify-center gap-1">
+                            ▶️ Run Code
+                        </button>
+                        <button id="playground-reset" class="px-4 py-2 w-full sm:w-auto text-sm font-semibold rounded-lg border border-slate-200 bg-white text-slate-700 shadow-sm hover:-translate-y-0.5 transition">
+                            🔄 Reset Editor
+                        </button>
+                        <p class="text-xs text-slate-500 flex-1">Uses the open Piston API when network access is available. Configure <code>CODE_RUNNER_ENDPOINT</code> in <code>js/script.js</code> to point to your own runner.</p>
+                    </div>
+                </div>
+                <div class="playground-card">
+                    <div class="flex items-center justify-between mb-3">
+                        <h4 class="text-base font-semibold text-slate-800">Console Output</h4>
+                        <button id="playground-copy" class="text-xs px-3 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold">Copy</button>
+                    </div>
+                    <pre id="playground-output" class="playground-output" aria-live="polite">// Output will appear here</pre>
+                </div>
+            </div>
+        </section>
+
         <!-- Modules Grid - Optimized Spacing -->
         <div id="modules-grid" class="section-spacing modules-responsive-grid">
             <!-- Modules will be populated by JavaScript -->
@@ -353,7 +400,7 @@
     <!-- Modals -->
     <!-- Settings Modal -->
     <div id="settings-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
-        <div class="rounded-2xl w-full max-w-md shadow-2xl bg-white text-slate-900 border border-slate-200">
+        <div class="modal-panel rounded-2xl w-full max-w-md shadow-2xl bg-white text-slate-900 border border-slate-200">
             <div class="flex justify-between items-center p-6 border-b border-slate-200">
                 <h3 class="text-2xl font-semibold text-indigo-600">Settings</h3>
                 <button id="close-settings" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700">×</button>
@@ -451,7 +498,7 @@
 
     <!-- Glossary Modal -->
     <div id="glossary-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
-        <div class="rounded-2xl w-full max-w-5xl shadow-2xl flex flex-col bg-white text-slate-900 border border-slate-200" style="max-height: 90vh;">
+        <div class="modal-panel rounded-2xl w-full max-w-5xl shadow-2xl flex flex-col bg-white text-slate-900 border border-slate-200" style="max-height: 90vh;">
             <div class="flex justify-between items-center p-6 border-b border-slate-200">
                 <h3 class="text-3xl font-semibold text-indigo-600">📚 Java DSA Glossary</h3>
                 <button id="close-glossary" class="text-2xl transition-colors duration-200 hover:scale-110 text-slate-500 hover:text-slate-700">×</button>
@@ -527,7 +574,7 @@
 
     <!-- Study Plan Modal -->
     <div id="study-plan-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
-        <div class="rounded-2xl w-full max-w-xl shadow-2xl bg-white text-slate-900 border border-slate-200">
+        <div class="modal-panel rounded-2xl w-full max-w-xl shadow-2xl bg-white text-slate-900 border border-slate-200">
             <div class="flex justify-between items-center p-6 border-b border-slate-200">
                 <h3 class="text-2xl font-semibold text-indigo-600">Build Your Study Plan</h3>
                 <button id="close-study-plan" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700">×</button>
@@ -570,7 +617,7 @@
 
     <!-- Account Modal -->
     <div id="account-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
-        <div class="rounded-2xl w-full max-w-md shadow-2xl bg-white text-slate-900 border border-slate-200">
+        <div class="modal-panel rounded-2xl w-full max-w-md shadow-2xl bg-white text-slate-900 border border-slate-200">
             <div class="flex justify-between items-center p-6 border-b border-slate-200">
                 <h3 class="text-2xl font-semibold text-indigo-600">Create Account</h3>
                 <button id="close-account" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700">×</button>
@@ -603,7 +650,7 @@
 
     <!-- Support Modal -->
     <div id="support-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
-        <div class="rounded-2xl w-full max-w-lg shadow-2xl bg-white text-slate-900 border border-slate-200">
+        <div class="modal-panel rounded-2xl w-full max-w-lg shadow-2xl bg-white text-slate-900 border border-slate-200">
             <div class="flex justify-between items-center p-6 border-b border-slate-200">
                 <h3 class="text-2xl font-semibold text-indigo-600">Student Support</h3>
                 <button id="close-support" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700">×</button>

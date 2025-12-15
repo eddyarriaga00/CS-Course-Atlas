@@ -71,6 +71,89 @@ html.font-scale-comfortable {
 html.font-scale-spacious {
     font-size: 18px;
 }
+
+.modal-panel {
+    max-height: min(92vh, 780px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+#playground-section {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.08), rgba(79, 70, 229, 0.08));
+    border-color: rgba(99, 102, 241, 0.25);
+}
+
+body.dark #playground-section {
+    background: linear-gradient(135deg, rgba(15, 118, 110, 0.18), rgba(15, 23, 42, 0.75));
+    border-color: rgba(14, 165, 233, 0.25);
+}
+
+.playground-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.playground-card {
+    background: linear-gradient(145deg, rgba(14, 165, 233, 0.08), rgba(236, 72, 153, 0.08));
+    border: 1px solid rgba(14, 165, 233, 0.3);
+    border-radius: 1.25rem;
+    padding: 1.25rem;
+    box-shadow: 0 20px 35px rgba(15, 23, 42, 0.12);
+    display: flex;
+    flex-direction: column;
+}
+
+.playground-editor {
+    min-height: 260px;
+    width: 100%;
+    border-radius: 1rem;
+    border: 1px solid rgba(14, 165, 233, 0.35);
+    background: #0b1120;
+    color: #f8fafc;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+    font-size: 0.9rem;
+    padding: 1rem;
+    line-height: 1.5;
+    resize: vertical;
+}
+
+.playground-output {
+    min-height: 260px;
+    border-radius: 1rem;
+    border: 1px solid rgba(99, 102, 241, 0.3);
+    background: #020617;
+    color: #cbd5f5;
+    padding: 1rem;
+    font-family: 'JetBrains Mono', 'Fira Code', 'SFMono-Regular', Menlo, Monaco, Consolas, 'Liberation Mono', monospace;
+    font-size: 0.9rem;
+    overflow: auto;
+}
+
+.playground-output.success {
+    color: #34d399;
+}
+
+.playground-output.error {
+    color: #f87171;
+}
+
+body.dark .playground-card {
+    background: linear-gradient(145deg, rgba(15, 118, 110, 0.3), rgba(15, 23, 42, 0.85));
+    border-color: rgba(14, 165, 233, 0.45);
+}
+
+body.dark .playground-editor {
+    background: rgba(2, 6, 23, 0.9);
+    border-color: rgba(59, 130, 246, 0.35);
+}
+
+body.dark .playground-output {
+    background: rgba(2, 6, 23, 0.95);
+    border-color: rgba(59, 130, 246, 0.35);
+    color: #c7d2fe;
+}
+
 body.dark #flashcard-content {
     background-color: #1e293b !important;
     border-color: #334155 !important;
@@ -1059,6 +1142,42 @@ body.dark .module-support-panel {
 
 body.dark .module-support-panel p {
     color: var(--accent-text);
+}
+
+.code-breakdown-card {
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    border-radius: 1rem;
+    padding: 0.75rem 1rem;
+    background: rgba(248, 250, 252, 0.9);
+    margin-bottom: 0.85rem;
+}
+
+.code-breakdown-card h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #312e81;
+    margin-bottom: 0.35rem;
+}
+
+.code-breakdown-card ul {
+    list-style: disc;
+    padding-left: 1.25rem;
+    color: #475569;
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+body.dark .code-breakdown-card {
+    background: rgba(15, 23, 42, 0.88);
+    border-color: rgba(99, 102, 241, 0.35);
+}
+
+body.dark .code-breakdown-card h4 {
+    color: #c7d2fe;
+}
+
+body.dark .code-breakdown-card ul {
+    color: #cbd5f5;
 }
 
 .module-section {
