@@ -231,6 +231,88 @@ const interviewExamples = [
         return levels;
     }
 }`
+    },
+    {
+        id: 'lrucache',
+        title: 'LRU Cache',
+        language: 'Java',
+        difficulty: 'Medium',
+        code: `class LRUCache {
+    private final int cap;
+    private final Map<Integer, Node> map = new HashMap<>();
+    private final Node head = new Node(0, 0);
+    private final Node tail = new Node(0, 0);
+
+    static class Node {
+        int k, v; Node prev, next;
+        Node(int k, int v) { this.k = k; this.v = v; }
+    }
+
+    public LRUCache(int capacity) {
+        this.cap = capacity;
+        head.next = tail; tail.prev = head;
+    }
+
+    public int get(int key) {
+        if (!map.containsKey(key)) return -1;
+        Node node = map.get(key);
+        moveToFront(node);
+        return node.v;
+    }
+
+    public void put(int key, int value) {
+        if (map.containsKey(key)) {
+            Node node = map.get(key);
+            node.v = value;
+            moveToFront(node);
+        } else {
+            if (map.size() == cap) {
+                Node lru = tail.prev;
+                remove(lru);
+                map.remove(lru.k);
+            }
+            Node fresh = new Node(key, value);
+            insertAfter(head, fresh);
+            map.put(key, fresh);
+        }
+    }
+
+    private void moveToFront(Node node) {
+        remove(node);
+        insertAfter(head, node);
+    }
+
+    private void remove(Node node) {
+        node.prev.next = node.next;
+        node.next.prev = node.prev;
+    }
+
+    private void insertAfter(Node prev, Node node) {
+        node.next = prev.next;
+        node.prev = prev;
+        prev.next.prev = node;
+        prev.next = node;
+    }
+}`
+    },
+    {
+        id: 'meeting-rooms',
+        title: 'Meeting Rooms (Greedy)',
+        language: 'Python',
+        difficulty: 'Medium',
+        code: `import heapq
+
+def min_meeting_rooms(intervals):
+    intervals.sort(key=lambda x: x[0])
+    h = []
+    for s, e in intervals:
+        if h and h[0] <= s:
+            heapq.heapreplace(h, e)
+        else:
+            heapq.heappush(h, e)
+    return len(h)
+
+print(min_meeting_rooms([[0,30],[5,10],[15,20]]))  # 2`
     }
 ];
 
@@ -4686,6 +4768,201 @@ jump_table:
 SWITCH x IN {0,1,2} RETURN 10/20/30 ELSE -1`
         },
         skipAutoExamples: true
+    },
+    {
+        id: 'assembly-bitwise',
+        title: 'Assembly: Bitwise Tricks (x86-32)',
+        category: 'systems',
+        description: 'Practice bitwise AND/OR/XOR/SHL/SHR with annotated 32-bit examples. Focus on masks, toggling bits, and quick parity checks.',
+        difficulty: 'beginner',
+        topics: ['AND/OR/XOR', 'SHL/SHR', 'Masks', 'Parity', 'Flags'],
+        exampleHighlight: 'Examples include: clearing/setting/toggling bits, extracting bytes, and counting set bits with a loop.',
+        examples: [
+            'Clear bit k: and eax, ~(1 << k); Set bit k: or eax, (1 << k); Toggle bit k: xor eax, (1 << k).',
+            'Mask low byte: mov bl, al ; and bl, 0xFF.',
+            'Count set bits: test al,1 ; shr al,1 in a loop.',
+            'Parity: xor folding chunks to compute a parity bit.'
+        ],
+        codeExamples: {
+            assembly: `; Bitwise ops (x86-32)
+section .text
+global clear_set_toggle, count_bits
+
+; void clear_set_toggle(int* x, int k)
+clear_set_toggle:
+    push ebp
+    mov  ebp, esp
+    mov  eax, [ebp+8]     ; ptr
+    mov  ecx, [ebp+12]    ; k
+    mov  edx, [eax]       ; value
+    mov  ebx, 1
+    shl  ebx, cl          ; ebx = 1 << k
+    and  edx, not ebx     ; clear bit k
+    or   edx, ebx         ; set bit k (demo)
+    xor  edx, ebx         ; toggle bit k (demo)
+    mov  [eax], edx
+    mov  esp, ebp
+    pop  ebp
+    ret
+
+; int count_bits(int x)
+count_bits:
+    push ebp
+    mov  ebp, esp
+    mov  eax, [ebp+8]     ; eax = x
+    xor  ecx, ecx         ; count = 0
+.loop:
+    test eax, eax
+    je   .done
+    add  ecx, eax & 1
+    shr  eax, 1
+    jmp  .loop
+.done:
+    mov  eax, ecx         ; return count
+    mov  esp, ebp
+    pop  ebp
+    ret
+`,
+            'assembly-pseudocode': `clear_set_toggle(*x, k):
+  mask <- 1 << k
+  x := (x & ~mask) ; clear
+  x := (x | mask)  ; set (demo)
+  x := (x ^ mask)  ; toggle
+
+count_bits(x):
+  count <- 0
+  while x != 0:
+    count += (x & 1)
+    x >>= 1
+  return count`
+        },
+        skipAutoExamples: true
+    },
+    {
+        id: 'assembly-stack-strings',
+        title: 'Assembly: Stack & Strings (x86-32)',
+        category: 'systems',
+        description: 'Manipulate the stack for temporary buffers, copy/compare small strings, and see how null terminators are handled at 32-bit alignment boundaries.',
+        difficulty: 'intermediate',
+        topics: ['Stack Buffers', 'String Copy', 'String Compare', 'Alignment', 'Cdecl'],
+        exampleHighlight: 'Examples include: pushing bytes to build a string, copying with movsb, and strcmp-style compare using repe cmpsb.',
+        examples: [
+            'Build a short string on stack: sub esp, 16; mov dword [esp], 0x00646c72 ("rld\\0").',
+            'Copy loop: use esi/edi with movsb and a countdown in ecx.',
+            'Compare loop: repe cmpsb and check ZF for equality.',
+            'Alignment: adjust ESP by multiples of 4 for 32-bit alignment.'
+        ],
+        codeExamples: {
+            assembly: `; Stack + strings (x86-32)
+section .text
+global copy_str, cmp_str
+
+; void copy_str(char* dst, char* src, int n)
+copy_str:
+    push ebp
+    mov  ebp, esp
+    push esi
+    push edi
+    mov  edi, [ebp+8]     ; dst
+    mov  esi, [ebp+12]    ; src
+    mov  ecx, [ebp+16]    ; n
+    rep movsb             ; copy n bytes
+    pop  edi
+    pop  esi
+    mov  esp, ebp
+    pop  ebp
+    ret
+
+; int cmp_str(char* a, char* b, int n)
+cmp_str:
+    push ebp
+    mov  ebp, esp
+    push esi
+    push edi
+    mov  esi, [ebp+8]
+    mov  edi, [ebp+12]
+    mov  ecx, [ebp+16]
+    repe cmpsb            ; compare byte-by-byte
+    jne  .diff
+    xor  eax, eax         ; equal -> return 0
+    jmp  .done
+.diff:
+    mov  al, [esi-1]
+    sub  al, [edi-1]      ; sign result: <0,0,>0
+.done:
+    pop  edi
+    pop  esi
+    mov  esp, ebp
+    pop  ebp
+    ret
+`,
+            'assembly-pseudocode': `copy_str(dst, src, n):
+  for i in 0..n-1: dst[i] <- src[i]
+
+cmp_str(a, b, n):
+  for i in 0..n-1:
+    if a[i] != b[i]: return a[i]-b[i]
+  return 0`
+        },
+        skipAutoExamples: true
+    },
+    {
+        id: 'discrete-math-5',
+        title: 'Discrete Mathematics V: Probability Basics',
+        category: 'discrete',
+        description: 'Beginner-friendly probability with sample spaces, events, conditional probability, Bayes’ rule, and independence. Heavy notes, worked examples, and mini tables.',
+        difficulty: 'beginner',
+        topics: ['Sample Spaces', 'Events', 'Conditional Probability', 'Bayes', 'Independence'],
+        exampleHighlight: 'Examples include: dice/coin sample spaces, conditional probability table for cards, and a Bayes’ rule medical test walkthrough.',
+        examples: [
+            'Sample space: roll 2 dice (36 outcomes), event of sum=7 enumerated.',
+            'Conditional: P(heart | face card) using 12 face cards, 3 hearts.',
+            'Bayes: false-positive/false-negative test example with explicit totals.',
+            'Independence: check P(A∩B) vs P(A)P(B) on coin flips.',
+            'Expectation: E[X] for a fair die (3.5) and for Bernoulli(p).'
+        ],
+        codeExamples: {
+            java: `// Theory-only module: probability tables and examples are in the notes.`
+        },
+        skipAutoExamples: true,
+        codeBreakdown: [
+            { label: 'Sample spaces', detail: 'List outcomes and define events clearly before computing probabilities.' },
+            { label: 'Conditional/Bayes', detail: 'Use totals to compute P(A|B) = P(A∩B)/P(B); apply Bayes with numeric tables.' },
+            { label: 'Independence', detail: 'Verify P(A∩B) = P(A)P(B) with simple coin/die events.' }
+        ],
+        truthTables: [],
+        resources: [
+            { text: 'Intro Probability Notes', url: 'https://prob140.org' }
+        ]
+    },
+    {
+        id: 'discrete-math-6',
+        title: 'Discrete Mathematics VI: Proof Strategies & Practice',
+        category: 'discrete',
+        description: 'Deepen proof skills with direct, contrapositive, contradiction, and induction practice. Heavy scaffolding, worked examples, and checklists for beginners.',
+        difficulty: 'beginner',
+        topics: ['Direct Proof', 'Contrapositive', 'Contradiction', 'Induction', 'Proof Structure'],
+        exampleHighlight: 'Examples include: parity proofs, divisibility proofs, induction on sums, and contradiction examples on irrationals.',
+        examples: [
+            'Direct: prove sum of two even numbers is even with explicit algebraic steps.',
+            'Contrapositive: if n² is even then n is even — rewrite and prove.',
+            'Contradiction: √2 is irrational — outline with assumptions and prime factorization.',
+            'Induction: 1+2+…+n = n(n+1)/2 with base and inductive step annotated.',
+            'Template: checklist for assumptions, goal restatement, and closure.'
+        ],
+        codeExamples: {
+            java: `// Theory-only module: use the proof templates and worked examples.`
+        },
+        skipAutoExamples: true,
+        codeBreakdown: [
+            { label: 'Direct/Contrapositive', detail: 'Rewrite the goal, assume hypotheses, derive target; for contrapositive, flip and negate carefully.' },
+            { label: 'Contradiction', detail: 'Assume the negation of the claim and force an impossibility (parity/irrational examples).' },
+            { label: 'Induction', detail: 'State base, hypothesis, and step; highlight where the hypothesis is used.' }
+        ],
+        truthTables: [],
+        resources: [
+            { text: 'Proof Strategies Guide', url: 'https://people.math.harvard.edu/~elkies/Misc/proofs.pdf' }
+        ]
     }
 ];
 
