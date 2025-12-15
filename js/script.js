@@ -7550,14 +7550,15 @@ function updateHeaderShrink() {
     const buttons = document.getElementById('header-buttons');
     const chip = document.getElementById('account-chip');
     const inner = header?.querySelector('.header-inner');
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-    const progress = Math.min(appState.scrollY / 60, 1);
-    const isScrolled = appState.scrollY > 10;
-    const isCollapsed = appState.scrollY > 10;
-    const isFullyShrunken = appState.scrollY > 40;
+    const progress = Math.min(appState.scrollY / 50, 1);
+    const isScrolled = appState.scrollY > 5;
+    const isCollapsed = appState.scrollY > 5;
+    const isFullyShrunken = appState.scrollY > 30;
 
-    // Header padding - smaller values for optimization
-    const paddingY = Math.max(10 - progress * 9, 1.5);
+    // Header padding - enforce tiny padding on mobile
+    const paddingY = Math.max(10 - progress * 9, isMobile ? 0.5 : 1.5);
     if (inner) {
         inner.style.paddingTop = `${paddingY}px`;
         inner.style.paddingBottom = `${paddingY}px`;
@@ -7567,8 +7568,17 @@ function updateHeaderShrink() {
     }
     header.classList.toggle('header-collapsed', isCollapsed);
 
-    // Title scale
-    title.style.transform = isFullyShrunken ? 'scale(0.88)' : 'scale(1)';
+    // Title scale and font override on mobile
+    title.style.transform = isFullyShrunken ? 'scale(0.82)' : 'scale(1)';
+    if (isCollapsed && isMobile) {
+        title.style.fontSize = '0.95rem';
+        title.style.lineHeight = '1.05';
+        title.style.margin = '0';
+    } else {
+        title.style.fontSize = '';
+        title.style.lineHeight = '';
+        title.style.margin = '';
+    }
 
     // Subtitle opacity
     const subtitleOpacity = Math.max(1 - progress * 1.8, 0);
@@ -7576,16 +7586,35 @@ function updateHeaderShrink() {
     subtitle.style.maxHeight = isCollapsed ? '0px' : '48px';
     subtitle.style.marginTop = isCollapsed ? '0px' : '4px';
     subtitle.style.transform = subtitleOpacity < 0.5 || isCollapsed ? 'translateY(-10px)' : 'translateY(0)';
+    subtitle.style.display = (isCollapsed && isMobile) ? 'none' : '';
 
     // Buttons
     const buttonOpacity = Math.max(1 - progress * 1.4, 0);
-    const buttonScale = Math.max(1 - progress * 0.4, 0.65);
+    const buttonScale = Math.max(1 - progress * 0.45, isMobile ? 0.5 : 0.65);
     buttons.style.opacity = buttonOpacity;
     buttons.style.transform = `scale(${buttonScale})`;
     buttons.style.transformOrigin = 'top right';
     if (chip) {
         chip.style.opacity = isCollapsed ? 0 : 1;
         chip.style.transform = isCollapsed ? 'translateY(-6px)' : 'translateY(0)';
+    }
+
+    // Explicit height constraints on mobile when collapsed
+    if (isCollapsed && isMobile) {
+        const targetHeight = 30;
+        header.style.minHeight = `${targetHeight}px`;
+        header.style.maxHeight = `${targetHeight}px`;
+        if (inner) {
+            inner.style.minHeight = `${targetHeight}px`;
+            inner.style.alignItems = 'center';
+        }
+    } else {
+        header.style.minHeight = '';
+        header.style.maxHeight = '';
+        if (inner) {
+            inner.style.minHeight = '';
+            inner.style.alignItems = '';
+        }
     }
 
     // Add/remove shadow
