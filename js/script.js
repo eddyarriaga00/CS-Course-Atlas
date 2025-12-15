@@ -16,6 +16,7 @@ const appState = {
     moduleModes: new Map(),
     searchTerm: '',
     difficultyFilter: 'all',
+    categoryFilter: 'all',
     glossarySearch: '',
     glossaryCategory: 'all',
     currentFlashcard: 0,
@@ -108,7 +109,8 @@ const SUPPORTED_LANGUAGES = {
     java: { name: 'Java', icon: '☕' },
     cpp: { name: 'C++', icon: '⚡' },
     python: { name: 'Python', icon: '🐍' },
-    javascript: { name: 'JavaScript', icon: '🟨' }
+    javascript: { name: 'JavaScript', icon: '🟨' },
+    assembly: { name: 'Assembly (x86-32)', icon: '⚙️' }
 };
 
 const CODE_MODES = {
@@ -140,6 +142,8 @@ const CARD_DEPTH_OPTIONS = ['flat', 'standard', 'lifted'];
 const CARD_DEPTH_CLASSES = CARD_DEPTH_OPTIONS.map(option => `card-depth-${option}`);
 const INTERVIEW_PAGE_SIZE = 2;
 let interviewPage = 1;
+const DONATION_URL = 'https://www.paypal.com/donate?business=your.email@paypal.com&amount=1.00&currency_code=USD&item_name=Java%20DSA%20Notes%20Support';
+const MODULE_CATEGORIES = ['all', 'dsa', 'discrete', 'systems'];
 
 const interviewExamples = [
     {
@@ -229,6 +233,57 @@ const interviewExamples = [
 }`
     }
 ];
+
+const notesLibrary = [
+    {
+        id: 'arrays-basics',
+        title: 'Arrays & Strings Fundamentals',
+        category: 'Foundations',
+        summary: 'Cheat sheet of array operations, common pitfalls, and string helpers.',
+        pages: 6,
+        url: '#'
+    },
+    {
+        id: 'stacks-queues',
+        title: 'Stacks vs Queues',
+        category: 'Foundations',
+        summary: 'Use-cases, diagrams, and practice prompts with complexity tables.',
+        pages: 5,
+        url: '#'
+    },
+    {
+        id: 'trees-overview',
+        title: 'Binary Trees & Traversals',
+        category: 'Trees',
+        summary: 'DFS/BFS orders, recursion templates, and interview-ready patterns.',
+        pages: 7,
+        url: '#'
+    },
+    {
+        id: 'hashing',
+        title: 'Hash Maps & Sets',
+        category: 'Hashing',
+        summary: 'Collision strategies, load factor intuition, and sample walkthroughs.',
+        pages: 5,
+        url: '#'
+    },
+    {
+        id: 'graphs',
+        title: 'Graphs & Traversals',
+        category: 'Graphs',
+        summary: 'Adjacency list vs matrix, BFS/DFS templates, and cycle detection notes.',
+        pages: 8,
+        url: '#'
+    }
+];
+
+const notesCategories = ['All', ...Array.from(new Set(notesLibrary.map(n => n.category)))];
+let activeNotesCategory = 'All';
+
+function normalizeCategoryFilter(value) {
+    return MODULE_CATEGORIES.includes(value) ? value : 'all';
+}
+
 const DIFFICULTY_SECTIONS = {
     beginner: { label: 'Beginner Track', icon: '🌱' },
     intermediate: { label: 'Intermediate Trail', icon: '⚙️' },
@@ -573,6 +628,7 @@ const ACHIEVEMENT_LEVELS = [
         description: 'All modules conquered! Pay it forward by mentoring someone still on the path.',
     }
 ];
+
 
 appState.flashcardSessionLength = FLASHCARD_SESSION_SIZE;
 
@@ -4305,6 +4361,331 @@ function kmpSearch(text, pattern) {
         },
         explanation: `We demystify the prefix table (LPS array), visualize how matches shift without rescanning characters, and compare with Rabin-Karp and Z-algorithm trade-offs. Practice exercises include DNA motif search and log scanning.`,
         resources: ['KMP Tutorial', 'Visual String Matching', 'Pattern Matching Cheat Sheet']
+    },
+    {
+        id: 'assembly-basics',
+        title: 'Assembly Language Basics',
+        category: 'systems',
+        description: 'Learn how high-level constructs map to registers, the stack, and instructions. We show loads/stores, loops, and function calls, then line up the same logic in Java so you can cross-compare.',
+        difficulty: 'intermediate',
+        topics: ['Registers', 'Stack Frames', 'Memory Addressing', 'Loops', 'Syscalls'],
+        codeExamples: {
+            assembly: `; Assembly Basics (x86-32) — detailed, line-by-line comments
+; cdecl calling convention, 32-bit registers, little-endian
+; int sum_array(int* arr, int len)
+
+section .text
+global sum_array
+
+sum_array:
+    push ebp                ; save caller frame pointer
+    mov  ebp, esp           ; establish our stack frame
+    push ebx                ; preserve callee-saved register
+    mov  ebx, [ebp+8]       ; ebx = arr pointer   (arg0)
+    mov  ecx, [ebp+12]      ; ecx = len           (arg1)
+    xor  eax, eax           ; eax = 0 (running sum)
+.loop:
+    cmp  ecx, 0             ; are we done? if len == 0, exit
+    je   .done
+    mov  edx, [ebx + 4*(ecx-1)] ; edx = arr[len-1] using scaled index
+    add  eax, edx           ; sum += arr[i]
+    dec  ecx                ; i--
+    jmp  .loop
+.done:
+    pop  ebx                ; restore callee-saved
+    mov  esp, ebp           ; tear down frame
+    pop  ebp
+    ret                     ; return sum in eax
+
+; int add_then_double(int a, int b)
+global add_then_double
+add_then_double:
+    push ebp
+    mov  ebp, esp
+    mov  eax, [ebp+8]       ; eax = a
+    add  eax, [ebp+12]      ; eax += b
+    shl  eax, 1             ; eax *= 2 (shift left by 1)
+    mov  esp, ebp
+    pop  ebp
+    ret
+`,
+            'assembly-pseudocode': `PROCEDURE sum_array(arr, len):
+  save frame + callee registers
+  sum <- 0
+  FOR i from len-1 down to 0:
+    sum <- sum + arr[i]
+  restore registers; return sum in eax
+
+PROCEDURE add_then_double(a, b):
+  result <- a + b
+  result <- result * 2
+  return result`
+        },
+        explanation: 'We annotate each Java line with its assembly counterpart: registers stand in for locals, loops map to compare/jump pairs, and calls mirror stack-frame setup/teardown. You will see how addressing works, why alignment matters, and how to reason about side effects.',
+        codeBreakdown: [
+            { label: 'Registers', detail: 'Map Java locals to general purpose registers (rax, rbx, rcx, rdx) and track their lifetimes.' },
+            { label: 'Stack Frame', detail: 'Prologue/epilogue pairs protect caller data; locals live at negative rbp offsets.' },
+            { label: 'Branches', detail: 'Loops and ifs compile into cmp/test plus conditional jumps—trace flags to understand flow.' }
+        ],
+        resources: [
+            { text: 'x86-64 Basics (CS61)', url: 'https://cs61c.org' },
+            { text: 'Godbolt Compiler Explorer', url: 'https://godbolt.org/' }
+        ]
+    },
+    {
+        id: 'discrete-math-1',
+        title: 'Discrete Mathematics I: Logic & Sets',
+        category: 'discrete',
+        description: 'Master propositions, truth tables, set operations, and proof patterns with theory-first explanations. We walk through law simplifications, contrapositive/contradiction reasoning, and Venn-style set identities before you ever touch code. Examples: DeMorgan transformations, distributive law rewrites, and direct vs. contrapositive proofs of conditional statements.',
+        difficulty: 'beginner',
+        topics: ['Propositions', 'Truth Tables', 'Set Operations', 'Proof Sketches', 'Logic Laws'],
+        exampleHighlight: 'Examples include: full truth tables for p→q, p↔q, ¬(p∨q); DeMorgan and distributive rewrites; direct vs. contrapositive proof outlines.',
+        examples: [
+            'Truth table (p→q): (F,F)->T, (F,T)->T, (T,F)->F, (T,T)->T with column-by-column evaluation.',
+            'Truth table (p↔q): (F,F)->T, (F,T)->F, (T,F)->F, (T,T)->T to show equivalence symmetry.',
+            'DeMorgan: ¬(p ∨ q) ≡ (¬p ∧ ¬q) with stepwise law application.',
+            'Proof skeleton: If n is even then n² is even — direct and contrapositive outlines side by side.'
+        ],
+        truthTables: [
+            {
+                title: 'Implication (p → q)',
+                headers: ['p', 'q', 'p → q'],
+                rows: [
+                    ['F', 'F', 'T'],
+                    ['F', 'T', 'T'],
+                    ['T', 'F', 'F'],
+                    ['T', 'T', 'T']
+                ]
+            },
+            {
+                title: 'Equivalence (p ↔ q)',
+                headers: ['p', 'q', 'p ↔ q'],
+                rows: [
+                    ['F', 'F', 'T'],
+                    ['F', 'T', 'F'],
+                    ['T', 'F', 'F'],
+                    ['T', 'T', 'T']
+                ]
+            },
+            {
+                title: 'DeMorgan: ¬(p ∨ q) ≡ (¬p ∧ ¬q)',
+                headers: ['p', 'q', 'p ∨ q', '¬(p ∨ q)', '¬p', '¬q', '¬p ∧ ¬q'],
+                rows: [
+                    ['F', 'F', 'F', 'T', 'T', 'T', 'T'],
+                    ['F', 'T', 'T', 'F', 'T', 'F', 'F'],
+                    ['T', 'F', 'T', 'F', 'F', 'T', 'F'],
+                    ['T', 'T', 'T', 'F', 'F', 'F', 'F']
+                ]
+            }
+        ],
+        codeExamples: {
+            java: `// Theory-focused module: use the tables and notes above.
+// Key formulas and patterns:
+// - Truth tables for p→q, p↔q, ¬(p∨q) vs ¬p∧¬q
+// - Law rewrites (DeMorgan, distributive)
+// - Proof outlines (direct, contrapositive, contradiction)
+// Treat this block as pinned notes, not executable code.`
+        },
+        skipAutoExamples: true,
+        explanation: 'Heavy theory first: translate English claims to symbolic form, build full truth tables, and apply equivalence laws to simplify. We compare direct proof, contrapositive, and contradiction with short, annotated outlines. Code appears only as a calculator to verify steps (truth tables, set operations) after you reason them out on paper.',
+        codeBreakdown: [
+            { label: 'Truth tables', detail: 'Iterate over boolean pairs to see how implications and equivalences behave.' },
+            { label: 'Set operations', detail: 'Use HashSet union/intersection to mirror Venn diagram reasoning.' },
+            { label: 'Proof outline', detail: 'A reusable five-step scaffold for direct or contradiction proofs.' }
+        ],
+        resources: [
+            { text: 'Discrete Math Notes – Logic', url: 'https://discrete.openmathbooks.org' }
+        ]
+    },
+    {
+        id: 'discrete-math-2',
+        title: 'Discrete Mathematics II: Counting & Graphs',
+        category: 'discrete',
+        description: 'Dive deep into theory: addition/multiplication rules, permutations vs. combinations, pigeonhole principle, and recurrence solving (iteration and substitution). Graph basics cover paths, degrees, and connectivity before touching code. Examples: counting handshakes, arranging books, pigeonhole applications, and walking through BFS layers on a small graph.',
+        difficulty: 'intermediate',
+        topics: ['Counting', 'Recurrence Relations', 'Permutations', 'Combinations', 'Graph Basics'],
+        exampleHighlight: 'Examples include: handshake lemma on K₄, arranging 5 distinct books on 3 shelves, pigeonhole proof for repeated initials, Fibonacci via recurrence unfolding, and BFS layer-by-layer on a 6-node graph.',
+        examples: [
+            'Counting: 10 students shaking hands → 10·9/2 = 45; verify with handshake lemma.',
+            'Permutations vs. combinations: choose 3 of 5 books (C(5,3)=10) versus ordering 3 of 5 (P(5,3)=60).',
+            'Pigeonhole: 13 people ⇒ at least 2 share a birth month; extend to initials example.',
+            'Recurrence: T(n)=2T(n-1)+1 unfolded to closed form 2^n-1; Fibonacci partial table up to F(10).',
+            'Graph example: BFS on adjacency list {1:[2,3],2:[4],3:[4,5],4:[6],5:[6]} produces layers [1],[2,3],[4,5],[6].'
+        ],
+        codeExamples: {
+            java: `// Theory-focused module: counting + graph notes (no code).
+// Use these as pinned references:
+// - Counting rules, nCk vs permutations
+// - Pigeonhole principle examples
+// - Recurrence unfolding/substitution sketches
+// - BFS layering for connectivity/distance intuition`
+        },
+        skipAutoExamples: true,
+        explanation: 'Theory-heavy walkthroughs of counting arguments and recurrence patterns, then short code to verify your manual answers. We annotate why nCk formulas work, how Pascal’s triangle embodies recursion, and how BFS layers reflect graph distance. Use the snippets as calculators after you reason through the combinatorial logic.',
+        codeBreakdown: [
+            { label: 'nCk DP', detail: 'Binomial coefficients via Pascal\'s triangle show how combinations build from smaller subproblems.' },
+            { label: 'Recurrences', detail: 'Memoized Fibonacci illustrates recurrence unfolding and overlapping subproblems.' },
+            { label: 'Graphs', detail: 'Breadth-first search orders vertices layer by layer for shortest-path intuition on unweighted graphs.' }
+        ],
+        resources: [
+            { text: 'Discrete Math – Counting', url: 'https://discrete.openmathbooks.org/dmoi3/sec_counting.html' },
+            { text: 'Intro Graphs', url: 'https://cp-algorithms.com/graph/' }
+        ]
+    },
+    {
+        id: 'discrete-math-3',
+        title: 'Discrete Mathematics III: Induction & Number Theory',
+        category: 'discrete',
+        description: 'A theory-only deep dive into induction (weak/strong), invariants, divisibility, primes, and modular arithmetic. We avoid code and focus on proof patterns and worked numeric examples.',
+        difficulty: 'intermediate',
+        topics: ['Induction', 'Strong Induction', 'Invariants', 'Modular Arithmetic', 'Divisibility'],
+        exampleHighlight: 'Examples include: proving sum of first n integers by induction, tiling invariants, gcd/Euclid walkthrough, modular inverses for small primes, and parity proofs.',
+        examples: [
+            'Induction: 1+2+…+n = n(n+1)/2 with base n=1 and inductive step.',
+            'Strong induction: any integer >1 factors into primes (outline the inductive hypothesis).',
+            'Invariant: checkerboard domino tiling after removing opposite corners (parity/coloring argument).',
+            'Euclid’s algorithm: gcd(252,105) step-by-step until remainder 0.',
+            'Mod arithmetic: solve 3x ≡ 1 (mod 7) via checking residues; introduce inverses.',
+            'Parity: prove n² and n have same parity and use it in simple Diophantine checks.'
+        ],
+        codeExamples: {
+            java: `// Theory-focused module: no executable code.
+// Use the examples list and truth tables to reason by hand.`
+        },
+        skipAutoExamples: true
+    },
+    {
+        id: 'discrete-math-4',
+        title: 'Discrete Mathematics IV: Relations & Graph Theory',
+        category: 'discrete',
+        description: 'Focus on definitions and properties: relations (reflexive, symmetric, transitive), equivalence classes, partial orders, and core graph properties. Heavy notes with layered examples, minimal code.',
+        difficulty: 'intermediate',
+        topics: ['Relations', 'Equivalence', 'Partial Orders', 'Graph Properties', 'Connectivity'],
+        exampleHighlight: 'Examples include: classifying relations on small sets, drawing Hasse diagrams for divisibility, equivalence classes for congruence mod n, and computing degrees/paths on small graphs.',
+        examples: [
+            'Relation table on {1,2,3}: test reflexive/symmetric/transitive with adjacency grid.',
+            'Equivalence: congruence mod 3 creates classes {[0],[1],[2]} with examples.',
+            'Partial order: divisibility on {1,2,4,8,16} with Hasse diagram explanation.',
+            'Graph: degrees and paths on a 5-node undirected graph; check for Euler path using odd-degree count.',
+            'Connectivity: BFS layers on a small graph to decide connected components.'
+        ],
+        codeExamples: {
+            java: `// Theory-focused module: no executable code.
+// Work through the examples and diagrams provided in the module.`
+        },
+        skipAutoExamples: true
+    },
+    {
+        id: 'assembly-stack-calls',
+        title: 'Assembly: Stack Frames & Calls (x86-32)',
+        category: 'systems',
+        description: 'Pure assembly walkthrough of 32-bit stack frames, calling conventions, and parameter passing. No high-level languages—only assembly and structured pseudocode.',
+        difficulty: 'intermediate',
+        topics: ['Stack Frames', 'EBP/ESP', 'CALL/RET', 'Parameter Passing', 'Prologue/Epilogue'],
+        exampleHighlight: 'Examples include: prologue/epilogue template, summing an array with ESI/EDI, and nested calls showing saved EBP/ret addresses.',
+        examples: [
+            'Prologue/Epilogue: push ebp; mov ebp, esp; sub esp, locals ... mov esp, ebp; pop ebp; ret.',
+            'Sum loop: mov ecx, len; xor eax, eax; mov esi, arr; loop add eax, [esi+4*edx].',
+            'Call chain: main -> foo -> bar with stack snapshots labeling return addresses and saved ebp.'
+        ],
+        codeExamples: {
+            assembly: `; Sum array and show frame layout (x86-32)
+section .text
+global sum_array
+
+sum_array:
+    push ebp
+    mov ebp, esp
+    push ebx              ; save callee-saved
+    mov ebx, [ebp+8]      ; arr pointer
+    mov ecx, [ebp+12]     ; length
+    xor eax, eax          ; sum = 0
+.loop:
+    cmp ecx, 0
+    je .done
+    add eax, [ebx + 4*(ecx-1)]
+    dec ecx
+    jmp .loop
+.done:
+    pop ebx
+    mov esp, ebp
+    pop ebp
+    ret
+`,
+            'assembly-pseudocode': `PROCEDURE sum_array(arr, len):
+  SAVE base pointer
+  SAVE callee-saved registers
+  sum <- 0
+  FOR i from len-1 downto 0:
+    sum <- sum + arr[i]
+  RESTORE registers
+  RETURN sum`
+        },
+        skipAutoExamples: true
+    },
+    {
+        id: 'assembly-branching',
+        title: 'Assembly: Branching & Loops (x86-32)',
+        category: 'systems',
+        description: 'Only assembly + pseudocode. Compare cmp/test with conditional jumps, build counted loops, while loops, and simple switch-like jump tables.',
+        difficulty: 'beginner',
+        topics: ['CMP/TEST', 'Jumps', 'Loops', 'Flags', 'Jump Tables'],
+        exampleHighlight: 'Examples include: translating if/else, do-while, counting loop with ecx, and a small jump table for cases 0–2.',
+        examples: [
+            'If/else: cmp eax, ebx; jl less; ... ; jmp end; less: ...',
+            'Do-while: label -> body -> evaluate condition -> jnz label.',
+            'For loop: mov ecx, n; xor eax, eax; loop add eax, ecx; loop label decrements ecx automatically.',
+            'Jump table: bounds check then indirect jump to cases for 0/1/2.'
+        ],
+        codeExamples: {
+            assembly: `; Branching and loops (x86-32)
+section .text
+global abs_val
+
+abs_val:
+    push ebp
+    mov ebp, esp
+    mov eax, [ebp+8]
+    cmp eax, 0
+    jge .done
+    neg eax
+.done:
+    mov esp, ebp
+    pop ebp
+    ret
+
+; Simple switch via jump table (cases 0,1,2)
+global tiny_switch
+tiny_switch:
+    push ebp
+    mov ebp, esp
+    mov eax, [ebp+8]   ; value
+    cmp eax, 2
+    ja .default
+    jmp [jump_table + eax*4]
+.case0:
+    mov eax, 10
+    jmp .end
+.case1:
+    mov eax, 20
+    jmp .end
+.case2:
+    mov eax, 30
+    jmp .end
+.default:
+    mov eax, -1
+.end:
+    mov esp, ebp
+    pop ebp
+    ret
+
+jump_table:
+    dd .case0, .case1, .case2
+`,
+            'assembly-pseudocode': `IF x < 0 THEN x <- -x
+SWITCH x IN {0,1,2} RETURN 10/20/30 ELSE -1`
+        },
+        skipAutoExamples: true
     }
 ];
 
@@ -4318,9 +4699,20 @@ function enrichModuleDetails(modulesList = []) {
         module.descriptionBase = baseDescription;
         module.explanationBase = baseExplanation;
 
-        module.description = `${baseDescription} You will see how the sample code maps each idea to practice, watch inputs flow through the helpers, and learn when to pick these techniques (${topics}).`;
+        const examplesList = Array.isArray(module.examples) ? module.examples : [];
+        if ((!examplesList.length) && !shouldSkipAutoExamples(module)) {
+            module.examples = buildDefaultExamples(module);
+        } else {
+            module.examples = examplesList;
+        }
+        if (!module.exampleHighlight) {
+            const preview = Array.isArray(module.examples) ? module.examples.slice(0, 3) : [];
+            module.exampleHighlight = `Examples include: ${preview.join('; ') || topics}.`;
+        }
+        const exampleSnippet = module.exampleHighlight || `Examples include: ${topics}.`;
+        module.description = `${baseDescription} You will see how the sample code maps each idea to practice, watch inputs flow through the helpers, and learn when to pick these techniques (${topics}). ${exampleSnippet}`;
 
-        module.explanation = `${baseExplanation} The walkthrough points out guard clauses, setup/teardown steps, complexity trade-offs, and mirrors the Java sample across ${sampleLanguages.length ? sampleLanguages.join(', ') : 'Java'} so you can cross-check logic in multiple languages.`;
+        module.explanation = `${baseExplanation} The walkthrough points out guard clauses, setup/teardown steps, complexity trade-offs, and mirrors the Java sample across ${sampleLanguages.length ? sampleLanguages.join(', ') : 'Java'} so you can cross-check logic in multiple languages. ${exampleSnippet}`;
 
         const baseBreakdown = module.codeBreakdownBase || module.codeBreakdown || [];
         module.codeBreakdownBase = baseBreakdown;
@@ -4542,8 +4934,26 @@ function buildAlignedFromJavaOutputs(module, language, javaCode = '') {
     return `${header}${translated}`;
 }
 
+function buildDefaultExamples(module) {
+    const title = module.title || 'This module';
+    const topicList = module.topics || [];
+    const primary = topicList[0] || 'core idea';
+    const secondary = topicList[1] || topicList[0] || 'related concept';
+    const difficultyLabel = module.difficulty ? `${module.difficulty} level` : 'all levels';
+    return [
+        `${title}: apply ${primary} on a small input and trace the steps.`,
+        `Compare two approaches for ${secondary}: brute force vs. optimized (${difficultyLabel}).`,
+        `Walk through edge cases (empty input, single item, duplicate values) to see how ${title} handles them.`
+    ];
+}
+
+function shouldSkipAutoExamples(module) {
+    return module.skipAutoExamples || module.category === 'systems' || module.category === 'discrete';
+}
+
 function alignNonJavaExamples(modulesList = []) {
     modulesList.forEach(module => {
+        if (shouldSkipAutoExamples(module)) return;
         const javaCode = (module.codeExamples && module.codeExamples.java) || module.codeExample || '';
         if (!javaCode) return;
 
@@ -4561,7 +4971,30 @@ function alignNonJavaExamples(modulesList = []) {
 }
 
 modules.forEach(module => {
+    const isSystems = module.category === 'systems';
+    const isDiscrete = module.category === 'discrete';
     module.codeExamples = module.codeExamples ? { ...module.codeExamples } : {};
+
+    if (isSystems) {
+        // Keep only assembly / pseudocode
+        Object.keys(module.codeExamples).forEach(key => {
+            if (key !== 'assembly' && key !== 'assembly-pseudocode') {
+                delete module.codeExamples[key];
+            }
+        });
+        if (!module.codeExamples.assembly) {
+            module.codeExamples.assembly = buildSampleCode(module, 'assembly');
+        }
+        if (!module.codeExamples['assembly-pseudocode']) {
+            module.codeExamples['assembly-pseudocode'] = convertToPseudocode(module.codeExamples.assembly, 'assembly', true);
+        }
+        return;
+    }
+
+    if (isDiscrete) {
+        return; // theory-focused; skip auto code generation
+    }
+
     SAMPLE_LANGUAGES.forEach(language => {
         if (!module.codeExamples[language]) {
             module.codeExamples[language] = buildSampleCode(module, language);
@@ -5148,6 +5581,7 @@ function saveToLocalStorage() {
         moduleModes: Array.from(appState.moduleModes.entries()),
         searchTerm: appState.searchTerm,
         difficultyFilter: appState.difficultyFilter,
+        categoryFilter: appState.categoryFilter,
         glossaryCategory: appState.glossaryCategory,
         currentFlashcard: appState.currentFlashcard,
         selectedFlashcardModule: appState.selectedFlashcardModule,
@@ -5188,7 +5622,8 @@ function loadFromLocalStorage() {
             appState.moduleLanguages = new Map(state.moduleLanguages || []);
             appState.moduleModes = new Map(state.moduleModes || []);
             appState.searchTerm = state.searchTerm || '';
-            appState.difficultyFilter = state.difficultyFilter || 'all';
+            appState.difficultyFilter = ['beginner', 'intermediate', 'advanced', 'all'].includes(state.difficultyFilter) ? state.difficultyFilter : 'all';
+            appState.categoryFilter = normalizeCategoryFilter(state.categoryFilter);
             appState.glossaryCategory = state.glossaryCategory || 'all';
             appState.currentFlashcard = state.currentFlashcard || 0;
             appState.selectedFlashcardModule = state.selectedFlashcardModule || 'all';
@@ -5626,6 +6061,41 @@ function renderInterviewPagination(totalPages) {
     }).join('');
 }
 
+function renderNotesLibrary() {
+    const catContainer = document.getElementById('notes-library-categories');
+    const list = document.getElementById('notes-library-list');
+    if (!catContainer || !list) return;
+    catContainer.innerHTML = notesCategories.map(cat => `
+        <button class="notes-chip ${cat === activeNotesCategory ? 'active' : ''}" data-notes-cat="${cat}">${cat}</button>
+    `).join('');
+    const filtered = activeNotesCategory === 'All'
+        ? notesLibrary
+        : notesLibrary.filter(n => n.category === activeNotesCategory);
+    list.innerHTML = filtered.map(item => `
+        <div class="notes-card">
+            <h4>${escapeHtml(item.title)}</h4>
+            <p>${escapeHtml(item.summary)}</p>
+            <p class="text-[11px] uppercase tracking-wide text-slate-500">Category: ${escapeHtml(item.category)} • ${item.pages} pages</p>
+            <div class="notes-actions">
+                <button class="notes-download" data-notes-download="${item.id}">Download ($1)</button>
+                <span class="text-xs text-slate-500">Preview available in class</span>
+            </div>
+        </div>
+    `).join('');
+
+    catContainer.querySelectorAll('[data-notes-cat]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            activeNotesCategory = btn.dataset.notesCat || 'All';
+            renderNotesLibrary();
+        });
+    });
+    list.querySelectorAll('[data-notes-download]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            openNotesDownloadModal(btn.dataset.notesDownload);
+        });
+    });
+}
+
 // Notes
 function loadNotes() {
     try {
@@ -5676,7 +6146,8 @@ const dsState = {
     rbtree: null,
     circuits: null,
     greedy: null,
-    visualN: 8
+    visualN: 8,
+    lastAction: 'Pick a structure and run an operation.'
 };
 
 const dsConfigs = {
@@ -5961,6 +6432,7 @@ function renderDSPlayground() {
     const quickSummary = document.getElementById('ds-complexity-summary');
     const quickOps = document.getElementById('ds-complexity-ops');
     const quickLabel = document.getElementById('ds-complexity-label');
+    const statusEl = document.getElementById('ds-status');
     if (!tabs || !controls || !stateEl || !complexityEl) return;
 
     ensureSampleData(dsState.active);
@@ -6019,6 +6491,9 @@ function renderDSPlayground() {
     }
     stateEl.textContent = stateText || 'No data yet.';
     complexityEl.textContent = cfg.complexity;
+    if (statusEl) {
+        statusEl.textContent = dsState.lastAction || '';
+    }
 
     if (visualEl) {
         visualEl.innerHTML = buildDSVisual(dsState.active);
@@ -6054,7 +6529,10 @@ function performDSOp(structKey, opLabel) {
     const cfg = dsConfigs[structKey];
     if (!cfg) return;
     const op = cfg.ops.find(o => o.label === opLabel);
-    if (op) op.action();
+    if (op) {
+        op.action();
+        dsState.lastAction = `${cfg.label}: ${op.label}`;
+    }
     renderDSPlayground();
 }
 
@@ -6094,19 +6572,6 @@ function buildDSVisual(structKey) {
         }
         case 'tree': {
             return buildTreeVisual(dsState.tree);
-        }
-        case 'hashing': {
-            if (!dsState.hashing || !dsState.hashing.buckets) return '<div class="text-xs text-slate-400">Hash table empty</div>';
-            return `
-                <div class="space-y-1">
-                    ${dsState.hashing.buckets.map((bucket, idx) => `
-                        <div class="flex items-center gap-2">
-                            <span class="text-[11px] text-slate-300 font-semibold">Bucket ${idx}</span>
-                            <div class="ds-array">${bucket.map(key => `<div class="ds-box">${escapeHtml(key)}</div>`).join('') || '<span class="text-xs text-slate-500">empty</span>'}</div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
         }
         case 'hashing': {
             if (!dsState.hashing || !dsState.hashing.buckets) return '<div class="text-xs text-slate-400">Hash table empty</div>';
@@ -6718,80 +7183,129 @@ function filterModules() {
     const searchTerm = appState.searchTerm.trim().toLowerCase();
     const hasSearch = searchTerm.length > 0;
     const difficultyFilter = appState.difficultyFilter;
+    const categoryFilter = normalizeCategoryFilter(appState.categoryFilter);
 
-    return modules.filter(module => {
-        const matchesSearch = !hasSearch ||
-            module.title.toLowerCase().includes(searchTerm) ||
-            module.description.toLowerCase().includes(searchTerm) ||
-            module.topics.some(topic => topic.toLowerCase().includes(searchTerm));
+    try {
+        return modules.filter(module => {
+            const moduleCategory = module.category || 'dsa';
+            const moduleTopics = Array.isArray(module.topics) ? module.topics : [];
+            const moduleDescription = typeof module.description === 'string' ? module.description : '';
+            const matchesSearch = !hasSearch ||
+                module.title.toLowerCase().includes(searchTerm) ||
+                moduleDescription.toLowerCase().includes(searchTerm) ||
+                moduleTopics.some(topic => topic.toLowerCase().includes(searchTerm));
 
-        const matchesDifficulty = difficultyFilter === 'all' || module.difficulty === difficultyFilter;
-        const passesCompletionFilter = !appState.hideCompletedModules || !appState.completedModules.has(module.id);
+            const matchesDifficulty = difficultyFilter === 'all' || module.difficulty === difficultyFilter;
+            const matchesCategory = categoryFilter === 'all' || moduleCategory === categoryFilter;
+            const passesCompletionFilter = !appState.hideCompletedModules || !appState.completedModules.has(module.id);
 
-        return matchesSearch && matchesDifficulty && passesCompletionFilter;
-    });
+            return matchesSearch && matchesDifficulty && matchesCategory && passesCompletionFilter;
+        });
+    } catch (err) {
+        console.error('filterModules error', err);
+        return modules;
+    }
 }
 
 function renderModules() {
-    const filteredModules = filterModules();
-    const grid = document.getElementById('modules-grid');
-    const searchResultsCount = document.getElementById('search-results-count');
+    try {
+        let filteredModules = filterModules();
+        if (!filteredModules.length && appState.categoryFilter !== 'all') {
+            appState.categoryFilter = 'all';
+            const catSelect = document.getElementById('category-filter');
+            if (catSelect) catSelect.value = 'all';
+            filteredModules = filterModules();
+        }
+        const grid = document.getElementById('modules-grid');
+        const searchResultsCount = document.getElementById('search-results-count');
 
-    if (filteredModules.length !== modules.length) {
-        searchResultsCount.textContent = `Showing ${filteredModules.length} of ${modules.length} modules`;
-        searchResultsCount.style.display = 'block';
-    } else {
-        searchResultsCount.style.display = 'none';
-    }
+        if (filteredModules.length !== modules.length) {
+            searchResultsCount.textContent = `Showing ${filteredModules.length} of ${modules.length} modules`;
+            searchResultsCount.style.display = 'block';
+        } else {
+            searchResultsCount.style.display = 'none';
+        }
 
-    const totalPages = Math.max(1, Math.ceil(filteredModules.length / MODULES_PER_PAGE));
-    if (appState.currentModulePage > totalPages) {
-        appState.currentModulePage = totalPages;
-    }
-    const startIndex = (appState.currentModulePage - 1) * MODULES_PER_PAGE;
-    const pageModules = filteredModules.slice(startIndex, startIndex + MODULES_PER_PAGE);
+        const totalPages = Math.max(1, Math.ceil(filteredModules.length / MODULES_PER_PAGE));
+        if (appState.currentModulePage > totalPages) {
+            appState.currentModulePage = totalPages;
+        }
+        const startIndex = (appState.currentModulePage - 1) * MODULES_PER_PAGE;
+        const pageModules = filteredModules.slice(startIndex, startIndex + MODULES_PER_PAGE);
 
-    const difficultyOrder = ['beginner', 'intermediate', 'advanced'];
-    const groupedContent = difficultyOrder.map(level => {
-        const bucket = pageModules.filter(module => module.difficulty === level);
-        if (!bucket.length) return '';
-        const meta = DIFFICULTY_SECTIONS[level] || { label: level, icon: '📘' };
-        return `
+        const difficultyOrder = ['beginner', 'intermediate', 'advanced'];
+        const groupedContent = difficultyOrder.map(level => {
+            const bucket = pageModules.filter(module => module.difficulty === level);
+            if (!bucket.length) return '';
+            const meta = DIFFICULTY_SECTIONS[level] || { label: level, icon: '📘' };
+            return `
+                <div class="module-section">
+                    <div class="module-section-heading">${meta.icon} ${meta.label}</div>
+                    ${bucket.map(buildModuleCard).join('')}
+                </div>
+            `;
+        }).join('');
+        const otherModules = pageModules.filter(module => !difficultyOrder.includes(module.difficulty));
+        const otherSection = otherModules.length ? `
             <div class="module-section">
-                <div class="module-section-heading">${meta.icon} ${meta.label}</div>
-                ${bucket.map(buildModuleCard).join('')}
+                <div class="module-section-heading">🧭 Additional Modules</div>
+                ${otherModules.map(buildModuleCard).join('')}
+            </div>
+        ` : '';
+        const sectionMarkup = [groupedContent, otherSection].filter(Boolean).join('');
+
+        grid.innerHTML = sectionMarkup || `
+            <div class="text-center p-8 rounded-xl bg-white shadow">
+                <p class="font-semibold text-slate-700">No modules match your filters yet.</p>
+                <p class="text-sm text-slate-500 mt-1">Try changing the difficulty or clearing the search.</p>
             </div>
         `;
-    }).join('');
-    const otherModules = pageModules.filter(module => !difficultyOrder.includes(module.difficulty));
-    const otherSection = otherModules.length ? `
-        <div class="module-section">
-            <div class="module-section-heading">🧭 Additional Modules</div>
-            ${otherModules.map(buildModuleCard).join('')}
-        </div>
-    ` : '';
-    const sectionMarkup = [groupedContent, otherSection].filter(Boolean).join('');
 
-    grid.innerHTML = sectionMarkup || `
-        <div class="text-center p-8 rounded-xl bg-white shadow">
-            <p class="font-semibold text-slate-700">No modules match your filters yet.</p>
-            <p class="text-sm text-slate-500 mt-1">Try changing the difficulty or clearing the search.</p>
-        </div>
-    `;
-
-    renderPagination(totalPages);
-    renderInsights();
+        renderPagination(totalPages);
+        renderInsights();
+    } catch (err) {
+        const grid = document.getElementById('modules-grid');
+        if (grid) {
+            grid.innerHTML = `
+                <div class="text-center p-6 rounded-xl bg-white shadow">
+                    <p class="font-semibold text-rose-600">Modules failed to load.</p>
+                    <p class="text-sm text-slate-600 mt-1">Check console for details.</p>
+                </div>
+            `;
+        }
+        console.error('renderModules error', err);
+    }
 }
 
 function buildModuleCard(module) {
     const isCompleted = appState.completedModules.has(module.id);
     const isCodeExpanded = appState.expandedCode.has(module.id);
-    const currentLanguage = getModuleLanguage(module.id);
-    const currentMode = getModuleMode(module.id);
-    const hasMultipleLanguages = module.codeExamples && Object.keys(module.codeExamples).length > 1;
-    const rawCode = getCodeExample(module, currentLanguage);
-    const processedCode = processCode(isCodeExpanded ? rawCode : truncateCode(rawCode), module.id);
-    const showExpandButton = rawCode.split('\n').length > CONSTANTS.CODE_PREVIEW_LINES;
+    const isDiscrete = module.category === 'discrete';
+    const isSystems = module.category === 'systems';
+    if (isSystems) {
+        Object.keys(module.codeExamples || {}).forEach(key => {
+            if (key !== 'assembly' && key !== 'assembly-pseudocode') {
+                delete module.codeExamples[key];
+            }
+        });
+    }
+    const availableLanguages = isDiscrete ? [] : Object.keys(module.codeExamples || {}).filter(lang => SUPPORTED_LANGUAGES[lang]);
+    const currentLanguage = isDiscrete ? null : getModuleLanguage(module.id);
+    const effectiveLanguage = isDiscrete
+        ? null
+        : (availableLanguages.includes(currentLanguage) ? currentLanguage : (availableLanguages[0] || currentLanguage));
+    if (!isDiscrete && effectiveLanguage && !availableLanguages.includes(currentLanguage)) {
+        appState.moduleLanguages.set(module.id, effectiveLanguage);
+    }
+    const currentMode = isDiscrete ? 'code' : getModuleMode(module.id);
+    const hasMultipleLanguages = availableLanguages.length > 1;
+    const rawCode = isDiscrete
+        ? 'Theory-focused module: review the examples, truth tables, and notes.'
+        : getCodeExample(module, effectiveLanguage);
+    const processedCode = isDiscrete
+        ? rawCode
+        : processCode(isCodeExpanded ? rawCode : truncateCode(rawCode), module.id);
+    const showExpandButton = !isDiscrete && rawCode.split('\n').length > CONSTANTS.CODE_PREVIEW_LINES;
     const supportSummary = module.topics?.slice(0, 2).join(' • ') || 'Guided office hours and async help.';
 const bonusBlock = module.interviewPrompts && module.interviewPrompts.length ? `
         <div class="module-bonus-card">
@@ -6848,37 +7362,40 @@ const bonusBlock = module.interviewPrompts && module.interviewPrompts.length ? `
             <div class="bg-slate-50 border-slate-200 rounded-lg border overflow-hidden mb-3 sm:mb-4">
                 <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 px-3 py-2 border-b border-slate-200 bg-slate-100">
                     <div class="flex items-center gap-1.5">
-                        <span class="text-xs font-medium text-slate-600">💻 Code Example</span>
-                        ${hasMultipleLanguages ? `
+                        <span class="text-xs font-medium text-slate-600">${isDiscrete ? '📘 Discrete Mathematics (Theory)' : '💻 Code Example'}</span>
+                        ${!isDiscrete && hasMultipleLanguages ? `
                             <span class="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 font-medium">
-                                ${SUPPORTED_LANGUAGES[currentLanguage]?.icon} ${SUPPORTED_LANGUAGES[currentLanguage]?.name}
+                                ${SUPPORTED_LANGUAGES[effectiveLanguage]?.icon} ${SUPPORTED_LANGUAGES[effectiveLanguage]?.name}
                             </span>
                         ` : ''}
-                        ${currentMode === 'pseudocode' ? `
+                        ${!isDiscrete && currentMode === 'pseudocode' ? `
                             <span class="text-xs px-1.5 py-0.5 rounded bg-purple-100 text-purple-800 font-medium">
                                 📝 Pseudocode
                             </span>
                         ` : ''}
+                        ${isDiscrete ? `<span class="text-xs px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-medium">Theory Only</span>` : ''}
                     </div>
                     <div class="flex flex-wrap gap-1 w-full sm:w-auto">
                         <button onclick="toggleModuleComments('${module.id}')" class="text-xs px-2 py-1 rounded transition-all duration-200 font-medium shadow-sm hover:shadow-md flex-shrink-0 ${shouldShowComments(module.id) ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-gray-500 hover:bg-gray-600 text-white'}" title="${shouldShowComments(module.id) ? 'Hide Comments' : 'Show Comments'}">
                             💬 ${shouldShowComments(module.id) ? 'ON' : 'OFF'}
                         </button>
+                        ${!isDiscrete && availableLanguages.length ? `
                         <select onchange="setModuleLanguage('${module.id}', this.value)" class="text-xs px-2 py-1 rounded bg-blue-500 hover:bg-blue-600 text-white border-0 font-medium" title="Select Programming Language">
-                            ${Object.entries(SUPPORTED_LANGUAGES).map(([langKey, langInfo]) => `
-                                <option value="${langKey}" ${currentLanguage === langKey ? 'selected' : ''} class="bg-white text-black">
-                                    ${langInfo.icon} ${langInfo.name}
+                            ${availableLanguages.map(langKey => `
+                                <option value="${langKey}" ${effectiveLanguage === langKey ? 'selected' : ''} class="bg-white text-black">
+                                    ${SUPPORTED_LANGUAGES[langKey]?.icon || ''} ${SUPPORTED_LANGUAGES[langKey]?.name || langKey}
                                 </option>
                             `).join('')}
-                        </select>
+                        </select>` : ''}
+                        ${!isDiscrete ? `
                         <select onchange="setModuleMode('${module.id}', this.value)" class="text-xs px-2 py-1 rounded border-0 font-medium ${currentMode === 'pseudocode' ? 'bg-purple-500 hover:bg-purple-600 text-white' : 'bg-indigo-500 hover:bg-indigo-600 text-white'}" title="Select Code Display Mode">
                             ${Object.entries(CODE_MODES).map(([modeKey, modeInfo]) => `
                                 <option value="${modeKey}" ${currentMode === modeKey ? 'selected' : ''} class="bg-white text-black">
                                     ${modeInfo.icon} ${modeInfo.name}
                                 </option>
                             `).join('')}
-                        </select>
-                        ${showExpandButton ? `
+                        </select>` : ''}
+                        ${!isDiscrete && showExpandButton ? `
                             <button onclick="toggleCodeExpansion('${module.id}')" class="text-xs px-2 py-1 rounded transition-all duration-200 font-medium shadow-sm hover:shadow-md flex-shrink-0 ${isCodeExpanded ? 'bg-slate-500 hover:bg-slate-600 text-white' : 'bg-emerald-500 hover:bg-emerald-600 text-white'}">
                                 ${isCodeExpanded ? '📄 Collapse' : '📖 Expand'}
                             </button>
@@ -6899,8 +7416,34 @@ const bonusBlock = module.interviewPrompts && module.interviewPrompts.length ? `
                 <div class="code-breakdown-card">
                     <h4>🧠 Code Breakdown</h4>
                     <ul>
-                        ${module.codeBreakdown.map(item => `<li><strong>${escapeHtml(item.label)}:</strong> ${escapeHtml(item.detail)}</li>`).join('')}
+            ${module.codeBreakdown.map(item => `<li><strong>${escapeHtml(item.label)}:</strong> ${escapeHtml(item.detail)}</li>`).join('')}
+        </ul>
+    </div>
+` : ''}
+            ${module.examples && module.examples.length ? `
+                <div class="code-breakdown-card">
+                    <h4>📌 Examples</h4>
+                    <ul>
+                        ${module.examples.map(example => `<li>${escapeHtml(example)}</li>`).join('')}
                     </ul>
+                </div>
+            ` : ''}
+            ${module.truthTables && module.truthTables.length ? `
+                <div class="code-breakdown-card truth-table-card">
+                    <h4>🧮 Truth Tables</h4>
+                    ${module.truthTables.map(table => `
+                        <div class="truth-table-wrapper">
+                            <div class="truth-table-title">${escapeHtml(table.title || '')}</div>
+                            <table class="truth-table">
+                                <thead>
+                                    <tr>${(table.headers || []).map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr>
+                                </thead>
+                                <tbody>
+                                    ${(table.rows || []).map(row => `<tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    `).join('')}
                 </div>
             ` : ''}
             <div class="module-support-panel">
@@ -7281,6 +7824,10 @@ function toggleModuleComments(moduleId) {
 function setModuleLanguage(moduleId, language) {
     const module = modules.find(m => m.id === moduleId);
     if (!module || !SUPPORTED_LANGUAGES[language]) return;
+    const availableLanguages = Object.keys(module.codeExamples || {});
+    if (shouldSkipAutoExamples(module) && !availableLanguages.includes(language)) {
+        return; // do not auto-generate for restricted modules
+    }
     module.codeExamples = module.codeExamples ? { ...module.codeExamples } : {};
     if (!module.codeExamples[language]) {
         module.codeExamples[language] = module.codeExamples.java || module.codeExample || buildSampleCode(module, language);
@@ -7400,6 +7947,24 @@ function submitPromptWorkspace() {
         notesEl.textContent = promptWorkspaceState.notes || '';
     }
     showToast?.('Compare your code with the reference and note differences.', 'info');
+}
+
+function openNotesDownloadModal(itemId) {
+    const modal = document.getElementById('notes-download-modal');
+    if (!modal) return;
+    const item = notesLibrary.find(n => n.id === itemId);
+    const title = document.getElementById('notes-download-title');
+    const meta = document.getElementById('notes-download-meta');
+    const donateLink = document.getElementById('notes-donate-link');
+    if (title) title.textContent = item ? item.title : 'Notes PDF';
+    if (meta) meta.textContent = item ? `${item.category} • ${item.pages} pages` : '';
+    if (donateLink) donateLink.href = item?.url && item.url !== '#' ? item.url : DONATION_URL;
+    modal.classList.remove('hidden');
+}
+
+function closeNotesDownloadModal() {
+    const modal = document.getElementById('notes-download-modal');
+    if (modal) modal.classList.add('hidden');
 }
 
 // Modal Functions
@@ -8089,6 +8654,24 @@ function resetProgress() {
     }
 }
 
+function resetDSPlayground() {
+    dsState.array = [];
+    dsState.stack = [];
+    dsState.queue = [];
+    dsState.heap = [];
+    dsState.graph = { nodes: [], edges: [] };
+    dsState.trie = {};
+    dsState.tree = null;
+    dsState.hashing = null;
+    dsState.heapsort = null;
+    dsState.rbtree = null;
+    dsState.circuits = null;
+    dsState.greedy = null;
+    dsState.lastAction = 'Reset to defaults.';
+    ensureSampleData(dsState.active);
+    renderDSPlayground();
+}
+
 // =================================
 // INITIALIZATION
 // =================================
@@ -8096,6 +8679,7 @@ function resetProgress() {
 function init() {
     // Load saved state
     loadFromLocalStorage();
+    appState.categoryFilter = normalizeCategoryFilter(appState.categoryFilter);
     ensureStudyTimesReset();
     studyTimer.startTime = null;
     studyTimer.totalTime = studyMetrics.totalTimeMs || 0;
@@ -8270,6 +8854,11 @@ function init() {
         });
     }
 
+    const resetDSBtn = document.getElementById('ds-reset-all');
+    if (resetDSBtn) {
+        resetDSBtn.addEventListener('click', resetDSPlayground);
+    }
+
     // Search and filter
     document.getElementById('search-input').addEventListener('input', (e) => {
         appState.searchTerm = e.target.value;
@@ -8323,6 +8912,18 @@ function init() {
     if (promptModal) {
         promptModal.addEventListener('click', (e) => {
             if (e.target === promptModal) closePromptWorkspace();
+        });
+    }
+
+    renderNotesLibrary();
+    const categoryFilter = document.getElementById('category-filter');
+    if (categoryFilter) {
+        categoryFilter.value = appState.categoryFilter;
+        categoryFilter.addEventListener('change', (e) => {
+            appState.categoryFilter = e.target.value;
+            appState.currentModulePage = 1;
+            renderModules();
+            saveToLocalStorage();
         });
     }
 
@@ -9304,17 +9905,34 @@ document.addEventListener('visibilitychange', () => {
 });
 
 // Start the application when DOM is loaded
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-} else {
-    init();
+function safeInit() {
+    try {
+        init();
+    } catch (err) {
+        console.error('Init failed', err);
+        const grid = document.getElementById('modules-grid');
+        if (grid) {
+            grid.innerHTML = `
+                <div class="text-center p-6 rounded-xl bg-white shadow">
+                    <p class="font-semibold text-rose-600">Modules failed to load.</p>
+                    <p class="text-sm text-slate-600 mt-1">Open console for details.</p>
+                </div>
+            `;
+        }
+    }
 }
 
-// Initialize additional features
-document.addEventListener('DOMContentLoaded', () => {
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        safeInit();
+        optimizeForMobile();
+        registerServiceWorker();
+    });
+} else {
+    safeInit();
     optimizeForMobile();
     registerServiceWorker();
-});
+}
 
 // Add window resize handler for responsive adjustments
 window.addEventListener('resize', () => {

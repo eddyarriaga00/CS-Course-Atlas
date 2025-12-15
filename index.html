@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Java DSA Learning Site - Master Data Structures & Algorithms</title>
-    <meta name="description" content="Complete Java Data Structures & Algorithms learning platform with interactive examples, quizzes, and flashcards">
+    <title>MultLearning Site - Master DSA, Assembly, Java, Python, JS, Discrete & More</title>
+    <meta name="description" content="MultLearning: DSA, Assembly, Java, Python, JavaScript, Discrete Mathematics, and more — interactive modules, examples, quizzes, and flashcards.">
     <link rel="stylesheet" href="css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,10 +17,10 @@
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-3">
                 <div class="w-full sm:w-auto transition-all duration-300">
                     <h1 id="main-title" class="font-bold leading-tight transition-all duration-300 text-xl sm:text-2xl lg:text-3xl">
-                        ☕ Java DSA Learning Site EAB
+                        ☕ MultLearning Site
                     </h1>
                     <p id="main-subtitle" class="text-blue-100 text-xs sm:text-sm lg:text-base mt-0.5 transition-all duration-300">
-                        Master Data Structures & Algorithms (& More) with Interactive Learning
+                        DSA, Assembly, Java, Python, JavaScript, Discrete, and more — interactive learning
                     </p>
                 </div>
                 <div id="header-buttons" class="flex flex-wrap gap-1.5 sm:gap-2 w-full sm:w-auto justify-start sm:justify-end transition-all duration-300 order-3 sm:order-2">
@@ -53,11 +53,11 @@
         <!-- Intro - Optimized Spacing -->
         <div class="text-center mb-8 sm:mb-10 hero-section rounded-2xl p-6 sm:p-8 shadow-2xl section-spacing">
             <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 sm:mb-6">
-                Master Java DSA Step by Step
+                MultLearning: Master DSA, Assembly, and Beyond
             </h2>
             <p class="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-                A comprehensive, beginner-friendly journey through Data Structures and Algorithms in Java created by Eddy Arriaga-B.
-                Each module includes detailed explanations, extensive code examples, and practical exercises.
+                A comprehensive, beginner-friendly journey across Data Structures & Algorithms, Assembly, Java, Python, JavaScript, and Discrete Mathematics by Eddy Arriaga-B.
+                Each module includes detailed explanations, extensive code examples where applicable, and practical exercises.
             </p>
         </div>
 
@@ -342,6 +342,26 @@
             <textarea id="notes-input" rows="6" class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20" placeholder="Write your notes here..."></textarea>
         </section>
 
+        <!-- Notes Library -->
+        <section id="notes-library-section" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+                <div>
+                    <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading">📥 Notes Library</h3>
+                    <p class="text-sm text-slate-600">Browse curated PDF cheat sheets by topic. Download requires a $1 donation to host the files.</p>
+                </div>
+                <span class="text-xs px-3 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold">Beginner-friendly</span>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div class="lg:col-span-1">
+                    <div class="text-xs uppercase tracking-wide text-slate-500 font-semibold mb-2">Categories</div>
+                    <div id="notes-library-categories" class="flex flex-wrap gap-2"></div>
+                </div>
+                <div class="lg:col-span-2">
+                    <div class="notes-scroll" id="notes-library-list"></div>
+                </div>
+            </div>
+        </section>
+
         <!-- Data Structure Playground -->
         <section id="ds-playground" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing">
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-3">
@@ -349,7 +369,10 @@
                     <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading">🛠️ Data Structure Playground</h3>
                     <p class="text-sm text-slate-600">Interact with arrays, stacks, queues, heaps, graphs, and tries. Watch the visuals update as you push/pop/enqueue.</p>
                 </div>
-                <div class="flex flex-wrap gap-2" id="ds-tabs"></div>
+                <div class="flex flex-wrap gap-2 items-center">
+                    <div class="flex flex-wrap gap-2" id="ds-tabs"></div>
+                    <button id="ds-reset-all" class="text-xs px-3 py-1.5 rounded-lg visual-link font-semibold">Reset playground</button>
+                </div>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div class="p-4 rounded-xl border border-slate-200 bg-white space-y-3" id="ds-controls"></div>
@@ -358,6 +381,7 @@
                     <div id="ds-visual" class="ds-visual space-y-1"></div>
                     <pre class="text-sm whitespace-pre-wrap" id="ds-state"></pre>
                     <div class="text-xs text-slate-300">Complexity: <span id="ds-complexity"></span></div>
+                    <div id="ds-status" class="text-xs text-indigo-200"></div>
                     <div class="p-3 rounded-lg bg-slate-800 border border-slate-700 space-y-2">
                         <div class="flex items-center justify-between text-xs text-slate-200 font-semibold">
                             <span>Quick Complexity Peek</span>
@@ -373,6 +397,26 @@
                 </div>
             </div>
         </section>
+
+        <!-- Notes Download Modal -->
+        <div id="notes-download-modal" class="prompt-modal hidden">
+            <div class="prompt-modal-backdrop" onclick="closeNotesDownloadModal()"></div>
+            <div class="prompt-modal-panel">
+                <div class="flex items-start justify-between gap-3 mb-3">
+                    <div>
+                        <p class="text-[11px] uppercase tracking-wide text-slate-500 font-semibold">Download</p>
+                        <h3 id="notes-download-title" class="text-lg font-semibold text-indigo-600">Notes PDF</h3>
+                        <p id="notes-download-meta" class="text-xs text-slate-500"></p>
+                    </div>
+                    <button class="prompt-close" onclick="closeNotesDownloadModal()">✕</button>
+                </div>
+                <p class="text-sm text-slate-700 mb-3">To download, please support with a $1 donation. The PDF will open after you click donate.</p>
+                <div class="flex flex-wrap gap-2">
+                    <a id="notes-donate-link" href="#" target="_blank" rel="noopener noreferrer" class="prompt-submit">Donate $1 & Download</a>
+                    <button class="px-3 py-2 rounded-lg bg-slate-200 text-slate-700 font-semibold" onclick="closeNotesDownloadModal()">Maybe later</button>
+                </div>
+            </div>
+        </div>
 
         <!-- Java Playground -->
         <section id="playground-section" class="content-backdrop rounded-2xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl border border-white/40 section-spacing">
@@ -434,12 +478,18 @@
                     <div class="flex-1">
                         <input type="text" id="search-input" placeholder="Search modules by title, description, or topics..." class="w-full px-3 py-2 sm:py-2.5 rounded-lg border transition-all duration-200 text-sm sm:text-base bg-white border-slate-300 text-slate-900 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
                     </div>
-                    <div class="flex items-center gap-2">
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
                         <select id="difficulty-filter" class="w-full sm:w-48 px-3 py-2 sm:py-2.5 rounded-lg border transition-all duration-200 text-sm sm:text-base bg-white border-slate-300 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
                             <option value="all">All Levels</option>
                             <option value="beginner">Beginner</option>
                             <option value="intermediate">Intermediate</option>
                             <option value="advanced">Advanced</option>
+                        </select>
+                        <select id="category-filter" class="w-full sm:w-56 px-3 py-2 sm:py-2.5 rounded-lg border transition-all duration-200 text-sm sm:text-base bg-white border-slate-300 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+                            <option value="all">All Topics</option>
+                            <option value="dsa">Data Structures & Algorithms</option>
+                            <option value="discrete">Discrete Mathematics</option>
+                            <option value="systems">Systems / Assembly</option>
                         </select>
                     </div>
                 </div>
