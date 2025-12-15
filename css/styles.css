@@ -874,6 +874,34 @@ body.dark .insight-button {
     box-shadow: var(--shadow-card);
 }
 
+.pagination-button {
+    border-radius: 0.75rem;
+    font-weight: 700;
+    min-width: 42px;
+    transition: all 0.2s ease;
+}
+
+.pagination-button.active {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: var(--accent-text);
+    border-color: transparent;
+    box-shadow: 0 15px 30px var(--accent-shadow);
+}
+
+.pagination-button:not(.active) {
+    background: linear-gradient(135deg, var(--surface-primary), var(--surface-secondary));
+    border: 1px solid var(--surface-border);
+    color: var(--text-primary-color);
+}
+
+.pagination-button:not(.active):hover {
+    box-shadow: var(--shadow-card);
+}
+
+body.dark .pagination-button:not(.active) {
+    color: var(--text-primary-color);
+}
+
 /* Enhanced difficulty badges */
 .difficulty-badge {
     position: relative;

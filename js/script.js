@@ -5193,7 +5193,7 @@ function renderPagination(totalPages) {
         for (let page = 1; page <= totalPages; page++) {
             const isActive = page === appState.currentModulePage;
             buttons.push(`
-                <button data-page="${page}" class="px-3 py-1.5 rounded-lg text-sm font-semibold border ${isActive ? 'bg-indigo-600 text-white border-indigo-600' : 'bg-white text-slate-700 border-slate-300 hover:bg-slate-50'}">
+                <button data-page="${page}" class="pagination-button px-3 py-1.5 text-sm font-semibold border ${isActive ? 'active' : ''}">
                     ${page}
                 </button>
             `);
