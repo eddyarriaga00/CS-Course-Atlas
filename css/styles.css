@@ -1000,6 +1000,50 @@ body.dark .hero-section p {
     background: linear-gradient(135deg, var(--surface-accent), var(--surface-secondary));
 }
 
+.header-inner {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    transition: padding 0.25s ease, gap 0.25s ease;
+}
+
+.header-brand h1 {
+    transition: font-size 0.25s ease, transform 0.25s ease;
+}
+
+.subtitle-collapsible {
+    transition: opacity 0.25s ease, max-height 0.25s ease, margin 0.25s ease, transform 0.25s ease;
+    max-height: 48px;
+}
+
+.header-collapsed .header-inner {
+    padding-top: 4px;
+    padding-bottom: 4px;
+}
+
+.header-collapsed .header-brand h1 {
+    font-size: clamp(1rem, 3vw, 1.3rem) !important;
+    transform: translateY(1px);
+}
+
+.header-collapsed .subtitle-collapsible {
+    opacity: 0;
+    max-height: 0;
+    margin-top: 0;
+    transform: translateY(-6px);
+    pointer-events: none;
+}
+
+.header-collapsed #header-buttons {
+    transform: scale(0.82);
+    transform-origin: top right;
+}
+
+.header-collapsed .header-control {
+    padding-top: 6px;
+    padding-bottom: 6px;
+    font-size: 0.78rem;
+}
+
 .account-chip {
     background: rgba(99, 102, 241, 0.12);
     border: 1px solid rgba(99, 102, 241, 0.35);

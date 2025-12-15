@@ -48,7 +48,8 @@ const appState = {
         output: '// Output will appear here',
         language: 'java',
         isRunning: false
-    }
+    },
+    autoRotatePaused: false
 };
 
 const interactiveQuizState = {
@@ -142,8 +143,10 @@ const CARD_DEPTH_OPTIONS = ['flat', 'standard', 'lifted'];
 const CARD_DEPTH_CLASSES = CARD_DEPTH_OPTIONS.map(option => `card-depth-${option}`);
 const INTERVIEW_PAGE_SIZE = 2;
 let interviewPage = 1;
+let rotationIntervalId = null;
 const DONATION_URL = 'https://www.paypal.com/donate?business=your.email@paypal.com&amount=1.00&currency_code=USD&item_name=Java%20DSA%20Notes%20Support';
 const MODULE_CATEGORIES = ['all', 'dsa', 'discrete', 'systems'];
+const AUTO_ROTATE_MS = 9000;
 
 const interviewExamples = [
     {
@@ -4521,12 +4524,15 @@ PROCEDURE add_then_double(a, b):
         description: 'Master propositions, truth tables, set operations, and proof patterns with theory-first explanations. We walk through law simplifications, contrapositive/contradiction reasoning, and Venn-style set identities before you ever touch code. Examples: DeMorgan transformations, distributive law rewrites, and direct vs. contrapositive proofs of conditional statements.',
         difficulty: 'beginner',
         topics: ['Propositions', 'Truth Tables', 'Set Operations', 'Proof Sketches', 'Logic Laws'],
-        exampleHighlight: 'Examples include: full truth tables for p→q, p↔q, ¬(p∨q); DeMorgan and distributive rewrites; direct vs. contrapositive proof outlines.',
+        exampleHighlight: 'Step-by-step Q&A: full truth tables for p→q and p↔q, DeMorgan law proof, distributive set proof, and direct/contrapositive parity proofs with complete justifications.',
         examples: [
-            'Truth table (p→q): (F,F)->T, (F,T)->T, (T,F)->F, (T,T)->T with column-by-column evaluation.',
-            'Truth table (p↔q): (F,F)->T, (F,T)->F, (T,F)->F, (T,T)->T to show equivalence symmetry.',
-            'DeMorgan: ¬(p ∨ q) ≡ (¬p ∧ ¬q) with stepwise law application.',
-            'Proof skeleton: If n is even then n² is even — direct and contrapositive outlines side by side.'
+            `Truth table (p→q): Q: build the complete table. Steps: (1) enumerate rows (F,F),(F,T),(T,F),(T,T); (2) add column ¬p; (3) compute ¬p ∨ q row-by-row; (4) mark only (T,F) as false. Answer: p→q is true on 3/4 rows because implication is vacuously true when p is false.`,
+            `Truth table (p↔q): Q: prove p↔q truth set. Steps: (1) compute p→q; (2) compute q→p; (3) AND the two implication columns; (4) highlight true rows (F,F) and (T,T); (5) explain symmetry. Answer: biconditional is true exactly when p and q match.`,
+            `DeMorgan rewrite: Q: show ¬(p∨q) ≡ (¬p ∧ ¬q). Steps: (1) copy headers p,q,p∨q,¬(p∨q),¬p,¬q,¬p∧¬q; (2) fill p∨q then negate; (3) fill ¬p and ¬q then their AND; (4) compare columns equality on all four rows. Answer: columns match, so the equivalence holds.`,
+            `Set distributive law: Q: prove A∩(B∪C) = (A∩B) ∪ (A∩C). Steps: (1) Pick arbitrary x; (2) assume x∈A and x∈(B∪C); (3) split cases x∈B or x∈C; (4) conclude x∈(A∩B) or x∈(A∩C); (5) reverse direction by assuming RHS and showing LHS. Answer: both inclusions hold ⇒ sets equal.`,
+            `Direct proof (n even ⇒ n² even): Q: prove. Steps: (1) let n=2k; (2) square: n²=4k²; (3) factor 4k²=2(2k²); (4) note 2k² integer; (5) conclude n² even; (6) paraphrase in English. Answer: even input yields even square.`,
+            `Contrapositive (n² even ⇒ n even): Q: prove via contrapositive. Steps: (1) prove ¬even(n) ⇒ ¬even(n²); (2) assume n odd ⇒ n=2k+1; (3) square: n²=4k²+4k+1=2(2k²+2k)+1 (odd); (4) therefore contrapositive true; (5) conclude original statement true.`,
+            `Set complements: Q: show (A\\B) = A∩Bᶜ. Steps: (1) pick x∈A\\B; (2) by definition x∈A and x∉B ⇒ x∈A and x∈Bᶜ ⇒ x∈A∩Bᶜ; (3) reverse: x∈A∩Bᶜ ⇒ x∈A and x∉B ⇒ x∈A\\B. Answer: membership arguments prove equality.`
         ],
         truthTables: [
             {
@@ -4586,13 +4592,14 @@ PROCEDURE add_then_double(a, b):
         description: 'Dive deep into theory: addition/multiplication rules, permutations vs. combinations, pigeonhole principle, and recurrence solving (iteration and substitution). Graph basics cover paths, degrees, and connectivity before touching code. Examples: counting handshakes, arranging books, pigeonhole applications, and walking through BFS layers on a small graph.',
         difficulty: 'intermediate',
         topics: ['Counting', 'Recurrence Relations', 'Permutations', 'Combinations', 'Graph Basics'],
-        exampleHighlight: 'Examples include: handshake lemma on K₄, arranging 5 distinct books on 3 shelves, pigeonhole proof for repeated initials, Fibonacci via recurrence unfolding, and BFS layer-by-layer on a 6-node graph.',
+        exampleHighlight: 'Step-by-step Q&A: handshake lemma on K₄, permutations vs. combinations with full arithmetic, pigeonhole proof with contradiction, recurrence unfolding to closed form, and BFS layer tracing with discovered vertices.',
         examples: [
-            'Counting: 10 students shaking hands → 10·9/2 = 45; verify with handshake lemma.',
-            'Permutations vs. combinations: choose 3 of 5 books (C(5,3)=10) versus ordering 3 of 5 (P(5,3)=60).',
-            'Pigeonhole: 13 people ⇒ at least 2 share a birth month; extend to initials example.',
-            'Recurrence: T(n)=2T(n-1)+1 unfolded to closed form 2^n-1; Fibonacci partial table up to F(10).',
-            'Graph example: BFS on adjacency list {1:[2,3],2:[4],3:[4,5],4:[6],5:[6]} produces layers [1],[2,3],[4,5],[6].'
+            `Handshake lemma: Q: edges in K₄? Steps: (1) four vertices labeled 1–4; (2) complete graph so each vertex degree 3; (3) sum degrees=4·3=12; (4) edges = (sum degrees)/2 = 6; (5) generalize to n(n−1)/2 by counting ordered pairs then dividing by 2.`,
+            `Perm vs Comb: Q: choose/arrange 3 of 5 books. Steps: (1) combinations ignore order ⇒ C(5,3)=5·4·3/(3·2·1)=10; (2) permutations care about order ⇒ P(5,3)=5·4·3=60; (3) explain when to use each (arranging vs selecting).`,
+            `Pigeonhole principle: Q: 13 people, 12 months. Steps: (1) assume each month gets at most one person; (2) only 12 slots exist; (3) placing 13th person forces reuse of a month ⇒ contradiction; (4) conclude at least two share a birth month. Extension: initials with 27 people and 26 letters.`,
+            `Recurrence unfolding: Q: solve T(n)=2T(n−1)+1. Steps: (1) expand once: 2(2T(n−2)+1)+1=4T(n−2)+3; (2) expand again: 8T(n−3)+7; (3) spot pattern 2^k T(n−k)+(2^k−1); (4) choose k=n−1 ⇒ T(n)=2^{n−1}T(1)+(2^{n−1}−1); (5) with T(1)=1, answer 2^n−1.`,
+            `Fibonacci memo table: Q: compute F10 with reuse. Steps: (1) seed F0=0,F1=1; (2) fill table up to F10; (3) note F8/F9 reused when computing F10; (4) discuss time O(n) vs exponential recursion.`,
+            `BFS layers: Q: layer order on graph {1:[2,3],2:[4],3:[4,5],4:[6],5:[6]}. Steps: (1) queue=[1]; (2) pop1→visit2,3; (3) pop2→visit4; (4) pop3→visit5; (5) pop4→visit6; (6) layers [1],[2,3],[4,5],[6]; (7) argue why this gives shortest path lengths on unweighted graphs.`
         ],
         codeExamples: {
             java: `// Theory-focused module: counting + graph notes (no code).
@@ -4621,14 +4628,14 @@ PROCEDURE add_then_double(a, b):
         description: 'A theory-only deep dive into induction (weak/strong), invariants, divisibility, primes, and modular arithmetic. We avoid code and focus on proof patterns and worked numeric examples.',
         difficulty: 'intermediate',
         topics: ['Induction', 'Strong Induction', 'Invariants', 'Modular Arithmetic', 'Divisibility'],
-        exampleHighlight: 'Examples include: proving sum of first n integers by induction, tiling invariants, gcd/Euclid walkthrough, modular inverses for small primes, and parity proofs.',
+        exampleHighlight: 'Stepwise proofs: induction on sums, strong induction for prime factorization, invariant domino tiling, Euclid gcd trace, modular inverse by checking residues, and parity arguments.',
         examples: [
-            'Induction: 1+2+…+n = n(n+1)/2 with base n=1 and inductive step.',
-            'Strong induction: any integer >1 factors into primes (outline the inductive hypothesis).',
-            'Invariant: checkerboard domino tiling after removing opposite corners (parity/coloring argument).',
-            'Euclid’s algorithm: gcd(252,105) step-by-step until remainder 0.',
-            'Mod arithmetic: solve 3x ≡ 1 (mod 7) via checking residues; introduce inverses.',
-            'Parity: prove n² and n have same parity and use it in simple Diophantine checks.'
+            `Weak induction (1+…+n): Q: prove n(n+1)/2. Steps: (1) base n=1 ⇒ 1=1·2/2; (2) assume true for n; (3) add (n+1) to both sides: [n(n+1)/2]+(n+1) = (n+1)(n+2)/2; (4) simplify factoring (n+1); (5) conclude by induction.`,
+            `Strong induction (every m>1 factors into primes): Steps: (1) base m=2 prime; (2) hypothesis: all integers 2…k have prime factorizations; (3) case k+1 prime ⇒ done; (4) else k+1=ab with 2≤a,b≤k ⇒ by hypothesis a,b factor into primes ⇒ concatenate factorizations ⇒ k+1 factors; (5) conclude.`,
+            `Invariant tiling: Q: domino tiling on 8×8 board missing opposite corners. Steps: (1) color board black/white; (2) removed squares same color ⇒ remaining board has unequal black/white counts; (3) each domino covers one black/one white; (4) invariant: covered squares maintain equal counts; (5) contradiction ⇒ impossible.`,
+            `Euclid gcd: Q: gcd(252,105). Steps: (1) 252=105·2+42; (2) 105=42·2+21; (3) 42=21·2+0 ⇒ gcd=21; (4) explain why last non-zero remainder is gcd.`,
+            `Mod inverse: Q: solve 3x ≡ 1 (mod 7). Steps: (1) test residues x=1..6; (2) compute 3·5=15≡1 (mod7); (3) conclude x≡5; (4) show linear combination 1=15−14=3·5−7·2.`,
+            `Parity proof: Q: show n² and n have same parity. Steps: (1) case n even ⇒ n=2k ⇒ n²=4k²=2(2k²) even; (2) case n odd ⇒ n=2k+1 ⇒ n²=4k²+4k+1=2(2k²+2k)+1 odd; (3) conclude parity preserved.`
         ],
         codeExamples: {
             java: `// Theory-focused module: no executable code.
@@ -4643,13 +4650,13 @@ PROCEDURE add_then_double(a, b):
         description: 'Focus on definitions and properties: relations (reflexive, symmetric, transitive), equivalence classes, partial orders, and core graph properties. Heavy notes with layered examples, minimal code.',
         difficulty: 'intermediate',
         topics: ['Relations', 'Equivalence', 'Partial Orders', 'Graph Properties', 'Connectivity'],
-        exampleHighlight: 'Examples include: classifying relations on small sets, drawing Hasse diagrams for divisibility, equivalence classes for congruence mod n, and computing degrees/paths on small graphs.',
+        exampleHighlight: 'Worked walkthroughs: classify relations with full tables, build congruence classes, draw Hasse diagrams for divisibility, check Euler paths via degree counts, and trace BFS/DFS for connectivity.',
         examples: [
-            'Relation table on {1,2,3}: test reflexive/symmetric/transitive with adjacency grid.',
-            'Equivalence: congruence mod 3 creates classes {[0],[1],[2]} with examples.',
-            'Partial order: divisibility on {1,2,4,8,16} with Hasse diagram explanation.',
-            'Graph: degrees and paths on a 5-node undirected graph; check for Euler path using odd-degree count.',
-            'Connectivity: BFS layers on a small graph to decide connected components.'
+            `Classify relation: Q: R on {1,2,3} with pairs {(1,1),(1,2),(2,1),(2,2),(3,3)}. Steps: (1) reflexive? has (1,1),(2,2),(3,3) ⇒ yes; (2) symmetric? (1,2) present and (2,1) present ⇒ yes; (3) transitive? since (1,2) and (2,1) need (1,1) (present); check (1,2) and (2,2) ⇒ (1,2) present; conclude equivalence relation.`,
+            `Equivalence classes: Q: mod 3 on ℤ. Steps: (1) define a~b if 3|(a−b); (2) list representatives 0,1,2; (3) classes: [0]={…,-3,0,3,6,…}, [1]={…,-2,1,4,7,…}, [2]={…,-1,2,5,8,…}; (4) note partition property.`,
+            `Partial order: Q: divisibility on {1,2,4,8,16}. Steps: (1) reflexive yes (a|a); (2) antisymmetric yes (a|b and b|a ⇒ a=b); (3) transitive yes; (4) draw Hasse diagram edges 1→2→4→8→16; (5) note minimal/maximal elements.`,
+            `Euler path test: Q: given undirected graph with degrees [3,3,2,2,2]. Steps: (1) count odd-degree vertices (two of them) ⇒ Euler path exists; (2) Euler circuit would need 0 odds ⇒ not present; (3) explain necessity/sufficiency.`,
+            `Connectivity: Q: BFS on 5-node graph starting at 1. Steps: (1) queue [1]; (2) pop1→visit neighbors 2,3; (3) pop2→visit 4; (4) pop3→visit5; (5) visited all ⇒ connected; (6) if some nodes unvisited, components >1.`
         ],
         codeExamples: {
             java: `// Theory-focused module: no executable code.
@@ -4913,13 +4920,14 @@ cmp_str(a, b, n):
         description: 'Beginner-friendly probability with sample spaces, events, conditional probability, Bayes’ rule, and independence. Heavy notes, worked examples, and mini tables.',
         difficulty: 'beginner',
         topics: ['Sample Spaces', 'Events', 'Conditional Probability', 'Bayes', 'Independence'],
-        exampleHighlight: 'Examples include: dice/coin sample spaces, conditional probability table for cards, and a Bayes’ rule medical test walkthrough.',
+        exampleHighlight: 'Worked problems: dice/coin sample spaces, conditional probability on cards, Bayes’ rule with full table, independence checks, and expectation/variance calculations.',
         examples: [
-            'Sample space: roll 2 dice (36 outcomes), event of sum=7 enumerated.',
-            'Conditional: P(heart | face card) using 12 face cards, 3 hearts.',
-            'Bayes: false-positive/false-negative test example with explicit totals.',
-            'Independence: check P(A∩B) vs P(A)P(B) on coin flips.',
-            'Expectation: E[X] for a fair die (3.5) and for Bernoulli(p).'
+            `Sample space: Q: P(sum=7) on two dice. Steps: (1) list 36 ordered outcomes; (2) mark success set {(1,6),(2,5),(3,4),(4,3),(5,2),(6,1)} size 6; (3) probability = 6/36=1/6.`,
+            `Conditional: Q: P(heart | face card). Steps: (1) face cards total 12; (2) heart faces {J♥,Q♥,K♥} = 3; (3) conditional probability = 3/12=1/4; (4) note reduced sample space logic.`,
+            `Bayes: Q: medical test with prevalence 1%, sensitivity 99%, specificity 95% over 10,000 people. Steps: (1) disease=100, healthy=9900; (2) TP=0.99·100=99, FN=1; (3) FP=0.05·9900=495, TN=9405; (4) positives=594; (5) P(disease|+) = 99/594 ≈ 0.1667; (6) interpret: most positives are false.`,
+            `Independence: Q: two coin flips, A=first H, B=second H. Steps: (1) P(A)=P(B)=1/2; (2) sample space HH,HT,TH,TT all 1/4; (3) P(A∩B)=1/4; (4) since 1/4 = 1/2·1/2 ⇒ independent.`,
+            `Expectation/variance: Q: fair die. Steps: (1) E=Σ_{k=1..6} k·(1/6)=3.5; (2) E[k²]=Σ k²/6=91/6; (3) Var=E[k²]−(E[k])² = 91/6 − 12.25 = 35/12 ≈ 2.92.`,
+            `Law of total probability: Q: bag with 3 red, 2 blue; draw one then another without replacement. Steps: (1) compute P(2 reds)= (3/5)·(2/4)=6/20=3/10; (2) compute P(R then B)= (3/5)·(2/4)=6/20; (3) verify probabilities sum to 1 across all ordered pairs.`
         ],
         codeExamples: {
             java: `// Theory-only module: probability tables and examples are in the notes.`
@@ -4942,13 +4950,14 @@ cmp_str(a, b, n):
         description: 'Deepen proof skills with direct, contrapositive, contradiction, and induction practice. Heavy scaffolding, worked examples, and checklists for beginners.',
         difficulty: 'beginner',
         topics: ['Direct Proof', 'Contrapositive', 'Contradiction', 'Induction', 'Proof Structure'],
-        exampleHighlight: 'Examples include: parity proofs, divisibility proofs, induction on sums, and contradiction examples on irrationals.',
+        exampleHighlight: 'Structured proofs: parity and divisibility by direct proof, contrapositive parity proof, contradiction (√2 irrational), induction on sums, and a reusable five-step proof checklist.',
         examples: [
-            'Direct: prove sum of two even numbers is even with explicit algebraic steps.',
-            'Contrapositive: if n² is even then n is even — rewrite and prove.',
-            'Contradiction: √2 is irrational — outline with assumptions and prime factorization.',
-            'Induction: 1+2+…+n = n(n+1)/2 with base and inductive step annotated.',
-            'Template: checklist for assumptions, goal restatement, and closure.'
+            `Direct parity: Q: prove even+even=even. Steps: (1) let a=2k, b=2m; (2) sum a+b=2k+2m; (3) factor 2(k+m); (4) k+m is integer ⇒ 2(k+m) even; (5) conclude.`,
+            `Divisibility sum rule: Q: prove “if m|a and m|b then m|(a+b)”. Steps: (1) assume a=m·k and b=m·l for integers k,l; (2) add: a+b = m·k + m·l = m(k+l); (3) k+l is an integer, so m divides a+b; (4) test with numbers (m=4, a=20, b=12 ⇒ a+b=32 divisible by 4) to cement intuition.`,
+            `Contrapositive (n² even ⇒ n even): Steps: (1) prove ¬even(n) ⇒ ¬even(n²); (2) assume n odd ⇒ n=2k+1; (3) square to 4k²+4k+1=2(2k²+2k)+1 odd; (4) conclude contrapositive true ⇒ original true.`,
+            `Contradiction (√2 irrational): Steps: (1) assume √2=p/q in lowest terms; (2) square: 2q²=p² ⇒ p even ⇒ p=2r; (3) substitute: 2q²=4r² ⇒ q²=2r² ⇒ q even; (4) both p,q even contradict lowest terms; (5) contradiction ⇒ √2 irrational.`,
+            `Induction (sum 1..n): Steps: (1) base n=1 true; (2) hypothesis for n; (3) add (n+1): [n(n+1)/2]+(n+1) = (n+1)(n+2)/2; (4) algebra check; (5) conclude.`,
+            `Proof checklist: (1) Restate claim precisely; (2) list givens/goal; (3) choose technique (direct/contrapositive/contradiction/induction); (4) execute algebra/logic with justifications; (5) close with therefore/contradiction sentence.`
         ],
         codeExamples: {
             java: `// Theory-only module: use the proof templates and worked examples.`
@@ -5350,6 +5359,61 @@ const dailyChallenges = [
             'Explain when you’d reach for a heap instead of a sorted list.'
         ],
         moduleId: 'heaps'
+    },
+    {
+        id: 'discrete-truth-table-build',
+        title: 'Truth Table Builder',
+        description: 'Construct a full truth table for ¬(p ∧ q) → r and label each equivalence you use.',
+        steps: [
+            'List all 8 combinations of (p,q,r).',
+            'Fill columns for p ∧ q, ¬(p ∧ q), and the implication.',
+            'State which rows make the statement false and why.'
+        ],
+        moduleId: 'discrete-math-1'
+    },
+    {
+        id: 'probability-bayes-refresh',
+        title: 'Bayes Refresher',
+        description: 'Recreate the medical test Bayes table from the Probability module with new numbers.',
+        steps: [
+            'Pick new prevalence, sensitivity, specificity values.',
+            'Compute TP/FN/FP/TN counts on a 10,000-person population.',
+            'Explain P(disease|+) in one sentence.'
+        ],
+        moduleId: 'discrete-math-5'
+    },
+    {
+        id: 'assembly-stack-trace',
+        title: 'Stack Frame Sketch',
+        description: 'Draw the stack frame for an assembly function call and label saved registers.',
+        steps: [
+            'Show ebp/esp before and after prologue/epilogue.',
+            'Mark where params and locals live relative to EBP.',
+            'Annotate which registers must be preserved.'
+        ],
+        moduleId: 'assembly-stack-calls'
+    },
+    {
+        id: 'graphs-bfs-layers',
+        title: 'BFS Layer Trace',
+        description: 'Take a small graph and write the BFS queue contents after each pop.',
+        steps: [
+            'List the adjacency for 5 nodes.',
+            'Track visited set, queue, and layer assignments.',
+            'Summarize the shortest path property in one line.'
+        ],
+        moduleId: 'graph-algorithms'
+    },
+    {
+        id: 'sorting-stability-check',
+        title: 'Sorting Stability Check',
+        description: 'Prove or disprove stability of a chosen sort with a counterexample.',
+        steps: [
+            'Pick merge sort, quicksort, or heapsort.',
+            'Craft input with duplicate keys (e.g., tuples with labels).',
+            'Argue whether relative order is preserved.'
+        ],
+        moduleId: 'sorting-algorithms'
     }
 ];
 
@@ -5360,7 +5424,15 @@ const studyTips = [
     'Mark modules as complete only after you can summarize the code without peeking.',
     'Use the Daily Challenge as your warm-up, then tackle a related module exercise.',
     'Pair flashcards with code: after seeing a definition, open the module snippet it references.',
-    'Refresh the Study Tip when you finish a module to keep motivation high.'
+    'Refresh the Study Tip when you finish a module to keep motivation high.',
+    'Rewrite the core idea of a module in three bullet points, then solve one related LeetCode easy.',
+    'Record yourself narrating a walkthrough of the sample code, then play it back at 1.25x to reinforce.',
+    'Alternate problem types: arrays → graphs → DP so you build breadth and avoid fatigue.',
+    'Keep a “gotchas” list for off-by-one errors, null checks, and overflow guards; revisit before quizzes.',
+    'After each quiz attempt, write one “I will…” statement (e.g., “I will draw the recursion tree next time”).',
+    'Practice dry-running code with pen and paper before running it in the playground to build intuition.',
+    'Use the inline glossary popovers as checkpoints—hover each bolded term and restate it in your own words.',
+    'End each session by scheduling your next one; momentum is easier when the plan is already set.'
 ];
 
 function generateFlashcardDecks(modulesData, generalCards = []) {
@@ -5841,6 +5913,60 @@ function renderStudyTip(force = false) {
     if (tipEl) tipEl.textContent = tip.text;
 }
 
+function rotateTipsAndChallenges(force = true) {
+    renderDailyChallenge(force);
+    renderStudyTip(force);
+}
+
+function updateRotationToggle() {
+    const toggleBtn = document.getElementById('toggle-auto-rotate');
+    if (toggleBtn) {
+        toggleBtn.textContent = appState.autoRotatePaused ? 'Resume Auto' : 'Pause Auto';
+    }
+}
+
+function updateRotationStatus() {
+    const statusEl = document.getElementById('rotation-status');
+    if (statusEl) {
+        statusEl.textContent = appState.autoRotatePaused
+            ? 'Auto shuffle paused'
+            : `Auto-shuffling every ${AUTO_ROTATE_MS / 1000}s (synced)`;
+    }
+    updateRotationToggle();
+}
+
+function pauseAutoRotation() {
+    if (rotationIntervalId) {
+        clearInterval(rotationIntervalId);
+        rotationIntervalId = null;
+    }
+    appState.autoRotatePaused = true;
+    updateRotationStatus();
+    saveToLocalStorage();
+}
+
+function startAutoRotation() {
+    if (rotationIntervalId) clearInterval(rotationIntervalId);
+    appState.autoRotatePaused = false;
+    rotationIntervalId = setInterval(() => rotateTipsAndChallenges(true), AUTO_ROTATE_MS);
+    updateRotationStatus();
+    saveToLocalStorage();
+}
+
+function restartAutoRotationIfActive() {
+    if (!appState.autoRotatePaused) {
+        startAutoRotation();
+    }
+}
+
+function toggleAutoRotation() {
+    if (appState.autoRotatePaused) {
+        startAutoRotation();
+    } else {
+        pauseAutoRotation();
+    }
+}
+
 // =================================
 // UTILITY FUNCTIONS
 // =================================
@@ -5874,6 +6000,7 @@ function saveToLocalStorage() {
         cardDensity: appState.cardDensity,
         reduceMotion: appState.reduceMotion,
         highContrast: appState.highContrast,
+        autoRotatePaused: appState.autoRotatePaused,
         studyPlan: appState.studyPlan,
         accountProfile: appState.accountProfile,
         playground: {
@@ -5917,6 +6044,7 @@ function loadFromLocalStorage() {
             appState.cardDensity = state.cardDensity || 'standard';
             appState.reduceMotion = Boolean(state.reduceMotion);
             appState.highContrast = Boolean(state.highContrast);
+            appState.autoRotatePaused = Boolean(state.autoRotatePaused);
             appState.studyPlan = state.studyPlan || null;
             appState.accountProfile = state.accountProfile || null;
             appState.playground = {
@@ -7419,31 +7547,37 @@ function updateHeaderShrink() {
     const title = document.getElementById('main-title');
     const subtitle = document.getElementById('main-subtitle');
     const buttons = document.getElementById('header-buttons');
+    const inner = header?.querySelector('.header-inner');
 
-    const progress = Math.min(appState.scrollY / 200, 1);
+    const progress = Math.min(appState.scrollY / 160, 1);
     const isScrolled = appState.scrollY > 10;
-    const isFullyShrunken = appState.scrollY > 100;
+    const isCollapsed = appState.scrollY > 40;
+    const isFullyShrunken = appState.scrollY > 120;
 
     // Header padding - smaller values for optimization
-    const paddingY = Math.max(12 - progress * 6, 6);
-    header.style.paddingTop = `${paddingY}px`;
-    header.style.paddingBottom = `${paddingY}px`;
-
-    // Title size - optimized sizes
-    if (isFullyShrunken) {
-        title.className = title.className.replace(/text-\w+/g, '') + ' text-lg sm:text-xl lg:text-2xl';
+    const paddingY = Math.max(10 - progress * 6, 4);
+    if (inner) {
+        inner.style.paddingTop = `${paddingY}px`;
+        inner.style.paddingBottom = `${paddingY}px`;
     } else {
-        title.className = title.className.replace(/text-\w+/g, '') + ' text-xl sm:text-2xl lg:text-3xl';
+        header.style.paddingTop = `${paddingY}px`;
+        header.style.paddingBottom = `${paddingY}px`;
     }
+    header.classList.toggle('header-collapsed', isCollapsed);
+
+    // Title scale
+    title.style.transform = isFullyShrunken ? 'scale(0.92)' : 'scale(1)';
 
     // Subtitle opacity
-    const subtitleOpacity = Math.max(1 - progress * 1.5, 0);
+    const subtitleOpacity = Math.max(1 - progress * 1.8, 0);
     subtitle.style.opacity = subtitleOpacity;
-    subtitle.style.transform = subtitleOpacity < 0.3 ? 'translateY(-10px)' : 'translateY(0)';
+    subtitle.style.maxHeight = isCollapsed ? '0px' : '48px';
+    subtitle.style.marginTop = isCollapsed ? '0px' : '4px';
+    subtitle.style.transform = subtitleOpacity < 0.5 || isCollapsed ? 'translateY(-10px)' : 'translateY(0)';
 
     // Buttons
-    const buttonOpacity = Math.max(1 - progress * 1.2, 0);
-    const buttonScale = Math.max(1 - progress * 0.3, 0.7);
+    const buttonOpacity = Math.max(1 - progress * 1.4, 0);
+    const buttonScale = Math.max(1 - progress * 0.35, 0.7);
     buttons.style.opacity = buttonOpacity;
     buttons.style.transform = `scale(${buttonScale})`;
     buttons.style.transformOrigin = 'top right';
@@ -8914,6 +9048,7 @@ function resetProgress() {
         appState.dailyChallengeId = null;
         appState.dailyChallengeDate = null;
         appState.studyTipId = null;
+        appState.autoRotatePaused = false;
         appState.currentModulePage = 1;
 
         // Reset UI
@@ -8925,8 +9060,8 @@ function resetProgress() {
         renderModules();
         populateFlashcardModuleSelect();
         refreshFlashcardSession('all', { persist: false });
-        renderDailyChallenge(true);
-        renderStudyTip(true);
+        rotateTipsAndChallenges(true);
+        startAutoRotation();
         saveToLocalStorage();
     }
 }
@@ -8982,6 +9117,11 @@ function init() {
     renderInsights();
     renderDailyChallenge();
     renderStudyTip();
+    if (!appState.autoRotatePaused) {
+        startAutoRotation();
+    } else {
+        updateRotationStatus();
+    }
     initPlayground();
     initComplexityVisualizer();
     renderDSPlayground();
@@ -9323,6 +9463,7 @@ function init() {
     if (refreshChallengeBtn) {
         refreshChallengeBtn.addEventListener('click', () => {
             renderDailyChallenge(true);
+            restartAutoRotationIfActive();
         });
     }
 
@@ -9330,7 +9471,13 @@ function init() {
     if (refreshStudyTipBtn) {
         refreshStudyTipBtn.addEventListener('click', () => {
             renderStudyTip(true);
+            restartAutoRotationIfActive();
         });
+    }
+
+    const toggleAutoRotateBtn = document.getElementById('toggle-auto-rotate');
+    if (toggleAutoRotateBtn) {
+        toggleAutoRotateBtn.addEventListener('click', toggleAutoRotation);
     }
 
     const fontScaleSelect = document.getElementById('font-scale-select');
