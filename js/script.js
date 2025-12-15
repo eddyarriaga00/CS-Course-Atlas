@@ -8873,6 +8873,12 @@ function init() {
         renderModules();
         saveToLocalStorage();
     });
+    document.getElementById('difficulty-filter').addEventListener('input', (e) => {
+        appState.difficultyFilter = e.target.value;
+        appState.currentModulePage = 1;
+        renderModules();
+        saveToLocalStorage();
+    });
 
     // Glossary search
     document.getElementById('glossary-search').addEventListener('input', (e) => {
@@ -8919,12 +8925,14 @@ function init() {
     const categoryFilter = document.getElementById('category-filter');
     if (categoryFilter) {
         categoryFilter.value = appState.categoryFilter;
-        categoryFilter.addEventListener('change', (e) => {
-            appState.categoryFilter = e.target.value;
+        const handleCategory = (value) => {
+            appState.categoryFilter = value;
             appState.currentModulePage = 1;
             renderModules();
             saveToLocalStorage();
-        });
+        };
+        categoryFilter.addEventListener('change', (e) => handleCategory(e.target.value));
+        categoryFilter.addEventListener('input', (e) => handleCategory(e.target.value));
     }
 
     // Flashcard event listeners
