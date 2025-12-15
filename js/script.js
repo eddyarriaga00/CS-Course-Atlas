@@ -7601,18 +7601,22 @@ function updateHeaderShrink() {
 
     // Explicit height constraints on mobile when collapsed
     if (isCollapsed && isMobile) {
-        const targetHeight = 30;
+        const targetHeight = 32;
         header.style.minHeight = `${targetHeight}px`;
         header.style.maxHeight = `${targetHeight}px`;
+        header.style.height = `${targetHeight}px`;
         if (inner) {
             inner.style.minHeight = `${targetHeight}px`;
+            inner.style.height = `${targetHeight}px`;
             inner.style.alignItems = 'center';
         }
     } else {
         header.style.minHeight = '';
         header.style.maxHeight = '';
+        header.style.height = '';
         if (inner) {
             inner.style.minHeight = '';
+            inner.style.height = '';
             inner.style.alignItems = '';
         }
     }

@@ -1079,9 +1079,11 @@ body.dark .hero-section p {
 }
 
 .header-collapsed .header-inner {
-    padding-top: 1px;
-    padding-bottom: 1px;
-    gap: 3px;
+    padding-top: 0;
+    padding-bottom: 0;
+    gap: 2px;
+    height: 32px;
+    align-items: center;
 }
 
 .header-collapsed .header-brand h1 {
@@ -1096,6 +1098,7 @@ body.dark .hero-section p {
     margin-top: 0;
     transform: translateY(-6px);
     pointer-events: none;
+    display: none !important;
 }
 
 .header-collapsed #header-buttons {
@@ -1117,6 +1120,7 @@ body.dark .hero-section p {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
     min-height: 28px;
+    height: 32px;
 }
 
 .account-chip {
@@ -1848,7 +1852,8 @@ body.dark .purple-glow-button {
     border-bottom: 1px solid var(--surface-border);
     box-shadow: var(--shadow-card);
     color: var(--text-primary-color);
-    transition: padding 0.2s ease, min-height 0.2s ease;
+    transition: padding 0.2s ease, min-height 0.2s ease, height 0.2s ease;
+    overflow: hidden;
 }
 
 #main-header h1,
