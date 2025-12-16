@@ -4665,17 +4665,91 @@ PROCEDURE add_then_double(a, b):
         skipAutoExamples: true
     },
     {
+        id: 'assembly-registers',
+        title: 'Assembly: Registers, Memory, and Flags (x86-32)',
+        category: 'systems',
+        description: 'Beginner-first primer on general purpose registers, the stack pointer/base pointer pair, and condition flags. Every instruction is annotated so you can see what EAX/EBX/ECX/EDX are for, how ESP/EBP move, and how CMP/TEST set ZF/SF/CF.',
+        difficulty: 'beginner',
+        topics: ['Registers', 'Flags', 'Stack Pointer', 'Base Pointer', 'Addressing Modes'],
+        exampleHighlight: 'Walk through what each register typically holds, how a stack frame is laid out, how CMP sets flags, and how to read [ebp+8]-style addressing.',
+        examples: [
+            'Register roles: EAX=accumulator (math/returns), EBX=base (scratch), ECX=count (loops), EDX=data (multiplication/division helper), ESI/EDI=source/dest pointers, ESP=stack pointer, EBP=frame base.',
+            'Stack snapshot: ESP points to the top of stack; pushing decrements ESP, popping increments ESP; EBP is set once per function to give stable addresses like [ebp+8] (1st arg).',
+            'Flags: CMP a,b sets ZF=1 when equal, SF tracks sign, CF handles unsigned borrow/carry; conditional jumps (JE/JNE/JL/JG) read these bits.',
+            'Addressing modes: [ebp+8] = first arg, [esi+4*ecx] = array access base in ESI, index in ECX scaled by 4 for 32-bit ints.'
+        ],
+        codeExamples: {
+            assembly: `; Register + flags primer (x86-32)
+section .text
+global add_and_compare
+
+; int add_and_compare(int a, int b)
+; Returns: eax = sum, ZF shows equality, SF shows sign of sum
+add_and_compare:
+    push ebp               ; save old base pointer
+    mov  ebp, esp          ; establish new frame
+    push ebx               ; save callee-saved register
+
+    mov  eax, [ebp+8]      ; eax = a (first argument)
+    mov  ebx, [ebp+12]     ; ebx = b (second argument)
+    add  eax, ebx          ; eax = a + b (accumulator pattern)
+
+    cmp  eax, 0            ; sets ZF/SF/CF based on eax vs 0
+    ; At this point:
+    ;  - ZF = 1 if sum == 0
+    ;  - SF = 1 if sum is negative
+    ;  - CF is unaffected by cmp with 0 for signed math, but set for unsigned borrow
+
+    pop  ebx               ; restore saved register
+    mov  esp, ebp
+    pop  ebp
+    ret
+
+; Demonstrate indexed addressing: load arr[i]
+; int load_elem(int* arr, int i)
+global load_elem
+load_elem:
+    push ebp
+    mov  ebp, esp
+    mov  esi, [ebp+8]      ; esi = arr base pointer
+    mov  ecx, [ebp+12]     ; ecx = i (index)
+    mov  eax, [esi + ecx*4]; eax = arr[i] (each int is 4 bytes)
+    mov  esp, ebp
+    pop  ebp
+    ret
+`,
+            'assembly-pseudocode': `add_and_compare(a, b):
+  sum <- a + b
+  compare sum with 0 to set flags (ZF, SF)
+  return sum
+
+load_elem(arr, i):
+  return arr[i]  ; address = base + i*4 for 32-bit ints`
+        },
+        explanation: 'Start here if registers feel mysterious. We explicitly label what each register does, why ESP moves by pushes/pops, and how EBP gives stable argument addresses. The examples also show how CMP sets flags and how scaled-index addressing works for arrays.',
+        codeBreakdown: [
+            { label: 'Register roles', detail: 'Lists common purposes: EAX=accumulator/returns, EBX scratch, ECX loop counter, EDX high word for mul/div, ESI/EDI source/dest pointers, ESP stack top, EBP frame base.' },
+            { label: 'Stack frame', detail: 'Prologue sets EBP=ESP; args live at [ebp+8], locals at negative offsets; push/pop move ESP.' },
+            { label: 'Flags + jumps', detail: 'CMP/TEST set ZF/SF/CF; conditional jumps (JE/JNE/JL/JG/JA/JB) read those bits for flow control.' }
+        ],
+        resources: [
+            { text: 'Registers overview', url: 'https://web.stanford.edu/class/archive/cs/cs107/cs107.1206/guide/x86-64.html' },
+            { text: 'Intel condition flags cheat sheet', url: 'https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf' }
+        ],
+        skipAutoExamples: true
+    },
+    {
         id: 'assembly-stack-calls',
         title: 'Assembly: Stack Frames & Calls (x86-32)',
         category: 'systems',
-        description: 'Pure assembly walkthrough of 32-bit stack frames, calling conventions, and parameter passing. No high-level languages—only assembly and structured pseudocode.',
+        description: 'Pure assembly walkthrough of 32-bit stack frames, calling conventions, and parameter passing. Includes a mini glossary of registers (EAX return value, EBX scratch, ECX counter, EDX helper, ESI/EDI pointers, ESP stack pointer, EBP frame base) and how prologue/epilogue protect them.',
         difficulty: 'intermediate',
         topics: ['Stack Frames', 'EBP/ESP', 'CALL/RET', 'Parameter Passing', 'Prologue/Epilogue'],
         exampleHighlight: 'Examples include: prologue/epilogue template, summing an array with ESI/EDI, and nested calls showing saved EBP/ret addresses.',
         examples: [
-            'Prologue/Epilogue: push ebp; mov ebp, esp; sub esp, locals ... mov esp, ebp; pop ebp; ret.',
-            'Sum loop: mov ecx, len; xor eax, eax; mov esi, arr; loop add eax, [esi+4*edx].',
-            'Call chain: main -> foo -> bar with stack snapshots labeling return addresses and saved ebp.'
+            'Prologue/Epilogue explained: push ebp; mov ebp, esp; sub esp, locals ... mov esp, ebp; pop ebp; ret — keeps EBP stable so [ebp+8] is first arg, [ebp+12] is second.',
+            'Sum loop annotated: ECX = length (counter), ESI = arr base, EAX = running sum, EDX as temp index; add eax, [esi+4*edx] uses scaled-index addressing.',
+            'Call chain: main -> foo -> bar with stack snapshots labeling return addresses, saved EBP, and where args/locals live.'
         ],
         codeExamples: {
             assembly: `; Sum array and show frame layout (x86-32)
@@ -4716,15 +4790,16 @@ sum_array:
         id: 'assembly-branching',
         title: 'Assembly: Branching & Loops (x86-32)',
         category: 'systems',
-        description: 'Only assembly + pseudocode. Compare cmp/test with conditional jumps, build counted loops, while loops, and simple switch-like jump tables.',
+        description: 'Only assembly + pseudocode. Starts with register cheat-sheet, then compares cmp/test with conditional jumps, counted loops, while loops, and simple switch-like jump tables. Includes notes on which flags each jump reads (JE/JNE use ZF; JL/JG use SF^OF).',
         difficulty: 'beginner',
         topics: ['CMP/TEST', 'Jumps', 'Loops', 'Flags', 'Jump Tables'],
         exampleHighlight: 'Examples include: translating if/else, do-while, counting loop with ecx, and a small jump table for cases 0–2.',
         examples: [
-            'If/else: cmp eax, ebx; jl less; ... ; jmp end; less: ...',
-            'Do-while: label -> body -> evaluate condition -> jnz label.',
-            'For loop: mov ecx, n; xor eax, eax; loop add eax, ecx; loop label decrements ecx automatically.',
-            'Jump table: bounds check then indirect jump to cases for 0/1/2.'
+            'Registers primer: EAX=accumulator/returns, EBX scratch, ECX counter, EDX helper, ESI/EDI pointers, ESP stack top, EBP frame base; FLAGS holds ZF/SF/CF/OF for jumps.',
+            'If/else: cmp eax, ebx sets flags; jl uses (SF≠OF) for signed less-than; je tests ZF for equality.',
+            'Do-while: label -> body -> evaluate condition -> jnz label; TEST sets ZF without changing registers.',
+            'For loop: mov ecx, n (counter); xor eax, eax (sum); loop add eax, ecx; LOOP instruction decrements ECX and jumps while ECX≠0.',
+            'Jump table: bounds check then indirect jump to cases for 0/1/2 using a table of addresses.'
         ],
         codeExamples: {
             assembly: `; Branching and loops (x86-32)
@@ -4780,15 +4855,16 @@ SWITCH x IN {0,1,2} RETURN 10/20/30 ELSE -1`
         id: 'assembly-bitwise',
         title: 'Assembly: Bitwise Tricks (x86-32)',
         category: 'systems',
-        description: 'Practice bitwise AND/OR/XOR/SHL/SHR with annotated 32-bit examples. Focus on masks, toggling bits, and quick parity checks.',
+        description: 'Practice bitwise AND/OR/XOR/SHL/SHR with annotated 32-bit examples. Starts with a register recap and shows exactly how masks are built, why SHL/SHR shift by CL, and which flags (CF/SF/ZF) change after bit ops.',
         difficulty: 'beginner',
         topics: ['AND/OR/XOR', 'SHL/SHR', 'Masks', 'Parity', 'Flags'],
         exampleHighlight: 'Examples include: clearing/setting/toggling bits, extracting bytes, and counting set bits with a loop.',
         examples: [
-            'Clear bit k: and eax, ~(1 << k); Set bit k: or eax, (1 << k); Toggle bit k: xor eax, (1 << k).',
-            'Mask low byte: mov bl, al ; and bl, 0xFF.',
-            'Count set bits: test al,1 ; shr al,1 in a loop.',
-            'Parity: xor folding chunks to compute a parity bit.'
+            'Registers refresher: EAX accumulator (we mutate it), EBX scratch to hold masks, ECX often carries shift count (CL low byte), EDX helper.',
+            'Clear/set/toggle bit k: build mask in EBX with mov ebx,1 / shl ebx,cl; then AND/OR/XOR with EAX; note how CF is updated on shifts.',
+            'Mask low byte: mov bl, al ; and bl, 0xFF — isolates lowest 8 bits; ZF is set if result is zero.',
+            'Count set bits: test al,1 ; shr al,1 in a loop; TEST sets ZF based on (al & 1) without changing AL.',
+            'Parity: xor-fold the accumulator across bits to compute a single parity bit.'
         ],
         codeExamples: {
             assembly: `; Bitwise ops (x86-32)
@@ -4849,15 +4925,16 @@ count_bits(x):
         id: 'assembly-stack-strings',
         title: 'Assembly: Stack & Strings (x86-32)',
         category: 'systems',
-        description: 'Manipulate the stack for temporary buffers, copy/compare small strings, and see how null terminators are handled at 32-bit alignment boundaries.',
+        description: 'Manipulate the stack for temporary buffers, copy/compare small strings, and see how null terminators are handled at 32-bit alignment boundaries. Includes register primer and explicit notes on which registers must be saved (ESI/EDI/EBX).',
         difficulty: 'intermediate',
         topics: ['Stack Buffers', 'String Copy', 'String Compare', 'Alignment', 'Cdecl'],
         exampleHighlight: 'Examples include: pushing bytes to build a string, copying with movsb, and strcmp-style compare using repe cmpsb.',
         examples: [
-            'Build a short string on stack: sub esp, 16; mov dword [esp], 0x00646c72 ("rld\\0").',
-            'Copy loop: use esi/edi with movsb and a countdown in ecx.',
-            'Compare loop: repe cmpsb and check ZF for equality.',
-            'Alignment: adjust ESP by multiples of 4 for 32-bit alignment.'
+            'Register roles: ESI = source pointer, EDI = destination pointer, ECX = byte count, EAX = return value; save ESI/EDI if you modify them.',
+            'Build a short string on stack: sub esp, 16; mov dword [esp], 0x00646c72 ("rld\\0"). Shows little-endian layout.',
+            'Copy loop: set ESI/EDI, load ECX with length, use rep movsb to copy ECX bytes; ESP/EBP unchanged.',
+            'Compare loop: repe cmpsb walks both strings until mismatch or count hits 0; ZF=1 means bytes matched.',
+            'Alignment: adjust ESP by multiples of 4 for 32-bit alignment so pushes/pops stay word-aligned.'
         ],
         codeExamples: {
             assembly: `; Stack + strings (x86-32)
@@ -5022,6 +5099,7 @@ function enrichModuleDetails(modulesList = []) {
 }
 
 enrichModuleDetails(modules);
+ensureModuleDefinitions(modules);
 
 const MODULE_DISPLAY_ORDER = {
     'java-basics': 0,
@@ -5231,6 +5309,58 @@ function buildDefaultExamples(module) {
         `Compare two approaches for ${secondary}: brute force vs. optimized (${difficultyLabel}).`,
         `Walk through edge cases (empty input, single item, duplicate values) to see how ${title} handles them.`
     ];
+}
+
+function ensureModuleDefinitions(modulesList = []) {
+    modulesList.forEach(module => {
+        const existing = Array.isArray(module.definitions) ? [...module.definitions] : [];
+        const definitions = [...existing];
+        const seen = new Set(definitions);
+        const topics = Array.isArray(module.topics) ? module.topics : [];
+        const title = module.title || 'This module';
+
+        const templates = [
+            `${title}: what you should be able to explain after finishing this module.`,
+            `Core invariant: the condition that must stay true for the algorithm to be correct.`,
+            `Edge cases to test: empty input, single element, duplicate values, or extreme sizes.`,
+            `Time complexity: dominant operation count (why O(n)/O(log n)/O(n log n)/O(n²)).`,
+            `Space complexity: extra memory used (stack frames, helper arrays, recursion depth).`,
+            `Data flow: how inputs move through the helpers, recursion, or loops in this module.`,
+            `Common pitfalls: off-by-one errors, overflow, null/empty checks, mutating during iteration.`,
+            `Testing hooks: minimal tests that prove correctness for the concept (happy path + edge).`,
+            `Vocabulary: plain-English explanation of the main concept and when to use it.`,
+            `Performance notes: where the bottlenecks live and how to optimize safely.`
+        ];
+
+        topics.forEach(topic => {
+            if (definitions.length < 10) {
+                const entry = `${topic}: why it matters here and how the sample code demonstrates it.`;
+                if (!seen.has(entry)) {
+                    definitions.push(entry);
+                    seen.add(entry);
+                }
+            }
+        });
+
+        templates.forEach(t => {
+            if (definitions.length < 10 && !seen.has(t)) {
+                definitions.push(t);
+                seen.add(t);
+            }
+        });
+
+        let i = 1;
+        while (definitions.length < 10) {
+            const filler = `${title} note ${i}: restate the key steps and required conditions in your own words.`;
+            if (!seen.has(filler)) {
+                definitions.push(filler);
+                seen.add(filler);
+            }
+            i += 1;
+        }
+
+        module.definitions = definitions.slice(0, 10);
+    });
 }
 
 function shouldSkipAutoExamples(module) {
@@ -7870,6 +8000,14 @@ const bonusBlock = module.interviewPrompts && module.interviewPrompts.length ? `
         </ul>
     </div>
 ` : ''}
+            ${module.definitions && module.definitions.length ? `
+                <div class="code-breakdown-card">
+                    <h4>📖 Key Definitions (10)</h4>
+                    <ul>
+                        ${module.definitions.slice(0, 10).map(def => `<li>${escapeHtml(def)}</li>`).join('')}
+                    </ul>
+                </div>
+            ` : ''}
             ${module.examples && module.examples.length ? `
                 <div class="code-breakdown-card">
                     <h4>📌 Examples</h4>
