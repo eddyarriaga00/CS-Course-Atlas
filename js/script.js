@@ -8062,30 +8062,30 @@ function renderModules() {
         const pageModules = filteredModules.slice(startIndex, startIndex + MODULES_PER_PAGE);
 
         const difficultyOrder = ['beginner', 'intermediate', 'advanced'];
-        const groupedContent = difficultyOrder.map(level => {
-            const bucket = pageModules.filter(module => module.difficulty === level);
-            if (!bucket.length) return '';
-            const meta = DIFFICULTY_SECTIONS[level] || { label: level, icon: '📘' };
-            return `
-                <div class="module-section">
-                    <div class="module-section-heading">${meta.icon} ${meta.label}</div>
+    const groupedContent = difficultyOrder.map(level => {
+        const bucket = pageModules.filter(module => module.difficulty === level);
+        if (!bucket.length) return '';
+        const meta = DIFFICULTY_SECTIONS[level] || { label: level, icon: '📘' };
+        return `
+                <div class="module-section tw:space-y-2 tw:bg-slate-900/40 tw:border tw:border-white/10 tw:rounded-2xl tw:backdrop-blur-sm tw:p-4">
+                    <div class="module-section-heading tw:text-slate-100 tw:border-b tw:border-white/10 tw:pb-1">${meta.icon} ${meta.label}</div>
                     ${bucket.map(buildModuleCard).join('')}
                 </div>
             `;
-        }).join('');
-        const otherModules = pageModules.filter(module => !difficultyOrder.includes(module.difficulty));
-        const otherSection = otherModules.length ? `
-            <div class="module-section">
-                <div class="module-section-heading">🧭 Additional Modules</div>
+    }).join('');
+    const otherModules = pageModules.filter(module => !difficultyOrder.includes(module.difficulty));
+    const otherSection = otherModules.length ? `
+            <div class="module-section tw:space-y-2 tw:bg-slate-900/40 tw:border tw:border-white/10 tw:rounded-2xl tw:backdrop-blur-sm tw:p-4">
+                <div class="module-section-heading tw:text-slate-100 tw:border-b tw:border-white/10 tw:pb-1">🧭 Additional Modules</div>
                 ${otherModules.map(buildModuleCard).join('')}
             </div>
         ` : '';
         const sectionMarkup = [groupedContent, otherSection].filter(Boolean).join('');
 
         grid.innerHTML = sectionMarkup || `
-            <div class="text-center p-8 rounded-xl bg-white shadow">
-                <p class="font-semibold text-slate-700">No modules match your filters yet.</p>
-                <p class="text-sm text-slate-500 mt-1">Try changing the difficulty or clearing the search.</p>
+            <div class="text-center p-8 rounded-xl bg-white shadow tw:bg-slate-900/70 tw:text-slate-100 tw:border tw:border-white/10 tw:backdrop-blur-sm">
+                <p class="font-semibold text-slate-700 tw:text-slate-100">No modules match your filters yet.</p>
+                <p class="text-sm text-slate-500 mt-1 tw:text-slate-300">Try changing the difficulty or clearing the search.</p>
             </div>
         `;
 
@@ -8095,9 +8095,9 @@ function renderModules() {
         const grid = document.getElementById('modules-grid');
         if (grid) {
             grid.innerHTML = `
-                <div class="text-center p-6 rounded-xl bg-white shadow">
+                <div class="text-center p-6 rounded-xl bg-white shadow tw:bg-slate-900/70 tw:text-slate-100 tw:border tw:border-white/10 tw:backdrop-blur-sm">
                     <p class="font-semibold text-rose-600">Modules failed to load.</p>
-                    <p class="text-sm text-slate-600 mt-1">Check console for details.</p>
+                    <p class="text-sm text-slate-600 mt-1 tw:text-slate-300">Check console for details.</p>
                 </div>
             `;
         }
@@ -8136,21 +8136,21 @@ function buildModuleCard(module) {
     const showExpandButton = !isDiscrete && rawCode.split('\n').length > CONSTANTS.CODE_PREVIEW_LINES;
     const supportSummary = module.topics?.slice(0, 2).join(' • ') || 'Guided office hours and async help.';
 const bonusBlock = module.interviewPrompts && module.interviewPrompts.length ? `
-        <div class="module-bonus-card">
+        <div class="module-bonus-card tw:bg-slate-900/60 tw:border-white/10 tw:text-slate-100">
             <div class="flex items-center justify-between mb-2">
-                <span class="font-semibold text-indigo-600 text-sm">Bonus: Timed Interview Practice</span>
-                <span class="text-[11px] px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 font-semibold uppercase tracking-wide">2 prompts</span>
+                <span class="font-semibold text-indigo-600 text-sm tw:text-indigo-300">Bonus: Timed Interview Practice</span>
+                <span class="text-[11px] px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 font-semibold uppercase tracking-wide tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10">2 prompts</span>
             </div>
             <div class="space-y-2">
                 ${module.interviewPrompts.slice(0, 2).map((prompt, idx) => `
-                    <div class="p-2 rounded-lg border border-slate-200 bg-white timed-prompt-card">
+                    <div class="p-2 rounded-lg border border-slate-200 bg-white timed-prompt-card tw:bg-slate-900/60 tw:border-white/10">
                         <div class="flex items-center justify-between gap-2">
-                            <span class="text-sm font-semibold text-slate-800">${escapeHtml(prompt.title)}</span>
+                            <span class="text-sm font-semibold text-slate-800 tw:text-slate-100">${escapeHtml(prompt.title)}</span>
                             <button class="text-xs px-2 py-1 rounded bg-indigo-500 hover:bg-indigo-600 text-white" onclick="startTimedPrompt('${module.id}', ${idx})">
                                 ⏱ ${prompt.durationMinutes || 20} min
                             </button>
                         </div>
-                        <p class="text-xs text-slate-600 mt-1">${escapeHtml(prompt.prompt)}</p>
+                        <p class="text-xs text-slate-600 mt-1 tw:text-slate-300">${escapeHtml(prompt.prompt)}</p>
                         <p class="text-[11px] text-emerald-600 mt-1" id="prompt-timer-${module.id}-${idx}"></p>
                     </div>
                 `).join('')}
@@ -8159,56 +8159,56 @@ const bonusBlock = module.interviewPrompts && module.interviewPrompts.length ? `
     ` : '';
     const visualKey = getModuleVisualKey(module);
     const visualLink = visualKey ? `
-        <button class="text-xs px-2.5 py-1 rounded font-semibold visual-link"
+        <button class="text-xs px-2.5 py-1 rounded font-semibold visual-link tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10"
             onclick="openPlaygroundStructure('${visualKey}')">
             🔍 View visual in playground
         </button>
     ` : '';
 
     return `
-        <div id="module-${module.id}" data-module-card="${module.id}" class="module-card bg-white border-slate-200 rounded-xl p-4 sm:p-6 shadow-xl border hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+        <div id="module-${module.id}" data-module-card="${module.id}" class="module-card bg-white border-slate-200 rounded-xl p-4 sm:p-6 shadow-xl border hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 tw:bg-slate-900/85 tw:border-white/25 tw:text-slate-100 tw:backdrop-blur-sm tw:shadow-2xl">
             <div class="flex flex-col sm:flex-row justify-between items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
-                <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 leading-tight">${module.title}</h3>
-                <span class="px-2 sm:px-2.5 py-1 rounded-lg text-xs sm:text-sm font-medium ${getDifficultyColor(module.difficulty)} whitespace-nowrap self-start sm:self-auto difficulty-badge">
+                <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 leading-tight tw:text-indigo-200">${module.title}</h3>
+                <span class="px-2 sm:px-2.5 py-1 rounded-lg text-xs sm:text-sm font-medium ${getDifficultyColor(module.difficulty)} whitespace-nowrap self-start sm:self-auto difficulty-badge tw:text-slate-100 tw:border tw:border-white/20 tw:bg-slate-800/80">
                     ${module.difficulty}
                 </span>
             </div>
             <div class="flex flex-wrap gap-2 mb-2">
                 ${visualLink}
             </div>
-            <p class="text-slate-600 mb-3 sm:mb-4 text-sm sm:text-base leading-relaxed">${wrapGlossaryInline(module.description)}</p>
+            <p class="text-slate-600 mb-3 sm:mb-4 text-sm sm:text-base leading-relaxed tw:text-slate-200">${wrapGlossaryInline(module.description)}</p>
             <div class="mb-3 sm:mb-4">
-                <h4 class="font-semibold mb-2 text-slate-800 text-sm">Topics Covered:</h4>
+                <h4 class="font-semibold mb-2 text-slate-800 text-sm tw:text-slate-100">Topics Covered:</h4>
                 <div class="flex flex-wrap gap-1 sm:gap-1.5">
                     ${(module.topics || []).map(topic => `
-                        <span class="px-2 py-0.5 sm:py-1 text-xs rounded-md font-medium bg-slate-100 text-slate-700 topic-badge">
+                        <span class="px-2 py-0.5 sm:py-1 text-xs rounded-md font-medium bg-slate-100 text-slate-700 topic-badge tw:bg-slate-800/80 tw:text-slate-100 tw:border tw:border-white/20">
                             ${topic}
                         </span>
                     `).join('')}
                 </div>
             </div>
-            <div class="bg-slate-50 border-slate-200 rounded-lg border overflow-hidden mb-3 sm:mb-4">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 px-3 py-2 border-b border-slate-200 bg-slate-100">
+            <div class="bg-slate-50 border-slate-200 rounded-lg border overflow-hidden mb-3 sm:mb-4 tw:bg-slate-900/60 tw:border-white/20 tw:shadow">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 px-3 py-2 border-b border-slate-200 bg-slate-100 tw:bg-slate-800/80 tw:border-white/20">
                     <div class="flex items-center gap-1.5">
-                        <span class="text-xs font-medium text-slate-600">${isDiscrete ? '📘 Discrete Mathematics (Theory)' : '💻 Code Example'}</span>
+                        <span class="text-xs font-medium text-slate-600 tw:text-slate-200">${isDiscrete ? '📘 Discrete Mathematics (Theory)' : '💻 Code Example'}</span>
                         ${!isDiscrete && hasMultipleLanguages ? `
-                            <span class="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 font-medium">
+                            <span class="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 font-medium tw:bg-slate-800/80 tw:text-slate-100 tw:border tw:border-white/25">
                                 ${SUPPORTED_LANGUAGES[effectiveLanguage]?.icon} ${SUPPORTED_LANGUAGES[effectiveLanguage]?.name}
                             </span>
                         ` : ''}
                         ${!isDiscrete && currentMode === 'pseudocode' ? `
-                            <span class="text-xs px-1.5 py-0.5 rounded bg-purple-100 text-purple-800 font-medium">
+                            <span class="text-xs px-1.5 py-0.5 rounded bg-purple-100 text-purple-800 font-medium tw:bg-slate-800/80 tw:text-slate-100 tw:border tw:border-white/25">
                                 📝 Pseudocode
                             </span>
                         ` : ''}
-                        ${isDiscrete ? `<span class="text-xs px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-medium">Theory Only</span>` : ''}
+                        ${isDiscrete ? `<span class="text-xs px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-medium tw:bg-slate-800/80 tw:text-slate-100 tw:border tw:border-white/25">Theory Only</span>` : ''}
                     </div>
                     <div class="flex flex-wrap gap-1 w-full sm:w-auto">
                         <button onclick="toggleModuleComments('${module.id}')" class="text-xs px-2 py-1 rounded transition-all duration-200 font-medium shadow-sm hover:shadow-md flex-shrink-0 ${shouldShowComments(module.id) ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-gray-500 hover:bg-gray-600 text-white'}" title="${shouldShowComments(module.id) ? 'Hide Comments' : 'Show Comments'}">
                             💬 ${shouldShowComments(module.id) ? 'ON' : 'OFF'}
                         </button>
                         ${!isDiscrete && availableLanguages.length ? `
-                        <select onchange="setModuleLanguage('${module.id}', this.value)" class="text-xs px-2 py-1 rounded bg-blue-500 hover:bg-blue-600 text-white border-0 font-medium" title="Select Programming Language">
+                        <select onchange="setModuleLanguage('${module.id}', this.value)" class="text-xs px-2 py-1 rounded bg-blue-500 hover:bg-blue-600 text-white border-0 font-medium tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10" title="Select Programming Language">
                             ${availableLanguages.map(langKey => `
                                 <option value="${langKey}" ${effectiveLanguage === langKey ? 'selected' : ''} class="bg-white text-black">
                                     ${SUPPORTED_LANGUAGES[langKey]?.icon || ''} ${SUPPORTED_LANGUAGES[langKey]?.name || langKey}
@@ -8216,7 +8216,7 @@ const bonusBlock = module.interviewPrompts && module.interviewPrompts.length ? `
                             `).join('')}
                         </select>` : ''}
                         ${!isDiscrete ? `
-                        <select onchange="setModuleMode('${module.id}', this.value)" class="text-xs px-2 py-1 rounded border-0 font-medium ${currentMode === 'pseudocode' ? 'bg-purple-500 hover:bg-purple-600 text-white' : 'bg-indigo-500 hover:bg-indigo-600 text-white'}" title="Select Code Display Mode">
+                        <select onchange="setModuleMode('${module.id}', this.value)" class="text-xs px-2 py-1 rounded border-0 font-medium ${currentMode === 'pseudocode' ? 'bg-purple-500 hover:bg-purple-600 text-white' : 'bg-indigo-500 hover:bg-indigo-600 text-white'} tw:border-white/10" title="Select Code Display Mode">
                             ${Object.entries(CODE_MODES).map(([modeKey, modeInfo]) => `
                                 <option value="${modeKey}" ${currentMode === modeKey ? 'selected' : ''} class="bg-white text-black">
                                     ${modeInfo.icon} ${modeInfo.name}
@@ -8230,18 +8230,18 @@ const bonusBlock = module.interviewPrompts && module.interviewPrompts.length ? `
                         ` : ''}
                     </div>
                 </div>
-                <div class="p-3 overflow-x-auto">
-                    <pre class="text-xs leading-relaxed">
+                <div class="p-3 overflow-x-auto tw:bg-slate-900/75 tw:border tw:border-white/25 tw:rounded-lg tw:shadow">
+                    <pre class="text-xs leading-relaxed tw:text-slate-100">
                         <code class="whitespace-pre-wrap font-mono">${processedCode}</code>
                     </pre>
                 </div>
             </div>
-            <div class="bg-indigo-50 border-indigo-200 border-l-4 border-l-indigo-500 p-3 sm:p-4 mb-3 sm:mb-4 rounded-r-lg">
-                <div class="whitespace-pre-line text-xs sm:text-sm text-slate-800">${module.explanation}</div>
+            <div class="bg-indigo-50 border-indigo-200 border-l-4 border-l-indigo-500 p-3 sm:p-4 mb-3 sm:mb-4 rounded-r-lg tw:bg-slate-800/80 tw:border-white/25 tw:shadow">
+                <div class="whitespace-pre-line text-xs sm:text-sm text-slate-800 tw:text-slate-100">${module.explanation}</div>
             </div>
             ${bonusBlock}
             ${module.codeBreakdown && module.codeBreakdown.length ? `
-                <div class="code-breakdown-card">
+                <div class="code-breakdown-card tw:bg-slate-900/80 tw:border-white/25 tw:text-slate-100 tw:shadow">
                     <h4>🧠 Code Breakdown</h4>
                     <ul>
             ${module.codeBreakdown.map(item => `<li><strong>${escapeHtml(item.label)}:</strong> ${escapeHtml(item.detail)}</li>`).join('')}
@@ -8249,7 +8249,7 @@ const bonusBlock = module.interviewPrompts && module.interviewPrompts.length ? `
     </div>
 ` : ''}
             ${module.definitions && module.definitions.length ? `
-                <div class="code-breakdown-card">
+                <div class="code-breakdown-card tw:bg-slate-900/80 tw:border-white/25 tw:text-slate-100 tw:shadow">
                     <h4>📖 Key Definitions (10)</h4>
                     <ul>
                         ${module.definitions.slice(0, 10).map(def => `<li>${escapeHtml(def)}</li>`).join('')}
@@ -8257,7 +8257,7 @@ const bonusBlock = module.interviewPrompts && module.interviewPrompts.length ? `
                 </div>
             ` : ''}
             ${module.examples && module.examples.length ? `
-                <div class="code-breakdown-card">
+                <div class="code-breakdown-card tw:bg-slate-900/80 tw:border-white/25 tw:text-slate-100 tw:shadow">
                     <h4>📌 Examples</h4>
                     <ul>
                         ${module.examples.map(example => `<li>${escapeHtml(example)}</li>`).join('')}
@@ -8265,46 +8265,46 @@ const bonusBlock = module.interviewPrompts && module.interviewPrompts.length ? `
                 </div>
             ` : ''}
             ${module.truthTables && module.truthTables.length ? `
-                <div class="code-breakdown-card truth-table-card">
+                <div class="code-breakdown-card truth-table-card tw:bg-slate-900/80 tw:border-white/25 tw:text-slate-100 tw:shadow">
                     <h4>🧮 Truth Tables</h4>
                     ${module.truthTables.map(table => `
-                        <div class="truth-table-wrapper">
-                            <div class="truth-table-title">${escapeHtml(table.title || '')}</div>
-                            <table class="truth-table">
-                                <thead>
-                                    <tr>${(table.headers || []).map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr>
+                        <div class="truth-table-wrapper tw:bg-slate-900/85 tw:border tw:border-white/25 tw:rounded-lg tw:p-3">
+                            <div class="truth-table-title tw:text-slate-100">${escapeHtml(table.title || '')}</div>
+                            <table class="truth-table tw:w-full tw:text-left tw:text-slate-100">
+                                <thead class="tw:bg-slate-800/70">
+                                    <tr>${(table.headers || []).map(h => `<th class="tw:px-2 tw:py-1 tw:text-[13px]">${escapeHtml(h)}</th>`).join('')}</tr>
                                 </thead>
                                 <tbody>
-                                    ${(table.rows || []).map(row => `<tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}
+                                    ${(table.rows || []).map(row => `<tr>${row.map(cell => `<td class="tw:px-2 tw:py-1 tw:text-[13px]">${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}
                                 </tbody>
                             </table>
                         </div>
                     `).join('')}
                 </div>
             ` : ''}
-            <div class="module-support-panel">
-                <p>Student Support • ${supportSummary}</p>
-                <button type="button" class="support-button" onclick="openSupportModal('${module.id}')">📣 Contact Student Support</button>
+            <div class="module-support-panel tw:bg-slate-900/60 tw:border tw:border-white/10 tw:text-slate-100">
+                <p class="tw:text-slate-100">Student Support • ${supportSummary}</p>
+                <button type="button" class="support-button tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10" onclick="openSupportModal('${module.id}')">📣 Contact Student Support</button>
             </div>
             <div class="mb-3 sm:mb-4">
-                <h4 class="font-semibold mb-2 text-slate-800 text-sm">📚 Learning Resources:</h4>
+                <h4 class="font-semibold mb-2 text-slate-800 text-sm tw:text-slate-100">📚 Learning Resources:</h4>
                 <div class="space-y-1">
                     ${(module.resources || []).map(resource => {
                         const label = typeof resource === 'string' ? resource : resource.text || resource.url;
                         const link = typeof resource === 'string' ? null : resource.url || null;
                         if (link) {
-                            return `<a href="${link}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 text-xs transition-colors duration-200 block">• ${label}</a>`;
+                            return `<a href="${link}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 text-xs transition-colors duration-200 block tw:text-indigo-300 tw:hover:text-indigo-200">• ${label}</a>`;
                         }
-                        return `<div class="text-indigo-600 hover:text-indigo-800 text-xs transition-colors duration-200 cursor-pointer">• ${label}</div>`;
+                        return `<div class="text-indigo-600 hover:text-indigo-800 text-xs transition-colors duration-200 cursor-pointer tw:text-indigo-300 tw:hover:text-indigo-200">• ${label}</div>`;
                     }).join('')}
                 </div>
             </div>
             <div class="space-y-2">
-                <button onclick="openQuiz('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm ${quizData[module.id] && quizData[module.id].parts[0].questions.length > 0 ? 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white hover:-translate-y-0.5' : 'bg-gradient-to-r from-slate-400 to-slate-500 text-white cursor-not-allowed'}" ${!quizData[module.id] || quizData[module.id].parts[0].questions.length === 0 ? 'disabled' : ''}>
+                <button onclick="openQuiz('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm tw:border tw:border-white/10 tw:shadow-lg ${quizData[module.id] && quizData[module.id].parts[0].questions.length > 0 ? 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white hover:-translate-y-0.5 tw:bg-gradient-to-r tw:from-blue-500 tw:to-indigo-500 tw:hover:from-blue-600 tw:hover:to-indigo-600' : 'tw:bg-slate-800 tw:text-slate-200 tw:border-white/10 cursor-not-allowed'}" ${!quizData[module.id] || quizData[module.id].parts[0].questions.length === 0 ? 'disabled' : ''}>
                     ${quizData[module.id] && quizData[module.id].parts[0].questions.length > 0 ? '🧠 Take Quiz' : '🔒 Quiz Coming Soon'}
                 </button>
                 
-                <button onclick="toggleCompletion('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm ${isCompleted ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white hover:-translate-y-0.5' : 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white hover:-translate-y-0.5'}">
+                <button onclick="toggleCompletion('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm tw:border tw:border-white/10 tw:shadow-lg ${isCompleted ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white hover:-translate-y-0.5 tw:bg-gradient-to-r tw:from-green-500 tw:to-emerald-500 tw:hover:from-green-600 tw:hover:to-emerald-600' : 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white hover:-translate-y-0.5 tw:bg-gradient-to-r tw:from-indigo-500 tw:to-purple-500 tw:hover:from-indigo-600 tw:hover:to-purple-600'}">
                     ${isCompleted ? '✅ Completed!' : '📝 Mark as Complete'}
                 </button>
             </div>
@@ -8348,7 +8348,7 @@ function renderPagination(totalPages) {
         for (let page = 1; page <= totalPages; page++) {
             const isActive = page === appState.currentModulePage;
             buttons.push(`
-                <button data-page="${page}" class="pagination-button px-3 py-1.5 text-sm font-semibold border ${isActive ? 'active' : ''}">
+                <button data-page="${page}" class="pagination-button px-3 py-1.5 text-sm font-semibold border ${isActive ? 'active' : ''} tw:bg-slate-900/60 tw:border-white/10 tw:text-slate-100 tw:rounded-lg ${isActive ? 'tw:ring-2 tw:ring-indigo-400' : 'tw:hover:bg-slate-800'}">
                     ${page}
                 </button>
             `);
@@ -8479,7 +8479,9 @@ function renderGlossaryFilters() {
     container.innerHTML = glossaryCategories.map(category => {
         const isActive = appState.glossaryCategory === category;
         const label = category === 'all' ? 'All Terms' : category;
-        return `<button type="button" class="glossary-chip ${isActive ? 'active' : ''}" data-category="${category}">${escapeHtml(label)}</button>`;
+        const base = 'glossary-chip tw:px-3 tw:py-1.5 tw:rounded-full tw:border tw:border-indigo-300/50 tw:bg-indigo-500/10 tw:text-indigo-100 tw:text-xs tw:font-semibold tw:transition tw:duration-200 tw:hover:-translate-y-0.5';
+        const active = 'tw:bg-indigo-500 tw:text-white tw:border-indigo-300 tw:shadow-lg';
+        return `<button type="button" class="${base} ${isActive ? active : ''}" data-category="${category}">${escapeHtml(label)}</button>`;
     }).join('');
 
     Array.from(container.querySelectorAll('button')).forEach(button => {
