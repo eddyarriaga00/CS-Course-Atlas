@@ -147,6 +147,22 @@ let rotationIntervalId = null;
 const DONATION_URL = 'https://www.paypal.com/donate?business=your.email@paypal.com&amount=1.00&currency_code=USD&item_name=Java%20DSA%20Notes%20Support';
 const MODULE_CATEGORIES = ['all', 'dsa', 'discrete', 'systems'];
 const AUTO_ROTATE_MS = 9000;
+const STRUCTURE_KEYWORDS = {
+    array: ['array', 'string'],
+    stack: ['stack'],
+    queue: ['queue'],
+    heap: ['heap'],
+    graph: ['graph'],
+    trie: ['trie'],
+    tree: ['tree', 'bst'],
+    avl: ['avl', 'balanced tree'],
+    hashing: ['hash'],
+    heapsort: ['sort'],
+    rbtree: ['red-black', 'rb tree'],
+    segment: ['segment tree', 'range'],
+    circuits: ['circuit'],
+    greedy: ['greedy', 'interval']
+};
 
 const interviewExamples = [
     {
@@ -5363,6 +5379,30 @@ function ensureModuleDefinitions(modulesList = []) {
     });
 }
 
+function findModuleByKeywords(keywords = []) {
+    const lowerKeywords = keywords.map(k => k.toLowerCase());
+    return modules.find(mod => {
+        const haystack = `${mod.id || ''} ${mod.title || ''} ${(mod.topics || []).join(' ')}`.toLowerCase();
+        return lowerKeywords.some(k => haystack.includes(k));
+    });
+}
+
+function getPlaygroundDefinitions(structKey) {
+    const keywords = STRUCTURE_KEYWORDS[structKey] || [structKey];
+    const mod = findModuleByKeywords(keywords);
+    if (mod && mod.definitions && mod.definitions.length) {
+        return mod.definitions.slice(0, 5);
+    }
+    // Fallback basics
+    return [
+        `${structKey}: what it stores and how it is accessed/updated.`,
+        `${structKey}: primary operations with expected time complexity.`,
+        `${structKey}: common pitfalls (empty structure, bounds, duplicates).`,
+        `${structKey}: when to choose it over alternatives.`,
+        `${structKey}: mini example of state before/after one operation.`
+    ];
+}
+
 function shouldSkipAutoExamples(module) {
     return module.skipAutoExamples || module.category === 'systems' || module.category === 'discrete';
 }
@@ -6677,6 +6717,8 @@ const dsState = {
     graph: { nodes: [], edges: [] },
     trie: {},
     tree: null,
+    avl: null,
+    segment: null,
     hashing: null,
     heapsort: null,
     rbtree: null,
@@ -6750,6 +6792,15 @@ const dsConfigs = {
         ],
         complexity: 'Insert/Search O(log n) avg; Traversal O(n)'
     },
+    avl: {
+        label: 'AVL Tree',
+        ops: [
+            { label: 'Load balanced sample', action: () => { dsState.avl = createSampleAVL(); } },
+            { label: 'Insert node', action: () => { dsState.avl = insertAVL(dsState.avl, randomValue()); } },
+            { label: 'Reset', action: () => { dsState.avl = null; } }
+        ],
+        complexity: 'Insert/Search O(log n) guaranteed via rotations'
+    },
     hashing: {
         label: 'Hashing',
         ops: [
@@ -6776,6 +6827,25 @@ const dsConfigs = {
             { label: 'Reset', action: () => { dsState.rbtree = createSampleRBTree(); } }
         ],
         complexity: 'Insert/Search O(log n) guaranteed via balancing'
+    },
+    segment: {
+        label: 'Segment Tree',
+        ops: [
+            { label: 'Load sample array', action: () => { dsState.segment = buildSegmentTree([2, 5, 1, 3, 4, 7, 6, 8]); } },
+            { label: 'Update index', action: () => {
+                if (!dsState.segment) dsState.segment = buildSegmentTree([2, 5, 1, 3, 4, 7, 6, 8]);
+                const idx = Math.floor(Math.random() * dsState.segment.n);
+                updateSegmentTree(idx, randomValue());
+            } },
+            { label: 'Query range', action: () => {
+                if (!dsState.segment) dsState.segment = buildSegmentTree([2, 5, 1, 3, 4, 7, 6, 8]);
+                const l = 0;
+                const r = Math.max(0, Math.min(dsState.segment.n - 1, 3));
+                querySegmentTree(l, r);
+            } },
+            { label: 'Reset', action: () => { dsState.segment = null; } }
+        ],
+        complexity: 'Build O(n); Query/Update O(log n)'
     },
     circuits: {
         label: 'Circuits (Topo)',
@@ -6805,9 +6875,11 @@ const dsComplexityMap = {
     graph: 'linear',
     trie: 'linear',
     tree: 'log',
+    avl: 'log',
     hashing: 'constant',
     heapsort: 'nlogn',
     rbtree: 'log',
+    segment: 'log',
     circuits: 'linear',
     greedy: 'nlogn'
 };
@@ -6952,6 +7024,78 @@ function insertTreeValue(val) {
     }
 }
 
+// AVL helpers
+function avlHeight(node) {
+    return node ? node.height || 1 : 0;
+}
+
+function updateAvlHeight(node) {
+    if (!node) return;
+    node.height = 1 + Math.max(avlHeight(node.left), avlHeight(node.right));
+}
+
+function avlBalance(node) {
+    return node ? avlHeight(node.left) - avlHeight(node.right) : 0;
+}
+
+function rotateRight(y) {
+    const x = y.left;
+    const T2 = x?.right || null;
+    x.right = y;
+    y.left = T2;
+    updateAvlHeight(y);
+    updateAvlHeight(x);
+    return x;
+}
+
+function rotateLeft(x) {
+    const y = x.right;
+    const T2 = y?.left || null;
+    y.left = x;
+    x.right = T2;
+    updateAvlHeight(x);
+    updateAvlHeight(y);
+    return y;
+}
+
+function insertAVL(node, val) {
+    if (!node) return { value: val, height: 1 };
+    if (val < node.value) {
+        node.left = insertAVL(node.left, val);
+    } else {
+        node.right = insertAVL(node.right, val);
+    }
+    updateAvlHeight(node);
+    const balance = avlBalance(node);
+    // Left heavy
+    if (balance > 1 && val < (node.left?.value || 0)) {
+        return rotateRight(node);
+    }
+    // Right heavy
+    if (balance < -1 && val > (node.right?.value || 0)) {
+        return rotateLeft(node);
+    }
+    // Left Right
+    if (balance > 1 && val > (node.left?.value || 0)) {
+        node.left = rotateLeft(node.left);
+        return rotateRight(node);
+    }
+    // Right Left
+    if (balance < -1 && val < (node.right?.value || 0)) {
+        node.right = rotateRight(node.right);
+        return rotateLeft(node);
+    }
+    return node;
+}
+
+function createSampleAVL() {
+    let root = null;
+    [10, 5, 15, 3, 7, 12, 18, 1, 4].forEach(v => {
+        root = insertAVL(root, v);
+    });
+    return root;
+}
+
 function setActiveStructure(key) {
     dsState.active = key;
     ensureSampleData(key);
@@ -6964,6 +7108,7 @@ function renderDSPlayground() {
     const stateEl = document.getElementById('ds-state');
     const complexityEl = document.getElementById('ds-complexity');
     const visualEl = document.getElementById('ds-visual');
+    const defsEl = document.getElementById('ds-definitions');
     const nSlider = document.getElementById('ds-complexity-n');
     const quickSummary = document.getElementById('ds-complexity-summary');
     const quickOps = document.getElementById('ds-complexity-ops');
@@ -7007,6 +7152,9 @@ function renderDSPlayground() {
         case 'tree':
             stateText = `Nodes (in-order approx): ${JSON.stringify(listTreeValues(dsState.tree))}`;
             break;
+        case 'avl':
+            stateText = `AVL levels: ${JSON.stringify(treeLevels(dsState.avl || createSampleAVL()).map(level => level.map(n => n.value)))}`;
+            break;
         case 'hashing':
             stateText = (dsState.hashing?.buckets || []).map((bucket, idx) => `Bucket ${idx}: ${bucket.join(', ') || 'empty'}`).join('\n');
             break;
@@ -7015,6 +7163,9 @@ function renderDSPlayground() {
             break;
         case 'rbtree':
             stateText = `Nodes: ${treeLevels(dsState.rbtree).flat().map(n => `${n.value}(${n.color || 'black'})`).join(', ')}`;
+            break;
+        case 'segment':
+            stateText = segmentStateText();
             break;
         case 'circuits':
             stateText = `Gates: ${(dsState.circuits?.gates || []).join(', ')}\nEdges: ${(dsState.circuits?.edges || []).map(e => `${e[0]}->${e[1]}`).join(', ')}`;
@@ -7033,6 +7184,10 @@ function renderDSPlayground() {
 
     if (visualEl) {
         visualEl.innerHTML = buildDSVisual(dsState.active);
+    }
+    if (defsEl) {
+        const defs = getPlaygroundDefinitions(dsState.active);
+        defsEl.innerHTML = defs.map(def => `<li>• ${escapeHtml(def)}</li>`).join('');
     }
 
     if (nSlider && quickSummary && quickOps && quickLabel) {
@@ -7153,6 +7308,23 @@ function buildDSVisual(structKey) {
                 </div>
             `;
         }
+        case 'avl': {
+            const tree = dsState.avl || createSampleAVL();
+            return buildTreeVisual(tree);
+        }
+        case 'segment': {
+            const data = dsState.segment || buildSegmentTree([2, 5, 1, 3, 4, 7, 6, 8]);
+            const treeArr = data.tree || [];
+            const arr = data.arr || [];
+            return `
+                <div class="space-y-2">
+                    <div class="text-[11px] text-slate-300 uppercase font-semibold">Base array</div>
+                    <div class="ds-array">${arr.map(v => `<div class="ds-box">${v}</div>`).join('')}</div>
+                    <div class="text-[11px] text-emerald-200 uppercase font-semibold">Tree (range sums)</div>
+                    <div class="text-xs text-slate-200 whitespace-pre-wrap">${treeArr.map((v, idx) => `${idx}: ${v ?? '-'}`).join('  ')}</div>
+                </div>
+            `;
+        }
         case 'circuits': {
             const data = dsState.circuits || createSampleCircuit();
             const gates = data.gates || [];
@@ -7220,6 +7392,11 @@ function ensureSampleData(key) {
                 loadSampleTree();
             }
             break;
+        case 'avl':
+            if (!dsState.avl) {
+                dsState.avl = createSampleAVL();
+            }
+            break;
         case 'hashing':
             if (!dsState.hashing) {
                 dsState.hashing = createSampleHash();
@@ -7235,6 +7412,11 @@ function ensureSampleData(key) {
                 dsState.rbtree = createSampleRBTree();
             }
             break;
+        case 'segment':
+            if (!dsState.segment) {
+                dsState.segment = buildSegmentTree([2, 5, 1, 3, 4, 7, 6, 8]);
+            }
+            break;
         case 'circuits':
             if (!dsState.circuits) {
                 dsState.circuits = createSampleCircuit();
@@ -7248,6 +7430,13 @@ function ensureSampleData(key) {
         default:
             break;
     }
+}
+
+function segmentStateText() {
+    const data = dsState.segment || buildSegmentTree([2, 5, 1, 3, 4, 7, 6, 8]);
+    const base = `Array: [${data.arr.join(', ')}]`;
+    const query = data.lastQuery ? ` | Last query [${data.lastQuery.l},${data.lastQuery.r}] = ${data.lastQuery.result}` : '';
+    return `${base}${query}`;
 }
 
 function listTrieWords(node = dsState.trie, prefix = '', words = []) {
@@ -7320,6 +7509,65 @@ function insertRBValue(val) {
     let node = dsState.rbtree;
     while (node.right) node = node.right;
     node.right = { value: val, color: 'red' };
+}
+
+// Segment tree (range sum)
+function buildSegmentTree(arr = []) {
+    const n = arr.length;
+    const tree = new Array(n * 4).fill(0);
+    function build(node, l, r) {
+        if (l === r) {
+            tree[node] = arr[l];
+            return;
+        }
+        const mid = Math.floor((l + r) / 2);
+        build(node * 2, l, mid);
+        build(node * 2 + 1, mid + 1, r);
+        tree[node] = tree[node * 2] + tree[node * 2 + 1];
+    }
+    if (n) build(1, 0, n - 1);
+    return { arr: [...arr], tree, n, lastQuery: null };
+}
+
+function updateSegmentTree(idx, val) {
+    if (!dsState.segment) dsState.segment = buildSegmentTree([2, 5, 1, 3, 4, 7, 6, 8]);
+    const data = dsState.segment;
+    if (idx < 0 || idx >= data.n) return;
+    data.arr[idx] = val;
+    function update(node, l, r) {
+        if (l === r) {
+            data.tree[node] = val;
+            return;
+        }
+        const mid = Math.floor((l + r) / 2);
+        if (idx <= mid) update(node * 2, l, mid);
+        else update(node * 2 + 1, mid + 1, r);
+        data.tree[node] = data.tree[node * 2] + data.tree[node * 2 + 1];
+    }
+    update(1, 0, data.n - 1);
+    dsState.lastAction = `Segment tree: updated index ${idx} to ${val}`;
+    renderDSPlayground();
+}
+
+function querySegmentTree(l, r) {
+    if (!dsState.segment) dsState.segment = buildSegmentTree([2, 5, 1, 3, 4, 7, 6, 8]);
+    const data = dsState.segment;
+    l = Math.max(0, l);
+    r = Math.min(data.n - 1, r);
+    if (l > r) return 0;
+    function query(node, left, right) {
+        if (l <= left && right <= r) return data.tree[node];
+        const mid = Math.floor((left + right) / 2);
+        let sum = 0;
+        if (l <= mid) sum += query(node * 2, left, mid);
+        if (r > mid) sum += query(node * 2 + 1, mid + 1, right);
+        return sum;
+    }
+    const result = query(1, 0, data.n - 1);
+    data.lastQuery = { l, r, result };
+    dsState.lastAction = `Segment tree: sum [${l}, ${r}] = ${result}`;
+    renderDSPlayground();
+    return result;
 }
 
 function createSampleCircuit() {
@@ -9251,6 +9499,8 @@ function resetDSPlayground() {
     dsState.graph = { nodes: [], edges: [] };
     dsState.trie = {};
     dsState.tree = null;
+    dsState.avl = null;
+    dsState.segment = null;
     dsState.hashing = null;
     dsState.heapsort = null;
     dsState.rbtree = null;
