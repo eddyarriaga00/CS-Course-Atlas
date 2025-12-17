@@ -547,6 +547,47 @@
         </div>
         <div id="modules-pagination" class="flex flex-wrap items-center justify-center gap-2 mb-6 tw:gap-3 tw:text-slate-100"></div>
 
+        <!-- Timed Bug Hunt -->
+        <section id="timed-bug-hunt" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing tw:bg-slate-900/80 tw:border tw:border-white/25 tw:text-slate-100 tw:ring-1 tw:ring-indigo-500/25">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+                <div>
+                    <h3 class="text-lg sm:text-xl font-semibold section-heading tw:text-indigo-300">⏱️ Timed Bug Hunt (Coming Soon)</h3>
+                    <p class="text-sm text-slate-200">Spot the single wrong token in a full code sample. You’ll have 1 minute per round; complete 3 in a row to earn a certificate badge.</p>
+                </div>
+                <span class="text-xs px-3 py-1 rounded-full tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10">Beta setup</span>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
+                <div class="p-3 rounded-xl tw:bg-slate-900/70 tw:border tw:border-white/15 tw:text-slate-100">
+                    <h4 class="font-semibold tw:text-indigo-200 mb-2">How it will work</h4>
+                    <ul class="list-disc pl-4 space-y-1 text-sm">
+                        <li>Load a Java code sample (VS Code style view).</li>
+                        <li>One token/word is wrong—identify and submit your fix.</li>
+                        <li>Timer: 60 seconds. Three consecutive wins trigger a certificate badge.</li>
+                    </ul>
+                </div>
+                <div class="p-3 rounded-xl tw:bg-slate-900/70 tw:border tw:border-white/15 tw:text-slate-100">
+                    <h4 class="font-semibold tw:text-indigo-200 mb-2">Linked Workflow</h4>
+                    <p class="text-sm">We’ll hook this to the module quizzes and GitHub/VS Code flow so you can practice debugging with real editor context. Placeholder UI is ready for the future hookup.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Common Mistakes -->
+        <section id="common-mistakes" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing tw:bg-slate-900/80 tw:border tw:border-white/25 tw:text-slate-100 tw:ring-1 tw:ring-indigo-500/25">
+            <h3 class="text-lg sm:text-xl font-semibold mb-3 section-heading tw:text-indigo-300">⚠️ Common Mistakes</h3>
+            <p class="text-sm text-slate-200 mb-3">Quick reminders to avoid frequent pitfalls while studying and coding:</p>
+            <ul class="list-disc pl-5 space-y-2 text-sm text-slate-100">
+                <li>Forgetting to reset local state between quiz attempts or sample runs.</li>
+                <li>Mixing zero-based and one-based indexing in loops or arrays.</li>
+                <li>Not guarding against null or empty inputs before processing data.</li>
+                <li>Off-by-one errors in loop bounds and substring slices.</li>
+                <li>Skipping error handling for user input and API calls.</li>
+                <li>Using mutable shared data without understanding side effects.</li>
+                <li>Ignoring time/space trade-offs when selecting data structures.</li>
+                <li>Writing code without small tests or print statements to trace logic.</li>
+            </ul>
+        </section>
+
         <!-- Footer - Reduced Padding -->
         <footer id="main-footer" class="bg-white border-slate-200 rounded-xl p-4 sm:p-6 mt-6 sm:mt-8 shadow-xl border section-spacing tw:bg-slate-900/70 tw:border-white/10 tw:text-slate-100 tw:backdrop-blur-md">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">

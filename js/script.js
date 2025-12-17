@@ -3329,7 +3329,7 @@ public class BitManipulation {
     {
         id: 'java-basics',
         title: 'Java Fundamentals',
-        description: 'We linger on the basics: fields, constructors, getters, and the `main` method. Every line spells out what the JVM is doing so absolute beginners can connect the dots between syntax and mental models.',
+        description: 'We linger on the basics: fields, constructors, getters, and the `main` method. Every line spells out what the JVM is doing so absolute beginners can connect the dots between syntax and mental models. We also map the code to stack vs heap memory, pass-by-value semantics, and the lifecycle of objects so you can reason about what the JVM does under the hood.',
         difficulty: 'beginner',
         topics: ['Variables', 'Data Types', 'Methods', 'Classes', 'Objects'],
         codeExample: `// JavaBasics demonstrates how a class stores state and exposes behaviour.
@@ -3356,12 +3356,26 @@ public class JavaBasics {
         System.out.println(person.getInfo());
     }
 }`,
-        explanation: `This primer explains the JVM model, primitive vs reference types, memory layout, and how to structure small programs with packages and build tools. Each topic is paired with short exercises so you can move from syntax memorization to writing idiomatic Java.`,
+        explanation: `This primer explains the JVM model, primitive vs reference types, memory layout, and how to structure small programs with packages and build tools. Each topic is paired with short exercises so you can move from syntax memorization to writing idiomatic Java. We add guardrail comments so you can trace how locals live on the stack while objects live on the heap, and why Java is pass-by-value even for references.`,
         codeBreakdown: [
             { label: 'Fields', detail: 'Represent the data every instance remembers (name and age).' },
             { label: 'Constructor', detail: 'Runs once per object to copy parameters into the fields.' },
             { label: 'getInfo', detail: 'Demonstrates string concatenation and returning values.' },
-            { label: 'main', detail: 'Shows how to instantiate the class and call methods.' }
+            { label: 'main', detail: 'Shows how to instantiate the class and call methods.' },
+            { label: 'Stack vs Heap', detail: 'Clarifies that locals live on the stack while objects live on the heap.' },
+            { label: 'Pass-by-Value', detail: 'Explains how Java passes copies of references, not objects themselves.' }
+        ],
+        definitions: [
+            'Primitive type: built-in value stored directly (int, double, boolean).',
+            'Reference type: an object handle pointing to heap data.',
+            'Constructor: special method that initializes a new object.',
+            'Method signature: method name plus parameter list.',
+            'Access modifier: controls visibility (public/private/protected).',
+            'Encapsulation: keeping data and behaviour together while hiding details.',
+            'Package: namespace to organize classes.',
+            'Classpath: search path the JVM uses to find classes/resources.',
+            'Garbage collection: automatic reclamation of unreachable objects.',
+            'Null reference: a reference that points to no object (NullPointerException risk).'
         ],
         resources: [
             { text: 'Oracle Java Tutorials – Language Basics', url: 'https://docs.oracle.com/javase/tutorial/java/nutsandbolts/' },
@@ -3371,9 +3385,64 @@ public class JavaBasics {
     },
 
     {
+        id: 'uml-intro',
+        title: 'UML for Java Beginners',
+        description: 'Learn UML as a visual thinking aid for Java projects. We cover class diagrams, relationships (association, aggregation, composition, inheritance), and simple sequence diagrams to map method calls. Includes a GitHub + VS Code flow so you can diagram, commit, and iterate quickly.',
+        difficulty: 'beginner',
+        topics: ['Class Diagrams', 'Relationships', 'Sequence Diagrams', 'GitHub Workflow', 'VS Code'],
+        codeExample: `// PlantUML snippet (save as diagram.puml)
+@startuml
+class User {
+  -String name
+  +login()
+}
+class Order {
+  -List<Item> items
+  +submit()
+}
+User "1" -- "*" Order : places
+@enduml
+
+// Java skeleton that matches the UML
+public class User {
+    private String name;
+    public void login() {}
+}
+
+public class Order {
+    private List<Item> items = new ArrayList<>();
+    public void submit() {}
+}`,
+        explanation: `We align UML shapes to Java code so you can read and produce small diagrams. You’ll practice drawing class diagrams for an app, then scaffold matching Java classes in VS Code. A mini GitHub workflow shows how to commit both code and diagrams for review.`,
+        codeBreakdown: [
+            { label: 'Classes', detail: 'Represent state/behaviour; align fields/methods with your UML boxes.' },
+            { label: 'Relationships', detail: 'Use association/aggregation/composition/inheritance to describe how classes connect.' },
+            { label: 'Sequence Flow', detail: 'Sketch key method calls to map object interactions.' },
+            { label: 'GitHub Flow', detail: 'Create a branch, add UML + Java skeletons, open a PR for review.' }
+        ],
+        definitions: [
+            'Class diagram: UML view of classes, fields, methods, and relationships.',
+            'Association: a generic link between two classes.',
+            'Aggregation: a whole–part link where the part can outlive the whole.',
+            'Composition: a strong ownership link; parts die with the whole.',
+            'Inheritance: an is-a relationship between base and derived classes.',
+            'Sequence diagram: timeline of messages between objects.',
+            'Multiplicity: notation for how many instances participate in a relationship.',
+            'Stereotype: a UML tag indicating a role (e.g., <<interface>>).',
+            'Commit: a snapshot of changes stored in Git.',
+            'Pull Request: a reviewable proposal to merge your branch into main.'
+        ],
+        resources: [
+            { text: 'PlantUML Quickstart', url: 'https://plantuml.com/class-diagram' },
+            { text: 'VS Code + PlantUML Extension', url: 'https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml' },
+            { text: 'GitHub Flow Guide', url: 'https://guides.github.com/introduction/flow/' }
+        ]
+    },
+
+    {
         id: 'control-flow',
         title: 'Control Flow Statements',
-        description: 'We narrate the entire method: how if/else chooses a branch, how classic for loops change counters, how enhanced for loops iterate arrays, and what happens if you accidentally create infinite loops.',
+        description: 'We narrate the entire method: how if/else chooses a branch, how classic for loops change counters, how enhanced for loops iterate arrays, and what happens if you accidentally create infinite loops. We highlight guard clauses, trace conditions, and when to prefer switch expressions for clarity.',
         difficulty: 'beginner',
         topics: ['If-Else', 'For Loops', 'While Loops', 'Switch', 'Break/Continue'],
         codeExample: `// Control Flow Examples with detailed narration.
@@ -3405,7 +3474,21 @@ public class ControlFlow {
         codeBreakdown: [
             { label: 'If/Else', detail: 'Selects exactly one path based on the score variable.' },
             { label: 'Classic For Loop', detail: 'Initialises i, checks the condition, runs the body, then increments i.' },
-            { label: 'Enhanced For Loop', detail: 'Iterates an array without manual index tracking, perfect for read-only loops.' }
+            { label: 'Enhanced For Loop', detail: 'Iterates an array without manual index tracking, perfect for read-only loops.' },
+            { label: 'While vs Do-While', detail: 'Compares entry-condition vs exit-condition loops for retries and input validation.' },
+            { label: 'Switch/Fall-through', detail: 'Shows how to prevent unintended fall-through and how switch expressions help.' }
+        ],
+        definitions: [
+            'Branch: a conditional path chosen when a boolean is true.',
+            'Guard clause: early return to prevent invalid states from proceeding.',
+            'Loop invariant: a statement that remains true before and after each iteration.',
+            'Infinite loop: a loop that never terminates because the condition never flips.',
+            'Break: exits the nearest loop or switch immediately.',
+            'Continue: skips to the next iteration of the current loop.',
+            'Switch expression: concise switch that yields a value.',
+            'Short-circuit: && and || stop evaluating when the result is known.',
+            'Control variable: the variable driving loop iteration or branching.',
+            'Fencepost error: off-by-one bug from incorrect loop bounds.'
         ],
         resources: [
             { text: 'Oracle Docs – Control Flow Statements', url: 'https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html' },
@@ -3417,7 +3500,7 @@ public class ControlFlow {
     {
         id: 'oop-basics',
         title: 'Object-Oriented Programming',
-        description: 'We zoom in on encapsulation, inheritance, and polymorphism. Comments spell out why `Animal` is abstract, how `Dog` reuses and overrides behaviour, and what happens when you call methods through the base type.',
+        description: 'We zoom in on encapsulation, inheritance, and polymorphism. Comments spell out why `Animal` is abstract, how `Dog` reuses and overrides behaviour, and what happens when you call methods through the base type. We compare interfaces vs abstract classes and show where composition beats inheritance.',
         difficulty: 'beginner',
         topics: ['Encapsulation', 'Inheritance', 'Polymorphism', 'Abstraction', 'Interfaces'],
         codeExample: `// OOP Concepts with heavy narration.
@@ -3453,11 +3536,25 @@ public class OopDemo {
         pet.sleep();     // Inherited method defined in Animal.
     }
 }`,
-        explanation: `Encapsulation, inheritance, and polymorphism are demonstrated with cohesive mini-systems (bank accounts, game entities) so you see how design choices affect flexibility. Interfaces vs abstract classes, composition-over-inheritance, and SOLID principles round out the lesson.`,
+        explanation: `Encapsulation, inheritance, and polymorphism are demonstrated with cohesive mini-systems (bank accounts, game entities) so you see how design choices affect flexibility. Interfaces vs abstract classes, composition-over-inheritance, and SOLID principles round out the lesson. We also add quick checklists to decide when to subclass and when to compose.`,
         codeBreakdown: [
             { label: 'Animal', detail: 'Abstract base class that defines what every animal must know/do (name + makeSound + sleep).' },
             { label: 'Dog', detail: 'Concrete subclass that reuses the constructor and overrides makeSound.' },
-            { label: 'OopDemo', detail: 'Shows how polymorphism lets us treat a Dog as its base type while still running Dog-specific code.' }
+            { label: 'OopDemo', detail: 'Shows how polymorphism lets us treat a Dog as its base type while still running Dog-specific code.' },
+            { label: 'Interface vs Abstract', detail: 'Contrasts shared implementation in abstract classes vs pure contracts in interfaces.' },
+            { label: 'Composition', detail: 'Highlights when to prefer combining objects instead of subclassing for flexibility.' }
+        ],
+        definitions: [
+            'Encapsulation: bundling data and behaviour while hiding implementation details.',
+            'Inheritance: deriving a class to reuse and extend behaviour.',
+            'Polymorphism: treating different object types through a shared interface or base.',
+            'Abstract class: cannot be instantiated; may include abstract methods and concrete helpers.',
+            'Interface: contract of methods that implementing classes must fulfill.',
+            'Override: replace a superclass method with a subclass implementation.',
+            'Super: keyword to access parent constructors or methods.',
+            'Composition: building features by combining smaller objects.',
+            'Dynamic dispatch: runtime method selection based on actual object type.',
+            'Liskov Substitution Principle: subclasses should stand in for base classes without breaking expectations.'
         ],
         resources: [
             { text: 'Oracle Java Tutorials – Object-Oriented Concepts', url: 'https://docs.oracle.com/javase/tutorial/java/concepts/' },

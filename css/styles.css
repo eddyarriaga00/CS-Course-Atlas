@@ -544,6 +544,11 @@ html.font-scale-spacious {
     box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
 }
 
+#quiz-content .quiz-option *,
+.interactive-option * {
+    color: #ffffff !important;
+}
+
 #quiz-content .quiz-option.correct {
     border-color: #34d399 !important;
     box-shadow: 0 16px 36px rgba(52, 211, 153, 0.2);
@@ -608,6 +613,14 @@ html.font-scale-spacious {
         width: 100% !important;
         text-align: center !important;
     }
+}
+
+#quiz-content .quiz-nav button:disabled,
+#interactive-quiz-body .nav-buttons button:disabled {
+    background: rgba(34, 43, 72, 0.9) !important;
+    color: #e5e7ff !important;
+    border: 1px solid rgba(255, 255, 255, 0.14) !important;
+    opacity: 0.85 !important;
 }
 
 #quiz-content .progress-bar {
@@ -1746,6 +1759,19 @@ body {
 .insight-highlight-card {
     background: linear-gradient(174deg, rgba(24, 31, 52, 0.9), rgba(14, 19, 36, 0.9)) !important;
     border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+#learning-path-card,
+#learning-path-card h3,
+#learning-path-card p,
+#learning-path-card span,
+#learning-path-card li,
+#learning-path-card div {
+    color: #eef3ff !important;
+}
+
+#recommended-modules-list li {
+    color: #eef3ff !important;
 }
 
 .insight-card h4,
