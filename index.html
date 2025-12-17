@@ -32,16 +32,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body class="min-h-screen transition-all duration-300 bg-slate-50 text-slate-900 accent-indigo card-depth-standard tw:min-h-screen tw:bg-gradient-to-br tw:from-[#0a0f1f] tw:via-[#0e1430] tw:to-[#131738] tw:text-slate-100 tw:font-sans" id="main-body">
+<body class="min-h-screen transition-all duration-300 bg-slate-50 text-slate-900 accent-indigo card-depth-standard tw:bg-slate-50 tw:text-slate-900 tw:font-sans" id="main-body">
     <!-- Header - Optimized Height -->
-    <header id="main-header" class="bg-gradient-to-r from-[#0f172a] via-[#141126] to-[#1d1338] text-white sticky top-0 z-50 shadow-xl transition-all duration-300 tw:backdrop-blur-md tw:border-b tw:border-white/10">
+    <header id="main-header" class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white sticky top-0 z-50 shadow-xl transition-all duration-300 tw:backdrop-blur-md tw:border-b tw:border-white/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 header-inner tw:px-4 tw:py-2">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-3 tw:gap-2.5">
                 <div class="w-full sm:w-auto transition-all duration-300 header-brand tw:space-y-1">
-                    <h1 id="main-title" class="font-bold leading-tight transition-all duration-300 text-xl sm:text-2xl lg:text-3xl tw:text-xl tw:sm:text-2xl tw:tracking-tight tw:text-white">
+                    <h1 id="main-title" class="font-bold leading-tight transition-all duration-300 text-xl sm:text-2xl lg:text-3xl tw:text-xl tw:sm:text-2xl tw:tracking-tight">
                         ☕ MultLearning Site
                     </h1>
-                    <p id="main-subtitle" class="text-blue-100 text-xs sm:text-sm lg:text-base mt-0.5 transition-all duration-300 subtitle-collapsible tw:text-[0.9rem] tw:sm:text-sm tw:text-slate-100">
+                    <p id="main-subtitle" class="text-blue-100 text-xs sm:text-sm lg:text-base mt-0.5 transition-all duration-300 subtitle-collapsible tw:text-[0.9rem] tw:sm:text-sm">
                         DSA, Assembly, Java, Python, JavaScript, Discrete, and more — interactive learning
                     </p>
                 </div>
@@ -73,7 +73,7 @@
     <!-- Main Content -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <!-- Intro - Optimized Spacing -->
-        <div class="text-center mb-8 sm:mb-10 hero-section rounded-2xl p-6 sm:p-8 shadow-2xl section-spacing tw:p-6 tw:sm:p-8 tw:backdrop-blur-md tw:bg-slate-900/60 tw:border tw:border-white/15 tw:text-slate-100">
+        <div class="text-center mb-8 sm:mb-10 hero-section rounded-2xl p-6 sm:p-8 shadow-2xl section-spacing tw:p-6 tw:sm:p-8 tw:backdrop-blur-md">
             <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 sm:mb-6 tw:text-3xl tw:sm:text-4xl tw:leading-tight tw:text-slate-100">
                 MultLearning: Master DSA, Assembly, and Beyond
             </h2>
@@ -84,33 +84,33 @@
         </div>
 
         <!-- Progress Overview - Tighter Spacing -->
-        <div id="progress-section" class="panel-surface progress-panel rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing tw:border tw:border-white/25 tw:bg-slate-900/80 tw:text-slate-100 tw:shadow-2xl tw:ring-1 tw:ring-indigo-500/25">
+        <div id="progress-section" class="panel-surface progress-panel rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing tw:border tw:border-white/10 tw:bg-slate-900/60 tw:text-slate-100">
             <h3 class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 section-heading tw:text-[1.05rem]">📊 Your Learning Progress</h3>
             <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 tw:gap-5">
                 <div class="w-full tw:space-y-2">
-                    <p class="progress-kicker text-xs uppercase font-semibold tw:text-[11px] tw:text-slate-200">Current journey</p>
+                    <p class="progress-kicker text-xs uppercase font-semibold tw:text-[11px]">Current journey</p>
                     <span id="progress-text" class="progress-summary block text-base sm:text-lg font-semibold mt-1 tw:text-[1rem] tw:text-slate-100">
                         0 of 34 modules completed
                     </span>
-                    <div class="progress-meter mt-3 tw:w-full tw:max-w-md tw:h-2.5 tw:rounded-full tw:bg-slate-200/30 tw:border tw:border-white/10 tw:overflow-hidden tw:backdrop-blur">
-                        <div id="progress-bar" class="progress-meter-fill transition-all duration-500 tw:h-full tw:bg-gradient-to-r tw:from-sky-400 tw:via-cyan-300 tw:to-amber-400 tw:rounded-full tw:shadow-md" style="width: 0%"></div>
+                    <div class="progress-meter mt-3">
+                        <div id="progress-bar" class="progress-meter-fill transition-all duration-500" style="width: 0%"></div>
                     </div>
                 </div>
-                <div class="progress-percentage-chip text-center tw:bg-slate-800/90 tw:border tw:border-white/20 tw:text-slate-100 tw:shadow-lg">
+                <div class="progress-percentage-chip text-center tw:bg-slate-800 tw:border tw:border-white/10 tw:text-slate-100">
                     <span class="chip-label text-xs uppercase font-semibold tw:text-slate-200">Now at</span>
                     <div id="progress-percentage" class="chip-value text-3xl sm:text-4xl font-black tw:text-2xl tw:text-slate-100">0%</div>
                     <span id="progress-goal" class="chip-subtitle text-xs tw:text-slate-300">Goal: Complete all modules</span>
                 </div>
             </div>
             <div class="progress-pills flex flex-wrap gap-2 mt-4 text-xs sm:text-sm tw:text-[12.5px] tw:text-slate-200">
-                <span class="progress-pill tw:bg-slate-800/90 tw:border tw:border-white/20 tw:text-slate-100 tw:px-3 tw:py-1.5 tw:rounded-full tw:shadow tw:backdrop-blur">🎯 Next milestone at 25%</span>
-                <span class="progress-pill tw:bg-slate-800/90 tw:border tw:border-white/20 tw:text-slate-100 tw:px-3 tw:py-1.5 tw:rounded-full tw:shadow tw:backdrop-blur">⚡ Flashcards unlock at 50%</span>
-                <span class="progress-pill tw:bg-slate-800/90 tw:border tw:border-white/20 tw:text-slate-100 tw:px-3 tw:py-1.5 tw:rounded-full tw:shadow tw:backdrop-blur">💡 Tip: Use the Focus Tracker to stay on pace</span>
+                <span class="progress-pill tw:bg-slate-800 tw:border tw:border-white/10 tw:text-slate-100">🎯 Next milestone at 25%</span>
+                <span class="progress-pill tw:bg-slate-800 tw:border tw:border-white/10 tw:text-slate-100">⚡ Flashcards unlock at 50%</span>
+                <span class="progress-pill tw:bg-slate-800 tw:border tw:border-white/10 tw:text-slate-100">💡 Tip: Use the Focus Tracker to stay on pace</span>
             </div>
         </div>
 
         <!-- Achievements Card -->
-        <div id="achievements-card" class="panel-surface achievements-card rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl tw:border tw:border-white/25 tw:bg-slate-900/80 tw:text-slate-100 tw:shadow-2xl tw:ring-1 tw:ring-indigo-500/25">
+        <div id="achievements-card" class="panel-surface achievements-card rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl tw:border tw:border-white/10 tw:bg-slate-900/60 tw:text-slate-100">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 tw:gap-5">
                 <div>
                     <p class="text-xs uppercase font-semibold tracking-widest text-slate-500 tw:text-slate-300">Learning Achievements</p>
@@ -120,7 +120,7 @@
                     <p id="achievement-description" class="text-sm text-slate-600 mt-1 tw:text-slate-200 tw:text-[0.95rem]">Complete your first module to begin earning badges.</p>
                 </div>
                 <div class="text-left md:text-right">
-                    <div id="achievement-badge" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm badge-pill tw:text-[0.9rem] tw:bg-slate-800/90 tw:border tw:border-white/20 tw:shadow">
+                    <div id="achievement-badge" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm badge-pill tw:text-[0.9rem] tw:bg-slate-800 tw:border tw:border-white/10">
                         <span id="achievement-badge-icon" class="text-xl tw:text-slate-100">🌱</span>
                         <span id="achievement-badge-name" class="tw:text-slate-100">Trailhead Rookie</span>
                     </div>
@@ -128,8 +128,8 @@
                 </div>
             </div>
             <div class="mt-4">
-                <div class="achievement-progress-track tw:w-full tw:h-2.5 tw:rounded-full tw:bg-slate-800/70 tw:border tw:border-white/20 tw:overflow-hidden tw:backdrop-blur">
-                    <div id="achievement-progress-bar" class="achievement-progress-bar tw:h-full tw:bg-gradient-to-r tw:from-amber-400 tw:via-emerald-400 tw:to-blue-500 tw:shadow-md" style="width: 0%"></div>
+                <div class="achievement-progress-track">
+                    <div id="achievement-progress-bar" class="achievement-progress-bar" style="width: 0%"></div>
                 </div>
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs text-slate-500 mt-2 gap-1 tw:text-slate-300">
                     <span id="achievement-progress-label">0 / 3 modules toward next badge</span>
@@ -139,7 +139,7 @@
         </div>
 
         <!-- Support Section - Reduced Padding -->
-        <div class="support-card rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 text-center shadow-xl section-spacing tw:bg-slate-900/70 tw:border tw:border-white/20 tw:text-slate-100 tw:ring-1 tw:ring-indigo-500/25">
+        <div class="support-card rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 text-center shadow-xl section-spacing tw:bg-slate-900/60 tw:border tw:border-white/10 tw:text-slate-100">
             <h3 class="text-lg sm:text-xl font-semibold mb-2 sm:mb-3 section-heading tw:text-[1.05rem] tw:text-slate-100">❤️ Do you enjoy this website?</h3>
             <p class="mb-3 sm:mb-4 opacity-90 text-sm sm:text-base tw:text-slate-200">Help keep this resource free and updated with new content weekly!</p>
             <div class="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3">
@@ -158,7 +158,7 @@
 
         <!-- Daily Challenge & Study Tip -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-5 sm:mb-6 section-spacing tw:gap-5">
-            <div id="daily-challenge-card" class="panel-surface rounded-xl p-4 sm:p-5 shadow-xl border border-transparent tw:bg-slate-900/70 tw:border-white/20 tw:text-slate-100 tw:ring-1 tw:ring-indigo-500/25">
+            <div id="daily-challenge-card" class="panel-surface rounded-xl p-4 sm:p-5 shadow-xl border border-transparent tw:bg-slate-900/60 tw:border-white/10 tw:text-slate-100">
                 <div class="flex items-start justify-between gap-3 mb-3 tw:gap-2.5">
                     <div>
                         <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading tw:text-[1.05rem] tw:text-indigo-300">🔥 Daily Challenge</h3>
@@ -176,7 +176,7 @@
                 <ul id="daily-challenge-steps" class="text-sm text-slate-700 space-y-1 list-disc list-inside tw:text-slate-100 tw:text-[0.95rem]"></ul>
                 <div id="daily-challenge-hint" class="mt-3 text-xs font-semibold text-slate-500 uppercase tracking-wider tw:text-slate-300"></div>
             </div>
-            <div id="study-tip-card" class="panel-surface rounded-xl p-4 sm:p-5 shadow-xl border border-transparent tw:bg-slate-900/70 tw:border-white/20 tw:text-slate-100 tw:ring-1 tw:ring-indigo-500/25">
+            <div id="study-tip-card" class="panel-surface rounded-xl p-4 sm:p-5 shadow-xl border border-transparent tw:bg-slate-900/60 tw:border-white/10 tw:text-slate-100">
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading tw:text-[1.05rem] tw:text-indigo-300">🌟 Study Tip</h3>
                     <button id="refresh-study-tip" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-all duration-200 tw:bg-emerald-500/20 tw:text-emerald-100 tw:border tw:border-emerald-200/40 tw:hover:bg-emerald-500/30">New Tip</button>
@@ -186,7 +186,7 @@
         </div>
 
         <!-- Insights Section -->
-        <section id="insights-section" class="content-backdrop rounded-2xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl border border-white/30 section-spacing tw:bg-slate-900/80 tw:border-white/25 tw:text-slate-100 tw:ring-1 tw:ring-indigo-500/25">
+        <section id="insights-section" class="content-backdrop rounded-2xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl border border-white/30 section-spacing tw:bg-slate-900/60 tw:border-white/10 tw:text-slate-100">
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-4">
                 <div>
                     <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading glow-text tw:text-[1.05rem]">Personalized Study Insights</h3>
@@ -264,7 +264,7 @@
                 <div class="insight-card tw:bg-slate-900/60 tw:border-white/10" id="study-tracker-card">
                     <div class="flex items-center justify-between mb-3">
                         <p class="text-xs uppercase tracking-wide text-slate-500 tw:text-slate-300">Focus Tracker</p>
-                        <span id="study-session-status" class="px-2 py-1 rounded-full text-xs font-semibold tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10">Idle</span>
+                        <span id="study-session-status" class="px-2 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-600 tw:bg-slate-700 tw:text-slate-200">Idle</span>
                     </div>
                     <div class="text-sm text-slate-700 mb-3 leading-relaxed tw:text-slate-200" id="study-session-copy">Track study minutes and module completions here.</div>
                     <div class="space-y-3 text-sm text-slate-700 tw:text-slate-200">
@@ -318,7 +318,7 @@
         </section>
 
         <!-- Interview Examples -->
-        <section id="interview-examples" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing tw:bg-slate-900/80 tw:border-white/25 tw:text-slate-100 tw:ring-1 tw:ring-indigo-500/25">
+        <section id="interview-examples" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing tw:bg-slate-900/60 tw:border-white/10 tw:text-slate-100">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
                 <div>
                     <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading">📂 Interview Examples</h3>
@@ -364,22 +364,22 @@
         </div>
 
         <!-- Notes -->
-        <section id="notes-section" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing tw:bg-slate-900/80 tw:border tw:border-white/25 tw:text-slate-100 tw:ring-1 tw:ring-indigo-500/25">
+        <section id="notes-section" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing tw:bg-slate-900/60 tw:border tw:border-white/10 tw:text-slate-100">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
                 <div>
                     <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading tw:text-indigo-300">📝 Study Notes</h3>
                     <p class="text-sm text-slate-600 tw:text-slate-200">Jot down takeaways and export as a text file.</p>
                 </div>
                 <div class="flex gap-2">
-                    <button id="save-notes" class="px-3 py-2 rounded-lg bg-indigo-500 text-white text-sm font-semibold shadow-sm hover:bg-indigo-600 transition tw:border tw:border-white/10 tw:shadow-md">Save</button>
-                    <button id="download-notes" class="px-3 py-2 rounded-lg bg-slate-800 text-slate-100 text-sm font-semibold border border-white/10 shadow-sm hover:bg-slate-700 transition tw:border tw:border-white/10 tw:shadow-md">Download TXT</button>
+                    <button id="save-notes" class="px-3 py-2 rounded-lg bg-indigo-500 text-white text-sm font-semibold shadow-sm hover:bg-indigo-600 transition">Save</button>
+                    <button id="download-notes" class="px-3 py-2 rounded-lg bg-slate-800 text-slate-100 text-sm font-semibold border border-white/10 shadow-sm hover:bg-slate-700 transition">Download TXT</button>
                 </div>
             </div>
             <textarea id="notes-input" rows="6" class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 tw:bg-slate-800 tw:border-white/10 tw:text-slate-100 tw:placeholder-slate-400" placeholder="Write your notes here..."></textarea>
         </section>
 
         <!-- Notes Library -->
-        <section id="notes-library-section" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing tw:bg-slate-900/80 tw:border tw:border-white/25 tw:text-slate-100 tw:ring-1 tw:ring-indigo-500/25">
+        <section id="notes-library-section" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing tw:bg-slate-900/60 tw:border tw:border-white/10 tw:text-slate-100">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
                 <div>
                     <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading tw:text-indigo-300">📥 Notes Library</h3>
@@ -387,19 +387,19 @@
                 </div>
                 <span class="text-xs px-3 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10">Beginner-friendly</span>
             </div>
-            <div class="notes-layout grid grid-cols-1 gap-4">
-                <div class="w-full">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+                <div class="lg:col-span-1">
                     <div class="text-xs uppercase tracking-wide text-slate-500 font-semibold mb-2 tw:text-slate-300">Categories</div>
                     <div id="notes-library-categories" class="flex flex-wrap gap-2 tw:gap-2.5 tw:text-slate-100"></div>
                 </div>
-                <div class="w-full">
-                    <div class="notes-scroll tw:bg-slate-900/60 tw:border tw:border-white/10 tw:rounded-xl tw:text-slate-100" id="notes-library-list"></div>
+                <div class="lg:col-span-2">
+                    <div class="notes-scroll tw:bg-slate-900/60 tw:border tw:border-white/10 tw:rounded-xl" id="notes-library-list"></div>
                 </div>
             </div>
         </section>
 
         <!-- Data Structure Playground -->
-        <section id="ds-playground" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing tw:bg-slate-900/80 tw:border tw:border-white/25 tw:backdrop-blur-sm tw:ring-1 tw:ring-indigo-500/25">
+        <section id="ds-playground" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing tw:bg-slate-900/40 tw:border tw:border-white/10 tw:backdrop-blur-sm">
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-3 tw:gap-4">
                 <div class="tw:space-y-1">
                     <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading">🛠️ Data Structure Playground</h3>
@@ -411,28 +411,28 @@
                 </div>
             </div>
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 tw:gap-5">
-                <div class="p-4 rounded-xl border border-slate-200 bg-white space-y-3 tw:space-y-4 tw:bg-slate-900/60 tw:border-white/10 tw:text-slate-100 tw:shadow-lg tw:backdrop-blur-sm" id="ds-controls"></div>
-                <div class="p-4 rounded-xl border border-slate-200 bg-slate-900 text-slate-100 space-y-3 tw:space-y-4 tw:border-white/20 tw:bg-slate-900/80">
+                <div class="p-4 rounded-xl border border-slate-200 bg-white space-y-3 tw:space-y-4 tw:bg-slate-900/60 tw:border-white/10 tw:text-slate-100" id="ds-controls"></div>
+                <div class="p-4 rounded-xl border border-slate-200 bg-slate-900 text-slate-100 space-y-3 tw:space-y-4 tw:border-white/10 tw:bg-slate-900/70">
                     <div class="text-xs uppercase tracking-wide text-emerald-300 font-semibold tw:text-[11px]">Current State</div>
                     <div id="ds-visual" class="ds-visual space-y-1"></div>
-                    <pre class="text-sm whitespace-pre-wrap tw:text-[0.9rem] tw:text-slate-100" id="ds-state"></pre>
+                    <pre class="text-sm whitespace-pre-wrap tw:text-[0.9rem]" id="ds-state"></pre>
                     <div class="text-xs text-slate-300 tw:text-slate-200">Complexity: <span id="ds-complexity"></span></div>
                     <div id="ds-status" class="text-xs text-indigo-200"></div>
                     <div class="p-3 rounded-lg bg-slate-800 border border-slate-700 space-y-2 tw:space-y-2">
                         <div class="flex items-center justify-between text-xs text-slate-200 font-semibold">
-                            <span class="tw:text-slate-100">Quick Complexity Peek</span>
+                            <span>Quick Complexity Peek</span>
                             <span id="ds-complexity-label" class="text-amber-200"></span>
                         </div>
-                        <label for="ds-complexity-n" class="text-[11px] uppercase tracking-wide text-slate-400 font-semibold tw:text-slate-300">Sample size (n)</label>
+                        <label for="ds-complexity-n" class="text-[11px] uppercase tracking-wide text-slate-400 font-semibold">Sample size (n)</label>
                         <input type="range" id="ds-complexity-n" min="1" max="50" value="8" class="w-full accent-indigo-300">
                         <div class="flex justify-between text-xs text-slate-300">
-                            <span id="ds-complexity-summary" class="tw:text-slate-200">n=8 • ~ops</span>
+                            <span id="ds-complexity-summary">n=8 • ~ops</span>
                             <span id="ds-complexity-ops" class="font-semibold text-emerald-200"></span>
                         </div>
                     </div>
                     <div class="p-3 rounded-lg bg-slate-800 border border-slate-700 space-y-2 tw:space-y-2">
                         <div class="flex items-center justify-between text-xs text-slate-200 font-semibold">
-                            <span class="tw:text-slate-100">Related Definitions</span>
+                            <span>Related Definitions</span>
                             <span class="text-amber-200">from modules</span>
                         </div>
                         <ul id="ds-definitions" class="text-xs space-y-1 text-slate-200"></ul>
@@ -462,13 +462,13 @@
         </div>
 
         <!-- Java Playground -->
-        <section id="playground-section" class="content-backdrop rounded-2xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl border border-white/40 section-spacing tw:bg-slate-900/80 tw:border-white/25 tw:text-slate-100 tw:ring-1 tw:ring-indigo-500/25">
+        <section id="playground-section" class="content-backdrop rounded-2xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl border border-white/40 section-spacing tw:bg-slate-900/60 tw:border-white/10 tw:text-slate-100">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
                 <div>
                     <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading glow-text tw:text-indigo-300">Code Playground</h3>
                     <p class="text-sm text-slate-600 tw:text-slate-200">Run quick Java, Python, C++, or JavaScript snippets through the sandbox API and iterate without leaving the page.</p>
                 </div>
-                <div id="playground-status" class="text-xs px-3 py-1 rounded-full font-semibold uppercase tracking-wider text-center tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10">Idle</div>
+                <div id="playground-status" class="text-xs px-3 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold uppercase tracking-wider text-center tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10">Idle</div>
             </div>
             <div class="playground-grid">
                 <div class="playground-card">
@@ -479,18 +479,18 @@
                         </div>
                         <div class="flex flex-wrap items-center gap-2 justify-end playground-selectors tw:gap-2.5">
                             <div class="flex items-center gap-2">
-                                <label for="playground-language" class="text-xs font-semibold text-slate-500 uppercase tracking-wide tw:text-slate-300">Language</label>
-                                <select id="playground-language" class="text-sm rounded-lg border border-slate-300 px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 tw:bg-slate-800 tw:border-white/10 tw:text-slate-100">
-                                    <option>Loading...</option>
-                                </select>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <label for="playground-snippets" class="text-xs font-semibold text-slate-500 uppercase tracking-wide tw:text-slate-300">Load sample</label>
+                                <label for="playground-language" class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Language</label>
+                        <select id="playground-language" class="text-sm rounded-lg border border-slate-300 px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 tw:bg-slate-800 tw:border-white/10 tw:text-slate-100">
+                            <option>Loading...</option>
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label for="playground-snippets" class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Load sample</label>
                                 <select id="playground-snippets" class="text-sm rounded-lg border border-slate-300 px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 tw:bg-slate-800 tw:border-white/10 tw:text-slate-100">
                                     <option value="hello-world">Loading samples...</option>
                                 </select>
-                            </div>
-                        </div>
+                    </div>
+                </div>
                     </div>
                     <textarea id="playground-editor" spellcheck="false" class="playground-editor tw:bg-slate-900 tw:text-slate-100 tw:border-white/10" aria-label="Playground editor"></textarea>
                     <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 mt-3 tw:gap-3">
@@ -514,7 +514,7 @@
         </section>
 
         <!-- Search and Filter - Tighter Spacing -->
-        <div id="search-section" class="panel-surface rounded-xl p-4 sm:p-5 mb-5 sm:mb-6 shadow-xl section-spacing tw:bg-slate-900/80 tw:border tw:border-white/25 tw:text-slate-100 tw:ring-1 tw:ring-indigo-500/25">
+        <div id="search-section" class="panel-surface rounded-xl p-4 sm:p-5 mb-5 sm:mb-6 shadow-xl section-spacing tw:bg-slate-900/60 tw:border tw:border-white/10 tw:text-slate-100">
             <h3 class="text-lg sm:text-xl font-semibold mb-3 text-indigo-600 section-heading tw:text-indigo-300">Find Your Learning Path</h3>
             <div class="flex flex-col gap-3">
         <div class="w-full flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2 tw:gap-3">
@@ -547,47 +547,6 @@
         </div>
         <div id="modules-pagination" class="flex flex-wrap items-center justify-center gap-2 mb-6 tw:gap-3 tw:text-slate-100"></div>
 
-        <!-- Timed Bug Hunt -->
-        <section id="timed-bug-hunt" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing tw:bg-slate-900/80 tw:border tw:border-white/25 tw:text-slate-100 tw:ring-1 tw:ring-indigo-500/25">
-            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
-                <div>
-                    <h3 class="text-lg sm:text-xl font-semibold section-heading tw:text-indigo-300">⏱️ Timed Bug Hunt (Coming Soon)</h3>
-                    <p class="text-sm text-slate-200">Spot the single wrong token in a full code sample. You’ll have 1 minute per round; complete 3 in a row to earn a certificate badge.</p>
-                </div>
-                <span class="text-xs px-3 py-1 rounded-full tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10">Beta setup</span>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
-                <div class="p-3 rounded-xl tw:bg-slate-900/70 tw:border tw:border-white/15 tw:text-slate-100">
-                    <h4 class="font-semibold tw:text-indigo-200 mb-2">How it will work</h4>
-                    <ul class="list-disc pl-4 space-y-1 text-sm">
-                        <li>Load a Java code sample (VS Code style view).</li>
-                        <li>One token/word is wrong—identify and submit your fix.</li>
-                        <li>Timer: 60 seconds. Three consecutive wins trigger a certificate badge.</li>
-                    </ul>
-                </div>
-                <div class="p-3 rounded-xl tw:bg-slate-900/70 tw:border tw:border-white/15 tw:text-slate-100">
-                    <h4 class="font-semibold tw:text-indigo-200 mb-2">Linked Workflow</h4>
-                    <p class="text-sm">We’ll hook this to the module quizzes and GitHub/VS Code flow so you can practice debugging with real editor context. Placeholder UI is ready for the future hookup.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- Common Mistakes -->
-        <section id="common-mistakes" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing tw:bg-slate-900/80 tw:border tw:border-white/25 tw:text-slate-100 tw:ring-1 tw:ring-indigo-500/25">
-            <h3 class="text-lg sm:text-xl font-semibold mb-3 section-heading tw:text-indigo-300">⚠️ Common Mistakes</h3>
-            <p class="text-sm text-slate-200 mb-3">Quick reminders to avoid frequent pitfalls while studying and coding:</p>
-            <ul class="list-disc pl-5 space-y-2 text-sm text-slate-100">
-                <li>Forgetting to reset local state between quiz attempts or sample runs.</li>
-                <li>Mixing zero-based and one-based indexing in loops or arrays.</li>
-                <li>Not guarding against null or empty inputs before processing data.</li>
-                <li>Off-by-one errors in loop bounds and substring slices.</li>
-                <li>Skipping error handling for user input and API calls.</li>
-                <li>Using mutable shared data without understanding side effects.</li>
-                <li>Ignoring time/space trade-offs when selecting data structures.</li>
-                <li>Writing code without small tests or print statements to trace logic.</li>
-            </ul>
-        </section>
-
         <!-- Footer - Reduced Padding -->
         <footer id="main-footer" class="bg-white border-slate-200 rounded-xl p-4 sm:p-6 mt-6 sm:mt-8 shadow-xl border section-spacing tw:bg-slate-900/70 tw:border-white/10 tw:text-slate-100 tw:backdrop-blur-md">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
@@ -608,11 +567,11 @@
                 <div>
                     <h4 class="font-semibold text-indigo-600 mb-2 sm:mb-3 text-base section-heading tw:text-indigo-300">🚀 Features</h4>
                     <div class="space-y-1 sm:space-y-2 text-slate-600 text-sm tw:text-slate-200">
-                        <div class="tw:text-slate-200">💬 Individual Comment Controls</div>
-                        <div class="tw:text-slate-200">📝 Pseudocode Conversion</div>
-                        <div class="tw:text-slate-200">🛠️ Multi-Language Support</div>
-                        <div class="tw:text-slate-200">📱 Mobile-Optimized Design</div>
-                        <div class="tw:text-slate-200">🌙 Dark Mode Support</div>
+                        <div>💬 Individual Comment Controls</div>
+                        <div>📝 Pseudocode Conversion</div>
+                        <div>🛠️ Multi-Language Support</div>
+                        <div>📱 Mobile-Optimized Design</div>
+                        <div>🌙 Dark Mode Support</div>
                     </div>
                 </div>
                 <div>
@@ -621,10 +580,10 @@
                         <div class="text-slate-600 text-sm tw:text-slate-200">Made with ❤️ for CS students</div>
                         <div class="text-slate-600 text-sm tw:text-slate-200">Help keep this resource free!</div>
                         <div class="flex gap-2 mt-2 sm:mt-3">
-                        <a href="https://www.paypal.com/donate?business=your.email@paypal.com&amount=5.00&currency_code=USD&item_name=Coffee%20Support" target="_blank" rel="noopener noreferrer" class="bg-amber-500 hover:bg-amber-600 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-xs transition-colors duration-200 shadow-md hover:shadow-lg tw:border tw:border-white/10 tw:bg-gradient-to-r tw:from-amber-500 tw:to-orange-500">
+                            <a href="https://www.paypal.com/donate?business=your.email@paypal.com&amount=5.00&currency_code=USD&item_name=Coffee%20Support" target="_blank" rel="noopener noreferrer" class="bg-amber-500 hover:bg-amber-600 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-xs transition-colors duration-200 shadow-md hover:shadow-lg">
                                 ☕ Coffee
                             </a>
-                            <a href="https://www.paypal.com/donate?business=your.email@paypal.com&amount=25.00&currency_code=USD&item_name=Sponsor%20Support" target="_blank" rel="noopener noreferrer" class="bg-purple-500 hover:bg-purple-600 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-xs transition-colors duration-200 shadow-md hover:shadow-lg tw:border tw:border-white/10 tw:bg-gradient-to-r tw:from-purple-500 tw:to-fuchsia-500">
+                            <a href="https://www.paypal.com/donate?business=your.email@paypal.com&amount=25.00&currency_code=USD&item_name=Sponsor%20Support" target="_blank" rel="noopener noreferrer" class="bg-purple-500 hover:bg-purple-600 text-white px-2 sm:px-3 py-1 sm:py-1.5 rounded-md text-xs transition-colors duration-200 shadow-md hover:shadow-lg">
                                 💝 Sponsor
                             </a>
                         </div>
@@ -697,6 +656,7 @@
                     <div>
                         <label class="font-medium text-slate-800 tw:text-slate-200">Hide Completed Modules</label>
                         <p class="text-xs mt-1 text-slate-600 tw:text-slate-300">Keep your grid focused on what’s left.</p>
+
                     </div>
                     <button id="hide-completed-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300">
                         <div id="hide-completed-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5"></div>
@@ -764,11 +724,11 @@
                 </div>
             <div class="p-6 pb-4 space-y-4 tw:space-y-3 tw:p-5">
                 <input type="text" id="glossary-search" placeholder="Search glossary terms..." class="w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-white border-slate-300 text-slate-900 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 tw:bg-slate-800 tw:border-slate-700 tw:text-slate-100 tw:placeholder-slate-400">
-                <div id="glossary-stats" class="glossary-stats text-xs sm:text-sm text-slate-500 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 tw:text-slate-300 tw:bg-slate-800/40 tw:border tw:border-white/10 tw:rounded-xl tw:px-3 tw:py-2">
+                <div id="glossary-stats" class="glossary-stats text-xs sm:text-sm text-slate-500 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 tw:text-slate-300">
                     <span>Browse curated Java DSA terminology.</span>
                     <span>Filter by category to focus your study.</span>
                 </div>
-                <div id="glossary-categories" class="glossary-chip-row flex flex-wrap gap-2 tw:text-slate-100 tw:gap-2.5"></div>
+                <div id="glossary-categories" class="glossary-chip-row flex flex-wrap gap-2"></div>
             </div>
             <div class="flex-1 overflow-y-auto px-6 pb-6 tw:px-5 tw:pb-5">
                 <div id="glossary-content" class="grid grid-cols-1 md:grid-cols-2 gap-4 tw:gap-3">
@@ -800,13 +760,13 @@
                 </div>
                 <div class="flex items-center justify-between flex-wrap gap-3 mb-4">
                     <div class="flex items-center gap-2">
-                        <span id="flashcard-counter" class="flashcard-pill tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10">Card 1 of 8</span>
-                        <span id="flashcard-module-label" class="flashcard-pill tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10">All Modules</span>
+                        <span id="flashcard-counter" class="flashcard-pill">Card 1 of 8</span>
+                        <span id="flashcard-module-label" class="flashcard-pill">All Modules</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <button id="prev-flashcard" class="bg-slate-500 hover:bg-slate-600 text-white px-4 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 tw:border tw:border-white/10">← Prev</button>
-                        <button id="next-flashcard" class="bg-slate-500 hover:bg-slate-600 text-white px-4 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 tw:border tw:border-white/10">Next →</button>
-                        <button id="random-flashcard" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 tw:border tw:border-white/10">🔀 Random</button>
+                        <button id="prev-flashcard" class="bg-slate-500 hover:bg-slate-600 text-white px-4 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5">← Prev</button>
+                        <button id="next-flashcard" class="bg-slate-500 hover:bg-slate-600 text-white px-4 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5">Next →</button>
+                        <button id="random-flashcard" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5">🔀 Random</button>
                     </div>
                 </div>
 
@@ -817,10 +777,10 @@
                 </div>
 
                 <div class="flashcard-controls">
-                    <button id="toggle-flashcard-answer" class="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5 tw:border tw:border-white/10">Show Answer</button>
+                    <button id="toggle-flashcard-answer" class="bg-indigo-500 hover:bg-indigo-600 text-white px-5 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5">Show Answer</button>
                     <div class="flex gap-2">
-                        <span class="flashcard-pill tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10" id="flashcard-progress-pill">0 / 20 in session</span>
-                        <span class="flashcard-pill tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10" id="flashcard-mode-pill">Tap to flip</span>
+                        <span class="flashcard-pill" id="flashcard-progress-pill">0 / 20 in session</span>
+                        <span class="flashcard-pill" id="flashcard-mode-pill">Tap to flip</span>
                     </div>
                 </div>
             </div>
@@ -851,25 +811,25 @@
                 <div>
                     <p class="font-semibold text-slate-800 mb-2 tw:text-slate-200">How many hours can you dedicate weekly?</p>
                     <div class="plan-option-group" data-plan-group="pace">
-                        <button type="button" class="plan-option tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10" data-plan-value="light">🌱 3-4 hrs</button>
-                        <button type="button" class="plan-option tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10" data-plan-value="balanced">⚖️ 5-8 hrs</button>
-                        <button type="button" class="plan-option tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10" data-plan-value="intense">🔥 9+ hrs</button>
+                        <button type="button" class="plan-option" data-plan-value="light">🌱 3-4 hrs</button>
+                        <button type="button" class="plan-option" data-plan-value="balanced">⚖️ 5-8 hrs</button>
+                        <button type="button" class="plan-option" data-plan-value="intense">🔥 9+ hrs</button>
                     </div>
                 </div>
                 <div>
                     <p class="font-semibold text-slate-800 mb-2 tw:text-slate-200">What is your current focus?</p>
                     <div class="plan-option-group" data-plan-group="focus">
-                        <button type="button" class="plan-option tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10" data-plan-value="foundations">📚 Foundations</button>
-                        <button type="button" class="plan-option tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10" data-plan-value="interview">💼 Interview Prep</button>
-                        <button type="button" class="plan-option tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10" data-plan-value="projects">🛠️ Projects</button>
+                        <button type="button" class="plan-option" data-plan-value="foundations">📚 Foundations</button>
+                        <button type="button" class="plan-option" data-plan-value="interview">💼 Interview Prep</button>
+                        <button type="button" class="plan-option" data-plan-value="projects">🛠️ Projects</button>
                     </div>
                 </div>
                 <div>
                     <p class="font-semibold text-slate-800 mb-2 tw:text-slate-200">Preferred learning style?</p>
                     <div class="plan-option-group" data-plan-group="style">
-                        <button type="button" class="plan-option tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10" data-plan-value="visual">🎨 Visual Walkthroughs</button>
-                        <button type="button" class="plan-option tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10" data-plan-value="practice">🧠 Practice Heavy</button>
-                        <button type="button" class="plan-option tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10" data-plan-value="blended">🔀 Blended</button>
+                        <button type="button" class="plan-option" data-plan-value="visual">🎨 Visual Walkthroughs</button>
+                        <button type="button" class="plan-option" data-plan-value="practice">🧠 Practice Heavy</button>
+                        <button type="button" class="plan-option" data-plan-value="blended">🔀 Blended</button>
                     </div>
                 </div>
                 <div>
@@ -917,7 +877,7 @@
     </div>
 
     <!-- Support Modal -->
-        <div id="support-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+    <div id="support-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
         <div class="modal-panel rounded-2xl w-full max-w-lg shadow-2xl bg-white text-slate-900 border border-slate-200 tw:bg-slate-900 tw:text-slate-100 tw:border-white/10">
             <div class="flex justify-between items-center p-6 border-b border-slate-200 tw:border-white/10">
                 <h3 class="text-2xl font-semibold text-indigo-600 tw:text-indigo-300">Student Support</h3>
@@ -955,14 +915,14 @@
                 </div>
                 <button id="close-interactive-quiz" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700 tw:text-slate-200">×</button>
             </div>
-            <div class="p-6 space-y-4 tw:text-slate-100">
+            <div class="p-6 space-y-4">
                 <div class="flex flex-col lg:flex-row lg:items-center gap-3">
                     <div class="flex-1">
                         <label for="interactive-quiz-module" class="font-semibold text-slate-800 text-sm mb-1 block tw:text-slate-200">Module</label>
                         <select id="interactive-quiz-module" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 tw:bg-slate-800 tw:border-white/10 tw:text-slate-100"></select>
                     </div>
                     <div class="w-full lg:w-auto">
-                        <div id="interactive-quiz-progress" class="text-sm text-slate-600 tw:text-slate-200 tw:bg-slate-800 tw:border tw:border-white/10 tw:rounded-lg tw:px-3 tw:py-1"></div>
+                        <div id="interactive-quiz-progress" class="text-sm text-slate-600 tw:text-slate-200"></div>
                     </div>
                 </div>
                 <div id="interactive-quiz-body" class="space-y-3">

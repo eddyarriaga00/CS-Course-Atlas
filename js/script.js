@@ -3,10 +3,8 @@
 // =================================
 // GLOBAL STATE
 // =================================
-const DEFAULT_PLAYGROUND_SAMPLE = 'hello-world';
-
 const appState = {
-    darkMode: true,
+    darkMode: false,
     showComments: true,
     completedModules: new Set(),
     completedQuizzes: new Set(),
@@ -16,7 +14,6 @@ const appState = {
     moduleModes: new Map(),
     searchTerm: '',
     difficultyFilter: 'all',
-    categoryFilter: 'all',
     glossarySearch: '',
     glossaryCategory: 'all',
     currentFlashcard: 0,
@@ -27,36 +24,13 @@ const appState = {
     flashcardSession: [],
     flashcardSessionLength: 20,
     theme: 'default',
-    accentTheme: 'indigo',
     fontScale: 'base',
     dailyChallengeId: null,
     dailyChallengeDate: null,
     studyTipId: null,
     weeklyGoal: 5,
     hideCompletedModules: false,
-    compactLayout: false,
-    cardDensity: 'standard',
-    reduceMotion: false,
-    highContrast: false,
-    studyPlan: null,
-    accountProfile: null,
-    currentModulePage: 1,
-    promptTimers: new Map(),
-    playground: {
-        code: '',
-        sample: DEFAULT_PLAYGROUND_SAMPLE,
-        output: '// Output will appear here',
-        language: 'java',
-        isRunning: false
-    },
-    autoRotatePaused: false
-};
-
-const interactiveQuizState = {
-    moduleId: null,
-    questions: [],
-    current: 0,
-    answers: []
+    compactLayout: false
 };
 
 // =================================
@@ -68,50 +42,16 @@ const CONSTANTS = {
     TOTAL_MODULES: 34
 };
 
-const QUIZ_CONFIG = {
-    poolSize: 15,
-    questionsPerAttempt: 4
-};
-
-const MODULES_PER_PAGE = 5;
-
-const DEFAULT_DISTRACTOR_TEXTS = [
-    'Review the glossary entry for clarity.',
-    'Revisit the flashcards for this module.',
-    'Trace through the annotated code example.',
-    'Discuss this concept with a peer.'
-];
-
 const STORAGE_KEYS = {
     STUDY_METRICS: 'javaDSAStudyMetrics',
-    STUDY_HABIT: 'javaDSAStudyHabit',
-    NOTES: 'javaDSANotes'
+    STUDY_HABIT: 'javaDSAStudyHabit'
 };
-
-const INLINE_GLOSSARY_LIMIT = 60;
-const TIMED_PROMPT_SECONDS = 20 * 60;
-
-const RESET_FLAGS = {
-    STUDY_TIMES: 'javaDSAResetTimesV2'
-};
-
-const SUPPORT_EMAIL = 'eddyarriaga06@gmail.com';
-const CODE_RUNNER_ENDPOINT = 'https://emkc.org/api/v2/piston/execute'; // EMKC Piston open-source runner
-const CODE_RUNNER_CONFIG = {
-    java: { language: 'java', version: '15.0.2', filename: 'Main.java' },
-    python: { language: 'python', version: '3.10.0', filename: 'main.py' },
-    cpp: { language: 'cpp', version: '10.2.0', filename: 'Main.cpp' },
-    javascript: { language: 'javascript', version: '18.15.0', filename: 'main.js' }
-};
-
-const ACCOUNT_API_ENDPOINT = '';
 
 const SUPPORTED_LANGUAGES = {
     java: { name: 'Java', icon: '☕' },
     cpp: { name: 'C++', icon: '⚡' },
     python: { name: 'Python', icon: '🐍' },
-    javascript: { name: 'JavaScript', icon: '🟨' },
-    assembly: { name: 'Assembly (x86-32)', icon: '⚙️' }
+    javascript: { name: 'JavaScript', icon: '🟨' }
 };
 
 const CODE_MODES = {
@@ -137,560 +77,6 @@ const FONT_SCALE_CLASS_MAP = {
     spacious: 'font-scale-spacious'
 };
 const FONT_SCALE_CLASSES = Object.values(FONT_SCALE_CLASS_MAP);
-const ACCENT_THEME_OPTIONS = ['indigo', 'emerald', 'amber', 'rose'];
-const ACCENT_THEME_CLASSES = ACCENT_THEME_OPTIONS.map(option => `accent-${option}`);
-const CARD_DEPTH_OPTIONS = ['flat', 'standard', 'lifted'];
-const CARD_DEPTH_CLASSES = CARD_DEPTH_OPTIONS.map(option => `card-depth-${option}`);
-const INTERVIEW_PAGE_SIZE = 2;
-let interviewPage = 1;
-let rotationIntervalId = null;
-const DONATION_URL = 'https://www.paypal.com/donate?business=your.email@paypal.com&amount=1.00&currency_code=USD&item_name=Java%20DSA%20Notes%20Support';
-const MODULE_CATEGORIES = ['all', 'dsa', 'discrete', 'systems'];
-const AUTO_ROTATE_MS = 9000;
-const STRUCTURE_KEYWORDS = {
-    array: ['array', 'string'],
-    stack: ['stack'],
-    queue: ['queue'],
-    heap: ['heap'],
-    graph: ['graph'],
-    trie: ['trie'],
-    tree: ['tree', 'bst'],
-    avl: ['avl', 'balanced tree'],
-    hashing: ['hash'],
-    heapsort: ['sort'],
-    rbtree: ['red-black', 'rb tree'],
-    segment: ['segment tree', 'range'],
-    circuits: ['circuit'],
-    greedy: ['greedy', 'interval']
-};
-
-const interviewExamples = [
-    {
-        id: 'two-sum',
-        title: 'Two Sum (Hash Map)',
-        language: 'Java',
-        difficulty: 'Easy',
-        code: `class TwoSum {
-    public int[] twoSum(int[] nums, int target) {
-        Map<Integer, Integer> seen = new HashMap<>();
-        for (int i = 0; i < nums.length; i++) {
-            int complement = target - nums[i];
-            if (seen.containsKey(complement)) {
-                return new int[]{seen.get(complement), i};
-            }
-            seen.put(nums[i], i);
-        }
-        return new int[]{-1, -1};
-    }
-}`
-    },
-    {
-        id: 'valid-parens',
-        title: 'Valid Parentheses (Stack)',
-        language: 'Java',
-        difficulty: 'Easy',
-        code: `class Solution {
-    public boolean isValid(String s) {
-        Map<Character, Character> pairs = Map.of(')', '(', ']', '[', '}', '{');
-        Deque<Character> stack = new ArrayDeque<>();
-        for (char c : s.toCharArray()) {
-            if (pairs.containsKey(c)) {
-                if (stack.isEmpty() || stack.pop() != pairs.get(c)) return false;
-            } else {
-                stack.push(c);
-            }
-        }
-        return stack.isEmpty();
-    }
-}`
-    },
-    {
-        id: 'merge-intervals',
-        title: 'Merge Intervals',
-        language: 'Java',
-        difficulty: 'Medium',
-        code: `class Solution {
-    public int[][] merge(int[][] intervals) {
-        Arrays.sort(intervals, Comparator.comparingInt(a -> a[0]));
-        List<int[]> merged = new ArrayList<>();
-        for (int[] interval : intervals) {
-            if (merged.isEmpty() || merged.get(merged.size() - 1)[1] < interval[0]) {
-                merged.add(interval);
-            } else {
-                merged.get(merged.size() - 1)[1] =
-                    Math.max(merged.get(merged.size() - 1)[1], interval[1]);
-            }
-        }
-        return merged.toArray(new int[merged.size()][]);
-    }
-}`
-    },
-    {
-        id: 'bfs-level-order',
-        title: 'Binary Tree Level Order (BFS)',
-        language: 'Java',
-        difficulty: 'Medium',
-        code: `class Solution {
-    public List<List<Integer>> levelOrder(TreeNode root) {
-        List<List<Integer>> levels = new ArrayList<>();
-        if (root == null) return levels;
-        Queue<TreeNode> q = new ArrayDeque<>();
-        q.offer(root);
-        while (!q.isEmpty()) {
-            int size = q.size();
-            List<Integer> level = new ArrayList<>();
-            for (int i = 0; i < size; i++) {
-                TreeNode node = q.poll();
-                level.add(node.val);
-                if (node.left != null) q.offer(node.left);
-                if (node.right != null) q.offer(node.right);
-            }
-            levels.add(level);
-        }
-        return levels;
-    }
-}`
-    },
-    {
-        id: 'lrucache',
-        title: 'LRU Cache',
-        language: 'Java',
-        difficulty: 'Medium',
-        code: `class LRUCache {
-    private final int cap;
-    private final Map<Integer, Node> map = new HashMap<>();
-    private final Node head = new Node(0, 0);
-    private final Node tail = new Node(0, 0);
-
-    static class Node {
-        int k, v; Node prev, next;
-        Node(int k, int v) { this.k = k; this.v = v; }
-    }
-
-    public LRUCache(int capacity) {
-        this.cap = capacity;
-        head.next = tail; tail.prev = head;
-    }
-
-    public int get(int key) {
-        if (!map.containsKey(key)) return -1;
-        Node node = map.get(key);
-        moveToFront(node);
-        return node.v;
-    }
-
-    public void put(int key, int value) {
-        if (map.containsKey(key)) {
-            Node node = map.get(key);
-            node.v = value;
-            moveToFront(node);
-        } else {
-            if (map.size() == cap) {
-                Node lru = tail.prev;
-                remove(lru);
-                map.remove(lru.k);
-            }
-            Node fresh = new Node(key, value);
-            insertAfter(head, fresh);
-            map.put(key, fresh);
-        }
-    }
-
-    private void moveToFront(Node node) {
-        remove(node);
-        insertAfter(head, node);
-    }
-
-    private void remove(Node node) {
-        node.prev.next = node.next;
-        node.next.prev = node.prev;
-    }
-
-    private void insertAfter(Node prev, Node node) {
-        node.next = prev.next;
-        node.prev = prev;
-        prev.next.prev = node;
-        prev.next = node;
-    }
-}`
-    },
-    {
-        id: 'meeting-rooms',
-        title: 'Meeting Rooms (Greedy)',
-        language: 'Python',
-        difficulty: 'Medium',
-        code: `import heapq
-
-def min_meeting_rooms(intervals):
-    intervals.sort(key=lambda x: x[0])
-    h = []
-    for s, e in intervals:
-        if h and h[0] <= s:
-            heapq.heapreplace(h, e)
-        else:
-            heapq.heappush(h, e)
-    return len(h)
-
-print(min_meeting_rooms([[0,30],[5,10],[15,20]]))  # 2`
-    }
-];
-
-const notesLibrary = [
-    {
-        id: 'arrays-basics',
-        title: 'Arrays & Strings Fundamentals',
-        category: 'Foundations',
-        summary: 'Cheat sheet of array operations, common pitfalls, and string helpers.',
-        pages: 6,
-        url: '#'
-    },
-    {
-        id: 'stacks-queues',
-        title: 'Stacks vs Queues',
-        category: 'Foundations',
-        summary: 'Use-cases, diagrams, and practice prompts with complexity tables.',
-        pages: 5,
-        url: '#'
-    },
-    {
-        id: 'trees-overview',
-        title: 'Binary Trees & Traversals',
-        category: 'Trees',
-        summary: 'DFS/BFS orders, recursion templates, and interview-ready patterns.',
-        pages: 7,
-        url: '#'
-    },
-    {
-        id: 'hashing',
-        title: 'Hash Maps & Sets',
-        category: 'Hashing',
-        summary: 'Collision strategies, load factor intuition, and sample walkthroughs.',
-        pages: 5,
-        url: '#'
-    },
-    {
-        id: 'graphs',
-        title: 'Graphs & Traversals',
-        category: 'Graphs',
-        summary: 'Adjacency list vs matrix, BFS/DFS templates, and cycle detection notes.',
-        pages: 8,
-        url: '#'
-    }
-];
-
-const notesCategories = ['All', ...Array.from(new Set(notesLibrary.map(n => n.category)))];
-let activeNotesCategory = 'All';
-
-function normalizeCategoryFilter(value) {
-    return MODULE_CATEGORIES.includes(value) ? value : 'all';
-}
-
-const DIFFICULTY_SECTIONS = {
-    beginner: { label: 'Beginner Track', icon: '🌱' },
-    intermediate: { label: 'Intermediate Trail', icon: '⚙️' },
-    advanced: { label: 'Advanced Summit', icon: '🚀' }
-};
-const studyPlanSelection = { pace: null, focus: null, style: null };
-const STUDY_PLAN_LABELS = {
-    pace: {
-        light: 'Light Pace',
-        balanced: 'Balanced',
-        intense: 'Accelerated'
-    },
-    focus: {
-        foundations: 'Core Concepts',
-        interview: 'Interview Readiness',
-        projects: 'Project Driven'
-    },
-    style: {
-        visual: 'Visual',
-        practice: 'Practice Heavy',
-        blended: 'Blended Approach'
-    }
-};
-
-const BASE_PLAYGROUND_SNIPPETS = {
-    'hello-world': {
-        label: 'Hello World',
-        codeByLanguage: {
-            java: `public class Main {
-    public static void main(String[] args) {
-        System.out.println("Hello, Java explorer!");
-    }
-}`,
-            python: `def main():
-    print("Hello, Python explorer!")
-
-
-if __name__ == "__main__":
-    main()
-`,
-            cpp: `#include <iostream>
-
-int main() {
-    std::cout << "Hello, C++ explorer!" << std::endl;
-    return 0;
-}
-`,
-            javascript: `function main() {
-    console.log("Hello, JavaScript explorer!");
-}
-
-main();
-`
-        }
-    },
-    'arrays-primer': {
-        label: 'Arrays Primer',
-        codeByLanguage: {
-            java: `import java.util.Arrays;
-
-public class Main {
-    public static void main(String[] args) {
-        int[] numbers = {3, 1, 4, 1, 5, 9};
-        Arrays.sort(numbers);
-        int largest = numbers[numbers.length - 1];
-        System.out.println("Sorted: " + Arrays.toString(numbers));
-        System.out.println("Largest value: " + largest);
-    }
-}`,
-            python: `def arrays_primer():
-    numbers = [3, 1, 4, 1, 5, 9]
-    numbers.sort()
-    largest = numbers[-1]
-    print(f"Sorted: {numbers}")
-    print(f"Largest value: {largest}")
-
-
-if __name__ == "__main__":
-    arrays_primer()
-`,
-            cpp: `#include <algorithm>
-#include <iostream>
-#include <vector>
-
-int main() {
-    std::vector<int> numbers = {3, 1, 4, 1, 5, 9};
-    std::sort(numbers.begin(), numbers.end());
-    int largest = numbers.back();
-
-    std::cout << "Sorted: ";
-    for (size_t i = 0; i < numbers.size(); ++i) {
-        std::cout << numbers[i] << (i + 1 == numbers.size() ? "" : ", ");
-    }
-    std::cout << std::endl;
-    std::cout << "Largest value: " << largest << std::endl;
-    return 0;
-}
-`,
-            javascript: `function arraysPrimer() {
-    const numbers = [3, 1, 4, 1, 5, 9];
-    numbers.sort((a, b) => a - b);
-    const largest = numbers[numbers.length - 1];
-    console.log("Sorted:", numbers.join(", "));
-    console.log("Largest value:", largest);
-}
-
-arraysPrimer();
-`
-        }
-    },
-    'loops-and-conditions': {
-        label: 'Loops & Conditions',
-        codeByLanguage: {
-            java: `public class Main {
-    public static void main(String[] args) {
-        int focusMinutes = 0;
-        for (int day = 1; day <= 7; day++) {
-            focusMinutes += 25;
-            if (day % 2 == 0) {
-                System.out.println("Day " + day + ": recovery + review");
-            } else {
-                System.out.println("Day " + day + ": deep practice session");
-            }
-        }
-        System.out.println("Weekly focus minutes: " + focusMinutes);
-    }
-}`,
-            python: `def loops_and_conditions():
-    focus_minutes = 0
-    for day in range(1, 8):
-        focus_minutes += 25
-        if day % 2 == 0:
-            print(f"Day {day}: recovery + review")
-        else:
-            print(f"Day {day}: deep practice session")
-    print(f"Weekly focus minutes: {focus_minutes}")
-
-
-if __name__ == "__main__":
-    loops_and_conditions()
-`,
-            cpp: `#include <iostream>
-#include <string>
-
-int main() {
-    int focusMinutes = 0;
-    for (int day = 1; day <= 7; day++) {
-        focusMinutes += 25;
-        if (day % 2 == 0) {
-            std::cout << "Day " << day << ": recovery + review" << std::endl;
-        } else {
-            std::cout << "Day " << day << ": deep practice session" << std::endl;
-        }
-    }
-    std::cout << "Weekly focus minutes: " << focusMinutes << std::endl;
-    return 0;
-}
-`,
-            javascript: `function loopsAndConditions() {
-    let focusMinutes = 0;
-    for (let day = 1; day <= 7; day++) {
-        focusMinutes += 25;
-        if (day % 2 === 0) {
-            console.log(\`Day \${day}: recovery + review\`);
-        } else {
-            console.log(\`Day \${day}: deep practice session\`);
-        }
-    }
-    console.log("Weekly focus minutes:", focusMinutes);
-}
-
-loopsAndConditions();
-`
-        }
-    },
-    'class-basics': {
-        label: 'Class Basics',
-        codeByLanguage: {
-            java: `public class Main {
-    static class ModuleProgress {
-        private final String title;
-        private int completedLessons;
-
-        ModuleProgress(String title) {
-            this.title = title;
-        }
-
-        void markLesson() {
-            completedLessons++;
-            System.out.println("Completed lesson " + completedLessons + " in " + title);
-        }
-    }
-
-    public static void main(String[] args) {
-        ModuleProgress arrays = new ModuleProgress("Arrays & Strings");
-        arrays.markLesson();
-        arrays.markLesson();
-    }
-}`,
-            python: `class ModuleProgress:
-    def __init__(self, title):
-        self.title = title
-        self.completed_lessons = 0
-
-    def mark_lesson(self):
-        self.completed_lessons += 1
-        print(f"Completed lesson {self.completed_lessons} in {self.title}")
-
-
-if __name__ == "__main__":
-    arrays = ModuleProgress("Arrays & Strings")
-    arrays.mark_lesson()
-    arrays.mark_lesson()
-`,
-            cpp: `#include <iostream>
-#include <string>
-
-class ModuleProgress {
-public:
-    explicit ModuleProgress(const std::string& title) : title(title), completedLessons(0) {}
-
-    void markLesson() {
-        completedLessons++;
-        std::cout << "Completed lesson " << completedLessons << " in " << title << std::endl;
-    }
-
-private:
-    std::string title;
-    int completedLessons;
-};
-
-int main() {
-    ModuleProgress arrays("Arrays & Strings");
-    arrays.markLesson();
-    arrays.markLesson();
-    return 0;
-}
-`,
-            javascript: `class ModuleProgress {
-    constructor(title) {
-        this.title = title;
-        this.completedLessons = 0;
-    }
-
-    markLesson() {
-        this.completedLessons += 1;
-        console.log(\`Completed lesson \${this.completedLessons} in \${this.title}\`);
-    }
-}
-
-const arrays = new ModuleProgress("Arrays & Strings");
-arrays.markLesson();
-arrays.markLesson();
-`
-        }
-    }
-};
-
-function buildPlaygroundSnippetLibrary(modulesList = []) {
-    const snippets = {};
-    modulesList.forEach(module => {
-        const snippetId = `module-${module.id}`;
-        const codeByLanguage = {};
-        const languages = Object.keys(SUPPORTED_LANGUAGES);
-
-        languages.forEach(language => {
-            const sample = (module.codeExamples && module.codeExamples[language]) || module.codeExample || '';
-            if (!sample || typeof sample !== 'string') return;
-            const content = language === 'java'
-                ? ensureRunnableJava(sample, module.title)
-                : sample;
-            codeByLanguage[language] = content.trim();
-        });
-
-        if (!Object.keys(codeByLanguage).length) return;
-
-        snippets[snippetId] = {
-            label: `${module.title}`,
-            codeByLanguage
-        };
-    });
-    return snippets;
-}
-
-async function fakeAccountAPI(payload) {
-    if (ACCOUNT_API_ENDPOINT) {
-        const response = await fetch(ACCOUNT_API_ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        if (!response.ok) {
-            throw new Error(`Account API failed (${response.status})`);
-        }
-        return response.json();
-    }
-    return new Promise(resolve => {
-        setTimeout(() => {
-            resolve({
-                status: 'ok',
-                profileId: `local-${Date.now()}`,
-                message: 'Profile stored locally. Connect backend to persist.'
-            });
-        }, 400);
-    });
-}
 
 const ACHIEVEMENT_LEVELS = [
     {
@@ -729,7 +115,6 @@ const ACHIEVEMENT_LEVELS = [
         description: 'All modules conquered! Pay it forward by mentoring someone still on the path.',
     }
 ];
-
 
 appState.flashcardSessionLength = FLASHCARD_SESSION_SIZE;
 
@@ -992,81 +377,6 @@ const baseFlashcards = [
         id: 50,
         question: "What is the Knapsack problem?",
         answer: "Optimization problem to choose items with max value and weight <= capacity\nSolved with DP"
-    },
-    {
-        id: 51,
-        question: "What does it mean for a sort to be stable?",
-        answer: "Stable sorts keep equal elements in their original relative order (important for multi-key sorts)."
-    },
-    {
-        id: 52,
-        question: "When would you prefer BFS over DFS?",
-        answer: "Use BFS for shortest path in unweighted graphs and level-order problems; DFS for depth-first exploration and backtracking."
-    },
-    {
-        id: 53,
-        question: "What is a monotonic stack used for?",
-        answer: "Keeps elements in increasing/decreasing order to answer next greater/smaller queries in linear time."
-    },
-    {
-        id: 54,
-        question: "What does in-place mean?",
-        answer: "Algorithm transforms data using O(1) extra space beyond the input (e.g., reversing an array with swaps)."
-    },
-    {
-        id: 55,
-        question: "How does a deque support sliding window minimum/maximum?",
-        answer: "Store candidates in a monotonic deque; pop back while worse, pop front when out of window."
-    },
-    {
-        id: 56,
-        question: "What is a Binary Indexed Tree (Fenwick Tree) good for?",
-        answer: "Supports prefix sums and point updates in O(log n) with less code than a segment tree."
-    },
-    {
-        id: 57,
-        question: "Why do we add a sentinel/dummy node in linked lists?",
-        answer: "It removes head-edge cases so insertions/merges treat every node uniformly."
-    },
-    {
-        id: 58,
-        question: "When do you reach for a heap instead of a balanced BST?",
-        answer: "When you mostly need fast min/max extraction (priority queues) and rarely need ordered iteration."
-    },
-    {
-        id: 59,
-        question: "What is path compression in union-find?",
-        answer: "After finds, reattach nodes directly to the root to flatten the tree and speed future finds."
-    },
-    {
-        id: 60,
-        question: "How does prefix sum help with range queries?",
-        answer: "Precompute cumulative sums so any range [l, r] is O(1): prefix[r] - prefix[l-1]."
-    },
-    {
-        id: 61,
-        question: "What is the purpose of the LPS (prefix) table in KMP?",
-        answer: "It tells where to resume in the pattern after a mismatch, avoiding rechecking characters."
-    },
-    {
-        id: 62,
-        question: "What makes quicksort fast on average?",
-        answer: "Good pivots split the array, yielding ~O(n log n); in-place partitioning keeps space O(1)."
-    },
-    {
-        id: 63,
-        question: "What does tail recursion optimization do?",
-        answer: "Reuses the current stack frame for the final recursive call, reducing stack usage if supported."
-    },
-    {
-        id: 64,
-        question: "Why is immutability helpful in multithreading?",
-        answer: "Immutable objects are safe to share without locks because their state cannot change."
-    },
-    {
-        id: 65,
-        question: "How do you solve Two Sum in linear time?",
-        answer: "Scan once, store seen values in a hash map, and check if target - current exists."
     }
 ];
 
@@ -1327,155 +637,7 @@ const glossaryTerms = [
         term: "Prim’s Algorithm",
         definition: "Greedy algorithm that grows a minimum spanning tree from a starting node.",
         category: "Algorithms"
-    },
-    {
-        term: "Two-Pointer Technique",
-        definition: "Method highlighted in the Arrays & Strings module: move two indices (start/end or slow/fast) through a collection to compare mirrored values, reverse data, or skip work in O(n) time.",
-        category: "Techniques"
-    },
-    {
-        term: "Dummy Head Node",
-        definition: "Linked Lists module pattern where an extra node sits before the real head so insert/merge operations treat every node uniformly without special cases.",
-        category: "Data Structures"
-    },
-    {
-        term: "Sliding Window",
-        definition: "Technique from the queues/stacks and searching modules: keep a moving subarray/substring window, expanding/shrinking it to maintain constraints (e.g., sum, frequency) in linear time.",
-        category: "Techniques"
-    },
-    {
-        term: "Segment Tree",
-        definition: "Advanced data structure taught in Segment Trees & Range Queries that stores aggregated values for array segments so range queries and point updates run in O(log n).",
-        category: "Data Structures"
-    },
-    {
-        term: "Disjoint Set Union (Union-Find)",
-        definition: "Structure used in the Disjoint Set Union module to track connectivity between elements using path compression and union-by-rank for near-O(1) find/union.",
-        category: "Data Structures"
-    },
-    {
-        term: "Knuth-Morris-Pratt (KMP)",
-        definition: "String Pattern Matching module algorithm that uses a longest-prefix-suffix table to resume comparisons without re-checking characters, enabling O(n + m) search.",
-        category: "Algorithms"
-    },
-    {
-        term: "Stable Sort",
-        definition: "A sorting algorithm that preserves the relative order of equal elements—critical when sorting by multiple keys.",
-        category: "Algorithms"
-    },
-    {
-        term: "Monotonic Stack",
-        definition: "Stack kept in increasing or decreasing order to answer next greater/smaller queries in O(n).",
-        category: "Techniques"
-    },
-    {
-        term: "Deque",
-        definition: "Double-ended queue supporting push/pop at both ends; used for sliding window min/max.",
-        category: "Data Structures"
-    },
-    {
-        term: "Binary Indexed Tree",
-        definition: "Fenwick Tree supporting prefix sums and point updates in O(log n) with low memory.",
-        category: "Data Structures"
-    },
-    {
-        term: "In-Place Algorithm",
-        definition: "Algorithm that transforms data using O(1) or constant extra space beyond the input.",
-        category: "Techniques"
-    },
-    {
-        term: "Immutability",
-        definition: "Property where an object's state cannot change after creation, simplifying reasoning and thread safety.",
-        category: "Concepts"
-    },
-    {
-        term: "Sentinel Node",
-        definition: "Dummy node added to simplify edge cases at list head/tail or tree boundaries.",
-        category: "Data Structures"
-    },
-    {
-        term: "NP-Complete",
-        definition: "Class of problems both in NP and NP-hard; if one has a polynomial-time solution, all do.",
-        category: "Complexity"
-    },
-    {
-        term: "P vs NP",
-        definition: "Open question asking whether every efficiently verifiable problem (NP) is also efficiently solvable (P).",
-        category: "Complexity"
-    },
-    {
-        term: "Greedy Choice Property",
-        definition: "Condition where locally optimal choices lead to a global optimum, enabling greedy algorithms.",
-        category: "Concepts"
-    },
-    {
-        term: "Overlapping Subproblems",
-        definition: "DP trait where the same subproblems recur, justifying memoization/tabulation.",
-        category: "Techniques"
-    },
-    // Arrays & Strings module (20 terms)
-    { term: "Two-Pointer Swap", definition: "Use a left/right index to swap mirrored characters or values in-place.", category: "Arrays & Strings (Module)" },
-    { term: "Sliding Window Min/Max", definition: "Maintain window bounds while updating a running best (count, sum, freq).", category: "Arrays & Strings (Module)" },
-    { term: "Prefix Check", definition: "Verify a string starts with a pattern before further processing.", category: "Arrays & Strings (Module)" },
-    { term: "Suffix Check", definition: "Confirm trailing characters match a pattern (file extensions, endings).", category: "Arrays & Strings (Module)" },
-    { term: "Char Frequency Map", definition: "Hash map counting occurrences of characters for anagram or uniqueness checks.", category: "Arrays & Strings (Module)" },
-    { term: "Distinct Window", definition: "Sliding window ensuring all characters are unique before expansion.", category: "Arrays & Strings (Module)" },
-    { term: "Palindrome Normalization", definition: "Lowercase and strip non-alphanumerics prior to palindrome testing.", category: "Arrays & Strings (Module)" },
-    { term: "In-Place Reverse", definition: "Swap ends of an array/string without allocating extra memory.", category: "Arrays & Strings (Module)" },
-    { term: "Merge Two Sorted Arrays", definition: "Walk two sorted arrays to build a combined sorted result in linear time.", category: "Arrays & Strings (Module)" },
-    { term: "Two-Sum with Hashing", definition: "Store complements in a map to find pairs summing to a target in O(n).", category: "Arrays & Strings (Module)" },
-    { term: "Kadane’s Algorithm", definition: "Track running max subarray sum with O(1) extra space.", category: "Arrays & Strings (Module)" },
-    { term: "Dutch Flag Partition", definition: "Three-way partitioning to group values (e.g., 0/1/2) in one pass.", category: "Arrays & Strings (Module)" },
-    { term: "Substring Search", definition: "Scan for a pattern in text; naive, KMP, or sliding window approaches.", category: "Arrays & Strings (Module)" },
-    { term: "Rotation Check", definition: "Determine if one string is a rotation of another using concatenation.", category: "Arrays & Strings (Module)" },
-    { term: "Prefix Sum Array", definition: "Cumulative sums enabling O(1) range queries after O(n) setup.", category: "Arrays & Strings (Module)" },
-    { term: "Balanced Brackets (String)", definition: "Verify bracket order using a stack and mapping of open→close.", category: "Arrays & Strings (Module)" },
-    { term: "Array Deduplication", definition: "Remove duplicates by overwriting in-place with two pointers.", category: "Arrays & Strings (Module)" },
-    { term: "Stable Sort by Key", definition: "Sort by secondary key while keeping equal primary-order intact.", category: "Arrays & Strings (Module)" },
-    { term: "Character Classification", definition: "Check char type (alpha, digit, whitespace) before processing.", category: "Arrays & Strings (Module)" },
-    { term: "Run-Length Encoding", definition: "Compress repeated characters as count+char while scanning once.", category: "Arrays & Strings (Module)" },
-    // Stacks & Queues module (20 terms)
-    { term: "Push/Pop Semantics", definition: "Stack operations adding/removing from the same end (LIFO).", category: "Stacks & Queues (Module)" },
-    { term: "Peek Safety", definition: "Check emptiness before peeking to avoid exceptions.", category: "Stacks & Queues (Module)" },
-    { term: "Queue Enqueue/Dequeue", definition: "FIFO operations add to back, remove from front.", category: "Stacks & Queues (Module)" },
-    { term: "Deque for Sliding Window", definition: "Use a monotonic deque to track best candidates per window.", category: "Stacks & Queues (Module)" },
-    { term: "Min Stack", definition: "Augment stack to retrieve current minimum in O(1).", category: "Stacks & Queues (Module)" },
-    { term: "Undo Stack", definition: "Store prior states to roll back changes (text editors, commands).", category: "Stacks & Queues (Module)" },
-    { term: "BFS Queue", definition: "Breadth-first traversal uses a queue to visit neighbors level by level.", category: "Stacks & Queues (Module)" },
-    { term: "Prefix Evaluation", definition: "Evaluate prefix expressions using a stack (operators before operands).", category: "Stacks & Queues (Module)" },
-    { term: "Infix to Postfix", definition: "Convert expressions with a stack to manage operator precedence.", category: "Stacks & Queues (Module)" },
-    { term: "Parentheses Validation", definition: "Use a stack of opens to ensure each close matches type/order.", category: "Stacks & Queues (Module)" },
-    { term: "Circular Queue", definition: "Fixed-size queue that wraps indices to reuse freed slots.", category: "Stacks & Queues (Module)" },
-    { term: "Queue Backpressure", definition: "Slow producers when consumer lags to avoid overflow.", category: "Stacks & Queues (Module)" },
-    { term: "DFS with Stack", definition: "Iterative DFS using an explicit stack instead of recursion.", category: "Stacks & Queues (Module)" },
-    { term: "Call Stack Frames", definition: "Each function call pushes a frame; recursion deepens the stack.", category: "Stacks & Queues (Module)" },
-    { term: "Top of Stack (TOS)", definition: "Pointer/index to the next push/pop position.", category: "Stacks & Queues (Module)" },
-    { term: "Queue Throughput", definition: "Rate of items processed per time unit; impacted by batching.", category: "Stacks & Queues (Module)" },
-    { term: "Priority Queue via Heap", definition: "Back a priority queue with a heap for O(log n) updates.", category: "Stacks & Queues (Module)" },
-    { term: "Monotonic Increasing Stack", definition: "Stack that keeps elements in non-decreasing order to find next greater.", category: "Stacks & Queues (Module)" },
-    { term: "Queue Drain", definition: "Process all items until empty; common in event loops.", category: "Stacks & Queues (Module)" },
-    { term: "Stack Overflow (Recursion)", definition: "Exceeding call stack depth causes a runtime stack overflow error.", category: "Stacks & Queues (Module)" },
-    // Searching Algorithms module (20 terms)
-    { term: "Binary Search Invariant", definition: "Maintain sorted half where target can still exist; shrink bounds accordingly.", category: "Searching Algorithms (Module)" },
-    { term: "Mid Overflow Guard", definition: "Compute mid as left + (right-left)/2 to avoid integer overflow.", category: "Searching Algorithms (Module)" },
-    { term: "Lower Bound", definition: "First index where value is not less than target (>=).", category: "Searching Algorithms (Module)" },
-    { term: "Upper Bound", definition: "First index where value is greater than target (>).", category: "Searching Algorithms (Module)" },
-    { term: "Infinite Array Search", definition: "Expand bounds exponentially, then binary search within.", category: "Searching Algorithms (Module)" },
-    { term: "Rotated Array Search", definition: "Binary search while detecting which half is sorted each step.", category: "Searching Algorithms (Module)" },
-    { term: "2D Matrix Search", definition: "Treat rows/cols as sorted lists; walk from corner or flatten index math.", category: "Searching Algorithms (Module)" },
-    { term: "Interpolation Search", definition: "Estimate position by value distribution; good for uniformly distributed data.", category: "Searching Algorithms (Module)" },
-    { term: "Ternary Search", definition: "Split search space into three parts for unimodal functions.", category: "Searching Algorithms (Module)" },
-    { term: "Exponential Search", definition: "Double range size until surpassing target, then binary search range.", category: "Searching Algorithms (Module)" },
-    { term: "Jump Search", definition: "Skip ahead fixed steps, then linear scan within the block.", category: "Searching Algorithms (Module)" },
-    { term: "Binary Search on Answer", definition: "Search over solution space (e.g., capacity, time) not just array indices.", category: "Searching Algorithms (Module)" },
-    { term: "Monotonic Predicate", definition: "Condition that flips once; enables binary search over answers.", category: "Searching Algorithms (Module)" },
-    { term: "Peak Element Search", definition: "Find local maximum by comparing mid with neighbors; narrow to uphill side.", category: "Searching Algorithms (Module)" },
-    { term: "Bitonic Array Search", definition: "Find peak in a bitonic array then binary search both halves.", category: "Searching Algorithms (Module)" },
-    { term: "Nearest Value Search", definition: "Return closest element; track best candidate during binary search.", category: "Searching Algorithms (Module)" },
-    { term: "Duplicate Handling", definition: "Adjust bounds carefully when equals appear to avoid infinite loops.", category: "Searching Algorithms (Module)" },
-    { term: "Search Insert Position", definition: "Return index where target would be inserted to keep order.", category: "Searching Algorithms (Module)" },
-    { term: "Frequency Binary Search", definition: "Count occurrences by finding first and last positions via binary search.", category: "Searching Algorithms (Module)" },
-    { term: "Binary Search Templates", definition: "Predefined loop patterns to avoid off-by-one errors.", category: "Searching Algorithms (Module)" }
+    }
 ];
 
 const glossaryCategories = [
@@ -1485,81 +647,982 @@ const glossaryCategories = [
 
 
 // Quiz Data
-let quizData = {};
-
-
+const quizData = {
+    'arrays-strings': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "What is the time complexity of accessing an element in an array by its index?",
+                    options: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+                    correct: 0,
+                    explanation: "Random access arrays compute the memory address via base + index × element_size, so lookup cost is constant."
+                },
+                {
+                    id: 2,
+                    question: "Which technique is most efficient for checking if a string is a palindrome?",
+                    options: ["Reverse and compare", "Two pointers", "Recursion", "Stack-based approach"],
+                    correct: 1,
+                    explanation: "Two pointers toggled inward compare characters in O(n) time while keeping O(1) extra memory."
+                },
+                {
+                    id: 3,
+                    question: "Sliding window works best when:",
+                    options: ["You need factorial permutations", "The subarray size or constraint can be updated incrementally", "Data is a tree", "The input is immutable"],
+                    correct: 1,
+                    explanation: "Sliding windows reuse previous work (add/remove elements) making contiguous-range problems linear rather than quadratic."
+                }
+            ]
+        }]
+    },
+    'linked-lists': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Why can linked lists grow or shrink more easily than arrays?",
+                    options: ["They use less memory", "Elements live on the heap and nodes connect via pointers", "They store indices", "They are cache-optimized"],
+                    correct: 1,
+                    explanation: "Each node is dynamically allocated and linked, so insertions/deletions adjust pointers without shifting contiguous memory."
+                },
+                {
+                    id: 2,
+                    question: "Floyd's cycle detection works because the fast pointer:",
+                    options: ["Moves randomly", "Moves twice as fast and therefore laps the slow pointer in a cycle", "Starts at the cycle entry", "Checks node values"],
+                    correct: 1,
+                    explanation: "The fast pointer gains one node on the slow pointer each iteration, so they eventually meet if a loop exists."
+                },
+                {
+                    id: 3,
+                    question: "Reversing a singly linked list in-place requires:",
+                    options: ["Three pointers to rewire next references iteratively", "Recursive stack only", "Changing head value only", "Doubly linked nodes"],
+                    correct: 0,
+                    explanation: "Prev/current/nextTemp allow you to redirect each node's next pointer while progressing through the list once."
+                }
+            ]
+        }]
+    },
+    'stacks-queues': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Which data structure best validates balanced parentheses?",
+                    options: ["Stack", "Queue", "Set", "Heap"],
+                    correct: 0,
+                    explanation: "A stack mirrors nesting depth—push for '(' and pop for ')'—so mismatches surface immediately."
+                },
+                {
+                    id: 2,
+                    question: "Why does BFS depend on FIFO order?",
+                    options: ["It mimics recursion", "It must explore closest nodes first", "It sorts nodes", "It caches edges"],
+                    correct: 1,
+                    explanation: "Level-order exploration requires removing nodes in the same order they were discovered, which a queue guarantees."
+                },
+                {
+                    id: 3,
+                    question: "Implementing a queue with two stacks yields what amortized complexity for enqueue/dequeue?",
+                    options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+                    correct: 0,
+                    explanation: "While elements occasionally move between stacks, each element is transferred at most twice, leading to amortized O(1)."
+                }
+            ]
+        }]
+    },
+    'trees-basics': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "The height of a binary tree equals:",
+                    options: ["Total nodes", "Edges on the longest root-to-leaf path", "Number of leaves", "Depth of minimum node"],
+                    correct: 1,
+                    explanation: "Height measures the depth of the deepest leaf and dictates recursion depth and balance reasoning."
+                },
+                {
+                    id: 2,
+                    question: "In-order traversal of a BST yields:",
+                    options: ["Random order", "Sorted ascending keys", "Post-order sequence", "Only leaf nodes"],
+                    correct: 1,
+                    explanation: "Left subtree < root < right subtree, so visiting them in that order produces sorted keys."
+                },
+                {
+                    id: 3,
+                    question: "A full binary tree is defined by:",
+                    options: ["Every node has 0 or 2 children", "Perfect balance", "Only leaves at last level", "All nodes same value"],
+                    correct: 0,
+                    explanation: "Full trees forbid nodes with a single child, which helps when reasoning about structure or converting to arrays."
+                }
+            ]
+        }]
+    },
+    'hash-tables': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "The load factor of a hash table measures:",
+                    options: ["Average probe length", "Entries divided by bucket count", "Number of collisions", "Memory usage"],
+                    correct: 1,
+                    explanation: "Load factor α = n / m drives when to resize; keeping α bounded retains O(1) average operations."
+                },
+                {
+                    id: 2,
+                    question: "Separate chaining stores collisions by:",
+                    options: ["Linear probing", "Arrays of buckets stored on disk", "Secondary structures (lists/trees) per bucket", "Doubling key size"],
+                    correct: 2,
+                    explanation: "Each bucket points to a linked list or balanced tree containing all keys hashing to that bucket."
+                },
+                {
+                    id: 3,
+                    question: "Open addressing requires careful handling of deletes because:",
+                    options: ["Memory leaks occur", "Removed slots break probe sequences unless marked as tombstones", "Load factor resets", "Keys resort automatically"],
+                    correct: 1,
+                    explanation: "Linear/quad probing relies on contiguous probes; marking deleted slots prevents search termination before real entries."
+                }
+            ]
+        }]
+    },
+    'heaps': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "A binary heap is stored efficiently in an array because:",
+                    options: ["It sorts automatically", "Parent/child indices follow simple math (i→2i+1/2i+2)", "It needs pointers", "Heapify needs recursion"],
+                    correct: 1,
+                    explanation: "Heap nodes correspond to contiguous indices, so tree relationships derive from arithmetic rather than explicit references."
+                },
+                {
+                    id: 2,
+                    question: "Build-heap via bottom-up heapify runs in:",
+                    options: ["O(n)", "O(n log n)", "O(log n)", "O(1)"],
+                    correct: 0,
+                    explanation: "Most nodes are near the leaves, so their heapify cost is small; summing costs yields linear time."
+                },
+                {
+                    id: 3,
+                    question: "Heaps underpin priority queues because they:",
+                    options: ["Maintain strict sorting", "Allow fast retrieval and adjustment of highest-priority element", "Use BST rotations", "Guarantee O(1) deletion"],
+                    correct: 1,
+                    explanation: "The max/min sits at the root (O(1) access) and adjustments only traverse tree height (O(log n))."
+                }
+            ]
+        }]
+    },
+    'sorting-algorithms': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Which algorithm is stable and always O(n log n)?",
+                    options: ["Merge Sort", "Quick Sort", "Heap Sort", "Shell Sort"],
+                    correct: 0,
+                    explanation: "Merge sort splits/merges deterministically so runtime never degrades to quadratic and ties preserve order."
+                },
+                {
+                    id: 2,
+                    question: "Why does quick sort degrade on already sorted arrays with naive pivot choice?",
+                    options: ["Recursion depth stays constant", "Partitions become unbalanced (n-1 vs 0 elements)", "Randomization fails", "It copies too much"],
+                    correct: 1,
+                    explanation: "Picking first or last element as pivot yields worst-case recursion depth n and total work O(n²)."
+                },
+                {
+                    id: 3,
+                    question: "Counting/Radix sorts beat comparison sorts when:",
+                    options: ["Keys have bounded integer ranges or fixed digit count", "Data is unsorted text", "Floating numbers appear", "You need in-place sort"],
+                    correct: 0,
+                    explanation: "They leverage key structure instead of comparisons, achieving near O(n) time when the domain is limited."
+                }
+            ]
+        }]
+    },
+    'searching-algorithms': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Binary search requires:",
+                    options: ["Linked lists", "Sorted random-access collection", "Hash table", "Tree"],
+                    correct: 1,
+                    explanation: "Halving the search space depends on direct indexing; without sorted order halving is meaningless."
+                },
+                {
+                    id: 2,
+                    question: "Interpolation search excels when:",
+                    options: ["Keys are uniformly distributed numbers", "Data is unsorted", "Strings contain duplicates", "You need recursion"],
+                    correct: 0,
+                    explanation: "The probe position is estimated proportional to value; uniform numeric distributions make this guess accurate."
+                },
+                {
+                    id: 3,
+                    question: "Exponential search is helpful because it:",
+                    options: ["Avoids recursion", "Quickly finds bounds in infinite or unknown-length arrays before binary searching", "Sorts data", "Builds heaps"],
+                    correct: 1,
+                    explanation: "It doubles the index until the target is within range, then performs binary search inside that window."
+                }
+            ]
+        }]
+    },
+    'recursion': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "A base case prevents:",
+                    options: ["Compilation errors", "Infinite recursion and stack overflow", "Tail-call optimization", "Caching"],
+                    correct: 1,
+                    explanation: "Without a terminating condition, calls never stop and the stack eventually exhausts memory."
+                },
+                {
+                    id: 2,
+                    question: "Recursion tree analysis helps by:",
+                    options: ["Comparing algorithms to loops", "Visualizing how many subcalls occur at each level and summing total cost", "Reducing memory", "Guaranteeing optimality"],
+                    correct: 1,
+                    explanation: "Drawing branches per call clarifies total work, which is critical for Master Theorem intuition."
+                },
+                {
+                    id: 3,
+                    question: "Tail recursion allows compilers to:",
+                    options: ["Parallelize automatically", "Reuse the same stack frame for the recursive call", "Skip base cases", "Memoize results"],
+                    correct: 1,
+                    explanation: "If the recursive call is the final action, the current frame need not persist, so optimized runtimes reuse it."
+                }
+            ]
+        }]
+    },
+    'dynamic-programming': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Dynamic programming relies on:",
+                    options: ["Independent subproblems", "Overlapping subproblems and optimal substructure", "Random choices", "Greedy proofs"],
+                    correct: 1,
+                    explanation: "DP caches solutions because subproblems repeat, and combining optimal sub-solutions yields a global optimum."
+                },
+                {
+                    id: 2,
+                    question: "Memoization differs from tabulation because it:",
+                    options: ["Requires iteration", "Evaluates subproblems lazily via recursion and caching", "Uses more memory", "Needs sorted input"],
+                    correct: 1,
+                    explanation: "Top-down memoization only solves subproblems that appear, mirroring the recursive structure exactly."
+                },
+                {
+                    id: 3,
+                    question: "Identifying DP state involves:",
+                    options: ["Finding loops", "Choosing variables that uniquely represent a subproblem", "Sorting arrays", "Optimizing constants"],
+                    correct: 1,
+                    explanation: "State dimensions encode parameters that differentiate subproblems; without clear state boundaries caching fails."
+                }
+            ]
+        }]
+    },
+    'greedy-algorithms': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "The greedy-choice property means:",
+                    options: ["Choices are random", "A locally optimal choice leads to a globally optimal solution", "Problem uses DP", "Inputs are sorted"],
+                    correct: 1,
+                    explanation: "Only when local decisions never preclude optimality can a greedy approach be correct."
+                },
+                {
+                    id: 2,
+                    question: "Huffman coding is greedy because it:",
+                    options: ["Uses recursion", "Repeatedly merges the two least frequent symbols to build an optimal prefix tree", "Sorts words lexicographically", "Requires dynamic programming"],
+                    correct: 1,
+                    explanation: "The algorithm always picks the cheapest two nodes to combine, and this strategy is provably optimal."
+                },
+                {
+                    id: 3,
+                    question: "Counterexamples are crucial when studying greedy algorithms because they:",
+                    options: ["Prove algorithm works", "Demonstrate a single failing case invalidates correctness", "Improve runtime", "Reduce memory"],
+                    correct: 1,
+                    explanation: "Showing one input where greedy fails is enough to reject the algorithm for the general problem."
+                }
+            ]
+        }]
+    },
+    'graph-algorithms': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Breadth-first search on an unweighted graph gives shortest paths because:",
+                    options: ["It uses recursion", "It explores vertices in increasing distance from the source", "It stores parents", "It visits each vertex once"],
+                    correct: 1,
+                    explanation: "By expanding level by level via a queue, the first time you reach a node is the shortest path length."
+                },
+                {
+                    id: 2,
+                    question: "Dijkstra's algorithm fails with negative edges because:",
+                    options: ["Heaps cannot store negatives", "A node may be finalized before discovering a cheaper path through a negative edge", "Graphs become cyclic", "It requires sorted edges"],
+                    correct: 1,
+                    explanation: "Once a vertex is extracted from the min-heap it's assumed optimal; negative edges can invalidate that assumption."
+                },
+                {
+                    id: 3,
+                    question: "Topological ordering exists only for:",
+                    options: ["Undirected graphs", "Connected graphs", "Directed acyclic graphs", "Weighted trees"],
+                    correct: 2,
+                    explanation: "Any directed cycle makes it impossible to linearize edges such that prerequisites precede dependents."
+                }
+            ]
+        }]
+    },
+    'algorithm-analysis': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Big-O expresses:",
+                    options: ["Exact runtime", "Upper bound on asymptotic growth", "Best-case behavior", "Only space complexity"],
+                    correct: 1,
+                    explanation: "Big-O gives an asymptotic ceiling, ignoring constants and lower-order terms."
+                },
+                {
+                    id: 2,
+                    question: "Amortized analysis is useful when:",
+                    options: ["All operations cost the same", "Expensive operations are rare and average cost stays low", "Randomization is used", "Parallelism is required"],
+                    correct: 1,
+                    explanation: "By averaging total cost over a sequence, we show operations like dynamic array resize stay O(1) amortized."
+                },
+                {
+                    id: 3,
+                    question: "If an algorithm has nested loops each running n times, the time complexity is:",
+                    options: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+                    correct: 3,
+                    explanation: "An outer loop of n iterations containing an inner loop of n iterations leads to n × n operations."
+                }
+            ]
+        }]
+    },
+    'tries': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Trie lookups depend on:",
+                    options: ["Number of keys", "Length of the search string", "Hash values", "Balancing rotations"],
+                    correct: 1,
+                    explanation: "Operations traverse one level per character, so complexity is O(L) independent of stored key count."
+                },
+                {
+                    id: 2,
+                    question: "Edges in a trie typically represent:",
+                    options: ["Whole words", "Single characters or digits", "Hash collisions", "Node depth"],
+                    correct: 1,
+                    explanation: "Each edge corresponds to the next symbol in a key, gradually spelling out stored entries."
+                },
+                {
+                    id: 3,
+                    question: "Word termination flags are required because:",
+                    options: ["They speed up traversal", "Many keys share prefixes, so you need to mark where a valid word ends", "They ensure balance", "They compress memory"],
+                    correct: 1,
+                    explanation: "Without explicit end markers, prefixes couldn't represent keys distinct from longer words."
+                }
+            ]
+        }]
+    },
+    'union-find': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Path compression improves which operation?",
+                    options: ["Union", "Find", "Initialization", "Deletion"],
+                    correct: 1,
+                    explanation: "After a find, each node rewires directly to the root, flattening future traversals."
+                },
+                {
+                    id: 2,
+                    question: "Union by rank/size keeps trees shallow by:",
+                    options: ["Sorting nodes", "Attaching the smaller tree beneath the larger root", "Randomly merging sets", "Rehashing elements"],
+                    correct: 1,
+                    explanation: "Always linking the shorter tree under the taller one limits height growth."
+                },
+                {
+                    id: 3,
+                    question: "Kruskal’s MST algorithm uses union-find to:",
+                    options: ["Sort edges", "Detect when adding an edge would create a cycle", "Relax distances", "Count components"],
+                    correct: 1,
+                    explanation: "Before adding an edge, Kruskal checks whether its endpoints are already connected; union-find tracks that connectivity."
+                }
+            ]
+        }]
+    },
+    'segment-trees': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Segment trees shine when you need:",
+                    options: ["Only point queries", "Range queries/updates over an array in logarithmic time", "Graph traversal", "String parsing"],
+                    correct: 1,
+                    explanation: "Each node stores aggregate info for a range, so queries touch O(log n) segments."
+                },
+                {
+                    id: 2,
+                    question: "Lazy propagation allows you to:",
+                    options: ["Delete nodes", "Defer pushing range updates to children until necessary", "Balance the tree", "Reduce depth"],
+                    correct: 1,
+                    explanation: "Instead of visiting all descendants immediately, lazy tags record pending updates, preserving O(log n) complexity."
+                },
+                {
+                    id: 3,
+                    question: "Building a segment tree from scratch costs:",
+                    options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+                    correct: 2,
+                    explanation: "Each element contributes to O(1) nodes, resulting in linear construction time."
+                }
+            ]
+        }]
+    },
+    'binary-indexed-trees': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Fenwick trees are ideal for:",
+                    options: ["Graph adjacency", "Prefix sums and point updates in O(log n)", "Sorting strings", "Tree traversals"],
+                    correct: 1,
+                    explanation: "They maintain cumulative frequency using bit operations to jump between responsible nodes."
+                },
+                {
+                    id: 2,
+                    question: "The least significant set bit (LSB) is used to:",
+                    options: ["Choose pivots", "Move to parent/child indices covering the next range chunk", "Check parity", "Compress data"],
+                    correct: 1,
+                    explanation: "Adding the LSB moves upward, subtracting moves downward along the implicit tree."
+                },
+                {
+                    id: 3,
+                    question: "Compared to segment trees, BITs are:",
+                    options: ["Harder to code", "Simpler for 1D prefix problems but limited to certain operations", "Always faster", "More memory hungry"],
+                    correct: 1,
+                    explanation: "Fenwick trees excel for prefix aggregates and point updates but cannot handle arbitrary range updates without tweaks."
+                }
+            ]
+        }]
+    },
+    'advanced-trees': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "AVL trees maintain balance by ensuring:",
+                    options: ["Red-black coloring", "Height difference between children is at most 1", "Keys remain sorted", "Root stays median"],
+                    correct: 1,
+                    explanation: "Each node stores heights; rotations restore the invariant when the difference exceeds one."
+                },
+                {
+                    id: 2,
+                    question: "Red-Black trees guarantee logarithmic height because:",
+                    options: ["All nodes are black", "Every root-to-leaf path contains the same number of black nodes", "They use hashing", "They rebuild often"],
+                    correct: 1,
+                    explanation: "The black-height property ensures no path is more than twice as long as another."
+                },
+                {
+                    id: 3,
+                    question: "Splay trees are unique because they:",
+                    options: ["Require coloring", "Move recently accessed nodes to the root via rotations", "Use heaps", "Need extra memory"],
+                    correct: 1,
+                    explanation: "Splaying promotes locality—frequently accessed nodes become easier to reach."
+                }
+            ]
+        }]
+    },
+    'string-algorithms': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "KMP avoids re-checking characters by:",
+                    options: ["Hashing strings", "Using the LPS (longest prefix-suffix) table to know where to resume", "Sorting substrings", "Using recursion"],
+                    correct: 1,
+                    explanation: "When a mismatch occurs, the prefix table tells you the longest prefix equal to a suffix to continue matching efficiently."
+                },
+                {
+                    id: 2,
+                    question: "Rabin-Karp leverages rolling hashes to:",
+                    options: ["Guarantee collision-free results", "Compare substring hashes in O(1) and verify only on matches", "Sort strings lexicographically", "Use tries"],
+                    correct: 1,
+                    explanation: "Efficient hash updates allow scanning multiple positions quickly while verifying when hashes match."
+                },
+                {
+                    id: 3,
+                    question: "Suffix arrays paired with LCP arrays help:",
+                    options: ["Solve shortest path", "Find repeating substrings efficiently by checking adjacent suffixes' longest common prefixes", "Convert to tries", "Balance BSTs"],
+                    correct: 1,
+                    explanation: "Once suffixes are sorted, neighboring entries share large prefixes; the LCP array quantifies those lengths for queries."
+                }
+            ]
+        }]
+    },
+    'computational-geometry': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Orientation tests using cross products determine:",
+                    options: ["Distance between points", "Whether three points make clockwise, counter-clockwise, or collinear turns", "Convex hull area", "Edge weights"],
+                    correct: 1,
+                    explanation: "The sign of the cross product indicates the turn direction, which is fundamental for hulls and intersection tests."
+                },
+                {
+                    id: 2,
+                    question: "Graham scan builds a convex hull by:",
+                    options: ["Dynamic programming", "Sorting points by angle from a pivot and maintaining a stack of hull vertices", "Binary search", "Divide and conquer"],
+                    correct: 1,
+                    explanation: "After sorting, points that cause clockwise turns are popped, leaving the convex envelope."
+                },
+                {
+                    id: 3,
+                    question: "Sweep-line algorithms process geometry by:",
+                    options: ["Random sampling", "Moving a line across the plane and handling events in sorted order while tracking active segments", "Brute force", "Only using grids"],
+                    correct: 1,
+                    explanation: "The sweep line converts geometric problems into ordered events, enabling efficient detection of intersections or coverage."
+                }
+            ]
+        }]
+    },
+    'number-theory': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "The Euclidean algorithm computes:",
+                    options: ["Prime factors", "GCD by repeated remainder operations", "LCM", "Modular exponentiation"],
+                    correct: 1,
+                    explanation: "Repeatedly replacing (a, b) with (b, a mod b) quickly finds the greatest common divisor."
+                },
+                {
+                    id: 2,
+                    question: "Modular exponentiation via repeated squaring is efficient because it:",
+                    options: ["Avoids multiplication", "Reduces exponentiation to O(log b) multiplications while applying modulus each step", "Needs primes only", "Uses floating point"],
+                    correct: 1,
+                    explanation: "By squaring intermediate results and reducing modulo m, numbers stay small and operations drop to logarithmic count."
+                },
+                {
+                    id: 3,
+                    question: "The Sieve of Eratosthenes marks composites by:",
+                    options: ["Dividing by primes repeatedly", "Marking multiples of each prime starting at p²", "Random testing", "Using recursion"],
+                    correct: 1,
+                    explanation: "Multiples below p² were already marked by smaller primes, so starting at p² avoids redundant work."
+                }
+            ]
+        }]
+    },
+    'bit-manipulation': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Expression x & (-x) isolates:",
+                    options: ["Most significant bit", "Least significant set bit", "Parity", "All ones"],
+                    correct: 1,
+                    explanation: "Two's complement negation flips bits and adds one, leaving only the lowest set bit when ANDed."
+                },
+                {
+                    id: 2,
+                    question: "XOR is handy for finding a single unique element because:",
+                    options: ["It sorts values", "a ^ a = 0 so duplicates cancel, leaving the odd-occurring value", "It shifts bits", "It multiplies values"],
+                    correct: 1,
+                    explanation: "Pairing duplicates removes them from the accumulator, revealing the lone number."
+                },
+                {
+                    id: 3,
+                    question: "To set bit i of integer n you can:",
+                    options: ["n &= ~(1 << i)", "n |= (1 << i)", "n ^= (1 << i)", "n >>= i"],
+                    correct: 1,
+                    explanation: "OR with a mask containing only bit i ensures that bit becomes 1 without affecting others."
+                }
+            ]
+        }]
+    },
+    'java-basics': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Java's char type stores:",
+                    options: ["8-bit ASCII", "16-bit UTF-16 code units", "32-bit Unicode", "Only digits"],
+                    correct: 1,
+                    explanation: "char is an unsigned 16-bit value capable of representing UTF-16 units, enabling Unicode support."
+                },
+                {
+                    id: 2,
+                    question: "Java passes everything by:",
+                    options: ["Reference", "Value (object references themselves are copied)", "Pointer arithmetic", "Copy-on-write"],
+                    correct: 1,
+                    explanation: "Even though objects are manipulated indirectly, the reference value is passed by value."
+                },
+                {
+                    id: 3,
+                    question: "The keyword final on a variable means:",
+                    options: ["Immutable object", "Reference cannot be reassigned after initialization", "Static binding", "Thread-safe access"],
+                    correct: 1,
+                    explanation: "final stops reassignment; for objects it locks the reference, not the object's internal state."
+                }
+            ]
+        }]
+    },
+    'control-flow': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "The enhanced for-each loop cannot safely:",
+                    options: ["Iterate arrays", "Remove elements while iterating", "Read values", "Handle collections"],
+                    correct: 1,
+                    explanation: "Modifying the underlying collection structure triggers ConcurrentModificationException; use iterators instead."
+                },
+                {
+                    id: 2,
+                    question: "Modern switch expressions (Java 14+) allow:",
+                    options: ["Returning values via -> syntax", "Only integers", "Fallthrough by default", "Polymorphic dispatch"],
+                    correct: 0,
+                    explanation: "Switch expressions evaluate to a value, letting you assign results directly."
+                },
+                {
+                    id: 3,
+                    question: "A do-while loop differs because:",
+                    options: ["It checks condition first", "It guarantees the body executes at least once", "It is faster", "It only works with ints"],
+                    correct: 1,
+                    explanation: "Condition evaluation occurs after the body, ensuring at least one iteration."
+                }
+            ]
+        }]
+    },
+    'oop-basics': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Encapsulation means:",
+                    options: ["Public fields only", "Bundling data and behavior with restricted access", "Multiple inheritance", "Runtime polymorphism"],
+                    correct: 1,
+                    explanation: "Objects hide their state by exposing controlled interfaces."
+                },
+                {
+                    id: 2,
+                    question: "Polymorphism lets you:",
+                    options: ["Avoid inheritance", "Treat different subclass instances via a common supertype interface", "Optimize memory", "Disable overriding"],
+                    correct: 1,
+                    explanation: "Dynamic dispatch ensures the correct overridden method executes based on runtime type."
+                },
+                {
+                    id: 3,
+                    question: "final classes cannot be:",
+                    options: ["Instantiated", "Subclassed", "Used", "Serialized"],
+                    correct: 1,
+                    explanation: "Marking a class final prevents other classes from extending it."
+                }
+            ]
+        }]
+    },
+    'exception-handling': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Checked exceptions must be:",
+                    options: ["Ignored", "Handled with try/catch or declared with throws", "Converted to runtime exceptions automatically", "Thrown only by JVM"],
+                    correct: 1,
+                    explanation: "The compiler enforces that checked exceptions are either caught or declared."
+                },
+                {
+                    id: 2,
+                    question: "Finally blocks execute except when:",
+                    options: ["Return is used", "System.exit or catastrophic VM failure occurs", "Exception thrown", "Break executes"],
+                    correct: 1,
+                    explanation: "Normal path or exceptions still run finally, but VM termination prevents it."
+                },
+                {
+                    id: 3,
+                    question: "Try-with-resources automatically:",
+                    options: ["Retries operations", "Closes AutoCloseable resources after the block even on exceptions", "Makes code faster", "Handles unchecked exceptions"],
+                    correct: 1,
+                    explanation: "Resources declared in the try statement are closed deterministically, reducing boilerplate."
+                }
+            ]
+        }]
+    },
+    'collections-framework': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "LinkedHashMap maintains:",
+                    options: ["Sorted order", "Insertion order via a doubly linked list of entries", "Random iteration", "Thread safety"],
+                    correct: 1,
+                    explanation: "It combines a hash table with a linked list to preserve predictable iteration order."
+                },
+                {
+                    id: 2,
+                    question: "ArrayList is preferable to LinkedList when:",
+                    options: ["Frequent head insertions occur", "Random access dominates operations", "Memory is tight", "You need lock-free behavior"],
+                    correct: 1,
+                    explanation: "ArrayList provides O(1) get/set while LinkedList must traverse nodes."
+                },
+                {
+                    id: 3,
+                    question: "ConcurrentHashMap scales by:",
+                    options: ["Using a single global lock", "Segmenting buckets/using striped locks and allowing lock-free reads", "Copying on write", "Sorting keys"],
+                    correct: 1,
+                    explanation: "It minimizes contention by locking only portions of the map or using CAS for writes."
+                }
+            ]
+        }]
+    },
+    'file-io': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Buffered streams speed IO because they:",
+                    options: ["Encrypt data", "Batch reads/writes in memory, reducing system calls", "Use multithreading", "Skip disk"],
+                    correct: 1,
+                    explanation: "Fewer trips to the OS block device drastically reduce overhead."
+                },
+                {
+                    id: 2,
+                    question: "Try-with-resources is ideal for IO since it:",
+                    options: ["Makes files optional", "Automatically closes streams even when exceptions occur", "Retries operations", "Caches bytes"],
+                    correct: 1,
+                    explanation: "Resources implementing AutoCloseable are cleaned up without manual finally blocks."
+                },
+                {
+                    id: 3,
+                    question: "The java.nio.file.Files utility provides:",
+                    options: ["Database connections", "Modern path handling, metadata, and atomic move/copy helpers", "Network protocols", "Only synchronous IO"],
+                    correct: 1,
+                    explanation: "NIO's Files class includes convenience methods for interacting with the filesystem safely."
+                }
+            ]
+        }]
+    },
+    'multithreading': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "synchronized in Java ensures:",
+                    options: ["Order of thread execution", "Mutual exclusion and visibility for a block/object monitor", "Faster code", "Automatic deadlock prevention"],
+                    correct: 1,
+                    explanation: "It acquires the intrinsic lock and establishes happens-before relationships."
+                },
+                {
+                    id: 2,
+                    question: "Executors simplify concurrency by:",
+                    options: ["Eliminating threads", "Managing thread pools and decoupling task submission from execution", "Enforcing parallel streams", "Replacing interrupts"],
+                    correct: 1,
+                    explanation: "You submit Runnable/Callable tasks; the executor handles scheduling and lifecycle."
+                },
+                {
+                    id: 3,
+                    question: "volatile guarantees:",
+                    options: ["Atomicity of compound actions", "Visibility/no reordering of reads and writes", "Lock-free algorithms", "Lower memory usage"],
+                    correct: 1,
+                    explanation: "volatile fields are read/written directly to main memory, preventing stale values."
+                }
+            ]
+        }]
+    },
+    'design-patterns': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "The Singleton pattern ensures:",
+                    options: ["Multiple instances", "Exactly one instance with global access", "Loose coupling", "Observer behavior"],
+                    correct: 1,
+                    explanation: "It hides constructors and exposes a single accessor for the lone instance."
+                },
+                {
+                    id: 2,
+                    question: "Strategy pattern enables:",
+                    options: ["Multiple inheritance", "Swapping algorithms at runtime via a common interface", "Event notification", "Adapting interfaces"],
+                    correct: 1,
+                    explanation: "Clients can inject different behavior objects without changing the context code."
+                },
+                {
+                    id: 3,
+                    question: "Observer pattern decouples components by:",
+                    options: ["Sharing state globally", "Letting subjects publish events to subscribed observers", "Copying data", "Using inheritance"],
+                    correct: 1,
+                    explanation: "Observers register for updates and subjects notify them when state changes."
+                }
+            ]
+        }]
+    },
+    'lambda-streams': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "A functional interface contains:",
+                    options: ["Multiple abstract methods", "Exactly one abstract method (plus optional defaults)", "No methods", "Only static methods"],
+                    correct: 1,
+                    explanation: "Single Abstract Method interfaces (SAM) are lambda compatible."
+                },
+                {
+                    id: 2,
+                    question: "Which stream operation is terminal?",
+                    options: ["map", "filter", "collect", "peek"],
+                    correct: 2,
+                    explanation: "collect triggers evaluation and gathers results, closing the stream pipeline."
+                },
+                {
+                    id: 3,
+                    question: "Streams should not be reused because:",
+                    options: ["They copy data", "Terminal operations consume them and mark them closed", "They leak memory", "They are slow"],
+                    correct: 1,
+                    explanation: "Once a terminal operation executes, further use throws IllegalStateException."
+                }
+            ]
+        }]
+    },
+    'generics': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Type erasure means that:",
+                    options: ["Generics persist at runtime", "Generic type info is removed during compilation and replaced with bounds/casts", "Generics cannot be nested", "Only primitives allowed"],
+                    correct: 1,
+                    explanation: "The JVM sees raw types; the compiler enforces type safety and inserts casts."
+                },
+                {
+                    id: 2,
+                    question: "The wildcard ? extends T allows you to:",
+                    options: ["Insert arbitrary T values", "Read T or subclasses safely but not insert arbitrary values", "Modify list freely", "Use primitives"],
+                    correct: 1,
+                    explanation: "Producer Extends: treat the structure as a producer; writes are unsafe except null."
+                },
+                {
+                    id: 3,
+                    question: "Generic methods differ from generic classes because they:",
+                    options: ["Require inheritance", "Declare their own type parameters independent of the class", "Only work in interfaces", "Need reflection"],
+                    correct: 1,
+                    explanation: "Method-level generics introduce <T> before the return type, enabling flexible reuse."
+                }
+            ]
+        }]
+    },
+    'testing-junit': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "@BeforeEach in JUnit 5 runs:",
+                    options: ["Once per class", "Before every @Test to reset fixtures", "After tests", "Only on failure"],
+                    correct: 1,
+                    explanation: "Each test gets a fresh setup so state does not leak."
+                },
+                {
+                    id: 2,
+                    question: "assertThrows is used to:",
+                    options: ["Compare objects", "Verify a lambda throws a specific exception type", "Skip tests", "Measure runtime"],
+                    correct: 1,
+                    explanation: "It ensures the provided executable raises the expected exception."
+                },
+                {
+                    id: 3,
+                    question: "Parameterized tests allow you to:",
+                    options: ["Mock dependencies", "Run the same logic with multiple inputs from sources like @CsvSource", "Parallelize automatically", "Disable assertions"],
+                    correct: 1,
+                    explanation: "Junit feeds different argument sets to one test method, reducing duplication."
+                }
+            ]
+        }]
+    },
+    'jdbc-basics': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Which JDBC object executes SQL statements?",
+                    options: ["Connection", "Statement/PreparedStatement", "ResultSet", "DriverManager"],
+                    correct: 1,
+                    explanation: "PreparedStatement compiles SQL with parameters and sends it over an active Connection."
+                },
+                {
+                    id: 2,
+                    question: "Prepared statements help prevent SQL injection because they:",
+                    options: ["Encrypt traffic", "Separate query structure from user parameters", "Use hashing", "Auto-escape strings"],
+                    correct: 1,
+                    explanation: "Parameters are bound, so input cannot alter the SQL command structure."
+                },
+                {
+                    id: 3,
+                    question: "Calling ResultSet.next() returns false when:",
+                    options: ["Column is null", "Cursor moves past the last row", "Transaction commits", "Statement closes"],
+                    correct: 1,
+                    explanation: "next() advances the cursor; when there are no more rows it returns false."
+                }
+            ]
+        }]
+    }
+};
 // Modules Data (Complete with ALL LANGUAGES)
 const modules = [
     {
         id: 'arrays-strings',
         title: 'Arrays and Strings',
-        description: 'We slow down every array and string helper so you see why guards exist, how loops scan data, and how pointer swaps work. Each method is annotated with plain-English comments plus a bullet-by-bullet breakdown under the code block, perfect for a first pass through Java collections.',
+        description: 'This walkthrough dissects the `findMax`, `reverseString`, and `isPalindrome` helpers so you can watch loops, boundary guards, and two-pointer swaps combine into real array/string utilities.',
         difficulty: 'beginner',
         topics: ['Array Traversal', 'String Methods', 'Two Pointers', 'Sliding Window', 'Array Sorting'],
-        interviewPrompts: [
-            {
-                title: 'Two Sum Variants',
-                prompt: 'Given an array of integers and a target, return indices of two numbers adding to target. Follow up: return all unique pairs. Aim for O(n) with extra space.',
-                durationMinutes: 20
-            },
-            {
-                title: 'Longest Unique Substring',
-                prompt: 'Find the length of the longest substring without repeating characters. Explain your sliding window and how you track last-seen indices.',
-                durationMinutes: 20
-            }
-        ],
         codeExamples: {
-            java: `// ArraysAndStrings demonstrates three starter utilities.
-// Every method explains *why* each line exists so you can trace the logic.
+            java: `// Array and String fundamentals
 public class ArraysAndStrings {
     
-    // Finds the largest value by scanning left to right once.
-    // Time: O(n), Space: O(1) because we only track the best-so-far value.
+    // Find maximum element in array
     public static int findMax(int[] arr) {
-        // Defensive check: an empty array has no max, so we signal with MIN_VALUE.
         if (arr.length == 0) return Integer.MIN_VALUE;
         
-        int max = arr[0]; // Start by assuming the first element is the answer.
+        int max = arr[0]; // Initialize with first element
         for (int i = 1; i < arr.length; i++) {
             if (arr[i] > max) {
-                max = arr[i]; // Whenever we discover something larger, record it.
+                max = arr[i]; // Update maximum
             }
         }
-        return max; // After the loop finishes the best value lives here.
+        return max;
     }
     
-    // Reverses a string by swapping symmetric characters.
+    // Reverse a string using two pointers
     public static String reverseString(String str) {
-        char[] chars = str.toCharArray(); // Strings are immutable, so work on a char array.
-        int left = 0, right = chars.length - 1; // Two pointers move toward the centre.
+        char[] chars = str.toCharArray();
+        int left = 0, right = chars.length - 1;
         
         while (left < right) {
-            // Swap the characters at the current pointers.
+            // Swap characters
             char temp = chars[left];
             chars[left] = chars[right];
             chars[right] = temp;
             
-            left++;          // Moving the pointers shrinks the window.
+            left++;  // Move pointers toward center
             right--;
         }
         
-        return new String(chars); // Convert the mutated array back to a String.
+        return new String(chars);
     }
     
-    // Returns true only when the cleaned string reads the same forward/backward.
+    // Check if string is palindrome
     public static boolean isPalindrome(String str) {
-        // Normalize by removing punctuation/spacing differences.
         str = str.toLowerCase().replaceAll("[^a-z0-9]", "");
-        int left = 0, right = str.length() - 1; // Compare mirrored characters.
+        int left = 0, right = str.length() - 1;
         
         while (left < right) {
             if (str.charAt(left) != str.charAt(right)) {
-                return false; // As soon as we find a mismatch the string is not a palindrome.
+                return false; // Characters don't match
             }
             left++;
             right--;
         }
-        return true; // All mirrored pairs matched, so the string is a palindrome.
+        return true; // All characters matched
     }
 }`,
             cpp: `// Array and String fundamentals in C++
@@ -1725,35 +1788,25 @@ const isPalindromeFunctional = str => {
 };`
         },
         explanation: `Arrays and strings form the foundation of programming. Arrays provide indexed access to elements, while strings are sequences of characters. Key concepts include traversal patterns, the two-pointer technique for efficient processing, and understanding how memory layout affects performance. These data structures appear in countless real-world applications.`,
-        codeBreakdown: [
-            { label: 'findMax', detail: 'Shows how to seed an answer with the first element, loop through the rest, and update the running best when a larger value appears.' },
-            { label: 'reverseString', detail: 'Demonstrates the two-pointer technique: convert to a char array, swap mirrored characters, and walk the pointers toward the centre.' },
-            { label: 'isPalindrome', detail: 'Explains preprocessing (lowercase + alphanumeric), then compares mirrored characters to confirm the string reads the same both ways.' }
-        ],
         resources: [
-            { text: 'Oracle Java Arrays Tutorial', url: 'https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html' },
-            { text: 'Two Pointer Technique Guide – GeeksforGeeks', url: 'https://www.geeksforgeeks.org/two-pointers-technique/' },
-            { text: 'String Algorithm Patterns (CP-Algorithms)', url: 'https://cp-algorithms.com/string/' }
+            'JUnit 5 Guide',  // Plain text
+            {
+                text: 'Official JUnit Documentation',
+                url: 'youtube.com'
+            },
+            'Test Driven Development',  // Plain text
+            {
+                text: 'Martin Fowler - Test Pyramid',
+                url: 'https://martinfowler.com/articles/practical-test-pyramid.html'
+            }
         ],
     },
     {
         id: 'linked-lists',
         title: 'Linked Lists',
-        description: 'Line-by-line narration shows how `reverseList` flips `next` pointers, how Floyd\'s tortoise–hare loop guard works inside `hasCycle`, and how the dummy node plus pointer weaving in `mergeTwoLists` prevents null-pointer bugs.',
+        description: 'We narrate every pointer move in `reverseList`, `hasCycle`, and `mergeTwoLists`, showing how temp nodes, tortoise–hare detection, and dummy heads keep lists consistent.',
         difficulty: 'intermediate',
         topics: ['Singly Linked Lists', 'Doubly Linked Lists', 'Cycle Detection', 'List Reversal', 'Merge Operations'],
-        interviewPrompts: [
-            {
-                title: 'Reverse in K-Groups',
-                prompt: 'Given the head of a linked list, reverse nodes in groups of k and return the modified list. Keep O(1) extra space and describe edge cases.',
-                durationMinutes: 25
-            },
-            {
-                title: 'Cycle Start Detection',
-                prompt: 'Detect if a cycle exists and return the node where the cycle begins. Use O(1) space and explain the math behind the meeting point.',
-                durationMinutes: 20
-            }
-        ],
         codeExamples: {
             java: `// Linked List implementation and operations
 class ListNode {
@@ -2017,45 +2070,32 @@ class LinkedListOperations {
     }
 }`
         },
-        explanation: `We slow down every pointer mutation: storing \`nextTemp\`, rerouting \`current.next\`, advancing slow/fast pointers, and stitching two sorted lists together with a dummy head so you can reason about ownership and edge cases (empty lists, one node, intersecting chains).`,
-        codeBreakdown: [
-            { label: 'reverseList', detail: 'Introduces a prev pointer, stores the next node, rewires the current link, then advances both pointers until the list flips.' },
-            { label: 'hasCycle', detail: 'Uses slow/fast pointers to detect loops; the sample explains why moving two steps vs one guarantees a meeting point when a cycle exists.' },
-            { label: 'mergeTwoLists', detail: 'Builds a dummy node so you always have a stable head reference while weaving the smaller node from either list into the result.' }
-        ],
-        resources: [
-            { text: 'Linked List Animations - VisuAlgo', url: 'https://visualgo.net/en/list' },
-            { text: "Floyd's Cycle Detection - GeeksforGeeks", url: 'https://www.geeksforgeeks.org/detect-loop-in-a-linked-list/' },
-            { text: 'Merge Two Sorted Lists Walkthrough - LeetCode Discuss', url: 'https://leetcode.com/problems/merge-two-sorted-lists/solutions/' }
-        ]
+        explanation: `Linked lists provide dynamic memory allocation and efficient insertion/deletion at any position. Unlike arrays, they don\'t require contiguous memory but sacrifice random access. Understanding pointer manipulation and edge cases (null checks, single nodes) is crucial for mastering linked list algorithms.`,
+        resources: ['Linked List Visualization', 'Floyd\'s Cycle Detection', 'Pointer Manipulation Guide']
     },
     // Additional modules (blank templates as in original)
     {
         id: 'stacks-queues',
         title: 'Stacks and Queues',
-        description: 'We treat stacks and queues like story problems: every method describes the data movement and why errors are thrown. The walkthrough compares LIFO vs FIFO behavior, visualizes each push/pop/enqueue/dequeue, and finishes with usage tips (undo buffers vs schedulers).',
+        description: 'The `ArrayStack` and `ArrayQueue` wrappers expose each push/pop/peek and enqueue/dequeue call so you can see how ArrayDeque underpins both LIFO and FIFO flows in `main`.',
         difficulty: 'beginner',
         topics: ['Stack Operations', 'Queue Operations', 'Deque', 'Priority Queue', 'Applications'],
-        codeExample: `// Simple Stack and Queue implementations in Java.
-// ArrayDeque gives us both LIFO and FIFO behaviour without writing array math by hand.
+        codeExample: `// Simple Stack and Queue implementations in Java
 import java.util.ArrayDeque;
 import java.util.NoSuchElementException;
 
 class ArrayStack<E> {
     private final ArrayDeque<E> data = new ArrayDeque<>();
 
-    // Adds an element to the *top* of the stack.
     public void push(E value) {
-        data.push(value); // O(1) because ArrayDeque stores a pointer to the current head.
+        data.push(value); // O(1)
     }
 
-    // Removes and returns the most recent element.
     public E pop() {
         if (data.isEmpty()) throw new NoSuchElementException("Stack empty");
-        return data.pop(); // ArrayDeque throws if empty, so we guard first.
+        return data.pop();
     }
 
-    // Looks at the top element without removing it.
     public E peek() {
         return data.peek();
     }
@@ -2064,15 +2104,13 @@ class ArrayStack<E> {
 class ArrayQueue<E> {
     private final ArrayDeque<E> data = new ArrayDeque<>();
 
-    // Adds to the *tail* to preserve FIFO ordering.
     public void enqueue(E value) {
-        data.offer(value); // offer adds to the back of the deque.
+        data.offer(value); // adds to tail
     }
 
-    // Removes from the *head* because the oldest element leaves first.
     public E dequeue() {
         if (data.isEmpty()) throw new NoSuchElementException("Queue empty");
-        return data.poll(); // poll returns null when empty, but we already guarded.
+        return data.poll(); // removes from head
     }
 
     public int size() {
@@ -2082,37 +2120,26 @@ class ArrayQueue<E> {
 
 public class StackQueueDemo {
     public static void main(String[] args) {
-        // Demonstrate stack usage.
         ArrayStack<Integer> stack = new ArrayStack<>();
         stack.push(10);
         stack.push(20);
-        System.out.println("Stack peek: " + stack.peek()); // Shows the top without removing it (20).
-        System.out.println("Stack pop: " + stack.pop());   // Removes 20 and prints it.
+        System.out.println("Stack peek: " + stack.peek()); // 20
+        System.out.println("Stack pop: " + stack.pop());   // 20
 
-        // Demonstrate queue usage.
         ArrayQueue<String> queue = new ArrayQueue<>();
         queue.enqueue("Alice");
         queue.enqueue("Bob");
-        System.out.println("Queue dequeue: " + queue.dequeue()); // Alice leaves first.
-        System.out.println("Queue size: " + queue.size());       // Shows remaining items.
+        System.out.println("Queue dequeue: " + queue.dequeue()); // Alice
+        System.out.println("Queue size: " + queue.size());       // 1
     }
 }`,
         explanation: `Stacks model LIFO flows used in call stacks, undo buffers, and expression evaluation, while queues deliver FIFO order for schedulers, BFS, and streaming pipelines. This lesson contrasts their implementations (array vs. linked), explains amortized push/pop/enqueue costs, and walks through real interview problems like balanced parentheses, sliding windows, and task queues.`,
-        codeBreakdown: [
-            { label: 'ArrayStack', detail: 'push adds to the top, pop removes from the top, and peek inspects the next value. Guards explain how to handle empty structures.' },
-            { label: 'ArrayQueue', detail: 'enqueue places elements at the back, dequeue removes from the front, and size helps drive UI counters.' },
-            { label: 'StackQueueDemo', detail: 'Sequences through both abstractions so you can watch how the operations interleave in a single main method.' }
-        ],
-        resources: [
-            { text: 'Visualizing Stack & Queue Operations – VisuAlgo', url: 'https://visualgo.net/en/list' },
-            { text: 'Java ArrayDeque Official Docs', url: 'https://docs.oracle.com/javase/8/docs/api/java/util/ArrayDeque.html' },
-            { text: 'Stack vs Queue Cheat Sheet – GeeksforGeeks', url: 'https://www.geeksforgeeks.org/stack-vs-queue-data-structures/' }
-        ]
+        resources: ['Stack Applications', 'Queue Implementations']
     },
     {
         id: 'trees-basics',
         title: 'Binary Trees',
-        description: 'The walkthrough pauses inside `insertRecursive`, `inorder`, and `levelOrderTraversal` so you can watch how new nodes find their spot, how recursive DFS prints sorted data, and how the queue-driven BFS fans through each level.',
+        description: 'Follow `insertRecursive`, `inorder`, and `levelOrderTraversal` to see how the BST is built, how DFS prints sorted values, and how a queue drives breadth-first output.',
         difficulty: 'intermediate',
         topics: ['Tree Traversal', 'Binary Search Trees', 'Tree Height', 'Path Problems', 'Tree Construction'],
         codeExample: `// Binary tree traversals and insert in Java
@@ -2175,22 +2202,13 @@ public class BinaryTree {
         bst.levelOrderTraversal();
     }
 }`,
-        explanation: `We draw the BST invariant at every recursive call so you see why values smaller than the current node drift left and larger values drift right. Then we highlight how inorder guarantees sorted output, why queues help with BFS level markers, and how to adapt the same patterns to path-sum or serialization tasks.`,
-        codeBreakdown: [
-            { label: 'insertRecursive', detail: 'Checks whether to branch left or right, creates a node when it reaches null, and returns the rebuilt subtree to the parent call.' },
-            { label: 'inorder', detail: 'Visits left subtree, logs the current value, then visits the right subtree to yield ascending output in a BST.' },
-            { label: 'levelOrderTraversal', detail: 'Uses a queue to pop the current node and push children so values stream out level by level.' }
-        ],
-        resources: [
-            { text: 'Binary Tree Traversals - Programiz', url: 'https://www.programiz.com/dsa/tree-traversal' },
-            { text: 'BST Visualizer - VisuAlgo', url: 'https://visualgo.net/en/bst' },
-            { text: 'Breadth First Search for Trees - GeeksforGeeks', url: 'https://www.geeksforgeeks.org/level-order-tree-traversal/' }
-        ]
+        explanation: `You will practice building binary trees from traversal lists, executing DFS traversals iteratively, and reasoning about height and balance. The section also demystifies BST invariants, common recursion templates, and how to restructure trees for path-sum, diameter, and serialization problems.`,
+        resources: ['Tree Traversals', 'BST Operations']
     },
     {
         id: 'hash-tables',
         title: 'Hash Tables and Maps',
-        description: 'First we trace how `HashMap.merge` updates a character-frequency map, then we build a lightweight `SimpleHashTable` so you can watch hashing, bucket selection, and collision resolution happen in slow motion.',
+        description: 'We count characters with `HashMap.merge` and then peel back a custom `SimpleHashTable` that hashes keys, stores chained entries, and resolves collisions bucket by bucket.',
         difficulty: 'intermediate',
         topics: ['Hash Functions', 'Collision Resolution', 'HashMap Operations', 'Hash Sets', 'Load Factor'],
         codeExample: `// Frequency counter using HashMap and simple custom hash table
@@ -2259,22 +2277,13 @@ public class HashTableDemo {
         System.out.println(table.get(\"java\").orElse(\"Not found\")); // Coffee language
     }
 }`,
-        explanation: `Zoomed-in commentary shows how a string key becomes a bucket index, what happens when two keys collide, and how chaining keeps entries accessible. You will also compare average-case O(1) operations with worst-case O(n) scans, tweak load factors, and reason about when to reach for LinkedHashMap or TreeMap.`,
-        codeBreakdown: [
-            { label: 'countLetters', detail: 'Uses HashMap.merge to increment counts atomically, demonstrating why hash tables shine for aggregations.' },
-            { label: 'SimpleHashTable.put', detail: 'Computes the bucket, scans for an existing key, then either updates the value or appends a new entry.' },
-            { label: 'SimpleHashTable.get', detail: 'Reuses the same hash -> bucket mapping to locate entries and wraps the answer in Optional for safe reads.' }
-        ],
-        resources: [
-            { text: 'Hash Table Basics - Programiz', url: 'https://www.programiz.com/dsa/hash-table' },
-            { text: 'Java HashMap Tutorial - Baeldung', url: 'https://www.baeldung.com/java-hashmap' },
-            { text: 'Collision Resolution Strategies - GeeksforGeeks', url: 'https://www.geeksforgeeks.org/collision-resolution-techniques/' }
-        ]
+        explanation: `We cover how good hash functions minimize collisions, why load factor matters, and when to choose chaining vs. open addressing. Practical labs include frequency maps, LRU caches, and dictionary-based deduplication so you can confidently use HashMap/HashSet in coding interviews.`,
+        resources: ['Hash Function Design', 'Collision Handling']
     },
     {
         id: 'heaps',
         title: 'Heaps and Priority Queues',
-        description: '`priorityQueueDemo` confirms how Java\'s PriorityQueue pops the smallest element, then `heapify`/`buildMinHeap` rebuild the structure from an array so you can trace the parent/child index math, swaps, and bubbling logic yourself.',
+        description: 'First `priorityQueueDemo` shows the library min-heap, then `heapify`/`buildMinHeap` rebuild the structure from an array so you can trace index math, swaps, and bottom-up heap construction.',
         difficulty: 'intermediate',
         topics: ['Min Heap', 'Max Heap', 'Heap Operations', 'Heapify', 'Priority Queues'],
         codeExample: `// Min-heap using PriorityQueue plus manual heapify
@@ -2322,22 +2331,13 @@ public class HeapExamples {
         System.out.println(\"Heapified array: \" + Arrays.toString(arr));
     }
 }`,
-        explanation: `We highlight the array representation (parent i -> children 2i+1 / 2i+2), explain why heapify works from the last parent backwards, and compare the ergonomics of the library queue vs manual implementations. Practice prompts connect heaps to scheduling, streaming medians, and graph algorithms.`,
-        codeBreakdown: [
-            { label: 'priorityQueueDemo', detail: "Uses Java's PriorityQueue to show automatic heap ordering and repeated poll behavior." },
-            { label: 'heapify', detail: 'Looks at both children, finds the smallest, swaps as needed, and recurses until the subtree satisfies the heap property.' },
-            { label: 'buildMinHeap', detail: 'Starts at the last non-leaf index and calls heapify on each parent so the structure stabilizes in O(n) time.' }
-        ],
-        resources: [
-            { text: 'Binary Heap Tutorial - GeeksforGeeks', url: 'https://www.geeksforgeeks.org/binary-heap/' },
-            { text: 'PriorityQueue API - Oracle Docs', url: 'https://docs.oracle.com/javase/8/docs/api/java/util/PriorityQueue.html' },
-            { text: 'Heap Visualization - VisuAlgo', url: 'https://visualgo.net/en/heap' }
-        ]
+        explanation: `Heaps guarantee log n insert/delete while always exposing the next highest or lowest priority element. You will implement binary heaps from scratch, trace heapify, compare min/max structures, and apply them to Dijkstra, streaming medians, and scheduling simulations.`,
+        resources: ['Heap Properties', 'Priority Queue Applications']
     },
     {
         id: 'sorting-algorithms',
         title: 'Sorting Algorithms',
-        description: '`bubbleSort`, `mergeSort`, and `quickSort` live in one class so we can pause after each comparison, swap, merge, and pivot partition to explain exactly why elements move the way they do.',
+        description: '`bubbleSort`, `mergeSort`, and `quickSort` live in one class, letting us highlight each loop condition, partition, and merge so the control flow behind every comparison is crystal clear.',
         difficulty: 'intermediate',
         topics: ['Bubble Sort', 'Merge Sort', 'Quick Sort', 'Heap Sort', 'Radix Sort'],
         codeExample: `// Detailed sorting implementations with analysis
@@ -2419,61 +2419,44 @@ public class SortingAlgorithms {
         System.out.println(\"Merge Sort: \" + Arrays.toString(other));
     }
 }`,
-        explanation: `We annotate inner loops, highlight invariants (left side already sorted, pivot partitioned, temp array holding the merge), and summarize time/space costs so you can instantly match a real problem with the right sorting strategy.`,
-        codeBreakdown: [
-            { label: 'bubbleSort', detail: 'Nested loops bubble the largest value to the end, and the swapped flag explains the early exit optimization.' },
-            { label: 'mergeSort', detail: 'Splits the array, recurses, and merges using a helper buffer so you see how stable merging works.' },
-            { label: 'quickSort', detail: 'Chooses a pivot, partitions the array in place, then recurses on the subarrays to finish in average O(n log n).' }
-        ],
-        resources: [
-            { text: 'Sorting Algorithm Visualizer - VisuAlgo', url: 'https://visualgo.net/en/sorting' },
-            { text: 'Sorting Summary Table - GeeksforGeeks', url: 'https://www.geeksforgeeks.org/sorting-algorithms/' },
-            { text: 'Merge vs Quick Sort - Baeldung', url: 'https://www.baeldung.com/cs/merge-sort-vs-quicksort' }
-        ]
+        explanation: `This module compares comparison-based sorts (quick, merge, heap) with non-comparison sorts like counting and radix, emphasizing stability and memory trade-offs. Step-by-step traces and code exercises help you recognize when to favor O(n log n) strategies vs linear-time specialized sorts.`,
+        resources: ['Sorting Comparisons', 'Algorithm Complexity']
     },
     {
         id: 'searching-algorithms',
         title: 'Searching Algorithms',
-        description: 'Linear, binary, and exponential search are implemented side by side with narrated pointer movements, annotated boundary updates, and a recap of when to choose each strategy.',
+        description: 'Linear, binary, and exponential search are implemented side by side, so we break down pointer shifts, boundary tests, and the final `Arrays.binarySearch` call that finishes the exponential window.',
         difficulty: 'beginner',
         topics: ['Linear Search', 'Binary Search', 'Interpolation Search', 'Exponential Search'],
-        codeExample: `// Searching utilities highlighting multiple techniques.
-// Read the comments top-to-bottom to follow how the pointers move.
+        codeExample: `// Searching utilities highlighting multiple techniques
 import java.util.Arrays;
 
 public class SearchingAlgorithms {
 
-    // Walks each element until it finds the target or reaches the end.
     public static int linearSearch(int[] arr, int target) {
         for (int i = 0; i < arr.length; i++) {
-            if (arr[i] == target) return i; // Break out as soon as we see the target.
+            if (arr[i] == target) return i;
         }
-        return -1; // Not found.
+        return -1;
     }
 
-    // Binary search halves the search space on every comparison.
     public static int binarySearch(int[] arr, int target) {
         int left = 0, right = arr.length - 1;
         while (left <= right) {
             int mid = left + (right - left) / 2;
-            if (arr[mid] == target) return mid; // Found it!
-            if (arr[mid] < target) {
-                left = mid + 1; // Toss the left half, keep searching the right half.
-            } else {
-                right = mid - 1; // Toss the right half, search the left half.
-            }
+            if (arr[mid] == target) return mid;
+            if (arr[mid] < target) left = mid + 1;
+            else right = mid - 1;
         }
-        return -1; // The pointers crossed, so the target is absent.
+        return -1;
     }
 
-    // Exponential search finds a reasonable window, then reuses binary search.
     public static int exponentialSearch(int[] arr, int target) {
-        if (arr.length == 0) return -1; // Nothing to do.
-        int bound = 1; // Start by looking at index 1 (after index 0).
+        if (arr.length == 0) return -1;
+        int bound = 1;
         while (bound < arr.length && arr[bound] < target) {
-            bound *= 2; // Double the range until we overshoot the target.
+            bound *= 2;
         }
-        // Search the window [bound / 2, bound] because the target must be inside it.
         return Arrays.binarySearch(arr, bound / 2, Math.min(bound + 1, arr.length), target);
     }
 
@@ -2485,16 +2468,7 @@ public class SearchingAlgorithms {
     }
 }`,
         explanation: `Beyond linear search, you will master binary search patterns on arrays, answer-range problems, and implicit search spaces such as answer-guessing or peak finding. We also cover interpolation/exponential search and how to adapt search templates to rotated arrays and matrix traversal.`,
-        codeBreakdown: [
-            { label: 'linearSearch', detail: 'Use when input is tiny or unsorted. The loop simply compares every element with the target.' },
-            { label: 'binarySearch', detail: 'Ideal for sorted arrays. Watch how the left/right pointers shrink the search window by half each iteration.' },
-            { label: 'exponentialSearch', detail: 'Perfect when the length is unknown (streams/infinite arrays). Quickly find bounds, then reuse binary search inside them.' }
-        ],
-        resources: [
-            { text: 'Binary Search Illustrated – Khan Academy', url: 'https://www.khanacademy.org/computing/computer-science/algorithms/binary-search/a/binary-search' },
-            { text: 'Searching Algorithms Overview – GeeksforGeeks', url: 'https://www.geeksforgeeks.org/searching-algorithms/' },
-            { text: 'Exponential Search Explained – Programiz', url: 'https://www.programiz.com/dsa/exponential-search' }
-        ]
+        resources: ['Binary Search Guide', 'Search Optimization']
     },
     {
         id: 'recursion',
@@ -3329,126 +3303,46 @@ public class BitManipulation {
     {
         id: 'java-basics',
         title: 'Java Fundamentals',
-        description: 'We linger on the basics: fields, constructors, getters, and the `main` method. Every line spells out what the JVM is doing so absolute beginners can connect the dots between syntax and mental models. We also map the code to stack vs heap memory, pass-by-value semantics, and the lifecycle of objects so you can reason about what the JVM does under the hood.',
+        description: '`JavaBasics` wires up fields via a constructor, exposes `getInfo`, and creates an instance in `main`, breaking down how objects store state and expose behavior.',
         difficulty: 'beginner',
         topics: ['Variables', 'Data Types', 'Methods', 'Classes', 'Objects'],
-        codeExample: `// JavaBasics demonstrates how a class stores state and exposes behaviour.
-// Follow the numbered comments to see the life cycle of an object.
+        codeExample: `// Java Basics - Variables and Methods
 public class JavaBasics {
-    // 1️⃣ Instance variables belong to each object made from this class.
+    // Instance variables
     private String name;
     private int age;
     
-    // 2️⃣ Constructors run when you call "new" and allow you to provide initial values.
+    // Constructor
     public JavaBasics(String name, int age) {
         this.name = name;
         this.age = age;
     }
     
-    // 3️⃣ Instance methods can use those fields to compute friendly strings.
+    // Method with return value
     public String getInfo() {
         return "Name: " + name + ", Age: " + age;
     }
     
-    // 4️⃣ The JVM starts executing in main. We create an object and call its method.
+    // Static method
     public static void main(String[] args) {
         JavaBasics person = new JavaBasics("Alice", 25);
         System.out.println(person.getInfo());
     }
 }`,
-        explanation: `This primer explains the JVM model, primitive vs reference types, memory layout, and how to structure small programs with packages and build tools. Each topic is paired with short exercises so you can move from syntax memorization to writing idiomatic Java. We add guardrail comments so you can trace how locals live on the stack while objects live on the heap, and why Java is pass-by-value even for references.`,
-        codeBreakdown: [
-            { label: 'Fields', detail: 'Represent the data every instance remembers (name and age).' },
-            { label: 'Constructor', detail: 'Runs once per object to copy parameters into the fields.' },
-            { label: 'getInfo', detail: 'Demonstrates string concatenation and returning values.' },
-            { label: 'main', detail: 'Shows how to instantiate the class and call methods.' },
-            { label: 'Stack vs Heap', detail: 'Clarifies that locals live on the stack while objects live on the heap.' },
-            { label: 'Pass-by-Value', detail: 'Explains how Java passes copies of references, not objects themselves.' }
-        ],
-        definitions: [
-            'Primitive type: built-in value stored directly (int, double, boolean).',
-            'Reference type: an object handle pointing to heap data.',
-            'Constructor: special method that initializes a new object.',
-            'Method signature: method name plus parameter list.',
-            'Access modifier: controls visibility (public/private/protected).',
-            'Encapsulation: keeping data and behaviour together while hiding details.',
-            'Package: namespace to organize classes.',
-            'Classpath: search path the JVM uses to find classes/resources.',
-            'Garbage collection: automatic reclamation of unreachable objects.',
-            'Null reference: a reference that points to no object (NullPointerException risk).'
-        ],
-        resources: [
-            { text: 'Oracle Java Tutorials – Language Basics', url: 'https://docs.oracle.com/javase/tutorial/java/nutsandbolts/' },
-            { text: 'Java Classes and Objects – W3Schools', url: 'https://www.w3schools.com/java/java_classes.asp' },
-            { text: 'Understanding main() in Java – Baeldung', url: 'https://www.baeldung.com/java-main-method' }
-        ]
-    },
-
-    {
-        id: 'uml-intro',
-        title: 'UML for Java Beginners',
-        description: 'Learn UML as a visual thinking aid for Java projects. We cover class diagrams, relationships (association, aggregation, composition, inheritance), and simple sequence diagrams to map method calls. Includes a GitHub + VS Code flow so you can diagram, commit, and iterate quickly.',
-        difficulty: 'beginner',
-        topics: ['Class Diagrams', 'Relationships', 'Sequence Diagrams', 'GitHub Workflow', 'VS Code'],
-        codeExample: `// PlantUML snippet (save as diagram.puml)
-@startuml
-class User {
-  -String name
-  +login()
-}
-class Order {
-  -List<Item> items
-  +submit()
-}
-User "1" -- "*" Order : places
-@enduml
-
-// Java skeleton that matches the UML
-public class User {
-    private String name;
-    public void login() {}
-}
-
-public class Order {
-    private List<Item> items = new ArrayList<>();
-    public void submit() {}
-}`,
-        explanation: `We align UML shapes to Java code so you can read and produce small diagrams. You’ll practice drawing class diagrams for an app, then scaffold matching Java classes in VS Code. A mini GitHub workflow shows how to commit both code and diagrams for review.`,
-        codeBreakdown: [
-            { label: 'Classes', detail: 'Represent state/behaviour; align fields/methods with your UML boxes.' },
-            { label: 'Relationships', detail: 'Use association/aggregation/composition/inheritance to describe how classes connect.' },
-            { label: 'Sequence Flow', detail: 'Sketch key method calls to map object interactions.' },
-            { label: 'GitHub Flow', detail: 'Create a branch, add UML + Java skeletons, open a PR for review.' }
-        ],
-        definitions: [
-            'Class diagram: UML view of classes, fields, methods, and relationships.',
-            'Association: a generic link between two classes.',
-            'Aggregation: a whole–part link where the part can outlive the whole.',
-            'Composition: a strong ownership link; parts die with the whole.',
-            'Inheritance: an is-a relationship between base and derived classes.',
-            'Sequence diagram: timeline of messages between objects.',
-            'Multiplicity: notation for how many instances participate in a relationship.',
-            'Stereotype: a UML tag indicating a role (e.g., <<interface>>).',
-            'Commit: a snapshot of changes stored in Git.',
-            'Pull Request: a reviewable proposal to merge your branch into main.'
-        ],
-        resources: [
-            { text: 'PlantUML Quickstart', url: 'https://plantuml.com/class-diagram' },
-            { text: 'VS Code + PlantUML Extension', url: 'https://marketplace.visualstudio.com/items?itemName=jebbs.plantuml' },
-            { text: 'GitHub Flow Guide', url: 'https://guides.github.com/introduction/flow/' }
-        ]
+        explanation: `This primer explains the JVM model, primitive vs reference types, memory layout, and how to structure small programs with packages and build tools. Each topic is paired with short exercises so you can move from syntax memorization to writing idiomatic Java.`,
+        resources: ['Java Documentation', 'Oracle Java Tutorials', 'Java Syntax Guide']
     },
 
     {
         id: 'control-flow',
         title: 'Control Flow Statements',
-        description: 'We narrate the entire method: how if/else chooses a branch, how classic for loops change counters, how enhanced for loops iterate arrays, and what happens if you accidentally create infinite loops. We highlight guard clauses, trace conditions, and when to prefer switch expressions for clarity.',
+        description: '`ControlFlow.main` chains an if/else ladder, classic for loop, and enhanced for loop so you can trace how each branch or counter drives console output.',
         difficulty: 'beginner',
         topics: ['If-Else', 'For Loops', 'While Loops', 'Switch', 'Break/Continue'],
-        codeExample: `// Control Flow Examples with detailed narration.
+        codeExample: `// Control Flow Examples
 public class ControlFlow {
     public static void main(String[] args) {
-        // 1️⃣ If/else ladder chooses exactly one branch.
+        // If-else example
         int score = 85;
         if (score >= 90) {
             System.out.println("A grade");
@@ -3458,12 +3352,12 @@ public class ControlFlow {
             System.out.println("C grade or below");
         }
         
-        // 2️⃣ Standard for loop: init → condition check → body → increment.
+        // For loop example
         for (int i = 1; i <= 5; i++) {
             System.out.println("Count: " + i);
         }
         
-        // 3️⃣ Enhanced for loop reads "for each number in numbers".
+        // Enhanced for loop
         int[] numbers = {1, 2, 3, 4, 5};
         for (int num : numbers) {
             System.out.println("Number: " + num);
@@ -3471,156 +3365,74 @@ public class ControlFlow {
     }
 }`,
         explanation: `We relate each control structure to real scenarios (validation, accumulation, menu handling) and highlight pitfalls like infinite loops or fall-through switches. Flowchart exercises plus debugging tips reinforce how to trace program execution step by step.`,
-        codeBreakdown: [
-            { label: 'If/Else', detail: 'Selects exactly one path based on the score variable.' },
-            { label: 'Classic For Loop', detail: 'Initialises i, checks the condition, runs the body, then increments i.' },
-            { label: 'Enhanced For Loop', detail: 'Iterates an array without manual index tracking, perfect for read-only loops.' },
-            { label: 'While vs Do-While', detail: 'Compares entry-condition vs exit-condition loops for retries and input validation.' },
-            { label: 'Switch/Fall-through', detail: 'Shows how to prevent unintended fall-through and how switch expressions help.' }
-        ],
-        definitions: [
-            'Branch: a conditional path chosen when a boolean is true.',
-            'Guard clause: early return to prevent invalid states from proceeding.',
-            'Loop invariant: a statement that remains true before and after each iteration.',
-            'Infinite loop: a loop that never terminates because the condition never flips.',
-            'Break: exits the nearest loop or switch immediately.',
-            'Continue: skips to the next iteration of the current loop.',
-            'Switch expression: concise switch that yields a value.',
-            'Short-circuit: && and || stop evaluating when the result is known.',
-            'Control variable: the variable driving loop iteration or branching.',
-            'Fencepost error: off-by-one bug from incorrect loop bounds.'
-        ],
-        resources: [
-            { text: 'Oracle Docs – Control Flow Statements', url: 'https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html' },
-            { text: 'Java Loops Made Easy – LearnJava', url: 'https://www.learnjavaonline.org/en/Loops' },
-            { text: 'Understanding If/Else – Baeldung', url: 'https://www.baeldung.com/java-if-else' }
-        ]
+        resources: ['Java Control Statements', 'Loop Examples', 'Conditional Logic']
     },
 
     {
         id: 'oop-basics',
         title: 'Object-Oriented Programming',
-        description: 'We zoom in on encapsulation, inheritance, and polymorphism. Comments spell out why `Animal` is abstract, how `Dog` reuses and overrides behaviour, and what happens when you call methods through the base type. We compare interfaces vs abstract classes and show where composition beats inheritance.',
+        description: 'An abstract `Animal` defines shared state/behavior, `Dog` overrides `makeSound`, and the inherited `sleep` method demonstrates encapsulation and polymorphism in one snippet.',
         difficulty: 'beginner',
         topics: ['Encapsulation', 'Inheritance', 'Polymorphism', 'Abstraction', 'Interfaces'],
-        codeExample: `// OOP Concepts with heavy narration.
+        codeExample: `
+        // OOP Concepts
 abstract class Animal {
-    protected String name; // Shared state for all subclasses.
+    protected String name;
     
     public Animal(String name) {
-        this.name = name; // Constructor ensures every animal has a name.
+        this.name = name;
     }
     
-    public abstract void makeSound(); // Subclasses must explain how they sound.
+    public abstract void makeSound();
     
     public void sleep() {
-        System.out.println(name + " is sleeping"); // Concrete behaviour shared by all animals.
+        System.out.println(name + " is sleeping");
     }
 }
 
 class Dog extends Animal {
     public Dog(String name) {
-        super(name); // Reuse the parent constructor.
+        super(name);
     }
     
     @Override
     public void makeSound() {
-        System.out.println(name + " says Woof!"); // Polymorphic behaviour unique to Dog.
-    }
-}
-
-public class OopDemo {
-    public static void main(String[] args) {
-        Animal pet = new Dog("Luna"); // Reference type is Animal, object type is Dog.
-        pet.makeSound(); // Calls Dog.makeSound thanks to dynamic dispatch.
-        pet.sleep();     // Inherited method defined in Animal.
+        System.out.println(name + " says Woof!");
     }
 }`,
-        explanation: `Encapsulation, inheritance, and polymorphism are demonstrated with cohesive mini-systems (bank accounts, game entities) so you see how design choices affect flexibility. Interfaces vs abstract classes, composition-over-inheritance, and SOLID principles round out the lesson. We also add quick checklists to decide when to subclass and when to compose.`,
-        codeBreakdown: [
-            { label: 'Animal', detail: 'Abstract base class that defines what every animal must know/do (name + makeSound + sleep).' },
-            { label: 'Dog', detail: 'Concrete subclass that reuses the constructor and overrides makeSound.' },
-            { label: 'OopDemo', detail: 'Shows how polymorphism lets us treat a Dog as its base type while still running Dog-specific code.' },
-            { label: 'Interface vs Abstract', detail: 'Contrasts shared implementation in abstract classes vs pure contracts in interfaces.' },
-            { label: 'Composition', detail: 'Highlights when to prefer combining objects instead of subclassing for flexibility.' }
-        ],
-        definitions: [
-            'Encapsulation: bundling data and behaviour while hiding implementation details.',
-            'Inheritance: deriving a class to reuse and extend behaviour.',
-            'Polymorphism: treating different object types through a shared interface or base.',
-            'Abstract class: cannot be instantiated; may include abstract methods and concrete helpers.',
-            'Interface: contract of methods that implementing classes must fulfill.',
-            'Override: replace a superclass method with a subclass implementation.',
-            'Super: keyword to access parent constructors or methods.',
-            'Composition: building features by combining smaller objects.',
-            'Dynamic dispatch: runtime method selection based on actual object type.',
-            'Liskov Substitution Principle: subclasses should stand in for base classes without breaking expectations.'
-        ],
-        resources: [
-            { text: 'Oracle Java Tutorials – Object-Oriented Concepts', url: 'https://docs.oracle.com/javase/tutorial/java/concepts/' },
-            { text: 'GeeksforGeeks – OOP in Java', url: 'https://www.geeksforgeeks.org/object-oriented-programming-oops-concept-in-java/' },
-            { text: 'Abstract Classes vs Interfaces – Baeldung', url: 'https://www.baeldung.com/java-interfaces-vs-abstract-classes' }
-        ]
+        explanation: `Encapsulation, inheritance, and polymorphism are demonstrated with cohesive mini-systems (bank accounts, game entities) so you see how design choices affect flexibility. Interfaces vs abstract classes, composition-over-inheritance, and SOLID principles round out the lesson.`,
+        resources: ['OOP in Java', 'Inheritance Examples', 'Interface vs Abstract']
     },
 
     {
         id: 'exception-handling',
         title: 'Exception Handling',
-        description: 'We narrate how try/catch/finally sequences execute (success vs failure) and how to throw your own checked exception with meaningful context.',
+        description: '`divide` wraps division in try/catch/finally while `validateAge` throws a custom exception, showing exactly how execution moves through error paths and cleanup blocks.',
         difficulty: 'beginner',
         topics: ['Try-Catch', 'Finally Block', 'Custom Exceptions', 'Throws', 'Exception Types'],
-        codeExample: `// Exception Handling with narration.
-class InvalidAgeException extends Exception {
-    InvalidAgeException(String message) {
-        super(message);
-    }
-}
-
+        codeExample: `
+        // Exception Handling
 public class ExceptionExample {
-    // Handles both the happy path and divide-by-zero failure.
     public static void divide(int a, int b) {
         try {
-            int result = a / b; // May throw ArithmeticException if b == 0.
+            int result = a / b;
             System.out.println("Result: " + result);
         } catch (ArithmeticException e) {
             System.out.println("Error: Cannot divide by zero!");
         } finally {
-            System.out.println("Division operation completed."); // Always runs.
+            System.out.println("Division operation completed.");
         }
     }
     
-    // Demonstrates throwing your own checked exception.
+    // Custom exception
     public static void validateAge(int age) throws InvalidAgeException {
         if (age < 0) {
             throw new InvalidAgeException("Age cannot be negative");
         }
-        System.out.println("Validated age: " + age);
     }
-
-    public static void main(String[] args) {
-        divide(10, 2);  // Works
-        divide(5, 0);   // Triggers ArithmeticException
-
-        try {
-            validateAge(-5); // Triggers our custom checked exception
-        } catch (InvalidAgeException e) {
-            System.out.println("Caught custom exception: " + e.getMessage());
-        }
-    }
-}
-`,
+}`,
         explanation: `You will categorize checked vs unchecked exceptions, design custom hierarchies, and use try-with-resources for safe cleanup. Realistic scenarios cover logging, wrapping exceptions to add context, and establishing global handlers to keep apps resilient.`,
-        codeBreakdown: [
-            { label: 'divide', detail: 'Wraps risky arithmetic in try/catch and shows how finally executes regardless of success.' },
-            { label: 'validateAge', detail: 'Illustrates how to throw a custom checked exception with a helpful message.' },
-            { label: 'InvalidAgeException', detail: 'Custom checked exception extends Exception and carries a human-friendly message.' },
-            { label: 'main', detail: 'Runs happy-path division, a divide-by-zero failure, and a negative-age check to exercise both catch blocks.' }
-        ],
-        resources: [
-            { text: 'Oracle Java Tutorials – Exceptions', url: 'https://docs.oracle.com/javase/tutorial/essential/exceptions/' },
-            { text: 'Guide to Java Exception Handling – Baeldung', url: 'https://www.baeldung.com/java-exceptions' },
-            { text: 'Custom Exception Patterns – GeeksforGeeks', url: 'https://www.geeksforgeeks.org/user-defined-custom-exception-in-java/' }
-        ]
+        resources: ['Java Exceptions', 'Error Handling Best Practices']
     },
 
     // INTERMEDIATE CONCEPTS
@@ -3947,1629 +3759,10 @@ public class JDBCExample {
 }`,
         explanation: `JDBC coverage includes driver setup, connection pooling, prepared statements, and transaction management. You'll practice defensive coding against SQL injection, map result sets to objects, and compare raw JDBC with higher-level ORM approaches.`,
         resources: ['JDBC Tutorial', 'SQL Basics', 'Database Best Practices']
-    },
-    {
-        id: 'graph-algorithms-pro',
-        title: 'Graph Algorithms Pro',
-        description: 'We pair a reusable `WeightedGraph` class with Dijkstra and topological sort helpers so you can see adjacency lists, priority queues, and indegree tracking working together.',
-        difficulty: 'advanced',
-        topics: ['Dijkstra', 'Topological Sort', 'Directed Graphs', 'Adjacency List', 'Cycle Detection'],
-        codeExample: `import java.util.*;
-
-class WeightedGraph {
-    static class Edge {
-        final int to, weight;
-        Edge(int to, int weight) {
-            this.to = to;
-            this.weight = weight;
-        }
-    }
-
-    private final Map<Integer, List<Edge>> graph = new HashMap<>();
-
-    public void addEdge(int from, int to, int weight) {
-        graph.computeIfAbsent(from, k -> new ArrayList<>()).add(new Edge(to, weight));
-        graph.computeIfAbsent(to, k -> new ArrayList<>());
-    }
-
-    public Map<Integer, Integer> dijkstra(int source) {
-        Map<Integer, Integer> distance = new HashMap<>();
-        graph.keySet().forEach(node -> distance.put(node, Integer.MAX_VALUE));
-        distance.put(source, 0);
-
-        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[1]));
-        pq.offer(new int[]{source, 0});
-
-        while (!pq.isEmpty()) {
-            int[] current = pq.poll();
-            int node = current[0];
-            int dist = current[1];
-            if (dist > distance.get(node)) continue;
-
-            for (Edge edge : graph.getOrDefault(node, List.of())) {
-                int newDist = dist + edge.weight;
-                if (newDist < distance.get(edge.to)) {
-                    distance.put(edge.to, newDist);
-                    pq.offer(new int[]{edge.to, newDist});
-                }
-            }
-        }
-        return distance;
-    }
-
-    public List<Integer> topoSort() {
-        Map<Integer, Integer> indegree = new HashMap<>();
-        graph.keySet().forEach(node -> indegree.put(node, 0));
-        graph.forEach((node, edges) -> edges.forEach(edge -> indegree.merge(edge.to, 1, Integer::sum)));
-
-        Queue<Integer> queue = new ArrayDeque<>();
-        indegree.forEach((node, degree) -> {
-            if (degree == 0) queue.offer(node);
-        });
-
-        List<Integer> ordering = new ArrayList<>();
-        while (!queue.isEmpty()) {
-            int node = queue.poll();
-            ordering.add(node);
-            for (Edge edge : graph.getOrDefault(node, List.of())) {
-                indegree.merge(edge.to, -1, Integer::sum);
-                if (indegree.get(edge.to) == 0) {
-                    queue.offer(edge.to);
-                }
-            }
-        }
-        return ordering;
-    }
-
-    public static void main(String[] args) {
-        WeightedGraph graph = new WeightedGraph();
-        graph.addEdge(0, 1, 2);
-        graph.addEdge(0, 2, 5);
-        graph.addEdge(1, 2, 1);
-        graph.addEdge(1, 3, 4);
-
-        System.out.println(graph.dijkstra(0)); // {0=0, 1=2, 2=3, 3=6}
-        System.out.println(graph.topoSort());  // valid DAG ordering
-    }
-}`,
-        explanation: `You will practice modeling weighted graphs, implementing Dijkstra with a PQ, and producing topological orders using indegree buckets. We also cover how to detect negative edges, cache parent pointers for shortest path reconstruction, and reason about DAG DP.`,
-        resources: ['Dijkstra Visualization', 'Topological Ordering Guide', 'Graph Pattern Cheat Sheet']
-    },
-    {
-        id: 'dynamic-programming-playbook',
-        title: 'Dynamic Programming Playbook',
-        description: 'The module disassembles LIS and classic knapsack from brute force to memoization/tabulation so the DP transition, base cases, and reconstruction flow are explicit.',
-        difficulty: 'advanced',
-        topics: ['Memoization', 'Tabulation', 'Knapsack', 'LIS', 'State Compression'],
-        codeExample: `import java.util.Arrays;
-
-public class DynamicProgrammingPlaybook {
-    public static int longestIncreasingSubsequence(int[] nums) {
-        int[] dp = new int[nums.length];
-        Arrays.fill(dp, 1);
-        int best = 0;
-        for (int i = 0; i < nums.length; i++) {
-            for (int j = 0; j < i; j++) {
-                if (nums[j] < nums[i]) {
-                    dp[i] = Math.max(dp[i], dp[j] + 1);
-                }
-            }
-            best = Math.max(best, dp[i]);
-        }
-        return best;
-    }
-
-    public static int knapSack(int capacity, int[] weights, int[] values) {
-        int[][] dp = new int[weights.length + 1][capacity + 1];
-        for (int i = 1; i <= weights.length; i++) {
-            for (int w = 0; w <= capacity; w++) {
-                if (weights[i - 1] > w) {
-                    dp[i][w] = dp[i - 1][w];
-                } else {
-                    dp[i][w] = Math.max(
-                        dp[i - 1][w],
-                        values[i - 1] + dp[i - 1][w - weights[i - 1]]
-                    );
-                }
-            }
-        }
-        return dp[weights.length][capacity];
-    }
-
-    public static void main(String[] args) {
-        System.out.println(longestIncreasingSubsequence(new int[]{10,9,2,5,3,7,101,18})); // 4
-        System.out.println(knapSack(7, new int[]{1,3,4,5}, new int[]{1,4,5,7})); // 9
-    }
-}`,
-        explanation: `We zoom in on identifying state variables, transitions, and reusing memory. Expect tear-downs of LIS, knapsack, edit distance, and grid DP so you learn to move from recursion → memoization → tabulation confidently.`,
-        resources: ['DP Patterns', 'Top 14 DP Problems', 'State Compression Tips']
-    },
-    {
-        id: 'concurrency-basics',
-        title: 'Concurrency & Threading Basics',
-        description: 'A `Counter` with synchronized blocks, an `ExecutorService` based worker pool, and scheduled tasks demonstrate race-free increments, cooperative shutdown, and periodic reminders.',
-        difficulty: 'intermediate',
-        topics: ['Threads', 'Synchronization', 'ExecutorService', 'Atomic Variables', 'Scheduling'],
-        codeExample: `import java.util.concurrent.*;
-import java.util.stream.IntStream;
-
-class Counter {
-    private int value = 0;
-    public synchronized void increment() {
-        value++;
-    }
-    public int getValue() {
-        return value;
-    }
-}
-
-public class ConcurrencyBasics {
-    public static void main(String[] args) throws InterruptedException {
-        Counter counter = new Counter();
-        ExecutorService pool = Executors.newFixedThreadPool(4);
-
-        IntStream.range(0, 1000).forEach(i -> pool.submit(counter::increment));
-        pool.shutdown();
-        pool.awaitTermination(1, TimeUnit.SECONDS);
-        System.out.println("Count = " + counter.getValue());
-
-        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(() -> System.out.println("Hydrate + stretch!"), 0, 30, TimeUnit.SECONDS);
-
-        Thread.sleep(95); // demo only
-        scheduler.shutdownNow();
-    }
-}`,
-        explanation: `This module explains why race conditions appear, when to use synchronized blocks vs. locks, and how thread pools simplify workload fan-out. You will also practice with scheduled jobs, futures, and graceful shutdown so your CLI tools don’t leak threads.`,
-        resources: ['Java Concurrency Guide', 'ExecutorService Patterns', 'Effective Java Concurrency Chapter']
-    },
-    {
-        id: 'segment-trees',
-        title: 'Segment Trees & Range Queries',
-        description: 'We build a reusable segment tree that supports O(log n) range sum queries and point updates, annotating every recursion branch so you understand how the tree spans the array.',
-        difficulty: 'advanced',
-        topics: ['Divide and Conquer', 'Range Queries', 'Lazy Propagation', 'Tree Recursion'],
-        codeExamples: {
-            java: `// Segment tree for range sum queries with point updates
-class SegmentTree {
-    private final int[] tree;
-    private final int n;
-
-    SegmentTree(int[] nums) {
-        n = nums.length;
-        tree = new int[4 * n];
-        build(1, 0, n - 1, nums); // Node, left, right, source array
-    }
-
-    private void build(int node, int left, int right, int[] nums) {
-        if (left == right) { // Leaf holds single element
-            tree[node] = nums[left];
-            return;
-        }
-        int mid = (left + right) / 2;
-        build(node * 2, left, mid, nums);
-        build(node * 2 + 1, mid + 1, right, nums);
-        tree[node] = tree[node * 2] + tree[node * 2 + 1]; // Parent = sum(children)
-    }
-
-    public void update(int index, int value) {
-        update(1, 0, n - 1, index, value);
-    }
-
-    private void update(int node, int left, int right, int index, int value) {
-        if (left == right) {
-            tree[node] = value;
-            return;
-        }
-        int mid = (left + right) / 2;
-        if (index <= mid) update(node * 2, left, mid, index, value);
-        else update(node * 2 + 1, mid + 1, right, index, value);
-        tree[node] = tree[node * 2] + tree[node * 2 + 1];
-    }
-
-    public int query(int l, int r) {
-        return query(1, 0, n - 1, l, r);
-    }
-
-    private int query(int node, int left, int right, int l, int r) {
-        if (r < left || right < l) return 0;   // Segment outside range
-        if (l <= left && right <= r) return tree[node]; // Fully covered
-        int mid = (left + right) / 2;
-        int leftSum = query(node * 2, left, mid, l, r);
-        int rightSum = query(node * 2 + 1, mid + 1, right, l, r);
-        return leftSum + rightSum;
-    }
-}`,
-            cpp: `// Segment tree for range sum queries
-class SegmentTree {
-    vector<int> tree;
-    int n;
-
-    void build(int node, int left, int right, const vector<int>& nums) {
-        if (left == right) {
-            tree[node] = nums[left];
-            return;
-        }
-        int mid = (left + right) / 2;
-        build(node * 2, left, mid, nums);
-        build(node * 2 + 1, mid + 1, right, nums);
-        tree[node] = tree[node * 2] + tree[node * 2 + 1];
-    }
-
-public:
-    SegmentTree(const vector<int>& nums) {
-        n = nums.size();
-        tree.assign(4 * n, 0);
-        build(1, 0, n - 1, nums);
-    }
-
-    void update(int index, int value, int node, int left, int right) {
-        if (left == right) {
-            tree[node] = value;
-            return;
-        }
-        int mid = (left + right) / 2;
-        if (index <= mid) update(index, value, node * 2, left, mid);
-        else update(index, value, node * 2 + 1, mid + 1, right);
-        tree[node] = tree[node * 2] + tree[node * 2 + 1];
-    }
-
-    int query(int l, int r, int node, int left, int right) {
-        if (r < left || right < l) return 0;
-        if (l <= left && right <= r) return tree[node];
-        int mid = (left + right) / 2;
-        return query(l, r, node * 2, left, mid) +
-               query(l, r, node * 2 + 1, mid + 1, right);
-    }
-};`,
-            python: `# Segment tree for range sums
-class SegmentTree:
-    def __init__(self, nums):
-        self.n = len(nums)
-        self.tree = [0] * (4 * self.n)
-        self._build(1, 0, self.n - 1, nums)
-
-    def _build(self, node, left, right, nums):
-        if left == right:
-            self.tree[node] = nums[left]
-            return
-        mid = (left + right) // 2
-        self._build(node * 2, left, mid, nums)
-        self._build(node * 2 + 1, mid + 1, right, nums)
-        self.tree[node] = self.tree[node * 2] + self.tree[node * 2 + 1]
-
-    def update(self, index, value, node=1, left=0, right=None):
-        right = self.n - 1 if right is None else right
-        if left == right:
-            self.tree[node] = value
-            return
-        mid = (left + right) // 2
-        if index <= mid:
-            self.update(index, value, node * 2, left, mid)
-        else:
-            self.update(index, value, node * 2 + 1, mid + 1, right)
-        self.tree[node] = self.tree[node * 2] + self.tree[node * 2 + 1]
-
-    def query(self, ql, qr, node=1, left=0, right=None):
-        right = self.n - 1 if right is None else right
-        if qr < left or right < ql:
-            return 0
-        if ql <= left and right <= qr:
-            return self.tree[node]
-        mid = (left + right) // 2
-        return self.query(ql, qr, node * 2, left, mid) + \
-               self.query(ql, qr, node * 2 + 1, mid + 1, right)`,
-            javascript: `// Segment tree implemented with arrays
-class SegmentTree {
-    constructor(nums) {
-        this.n = nums.length;
-        this.tree = Array(4 * this.n).fill(0);
-        this.build(1, 0, this.n - 1, nums);
-    }
-
-    build(node, left, right, nums) {
-        if (left === right) {
-            this.tree[node] = nums[left];
-            return;
-        }
-        const mid = Math.floor((left + right) / 2);
-        this.build(node * 2, left, mid, nums);
-        this.build(node * 2 + 1, mid + 1, right, nums);
-        this.tree[node] = this.tree[node * 2] + this.tree[node * 2 + 1];
-    }
-
-    update(index, value, node = 1, left = 0, right = this.n - 1) {
-        if (left === right) {
-            this.tree[node] = value;
-            return;
-        }
-        const mid = Math.floor((left + right) / 2);
-        if (index <= mid) this.update(index, value, node * 2, left, mid);
-        else this.update(index, value, node * 2 + 1, mid + 1, right);
-        this.tree[node] = this.tree[node * 2] + this.tree[node * 2 + 1];
-    }
-
-    query(l, r, node = 1, left = 0, right = this.n - 1) {
-        if (r < left || right < l) return 0;
-        if (l <= left && right <= r) return this.tree[node];
-        const mid = Math.floor((left + right) / 2);
-        return this.query(l, r, node * 2, left, mid) +
-               this.query(l, r, node * 2 + 1, mid + 1, right);
-    }
-}`
-        },
-        explanation: `Range structures feel abstract, so we trace every recursive branch, annotate overlap checks, and compare complexity with prefix sums. Extensions cover lazy propagation, min/max trees, and when Fenwick trees are a tighter fit.`,
-        resources: ['Segment Tree Visualizer', 'Fenwick vs Segment Trees', 'Range Query Patterns']
-    },
-    {
-        id: 'disjoint-set-union',
-        title: 'Disjoint Set Union (Union-Find)',
-        description: 'The DSU module instruments path compression and union by rank with console logs so you can watch parent pointers flatten and understand how connectivity answers become near constant time.',
-        difficulty: 'intermediate',
-        topics: ['Union-Find', 'Path Compression', 'Connected Components', 'Cycle Detection'],
-        codeExamples: {
-            java: `// Disjoint Set Union with path compression and union by rank
-class DisjointSet {
-    private final int[] parent;
-    private final int[] rank;
-
-    DisjointSet(int size) {
-        parent = new int[size];
-        rank = new int[size];
-        for (int i = 0; i < size; i++) {
-            parent[i] = i; // Each node starts as its own parent
-        }
-    }
-
-    int find(int x) {
-        if (parent[x] != x) {
-            parent[x] = find(parent[x]); // Path compression
-        }
-        return parent[x];
-    }
-
-    void union(int a, int b) {
-        int rootA = find(a);
-        int rootB = find(b);
-        if (rootA == rootB) return; // Already connected
-        if (rank[rootA] < rank[rootB]) parent[rootA] = rootB;
-        else if (rank[rootA] > rank[rootB]) parent[rootB] = rootA;
-        else {
-            parent[rootB] = rootA;
-            rank[rootA]++;
-        }
-    }
-
-    boolean connected(int a, int b) {
-        return find(a) == find(b);
-    }
-}`,
-            cpp: `// DSU implementation
-class DisjointSet {
-    vector<int> parent, rank;
-public:
-    DisjointSet(int n) : parent(n), rank(n, 0) {
-        iota(parent.begin(), parent.end(), 0);
-    }
-
-    int find(int x) {
-        if (parent[x] != x)
-            parent[x] = find(parent[x]);
-        return parent[x];
-    }
-
-    void unite(int a, int b) {
-        a = find(a);
-        b = find(b);
-        if (a == b) return;
-        if (rank[a] < rank[b]) swap(a, b);
-        parent[b] = a;
-        if (rank[a] == rank[b]) rank[a]++;
-    }
-};`,
-            python: `# Disjoint set union
-class DisjointSet:
-    def __init__(self, size):
-        self.parent = list(range(size))
-        self.rank = [0] * size
-
-    def find(self, x):
-        if self.parent[x] != x:
-            self.parent[x] = self.find(self.parent[x])
-        return self.parent[x]
-
-    def union(self, a, b):
-        root_a, root_b = self.find(a), self.find(b)
-        if root_a == root_b:
-            return
-        if self.rank[root_a] < self.rank[root_b]:
-            root_a, root_b = root_b, root_a
-        self.parent[root_b] = root_a
-        if self.rank[root_a] == self.rank[root_b]:
-            self.rank[root_a] += 1`,
-            javascript: `// Union-Find data structure
-class DisjointSet {
-    constructor(size) {
-        this.parent = Array.from({ length: size }, (_, i) => i);
-        this.rank = Array(size).fill(0);
-    }
-
-    find(x) {
-        if (this.parent[x] !== x) {
-            this.parent[x] = this.find(this.parent[x]);
-        }
-        return this.parent[x];
-    }
-
-    union(a, b) {
-        let rootA = this.find(a);
-        let rootB = this.find(b);
-        if (rootA === rootB) return;
-        if (this.rank[rootA] < this.rank[rootB]) {
-            [rootA, rootB] = [rootB, rootA];
-        }
-        this.parent[rootB] = rootA;
-        if (this.rank[rootA] === this.rank[rootB]) {
-            this.rank[rootA]++;
-        }
-    }
-}`
-        },
-        explanation: `We explore DSU internals, build a cycle detector for undirected graphs, and visualize how repeated finds reshape the forest. You will also wire DSU into Kruskal’s MST and friend-group problems to see practical payoffs.`,
-        resources: ['Union-Find Guide', 'Kruskal Walkthrough', 'Dynamic Connectivity Patterns']
-    },
-    {
-        id: 'string-patterns',
-        title: 'String Pattern Matching',
-        description: 'This module implements the Knuth-Morris-Pratt (KMP) matcher and contrasts it with a sliding window brute force so you can trace prefix table construction and reuse.',
-        difficulty: 'advanced',
-        topics: ['KMP', 'Prefix Function', 'Pattern Matching', 'String Algorithms'],
-        codeExamples: {
-            java: `// KMP string matching
-class KMPMatcher {
-    private int[] buildLPS(String pattern) {
-        int[] lps = new int[pattern.length()];
-        int len = 0;
-        for (int i = 1; i < pattern.length(); ) {
-            if (pattern.charAt(i) == pattern.charAt(len)) {
-                lps[i++] = ++len;
-            } else if (len != 0) {
-                len = lps[len - 1];
-            } else {
-                lps[i++] = 0;
-            }
-        }
-        return lps;
-    }
-
-    int search(String text, String pattern) {
-        if (pattern.isEmpty()) return 0;
-        int[] lps = buildLPS(pattern);
-        int i = 0, j = 0;
-        while (i < text.length()) {
-            if (text.charAt(i) == pattern.charAt(j)) {
-                i++; j++;
-                if (j == pattern.length()) return i - j;
-            } else if (j != 0) {
-                j = lps[j - 1]; // Reuse previous border
-            } else {
-                i++;
-            }
-        }
-        return -1;
-    }
-}`,
-            cpp: `// KMP search in C++
-vector<int> buildLPS(const string& pattern) {
-    vector<int> lps(pattern.size());
-    int len = 0;
-    for (int i = 1; i < pattern.size(); ) {
-        if (pattern[i] == pattern[len]) {
-            lps[i++] = ++len;
-        } else if (len != 0) {
-            len = lps[len - 1];
-        } else {
-            lps[i++] = 0;
-        }
-    }
-    return lps;
-}
-
-int kmpSearch(const string& text, const string& pattern) {
-    if (pattern.empty()) return 0;
-    vector<int> lps = buildLPS(pattern);
-    int i = 0, j = 0;
-    while (i < text.size()) {
-        if (text[i] == pattern[j]) {
-            i++; j++;
-            if (j == pattern.size()) return i - j;
-        } else if (j != 0) {
-            j = lps[j - 1];
-        } else {
-            i++;
-        }
-    }
-    return -1;
-}`,
-            python: `# KMP search in Python with comments
-def build_lps(pattern):
-    lps = [0] * len(pattern)
-    length = 0  # Length of the previous longest prefix suffix
-    i = 1
-    while i < len(pattern):
-        if pattern[i] == pattern[length]:
-            length += 1
-            lps[i] = length
-            i += 1
-        elif length != 0:
-            length = lps[length - 1]  # Fall back to shorter border
-        else:
-            lps[i] = 0
-            i += 1
-    return lps
-
-def kmp_search(text, pattern):
-    if not pattern:
-        return 0
-    lps = build_lps(pattern)
-    i = j = 0
-    while i < len(text):
-        if text[i] == pattern[j]:
-            i += 1
-            j += 1
-            if j == len(pattern):
-                return i - j
-        elif j != 0:
-            j = lps[j - 1]
-        else:
-            i += 1
-    return -1`,
-            javascript: `// JavaScript KMP implementation
-function buildLPS(pattern) {
-    const lps = Array(pattern.length).fill(0);
-    let len = 0;
-    for (let i = 1; i < pattern.length; ) {
-        if (pattern[i] === pattern[len]) {
-            lps[i++] = ++len;
-        } else if (len !== 0) {
-            len = lps[len - 1];
-        } else {
-            lps[i++] = 0;
-        }
-    }
-    return lps;
-}
-
-function kmpSearch(text, pattern) {
-    if (!pattern.length) return 0;
-    const lps = buildLPS(pattern);
-    let i = 0, j = 0;
-    while (i < text.length) {
-        if (text[i] === pattern[j]) {
-            i++; j++;
-            if (j === pattern.length) return i - j;
-        } else if (j !== 0) {
-            j = lps[j - 1];
-        } else {
-            i++;
-        }
-    }
-    return -1;
-}`
-        },
-        explanation: `We demystify the prefix table (LPS array), visualize how matches shift without rescanning characters, and compare with Rabin-Karp and Z-algorithm trade-offs. Practice exercises include DNA motif search and log scanning.`,
-        resources: ['KMP Tutorial', 'Visual String Matching', 'Pattern Matching Cheat Sheet']
-    },
-    {
-        id: 'assembly-basics',
-        title: 'Assembly Language Basics',
-        category: 'systems',
-        description: 'Learn how high-level constructs map to registers, the stack, and instructions. We show loads/stores, loops, and function calls, then line up the same logic in Java so you can cross-compare.',
-        difficulty: 'intermediate',
-        topics: ['Registers', 'Stack Frames', 'Memory Addressing', 'Loops', 'Syscalls'],
-        codeExamples: {
-            assembly: `; Assembly Basics (x86-32) — detailed, line-by-line comments
-; cdecl calling convention, 32-bit registers, little-endian
-; int sum_array(int* arr, int len)
-
-section .text
-global sum_array
-
-sum_array:
-    push ebp                ; save caller frame pointer
-    mov  ebp, esp           ; establish our stack frame
-    push ebx                ; preserve callee-saved register
-    mov  ebx, [ebp+8]       ; ebx = arr pointer   (arg0)
-    mov  ecx, [ebp+12]      ; ecx = len           (arg1)
-    xor  eax, eax           ; eax = 0 (running sum)
-.loop:
-    cmp  ecx, 0             ; are we done? if len == 0, exit
-    je   .done
-    mov  edx, [ebx + 4*(ecx-1)] ; edx = arr[len-1] using scaled index
-    add  eax, edx           ; sum += arr[i]
-    dec  ecx                ; i--
-    jmp  .loop
-.done:
-    pop  ebx                ; restore callee-saved
-    mov  esp, ebp           ; tear down frame
-    pop  ebp
-    ret                     ; return sum in eax
-
-; int add_then_double(int a, int b)
-global add_then_double
-add_then_double:
-    push ebp
-    mov  ebp, esp
-    mov  eax, [ebp+8]       ; eax = a
-    add  eax, [ebp+12]      ; eax += b
-    shl  eax, 1             ; eax *= 2 (shift left by 1)
-    mov  esp, ebp
-    pop  ebp
-    ret
-`,
-            'assembly-pseudocode': `PROCEDURE sum_array(arr, len):
-  save frame + callee registers
-  sum <- 0
-  FOR i from len-1 down to 0:
-    sum <- sum + arr[i]
-  restore registers; return sum in eax
-
-PROCEDURE add_then_double(a, b):
-  result <- a + b
-  result <- result * 2
-  return result`
-        },
-        explanation: 'We annotate each Java line with its assembly counterpart: registers stand in for locals, loops map to compare/jump pairs, and calls mirror stack-frame setup/teardown. You will see how addressing works, why alignment matters, and how to reason about side effects.',
-        codeBreakdown: [
-            { label: 'Registers', detail: 'Map Java locals to general purpose registers (rax, rbx, rcx, rdx) and track their lifetimes.' },
-            { label: 'Stack Frame', detail: 'Prologue/epilogue pairs protect caller data; locals live at negative rbp offsets.' },
-            { label: 'Branches', detail: 'Loops and ifs compile into cmp/test plus conditional jumps—trace flags to understand flow.' }
-        ],
-        resources: [
-            { text: 'x86-64 Basics (CS61)', url: 'https://cs61c.org' },
-            { text: 'Godbolt Compiler Explorer', url: 'https://godbolt.org/' }
-        ]
-    },
-    {
-        id: 'discrete-math-1',
-        title: 'Discrete Mathematics I: Logic & Sets',
-        category: 'discrete',
-        description: 'Master propositions, truth tables, set operations, and proof patterns with theory-first explanations. We walk through law simplifications, contrapositive/contradiction reasoning, and Venn-style set identities before you ever touch code. Examples: DeMorgan transformations, distributive law rewrites, and direct vs. contrapositive proofs of conditional statements.',
-        difficulty: 'beginner',
-        topics: ['Propositions', 'Truth Tables', 'Set Operations', 'Proof Sketches', 'Logic Laws'],
-        exampleHighlight: 'Step-by-step Q&A: full truth tables for p→q and p↔q, DeMorgan law proof, distributive set proof, and direct/contrapositive parity proofs with complete justifications.',
-        examples: [
-            `Truth table (p→q): Q: build the complete table. Steps: (1) enumerate rows (F,F),(F,T),(T,F),(T,T); (2) add column ¬p; (3) compute ¬p ∨ q row-by-row; (4) mark only (T,F) as false. Answer: p→q is true on 3/4 rows because implication is vacuously true when p is false.`,
-            `Truth table (p↔q): Q: prove p↔q truth set. Steps: (1) compute p→q; (2) compute q→p; (3) AND the two implication columns; (4) highlight true rows (F,F) and (T,T); (5) explain symmetry. Answer: biconditional is true exactly when p and q match.`,
-            `DeMorgan rewrite: Q: show ¬(p∨q) ≡ (¬p ∧ ¬q). Steps: (1) copy headers p,q,p∨q,¬(p∨q),¬p,¬q,¬p∧¬q; (2) fill p∨q then negate; (3) fill ¬p and ¬q then their AND; (4) compare columns equality on all four rows. Answer: columns match, so the equivalence holds.`,
-            `Set distributive law: Q: prove A∩(B∪C) = (A∩B) ∪ (A∩C). Steps: (1) Pick arbitrary x; (2) assume x∈A and x∈(B∪C); (3) split cases x∈B or x∈C; (4) conclude x∈(A∩B) or x∈(A∩C); (5) reverse direction by assuming RHS and showing LHS. Answer: both inclusions hold ⇒ sets equal.`,
-            `Direct proof (n even ⇒ n² even): Q: prove. Steps: (1) let n=2k; (2) square: n²=4k²; (3) factor 4k²=2(2k²); (4) note 2k² integer; (5) conclude n² even; (6) paraphrase in English. Answer: even input yields even square.`,
-            `Contrapositive (n² even ⇒ n even): Q: prove via contrapositive. Steps: (1) prove ¬even(n) ⇒ ¬even(n²); (2) assume n odd ⇒ n=2k+1; (3) square: n²=4k²+4k+1=2(2k²+2k)+1 (odd); (4) therefore contrapositive true; (5) conclude original statement true.`,
-            `Set complements: Q: show (A\\B) = A∩Bᶜ. Steps: (1) pick x∈A\\B; (2) by definition x∈A and x∉B ⇒ x∈A and x∈Bᶜ ⇒ x∈A∩Bᶜ; (3) reverse: x∈A∩Bᶜ ⇒ x∈A and x∉B ⇒ x∈A\\B. Answer: membership arguments prove equality.`
-        ],
-        truthTables: [
-            {
-                title: 'Implication (p → q)',
-                headers: ['p', 'q', 'p → q'],
-                rows: [
-                    ['F', 'F', 'T'],
-                    ['F', 'T', 'T'],
-                    ['T', 'F', 'F'],
-                    ['T', 'T', 'T']
-                ]
-            },
-            {
-                title: 'Equivalence (p ↔ q)',
-                headers: ['p', 'q', 'p ↔ q'],
-                rows: [
-                    ['F', 'F', 'T'],
-                    ['F', 'T', 'F'],
-                    ['T', 'F', 'F'],
-                    ['T', 'T', 'T']
-                ]
-            },
-            {
-                title: 'DeMorgan: ¬(p ∨ q) ≡ (¬p ∧ ¬q)',
-                headers: ['p', 'q', 'p ∨ q', '¬(p ∨ q)', '¬p', '¬q', '¬p ∧ ¬q'],
-                rows: [
-                    ['F', 'F', 'F', 'T', 'T', 'T', 'T'],
-                    ['F', 'T', 'T', 'F', 'T', 'F', 'F'],
-                    ['T', 'F', 'T', 'F', 'F', 'T', 'F'],
-                    ['T', 'T', 'T', 'F', 'F', 'F', 'F']
-                ]
-            }
-        ],
-        codeExamples: {
-            java: `// Theory-focused module: use the tables and notes above.
-// Key formulas and patterns:
-// - Truth tables for p→q, p↔q, ¬(p∨q) vs ¬p∧¬q
-// - Law rewrites (DeMorgan, distributive)
-// - Proof outlines (direct, contrapositive, contradiction)
-// Treat this block as pinned notes, not executable code.`
-        },
-        skipAutoExamples: true,
-        explanation: 'Heavy theory first: translate English claims to symbolic form, build full truth tables, and apply equivalence laws to simplify. We compare direct proof, contrapositive, and contradiction with short, annotated outlines. Code appears only as a calculator to verify steps (truth tables, set operations) after you reason them out on paper.',
-        codeBreakdown: [
-            { label: 'Truth tables', detail: 'Iterate over boolean pairs to see how implications and equivalences behave.' },
-            { label: 'Set operations', detail: 'Use HashSet union/intersection to mirror Venn diagram reasoning.' },
-            { label: 'Proof outline', detail: 'A reusable five-step scaffold for direct or contradiction proofs.' }
-        ],
-        resources: [
-            { text: 'Discrete Math Notes – Logic', url: 'https://discrete.openmathbooks.org' }
-        ]
-    },
-    {
-        id: 'discrete-math-2',
-        title: 'Discrete Mathematics II: Counting & Graphs',
-        category: 'discrete',
-        description: 'Dive deep into theory: addition/multiplication rules, permutations vs. combinations, pigeonhole principle, and recurrence solving (iteration and substitution). Graph basics cover paths, degrees, and connectivity before touching code. Examples: counting handshakes, arranging books, pigeonhole applications, and walking through BFS layers on a small graph.',
-        difficulty: 'intermediate',
-        topics: ['Counting', 'Recurrence Relations', 'Permutations', 'Combinations', 'Graph Basics'],
-        exampleHighlight: 'Step-by-step Q&A: handshake lemma on K₄, permutations vs. combinations with full arithmetic, pigeonhole proof with contradiction, recurrence unfolding to closed form, and BFS layer tracing with discovered vertices.',
-        examples: [
-            `Handshake lemma: Q: edges in K₄? Steps: (1) four vertices labeled 1–4; (2) complete graph so each vertex degree 3; (3) sum degrees=4·3=12; (4) edges = (sum degrees)/2 = 6; (5) generalize to n(n−1)/2 by counting ordered pairs then dividing by 2.`,
-            `Perm vs Comb: Q: choose/arrange 3 of 5 books. Steps: (1) combinations ignore order ⇒ C(5,3)=5·4·3/(3·2·1)=10; (2) permutations care about order ⇒ P(5,3)=5·4·3=60; (3) explain when to use each (arranging vs selecting).`,
-            `Pigeonhole principle: Q: 13 people, 12 months. Steps: (1) assume each month gets at most one person; (2) only 12 slots exist; (3) placing 13th person forces reuse of a month ⇒ contradiction; (4) conclude at least two share a birth month. Extension: initials with 27 people and 26 letters.`,
-            `Recurrence unfolding: Q: solve T(n)=2T(n−1)+1. Steps: (1) expand once: 2(2T(n−2)+1)+1=4T(n−2)+3; (2) expand again: 8T(n−3)+7; (3) spot pattern 2^k T(n−k)+(2^k−1); (4) choose k=n−1 ⇒ T(n)=2^{n−1}T(1)+(2^{n−1}−1); (5) with T(1)=1, answer 2^n−1.`,
-            `Fibonacci memo table: Q: compute F10 with reuse. Steps: (1) seed F0=0,F1=1; (2) fill table up to F10; (3) note F8/F9 reused when computing F10; (4) discuss time O(n) vs exponential recursion.`,
-            `BFS layers: Q: layer order on graph {1:[2,3],2:[4],3:[4,5],4:[6],5:[6]}. Steps: (1) queue=[1]; (2) pop1→visit2,3; (3) pop2→visit4; (4) pop3→visit5; (5) pop4→visit6; (6) layers [1],[2,3],[4,5],[6]; (7) argue why this gives shortest path lengths on unweighted graphs.`
-        ],
-        codeExamples: {
-            java: `// Theory-focused module: counting + graph notes (no code).
-// Use these as pinned references:
-// - Counting rules, nCk vs permutations
-// - Pigeonhole principle examples
-// - Recurrence unfolding/substitution sketches
-// - BFS layering for connectivity/distance intuition`
-        },
-        skipAutoExamples: true,
-        explanation: 'Theory-heavy walkthroughs of counting arguments and recurrence patterns, then short code to verify your manual answers. We annotate why nCk formulas work, how Pascal’s triangle embodies recursion, and how BFS layers reflect graph distance. Use the snippets as calculators after you reason through the combinatorial logic.',
-        codeBreakdown: [
-            { label: 'nCk DP', detail: 'Binomial coefficients via Pascal\'s triangle show how combinations build from smaller subproblems.' },
-            { label: 'Recurrences', detail: 'Memoized Fibonacci illustrates recurrence unfolding and overlapping subproblems.' },
-            { label: 'Graphs', detail: 'Breadth-first search orders vertices layer by layer for shortest-path intuition on unweighted graphs.' }
-        ],
-        resources: [
-            { text: 'Discrete Math – Counting', url: 'https://discrete.openmathbooks.org/dmoi3/sec_counting.html' },
-            { text: 'Intro Graphs', url: 'https://cp-algorithms.com/graph/' }
-        ]
-    },
-    {
-        id: 'discrete-math-3',
-        title: 'Discrete Mathematics III: Induction & Number Theory',
-        category: 'discrete',
-        description: 'A theory-only deep dive into induction (weak/strong), invariants, divisibility, primes, and modular arithmetic. We avoid code and focus on proof patterns and worked numeric examples.',
-        difficulty: 'intermediate',
-        topics: ['Induction', 'Strong Induction', 'Invariants', 'Modular Arithmetic', 'Divisibility'],
-        exampleHighlight: 'Stepwise proofs: induction on sums, strong induction for prime factorization, invariant domino tiling, Euclid gcd trace, modular inverse by checking residues, and parity arguments.',
-        examples: [
-            `Weak induction (1+…+n): Q: prove n(n+1)/2. Steps: (1) base n=1 ⇒ 1=1·2/2; (2) assume true for n; (3) add (n+1) to both sides: [n(n+1)/2]+(n+1) = (n+1)(n+2)/2; (4) simplify factoring (n+1); (5) conclude by induction.`,
-            `Strong induction (every m>1 factors into primes): Steps: (1) base m=2 prime; (2) hypothesis: all integers 2…k have prime factorizations; (3) case k+1 prime ⇒ done; (4) else k+1=ab with 2≤a,b≤k ⇒ by hypothesis a,b factor into primes ⇒ concatenate factorizations ⇒ k+1 factors; (5) conclude.`,
-            `Invariant tiling: Q: domino tiling on 8×8 board missing opposite corners. Steps: (1) color board black/white; (2) removed squares same color ⇒ remaining board has unequal black/white counts; (3) each domino covers one black/one white; (4) invariant: covered squares maintain equal counts; (5) contradiction ⇒ impossible.`,
-            `Euclid gcd: Q: gcd(252,105). Steps: (1) 252=105·2+42; (2) 105=42·2+21; (3) 42=21·2+0 ⇒ gcd=21; (4) explain why last non-zero remainder is gcd.`,
-            `Mod inverse: Q: solve 3x ≡ 1 (mod 7). Steps: (1) test residues x=1..6; (2) compute 3·5=15≡1 (mod7); (3) conclude x≡5; (4) show linear combination 1=15−14=3·5−7·2.`,
-            `Parity proof: Q: show n² and n have same parity. Steps: (1) case n even ⇒ n=2k ⇒ n²=4k²=2(2k²) even; (2) case n odd ⇒ n=2k+1 ⇒ n²=4k²+4k+1=2(2k²+2k)+1 odd; (3) conclude parity preserved.`
-        ],
-        codeExamples: {
-            java: `// Theory-focused module: no executable code.
-// Use the examples list and truth tables to reason by hand.`
-        },
-        skipAutoExamples: true
-    },
-    {
-        id: 'discrete-math-4',
-        title: 'Discrete Mathematics IV: Relations & Graph Theory',
-        category: 'discrete',
-        description: 'Focus on definitions and properties: relations (reflexive, symmetric, transitive), equivalence classes, partial orders, and core graph properties. Heavy notes with layered examples, minimal code.',
-        difficulty: 'intermediate',
-        topics: ['Relations', 'Equivalence', 'Partial Orders', 'Graph Properties', 'Connectivity'],
-        exampleHighlight: 'Worked walkthroughs: classify relations with full tables, build congruence classes, draw Hasse diagrams for divisibility, check Euler paths via degree counts, and trace BFS/DFS for connectivity.',
-        examples: [
-            `Classify relation: Q: R on {1,2,3} with pairs {(1,1),(1,2),(2,1),(2,2),(3,3)}. Steps: (1) reflexive? has (1,1),(2,2),(3,3) ⇒ yes; (2) symmetric? (1,2) present and (2,1) present ⇒ yes; (3) transitive? since (1,2) and (2,1) need (1,1) (present); check (1,2) and (2,2) ⇒ (1,2) present; conclude equivalence relation.`,
-            `Equivalence classes: Q: mod 3 on ℤ. Steps: (1) define a~b if 3|(a−b); (2) list representatives 0,1,2; (3) classes: [0]={…,-3,0,3,6,…}, [1]={…,-2,1,4,7,…}, [2]={…,-1,2,5,8,…}; (4) note partition property.`,
-            `Partial order: Q: divisibility on {1,2,4,8,16}. Steps: (1) reflexive yes (a|a); (2) antisymmetric yes (a|b and b|a ⇒ a=b); (3) transitive yes; (4) draw Hasse diagram edges 1→2→4→8→16; (5) note minimal/maximal elements.`,
-            `Euler path test: Q: given undirected graph with degrees [3,3,2,2,2]. Steps: (1) count odd-degree vertices (two of them) ⇒ Euler path exists; (2) Euler circuit would need 0 odds ⇒ not present; (3) explain necessity/sufficiency.`,
-            `Connectivity: Q: BFS on 5-node graph starting at 1. Steps: (1) queue [1]; (2) pop1→visit neighbors 2,3; (3) pop2→visit 4; (4) pop3→visit5; (5) visited all ⇒ connected; (6) if some nodes unvisited, components >1.`
-        ],
-        codeExamples: {
-            java: `// Theory-focused module: no executable code.
-// Work through the examples and diagrams provided in the module.`
-        },
-        skipAutoExamples: true
-    },
-    {
-        id: 'assembly-registers',
-        title: 'Assembly: Registers, Memory, and Flags (x86-32)',
-        category: 'systems',
-        description: 'Beginner-first primer on general purpose registers, the stack pointer/base pointer pair, and condition flags. Every instruction is annotated so you can see what EAX/EBX/ECX/EDX are for, how ESP/EBP move, and how CMP/TEST set ZF/SF/CF.',
-        difficulty: 'beginner',
-        topics: ['Registers', 'Flags', 'Stack Pointer', 'Base Pointer', 'Addressing Modes'],
-        exampleHighlight: 'Walk through what each register typically holds, how a stack frame is laid out, how CMP sets flags, and how to read [ebp+8]-style addressing.',
-        examples: [
-            'Register roles: EAX=accumulator (math/returns), EBX=base (scratch), ECX=count (loops), EDX=data (multiplication/division helper), ESI/EDI=source/dest pointers, ESP=stack pointer, EBP=frame base.',
-            'Stack snapshot: ESP points to the top of stack; pushing decrements ESP, popping increments ESP; EBP is set once per function to give stable addresses like [ebp+8] (1st arg).',
-            'Flags: CMP a,b sets ZF=1 when equal, SF tracks sign, CF handles unsigned borrow/carry; conditional jumps (JE/JNE/JL/JG) read these bits.',
-            'Addressing modes: [ebp+8] = first arg, [esi+4*ecx] = array access base in ESI, index in ECX scaled by 4 for 32-bit ints.'
-        ],
-        codeExamples: {
-            assembly: `; Register + flags primer (x86-32)
-section .text
-global add_and_compare
-
-; int add_and_compare(int a, int b)
-; Returns: eax = sum, ZF shows equality, SF shows sign of sum
-add_and_compare:
-    push ebp               ; save old base pointer
-    mov  ebp, esp          ; establish new frame
-    push ebx               ; save callee-saved register
-
-    mov  eax, [ebp+8]      ; eax = a (first argument)
-    mov  ebx, [ebp+12]     ; ebx = b (second argument)
-    add  eax, ebx          ; eax = a + b (accumulator pattern)
-
-    cmp  eax, 0            ; sets ZF/SF/CF based on eax vs 0
-    ; At this point:
-    ;  - ZF = 1 if sum == 0
-    ;  - SF = 1 if sum is negative
-    ;  - CF is unaffected by cmp with 0 for signed math, but set for unsigned borrow
-
-    pop  ebx               ; restore saved register
-    mov  esp, ebp
-    pop  ebp
-    ret
-
-; Demonstrate indexed addressing: load arr[i]
-; int load_elem(int* arr, int i)
-global load_elem
-load_elem:
-    push ebp
-    mov  ebp, esp
-    mov  esi, [ebp+8]      ; esi = arr base pointer
-    mov  ecx, [ebp+12]     ; ecx = i (index)
-    mov  eax, [esi + ecx*4]; eax = arr[i] (each int is 4 bytes)
-    mov  esp, ebp
-    pop  ebp
-    ret
-`,
-            'assembly-pseudocode': `add_and_compare(a, b):
-  sum <- a + b
-  compare sum with 0 to set flags (ZF, SF)
-  return sum
-
-load_elem(arr, i):
-  return arr[i]  ; address = base + i*4 for 32-bit ints`
-        },
-        explanation: 'Start here if registers feel mysterious. We explicitly label what each register does, why ESP moves by pushes/pops, and how EBP gives stable argument addresses. The examples also show how CMP sets flags and how scaled-index addressing works for arrays.',
-        codeBreakdown: [
-            { label: 'Register roles', detail: 'Lists common purposes: EAX=accumulator/returns, EBX scratch, ECX loop counter, EDX high word for mul/div, ESI/EDI source/dest pointers, ESP stack top, EBP frame base.' },
-            { label: 'Stack frame', detail: 'Prologue sets EBP=ESP; args live at [ebp+8], locals at negative offsets; push/pop move ESP.' },
-            { label: 'Flags + jumps', detail: 'CMP/TEST set ZF/SF/CF; conditional jumps (JE/JNE/JL/JG/JA/JB) read those bits for flow control.' }
-        ],
-        resources: [
-            { text: 'Registers overview', url: 'https://web.stanford.edu/class/archive/cs/cs107/cs107.1206/guide/x86-64.html' },
-            { text: 'Intel condition flags cheat sheet', url: 'https://cs.brown.edu/courses/cs033/docs/guides/x64_cheatsheet.pdf' }
-        ],
-        skipAutoExamples: true
-    },
-    {
-        id: 'assembly-stack-calls',
-        title: 'Assembly: Stack Frames & Calls (x86-32)',
-        category: 'systems',
-        description: 'Pure assembly walkthrough of 32-bit stack frames, calling conventions, and parameter passing. Includes a mini glossary of registers (EAX return value, EBX scratch, ECX counter, EDX helper, ESI/EDI pointers, ESP stack pointer, EBP frame base) and how prologue/epilogue protect them.',
-        difficulty: 'intermediate',
-        topics: ['Stack Frames', 'EBP/ESP', 'CALL/RET', 'Parameter Passing', 'Prologue/Epilogue'],
-        exampleHighlight: 'Examples include: prologue/epilogue template, summing an array with ESI/EDI, and nested calls showing saved EBP/ret addresses.',
-        examples: [
-            'Prologue/Epilogue explained: push ebp; mov ebp, esp; sub esp, locals ... mov esp, ebp; pop ebp; ret — keeps EBP stable so [ebp+8] is first arg, [ebp+12] is second.',
-            'Sum loop annotated: ECX = length (counter), ESI = arr base, EAX = running sum, EDX as temp index; add eax, [esi+4*edx] uses scaled-index addressing.',
-            'Call chain: main -> foo -> bar with stack snapshots labeling return addresses, saved EBP, and where args/locals live.'
-        ],
-        codeExamples: {
-            assembly: `; Sum array and show frame layout (x86-32)
-section .text
-global sum_array
-
-sum_array:
-    push ebp
-    mov ebp, esp
-    push ebx              ; save callee-saved
-    mov ebx, [ebp+8]      ; arr pointer
-    mov ecx, [ebp+12]     ; length
-    xor eax, eax          ; sum = 0
-.loop:
-    cmp ecx, 0
-    je .done
-    add eax, [ebx + 4*(ecx-1)]
-    dec ecx
-    jmp .loop
-.done:
-    pop ebx
-    mov esp, ebp
-    pop ebp
-    ret
-`,
-            'assembly-pseudocode': `PROCEDURE sum_array(arr, len):
-  SAVE base pointer
-  SAVE callee-saved registers
-  sum <- 0
-  FOR i from len-1 downto 0:
-    sum <- sum + arr[i]
-  RESTORE registers
-  RETURN sum`
-        },
-        skipAutoExamples: true
-    },
-    {
-        id: 'assembly-branching',
-        title: 'Assembly: Branching & Loops (x86-32)',
-        category: 'systems',
-        description: 'Only assembly + pseudocode. Starts with register cheat-sheet, then compares cmp/test with conditional jumps, counted loops, while loops, and simple switch-like jump tables. Includes notes on which flags each jump reads (JE/JNE use ZF; JL/JG use SF^OF).',
-        difficulty: 'beginner',
-        topics: ['CMP/TEST', 'Jumps', 'Loops', 'Flags', 'Jump Tables'],
-        exampleHighlight: 'Examples include: translating if/else, do-while, counting loop with ecx, and a small jump table for cases 0–2.',
-        examples: [
-            'Registers primer: EAX=accumulator/returns, EBX scratch, ECX counter, EDX helper, ESI/EDI pointers, ESP stack top, EBP frame base; FLAGS holds ZF/SF/CF/OF for jumps.',
-            'If/else: cmp eax, ebx sets flags; jl uses (SF≠OF) for signed less-than; je tests ZF for equality.',
-            'Do-while: label -> body -> evaluate condition -> jnz label; TEST sets ZF without changing registers.',
-            'For loop: mov ecx, n (counter); xor eax, eax (sum); loop add eax, ecx; LOOP instruction decrements ECX and jumps while ECX≠0.',
-            'Jump table: bounds check then indirect jump to cases for 0/1/2 using a table of addresses.'
-        ],
-        codeExamples: {
-            assembly: `; Branching and loops (x86-32)
-section .text
-global abs_val
-
-abs_val:
-    push ebp
-    mov ebp, esp
-    mov eax, [ebp+8]
-    cmp eax, 0
-    jge .done
-    neg eax
-.done:
-    mov esp, ebp
-    pop ebp
-    ret
-
-; Simple switch via jump table (cases 0,1,2)
-global tiny_switch
-tiny_switch:
-    push ebp
-    mov ebp, esp
-    mov eax, [ebp+8]   ; value
-    cmp eax, 2
-    ja .default
-    jmp [jump_table + eax*4]
-.case0:
-    mov eax, 10
-    jmp .end
-.case1:
-    mov eax, 20
-    jmp .end
-.case2:
-    mov eax, 30
-    jmp .end
-.default:
-    mov eax, -1
-.end:
-    mov esp, ebp
-    pop ebp
-    ret
-
-jump_table:
-    dd .case0, .case1, .case2
-`,
-            'assembly-pseudocode': `IF x < 0 THEN x <- -x
-SWITCH x IN {0,1,2} RETURN 10/20/30 ELSE -1`
-        },
-        skipAutoExamples: true
-    },
-    {
-        id: 'assembly-bitwise',
-        title: 'Assembly: Bitwise Tricks (x86-32)',
-        category: 'systems',
-        description: 'Practice bitwise AND/OR/XOR/SHL/SHR with annotated 32-bit examples. Starts with a register recap and shows exactly how masks are built, why SHL/SHR shift by CL, and which flags (CF/SF/ZF) change after bit ops.',
-        difficulty: 'beginner',
-        topics: ['AND/OR/XOR', 'SHL/SHR', 'Masks', 'Parity', 'Flags'],
-        exampleHighlight: 'Examples include: clearing/setting/toggling bits, extracting bytes, and counting set bits with a loop.',
-        examples: [
-            'Registers refresher: EAX accumulator (we mutate it), EBX scratch to hold masks, ECX often carries shift count (CL low byte), EDX helper.',
-            'Clear/set/toggle bit k: build mask in EBX with mov ebx,1 / shl ebx,cl; then AND/OR/XOR with EAX; note how CF is updated on shifts.',
-            'Mask low byte: mov bl, al ; and bl, 0xFF — isolates lowest 8 bits; ZF is set if result is zero.',
-            'Count set bits: test al,1 ; shr al,1 in a loop; TEST sets ZF based on (al & 1) without changing AL.',
-            'Parity: xor-fold the accumulator across bits to compute a single parity bit.'
-        ],
-        codeExamples: {
-            assembly: `; Bitwise ops (x86-32)
-section .text
-global clear_set_toggle, count_bits
-
-; void clear_set_toggle(int* x, int k)
-clear_set_toggle:
-    push ebp
-    mov  ebp, esp
-    mov  eax, [ebp+8]     ; ptr
-    mov  ecx, [ebp+12]    ; k
-    mov  edx, [eax]       ; value
-    mov  ebx, 1
-    shl  ebx, cl          ; ebx = 1 << k
-    and  edx, not ebx     ; clear bit k
-    or   edx, ebx         ; set bit k (demo)
-    xor  edx, ebx         ; toggle bit k (demo)
-    mov  [eax], edx
-    mov  esp, ebp
-    pop  ebp
-    ret
-
-; int count_bits(int x)
-count_bits:
-    push ebp
-    mov  ebp, esp
-    mov  eax, [ebp+8]     ; eax = x
-    xor  ecx, ecx         ; count = 0
-.loop:
-    test eax, eax
-    je   .done
-    add  ecx, eax & 1
-    shr  eax, 1
-    jmp  .loop
-.done:
-    mov  eax, ecx         ; return count
-    mov  esp, ebp
-    pop  ebp
-    ret
-`,
-            'assembly-pseudocode': `clear_set_toggle(*x, k):
-  mask <- 1 << k
-  x := (x & ~mask) ; clear
-  x := (x | mask)  ; set (demo)
-  x := (x ^ mask)  ; toggle
-
-count_bits(x):
-  count <- 0
-  while x != 0:
-    count += (x & 1)
-    x >>= 1
-  return count`
-        },
-        skipAutoExamples: true
-    },
-    {
-        id: 'assembly-stack-strings',
-        title: 'Assembly: Stack & Strings (x86-32)',
-        category: 'systems',
-        description: 'Manipulate the stack for temporary buffers, copy/compare small strings, and see how null terminators are handled at 32-bit alignment boundaries. Includes register primer and explicit notes on which registers must be saved (ESI/EDI/EBX).',
-        difficulty: 'intermediate',
-        topics: ['Stack Buffers', 'String Copy', 'String Compare', 'Alignment', 'Cdecl'],
-        exampleHighlight: 'Examples include: pushing bytes to build a string, copying with movsb, and strcmp-style compare using repe cmpsb.',
-        examples: [
-            'Register roles: ESI = source pointer, EDI = destination pointer, ECX = byte count, EAX = return value; save ESI/EDI if you modify them.',
-            'Build a short string on stack: sub esp, 16; mov dword [esp], 0x00646c72 ("rld\\0"). Shows little-endian layout.',
-            'Copy loop: set ESI/EDI, load ECX with length, use rep movsb to copy ECX bytes; ESP/EBP unchanged.',
-            'Compare loop: repe cmpsb walks both strings until mismatch or count hits 0; ZF=1 means bytes matched.',
-            'Alignment: adjust ESP by multiples of 4 for 32-bit alignment so pushes/pops stay word-aligned.'
-        ],
-        codeExamples: {
-            assembly: `; Stack + strings (x86-32)
-section .text
-global copy_str, cmp_str
-
-; void copy_str(char* dst, char* src, int n)
-copy_str:
-    push ebp
-    mov  ebp, esp
-    push esi
-    push edi
-    mov  edi, [ebp+8]     ; dst
-    mov  esi, [ebp+12]    ; src
-    mov  ecx, [ebp+16]    ; n
-    rep movsb             ; copy n bytes
-    pop  edi
-    pop  esi
-    mov  esp, ebp
-    pop  ebp
-    ret
-
-; int cmp_str(char* a, char* b, int n)
-cmp_str:
-    push ebp
-    mov  ebp, esp
-    push esi
-    push edi
-    mov  esi, [ebp+8]
-    mov  edi, [ebp+12]
-    mov  ecx, [ebp+16]
-    repe cmpsb            ; compare byte-by-byte
-    jne  .diff
-    xor  eax, eax         ; equal -> return 0
-    jmp  .done
-.diff:
-    mov  al, [esi-1]
-    sub  al, [edi-1]      ; sign result: <0,0,>0
-.done:
-    pop  edi
-    pop  esi
-    mov  esp, ebp
-    pop  ebp
-    ret
-`,
-            'assembly-pseudocode': `copy_str(dst, src, n):
-  for i in 0..n-1: dst[i] <- src[i]
-
-cmp_str(a, b, n):
-  for i in 0..n-1:
-    if a[i] != b[i]: return a[i]-b[i]
-  return 0`
-        },
-        skipAutoExamples: true
-    },
-    {
-        id: 'discrete-math-5',
-        title: 'Discrete Mathematics V: Probability Basics',
-        category: 'discrete',
-        description: 'Beginner-friendly probability with sample spaces, events, conditional probability, Bayes’ rule, and independence. Heavy notes, worked examples, and mini tables.',
-        difficulty: 'beginner',
-        topics: ['Sample Spaces', 'Events', 'Conditional Probability', 'Bayes', 'Independence'],
-        exampleHighlight: 'Worked problems: dice/coin sample spaces, conditional probability on cards, Bayes’ rule with full table, independence checks, and expectation/variance calculations.',
-        examples: [
-            `Sample space: Q: P(sum=7) on two dice. Steps: (1) list 36 ordered outcomes; (2) mark success set {(1,6),(2,5),(3,4),(4,3),(5,2),(6,1)} size 6; (3) probability = 6/36=1/6.`,
-            `Conditional: Q: P(heart | face card). Steps: (1) face cards total 12; (2) heart faces {J♥,Q♥,K♥} = 3; (3) conditional probability = 3/12=1/4; (4) note reduced sample space logic.`,
-            `Bayes: Q: medical test with prevalence 1%, sensitivity 99%, specificity 95% over 10,000 people. Steps: (1) disease=100, healthy=9900; (2) TP=0.99·100=99, FN=1; (3) FP=0.05·9900=495, TN=9405; (4) positives=594; (5) P(disease|+) = 99/594 ≈ 0.1667; (6) interpret: most positives are false.`,
-            `Independence: Q: two coin flips, A=first H, B=second H. Steps: (1) P(A)=P(B)=1/2; (2) sample space HH,HT,TH,TT all 1/4; (3) P(A∩B)=1/4; (4) since 1/4 = 1/2·1/2 ⇒ independent.`,
-            `Expectation/variance: Q: fair die. Steps: (1) E=Σ_{k=1..6} k·(1/6)=3.5; (2) E[k²]=Σ k²/6=91/6; (3) Var=E[k²]−(E[k])² = 91/6 − 12.25 = 35/12 ≈ 2.92.`,
-            `Law of total probability: Q: bag with 3 red, 2 blue; draw one then another without replacement. Steps: (1) compute P(2 reds)= (3/5)·(2/4)=6/20=3/10; (2) compute P(R then B)= (3/5)·(2/4)=6/20; (3) verify probabilities sum to 1 across all ordered pairs.`
-        ],
-        codeExamples: {
-            java: `// Theory-only module: probability tables and examples are in the notes.`
-        },
-        skipAutoExamples: true,
-        codeBreakdown: [
-            { label: 'Sample spaces', detail: 'List outcomes and define events clearly before computing probabilities.' },
-            { label: 'Conditional/Bayes', detail: 'Use totals to compute P(A|B) = P(A∩B)/P(B); apply Bayes with numeric tables.' },
-            { label: 'Independence', detail: 'Verify P(A∩B) = P(A)P(B) with simple coin/die events.' }
-        ],
-        truthTables: [],
-        resources: [
-            { text: 'Intro Probability Notes', url: 'https://prob140.org' }
-        ]
-    },
-    {
-        id: 'discrete-math-6',
-        title: 'Discrete Mathematics VI: Proof Strategies & Practice',
-        category: 'discrete',
-        description: 'Deepen proof skills with direct, contrapositive, contradiction, and induction practice. Heavy scaffolding, worked examples, and checklists for beginners.',
-        difficulty: 'beginner',
-        topics: ['Direct Proof', 'Contrapositive', 'Contradiction', 'Induction', 'Proof Structure'],
-        exampleHighlight: 'Structured proofs: parity and divisibility by direct proof, contrapositive parity proof, contradiction (√2 irrational), induction on sums, and a reusable five-step proof checklist.',
-        examples: [
-            `Direct parity: Q: prove even+even=even. Steps: (1) let a=2k, b=2m; (2) sum a+b=2k+2m; (3) factor 2(k+m); (4) k+m is integer ⇒ 2(k+m) even; (5) conclude.`,
-            `Divisibility sum rule: Q: prove “if m|a and m|b then m|(a+b)”. Steps: (1) assume a=m·k and b=m·l for integers k,l; (2) add: a+b = m·k + m·l = m(k+l); (3) k+l is an integer, so m divides a+b; (4) test with numbers (m=4, a=20, b=12 ⇒ a+b=32 divisible by 4) to cement intuition.`,
-            `Contrapositive (n² even ⇒ n even): Steps: (1) prove ¬even(n) ⇒ ¬even(n²); (2) assume n odd ⇒ n=2k+1; (3) square to 4k²+4k+1=2(2k²+2k)+1 odd; (4) conclude contrapositive true ⇒ original true.`,
-            `Contradiction (√2 irrational): Steps: (1) assume √2=p/q in lowest terms; (2) square: 2q²=p² ⇒ p even ⇒ p=2r; (3) substitute: 2q²=4r² ⇒ q²=2r² ⇒ q even; (4) both p,q even contradict lowest terms; (5) contradiction ⇒ √2 irrational.`,
-            `Induction (sum 1..n): Steps: (1) base n=1 true; (2) hypothesis for n; (3) add (n+1): [n(n+1)/2]+(n+1) = (n+1)(n+2)/2; (4) algebra check; (5) conclude.`,
-            `Proof checklist: (1) Restate claim precisely; (2) list givens/goal; (3) choose technique (direct/contrapositive/contradiction/induction); (4) execute algebra/logic with justifications; (5) close with therefore/contradiction sentence.`
-        ],
-        codeExamples: {
-            java: `// Theory-only module: use the proof templates and worked examples.`
-        },
-        skipAutoExamples: true,
-        codeBreakdown: [
-            { label: 'Direct/Contrapositive', detail: 'Rewrite the goal, assume hypotheses, derive target; for contrapositive, flip and negate carefully.' },
-            { label: 'Contradiction', detail: 'Assume the negation of the claim and force an impossibility (parity/irrational examples).' },
-            { label: 'Induction', detail: 'State base, hypothesis, and step; highlight where the hypothesis is used.' }
-        ],
-        truthTables: [],
-        resources: [
-            { text: 'Proof Strategies Guide', url: 'https://people.math.harvard.edu/~elkies/Misc/proofs.pdf' }
-        ]
     }
 ];
 
-function enrichModuleDetails(modulesList = []) {
-    modulesList.forEach(module => {
-        const baseDescription = module.descriptionBase || module.description || '';
-        const baseExplanation = module.explanationBase || module.explanation || baseDescription;
-        const topics = (module.topics || []).slice(0, 4).join(', ') || 'core concepts';
-        const sampleLanguages = Object.keys(module.codeExamples || {});
-
-        module.descriptionBase = baseDescription;
-        module.explanationBase = baseExplanation;
-
-        const examplesList = Array.isArray(module.examples) ? module.examples : [];
-        if ((!examplesList.length) && !shouldSkipAutoExamples(module)) {
-            module.examples = buildDefaultExamples(module);
-        } else {
-            module.examples = examplesList;
-        }
-        if (!module.exampleHighlight) {
-            const preview = Array.isArray(module.examples) ? module.examples.slice(0, 3) : [];
-            module.exampleHighlight = `Examples include: ${preview.join('; ') || topics}.`;
-        }
-        const exampleSnippet = module.exampleHighlight || `Examples include: ${topics}.`;
-        module.description = `${baseDescription} You will see how the sample code maps each idea to practice, watch inputs flow through the helpers, and learn when to pick these techniques (${topics}). ${exampleSnippet}`;
-
-        module.explanation = `${baseExplanation} The walkthrough points out guard clauses, setup/teardown steps, complexity trade-offs, and mirrors the Java sample across ${sampleLanguages.length ? sampleLanguages.join(', ') : 'Java'} so you can cross-check logic in multiple languages. ${exampleSnippet}`;
-
-        const baseBreakdown = module.codeBreakdownBase || module.codeBreakdown || [];
-        module.codeBreakdownBase = baseBreakdown;
-
-        const enrichedBreakdown = baseBreakdown.map(entry => ({
-            ...entry,
-            detail: `${entry.detail} Follow the input/output flow, the edge-case guard, and the time/space footprint as annotated in the code.`
-        }));
-
-        if (!enrichedBreakdown.length) {
-            (module.topics || []).slice(0, 3).forEach(topic => {
-                enrichedBreakdown.push({
-                    label: topic,
-                    detail: `Explains how ${topic} is implemented in the sample and what invariants to check while stepping through the code.`
-                });
-            });
-        }
-
-        module.codeBreakdown = enrichedBreakdown;
-    });
-}
-
-enrichModuleDetails(modules);
-ensureModuleDefinitions(modules);
-
-const MODULE_DISPLAY_ORDER = {
-    'java-basics': 0,
-    'control-flow': 1,
-    'oop-basics': 2,
-    'exception-handling': 3,
-    'arrays-strings': 4,
-    'stacks-queues': 5,
-    'linked-lists': 6,
-    'trees-basics': 7,
-    'hash-tables': 8,
-    'heaps': 9,
-    'sorting-algorithms': 10,
-    'searching-algorithms': 11
-};
-
-const DIFFICULTY_RANK = { beginner: 0, intermediate: 1, advanced: 2 };
-
-modules.sort((a, b) => {
-    const priorityA = MODULE_DISPLAY_ORDER[a.id] ?? Number.MAX_SAFE_INTEGER;
-    const priorityB = MODULE_DISPLAY_ORDER[b.id] ?? Number.MAX_SAFE_INTEGER;
-    if (priorityA !== priorityB) return priorityA - priorityB;
-    const diffRank = (DIFFICULTY_RANK[a.difficulty] ?? 99) - (DIFFICULTY_RANK[b.difficulty] ?? 99);
-    if (diffRank !== 0) return diffRank;
-    return a.title.localeCompare(b.title);
-});
-
-const SAMPLE_LANGUAGES = Object.keys(SUPPORTED_LANGUAGES);
-
-function formatIdentifier(id = '') {
-    return id.split(/[-\s]/).map(part => part.charAt(0).toUpperCase() + part.slice(1)).join('') || 'Module';
-}
-
-function buildSampleCode(module, language) {
-    const title = module.title || 'Module';
-    const summary = (module.topics || []).slice(0, 3).join(', ') || 'core concepts';
-    const className = formatIdentifier(module.id);
-    const guidance = [
-        'Read the description to anchor the concept.',
-        'Follow the code comments to see control flow.',
-        'Trace sample inputs and note edge cases.',
-        'Compare time/space complexity.'
-    ];
-
-    switch (language) {
-        case 'python':
-            return `# ${title} in Python
-# Focus: ${summary}
-# Each step mirrors the Java sample so you can compare logic side by side.
-
-class ${className}Module:
-    def __init__(self):
-        self.topics = ${JSON.stringify(module.topics || [])}
-
-    def walkthrough(self):
-        print("Working through ${title}...")
-        for step in ${JSON.stringify(guidance)}:
-            print(f"- {step}")
-        if self.topics:
-            print("Key topics:")
-            for topic in self.topics:
-                print(f"  • {topic}")
-
-
-if __name__ == "__main__":
-    demo = ${className}Module()
-    demo.walkthrough()
-`;
-        case 'cpp':
-            return `// ${title} in C++\n// Topics: ${summary}\n// Follows the same flow as the Java sample: read, trace, practice.\n#include <iostream>\n#include <vector>\n#include <string>\n\nclass ${className}Module {\npublic:\n    void walkthrough() {\n        std::vector<std::string> guidance = {${guidance.map(s => `"${s}"`).join(', ')}};\n        std::vector<std::string> topics = {${(module.topics || []).map(t => `"${t}"`).join(', ')}};\n        std::cout << "Working through ${title}..." << std::endl;\n        for (const auto& step : guidance) {\n            std::cout << "- " << step << std::endl;\n        }\n        if (!topics.empty()) {\n            std::cout << "Key topics:" << std::endl;\n            for (const auto& topic : topics) {\n                std::cout << "  • " << topic << std::endl;\n            }\n        }\n    }\n};\n\nint main() {\n    ${className}Module demo;\n    demo.walkthrough();\n    return 0;\n}\n`;
-        case 'javascript':
-            return `// ${title} in JavaScript\n// Highlights: ${summary}\n// Mirrors the Java sample: read comments, trace control flow, then practice.\nclass ${className}Module {\n    constructor() {\n        this.topics = ${JSON.stringify(module.topics || [])};\n        this.guidance = ${JSON.stringify(guidance)};\n    }\n\n    walkthrough() {\n        console.log("Working through ${title}...");\n        this.guidance.forEach(step => console.log(\`- \${step}\`));\n        if (this.topics.length) {\n            console.log("Key topics:");\n            this.topics.forEach(topic => console.log(\`  • \${topic}\`));\n        }\n    }\n}\n\nconst demo = new ${className}Module();\ndemo.walkthrough();\n`;
-        default:
-            return module.codeExample || `// ${title} in Java\n// Topics: ${summary}\npublic class ${className}Module {\n    public void walkthrough() {\n        String[] steps = {"concept overview", "code tracing", "practice challenge"};\n        for (String step : steps) {\n            System.out.println("✔️ " + step);\n        }\n    }\n\n    public static void main(String[] args) {\n        new ${className}Module().walkthrough();\n    }\n}\n`;
-    }
-}
-
-function isPlaceholderExample(code = '') {
-    if (!code || typeof code !== 'string') return true;
-    const markers = ['Working through', 'walkthrough', 'guidance =', 'topics =', 'demo.walkthrough', 'focus:', 'Mirrors the Java sample'];
-    return markers.some(marker => code.toLowerCase().includes(marker.toLowerCase()));
-}
-
-function translateJavaToPython(javaCode = '') {
-    const lines = javaCode.replace(/\r/g, '').split('\n');
-    let indent = 0;
-    const translated = [];
-
-    lines.forEach(rawLine => {
-        let line = rawLine.trim();
-        if (!line) {
-            translated.push('');
-            return;
-        }
-        if (line.includes('}')) indent = Math.max(0, indent - 1);
-
-        line = line
-            .replace(/System\.out\.println\s*\((.*)\)\s*;?/, 'print(\\1)')
-            .replace(/System\.out\.print\s*\((.*)\)\s*;?/, 'print(\\1, end="")')
-            .replace(/public\s+static\s+void\s+main\s*\([^)]*\)\s*\{?/, 'def main():')
-            .replace(/\bString\b/g, '')
-            .replace(/\bint\b/g, '')
-            .replace(/\bdouble\b/g, '')
-            .replace(/\bboolean\b/g, '')
-            .replace(/\bchar\b/g, '')
-            .replace(/\bnew\s+([A-Za-z0-9_<>]+)\s*\(\)/g, '\\1()')
-            .replace(/\/\/\s?/g, '# ')
-            .replace(/;/g, '');
-
-        if (line.endsWith('{')) {
-            line = line.replace(/\{\s*$/, ':');
-        }
-
-        translated.push(`${'    '.repeat(indent)}${line}`);
-
-        if (rawLine.includes('{') && !line.startsWith('def main():')) {
-            indent += 1;
-        }
-    });
-
-    if (!translated.find(l => l.trim().startsWith('if __name__'))) {
-        translated.push('');
-        translated.push('if __name__ == "__main__":');
-        translated.push('    main()');
-    }
-    return translated.join('\n');
-}
-
-function translateJavaToJavaScript(javaCode = '') {
-    return javaCode
-        .replace(/System\.out\.println\s*\((.*)\)\s*;?/g, 'console.log($1);')
-        .replace(/System\.out\.print\s*\((.*)\)\s*;?/g, 'process.stdout.write(String($1));')
-        .replace(/\bpublic\s+class\b/g, 'class')
-        .replace(/\bpublic\s+static\s+void\s+main\s*\(([^)]*)\)\s*\{?/g, 'function main($1) {')
-        .replace(/\bString\b/g, '')
-        .replace(/\bint\b/g, 'let')
-        .replace(/\bdouble\b/g, 'let')
-        .replace(/\bboolean\b/g, 'let')
-        .replace(/\bchar\b/g, 'let');
-}
-
-function translateJavaToCpp(javaCode = '') {
-    const header = '#include <bits/stdc++.h>\\nusing namespace std;\\n';
-    const body = javaCode
-        .replace(/System\.out\.println\s*\((.*)\)\s*;?/g, 'cout << $1 << endl;')
-        .replace(/System\.out\.print\s*\((.*)\)\s*;?/g, 'cout << $1;')
-        .replace(/\bString\b/g, 'string')
-        .replace(/\bboolean\b/g, 'bool')
-        .replace(/\btrue\b/g, 'true')
-        .replace(/\bfalse\b/g, 'false')
-        .replace(/\bpublic\s+class\s+([A-Za-z0-9_]+)\s*\{/g, 'class $1 {')
-        .replace(/\bpublic\s+static\s+void\s+main\s*\([^)]*\)\s*\{?/g, 'int main() {')
-        .replace(/new\s+int\[\]/g, 'vector<int>()')
-        .replace(/new\s+String\[\]/g, 'vector<string>()');
-    return `${header}${body}`;
-}
-
-function extractJavaOutputs(javaCode = '') {
-    const outputs = [];
-    const regex = /System\.out\.print(?:ln)?\s*\(([^;]+)\)/g;
-    let match;
-    while ((match = regex.exec(javaCode)) !== null) {
-        const raw = match[1]?.trim() || '';
-        const stringLiterals = raw.match(/"(?:[^"\\]|\\.)*"/g);
-        if (stringLiterals && stringLiterals.length) {
-            const joined = stringLiterals.map(s => s.slice(1, -1)).join(' ').replace(/\s+/g, ' ').trim();
-            if (joined) outputs.push(joined);
-        } else {
-            outputs.push(raw.replace(/\s+/g, ' ').trim());
-        }
-    }
-    return outputs;
-}
-
-function buildAlignedFromJavaOutputs(module, language, javaCode = '') {
-    const base = javaCode || module.codeExamples?.java || module.codeExample || '';
-    const label = SUPPORTED_LANGUAGES[language]?.name || language;
-    const header = language === 'python'
-        ? `# ${label} translation of "${module.title}"\n`
-        : `// ${label} translation of "${module.title}"\n`;
-
-    let translated = base;
-    switch (language) {
-        case 'python':
-            translated = translateJavaToPython(base);
-            break;
-        case 'javascript':
-            translated = translateJavaToJavaScript(base);
-            break;
-        case 'cpp':
-            translated = translateJavaToCpp(base);
-            break;
-        default:
-            translated = base;
-    }
-    return `${header}${translated}`;
-}
-
-function buildDefaultExamples(module) {
-    const title = module.title || 'This module';
-    const topicList = module.topics || [];
-    const primary = topicList[0] || 'core idea';
-    const secondary = topicList[1] || topicList[0] || 'related concept';
-    const difficultyLabel = module.difficulty ? `${module.difficulty} level` : 'all levels';
-    return [
-        `${title}: apply ${primary} on a small input and trace the steps.`,
-        `Compare two approaches for ${secondary}: brute force vs. optimized (${difficultyLabel}).`,
-        `Walk through edge cases (empty input, single item, duplicate values) to see how ${title} handles them.`
-    ];
-}
-
-function ensureModuleDefinitions(modulesList = []) {
-    modulesList.forEach(module => {
-        const existing = Array.isArray(module.definitions) ? [...module.definitions] : [];
-        const definitions = [...existing];
-        const seen = new Set(definitions);
-        const topics = Array.isArray(module.topics) ? module.topics : [];
-        const title = module.title || 'This module';
-
-        const templates = [
-            `${title}: what you should be able to explain after finishing this module.`,
-            `Core invariant: the condition that must stay true for the algorithm to be correct.`,
-            `Edge cases to test: empty input, single element, duplicate values, or extreme sizes.`,
-            `Time complexity: dominant operation count (why O(n)/O(log n)/O(n log n)/O(n²)).`,
-            `Space complexity: extra memory used (stack frames, helper arrays, recursion depth).`,
-            `Data flow: how inputs move through the helpers, recursion, or loops in this module.`,
-            `Common pitfalls: off-by-one errors, overflow, null/empty checks, mutating during iteration.`,
-            `Testing hooks: minimal tests that prove correctness for the concept (happy path + edge).`,
-            `Vocabulary: plain-English explanation of the main concept and when to use it.`,
-            `Performance notes: where the bottlenecks live and how to optimize safely.`
-        ];
-
-        topics.forEach(topic => {
-            if (definitions.length < 10) {
-                const entry = `${topic}: why it matters here and how the sample code demonstrates it.`;
-                if (!seen.has(entry)) {
-                    definitions.push(entry);
-                    seen.add(entry);
-                }
-            }
-        });
-
-        templates.forEach(t => {
-            if (definitions.length < 10 && !seen.has(t)) {
-                definitions.push(t);
-                seen.add(t);
-            }
-        });
-
-        let i = 1;
-        while (definitions.length < 10) {
-            const filler = `${title} note ${i}: restate the key steps and required conditions in your own words.`;
-            if (!seen.has(filler)) {
-                definitions.push(filler);
-                seen.add(filler);
-            }
-            i += 1;
-        }
-
-        module.definitions = definitions.slice(0, 10);
-    });
-}
-
-function findModuleByKeywords(keywords = []) {
-    const lowerKeywords = keywords.map(k => k.toLowerCase());
-    return modules.find(mod => {
-        const haystack = `${mod.id || ''} ${mod.title || ''} ${(mod.topics || []).join(' ')}`.toLowerCase();
-        return lowerKeywords.some(k => haystack.includes(k));
-    });
-}
-
-function getPlaygroundDefinitions(structKey) {
-    const keywords = STRUCTURE_KEYWORDS[structKey] || [structKey];
-    const mod = findModuleByKeywords(keywords);
-    if (mod && mod.definitions && mod.definitions.length) {
-        return mod.definitions.slice(0, 5);
-    }
-    // Fallback basics
-    return [
-        `${structKey}: what it stores and how it is accessed/updated.`,
-        `${structKey}: primary operations with expected time complexity.`,
-        `${structKey}: common pitfalls (empty structure, bounds, duplicates).`,
-        `${structKey}: when to choose it over alternatives.`,
-        `${structKey}: mini example of state before/after one operation.`
-    ];
-}
-
-function shouldSkipAutoExamples(module) {
-    return module.skipAutoExamples || module.category === 'systems' || module.category === 'discrete';
-}
-
-function alignNonJavaExamples(modulesList = []) {
-    modulesList.forEach(module => {
-        if (shouldSkipAutoExamples(module)) return;
-        const javaCode = (module.codeExamples && module.codeExamples.java) || module.codeExample || '';
-        if (!javaCode) return;
-
-        // Normalize to ensure codeExamples exists for downstream consumers
-        module.codeExamples = module.codeExamples ? { ...module.codeExamples } : { java: javaCode };
-
-        SAMPLE_LANGUAGES.forEach(language => {
-            if (language === 'java') return;
-            module.codeExamples[language] = buildAlignedFromJavaOutputs(module, language, javaCode);
-            const pseudoKey = `${language}-pseudocode`;
-            module.codeExamples[pseudoKey] = convertToPseudocode(module.codeExamples[language], language, true);
-        });
-        module.codeExamples['java-pseudocode'] = convertToPseudocode(javaCode, 'java', true);
-    });
-}
-
-modules.forEach(module => {
-    const isSystems = module.category === 'systems';
-    const isDiscrete = module.category === 'discrete';
-    module.codeExamples = module.codeExamples ? { ...module.codeExamples } : {};
-
-    if (isSystems) {
-        // Keep only assembly / pseudocode
-        Object.keys(module.codeExamples).forEach(key => {
-            if (key !== 'assembly' && key !== 'assembly-pseudocode') {
-                delete module.codeExamples[key];
-            }
-        });
-        if (!module.codeExamples.assembly) {
-            module.codeExamples.assembly = buildSampleCode(module, 'assembly');
-        }
-        if (!module.codeExamples['assembly-pseudocode']) {
-            module.codeExamples['assembly-pseudocode'] = convertToPseudocode(module.codeExamples.assembly, 'assembly', true);
-        }
-        return;
-    }
-
-    if (isDiscrete) {
-        return; // theory-focused; skip auto code generation
-    }
-
-    SAMPLE_LANGUAGES.forEach(language => {
-        if (!module.codeExamples[language]) {
-            module.codeExamples[language] = buildSampleCode(module, language);
-        }
-    });
-});
-
-alignNonJavaExamples(modules);
-
-const modulePlaygroundSnippets = buildPlaygroundSnippetLibrary(modules);
-const PLAYGROUND_SNIPPETS = { ...BASE_PLAYGROUND_SNIPPETS, ...modulePlaygroundSnippets };
-const BASE_PLAYGROUND_SNIPPET_KEYS = Object.keys(BASE_PLAYGROUND_SNIPPETS);
-const MODULE_PLAYGROUND_SNIPPET_KEYS = Object.keys(modulePlaygroundSnippets);
-
-CONSTANTS.TOTAL_MODULES = modules.length;
-const luminaryLevel = ACHIEVEMENT_LEVELS.find(level => level.id === 'luminary');
-if (luminaryLevel) {
-    luminaryLevel.threshold = CONSTANTS.TOTAL_MODULES;
-}
-
 const flashcardDecks = generateFlashcardDecks(modules, baseFlashcards);
-quizData = buildModuleQuizBanks(modules, flashcardDecks, glossaryTerms);
 
 const dailyChallenges = [
     {
@@ -5626,61 +3819,6 @@ const dailyChallenges = [
             'Explain when you’d reach for a heap instead of a sorted list.'
         ],
         moduleId: 'heaps'
-    },
-    {
-        id: 'discrete-truth-table-build',
-        title: 'Truth Table Builder',
-        description: 'Construct a full truth table for ¬(p ∧ q) → r and label each equivalence you use.',
-        steps: [
-            'List all 8 combinations of (p,q,r).',
-            'Fill columns for p ∧ q, ¬(p ∧ q), and the implication.',
-            'State which rows make the statement false and why.'
-        ],
-        moduleId: 'discrete-math-1'
-    },
-    {
-        id: 'probability-bayes-refresh',
-        title: 'Bayes Refresher',
-        description: 'Recreate the medical test Bayes table from the Probability module with new numbers.',
-        steps: [
-            'Pick new prevalence, sensitivity, specificity values.',
-            'Compute TP/FN/FP/TN counts on a 10,000-person population.',
-            'Explain P(disease|+) in one sentence.'
-        ],
-        moduleId: 'discrete-math-5'
-    },
-    {
-        id: 'assembly-stack-trace',
-        title: 'Stack Frame Sketch',
-        description: 'Draw the stack frame for an assembly function call and label saved registers.',
-        steps: [
-            'Show ebp/esp before and after prologue/epilogue.',
-            'Mark where params and locals live relative to EBP.',
-            'Annotate which registers must be preserved.'
-        ],
-        moduleId: 'assembly-stack-calls'
-    },
-    {
-        id: 'graphs-bfs-layers',
-        title: 'BFS Layer Trace',
-        description: 'Take a small graph and write the BFS queue contents after each pop.',
-        steps: [
-            'List the adjacency for 5 nodes.',
-            'Track visited set, queue, and layer assignments.',
-            'Summarize the shortest path property in one line.'
-        ],
-        moduleId: 'graph-algorithms'
-    },
-    {
-        id: 'sorting-stability-check',
-        title: 'Sorting Stability Check',
-        description: 'Prove or disprove stability of a chosen sort with a counterexample.',
-        steps: [
-            'Pick merge sort, quicksort, or heapsort.',
-            'Craft input with duplicate keys (e.g., tuples with labels).',
-            'Argue whether relative order is preserved.'
-        ],
-        moduleId: 'sorting-algorithms'
     }
 ];
 
@@ -5691,15 +3829,7 @@ const studyTips = [
     'Mark modules as complete only after you can summarize the code without peeking.',
     'Use the Daily Challenge as your warm-up, then tackle a related module exercise.',
     'Pair flashcards with code: after seeing a definition, open the module snippet it references.',
-    'Refresh the Study Tip when you finish a module to keep motivation high.',
-    'Rewrite the core idea of a module in three bullet points, then solve one related LeetCode easy.',
-    'Record yourself narrating a walkthrough of the sample code, then play it back at 1.25x to reinforce.',
-    'Alternate problem types: arrays → graphs → DP so you build breadth and avoid fatigue.',
-    'Keep a “gotchas” list for off-by-one errors, null checks, and overflow guards; revisit before quizzes.',
-    'After each quiz attempt, write one “I will…” statement (e.g., “I will draw the recursion tree next time”).',
-    'Practice dry-running code with pen and paper before running it in the playground to build intuition.',
-    'Use the inline glossary popovers as checkpoints—hover each bolded term and restate it in your own words.',
-    'End each session by scheduling your next one; momentum is easier when the plan is already set.'
+    'Refresh the Study Tip when you finish a module to keep motivation high.'
 ];
 
 function generateFlashcardDecks(modulesData, generalCards = []) {
@@ -5750,15 +3880,10 @@ function generateFlashcardDecks(modulesData, generalCards = []) {
         });
 
         if (resources.length) {
-            const resourceText = resources.map(resource => {
-                if (typeof resource === 'string') return resource;
-                if (resource.text) return resource.text;
-                return resource.url || 'Resource';
-            }).join(', ');
             cards.push({
                 moduleId: module.id,
                 question: `Name a supporting resource for ${module.title}.`,
-                answer: resourceText
+                answer: resources.join(', ')
             });
         }
 
@@ -5788,269 +3913,6 @@ function generateFlashcardDecks(modulesData, generalCards = []) {
     return deckCollection;
 }
 
-function pickRandomItems(array = [], count = 1, exclude = []) {
-    const excludeSet = new Set(exclude);
-    const available = array.filter(item => item && !excludeSet.has(item));
-    const shuffled = shuffleArray(available);
-    return shuffled.slice(0, Math.min(count, shuffled.length));
-}
-
-function getResourceText(resource) {
-    if (!resource) return '';
-    if (typeof resource === 'string') return resource;
-    return resource.text || resource.url || '';
-}
-
-function createQuestion(questionText, correctOption, distractorOptions = [], explanation = '') {
-    if (!questionText || !correctOption) return null;
-    const used = new Set([correctOption]);
-    const options = [correctOption];
-    distractorOptions.forEach(option => {
-        if (!option || used.has(option) || options.length >= 4) return;
-        options.push(option);
-        used.add(option);
-    });
-    let fillerIndex = 0;
-    while (options.length < 4) {
-        const filler = DEFAULT_DISTRACTOR_TEXTS[fillerIndex % DEFAULT_DISTRACTOR_TEXTS.length];
-        fillerIndex++;
-        if (used.has(filler)) continue;
-        options.push(filler);
-        used.add(filler);
-    }
-    const shuffled = shuffleArray(options);
-    return {
-        question: questionText,
-        options: shuffled,
-        correct: shuffled.indexOf(correctOption),
-        explanation: explanation || 'This detail comes directly from the module walkthrough or glossary.'
-    };
-}
-
-function ensureRunnableJava(code, moduleTitle = 'Module') {
-    if (/public\s+static\s+void\s+main\s*\(/i.test(code)) {
-        return code;
-    }
-    const stub = `
-
-class Main {
-    public static void main(String[] args) {
-        System.out.println("Loaded ${moduleTitle} sample. Add method calls or tests here.");
-    }
-}
-`;
-    return `${code.trim()}\n${stub}`;
-}
-
-function dedupeQuestions(questions = []) {
-    const seen = new Set();
-    return questions.filter(question => {
-        if (!question || !question.question) return false;
-        const key = question.question.trim();
-        if (seen.has(key)) return false;
-        seen.add(key);
-        return true;
-    });
-}
-
-function findGlossaryMatches(module, glossaryList = []) {
-    const haystack = [
-        module.title,
-        module.description,
-        module.explanation,
-        ...(module.topics || [])
-    ].join(' ').toLowerCase();
-    return glossaryList.filter(term => {
-        const value = term.term?.toLowerCase();
-        return value && haystack.includes(value);
-    });
-}
-
-function buildDifficultyQuestion(module) {
-    if (!module.difficulty) return null;
-    const label = module.difficulty.charAt(0).toUpperCase() + module.difficulty.slice(1);
-    const difficulties = ['Beginner', 'Intermediate', 'Advanced'];
-    const distractors = pickRandomItems(difficulties.filter(item => item !== label), 3);
-    return createQuestion(
-        `How is ${module.title} categorized in the curriculum?`,
-        label,
-        distractors,
-        `${module.title} is intentionally presented at the ${label.toLowerCase()} level so you can plan your learning pace.`
-    );
-}
-
-function buildDescriptionQuestion(module, modulesList) {
-    if (!module.description) return null;
-    const distractors = pickRandomItems(
-        modulesList.filter(other => other.id !== module.id).map(other => other.description).filter(Boolean),
-        3
-    );
-    return createQuestion(
-        `Which summary best matches ${module.title}?`,
-        module.description,
-        distractors,
-        module.description
-    );
-}
-
-function buildExplanationQuestion(module, modulesList) {
-    const detail = module.explanation || module.description;
-    if (!detail) return null;
-    const distractors = pickRandomItems(
-        modulesList.filter(other => other.id !== module.id).map(other => other.explanation || other.description).filter(Boolean),
-        3
-    );
-    return createQuestion(
-        `Why is ${module.title} an important stop on your Java DSA roadmap?`,
-        detail,
-        distractors,
-        detail
-    );
-}
-
-function buildResourceQuestion(module, resource, resourcePool) {
-    const resourceText = getResourceText(resource);
-    if (!resourceText) return null;
-    const distractors = pickRandomItems(
-        resourcePool.filter(item => item !== resourceText),
-        3
-    );
-    return createQuestion(
-        `Which supporting resource is listed under ${module.title}?`,
-        resourceText,
-        distractors,
-        `This link is surfaced directly under ${module.title}'s resources list.`
-    );
-}
-
-function buildTopicQuestion(module, topic, modulesList) {
-    if (!topic) return null;
-    const distractors = pickRandomItems(
-        modulesList.filter(other => other.id !== module.id).map(other => other.title),
-        3
-    );
-    return createQuestion(
-        `Which module should you revisit to strengthen ${topic}?`,
-        module.title,
-        distractors,
-        `${topic} is one of the highlighted topics for ${module.title}.`
-    );
-}
-
-function buildBreakdownQuestion(module, breakdown, breakdownPool) {
-    if (!breakdown?.detail) return null;
-    const distractors = pickRandomItems(
-        breakdownPool.filter(item => item !== breakdown.detail),
-        3
-    );
-    return createQuestion(
-        `In ${module.title}, what does the ${breakdown.label} walkthrough emphasize?`,
-        breakdown.detail,
-        distractors,
-        breakdown.detail
-    );
-}
-
-function buildGlossaryDefinitionQuestion(term, glossaryList) {
-    if (!term?.definition) return null;
-    const distractors = pickRandomItems(
-        glossaryList.filter(entry => entry.term !== term.term).map(entry => entry.definition),
-        3
-    );
-    return createQuestion(
-        `According to the glossary, what does ${term.term} mean?`,
-        term.definition,
-        distractors,
-        term.definition
-    );
-}
-
-function buildFlashcardQuestion(module, card, answerPool) {
-    if (!card?.question || !card?.answer) return null;
-    const distractors = pickRandomItems(
-        answerPool.filter(answer => answer !== card.answer),
-        3
-    );
-    return createQuestion(
-        card.question,
-        card.answer,
-        distractors,
-        `This matches the flashcard explanation for ${module.title}.`
-    );
-}
-
-function ensureQuestionPool(pool, module, modulesList) {
-    const builders = [
-        () => buildDescriptionQuestion(module, modulesList),
-        () => buildExplanationQuestion(module, modulesList),
-        () => buildDifficultyQuestion(module)
-    ];
-    let attempts = 0;
-    while (pool.length < QUIZ_CONFIG.poolSize && attempts < 20) {
-        const candidate = builders[attempts % builders.length]();
-        attempts++;
-        if (!candidate) continue;
-        if (pool.some(existing => existing.question === candidate.question)) continue;
-        pool.push(candidate);
-    }
-    return pool;
-}
-
-function buildModuleQuizBanks(modulesList, deckCollection, glossaryList) {
-    const resourcePool = modulesList.flatMap(module => (module.resources || []).map(getResourceText)).filter(Boolean);
-    const breakdownPool = modulesList.flatMap(module => (module.codeBreakdown || []).map(entry => entry.detail)).filter(Boolean);
-    const answerPool = Object.entries(deckCollection)
-        .filter(([deckId]) => deckId !== 'general' && deckId !== 'all')
-        .flatMap(([, cards]) => cards.map(card => card.answer).filter(Boolean));
-
-    const quizBank = {};
-
-    modulesList.forEach(module => {
-        const moduleQuestions = [];
-        moduleQuestions.push(buildDifficultyQuestion(module));
-        moduleQuestions.push(buildDescriptionQuestion(module, modulesList));
-        moduleQuestions.push(buildExplanationQuestion(module, modulesList));
-
-        (module.resources || []).forEach(resource => {
-            moduleQuestions.push(buildResourceQuestion(module, resource, resourcePool));
-        });
-
-        (module.topics || []).forEach(topic => {
-            moduleQuestions.push(buildTopicQuestion(module, topic, modulesList));
-        });
-
-        (module.codeBreakdown || []).forEach(breakdown => {
-            moduleQuestions.push(buildBreakdownQuestion(module, breakdown, breakdownPool));
-        });
-
-        const glossaryMatches = findGlossaryMatches(module, glossaryList);
-        glossaryMatches.forEach(term => {
-            moduleQuestions.push(buildGlossaryDefinitionQuestion(term, glossaryList));
-        });
-
-        (deckCollection[module.id] || []).forEach(card => {
-            moduleQuestions.push(buildFlashcardQuestion(module, card, answerPool));
-        });
-
-        const cleaned = dedupeQuestions(moduleQuestions.filter(Boolean));
-        const completed = ensureQuestionPool(cleaned, module, modulesList);
-        const finalQuestions = shuffleArray(completed)
-            .slice(0, QUIZ_CONFIG.poolSize)
-            .map((question, index) => ({
-                ...question,
-                id: `${module.id}-q${index + 1}`
-            }));
-
-        quizBank[module.id] = {
-            parts: [
-                { questions: finalQuestions }
-            ]
-        };
-    });
-
-    return quizBank;
-}
-
 function getFlashcardDeck(moduleId) {
     if (moduleId === 'general') {
         return flashcardDecks.general || [];
@@ -6068,7 +3930,7 @@ function getFlashcardDeck(moduleId) {
     return flashcardDecks[moduleId] || [];
 }
 
-function shuffleArray(array = []) {
+function shuffleArray(array) {
     const cloned = [...array];
     for (let i = cloned.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -6089,14 +3951,10 @@ function markQuizCompleted(moduleId) {
     if (!moduleId) return;
     if (!appState.completedQuizzes.has(moduleId)) {
         appState.completedQuizzes.add(moduleId);
-        appState.completedModules.add(moduleId);
         populateFlashcardModuleSelect();
         if (appState.selectedFlashcardModule === moduleId) {
             refreshFlashcardSession(moduleId, { persist: false });
         }
-        updateProgress();
-        renderInsights();
-        renderModules();
         saveToLocalStorage();
     }
 }
@@ -6180,60 +4038,6 @@ function renderStudyTip(force = false) {
     if (tipEl) tipEl.textContent = tip.text;
 }
 
-function rotateTipsAndChallenges(force = true) {
-    renderDailyChallenge(force);
-    renderStudyTip(force);
-}
-
-function updateRotationToggle() {
-    const toggleBtn = document.getElementById('toggle-auto-rotate');
-    if (toggleBtn) {
-        toggleBtn.textContent = appState.autoRotatePaused ? 'Resume Auto' : 'Pause Auto';
-    }
-}
-
-function updateRotationStatus() {
-    const statusEl = document.getElementById('rotation-status');
-    if (statusEl) {
-        statusEl.textContent = appState.autoRotatePaused
-            ? 'Auto shuffle paused'
-            : `Auto-shuffling every ${AUTO_ROTATE_MS / 1000}s (synced)`;
-    }
-    updateRotationToggle();
-}
-
-function pauseAutoRotation() {
-    if (rotationIntervalId) {
-        clearInterval(rotationIntervalId);
-        rotationIntervalId = null;
-    }
-    appState.autoRotatePaused = true;
-    updateRotationStatus();
-    saveToLocalStorage();
-}
-
-function startAutoRotation() {
-    if (rotationIntervalId) clearInterval(rotationIntervalId);
-    appState.autoRotatePaused = false;
-    rotationIntervalId = setInterval(() => rotateTipsAndChallenges(true), AUTO_ROTATE_MS);
-    updateRotationStatus();
-    saveToLocalStorage();
-}
-
-function restartAutoRotationIfActive() {
-    if (!appState.autoRotatePaused) {
-        startAutoRotation();
-    }
-}
-
-function toggleAutoRotation() {
-    if (appState.autoRotatePaused) {
-        startAutoRotation();
-    } else {
-        pauseAutoRotation();
-    }
-}
-
 // =================================
 // UTILITY FUNCTIONS
 // =================================
@@ -6251,31 +4055,17 @@ function saveToLocalStorage() {
         moduleModes: Array.from(appState.moduleModes.entries()),
         searchTerm: appState.searchTerm,
         difficultyFilter: appState.difficultyFilter,
-        categoryFilter: appState.categoryFilter,
         glossaryCategory: appState.glossaryCategory,
         currentFlashcard: appState.currentFlashcard,
         selectedFlashcardModule: appState.selectedFlashcardModule,
         theme: appState.theme,
-        accentTheme: appState.accentTheme,
         fontScale: appState.fontScale,
         dailyChallengeId: appState.dailyChallengeId,
         dailyChallengeDate: appState.dailyChallengeDate,
         studyTipId: appState.studyTipId,
         weeklyGoal: appState.weeklyGoal,
         hideCompletedModules: appState.hideCompletedModules,
-        compactLayout: appState.compactLayout,
-        cardDensity: appState.cardDensity,
-        reduceMotion: appState.reduceMotion,
-        highContrast: appState.highContrast,
-        autoRotatePaused: appState.autoRotatePaused,
-        studyPlan: appState.studyPlan,
-        accountProfile: appState.accountProfile,
-        playground: {
-            code: appState.playground.code,
-            sample: appState.playground.sample,
-            output: appState.playground.output,
-            language: appState.playground.language
-        }
+        compactLayout: appState.compactLayout
     };
     localStorage.setItem('javaDSAHub', JSON.stringify(stateToSave));
 }
@@ -6285,8 +4075,7 @@ function loadFromLocalStorage() {
     if (saved) {
         try {
             const state = JSON.parse(saved);
-            const savedDarkMode = state.darkMode;
-            appState.darkMode = savedDarkMode === undefined ? true : Boolean(savedDarkMode);
+            appState.darkMode = state.darkMode || false;
             appState.showComments = state.showComments !== undefined ? state.showComments : true;
             appState.completedModules = new Set(state.completedModules || []);
             appState.expandedCode = new Set(state.expandedCode || []);
@@ -6294,13 +4083,11 @@ function loadFromLocalStorage() {
             appState.moduleLanguages = new Map(state.moduleLanguages || []);
             appState.moduleModes = new Map(state.moduleModes || []);
             appState.searchTerm = state.searchTerm || '';
-            appState.difficultyFilter = ['beginner', 'intermediate', 'advanced', 'all'].includes(state.difficultyFilter) ? state.difficultyFilter : 'all';
-            appState.categoryFilter = normalizeCategoryFilter(state.categoryFilter);
+            appState.difficultyFilter = state.difficultyFilter || 'all';
             appState.glossaryCategory = state.glossaryCategory || 'all';
             appState.currentFlashcard = state.currentFlashcard || 0;
             appState.selectedFlashcardModule = state.selectedFlashcardModule || 'all';
             appState.theme = state.theme || 'default';
-            appState.accentTheme = state.accentTheme || 'indigo';
             appState.fontScale = state.fontScale || 'base';
             appState.completedQuizzes = new Set(state.completedQuizzes || []);
             appState.dailyChallengeId = state.dailyChallengeId || null;
@@ -6309,19 +4096,6 @@ function loadFromLocalStorage() {
             appState.weeklyGoal = Number(state.weeklyGoal) || 5;
             appState.hideCompletedModules = Boolean(state.hideCompletedModules);
             appState.compactLayout = Boolean(state.compactLayout);
-            appState.cardDensity = state.cardDensity || 'standard';
-            appState.reduceMotion = Boolean(state.reduceMotion);
-            appState.highContrast = Boolean(state.highContrast);
-            appState.autoRotatePaused = Boolean(state.autoRotatePaused);
-            appState.studyPlan = state.studyPlan || null;
-            appState.accountProfile = state.accountProfile || null;
-            appState.playground = {
-                code: state.playground?.code || '',
-                sample: state.playground?.sample || DEFAULT_PLAYGROUND_SAMPLE,
-                output: state.playground?.output || '// Output will appear here',
-                language: state.playground?.language || 'java',
-                isRunning: false
-            };
         } catch (e) {
             console.error('Failed to load saved state:', e);
         }
@@ -6419,48 +4193,6 @@ function truncateCode(code, lines = CONSTANTS.CODE_PREVIEW_LINES) {
     return codeLines.slice(0, lines).join('\n') + CONSTANTS.TRUNCATE_INDICATOR;
 }
 
-// Lightweight confetti burst (CSS injected once)
-function triggerConfetti() {
-    const existing = document.getElementById('confetti-style');
-    if (!existing) {
-        const style = document.createElement('style');
-        style.id = 'confetti-style';
-        style.textContent = `
-        @keyframes confetti-fall {
-            0% { transform: translate3d(0,0,0) rotate(0deg); opacity: 1; }
-            100% { transform: translate3d(var(--confetti-x, 0px), 120vh, 0) rotate(720deg); opacity: 0; }
-        }`;
-        document.head.appendChild(style);
-    }
-
-    const container = document.createElement('div');
-    container.style.position = 'fixed';
-    container.style.inset = '0';
-    container.style.pointerEvents = 'none';
-    container.style.zIndex = '9999';
-
-    const colors = ['#4f46e5', '#22c55e', '#f59e0b', '#ef4444', '#06b6d4', '#a855f7'];
-    const pieces = 60;
-    for (let i = 0; i < pieces; i++) {
-        const piece = document.createElement('span');
-        const size = Math.random() * 8 + 6;
-        piece.style.position = 'absolute';
-        piece.style.top = '-10px';
-        piece.style.left = `${Math.random() * 100}%`;
-        piece.style.width = `${size}px`;
-        piece.style.height = `${size * 0.4}px`;
-        piece.style.background = colors[i % colors.length];
-        piece.style.borderRadius = '2px';
-        piece.style.opacity = '0.9';
-        piece.style.animation = `confetti-fall ${Math.random() * 1 + 1.2}s ease-out forwards`;
-        piece.style.setProperty('--confetti-x', `${(Math.random() - 0.5) * 200}px`);
-        container.appendChild(piece);
-    }
-
-    document.body.appendChild(container);
-    setTimeout(() => container.remove(), 1800);
-}
-
 // Module Helper Functions
 function shouldShowComments(moduleId) {
     const individualSetting = appState.moduleComments.get(moduleId);
@@ -6475,19 +4207,12 @@ function getModuleMode(moduleId) {
     return appState.moduleModes.get(moduleId) || 'code';
 }
 
-function getCodeExample(module, languageOverride = null) {
-    const language = languageOverride || getModuleLanguage(module.id);
-    const codeExamples = (module && typeof module.codeExamples === 'object') ? module.codeExamples : {};
-    const mode = getModuleMode(module.id);
-    const pseudoKey = `${language}-pseudocode`;
-    const primary = mode === 'pseudocode'
-        ? (typeof codeExamples[pseudoKey] === 'string' ? codeExamples[pseudoKey] : null)
-        : (typeof codeExamples[language] === 'string' ? codeExamples[language] : null);
-    const javaFallback = mode === 'pseudocode'
-        ? (typeof codeExamples['java-pseudocode'] === 'string' ? codeExamples['java-pseudocode'] : null)
-        : (typeof codeExamples.java === 'string' ? codeExamples.java : null);
-    const legacy = typeof module.codeExample === 'string' ? module.codeExample : null;
-    return primary || javaFallback || legacy || 'Code example coming soon...';
+function getCodeExample(module) {
+    const language = getModuleLanguage(module.id);
+    if (module.codeExamples && module.codeExamples[language]) {
+        return module.codeExamples[language];
+    }
+    return module.codeExample || 'Code example coming soon...';
 }
 
 function processCode(code, moduleId) {
@@ -6519,1436 +4244,6 @@ function applyTheme() {
     }
 }
 
-function applyAccentTheme() {
-    const body = document.body;
-    ACCENT_THEME_CLASSES.forEach(cls => body.classList.remove(cls));
-    const selected = ACCENT_THEME_OPTIONS.includes(appState.accentTheme) ? appState.accentTheme : 'indigo';
-    body.classList.add(`accent-${selected}`);
-}
-
-function applyCardDepth() {
-    const body = document.body;
-    CARD_DEPTH_CLASSES.forEach(cls => body.classList.remove(cls));
-    const selected = CARD_DEPTH_OPTIONS.includes(appState.cardDensity) ? appState.cardDensity : 'standard';
-    body.classList.add(`card-depth-${selected}`);
-}
-
-function applyReducedMotion() {
-    document.body.classList.toggle('reduce-motion', !!appState.reduceMotion);
-}
-
-function applyHighContrast() {
-    document.body.classList.toggle('high-contrast', !!appState.highContrast);
-}
-
-// Inline glossary popover
-let glossaryPopoverEl = null;
-
-function ensureGlossaryPopover() {
-    if (glossaryPopoverEl) return glossaryPopoverEl;
-    glossaryPopoverEl = document.createElement('div');
-    glossaryPopoverEl.className = 'glossary-popover';
-    glossaryPopoverEl.setAttribute('role', 'tooltip');
-    glossaryPopoverEl.style.display = 'block';
-    document.body.appendChild(glossaryPopoverEl);
-    return glossaryPopoverEl;
-}
-
-function showGlossaryPopover(target) {
-    const term = target?.dataset?.glossaryTerm;
-    if (!term) return;
-    const entry = getGlossaryEntry(term);
-    if (!entry) return;
-    const pop = ensureGlossaryPopover();
-    pop.innerHTML = `<strong>${escapeHtml(entry.term)}</strong><br>${escapeHtml(entry.definition)}`;
-    pop.classList.add('visible');
-    const rect = target.getBoundingClientRect();
-    const top = rect.top + window.scrollY - pop.offsetHeight - 10;
-    const left = rect.left + window.scrollX + (rect.width / 2) - (pop.offsetWidth / 2);
-    pop.style.top = `${Math.max(8, top)}px`;
-    pop.style.left = `${Math.max(8, left)}px`;
-}
-
-function hideGlossaryPopover() {
-    if (glossaryPopoverEl) {
-        glossaryPopoverEl.classList.remove('visible');
-    }
-}
-
-function attachInlineGlossaryHandlers() {
-    document.body.removeEventListener('click', handleGlossaryClick, true);
-    document.body.removeEventListener('mouseover', handleGlossaryHover, true);
-    document.body.removeEventListener('mouseout', handleGlossaryLeave, true);
-    document.body.addEventListener('click', handleGlossaryClick, true);
-    document.body.addEventListener('mouseover', handleGlossaryHover, true);
-    document.body.addEventListener('mouseout', handleGlossaryLeave, true);
-}
-
-function handleGlossaryHover(event) {
-    const target = event.target.closest('.glossary-inline');
-    if (!target) return;
-    showGlossaryPopover(target);
-}
-
-function handleGlossaryLeave(event) {
-    if (!event.target.closest('.glossary-inline')) return;
-    hideGlossaryPopover();
-}
-
-function handleGlossaryClick(event) {
-    const target = event.target.closest('.glossary-inline');
-    if (!target) return;
-    event.stopPropagation();
-    showGlossaryPopover(target);
-    setTimeout(() => hideGlossaryPopover(), 2200);
-}
-
-function updateToggleState(toggleId, sliderId, isOn) {
-    const toggle = document.getElementById(toggleId);
-    const slider = document.getElementById(sliderId);
-    if (!toggle || !slider) return;
-    toggle.classList.toggle('bg-indigo-600', isOn);
-    toggle.classList.toggle('bg-slate-300', !isOn);
-    slider.classList.toggle('translate-x-7', isOn);
-    slider.classList.toggle('translate-x-0.5', !isOn);
-}
-
-// Complexity visualizer
-function computeOps(n, complexity, constant = 1) {
-    switch (complexity) {
-        case 'constant': return constant;
-        case 'log': return constant * Math.max(1, Math.log2(Math.max(1, n)));
-        case 'linear': return constant * n;
-        case 'nlogn': return constant * n * Math.max(1, Math.log2(Math.max(1, n)));
-        case 'quadratic': return constant * n * n;
-        default: return constant * n;
-    }
-}
-
-function initComplexityVisualizer() {
-    const nInput = document.getElementById('complexity-n');
-    const levelInput = document.getElementById('complexity-level');
-    const presetSelect = document.getElementById('complexity-preset');
-    const helpEl = document.getElementById('complexity-help');
-    const opsEl = document.getElementById('complexity-ops');
-    const opsNote = document.getElementById('complexity-ops-note');
-    const spaceEl = document.getElementById('complexity-space-usage');
-    const spaceNote = document.getElementById('complexity-space-note');
-    const summary = document.getElementById('complexity-summary');
-    const nValue = document.getElementById('complexity-n-value');
-    const logValue = document.getElementById('complexity-log-value');
-    const labelEl = document.getElementById('complexity-label');
-
-    const levels = [
-        { key: 'constant', label: 'O(1)' },
-        { key: 'log', label: 'O(log n)' },
-        { key: 'linear', label: 'O(n)' },
-        { key: 'nlogn', label: 'O(n log n)' },
-        { key: 'quadratic', label: 'O(n²)' }
-    ];
-
-    const presetMap = {
-        constant: { level: 1, help: 'Hash map lookups or direct indexing run in constant time.' },
-        log: { level: 2, help: 'Binary search and balanced trees shrink the search space each step.' },
-        linear: { level: 3, help: 'Linear scans touch each element once (arrays, strings).' },
-        nlogn: { level: 4, help: 'Efficient sorts (merge/quick/heap) and many divide-and-conquer routines.' },
-        quadratic: { level: 5, help: 'Nested loops (brute-force pairs) grow quickly—optimize if possible.' }
-    };
-
-    if (!nInput || !levelInput) return;
-
-    function update() {
-        const n = Number(nInput.value) || 1;
-        const levelIndex = Math.min(levels.length - 1, Math.max(0, (Number(levelInput.value) || 1) - 1));
-        const { key, label } = levels[levelIndex];
-        const ops = Math.round(computeOps(n, key, 1));
-        const spaceUnits = Math.round(computeOps(n, key, 1));
-        if (opsEl) opsEl.textContent = `${ops.toLocaleString()} ops`;
-        if (spaceEl) spaceEl.textContent = `${spaceUnits.toLocaleString()} units`;
-        if (opsNote) opsNote.textContent = `Assuming ${label} growth.`;
-        if (spaceNote) spaceNote.textContent = `Space mirrors ${label} for n items.`;
-        if (summary) summary.textContent = `n=${n.toLocaleString()} • ${label}`;
-        if (nValue) nValue.textContent = n.toLocaleString();
-        if (logValue) logValue.textContent = Math.max(1, Math.round(Math.log2(Math.max(1, n)))).toLocaleString();
-        if (labelEl) labelEl.textContent = label;
-    }
-
-    if (presetSelect) {
-        presetSelect.addEventListener('change', (e) => {
-            const selected = e.target.value;
-            const preset = presetMap[selected];
-            if (preset) {
-                levelInput.value = preset.level;
-                if (helpEl) helpEl.textContent = preset.help;
-                update();
-            }
-        });
-    }
-
-    [nInput, levelInput].forEach(el => {
-        el.addEventListener('input', update);
-        el.addEventListener('change', update);
-    });
-    update();
-}
-
-// Interview examples copy
-function copyExample(elementId) {
-    const el = document.getElementById(elementId);
-    if (!el) return;
-    const text = el.textContent || '';
-    navigator.clipboard.writeText(text).then(() => {
-        showToast?.('Example copied!', 'success');
-    }).catch(() => showToast?.('Copy failed. Select and copy manually.', 'error'));
-}
-
-function renderInterviewExamples(page = interviewPage) {
-    const grid = document.getElementById('interview-examples-grid');
-    if (!grid) return;
-    const totalPages = Math.max(1, Math.ceil(interviewExamples.length / INTERVIEW_PAGE_SIZE));
-    interviewPage = Math.min(totalPages, Math.max(1, page));
-    const start = (interviewPage - 1) * INTERVIEW_PAGE_SIZE;
-    const current = interviewExamples.slice(start, start + INTERVIEW_PAGE_SIZE);
-    grid.innerHTML = current.map(example => `
-        <div class="interview-card">
-            <div class="flex items-center justify-between mb-2">
-                <div class="flex flex-col">
-                    <span class="font-semibold text-slate-800">${escapeHtml(example.title)}</span>
-                    <span class="text-[11px] uppercase tracking-wide text-slate-500">${escapeHtml(example.language)} · ${escapeHtml(example.difficulty)}</span>
-                </div>
-                <button onclick="copyExample('example-${example.id}')" class="text-xs px-2 py-1 rounded bg-indigo-500 text-white">Copy</button>
-            </div>
-            <pre class="interview-pre" id="example-${example.id}">${escapeHtml(example.code)}</pre>
-        </div>
-    `).join('');
-    renderInterviewPagination(totalPages);
-}
-
-function renderInterviewPagination(totalPages) {
-    const container = document.getElementById('interview-pagination');
-    if (!container) return;
-    container.innerHTML = Array.from({ length: totalPages }, (_, idx) => {
-        const page = idx + 1;
-        const active = page === interviewPage;
-        return `<button class="interview-page ${active ? 'active' : ''}" data-page="${page}">${page}</button>`;
-    }).join('');
-}
-
-function renderNotesLibrary() {
-    const catContainer = document.getElementById('notes-library-categories');
-    const list = document.getElementById('notes-library-list');
-    if (!catContainer || !list) return;
-    catContainer.innerHTML = notesCategories.map(cat => `
-        <button class="notes-chip ${cat === activeNotesCategory ? 'active' : ''}" data-notes-cat="${cat}">${cat}</button>
-    `).join('');
-    const filtered = activeNotesCategory === 'All'
-        ? notesLibrary
-        : notesLibrary.filter(n => n.category === activeNotesCategory);
-    list.innerHTML = filtered.map(item => `
-        <div class="notes-card">
-            <h4>${escapeHtml(item.title)}</h4>
-            <p>${escapeHtml(item.summary)}</p>
-            <p class="text-[11px] uppercase tracking-wide text-slate-500">Category: ${escapeHtml(item.category)} • ${item.pages} pages</p>
-            <div class="notes-actions">
-                <button class="notes-download" data-notes-download="${item.id}">Download ($1)</button>
-                <span class="text-xs text-slate-500">Preview available in class</span>
-            </div>
-        </div>
-    `).join('');
-
-    catContainer.querySelectorAll('[data-notes-cat]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            activeNotesCategory = btn.dataset.notesCat || 'All';
-            renderNotesLibrary();
-        });
-    });
-    list.querySelectorAll('[data-notes-download]').forEach(btn => {
-        btn.addEventListener('click', () => {
-            openNotesDownloadModal(btn.dataset.notesDownload);
-        });
-    });
-}
-
-// Notes
-function loadNotes() {
-    try {
-        const saved = localStorage.getItem(STORAGE_KEYS.NOTES);
-        return saved || '';
-    } catch {
-        return '';
-    }
-}
-
-function saveNotes() {
-    const textarea = document.getElementById('notes-input');
-    if (!textarea) return;
-    try {
-        localStorage.setItem(STORAGE_KEYS.NOTES, textarea.value);
-        showToast?.('Notes saved locally.', 'success');
-    } catch {
-        showToast?.('Unable to save notes locally.', 'error');
-    }
-}
-
-function downloadNotes() {
-    const textarea = document.getElementById('notes-input');
-    if (!textarea) return;
-    const blob = new Blob([textarea.value || ''], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'java-dsa-notes.txt';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-}
-
-// Data Structure Playground
-const dsState = {
-    active: 'array',
-    array: [],
-    stack: [],
-    queue: [],
-    heap: [],
-    graph: { nodes: [], edges: [] },
-    trie: {},
-    tree: null,
-    avl: null,
-    segment: null,
-    hashing: null,
-    heapsort: null,
-    rbtree: null,
-    circuits: null,
-    greedy: null,
-    visualN: 8,
-    lastAction: 'Pick a structure and run an operation.'
-};
-
-const dsConfigs = {
-    array: {
-        label: 'Array',
-        ops: [
-            { label: 'Load sample', action: () => { dsState.array = [2, 4, 7, 9, 13]; } },
-            { label: 'Append example', action: () => dsState.array.push(21) },
-            { label: 'Remove last', action: () => dsState.array.pop() }
-        ],
-        complexity: 'Access O(1), Insert/Remove end O(1) amortized'
-    },
-    stack: {
-        label: 'Stack',
-        ops: [
-            { label: 'Load call stack sample', action: () => { dsState.stack = ['main', 'dfs', 'visit']; } },
-            { label: 'Push frame', action: () => dsState.stack.push('helper()') },
-            { label: 'Pop frame', action: () => dsState.stack.pop() }
-        ],
-        complexity: 'Push/Pop O(1)'
-    },
-    queue: {
-        label: 'Queue',
-        ops: [
-            { label: 'Load print queue', action: () => { dsState.queue = ['docA', 'docB', 'docC']; } },
-            { label: 'Enqueue job', action: () => dsState.queue.push('docX') },
-            { label: 'Dequeue job', action: () => dsState.queue.shift() }
-        ],
-        complexity: 'Enqueue/Dequeue O(1) amortized'
-    },
-    heap: {
-        label: 'Min-Heap',
-        ops: [
-            { label: 'Load priorities', action: () => { dsState.heap = []; [5, 9, 12, 20, 3].forEach(v => heapInsert(v)); } },
-            { label: 'Insert priority', action: () => heapInsert(7) },
-            { label: 'Extract min', action: () => heapExtractMin() }
-        ],
-        complexity: 'Insert/Extract O(log n); Peek O(1)'
-    },
-    graph: {
-        label: 'Graph',
-        ops: [
-            { label: 'Load sample graph', action: () => { dsState.graph = { nodes: ['A', 'B', 'C', 'D'], edges: [['A', 'B'], ['B', 'C'], ['A', 'D']] }; } },
-            { label: 'Add node', action: () => addGraphNode() },
-            { label: 'Add edge', action: () => addGraphEdge() }
-        ],
-        complexity: 'Adjacency list: Add edge O(1); traversal O(V+E)'
-    },
-    trie: {
-        label: 'Trie',
-        ops: [
-            { label: 'Load sample words', action: () => loadSampleTrie() },
-            { label: 'Insert word', action: () => insertTrieWord(sampleWord()) },
-            { label: 'Reset', action: () => { dsState.trie = {}; } }
-        ],
-        complexity: 'Insert/Lookup O(L) where L = word length'
-    },
-    tree: {
-        label: 'Binary Tree',
-        ops: [
-            { label: 'Load sample tree', action: () => loadSampleTree() },
-            { label: 'Insert node', action: () => insertTreeValue(randomValue()) },
-            { label: 'Reset', action: () => { dsState.tree = null; } }
-        ],
-        complexity: 'Insert/Search O(log n) avg; Traversal O(n)'
-    },
-    avl: {
-        label: 'AVL Tree',
-        ops: [
-            { label: 'Load balanced sample', action: () => { dsState.avl = createSampleAVL(); } },
-            { label: 'Insert node', action: () => { dsState.avl = insertAVL(dsState.avl, randomValue()); } },
-            { label: 'Reset', action: () => { dsState.avl = null; } }
-        ],
-        complexity: 'Insert/Search O(log n) guaranteed via rotations'
-    },
-    hashing: {
-        label: 'Hashing',
-        ops: [
-            { label: 'Load sample table', action: () => { dsState.hashing = createSampleHash(); } },
-            { label: 'Insert key', action: () => insertHashKey(sampleWord()) },
-            { label: 'Reset', action: () => { dsState.hashing = createSampleHash(); } }
-        ],
-        complexity: 'Average O(1) lookup/insert; collisions handled with chaining'
-    },
-    heapsort: {
-        label: 'Heap Sort',
-        ops: [
-            { label: 'Load unsorted', action: () => { dsState.heapsort = { input: [7, 1, 9, 3, 6, 2], sorted: [], heapBuilt: false }; } },
-            { label: 'Heapify + extract', action: () => runHeapSortStep() },
-            { label: 'Reset', action: () => { dsState.heapsort = { input: [7, 1, 9, 3, 6, 2], sorted: [], heapBuilt: false }; } }
-        ],
-        complexity: 'O(n log n) time; O(1) extra space'
-    },
-    rbtree: {
-        label: 'Red-Black Tree',
-        ops: [
-            { label: 'Load balanced sample', action: () => { dsState.rbtree = createSampleRBTree(); } },
-            { label: 'Insert node', action: () => insertRBValue(randomValue()) },
-            { label: 'Reset', action: () => { dsState.rbtree = createSampleRBTree(); } }
-        ],
-        complexity: 'Insert/Search O(log n) guaranteed via balancing'
-    },
-    segment: {
-        label: 'Segment Tree',
-        ops: [
-            { label: 'Load sample array', action: () => { dsState.segment = buildSegmentTree([2, 5, 1, 3, 4, 7, 6, 8]); } },
-            { label: 'Update index', action: () => {
-                if (!dsState.segment) dsState.segment = buildSegmentTree([2, 5, 1, 3, 4, 7, 6, 8]);
-                const idx = Math.floor(Math.random() * dsState.segment.n);
-                updateSegmentTree(idx, randomValue());
-            } },
-            { label: 'Query range', action: () => {
-                if (!dsState.segment) dsState.segment = buildSegmentTree([2, 5, 1, 3, 4, 7, 6, 8]);
-                const l = 0;
-                const r = Math.max(0, Math.min(dsState.segment.n - 1, 3));
-                querySegmentTree(l, r);
-            } },
-            { label: 'Reset', action: () => { dsState.segment = null; } }
-        ],
-        complexity: 'Build O(n); Query/Update O(log n)'
-    },
-    circuits: {
-        label: 'Circuits (Topo)',
-        ops: [
-            { label: 'Load DAG sample', action: () => { dsState.circuits = createSampleCircuit(); } },
-            { label: 'Add gate', action: () => addCircuitGate() },
-            { label: 'Reset', action: () => { dsState.circuits = createSampleCircuit(); } }
-        ],
-        complexity: 'Topological order O(V+E)'
-    },
-    greedy: {
-        label: 'Greedy',
-        ops: [
-            { label: 'Load intervals', action: () => { dsState.greedy = createSampleGreedy(); } },
-            { label: 'Pick optimal', action: () => pickGreedyInterval() },
-            { label: 'Reset', action: () => { dsState.greedy = createSampleGreedy(); } }
-        ],
-        complexity: 'Sort O(n log n) + selection O(n)'
-    }
-};
-
-const dsComplexityMap = {
-    array: 'linear',
-    stack: 'constant',
-    queue: 'constant',
-    heap: 'log',
-    graph: 'linear',
-    trie: 'linear',
-    tree: 'log',
-    avl: 'log',
-    hashing: 'constant',
-    heapsort: 'nlogn',
-    rbtree: 'log',
-    segment: 'log',
-    circuits: 'linear',
-    greedy: 'nlogn'
-};
-
-function randomValue() {
-    return Math.floor(Math.random() * 99) + 1;
-}
-
-function heapInsert(val) {
-    dsState.heap.push(val);
-    let i = dsState.heap.length - 1;
-    while (i > 0) {
-        const p = Math.floor((i - 1) / 2);
-        if (dsState.heap[p] <= dsState.heap[i]) break;
-        [dsState.heap[p], dsState.heap[i]] = [dsState.heap[i], dsState.heap[p]];
-        i = p;
-    }
-}
-
-function heapExtractMin() {
-    if (!dsState.heap.length) return null;
-    const min = dsState.heap[0];
-    const last = dsState.heap.pop();
-    if (dsState.heap.length) {
-        dsState.heap[0] = last;
-        let i = 0;
-        while (true) {
-            const l = i * 2 + 1;
-            const r = i * 2 + 2;
-            let smallest = i;
-            if (l < dsState.heap.length && dsState.heap[l] < dsState.heap[smallest]) smallest = l;
-            if (r < dsState.heap.length && dsState.heap[r] < dsState.heap[smallest]) smallest = r;
-            if (smallest === i) break;
-            [dsState.heap[i], dsState.heap[smallest]] = [dsState.heap[smallest], dsState.heap[i]];
-            i = smallest;
-        }
-    }
-    return min;
-}
-
-function addGraphNode() {
-    const id = `N${dsState.graph.nodes.length + 1}`;
-    dsState.graph.nodes.push(id);
-}
-
-function addGraphEdge() {
-    if (dsState.graph.nodes.length < 2) return;
-    const [a, b] = dsState.graph.nodes.slice(-2);
-    dsState.graph.edges.push([a, b]);
-}
-
-function insertTrieWord(word = sampleWord()) {
-    let node = dsState.trie;
-    for (const ch of word) {
-        node.children = node.children || {};
-        node.children[ch] = node.children[ch] || {};
-        node = node.children[ch];
-    }
-    node.isEnd = true;
-}
-
-function loadSampleTrie() {
-    dsState.trie = {};
-    ['code', 'stack', 'queue', 'tree'].forEach(w => insertTrieWord(w));
-}
-
-function createSampleHash() {
-    const buckets = Array.from({ length: 5 }, () => []);
-    ['map', 'stack', 'queue', 'tree'].forEach(key => insertHashKey(key, buckets));
-    return { buckets };
-}
-
-function hashKey(key, size = 5) {
-    let hash = 0;
-    for (const ch of key) {
-        hash = (hash * 31 + ch.charCodeAt(0)) % size;
-    }
-    return hash;
-}
-
-function insertHashKey(key, buckets = dsState.hashing?.buckets) {
-    const table = buckets || (dsState.hashing && dsState.hashing.buckets);
-    if (!table) return;
-    const idx = hashKey(key, table.length);
-    table[idx].push(key);
-    dsState.hashing = { buckets: table };
-}
-
-function runHeapSortStep() {
-    if (!dsState.heapsort) {
-        dsState.heapsort = { input: [7, 1, 9, 3, 6, 2], sorted: [] };
-    }
-    const { input, sorted } = dsState.heapsort;
-    if (!input.length && dsState.heap.length === 0) return;
-    // Build heap on first call
-    if (!dsState.heapsort.heapBuilt) {
-        dsState.heap = [];
-        input.forEach(v => heapInsert(v));
-        dsState.heapsort.heapBuilt = true;
-    }
-    const min = heapExtractMin();
-    if (min !== null && min !== undefined) {
-        sorted.push(min);
-    }
-    dsState.heapsort.input = dsState.heap.slice();
-    dsState.heapsort.sorted = sorted;
-}
-
-function sampleWord() {
-    const words = ['code', 'tree', 'heap', 'stack', 'queue', 'graph'];
-    return words[Math.floor(Math.random() * words.length)];
-}
-
-function loadSampleTree() {
-    dsState.tree = {
-        value: 8,
-        left: { value: 4, left: { value: 2 }, right: { value: 6 } },
-        right: { value: 12, left: { value: 10 }, right: { value: 14 } }
-    };
-}
-
-function insertTreeValue(val) {
-    if (!dsState.tree) {
-        dsState.tree = { value: val };
-        return;
-    }
-    let node = dsState.tree;
-    while (node) {
-        if (val < node.value) {
-            if (!node.left) {
-                node.left = { value: val };
-                return;
-            }
-            node = node.left;
-        } else {
-            if (!node.right) {
-                node.right = { value: val };
-                return;
-            }
-            node = node.right;
-        }
-    }
-}
-
-// AVL helpers
-function avlHeight(node) {
-    return node ? node.height || 1 : 0;
-}
-
-function updateAvlHeight(node) {
-    if (!node) return;
-    node.height = 1 + Math.max(avlHeight(node.left), avlHeight(node.right));
-}
-
-function avlBalance(node) {
-    return node ? avlHeight(node.left) - avlHeight(node.right) : 0;
-}
-
-function rotateRight(y) {
-    const x = y.left;
-    const T2 = x?.right || null;
-    x.right = y;
-    y.left = T2;
-    updateAvlHeight(y);
-    updateAvlHeight(x);
-    return x;
-}
-
-function rotateLeft(x) {
-    const y = x.right;
-    const T2 = y?.left || null;
-    y.left = x;
-    x.right = T2;
-    updateAvlHeight(x);
-    updateAvlHeight(y);
-    return y;
-}
-
-function insertAVL(node, val) {
-    if (!node) return { value: val, height: 1 };
-    if (val < node.value) {
-        node.left = insertAVL(node.left, val);
-    } else {
-        node.right = insertAVL(node.right, val);
-    }
-    updateAvlHeight(node);
-    const balance = avlBalance(node);
-    // Left heavy
-    if (balance > 1 && val < (node.left?.value || 0)) {
-        return rotateRight(node);
-    }
-    // Right heavy
-    if (balance < -1 && val > (node.right?.value || 0)) {
-        return rotateLeft(node);
-    }
-    // Left Right
-    if (balance > 1 && val > (node.left?.value || 0)) {
-        node.left = rotateLeft(node.left);
-        return rotateRight(node);
-    }
-    // Right Left
-    if (balance < -1 && val < (node.right?.value || 0)) {
-        node.right = rotateRight(node.right);
-        return rotateLeft(node);
-    }
-    return node;
-}
-
-function createSampleAVL() {
-    let root = null;
-    [10, 5, 15, 3, 7, 12, 18, 1, 4].forEach(v => {
-        root = insertAVL(root, v);
-    });
-    return root;
-}
-
-function setActiveStructure(key) {
-    dsState.active = key;
-    ensureSampleData(key);
-    renderDSPlayground();
-}
-
-function renderDSPlayground() {
-    const tabs = document.getElementById('ds-tabs');
-    const controls = document.getElementById('ds-controls');
-    const stateEl = document.getElementById('ds-state');
-    const complexityEl = document.getElementById('ds-complexity');
-    const visualEl = document.getElementById('ds-visual');
-    const defsEl = document.getElementById('ds-definitions');
-    const nSlider = document.getElementById('ds-complexity-n');
-    const quickSummary = document.getElementById('ds-complexity-summary');
-    const quickOps = document.getElementById('ds-complexity-ops');
-    const quickLabel = document.getElementById('ds-complexity-label');
-    const statusEl = document.getElementById('ds-status');
-    if (!tabs || !controls || !stateEl || !complexityEl) return;
-
-    ensureSampleData(dsState.active);
-
-    tabs.innerHTML = Object.entries(dsConfigs).map(([key, cfg]) => `
-        <button class="px-3 py-1 rounded-lg text-sm font-semibold ${dsState.active === key ? 'bg-indigo-500 text-white' : 'bg-slate-200 text-slate-800'}"
-            onclick="setActiveStructure('${key}')">${cfg.label}</button>
-    `).join('');
-
-    const cfg = dsConfigs[dsState.active];
-    controls.innerHTML = cfg.ops.map(op => `
-        <button class="w-full px-3 py-2 rounded-lg text-sm font-semibold bg-white border border-slate-200 hover:border-indigo-300"
-            onclick="performDSOp('${dsState.active}', '${op.label}')">${op.label}</button>
-    `).join('');
-
-    let stateText = '';
-    switch (dsState.active) {
-        case 'array':
-            stateText = JSON.stringify(dsState.array);
-            break;
-        case 'stack':
-            stateText = `Top -> ${JSON.stringify(dsState.stack.slice().reverse())}`;
-            break;
-        case 'queue':
-            stateText = `Front -> ${JSON.stringify(dsState.queue)}`;
-            break;
-        case 'heap':
-            stateText = `Heap array: ${JSON.stringify(dsState.heap)}`;
-            break;
-        case 'graph':
-            stateText = `Nodes: ${dsState.graph.nodes.join(', ')}\nEdges: ${dsState.graph.edges.map(e => `${e[0]}-${e[1]}`).join(', ')}`;
-            break;
-        case 'trie':
-            stateText = JSON.stringify(dsState.trie, null, 2);
-            break;
-        case 'tree':
-            stateText = `Nodes (in-order approx): ${JSON.stringify(listTreeValues(dsState.tree))}`;
-            break;
-        case 'avl':
-            stateText = `AVL levels: ${JSON.stringify(treeLevels(dsState.avl || createSampleAVL()).map(level => level.map(n => n.value)))}`;
-            break;
-        case 'hashing':
-            stateText = (dsState.hashing?.buckets || []).map((bucket, idx) => `Bucket ${idx}: ${bucket.join(', ') || 'empty'}`).join('\n');
-            break;
-        case 'heapsort':
-            stateText = `Heap array: ${JSON.stringify(dsState.heap || [])}\nSorted out: ${JSON.stringify(dsState.heapsort?.sorted || [])}`;
-            break;
-        case 'rbtree':
-            stateText = `Nodes: ${treeLevels(dsState.rbtree).flat().map(n => `${n.value}(${n.color || 'black'})`).join(', ')}`;
-            break;
-        case 'segment':
-            stateText = segmentStateText();
-            break;
-        case 'circuits':
-            stateText = `Gates: ${(dsState.circuits?.gates || []).join(', ')}\nEdges: ${(dsState.circuits?.edges || []).map(e => `${e[0]}->${e[1]}`).join(', ')}`;
-            break;
-        case 'greedy':
-            stateText = `Intervals: ${(dsState.greedy?.intervals || []).map(iv => `[${iv[0]},${iv[1]}]`).join(' ')}\nChosen: ${(dsState.greedy?.chosen || []).join(' ')}`;
-            break;
-        default:
-            stateText = '';
-    }
-    stateEl.textContent = stateText || 'No data yet.';
-    complexityEl.textContent = cfg.complexity;
-    if (statusEl) {
-        statusEl.textContent = dsState.lastAction || '';
-    }
-
-    if (visualEl) {
-        visualEl.innerHTML = buildDSVisual(dsState.active);
-    }
-    if (defsEl) {
-        const defs = getPlaygroundDefinitions(dsState.active);
-        defsEl.innerHTML = defs.map(def => `<li>• ${escapeHtml(def)}</li>`).join('');
-    }
-
-    if (nSlider && quickSummary && quickOps && quickLabel) {
-        const activeKey = dsState.active;
-        if (!nSlider.dataset.bound) {
-            nSlider.addEventListener('input', () => {
-                dsState.visualN = Number(nSlider.value) || dsState.visualN;
-                renderDSPlayground();
-            });
-            nSlider.dataset.bound = 'true';
-        }
-        const n = Number(nSlider.value) || dsState.visualN || 8;
-        dsState.visualN = n;
-        const complexityKey = dsComplexityMap[activeKey] || 'linear';
-        const labelMap = {
-            constant: 'O(1)',
-            log: 'O(log n)',
-            linear: 'O(n)',
-            nlogn: 'O(n log n)',
-            quadratic: 'O(n²)'
-        };
-        const ops = Math.round(computeOps(n, complexityKey, 1));
-        quickSummary.textContent = `n=${n} • ${labelMap[complexityKey] || 'O(n)'}`;
-        quickOps.textContent = `${ops.toLocaleString()} ops`;
-        quickLabel.textContent = labelMap[complexityKey] || '';
-    }
-}
-
-function performDSOp(structKey, opLabel) {
-    const cfg = dsConfigs[structKey];
-    if (!cfg) return;
-    const op = cfg.ops.find(o => o.label === opLabel);
-    if (op) {
-        op.action();
-        dsState.lastAction = `${cfg.label}: ${op.label}`;
-    }
-    renderDSPlayground();
-}
-
-function buildDSVisual(structKey) {
-    switch (structKey) {
-        case 'stack': {
-            if (!dsState.stack.length) return '<div class="text-xs text-slate-400">Stack is empty</div>';
-            const items = dsState.stack.map(val => `<div class="ds-box">${val}</div>`).join('');
-            return `<div class="text-[11px] uppercase text-emerald-200 font-semibold">Top</div><div class="ds-stack">${items}</div><div class="text-[11px] uppercase text-slate-400 font-semibold">Bottom</div>`;
-        }
-        case 'queue': {
-            if (!dsState.queue.length) return '<div class="text-xs text-slate-400">Queue is empty</div>';
-            const items = dsState.queue.map(val => `<div class="ds-box">${val}</div>`).join('');
-            return `<div class="ds-queue">${items}</div><div class="flex justify-between text-[11px] text-slate-300 mt-1"><span>Front</span><span>Back</span></div>`;
-        }
-        case 'array': {
-            if (!dsState.array.length) return '<div class="text-xs text-slate-400">Array is empty</div>';
-            const items = dsState.array.map((val, idx) => `<div class="ds-box">${idx}: ${val}</div>`).join('');
-            return `<div class="ds-array">${items}</div>`;
-        }
-        case 'heap': {
-            if (!dsState.heap.length) return '<div class="text-xs text-slate-400">Heap is empty</div>';
-            const items = dsState.heap.map((val, idx) => `<div class="ds-box">${val} <span class="text-[10px] opacity-70">(${idx})</span></div>`).join('');
-            return `<div class="ds-heap">${items}</div>`;
-        }
-        case 'graph': {
-            if (!dsState.graph.nodes.length) return '<div class="text-xs text-slate-400">Graph is empty</div>';
-            const nodes = dsState.graph.nodes.map(n => `<span class="ds-graph-node">${n}</span>`).join('');
-            const edges = dsState.graph.edges.map(e => `${e[0]} — ${e[1]}`).join(', ');
-            return `<div class="ds-graph-nodes">${nodes}</div><div class="ds-graph-edges mt-1">Edges: ${edges || 'None'}</div>`;
-        }
-        case 'trie': {
-            const hasNodes = Object.keys(dsState.trie).length;
-            const words = hasNodes ? listTrieWords(dsState.trie) : [];
-            const content = hasNodes ? words.join(', ') : 'Insert a word to see the trie grow.';
-            return `<div class="ds-trie text-xs whitespace-pre-wrap">Words: ${escapeHtml(content)}</div>`;
-        }
-        case 'tree': {
-            return buildTreeVisual(dsState.tree);
-        }
-        case 'hashing': {
-            if (!dsState.hashing || !dsState.hashing.buckets) return '<div class="text-xs text-slate-400">Hash table empty</div>';
-            return `
-                <div class="space-y-1">
-                    ${dsState.hashing.buckets.map((bucket, idx) => `
-                        <div class="flex items-center gap-2">
-                            <span class="text-[11px] text-slate-300 font-semibold">Bucket ${idx}</span>
-                            <div class="ds-array">${bucket.map(key => `<div class="ds-box">${escapeHtml(key)}</div>`).join('') || '<span class="text-xs text-slate-500">empty</span>'}</div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-        }
-        case 'heapsort': {
-            const data = dsState.heapsort || { input: [], sorted: [] };
-            const inputBoxes = (data.input || []).map(v => `<div class="ds-box">${v}</div>`).join('');
-            const sortedBoxes = (data.sorted || []).map(v => `<div class="ds-box">${v}</div>`).join('');
-            return `
-                <div class="space-y-2">
-                    <div>
-                        <div class="text-[11px] text-slate-300 uppercase font-semibold">Current Heap Array</div>
-                        <div class="ds-array">${inputBoxes || '<span class="text-xs text-slate-500">empty</span>'}</div>
-                    </div>
-                    <div>
-                        <div class="text-[11px] text-emerald-200 uppercase font-semibold">Sorted Output</div>
-                        <div class="ds-array">${sortedBoxes || '<span class="text-xs text-slate-500">empty</span>'}</div>
-                    </div>
-                </div>
-            `;
-        }
-        case 'rbtree': {
-            const tree = dsState.rbtree || createSampleRBTree();
-            const levels = treeLevels(tree);
-            return `
-                <div class="space-y-2">
-                    ${levels.map(level => `
-                        <div class="flex justify-center gap-2">
-                            ${level.map(n => `<div class="ds-box" style="background:${n.color === 'red' ? 'rgba(239, 68, 68, 0.22)' : 'rgba(59, 130, 246, 0.18)'};border-color:${n.color === 'red' ? 'rgba(239,68,68,0.5)' : 'rgba(59,130,246,0.35)'}">${n.value}</div>`).join('')}
-                        </div>
-                    `).join('')}
-                    <div class="text-[11px] text-slate-300">Balanced red/black tree</div>
-                </div>
-            `;
-        }
-        case 'avl': {
-            const tree = dsState.avl || createSampleAVL();
-            return buildTreeVisual(tree);
-        }
-        case 'segment': {
-            const data = dsState.segment || buildSegmentTree([2, 5, 1, 3, 4, 7, 6, 8]);
-            const treeArr = data.tree || [];
-            const arr = data.arr || [];
-            return `
-                <div class="space-y-2">
-                    <div class="text-[11px] text-slate-300 uppercase font-semibold">Base array</div>
-                    <div class="ds-array">${arr.map(v => `<div class="ds-box">${v}</div>`).join('')}</div>
-                    <div class="text-[11px] text-emerald-200 uppercase font-semibold">Tree (range sums)</div>
-                    <div class="text-xs text-slate-200 whitespace-pre-wrap">${treeArr.map((v, idx) => `${idx}: ${v ?? '-'}`).join('  ')}</div>
-                </div>
-            `;
-        }
-        case 'circuits': {
-            const data = dsState.circuits || createSampleCircuit();
-            const gates = data.gates || [];
-            return `
-                <div class="space-y-2">
-                    <div class="flex flex-wrap gap-2">
-                        ${gates.map(g => `<div class="ds-box">${escapeHtml(g)}</div>`).join('')}
-                    </div>
-                    <div class="text-[11px] text-slate-300">Edges: ${data.edges.map(e => `${e[0]}→${e[1]}`).join(', ') || 'none'}</div>
-                </div>
-            `;
-        }
-        case 'greedy': {
-            const data = dsState.greedy || createSampleGreedy();
-            const intervals = data.intervals || [];
-            const chosen = data.chosen || [];
-            return `
-                <div class="space-y-2">
-                    <div class="text-[11px] text-slate-300 uppercase font-semibold">Intervals (start, end)</div>
-                    <div class="flex flex-wrap gap-2">
-                        ${intervals.map(iv => {
-                            const tag = `${iv[0]},${iv[1]}`;
-                            const picked = chosen.includes(tag);
-                            return `<div class="ds-box" style="background:${picked ? 'rgba(52,211,153,0.2)' : 'rgba(255,255,255,0.12)'}">${iv[0]}-${iv[1]}</div>`;
-                        }).join('')}
-                    </div>
-                    <div class="text-[11px] text-emerald-200">Greedy picks non-overlapping shortest finishing times.</div>
-                </div>
-            `;
-        }
-        default:
-            return '<div class="text-xs text-slate-400">Choose a structure to visualize.</div>';
-    }
-}
-
-function ensureSampleData(key) {
-    switch (key) {
-        case 'array':
-            if (!dsState.array.length) dsState.array = [2, 4, 7, 9, 13];
-            break;
-        case 'stack':
-            if (!dsState.stack.length) dsState.stack = ['main', 'dfs'];
-            break;
-        case 'queue':
-            if (!dsState.queue.length) dsState.queue = ['docA', 'docB'];
-            break;
-        case 'heap':
-            if (!dsState.heap.length) {
-                dsState.heap = [];
-                [5, 9, 12, 20, 3].forEach(v => heapInsert(v));
-            }
-            break;
-        case 'graph':
-            if (!dsState.graph.nodes.length) {
-                dsState.graph = { nodes: ['A', 'B', 'C'], edges: [['A', 'B'], ['B', 'C']] };
-            }
-            break;
-        case 'trie':
-            if (!Object.keys(dsState.trie).length) {
-                loadSampleTrie();
-            }
-            break;
-        case 'tree':
-            if (!dsState.tree) {
-                loadSampleTree();
-            }
-            break;
-        case 'avl':
-            if (!dsState.avl) {
-                dsState.avl = createSampleAVL();
-            }
-            break;
-        case 'hashing':
-            if (!dsState.hashing) {
-                dsState.hashing = createSampleHash();
-            }
-            break;
-        case 'heapsort':
-            if (!dsState.heapsort) {
-                dsState.heapsort = { input: [7, 1, 9, 3, 6], sorted: [], heapBuilt: false };
-            }
-            break;
-        case 'rbtree':
-            if (!dsState.rbtree) {
-                dsState.rbtree = createSampleRBTree();
-            }
-            break;
-        case 'segment':
-            if (!dsState.segment) {
-                dsState.segment = buildSegmentTree([2, 5, 1, 3, 4, 7, 6, 8]);
-            }
-            break;
-        case 'circuits':
-            if (!dsState.circuits) {
-                dsState.circuits = createSampleCircuit();
-            }
-            break;
-        case 'greedy':
-            if (!dsState.greedy) {
-                dsState.greedy = createSampleGreedy();
-            }
-            break;
-        default:
-            break;
-    }
-}
-
-function segmentStateText() {
-    const data = dsState.segment || buildSegmentTree([2, 5, 1, 3, 4, 7, 6, 8]);
-    const base = `Array: [${data.arr.join(', ')}]`;
-    const query = data.lastQuery ? ` | Last query [${data.lastQuery.l},${data.lastQuery.r}] = ${data.lastQuery.result}` : '';
-    return `${base}${query}`;
-}
-
-function listTrieWords(node = dsState.trie, prefix = '', words = []) {
-    if (!node) return words;
-    if (node.isEnd) words.push(prefix);
-    const children = node.children || {};
-    Object.keys(children).forEach(ch => listTrieWords(children[ch], prefix + ch, words));
-    return words;
-}
-
-function buildTreeVisual(tree = dsState.tree) {
-    if (!tree) return '<div class="text-xs text-slate-400">Tree is empty</div>';
-    const levels = [];
-    const queue = [{ node: tree, depth: 0 }];
-    while (queue.length) {
-        const { node, depth } = queue.shift();
-        levels[depth] = levels[depth] || [];
-        levels[depth].push(node);
-        if (node.left) queue.push({ node: node.left, depth: depth + 1 });
-        if (node.right) queue.push({ node: node.right, depth: depth + 1 });
-    }
-    return `
-        <div class="space-y-2">
-            ${levels.map((level, idx) => `
-                <div class="flex justify-center gap-2">
-                    ${level.map(n => `<div class="ds-box">${n.value}</div>`).join('')}
-                </div>
-            `).join('')}
-            <div class="text-[11px] text-slate-300">Level order · ${levels.length} levels</div>
-        </div>
-    `;
-}
-
-function listTreeValues(tree, arr = []) {
-    if (!tree) return arr;
-    if (tree.left) listTreeValues(tree.left, arr);
-    arr.push(tree.value);
-    if (tree.right) listTreeValues(tree.right, arr);
-    return arr;
-}
-
-function treeLevels(tree) {
-    if (!tree) return [];
-    const levels = [];
-    const queue = [{ node: tree, depth: 0 }];
-    while (queue.length) {
-        const { node, depth } = queue.shift();
-        levels[depth] = levels[depth] || [];
-        levels[depth].push(node);
-        if (node.left) queue.push({ node: node.left, depth: depth + 1 });
-        if (node.right) queue.push({ node: node.right, depth: depth + 1 });
-    }
-    return levels;
-}
-
-function createSampleRBTree() {
-    return {
-        value: 10,
-        color: 'black',
-        left: { value: 5, color: 'red', left: { value: 3, color: 'black' }, right: { value: 7, color: 'black' } },
-        right: { value: 15, color: 'red', left: { value: 13, color: 'black' }, right: { value: 18, color: 'black' } }
-    };
-}
-
-function insertRBValue(val) {
-    if (!dsState.rbtree) {
-        dsState.rbtree = createSampleRBTree();
-    }
-    // Simplified insert: append to rightmost for visualization only
-    let node = dsState.rbtree;
-    while (node.right) node = node.right;
-    node.right = { value: val, color: 'red' };
-}
-
-// Segment tree (range sum)
-function buildSegmentTree(arr = []) {
-    const n = arr.length;
-    const tree = new Array(n * 4).fill(0);
-    function build(node, l, r) {
-        if (l === r) {
-            tree[node] = arr[l];
-            return;
-        }
-        const mid = Math.floor((l + r) / 2);
-        build(node * 2, l, mid);
-        build(node * 2 + 1, mid + 1, r);
-        tree[node] = tree[node * 2] + tree[node * 2 + 1];
-    }
-    if (n) build(1, 0, n - 1);
-    return { arr: [...arr], tree, n, lastQuery: null };
-}
-
-function updateSegmentTree(idx, val) {
-    if (!dsState.segment) dsState.segment = buildSegmentTree([2, 5, 1, 3, 4, 7, 6, 8]);
-    const data = dsState.segment;
-    if (idx < 0 || idx >= data.n) return;
-    data.arr[idx] = val;
-    function update(node, l, r) {
-        if (l === r) {
-            data.tree[node] = val;
-            return;
-        }
-        const mid = Math.floor((l + r) / 2);
-        if (idx <= mid) update(node * 2, l, mid);
-        else update(node * 2 + 1, mid + 1, r);
-        data.tree[node] = data.tree[node * 2] + data.tree[node * 2 + 1];
-    }
-    update(1, 0, data.n - 1);
-    dsState.lastAction = `Segment tree: updated index ${idx} to ${val}`;
-    renderDSPlayground();
-}
-
-function querySegmentTree(l, r) {
-    if (!dsState.segment) dsState.segment = buildSegmentTree([2, 5, 1, 3, 4, 7, 6, 8]);
-    const data = dsState.segment;
-    l = Math.max(0, l);
-    r = Math.min(data.n - 1, r);
-    if (l > r) return 0;
-    function query(node, left, right) {
-        if (l <= left && right <= r) return data.tree[node];
-        const mid = Math.floor((left + right) / 2);
-        let sum = 0;
-        if (l <= mid) sum += query(node * 2, left, mid);
-        if (r > mid) sum += query(node * 2 + 1, mid + 1, right);
-        return sum;
-    }
-    const result = query(1, 0, data.n - 1);
-    data.lastQuery = { l, r, result };
-    dsState.lastAction = `Segment tree: sum [${l}, ${r}] = ${result}`;
-    renderDSPlayground();
-    return result;
-}
-
-function createSampleCircuit() {
-    return {
-        gates: ['Input A', 'Input B', 'AND', 'NOT', 'Output'],
-        edges: [['Input A', 'AND'], ['Input B', 'AND'], ['AND', 'NOT'], ['NOT', 'Output']]
-    };
-}
-
-function addCircuitGate() {
-    if (!dsState.circuits) dsState.circuits = createSampleCircuit();
-    const idx = dsState.circuits.gates.length + 1;
-    const name = `Gate ${idx}`;
-    dsState.circuits.gates.push(name);
-    if (dsState.circuits.gates.length > 1) {
-        const prev = dsState.circuits.gates[dsState.circuits.gates.length - 2];
-        dsState.circuits.edges.push([prev, name]);
-    }
-}
-
-function createSampleGreedy() {
-    return { intervals: [[1, 3], [2, 4], [3, 5], [0, 6], [5, 7]], chosen: [] };
-}
-
-function pickGreedyInterval() {
-    if (!dsState.greedy) dsState.greedy = createSampleGreedy();
-    const { intervals } = dsState.greedy;
-    const sorted = intervals.slice().sort((a, b) => a[1] - b[1]);
-    const chosen = [];
-    let lastEnd = -Infinity;
-    sorted.forEach(iv => {
-        if (iv[0] >= lastEnd) {
-            chosen.push(`${iv[0]},${iv[1]}`);
-            lastEnd = iv[1];
-        }
-    });
-    dsState.greedy.chosen = chosen;
-}
-
-function getPlaygroundSnippet(key, language = appState.playground.language) {
-    const snippet = PLAYGROUND_SNIPPETS[key] || PLAYGROUND_SNIPPETS[DEFAULT_PLAYGROUND_SAMPLE];
-    if (!snippet) return { label: '', code: '' };
-    const languageKey = SUPPORTED_LANGUAGES[language] ? language : 'java';
-    const code = (snippet.codeByLanguage && (snippet.codeByLanguage[languageKey] || snippet.codeByLanguage.java))
-        || snippet.code
-        || '';
-    return {
-        label: snippet.label || formatIdentifier(key),
-        code
-    };
-}
-
-function populatePlaygroundSnippetOptions() {
-    const select = document.getElementById('playground-snippets');
-    if (!select) return;
-
-    const optionGroups = [];
-
-    if (BASE_PLAYGROUND_SNIPPET_KEYS.length) {
-        const baseOptions = BASE_PLAYGROUND_SNIPPET_KEYS.map(key => {
-            const snippet = BASE_PLAYGROUND_SNIPPETS[key];
-            const label = snippet?.label || formatIdentifier(key);
-            return `<option value="${key}">${label}</option>`;
-        }).join('');
-        optionGroups.push(`<optgroup label="Starter Samples">${baseOptions}</optgroup>`);
-    }
-
-    const moduleOptions = modules
-        .map((module, index) => {
-            const snippetKey = `module-${module.id}`;
-            if (!modulePlaygroundSnippets[snippetKey]) return null;
-            return `<option value="${snippetKey}">${index + 1}. ${module.title}</option>`;
-        })
-        .filter(Boolean)
-        .join('');
-
-    if (moduleOptions) {
-        optionGroups.push(`<optgroup label="Module Walkthroughs">${moduleOptions}</optgroup>`);
-    }
-
-    if (!optionGroups.length) {
-        optionGroups.push('<option value="hello-world">Hello World</option>');
-    }
-
-    select.innerHTML = optionGroups.join('');
-    const preferredSample = PLAYGROUND_SNIPPETS[appState.playground.sample]
-        ? appState.playground.sample
-        : DEFAULT_PLAYGROUND_SAMPLE;
-    select.value = preferredSample;
-}
-
-function populatePlaygroundLanguageOptions() {
-    const languageSelect = document.getElementById('playground-language');
-    if (!languageSelect) return;
-
-    languageSelect.innerHTML = Object.entries(SUPPORTED_LANGUAGES)
-        .map(([key, meta]) => `<option value="${key}">${meta.icon} ${meta.name}</option>`)
-        .join('');
-
-    const preferredLanguage = SUPPORTED_LANGUAGES[appState.playground.language]
-        ? appState.playground.language
-        : 'java';
-
-    appState.playground.language = preferredLanguage;
-    languageSelect.value = preferredLanguage;
-
-    languageSelect.addEventListener('change', (event) => {
-        setPlaygroundLanguage(event.target.value);
-    });
-}
-
-function initPlayground() {
-    const editor = document.getElementById('playground-editor');
-    if (!editor) return;
-
-    populatePlaygroundSnippetOptions();
-    populatePlaygroundLanguageOptions();
-    const select = document.getElementById('playground-snippets');
-    const fallbackSample = PLAYGROUND_SNIPPETS[appState.playground.sample]
-        ? appState.playground.sample
-        : DEFAULT_PLAYGROUND_SAMPLE;
-
-    if (!appState.playground.code) {
-        const snippet = getPlaygroundSnippet(fallbackSample, appState.playground.language);
-        appState.playground.code = snippet.code;
-    }
-    appState.playground.sample = fallbackSample;
-
-    if (select) {
-        select.value = fallbackSample;
-        select.addEventListener('change', (event) => {
-            setPlaygroundSample(event.target.value);
-        });
-    }
-
-    editor.value = appState.playground.code;
-    editor.addEventListener('input', (event) => {
-        appState.playground.code = event.target.value;
-        saveToLocalStorage();
-    });
-    document.getElementById('playground-run')?.addEventListener('click', runPlaygroundCode);
-    document.getElementById('playground-reset')?.addEventListener('click', resetPlaygroundEditor);
-    document.getElementById('playground-copy')?.addEventListener('click', copyPlaygroundOutput);
-    updatePlaygroundOutput(appState.playground.output || '// Output will appear here');
-    updatePlaygroundStatus('Idle', false);
-}
-
-function setPlaygroundSample(sampleKey) {
-    if (!PLAYGROUND_SNIPPETS[sampleKey]) {
-        sampleKey = DEFAULT_PLAYGROUND_SAMPLE;
-    }
-    appState.playground.sample = sampleKey;
-    const snippet = getPlaygroundSnippet(sampleKey, appState.playground.language);
-    appState.playground.code = snippet.code;
-    const select = document.getElementById('playground-snippets');
-    if (select) {
-        select.value = sampleKey;
-    }
-    const editor = document.getElementById('playground-editor');
-    if (editor) {
-        editor.value = appState.playground.code;
-    }
-    appState.playground.output = '// Output will appear here';
-    updatePlaygroundOutput(appState.playground.output);
-    saveToLocalStorage();
-}
-
-function setPlaygroundLanguage(language) {
-    const normalized = SUPPORTED_LANGUAGES[language] ? language : 'java';
-    appState.playground.language = normalized;
-
-    const languageSelect = document.getElementById('playground-language');
-    if (languageSelect) {
-        languageSelect.value = normalized;
-    }
-
-    const snippet = getPlaygroundSnippet(appState.playground.sample, normalized);
-    appState.playground.code = snippet.code;
-
-    const editor = document.getElementById('playground-editor');
-    if (editor) {
-        editor.value = appState.playground.code;
-    }
-
-    appState.playground.output = '// Output will appear here';
-    updatePlaygroundOutput(appState.playground.output);
-    saveToLocalStorage();
-}
-
-async function runPlaygroundCode() {
-    if (appState.playground.isRunning) return;
-    const code = appState.playground.code.trim();
-    if (!code) {
-        updatePlaygroundOutput('Add some code before running the playground.', 'error');
-        return;
-    }
-    if (!CODE_RUNNER_ENDPOINT) {
-        updatePlaygroundOutput('Set CODE_RUNNER_ENDPOINT in js/script.js to connect a code runner.', 'error');
-        return;
-    }
-
-    const languageKey = SUPPORTED_LANGUAGES[appState.playground.language]
-        ? appState.playground.language
-        : 'java';
-    const runnerConfig = CODE_RUNNER_CONFIG[languageKey] || CODE_RUNNER_CONFIG.java;
-
-    updatePlaygroundStatus(`Running ${SUPPORTED_LANGUAGES[languageKey]?.name || ''}`, true);
-
-    try {
-        const payload = {
-            language: runnerConfig.language,
-            version: runnerConfig.version,
-            files: [{ name: runnerConfig.filename, content: code }]
-        };
-        const response = await fetch(CODE_RUNNER_ENDPOINT, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        if (!response.ok) {
-            throw new Error(`Runner responded with ${response.status}`);
-        }
-        const data = await response.json();
-        const stdout = data?.run?.stdout?.trim();
-        const stderr = data?.run?.stderr?.trim();
-        const fallback = data?.run?.output?.trim();
-
-        let outputText = '// Program finished with no output';
-        let status = 'info';
-
-        if (stderr) {
-            outputText = stderr;
-            status = 'error';
-        } else if (stdout) {
-            outputText = stdout;
-            status = 'success';
-        } else if (fallback) {
-            outputText = fallback;
-            status = 'info';
-        }
-
-        updatePlaygroundOutput(outputText, status);
-        appState.playground.output = outputText;
-        saveToLocalStorage();
-    } catch (error) {
-        updatePlaygroundOutput(`Unable to reach the runner (${error.message}). Make sure you are online or configure a local endpoint.`, 'error');
-    } finally {
-        updatePlaygroundStatus('Idle', false);
-    }
-}
-
-function resetPlaygroundEditor() {
-    setPlaygroundSample(appState.playground.sample);
-}
-
-function updatePlaygroundOutput(text, status = 'info') {
-    const outputEl = document.getElementById('playground-output');
-    if (!outputEl) return;
-    outputEl.textContent = text;
-    outputEl.classList.remove('success', 'error');
-    if (status === 'success') outputEl.classList.add('success');
-    if (status === 'error') outputEl.classList.add('error');
-}
-
-function updatePlaygroundStatus(label, running) {
-    const statusEl = document.getElementById('playground-status');
-    if (statusEl) {
-        statusEl.textContent = running ? 'Running...' : label;
-        statusEl.classList.toggle('bg-emerald-100', running);
-        statusEl.classList.toggle('text-emerald-700', running);
-        statusEl.classList.toggle('bg-slate-100', !running);
-        statusEl.classList.toggle('text-slate-600', !running);
-    }
-    appState.playground.isRunning = running;
-}
-
-function copyPlaygroundOutput() {
-    const outputEl = document.getElementById('playground-output');
-    if (!outputEl) return;
-    navigator.clipboard.writeText(outputEl.textContent || '')
-        .then(() => showToast?.('Playground output copied!', 'success'))
-        .catch(() => showToast?.('Copy failed. Select the text and copy manually.', 'error'));
-}
-
 function applyFontScale() {
     const root = document.documentElement;
     FONT_SCALE_CLASSES.forEach(cls => root.classList.remove(cls));
@@ -7969,10 +4264,6 @@ function updateProgress() {
         `${appState.completedModules.size} of ${CONSTANTS.TOTAL_MODULES} modules completed`;
     document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
     document.getElementById('progress-percentage').textContent = `${progressPercentage}%`;
-    const goalEl = document.getElementById('progress-goal');
-    if (goalEl) {
-        goalEl.textContent = `Goal: Complete all ${CONSTANTS.TOTAL_MODULES} modules`;
-    }
 
     renderAchievements();
 }
@@ -8023,78 +4314,34 @@ function updateHeaderShrink() {
     const title = document.getElementById('main-title');
     const subtitle = document.getElementById('main-subtitle');
     const buttons = document.getElementById('header-buttons');
-    const chip = document.getElementById('account-chip');
-    const inner = header?.querySelector('.header-inner');
-    const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-    const progress = Math.min(appState.scrollY / 50, 1);
-    const isScrolled = appState.scrollY > 5;
-    const isCollapsed = appState.scrollY > 5;
-    const isFullyShrunken = appState.scrollY > 30;
+    const progress = Math.min(appState.scrollY / 200, 1);
+    const isScrolled = appState.scrollY > 10;
+    const isFullyShrunken = appState.scrollY > 100;
 
-    // Header padding - enforce tiny padding on mobile
-    const paddingY = Math.max(10 - progress * 9, isMobile ? 0.5 : 1.5);
-    if (inner) {
-        inner.style.paddingTop = `${paddingY}px`;
-        inner.style.paddingBottom = `${paddingY}px`;
+    // Header padding - smaller values for optimization
+    const paddingY = Math.max(12 - progress * 6, 6);
+    header.style.paddingTop = `${paddingY}px`;
+    header.style.paddingBottom = `${paddingY}px`;
+
+    // Title size - optimized sizes
+    if (isFullyShrunken) {
+        title.className = title.className.replace(/text-\w+/g, '') + ' text-lg sm:text-xl lg:text-2xl';
     } else {
-        header.style.paddingTop = `${paddingY}px`;
-        header.style.paddingBottom = `${paddingY}px`;
-    }
-    header.classList.toggle('header-collapsed', isCollapsed);
-
-    // Title scale and font override on mobile
-    title.style.transform = isFullyShrunken ? 'scale(0.82)' : 'scale(1)';
-    if (isCollapsed && isMobile) {
-        title.style.fontSize = '0.95rem';
-        title.style.lineHeight = '1.05';
-        title.style.margin = '0';
-    } else {
-        title.style.fontSize = '';
-        title.style.lineHeight = '';
-        title.style.margin = '';
+        title.className = title.className.replace(/text-\w+/g, '') + ' text-xl sm:text-2xl lg:text-3xl';
     }
 
     // Subtitle opacity
-    const subtitleOpacity = Math.max(1 - progress * 1.8, 0);
+    const subtitleOpacity = Math.max(1 - progress * 1.5, 0);
     subtitle.style.opacity = subtitleOpacity;
-    subtitle.style.maxHeight = isCollapsed ? '0px' : '48px';
-    subtitle.style.marginTop = isCollapsed ? '0px' : '4px';
-    subtitle.style.transform = subtitleOpacity < 0.5 || isCollapsed ? 'translateY(-10px)' : 'translateY(0)';
-    subtitle.style.display = (isCollapsed && isMobile) ? 'none' : '';
+    subtitle.style.transform = subtitleOpacity < 0.3 ? 'translateY(-10px)' : 'translateY(0)';
 
     // Buttons
-    const buttonOpacity = Math.max(1 - progress * 1.4, 0);
-    const buttonScale = Math.max(1 - progress * 0.45, isMobile ? 0.5 : 0.65);
+    const buttonOpacity = Math.max(1 - progress * 1.2, 0);
+    const buttonScale = Math.max(1 - progress * 0.3, 0.7);
     buttons.style.opacity = buttonOpacity;
     buttons.style.transform = `scale(${buttonScale})`;
     buttons.style.transformOrigin = 'top right';
-    if (chip) {
-        chip.style.opacity = isCollapsed ? 0 : 1;
-        chip.style.transform = isCollapsed ? 'translateY(-6px)' : 'translateY(0)';
-    }
-
-    // Explicit height constraints on mobile when collapsed
-    if (isCollapsed && isMobile) {
-        const targetHeight = 32;
-        header.style.minHeight = `${targetHeight}px`;
-        header.style.maxHeight = `${targetHeight}px`;
-        header.style.height = `${targetHeight}px`;
-        if (inner) {
-            inner.style.minHeight = `${targetHeight}px`;
-            inner.style.height = `${targetHeight}px`;
-            inner.style.alignItems = 'center';
-        }
-    } else {
-        header.style.minHeight = '';
-        header.style.maxHeight = '';
-        header.style.height = '';
-        if (inner) {
-            inner.style.minHeight = '';
-            inner.style.height = '';
-            inner.style.alignItems = '';
-        }
-    }
 
     // Add/remove shadow
     if (isScrolled) {
@@ -8108,356 +4355,167 @@ function filterModules() {
     const searchTerm = appState.searchTerm.trim().toLowerCase();
     const hasSearch = searchTerm.length > 0;
     const difficultyFilter = appState.difficultyFilter;
-    const categoryFilter = normalizeCategoryFilter(appState.categoryFilter);
 
-    try {
-        return modules.filter(module => {
-            const moduleCategory = module.category || 'dsa';
-            const moduleTopics = Array.isArray(module.topics) ? module.topics : [];
-            const moduleDescription = typeof module.description === 'string' ? module.description : '';
-            const matchesSearch = !hasSearch ||
-                module.title.toLowerCase().includes(searchTerm) ||
-                moduleDescription.toLowerCase().includes(searchTerm) ||
-                moduleTopics.some(topic => topic.toLowerCase().includes(searchTerm));
+    return modules.filter(module => {
+        const matchesSearch = !hasSearch ||
+            module.title.toLowerCase().includes(searchTerm) ||
+            module.description.toLowerCase().includes(searchTerm) ||
+            module.topics.some(topic => topic.toLowerCase().includes(searchTerm));
 
-            const matchesDifficulty = difficultyFilter === 'all' || module.difficulty === difficultyFilter;
-            const matchesCategory = categoryFilter === 'all' || moduleCategory === categoryFilter;
-            const passesCompletionFilter = !appState.hideCompletedModules || !appState.completedModules.has(module.id);
+        const matchesDifficulty = difficultyFilter === 'all' || module.difficulty === difficultyFilter;
+        const passesCompletionFilter = !appState.hideCompletedModules || !appState.completedModules.has(module.id);
 
-            return matchesSearch && matchesDifficulty && matchesCategory && passesCompletionFilter;
-        });
-    } catch (err) {
-        console.error('filterModules error', err);
-        return modules;
-    }
+        return matchesSearch && matchesDifficulty && passesCompletionFilter;
+    });
 }
 
 function renderModules() {
-    try {
-        let filteredModules = filterModules();
-        if (!filteredModules.length && appState.categoryFilter !== 'all') {
-            appState.categoryFilter = 'all';
-            const catSelect = document.getElementById('category-filter');
-            if (catSelect) catSelect.value = 'all';
-            filteredModules = filterModules();
-        }
-        const grid = document.getElementById('modules-grid');
-        const searchResultsCount = document.getElementById('search-results-count');
+    const filteredModules = filterModules();
+    const grid = document.getElementById('modules-grid');
+    const searchResultsCount = document.getElementById('search-results-count');
 
-        if (filteredModules.length !== modules.length) {
-            searchResultsCount.textContent = `Showing ${filteredModules.length} of ${modules.length} modules`;
-            searchResultsCount.style.display = 'block';
-        } else {
-            searchResultsCount.style.display = 'none';
-        }
+    // Update search results count
+    if (filteredModules.length !== modules.length) {
+        searchResultsCount.textContent = `Showing ${filteredModules.length} of ${modules.length} modules`;
+        searchResultsCount.style.display = 'block';
+    } else {
+        searchResultsCount.style.display = 'none';
+    }
 
-        const totalPages = Math.max(1, Math.ceil(filteredModules.length / MODULES_PER_PAGE));
-        if (appState.currentModulePage > totalPages) {
-            appState.currentModulePage = totalPages;
-        }
-        const startIndex = (appState.currentModulePage - 1) * MODULES_PER_PAGE;
-        const pageModules = filteredModules.slice(startIndex, startIndex + MODULES_PER_PAGE);
+    grid.innerHTML = filteredModules.map(module => {
+        const isCompleted = appState.completedModules.has(module.id);
+        const isCodeExpanded = appState.expandedCode.has(module.id);
+        const currentLanguage = getModuleLanguage(module.id);
+        const currentMode = getModuleMode(module.id);
+        const hasMultipleLanguages = module.codeExamples && Object.keys(module.codeExamples).length > 1;
 
-        const difficultyOrder = ['beginner', 'intermediate', 'advanced'];
-    const groupedContent = difficultyOrder.map(level => {
-        const bucket = pageModules.filter(module => module.difficulty === level);
-        if (!bucket.length) return '';
-        const meta = DIFFICULTY_SECTIONS[level] || { label: level, icon: '📘' };
+        const codeToDisplay = getCodeExample(module);
+        const displayCode = isCodeExpanded ? codeToDisplay : truncateCode(codeToDisplay);
+        const showExpandButton = codeToDisplay.split('\n').length > CONSTANTS.CODE_PREVIEW_LINES;
+
+        const processedCode = processCode(displayCode, module.id);
+
         return `
-                <div class="module-section tw:space-y-2 tw:bg-slate-900/40 tw:border tw:border-white/10 tw:rounded-2xl tw:backdrop-blur-sm tw:p-4">
-                    <div class="module-section-heading tw:text-slate-100 tw:border-b tw:border-white/10 tw:pb-1">${meta.icon} ${meta.label}</div>
-                    ${bucket.map(buildModuleCard).join('')}
+            <div id="module-${module.id}" data-module-card="${module.id}" class="module-card bg-white border-slate-200 rounded-xl p-4 sm:p-6 shadow-xl border hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+                <!-- Module Header -->
+                <div class="flex flex-col sm:flex-row justify-between items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
+                    <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 leading-tight">
+                        ${module.title}
+                    </h3>
+                    <span class="px-2 sm:px-2.5 py-1 rounded-lg text-xs sm:text-sm font-medium ${getDifficultyColor(module.difficulty)} whitespace-nowrap self-start sm:self-auto difficulty-badge">
+                        ${module.difficulty}
+                    </span>
                 </div>
-            `;
-    }).join('');
-    const otherModules = pageModules.filter(module => !difficultyOrder.includes(module.difficulty));
-    const otherSection = otherModules.length ? `
-            <div class="module-section tw:space-y-2 tw:bg-slate-900/40 tw:border tw:border-white/10 tw:rounded-2xl tw:backdrop-blur-sm tw:p-4">
-                <div class="module-section-heading tw:text-slate-100 tw:border-b tw:border-white/10 tw:pb-1">🧭 Additional Modules</div>
-                ${otherModules.map(buildModuleCard).join('')}
-            </div>
-        ` : '';
-        const sectionMarkup = [groupedContent, otherSection].filter(Boolean).join('');
 
-        grid.innerHTML = sectionMarkup || `
-            <div class="text-center p-8 rounded-xl bg-white shadow tw:bg-slate-900/70 tw:text-slate-100 tw:border tw:border-white/10 tw:backdrop-blur-sm">
-                <p class="font-semibold text-slate-700 tw:text-slate-100">No modules match your filters yet.</p>
-                <p class="text-sm text-slate-500 mt-1 tw:text-slate-300">Try changing the difficulty or clearing the search.</p>
+                <p class="text-slate-600 mb-3 sm:mb-4 text-sm sm:text-base leading-relaxed">${module.description}</p>
+
+                <!-- Topics -->
+                <div class="mb-3 sm:mb-4">
+                    <h4 class="font-semibold mb-2 text-slate-800 text-sm">Topics Covered:</h4>
+                    <div class="flex flex-wrap gap-1 sm:gap-1.5">
+                        ${module.topics.map(topic => `
+                            <span class="px-2 py-0.5 sm:py-1 text-xs rounded-md font-medium bg-slate-100 text-slate-700 topic-badge">
+                                ${topic}
+                            </span>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Code Example -->
+                <div class="bg-slate-50 border-slate-200 rounded-lg border overflow-hidden mb-3 sm:mb-4">
+                    <!-- Code Header -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 px-3 py-2 border-b border-slate-200 bg-slate-100">
+                        <div class="flex items-center gap-1.5">
+                            <span class="text-xs font-medium text-slate-600">💻 Code Example</span>
+                            ${hasMultipleLanguages ? `
+                                <span class="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 font-medium">
+                                    ${SUPPORTED_LANGUAGES[currentLanguage]?.icon} ${SUPPORTED_LANGUAGES[currentLanguage]?.name}
+                                </span>
+                            ` : ''}
+                            ${currentMode === 'pseudocode' ? `
+                                <span class="text-xs px-1.5 py-0.5 rounded bg-purple-100 text-purple-800 font-medium">
+                                    📝 Pseudocode
+                                </span>
+                            ` : ''}
+                        </div>
+
+                        <div class="flex flex-wrap gap-1 w-full sm:w-auto">
+                            <!-- Comments Toggle -->
+                            <button onclick="toggleModuleComments('${module.id}')" class="text-xs px-2 py-1 rounded transition-all duration-200 font-medium shadow-sm hover:shadow-md flex-shrink-0 ${shouldShowComments(module.id) ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-gray-500 hover:bg-gray-600 text-white'}" title="${shouldShowComments(module.id) ? 'Hide Comments' : 'Show Comments'}">
+                                💬 ${shouldShowComments(module.id) ? 'ON' : 'OFF'}
+                            </button>
+
+                            <!-- Language Selector -->
+                            ${hasMultipleLanguages ? `
+                                <select onchange="setModuleLanguage('${module.id}', this.value)" class="text-xs px-2 py-1 rounded bg-blue-500 hover:bg-blue-600 text-white border-0 font-medium" title="Select Programming Language">
+                                    ${Object.entries(SUPPORTED_LANGUAGES).map(([langKey, langInfo]) =>
+            module.codeExamples && module.codeExamples[langKey] ? `
+                                            <option value="${langKey}" ${currentLanguage === langKey ? 'selected' : ''} class="bg-white text-black">
+                                                ${langInfo.icon} ${langInfo.name}
+                                            </option>
+                                        ` : ''
+        ).join('')}
+                                </select>
+                            ` : ''}
+
+                            <!-- Code Mode Selector -->
+                            <select onchange="setModuleMode('${module.id}', this.value)" class="text-xs px-2 py-1 rounded border-0 font-medium ${currentMode === 'pseudocode' ? 'bg-purple-500 hover:bg-purple-600 text-white' : 'bg-indigo-500 hover:bg-indigo-600 text-white'}" title="Select Code Display Mode">
+                                ${Object.entries(CODE_MODES).map(([modeKey, modeInfo]) => `
+                                    <option value="${modeKey}" ${currentMode === modeKey ? 'selected' : ''} class="bg-white text-black">
+                                        ${modeInfo.icon} ${modeInfo.name}
+                                    </option>
+                                `).join('')}
+                            </select>
+
+                            <!-- Expand Button -->
+                            ${showExpandButton ? `
+                                <button onclick="toggleCodeExpansion('${module.id}')" class="text-xs px-2 py-1 rounded transition-all duration-200 font-medium shadow-sm hover:shadow-md flex-shrink-0 ${isCodeExpanded ? 'bg-slate-500 hover:bg-slate-600 text-white' : 'bg-emerald-500 hover:bg-emerald-600 text-white'}">
+                                    ${isCodeExpanded ? '📄 Collapse' : '📖 Expand'}
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <!-- Code Content -->
+                    <div class="p-3 overflow-x-auto">
+                        <pre class="text-xs leading-relaxed">
+                            <code class="whitespace-pre-wrap font-mono">${processedCode}</code>
+                        </pre>
+                    </div>
+                </div>
+
+                <!-- Explanation -->
+                <div class="bg-indigo-50 border-indigo-200 border-l-4 border-l-indigo-500 p-3 sm:p-4 mb-3 sm:mb-4 rounded-r-lg">
+                    <div class="whitespace-pre-line text-xs sm:text-sm text-slate-800">${module.explanation}</div>
+                </div>
+
+                <!-- Resources -->
+                <div class="mb-3 sm:mb-4">
+                    <h4 class="font-semibold mb-2 text-slate-800 text-sm">📚 Learning Resources:</h4>
+                    <div class="space-y-1">
+                        ${module.resources.map(resource => `
+                            <div class="text-indigo-600 hover:text-indigo-800 text-xs transition-colors duration-200 cursor-pointer">
+                                • ${resource}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <!-- Buttons -->
+                <div class="space-y-2">
+                    <button onclick="openQuiz('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm ${quizData[module.id] && quizData[module.id].parts[0].questions.length > 0 ? 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white hover:-translate-y-0.5' : 'bg-gradient-to-r from-slate-400 to-slate-500 text-white cursor-not-allowed'}" ${!quizData[module.id] || quizData[module.id].parts[0].questions.length === 0 ? 'disabled' : ''}>
+                        ${quizData[module.id] && quizData[module.id].parts[0].questions.length > 0 ? '🧠 Take Quiz' : '🔒 Quiz Coming Soon'}
+                    </button>
+                    
+                    <button onclick="toggleCompletion('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm ${isCompleted ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white hover:-translate-y-0.5' : 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white hover:-translate-y-0.5'}">
+                        ${isCompleted ? '✅ Completed!' : '📝 Mark as Complete'}
+                    </button>
+                </div>
             </div>
         `;
+    }).join('');
 
-        renderPagination(totalPages);
-        renderInsights();
-    } catch (err) {
-        const grid = document.getElementById('modules-grid');
-        if (grid) {
-            grid.innerHTML = `
-                <div class="text-center p-6 rounded-xl bg-white shadow tw:bg-slate-900/70 tw:text-slate-100 tw:border tw:border-white/10 tw:backdrop-blur-sm">
-                    <p class="font-semibold text-rose-600">Modules failed to load.</p>
-                    <p class="text-sm text-slate-600 mt-1 tw:text-slate-300">Check console for details.</p>
-                </div>
-            `;
-        }
-        console.error('renderModules error', err);
-    }
-}
-
-function buildModuleCard(module) {
-    const isCompleted = appState.completedModules.has(module.id);
-    const isCodeExpanded = appState.expandedCode.has(module.id);
-    const isDiscrete = module.category === 'discrete';
-    const isSystems = module.category === 'systems';
-    if (isSystems) {
-        Object.keys(module.codeExamples || {}).forEach(key => {
-            if (key !== 'assembly' && key !== 'assembly-pseudocode') {
-                delete module.codeExamples[key];
-            }
-        });
-    }
-    const availableLanguages = isDiscrete ? [] : Object.keys(module.codeExamples || {}).filter(lang => SUPPORTED_LANGUAGES[lang]);
-    const currentLanguage = isDiscrete ? null : getModuleLanguage(module.id);
-    const effectiveLanguage = isDiscrete
-        ? null
-        : (availableLanguages.includes(currentLanguage) ? currentLanguage : (availableLanguages[0] || currentLanguage));
-    if (!isDiscrete && effectiveLanguage && !availableLanguages.includes(currentLanguage)) {
-        appState.moduleLanguages.set(module.id, effectiveLanguage);
-    }
-    const currentMode = isDiscrete ? 'code' : getModuleMode(module.id);
-    const hasMultipleLanguages = availableLanguages.length > 1;
-    const rawCode = isDiscrete
-        ? 'Theory-focused module: review the examples, truth tables, and notes.'
-        : getCodeExample(module, effectiveLanguage);
-    const processedCode = isDiscrete
-        ? rawCode
-        : processCode(isCodeExpanded ? rawCode : truncateCode(rawCode), module.id);
-    const showExpandButton = !isDiscrete && rawCode.split('\n').length > CONSTANTS.CODE_PREVIEW_LINES;
-    const supportSummary = module.topics?.slice(0, 2).join(' • ') || 'Guided office hours and async help.';
-const bonusBlock = module.interviewPrompts && module.interviewPrompts.length ? `
-        <div class="module-bonus-card tw:bg-slate-900/60 tw:border-white/10 tw:text-slate-100">
-            <div class="flex items-center justify-between mb-2">
-                <span class="font-semibold text-indigo-600 text-sm tw:text-indigo-300">Bonus: Timed Interview Practice</span>
-                <span class="text-[11px] px-2 py-0.5 rounded-full bg-indigo-100 text-indigo-700 font-semibold uppercase tracking-wide tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10">2 prompts</span>
-            </div>
-            <div class="space-y-2">
-                ${module.interviewPrompts.slice(0, 2).map((prompt, idx) => `
-                    <div class="p-2 rounded-lg border border-slate-200 bg-white timed-prompt-card tw:bg-slate-900/60 tw:border-white/10">
-                        <div class="flex items-center justify-between gap-2">
-                            <span class="text-sm font-semibold text-slate-800 tw:text-slate-100">${escapeHtml(prompt.title)}</span>
-                            <button class="text-xs px-2 py-1 rounded bg-indigo-500 hover:bg-indigo-600 text-white" onclick="startTimedPrompt('${module.id}', ${idx})">
-                                ⏱ ${prompt.durationMinutes || 20} min
-                            </button>
-                        </div>
-                        <p class="text-xs text-slate-600 mt-1 tw:text-slate-300">${escapeHtml(prompt.prompt)}</p>
-                        <p class="text-[11px] text-emerald-600 mt-1" id="prompt-timer-${module.id}-${idx}"></p>
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    ` : '';
-    const visualKey = getModuleVisualKey(module);
-    const visualLink = visualKey ? `
-        <button class="text-xs px-2.5 py-1 rounded font-semibold visual-link tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10"
-            onclick="openPlaygroundStructure('${visualKey}')">
-            🔍 View visual in playground
-        </button>
-    ` : '';
-
-    return `
-        <div id="module-${module.id}" data-module-card="${module.id}" class="module-card bg-white border-slate-200 rounded-xl p-4 sm:p-6 shadow-xl border hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 tw:bg-slate-900/85 tw:border-white/25 tw:text-slate-100 tw:backdrop-blur-sm tw:shadow-2xl">
-            <div class="flex flex-col sm:flex-row justify-between items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
-                <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 leading-tight tw:text-indigo-200">${module.title}</h3>
-                <span class="px-2 sm:px-2.5 py-1 rounded-lg text-xs sm:text-sm font-medium ${getDifficultyColor(module.difficulty)} whitespace-nowrap self-start sm:self-auto difficulty-badge tw:text-slate-100 tw:border tw:border-white/20 tw:bg-slate-800/80">
-                    ${module.difficulty}
-                </span>
-            </div>
-            <div class="flex flex-wrap gap-2 mb-2">
-                ${visualLink}
-            </div>
-            <p class="text-slate-600 mb-3 sm:mb-4 text-sm sm:text-base leading-relaxed tw:text-slate-200">${wrapGlossaryInline(module.description)}</p>
-            <div class="mb-3 sm:mb-4">
-                <h4 class="font-semibold mb-2 text-slate-800 text-sm tw:text-slate-100">Topics Covered:</h4>
-                <div class="flex flex-wrap gap-1 sm:gap-1.5">
-                    ${(module.topics || []).map(topic => `
-                        <span class="px-2 py-0.5 sm:py-1 text-xs rounded-md font-medium bg-slate-100 text-slate-700 topic-badge tw:bg-slate-800/80 tw:text-slate-100 tw:border tw:border-white/20">
-                            ${topic}
-                        </span>
-                    `).join('')}
-                </div>
-            </div>
-            <div class="bg-slate-50 border-slate-200 rounded-lg border overflow-hidden mb-3 sm:mb-4 tw:bg-slate-900/60 tw:border-white/20 tw:shadow">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 px-3 py-2 border-b border-slate-200 bg-slate-100 tw:bg-slate-800/80 tw:border-white/20">
-                    <div class="flex items-center gap-1.5">
-                        <span class="text-xs font-medium text-slate-600 tw:text-slate-200">${isDiscrete ? '📘 Discrete Mathematics (Theory)' : '💻 Code Example'}</span>
-                        ${!isDiscrete && hasMultipleLanguages ? `
-                            <span class="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 font-medium tw:bg-slate-800/80 tw:text-slate-100 tw:border tw:border-white/25">
-                                ${SUPPORTED_LANGUAGES[effectiveLanguage]?.icon} ${SUPPORTED_LANGUAGES[effectiveLanguage]?.name}
-                            </span>
-                        ` : ''}
-                        ${!isDiscrete && currentMode === 'pseudocode' ? `
-                            <span class="text-xs px-1.5 py-0.5 rounded bg-purple-100 text-purple-800 font-medium tw:bg-slate-800/80 tw:text-slate-100 tw:border tw:border-white/25">
-                                📝 Pseudocode
-                            </span>
-                        ` : ''}
-                        ${isDiscrete ? `<span class="text-xs px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-medium tw:bg-slate-800/80 tw:text-slate-100 tw:border tw:border-white/25">Theory Only</span>` : ''}
-                    </div>
-                    <div class="flex flex-wrap gap-1 w-full sm:w-auto">
-                        <button onclick="toggleModuleComments('${module.id}')" class="text-xs px-2 py-1 rounded transition-all duration-200 font-medium shadow-sm hover:shadow-md flex-shrink-0 ${shouldShowComments(module.id) ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-gray-500 hover:bg-gray-600 text-white'}" title="${shouldShowComments(module.id) ? 'Hide Comments' : 'Show Comments'}">
-                            💬 ${shouldShowComments(module.id) ? 'ON' : 'OFF'}
-                        </button>
-                        ${!isDiscrete && availableLanguages.length ? `
-                        <select onchange="setModuleLanguage('${module.id}', this.value)" class="text-xs px-2 py-1 rounded bg-blue-500 hover:bg-blue-600 text-white border-0 font-medium tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10" title="Select Programming Language">
-                            ${availableLanguages.map(langKey => `
-                                <option value="${langKey}" ${effectiveLanguage === langKey ? 'selected' : ''} class="bg-white text-black">
-                                    ${SUPPORTED_LANGUAGES[langKey]?.icon || ''} ${SUPPORTED_LANGUAGES[langKey]?.name || langKey}
-                                </option>
-                            `).join('')}
-                        </select>` : ''}
-                        ${!isDiscrete ? `
-                        <select onchange="setModuleMode('${module.id}', this.value)" class="text-xs px-2 py-1 rounded border-0 font-medium ${currentMode === 'pseudocode' ? 'bg-purple-500 hover:bg-purple-600 text-white' : 'bg-indigo-500 hover:bg-indigo-600 text-white'} tw:border-white/10" title="Select Code Display Mode">
-                            ${Object.entries(CODE_MODES).map(([modeKey, modeInfo]) => `
-                                <option value="${modeKey}" ${currentMode === modeKey ? 'selected' : ''} class="bg-white text-black">
-                                    ${modeInfo.icon} ${modeInfo.name}
-                                </option>
-                            `).join('')}
-                        </select>` : ''}
-                        ${!isDiscrete && showExpandButton ? `
-                            <button onclick="toggleCodeExpansion('${module.id}')" class="text-xs px-2 py-1 rounded transition-all duration-200 font-medium shadow-sm hover:shadow-md flex-shrink-0 ${isCodeExpanded ? 'bg-slate-500 hover:bg-slate-600 text-white' : 'bg-emerald-500 hover:bg-emerald-600 text-white'}">
-                                ${isCodeExpanded ? '📄 Collapse' : '📖 Expand'}
-                            </button>
-                        ` : ''}
-                    </div>
-                </div>
-                <div class="p-3 overflow-x-auto tw:bg-slate-900/75 tw:border tw:border-white/25 tw:rounded-lg tw:shadow">
-                    <pre class="text-xs leading-relaxed tw:text-slate-100">
-                        <code class="whitespace-pre-wrap font-mono">${processedCode}</code>
-                    </pre>
-                </div>
-            </div>
-            <div class="bg-indigo-50 border-indigo-200 border-l-4 border-l-indigo-500 p-3 sm:p-4 mb-3 sm:mb-4 rounded-r-lg tw:bg-slate-800/80 tw:border-white/25 tw:shadow">
-                <div class="whitespace-pre-line text-xs sm:text-sm text-slate-800 tw:text-slate-100">${module.explanation}</div>
-            </div>
-            ${bonusBlock}
-            ${module.codeBreakdown && module.codeBreakdown.length ? `
-                <div class="code-breakdown-card tw:bg-slate-900/80 tw:border-white/25 tw:text-slate-100 tw:shadow">
-                    <h4>🧠 Code Breakdown</h4>
-                    <ul>
-            ${module.codeBreakdown.map(item => `<li><strong>${escapeHtml(item.label)}:</strong> ${escapeHtml(item.detail)}</li>`).join('')}
-        </ul>
-    </div>
-` : ''}
-            ${module.definitions && module.definitions.length ? `
-                <div class="code-breakdown-card tw:bg-slate-900/80 tw:border-white/25 tw:text-slate-100 tw:shadow">
-                    <h4>📖 Key Definitions (10)</h4>
-                    <ul>
-                        ${module.definitions.slice(0, 10).map(def => `<li>${escapeHtml(def)}</li>`).join('')}
-                    </ul>
-                </div>
-            ` : ''}
-            ${module.examples && module.examples.length ? `
-                <div class="code-breakdown-card tw:bg-slate-900/80 tw:border-white/25 tw:text-slate-100 tw:shadow">
-                    <h4>📌 Examples</h4>
-                    <ul>
-                        ${module.examples.map(example => `<li>${escapeHtml(example)}</li>`).join('')}
-                    </ul>
-                </div>
-            ` : ''}
-            ${module.truthTables && module.truthTables.length ? `
-                <div class="code-breakdown-card truth-table-card tw:bg-slate-900/80 tw:border-white/25 tw:text-slate-100 tw:shadow">
-                    <h4>🧮 Truth Tables</h4>
-                    ${module.truthTables.map(table => `
-                        <div class="truth-table-wrapper tw:bg-slate-900/85 tw:border tw:border-white/25 tw:rounded-lg tw:p-3">
-                            <div class="truth-table-title tw:text-slate-100">${escapeHtml(table.title || '')}</div>
-                            <table class="truth-table tw:w-full tw:text-left tw:text-slate-100">
-                                <thead class="tw:bg-slate-800/70">
-                                    <tr>${(table.headers || []).map(h => `<th class="tw:px-2 tw:py-1 tw:text-[13px]">${escapeHtml(h)}</th>`).join('')}</tr>
-                                </thead>
-                                <tbody>
-                                    ${(table.rows || []).map(row => `<tr>${row.map(cell => `<td class="tw:px-2 tw:py-1 tw:text-[13px]">${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}
-                                </tbody>
-                            </table>
-                        </div>
-                    `).join('')}
-                </div>
-            ` : ''}
-            <div class="module-support-panel tw:bg-slate-900/60 tw:border tw:border-white/10 tw:text-slate-100">
-                <p class="tw:text-slate-100">Student Support • ${supportSummary}</p>
-                <button type="button" class="support-button tw:bg-slate-800 tw:text-slate-100 tw:border tw:border-white/10" onclick="openSupportModal('${module.id}')">📣 Contact Student Support</button>
-            </div>
-            <div class="mb-3 sm:mb-4">
-                <h4 class="font-semibold mb-2 text-slate-800 text-sm tw:text-slate-100">📚 Learning Resources:</h4>
-                <div class="space-y-1">
-                    ${(module.resources || []).map(resource => {
-                        const label = typeof resource === 'string' ? resource : resource.text || resource.url;
-                        const link = typeof resource === 'string' ? null : resource.url || null;
-                        if (link) {
-                            return `<a href="${link}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 text-xs transition-colors duration-200 block tw:text-indigo-300 tw:hover:text-indigo-200">• ${label}</a>`;
-                        }
-                        return `<div class="text-indigo-600 hover:text-indigo-800 text-xs transition-colors duration-200 cursor-pointer tw:text-indigo-300 tw:hover:text-indigo-200">• ${label}</div>`;
-                    }).join('')}
-                </div>
-            </div>
-            <div class="space-y-2">
-                <button onclick="openQuiz('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm tw:border tw:border-white/10 tw:shadow-lg ${quizData[module.id] && quizData[module.id].parts[0].questions.length > 0 ? 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white hover:-translate-y-0.5 tw:bg-gradient-to-r tw:from-blue-500 tw:to-indigo-500 tw:hover:from-blue-600 tw:hover:to-indigo-600' : 'tw:bg-slate-800 tw:text-slate-200 tw:border-white/10 cursor-not-allowed'}" ${!quizData[module.id] || quizData[module.id].parts[0].questions.length === 0 ? 'disabled' : ''}>
-                    ${quizData[module.id] && quizData[module.id].parts[0].questions.length > 0 ? '🧠 Take Quiz' : '🔒 Quiz Coming Soon'}
-                </button>
-                
-                <button onclick="toggleCompletion('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm tw:border tw:border-white/10 tw:shadow-lg ${isCompleted ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white hover:-translate-y-0.5 tw:bg-gradient-to-r tw:from-green-500 tw:to-emerald-500 tw:hover:from-green-600 tw:hover:to-emerald-600' : 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white hover:-translate-y-0.5 tw:bg-gradient-to-r tw:from-indigo-500 tw:to-purple-500 tw:hover:from-indigo-600 tw:hover:to-purple-600'}">
-                    ${isCompleted ? '✅ Completed!' : '📝 Mark as Complete'}
-                </button>
-            </div>
-        </div>
-    `;
-}
-
-function getModuleVisualKey(module) {
-    const text = `${module.id || ''} ${module.title || ''} ${(module.topics || []).join(' ')}`.toLowerCase();
-    if (text.includes('hash')) return 'hashing';
-    if (text.includes('heap')) return 'heap';
-    if (text.includes('stack')) return 'stack';
-    if (text.includes('queue')) return 'queue';
-    if (text.includes('graph')) return 'graph';
-    if (text.includes('trie')) return 'trie';
-    if (text.includes('tree') || text.includes('bst') || text.includes('avl') || text.includes('red-black')) return 'tree';
-    if (text.includes('sort')) return 'heapsort';
-    if (text.includes('greedy')) return 'greedy';
-    return null;
-}
-
-function openPlaygroundStructure(structKey) {
-    if (!dsConfigs[structKey]) return;
-    setActiveStructure(structKey);
-    const el = document.getElementById('ds-playground');
-    if (el) {
-        el.scrollIntoView({ behavior: appState.reduceMotion ? 'auto' : 'smooth', block: 'start' });
-    }
-}
-
-function renderPagination(totalPages) {
-    const containers = [
-        document.getElementById('modules-pagination'),
-        document.getElementById('modules-pagination-top')
-    ].filter(Boolean);
-    if (!containers.length) return;
-
-    const buildButtons = () => {
-        if (totalPages <= 1) return '';
-        const buttons = [];
-        for (let page = 1; page <= totalPages; page++) {
-            const isActive = page === appState.currentModulePage;
-            buttons.push(`
-                <button data-page="${page}" class="pagination-button px-3 py-1.5 text-sm font-semibold border ${isActive ? 'active' : ''} tw:bg-slate-900/60 tw:border-white/10 tw:text-slate-100 tw:rounded-lg ${isActive ? 'tw:ring-2 tw:ring-indigo-400' : 'tw:hover:bg-slate-800'}">
-                    ${page}
-                </button>
-            `);
-        }
-        return buttons.join('');
-    };
-
-    const markup = buildButtons();
-    containers.forEach(container => {
-        container.innerHTML = markup;
-        container.classList.toggle('hidden', !markup);
-    });
+    renderInsights();
 }
 
 function getAchievementState() {
@@ -8550,25 +4608,6 @@ function highlightGlossaryText(text, searchTerm) {
     return safe.replace(pattern, '<span class="glossary-highlight">$1</span>');
 }
 
-function wrapGlossaryInline(text = '') {
-    if (!text || typeof text !== 'string') return text;
-    const termsToLink = glossaryTerms.slice(0, INLINE_GLOSSARY_LIMIT);
-    let output = escapeHtml(text);
-    termsToLink.forEach(term => {
-        const pattern = new RegExp(`\\b(${escapeRegExp(term.term)})\\b`, 'i');
-        output = output.replace(
-            pattern,
-            `<span class="glossary-inline" data-glossary-term="${escapeHtml(term.term)}"><strong><em>$1</em></strong></span>`
-        );
-    });
-    return output;
-}
-
-function getGlossaryEntry(term = '') {
-    const normalized = term.trim().toLowerCase();
-    return glossaryTerms.find(entry => entry.term.toLowerCase() === normalized);
-}
-
 function renderGlossaryFilters() {
     const container = document.getElementById('glossary-categories');
     if (!container) return;
@@ -8576,9 +4615,7 @@ function renderGlossaryFilters() {
     container.innerHTML = glossaryCategories.map(category => {
         const isActive = appState.glossaryCategory === category;
         const label = category === 'all' ? 'All Terms' : category;
-        const base = 'glossary-chip tw:px-3 tw:py-1.5 tw:rounded-full tw:border tw:border-indigo-300/50 tw:bg-indigo-500/10 tw:text-indigo-100 tw:text-xs tw:font-semibold tw:transition tw:duration-200 tw:hover:-translate-y-0.5';
-        const active = 'tw:bg-indigo-500 tw:text-white tw:border-indigo-300 tw:shadow-lg';
-        return `<button type="button" class="${base} ${isActive ? active : ''}" data-category="${category}">${escapeHtml(label)}</button>`;
+        return `<button type="button" class="glossary-chip ${isActive ? 'active' : ''}" data-category="${category}">${escapeHtml(label)}</button>`;
     }).join('');
 
     Array.from(container.querySelectorAll('button')).forEach(button => {
@@ -8630,13 +4667,13 @@ function renderGlossary() {
     const highlightTerm = appState.glossarySearch.trim();
     content.innerHTML = filteredTerms.map(item => `
         <div class="p-4 rounded-xl border transition-all duration-200 hover:shadow-lg bg-slate-50 border-slate-200 hover:bg-white">
-            <div class="flex justify-between items-start mb-2 gap-2">
+            <div class="flex justify-between items-start mb-2">
                 <h4 class="font-semibold text-lg text-indigo-600">${highlightGlossaryText(item.term, highlightTerm)}</h4>
-                <span class="text-xs px-2 py-1 rounded-full bg-indigo-100 text-indigo-700 whitespace-nowrap">
+                <span class="text-xs px-2 py-1 rounded-full bg-indigo-100 text-indigo-700">
                     ${escapeHtml(item.category)}
                 </span>
             </div>
-            <p class="text-sm leading-relaxed text-slate-800 mb-2">${highlightGlossaryText(item.definition, highlightTerm)}</p>
+            <p class="text-sm leading-relaxed text-slate-800">${highlightGlossaryText(item.definition, highlightTerm)}</p>
         </div>
     `).join('');
 }
@@ -8757,16 +4794,6 @@ function toggleModuleComments(moduleId) {
 }
 
 function setModuleLanguage(moduleId, language) {
-    const module = modules.find(m => m.id === moduleId);
-    if (!module || !SUPPORTED_LANGUAGES[language]) return;
-    const availableLanguages = Object.keys(module.codeExamples || {});
-    if (shouldSkipAutoExamples(module) && !availableLanguages.includes(language)) {
-        return; // do not auto-generate for restricted modules
-    }
-    module.codeExamples = module.codeExamples ? { ...module.codeExamples } : {};
-    if (!module.codeExamples[language]) {
-        module.codeExamples[language] = module.codeExamples.java || module.codeExample || buildSampleCode(module, language);
-    }
     appState.moduleLanguages.set(moduleId, language);
     renderModules();
     saveToLocalStorage();
@@ -8783,145 +4810,32 @@ function toggleCompletion(moduleId) {
         appState.completedModules.delete(moduleId);
     } else {
         appState.completedModules.add(moduleId);
-        maybePromptStudyPlan(moduleId);
     }
     updateProgress();
-    renderInsights();
     renderModules();
     saveToLocalStorage();
 }
 
-const promptIntervals = new Map();
-const promptWorkspaceState = {
-    moduleId: null,
-    promptIndex: 0,
-    solution: '',
-    language: 'java',
-    notes: ''
-};
-
-function startTimedPrompt(moduleId, promptIndex = 0) {
-    const module = modules.find(m => m.id === moduleId);
-    if (!module || !module.interviewPrompts || !module.interviewPrompts[promptIndex]) return;
-    const targetId = `prompt-timer-${moduleId}-${promptIndex}`;
-    const display = document.getElementById(targetId);
-    if (!display) return;
-
-    if (promptIntervals.has(targetId)) {
-        clearInterval(promptIntervals.get(targetId));
-        promptIntervals.delete(targetId);
-    }
-
-    let remaining = (module.interviewPrompts[promptIndex].durationMinutes || 20) * 60;
-    display.textContent = `Timer started: ${Math.ceil(remaining / 60)} min`;
-
-    const interval = setInterval(() => {
-        remaining -= 1;
-        if (remaining <= 0) {
-            clearInterval(interval);
-            promptIntervals.delete(targetId);
-            display.textContent = '⏱ Time! Review your solution and complexity.';
-            showToast?.('Time is up! Reflect on your approach and complexity.', 'info');
-        } else {
-            const mins = Math.floor(remaining / 60);
-            const secs = remaining % 60;
-            display.textContent = `⏳ ${mins}m ${secs.toString().padStart(2, '0')}s left`;
-        }
-    }, 1000);
-
-    promptIntervals.set(targetId, interval);
-    openPromptWorkspace(moduleId, promptIndex);
-}
-
-function openPromptWorkspace(moduleId, promptIndex = 0) {
-    const module = modules.find(m => m.id === moduleId);
-    const prompt = module?.interviewPrompts?.[promptIndex];
-    const modal = document.getElementById('prompt-workspace-modal');
-    if (!module || !prompt || !modal) return;
-
-    const lang = getModuleLanguage(moduleId) || 'java';
-    const solution = prompt.solution || getCodeExample(module, lang) || '';
-    const notes = prompt.solutionNotes || 'Review the reference solution and compare complexity and edge cases.';
-    promptWorkspaceState.moduleId = moduleId;
-    promptWorkspaceState.promptIndex = promptIndex;
-    promptWorkspaceState.solution = solution;
-    promptWorkspaceState.language = lang;
-    promptWorkspaceState.notes = notes;
-
-    const title = document.getElementById('prompt-workspace-title');
-    const meta = document.getElementById('prompt-workspace-meta');
-    const promptText = document.getElementById('prompt-workspace-prompt');
-    const input = document.getElementById('prompt-workspace-input');
-    const solutionEl = document.getElementById('prompt-workspace-solution');
-    const notesEl = document.getElementById('prompt-workspace-notes');
-    const langPill = document.getElementById('prompt-workspace-language');
-
-    if (title) title.textContent = prompt.title || 'Interview Prompt';
-    if (meta) meta.textContent = `${module.title} • ${lang.toUpperCase()} • ${prompt.durationMinutes || 20} min`;
-    if (promptText) promptText.textContent = prompt.prompt || '';
-    if (input) input.value = '';
-    if (solutionEl) solutionEl.textContent = 'Submit to reveal the reference solution.';
-    if (notesEl) notesEl.textContent = '';
-    if (langPill) langPill.textContent = lang.toUpperCase();
-
-    modal.classList.remove('hidden');
-}
-
-function closePromptWorkspace() {
-    const modal = document.getElementById('prompt-workspace-modal');
-    if (modal) modal.classList.add('hidden');
-}
-
-function submitPromptWorkspace() {
-    const solutionEl = document.getElementById('prompt-workspace-solution');
-    const notesEl = document.getElementById('prompt-workspace-notes');
-    if (solutionEl) {
-        solutionEl.textContent = promptWorkspaceState.solution || 'Reference solution unavailable.';
-    }
-    if (notesEl && notesEl.textContent.trim().length === 0) {
-        notesEl.textContent = promptWorkspaceState.notes || '';
-    }
-    showToast?.('Compare your code with the reference and note differences.', 'info');
-}
-
-function openNotesDownloadModal(itemId) {
-    const modal = document.getElementById('notes-download-modal');
-    if (!modal) return;
-    const item = notesLibrary.find(n => n.id === itemId);
-    const title = document.getElementById('notes-download-title');
-    const meta = document.getElementById('notes-download-meta');
-    const donateLink = document.getElementById('notes-donate-link');
-    if (title) title.textContent = item ? item.title : 'Notes PDF';
-    if (meta) meta.textContent = item ? `${item.category} • ${item.pages} pages` : '';
-    if (donateLink) donateLink.href = item?.url && item.url !== '#' ? item.url : DONATION_URL;
-    modal.classList.remove('hidden');
-}
-
-function closeNotesDownloadModal() {
-    const modal = document.getElementById('notes-download-modal');
-    if (modal) modal.classList.add('hidden');
-}
-
 // Modal Functions
 function openSettings() {
-    openModal('settings-modal');
+    document.getElementById('settings-modal').style.display = 'flex';
 }
 
 function closeSettings() {
-    closeModal('settings-modal');
+    document.getElementById('settings-modal').style.display = 'none';
 }
 
 function openGlossary() {
-    openModal('glossary-modal');
+    document.getElementById('glossary-modal').style.display = 'flex';
     renderGlossary();
 }
 
 function closeGlossary() {
-    closeModal('glossary-modal');
+    document.getElementById('glossary-modal').style.display = 'none';
 }
 
 function openFlashcards() {
-    openModal('flashcards-modal');
+    document.getElementById('flashcards-modal').style.display = 'flex';
     populateFlashcardModuleSelect();
     const moduleSelect = document.getElementById('flashcard-module-select');
     if (moduleSelect) {
@@ -8932,203 +4846,12 @@ function openFlashcards() {
     } else {
         renderFlashcard();
     }
-    const moduleLabel = document.getElementById('flashcard-module-label');
-    if (moduleLabel) {
-        const currentModule = modules.find(m => m.id === appState.selectedFlashcardModule);
-        moduleLabel.textContent = currentModule ? currentModule.title : 'All Modules';
-    }
 }
 
 function closeFlashcards() {
-    closeModal('flashcards-modal');
+    document.getElementById('flashcards-modal').style.display = 'none';
 }
 
-const MODAL_IDS = [
-    'settings-modal',
-    'glossary-modal',
-    'flashcards-modal',
-    'quiz-modal',
-    'study-plan-modal',
-    'account-modal',
-    'support-modal'
-];
-
-function bindClick(id, handler) {
-    const el = document.getElementById(id);
-    if (!el || typeof handler !== 'function') return null;
-    el.addEventListener('click', handler);
-    return el;
-}
-
-function openModal(id) {
-    const modal = document.getElementById(id);
-    if (modal) modal.style.display = 'flex';
-}
-
-function closeModal(id) {
-    const modal = document.getElementById(id);
-    if (modal) modal.style.display = 'none';
-}
-
-function closeAllModals() {
-    MODAL_IDS.forEach(closeModal);
-}
-
-function openStudyPlanModal() {
-    openModal('study-plan-modal');
-    resetStudyPlanSelection();
-}
-
-function closeStudyPlanModal() {
-    closeModal('study-plan-modal');
-}
-
-function resetStudyPlanSelection() {
-    studyPlanSelection.pace = appState.studyPlan?.pace || null;
-    studyPlanSelection.focus = appState.studyPlan?.focus || null;
-    studyPlanSelection.style = appState.studyPlan?.style || null;
-    document.querySelectorAll('.plan-option').forEach(button => {
-        const group = button.closest('.plan-option-group')?.dataset.planGroup;
-        const value = button.dataset.planValue;
-        const isActive = group && studyPlanSelection[group] === value;
-        button.classList.toggle('active', Boolean(isActive));
-    });
-    const notes = document.getElementById('study-plan-notes');
-    if (notes) notes.value = appState.studyPlan?.notes || '';
-}
-
-function selectPlanOption(group, value) {
-    studyPlanSelection[group] = value;
-    const groupEl = document.querySelector(`.plan-option-group[data-plan-group="${group}"]`);
-    if (groupEl) {
-        groupEl.querySelectorAll('.plan-option').forEach(button => {
-            button.classList.toggle('active', button.dataset.planValue === value);
-        });
-    }
-}
-
-function saveStudyPlan() {
-    if (!studyPlanSelection.pace || !studyPlanSelection.focus || !studyPlanSelection.style) {
-        showToast?.('Please answer all study plan questions before saving.', 'warning');
-        return;
-    }
-    const notes = document.getElementById('study-plan-notes')?.value.trim() || '';
-    appState.studyPlan = {
-        ...studyPlanSelection,
-        notes,
-        summary: `${STUDY_PLAN_LABELS.pace[studyPlanSelection.pace]} • ${STUDY_PLAN_LABELS.focus[studyPlanSelection.focus]}`
-    };
-    closeStudyPlanModal();
-    renderInsights();
-    saveToLocalStorage();
-    showToast?.('Study plan saved! Your recommendations will reflect it.', 'success');
-}
-
-function maybePromptStudyPlan(moduleId) {
-    if (moduleId === 'arrays-strings' && appState.completedModules.has('arrays-strings') && !appState.studyPlan) {
-        openStudyPlanModal();
-    }
-}
-
-function openAccountModal() {
-    openModal('account-modal');
-    const profile = appState.accountProfile || {};
-    document.getElementById('account-name').value = profile.name || '';
-    document.getElementById('account-email').value = profile.email || '';
-    document.getElementById('account-goal').value = profile.goal || 'exploring';
-}
-
-function closeAccountModal() {
-    closeModal('account-modal');
-}
-
-async function saveAccountProfile() {
-    const name = document.getElementById('account-name').value.trim();
-    const email = document.getElementById('account-email').value.trim();
-    const goal = document.getElementById('account-goal').value;
-    if (!name || !email) {
-        showToast?.('Enter a name and email to personalize your profile.', 'warning');
-        return;
-    }
-    const payload = { name, email, goal };
-    const pendingToast = showToast?.('Saving profile...', 'info');
-    try {
-        const response = await fakeAccountAPI(payload);
-        appState.accountProfile = { ...payload, profileId: response.profileId };
-        updateAccountChip();
-        closeAccountModal();
-        saveToLocalStorage();
-        if (pendingToast) pendingToast.dismiss?.();
-        showToast?.(response.message || 'Account saved locally.', 'success');
-    } catch (error) {
-        if (pendingToast) pendingToast.dismiss?.();
-        showToast?.('Unable to save profile right now. Try again soon.', 'error');
-        console.error('Account save failed:', error);
-    }
-    updateAccountChip();
-}
-
-function updateAccountChip() {
-    const chip = document.getElementById('account-chip');
-    if (!chip) return;
-    if (appState.accountProfile?.name) {
-        chip.textContent = `👋 Welcome back, ${appState.accountProfile.name.split(' ')[0]}`;
-        chip.classList.remove('hidden');
-    } else {
-        chip.textContent = '';
-        chip.classList.add('hidden');
-    }
-}
-
-function openSupportModal(moduleId = null) {
-    const modal = document.getElementById('support-modal');
-    const select = document.getElementById('support-module');
-    if (select && !select.children.length) {
-        select.innerHTML = modules.map(module => `<option value="${module.id}">${module.title}</option>`).join('');
-    }
-    if (moduleId && select) {
-        select.value = moduleId;
-    }
-    document.getElementById('support-topic').value = '';
-    document.getElementById('support-message').value = '';
-    openModal('support-modal');
-}
-
-function closeSupportModal() {
-    closeModal('support-modal');
-}
-
-function submitSupportRequest(event) {
-    event.preventDefault();
-    const moduleId = document.getElementById('support-module')?.value;
-    const topic = document.getElementById('support-topic')?.value.trim();
-    const message = document.getElementById('support-message')?.value.trim();
-    if (!topic || !message) {
-        showToast?.('Share a topic and short description so mentors can help.', 'warning');
-        return;
-    }
-    closeSupportModal();
-    const moduleTitle = modules.find(m => m.id === moduleId)?.title || 'General Module';
-    const subject = `[Java DSA Support] ${topic}`;
-    const bodyLines = [
-        `Module: ${moduleTitle} (${moduleId || 'n/a'})`,
-        `Topic: ${topic}`,
-        '',
-        message,
-        '',
-        '-- Sent from the Java DSA Learning Hub'
-    ];
-    const mailtoUrl = `mailto:${SUPPORT_EMAIL}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyLines.join('\n'))}`;
-    // Try both navigation + new window to maximize compatibility.
-    window.location.href = mailtoUrl;
-    window.open(mailtoUrl, '_blank');
-
-    // Fallback: copy the message so users can paste if a mail client is not configured.
-    if (navigator.clipboard?.writeText) {
-        navigator.clipboard.writeText(bodyLines.join('\n')).catch(() => {});
-    }
-    showToast?.('Support email is ready to send. If no mail app opens, paste from clipboard.', 'success');
-}
 // Flashcard Functions
 function prevFlashcard() {
     if (!appState.flashcardSession.length) return;
@@ -9226,169 +4949,24 @@ function populateFlashcardModuleSelect() {
 // Quiz Functions
 function openQuiz(moduleId) {
     const quiz = quizData[moduleId];
-    const questionPool = quiz?.parts?.[0]?.questions || [];
-    if (!quiz || !questionPool.length) return;
-
-    const selection = pickRandomItems(
-        questionPool,
-        Math.min(QUIZ_CONFIG.questionsPerAttempt, questionPool.length)
-    );
+    if (!quiz || !quiz.parts[0].questions.length) return;
 
     appState.currentQuiz = {
         moduleId,
-        questions: selection,
-        questionPool,
+        questions: quiz.parts[0].questions,
         currentQuestion: 0,
         answers: [],
         showResults: false,
-        score: 0,
-        wasPerfect: false
+        score: 0
     };
 
-    openModal('quiz-modal');
+    document.getElementById('quiz-modal').style.display = 'flex';
     renderQuiz();
 }
 
 function closeQuiz() {
-    closeModal('quiz-modal');
-    if (appState.currentQuiz?.wasPerfect) {
-        triggerConfetti();
-        showToast?.('Congrats on acing that quiz!', 'success');
-        updateProgress();
-        renderInsights();
-        renderAchievements();
-        renderModules();
-    }
+    document.getElementById('quiz-modal').style.display = 'none';
     appState.currentQuiz = null;
-}
-
-// Interactive Quiz Library (footer entry)
-function openInteractiveQuizLibrary() {
-    const modal = document.getElementById('interactive-quiz-modal');
-    const select = document.getElementById('interactive-quiz-module');
-    if (!modal || !select) return;
-
-    populateInteractiveQuizModules();
-    const firstOption = select.options[0];
-    const initialModule = interactiveQuizState.moduleId || (firstOption ? firstOption.value : null);
-    loadInteractiveQuizModule(initialModule);
-    openModal('interactive-quiz-modal');
-}
-
-function closeInteractiveQuizLibrary() {
-    closeModal('interactive-quiz-modal');
-}
-
-function populateInteractiveQuizModules() {
-    const select = document.getElementById('interactive-quiz-module');
-    if (!select) return;
-    const options = Object.entries(quizData)
-        .filter(([id, data]) => data?.parts?.[0]?.questions?.length)
-        .map(([id, data]) => {
-            const module = modules.find(m => m.id === id);
-            const title = module?.title || data?.title || id;
-            const count = data?.parts?.[0]?.questions?.length || 0;
-            return `<option value="${id}">${title} (${count} Qs)</option>`;
-        })
-        .join('');
-    select.innerHTML = options || '<option disabled>No quizzes available</option>';
-}
-
-function loadInteractiveQuizModule(moduleId) {
-    const select = document.getElementById('interactive-quiz-module');
-    if (select && moduleId) select.value = moduleId;
-    interactiveQuizState.moduleId = moduleId;
-    const questions = quizData[moduleId]?.parts?.[0]?.questions || [];
-    interactiveQuizState.questions = questions;
-    interactiveQuizState.current = 0;
-    interactiveQuizState.answers = new Array(questions.length).fill(null);
-    renderInteractiveQuizQuestion();
-}
-
-function renderInteractiveQuizQuestion() {
-    const body = document.getElementById('interactive-quiz-body');
-    const progress = document.getElementById('interactive-quiz-progress');
-    if (!body) return;
-
-    const questions = interactiveQuizState.questions || [];
-    const total = questions.length;
-
-    if (!total) {
-        body.innerHTML = `<div class="p-6 rounded-xl bg-slate-50 border border-slate-200 text-slate-600">No questions available for this module yet.</div>`;
-        if (progress) progress.textContent = '';
-        return;
-    }
-
-    const current = interactiveQuizState.current;
-    const question = questions[current];
-    const selected = interactiveQuizState.answers[current];
-
-    const feedback = selected === null
-        ? ''
-        : selected === question.correct
-            ? `<p class="text-sm text-emerald-600 font-semibold mt-2">✅ Correct! ${question.explanation || ''}</p>`
-            : `<p class="text-sm text-rose-600 font-semibold mt-2">❌ Try again. ${question.explanation || ''}</p>`;
-
-    body.innerHTML = `
-        <div class="flex items-center justify-between text-sm text-slate-600 mb-2">
-            <span>Question ${current + 1} of ${total}</span>
-            <span>${Math.round(((current + 1) / total) * 100)}% through</span>
-        </div>
-        <div class="p-4 sm:p-5 rounded-xl border border-slate-200 bg-white shadow-sm">
-            <h4 class="text-lg font-semibold text-slate-800 mb-4">${question.question}</h4>
-            <div class="space-y-2">
-                ${question.options.map((option, idx) => {
-                    const isSelected = selected === idx;
-                    const isCorrect = idx === question.correct;
-                    let stateClass = 'border-slate-200 bg-white hover:border-indigo-300 hover:bg-indigo-50';
-                    if (selected !== null) {
-                        if (isCorrect) stateClass = 'border-emerald-500 bg-emerald-50';
-                        else if (isSelected) stateClass = 'border-rose-500 bg-rose-50';
-                    }
-                    return `
-                        <button class="w-full text-left p-3 rounded-lg border transition-all duration-200 ${stateClass}"
-                            onclick="answerInteractiveQuiz(${idx})">
-                            <span class="font-medium text-slate-800">${String.fromCharCode(65 + idx)}. ${option}</span>
-                        </button>`;
-                }).join('')}
-            </div>
-            ${feedback}
-            <div class="flex justify-between items-center mt-4 gap-3">
-                <button class="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 bg-white hover:border-indigo-300 hover:bg-indigo-50 transition"
-                    ${current === 0 ? 'disabled' : ''} onclick="prevInteractiveQuizQuestion()">
-                    ◀ Previous
-                </button>
-                <button class="px-4 py-2 rounded-lg bg-indigo-500 text-white font-semibold hover:bg-indigo-600 shadow-sm transition"
-                    ${current >= total - 1 ? 'disabled' : ''} onclick="nextInteractiveQuizQuestion()">
-                    Next ▶
-                </button>
-            </div>
-        </div>
-    `;
-
-    if (progress) {
-        const answered = interactiveQuizState.answers.filter(a => a !== null).length;
-        progress.textContent = `${answered} answered • ${total} total`;
-    }
-}
-
-function answerInteractiveQuiz(index) {
-    interactiveQuizState.answers[interactiveQuizState.current] = index;
-    renderInteractiveQuizQuestion();
-}
-
-function nextInteractiveQuizQuestion() {
-    if (interactiveQuizState.current < interactiveQuizState.questions.length - 1) {
-        interactiveQuizState.current++;
-        renderInteractiveQuizQuestion();
-    }
-}
-
-function prevInteractiveQuizQuestion() {
-    if (interactiveQuizState.current > 0) {
-        interactiveQuizState.current--;
-        renderInteractiveQuizQuestion();
-    }
 }
 
 function renderQuiz() {
@@ -9505,21 +5083,14 @@ function nextQuestion() {
         appState.currentQuiz.currentQuestion++;
         renderQuiz();
     } else {
+        // Calculate score and show results
         const score = appState.currentQuiz.answers.reduce((acc, answer, index) => {
             return acc + (answer === appState.currentQuiz.questions[index].correct ? 1 : 0);
         }, 0);
-        const total = appState.currentQuiz.questions.length;
-        const perfectScore = score === total;
 
         appState.currentQuiz.showResults = true;
         appState.currentQuiz.score = score;
-        appState.currentQuiz.wasPerfect = perfectScore;
-
-        if (perfectScore) {
-            markQuizCompleted(appState.currentQuiz.moduleId);
-        } else {
-            showToast?.('Score 100% to mark this quiz as complete.', 'info');
-        }
+        markQuizCompleted(appState.currentQuiz.moduleId);
         renderQuiz();
     }
 }
@@ -9535,15 +5106,7 @@ function prevQuestion() {
 
 function restartQuiz() {
     if (!appState.currentQuiz) return;
-    const pool =
-        appState.currentQuiz.questionPool ||
-        quizData[appState.currentQuiz.moduleId]?.parts?.[0]?.questions ||
-        [];
-    const selection = pickRandomItems(
-        pool,
-        Math.min(QUIZ_CONFIG.questionsPerAttempt, pool.length)
-    );
-    appState.currentQuiz.questions = selection;
+
     appState.currentQuiz.currentQuestion = 0;
     appState.currentQuiz.answers = [];
     appState.currentQuiz.showResults = false;
@@ -9572,8 +5135,6 @@ function resetProgress() {
         appState.dailyChallengeId = null;
         appState.dailyChallengeDate = null;
         appState.studyTipId = null;
-        appState.autoRotatePaused = false;
-        appState.currentModulePage = 1;
 
         // Reset UI
         document.getElementById('search-input').value = '';
@@ -9584,30 +5145,10 @@ function resetProgress() {
         renderModules();
         populateFlashcardModuleSelect();
         refreshFlashcardSession('all', { persist: false });
-        rotateTipsAndChallenges(true);
-        startAutoRotation();
+        renderDailyChallenge(true);
+        renderStudyTip(true);
         saveToLocalStorage();
     }
-}
-
-function resetDSPlayground() {
-    dsState.array = [];
-    dsState.stack = [];
-    dsState.queue = [];
-    dsState.heap = [];
-    dsState.graph = { nodes: [], edges: [] };
-    dsState.trie = {};
-    dsState.tree = null;
-    dsState.avl = null;
-    dsState.segment = null;
-    dsState.hashing = null;
-    dsState.heapsort = null;
-    dsState.rbtree = null;
-    dsState.circuits = null;
-    dsState.greedy = null;
-    dsState.lastAction = 'Reset to defaults.';
-    ensureSampleData(dsState.active);
-    renderDSPlayground();
 }
 
 // =================================
@@ -9617,163 +5158,57 @@ function resetDSPlayground() {
 function init() {
     // Load saved state
     loadFromLocalStorage();
-    appState.categoryFilter = normalizeCategoryFilter(appState.categoryFilter);
-    ensureStudyTimesReset();
-    studyTimer.startTime = null;
-    studyTimer.totalTime = studyMetrics.totalTimeMs || 0;
-    studyTimer.isActive = false;
 
     // Apply loaded state to UI
     applyFontScale();
     applyTheme();
-    applyAccentTheme();
     applyCompactLayout();
-    applyCardDepth();
-    applyReducedMotion();
-    applyHighContrast();
     updateDarkMode();
     updateCommentsToggle();
     updateHideCompletedToggle();
     updateCompactLayoutToggle();
-    updateToggleState('reduce-motion-toggle', 'reduce-motion-slider', appState.reduceMotion);
-    updateToggleState('high-contrast-toggle', 'high-contrast-slider', appState.highContrast);
-    updateAccountChip();
     updateProgress();
     renderModules();
-    renderInsights();
     renderDailyChallenge();
     renderStudyTip();
-    if (!appState.autoRotatePaused) {
-        startAutoRotation();
-    } else {
-        updateRotationStatus();
-    }
-    initPlayground();
-    initComplexityVisualizer();
-    renderDSPlayground();
-    renderInterviewExamples();
-    attachInlineGlossaryHandlers();
 
     // Set initial form values
     document.getElementById('search-input').value = appState.searchTerm;
     document.getElementById('difficulty-filter').value = appState.difficultyFilter;
-    const notesInput = document.getElementById('notes-input');
-    if (notesInput) {
-        notesInput.value = loadNotes();
-    }
 
     // Add event listeners
-    bindClick('settings-btn', openSettings);
-    bindClick('close-settings', closeSettings);
-    bindClick('save-settings', closeSettings);
+    document.getElementById('settings-btn').addEventListener('click', openSettings);
+    document.getElementById('close-settings').addEventListener('click', closeSettings);
+    document.getElementById('save-settings').addEventListener('click', closeSettings);
 
-    bindClick('glossary-btn', openGlossary);
-    bindClick('close-glossary', closeGlossary);
+    document.getElementById('glossary-btn').addEventListener('click', openGlossary);
+    document.getElementById('close-glossary').addEventListener('click', closeGlossary);
 
-    bindClick('flashcards-btn', openFlashcards);
-    bindClick('close-flashcards', closeFlashcards);
+    document.getElementById('flashcards-btn').addEventListener('click', openFlashcards);
+    document.getElementById('close-flashcards').addEventListener('click', closeFlashcards);
 
-    bindClick('close-quiz', closeQuiz);
+    document.getElementById('close-quiz').addEventListener('click', closeQuiz);
 
-    bindClick('account-btn', openAccountModal);
-    bindClick('close-account', closeAccountModal);
-    bindClick('save-account', saveAccountProfile);
-
-    bindClick('close-study-plan', closeStudyPlanModal);
-    bindClick('save-study-plan', saveStudyPlan);
-    const planCtaButton = document.getElementById('insight-plan-cta');
-    if (planCtaButton) {
-        planCtaButton.addEventListener('click', openStudyPlanModal);
-    }
-
-    document.querySelectorAll('.plan-option').forEach(button => {
-        button.addEventListener('click', () => {
-            const group = button.closest('.plan-option-group')?.dataset.planGroup;
-            if (!group) return;
-            selectPlanOption(group, button.dataset.planValue);
-        });
-    });
-
-    bindClick('close-support', closeSupportModal);
-    const supportForm = document.getElementById('support-form');
-    if (supportForm) {
-        supportForm.addEventListener('submit', submitSupportRequest);
-    }
-
-    bindClick('interactive-quiz-btn', openInteractiveQuizLibrary);
-    bindClick('close-interactive-quiz', closeInteractiveQuizLibrary);
-    const interactiveModuleSelect = document.getElementById('interactive-quiz-module');
-    if (interactiveModuleSelect) {
-        interactiveModuleSelect.addEventListener('change', (e) => {
-            loadInteractiveQuizModule(e.target.value);
-        });
-    }
-
-    bindClick('reset-btn', resetProgress);
-
-    const reduceMotionToggle = document.getElementById('reduce-motion-toggle');
-    if (reduceMotionToggle) {
-        reduceMotionToggle.addEventListener('click', () => {
-            appState.reduceMotion = !appState.reduceMotion;
-            applyReducedMotion();
-            updateToggleState('reduce-motion-toggle', 'reduce-motion-slider', appState.reduceMotion);
-            saveToLocalStorage();
-        });
-    }
-
-    const highContrastToggle = document.getElementById('high-contrast-toggle');
-    if (highContrastToggle) {
-        highContrastToggle.addEventListener('click', () => {
-            appState.highContrast = !appState.highContrast;
-            applyHighContrast();
-            updateToggleState('high-contrast-toggle', 'high-contrast-slider', appState.highContrast);
-            saveToLocalStorage();
-        });
-    }
+    document.getElementById('reset-btn').addEventListener('click', resetProgress);
 
     const studyToggleButton = document.getElementById('study-session-toggle');
     if (studyToggleButton) {
         studyToggleButton.addEventListener('click', toggleManualStudySession);
     }
 
-    const saveNotesBtn = document.getElementById('save-notes');
-    if (saveNotesBtn) {
-        saveNotesBtn.addEventListener('click', saveNotes);
-    }
-    const downloadNotesBtn = document.getElementById('download-notes');
-    if (downloadNotesBtn) {
-        downloadNotesBtn.addEventListener('click', downloadNotes);
-    }
-
     // Dark mode toggle
-    bindClick('dark-mode-toggle', () => {
+    document.getElementById('dark-mode-toggle').addEventListener('click', () => {
         appState.darkMode = !appState.darkMode;
         updateDarkMode();
         saveToLocalStorage();
     });
 
     // Comments toggle
-    bindClick('comments-toggle', () => {
+    document.getElementById('comments-toggle').addEventListener('click', () => {
         appState.showComments = !appState.showComments;
         updateCommentsToggle();
         renderModules();
         saveToLocalStorage();
-    });
-
-    // Close modals on backdrop click
-    document.querySelectorAll('.modal-backdrop').forEach(modal => {
-        modal.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                closeModal(modal.id);
-            }
-        });
-    });
-
-    // Close all modals with Escape
-    document.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape') {
-            closeAllModals();
-        }
     });
 
     const hideCompletedToggle = document.getElementById('hide-completed-toggle');
@@ -9781,7 +5216,6 @@ function init() {
         hideCompletedToggle.addEventListener('click', () => {
             appState.hideCompletedModules = !appState.hideCompletedModules;
             updateHideCompletedToggle();
-            appState.currentModulePage = 1;
             renderModules();
             saveToLocalStorage();
         });
@@ -9797,28 +5231,15 @@ function init() {
         });
     }
 
-    const resetDSBtn = document.getElementById('ds-reset-all');
-    if (resetDSBtn) {
-        resetDSBtn.addEventListener('click', resetDSPlayground);
-    }
-
     // Search and filter
     document.getElementById('search-input').addEventListener('input', (e) => {
         appState.searchTerm = e.target.value;
-        appState.currentModulePage = 1;
         renderModules();
         saveToLocalStorage();
     });
 
     document.getElementById('difficulty-filter').addEventListener('change', (e) => {
         appState.difficultyFilter = e.target.value;
-        appState.currentModulePage = 1;
-        renderModules();
-        saveToLocalStorage();
-    });
-    document.getElementById('difficulty-filter').addEventListener('input', (e) => {
-        appState.difficultyFilter = e.target.value;
-        appState.currentModulePage = 1;
         renderModules();
         saveToLocalStorage();
     });
@@ -9828,55 +5249,6 @@ function init() {
         appState.glossarySearch = e.target.value;
         renderGlossary();
     });
-
-    const paginationContainers = [
-        document.getElementById('modules-pagination'),
-        document.getElementById('modules-pagination-top')
-    ].filter(Boolean);
-    paginationContainers.forEach(container => {
-        container.addEventListener('click', (event) => {
-            const target = event.target.closest('[data-page]');
-            if (!target) return;
-            const page = Number(target.dataset.page);
-            if (Number.isFinite(page)) {
-                setModulePage(page);
-            }
-        });
-    });
-
-    const interviewPagination = document.getElementById('interview-pagination');
-    if (interviewPagination) {
-        interviewPagination.addEventListener('click', (event) => {
-            const target = event.target.closest('[data-page]');
-            if (!target) return;
-            const page = Number(target.dataset.page);
-            if (Number.isFinite(page)) {
-                renderInterviewExamples(page);
-            }
-        });
-    }
-
-    bindClick('prompt-workspace-submit', submitPromptWorkspace);
-    const promptModal = document.getElementById('prompt-workspace-modal');
-    if (promptModal) {
-        promptModal.addEventListener('click', (e) => {
-            if (e.target === promptModal) closePromptWorkspace();
-        });
-    }
-
-    renderNotesLibrary();
-    const categoryFilter = document.getElementById('category-filter');
-    if (categoryFilter) {
-        categoryFilter.value = appState.categoryFilter;
-        const handleCategory = (value) => {
-            appState.categoryFilter = value;
-            appState.currentModulePage = 1;
-            renderModules();
-            saveToLocalStorage();
-        };
-        categoryFilter.addEventListener('change', (e) => handleCategory(e.target.value));
-        categoryFilter.addEventListener('input', (e) => handleCategory(e.target.value));
-    }
 
     // Flashcard event listeners
     document.getElementById('prev-flashcard').addEventListener('click', prevFlashcard);
@@ -9917,9 +5289,6 @@ function init() {
             if (e.target.id === 'glossary-modal') closeGlossary();
             if (e.target.id === 'flashcards-modal') closeFlashcards();
             if (e.target.id === 'quiz-modal') closeQuiz();
-            if (e.target.id === 'account-modal') closeAccountModal();
-            if (e.target.id === 'study-plan-modal') closeStudyPlanModal();
-            if (e.target.id === 'support-modal') closeSupportModal();
         }
     });
 
@@ -9931,9 +5300,6 @@ function init() {
             closeGlossary();
             closeFlashcards();
             closeQuiz();
-            closeAccountModal();
-            closeStudyPlanModal();
-            closeSupportModal();
         }
 
         // Arrow keys for flashcards (when flashcard modal is open)
@@ -9954,6 +5320,9 @@ function init() {
     });
 
     updateStudyTrackerUI();
+    if (!studyTimer.isActive) {
+        startStudySession();
+    }
 
     const themeSelect = document.getElementById('theme-select');
     if (themeSelect) {
@@ -9961,16 +5330,6 @@ function init() {
         themeSelect.addEventListener('change', (e) => {
             appState.theme = e.target.value;
             applyTheme();
-            saveToLocalStorage();
-        });
-    }
-
-    const accentSelect = document.getElementById('accent-select');
-    if (accentSelect) {
-        accentSelect.value = appState.accentTheme || 'indigo';
-        accentSelect.addEventListener('change', (e) => {
-            appState.accentTheme = e.target.value;
-            applyAccentTheme();
             saveToLocalStorage();
         });
     }
@@ -9989,7 +5348,6 @@ function init() {
     if (refreshChallengeBtn) {
         refreshChallengeBtn.addEventListener('click', () => {
             renderDailyChallenge(true);
-            restartAutoRotationIfActive();
         });
     }
 
@@ -9997,13 +5355,7 @@ function init() {
     if (refreshStudyTipBtn) {
         refreshStudyTipBtn.addEventListener('click', () => {
             renderStudyTip(true);
-            restartAutoRotationIfActive();
         });
-    }
-
-    const toggleAutoRotateBtn = document.getElementById('toggle-auto-rotate');
-    if (toggleAutoRotateBtn) {
-        toggleAutoRotateBtn.addEventListener('click', toggleAutoRotation);
     }
 
     const fontScaleSelect = document.getElementById('font-scale-select');
@@ -10012,16 +5364,6 @@ function init() {
         fontScaleSelect.addEventListener('change', (e) => {
             appState.fontScale = e.target.value;
             applyFontScale();
-            saveToLocalStorage();
-        });
-    }
-
-    const cardDepthSelect = document.getElementById('card-depth-select');
-    if (cardDepthSelect) {
-        cardDepthSelect.value = appState.cardDensity || 'standard';
-        cardDepthSelect.addEventListener('change', (e) => {
-            appState.cardDensity = e.target.value;
-            applyCardDepth();
             saveToLocalStorage();
         });
     }
@@ -10074,13 +5416,6 @@ function loadStudyHabit() {
 
 function saveStudyHabit() {
     localStorage.setItem(STORAGE_KEYS.STUDY_HABIT, JSON.stringify(studyHabit));
-}
-
-function ensureStudyTimesReset() {
-    studyMetrics = { totalTimeMs: 0, todayMs: 0, todayDate: null };
-    saveStudyMetrics();
-    studyHabit = { streak: 0, lastDate: null, longestStreak: 0 };
-    saveStudyHabit();
 }
 
 function updateStudyHabit(sessionTime) {
@@ -10180,10 +5515,6 @@ function renderInsights() {
     const highlightFocusNoteEl = document.getElementById('insight-focus-note');
     const highlightStreakValueEl = document.getElementById('insight-streak-value');
     const highlightStreakNoteEl = document.getElementById('insight-streak-note');
-    const planLabelEl = document.getElementById('insight-plan-label');
-    const planNoteEl = document.getElementById('insight-plan-note');
-    const planPillEl = document.getElementById('insight-plan-pill');
-    const planButtonEl = document.getElementById('insight-plan-cta');
     const momentumStreakEl = document.getElementById('insight-momentum-streak');
     const momentumTodayEl = document.getElementById('insight-momentum-today');
     const momentumLongestEl = document.getElementById('insight-momentum-longest');
@@ -10277,47 +5608,19 @@ function renderInsights() {
         insightUpdates.textContent = `Synced ${timestamp}`;
     }
 
-    const planSummary = appState.studyPlan?.summary || null;
-    const hasPlan = Boolean(appState.studyPlan);
-    if (planLabelEl) {
-        planLabelEl.textContent = hasPlan
-            ? `${STUDY_PLAN_LABELS.pace[appState.studyPlan.pace]} pace`
-            : 'Not configured';
-    }
-    if (planNoteEl) {
-        if (hasPlan) {
-            const focus = STUDY_PLAN_LABELS.focus[appState.studyPlan.focus];
-            const style = STUDY_PLAN_LABELS.style[appState.studyPlan.style];
-            planNoteEl.textContent = `${focus} • Prefers ${style}`;
-        } else {
-            planNoteEl.textContent = 'Answer 3 quick questions to personalize pacing.';
-        }
-    }
-    if (planPillEl) {
-        planPillEl.textContent = hasPlan ? 'Active' : 'Set up';
-        planPillEl.classList.toggle('bg-emerald-100', hasPlan);
-        planPillEl.classList.toggle('text-emerald-700', hasPlan);
-        planPillEl.classList.toggle('bg-slate-100', !hasPlan);
-        planPillEl.classList.toggle('text-slate-600', !hasPlan);
-    }
-    if (planButtonEl) {
-        planButtonEl.textContent = hasPlan ? 'Adjust Plan' : 'Personalize';
-    }
     if (highlightGoalEl) {
         highlightGoalEl.textContent = `${weeklyGoal} modules/wk`;
     }
     if (highlightGoalNoteEl) {
-        const finishText = modulesRemaining === 0
+        highlightGoalNoteEl.textContent = modulesRemaining === 0
             ? 'Goal complete! Review & reinforce.'
             : `Finish in ~${finishWeeks} week${finishWeeks === 1 ? '' : 's'}`;
-        highlightGoalNoteEl.textContent = planSummary ? `${planSummary} • ${finishText}` : finishText;
     }
     if (highlightFocusEl) {
         highlightFocusEl.textContent = `${formatMinutes(todayMinutes)} today`;
     }
     if (highlightFocusNoteEl) {
-        const mentor = appState.accountProfile?.name ? `${appState.accountProfile.name.split(' ')[0]}'s` : 'Lifetime';
-        highlightFocusNoteEl.textContent = `${mentor} total ${formatMinutes(totalMinutes)}`;
+        highlightFocusNoteEl.textContent = `Lifetime ${formatMinutes(totalMinutes)}`;
     }
     if (highlightStreakValueEl) {
         highlightStreakValueEl.textContent = `${streak}-day streak`;
@@ -10350,8 +5653,6 @@ function renderInsights() {
             tip = '🔥 Your streak is on fire! Consider revisiting advanced challenge sets.';
         } else if (todayMinutes < 30) {
             tip = 'Try a focused 30-minute sprint to lock in a module today.';
-        } else if (appState.studyPlan) {
-            tip = `Follow your ${STUDY_PLAN_LABELS.focus[appState.studyPlan.focus]} focus—${weeklyNeed} module${weeklyNeed === 1 ? '' : 's'} keeps you on pace.`;
         } else {
             tip = `Complete ${weeklyNeed} module${weeklyNeed === 1 ? '' : 's'} this week to stay on pace.`;
         }
@@ -10657,20 +5958,9 @@ function debouncedSearch(searchTerm) {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(() => {
         appState.searchTerm = searchTerm;
-        appState.currentModulePage = 1;
         renderModules();
         saveToLocalStorage();
     }, 300);
-}
-
-function setModulePage(page) {
-    const filtered = filterModules();
-    const totalPages = Math.max(1, Math.ceil(filtered.length / MODULES_PER_PAGE));
-    const nextPage = Math.min(Math.max(1, page), totalPages);
-    if (nextPage === appState.currentModulePage) return;
-    appState.currentModulePage = nextPage;
-    renderModules();
-    saveToLocalStorage();
 }
 
 // Mobile detection and optimization
@@ -10679,9 +5969,10 @@ function isMobile() {
 }
 
 function optimizeForMobile() {
-    const mobile = isMobile();
-    document.body.classList.toggle('is-mobile', mobile);
-    document.documentElement.style.setProperty('--animation-duration', mobile ? '0.1s' : '0.25s');
+    if (isMobile()) {
+        // Reduce animations on mobile for better performance
+        document.documentElement.style.setProperty('--animation-duration', '0.1s');
+    }
 }
 
 // Service Worker registration for offline support
@@ -10784,7 +6075,6 @@ function endStudySession(options = {}) {
         studyTrackerInterval = null;
     }
     updateStudyTrackerUI();
-    renderInsights();
 
     const minutes = Math.max(1, Math.round(sessionTime / 60000));
     if (notify) {
@@ -10795,8 +6085,8 @@ function endStudySession(options = {}) {
 
 // Enhanced quiz functionality
 function getQuizStats() {
-    const storedStats = JSON.parse(localStorage.getItem('dsaHubQuizStats') || '{}');
-    return storedStats;
+    const quizData = JSON.parse(localStorage.getItem('dsaHubQuizStats') || '{}');
+    return quizData;
 }
 
 function saveQuizResult(moduleId, score, totalQuestions) {
@@ -10857,40 +6147,26 @@ window.addEventListener('unhandledrejection', (event) => {
 
 // Visibility change handler for study sessions
 document.addEventListener('visibilitychange', () => {
-    if (document.hidden && studyTimer.isActive) {
-        endStudySession({ notify: false });
+    if (document.hidden) {
+        endStudySession();
+    } else {
+        startStudySession();
     }
 });
 
 // Start the application when DOM is loaded
-function safeInit() {
-    try {
-        init();
-    } catch (err) {
-        console.error('Init failed', err);
-        const grid = document.getElementById('modules-grid');
-        if (grid) {
-            grid.innerHTML = `
-                <div class="text-center p-6 rounded-xl bg-white shadow">
-                    <p class="font-semibold text-rose-600">Modules failed to load.</p>
-                    <p class="text-sm text-slate-600 mt-1">Open console for details.</p>
-                </div>
-            `;
-        }
-    }
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
 }
 
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        safeInit();
-        optimizeForMobile();
-        registerServiceWorker();
-    });
-} else {
-    safeInit();
+// Initialize additional features
+document.addEventListener('DOMContentLoaded', () => {
     optimizeForMobile();
     registerServiceWorker();
-}
+    startStudySession();
+});
 
 // Add window resize handler for responsive adjustments
 window.addEventListener('resize', () => {
