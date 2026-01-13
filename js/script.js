@@ -30,7 +30,19 @@ const appState = {
     studyTipId: null,
     weeklyGoal: 5,
     hideCompletedModules: false,
-    compactLayout: false
+    compactLayout: false,
+    accent: 'indigo',
+    reduceMotion: false,
+    highContrast: false,
+    cardDepth: 'standard'
+};
+
+// Interactive quiz state
+const interactiveQuizState = {
+    moduleId: null,
+    questions: [],
+    current: 0,
+    answers: []
 };
 
 // =================================
@@ -70,6 +82,10 @@ const FLASHCARD_SESSION_SIZE = 20;
 const FREE_FLASHCARD_MODULES = 10;
 const THEME_OPTIONS = ['default', 'ocean', 'sunset', 'forest', 'minimal', 'space'];
 const THEME_CLASSES = THEME_OPTIONS.filter(option => option !== 'default').map(option => `theme-${option}`);
+const ACCENT_OPTIONS = ['indigo', 'emerald', 'amber', 'rose'];
+const ACCENT_CLASSES = ACCENT_OPTIONS.map(option => `accent-${option}`);
+const CARD_DEPTH_OPTIONS = ['standard', 'flat', 'lifted'];
+const CARD_DEPTH_CLASSES = CARD_DEPTH_OPTIONS.map(option => `card-depth-${option}`);
 const FONT_SCALE_CLASS_MAP = {
     compact: 'font-scale-compact',
     base: 'font-scale-base',
@@ -4042,6 +4058,22 @@ function renderStudyTip(force = false) {
 // UTILITY FUNCTIONS
 // =================================
 
+function safeGetItem(key) {
+    try {
+        return window.localStorage ? window.localStorage.getItem(key) : null;
+    } catch (error) {
+        return null;
+    }
+}
+
+function safeSetItem(key, value) {
+    try {
+        if (window.localStorage) {
+            window.localStorage.setItem(key, value);
+        }
+    } catch (error) {}
+}
+
 // Local Storage Management
 function saveToLocalStorage() {
     const stateToSave = {
@@ -4065,13 +4097,20 @@ function saveToLocalStorage() {
         studyTipId: appState.studyTipId,
         weeklyGoal: appState.weeklyGoal,
         hideCompletedModules: appState.hideCompletedModules,
-        compactLayout: appState.compactLayout
+        compactLayout: appState.compactLayout,
+        accent: appState.accent,
+        reduceMotion: appState.reduceMotion,
+        highContrast: appState.highContrast,
+        cardDepth: appState.cardDepth
     };
-    localStorage.setItem('javaDSAHub', JSON.stringify(stateToSave));
+    safeSetItem('javaDSAHub', JSON.stringify(stateToSave));
 }
 
 function loadFromLocalStorage() {
-    const saved = localStorage.getItem('javaDSAHub');
+    const saved = safeGetItem('javaDSAHub');
+    const prefersReduced = typeof window !== 'undefined'
+        && window.matchMedia
+        && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (saved) {
         try {
             const state = JSON.parse(saved);
@@ -4096,9 +4135,15 @@ function loadFromLocalStorage() {
             appState.weeklyGoal = Number(state.weeklyGoal) || 5;
             appState.hideCompletedModules = Boolean(state.hideCompletedModules);
             appState.compactLayout = Boolean(state.compactLayout);
+            appState.reduceMotion = state.reduceMotion !== undefined ? Boolean(state.reduceMotion) : prefersReduced;
+            appState.highContrast = Boolean(state.highContrast);
+            appState.accent = ACCENT_OPTIONS.includes(state.accent) ? state.accent : 'indigo';
+            appState.cardDepth = CARD_DEPTH_OPTIONS.includes(state.cardDepth) ? state.cardDepth : 'standard';
         } catch (e) {
             console.error('Failed to load saved state:', e);
         }
+    } else {
+        appState.reduceMotion = prefersReduced;
     }
 }
 
@@ -4244,6 +4289,28 @@ function applyTheme() {
     }
 }
 
+function applyAccent() {
+    const body = document.body;
+    ACCENT_CLASSES.forEach(cls => body.classList.remove(cls));
+    const accent = ACCENT_OPTIONS.includes(appState.accent) ? appState.accent : 'indigo';
+    body.classList.add(`accent-${accent}`);
+}
+
+function applyCardDepth() {
+    const body = document.body;
+    CARD_DEPTH_CLASSES.forEach(cls => body.classList.remove(cls));
+    const depth = CARD_DEPTH_OPTIONS.includes(appState.cardDepth) ? appState.cardDepth : 'standard';
+    body.classList.add(`card-depth-${depth}`);
+}
+
+function applyReduceMotion() {
+    document.body.classList.toggle('reduce-motion', !!appState.reduceMotion);
+}
+
+function applyHighContrast() {
+    document.body.classList.toggle('high-contrast', !!appState.highContrast);
+}
+
 function applyFontScale() {
     const root = document.documentElement;
     FONT_SCALE_CLASSES.forEach(cls => root.classList.remove(cls));
@@ -4307,6 +4374,14 @@ function updateHideCompletedToggle() {
 
 function updateCompactLayoutToggle() {
     syncToggleState('compact-layout-toggle', 'compact-layout-slider', appState.compactLayout);
+}
+
+function updateReduceMotionToggle() {
+    syncToggleState('reduce-motion-toggle', 'reduce-motion-slider', appState.reduceMotion);
+}
+
+function updateHighContrastToggle() {
+    syncToggleState('high-contrast-toggle', 'high-contrast-slider', appState.highContrast);
 }
 
 function updateHeaderShrink() {
@@ -4955,7 +5030,7 @@ function openQuiz(moduleId) {
         moduleId,
         questions: quiz.parts[0].questions,
         currentQuestion: 0,
-        answers: [],
+        answers: new Array(quiz.parts[0].questions.length).fill(null),
         showResults: false,
         score: 0
     };
@@ -4979,37 +5054,45 @@ function renderQuiz() {
     title.textContent = `🧠 Quiz: ${module?.title || 'Quiz'}`;
 
     if (!appState.currentQuiz.showResults) {
+        const answeredCount = appState.currentQuiz.answers.filter(a => a !== null && a !== undefined).length;
+        const totalCount = appState.currentQuiz.questions.length;
+        const selected = appState.currentQuiz.answers[appState.currentQuiz.currentQuestion];
+
         content.innerHTML = `
             <div class="mb-6">
                 <div class="flex justify-between items-center mb-4">
-                    <span class="text-sm text-slate-600">
-                        Question ${appState.currentQuiz.currentQuestion + 1} of ${appState.currentQuiz.questions.length}
+                    <span class="text-sm quiz-progress-label">
+                        Question ${appState.currentQuiz.currentQuestion + 1} of ${totalCount} • ${answeredCount}/${totalCount} answered
                     </span>
-                    <div class="h-2 bg-gray-200 rounded-full flex-1 ml-4 overflow-hidden">
-                        <div class="h-full bg-indigo-500 transition-all duration-300" style="width: ${((appState.currentQuiz.currentQuestion + 1) / appState.currentQuiz.questions.length) * 100}%"></div>
+                    <div class="h-2 bg-slate-800 rounded-full flex-1 ml-4 overflow-hidden border border-white/10">
+                        <div class="h-full bg-indigo-500 transition-all duration-300" style="width: ${((appState.currentQuiz.currentQuestion + 1) / totalCount) * 100}%"></div>
                     </div>
                 </div>
-                <h4 class="text-xl font-semibold mb-6 text-slate-800">
+                <h4 class="text-xl font-semibold mb-6 text-white">
                     ${appState.currentQuiz.questions[appState.currentQuiz.currentQuestion].question}
                 </h4>
             </div>
 
             <div class="space-y-3 mb-8">
                 ${appState.currentQuiz.questions[appState.currentQuiz.currentQuestion].options.map((option, index) => `
-                    <button onclick="answerQuestion(${index})" class="w-full p-4 text-left rounded-xl border-2 transition-all duration-200 quiz-option ${appState.currentQuiz.answers[appState.currentQuiz.currentQuestion] === index ? 'border-indigo-500 bg-indigo-50' : 'border-gray-200 hover:border-indigo-300 bg-white hover:bg-slate-50'}">
-                        <span class="font-medium text-slate-800">
+                    <button onclick="answerQuestion(${index})" class="w-full p-4 text-left rounded-xl border-2 transition-all duration-200 quiz-option text-white ${appState.currentQuiz.answers[appState.currentQuiz.currentQuestion] === index ? 'border-indigo-400 bg-slate-800/80' : 'border-white/15 bg-slate-900/80 hover:border-indigo-300'}">
+                        <span class="font-medium text-white">
                             ${String.fromCharCode(65 + index)}. ${option}
                         </span>
                     </button>
                 `).join('')}
             </div>
 
+            <div class="text-sm text-slate-200 mb-4">
+                ${selected === null || selected === undefined ? 'Pick an answer to continue.' : 'Answer selected.'}
+            </div>
+
             <div class="flex justify-between">
-                <button onclick="prevQuestion()" ${appState.currentQuiz.currentQuestion === 0 ? 'disabled' : ''} class="px-6 py-3 rounded-xl font-medium transition-all duration-200 ${appState.currentQuiz.currentQuestion === 0 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-gray-500 hover:bg-gray-600 text-white'}">
+                <button onclick="prevQuestion()" ${appState.currentQuiz.currentQuestion === 0 ? 'disabled' : ''} class="px-6 py-3 rounded-xl font-medium transition-all duration-200 quiz-nav-button secondary ${appState.currentQuiz.currentQuestion === 0 ? '' : ''}">
                     Previous
                 </button>
 
-                <button onclick="nextQuestion()" ${appState.currentQuiz.answers[appState.currentQuiz.currentQuestion] === undefined ? 'disabled' : ''} class="px-6 py-3 rounded-xl font-medium transition-all duration-200 ${appState.currentQuiz.answers[appState.currentQuiz.currentQuestion] === undefined ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-indigo-500 hover:bg-indigo-600 text-white'}">
+                <button onclick="nextQuestion()" ${appState.currentQuiz.answers[appState.currentQuiz.currentQuestion] === null ? 'disabled' : ''} class="px-6 py-3 rounded-xl font-medium transition-all duration-200 quiz-nav-button primary">
                     ${appState.currentQuiz.currentQuestion === appState.currentQuiz.questions.length - 1 ? 'Finish' : 'Next'}
                 </button>
             </div>
@@ -5083,7 +5166,10 @@ function nextQuestion() {
         appState.currentQuiz.currentQuestion++;
         renderQuiz();
     } else {
-        // Calculate score and show results
+        // Calculate score and show results only if all answered
+        const allAnswered = appState.currentQuiz.answers.every(a => a !== null && a !== undefined);
+        if (!allAnswered) return;
+
         const score = appState.currentQuiz.answers.reduce((acc, answer, index) => {
             return acc + (answer === appState.currentQuiz.questions[index].correct ? 1 : 0);
         }, 0);
@@ -5108,7 +5194,7 @@ function restartQuiz() {
     if (!appState.currentQuiz) return;
 
     appState.currentQuiz.currentQuestion = 0;
-    appState.currentQuiz.answers = [];
+    appState.currentQuiz.answers = new Array(appState.currentQuiz.questions.length).fill(null);
     appState.currentQuiz.showResults = false;
     appState.currentQuiz.score = 0;
     renderQuiz();
@@ -5162,11 +5248,17 @@ function init() {
     // Apply loaded state to UI
     applyFontScale();
     applyTheme();
+    applyAccent();
+    applyCardDepth();
     applyCompactLayout();
+    applyReduceMotion();
+    applyHighContrast();
     updateDarkMode();
     updateCommentsToggle();
     updateHideCompletedToggle();
     updateCompactLayoutToggle();
+    updateReduceMotionToggle();
+    updateHighContrastToggle();
     updateProgress();
     renderModules();
     renderDailyChallenge();
@@ -5227,6 +5319,26 @@ function init() {
             appState.compactLayout = !appState.compactLayout;
             updateCompactLayoutToggle();
             applyCompactLayout();
+            saveToLocalStorage();
+        });
+    }
+
+    const reduceMotionToggle = document.getElementById('reduce-motion-toggle');
+    if (reduceMotionToggle) {
+        reduceMotionToggle.addEventListener('click', () => {
+            appState.reduceMotion = !appState.reduceMotion;
+            updateReduceMotionToggle();
+            applyReduceMotion();
+            saveToLocalStorage();
+        });
+    }
+
+    const highContrastToggle = document.getElementById('high-contrast-toggle');
+    if (highContrastToggle) {
+        highContrastToggle.addEventListener('click', () => {
+            appState.highContrast = !appState.highContrast;
+            updateHighContrastToggle();
+            applyHighContrast();
             saveToLocalStorage();
         });
     }
@@ -5334,6 +5446,17 @@ function init() {
         });
     }
 
+    const accentSelect = document.getElementById('accent-select');
+    if (accentSelect) {
+        accentSelect.value = appState.accent;
+        accentSelect.addEventListener('change', (e) => {
+            const nextAccent = e.target.value;
+            appState.accent = ACCENT_OPTIONS.includes(nextAccent) ? nextAccent : 'indigo';
+            applyAccent();
+            saveToLocalStorage();
+        });
+    }
+
     const weeklyGoalSelect = document.getElementById('weekly-goal-select');
     if (weeklyGoalSelect) {
         weeklyGoalSelect.value = String(appState.weeklyGoal || 5);
@@ -5368,6 +5491,17 @@ function init() {
         });
     }
 
+    const cardDepthSelect = document.getElementById('card-depth-select');
+    if (cardDepthSelect) {
+        cardDepthSelect.value = appState.cardDepth;
+        cardDepthSelect.addEventListener('change', (e) => {
+            const nextDepth = e.target.value;
+            appState.cardDepth = CARD_DEPTH_OPTIONS.includes(nextDepth) ? nextDepth : 'standard';
+            applyCardDepth();
+            saveToLocalStorage();
+        });
+    }
+
     console.log('Java DSA Learning Hub initialized successfully!');
 }
 
@@ -5378,7 +5512,7 @@ function init() {
 function loadStudyMetrics() {
     const defaults = { totalTimeMs: 0, todayMs: 0, todayDate: null };
     try {
-        const stored = localStorage.getItem(STORAGE_KEYS.STUDY_METRICS);
+        const stored = safeGetItem(STORAGE_KEYS.STUDY_METRICS);
         if (!stored) return { ...defaults };
         const parsed = JSON.parse(stored);
         return { ...defaults, ...parsed };
@@ -5389,7 +5523,7 @@ function loadStudyMetrics() {
 }
 
 function saveStudyMetrics() {
-    localStorage.setItem(STORAGE_KEYS.STUDY_METRICS, JSON.stringify(studyMetrics));
+    safeSetItem(STORAGE_KEYS.STUDY_METRICS, JSON.stringify(studyMetrics));
 }
 
 function ensureTodayMetrics() {
@@ -5404,7 +5538,7 @@ function ensureTodayMetrics() {
 function loadStudyHabit() {
     const defaults = { streak: 0, lastDate: null, longestStreak: 0 };
     try {
-        const stored = localStorage.getItem(STORAGE_KEYS.STUDY_HABIT);
+        const stored = safeGetItem(STORAGE_KEYS.STUDY_HABIT);
         if (!stored) return { ...defaults };
         const parsed = JSON.parse(stored);
         return { ...defaults, ...parsed };
@@ -5415,7 +5549,7 @@ function loadStudyHabit() {
 }
 
 function saveStudyHabit() {
-    localStorage.setItem(STORAGE_KEYS.STUDY_HABIT, JSON.stringify(studyHabit));
+    safeSetItem(STORAGE_KEYS.STUDY_HABIT, JSON.stringify(studyHabit));
 }
 
 function updateStudyHabit(sessionTime) {
@@ -5992,7 +6126,13 @@ function registerServiceWorker() {
 
 // Analytics and usage tracking (privacy-friendly)
 function trackUsage(action, category = 'General') {
-    const usage = JSON.parse(localStorage.getItem('dsaHubUsage') || '{}');
+    let usage = {};
+    try {
+        const stored = safeGetItem('dsaHubUsage');
+        usage = stored ? JSON.parse(stored) : {};
+    } catch (error) {
+        usage = {};
+    }
     const today = new Date().toISOString().split('T')[0];
 
     if (!usage[today]) {
@@ -6005,7 +6145,7 @@ function trackUsage(action, category = 'General') {
 
     usage[today][category][action] = (usage[today][category][action] || 0) + 1;
 
-    localStorage.setItem('dsaHubUsage', JSON.stringify(usage));
+    safeSetItem('dsaHubUsage', JSON.stringify(usage));
 }
 
 // Module recommendation system
@@ -6085,8 +6225,12 @@ function endStudySession(options = {}) {
 
 // Enhanced quiz functionality
 function getQuizStats() {
-    const quizData = JSON.parse(localStorage.getItem('dsaHubQuizStats') || '{}');
-    return quizData;
+    try {
+        const stored = safeGetItem('dsaHubQuizStats');
+        return stored ? JSON.parse(stored) : {};
+    } catch (error) {
+        return {};
+    }
 }
 
 function saveQuizResult(moduleId, score, totalQuestions) {
@@ -6104,7 +6248,7 @@ function saveQuizResult(moduleId, score, totalQuestions) {
         percentage: Math.round((score / totalQuestions) * 100)
     });
 
-    localStorage.setItem('dsaHubQuizStats', JSON.stringify(stats));
+    safeSetItem('dsaHubQuizStats', JSON.stringify(stats));
     trackUsage('quiz_completed', 'Assessment');
 }
 
@@ -6175,3 +6319,148 @@ window.addEventListener('resize', () => {
 });
 
 console.log('Java DSA Learning Hub - All systems loaded successfully! 🚀');
+
+// Interactive Quiz Library (restored)
+function openInteractiveQuizLibrary() {
+    const modal = document.getElementById('interactive-quiz-modal');
+    const select = document.getElementById('interactive-quiz-module');
+    if (!modal || !select) return;
+
+    populateInteractiveQuizModules();
+    const firstOption = select.options[0];
+    const initialModule = interactiveQuizState.moduleId || (firstOption ? firstOption.value : null);
+    loadInteractiveQuizModule(initialModule);
+    openModal('interactive-quiz-modal');
+}
+
+function closeInteractiveQuizLibrary() {
+    closeModal('interactive-quiz-modal');
+}
+
+function populateInteractiveQuizModules() {
+    const select = document.getElementById('interactive-quiz-module');
+    if (!select) return;
+    const options = Object.entries(quizData)
+        .filter(([id, data]) => data?.parts?.[0]?.questions?.length)
+        .map(([id, data]) => {
+            const module = modules.find(m => m.id === id);
+            const title = module?.title || data?.title || id;
+            const count = data?.parts?.[0]?.questions?.length || 0;
+            return `<option value="${id}">${title} (${count} Qs)</option>`;
+        })
+        .join('');
+    select.innerHTML = options || '<option disabled>No quizzes available</option>';
+    select.onchange = (e) => loadInteractiveQuizModule(e.target.value);
+}
+
+function loadInteractiveQuizModule(moduleId) {
+    const select = document.getElementById('interactive-quiz-module');
+    if (select && moduleId) select.value = moduleId;
+    interactiveQuizState.moduleId = moduleId;
+    const questions = quizData[moduleId]?.parts?.[0]?.questions || [];
+    interactiveQuizState.questions = questions;
+    interactiveQuizState.current = 0;
+    interactiveQuizState.answers = new Array(questions.length).fill(null);
+    renderInteractiveQuizQuestion();
+}
+
+function renderInteractiveQuizQuestion() {
+    const body = document.getElementById('interactive-quiz-body');
+    const progress = document.getElementById('interactive-quiz-progress');
+    if (!body) return;
+
+    const questions = interactiveQuizState.questions || [];
+    const total = questions.length;
+
+    if (!total) {
+        body.innerHTML = `<div class="p-6 rounded-xl bg-slate-50 border border-slate-200 text-slate-600">No questions available for this module yet.</div>`;
+        if (progress) progress.textContent = '';
+        return;
+    }
+
+    const current = interactiveQuizState.current;
+    const question = questions[current];
+    const selected = interactiveQuizState.answers[current];
+
+    const feedback = selected === null
+        ? ''
+        : selected === question.correct
+            ? `<p class="text-sm text-emerald-600 font-semibold mt-2">✅ Correct! ${question.explanation || ''}</p>`
+            : `<p class="text-sm text-rose-600 font-semibold mt-2">❌ Try again. ${question.explanation || ''}</p>`;
+
+    body.innerHTML = `
+        <div class="flex items-center justify-between text-sm text-slate-600 mb-2">
+            <span>Question ${current + 1} of ${total}</span>
+            <span>${Math.round(((current + 1) / total) * 100)}% through</span>
+        </div>
+        <div class="p-4 sm:p-5 rounded-xl border border-slate-200 bg-white shadow-sm">
+            <h4 class="text-lg font-semibold text-slate-800 mb-4">${question.question}</h4>
+            <div class="space-y-2">
+                ${question.options.map((option, idx) => {
+                    const isSelected = selected === idx;
+                    const isCorrect = idx === question.correct;
+                    let stateClass = 'border-slate-200 bg-white hover:border-indigo-300 hover:bg-indigo-50';
+                    if (selected !== null) {
+                        if (isCorrect) stateClass = 'border-emerald-500 bg-emerald-50';
+                        else if (isSelected) stateClass = 'border-rose-500 bg-rose-50';
+                    }
+                    return `
+                        <button class="w-full text-left p-3 rounded-lg border transition-all duration-200 ${stateClass}"
+                            onclick="answerInteractiveQuiz(${idx})">
+                            <span class="font-medium text-slate-800">${String.fromCharCode(65 + idx)}. ${option}</span>
+                        </button>`;
+                }).join('')}
+            </div>
+            ${feedback}
+            <div class="flex justify-between items-center mt-4 gap-3">
+                <button class="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 bg-white hover:border-indigo-300 hover:bg-indigo-50 transition"
+                    ${current === 0 ? 'disabled' : ''} onclick="prevInteractiveQuizQuestion()">
+                    ◀ Previous
+                </button>
+                <button class="px-4 py-2 rounded-lg bg-indigo-500 text-white font-semibold hover:bg-indigo-600 shadow-sm transition"
+                    ${current >= total - 1 ? 'disabled' : ''} onclick="nextInteractiveQuizQuestion()">
+                    Next ▶
+                </button>
+            </div>
+        </div>
+    `;
+
+    if (progress) {
+        const answered = interactiveQuizState.answers.filter(a => a !== null).length;
+        progress.textContent = `${answered} answered • ${total} total`;
+    }
+}
+
+function answerInteractiveQuiz(index) {
+    interactiveQuizState.answers[interactiveQuizState.current] = index;
+    renderInteractiveQuizQuestion();
+}
+
+function nextInteractiveQuizQuestion() {
+    if (interactiveQuizState.current < interactiveQuizState.questions.length - 1) {
+        interactiveQuizState.current++;
+        renderInteractiveQuizQuestion();
+    }
+}
+
+function prevInteractiveQuizQuestion() {
+    if (interactiveQuizState.current > 0) {
+        interactiveQuizState.current--;
+        renderInteractiveQuizQuestion();
+    }
+}
+
+// Generic modal helpers (fallback for interactive quiz and others)
+function openModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+    modal.style.display = 'flex';
+    modal.setAttribute('aria-hidden', 'false');
+}
+
+function closeModal(modalId) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
+}

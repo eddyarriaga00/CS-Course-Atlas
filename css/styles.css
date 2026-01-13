@@ -1,7 +1,3 @@
-/* Add these dark mode fixes to your styles.css file */
-
-/* Fix for flashcard content and quiz modal backgrounds */
-
 :root {
     --purple-50: #f5e9ff;
     --purple-100: #edd5ff;
@@ -545,7 +541,6 @@ body.dark .truth-table th {
     background: rgba(99, 102, 241, 0.16);
 }
 
-/* Responsive refinements */
 @media (max-width: 640px) {
     .module-card {
         padding: 1rem;
@@ -645,6 +640,10 @@ body.dark .notes-chip {
 .reduce-motion * {
     animation-duration: 0ms !important;
     transition-duration: 0ms !important;
+}
+
+body.reduce-motion {
+    scroll-behavior: auto;
 }
 
 .high-contrast {
@@ -815,11 +814,10 @@ body.dark .flashcard-pill {
     border-color: rgba(148, 163, 184, 0.35);
 }
 
-body.dark .bg-slate-50 { 
-    background-color: #334155 !important; 
+body.dark .bg-slate-50 {
+    background-color: #334155 !important;
 }
 
-/* Quiz and Modal fixes */
 body.dark #quiz-modal .bg-white {
     background-color: #1e293b !important;
     color: #f1f5f9 !important;
@@ -829,29 +827,99 @@ body.dark #quiz-modal {
     color: #f1f5f9 !important;
 }
 
-/* Fix for any remaining white backgrounds */
+#quiz-modal .quiz-option,
+#quiz-modal .quiz-option *,
+#interactive-quiz-modal .quiz-option,
+#interactive-quiz-modal .quiz-option *,
+#quiz-content .quiz-option,
+#quiz-content .quiz-option * {
+    color: #ffffff !important;
+    background-color: #0f172a !important;
+    border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+#quiz-modal .text-slate-800,
+#quiz-modal .text-slate-700,
+#quiz-modal .text-slate-600,
+#quiz-content .text-slate-800,
+#quiz-content .text-slate-700,
+#quiz-content .text-slate-600 {
+    color: #ffffff !important;
+}
+
+#quiz-modal h4,
+#quiz-content h4 {
+    color: #ffffff !important;
+}
+
 body.dark .bg-white,
 body.dark [class*="bg-white"] {
     background-color: #1e293b !important;
     color: #f1f5f9 !important;
 }
 
-/* Fix for explanation sections */
+#quiz-modal,
+#interactive-quiz-modal {
+    color: #ffffff !important;
+}
+
+#quiz-modal,
+#quiz-modal * {
+    color: #ffffff !important;
+}
+#interactive-quiz-modal,
+#interactive-quiz-modal * {
+    color: #ffffff !important;
+}
+#quiz-modal .quiz-option,
+#interactive-quiz-modal .quiz-option {
+    background: #0f172a !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+#quiz-modal .quiz-option *,
+#interactive-quiz-modal .quiz-option * {
+    color: #ffffff !important;
+}
+
+.quiz-progress-label {
+    color: #e5e7ff !important;
+}
+
+.quiz-nav-button {
+    border-radius: 0.75rem !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.25);
+}
+
+.quiz-nav-button.primary {
+    background: linear-gradient(120deg, #4f46e5, #6366f1) !important;
+    color: #f8fafc !important;
+}
+
+.quiz-nav-button.secondary {
+    background: rgba(34, 43, 72, 0.9) !important;
+    color: #e5e7ff !important;
+}
+
+.quiz-nav-button:disabled {
+    background: rgba(34, 43, 72, 0.7) !important;
+    color: #cbd5f5 !important;
+    cursor: not-allowed;
+}
+
 body.dark .bg-indigo-50 {
     background-color: rgba(49, 46, 129, 0.3) !important;
     color: #f1f5f9 !important;
 }
 
-/* Fix for border colors in dark mode */
-body.dark .border-slate-200 { 
-    border-color: #334155 !important; 
+body.dark .border-slate-200 {
+    border-color: #334155 !important;
 }
 
 body.dark .border-indigo-200 {
     border-color: #475569 !important;
 }
 
-/* Fix for any content containers */
 body.dark .content-container,
 body.dark .explanation-container,
 body.dark .resource-container {
@@ -859,20 +927,17 @@ body.dark .resource-container {
     color: #f1f5f9 !important;
 }
 
-/* Specific fix for module card backgrounds */
 body.dark .module-card {
     background-color: #1e293b !important;
     border-color: #334155 !important;
     color: #f1f5f9 !important;
 }
 
-/* Fix for code explanation boxes */
 body.dark .border-l-indigo-500 {
     background-color: rgba(49, 46, 129, 0.3) !important;
     border-left-color: #6366f1 !important;
 }
 
-/* Additional safety net for any missed white backgrounds */
 body.dark *[style*="background-color: white"],
 body.dark *[style*="background-color: #ffffff"],
 body.dark *[style*="background-color: #fff"] {
@@ -880,11 +945,6 @@ body.dark *[style*="background-color: #fff"] {
     color: #f1f5f9 !important;
 }
 
-/* =================================
-   ENHANCED BACKGROUND SYSTEM
-   ================================= */
-
-/* Animated gradient background */
 body {
     background: linear-gradient(145deg, #f8fafc, #eef2ff, #e0e7ff);
     background-size: 200% 200%;
@@ -895,7 +955,6 @@ body {
     scroll-behavior: smooth;
 }
 
-/* Background animation keyframes */
 @keyframes gradientShift {
     0% { background-position: 0% 50%; }
     25% { background-position: 100% 50%; }
@@ -904,7 +963,6 @@ body {
     100% { background-position: 0% 50%; }
 }
 
-/* Subtle pattern overlay */
 body::before {
     content: '';
     position: fixed;
@@ -912,7 +970,7 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background-image: 
+    background-image:
         radial-gradient(circle at 20% 50%, rgba(99,102,241,0.08) 2px, transparent 2px),
         radial-gradient(circle at 80% 30%, rgba(236,72,153,0.08) 2px, transparent 2px),
         radial-gradient(circle at 40% 20%, rgba(79,70,229,0.05) 3px, transparent 3px),
@@ -934,7 +992,6 @@ body::after {
     z-index: -2;
 }
 
-/* Dark mode background */
 body.dark {
     background: linear-gradient(135deg, #090a1a, #101632, #151a3a, #0f172a);
     background-size: 300% 300%;
@@ -958,9 +1015,8 @@ body.dark {
     100% { background-position: 0% 50%; }
 }
 
-/* Dark mode pattern overlay */
 body.dark::before {
-    background-image: 
+    background-image:
         radial-gradient(circle at 20% 50%, rgba(99,102,241,0.1) 2px, transparent 2px),
         radial-gradient(circle at 80% 50%, rgba(167,139,250,0.1) 2px, transparent 2px),
         radial-gradient(circle at 40% 20%, rgba(59,130,246,0.05) 3px, transparent 3px),
@@ -1182,7 +1238,6 @@ body.dark #main-header p {
     100% { background-position: 0% 50%; }
 }
 
-/* Background theme options */
 body.theme-ocean {
     background: linear-gradient(-45deg, #667eea, #764ba2, #2196F3, #21CBF3, #00BCD4, #009688);
     background-size: 400% 400%;
@@ -1212,7 +1267,6 @@ body.theme-space {
     animation: gradientShiftDark 25s ease infinite;
 }
 
-/* Content background improvements */
 .content-backdrop {
     backdrop-filter: blur(12px);
     background: linear-gradient(135deg, var(--surface-primary), var(--surface-secondary));
@@ -1238,11 +1292,6 @@ body.dark .content-backdrop::after {
                 radial-gradient(circle at 80% 5%, rgba(236, 72, 153, 0.25), transparent 50%);
 }
 
-/* =================================
-   ENHANCED COMPONENT STYLES
-   ================================= */
-
-/* Enhanced module cards with glassmorphism */
 .module-highlight {
     box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.4), 0 20px 40px rgba(15, 23, 42, 0.35) !important;
     transition: box-shadow 0.3s ease;
@@ -1278,7 +1327,6 @@ body.compact-modules #modules-grid {
     gap: 1.5rem;
 }
 
-/* Insights section cards */
 .insight-highlight-card {
     background: linear-gradient(135deg, var(--surface-primary), var(--surface-secondary));
     border: 1px solid var(--surface-border);
@@ -1496,7 +1544,6 @@ body.dark .pagination-button:not(.active) {
     color: var(--text-primary-color);
 }
 
-/* Enhanced difficulty badges */
 .difficulty-badge {
     position: relative;
     overflow: hidden;
@@ -1528,7 +1575,6 @@ body.dark .pagination-button:not(.active) {
     box-shadow: 0 6px 20px rgba(0,0,0,0.3);
 }
 
-/* Progress section wrapper now relies on .progress-panel styling */
 #progress-section {
     backdrop-filter: none;
     background: transparent;
@@ -1542,7 +1588,6 @@ body.dark .pagination-button:not(.active) {
     display: none;
 }
 
-/* Enhanced search section */
 #search-section {
     backdrop-filter: blur(16px);
     background: linear-gradient(135deg, var(--surface-primary), var(--surface-secondary));
@@ -1550,7 +1595,6 @@ body.dark .pagination-button:not(.active) {
     box-shadow: var(--shadow-card);
 }
 
-/* Enhanced input fields */
 input[type="text"], select {
     backdrop-filter: blur(8px);
     background: var(--surface-primary);
@@ -1567,7 +1611,6 @@ input[type="text"]:focus, select:focus {
     transform: translateY(-2px);
 }
 
-/* Enhanced buttons */
 button {
     position: relative;
     overflow: hidden;
@@ -1739,11 +1782,6 @@ body.dark .footer-link {
     color: var(--text-primary-color);
 }
 
-/* =================================
-   ENHANCED FILTER SYSTEM
-   ================================= */
-
-/* Filter container styling */
 .filter-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -1772,7 +1810,6 @@ body.dark .footer-link {
     color: var(--accent-primary);
 }
 
-/* Multi-select styling */
 .multi-select {
     position: relative;
 }
@@ -1843,7 +1880,6 @@ body.dark .multi-select-option.selected {
     background: rgba(129, 140, 248, 0.2);
 }
 
-/* Tag styling for selected filters */
 .filter-tags {
     display: flex;
     flex-wrap: wrap;
@@ -1892,7 +1928,6 @@ body.dark .multi-select-option.selected {
     background: rgba(255,255,255,0.3);
 }
 
-/* Sort controls */
 .sort-controls {
     display: flex;
     gap: 0.5rem;
@@ -1923,7 +1958,6 @@ body.dark .sort-button {
     color: #e2e8f0;
 }
 
-/* Results counter styling */
 .results-counter {
     backdrop-filter: blur(8px);
     background: rgba(255, 255, 255, 0.8);
@@ -1948,7 +1982,6 @@ body.dark .results-counter {
     color: #818cf8;
 }
 
-/* CSS Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
@@ -1964,7 +1997,6 @@ body {
     line-height: 1.6;
 }
 
-/* Utility Classes */
 .min-h-screen { min-height: 100vh; }
 .max-w-7xl { max-width: 80rem; }
 .max-w-5xl { max-width: 64rem; }
@@ -2027,7 +2059,6 @@ body {
 .flex-shrink-0 { flex-shrink: 0; }
 .font-mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Consolas, "Liberation Mono", Menlo, monospace; }
 
-/* Spacing - Optimized Values */
 .p-1 { padding: 0.25rem; }
 .p-2 { padding: 0.5rem; }
 .p-3 { padding: 0.75rem; }
@@ -2079,7 +2110,6 @@ body {
 .space-y-4 > * + * { margin-top: 1rem; }
 .space-y-6 > * + * { margin-top: 1.5rem; }
 
-/* Typography */
 .text-xs { font-size: 0.75rem; line-height: 1rem; }
 .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
 .text-base { font-size: 1rem; line-height: 1.5rem; }
@@ -2091,7 +2121,6 @@ body {
 .text-5xl { font-size: 3rem; line-height: 1; }
 .text-6xl { font-size: 3.75rem; line-height: 1; }
 
-/* Colors */
 .bg-slate-50 { background-color: #f8fafc; }
 .bg-slate-100 { background-color: #f1f5f9; }
 .bg-slate-200 { background-color: #e2e8f0; }
@@ -2176,7 +2205,6 @@ body {
 .bg-yellow-500 { background-color: #eab308; }
 .text-yellow-800 { color: #854d0e; }
 
-/* Borders */
 .border { border-width: 1px; }
 .border-2 { border-width: 2px; }
 .border-4 { border-width: 4px; }
@@ -2194,7 +2222,6 @@ body {
 .border-red-500 { border-color: #ef4444; }
 .border-white\/30 { border-color: rgba(255, 255, 255, 0.3); }
 
-/* Border Radius - Fixed Difficulty Badges */
 .rounded { border-radius: 0.25rem; }
 .rounded-md { border-radius: 0.375rem; }
 .rounded-lg { border-radius: 0.5rem; }
@@ -2204,14 +2231,12 @@ body {
 .rounded-r-lg { border-top-right-radius: 0.5rem; border-bottom-right-radius: 0.5rem; }
 .rounded-r-xl { border-top-right-radius: 0.75rem; border-bottom-right-radius: 0.75rem; }
 
-/* Shadows */
 .shadow-sm { box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05); }
 .shadow-md { box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1); }
 .shadow-lg { box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1); }
 .shadow-xl { box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1); }
 .shadow-2xl { box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25); }
 
-/* Transitions */
 .transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
 .transition-colors { transition-property: color, background-color, border-color, text-decoration-color, fill, stroke; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
 .transition-transform { transition-property: transform; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
@@ -2219,14 +2244,12 @@ body {
 .duration-300 { transition-duration: 300ms; }
 .duration-500 { transition-duration: 500ms; }
 
-/* Transforms */
 .translate-x-0\.5 { transform: translateX(0.125rem); }
 .translate-x-7 { transform: translateX(1.75rem); }
 .-translate-y-0\.5:hover { transform: translateY(-0.125rem); }
 .-translate-y-1:hover { transform: translateY(-0.25rem); }
 .hover\:scale-110:hover { transform: scale(1.1); }
 
-/* Size */
 .w-6 { width: 1.5rem; }
 .h-6 { height: 1.5rem; }
 .h-7 { height: 1.75rem; }
@@ -2239,17 +2262,14 @@ body {
 .w-64 { width: 16rem; }
 .min-h-80 { min-height: 20rem; }
 
-/* Focus */
 .focus\:outline-none:focus { outline: 2px solid transparent; outline-offset: 2px; }
 .focus\:ring-2:focus { box-shadow: 0 0 0 3px rgb(59 130 246 / 0.5); }
 .focus\:border-indigo-500:focus { border-color: #6366f1; }
 .focus\:border-indigo-400:focus { border-color: #818cf8; }
 
-/* Placeholder */
 .placeholder-slate-400::placeholder { color: #94a3b8; }
 .placeholder-slate-500::placeholder { color: #64748b; }
 
-/* Hover */
 .hover\:bg-indigo-400:hover { background-color: #818cf8; }
 .hover\:bg-indigo-600:hover { background-color: #4f46e5; }
 .hover\:bg-blue-600:hover { background-color: #2563eb; }
@@ -2274,12 +2294,10 @@ body {
 .hover\:border-slate-500:hover { border-color: #64748b; }
 .hover\:border-indigo-300:hover { border-color: #a5b4fc; }
 
-/* Disabled */
 .disabled\:bg-slate-300:disabled { background-color: #cbd5e1; }
 .disabled\:text-slate-500:disabled { color: #64748b; }
 .disabled\:cursor-not-allowed:disabled { cursor: not-allowed; }
 
-/* Background Gradients */
 .bg-gradient-to-r { background-image: linear-gradient(to right, var(--tw-gradient-stops)); }
 .from-blue-600 { --tw-gradient-from: #2563eb; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to, rgb(37 99 235 / 0)); }
 .via-indigo-600 { --tw-gradient-to: rgb(79 70 229 / 0); --tw-gradient-stops: var(--tw-gradient-from), #4f46e5, var(--tw-gradient-to, rgb(79 70 229 / 0)); }
@@ -2299,13 +2317,11 @@ body {
 .bg-clip-text { background-clip: text; }
 .text-transparent { color: transparent; }
 
-/* Backdrop */
 .backdrop-blur-sm { backdrop-filter: blur(4px); }
 .bg-opacity-20 { background-color: rgb(255 255 255 / 0.2); }
 .bg-opacity-30 { background-color: rgb(255 255 255 / 0.3); }
 .bg-opacity-50 { background-color: rgb(0 0 0 / 0.5); }
 
-/* Dark Mode Classes - FIXED FOOTER BUTTONS */
 body.dark {
     background-color: #0f172a;
     color: #f1f5f9;
@@ -2341,7 +2357,6 @@ body.dark .bg-slate-100 { background-color: #475569; }
 body.dark .border-slate-200 { border-color: #334155; }
 body.dark .text-indigo-600 { color: #818cf8; }
 
-/* FIXED: Dark mode footer buttons */
 body.dark .footer-link {
     color: #cbd5e1;
     background: transparent;
@@ -2374,7 +2389,6 @@ body.dark select:focus {
     border-color: #818cf8;
 }
 
-/* Responsive Design - Optimized */
 @media (min-width: 640px) {
     .sm\:px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
     .sm\:px-4 { padding-left: 1rem; padding-right: 1rem; }
@@ -2444,13 +2458,11 @@ body.dark select:focus {
     .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
-/* Extra small screens (custom breakpoint) */
 @media (min-width: 480px) {
     .xs\:inline { display: inline; }
     .xs\:hidden { display: none; }
 }
 
-/* Custom Components */
 .module-card {
     transition: all 0.3s ease;
 }
@@ -2472,12 +2484,9 @@ body.dark select:focus {
     color: #334155;
 }
 
-/* Difficulty badges - FIXED: Less rounded */
 .difficulty-badge {
-    border-radius: 0.5rem; /* Changed from rounded-full to rounded-lg */
-}
+    border-radius: 0.5rem; }
 
-/* Progress Ring Animation */
 .progress-ring {
     animation: progress-fill 1s ease-in-out;
 }
@@ -2487,12 +2496,10 @@ body.dark select:focus {
     to { width: var(--progress-width); }
 }
 
-/* Smooth scroll for anchor links */
 html {
     scroll-behavior: smooth;
 }
 
-/* Custom scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -2522,18 +2529,15 @@ html {
     background: #64748b;
 }
 
-/* Focus visible for accessibility */
 button:focus-visible {
     outline: 2px solid #6366f1;
     outline-offset: 2px;
 }
 
-/* Button hover effects */
 button {
     transition: all 0.2s ease;
 }
 
-/* Custom input styles */
 input, select {
     transition: all 0.2s ease;
 }
@@ -2542,7 +2546,6 @@ input:focus, select:focus {
     box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
-/* Modal backdrop animation */
 .modal-backdrop {
     animation: fadeIn 0.2s ease;
 }
@@ -2552,23 +2555,21 @@ input:focus, select:focus {
     to { opacity: 1; }
 }
 
-/* Modal content animation */
 .modal-content {
     animation: slideIn 0.3s ease;
 }
 
 @keyframes slideIn {
-    from { 
+    from {
         opacity: 0;
         transform: translateY(-20px) scale(0.95);
     }
-    to { 
+    to {
         opacity: 1;
         transform: translateY(0) scale(1);
     }
 }
 
-/* Quiz option animation */
 .quiz-option {
     transition: all 0.2s ease;
 }
@@ -2577,7 +2578,6 @@ input:focus, select:focus {
     transform: translateX(4px);
 }
 
-/* Badge animations */
 .badge {
     animation: badge-bounce 0.5s ease;
 }
@@ -2588,19 +2588,15 @@ input:focus, select:focus {
     60% { transform: translateY(-5px); }
 }
 
-/* Additional utility classes for specific needs */
 .max-h-90vh { max-height: 90vh; }
 .max-h-80 { max-height: 20rem; }
 
-/* Ring utilities for focus states */
 .ring-indigo-500 { box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5); }
 .ring-2 { box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5); }
 
-/* Opacity utilities */
 .opacity-75 { opacity: 0.75; }
 .opacity-90 { opacity: 0.9; }
 
-/* Additional background patterns for code blocks */
 .bg-indigo-50 { background-color: #eef2ff; }
 .bg-indigo-900\/30 { background-color: rgba(49, 46, 129, 0.3); }
 .bg-blue-900\/30 { background-color: rgba(30, 64, 175, 0.3); }
@@ -2611,24 +2607,22 @@ input:focus, select:focus {
 .bg-amber-900\/30 { background-color: rgba(120, 53, 15, 0.3); }
 .bg-rose-900\/30 { background-color: rgba(136, 19, 55, 0.3); }
 
-/* Responsive typography */
 @media (max-width: 640px) {
     .text-5xl { font-size: 2.25rem; line-height: 2.5rem; }
     .text-4xl { font-size: 1.875rem; line-height: 2.25rem; }
     .text-3xl { font-size: 1.5rem; line-height: 2rem; }
 }
 
-/* Print styles */
 @media print {
     .no-print {
         display: none !important;
     }
-    
+
     body {
         background: white !important;
         color: black !important;
     }
-    
+
     .shadow-xl,
     .shadow-lg,
     .shadow-md {
@@ -2636,18 +2630,16 @@ input:focus, select:focus {
     }
 }
 
-/* High contrast mode support */
 @media (prefers-contrast: high) {
     button {
         border: 2px solid currentColor;
     }
-    
+
     .bg-gradient-to-r {
         background: #2563eb;
     }
 }
 
-/* Reduced motion support */
 @media (prefers-reduced-motion: reduce) {
     * {
         animation-duration: 0.01ms !important;
