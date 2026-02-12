@@ -4,7 +4,7 @@
 // GLOBAL STATE
 // =================================
 const appState = {
-    darkMode: false,
+    darkMode: true,
     showComments: true,
     completedModules: new Set(),
     completedQuizzes: new Set(),
@@ -56,7 +56,10 @@ const CONSTANTS = {
 
 const STORAGE_KEYS = {
     STUDY_METRICS: 'javaDSAStudyMetrics',
-    STUDY_HABIT: 'javaDSAStudyHabit'
+    STUDY_HABIT: 'javaDSAStudyHabit',
+    ACCOUNT: 'javaDSAAccountProfile',
+    NOTES: 'javaDSANotes',
+    STUDY_PLAN: 'javaDSAStudyPlan'
 };
 
 const SUPPORTED_LANGUAGES = {
@@ -93,6 +96,14 @@ const FONT_SCALE_CLASS_MAP = {
     spacious: 'font-scale-spacious'
 };
 const FONT_SCALE_CLASSES = Object.values(FONT_SCALE_CLASS_MAP);
+
+const CODE_RUNNER_ENDPOINT = '';
+const CODE_RUNNER_CONFIG = {
+    java: { language: 'java', version: '17', filename: 'Main.java' },
+    python: { language: 'python', version: '3.10.0', filename: 'main.py' },
+    cpp: { language: 'cpp', version: '17', filename: 'main.cpp' },
+    javascript: { language: 'javascript', version: '18.15.0', filename: 'index.js' }
+};
 
 const ACHIEVEMENT_LEVELS = [
     {
@@ -137,6 +148,9 @@ appState.flashcardSessionLength = FLASHCARD_SESSION_SIZE;
 let studyMetrics = loadStudyMetrics();
 let studyHabit = loadStudyHabit();
 let studyTrackerInterval = null;
+let accountProfile = loadAccountProfile();
+let studyPlanState = loadStudyPlan();
+let notesDraft = loadNotesDraft();
 
 // =================================
 // DATA
@@ -4114,7 +4128,7 @@ function loadFromLocalStorage() {
     if (saved) {
         try {
             const state = JSON.parse(saved);
-            appState.darkMode = state.darkMode || false;
+            appState.darkMode = state.darkMode !== undefined ? state.darkMode : true;
             appState.showComments = state.showComments !== undefined ? state.showComments : true;
             appState.completedModules = new Set(state.completedModules || []);
             appState.expandedCode = new Set(state.expandedCode || []);
@@ -4144,6 +4158,1347 @@ function loadFromLocalStorage() {
         }
     } else {
         appState.reduceMotion = prefersReduced;
+    }
+}
+
+// =================================
+// EXTENDED FEATURES: NOTES, PLANS, INTERVIEWS, PLAYGROUND
+// =================================
+
+const INTERVIEW_EXAMPLES = [
+    {
+        id: 'two-sum',
+        title: 'Two Sum (Hash Map)',
+        difficulty: 'Beginner',
+        minutes: 20,
+        tags: ['Array', 'HashMap'],
+        prompt: 'Given an array of integers, return indices of the two numbers such that they add up to a target. Assume exactly one solution and that you cannot use the same element twice.',
+        solution: `// Java\npublic int[] twoSum(int[] nums, int target) {\n    Map<Integer, Integer> seen = new HashMap<>();\n    for (int i = 0; i < nums.length; i++) {\n        int need = target - nums[i];\n        if (seen.containsKey(need)) {\n            return new int[] { seen.get(need), i };\n        }\n        seen.put(nums[i], i);\n    }\n    return new int[] { -1, -1 };\n}`,
+        language: 'Java',
+        notes: 'Store value → index so lookup is O(1).'
+    },
+    {
+        id: 'valid-parentheses',
+        title: 'Valid Parentheses (Stack)',
+        difficulty: 'Beginner',
+        minutes: 15,
+        tags: ['Stack', 'String'],
+        prompt: 'Given a string containing ()[]{} brackets, determine if the string is valid. A valid string closes brackets in the correct order.',
+        solution: `// Java\npublic boolean isValid(String s) {\n    Deque<Character> stack = new ArrayDeque<>();\n    Map<Character, Character> pairs = Map.of(')', '(', ']', '[', '}', '{');\n    for (char c : s.toCharArray()) {\n        if (pairs.containsValue(c)) {\n            stack.push(c);\n        } else if (!stack.isEmpty() && pairs.get(c) == stack.peek()) {\n            stack.pop();\n        } else {\n            return false;\n        }\n    }\n    return stack.isEmpty();\n}`,
+        language: 'Java',
+        notes: 'Push opens, pop when matching closes arrive.'
+    },
+    {
+        id: 'merge-two-lists',
+        title: 'Merge Two Sorted Lists',
+        difficulty: 'Beginner',
+        minutes: 20,
+        tags: ['Linked List', 'Two Pointers'],
+        prompt: 'Merge two sorted linked lists and return the head of the merged list. The resulting list should be sorted.',
+        solution: `// Java\npublic ListNode mergeTwoLists(ListNode l1, ListNode l2) {\n    ListNode dummy = new ListNode(0);\n    ListNode tail = dummy;\n    while (l1 != null && l2 != null) {\n        if (l1.val <= l2.val) {\n            tail.next = l1;\n            l1 = l1.next;\n        } else {\n            tail.next = l2;\n            l2 = l2.next;\n        }\n        tail = tail.next;\n    }\n    tail.next = (l1 != null) ? l1 : l2;\n    return dummy.next;\n}`,
+        language: 'Java',
+        notes: 'Use a dummy head to simplify pointer updates.'
+    },
+    {
+        id: 'binary-search',
+        title: 'Binary Search',
+        difficulty: 'Beginner',
+        minutes: 15,
+        tags: ['Array', 'Binary Search'],
+        prompt: 'Given a sorted array and a target value, return the index if found. Otherwise return -1.',
+        solution: `// Java\npublic int binarySearch(int[] nums, int target) {\n    int left = 0, right = nums.length - 1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (nums[mid] == target) return mid;\n        if (nums[mid] < target) left = mid + 1;\n        else right = mid - 1;\n    }\n    return -1;\n}`,
+        language: 'Java',
+        notes: 'Always shrink the search window based on mid.'
+    },
+    {
+        id: 'bfs-grid',
+        title: 'Shortest Path in Grid (BFS)',
+        difficulty: 'Intermediate',
+        minutes: 30,
+        tags: ['Graph', 'BFS'],
+        prompt: 'Given a grid with 0 = free and 1 = blocked, find the shortest path length from top-left to bottom-right using BFS.',
+        solution: `// Java\npublic int shortestPath(int[][] grid) {\n    int n = grid.length, m = grid[0].length;\n    int[][] dirs = { {1,0}, {-1,0}, {0,1}, {0,-1} };\n    boolean[][] seen = new boolean[n][m];\n    Queue<int[]> q = new ArrayDeque<>();\n    if (grid[0][0] == 1) return -1;\n    q.add(new int[] {0,0,0});\n    seen[0][0] = true;\n    while (!q.isEmpty()) {\n        int[] cur = q.poll();\n        int r = cur[0], c = cur[1], d = cur[2];\n        if (r == n - 1 && c == m - 1) return d;\n        for (int[] dir : dirs) {\n            int nr = r + dir[0], nc = c + dir[1];\n            if (nr >= 0 && nr < n && nc >= 0 && nc < m && grid[nr][nc] == 0 && !seen[nr][nc]) {\n                seen[nr][nc] = true;\n                q.add(new int[] {nr, nc, d + 1});\n            }\n        }\n    }\n    return -1;\n}`,
+        language: 'Java',
+        notes: 'BFS guarantees shortest path in unweighted graphs.'
+    },
+    {
+        id: 'top-k-frequent',
+        title: 'Top K Frequent Elements',
+        difficulty: 'Intermediate',
+        minutes: 25,
+        tags: ['HashMap', 'Heap'],
+        prompt: 'Given an array of integers, return the k most frequent elements.',
+        solution: `// Java\npublic int[] topKFrequent(int[] nums, int k) {\n    Map<Integer, Integer> freq = new HashMap<>();\n    for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);\n    PriorityQueue<int[]> heap = new PriorityQueue<>((a, b) -> a[1] - b[1]);\n    for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {\n        heap.offer(new int[] { entry.getKey(), entry.getValue() });\n        if (heap.size() > k) heap.poll();\n    }\n    int[] result = new int[k];\n    for (int i = k - 1; i >= 0; i--) result[i] = heap.poll()[0];\n    return result;\n}`,
+        language: 'Java',
+        notes: 'Maintain a min-heap of size k for O(n log k).'
+    }
+];
+
+const INTERVIEW_PAGE_SIZE = 2;
+
+const NOTES_LIBRARY = [
+    {
+        id: 'arrays-strings',
+        title: 'Arrays & Strings Cheat Sheet',
+        category: 'Arrays',
+        description: 'Big-O, sliding window patterns, and common pitfalls.',
+        pages: 6,
+        level: 'Beginner',
+        downloadUrl: ''
+    },
+    {
+        id: 'linked-lists',
+        title: 'Linked Lists Visual Guide',
+        category: 'Linked Lists',
+        description: 'Pointer moves, reversal patterns, and cycle detection.',
+        pages: 5,
+        level: 'Beginner',
+        downloadUrl: ''
+    },
+    {
+        id: 'stack-queue',
+        title: 'Stacks & Queues Quick Reference',
+        category: 'Stacks & Queues',
+        description: 'LIFO/FIFO use cases, monotonic patterns, and queues.',
+        pages: 4,
+        level: 'Beginner',
+        downloadUrl: ''
+    },
+    {
+        id: 'trees',
+        title: 'Trees & BSTs Guide',
+        category: 'Trees',
+        description: 'Traversals, BST invariants, and recursion tips.',
+        pages: 7,
+        level: 'Intermediate',
+        downloadUrl: ''
+    },
+    {
+        id: 'graphs',
+        title: 'Graphs BFS/DFS Sheet',
+        category: 'Graphs',
+        description: 'Adjacency lists, traversal templates, and shortest path.',
+        pages: 6,
+        level: 'Intermediate',
+        downloadUrl: ''
+    },
+    {
+        id: 'sorting',
+        title: 'Sorting Algorithms Summary',
+        category: 'Sorting',
+        description: 'Stable vs unstable, complexities, and use cases.',
+        pages: 5,
+        level: 'Beginner',
+        downloadUrl: ''
+    },
+    {
+        id: 'recursion',
+        title: 'Recursion & Backtracking',
+        category: 'Recursion',
+        description: 'Base cases, call stack, and backtracking checklist.',
+        pages: 6,
+        level: 'Intermediate',
+        downloadUrl: ''
+    },
+    {
+        id: 'big-o',
+        title: 'Big-O & Complexity',
+        category: 'Complexity',
+        description: 'Runtime intuition, amortized analysis, and pitfalls.',
+        pages: 4,
+        level: 'Beginner',
+        downloadUrl: ''
+    },
+    {
+        id: 'java-dsa',
+        title: 'Java Collections for DSA',
+        category: 'Java',
+        description: 'HashMap, ArrayDeque, PriorityQueue cheat sheet.',
+        pages: 5,
+        level: 'Intermediate',
+        downloadUrl: ''
+    },
+    {
+        id: 'discrete-math',
+        title: 'Discrete Math Toolkit',
+        category: 'Discrete Math',
+        description: 'Logic, sets, combinatorics, and graph basics.',
+        pages: 6,
+        level: 'Beginner',
+        downloadUrl: ''
+    }
+];
+
+const DS_PLAYGROUND_CONFIG = {
+    array: {
+        label: 'Array',
+        hint: 'Arrays are great for indexed access and quick scans.',
+        primaryComplexity: { label: 'Insert', bigO: 'O(n)' },
+        complexitySummary: ['Access: O(1)', 'Search: O(n)', 'Insert: O(n)', 'Delete: O(n)'],
+        definitions: [
+            { term: 'Index', description: 'Zero-based position of an element.' },
+            { term: 'Contiguous', description: 'Stored in adjacent memory blocks.' }
+        ]
+    },
+    stack: {
+        label: 'Stack',
+        hint: 'Last-In-First-Out (LIFO) structure for call stacks and undo.',
+        primaryComplexity: { label: 'Push/Pop', bigO: 'O(1)' },
+        complexitySummary: ['Push: O(1)', 'Pop: O(1)', 'Peek: O(1)'],
+        definitions: [
+            { term: 'LIFO', description: 'Last element in is the first out.' },
+            { term: 'Use cases', description: 'Recursion, parsing, backtracking.' }
+        ]
+    },
+    queue: {
+        label: 'Queue',
+        hint: 'First-In-First-Out (FIFO) for scheduling and BFS.',
+        primaryComplexity: { label: 'Enqueue/Dequeue', bigO: 'O(1)' },
+        complexitySummary: ['Enqueue: O(1)', 'Dequeue: O(1)', 'Peek: O(1)'],
+        definitions: [
+            { term: 'FIFO', description: 'First element in is the first out.' },
+            { term: 'Use cases', description: 'BFS, task scheduling, streaming.' }
+        ]
+    },
+    heap: {
+        label: 'Heap',
+        hint: 'Binary heap keeps min/max at the root for quick access.',
+        primaryComplexity: { label: 'Insert/Extract', bigO: 'O(log n)' },
+        complexitySummary: ['Insert: O(log n)', 'Extract min: O(log n)', 'Peek: O(1)'],
+        definitions: [
+            { term: 'Heap property', description: 'Parent is <= children (min-heap).' },
+            { term: 'Use cases', description: 'Priority queues, top-K problems.' }
+        ]
+    },
+    graph: {
+        label: 'Graph',
+        hint: 'Nodes connected by edges. Great for BFS/DFS practice.',
+        primaryComplexity: { label: 'Add Edge', bigO: 'O(1)' },
+        complexitySummary: ['Add node: O(1)', 'Add edge: O(1)', 'Traversal: O(V + E)'],
+        definitions: [
+            { term: 'Vertex', description: 'A node in the graph.' },
+            { term: 'Edge', description: 'A connection between two nodes.' }
+        ]
+    },
+    trie: {
+        label: 'Trie',
+        hint: 'Prefix tree for fast word/prefix lookup.',
+        primaryComplexity: { label: 'Insert/Search', bigO: 'O(L)' },
+        complexitySummary: ['Insert: O(L)', 'Search: O(L)', 'StartsWith: O(L)'],
+        definitions: [
+            { term: 'Prefix', description: 'Shared path for common starting letters.' },
+            { term: 'Terminal', description: 'Marks the end of a word.' }
+        ]
+    }
+};
+
+const dsState = {
+    array: [4, 9, 2, 7],
+    stack: [3, 6, 9],
+    queue: [5, 8, 11],
+    heap: [2, 5, 7, 9],
+    graph: {
+        nodes: ['A', 'B', 'C', 'D'],
+        edges: [
+            { from: 'A', to: 'B' },
+            { from: 'A', to: 'C' },
+            { from: 'B', to: 'D' }
+        ]
+    },
+    trie: ['tree', 'trie', 'trial']
+};
+
+let interviewPage = 1;
+let activePromptId = null;
+let notesLibraryFilter = 'all';
+let notesSaveTimer = null;
+let studyPlanDraft = null;
+let dsActive = 'array';
+let dsControlsBound = false;
+let playgroundState = {
+    language: 'java',
+    snippetId: '',
+    baseCode: '',
+    isCustom: false
+};
+
+function loadAccountProfile() {
+    const stored = safeGetItem(STORAGE_KEYS.ACCOUNT);
+    if (!stored) {
+        return { name: '', email: '', goal: 'exploring' };
+    }
+    try {
+        const parsed = JSON.parse(stored);
+        return {
+            name: parsed.name || '',
+            email: parsed.email || '',
+            goal: parsed.goal || 'exploring'
+        };
+    } catch (error) {
+        return { name: '', email: '', goal: 'exploring' };
+    }
+}
+
+function saveAccountProfile() {
+    safeSetItem(STORAGE_KEYS.ACCOUNT, JSON.stringify(accountProfile));
+}
+
+function updateAccountChip() {
+    const chip = document.getElementById('account-chip');
+    if (!chip) return;
+    const label = accountProfile.name || accountProfile.email;
+    if (label) {
+        chip.textContent = `👋 ${label}`;
+        chip.classList.remove('hidden');
+    } else {
+        chip.textContent = '';
+        chip.classList.add('hidden');
+    }
+}
+
+function openAccountModal() {
+    const modal = document.getElementById('account-modal');
+    if (!modal) return;
+    const nameInput = document.getElementById('account-name');
+    const emailInput = document.getElementById('account-email');
+    const goalInput = document.getElementById('account-goal');
+    if (nameInput) nameInput.value = accountProfile.name || '';
+    if (emailInput) emailInput.value = accountProfile.email || '';
+    if (goalInput) goalInput.value = accountProfile.goal || 'exploring';
+    openModal('account-modal');
+}
+
+function closeAccountModal() {
+    closeModal('account-modal');
+}
+
+function initAccount() {
+    updateAccountChip();
+    const closeBtn = document.getElementById('close-account');
+    const saveBtn = document.getElementById('save-account');
+    if (closeBtn) closeBtn.addEventListener('click', closeAccountModal);
+    if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
+            const nameInput = document.getElementById('account-name');
+            const emailInput = document.getElementById('account-email');
+            const goalInput = document.getElementById('account-goal');
+            accountProfile = {
+                name: nameInput ? nameInput.value.trim() : '',
+                email: emailInput ? emailInput.value.trim() : '',
+                goal: goalInput ? goalInput.value : 'exploring'
+            };
+            saveAccountProfile();
+            updateAccountChip();
+            closeAccountModal();
+            showToast('Profile saved locally!', 'success');
+        });
+    }
+}
+
+function loadNotesDraft() {
+    return safeGetItem(STORAGE_KEYS.NOTES) || '';
+}
+
+function saveNotesDraft(value) {
+    safeSetItem(STORAGE_KEYS.NOTES, value || '');
+}
+
+function downloadTextFile(filename, text) {
+    const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+}
+
+function initNotes() {
+    const notesInput = document.getElementById('notes-input');
+    const saveBtn = document.getElementById('save-notes');
+    const downloadBtn = document.getElementById('download-notes');
+    if (!notesInput) return;
+    notesInput.value = notesDraft || '';
+
+    if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
+            notesDraft = notesInput.value;
+            saveNotesDraft(notesDraft);
+            showToast('Notes saved!', 'success');
+        });
+    }
+    if (downloadBtn) {
+        downloadBtn.addEventListener('click', () => {
+            const content = notesInput.value.trim();
+            if (!content) {
+                showToast('Write a few notes first!', 'warning');
+                return;
+            }
+            downloadTextFile('java-dsa-notes.txt', content);
+        });
+    }
+    notesInput.addEventListener('input', () => {
+        notesDraft = notesInput.value;
+        if (notesSaveTimer) clearTimeout(notesSaveTimer);
+        notesSaveTimer = setTimeout(() => {
+            saveNotesDraft(notesDraft);
+        }, 500);
+    });
+}
+
+function loadStudyPlan() {
+    const stored = safeGetItem(STORAGE_KEYS.STUDY_PLAN);
+    if (!stored) {
+        return { pace: null, focus: null, style: null, notes: '' };
+    }
+    try {
+        const parsed = JSON.parse(stored);
+        return {
+            pace: parsed.pace || null,
+            focus: parsed.focus || null,
+            style: parsed.style || null,
+            notes: parsed.notes || ''
+        };
+    } catch (error) {
+        return { pace: null, focus: null, style: null, notes: '' };
+    }
+}
+
+function saveStudyPlan() {
+    safeSetItem(STORAGE_KEYS.STUDY_PLAN, JSON.stringify(studyPlanState));
+}
+
+function getStudyPlanSummary() {
+    const paceMap = {
+        light: { label: 'Light pace', weeklyGoal: 3 },
+        balanced: { label: 'Balanced pace', weeklyGoal: 5 },
+        intense: { label: 'Intense pace', weeklyGoal: 8 }
+    };
+    const focusMap = {
+        foundations: 'Foundations',
+        interview: 'Interview prep',
+        projects: 'Projects'
+    };
+    const styleMap = {
+        visual: 'Visual walkthroughs',
+        practice: 'Practice heavy',
+        blended: 'Blended'
+    };
+
+    if (!studyPlanState?.pace || !studyPlanState?.focus || !studyPlanState?.style) {
+        return {
+            label: 'Not configured',
+            pill: 'Set up',
+            note: 'Answer 3 quick questions to personalize pacing.'
+        };
+    }
+
+    const paceLabel = paceMap[studyPlanState.pace]?.label || 'Custom pace';
+    const focusLabel = focusMap[studyPlanState.focus] || 'Custom focus';
+    const styleLabel = styleMap[studyPlanState.style] || 'Custom style';
+
+    return {
+        label: paceLabel,
+        pill: 'Active',
+        note: `Focus: ${focusLabel} · Style: ${styleLabel}`
+    };
+}
+
+function applyStudyPlanSelection(plan) {
+    const groups = document.querySelectorAll('.plan-option-group');
+    groups.forEach(group => {
+        const groupKey = group.dataset.planGroup;
+        const selected = plan ? plan[groupKey] : null;
+        Array.from(group.querySelectorAll('.plan-option')).forEach(option => {
+            option.classList.toggle('active', option.dataset.planValue === selected);
+        });
+    });
+    const notesInput = document.getElementById('study-plan-notes');
+    if (notesInput) notesInput.value = plan?.notes || '';
+}
+
+function openStudyPlanModal() {
+    studyPlanDraft = { ...studyPlanState };
+    applyStudyPlanSelection(studyPlanDraft);
+    openModal('study-plan-modal');
+}
+
+function closeStudyPlanModal() {
+    closeModal('study-plan-modal');
+    studyPlanDraft = null;
+}
+
+function initStudyPlan() {
+    const openBtn = document.getElementById('insight-plan-cta');
+    const closeBtn = document.getElementById('close-study-plan');
+    const saveBtn = document.getElementById('save-study-plan');
+    const groups = document.querySelectorAll('.plan-option-group');
+
+    if (openBtn) {
+        openBtn.addEventListener('click', openStudyPlanModal);
+    }
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeStudyPlanModal);
+    }
+    if (groups.length > 0) {
+        groups.forEach(group => {
+            group.addEventListener('click', (event) => {
+                const button = event.target.closest('.plan-option');
+                if (!button) return;
+                const groupKey = group.dataset.planGroup;
+                if (!groupKey) return;
+                if (!studyPlanDraft) studyPlanDraft = { ...studyPlanState };
+                studyPlanDraft[groupKey] = button.dataset.planValue || null;
+                applyStudyPlanSelection(studyPlanDraft);
+            });
+        });
+    }
+    if (saveBtn) {
+        saveBtn.addEventListener('click', () => {
+            const notesInput = document.getElementById('study-plan-notes');
+            if (!studyPlanDraft) studyPlanDraft = { ...studyPlanState };
+            studyPlanDraft.notes = notesInput ? notesInput.value.trim() : '';
+            studyPlanState = { ...studyPlanDraft };
+            saveStudyPlan();
+
+            const paceGoalMap = { light: 3, balanced: 5, intense: 8 };
+            if (studyPlanState.pace && paceGoalMap[studyPlanState.pace]) {
+                appState.weeklyGoal = paceGoalMap[studyPlanState.pace];
+                saveToLocalStorage();
+            }
+
+            renderInsights();
+            closeStudyPlanModal();
+            showToast('Study plan saved!', 'success');
+        });
+    }
+
+    renderInsights();
+}
+
+function initNotesLibrary() {
+    const categoriesEl = document.getElementById('notes-library-categories');
+    const listEl = document.getElementById('notes-library-list');
+    if (!categoriesEl || !listEl) return;
+
+    categoriesEl.addEventListener('click', (event) => {
+        const chip = event.target.closest('button');
+        if (!chip) return;
+        const category = chip.dataset.category || 'all';
+        if (category === notesLibraryFilter) return;
+        notesLibraryFilter = category;
+        renderNotesLibrary();
+    });
+
+    listEl.addEventListener('click', (event) => {
+        const target = event.target.closest('button');
+        if (!target) return;
+        const noteId = target.dataset.noteId;
+        if (!noteId) return;
+        if (target.dataset.action === 'download') {
+            openNotesDownloadModal(noteId);
+        } else if (target.dataset.action === 'preview') {
+            const note = NOTES_LIBRARY.find(item => item.id === noteId);
+            if (note?.downloadUrl) {
+                window.open(note.downloadUrl, '_blank');
+            } else {
+                showToast('Preview coming soon!', 'info');
+            }
+        }
+    });
+
+    renderNotesLibrary();
+}
+
+function renderNotesLibrary() {
+    const categoriesEl = document.getElementById('notes-library-categories');
+    const listEl = document.getElementById('notes-library-list');
+    if (!categoriesEl || !listEl) return;
+
+    const categories = ['all', ...new Set(NOTES_LIBRARY.map(item => item.category))];
+    categoriesEl.innerHTML = categories.map(category => {
+        const label = category === 'all' ? 'All Topics' : category;
+        const isActive = notesLibraryFilter === category;
+        return `<button type="button" class="notes-chip ${isActive ? 'active' : ''}" data-category="${escapeHtml(category)}">${escapeHtml(label)}</button>`;
+    }).join('');
+
+    const items = NOTES_LIBRARY.filter(item => notesLibraryFilter === 'all' || item.category === notesLibraryFilter);
+    listEl.innerHTML = items.map(item => `
+        <div class="notes-card">
+            <div class="flex items-start justify-between gap-2">
+                <h4>${escapeHtml(item.title)}</h4>
+                <span class="notes-chip">${escapeHtml(item.level)}</span>
+            </div>
+            <p>${escapeHtml(item.description)}</p>
+            <div class="text-xs text-slate-500">Category: ${escapeHtml(item.category)} • ${item.pages} pages</div>
+            <div class="notes-actions mt-2">
+                <button type="button" class="notes-download" data-action="download" data-note-id="${escapeHtml(item.id)}">Download</button>
+                <button type="button" class="notes-view" data-action="preview" data-note-id="${escapeHtml(item.id)}">Preview</button>
+            </div>
+        </div>
+    `).join('');
+}
+
+function openNotesDownloadModal(noteId) {
+    const modal = document.getElementById('notes-download-modal');
+    const titleEl = document.getElementById('notes-download-title');
+    const metaEl = document.getElementById('notes-download-meta');
+    const donateLink = document.getElementById('notes-donate-link');
+    const note = NOTES_LIBRARY.find(item => item.id === noteId);
+    if (!modal || !note) return;
+
+    if (titleEl) titleEl.textContent = note.title;
+    if (metaEl) metaEl.textContent = `${note.category} • ${note.pages} pages • ${note.level}`;
+    if (donateLink) {
+        donateLink.href = generatePayPalUrl(1, `${note.title} PDF`);
+        donateLink.dataset.downloadUrl = note.downloadUrl || '';
+        donateLink.onclick = () => {
+            if (note.downloadUrl) {
+                setTimeout(() => window.open(note.downloadUrl, '_blank'), 600);
+            }
+        };
+    }
+    modal.classList.remove('hidden');
+}
+
+function closeNotesDownloadModal() {
+    const modal = document.getElementById('notes-download-modal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+}
+
+function initInterviewExamples() {
+    const grid = document.getElementById('interview-examples-grid');
+    const pagination = document.getElementById('interview-pagination');
+    if (!grid || !pagination) return;
+
+    pagination.addEventListener('click', (event) => {
+        const button = event.target.closest('button');
+        if (!button) return;
+        const page = Number(button.dataset.page);
+        if (!Number.isNaN(page)) {
+            interviewPage = page;
+            renderInterviewExamples();
+        }
+    });
+
+    const submitBtn = document.getElementById('prompt-workspace-submit');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', () => {
+            const input = document.getElementById('prompt-workspace-input');
+            const notesEl = document.getElementById('prompt-workspace-notes');
+            if (!input || !notesEl) return;
+            const content = input.value.trim();
+            if (!content) {
+                notesEl.textContent = 'Add your solution draft before comparing.';
+                return;
+            }
+            notesEl.textContent = 'Nice work! Compare your draft with the reference solution and note any gaps.';
+        });
+    }
+
+    renderInterviewExamples();
+}
+
+function renderInterviewExamples() {
+    const grid = document.getElementById('interview-examples-grid');
+    const pagination = document.getElementById('interview-pagination');
+    if (!grid || !pagination) return;
+
+    const totalPages = Math.max(1, Math.ceil(INTERVIEW_EXAMPLES.length / INTERVIEW_PAGE_SIZE));
+    if (interviewPage > totalPages) interviewPage = totalPages;
+
+    const start = (interviewPage - 1) * INTERVIEW_PAGE_SIZE;
+    const currentItems = INTERVIEW_EXAMPLES.slice(start, start + INTERVIEW_PAGE_SIZE);
+
+    grid.innerHTML = currentItems.map(example => `
+        <div class="timed-prompt-card rounded-xl border shadow-sm p-4 flex flex-col gap-2">
+            <div class="flex items-start justify-between gap-2">
+                <div>
+                    <h4 class="font-semibold text-indigo-600">${escapeHtml(example.title)}</h4>
+                    <p class="text-xs text-slate-500">${escapeHtml(example.difficulty)} • ${example.tags.map(escapeHtml).join(', ')}</p>
+                </div>
+                <span class="text-[11px] px-2 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold">${example.minutes} min</span>
+            </div>
+            <p class="text-sm text-slate-600">${escapeHtml(example.prompt)}</p>
+            <div class="flex flex-wrap gap-2 mt-1">
+                <button type="button" class="notes-download" onclick="openPromptWorkspace('${example.id}')">Open Prompt</button>
+                <button type="button" class="notes-view" onclick="copyInterviewSolution('${example.id}')">Copy Solution</button>
+            </div>
+        </div>
+    `).join('');
+
+    pagination.innerHTML = Array.from({ length: totalPages }, (_, index) => {
+        const page = index + 1;
+        const active = page === interviewPage ? 'active' : '';
+        return `<button type="button" class="notes-chip ${active}" data-page="${page}">${page}</button>`;
+    }).join('');
+}
+
+function openPromptWorkspace(exampleId) {
+    const modal = document.getElementById('prompt-workspace-modal');
+    const example = INTERVIEW_EXAMPLES.find(item => item.id === exampleId);
+    if (!modal || !example) return;
+
+    activePromptId = exampleId;
+    const titleEl = document.getElementById('prompt-workspace-title');
+    const metaEl = document.getElementById('prompt-workspace-meta');
+    const promptEl = document.getElementById('prompt-workspace-prompt');
+    const solutionEl = document.getElementById('prompt-workspace-solution');
+    const langEl = document.getElementById('prompt-workspace-language');
+    const notesEl = document.getElementById('prompt-workspace-notes');
+    const inputEl = document.getElementById('prompt-workspace-input');
+
+    if (titleEl) titleEl.textContent = example.title;
+    if (metaEl) metaEl.textContent = `${example.difficulty} • ${example.minutes} min • ${example.tags.join(', ')}`;
+    if (promptEl) promptEl.textContent = example.prompt;
+    if (solutionEl) solutionEl.textContent = example.solution;
+    if (langEl) langEl.textContent = example.language || 'Java';
+    if (notesEl) notesEl.textContent = example.notes || '';
+    if (inputEl) inputEl.value = '';
+
+    modal.classList.remove('hidden');
+}
+
+function closePromptWorkspace() {
+    const modal = document.getElementById('prompt-workspace-modal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    activePromptId = null;
+}
+
+function copyInterviewSolution(exampleId) {
+    const example = INTERVIEW_EXAMPLES.find(item => item.id === exampleId);
+    if (!example) return;
+    navigator.clipboard.writeText(example.solution).then(() => {
+        showToast('Solution copied!', 'success');
+    }).catch(() => {
+        showToast('Unable to copy solution', 'error');
+    });
+}
+
+function initDSPlayground() {
+    const tabs = document.getElementById('ds-tabs');
+    const controls = document.getElementById('ds-controls');
+    const resetBtn = document.getElementById('ds-reset-all');
+    const complexitySlider = document.getElementById('ds-complexity-n');
+    if (!tabs || !controls) return;
+
+    if (!dsControlsBound) {
+        controls.addEventListener('click', (event) => {
+            const action = event.target.dataset.action;
+            if (!action) return;
+            handleDSAction(action);
+        });
+        dsControlsBound = true;
+    }
+
+    tabs.addEventListener('click', (event) => {
+        const button = event.target.closest('button');
+        if (!button) return;
+        const next = button.dataset.ds;
+        if (!next || !DS_PLAYGROUND_CONFIG[next]) return;
+        dsActive = next;
+        renderDSTabs();
+        renderDSControls();
+        updateDSView();
+    });
+
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            dsState.array = [4, 9, 2, 7];
+            dsState.stack = [3, 6, 9];
+            dsState.queue = [5, 8, 11];
+            dsState.heap = [2, 5, 7, 9];
+            dsState.graph = {
+                nodes: ['A', 'B', 'C', 'D'],
+                edges: [
+                    { from: 'A', to: 'B' },
+                    { from: 'A', to: 'C' },
+                    { from: 'B', to: 'D' }
+                ]
+            };
+            dsState.trie = ['tree', 'trie', 'trial'];
+            updateDSView('Playground reset.');
+        });
+    }
+
+    if (complexitySlider) {
+        complexitySlider.addEventListener('input', updateDSComplexity);
+    }
+
+    renderDSTabs();
+    renderDSControls();
+    updateDSView();
+}
+
+function initPlayground() {
+    const languageSelect = document.getElementById('playground-language');
+    const snippetSelect = document.getElementById('playground-snippets');
+    const editor = document.getElementById('playground-editor');
+    const runButton = document.getElementById('playground-run');
+    const resetButton = document.getElementById('playground-reset');
+    const copyButton = document.getElementById('playground-copy');
+    const output = document.getElementById('playground-output');
+    const status = document.getElementById('playground-status');
+
+    if (!languageSelect || !snippetSelect || !editor || !output) return;
+
+    const availableLanguages = Object.entries(SUPPORTED_LANGUAGES)
+        .map(([key, info]) => ({ key, label: `${info.icon} ${info.name}` }));
+
+    languageSelect.innerHTML = availableLanguages
+        .map(lang => `<option value="${lang.key}">${lang.label}</option>`)
+        .join('');
+
+    const snippetOptions = modules
+        .filter(module => module.codeExamples || module.codeExample)
+        .map(module => ({ id: module.id, title: module.title }));
+
+    snippetSelect.innerHTML = [
+        '<option value="">Select a module sample</option>',
+        ...snippetOptions.map(option => `<option value="${option.id}">${escapeHtml(option.title)}</option>`)
+    ].join('');
+
+    playgroundState.language = languageSelect.value || 'java';
+
+    const setStatus = (text, tone = 'Idle') => {
+        if (!status) return;
+        status.textContent = text;
+        status.dataset.state = tone;
+    };
+
+    const setOutput = (text) => {
+        output.textContent = text;
+    };
+
+    const getPlaygroundCode = (moduleId, language) => {
+        const module = modules.find(item => item.id === moduleId);
+        if (!module) return '';
+        if (module.codeExamples && module.codeExamples[language]) {
+            return module.codeExamples[language];
+        }
+        return module.codeExample || '';
+    };
+
+    const updateEditor = (moduleId) => {
+        if (!moduleId) {
+            editor.value = '';
+            playgroundState.baseCode = '';
+            playgroundState.snippetId = '';
+            playgroundState.isCustom = true;
+            return;
+        }
+        const code = getPlaygroundCode(moduleId, playgroundState.language);
+        editor.value = code || '';
+        playgroundState.baseCode = editor.value;
+        playgroundState.snippetId = moduleId;
+        playgroundState.isCustom = false;
+    };
+
+    const refreshSnippetForLanguage = () => {
+        if (!playgroundState.snippetId) return;
+        updateEditor(playgroundState.snippetId);
+    };
+
+    languageSelect.addEventListener('change', () => {
+        playgroundState.language = languageSelect.value;
+        refreshSnippetForLanguage();
+    });
+
+    snippetSelect.addEventListener('change', () => {
+        updateEditor(snippetSelect.value);
+    });
+
+    editor.addEventListener('input', () => {
+        playgroundState.isCustom = true;
+    });
+
+    if (resetButton) {
+        resetButton.addEventListener('click', () => {
+            if (playgroundState.baseCode) {
+                editor.value = playgroundState.baseCode;
+                playgroundState.isCustom = false;
+                setStatus('Reset sample', 'Idle');
+            } else {
+                editor.value = '';
+            }
+        });
+    }
+
+    if (copyButton) {
+        copyButton.addEventListener('click', () => {
+            navigator.clipboard.writeText(output.textContent || '').then(() => {
+                showToast('Output copied!', 'success');
+            }).catch(() => {
+                showToast('Unable to copy output', 'error');
+            });
+        });
+    }
+
+    if (runButton) {
+        runButton.addEventListener('click', async () => {
+            const code = editor.value.trim();
+            if (!code) {
+                setOutput('// Add code before running');
+                return;
+            }
+            if (!CODE_RUNNER_ENDPOINT) {
+                setOutput('// Runner not configured.\n// Set CODE_RUNNER_ENDPOINT in js/script.js to enable execution.');
+                return;
+            }
+
+            setStatus('Running...', 'Running');
+            setOutput('// Running...');
+
+            const langConfig = CODE_RUNNER_CONFIG[playgroundState.language] || CODE_RUNNER_CONFIG.java;
+            try {
+                const response = await fetch(CODE_RUNNER_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        language: langConfig.language,
+                        version: langConfig.version,
+                        files: [{ name: langConfig.filename, content: code }]
+                    })
+                });
+
+                if (!response.ok) throw new Error('Execution failed');
+                const result = await response.json();
+                const outputText = result?.run?.output || result?.output || 'No output returned.';
+                setOutput(outputText);
+                setStatus('Complete', 'Idle');
+            } catch (error) {
+                setOutput('// Execution failed. Check your runner endpoint.');
+                setStatus('Error', 'Idle');
+            }
+        });
+    }
+
+    setStatus('Idle', 'Idle');
+}
+
+function renderDSTabs() {
+    const tabs = document.getElementById('ds-tabs');
+    if (!tabs) return;
+    tabs.innerHTML = Object.entries(DS_PLAYGROUND_CONFIG).map(([key, config]) => {
+        const active = key === dsActive ? 'active' : '';
+        return `<button type="button" class="notes-chip ${active}" data-ds="${key}">${escapeHtml(config.label)}</button>`;
+    }).join('');
+}
+
+function renderDSControls() {
+    const controls = document.getElementById('ds-controls');
+    if (!controls) return;
+    const config = DS_PLAYGROUND_CONFIG[dsActive];
+    let html = '';
+
+    switch (dsActive) {
+        case 'array':
+            html = `
+                <div class="space-y-3">
+                    <div class="text-xs uppercase tracking-wide text-slate-400 font-semibold">Array Controls</div>
+                    <input id="ds-value-input" type="text" placeholder="Value" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
+                    <input id="ds-index-input" type="number" placeholder="Index (optional)" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
+                    <div class="flex flex-wrap gap-2">
+                        <button data-action="append" class="notes-download">Append</button>
+                        <button data-action="insert" class="notes-view">Insert at Index</button>
+                        <button data-action="remove" class="notes-view">Remove Last</button>
+                        <button data-action="remove-index" class="notes-view">Remove at Index</button>
+                    </div>
+                    <div class="text-xs text-slate-300">${escapeHtml(config.hint)}</div>
+                </div>
+            `;
+            break;
+        case 'stack':
+            html = `
+                <div class="space-y-3">
+                    <div class="text-xs uppercase tracking-wide text-slate-400 font-semibold">Stack Controls</div>
+                    <input id="ds-value-input" type="text" placeholder="Value" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
+                    <div class="flex flex-wrap gap-2">
+                        <button data-action="push" class="notes-download">Push</button>
+                        <button data-action="pop" class="notes-view">Pop</button>
+                        <button data-action="peek" class="notes-view">Peek</button>
+                    </div>
+                    <div class="text-xs text-slate-300">${escapeHtml(config.hint)}</div>
+                </div>
+            `;
+            break;
+        case 'queue':
+            html = `
+                <div class="space-y-3">
+                    <div class="text-xs uppercase tracking-wide text-slate-400 font-semibold">Queue Controls</div>
+                    <input id="ds-value-input" type="text" placeholder="Value" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
+                    <div class="flex flex-wrap gap-2">
+                        <button data-action="enqueue" class="notes-download">Enqueue</button>
+                        <button data-action="dequeue" class="notes-view">Dequeue</button>
+                        <button data-action="peek" class="notes-view">Peek</button>
+                    </div>
+                    <div class="text-xs text-slate-300">${escapeHtml(config.hint)}</div>
+                </div>
+            `;
+            break;
+        case 'heap':
+            html = `
+                <div class="space-y-3">
+                    <div class="text-xs uppercase tracking-wide text-slate-400 font-semibold">Heap Controls</div>
+                    <input id="ds-value-input" type="number" placeholder="Numeric value" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
+                    <div class="flex flex-wrap gap-2">
+                        <button data-action="heap-insert" class="notes-download">Insert</button>
+                        <button data-action="heap-extract" class="notes-view">Extract Min</button>
+                        <button data-action="peek" class="notes-view">Peek</button>
+                    </div>
+                    <div class="text-xs text-slate-300">${escapeHtml(config.hint)}</div>
+                </div>
+            `;
+            break;
+        case 'graph':
+            html = `
+                <div class="space-y-3">
+                    <div class="text-xs uppercase tracking-wide text-slate-400 font-semibold">Graph Controls</div>
+                    <input id="ds-node-input" type="text" placeholder="Node label (ex: A)" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input id="ds-edge-from" type="text" placeholder="From" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
+                        <input id="ds-edge-to" type="text" placeholder="To" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button data-action="graph-add-node" class="notes-download">Add Node</button>
+                        <button data-action="graph-add-edge" class="notes-view">Add Edge</button>
+                        <button data-action="graph-remove-node" class="notes-view">Remove Node</button>
+                    </div>
+                    <div class="text-xs text-slate-300">${escapeHtml(config.hint)}</div>
+                </div>
+            `;
+            break;
+        case 'trie':
+            html = `
+                <div class="space-y-3">
+                    <div class="text-xs uppercase tracking-wide text-slate-400 font-semibold">Trie Controls</div>
+                    <input id="ds-word-input" type="text" placeholder="Word" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
+                    <div class="flex flex-wrap gap-2">
+                        <button data-action="trie-insert" class="notes-download">Insert</button>
+                        <button data-action="trie-remove" class="notes-view">Remove</button>
+                        <button data-action="trie-search" class="notes-view">Search</button>
+                    </div>
+                    <div class="text-xs text-slate-300">${escapeHtml(config.hint)}</div>
+                </div>
+            `;
+            break;
+        default:
+            html = '';
+    }
+
+    controls.innerHTML = html;
+}
+
+function updateDSView(statusMessage) {
+    const config = DS_PLAYGROUND_CONFIG[dsActive];
+    const visual = document.getElementById('ds-visual');
+    const stateEl = document.getElementById('ds-state');
+    const complexityEl = document.getElementById('ds-complexity');
+    const statusEl = document.getElementById('ds-status');
+    const defsEl = document.getElementById('ds-definitions');
+    const complexityLabel = document.getElementById('ds-complexity-label');
+
+    if (visual) {
+        if (dsActive === 'stack') {
+            visual.className = 'ds-visual ds-stack';
+            visual.innerHTML = dsState.stack.map(value => `<span class="ds-box">${escapeHtml(String(value))}</span>`).join('');
+        } else if (dsActive === 'queue') {
+            visual.className = 'ds-visual ds-queue';
+            visual.innerHTML = dsState.queue.map(value => `<span class="ds-box">${escapeHtml(String(value))}</span>`).join('');
+        } else if (dsActive === 'array') {
+            visual.className = 'ds-visual ds-array';
+            visual.innerHTML = dsState.array.map(value => `<span class="ds-box">${escapeHtml(String(value))}</span>`).join('');
+        } else if (dsActive === 'heap') {
+            visual.className = 'ds-visual ds-array';
+            visual.innerHTML = dsState.heap.map(value => `<span class="ds-box">${escapeHtml(String(value))}</span>`).join('');
+        } else if (dsActive === 'graph') {
+            visual.className = 'ds-visual';
+            const nodes = dsState.graph.nodes.map(node => `<span class="ds-box">${escapeHtml(node)}</span>`).join('');
+            const edges = dsState.graph.edges.map(edge => `${edge.from}→${edge.to}`).join(', ') || 'No edges yet';
+            visual.innerHTML = `<div class="mb-2">${nodes}</div><div class="text-xs text-slate-300">${escapeHtml(edges)}</div>`;
+        } else if (dsActive === 'trie') {
+            visual.className = 'ds-visual ds-array';
+            visual.innerHTML = dsState.trie.map(word => `<span class="ds-box">${escapeHtml(word)}</span>`).join('');
+        }
+    }
+
+    if (stateEl) {
+        if (dsActive === 'graph') {
+            const adjacency = {};
+            dsState.graph.nodes.forEach(node => {
+                adjacency[node] = [];
+            });
+            dsState.graph.edges.forEach(edge => {
+                if (adjacency[edge.from]) adjacency[edge.from].push(edge.to);
+            });
+            stateEl.textContent = JSON.stringify(adjacency, null, 2);
+        } else if (dsActive === 'trie') {
+            stateEl.textContent = JSON.stringify({ words: dsState.trie }, null, 2);
+        } else {
+            stateEl.textContent = JSON.stringify(dsState[dsActive], null, 2);
+        }
+    }
+
+    if (complexityEl) {
+        complexityEl.textContent = config.complexitySummary.join(' • ');
+    }
+    if (complexityLabel) {
+        complexityLabel.textContent = config.primaryComplexity.bigO;
+    }
+    if (defsEl) {
+        defsEl.innerHTML = config.definitions.map(def => `<li><span class="text-slate-300">${escapeHtml(def.term)}:</span> ${escapeHtml(def.description)}</li>`).join('');
+    }
+    if (statusEl) {
+        statusEl.textContent = statusMessage || `${config.label} ready.`;
+    }
+    updateDSComplexity();
+}
+
+function estimateOps(bigO, n) {
+    const safeN = Math.max(1, n);
+    switch (bigO) {
+        case 'O(1)':
+            return 1;
+        case 'O(log n)':
+            return Math.max(1, Math.round(Math.log2(safeN)));
+        case 'O(n)':
+            return safeN;
+        case 'O(n log n)':
+            return Math.round(safeN * Math.log2(safeN));
+        case 'O(n^2)':
+            return safeN * safeN;
+        case 'O(L)':
+            return safeN;
+        default:
+            return safeN;
+    }
+}
+
+function updateDSComplexity() {
+    const slider = document.getElementById('ds-complexity-n');
+    const summary = document.getElementById('ds-complexity-summary');
+    const opsEl = document.getElementById('ds-complexity-ops');
+    if (!slider || !summary || !opsEl) return;
+
+    const n = Number(slider.value) || 1;
+    const config = DS_PLAYGROUND_CONFIG[dsActive];
+    const ops = estimateOps(config.primaryComplexity.bigO, n);
+    summary.textContent = `n=${n} • ${config.primaryComplexity.label}`;
+    opsEl.textContent = `~${ops} ops`;
+}
+
+function normalizeDsValue(raw) {
+    const trimmed = String(raw || '').trim();
+    if (!trimmed) return null;
+    const asNumber = Number(trimmed);
+    return Number.isNaN(asNumber) ? trimmed : asNumber;
+}
+
+function heapInsert(heap, value) {
+    heap.push(value);
+    let idx = heap.length - 1;
+    while (idx > 0) {
+        const parent = Math.floor((idx - 1) / 2);
+        if (heap[parent] <= heap[idx]) break;
+        [heap[parent], heap[idx]] = [heap[idx], heap[parent]];
+        idx = parent;
+    }
+}
+
+function heapExtract(heap) {
+    if (heap.length === 0) return null;
+    const min = heap[0];
+    const last = heap.pop();
+    if (heap.length > 0) {
+        heap[0] = last;
+        let idx = 0;
+        while (true) {
+            let left = idx * 2 + 1;
+            let right = idx * 2 + 2;
+            let smallest = idx;
+            if (left < heap.length && heap[left] < heap[smallest]) smallest = left;
+            if (right < heap.length && heap[right] < heap[smallest]) smallest = right;
+            if (smallest === idx) break;
+            [heap[idx], heap[smallest]] = [heap[smallest], heap[idx]];
+            idx = smallest;
+        }
+    }
+    return min;
+}
+
+function handleDSAction(action) {
+    const valueInput = document.getElementById('ds-value-input');
+    const indexInput = document.getElementById('ds-index-input');
+    const nodeInput = document.getElementById('ds-node-input');
+    const edgeFrom = document.getElementById('ds-edge-from');
+    const edgeTo = document.getElementById('ds-edge-to');
+    const wordInput = document.getElementById('ds-word-input');
+
+    const value = normalizeDsValue(valueInput ? valueInput.value : '');
+    const index = indexInput ? Number(indexInput.value) : null;
+    const status = (message) => updateDSView(message);
+
+    if (dsActive === 'array') {
+        if (action === 'append') {
+            if (value === null) return status('Enter a value to append.');
+            dsState.array.push(value);
+            return status(`Appended ${value}.`);
+        }
+        if (action === 'insert') {
+            if (value === null) return status('Enter a value to insert.');
+            const targetIndex = Number.isInteger(index) && index >= 0 ? index : dsState.array.length;
+            dsState.array.splice(Math.min(targetIndex, dsState.array.length), 0, value);
+            return status(`Inserted ${value} at index ${targetIndex}.`);
+        }
+        if (action === 'remove') {
+            if (dsState.array.length === 0) return status('Array is already empty.');
+            const removed = dsState.array.pop();
+            return status(`Removed ${removed}.`);
+        }
+        if (action === 'remove-index') {
+            if (!Number.isInteger(index) || index < 0 || index >= dsState.array.length) {
+                return status('Provide a valid index to remove.');
+            }
+            const removed = dsState.array.splice(index, 1)[0];
+            return status(`Removed ${removed} at index ${index}.`);
+        }
+    }
+
+    if (dsActive === 'stack') {
+        if (action === 'push') {
+            if (value === null) return status('Enter a value to push.');
+            dsState.stack.push(value);
+            return status(`Pushed ${value}.`);
+        }
+        if (action === 'pop') {
+            if (dsState.stack.length === 0) return status('Stack is empty.');
+            const removed = dsState.stack.pop();
+            return status(`Popped ${removed}.`);
+        }
+        if (action === 'peek') {
+            if (dsState.stack.length === 0) return status('Stack is empty.');
+            return status(`Top is ${dsState.stack[dsState.stack.length - 1]}.`);
+        }
+    }
+
+    if (dsActive === 'queue') {
+        if (action === 'enqueue') {
+            if (value === null) return status('Enter a value to enqueue.');
+            dsState.queue.push(value);
+            return status(`Enqueued ${value}.`);
+        }
+        if (action === 'dequeue') {
+            if (dsState.queue.length === 0) return status('Queue is empty.');
+            const removed = dsState.queue.shift();
+            return status(`Dequeued ${removed}.`);
+        }
+        if (action === 'peek') {
+            if (dsState.queue.length === 0) return status('Queue is empty.');
+            return status(`Front is ${dsState.queue[0]}.`);
+        }
+    }
+
+    if (dsActive === 'heap') {
+        if (action === 'heap-insert') {
+            if (value === null || typeof value !== 'number') return status('Enter a numeric value to insert.');
+            heapInsert(dsState.heap, value);
+            return status(`Inserted ${value}.`);
+        }
+        if (action === 'heap-extract') {
+            if (dsState.heap.length === 0) return status('Heap is empty.');
+            const removed = heapExtract(dsState.heap);
+            return status(`Extracted ${removed}.`);
+        }
+        if (action === 'peek') {
+            if (dsState.heap.length === 0) return status('Heap is empty.');
+            return status(`Min is ${dsState.heap[0]}.`);
+        }
+    }
+
+    if (dsActive === 'graph') {
+        if (action === 'graph-add-node') {
+            const label = (nodeInput ? nodeInput.value : '').trim();
+            if (!label) return status('Enter a node label.');
+            if (!dsState.graph.nodes.includes(label)) {
+                dsState.graph.nodes.push(label);
+            }
+            return status(`Added node ${label}.`);
+        }
+        if (action === 'graph-add-edge') {
+            const from = (edgeFrom ? edgeFrom.value : '').trim();
+            const to = (edgeTo ? edgeTo.value : '').trim();
+            if (!from || !to) return status('Enter both edge endpoints.');
+            if (!dsState.graph.nodes.includes(from)) dsState.graph.nodes.push(from);
+            if (!dsState.graph.nodes.includes(to)) dsState.graph.nodes.push(to);
+            if (!dsState.graph.edges.find(edge => edge.from === from && edge.to === to)) {
+                dsState.graph.edges.push({ from, to });
+            }
+            return status(`Added edge ${from} → ${to}.`);
+        }
+        if (action === 'graph-remove-node') {
+            const label = (nodeInput ? nodeInput.value : '').trim();
+            if (!label) return status('Enter a node to remove.');
+            dsState.graph.nodes = dsState.graph.nodes.filter(node => node !== label);
+            dsState.graph.edges = dsState.graph.edges.filter(edge => edge.from !== label && edge.to !== label);
+            return status(`Removed node ${label}.`);
+        }
+    }
+
+    if (dsActive === 'trie') {
+        if (action === 'trie-insert') {
+            const word = (wordInput ? wordInput.value : '').trim().toLowerCase();
+            if (!word) return status('Enter a word to insert.');
+            if (!dsState.trie.includes(word)) dsState.trie.push(word);
+            return status(`Inserted "${word}".`);
+        }
+        if (action === 'trie-remove') {
+            const word = (wordInput ? wordInput.value : '').trim().toLowerCase();
+            if (!word) return status('Enter a word to remove.');
+            dsState.trie = dsState.trie.filter(item => item !== word);
+            return status(`Removed "${word}".`);
+        }
+        if (action === 'trie-search') {
+            const word = (wordInput ? wordInput.value : '').trim().toLowerCase();
+            if (!word) return status('Enter a word to search.');
+            return status(dsState.trie.includes(word) ? `Found "${word}".` : `"${word}" not found.`);
+        }
+    }
+
+    updateDSView();
+}
+
+function openSupportModal() {
+    openModal('support-modal');
+}
+
+function closeSupportModal() {
+    closeModal('support-modal');
+}
+
+function initSupport() {
+    const closeBtn = document.getElementById('close-support');
+    const form = document.getElementById('support-form');
+    const moduleSelect = document.getElementById('support-module');
+
+    if (moduleSelect && moduleSelect.options.length === 0) {
+        moduleSelect.innerHTML = modules.map(module => `<option value="${escapeHtml(module.id)}">${escapeHtml(module.title)}</option>`).join('');
+    }
+
+    if (closeBtn) {
+        closeBtn.addEventListener('click', closeSupportModal);
+    }
+
+    if (form) {
+        form.addEventListener('submit', (event) => {
+            event.preventDefault();
+            showToast('Support request saved locally. We will reply soon!', 'success');
+            form.reset();
+            closeSupportModal();
+        });
     }
 }
 
@@ -4448,6 +5803,7 @@ function renderModules() {
     const filteredModules = filterModules();
     const grid = document.getElementById('modules-grid');
     const searchResultsCount = document.getElementById('search-results-count');
+    const accentModuleTitles = new Set(['Stacks and Queues', 'Searching Algorithms']);
 
     // Update search results count
     if (filteredModules.length !== modules.length) {
@@ -4470,11 +5826,15 @@ function renderModules() {
 
         const processedCode = processCode(displayCode, module.id);
 
+        const isAccentModule = accentModuleTitles.has(module.title);
+
+        const cardThemeClasses = isAccentModule ? 'module-card--accent' : 'bg-white border-slate-200';
+
         return `
-            <div id="module-${module.id}" data-module-card="${module.id}" class="module-card bg-white border-slate-200 rounded-xl p-4 sm:p-6 shadow-xl border hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <div id="module-${module.id}" data-module-card="${module.id}" class="module-card ${cardThemeClasses} rounded-xl p-4 sm:p-6 shadow-xl border hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
                 <!-- Module Header -->
                 <div class="flex flex-col sm:flex-row justify-between items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
-                    <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 leading-tight">
+                    <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 leading-tight ${isAccentModule ? 'module-accent-text' : ''}">
                         ${module.title}
                     </h3>
                     <span class="px-2 sm:px-2.5 py-1 rounded-lg text-xs sm:text-sm font-medium ${getDifficultyColor(module.difficulty)} whitespace-nowrap self-start sm:self-auto difficulty-badge">
@@ -4482,7 +5842,7 @@ function renderModules() {
                     </span>
                 </div>
 
-                <p class="text-slate-600 mb-3 sm:mb-4 text-sm sm:text-base leading-relaxed">${module.description}</p>
+                <p class="text-slate-600 mb-3 sm:mb-4 text-sm sm:text-base leading-relaxed ${isAccentModule ? 'module-accent-text' : ''}">${module.description}</p>
 
                 <!-- Topics -->
                 <div class="mb-3 sm:mb-4">
@@ -5244,6 +6604,9 @@ function resetProgress() {
 function init() {
     // Load saved state
     loadFromLocalStorage();
+    accountProfile = loadAccountProfile();
+    studyPlanState = loadStudyPlan();
+    notesDraft = loadNotesDraft();
 
     // Apply loaded state to UI
     applyFontScale();
@@ -5263,6 +6626,14 @@ function init() {
     renderModules();
     renderDailyChallenge();
     renderStudyTip();
+    initStudyPlan();
+    initAccount();
+    initNotes();
+    initNotesLibrary();
+    initInterviewExamples();
+    initDSPlayground();
+    initSupport();
+    initPlayground();
 
     // Set initial form values
     document.getElementById('search-input').value = appState.searchTerm;
@@ -5401,6 +6772,10 @@ function init() {
             if (e.target.id === 'glossary-modal') closeGlossary();
             if (e.target.id === 'flashcards-modal') closeFlashcards();
             if (e.target.id === 'quiz-modal') closeQuiz();
+            if (e.target.id === 'study-plan-modal') closeStudyPlanModal();
+            if (e.target.id === 'account-modal') closeAccountModal();
+            if (e.target.id === 'support-modal') closeSupportModal();
+            if (e.target.id === 'interactive-quiz-modal') closeInteractiveQuizLibrary();
         }
     });
 
@@ -5649,6 +7024,10 @@ function renderInsights() {
     const highlightFocusNoteEl = document.getElementById('insight-focus-note');
     const highlightStreakValueEl = document.getElementById('insight-streak-value');
     const highlightStreakNoteEl = document.getElementById('insight-streak-note');
+    const planLabelEl = document.getElementById('insight-plan-label');
+    const planPillEl = document.getElementById('insight-plan-pill');
+    const planNoteEl = document.getElementById('insight-plan-note');
+    const planCtaEl = document.getElementById('insight-plan-cta');
     const momentumStreakEl = document.getElementById('insight-momentum-streak');
     const momentumTodayEl = document.getElementById('insight-momentum-today');
     const momentumLongestEl = document.getElementById('insight-momentum-longest');
@@ -5761,6 +7140,13 @@ function renderInsights() {
     }
     if (highlightStreakNoteEl) {
         highlightStreakNoteEl.textContent = `Longest streak: ${longestStreak} day${longestStreak === 1 ? '' : 's'}`;
+    }
+    if (planLabelEl || planPillEl || planNoteEl) {
+        const planSummary = getStudyPlanSummary();
+        if (planLabelEl) planLabelEl.textContent = planSummary.label;
+        if (planPillEl) planPillEl.textContent = planSummary.pill;
+        if (planNoteEl) planNoteEl.textContent = planSummary.note;
+        if (planCtaEl) planCtaEl.textContent = planSummary.pill === 'Active' ? 'Edit plan' : 'Personalize';
     }
 
     if (momentumStreakEl) {

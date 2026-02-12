@@ -827,28 +827,28 @@ body.dark #quiz-modal {
     color: #f1f5f9 !important;
 }
 
-#quiz-modal .quiz-option,
-#quiz-modal .quiz-option *,
-#interactive-quiz-modal .quiz-option,
-#interactive-quiz-modal .quiz-option *,
-#quiz-content .quiz-option,
-#quiz-content .quiz-option * {
+body.dark #quiz-modal .quiz-option,
+body.dark #quiz-modal .quiz-option *,
+body.dark #interactive-quiz-modal .quiz-option,
+body.dark #interactive-quiz-modal .quiz-option *,
+body.dark #quiz-content .quiz-option,
+body.dark #quiz-content .quiz-option * {
     color: #ffffff !important;
     background-color: #0f172a !important;
     border-color: rgba(255, 255, 255, 0.18) !important;
 }
 
-#quiz-modal .text-slate-800,
-#quiz-modal .text-slate-700,
-#quiz-modal .text-slate-600,
-#quiz-content .text-slate-800,
-#quiz-content .text-slate-700,
-#quiz-content .text-slate-600 {
+body.dark #quiz-modal .text-slate-800,
+body.dark #quiz-modal .text-slate-700,
+body.dark #quiz-modal .text-slate-600,
+body.dark #quiz-content .text-slate-800,
+body.dark #quiz-content .text-slate-700,
+body.dark #quiz-content .text-slate-600 {
     color: #ffffff !important;
 }
 
-#quiz-modal h4,
-#quiz-content h4 {
+body.dark #quiz-modal h4,
+body.dark #quiz-content h4 {
     color: #ffffff !important;
 }
 
@@ -858,26 +858,26 @@ body.dark [class*="bg-white"] {
     color: #f1f5f9 !important;
 }
 
-#quiz-modal,
-#interactive-quiz-modal {
+body.dark #quiz-modal,
+body.dark #interactive-quiz-modal {
     color: #ffffff !important;
 }
 
-#quiz-modal,
-#quiz-modal * {
+body.dark #quiz-modal,
+body.dark #quiz-modal * {
     color: #ffffff !important;
 }
-#interactive-quiz-modal,
-#interactive-quiz-modal * {
+body.dark #interactive-quiz-modal,
+body.dark #interactive-quiz-modal * {
     color: #ffffff !important;
 }
-#quiz-modal .quiz-option,
-#interactive-quiz-modal .quiz-option {
+body.dark #quiz-modal .quiz-option,
+body.dark #interactive-quiz-modal .quiz-option {
     background: #0f172a !important;
     border: 1px solid rgba(255, 255, 255, 0.18) !important;
 }
-#quiz-modal .quiz-option *,
-#interactive-quiz-modal .quiz-option * {
+body.dark #quiz-modal .quiz-option *,
+body.dark #interactive-quiz-modal .quiz-option * {
     color: #ffffff !important;
 }
 
@@ -1514,6 +1514,45 @@ body.dark .insight-button {
 .recommended-link:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-card);
+}
+
+#recommended-modules-list .recommended-link {
+    background: linear-gradient(120deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 18px 35px var(--accent-shadow);
+}
+
+#recommended-modules-list .recommended-link .text-slate-800,
+#recommended-modules-list .recommended-link .text-slate-500 {
+    color: #f8fafc !important;
+}
+
+#recommended-modules-list .recommended-link:hover {
+    box-shadow: 0 25px 45px var(--accent-shadow);
+}
+
+.progress-percentage-chip {
+    background: linear-gradient(120deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+    color: #fff !important;
+    border-color: transparent !important;
+    box-shadow: 0 18px 35px var(--accent-shadow);
+}
+
+.progress-percentage-chip .chip-label,
+.progress-percentage-chip .chip-value,
+.progress-percentage-chip .chip-subtitle {
+    color: #fff !important;
+}
+
+.module-card--accent {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary)) !important;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 25px 45px var(--accent-shadow);
+}
+
+.module-card--accent .module-accent-text {
+    color: #fff !important;
 }
 
 .pagination-button {
@@ -2356,6 +2395,194 @@ body.dark .bg-slate-50 { background-color: #334155; }
 body.dark .bg-slate-100 { background-color: #475569; }
 body.dark .border-slate-200 { border-color: #334155; }
 body.dark .text-indigo-600 { color: #818cf8; }
+
+/* Light mode normalization for mixed Tailwind classes inside main content */
+body:not(.dark) #main-content .panel-surface,
+body:not(.dark) #main-content .content-backdrop,
+body:not(.dark) #main-content .support-card,
+body:not(.dark) #main-content #main-footer {
+    background: linear-gradient(135deg, var(--surface-primary), var(--surface-secondary));
+    border-color: var(--surface-border);
+    color: var(--text-primary-color);
+}
+
+body:not(.dark) #main-content .panel-surface .text-slate-100,
+body:not(.dark) #main-content .content-backdrop .text-slate-100,
+body:not(.dark) #main-content .support-card .text-slate-100,
+body:not(.dark) #main-content #main-footer .text-slate-100 {
+    color: var(--text-primary-color) !important;
+}
+
+body:not(.dark) #main-content .panel-surface .text-slate-200,
+body:not(.dark) #main-content .content-backdrop .text-slate-200,
+body:not(.dark) #main-content .support-card .text-slate-200,
+body:not(.dark) #main-content #main-footer .text-slate-200 {
+    color: var(--text-secondary-color) !important;
+}
+
+body:not(.dark) #main-content .panel-surface .text-slate-300,
+body:not(.dark) #main-content .content-backdrop .text-slate-300,
+body:not(.dark) #main-content .support-card .text-slate-300,
+body:not(.dark) #main-content #main-footer .text-slate-300 {
+    color: #64748b !important;
+}
+
+body:not(.dark) #main-content .panel-surface .text-slate-400,
+body:not(.dark) #main-content .content-backdrop .text-slate-400,
+body:not(.dark) #main-content .support-card .text-slate-400,
+body:not(.dark) #main-content #main-footer .text-slate-400 {
+    color: #94a3b8 !important;
+}
+
+body:not(.dark) #main-content .panel-surface button.text-slate-100,
+body:not(.dark) #main-content .panel-surface a.text-slate-100,
+body:not(.dark) #main-content .content-backdrop button.text-slate-100,
+body:not(.dark) #main-content .content-backdrop a.text-slate-100,
+body:not(.dark) #main-content .support-card button.text-slate-100,
+body:not(.dark) #main-content .support-card a.text-slate-100,
+body:not(.dark) #main-content #main-footer button.text-slate-100,
+body:not(.dark) #main-content #main-footer a.text-slate-100 {
+    color: #f8fafc !important;
+}
+
+body:not(.dark) #main-content .module-card {
+    color: var(--text-primary-color);
+}
+
+body:not(.dark) #main-content .module-card pre,
+body:not(.dark) #main-content .module-card code {
+    color: var(--text-primary-color);
+}
+
+/* Light mode inversion for dark-mode utility classes inside main content */
+body:not(.dark) #main-content .bg-slate-900 {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+}
+body:not(.dark) #main-content .bg-slate-900\\/70 {
+    background-color: rgba(255, 255, 255, 0.95) !important;
+}
+body:not(.dark) #main-content .bg-slate-900\\/60 {
+    background-color: rgba(255, 255, 255, 0.92) !important;
+}
+body:not(.dark) #main-content .bg-slate-900\\/40 {
+    background-color: rgba(255, 255, 255, 0.85) !important;
+}
+body:not(.dark) #main-content .bg-slate-800 {
+    background-color: #f8fafc !important;
+    color: #0f172a !important;
+}
+body:not(.dark) #main-content .bg-slate-800\\/60 {
+    background-color: rgba(248, 250, 252, 0.9) !important;
+}
+body:not(.dark) #main-content .bg-slate-700 {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+}
+body:not(.dark) #main-content .bg-slate-100 {
+    background-color: #f8fafc !important;
+    color: #0f172a !important;
+}
+body:not(.dark) #main-content .bg-slate-50 {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+}
+
+body:not(.dark) #main-content .text-slate-100 { color: #0f172a !important; }
+body:not(.dark) #main-content .text-slate-200 { color: #1f2937 !important; }
+body:not(.dark) #main-content .text-slate-300 { color: #334155 !important; }
+body:not(.dark) #main-content .text-slate-400 { color: #475569 !important; }
+
+body:not(.dark) #main-content .border-white\\/10 {
+    border-color: rgba(15, 23, 42, 0.1) !important;
+}
+body:not(.dark) #main-content .border-white\\/20 {
+    border-color: rgba(15, 23, 42, 0.15) !important;
+}
+body:not(.dark) #main-content .border-white\\/30 {
+    border-color: rgba(15, 23, 42, 0.2) !important;
+}
+body:not(.dark) #main-content .border-white\\/40 {
+    border-color: rgba(15, 23, 42, 0.25) !important;
+}
+
+#progress-section .progress-percentage-chip {
+    color: #fff !important;
+}
+
+#progress-section .progress-percentage-chip .chip-label,
+#progress-section .progress-percentage-chip .chip-value,
+#progress-section .progress-percentage-chip .chip-subtitle {
+    color: #fff !important;
+}
+
+/* Light mode modal/menu inversion */
+body:not(.dark) .modal-backdrop,
+body:not(.dark) .modal-backdrop * {
+    color: #0f172a;
+}
+
+body:not(.dark) .modal-panel,
+body:not(.dark) .modal-panel.bg-slate-900,
+body:not(.dark) .modal-panel.bg-slate-900\\/60,
+body:not(.dark) .modal-panel.bg-slate-900\\/70 {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #e2e8f0 !important;
+}
+
+body:not(.dark) .modal-panel .text-slate-100 { color: #0f172a !important; }
+body:not(.dark) .modal-panel .text-slate-200 { color: #1f2937 !important; }
+body:not(.dark) .modal-panel .text-slate-300 { color: #334155 !important; }
+body:not(.dark) .modal-panel .text-slate-400 { color: #475569 !important; }
+
+body:not(.dark) .modal-panel .bg-slate-900,
+body:not(.dark) .modal-panel .bg-slate-900\\/60,
+body:not(.dark) .modal-panel .bg-slate-800 {
+    background-color: #f8fafc !important;
+    color: #0f172a !important;
+    border-color: #e2e8f0 !important;
+}
+
+body:not(.dark) .modal-panel input,
+body:not(.dark) .modal-panel select,
+body:not(.dark) .modal-panel textarea {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+    border-color: #e2e8f0 !important;
+}
+
+body:not(.dark) #quiz-modal,
+body:not(.dark) #interactive-quiz-modal {
+    color: #0f172a !important;
+}
+
+body:not(.dark) #quiz-modal .quiz-option,
+body:not(.dark) #interactive-quiz-modal .quiz-option {
+    background-color: #f8fafc !important;
+    color: #0f172a !important;
+    border-color: rgba(15, 23, 42, 0.12) !important;
+}
+
+body:not(.dark) #quiz-modal .quiz-option *,
+body:not(.dark) #interactive-quiz-modal .quiz-option * {
+    color: #0f172a !important;
+}
+
+body:not(.dark) .quiz-progress-label {
+    color: #334155 !important;
+}
+
+body:not(.dark) .quiz-nav-button.secondary {
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.12);
+}
+
+body:not(.dark) .quiz-nav-button.primary {
+    color: #ffffff !important;
+}
 
 body.dark .footer-link {
     color: #cbd5e1;
