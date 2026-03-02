@@ -2986,3 +2986,765 @@ body.card-depth-lifted .module-card {
 body.card-depth-lifted .module-card:hover {
     transform: translateY(-8px);
 }
+
+/* ========================================
+   2025 DESIGN OVERHAUL
+   Rounder edges · Vibrant colors · Premium feel
+   ======================================== */
+
+/* More vibrant accent color defaults */
+:root {
+    --accent-primary: #5b21b6;
+    --accent-secondary: #7c3aed;
+    --accent-tertiary: #f472b6;
+    --accent-surface: rgba(91, 33, 182, 0.13);
+    --accent-shadow: rgba(91, 33, 182, 0.38);
+    --shadow-card: 0 24px 48px rgba(91, 33, 182, 0.10), 0 6px 16px rgba(15, 23, 42, 0.07);
+}
+
+body.accent-indigo {
+    --accent-primary: #5b21b6;
+    --accent-secondary: #7c3aed;
+    --accent-tertiary: #f472b6;
+    --accent-surface: rgba(91, 33, 182, 0.13);
+    --accent-shadow: rgba(91, 33, 182, 0.38);
+}
+
+body.accent-emerald {
+    --accent-primary: #059669;
+    --accent-secondary: #10b981;
+    --accent-tertiary: #06b6d4;
+    --accent-surface: rgba(16, 185, 129, 0.15);
+    --accent-shadow: rgba(16, 185, 129, 0.38);
+}
+
+body.accent-amber {
+    --accent-primary: #d97706;
+    --accent-secondary: #f59e0b;
+    --accent-tertiary: #fb923c;
+    --accent-surface: rgba(245, 158, 11, 0.15);
+    --accent-shadow: rgba(245, 158, 11, 0.38);
+}
+
+body.accent-rose {
+    --accent-primary: #e11d48;
+    --accent-secondary: #ec4899;
+    --accent-tertiary: #f472b6;
+    --accent-surface: rgba(236, 72, 153, 0.15);
+    --accent-shadow: rgba(236, 72, 153, 0.40);
+}
+
+/* More vibrant body background */
+body {
+    background: linear-gradient(145deg, #f0f4ff, #e8ecff, #f5e8ff, #ffe8f5) !important;
+    background-size: 300% 300% !important;
+}
+
+body::after {
+    background: radial-gradient(circle at 10% 10%, rgba(147, 51, 234, 0.25), transparent 40%),
+                radial-gradient(circle at 90% 5%, rgba(236, 72, 153, 0.20), transparent 35%),
+                radial-gradient(circle at 50% 90%, rgba(79, 70, 229, 0.20), transparent 40%) !important;
+}
+
+/* Punchier header gradient */
+#main-header {
+    background: linear-gradient(120deg, #1d4ed8, #5b21b6, #7c3aed, #a855f7, #db2777) !important;
+    background-size: 200% 200% !important;
+    animation: headerShimmer 8s ease infinite !important;
+}
+
+@keyframes headerShimmer {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* ---- Rounder corners everywhere ---- */
+.modal-panel {
+    border-radius: 1.75rem !important;
+}
+
+.module-card {
+    border-radius: 1.5rem !important;
+}
+
+.insight-card {
+    border-radius: 1.5rem !important;
+}
+
+.insight-highlight-card {
+    border-radius: 1.25rem !important;
+}
+
+.flashcard-shell {
+    border-radius: 1.5rem !important;
+}
+
+.hero-section {
+    border-radius: 2rem !important;
+}
+
+.content-backdrop {
+    border-radius: 2rem !important;
+}
+
+.panel-surface {
+    border-radius: 1.5rem !important;
+}
+
+.progress-panel {
+    border-radius: 1.5rem !important;
+}
+
+#search-section {
+    border-radius: 1.5rem !important;
+}
+
+#achievements-card {
+    border-radius: 1.5rem !important;
+}
+
+.support-card {
+    border-radius: 1.5rem !important;
+}
+
+.playground-card {
+    border-radius: 1.75rem !important;
+}
+
+.playground-editor,
+.playground-output {
+    border-radius: 1.25rem !important;
+}
+
+.filter-group {
+    border-radius: 1.25rem !important;
+}
+
+.notes-scroll {
+    border-radius: 1.25rem !important;
+}
+
+.notes-card {
+    border-radius: 1rem !important;
+}
+
+.interview-card {
+    border-radius: 1.25rem !important;
+}
+
+.module-bonus-card {
+    border-radius: 1.25rem !important;
+}
+
+.code-breakdown-card {
+    border-radius: 1.25rem !important;
+}
+
+.progress-percentage-chip {
+    border-radius: 1.5rem !important;
+}
+
+.prompt-modal-panel {
+    border-radius: 1.5rem !important;
+}
+
+button {
+    border-radius: 1rem !important;
+}
+
+.header-control {
+    border-radius: 999px !important;
+}
+
+select, input[type="text"], textarea {
+    border-radius: 0.875rem !important;
+}
+
+/* ---- Vibrant progress bars ---- */
+.progress-meter-fill,
+#progress-bar {
+    background: linear-gradient(90deg, #7c3aed, #a855f7, #ec4899, #f472b6) !important;
+    box-shadow: 0 0 18px rgba(168, 85, 247, 0.55) !important;
+}
+
+.insight-progress-bar {
+    background: linear-gradient(90deg, #5b21b6, #7c3aed, #a855f7, #ec4899) !important;
+    box-shadow: 0 0 14px rgba(124, 58, 237, 0.5) !important;
+}
+
+.achievement-progress-bar {
+    background: linear-gradient(90deg, #5b21b6, #a855f7, #ec4899) !important;
+    box-shadow: 0 0 12px rgba(91, 33, 182, 0.45) !important;
+}
+
+/* ---- More vivid card shadows ---- */
+.module-card {
+    box-shadow: 0 10px 35px rgba(91, 33, 182, 0.10), 0 3px 10px rgba(15, 23, 42, 0.05) !important;
+}
+
+.module-card:hover {
+    box-shadow: 0 22px 55px rgba(91, 33, 182, 0.20), 0 8px 18px rgba(15, 23, 42, 0.08) !important;
+    transform: translateY(-6px) !important;
+}
+
+/* ---- Section heading vivid bar ---- */
+.section-heading::before {
+    background: linear-gradient(180deg, #f472b6, #7c3aed, #2563eb) !important;
+    box-shadow: 0 6px 18px rgba(236, 72, 153, 0.35) !important;
+    width: 4px !important;
+}
+
+/* ---- Scrollbar accent ---- */
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #7c3aed, #ec4899) !important;
+    border-radius: 999px !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #5b21b6, #db2777) !important;
+}
+
+/* ========================================
+   SETTINGS MODAL — REDESIGNED
+   ======================================== */
+
+#settings-modal .modal-panel {
+    max-width: 32rem;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 1.75rem !important;
+}
+
+body.dark #settings-modal .modal-panel {
+    background: #111827 !important;
+    border-color: rgba(148, 163, 184, 0.2) !important;
+}
+
+.settings-modal-header {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
+    padding: 1.5rem 1.75rem 1.25rem;
+    position: relative;
+    overflow: hidden;
+    border-radius: 0 !important;
+}
+
+.settings-modal-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 80% 20%, rgba(255,255,255,0.22), transparent 55%);
+    pointer-events: none;
+}
+
+.settings-modal-header h3 {
+    color: #fff !important;
+    font-size: 1.4rem !important;
+    font-weight: 800 !important;
+    letter-spacing: -0.01em !important;
+    margin: 0 !important;
+}
+
+.settings-modal-header p {
+    color: rgba(255,255,255,0.82) !important;
+    font-size: 0.82rem !important;
+    margin-top: 0.2rem !important;
+}
+
+.settings-modal-header-close {
+    background: rgba(255,255,255,0.20) !important;
+    border-radius: 999px !important;
+    width: 2rem !important;
+    height: 2rem !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: 1px solid rgba(255,255,255,0.3) !important;
+    color: #fff !important;
+    font-size: 1.2rem !important;
+    line-height: 1 !important;
+    cursor: pointer !important;
+    flex-shrink: 0 !important;
+    box-shadow: none !important;
+    transition: background 0.2s ease !important;
+}
+
+.settings-modal-header-close:hover {
+    background: rgba(255,255,255,0.32) !important;
+    transform: none !important;
+}
+
+.settings-modal-body {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow-y: auto;
+    max-height: calc(90vh - 200px);
+    scrollbar-width: thin;
+}
+
+.settings-modal-footer {
+    padding: 1rem 1.5rem 1.5rem;
+    border-top: 1px solid var(--surface-border);
+    background: var(--surface-primary);
+}
+
+body.dark .settings-modal-footer {
+    background: #111827;
+    border-top-color: rgba(148, 163, 184, 0.2);
+}
+
+/* Settings Sections */
+.settings-section {
+    border-radius: 1.25rem !important;
+    padding: 1.1rem 1.25rem;
+    border: 1.5px solid transparent;
+    transition: box-shadow 0.2s ease;
+}
+
+.settings-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 2px solid transparent;
+}
+
+.settings-section.appearance {
+    background: linear-gradient(135deg, rgba(91, 33, 182, 0.07), rgba(168, 85, 247, 0.04));
+    border-color: rgba(168, 85, 247, 0.18);
+}
+
+.settings-section.appearance .settings-section-header {
+    color: #7c3aed;
+    border-bottom-color: rgba(124, 58, 237, 0.20);
+}
+
+body.dark .settings-section.appearance {
+    background: rgba(91, 33, 182, 0.12);
+    border-color: rgba(168, 85, 247, 0.28);
+}
+
+body.dark .settings-section.appearance .settings-section-header {
+    color: #a78bfa;
+}
+
+.settings-section.layout {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.07), rgba(59, 130, 246, 0.04));
+    border-color: rgba(59, 130, 246, 0.18);
+}
+
+.settings-section.layout .settings-section-header {
+    color: #2563eb;
+    border-bottom-color: rgba(37, 99, 235, 0.20);
+}
+
+body.dark .settings-section.layout {
+    background: rgba(14, 165, 233, 0.10);
+    border-color: rgba(59, 130, 246, 0.28);
+}
+
+body.dark .settings-section.layout .settings-section-header {
+    color: #60a5fa;
+}
+
+.settings-section.accessibility {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.07), rgba(6, 182, 212, 0.04));
+    border-color: rgba(16, 185, 129, 0.18);
+}
+
+.settings-section.accessibility .settings-section-header {
+    color: #059669;
+    border-bottom-color: rgba(5, 150, 105, 0.20);
+}
+
+body.dark .settings-section.accessibility {
+    background: rgba(16, 185, 129, 0.10);
+    border-color: rgba(16, 185, 129, 0.28);
+}
+
+body.dark .settings-section.accessibility .settings-section-header {
+    color: #34d399;
+}
+
+.settings-section.learning {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.07), rgba(249, 115, 22, 0.04));
+    border-color: rgba(245, 158, 11, 0.18);
+}
+
+.settings-section.learning .settings-section-header {
+    color: #d97706;
+    border-bottom-color: rgba(217, 119, 6, 0.20);
+}
+
+body.dark .settings-section.learning {
+    background: rgba(245, 158, 11, 0.10);
+    border-color: rgba(245, 158, 11, 0.28);
+}
+
+body.dark .settings-section.learning .settings-section-header {
+    color: #fbbf24;
+}
+
+.settings-section.language {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.07), rgba(244, 114, 182, 0.04));
+    border-color: rgba(236, 72, 153, 0.18);
+}
+
+.settings-section.language .settings-section-header {
+    color: #db2777;
+    border-bottom-color: rgba(219, 39, 119, 0.20);
+}
+
+body.dark .settings-section.language {
+    background: rgba(236, 72, 153, 0.10);
+    border-color: rgba(236, 72, 153, 0.28);
+}
+
+body.dark .settings-section.language .settings-section-header {
+    color: #f472b6;
+}
+
+/* Settings rows */
+.settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.settings-row + .settings-row {
+    margin-top: 0.65rem;
+}
+
+.settings-label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.12rem;
+    min-width: 0;
+}
+
+.settings-label-main {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--text-primary-color);
+    line-height: 1.3;
+}
+
+.settings-label-sub {
+    font-size: 0.75rem;
+    color: var(--text-secondary-color);
+    line-height: 1.3;
+}
+
+.settings-select {
+    width: 100%;
+    padding: 0.55rem 0.875rem;
+    border-radius: 0.875rem !important;
+    border: 1.5px solid var(--surface-border);
+    background: var(--surface-primary);
+    color: var(--text-primary-color);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+    transition: all 0.2s ease;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.settings-select:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px var(--accent-surface) !important;
+    transform: none !important;
+}
+
+body.dark .settings-select {
+    background: rgba(15, 23, 42, 0.8);
+    border-color: rgba(148, 163, 184, 0.3);
+    color: #f1f5f9;
+}
+
+/* Toggle switch improved */
+.settings-toggle-wrap {
+    position: relative;
+    width: 3.25rem;
+    height: 1.75rem;
+    flex-shrink: 0;
+    border-radius: 999px !important;
+    border: none !important;
+    box-shadow: none !important;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.settings-toggle-knob {
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 1.25rem;
+    height: 1.25rem;
+    background: white;
+    border-radius: 999px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.28);
+    transition: transform 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+.settings-toggle-wrap.is-on .settings-toggle-knob {
+    transform: translateX(1.5rem);
+}
+
+/* Language toggle pills */
+.lang-toggle-group {
+    display: flex;
+    gap: 0.3rem;
+    background: var(--surface-muted);
+    border-radius: 999px !important;
+    padding: 0.2rem;
+    border: 1.5px solid var(--surface-border);
+    flex-shrink: 0;
+}
+
+body.dark .lang-toggle-group {
+    background: rgba(15, 23, 42, 0.7);
+    border-color: rgba(148, 163, 184, 0.3);
+}
+
+.lang-btn {
+    padding: 0.35rem 1rem;
+    border-radius: 999px !important;
+    border: none !important;
+    font-size: 0.82rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    background: transparent !important;
+    color: var(--text-secondary-color);
+    box-shadow: none !important;
+    transition: all 0.2s ease;
+}
+
+.lang-btn:hover {
+    transform: none !important;
+    box-shadow: none !important;
+    background: rgba(255,255,255,0.5) !important;
+}
+
+.lang-btn.active {
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)) !important;
+    color: #fff !important;
+    box-shadow: 0 4px 16px var(--accent-shadow) !important;
+}
+
+body.dark .lang-btn.active {
+    color: #fff !important;
+}
+
+/* Save button */
+.settings-save-btn {
+    width: 100%;
+    padding: 0.85rem;
+    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+    color: white !important;
+    border: none !important;
+    border-radius: 1rem !important;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.01em;
+    box-shadow: 0 8px 28px var(--accent-shadow) !important;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.settings-save-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 14px 38px var(--accent-shadow) !important;
+}
+
+/* ---- Utility overrides for more roundness ---- */
+.rounded-xl { border-radius: 1rem; }
+.rounded-2xl { border-radius: 1.5rem; }
+.rounded-lg { border-radius: 0.75rem; }
+.rounded-md { border-radius: 0.6rem; }
+
+/* ---- Dark mode overhaul body ---- */
+body.dark {
+    background: linear-gradient(145deg, #050812, #0a0f24, #120928, #0f172a) !important;
+    background-size: 300% 300% !important;
+    animation: gradientShiftDark 25s ease infinite !important;
+}
+
+body.dark::after {
+    background: radial-gradient(circle at 20% 15%, rgba(91, 33, 182, 0.30), transparent 45%),
+                radial-gradient(circle at 75% 5%, rgba(236, 72, 153, 0.22), transparent 45%),
+                radial-gradient(circle at 50% 90%, rgba(14, 165, 233, 0.18), transparent 40%) !important;
+}
+
+/* Glow text more vibrant */
+.glow-text {
+    text-shadow: 0 8px 25px rgba(168, 85, 247, 0.45), 0 0 20px rgba(236, 72, 153, 0.30) !important;
+}
+
+/* Progress pills rounder */
+.progress-pill {
+    border-radius: 999px !important;
+}
+
+/* Pagination buttons rounder */
+.pagination-button {
+    border-radius: 1rem !important;
+}
+
+/* Glossary chip rounder */
+.glossary-chip {
+    border-radius: 999px !important;
+}
+
+/* Achievement badge rounder */
+.badge-pill {
+    border-radius: 1.25rem !important;
+}
+
+/* Flashcard pill rounder */
+.flashcard-pill {
+    border-radius: 999px !important;
+}
+
+/* Topic badge rounder */
+.topic-badge {
+    border-radius: 999px !important;
+}
+
+/* DS box rounder */
+.ds-box {
+    border-radius: 0.875rem !important;
+}
+
+/* Insight pill rounder */
+.insight-pill {
+    border-radius: 999px !important;
+}
+
+/* Recommended link rounder */
+.recommended-link {
+    border-radius: 1.25rem !important;
+}
+
+/* Footer rounded */
+#main-footer {
+    border-radius: 1.5rem !important;
+}
+
+/* Code container rounder */
+.code-container {
+    border-radius: 1.25rem !important;
+}
+
+/* interview-pre rounder */
+.interview-pre {
+    border-radius: 1rem !important;
+}
+
+/* More vibrant insight plan button */
+.insight-plan-button {
+    border-radius: 1rem !important;
+    box-shadow: 0 12px 30px var(--accent-shadow) !important;
+}
+
+/* Difficulty badges more vibrant */
+.difficulty-badge {
+    border-radius: 999px !important;
+}
+
+/* Sort button rounder */
+.sort-button {
+    border-radius: 0.875rem !important;
+}
+
+/* Results counter rounder */
+.results-counter {
+    border-radius: 999px !important;
+}
+
+/* Filter tag rounder */
+.filter-tag {
+    border-radius: 999px !important;
+}
+
+/* Notes chip rounder */
+.notes-chip {
+    border-radius: 999px !important;
+}
+
+/* Module support panel rounder */
+.module-support-panel {
+    border-radius: 1.25rem !important;
+}
+
+/* Timed prompt card rounder */
+.timed-prompt-card {
+    border-radius: 1.5rem !important;
+}
+
+/* Plan option rounder */
+.plan-option {
+    border-radius: 1rem !important;
+}
+
+/* Plan option active more vibrant */
+.plan-option.active {
+    box-shadow: 0 12px 28px var(--accent-shadow) !important;
+}
+
+/* Insight button rounder */
+.insight-button {
+    border-radius: 1rem !important;
+}
+
+/* Support card links rounder */
+.support-card a {
+    border-radius: 999px !important;
+}
+
+/* Header control - already pill, keep */
+.header-control {
+    border-radius: 999px !important;
+}
+
+/* Dark mode scrollbar */
+body.dark ::-webkit-scrollbar-track {
+    background: #0a0f24;
+}
+
+body.dark ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #7c3aed, #ec4899) !important;
+}
+
+/* ---- Responsive adjustments for new modal ---- */
+@media (max-width: 640px) {
+    #settings-modal .modal-panel {
+        max-width: 100%;
+        margin: 0;
+        height: 100vh;
+        border-radius: 0 !important;
+        max-height: 100vh;
+    }
+
+    .settings-modal-header {
+        border-radius: 0 !important;
+    }
+
+    .settings-modal-body {
+        max-height: calc(100vh - 200px);
+        padding: 1rem;
+    }
+
+    .settings-modal-footer {
+        padding: 0.75rem 1rem 1rem;
+    }
+}

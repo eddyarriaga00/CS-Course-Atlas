@@ -40,31 +40,31 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 header-inner py-2">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-3 gap-2.5">
                 <div class="w-full sm:w-auto transition-all duration-300 header-brand space-y-1">
-                    <h1 id="main-title" class="font-bold leading-tight transition-all duration-300 text-xl sm:text-2xl lg:text-3xl tracking-tight">
+                    <h1 id="main-title" class="font-bold leading-tight transition-all duration-300 text-xl sm:text-2xl lg:text-3xl tracking-tight" data-i18n="main.title">
                         ☕ MultLearning Site
                     </h1>
-                    <p id="main-subtitle" class="text-blue-100 text-xs sm:text-sm lg:text-base mt-0.5 transition-all duration-300 subtitle-collapsible text-[0.9rem]">
+                    <p id="main-subtitle" class="text-blue-100 text-xs sm:text-sm lg:text-base mt-0.5 transition-all duration-300 subtitle-collapsible text-[0.9rem]" data-i18n="main.subtitle">
                         DSA, Assembly, Java, Python, JavaScript, Discrete, and more — interactive learning
                     </p>
                 </div>
                 <div id="header-buttons" class="flex flex-wrap gap-1.5 sm:gap-2 w-full sm:w-auto justify-start sm:justify-end transition-all duration-300 order-3 sm:order-2 gap-2 justify-end">
-                    <button id="flashcards-btn" type="button" onclick="openFlashcards()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-slate-800 text-slate-100 border border-white/10 hover:-translate-y-0.5">
-                        🎯 <span class="hidden xs:inline">Flashcards</span><span class="xs:hidden">Cards</span>
+                    <button id="flashcards-btn" type="button" onclick="openFlashcards()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
+                        🎯 <span class="hidden xs:inline" data-i18n="btn.flashcards">Flashcards</span><span class="xs:hidden" data-i18n="btn.flashcardsShort">Cards</span>
                     </button>
-                    <button id="glossary-btn" type="button" onclick="openGlossary()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-slate-800 text-slate-100 border border-white/10 hover:-translate-y-0.5">
-                        📚 <span class="hidden xs:inline">Glossary</span><span class="xs:hidden">Terms</span>
+                    <button id="glossary-btn" type="button" onclick="openGlossary()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
+                        📚 <span class="hidden xs:inline" data-i18n="btn.glossary">Glossary</span><span class="xs:hidden" data-i18n="btn.glossaryShort">Terms</span>
                     </button>
-                    <button id="interactive-quiz-btn" type="button" onclick="openInteractiveQuizLibrary()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-slate-800 text-slate-100 border border-white/10 hover:-translate-y-0.5">
-                        🧠 <span class="hidden xs:inline">Interactive Quizzes</span><span class="xs:hidden">Quizzes</span>
+                    <button id="interactive-quiz-btn" type="button" onclick="openInteractiveQuizLibrary()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
+                        🧠 <span class="hidden xs:inline" data-i18n="btn.quizzes">Interactive Quizzes</span><span class="xs:hidden" data-i18n="btn.quizzesShort">Quizzes</span>
                     </button>
-                    <button id="settings-btn" type="button" onclick="openSettings()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-slate-800 text-slate-100 border border-white/10 hover:-translate-y-0.5">
-                        ⚙️ <span class="hidden sm:inline">Settings</span>
+                    <button id="settings-btn" type="button" onclick="openSettings()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
+                        ⚙️ <span class="hidden sm:inline" data-i18n="btn.settings">Settings</span>
                     </button>
-                    <button id="reset-btn" type="button" onclick="resetProgress()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-slate-800 text-slate-100 border border-white/10 hover:-translate-y-0.5">
-                        🔄 <span class="hidden sm:inline">Reset</span>
+                    <button id="reset-btn" type="button" onclick="resetProgress()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
+                        🔄 <span class="hidden sm:inline" data-i18n="btn.reset">Reset</span>
                     </button>
-                    <button id="account-btn" type="button" onclick="openAccountModal()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 rounded-md sm:rounded-lg transition-all duration-200 flex items-center gap-1 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-slate-800 text-slate-100 border border-white/10 hover:-translate-y-0.5">
-                        👤 <span class="hidden sm:inline">Account</span>
+                    <button id="account-btn" type="button" onclick="openAccountModal()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
+                        👤 <span class="hidden sm:inline" data-i18n="btn.account">Account</span>
                     </button>
                 </div>
                 <div id="account-chip" class="account-chip hidden sm:flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold order-2 sm:order-3 bg-slate-800 text-slate-100 border border-white/10"></div>
@@ -74,20 +74,20 @@
 
     <div id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <div class="text-center mb-8 sm:mb-10 hero-section rounded-2xl p-6 sm:p-8 shadow-2xl section-spacing backdrop-blur-md">
-            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 sm:mb-6 leading-tight text-slate-100">
+            <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 sm:mb-6 leading-tight text-slate-100" data-i18n="hero.title">
                 MultLearning: Master DSA, Assembly, and Beyond
             </h2>
-            <p class="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed text-base sm:text-lg text-slate-200">
+            <p class="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed text-base sm:text-lg text-slate-200" data-i18n="hero.subtitle">
                 A comprehensive, beginner-friendly journey across Data Structures & Algorithms, Assembly, Java, Python, JavaScript, and Discrete Mathematics by Eddy Arriaga-B.
                 Each module includes detailed explanations, extensive code examples where applicable, and practical exercises.
             </p>
         </div>
 
         <div id="progress-section" class="panel-surface progress-panel rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing border border-white/10 bg-slate-900/60 text-slate-100">
-            <h3 class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 section-heading text-[1.05rem]">📊 Your Learning Progress</h3>
+            <h3 class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 section-heading text-[1.05rem]" data-i18n="progress.heading">📊 Your Learning Progress</h3>
             <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 gap-5">
                 <div class="w-full space-y-2">
-                    <p class="progress-kicker text-xs uppercase font-semibold text-[11px]">Current journey</p>
+                    <p class="progress-kicker text-xs uppercase font-semibold text-[11px]" data-i18n="progress.kicker">Current journey</p>
                     <span id="progress-text" class="progress-summary block text-base sm:text-lg font-semibold mt-1 text-[1rem] text-slate-100">
                         0 of 34 modules completed
                     </span>
@@ -96,7 +96,7 @@
                     </div>
                 </div>
                 <div class="progress-percentage-chip text-center bg-slate-800 border border-white/10 text-white">
-                    <span class="chip-label text-xs uppercase font-semibold text-white">Now at</span>
+                    <span class="chip-label text-xs uppercase font-semibold text-white" data-i18n="progress.nowAt">Now at</span>
                     <div id="progress-percentage" class="chip-value text-3xl sm:text-4xl font-black text-2xl text-white">0%</div>
                     <span id="progress-goal" class="chip-subtitle text-xs text-white">Goal: Complete all modules</span>
                 </div>
@@ -111,7 +111,7 @@
         <div id="achievements-card" class="panel-surface achievements-card rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl border border-white/10 bg-slate-900/60 text-slate-100">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 gap-5">
                 <div>
-                    <p class="text-xs uppercase font-semibold tracking-widest text-slate-500 text-slate-300">Learning Achievements</p>
+                    <p class="text-xs uppercase font-semibold tracking-widest text-slate-500 text-slate-300" data-i18n="achievements.heading">Learning Achievements</p>
                     <h3 class="text-lg sm:text-xl font-semibold text-slate-900 flex items-center gap-2 section-heading text-[1.05rem] text-slate-100">
                         🏅 <span id="achievement-badge-label">Trailhead Rookie</span>
                     </h3>
@@ -137,8 +137,8 @@
         </div>
 
         <div class="support-card rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 text-center shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
-            <h3 class="text-lg sm:text-xl font-semibold mb-2 sm:mb-3 section-heading text-[1.05rem] text-slate-100">❤️ Do you enjoy this website?</h3>
-            <p class="mb-3 sm:mb-4 opacity-90 text-sm sm:text-base text-slate-200">Help keep this resource free and updated with new content weekly!</p>
+            <h3 class="text-lg sm:text-xl font-semibold mb-2 sm:mb-3 section-heading text-[1.05rem] text-slate-100" data-i18n="support.heading">❤️ Do you enjoy this website?</h3>
+            <p class="mb-3 sm:mb-4 opacity-90 text-sm sm:text-base text-slate-200" data-i18n="support.subtitle">Help keep this resource free and updated with new content weekly!</p>
             <div class="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3">
                 <a href="https://www.paypal.com/donate?business=your.email@paypal.com&amount=5.00&currency_code=USD&item_name=Java%20DSA%20Learning%20Hub%20-%20Coffee%20Support" target="_blank" rel="noopener noreferrer" class="px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-xs sm:text-sm bg-slate-800 border border-white/10 text-slate-100">
                     ☕ Buy me a coffee ($5)
@@ -157,7 +157,7 @@
             <div id="daily-challenge-card" class="panel-surface rounded-xl p-4 sm:p-5 shadow-xl border border-transparent bg-slate-900/60 border-white/10 text-slate-100">
                 <div class="flex items-start justify-between gap-3 mb-3 gap-2.5">
                     <div>
-                        <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading text-[1.05rem] text-indigo-300">🔥 Daily Challenge</h3>
+                        <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading text-[1.05rem] text-indigo-300" data-i18n="section.dailyChallenge">🔥 Daily Challenge</h3>
                         <p id="daily-challenge-title" class="text-base font-semibold text-slate-800 mt-1 text-slate-100 text-[0.95rem]"></p>
                     </div>
                     <div class="flex flex-col items-end gap-1">
@@ -174,7 +174,7 @@
             </div>
             <div id="study-tip-card" class="panel-surface rounded-xl p-4 sm:p-5 shadow-xl border border-transparent bg-slate-900/60 border-white/10 text-slate-100">
                 <div class="flex items-center justify-between mb-3">
-                    <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading text-[1.05rem] text-indigo-300">🌟 Study Tip</h3>
+                    <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading text-[1.05rem] text-indigo-300" data-i18n="section.studyTip">🌟 Study Tip</h3>
                     <button id="refresh-study-tip" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-all duration-200 bg-emerald-500/20 text-emerald-100 border border-emerald-200/40 hover:bg-emerald-500/30">New Tip</button>
                 </div>
                 <p id="study-tip-text" class="text-sm text-slate-700 leading-relaxed text-slate-100 text-[0.95rem]"></p>
@@ -184,8 +184,8 @@
         <section id="insights-section" class="content-backdrop rounded-2xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl border border-white/30 section-spacing bg-slate-900/60 border-white/10 text-slate-100">
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-4">
                 <div>
-                    <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading glow-text text-[1.05rem]">Personalized Study Insights</h3>
-                    <p class="text-sm text-slate-600 text-slate-200">Stay on track with live stats, tailored module suggestions, and a built-in focus buddy.</p>
+                    <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading glow-text text-[1.05rem]" data-i18n="section.insights">Personalized Study Insights</h3>
+                    <p class="text-sm text-slate-600 text-slate-200" data-i18n="section.insightsSubtitle">Stay on track with live stats, tailored module suggestions, and a built-in focus buddy.</p>
                 </div>
                 <div id="insight-updates" class="text-xs sm:text-sm text-indigo-600 font-medium text-indigo-200"></div>
             </div>
@@ -575,118 +575,191 @@
         </footer>
     </div>
 
-    <div id="settings-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
-        <div class="modal-panel rounded-2xl w-full max-w-md shadow-2xl bg-white text-slate-900 border border-slate-200 bg-slate-900 text-slate-100 border-white/10">
-            <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
-                <h3 class="text-2xl font-semibold text-indigo-600 text-indigo-300">Settings</h3>
-                <button id="close-settings" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700 text-slate-200">×</button>
-            </div>
-            <div class="p-6 space-y-6">
-                <div class="flex justify-between items-center">
-                    <label class="font-medium text-slate-800 text-slate-200">Dark Mode</label>
-                    <button id="dark-mode-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300">
-                        <div id="dark-mode-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5"></div>
-                    </button>
-                </div>
-                <div class="flex justify-between items-center">
+    <div id="settings-modal" class="modal-backdrop fixed inset-0 flex items-center justify-center z-50 p-4" style="display: none; background: rgba(5,8,18,0.65); backdrop-filter: blur(6px);">
+        <div class="modal-panel w-full shadow-2xl" style="max-width: 32rem; background: var(--surface-primary); border: 1px solid var(--surface-border);">
+            <!-- Gradient Header -->
+            <div class="settings-modal-header">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; position:relative; z-index:1;">
                     <div>
-                        <label class="font-medium text-slate-800 text-slate-200">Show Code Comments (Default)</label>
-                        <p class="text-xs mt-1 text-slate-600 text-slate-300">Each module can override this setting</p>
+                        <h3 data-i18n="settings.title">⚙️ Settings</h3>
+                        <p data-i18n="settings.subtitle">Customize your learning experience</p>
                     </div>
-                    <button id="comments-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-indigo-600">
-                        <div id="comments-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-7"></div>
-                    </button>
+                    <button id="close-settings" class="settings-modal-header-close" aria-label="Close settings">×</button>
                 </div>
-                <div>
-                    <label for="theme-select" class="font-medium text-slate-800 block mb-1 text-slate-200">Background Theme</label>
-                    <select id="theme-select" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 bg-slate-800 border-white/10 text-slate-100">
-                        <option value="default">Default Gradient</option>
-                        <option value="ocean">Ocean Breeze</option>
-                        <option value="sunset">Sunset Glow</option>
-                        <option value="forest">Forest Trail</option>
-                        <option value="minimal">Minimal Light</option>
-                        <option value="space">Space Night</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="accent-select" class="font-medium text-slate-800 block mb-1 text-slate-200">Accent Color</label>
-                    <select id="accent-select" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 bg-slate-800 border-white/10 text-slate-100">
-                        <option value="indigo">Indigo Aurora</option>
-                        <option value="emerald">Emerald Focus</option>
-                        <option value="amber">Amber Sunrise</option>
-                        <option value="rose">Rose Nebula</option>
-                    </select>
-                    <p class="text-xs text-slate-500 mt-1 text-slate-300">Updates buttons, highlights, and support callouts instantly.</p>
-                </div>
-                <div>
-                    <label for="weekly-goal-select" class="font-medium text-slate-800 block mb-1 text-slate-200">Weekly Module Goal</label>
-                    <select id="weekly-goal-select" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 bg-slate-800 border-white/10 text-slate-100">
-                        <option value="3">3 / week · Steady pace</option>
-                        <option value="5">5 / week · Balanced</option>
-                        <option value="8">8 / week · Accelerated</option>
-                        <option value="12">12 / week · Sprint</option>
-                    </select>
-                    <p class="text-xs text-slate-500 mt-1 text-slate-300">Used to personalize study insights and pacing tips.</p>
-                </div>
-                <div class="flex justify-between items-center">
-                    <div>
-                        <label class="font-medium text-slate-800 text-slate-200">Hide Completed Modules</label>
-                        <p class="text-xs mt-1 text-slate-600 text-slate-300">Keep your grid focused on what’s left.</p>
+            </div>
 
+            <!-- Scrollable Body -->
+            <div class="settings-modal-body">
+
+                <!-- 🎨 Appearance -->
+                <div class="settings-section appearance">
+                    <div class="settings-section-header">
+                        <span>🎨</span>
+                        <span data-i18n="settings.appearance">Appearance</span>
                     </div>
-                    <button id="hide-completed-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300">
-                        <div id="hide-completed-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5"></div>
-                    </button>
-                </div>
-                <div class="flex justify-between items-center">
-                    <div>
-                        <label class="font-medium text-slate-800 text-slate-200">Reduce Motion</label>
-                        <p class="text-xs mt-1 text-slate-600 text-slate-300">Limit animations for focus and accessibility.</p>
+
+                    <div class="settings-row">
+                        <div class="settings-label">
+                            <span class="settings-label-main" data-i18n="settings.darkMode">Dark Mode</span>
+                        </div>
+                        <button id="dark-mode-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                            <div id="dark-mode-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
+                        </button>
                     </div>
-                    <button id="reduce-motion-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300">
-                        <div id="reduce-motion-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5"></div>
-                    </button>
-                </div>
-                <div class="flex justify-between items-center">
-                    <div>
-                        <label class="font-medium text-slate-800 text-slate-200">High Contrast Text</label>
-                        <p class="text-xs mt-1 text-slate-600 text-slate-300">Boost text contrast for readability.</p>
+
+                    <div style="margin-top:0.85rem;">
+                        <label class="settings-label-main" for="theme-select" data-i18n="settings.bgTheme">Background Theme</label>
+                        <select id="theme-select" class="settings-select">
+                            <option value="default" data-i18n="settings.themeDefault">Default Gradient</option>
+                            <option value="ocean" data-i18n="settings.themeOcean">Ocean Breeze</option>
+                            <option value="sunset" data-i18n="settings.themeSunset">Sunset Glow</option>
+                            <option value="forest" data-i18n="settings.themeForest">Forest Trail</option>
+                            <option value="minimal" data-i18n="settings.themeMinimal">Minimal Light</option>
+                            <option value="space" data-i18n="settings.themeSpace">Space Night</option>
+                        </select>
                     </div>
-                    <button id="high-contrast-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300">
-                        <div id="high-contrast-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5"></div>
-                    </button>
-                </div>
-                <div class="flex justify-between items-center">
-                    <div>
-                        <label class="font-medium text-slate-800 text-slate-200">Compact Module Layout</label>
-                        <p class="text-xs mt-1 text-slate-600 text-slate-300">Denser cards for widescreen or multi-tasking.</p>
+
+                    <div style="margin-top:0.85rem;">
+                        <label class="settings-label-main" for="accent-select" data-i18n="settings.accentColor">Accent Color</label>
+                        <select id="accent-select" class="settings-select">
+                            <option value="indigo" data-i18n="settings.accentIndigo">Indigo Aurora</option>
+                            <option value="emerald" data-i18n="settings.accentEmerald">Emerald Focus</option>
+                            <option value="amber" data-i18n="settings.accentAmber">Amber Sunrise</option>
+                            <option value="rose" data-i18n="settings.accentRose">Rose Nebula</option>
+                        </select>
+                        <p class="settings-label-sub" style="margin-top:0.3rem;" data-i18n="settings.accentHint">Updates buttons, highlights, and callouts instantly.</p>
                     </div>
-                    <button id="compact-layout-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300">
-                        <div id="compact-layout-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5"></div>
-                    </button>
+
+                    <div style="margin-top:0.85rem;">
+                        <label class="settings-label-main" for="card-depth-select" data-i18n="settings.cardElevation">Card Elevation</label>
+                        <select id="card-depth-select" class="settings-select">
+                            <option value="flat" data-i18n="settings.elevationFlat">Minimal (low shadow)</option>
+                            <option value="standard" data-i18n="settings.elevationStandard">Balanced</option>
+                            <option value="lifted" data-i18n="settings.elevationLifted">Lifted Glow</option>
+                        </select>
+                    </div>
                 </div>
-                <div>
-                    <label for="card-depth-select" class="font-medium text-slate-800 block mb-1 text-slate-200">Card Elevation</label>
-                    <select id="card-depth-select" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 bg-slate-800 border-white/10 text-slate-100">
-                        <option value="flat">Minimal (low shadow)</option>
-                        <option value="standard">Balanced</option>
-                        <option value="lifted">Lifted Glow</option>
-                    </select>
-                    <p class="text-xs text-slate-500 mt-1 text-slate-300">Choose how dramatic module and insight shadows should appear.</p>
+
+                <!-- 📐 Layout -->
+                <div class="settings-section layout">
+                    <div class="settings-section-header">
+                        <span>📐</span>
+                        <span data-i18n="settings.layout">Layout</span>
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="settings-label">
+                            <span class="settings-label-main" data-i18n="settings.compactLayout">Compact Module Layout</span>
+                            <span class="settings-label-sub" data-i18n="settings.compactLayoutHint">Denser cards for widescreen or multi-tasking.</span>
+                        </div>
+                        <button id="compact-layout-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                            <div id="compact-layout-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
+                        </button>
+                    </div>
+
+                    <div style="margin-top:0.85rem;">
+                        <label class="settings-label-main" for="font-scale-select" data-i18n="settings.textSize">Text Size</label>
+                        <select id="font-scale-select" class="settings-select">
+                            <option value="compact" data-i18n="settings.textCompact">Compact</option>
+                            <option value="base" data-i18n="settings.textStandard">Standard</option>
+                            <option value="comfortable" data-i18n="settings.textComfortable">Comfortable</option>
+                            <option value="spacious" data-i18n="settings.textSpacious">Spacious</option>
+                        </select>
+                        <p class="settings-label-sub" style="margin-top:0.3rem;" data-i18n="settings.textSizeHint">Applies globally for easier reading.</p>
+                    </div>
                 </div>
-                <div>
-                    <label for="font-scale-select" class="font-medium text-slate-800 block mb-1 text-slate-200">Text Size</label>
-                    <select id="font-scale-select" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 bg-slate-800 border-white/10 text-slate-100">
-                        <option value="compact">Compact</option>
-                        <option value="base">Standard</option>
-                        <option value="comfortable">Comfortable</option>
-                        <option value="spacious">Spacious</option>
-                    </select>
-                    <p class="text-xs text-slate-500 mt-1 text-slate-300">Applies globally for easier reading.</p>
+
+                <!-- ♿ Accessibility -->
+                <div class="settings-section accessibility">
+                    <div class="settings-section-header">
+                        <span>♿</span>
+                        <span data-i18n="settings.accessibility">Accessibility</span>
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="settings-label">
+                            <span class="settings-label-main" data-i18n="settings.reduceMotion">Reduce Motion</span>
+                            <span class="settings-label-sub" data-i18n="settings.reduceMotionHint">Limit animations for focus and accessibility.</span>
+                        </div>
+                        <button id="reduce-motion-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                            <div id="reduce-motion-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
+                        </button>
+                    </div>
+
+                    <div class="settings-row" style="margin-top:0.65rem;">
+                        <div class="settings-label">
+                            <span class="settings-label-main" data-i18n="settings.highContrast">High Contrast Text</span>
+                            <span class="settings-label-sub" data-i18n="settings.highContrastHint">Boost text contrast for readability.</span>
+                        </div>
+                        <button id="high-contrast-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                            <div id="high-contrast-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
+                        </button>
+                    </div>
                 </div>
+
+                <!-- 📚 Learning -->
+                <div class="settings-section learning">
+                    <div class="settings-section-header">
+                        <span>📚</span>
+                        <span data-i18n="settings.learning">Learning</span>
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="settings-label">
+                            <span class="settings-label-main" data-i18n="settings.showComments">Show Code Comments</span>
+                            <span class="settings-label-sub" data-i18n="settings.showCommentsHint">Each module can override this setting.</span>
+                        </div>
+                        <button id="comments-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-indigo-600" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                            <div id="comments-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-7" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
+                        </button>
+                    </div>
+
+                    <div class="settings-row" style="margin-top:0.65rem;">
+                        <div class="settings-label">
+                            <span class="settings-label-main" data-i18n="settings.hideCompleted">Hide Completed Modules</span>
+                            <span class="settings-label-sub" data-i18n="settings.hideCompletedHint">Keep your grid focused on what’s left.</span>
+                        </div>
+                        <button id="hide-completed-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                            <div id="hide-completed-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
+                        </button>
+                    </div>
+
+                    <div style="margin-top:0.85rem;">
+                        <label class="settings-label-main" for="weekly-goal-select" data-i18n="settings.weeklyGoal">Weekly Module Goal</label>
+                        <select id="weekly-goal-select" class="settings-select">
+                            <option value="3" data-i18n="settings.goal3">3 / week · Steady pace</option>
+                            <option value="5" data-i18n="settings.goal5">5 / week · Balanced</option>
+                            <option value="8" data-i18n="settings.goal8">8 / week · Accelerated</option>
+                            <option value="12" data-i18n="settings.goal12">12 / week · Sprint</option>
+                        </select>
+                        <p class="settings-label-sub" style="margin-top:0.3rem;" data-i18n="settings.weeklyGoalHint">Personalizes your study insights and pacing tips.</p>
+                    </div>
+                </div>
+
+                <!-- 🌐 Language / Idioma -->
+                <div class="settings-section language">
+                    <div class="settings-section-header">
+                        <span>🌐</span>
+                        <span data-i18n="settings.language">Language / Idioma</span>
+                    </div>
+
+                    <div class="settings-row">
+                        <div class="settings-label">
+                            <span class="settings-label-main" data-i18n="settings.languageLabel">Interface Language</span>
+                            <span class="settings-label-sub" data-i18n="settings.languageHint">Switch between English and Spanish / Cambia entre inglés y español.</span>
+                        </div>
+                        <div class="lang-toggle-group">
+                            <button id="lang-en-btn" class="lang-btn active" onclick="setLanguage(‘en’)">EN</button>
+                            <button id="lang-es-btn" class="lang-btn" onclick="setLanguage(‘es’)">ES</button>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-            <div class="p-6 border-t border-slate-200 border-white/10">
-                <button id="save-settings" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-3 rounded-xl font-medium">Save Settings</button>
+
+            <!-- Footer -->
+            <div class="settings-modal-footer">
+                <button id="save-settings" class="settings-save-btn" data-i18n="settings.save">✓ Save &amp; Close</button>
             </div>
         </div>
     </div>

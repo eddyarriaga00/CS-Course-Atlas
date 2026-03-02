@@ -34,7 +34,8 @@ const appState = {
     accent: 'indigo',
     reduceMotion: false,
     highContrast: false,
-    cardDepth: 'standard'
+    cardDepth: 'standard',
+    language: 'en'
 };
 
 // Interactive quiz state
@@ -142,6 +143,223 @@ const ACHIEVEMENT_LEVELS = [
         description: 'All modules conquered! Pay it forward by mentoring someone still on the path.',
     }
 ];
+
+// =================================
+// TRANSLATION SYSTEM
+// =================================
+
+const TRANSLATIONS = {
+    en: {
+        // Main header
+        'main.title': '☕ MultLearning Site',
+        'main.subtitle': 'DSA, Assembly, Java, Python, JavaScript, Discrete, and more — interactive learning',
+        // Hero
+        'hero.title': 'MultLearning: Master DSA, Assembly, and Beyond',
+        'hero.subtitle': 'A comprehensive, beginner-friendly journey across Data Structures & Algorithms, Assembly, Java, Python, JavaScript, and Discrete Mathematics by Eddy Arriaga-B. Each module includes detailed explanations, extensive code examples where applicable, and practical exercises.',
+        // Header buttons
+        'btn.flashcards': 'Flashcards',
+        'btn.flashcardsShort': 'Cards',
+        'btn.glossary': 'Glossary',
+        'btn.glossaryShort': 'Terms',
+        'btn.quizzes': 'Interactive Quizzes',
+        'btn.quizzesShort': 'Quizzes',
+        'btn.settings': 'Settings',
+        'btn.reset': 'Reset',
+        'btn.account': 'Account',
+        // Progress
+        'progress.heading': '📊 Your Learning Progress',
+        'progress.kicker': 'Current journey',
+        // Sections
+        'section.dailyChallenge': '🔥 Daily Challenge',
+        'section.studyTip': '🌟 Study Tip',
+        'section.insights': 'Personalized Study Insights',
+        'section.insightsSubtitle': 'Stay on track with live stats, tailored module suggestions, and a built-in focus buddy.',
+        // Progress chip
+        'progress.nowAt': 'Now at',
+        // Achievements
+        'achievements.heading': 'Learning Achievements',
+        // Support
+        'support.heading': '❤️ Do you enjoy this website?',
+        'support.subtitle': 'Help keep this resource free and updated with new content weekly!',
+        // Settings modal
+        'settings.title': '⚙️ Settings',
+        'settings.subtitle': 'Customize your learning experience',
+        'settings.appearance': 'Appearance',
+        'settings.darkMode': 'Dark Mode',
+        'settings.bgTheme': 'Background Theme',
+        'settings.themeDefault': 'Default Gradient',
+        'settings.themeOcean': 'Ocean Breeze',
+        'settings.themeSunset': 'Sunset Glow',
+        'settings.themeForest': 'Forest Trail',
+        'settings.themeMinimal': 'Minimal Light',
+        'settings.themeSpace': 'Space Night',
+        'settings.accentColor': 'Accent Color',
+        'settings.accentIndigo': 'Indigo Aurora',
+        'settings.accentEmerald': 'Emerald Focus',
+        'settings.accentAmber': 'Amber Sunrise',
+        'settings.accentRose': 'Rose Nebula',
+        'settings.accentHint': 'Updates buttons, highlights, and callouts instantly.',
+        'settings.cardElevation': 'Card Elevation',
+        'settings.elevationFlat': 'Minimal (low shadow)',
+        'settings.elevationStandard': 'Balanced',
+        'settings.elevationLifted': 'Lifted Glow',
+        'settings.layout': 'Layout',
+        'settings.compactLayout': 'Compact Module Layout',
+        'settings.compactLayoutHint': 'Denser cards for widescreen or multi-tasking.',
+        'settings.textSize': 'Text Size',
+        'settings.textCompact': 'Compact',
+        'settings.textStandard': 'Standard',
+        'settings.textComfortable': 'Comfortable',
+        'settings.textSpacious': 'Spacious',
+        'settings.textSizeHint': 'Applies globally for easier reading.',
+        'settings.accessibility': 'Accessibility',
+        'settings.reduceMotion': 'Reduce Motion',
+        'settings.reduceMotionHint': 'Limit animations for focus and accessibility.',
+        'settings.highContrast': 'High Contrast Text',
+        'settings.highContrastHint': 'Boost text contrast for readability.',
+        'settings.learning': 'Learning',
+        'settings.showComments': 'Show Code Comments',
+        'settings.showCommentsHint': 'Each module can override this setting.',
+        'settings.hideCompleted': 'Hide Completed Modules',
+        'settings.hideCompletedHint': "Keep your grid focused on what's left.",
+        'settings.weeklyGoal': 'Weekly Module Goal',
+        'settings.goal3': '3 / week · Steady pace',
+        'settings.goal5': '5 / week · Balanced',
+        'settings.goal8': '8 / week · Accelerated',
+        'settings.goal12': '12 / week · Sprint',
+        'settings.weeklyGoalHint': 'Personalizes your study insights and pacing tips.',
+        'settings.language': 'Language / Idioma',
+        'settings.languageLabel': 'Interface Language',
+        'settings.languageHint': 'Switch between English and Spanish / Cambia entre inglés y español.',
+        'settings.save': '✓ Save & Close'
+    },
+    es: {
+        // Main header
+        'main.title': '☕ MultLearning Site',
+        'main.subtitle': 'EDA, Ensamblador, Java, Python, JavaScript, Matemáticas Discretas y más — aprendizaje interactivo',
+        // Hero
+        'hero.title': 'MultLearning: Domina EDA, Ensamblador y Más',
+        'hero.subtitle': 'Un recorrido completo y amigable para principiantes a través de Estructuras de Datos y Algoritmos, Ensamblador, Java, Python, JavaScript y Matemáticas Discretas por Eddy Arriaga-B. Cada módulo incluye explicaciones detalladas, amplios ejemplos de código y ejercicios prácticos.',
+        // Header buttons
+        'btn.flashcards': 'Tarjetas',
+        'btn.flashcardsShort': 'Tarjetas',
+        'btn.glossary': 'Glosario',
+        'btn.glossaryShort': 'Términos',
+        'btn.quizzes': 'Cuestionarios',
+        'btn.quizzesShort': 'Quiz',
+        'btn.settings': 'Ajustes',
+        'btn.reset': 'Reiniciar',
+        'btn.account': 'Cuenta',
+        // Progress
+        'progress.heading': '📊 Tu Progreso de Aprendizaje',
+        'progress.kicker': 'Recorrido actual',
+        // Sections
+        'section.dailyChallenge': '🔥 Desafío del Día',
+        'section.studyTip': '🌟 Consejo de Estudio',
+        'section.insights': 'Perspectivas de Estudio Personalizadas',
+        'section.insightsSubtitle': 'Mantente al día con estadísticas en vivo, sugerencias de módulos y un compañero de enfoque integrado.',
+        // Progress chip
+        'progress.nowAt': 'Ahora en',
+        // Achievements
+        'achievements.heading': 'Logros de Aprendizaje',
+        // Support
+        'support.heading': '❤️ ¿Disfrutas este sitio web?',
+        'support.subtitle': '¡Ayuda a mantener este recurso gratuito y actualizado con contenido nuevo cada semana!',
+        // Settings modal
+        'settings.title': '⚙️ Ajustes',
+        'settings.subtitle': 'Personaliza tu experiencia de aprendizaje',
+        'settings.appearance': 'Apariencia',
+        'settings.darkMode': 'Modo Oscuro',
+        'settings.bgTheme': 'Tema de Fondo',
+        'settings.themeDefault': 'Degradado Predeterminado',
+        'settings.themeOcean': 'Brisa del Océano',
+        'settings.themeSunset': 'Resplandor del Atardecer',
+        'settings.themeForest': 'Sendero del Bosque',
+        'settings.themeMinimal': 'Luz Mínima',
+        'settings.themeSpace': 'Noche Espacial',
+        'settings.accentColor': 'Color de Acento',
+        'settings.accentIndigo': 'Aurora Índigo',
+        'settings.accentEmerald': 'Enfoque Esmeralda',
+        'settings.accentAmber': 'Amanecer Ámbar',
+        'settings.accentRose': 'Nebulosa Rosa',
+        'settings.accentHint': 'Actualiza botones, resaltados y llamadas de atención al instante.',
+        'settings.cardElevation': 'Elevación de Tarjetas',
+        'settings.elevationFlat': 'Mínima (sombra baja)',
+        'settings.elevationStandard': 'Equilibrada',
+        'settings.elevationLifted': 'Elevada con Brillo',
+        'settings.layout': 'Diseño',
+        'settings.compactLayout': 'Diseño Compacto de Módulos',
+        'settings.compactLayoutHint': 'Tarjetas más densas para pantallas anchas o multitarea.',
+        'settings.textSize': 'Tamaño de Texto',
+        'settings.textCompact': 'Compacto',
+        'settings.textStandard': 'Estándar',
+        'settings.textComfortable': 'Cómodo',
+        'settings.textSpacious': 'Espacioso',
+        'settings.textSizeHint': 'Se aplica globalmente para una lectura más fácil.',
+        'settings.accessibility': 'Accesibilidad',
+        'settings.reduceMotion': 'Reducir Movimiento',
+        'settings.reduceMotionHint': 'Limita las animaciones para mayor enfoque y accesibilidad.',
+        'settings.highContrast': 'Texto de Alto Contraste',
+        'settings.highContrastHint': 'Aumenta el contraste del texto para mejor legibilidad.',
+        'settings.learning': 'Aprendizaje',
+        'settings.showComments': 'Mostrar Comentarios de Código',
+        'settings.showCommentsHint': 'Cada módulo puede anular esta configuración.',
+        'settings.hideCompleted': 'Ocultar Módulos Completados',
+        'settings.hideCompletedHint': 'Mantén tu cuadrícula enfocada en lo que falta.',
+        'settings.weeklyGoal': 'Meta Semanal de Módulos',
+        'settings.goal3': '3 / semana · Ritmo constante',
+        'settings.goal5': '5 / semana · Equilibrado',
+        'settings.goal8': '8 / semana · Acelerado',
+        'settings.goal12': '12 / semana · Sprint',
+        'settings.weeklyGoalHint': 'Personaliza tus perspectivas de estudio y consejos de ritmo.',
+        'settings.language': 'Idioma / Language',
+        'settings.languageLabel': 'Idioma de la Interfaz',
+        'settings.languageHint': 'Cambia entre español e inglés / Switch between Spanish and English.',
+        'settings.save': '✓ Guardar y Cerrar'
+    }
+};
+
+/**
+ * Apply the current language to all data-i18n elements.
+ * For <select> options, we translate their text content.
+ */
+function applyLanguage(lang) {
+    lang = lang || appState.language || 'en';
+    const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (!t[key]) return;
+        // For inputs / selects only update label-like containers, not the select itself
+        if (el.tagName === 'OPTION') {
+            el.textContent = t[key];
+        } else if (el.tagName === 'SELECT') {
+            // handled via option elements
+        } else {
+            el.textContent = t[key];
+        }
+    });
+
+    // Update language toggle button states
+    const enBtn = document.getElementById('lang-en-btn');
+    const esBtn = document.getElementById('lang-es-btn');
+    if (enBtn) enBtn.classList.toggle('active', lang === 'en');
+    if (esBtn) esBtn.classList.toggle('active', lang === 'es');
+
+    // Store on html element for CSS targeting if needed
+    document.documentElement.setAttribute('data-lang', lang);
+}
+
+/**
+ * Set language, persist, and apply.
+ */
+function setLanguage(lang) {
+    appState.language = lang;
+    applyLanguage(lang);
+    // Refresh dynamic text that's built by JS
+    if (typeof updateProgress === 'function') updateProgress();
+    saveToLocalStorage();
+}
 
 appState.flashcardSessionLength = FLASHCARD_SESSION_SIZE;
 
@@ -4115,7 +4333,8 @@ function saveToLocalStorage() {
         accent: appState.accent,
         reduceMotion: appState.reduceMotion,
         highContrast: appState.highContrast,
-        cardDepth: appState.cardDepth
+        cardDepth: appState.cardDepth,
+        language: appState.language
     };
     safeSetItem('javaDSAHub', JSON.stringify(stateToSave));
 }
@@ -4153,6 +4372,7 @@ function loadFromLocalStorage() {
             appState.highContrast = Boolean(state.highContrast);
             appState.accent = ACCENT_OPTIONS.includes(state.accent) ? state.accent : 'indigo';
             appState.cardDepth = CARD_DEPTH_OPTIONS.includes(state.cardDepth) ? state.cardDepth : 'standard';
+            appState.language = ['en', 'es'].includes(state.language) ? state.language : 'en';
         } catch (e) {
             console.error('Failed to load saved state:', e);
         }
@@ -5682,8 +5902,10 @@ function applyCompactLayout() {
 function updateProgress() {
     const progressPercentage = Math.round((appState.completedModules.size / CONSTANTS.TOTAL_MODULES) * 100);
 
-    document.getElementById('progress-text').textContent =
-        `${appState.completedModules.size} of ${CONSTANTS.TOTAL_MODULES} modules completed`;
+    const progressStr = appState.language === 'es'
+        ? `${appState.completedModules.size} de ${CONSTANTS.TOTAL_MODULES} módulos completados`
+        : `${appState.completedModules.size} of ${CONSTANTS.TOTAL_MODULES} modules completed`;
+    document.getElementById('progress-text').textContent = progressStr;
     document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
     document.getElementById('progress-percentage').textContent = `${progressPercentage}%`;
 
@@ -6876,6 +7098,15 @@ function init() {
             saveToLocalStorage();
         });
     }
+
+    // Apply saved language
+    applyLanguage(appState.language);
+
+    // Language toggle buttons
+    const langEnBtn = document.getElementById('lang-en-btn');
+    const langEsBtn = document.getElementById('lang-es-btn');
+    if (langEnBtn) langEnBtn.addEventListener('click', () => setLanguage('en'));
+    if (langEsBtn) langEsBtn.addEventListener('click', () => setLanguage('es'));
 
     console.log('Java DSA Learning Hub initialized successfully!');
 }
