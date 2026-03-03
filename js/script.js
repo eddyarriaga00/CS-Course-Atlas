@@ -21,6 +21,7 @@ const appState = {
     showFlashcardAnswer: false,
     currentQuiz: null,
     scrollY: 0,
+    headerCollapsed: false,
     selectedFlashcardModule: 'all',
     flashcardSession: [],
     flashcardSessionLength: 20,
@@ -8267,10 +8268,22 @@ function updateHeaderShrink() {
     const title = document.getElementById('main-title');
     const subtitle = document.getElementById('main-subtitle');
     const buttons = document.getElementById('header-buttons');
+    if (!header || !title || !subtitle || !buttons) return;
 
     const progress = Math.min(appState.scrollY / 200, 1);
     const isScrolled = appState.scrollY > 10;
     const isFullyShrunken = appState.scrollY > 100;
+    const collapseThreshold = 24;
+    const expandThreshold = 8;
+    const currentlyCollapsed = Boolean(appState.headerCollapsed);
+    let shouldCollapse = currentlyCollapsed;
+    if (!currentlyCollapsed && appState.scrollY >= collapseThreshold) {
+        shouldCollapse = true;
+    } else if (currentlyCollapsed && appState.scrollY <= expandThreshold) {
+        shouldCollapse = false;
+    }
+    appState.headerCollapsed = shouldCollapse;
+    header.classList.toggle('header-collapsed', shouldCollapse);
 
     // Header padding - smaller values for optimization
     const paddingY = Math.max(12 - progress * 6, 6);
@@ -9251,11 +9264,14 @@ function init() {
     initDSPlayground();
     initSupport();
     initPlayground();
+    initIOSOverscrollLock();
 
     // Set initial form values
     document.getElementById('search-input').value = appState.searchTerm;
     document.getElementById('difficulty-filter').value = appState.difficultyFilter;
     updateTopicFocusButtons();
+    appState.scrollY = window.scrollY || 0;
+    updateHeaderShrink();
 
     // Add event listeners
     document.getElementById('settings-btn').addEventListener('click', openSettings);
@@ -10137,6 +10153,73 @@ function debouncedSearch(searchTerm) {
 // Mobile detection and optimization
 function isMobile() {
     return window.innerWidth <= 768;
+}
+
+function isIOSTouchDevice() {
+    const ua = navigator.userAgent || '';
+    const platform = navigator.platform || '';
+    const isiOSUA = /iPad|iPhone|iPod/.test(ua);
+    const isiPadOS = platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+    return isiOSUA || isiPadOS;
+}
+
+function isVerticallyScrollable(element) {
+    if (!element || !(element instanceof Element)) return false;
+    const styles = window.getComputedStyle(element);
+    const overflowY = styles.overflowY;
+    const canScroll = overflowY === 'auto' || overflowY === 'scroll' || overflowY === 'overlay';
+    return canScroll && element.scrollHeight > element.clientHeight + 1;
+}
+
+function getNearestScrollableAncestor(node) {
+    let current = node instanceof Element ? node : null;
+    while (current && current !== document.body) {
+        if (isVerticallyScrollable(current)) {
+            return current;
+        }
+        current = current.parentElement;
+    }
+    return document.scrollingElement || document.documentElement;
+}
+
+function canScrollElementInDirection(scroller, deltaY) {
+    if (!scroller) return false;
+    const scrollTop = scroller.scrollTop;
+    const maxScrollTop = Math.max(scroller.scrollHeight - scroller.clientHeight, 0);
+    if (maxScrollTop <= 0) return false;
+    if (deltaY > 0) return scrollTop > 0;
+    if (deltaY < 0) return scrollTop < maxScrollTop;
+    return true;
+}
+
+let iosOverscrollLockInitialized = false;
+let iosTouchStartY = 0;
+let iosTouchStartX = 0;
+let iosActiveScroller = null;
+
+function initIOSOverscrollLock() {
+    if (iosOverscrollLockInitialized || !isIOSTouchDevice()) return;
+    iosOverscrollLockInitialized = true;
+
+    document.addEventListener('touchstart', (event) => {
+        if (event.touches.length !== 1) return;
+        const touch = event.touches[0];
+        iosTouchStartY = touch.clientY;
+        iosTouchStartX = touch.clientX;
+        iosActiveScroller = getNearestScrollableAncestor(event.target);
+    }, { passive: true });
+
+    document.addEventListener('touchmove', (event) => {
+        if (!event.cancelable || event.touches.length !== 1) return;
+        const touch = event.touches[0];
+        const deltaY = touch.clientY - iosTouchStartY;
+        const deltaX = touch.clientX - iosTouchStartX;
+        if (Math.abs(deltaY) <= Math.abs(deltaX)) return;
+        const scroller = iosActiveScroller || getNearestScrollableAncestor(event.target);
+        if (!canScrollElementInDirection(scroller, deltaY)) {
+            event.preventDefault();
+        }
+    }, { passive: false });
 }
 
 function optimizeForMobile() {

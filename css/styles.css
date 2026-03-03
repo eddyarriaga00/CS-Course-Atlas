@@ -430,8 +430,7 @@ body.dark .prompt-solution {
         gap: 1px;
     }
     #main-header.header-collapsed #header-buttons {
-        transform: scale(0.55);
-        transform-origin: top right;
+        display: none !important;
     }
     .prompt-modal-panel {
         margin: 6vh 10px;
@@ -943,6 +942,11 @@ body.dark *[style*="background-color: #ffffff"],
 body.dark *[style*="background-color: #fff"] {
     background-color: #1e293b !important;
     color: #f1f5f9 !important;
+}
+
+html,
+body {
+    overscroll-behavior-y: none;
 }
 
 body {
@@ -3727,25 +3731,46 @@ body.dark ::-webkit-scrollbar-thumb {
 
 /* ---- Responsive adjustments for new modal ---- */
 @media (max-width: 640px) {
+    #settings-modal {
+        padding: 0 !important;
+        align-items: stretch !important;
+        justify-content: stretch !important;
+    }
+
     #settings-modal .modal-panel {
         max-width: 100%;
         margin: 0;
-        height: 100vh;
+        width: 100vw;
+        height: 100dvh;
         border-radius: 0 !important;
-        max-height: 100vh;
+        max-height: 100dvh;
+        display: flex;
+        flex-direction: column;
     }
 
     .settings-modal-header {
         border-radius: 0 !important;
+        padding-top: calc(1rem + env(safe-area-inset-top));
     }
 
     .settings-modal-body {
-        max-height: calc(100vh - 200px);
+        flex: 1 1 auto;
+        min-height: 0;
+        max-height: none;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
         padding: 1rem;
+        padding-bottom: calc(1rem + env(safe-area-inset-bottom));
     }
 
     .settings-modal-footer {
-        padding: 0.75rem 1rem 1rem;
+        position: sticky;
+        bottom: 0;
+        padding: 0.75rem 1rem calc(1rem + env(safe-area-inset-bottom));
+    }
+
+    .settings-save-btn {
+        min-height: 44px;
     }
 }
 
