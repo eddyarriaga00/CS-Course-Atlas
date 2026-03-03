@@ -1,4 +1,4 @@
-// Java DSA Learning Hub - Main JavaScript File
+// CS Course Atlas - Main JavaScript File
 
 // =================================
 // GLOBAL STATE
@@ -14,6 +14,7 @@ const appState = {
     moduleModes: new Map(),
     searchTerm: '',
     difficultyFilter: 'all',
+    categoryFilter: 'all',
     glossarySearch: '',
     glossaryCategory: 'all',
     currentFlashcard: 0,
@@ -51,8 +52,7 @@ const interactiveQuizState = {
 // =================================
 const CONSTANTS = {
     CODE_PREVIEW_LINES: 15,
-    TRUNCATE_INDICATOR: '\n\n// ... (click Expand to see full code)',
-    TOTAL_MODULES: 34
+    TRUNCATE_INDICATOR: '\n\n// ... (click Expand to see full code)'
 };
 
 const STORAGE_KEYS = {
@@ -67,12 +67,15 @@ const SUPPORTED_LANGUAGES = {
     java: { name: 'Java', icon: '☕' },
     cpp: { name: 'C++', icon: '⚡' },
     python: { name: 'Python', icon: '🐍' },
-    javascript: { name: 'JavaScript', icon: '🟨' }
+    javascript: { name: 'JavaScript', icon: '🟨' },
+    assembly: { name: 'Assembly', icon: '🧩' }
 };
+const PLAYGROUND_RUNNABLE_LANGUAGES = ['java', 'cpp', 'python', 'javascript'];
 
 const CODE_MODES = {
     code: { name: 'Code', icon: '💻' },
-    pseudocode: { name: 'Pseudocode', icon: '📝' }
+    pseudocode: { name: 'Pseudocode', icon: '📝' },
+    discreteTheory: { name: 'Discrete Mathematics', icon: '📘' }
 };
 
 const DIFFICULTY_COLORS = {
@@ -99,12 +102,123 @@ const FONT_SCALE_CLASS_MAP = {
 const FONT_SCALE_CLASSES = Object.values(FONT_SCALE_CLASS_MAP);
 
 const CODE_RUNNER_ENDPOINT = '';
+const JUDGE0_ENDPOINT = 'https://ce.judge0.com/submissions?base64_encoded=false&wait=true';
 const CODE_RUNNER_CONFIG = {
     java: { language: 'java', version: '17', filename: 'Main.java' },
     python: { language: 'python', version: '3.10.0', filename: 'main.py' },
     cpp: { language: 'cpp', version: '17', filename: 'main.cpp' },
     javascript: { language: 'javascript', version: '18.15.0', filename: 'index.js' }
 };
+const JUDGE0_LANGUAGE_IDS = {
+    java: 91,
+    python: 109,
+    cpp: 105,
+    javascript: 93
+};
+const NEON_API_PATHS = {
+    session: '/api/auth/session',
+    profile: '/api/profile',
+    login: '/api/auth/login',
+    signup: '/api/auth/signup',
+    logout: '/api/auth/logout'
+};
+const PROFILE_SYNC_CONFIG = {
+    enabled: true,
+    baseUrl: '',
+    autoPullOnOpen: true,
+    autoPushOnSave: true
+};
+const LEGACY_MODULE_ID_MAP = {
+    'algorithm-analysis': 'propositional-logic-proofs',
+    'number-theory': 'sets-relations-functions',
+    'computational-geometry': 'combinatorics-discrete-probability'
+};
+const MODULE_CATEGORY_BY_ID = {
+    'git-basics-workflow': 'git',
+    'java-basics': 'java',
+    'control-flow': 'java',
+    'oop-basics': 'java',
+    'exception-handling': 'java',
+    'collections-framework': 'java',
+    'file-io': 'java',
+    'multithreading': 'java',
+    'design-patterns': 'java',
+    'lambda-streams': 'java',
+    'generics': 'java',
+    'testing-junit': 'java',
+    'jdbc-basics': 'java',
+    'propositional-logic-proofs': 'discrete',
+    'sets-relations-functions': 'discrete',
+    'combinatorics-discrete-probability': 'discrete',
+    'assembly-registers-memory': 'assembly',
+    'assembly-control-flow-procedures': 'assembly',
+    'assembly-arrays-strings-io': 'assembly',
+    'arrays-strings': 'dsa',
+    'linked-lists': 'dsa',
+    'stacks-queues': 'dsa',
+    'trees-basics': 'dsa',
+    'hash-tables': 'dsa',
+    'heaps': 'dsa',
+    'sorting-algorithms': 'dsa',
+    'searching-algorithms': 'dsa',
+    'recursion': 'dsa',
+    'dynamic-programming': 'dsa',
+    'greedy-algorithms': 'dsa',
+    'graph-algorithms': 'dsa',
+    'tries': 'dsa',
+    'union-find': 'dsa',
+    'segment-trees': 'dsa',
+    'binary-indexed-trees': 'dsa',
+    'advanced-trees': 'dsa',
+    'string-algorithms': 'dsa',
+    'bit-manipulation': 'dsa'
+};
+const MODULE_LEARNING_SEQUENCE = [
+    'java-basics',
+    'git-basics-workflow',
+    'control-flow',
+    'assembly-registers-memory',
+    'oop-basics',
+    'exception-handling',
+    'arrays-strings',
+    'searching-algorithms',
+    'stacks-queues',
+    'linked-lists',
+    'sets-relations-functions',
+    'propositional-logic-proofs',
+    'combinatorics-discrete-probability',
+    'collections-framework',
+    'file-io',
+    'assembly-control-flow-procedures',
+    'assembly-arrays-strings-io',
+    'generics',
+    'jdbc-basics',
+    'multithreading',
+    'trees-basics',
+    'hash-tables',
+    'heaps',
+    'sorting-algorithms',
+    'recursion',
+    'tries',
+    'union-find',
+    'bit-manipulation',
+    'greedy-algorithms',
+    'testing-junit',
+    'dynamic-programming',
+    'graph-algorithms',
+    'segment-trees',
+    'binary-indexed-trees',
+    'advanced-trees',
+    'string-algorithms',
+    'design-patterns',
+    'lambda-streams'
+];
+
+const DISCRETE_MODULE_IDS = new Set([
+    'propositional-logic-proofs',
+    'sets-relations-functions',
+    'combinatorics-discrete-probability'
+]);
 
 const ACHIEVEMENT_LEVELS = [
     {
@@ -151,10 +265,10 @@ const ACHIEVEMENT_LEVELS = [
 const TRANSLATIONS = {
     en: {
         // Main header
-        'main.title': '☕ MultLearning Site',
-        'main.subtitle': 'DSA, Assembly, Java, Python, JavaScript, Discrete, and more — interactive learning',
+        'main.title': '🧭 CS Course Atlas',
+        'main.subtitle': 'Multi-class learning for Computer Science students',
         // Hero
-        'hero.title': 'MultLearning: Master DSA, Assembly, and Beyond',
+        'hero.title': 'CS Course Atlas: Learn Across Core CS Courses',
         'hero.subtitle': 'A comprehensive, beginner-friendly journey across Data Structures & Algorithms, Assembly, Java, Python, JavaScript, and Discrete Mathematics by Eddy Arriaga-B. Each module includes detailed explanations, extensive code examples where applicable, and practical exercises.',
         // Header buttons
         'btn.flashcards': 'Flashcards',
@@ -169,6 +283,21 @@ const TRANSLATIONS = {
         // Progress
         'progress.heading': '📊 Your Learning Progress',
         'progress.kicker': 'Current journey',
+        // Topic focus
+        'topic.java.title': 'Java Learning',
+        'topic.java.subtitle': 'Core Java syntax, OOP, tooling, and practical software workflows',
+        'topic.git.title': 'Git Learning',
+        'topic.git.subtitle': 'Version control, branching, collaboration, and safe workflows',
+        'topic.assembly.title': 'Assembly Fundamentals',
+        'topic.assembly.subtitle': 'Registers, memory, and low-level program flow',
+        'topic.comingSoon.heading': 'Coming Soon Tracks',
+        'topic.comingSoon.label': 'Coming Soon',
+        'topic.comingSoon.toc.title': 'Theory of Computation',
+        'topic.comingSoon.toc.subtitle': 'Automata, formal languages, computability, and complexity foundations',
+        'topic.comingSoon.cpp.title': 'Dedicated C++ Learning Track',
+        'topic.comingSoon.cpp.subtitle': 'C++ fundamentals, STL, memory model, and performance-oriented problem solving',
+        'topic.comingSoon.stats.title': 'Statistics for CS',
+        'topic.comingSoon.stats.subtitle': 'Probability, distributions, inference, and data-driven decision making',
         // Sections
         'section.dailyChallenge': '🔥 Daily Challenge',
         'section.studyTip': '🌟 Study Tip',
@@ -235,10 +364,10 @@ const TRANSLATIONS = {
     },
     es: {
         // Main header
-        'main.title': '☕ MultLearning Site',
-        'main.subtitle': 'EDA, Ensamblador, Java, Python, JavaScript, Matemáticas Discretas y más — aprendizaje interactivo',
+        'main.title': '🧭 CS Course Atlas',
+        'main.subtitle': 'Aprendizaje multi-curso para estudiantes de Ciencias de la Computación',
         // Hero
-        'hero.title': 'MultLearning: Domina EDA, Ensamblador y Más',
+        'hero.title': 'CS Course Atlas: Aprende en Cursos Clave de CS',
         'hero.subtitle': 'Un recorrido completo y amigable para principiantes a través de Estructuras de Datos y Algoritmos, Ensamblador, Java, Python, JavaScript y Matemáticas Discretas por Eddy Arriaga-B. Cada módulo incluye explicaciones detalladas, amplios ejemplos de código y ejercicios prácticos.',
         // Header buttons
         'btn.flashcards': 'Tarjetas',
@@ -253,6 +382,21 @@ const TRANSLATIONS = {
         // Progress
         'progress.heading': '📊 Tu Progreso de Aprendizaje',
         'progress.kicker': 'Recorrido actual',
+        // Topic focus
+        'topic.java.title': 'Aprendizaje de Java',
+        'topic.java.subtitle': 'Sintaxis base de Java, POO, herramientas y flujos practicos de software',
+        'topic.git.title': 'Aprendizaje de Git',
+        'topic.git.subtitle': 'Control de versiones, ramas, colaboración y flujos seguros',
+        'topic.assembly.title': 'Fundamentos de Ensamblador',
+        'topic.assembly.subtitle': 'Registros, memoria y flujo de programa de bajo nivel',
+        'topic.comingSoon.heading': 'Rutas Próximamente',
+        'topic.comingSoon.label': 'Próximamente',
+        'topic.comingSoon.toc.title': 'Teoría de la Computación',
+        'topic.comingSoon.toc.subtitle': 'Autómatas, lenguajes formales, computabilidad y bases de complejidad',
+        'topic.comingSoon.cpp.title': 'Ruta Dedicada de C++',
+        'topic.comingSoon.cpp.subtitle': 'Fundamentos de C++, STL, modelo de memoria y resolución de problemas orientada al rendimiento',
+        'topic.comingSoon.stats.title': 'Estadística para CS',
+        'topic.comingSoon.stats.subtitle': 'Probabilidad, distribuciones, inferencia y toma de decisiones basada en datos',
         // Sections
         'section.dailyChallenge': '🔥 Desafío del Día',
         'section.studyTip': '🌟 Consejo de Estudio',
@@ -319,25 +463,206 @@ const TRANSLATIONS = {
     }
 };
 
+const SPANISH_LOCALIZATION = (typeof window !== 'undefined' && window.SPANISH_LOCALIZATION)
+    ? window.SPANISH_LOCALIZATION
+    : { content: {}, literals: {} };
+
+const CONTENT_I18N = {
+    es: SPANISH_LOCALIZATION.content || {}
+};
+
+const LITERAL_TRANSLATIONS = {
+    es: SPANISH_LOCALIZATION.literals || {}
+};
+
+let domLocalizationObserver = null;
+
+function interpolate(template, params = {}) {
+    if (typeof template !== 'string') return template;
+    return template.replace(/\{(\w+)\}/g, (_, key) => {
+        const value = params[key];
+        return value === undefined || value === null ? '' : String(value);
+    });
+}
+
+function t(key, params = {}, lang = appState.language || 'en') {
+    const active = TRANSLATIONS[lang] || TRANSLATIONS.en || {};
+    const fallback = TRANSLATIONS.en || {};
+    const template = active[key] ?? fallback[key] ?? key;
+    return interpolate(template, params);
+}
+
+function tc(key, count, params = {}, lang = appState.language || 'en') {
+    const suffix = count === 1 ? 'one' : 'other';
+    const fullKey = `${key}.${suffix}`;
+    const active = TRANSLATIONS[lang] || TRANSLATIONS.en || {};
+    const fallback = TRANSLATIONS.en || {};
+    const template = active[fullKey] ?? fallback[fullKey] ?? active[key] ?? fallback[key] ?? key;
+    return interpolate(template, { ...params, count });
+}
+
+function translateLiteral(text, lang = appState.language || 'en') {
+    if (lang !== 'es' || typeof text !== 'string') return text;
+    const trimmed = text.trim();
+    if (!trimmed) return text;
+    const translated = LITERAL_TRANSLATIONS.es?.[trimmed];
+    if (!translated) return text;
+    return text.replace(trimmed, translated);
+}
+
+function localizeEntity(type, id, fallback = null, lang = appState.language || 'en') {
+    if (lang === 'en') return fallback;
+    const localized = CONTENT_I18N[lang]?.[type]?.[id];
+    if (!localized) return fallback;
+    if (!fallback || typeof fallback !== 'object') return localized;
+    return { ...fallback, ...localized };
+}
+
+function localizeLiteralAttributes(root, lang) {
+    if (!root || !['es', 'en'].includes(lang)) return;
+    const attrNames = ['placeholder', 'title', 'aria-label'];
+    const nodes = root.querySelectorAll('*');
+    nodes.forEach((el) => {
+        attrNames.forEach((attr) => {
+            const originalAttr = `data-i18n-orig-${attr}`;
+            if (lang === 'es') {
+                const value = el.getAttribute(attr);
+                if (!value) return;
+                if (!el.hasAttribute(originalAttr)) {
+                    el.setAttribute(originalAttr, value);
+                }
+                const source = el.getAttribute(originalAttr) || value;
+                const translated = translateLiteral(source, 'es');
+                if (translated && translated !== value) {
+                    el.setAttribute(attr, translated);
+                }
+            } else if (el.hasAttribute(originalAttr)) {
+                el.setAttribute(attr, el.getAttribute(originalAttr) || '');
+            }
+        });
+    });
+}
+
+function shouldSkipTextNode(node) {
+    const parent = node?.parentElement;
+    if (!parent) return true;
+    if (parent.closest('script,style,code,pre')) return true;
+    if (parent.isContentEditable) return true;
+    return false;
+}
+
+function localizeLiteralTextNodes(root, lang) {
+    if (!root || !['es', 'en'].includes(lang)) return;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null);
+    const nodes = [];
+    while (walker.nextNode()) {
+        nodes.push(walker.currentNode);
+    }
+    nodes.forEach((node) => {
+        if (shouldSkipTextNode(node)) return;
+        const value = node.nodeValue || '';
+        if (!value.trim()) return;
+        if (lang === 'es') {
+            if (node.__i18nOriginalText === undefined) {
+                node.__i18nOriginalText = value;
+            }
+            const source = node.__i18nOriginalText;
+            node.nodeValue = translateLiteral(source, 'es');
+        } else if (node.__i18nOriginalText !== undefined) {
+            node.nodeValue = node.__i18nOriginalText;
+        }
+    });
+}
+
+function translateDomLiterals(lang) {
+    const root = document.body;
+    if (!root) return;
+    localizeLiteralTextNodes(root, lang);
+    localizeLiteralAttributes(root, lang);
+}
+
+function setDomLocalizationObserver(lang) {
+    if (domLocalizationObserver) {
+        domLocalizationObserver.disconnect();
+        domLocalizationObserver = null;
+    }
+    if (lang !== 'es') return;
+    domLocalizationObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'childList') {
+                mutation.addedNodes.forEach((node) => {
+                    if (!(node instanceof HTMLElement)) return;
+                    localizeLiteralTextNodes(node, 'es');
+                    localizeLiteralAttributes(node, 'es');
+                });
+            } else if (mutation.type === 'characterData') {
+                const node = mutation.target;
+                if (!(node instanceof Text)) return;
+                if (shouldSkipTextNode(node)) return;
+                const currentValue = node.nodeValue || '';
+                const currentOriginal = node.__i18nOriginalText;
+                if (currentOriginal !== undefined && currentValue === translateLiteral(currentOriginal, 'es')) {
+                    return;
+                }
+                node.__i18nOriginalText = currentValue;
+                const translated = translateLiteral(currentValue, 'es');
+                if (translated !== currentValue) {
+                    node.nodeValue = translated;
+                }
+            }
+        });
+    });
+    domLocalizationObserver.observe(document.body, { childList: true, characterData: true, subtree: true });
+}
+
+function refreshLocalizedSections() {
+    if (typeof renderModules === 'function') renderModules();
+    if (typeof renderDailyChallenge === 'function') renderDailyChallenge();
+    if (typeof renderStudyTip === 'function') renderStudyTip();
+    if (typeof renderInsights === 'function') renderInsights();
+    if (typeof renderAchievements === 'function') renderAchievements();
+    if (typeof renderGlossary === 'function') renderGlossary();
+    if (typeof renderFlashcard === 'function') renderFlashcard();
+    if (typeof renderInterviewExamples === 'function') renderInterviewExamples();
+    if (typeof renderNotesLibrary === 'function') renderNotesLibrary();
+    if (typeof renderInteractiveQuizQuestion === 'function') renderInteractiveQuizQuestion();
+    if (typeof renderQuiz === 'function') renderQuiz();
+}
+
 /**
  * Apply the current language to all data-i18n elements.
- * For <select> options, we translate their text content.
+ * Also supports attribute localization keys.
  */
 function applyLanguage(lang) {
     lang = lang || appState.language || 'en';
-    const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
+    const table = TRANSLATIONS[lang] || TRANSLATIONS.en;
 
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
-        if (!t[key]) return;
+        if (!table[key]) return;
         // For inputs / selects only update label-like containers, not the select itself
         if (el.tagName === 'OPTION') {
-            el.textContent = t[key];
+            el.textContent = table[key];
         } else if (el.tagName === 'SELECT') {
             // handled via option elements
         } else {
-            el.textContent = t[key];
+            el.textContent = table[key];
         }
+    });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
+        const key = el.getAttribute('data-i18n-placeholder');
+        const value = table[key] || TRANSLATIONS.en?.[key];
+        if (value) el.setAttribute('placeholder', value);
+    });
+    document.querySelectorAll('[data-i18n-title]').forEach((el) => {
+        const key = el.getAttribute('data-i18n-title');
+        const value = table[key] || TRANSLATIONS.en?.[key];
+        if (value) el.setAttribute('title', value);
+    });
+    document.querySelectorAll('[data-i18n-aria-label]').forEach((el) => {
+        const key = el.getAttribute('data-i18n-aria-label');
+        const value = table[key] || TRANSLATIONS.en?.[key];
+        if (value) el.setAttribute('aria-label', value);
     });
 
     // Update language toggle button states
@@ -348,6 +673,9 @@ function applyLanguage(lang) {
 
     // Store on html element for CSS targeting if needed
     document.documentElement.setAttribute('data-lang', lang);
+    document.documentElement.lang = lang;
+    translateDomLiterals(lang);
+    setDomLocalizationObserver(lang);
 }
 
 /**
@@ -356,8 +684,8 @@ function applyLanguage(lang) {
 function setLanguage(lang) {
     appState.language = lang;
     applyLanguage(lang);
-    // Refresh dynamic text that's built by JS
     if (typeof updateProgress === 'function') updateProgress();
+    refreshLocalizedSections();
     saveToLocalStorage();
 }
 
@@ -1220,29 +1548,83 @@ const quizData = {
             ]
         }]
     },
-    'algorithm-analysis': {
+    'propositional-logic-proofs': {
         parts: [{
             questions: [
                 {
                     id: 1,
-                    question: "Big-O expresses:",
-                    options: ["Exact runtime", "Upper bound on asymptotic growth", "Best-case behavior", "Only space complexity"],
+                    question: "A proposition in discrete math is:",
+                    options: ["A sentence that is either true or false", "Any question with a variable", "A command", "A set of numbers"],
                     correct: 1,
-                    explanation: "Big-O gives an asymptotic ceiling, ignoring constants and lower-order terms."
+                    explanation: "Propositions have definite truth values, which is the foundation for logical reasoning and proofs."
                 },
                 {
                     id: 2,
-                    question: "Amortized analysis is useful when:",
-                    options: ["All operations cost the same", "Expensive operations are rare and average cost stays low", "Randomization is used", "Parallelism is required"],
+                    question: "Implication p → q is false only when:",
+                    options: ["p is false and q is true", "p is true and q is false", "p and q are both true", "p and q are both false"],
                     correct: 1,
-                    explanation: "By averaging total cost over a sequence, we show operations like dynamic array resize stay O(1) amortized."
+                    explanation: "An implication fails only when the premise is true but the conclusion is false."
                 },
                 {
                     id: 3,
-                    question: "If an algorithm has nested loops each running n times, the time complexity is:",
-                    options: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
-                    correct: 3,
-                    explanation: "An outer loop of n iterations containing an inner loop of n iterations leads to n × n operations."
+                    question: "To prove a conditional statement, a common method is:",
+                    options: ["Proof by contradiction", "Assume antecedent and derive consequent", "Counterexample search", "Truth table for one row only"],
+                    correct: 1,
+                    explanation: "Direct proof starts by assuming the hypothesis and logically deriving the conclusion."
+                }
+            ]
+        }]
+    },
+    'sets-relations-functions': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "For sets A and B, A ∩ B means:",
+                    options: ["Elements in A or B", "Elements in both A and B", "Elements only in A", "Ordered pairs from A and B"],
+                    correct: 1,
+                    explanation: "Intersection keeps only elements common to both sets."
+                },
+                {
+                    id: 2,
+                    question: "A relation R on set A is:",
+                    options: ["A subset of A × A", "A function from A to A only", "A prime number list", "Always symmetric"],
+                    correct: 0,
+                    explanation: "A relation on A is any subset of the Cartesian product A × A."
+                },
+                {
+                    id: 3,
+                    question: "A function f: A → B is injective when:",
+                    options: ["Every b in B has a preimage", "Distinct inputs map to distinct outputs", "A equals B", "It is always surjective"],
+                    correct: 1,
+                    explanation: "Injective (one-to-one) functions never map two different domain elements to the same codomain element."
+                }
+            ]
+        }]
+    },
+    'combinatorics-discrete-probability': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "If order matters and repetition is not allowed, use:",
+                    options: ["Combinations", "Permutations", "Power sets", "Partitions"],
+                    correct: 1,
+                    explanation: "Permutations count arrangements where position matters."
+                },
+                {
+                    id: 2,
+                    question: "The binomial coefficient C(n, k) counts:",
+                    options: ["Ordered arrangements of k from n", "Ways to choose k items from n without order", "Prime numbers under n", "All subsets of size n"],
+                    correct: 1,
+                    explanation: "Combinations choose subsets where arrangement is irrelevant."
+                },
+                {
+                    id: 3,
+                    question: "For independent events A and B, P(A ∩ B) equals:",
+                    options: ["P(A) + P(B)", "P(A) / P(B)", "P(A) × P(B)", "1 - P(A)"],
+                    correct: 2,
+                    explanation: "Independence means one event does not affect the other, so intersection probability multiplies."
                 }
             ]
         }]
@@ -1409,56 +1791,83 @@ const quizData = {
             ]
         }]
     },
-    'computational-geometry': {
+    'assembly-registers-memory': {
         parts: [{
             questions: [
                 {
                     id: 1,
-                    question: "Orientation tests using cross products determine:",
-                    options: ["Distance between points", "Whether three points make clockwise, counter-clockwise, or collinear turns", "Convex hull area", "Edge weights"],
+                    question: "General-purpose CPU registers are primarily used to:",
+                    options: ["Store disk files", "Hold values for fast arithmetic and address operations", "Render graphics only", "Replace RAM entirely"],
                     correct: 1,
-                    explanation: "The sign of the cross product indicates the turn direction, which is fundamental for hulls and intersection tests."
+                    explanation: "Registers are the fastest storage locations and feed ALU operations directly."
                 },
                 {
                     id: 2,
-                    question: "Graham scan builds a convex hull by:",
-                    options: ["Dynamic programming", "Sorting points by angle from a pivot and maintaining a stack of hull vertices", "Binary search", "Divide and conquer"],
+                    question: "Little-endian byte order stores the:",
+                    options: ["Most significant byte first", "Least significant byte first", "Bytes in random order", "Only signed bytes"],
                     correct: 1,
-                    explanation: "After sorting, points that cause clockwise turns are popped, leaving the convex envelope."
+                    explanation: "Little-endian layouts place the lowest-order byte at the lowest memory address."
                 },
                 {
                     id: 3,
-                    question: "Sweep-line algorithms process geometry by:",
-                    options: ["Random sampling", "Moving a line across the plane and handling events in sorted order while tracking active segments", "Brute force", "Only using grids"],
+                    question: "Addressing mode `base + offset` is commonly used for:",
+                    options: ["Immediate constants", "Accessing stack/local variables", "Branch labels only", "Floating-point rounding"],
                     correct: 1,
-                    explanation: "The sweep line converts geometric problems into ordered events, enabling efficient detection of intersections or coverage."
+                    explanation: "Stack frames and structured data are typically reached via a base register plus displacement."
                 }
             ]
         }]
     },
-    'number-theory': {
+    'assembly-control-flow-procedures': {
         parts: [{
             questions: [
                 {
                     id: 1,
-                    question: "The Euclidean algorithm computes:",
-                    options: ["Prime factors", "GCD by repeated remainder operations", "LCM", "Modular exponentiation"],
+                    question: "A conditional jump in assembly executes when:",
+                    options: ["The program ends", "Relevant status flags match the jump condition", "The stack is empty", "A register is zero by default"],
                     correct: 1,
-                    explanation: "Repeatedly replacing (a, b) with (b, a mod b) quickly finds the greatest common divisor."
+                    explanation: "Instructions like `je`, `jne`, `jg`, and `jl` inspect flags set by prior compare/arithmetic instructions."
                 },
                 {
                     id: 2,
-                    question: "Modular exponentiation via repeated squaring is efficient because it:",
-                    options: ["Avoids multiplication", "Reduces exponentiation to O(log b) multiplications while applying modulus each step", "Needs primes only", "Uses floating point"],
+                    question: "A function prologue typically:",
+                    options: ["Clears all memory", "Saves caller context and allocates stack frame space", "Jumps to interrupt vector", "Writes output to stdout"],
                     correct: 1,
-                    explanation: "By squaring intermediate results and reducing modulo m, numbers stay small and operations drop to logarithmic count."
+                    explanation: "Common prologues push frame pointers/registers and reserve local stack storage."
                 },
                 {
                     id: 3,
-                    question: "The Sieve of Eratosthenes marks composites by:",
-                    options: ["Dividing by primes repeatedly", "Marking multiples of each prime starting at p²", "Random testing", "Using recursion"],
+                    question: "Calling conventions exist to:",
+                    options: ["Speed up all loops automatically", "Standardize argument passing, return values, and register ownership", "Avoid using stacks", "Replace machine code"],
                     correct: 1,
-                    explanation: "Multiples below p² were already marked by smaller primes, so starting at p² avoids redundant work."
+                    explanation: "They let separately compiled functions interoperate safely by enforcing consistent call rules."
+                }
+            ]
+        }]
+    },
+    'assembly-arrays-strings-io': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Iterating through an integer array in assembly usually increments the pointer by:",
+                    options: ["1 byte always", "Element size in bytes", "Register count", "Stack depth"],
+                    correct: 1,
+                    explanation: "Pointer arithmetic must match element width (e.g., 4 bytes for 32-bit integers)."
+                },
+                {
+                    id: 2,
+                    question: "Null-terminated strings end with:",
+                    options: ["Line feed", "Byte value 0", "Space character", "Return address"],
+                    correct: 1,
+                    explanation: "C-style strings use `0x00` as sentinel to mark the end of text."
+                },
+                {
+                    id: 3,
+                    question: "A basic output syscall/interrupt sequence needs:",
+                    options: ["Only source code comments", "Proper syscall number plus argument registers/pointers", "No registers at all", "A hash map"],
+                    correct: 1,
+                    explanation: "System interfaces require ABI-defined registers (or stack args) for operation code and data pointers."
                 }
             ]
         }]
@@ -1486,6 +1895,33 @@ const quizData = {
                     options: ["n &= ~(1 << i)", "n |= (1 << i)", "n ^= (1 << i)", "n >>= i"],
                     correct: 1,
                     explanation: "OR with a mask containing only bit i ensures that bit becomes 1 without affecting others."
+                }
+            ]
+        }]
+    },
+    'git-basics-workflow': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "In Git, what is the staging area (index) used for?",
+                    options: ["Running tests automatically", "Selecting exactly which changes go into the next commit", "Storing remote branches only", "Rewriting old commits"],
+                    correct: 1,
+                    explanation: "The staging area lets you craft focused commits by choosing specific file changes before committing."
+                },
+                {
+                    id: 2,
+                    question: "Which command is the safest way to undo a bad commit already shared to the remote default branch?",
+                    options: ["git reset --hard HEAD~1", "git revert <commit>", "git commit --amend", "git checkout -- ."],
+                    correct: 1,
+                    explanation: "git revert creates a new commit that undoes the old one without rewriting shared history."
+                },
+                {
+                    id: 3,
+                    question: "A common collaboration flow is:",
+                    options: ["Commit directly to main for every change", "Create a branch, commit, push branch, then merge via PR", "Delete local history weekly", "Use merge conflicts to sync progress"],
+                    correct: 1,
+                    explanation: "Branch-based development isolates work, enables review, and keeps the main branch stable."
                 }
             ]
         }]
@@ -2958,52 +3394,257 @@ class Graph {
         resources: ['Graph Algorithms', 'DFS and BFS']
     },
     {
-        id: 'algorithm-analysis',
-        title: 'Algorithm Analysis and Big O',
-        description: 'Tiny helpers such as `getFirst`, `sum`, and `binarySearchOperations` are instrumented so you can correlate the code with O(1), O(n), and O(log n) behavior and actual comparison counts.',
-        difficulty: 'advanced',
-        topics: ['Big O Notation', 'Time Complexity', 'Space Complexity', 'Best/Worst Case', 'Algorithm Optimization'],
-        codeExample: `// Measuring algorithmic complexity with instrumentation
-public class AlgorithmAnalysis {
-
-    public static int getFirst(int[] arr) {
-        return arr.length == 0 ? -1 : arr[0]; // O(1)
+        id: 'propositional-logic-proofs',
+        title: 'Propositional Logic and Proof Basics',
+        description: 'Truth-value helpers for implication, conjunction, and biconditional are traced in a mini truth-table runner so you can connect symbolic logic to executable reasoning.',
+        difficulty: 'beginner',
+        topics: ['Propositions', 'Truth Tables', 'Implication', 'Logical Equivalence', 'Direct Proof'],
+        codeExamples: {
+            java: `// Propositional logic truth table helpers
+public class PropositionalLogic {
+    static boolean implies(boolean p, boolean q) {
+        return !p || q;
     }
 
-    public static int sum(int[] arr) {
-        int total = 0;
-        for (int num : arr) {
-            total += num; // O(n)
-        }
-        return total;
-    }
-
-    public static int binarySearchOperations(int[] arr, int target) {
-        int left = 0, right = arr.length - 1;
-        int comparisons = 0;
-        while (left <= right) {
-            comparisons++;
-            int mid = left + (right - left) / 2;
-            if (arr[mid] == target) {
-                return comparisons;
-            } else if (arr[mid] < target) {
-                left = mid + 1;
-            } else {
-                right = mid - 1;
-            }
-        }
-        return comparisons;
+    static boolean biconditional(boolean p, boolean q) {
+        return p == q;
     }
 
     public static void main(String[] args) {
-        int[] sample = {1, 3, 5, 7, 9, 11, 13};
-        System.out.println(\"First element: \" + getFirst(sample));
-        System.out.println(\"Sum: \" + sum(sample));
-        System.out.println(\"Binary search comparisons: \" + binarySearchOperations(sample, 11));
+        boolean[] values = {false, true};
+        System.out.println("p q | p->q p<->q");
+        for (boolean p : values) {
+            for (boolean q : values) {
+                System.out.println(p + " " + q + " | " + implies(p, q) + "    " + biconditional(p, q));
+            }
+        }
+        System.out.println("Direct proof idea: assume p, derive q.");
     }
 }`,
-        explanation: `Instead of memorizing Big O, you will learn to count dominant operations, reason about best/worst/average cases, and evaluate memory footprints. Worked examples explain logarithms, recursion-tree analysis, and amortized proofs so you can justify complexity claims during interviews.`,
-        resources: ['Big O Guide', 'Complexity Analysis']
+            cpp: `// Propositional logic truth table helpers
+#include <iostream>
+using namespace std;
+
+bool implies(bool p, bool q) { return !p || q; }
+bool biconditional(bool p, bool q) { return p == q; }
+
+int main() {
+    bool values[2] = {false, true};
+    cout << boolalpha;
+    cout << "p q | p->q p<->q\\n";
+    for (bool p : values) {
+        for (bool q : values) {
+            cout << p << " " << q << " | " << implies(p, q) << "    " << biconditional(p, q) << "\\n";
+        }
+    }
+    cout << "Direct proof idea: assume p, derive q.\\n";
+    return 0;
+}`,
+            python: `# Propositional logic truth table helpers
+def implies(p, q):
+    return (not p) or q
+
+def biconditional(p, q):
+    return p == q
+
+values = [False, True]
+print("p q | p->q p<->q")
+for p in values:
+    for q in values:
+        print(f"{p} {q} | {implies(p, q)}    {biconditional(p, q)}")
+print("Direct proof idea: assume p, derive q.")`,
+            javascript: `// Propositional logic truth table helpers
+const implies = (p, q) => !p || q;
+const biconditional = (p, q) => p === q;
+
+const values = [false, true];
+console.log("p q | p->q p<->q");
+for (const p of values) {
+    for (const q of values) {
+        console.log(String(p) + " " + String(q) + " | " + String(implies(p, q)) + "    " + String(biconditional(p, q)));
+    }
+}
+console.log("Direct proof idea: assume p, derive q.");`
+        },
+        explanation: `This module focuses on statement logic, inference patterns, and proof framing. You will practice translating English claims to symbols, validating implications with truth tables, and structuring short direct/contrapositive proofs.`,
+        resources: ['Discrete Math Open Notes', 'Truth Table Practice']
+    },
+    {
+        id: 'sets-relations-functions',
+        title: 'Sets, Relations, and Functions',
+        description: 'Set union/intersection, Cartesian products, and injective checks run in one compact sample so you can connect formal definitions to concrete data structures.',
+        difficulty: 'beginner',
+        topics: ['Set Operations', 'Cartesian Product', 'Relations', 'Injective Functions', 'Surjective Functions'],
+        codeExamples: {
+            java: `// Sets, relations, and functions mini demo
+import java.util.*;
+
+public class SetsRelationsFunctions {
+    static boolean isInjective(Map<Integer, Integer> f) {
+        Set<Integer> seen = new HashSet<>();
+        for (int value : f.values()) {
+            if (!seen.add(value)) return false;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        Set<Integer> a = new HashSet<>(Arrays.asList(1, 2, 3));
+        Set<Integer> b = new HashSet<>(Arrays.asList(3, 4, 5));
+        Set<Integer> intersection = new HashSet<>(a);
+        intersection.retainAll(b);
+        Set<Integer> union = new HashSet<>(a);
+        union.addAll(b);
+
+        Map<Integer, Integer> f = new HashMap<>();
+        f.put(1, 10); f.put(2, 20); f.put(3, 30);
+
+        System.out.println("A ∩ B = " + intersection);
+        System.out.println("A ∪ B = " + union);
+        System.out.println("f is injective? " + isInjective(f));
+    }
+}`,
+            cpp: `// Sets, relations, and functions mini demo
+#include <iostream>
+#include <set>
+#include <map>
+using namespace std;
+
+bool isInjective(const map<int, int>& f) {
+    set<int> seen;
+    for (const auto& [k, v] : f) {
+        if (!seen.insert(v).second) return false;
+    }
+    return true;
+}
+
+int main() {
+    set<int> A = {1, 2, 3};
+    set<int> B = {3, 4, 5};
+    set<int> intersection, uni = A;
+    for (int x : B) {
+        if (A.count(x)) intersection.insert(x);
+        uni.insert(x);
+    }
+    map<int, int> f = {{1, 10}, {2, 20}, {3, 30}};
+
+    cout << "A ∩ B size = " << intersection.size() << "\\n";
+    cout << "A ∪ B size = " << uni.size() << "\\n";
+    cout << boolalpha << "f is injective? " << isInjective(f) << "\\n";
+    return 0;
+}`,
+            python: `# Sets, relations, and functions mini demo
+def is_injective(mapping):
+    return len(set(mapping.values())) == len(mapping.values())
+
+A = {1, 2, 3}
+B = {3, 4, 5}
+f = {1: 10, 2: 20, 3: 30}
+
+print("A ∩ B =", A & B)
+print("A ∪ B =", A | B)
+print("f is injective?", is_injective(f))`,
+            javascript: `// Sets, relations, and functions mini demo
+const A = new Set([1, 2, 3]);
+const B = new Set([3, 4, 5]);
+const intersection = [...A].filter((x) => B.has(x));
+const union = new Set([...A, ...B]);
+const f = new Map([[1, 10], [2, 20], [3, 30]]);
+
+const values = [...f.values()];
+const isInjective = new Set(values).size === values.length;
+
+console.log("A ∩ B =", intersection);
+console.log("A ∪ B =", [...union]);
+console.log("f is injective?", isInjective);`
+        },
+        explanation: `You will model sets, binary relations, and mappings with concrete operations: membership tests, products, relation properties, and injective/surjective checks. The focus is building intuition used later in graph theory and proofs.`,
+        resources: ['Sets and Relations Notes', 'Function Property Exercises']
+    },
+    {
+        id: 'combinatorics-discrete-probability',
+        title: 'Combinatorics and Discrete Probability',
+        description: 'Factorial/permutation/combination helpers pair with basic probability calculations so counting principles and event models become practical problem-solving tools.',
+        difficulty: 'intermediate',
+        topics: ['Factorials', 'Permutations', 'Combinations', 'Binomial Coefficients', 'Event Probability'],
+        codeExamples: {
+            java: `// Counting and probability helpers
+public class CombinatoricsProbability {
+    static long factorial(int n) {
+        long ans = 1;
+        for (int i = 2; i <= n; i++) ans *= i;
+        return ans;
+    }
+
+    static long nCr(int n, int r) {
+        return factorial(n) / (factorial(r) * factorial(n - r));
+    }
+
+    public static void main(String[] args) {
+        int n = 5, r = 2;
+        System.out.println("5! = " + factorial(5));
+        System.out.println("P(5,2) = " + (factorial(n) / factorial(n - r)));
+        System.out.println("C(5,2) = " + nCr(n, r));
+        System.out.println("P(exactly 2 heads in 3 fair flips) = " + (3.0 / 8.0));
+    }
+}`,
+            cpp: `// Counting and probability helpers
+#include <iostream>
+using namespace std;
+
+long long factorial(int n) {
+    long long ans = 1;
+    for (int i = 2; i <= n; ++i) ans *= i;
+    return ans;
+}
+
+long long nCr(int n, int r) {
+    return factorial(n) / (factorial(r) * factorial(n - r));
+}
+
+int main() {
+    int n = 5, r = 2;
+    cout << "5! = " << factorial(5) << "\\n";
+    cout << "P(5,2) = " << factorial(n) / factorial(n - r) << "\\n";
+    cout << "C(5,2) = " << nCr(n, r) << "\\n";
+    cout << "P(exactly 2 heads in 3 fair flips) = " << (3.0 / 8.0) << "\\n";
+    return 0;
+}`,
+            python: `# Counting and probability helpers
+def factorial(n):
+    ans = 1
+    for i in range(2, n + 1):
+        ans *= i
+    return ans
+
+def nCr(n, r):
+    return factorial(n) // (factorial(r) * factorial(n - r))
+
+n, r = 5, 2
+print("5! =", factorial(5))
+print("P(5,2) =", factorial(n) // factorial(n - r))
+print("C(5,2) =", nCr(n, r))
+print("P(exactly 2 heads in 3 fair flips) =", 3 / 8)`,
+            javascript: `// Counting and probability helpers
+function factorial(n) {
+    let ans = 1;
+    for (let i = 2; i <= n; i += 1) ans *= i;
+    return ans;
+}
+
+function nCr(n, r) {
+    return factorial(n) / (factorial(r) * factorial(n - r));
+}
+
+const n = 5;
+const r = 2;
+console.log("5! =", factorial(5));
+console.log("P(5,2) =", factorial(n) / factorial(n - r));
+console.log("C(5,2) =", nCr(n, r));
+console.log("P(exactly 2 heads in 3 fair flips) =", 3 / 8);`
+        },
+        explanation: `This module connects counting techniques to probability models. You will decide when order matters, compute combinations/permutations efficiently, and map sample spaces to event probabilities for exam-style and interview-style problems.`,
+        resources: ['Combinatorics Quick Sheet', 'Discrete Probability Practice']
     },
     {
         id: 'tries',
@@ -3386,120 +4027,306 @@ public class StringAlgorithms {
         resources: ['Pattern Matching', 'String Processing Optimization']
     },
     {
-        id: 'computational-geometry',
-        title: 'Computational Geometry',
-        description: 'Graham scan sorts points, grows lower/upper hulls, and uses the `cross` helper to pop clockwise turns, letting you watch the hull form in stack-sized steps.',
-        difficulty: 'advanced',
-        topics: ['Point Operations', 'Line Intersection', 'Convex Hull', 'Closest Pair', 'Area Calculation'],
-        codeExample: `// Convex hull using Graham scan
-import java.util.*;
+        id: 'assembly-registers-memory',
+        title: 'Assembly Registers and Memory Basics',
+        description: 'This starter module introduces register roles, immediate values, and memory addressing by tracing simple load/add/store sequences side by side with high-level equivalents.',
+        difficulty: 'beginner',
+        topics: ['CPU Registers', 'Memory Addresses', 'Load/Store', 'Data Sizes', 'Endian Awareness'],
+        codeExamples: {
+            assembly: `; x86-64 registers + memory demo (Linux, Intel syntax)
+section .data
+    valueA dd 7
+    valueB dd 5
+    msg db "Computed sum in EAX from valueA + valueB", 10
+    msg_len equ $ - msg
 
-public class GeometryAlgorithms {
-    static class Point {
-        final int x, y;
-        Point(int x, int y) { this.x = x; this.y = y; }
-        @Override public String toString() { return \"(\" + x + \",\" + y + \")\"; }
-    }
+section .text
+    global _start
+_start:
+    mov eax, [valueA]       ; EAX = 7
+    mov ebx, [valueB]       ; EBX = 5
+    add eax, ebx            ; EAX = 12
 
-    private static int cross(Point a, Point b, Point c) {
-        return (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x);
-    }
+    ; Write explanatory message to stdout
+    mov rax, 1              ; syscall: write
+    mov rdi, 1              ; fd: stdout
+    mov rsi, msg            ; buffer
+    mov rdx, msg_len        ; length
+    syscall
 
-    public static List<Point> convexHull(List<Point> points) {
-        if (points.size() <= 1) return points;
-        points.sort(Comparator.comparingInt((Point p) -> p.x).thenComparingInt(p -> p.y));
-        List<Point> lower = new ArrayList<>();
-        for (Point p : points) {
-            while (lower.size() >= 2 && cross(lower.get(lower.size()-2), lower.get(lower.size()-1), p) <= 0) {
-                lower.remove(lower.size()-1);
-            }
-            lower.add(p);
-        }
-        List<Point> upper = new ArrayList<>();
-        Collections.reverse(points);
-        for (Point p : points) {
-            while (upper.size() >= 2 && cross(upper.get(upper.size()-2), upper.get(upper.size()-1), p) <= 0) {
-                upper.remove(upper.size()-1);
-            }
-            upper.add(p);
-        }
-        lower.remove(lower.size()-1);
-        upper.remove(upper.size()-1);
-        lower.addAll(upper);
-        return lower;
-    }
-
+    ; Exit cleanly
+    mov rax, 60             ; syscall: exit
+    xor rdi, rdi            ; status 0
+    syscall
+`,
+            java: `// Register-like reasoning in Java
+public class AssemblyRegistersMemory {
     public static void main(String[] args) {
-        List<Point> points = Arrays.asList(
-            new Point(0, 3), new Point(2, 2), new Point(1, 1),
-            new Point(2, 1), new Point(3, 0), new Point(0, 0),
-            new Point(3, 3)
-        );
-        System.out.println(\"Convex Hull: \" + convexHull(new ArrayList<>(points)));
+        int eax = 7; // pretend eax register
+        int ebx = 5; // pretend ebx register
+        eax = eax + ebx;
+        System.out.println("eax after add = " + eax);
+
+        int[] memory = {100, 200, 300};
+        int baseAddress = 0;
+        int loaded = memory[baseAddress + 1];
+        System.out.println("loaded memory[base+1] = " + loaded);
     }
 }`,
-        explanation: `Geometry topics include vector math, orientation tests, sweep lines, and robustness tips to avoid floating-point pitfalls. Projects walk through Graham scan, rotating calipers, point-in-polygon tests, and collision detection for games or simulations.`,
-        resources: ['Geometric Algorithms', 'Convex Hull Methods']
+            cpp: `// Register-like reasoning in C++
+#include <iostream>
+using namespace std;
+
+int main() {
+    int eax = 7;
+    int ebx = 5;
+    eax = eax + ebx;
+    cout << "eax after add = " << eax << "\\n";
+
+    int memory[] = {100, 200, 300};
+    int base = 0;
+    int loaded = memory[base + 1];
+    cout << "loaded memory[base+1] = " << loaded << "\\n";
+    return 0;
+}`,
+            python: `# Register-like reasoning in Python
+eax = 7
+ebx = 5
+eax = eax + ebx
+print("eax after add =", eax)
+
+memory = [100, 200, 300]
+base = 0
+loaded = memory[base + 1]
+print("loaded memory[base+1] =", loaded)`,
+            javascript: `// Register-like reasoning in JavaScript
+let eax = 7;
+const ebx = 5;
+eax = eax + ebx;
+console.log("eax after add =", eax);
+
+const memory = [100, 200, 300];
+const base = 0;
+const loaded = memory[base + 1];
+console.log("loaded memory[base+1] =", loaded);`
+        },
+        explanation: `You will map low-level machine state to familiar variables: registers as fast temporary storage and memory as addressed slots. The goal is to make instruction-by-instruction traces intuitive before moving to procedures and control flow.`,
+        resources: ['x86 Register Reference', 'Memory Addressing Primer']
     },
     {
-        id: 'number-theory',
-        title: 'Number Theory Algorithms',
-        description: '`sieve`, `modPow`, and `gcd` are annotated so you can track loop invariants, modulus reductions, and Euclid swaps for common number-theory building blocks.',
+        id: 'assembly-control-flow-procedures',
+        title: 'Assembly Control Flow and Procedures',
+        description: 'Branch flags, loop counters, and call/return frames are demonstrated in short routines so you can see how high-level `if`, `while`, and function calls are represented in assembly.',
         difficulty: 'intermediate',
-        topics: ['Prime Numbers', 'GCD/LCM', 'Modular Arithmetic', 'Sieve of Eratosthenes', 'Fast Exponentiation'],
-        codeExample: `// Number theory helpers: sieve, gcd, modular exponentiation
-import java.util.Arrays;
+        topics: ['CMP and Flags', 'Conditional Jumps', 'Loops', 'Call/Ret', 'Calling Conventions'],
+        codeExamples: {
+            assembly: `; Control flow + procedure demo (Linux, Intel syntax)
+section .data
+    done_msg db "sum_to_n finished successfully", 10
+    done_len equ $ - done_msg
 
-public class NumberTheory {
+section .text
+    global _start
 
-    public static boolean[] sieve(int limit) {
-        boolean[] prime = new boolean[limit + 1];
-        Arrays.fill(prime, true);
-        prime[0] = prime[1] = false;
-        for (int p = 2; p * p <= limit; p++) {
-            if (prime[p]) {
-                for (int multiple = p * p; multiple <= limit; multiple += p) {
-                    prime[multiple] = false;
-                }
-            }
+sum_to_n:
+    ; Input: ECX = n, Output: EAX = 1 + ... + n
+    xor eax, eax             ; total = 0
+.loop:
+    add eax, ecx
+    dec ecx
+    jnz .loop
+    ret
+
+_start:
+    mov ecx, 5
+    call sum_to_n            ; EAX = 15
+
+    cmp eax, 10              ; branch example
+    jle .skip_print
+    mov rax, 1               ; write
+    mov rdi, 1               ; stdout
+    mov rsi, done_msg
+    mov rdx, done_len
+    syscall
+
+.skip_print:
+    mov rax, 60              ; exit
+    xor rdi, rdi
+    syscall
+`,
+            java: `// Control flow and procedure equivalents in Java
+public class AssemblyControlFlowProcedures {
+    static int sumToN(int n) {
+        int total = 0;
+        while (n != 0) {
+            total += n;
+            n--;
         }
-        return prime;
-    }
-
-    public static long modPow(long base, long exponent, long mod) {
-        long result = 1;
-        base %= mod;
-        while (exponent > 0) {
-            if ((exponent & 1) == 1) {
-                result = (result * base) % mod;
-            }
-            base = (base * base) % mod;
-            exponent >>= 1;
-        }
-        return result;
-    }
-
-    public static int gcd(int a, int b) {
-        while (b != 0) {
-            int temp = b;
-            b = a % b;
-            a = temp;
-        }
-        return a;
+        return total;
     }
 
     public static void main(String[] args) {
-        boolean[] prime = sieve(30);
-        System.out.println(\"Primes <= 30: \");
-        for (int i = 2; i < prime.length; i++) {
-            if (prime[i]) System.out.print(i + \" \");
+        int result = sumToN(5);
+        System.out.println("sumToN(5) = " + result);
+        if (result > 10) {
+            System.out.println("branch taken: result > 10");
         }
-        System.out.println(\"\\nGCD(24, 18) = \" + gcd(24, 18));
-        System.out.println(\"2^20 mod 1_000_000_007 = \" + modPow(2, 20, 1_000_000_007L));
     }
 }`,
-        explanation: `You will code sieves, fast exponentiation, modular inverses, and extended Euclid, then apply them to gcd-based proofs, combinatorics mod p, and cryptography-style puzzles. Emphasis is on deriving formulas and spotting when arithmetic shortcuts beat brute force.`,
-        resources: ['Prime Algorithms', 'Modular Arithmetic']
+            cpp: `// Control flow and procedure equivalents in C++
+#include <iostream>
+using namespace std;
+
+int sumToN(int n) {
+    int total = 0;
+    while (n != 0) {
+        total += n;
+        n--;
+    }
+    return total;
+}
+
+int main() {
+    int result = sumToN(5);
+    cout << "sumToN(5) = " << result << "\\n";
+    if (result > 10) {
+        cout << "branch taken: result > 10\\n";
+    }
+    return 0;
+}`,
+            python: `# Control flow and procedure equivalents in Python
+def sum_to_n(n):
+    total = 0
+    while n != 0:
+        total += n
+        n -= 1
+    return total
+
+result = sum_to_n(5)
+print("sum_to_n(5) =", result)
+if result > 10:
+    print("branch taken: result > 10")`,
+            javascript: `// Control flow and procedure equivalents in JavaScript
+function sumToN(n) {
+    let total = 0;
+    while (n !== 0) {
+        total += n;
+        n -= 1;
+    }
+    return total;
+}
+
+const result = sumToN(5);
+console.log("sumToN(5) =", result);
+if (result > 10) {
+    console.log("branch taken: result > 10");
+}`
+        },
+        explanation: `This module connects jump conditions and call frames to structured programming. You will read traces of compare/branch patterns, stack behavior across calls, and loop exits to build confidence debugging low-level flow.`,
+        resources: ['Calling Convention Cheatsheet', 'Conditional Jump Table']
+    },
+    {
+        id: 'assembly-arrays-strings-io',
+        title: 'Assembly Arrays, Strings, and Basic I/O',
+        description: 'Pointer stepping over arrays, null-terminated string scans, and minimal I/O patterns are broken into small examples so data traversal in assembly feels concrete.',
+        difficulty: 'intermediate',
+        topics: ['Pointer Arithmetic', 'Array Traversal', 'Null-Terminated Strings', 'System Calls', 'Byte/Word Access'],
+        codeExamples: {
+            assembly: `; Arrays + strings + basic I/O (Linux, Intel syntax)
+section .data
+    nums dd 3, 4, 5, 6
+    text db "HELLO", 0
+    out_msg db "Array sum and string length computed", 10
+    out_len equ $ - out_msg
+
+section .text
+    global _start
+_start:
+    xor eax, eax          ; sum = 0
+    mov ecx, 4            ; count
+    mov rsi, nums         ; pointer to array
+.sum_loop:
+    add eax, [rsi]
+    add rsi, 4            ; next int32 element
+    loop .sum_loop
+
+    ; string length scan
+    mov rdi, text
+    xor ebx, ebx
+.len_loop:
+    cmp byte [rdi], 0
+    je .done
+    inc ebx
+    inc rdi
+    jmp .len_loop
+.done:
+    ; EAX = array sum, EBX = string length
+    ; Print completion message
+    mov rax, 1              ; write
+    mov rdi, 1              ; stdout
+    mov rsi, out_msg
+    mov rdx, out_len
+    syscall
+
+    ; Exit
+    mov rax, 60             ; exit
+    xor rdi, rdi
+    syscall
+`,
+            java: `// Arrays, strings, and I/O analog in Java
+public class AssemblyArraysStringsIO {
+    public static void main(String[] args) {
+        int[] nums = {3, 4, 5, 6};
+        int sum = 0;
+        for (int value : nums) sum += value;
+
+        String text = "HELLO";
+        int length = text.length();
+
+        System.out.println("sum(nums) = " + sum);
+        System.out.println("length(text) = " + length);
+        System.out.println("I/O demo complete.");
+    }
+}`,
+            cpp: `// Arrays, strings, and I/O analog in C++
+#include <iostream>
+#include <string>
+using namespace std;
+
+int main() {
+    int nums[] = {3, 4, 5, 6};
+    int sum = 0;
+    for (int value : nums) sum += value;
+
+    string text = "HELLO";
+    int length = static_cast<int>(text.size());
+
+    cout << "sum(nums) = " << sum << "\\n";
+    cout << "length(text) = " << length << "\\n";
+    cout << "I/O demo complete.\\n";
+    return 0;
+}`,
+            python: `# Arrays, strings, and I/O analog in Python
+nums = [3, 4, 5, 6]
+sum_value = sum(nums)
+text = "HELLO"
+length = len(text)
+
+print("sum(nums) =", sum_value)
+print("length(text) =", length)
+print("I/O demo complete.")`,
+            javascript: `// Arrays, strings, and I/O analog in JavaScript
+const nums = [3, 4, 5, 6];
+const sumValue = nums.reduce((acc, value) => acc + value, 0);
+const text = "HELLO";
+const length = text.length;
+
+console.log("sum(nums) =", sumValue);
+console.log("length(text) =", length);
+console.log("I/O demo complete.");`
+        },
+        explanation: `You will practice low-level data movement through arrays and strings, then relate those patterns to higher-level loops and output routines. By the end, pointer increments, sentinel checks, and output setup should feel natural.`,
+        resources: ['Assembly String Ops', 'Syscall Reference (Intro)']
     },
     {
         id: 'bit-manipulation',
@@ -3579,6 +4406,62 @@ public class JavaBasics {
 }`,
         explanation: `This primer explains the JVM model, primitive vs reference types, memory layout, and how to structure small programs with packages and build tools. Each topic is paired with short exercises so you can move from syntax memorization to writing idiomatic Java.`,
         resources: ['Java Documentation', 'Oracle Java Tutorials', 'Java Syntax Guide']
+    },
+
+    {
+        id: 'git-basics-workflow',
+        title: 'Git Basics and Collaboration Workflow',
+        description: 'This starter module walks through repo setup, staging, commits, branching, pull/merge flow, conflict resolution basics, and safe undo commands you can use in real team projects.',
+        difficulty: 'beginner',
+        topics: ['Repository Setup', 'Staging and Commits', 'Branching and Merging', 'Pull/Rebase Basics', 'Merge Conflict Basics', 'Remote Collaboration', 'Safe Undo with Restore/Revert'],
+        codeExample: `# 1) Initialize a new repository and connect remote
+mkdir cs-atlas-demo
+cd cs-atlas-demo
+git init
+git branch -M main
+git remote add origin https://github.com/your-org/cs-atlas-demo.git
+git status
+# Expected: On branch main, no commits yet
+
+# 2) Stage and commit intentionally (small logical commit)
+echo "# CS Atlas Demo" > README.md
+git add README.md
+git commit -m "docs: add initial project README"
+git log --oneline -n 3
+# Expected: one commit shown with your message
+
+# 3) Create feature branch for isolated work
+git checkout -b feature/auth-modal
+echo "Auth modal revamp notes" > auth-notes.txt
+git add auth-notes.txt
+git commit -m "feat: add auth modal planning notes"
+git branch
+# Expected: * feature/auth-modal
+
+# 4) Sync with remote safely before opening PR
+git fetch origin
+git pull --rebase origin main
+git push -u origin feature/auth-modal
+# Expected: branch now tracks origin/feature/auth-modal
+
+# 5) Merge workflow after review (done on main branch)
+git checkout main
+git pull origin main
+git merge --no-ff feature/auth-modal -m "merge: feature/auth-modal"
+git push origin main
+
+# 6) Resolve simple conflict (core idea)
+# - Open conflicted file and choose final content
+# - Remove conflict markers <<<<<<< ======= >>>>>>>
+git add <resolved-file>
+git commit -m "fix: resolve merge conflict in <resolved-file>"
+
+# 7) Safe undo patterns (shared history safe)
+git restore --staged auth-notes.txt     # unstage file
+git restore auth-notes.txt              # discard local uncommitted change
+git revert <commit-hash>                # create new commit that undoes old one`,
+        explanation: `Git is not just commands; it is a safety model for collaboration. You will learn the three-state model (working tree, staging area, repository), why commits should be small and reversible, and how branch-based development protects the main branch. We also cover safe undo strategies for team projects: when to use restore for local cleanup and when to use revert for shared history. By the end, you should be able to ship features through branch -> review -> merge with minimal risk.`,
+        resources: ['Official Git Book', 'GitHub Flow Guide', 'Atlassian Git Tutorials', 'Conventional Commit Messages']
     },
 
     {
@@ -4010,6 +4893,220 @@ public class JDBCExample {
     }
 ];
 
+const MODULE_DEFINITION_FALLBACK_TERMS = {
+    en: ['Time Complexity', 'Space Complexity', 'Edge Case', 'Invariant', 'Pattern'],
+    es: ['Complejidad temporal', 'Complejidad espacial', 'Caso limite', 'Invariante', 'Patron']
+};
+
+function toModuleClassName(moduleId = '') {
+    const normalized = String(moduleId || '')
+        .split(/[^a-zA-Z0-9]+/)
+        .filter(Boolean)
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join('');
+    return normalized || 'ModuleDemo';
+}
+
+function escapeForJavaString(value) {
+    return String(value || '')
+        .replace(/\\/g, '\\\\')
+        .replace(/"/g, '\\"');
+}
+
+function isLikelyJavaSnippet(source) {
+    const code = String(source || '');
+    return /\bclass\s+[A-Za-z_]\w*\b/.test(code)
+        || /\bpublic\s+static\s+void\s+main\s*\(/.test(code)
+        || /System\.out\.print/.test(code)
+        || /\bimport\s+java\./.test(code);
+}
+
+function buildFallbackJavaSnippet(module) {
+    const className = toModuleClassName(module?.id);
+    const title = escapeForJavaString(module?.title || 'Module');
+    const description = escapeForJavaString(module?.description || '');
+    const topics = Array.isArray(module?.topics) ? module.topics : [];
+    const topicPrintLines = topics.map((topic) => `        System.out.println("- ${escapeForJavaString(topic)}");`).join('\n');
+    return `import java.util.*;\n\npublic class ${className} {\n    public static void main(String[] args) {\n        // High-level module walkthrough marker\n        System.out.println("Running module: ${title}");\n        System.out.println("${description}");\n        System.out.println("Topic checklist:");\n${topicPrintLines || '        System.out.println("- No topics listed.");'}\n        System.out.println("Sample completed.");\n    }\n}`;
+}
+
+function buildGitJavaSnippet() {
+    return `import java.util.*;\n\npublic class GitBasicsWorkflowDemo {\n    public static void main(String[] args) {\n        // This runnable sample prints a practical Git workflow in execution order.\n        List<String> commands = Arrays.asList(\n            "git init",\n            "git branch -M main",\n            "git add .",\n            "git commit -m \\"feat: meaningful snapshot\\"",\n            "git checkout -b feature/safe-change",\n            "git fetch origin",\n            "git pull --rebase origin main",\n            "git push -u origin feature/safe-change",\n            "git checkout main",\n            "git merge --no-ff feature/safe-change",\n            "git revert <commit-hash>    // safe undo on shared history"\n        );\n\n        // Explain each command so beginners understand both syntax and intent.\n        System.out.println("Git learning walkthrough:");\n        for (int i = 0; i < commands.size(); i++) {\n            System.out.println((i + 1) + ". " + commands.get(i));\n        }\n\n        // Key mental model: working tree -> staging area -> repository history.\n        System.out.println("Model: working tree -> staging area -> commit history.");\n        System.out.println("Rule: use revert for shared history, restore for local cleanup.");\n    }\n}`;
+}
+
+function addComprehensiveHeaderComments(module, javaCode) {
+    const topics = Array.isArray(module?.topics) ? module.topics : [];
+    const header = [
+        '/*',
+        ` * ${module?.title || 'Module'} - Comprehensive guided sample`,
+        ' * Coverage goals:',
+        ...topics.map((topic, index) => ` * ${index + 1}) ${topic}`),
+        ' * Reading strategy:',
+        ' * - Follow inline comments from top to bottom.',
+        ' * - Run once, then edit one concept at a time and rerun.',
+        ' * - Verify output after each logical step.',
+        ' */'
+    ].join('\n');
+    return `${header}\n${String(javaCode || '').trim()}`;
+}
+
+function ensureJavaSnippetHasVisibleOutput(module, javaCode) {
+    const source = String(javaCode || '').trim();
+    if (!source) return buildFallbackJavaSnippet(module);
+    if (/(System\.out\.print|System\.out\.println)/.test(source)) {
+        return source;
+    }
+    const runLine = `System.out.println("Running ${escapeForJavaString(module?.title || 'module')} sample...");`;
+    if (/public\s+static\s+void\s+main\s*\([^)]*\)\s*\{/.test(source)) {
+        return source.replace(
+            /(public\s+static\s+void\s+main\s*\([^)]*\)\s*\{)/,
+            `$1\n        // Runtime marker for learners\n        ${runLine}`
+        );
+    }
+    return `${source}\n\nclass ${toModuleClassName(module?.id)}RuntimeMarker {\n    public static void main(String[] args) {\n        ${runLine}\n    }\n}`;
+}
+
+function escapeForQuotedString(value) {
+    return String(value || '')
+        .replace(/\\/g, '\\\\')
+        .replace(/"/g, '\\"');
+}
+
+function extractJavaSignalLines(javaSource) {
+    const source = String(javaSource || '');
+    const signals = [];
+    const regex = /System\.out\.println\("([^"]+)"\)/g;
+    let match;
+    while ((match = regex.exec(source)) && signals.length < 6) {
+        const text = String(match[1] || '').trim();
+        if (text && !signals.includes(text)) {
+            signals.push(text);
+        }
+    }
+    return signals;
+}
+
+function hasVisibleOutputForLanguage(language, source) {
+    const code = String(source || '');
+    if (!code.trim()) return false;
+    if (language === 'java') return /(System\.out\.print|System\.out\.println)/.test(code);
+    if (language === 'cpp') return /(cout\s*<<|printf\s*\()/.test(code);
+    if (language === 'python') return /\bprint\s*\(/.test(code);
+    if (language === 'javascript') return /(console\.log|process\.stdout\.write)/.test(code);
+    return true;
+}
+
+function buildCppMirrorSnippet(module, javaSource) {
+    const title = escapeForQuotedString(module?.title || 'Module');
+    const description = escapeForQuotedString(module?.description || '');
+    const topics = (module?.topics || []).slice(0, 6).map((topic) => escapeForQuotedString(topic));
+    const signals = extractJavaSignalLines(javaSource).map((line) => escapeForQuotedString(line));
+    return `#include <iostream>\n#include <vector>\n#include <string>\nusing namespace std;\n\nint main() {\n    // C++ mirror of the updated Java module sample.\n    string moduleTitle = "${title}";\n    string moduleDescription = "${description}";\n    vector<string> topics = {${topics.map((t) => `"${t}"`).join(', ') || '"No topics listed"'}};\n    vector<string> javaSignals = {${signals.map((s) => `"${s}"`).join(', ') || '"Java sample executed"'}};\n\n    // 1) High-level module context\n    cout << "Running module: " << moduleTitle << "\\n";\n    cout << moduleDescription << "\\n";\n\n    // 2) Topic checklist to ensure full conceptual coverage\n    cout << "Topic checklist:\\n";\n    for (size_t i = 0; i < topics.size(); i++) {\n        cout << "- " << topics[i] << "\\n";\n    }\n\n    // 3) Java parity markers (mirrors important Java output checkpoints)\n    cout << "Parity checkpoints from Java sample:\\n";\n    for (const auto& line : javaSignals) {\n        cout << "* " << line << "\\n";\n    }\n\n    cout << "C++ parity sample completed.\\n";\n    return 0;\n}`;
+}
+
+function buildPythonMirrorSnippet(module, javaSource) {
+    const title = String(module?.title || 'Module');
+    const description = String(module?.description || '');
+    const topics = (module?.topics || []).slice(0, 6);
+    const signals = extractJavaSignalLines(javaSource);
+    return `# Python mirror of the updated Java module sample.\n# This script keeps the same conceptual checkpoints and prints them clearly.\n\ndef run_module_demo():\n    module_title = "${escapeForQuotedString(title)}"\n    module_description = "${escapeForQuotedString(description)}"\n    topics = [${topics.map((t) => `"${escapeForQuotedString(t)}"`).join(', ') || '"No topics listed"'}]\n    java_signals = [${signals.map((s) => `"${escapeForQuotedString(s)}"`).join(', ') || '"Java sample executed"'}]\n\n    # 1) High-level module context\n    print(f"Running module: {module_title}")\n    print(module_description)\n\n    # 2) Topic checklist for complete coverage\n    print("Topic checklist:")\n    for topic in topics:\n        print(f"- {topic}")\n\n    # 3) Java parity markers to confirm aligned intent\n    print("Parity checkpoints from Java sample:")\n    for line in java_signals:\n        print(f"* {line}")\n\n    print("Python parity sample completed.")\n\nif __name__ == \"__main__\":\n    run_module_demo()\n`;
+}
+
+function buildJavascriptMirrorSnippet(module, javaSource) {
+    const title = escapeForQuotedString(module?.title || 'Module');
+    const description = escapeForQuotedString(module?.description || '');
+    const topics = (module?.topics || []).slice(0, 6).map((topic) => escapeForQuotedString(topic));
+    const signals = extractJavaSignalLines(javaSource).map((line) => escapeForQuotedString(line));
+    return `// JavaScript mirror of the updated Java module sample.\n// This preserves the same instructional checkpoints and visible output.\n(function runModuleDemo() {\n    const moduleTitle = "${title}";\n    const moduleDescription = "${description}";\n    const topics = [${topics.map((t) => `"${t}"`).join(', ') || '"No topics listed"'}];\n    const javaSignals = [${signals.map((s) => `"${s}"`).join(', ') || '"Java sample executed"'}];\n\n    // 1) High-level module context\n    console.log("Running module: " + moduleTitle);\n    console.log(moduleDescription);\n\n    // 2) Topic checklist for complete conceptual coverage\n    console.log("Topic checklist:");\n    topics.forEach((topic) => console.log("- " + topic));\n\n    // 3) Java parity markers to align with the canonical Java sample\n    console.log("Parity checkpoints from Java sample:");\n    javaSignals.forEach((line) => console.log("* " + line));\n\n    console.log("JavaScript parity sample completed.");\n})();\n`;
+}
+
+function buildMirrorSnippetByLanguage(module, javaSource, language) {
+    if (language === 'cpp') return buildCppMirrorSnippet(module, javaSource);
+    if (language === 'python') return buildPythonMirrorSnippet(module, javaSource);
+    if (language === 'javascript') return buildJavascriptMirrorSnippet(module, javaSource);
+    return '';
+}
+
+function buildModuleDefinitions(module, language = 'en') {
+    const lang = language === 'es' ? 'es' : 'en';
+    const title = String(module?.title || (lang === 'es' ? 'este modulo' : 'this module'));
+    const topics = Array.isArray(module?.topics) ? module.topics.filter(Boolean) : [];
+    const terms = [];
+    topics.forEach((topic) => {
+        if (!terms.includes(topic)) terms.push(topic);
+    });
+    MODULE_DEFINITION_FALLBACK_TERMS[lang].forEach((term) => {
+        if (!terms.includes(term)) terms.push(term);
+    });
+    return terms.slice(0, 5).map((term) => {
+        if (lang === 'es') {
+            return {
+                term,
+                definition: `${term} es un concepto esencial en ${title}; dominelo para razonar mejor sobre implementacion y correccion.`
+            };
+        }
+        return {
+            term,
+            definition: `${term} is a core concept in ${title}; master it to reason clearly about implementation and correctness.`
+        };
+    });
+}
+
+function normalizeModuleCatalog(moduleList) {
+    moduleList.forEach((module) => {
+        const existingCodeExamples = module.codeExamples && typeof module.codeExamples === 'object'
+            ? { ...module.codeExamples }
+            : {};
+        const isAssembly = MODULE_CATEGORY_BY_ID[module.id] === 'assembly';
+
+        let javaSource = '';
+        if (module.id === 'git-basics-workflow') {
+            javaSource = buildGitJavaSnippet();
+        } else if (typeof existingCodeExamples.java === 'string' && existingCodeExamples.java.trim()) {
+            javaSource = existingCodeExamples.java;
+        } else if (typeof module.codeExample === 'string' && isLikelyJavaSnippet(module.codeExample)) {
+            javaSource = module.codeExample;
+        } else {
+            javaSource = buildFallbackJavaSnippet(module);
+        }
+
+        const enhancedJava = ensureJavaSnippetHasVisibleOutput(module, addComprehensiveHeaderComments(module, javaSource));
+        const normalizedCodeExamples = { java: enhancedJava };
+        ['cpp', 'python', 'javascript'].forEach((language) => {
+            const existing = typeof existingCodeExamples[language] === 'string' ? existingCodeExamples[language].trim() : '';
+            const resolved = hasVisibleOutputForLanguage(language, existing)
+                ? existing
+                : buildMirrorSnippetByLanguage(module, enhancedJava, language);
+            normalizedCodeExamples[language] = resolved;
+        });
+
+        if (isAssembly) {
+            const assemblySource = typeof existingCodeExamples.assembly === 'string' && existingCodeExamples.assembly.trim()
+                ? existingCodeExamples.assembly
+                : (typeof module.codeExample === 'string' ? module.codeExample : '; Assembly sample unavailable');
+            normalizedCodeExamples.assembly = assemblySource;
+            module.codeExamples = {
+                assembly: normalizedCodeExamples.assembly,
+                java: normalizedCodeExamples.java,
+                cpp: normalizedCodeExamples.cpp,
+                python: normalizedCodeExamples.python,
+                javascript: normalizedCodeExamples.javascript
+            };
+        } else {
+            module.codeExamples = {
+                java: normalizedCodeExamples.java,
+                cpp: normalizedCodeExamples.cpp,
+                python: normalizedCodeExamples.python,
+                javascript: normalizedCodeExamples.javascript
+            };
+        }
+
+        module.definitions = buildModuleDefinitions(module, 'en');
+    });
+}
+
+normalizeModuleCatalog(modules);
+
 const flashcardDecks = generateFlashcardDecks(modules, baseFlashcards);
 
 const dailyChallenges = [
@@ -4080,6 +5177,123 @@ const studyTips = [
     'Refresh the Study Tip when you finish a module to keep motivation high.'
 ];
 
+function getLocalizedModule(module) {
+    if (!module) return module;
+    const localized = localizeEntity('modules', module.id, null);
+    const language = appState.language === 'es' ? 'es' : 'en';
+    if (!localized) {
+        return {
+            ...module,
+            definitions: Array.isArray(module.definitions) && module.definitions.length === 5
+                ? module.definitions
+                : buildModuleDefinitions(module, language)
+        };
+    }
+    const localizedDefinitions = Array.isArray(localized.definitions) && localized.definitions.length
+        ? localized.definitions.slice(0, 5)
+        : buildModuleDefinitions({
+            ...module,
+            title: localized.title || module.title,
+            topics: localized.topics || module.topics
+        }, language);
+    return {
+        ...module,
+        ...localized,
+        topics: localized.topics || module.topics,
+        resources: localized.resources || module.resources,
+        definitions: localizedDefinitions
+    };
+}
+
+function getLocalizedModules() {
+    return modules.map(getLocalizedModule);
+}
+
+function getLocalizedQuizData(moduleId) {
+    const fallback = quizData[moduleId];
+    if (!fallback) return fallback;
+    return localizeEntity('quizData', moduleId, fallback);
+}
+
+function getLocalizedGlossaryTerms() {
+    return glossaryTerms.map((term, index) => {
+        const localized = localizeEntity('glossary', String(index), null);
+        const merged = localized ? { ...term, ...localized } : { ...term };
+        return {
+            ...merged,
+            categoryKey: term.category,
+            categoryLabel: localized?.category || term.category
+        };
+    });
+}
+
+function getLocalizedChallenge(challenge) {
+    if (!challenge) return challenge;
+    const localized = localizeEntity('dailyChallenges', challenge.id, null);
+    return localized ? { ...challenge, ...localized } : challenge;
+}
+
+function getLocalizedStudyTips() {
+    return studyTips.map((tip, index) => localizeEntity('studyTips', String(index), tip) || tip);
+}
+
+function getLocalizedInterviewExamples() {
+    return INTERVIEW_EXAMPLES.map((example) => {
+        const localized = localizeEntity('interviewExamples', example.id, null);
+        return localized ? { ...example, ...localized } : example;
+    });
+}
+
+function getLocalizedNotesLibrary() {
+    return NOTES_LIBRARY.map((note) => {
+        const localized = localizeEntity('notesLibrary', note.id, null);
+        const merged = localized ? { ...note, ...localized } : { ...note };
+        return {
+            ...merged,
+            categoryKey: note.category,
+            categoryLabel: localized?.category || note.category
+        };
+    });
+}
+
+function translateCodeHumanText(code) {
+    if (appState.language !== 'es' || typeof code !== 'string') return code;
+    return code.split('\n').map((line) => {
+        let nextLine = line;
+        const trimmed = line.trim();
+        const isCppDirective = /^#\s*(include|define|if|ifdef|ifndef|endif|pragma|import)\b/i.test(trimmed);
+
+        const slashCommentIdx = nextLine.indexOf('//');
+        if (slashCommentIdx >= 0) {
+            const head = nextLine.slice(0, slashCommentIdx + 2);
+            const body = nextLine.slice(slashCommentIdx + 2).trim();
+            const translated = translateLiteral(body, 'es');
+            nextLine = translated === body ? nextLine : `${head} ${translated}`;
+        } else if (!isCppDirective) {
+            const hashCommentIdx = nextLine.indexOf('#');
+            if (hashCommentIdx >= 0) {
+                const head = nextLine.slice(0, hashCommentIdx + 1);
+                const body = nextLine.slice(hashCommentIdx + 1).trim();
+                const translated = translateLiteral(body, 'es');
+                nextLine = translated === body ? nextLine : `${head} ${translated}`;
+            }
+        }
+
+        nextLine = nextLine.replace(/"([^"\\]*(?:\\.[^"\\]*)*)"|'([^'\\]*(?:\\.[^'\\]*)*)'/g, (match, g1, g2) => {
+            const source = (g1 || g2 || '').trim();
+            if (!source || /^https?:\/\//i.test(source)) return match;
+            if (!/[A-Za-z]/.test(source)) return match;
+            if (!/\s/.test(source) && source.length <= 2) return match;
+            const translated = translateLiteral(source, 'es');
+            if (!translated || translated === source) return match;
+            const quote = match[0];
+            return `${quote}${translated}${quote}`;
+        });
+
+        return nextLine;
+    }).join('\n');
+}
+
 function generateFlashcardDecks(modulesData, generalCards = []) {
     const decks = {};
 
@@ -4100,7 +5314,7 @@ function generateFlashcardDecks(modulesData, generalCards = []) {
         if (explanation) {
             cards.push({
                 moduleId: module.id,
-                question: `Why is ${module.title} important for your Java DSA journey?`,
+                question: `Why is ${module.title} important for your CS learning journey?`,
                 answer: explanation
             });
         }
@@ -4238,42 +5452,46 @@ function ensureDailyChallenge(force = false) {
 function renderDailyChallenge(force = false) {
     const challenge = ensureDailyChallenge(force);
     if (!challenge) return;
+    const localizedChallenge = getLocalizedChallenge(challenge);
 
     const titleEl = document.getElementById('daily-challenge-title');
     const descEl = document.getElementById('daily-challenge-description');
     const stepsEl = document.getElementById('daily-challenge-steps');
     const hintEl = document.getElementById('daily-challenge-hint');
 
-    if (titleEl) titleEl.textContent = challenge.title;
-    if (descEl) descEl.textContent = challenge.description;
+    if (titleEl) titleEl.textContent = localizedChallenge.title;
+    if (descEl) descEl.textContent = localizedChallenge.description;
     if (stepsEl) {
-        stepsEl.innerHTML = (challenge.steps || []).map(step => `<li>${step}</li>`).join('');
+        stepsEl.innerHTML = (localizedChallenge.steps || []).map(step => `<li>${step}</li>`).join('');
     }
     if (hintEl) {
         const module = modules.find(m => m.id === challenge.moduleId);
-        hintEl.textContent = module ? `Focus module: ${module.title}` : '';
+        const localizedModule = getLocalizedModule(module);
+        hintEl.textContent = module ? `${translateLiteral('Focus module:', appState.language)} ${localizedModule.title}` : '';
     }
 }
 
 function chooseRandomStudyTip(excludeId = null) {
-    if (!studyTips.length) return null;
-    const pool = excludeId !== null ? studyTips.filter((tip, idx) => `${idx}` !== excludeId) : studyTips;
-    const source = pool.length ? pool : studyTips;
+    const localizedStudyTips = getLocalizedStudyTips();
+    if (!localizedStudyTips.length) return null;
+    const pool = excludeId !== null ? localizedStudyTips.filter((tip, idx) => `${idx}` !== excludeId) : localizedStudyTips;
+    const source = pool.length ? pool : localizedStudyTips;
     const index = Math.floor(Math.random() * source.length);
     const tipText = source[index];
-    const absoluteIndex = studyTips.indexOf(tipText);
+    const absoluteIndex = localizedStudyTips.indexOf(tipText);
     return { text: tipText, id: `${absoluteIndex}` };
 }
 
 function ensureStudyTip(force = false) {
-    if (!studyTips.length) return null;
-    if (!force && appState.studyTipId !== null && studyTips[Number(appState.studyTipId)] !== undefined) {
+    const localizedStudyTips = getLocalizedStudyTips();
+    if (!localizedStudyTips.length) return null;
+    if (!force && appState.studyTipId !== null && localizedStudyTips[Number(appState.studyTipId)] !== undefined) {
         return {
-            text: studyTips[Number(appState.studyTipId)],
+            text: localizedStudyTips[Number(appState.studyTipId)],
             id: appState.studyTipId
         };
     }
-    const tip = chooseRandomStudyTip(force ? appState.studyTipId : null) || { text: studyTips[0], id: '0' };
+    const tip = chooseRandomStudyTip(force ? appState.studyTipId : null) || { text: localizedStudyTips[0], id: '0' };
     appState.studyTipId = tip.id;
     saveToLocalStorage();
     return tip;
@@ -4319,6 +5537,7 @@ function saveToLocalStorage() {
         moduleModes: Array.from(appState.moduleModes.entries()),
         searchTerm: appState.searchTerm,
         difficultyFilter: appState.difficultyFilter,
+        categoryFilter: appState.categoryFilter,
         glossaryCategory: appState.glossaryCategory,
         currentFlashcard: appState.currentFlashcard,
         selectedFlashcardModule: appState.selectedFlashcardModule,
@@ -4339,6 +5558,60 @@ function saveToLocalStorage() {
     safeSetItem('javaDSAHub', JSON.stringify(stateToSave));
 }
 
+function getCanonicalModuleId(moduleId) {
+    return LEGACY_MODULE_ID_MAP[moduleId] || moduleId;
+}
+
+function getValidModuleIdSet() {
+    return new Set(modules.map(module => module.id));
+}
+
+function remapStoredModuleIds(ids = []) {
+    const validIds = getValidModuleIdSet();
+    const remapped = [];
+    for (const rawId of ids) {
+        const canonicalId = getCanonicalModuleId(rawId);
+        if (validIds.has(canonicalId)) {
+            remapped.push(canonicalId);
+        }
+    }
+    return remapped;
+}
+
+function remapStoredModuleEntryPairs(entries = [], options = {}) {
+    const { allowLegacy = true } = options;
+    const validIds = getValidModuleIdSet();
+    const remapped = [];
+    for (const entry of entries) {
+        if (!Array.isArray(entry) || entry.length < 2) continue;
+        const rawId = entry[0];
+        const canonicalId = allowLegacy ? getCanonicalModuleId(rawId) : rawId;
+        if (!validIds.has(canonicalId)) continue;
+        remapped.push([canonicalId, entry[1]]);
+    }
+    return remapped;
+}
+
+function sanitizeStoredModuleModes(modeMap) {
+    if (!(modeMap instanceof Map)) {
+        return new Map();
+    }
+    for (const [moduleId, mode] of modeMap.entries()) {
+        const availableModes = getAvailableModeKeys(moduleId);
+        if (!availableModes.includes(mode)) {
+            const defaultMode = isDiscreteModule(moduleId) ? 'discreteTheory' : 'code';
+            modeMap.set(moduleId, defaultMode);
+        }
+    }
+    return modeMap;
+}
+
+function sanitizeCategoryFilter(category) {
+    const migrated = category === 'systems' ? 'java' : category;
+    const valid = new Set(['all', 'dsa', 'discrete', 'java', 'git', 'assembly']);
+    return valid.has(migrated) ? migrated : 'all';
+}
+
 function loadFromLocalStorage() {
     const saved = safeGetItem('javaDSAHub');
     const prefersReduced = typeof window !== 'undefined'
@@ -4349,19 +5622,22 @@ function loadFromLocalStorage() {
             const state = JSON.parse(saved);
             appState.darkMode = state.darkMode !== undefined ? state.darkMode : true;
             appState.showComments = state.showComments !== undefined ? state.showComments : true;
-            appState.completedModules = new Set(state.completedModules || []);
+            appState.completedModules = new Set(remapStoredModuleIds(state.completedModules || []));
             appState.expandedCode = new Set(state.expandedCode || []);
-            appState.moduleComments = new Map(state.moduleComments || []);
-            appState.moduleLanguages = new Map(state.moduleLanguages || []);
-            appState.moduleModes = new Map(state.moduleModes || []);
+            appState.moduleComments = new Map(remapStoredModuleEntryPairs(state.moduleComments || []));
+            appState.moduleLanguages = new Map(remapStoredModuleEntryPairs(state.moduleLanguages || []));
+            appState.moduleModes = sanitizeStoredModuleModes(
+                new Map(remapStoredModuleEntryPairs(state.moduleModes || [], { allowLegacy: false }))
+            );
             appState.searchTerm = state.searchTerm || '';
             appState.difficultyFilter = state.difficultyFilter || 'all';
+            appState.categoryFilter = sanitizeCategoryFilter(state.categoryFilter || 'all');
             appState.glossaryCategory = state.glossaryCategory || 'all';
             appState.currentFlashcard = state.currentFlashcard || 0;
             appState.selectedFlashcardModule = state.selectedFlashcardModule || 'all';
             appState.theme = state.theme || 'default';
             appState.fontScale = state.fontScale || 'base';
-            appState.completedQuizzes = new Set(state.completedQuizzes || []);
+            appState.completedQuizzes = new Set(remapStoredModuleIds(state.completedQuizzes || []));
             appState.dailyChallengeId = state.dailyChallengeId || null;
             appState.dailyChallengeDate = state.dailyChallengeDate || null;
             appState.studyTipId = state.studyTipId || null;
@@ -4373,6 +5649,13 @@ function loadFromLocalStorage() {
             appState.accent = ACCENT_OPTIONS.includes(state.accent) ? state.accent : 'indigo';
             appState.cardDepth = CARD_DEPTH_OPTIONS.includes(state.cardDepth) ? state.cardDepth : 'standard';
             appState.language = ['en', 'es'].includes(state.language) ? state.language : 'en';
+
+            // Keep assembly modules defaulting to Assembly unless explicitly set to Assembly.
+            ['assembly-registers-memory', 'assembly-control-flow-procedures', 'assembly-arrays-strings-io'].forEach((moduleId) => {
+                if (appState.moduleLanguages.get(moduleId) !== 'assembly') {
+                    appState.moduleLanguages.delete(moduleId);
+                }
+            });
         } catch (e) {
             console.error('Failed to load saved state:', e);
         }
@@ -4641,21 +5924,50 @@ let playgroundState = {
     baseCode: '',
     isCustom: false
 };
+const accountAuthState = {
+    mode: 'login',
+    inFlight: false,
+    isAuthenticated: false,
+    sessionLabel: ''
+};
+const LOCAL_EXAMPLE_AUTH = {
+    username: 'example',
+    password: 'example',
+    userId: 'example-local'
+};
+
+function getDefaultAccountProfile() {
+    return {
+        name: '',
+        email: '',
+        goal: 'exploring',
+        serverUserId: '',
+        lastSyncAt: null,
+        lastSyncStatus: 'idle',
+        lastSyncMessage: 'Sync idle.'
+    };
+}
 
 function loadAccountProfile() {
+    const defaults = getDefaultAccountProfile();
     const stored = safeGetItem(STORAGE_KEYS.ACCOUNT);
     if (!stored) {
-        return { name: '', email: '', goal: 'exploring' };
+        return { ...defaults };
     }
     try {
         const parsed = JSON.parse(stored);
         return {
+            ...defaults,
             name: parsed.name || '',
             email: parsed.email || '',
-            goal: parsed.goal || 'exploring'
+            goal: parsed.goal || 'exploring',
+            serverUserId: parsed.serverUserId || parsed.neonSessionUserId || parsed.neonUserId || '',
+            lastSyncAt: parsed.lastSyncAt || null,
+            lastSyncStatus: parsed.lastSyncStatus || defaults.lastSyncStatus,
+            lastSyncMessage: parsed.lastSyncMessage || defaults.lastSyncMessage
         };
     } catch (error) {
-        return { name: '', email: '', goal: 'exploring' };
+        return { ...defaults };
     }
 }
 
@@ -4676,16 +5988,564 @@ function updateAccountChip() {
     }
 }
 
-function openAccountModal() {
-    const modal = document.getElementById('account-modal');
-    if (!modal) return;
+function setAccountSyncUI(statusText, metaText, tone = 'neutral') {
+    const statusEl = document.getElementById('account-sync-status');
+    const metaEl = document.getElementById('account-sync-meta');
+    if (statusEl) {
+        statusEl.textContent = statusText;
+        statusEl.className = 'text-xs font-semibold px-2.5 py-1 rounded-full border';
+        const toneClassMap = {
+            success: 'bg-emerald-500/20 border-emerald-300/40 text-emerald-100',
+            error: 'bg-rose-500/20 border-rose-300/40 text-rose-100',
+            info: 'bg-sky-500/20 border-sky-300/40 text-sky-100',
+            neutral: 'bg-slate-800 border-white/10 text-slate-200'
+        };
+        statusEl.classList.add(...(toneClassMap[tone] || toneClassMap.neutral).split(' '));
+    }
+    if (metaEl) {
+        metaEl.textContent = metaText;
+    }
+}
+
+function setAccountSyncState(status, message) {
+    accountProfile.lastSyncStatus = status;
+    accountProfile.lastSyncMessage = message;
+    accountProfile.lastSyncAt = new Date().toISOString();
+    saveAccountProfile();
+    const tone = status === 'connected' || status === 'synced'
+        ? 'success'
+        : status === 'error'
+            ? 'error'
+            : status === 'connecting'
+                ? 'info'
+                : 'neutral';
+    setAccountSyncUI(status, message, tone);
+}
+
+function getCsrfToken() {
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    const token = meta ? meta.getAttribute('content') : '';
+    return String(token || '').trim();
+}
+
+function setAccountAuthStatus(message, tone = 'neutral') {
+    const statusEl = document.getElementById('account-auth-status');
+    if (!statusEl) return;
+    statusEl.className = 'text-xs';
+    const toneClassMap = {
+        success: 'text-emerald-300',
+        error: 'text-rose-300',
+        info: 'text-sky-300',
+        neutral: 'text-slate-300'
+    };
+    statusEl.classList.add(...(toneClassMap[tone] || toneClassMap.neutral).split(' '));
+    statusEl.textContent = message;
+}
+
+function getAccountPrimaryAuthLabel() {
+    if (accountAuthState.mode === 'signup') {
+        return 'Create Account';
+    }
+    return accountAuthState.isAuthenticated ? 'Log Out' : 'Log In';
+}
+
+function refreshAccountPrimaryAuthButton() {
+    const submitBtn = document.getElementById('account-auth-submit');
+    if (!submitBtn) return;
+    submitBtn.textContent = getAccountPrimaryAuthLabel();
+}
+
+function isLocalExampleCredentials(email, password) {
+    return String(email || '').trim().toLowerCase() === LOCAL_EXAMPLE_AUTH.username
+        && String(password || '') === LOCAL_EXAMPLE_AUTH.password;
+}
+
+function isLocalExampleSession() {
+    return String(accountProfile.serverUserId || '').trim() === LOCAL_EXAMPLE_AUTH.userId
+        && String(accountProfile.email || '').trim().toLowerCase() === LOCAL_EXAMPLE_AUTH.username;
+}
+
+function isNetworkAuthFailure(error) {
+    const message = String(error instanceof Error ? error.message : error || '').toLowerCase();
+    return message.includes('failed to fetch')
+        || message.includes('load failed')
+        || message.includes('networkerror')
+        || message.includes('network request failed');
+}
+
+function applyLocalExampleAuth() {
+    accountAuthState.isAuthenticated = true;
+    accountAuthState.sessionLabel = LOCAL_EXAMPLE_AUTH.username;
+    accountProfile.email = LOCAL_EXAMPLE_AUTH.username;
+    accountProfile.serverUserId = LOCAL_EXAMPLE_AUTH.userId;
+    if (!accountProfile.name) {
+        accountProfile.name = 'Example User';
+    }
+    saveAccountProfile();
+    applyAccountProfileToForm();
+    updateAccountChip();
+    clearAuthPasswordFields();
+    setAccountAuthStatus(`Authenticated as ${LOCAL_EXAMPLE_AUTH.username}`, 'success');
+    refreshAccountPrimaryAuthButton();
+}
+
+function setAccountAuthMode(mode) {
+    const nextMode = mode === 'signup' ? 'signup' : 'login';
+    accountAuthState.mode = nextMode;
+
+    const loginTab = document.getElementById('account-auth-login-tab');
+    const signupTab = document.getElementById('account-auth-signup-tab');
+    const confirmGroup = document.getElementById('account-auth-confirm-group');
+    const submitBtn = document.getElementById('account-auth-submit');
+    const passwordInput = document.getElementById('account-auth-password');
+    const confirmInput = document.getElementById('account-auth-confirm');
+
+    const isSignup = nextMode === 'signup';
+
+    if (loginTab) {
+        loginTab.className = `px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 ${isSignup ? 'bg-transparent text-slate-300 hover:text-white' : 'bg-violet-500 text-white'}`;
+    }
+    if (signupTab) {
+        signupTab.className = `px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 ${isSignup ? 'bg-violet-500 text-white' : 'bg-transparent text-slate-300 hover:text-white'}`;
+    }
+
+    if (confirmGroup) {
+        confirmGroup.classList.toggle('hidden', !isSignup);
+    }
+    if (submitBtn) refreshAccountPrimaryAuthButton();
+    if (passwordInput) {
+        passwordInput.setAttribute('autocomplete', isSignup ? 'new-password' : 'current-password');
+    }
+    if (confirmInput && !isSignup) {
+        confirmInput.value = '';
+    }
+}
+
+function clearAuthPasswordFields() {
+    const passwordInput = document.getElementById('account-auth-password');
+    const confirmInput = document.getElementById('account-auth-confirm');
+    if (passwordInput) passwordInput.value = '';
+    if (confirmInput) confirmInput.value = '';
+}
+
+function setAuthSubmitBusy(isBusy) {
+    accountAuthState.inFlight = Boolean(isBusy);
+    const submitBtn = document.getElementById('account-auth-submit');
+    if (!submitBtn) return;
+    submitBtn.disabled = accountAuthState.inFlight;
+    submitBtn.classList.toggle('opacity-70', accountAuthState.inFlight);
+    submitBtn.classList.toggle('cursor-not-allowed', accountAuthState.inFlight);
+    if (accountAuthState.inFlight) {
+        if (accountAuthState.mode === 'signup') {
+            submitBtn.textContent = 'Creating Account...';
+        } else {
+            submitBtn.textContent = accountAuthState.isAuthenticated ? 'Logging Out...' : 'Logging In...';
+        }
+    } else {
+        refreshAccountPrimaryAuthButton();
+    }
+}
+
+function readAccountAuthForm() {
+    const emailInput = document.getElementById('account-auth-email');
+    const passwordInput = document.getElementById('account-auth-password');
+    const confirmInput = document.getElementById('account-auth-confirm');
+    return {
+        email: emailInput ? emailInput.value.trim() : '',
+        password: passwordInput ? passwordInput.value : '',
+        confirm: confirmInput ? confirmInput.value : ''
+    };
+}
+
+function buildApiEndpoint(path) {
+    const base = getConfiguredApiBaseUrl();
+    return `${base}${path}`;
+}
+
+function normalizeApiBaseUrl(rawUrl) {
+    return String(rawUrl || '').trim().replace(/\/+$/, '');
+}
+
+function isSecureApiBaseUrl(rawUrl) {
+    const base = normalizeApiBaseUrl(rawUrl);
+    if (!base) return true;
+    try {
+        const parsed = new URL(base);
+        if (parsed.protocol === 'https:') return true;
+        return parsed.protocol === 'http:' && ['localhost', '127.0.0.1'].includes(parsed.hostname);
+    } catch (error) {
+        return false;
+    }
+}
+
+function getConfiguredApiBaseUrl() {
+    const appConfigBase = (typeof window !== 'undefined' && window.__APP_CONFIG?.apiBaseUrl)
+        || (typeof window !== 'undefined' && window.APP_CONFIG?.apiBaseUrl)
+        || '';
+    return normalizeApiBaseUrl(PROFILE_SYNC_CONFIG.baseUrl || appConfigBase || '');
+}
+
+function getSessionUserFromPayload(payload) {
+    const user = payload?.user
+        || payload?.data?.user
+        || payload?.session?.user
+        || payload?.data?.session?.user
+        || null;
+    const userId = String(
+        user?.id
+        || user?.user_id
+        || payload?.userId
+        || payload?.data?.userId
+        || ''
+    ).trim();
+    const userEmail = String(
+        user?.email
+        || payload?.email
+        || payload?.data?.email
+        || ''
+    ).trim();
+    return { userId, userEmail };
+}
+
+function getNeonProfileEndpoint() {
+    return buildApiEndpoint(NEON_API_PATHS.profile);
+}
+
+function getNeonSessionEndpoint() {
+    return buildApiEndpoint(NEON_API_PATHS.session);
+}
+
+function hasNeonSyncConfig() {
+    return PROFILE_SYNC_CONFIG.enabled
+        && isSecureApiBaseUrl(getConfiguredApiBaseUrl());
+}
+
+async function neonFetch(url, options = {}) {
+    const method = String(options.method || 'GET').toUpperCase();
+    const headers = {
+        'X-Requested-With': 'XMLHttpRequest',
+        ...(options.headers || {})
+    };
+    if (!headers['Content-Type'] && !(options.body instanceof FormData)) {
+        headers['Content-Type'] = 'application/json';
+    }
+    if (!['GET', 'HEAD', 'OPTIONS'].includes(method)) {
+        const csrfToken = getCsrfToken();
+        if (csrfToken && !headers['X-CSRF-Token']) {
+            headers['X-CSRF-Token'] = csrfToken;
+        }
+    }
+    const response = await fetch(url, {
+        ...options,
+        method,
+        credentials: 'include',
+        headers
+    });
+    const rawText = await response.text();
+    let payload = null;
+    try {
+        payload = rawText ? JSON.parse(rawText) : null;
+    } catch (error) {
+        payload = rawText;
+    }
+    if (!response.ok) {
+        const detail = typeof payload === 'string'
+            ? payload
+            : payload?.error || payload?.message || `HTTP ${response.status}`;
+        throw new Error(detail);
+    }
+    return payload;
+}
+
+function applyAccountProfileToForm() {
     const nameInput = document.getElementById('account-name');
     const emailInput = document.getElementById('account-email');
     const goalInput = document.getElementById('account-goal');
+    const authEmailInput = document.getElementById('account-auth-email');
+
     if (nameInput) nameInput.value = accountProfile.name || '';
     if (emailInput) emailInput.value = accountProfile.email || '';
     if (goalInput) goalInput.value = accountProfile.goal || 'exploring';
+    if (authEmailInput) authEmailInput.value = accountProfile.email || '';
+}
+
+function readAccountProfileFromForm() {
+    const nameInput = document.getElementById('account-name');
+    const emailInput = document.getElementById('account-email');
+    const goalInput = document.getElementById('account-goal');
+    return {
+        ...accountProfile,
+        name: nameInput ? nameInput.value.trim() : '',
+        email: emailInput ? emailInput.value.trim() : '',
+        goal: goalInput ? goalInput.value : 'exploring'
+    };
+}
+
+async function checkNeonSession(options = {}) {
+    const { silent = false } = options;
+    if (isLocalExampleSession()) {
+        accountAuthState.isAuthenticated = true;
+        accountAuthState.sessionLabel = LOCAL_EXAMPLE_AUTH.username;
+        setAccountAuthStatus(`Authenticated as ${LOCAL_EXAMPLE_AUTH.username}`, 'success');
+        refreshAccountPrimaryAuthButton();
+        return { userId: LOCAL_EXAMPLE_AUTH.userId, userLabel: LOCAL_EXAMPLE_AUTH.username };
+    }
+    if (!hasNeonSyncConfig()) {
+        accountAuthState.isAuthenticated = false;
+        accountAuthState.sessionLabel = '';
+        setAccountAuthStatus('Auth server not configured.', 'neutral');
+        refreshAccountPrimaryAuthButton();
+        return null;
+    }
+    const url = getNeonSessionEndpoint();
+    try {
+        const sessionPayload = await neonFetch(url, { method: 'GET' });
+        const { userId, userEmail } = getSessionUserFromPayload(sessionPayload);
+        if (userId) {
+            accountProfile.serverUserId = userId;
+            saveAccountProfile();
+        }
+        const userLabel = userEmail || userId || accountProfile.serverUserId;
+        const message = userLabel
+            ? `Session active for ${userLabel}`
+            : 'Session endpoint reachable.';
+        accountAuthState.isAuthenticated = Boolean(userId || userEmail);
+        accountAuthState.sessionLabel = userLabel;
+        setAccountAuthStatus(
+            accountAuthState.isAuthenticated ? `Authenticated as ${userLabel}` : 'Session detected. Sign in to continue.',
+            accountAuthState.isAuthenticated ? 'success' : 'info'
+        );
+        refreshAccountPrimaryAuthButton();
+        setAccountSyncState('connected', message);
+        return { userId: userId || accountProfile.serverUserId, userLabel };
+    } catch (error) {
+        accountAuthState.isAuthenticated = false;
+        accountAuthState.sessionLabel = '';
+        setAccountAuthStatus(`Not authenticated: ${error.message}`, 'error');
+        refreshAccountPrimaryAuthButton();
+        setAccountSyncState('error', `Session check failed: ${error.message}`);
+        if (!silent) {
+            showToast(`Session check failed: ${error.message}`, 'error');
+        }
+        return null;
+    }
+}
+
+async function signOutAccountFlow(options = {}) {
+    const { silent = false } = options;
+    await logoutAccountSession();
+    accountAuthState.isAuthenticated = false;
+    accountAuthState.sessionLabel = '';
+    setAccountAuthStatus('Signed out.', 'neutral');
+    clearAuthPasswordFields();
+    accountProfile = {
+        ...getDefaultAccountProfile()
+    };
+    saveAccountProfile();
+    applyAccountProfileToForm();
+    updateAccountChip();
+    refreshAccountPrimaryAuthButton();
+    if (!silent) {
+        showToast('Signed out successfully.', 'success');
+    }
+}
+
+async function submitAccountAuth() {
+    if (accountAuthState.inFlight) return;
+    const isSignup = accountAuthState.mode === 'signup';
+    if (!isSignup && accountAuthState.isAuthenticated) {
+        setAuthSubmitBusy(true);
+        try {
+            await signOutAccountFlow();
+        } finally {
+            setAuthSubmitBusy(false);
+        }
+        return;
+    }
+
+    const { email, password, confirm } = readAccountAuthForm();
+    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || /^[a-zA-Z0-9._-]{3,}$/.test(email);
+    if (!emailValid) {
+        setAccountAuthStatus('Enter a valid email or username.', 'error');
+        showToast('Enter a valid email or username.', 'warning');
+        return;
+    }
+    if (!password) {
+        setAccountAuthStatus('Enter your password.', 'error');
+        showToast('Enter your password.', 'warning');
+        return;
+    }
+    if (isSignup && password.length < 8) {
+        setAccountAuthStatus('Password must be at least 8 characters.', 'error');
+        showToast('Password must be at least 8 characters.', 'warning');
+        return;
+    }
+    if (isSignup && password !== confirm) {
+        setAccountAuthStatus('Passwords do not match.', 'error');
+        showToast('Passwords do not match.', 'warning');
+        return;
+    }
+
+    if (!hasNeonSyncConfig()) {
+        if (!isSignup && isLocalExampleCredentials(email, password)) {
+            applyLocalExampleAuth();
+            showToast('Signed in successfully.', 'success');
+            return;
+        }
+        setAccountAuthStatus('Auth server is not available.', 'error');
+        showToast('Auth server is not available.', 'warning');
+        return;
+    }
+
+    const endpoint = buildApiEndpoint(isSignup ? NEON_API_PATHS.signup : NEON_API_PATHS.login);
+    const payload = { email, password };
+    if (isSignup) {
+        payload.confirmPassword = confirm;
+    }
+
+    setAuthSubmitBusy(true);
+    setAccountAuthStatus(isSignup ? 'Creating account...' : 'Logging in...', 'info');
+    try {
+        await neonFetch(endpoint, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+        });
+        clearAuthPasswordFields();
+        accountProfile.email = email;
+        saveAccountProfile();
+        applyAccountProfileToForm();
+        const session = await checkNeonSession({ silent: true });
+        if (session?.userId && PROFILE_SYNC_CONFIG.enabled) {
+            await pullProfileFromNeon({ silent: true });
+        }
+        const successText = isSignup ? 'Account created and signed in successfully.' : 'Signed in successfully.';
+        setAccountAuthStatus(successText, 'success');
+        showToast(successText, 'success');
+        updateAccountChip();
+        refreshAccountPrimaryAuthButton();
+        if (isSignup) {
+            setAccountAuthMode('login');
+        }
+    } catch (error) {
+        if (!isSignup && isLocalExampleCredentials(email, password) && isNetworkAuthFailure(error)) {
+            applyLocalExampleAuth();
+            showToast('Signed in successfully.', 'success');
+            return;
+        }
+        const reason = error instanceof Error ? error.message : String(error);
+        setAccountAuthStatus(`Auth failed: ${reason}`, 'error');
+        showToast(`Authentication failed: ${reason}`, 'error');
+    } finally {
+        setAuthSubmitBusy(false);
+    }
+}
+
+async function logoutAccountSession() {
+    if (!hasNeonSyncConfig()) return;
+    try {
+        await neonFetch(buildApiEndpoint(NEON_API_PATHS.logout), { method: 'POST' });
+    } catch (error) {
+        // Keep local sign-out resilient even if backend logout is temporarily unavailable.
+    }
+}
+
+async function pushProfileToNeon(options = {}) {
+    const { silent = false } = options;
+    if (!hasNeonSyncConfig()) {
+        return false;
+    }
+    const url = getNeonProfileEndpoint();
+    let userId = String(accountProfile.serverUserId || '').trim();
+    if (!userId) {
+        const session = await checkNeonSession({ silent: true });
+        userId = String(session?.userId || accountProfile.serverUserId || '').trim();
+    }
+    if (!userId) {
+        if (!silent) {
+            showToast('No authenticated user session found for profile sync.', 'warning');
+        }
+        return false;
+    }
+    try {
+        await neonFetch(url, {
+            method: 'POST',
+            body: JSON.stringify({
+                userId,
+                profile: {
+                    name: accountProfile.name,
+                    email: accountProfile.email,
+                    goal: accountProfile.goal
+                }
+            })
+        });
+        setAccountSyncState('synced', `Profile synced at ${new Date().toLocaleString()}`);
+        if (!silent) {
+            showToast('Profile synced to backend.', 'success');
+        }
+        return true;
+    } catch (error) {
+        setAccountSyncState('error', `Push failed: ${error.message}`);
+        if (!silent) {
+            showToast(`Failed to sync profile: ${error.message}`, 'error');
+        }
+        return false;
+    }
+}
+
+async function pullProfileFromNeon(options = {}) {
+    const { silent = false } = options;
+    if (!hasNeonSyncConfig()) {
+        return false;
+    }
+    const baseUrl = getNeonProfileEndpoint();
+    let userId = String(accountProfile.serverUserId || '').trim();
+    if (!userId) {
+        const session = await checkNeonSession({ silent: true });
+        userId = String(session?.userId || accountProfile.serverUserId || '').trim();
+    }
+    if (!userId) {
+        return false;
+    }
+    const url = `${baseUrl}?userId=${encodeURIComponent(userId)}`;
+    try {
+        const payload = await neonFetch(url, { method: 'GET' });
+        const remoteProfile = payload?.profile || payload?.data?.profile || payload?.data || payload;
+        if (remoteProfile && typeof remoteProfile === 'object') {
+            accountProfile.name = String(remoteProfile.name || accountProfile.name || '');
+            accountProfile.email = String(remoteProfile.email || accountProfile.email || '');
+            accountProfile.goal = String(remoteProfile.goal || accountProfile.goal || 'exploring');
+            saveAccountProfile();
+            applyAccountProfileToForm();
+            updateAccountChip();
+        }
+        setAccountSyncState('synced', `Profile pulled at ${new Date().toLocaleString()}`);
+        if (!silent) {
+            showToast('Profile pulled from backend.', 'success');
+        }
+        return true;
+    } catch (error) {
+        setAccountSyncState('error', `Pull failed: ${error.message}`);
+        if (!silent) {
+            showToast(`Failed to pull profile: ${error.message}`, 'error');
+        }
+        return false;
+    }
+}
+
+function openAccountModal() {
+    const modal = document.getElementById('account-modal');
+    if (!modal) return;
+    applyAccountProfileToForm();
+    setAccountAuthMode(accountAuthState.mode);
+    clearAuthPasswordFields();
+    setAccountAuthStatus('Checking session...', 'info');
     openModal('account-modal');
+    if (PROFILE_SYNC_CONFIG.enabled) {
+        checkNeonSession({ silent: true });
+        if (PROFILE_SYNC_CONFIG.autoPullOnOpen) {
+            pullProfileFromNeon({ silent: true });
+        }
+    }
 }
 
 function closeAccountModal() {
@@ -4696,23 +6556,56 @@ function initAccount() {
     updateAccountChip();
     const closeBtn = document.getElementById('close-account');
     const saveBtn = document.getElementById('save-account');
+    const authLoginTab = document.getElementById('account-auth-login-tab');
+    const authSignupTab = document.getElementById('account-auth-signup-tab');
+    const authSubmitBtn = document.getElementById('account-auth-submit');
+    const authEmailInput = document.getElementById('account-auth-email');
+    const authPasswordInput = document.getElementById('account-auth-password');
+    const authConfirmInput = document.getElementById('account-auth-confirm');
+
     if (closeBtn) closeBtn.addEventListener('click', closeAccountModal);
-    if (saveBtn) {
-        saveBtn.addEventListener('click', () => {
-            const nameInput = document.getElementById('account-name');
-            const emailInput = document.getElementById('account-email');
-            const goalInput = document.getElementById('account-goal');
-            accountProfile = {
-                name: nameInput ? nameInput.value.trim() : '',
-                email: emailInput ? emailInput.value.trim() : '',
-                goal: goalInput ? goalInput.value : 'exploring'
-            };
-            saveAccountProfile();
-            updateAccountChip();
-            closeAccountModal();
-            showToast('Profile saved locally!', 'success');
+    if (authLoginTab) {
+        authLoginTab.addEventListener('click', () => setAccountAuthMode('login'));
+    }
+    if (authSignupTab) {
+        authSignupTab.addEventListener('click', () => setAccountAuthMode('signup'));
+    }
+    if (authSubmitBtn) {
+        authSubmitBtn.addEventListener('click', async () => {
+            if (authEmailInput && !authEmailInput.value.trim() && accountProfile.email) {
+                authEmailInput.value = accountProfile.email;
+            }
+            await submitAccountAuth();
         });
     }
+    const enterToSubmit = async (event) => {
+        if (event.key !== 'Enter') return;
+        event.preventDefault();
+        await submitAccountAuth();
+    };
+    if (authEmailInput) authEmailInput.addEventListener('keydown', enterToSubmit);
+    if (authPasswordInput) authPasswordInput.addEventListener('keydown', enterToSubmit);
+    if (authConfirmInput) authConfirmInput.addEventListener('keydown', enterToSubmit);
+
+    if (saveBtn) {
+        saveBtn.addEventListener('click', async () => {
+            accountProfile = readAccountProfileFromForm();
+            saveAccountProfile();
+            updateAccountChip();
+            let synced = false;
+            if (PROFILE_SYNC_CONFIG.enabled && PROFILE_SYNC_CONFIG.autoPushOnSave) {
+                synced = await pushProfileToNeon({ silent: true });
+            }
+            if (synced) {
+                showToast('Profile saved and synced successfully.', 'success');
+            } else {
+                showToast('Profile saved successfully.', 'success');
+            }
+        });
+    }
+    setAccountAuthMode('login');
+    setAccountAuthStatus('Not authenticated.', 'neutral');
+    refreshAccountPrimaryAuthButton();
 }
 
 function loadNotesDraft() {
@@ -4756,7 +6649,7 @@ function initNotes() {
                 showToast('Write a few notes first!', 'warning');
                 return;
             }
-            downloadTextFile('java-dsa-notes.txt', content);
+            downloadTextFile('cs-course-atlas-notes.txt', content);
         });
     }
     notesInput.addEventListener('input', () => {
@@ -4809,9 +6702,10 @@ function getStudyPlanSummary() {
 
     if (!studyPlanState?.pace || !studyPlanState?.focus || !studyPlanState?.style) {
         return {
-            label: 'Not configured',
-            pill: 'Set up',
-            note: 'Answer 3 quick questions to personalize pacing.'
+            status: 'inactive',
+            label: translateLiteral('Not configured', appState.language),
+            pill: translateLiteral('Set up', appState.language),
+            note: translateLiteral('Answer 3 quick questions to personalize pacing.', appState.language)
         };
     }
 
@@ -4820,9 +6714,10 @@ function getStudyPlanSummary() {
     const styleLabel = styleMap[studyPlanState.style] || 'Custom style';
 
     return {
-        label: paceLabel,
-        pill: 'Active',
-        note: `Focus: ${focusLabel} · Style: ${styleLabel}`
+        status: 'active',
+        label: translateLiteral(paceLabel, appState.language),
+        pill: translateLiteral('Active', appState.language),
+        note: translateLiteral(`Focus: ${focusLabel} · Style: ${styleLabel}`, appState.language)
     };
 }
 
@@ -4920,7 +6815,7 @@ function initNotesLibrary() {
         if (target.dataset.action === 'download') {
             openNotesDownloadModal(noteId);
         } else if (target.dataset.action === 'preview') {
-            const note = NOTES_LIBRARY.find(item => item.id === noteId);
+            const note = getLocalizedNotesLibrary().find(item => item.id === noteId);
             if (note?.downloadUrl) {
                 window.open(note.downloadUrl, '_blank');
             } else {
@@ -4936,15 +6831,18 @@ function renderNotesLibrary() {
     const categoriesEl = document.getElementById('notes-library-categories');
     const listEl = document.getElementById('notes-library-list');
     if (!categoriesEl || !listEl) return;
+    const localizedNotes = getLocalizedNotesLibrary();
 
-    const categories = ['all', ...new Set(NOTES_LIBRARY.map(item => item.category))];
+    const categories = ['all', ...new Set(localizedNotes.map(item => item.categoryKey || item.category))];
     categoriesEl.innerHTML = categories.map(category => {
-        const label = category === 'all' ? 'All Topics' : category;
+        const label = category === 'all'
+            ? translateLiteral('All Topics', appState.language)
+            : (localizedNotes.find(item => (item.categoryKey || item.category) === category)?.categoryLabel || category);
         const isActive = notesLibraryFilter === category;
         return `<button type="button" class="notes-chip ${isActive ? 'active' : ''}" data-category="${escapeHtml(category)}">${escapeHtml(label)}</button>`;
     }).join('');
 
-    const items = NOTES_LIBRARY.filter(item => notesLibraryFilter === 'all' || item.category === notesLibraryFilter);
+    const items = localizedNotes.filter(item => notesLibraryFilter === 'all' || (item.categoryKey || item.category) === notesLibraryFilter);
     listEl.innerHTML = items.map(item => `
         <div class="notes-card">
             <div class="flex items-start justify-between gap-2">
@@ -4952,10 +6850,10 @@ function renderNotesLibrary() {
                 <span class="notes-chip">${escapeHtml(item.level)}</span>
             </div>
             <p>${escapeHtml(item.description)}</p>
-            <div class="text-xs text-slate-500">Category: ${escapeHtml(item.category)} • ${item.pages} pages</div>
+            <div class="text-xs text-slate-500">${translateLiteral('Category:', appState.language)} ${escapeHtml(item.categoryLabel || item.category)} • ${item.pages} ${translateLiteral('pages', appState.language)}</div>
             <div class="notes-actions mt-2">
-                <button type="button" class="notes-download" data-action="download" data-note-id="${escapeHtml(item.id)}">Download</button>
-                <button type="button" class="notes-view" data-action="preview" data-note-id="${escapeHtml(item.id)}">Preview</button>
+                <button type="button" class="notes-download" data-action="download" data-note-id="${escapeHtml(item.id)}">${translateLiteral('Download', appState.language)}</button>
+                <button type="button" class="notes-view" data-action="preview" data-note-id="${escapeHtml(item.id)}">${translateLiteral('Preview', appState.language)}</button>
             </div>
         </div>
     `).join('');
@@ -4966,11 +6864,11 @@ function openNotesDownloadModal(noteId) {
     const titleEl = document.getElementById('notes-download-title');
     const metaEl = document.getElementById('notes-download-meta');
     const donateLink = document.getElementById('notes-donate-link');
-    const note = NOTES_LIBRARY.find(item => item.id === noteId);
+    const note = getLocalizedNotesLibrary().find(item => item.id === noteId);
     if (!modal || !note) return;
 
     if (titleEl) titleEl.textContent = note.title;
-    if (metaEl) metaEl.textContent = `${note.category} • ${note.pages} pages • ${note.level}`;
+    if (metaEl) metaEl.textContent = `${note.categoryLabel || note.category} • ${note.pages} ${translateLiteral('pages', appState.language)} • ${note.level}`;
     if (donateLink) {
         donateLink.href = generatePayPalUrl(1, `${note.title} PDF`);
         donateLink.dataset.downloadUrl = note.downloadUrl || '';
@@ -5026,12 +6924,13 @@ function renderInterviewExamples() {
     const grid = document.getElementById('interview-examples-grid');
     const pagination = document.getElementById('interview-pagination');
     if (!grid || !pagination) return;
+    const localizedExamples = getLocalizedInterviewExamples();
 
-    const totalPages = Math.max(1, Math.ceil(INTERVIEW_EXAMPLES.length / INTERVIEW_PAGE_SIZE));
+    const totalPages = Math.max(1, Math.ceil(localizedExamples.length / INTERVIEW_PAGE_SIZE));
     if (interviewPage > totalPages) interviewPage = totalPages;
 
     const start = (interviewPage - 1) * INTERVIEW_PAGE_SIZE;
-    const currentItems = INTERVIEW_EXAMPLES.slice(start, start + INTERVIEW_PAGE_SIZE);
+    const currentItems = localizedExamples.slice(start, start + INTERVIEW_PAGE_SIZE);
 
     grid.innerHTML = currentItems.map(example => `
         <div class="timed-prompt-card rounded-xl border shadow-sm p-4 flex flex-col gap-2">
@@ -5040,12 +6939,12 @@ function renderInterviewExamples() {
                     <h4 class="font-semibold text-indigo-600">${escapeHtml(example.title)}</h4>
                     <p class="text-xs text-slate-500">${escapeHtml(example.difficulty)} • ${example.tags.map(escapeHtml).join(', ')}</p>
                 </div>
-                <span class="text-[11px] px-2 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold">${example.minutes} min</span>
+                <span class="text-[11px] px-2 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold">${example.minutes} ${translateLiteral('min', appState.language)}</span>
             </div>
             <p class="text-sm text-slate-600">${escapeHtml(example.prompt)}</p>
             <div class="flex flex-wrap gap-2 mt-1">
-                <button type="button" class="notes-download" onclick="openPromptWorkspace('${example.id}')">Open Prompt</button>
-                <button type="button" class="notes-view" onclick="copyInterviewSolution('${example.id}')">Copy Solution</button>
+                <button type="button" class="notes-download" onclick="openPromptWorkspace('${example.id}')">${translateLiteral('Open Prompt', appState.language)}</button>
+                <button type="button" class="notes-view" onclick="copyInterviewSolution('${example.id}')">${translateLiteral('Copy Solution', appState.language)}</button>
             </div>
         </div>
     `).join('');
@@ -5059,7 +6958,7 @@ function renderInterviewExamples() {
 
 function openPromptWorkspace(exampleId) {
     const modal = document.getElementById('prompt-workspace-modal');
-    const example = INTERVIEW_EXAMPLES.find(item => item.id === exampleId);
+    const example = getLocalizedInterviewExamples().find(item => item.id === exampleId);
     if (!modal || !example) return;
 
     activePromptId = exampleId;
@@ -5074,7 +6973,7 @@ function openPromptWorkspace(exampleId) {
     if (titleEl) titleEl.textContent = example.title;
     if (metaEl) metaEl.textContent = `${example.difficulty} • ${example.minutes} min • ${example.tags.join(', ')}`;
     if (promptEl) promptEl.textContent = example.prompt;
-    if (solutionEl) solutionEl.textContent = example.solution;
+    if (solutionEl) solutionEl.textContent = translateCodeHumanText(example.solution);
     if (langEl) langEl.textContent = example.language || 'Java';
     if (notesEl) notesEl.textContent = example.notes || '';
     if (inputEl) inputEl.value = '';
@@ -5090,9 +6989,9 @@ function closePromptWorkspace() {
 }
 
 function copyInterviewSolution(exampleId) {
-    const example = INTERVIEW_EXAMPLES.find(item => item.id === exampleId);
+    const example = getLocalizedInterviewExamples().find(item => item.id === exampleId);
     if (!example) return;
-    navigator.clipboard.writeText(example.solution).then(() => {
+    navigator.clipboard.writeText(translateCodeHumanText(example.solution)).then(() => {
         showToast('Solution copied!', 'success');
     }).catch(() => {
         showToast('Unable to copy solution', 'error');
@@ -5154,6 +7053,255 @@ function initDSPlayground() {
     updateDSView();
 }
 
+function findMatchingBrace(source, openIndex) {
+    if (openIndex < 0 || openIndex >= source.length || source[openIndex] !== '{') {
+        return -1;
+    }
+    let depth = 0;
+    for (let i = openIndex; i < source.length; i++) {
+        const char = source[i];
+        if (char === '{') depth += 1;
+        if (char === '}') depth -= 1;
+        if (depth === 0) return i;
+    }
+    return -1;
+}
+
+function hasJavaMainMethod(classBody) {
+    return /\b(?:public\s+)?static\s+void\s+main\s*\(\s*String(?:\s*\[\s*\]|\.\.\.)\s+\w+\s*\)/.test(classBody);
+}
+
+function getJavaClassBlocks(source) {
+    const blocks = [];
+    const regex = /\bclass\s+([A-Za-z_]\w*)\b/g;
+    let match;
+    while ((match = regex.exec(source))) {
+        const openIndex = source.indexOf('{', match.index);
+        if (openIndex === -1) continue;
+        const closeIndex = findMatchingBrace(source, openIndex);
+        if (closeIndex === -1) continue;
+        blocks.push({
+            name: match[1],
+            start: match.index,
+            openIndex,
+            closeIndex
+        });
+    }
+    return blocks;
+}
+
+function indentCodeBlock(source, indent = '    ') {
+    return String(source || '')
+        .split('\n')
+        .map((line) => (line ? `${indent}${line}` : line))
+        .join('\n');
+}
+
+function hasJavaMethodDefinition(source) {
+    return /\b(?:public|protected|private)?\s*(?:static\s+)?(?:final\s+)?(?:synchronized\s+)?(?:<[^>]+>\s*)?[\w[\]<>?,]+\s+[A-Za-z_]\w*\s*\([^;{}]*\)\s*\{/.test(source);
+}
+
+function splitJavaImports(source) {
+    const lines = String(source || '').split('\n');
+    const importLines = [];
+    const bodyLines = [];
+    let scanImports = true;
+    lines.forEach((line) => {
+        if (scanImports && /^\s*import\s+[\w.*]+\s*;\s*$/.test(line)) {
+            importLines.push(line.trim());
+            return;
+        }
+        if (scanImports && !line.trim()) {
+            return;
+        }
+        scanImports = false;
+        bodyLines.push(line);
+    });
+    return {
+        imports: importLines.join('\n'),
+        body: bodyLines.join('\n').trim()
+    };
+}
+
+function getJavaMethodNames(source) {
+    const names = [];
+    const regex = /\b(?:public|protected|private)?\s*(?:static\s+)?(?:final\s+)?(?:synchronized\s+)?(?:<[^>]+>\s*)?[\w[\]<>?,]+\s+([A-Za-z_]\w*)\s*\([^;{}]*\)\s*\{/g;
+    let match;
+    while ((match = regex.exec(source))) {
+        const name = match[1];
+        if (name && name !== 'main') {
+            names.push(name);
+        }
+    }
+    return [...new Set(names)];
+}
+
+function buildJavaAutoMainBody(source, options = {}) {
+    const { label = 'Sample' } = options;
+    const classNames = getJavaClassBlocks(source).map(block => block.name);
+    const methodNames = getJavaMethodNames(source).slice(0, 8);
+    const lines = [
+        `System.out.println("${label} ran with auto-generated main().");`
+    ];
+    if (classNames.length) {
+        lines.push(`System.out.println("Classes detected: ${classNames.join(', ')}");`);
+    }
+    if (methodNames.length) {
+        lines.push(`System.out.println("Methods detected: ${methodNames.join(', ')}");`);
+    }
+    return lines.join('\n');
+}
+
+function wrapJavaSnippetWithoutClass(source) {
+    const { imports, body } = splitJavaImports(source);
+    const importBlock = imports ? `${imports}\n\n` : '';
+    const snippet = String(body || '').trim();
+    if (!snippet) {
+        return `${importBlock}class Main {\n    public static void main(String[] args) {\n        System.out.println("No Java code provided.");\n    }\n}\n`;
+    }
+
+    if (hasJavaMethodDefinition(snippet)) {
+        const autoBody = buildJavaAutoMainBody(snippet, { label: 'Method snippet' });
+        return `${importBlock}class Main {\n${indentCodeBlock(snippet)}\n\n    public static void main(String[] args) {\n${indentCodeBlock(autoBody, '        ')}\n    }\n}\n`;
+    }
+
+    return `${importBlock}class Main {\n    public static void main(String[] args) {\n${indentCodeBlock(snippet, '        ')}\n        System.out.println("Snippet executed.");\n    }\n}\n`;
+}
+
+function injectMainIntoClass(source, className, methodBody = '') {
+    const blocks = getJavaClassBlocks(source);
+    const target = blocks.find(block => block.name === className);
+    if (!target) return source;
+    const classBody = source.slice(target.openIndex, target.closeIndex + 1);
+    if (hasJavaMainMethod(classBody)) return source;
+    const body = String(methodBody || '').trim();
+    const mainBody = body ? `\n${indentCodeBlock(body, '        ')}\n` : '\n';
+    const insert = `\n    public static void main(String[] args) {${mainBody}    }\n`;
+    return `${source.slice(0, target.closeIndex)}${insert}${source.slice(target.closeIndex)}`;
+}
+
+function prepareJavaSourceForRunner(code) {
+    let source = String(code || '').replace(/\r\n/g, '\n');
+
+    source = source.replace(/^\s*package\s+[\w.]+;\s*$/gm, '').trim();
+    if (!source) {
+        return 'class Main {\n    public static void main(String[] args) {\n        System.out.println("No Java code provided.");\n    }\n}\n';
+    }
+    source = source.replace(/\bpublic\s+class\s+(?!Main\b)([A-Za-z_]\w*)/g, 'class $1');
+
+    const blocks = getJavaClassBlocks(source);
+    if (!blocks.length) {
+        return wrapJavaSnippetWithoutClass(source);
+    }
+    const mainClass = blocks.find((block) => {
+        const body = source.slice(block.openIndex, block.closeIndex + 1);
+        return hasJavaMainMethod(body);
+    });
+    const hasMainClass = Boolean(mainClass);
+    const hasMainType = blocks.some(block => block.name === 'Main');
+
+    if (hasMainClass) {
+        if (mainClass.name === 'Main') {
+            return source;
+        }
+        if (hasMainType) {
+            return injectMainIntoClass(source, 'Main', `${mainClass.name}.main(args);`);
+        }
+        source += `\n\nclass Main {\n    public static void main(String[] args) {\n        ${mainClass.name}.main(args);\n        System.out.println("Program finished.");\n    }\n}\n`;
+        return source;
+    }
+
+    if (hasMainType) {
+        return injectMainIntoClass(source, 'Main', buildJavaAutoMainBody(source, { label: 'Class snippet' }));
+    }
+
+    const autoBody = buildJavaAutoMainBody(source, { label: 'Class snippet' });
+    return `${source}\n\nclass Main {\n    public static void main(String[] args) {\n${indentCodeBlock(autoBody, '        ')}\n    }\n}\n`;
+}
+
+function normalizeCodeForRunner(language, code) {
+    const source = String(code || '').replace(/\r\n/g, '\n');
+    if (language === 'java') {
+        return prepareJavaSourceForRunner(source);
+    }
+    return source;
+}
+
+async function runViaCustomEndpoint(langConfig, code) {
+    const response = await fetch(CODE_RUNNER_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            language: langConfig.language,
+            version: langConfig.version,
+            files: [{ name: langConfig.filename, content: code }]
+        })
+    });
+    if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || `Runner request failed (${response.status})`);
+    }
+    const result = await response.json();
+    return result?.run?.output || result?.output || result?.stdout || 'Execution complete (no stdout).';
+}
+
+async function runViaJudge0(languageKey, code) {
+    const languageId = JUDGE0_LANGUAGE_IDS[languageKey];
+    if (!languageId) {
+        throw new Error(`Unsupported Judge0 language: ${languageKey}`);
+    }
+    const response = await fetch(JUDGE0_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            source_code: code,
+            language_id: languageId
+        })
+    });
+    if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || `Judge0 request failed (${response.status})`);
+    }
+    const result = await response.json();
+    const chunks = [
+        result.compile_output,
+        result.stderr,
+        result.stdout,
+        result.message
+    ].filter(Boolean);
+    if (chunks.length) return chunks.join('\n');
+    if (result?.status?.id && Number(result.status.id) !== 3) {
+        return result?.status?.description || 'Execution finished.';
+    }
+    return 'Execution complete (no stdout).';
+}
+
+async function runJavascriptLocally(code) {
+    const wrapped = `'use strict';\n${code}`;
+    const consoleLines = [];
+    const capture = (...args) => {
+        consoleLines.push(args.map((arg) => {
+            if (typeof arg === 'string') return arg;
+            try {
+                return JSON.stringify(arg);
+            } catch (error) {
+                return String(arg);
+            }
+        }).join(' '));
+    };
+
+    const localConsole = {
+        log: capture,
+        info: capture,
+        warn: capture,
+        error: capture
+    };
+
+    const runner = new Function('console', wrapped);
+    runner(localConsole);
+    return consoleLines.join('\n') || 'Execution complete (no stdout).';
+}
+
 function initPlayground() {
     const languageSelect = document.getElementById('playground-language');
     const snippetSelect = document.getElementById('playground-snippets');
@@ -5166,22 +7314,29 @@ function initPlayground() {
 
     if (!languageSelect || !snippetSelect || !editor || !output) return;
 
-    const availableLanguages = Object.entries(SUPPORTED_LANGUAGES)
-        .map(([key, info]) => ({ key, label: `${info.icon} ${info.name}` }));
+    const availableLanguages = PLAYGROUND_RUNNABLE_LANGUAGES
+        .map((key) => ({ key, label: `${SUPPORTED_LANGUAGES[key].icon} ${SUPPORTED_LANGUAGES[key].name}` }));
 
     languageSelect.innerHTML = availableLanguages
         .map(lang => `<option value="${lang.key}">${lang.label}</option>`)
         .join('');
 
-    const snippetOptions = modules
+    const snippetOptions = getOrderedModules()
         .filter(module => module.codeExamples || module.codeExample)
-        .map(module => ({ id: module.id, title: module.title }));
+        .map((module) => {
+            const localizedModule = getLocalizedModule(module) || module;
+            return { id: module.id, title: localizedModule.title || module.title };
+        });
 
     snippetSelect.innerHTML = [
         '<option value="">Select a module sample</option>',
         ...snippetOptions.map(option => `<option value="${option.id}">${escapeHtml(option.title)}</option>`)
     ].join('');
 
+    const preferredLanguage = PLAYGROUND_RUNNABLE_LANGUAGES.includes(playgroundState.language)
+        ? playgroundState.language
+        : 'java';
+    languageSelect.value = preferredLanguage;
     playgroundState.language = languageSelect.value || 'java';
 
     const setStatus = (text, tone = 'Idle') => {
@@ -5195,12 +7350,7 @@ function initPlayground() {
     };
 
     const getPlaygroundCode = (moduleId, language) => {
-        const module = modules.find(item => item.id === moduleId);
-        if (!module) return '';
-        if (module.codeExamples && module.codeExamples[language]) {
-            return module.codeExamples[language];
-        }
-        return module.codeExample || '';
+        return getCanonicalModuleCode(moduleId, language);
     };
 
     const updateEditor = (moduleId) => {
@@ -5211,7 +7361,12 @@ function initPlayground() {
             playgroundState.isCustom = true;
             return;
         }
-        const code = getPlaygroundCode(moduleId, playgroundState.language);
+        const result = getPlaygroundCode(moduleId, playgroundState.language);
+        if (result.language !== playgroundState.language) {
+            playgroundState.language = result.language;
+            languageSelect.value = result.language;
+        }
+        const code = result.code;
         editor.value = code || '';
         playgroundState.baseCode = editor.value;
         playgroundState.snippetId = moduleId;
@@ -5265,33 +7420,51 @@ function initPlayground() {
                 setOutput('// Add code before running');
                 return;
             }
-            if (!CODE_RUNNER_ENDPOINT) {
-                setOutput('// Runner not configured.\n// Set CODE_RUNNER_ENDPOINT in js/script.js to enable execution.');
-                return;
-            }
 
             setStatus('Running...', 'Running');
             setOutput('// Running...');
 
-            const langConfig = CODE_RUNNER_CONFIG[playgroundState.language] || CODE_RUNNER_CONFIG.java;
+            const languageKey = playgroundState.language;
+            if (!PLAYGROUND_RUNNABLE_LANGUAGES.includes(languageKey)) {
+                setOutput([
+                    'Execution skipped.',
+                    `Language "${languageKey}" is view-only in module cards.`,
+                    'Playground execution currently supports: Java, C++, Python, and JavaScript.'
+                ].join('\n'));
+                setStatus('Idle', 'Idle');
+                return;
+            }
+            const langConfig = CODE_RUNNER_CONFIG[languageKey] || CODE_RUNNER_CONFIG.java;
+            const normalizedCode = normalizeCodeForRunner(languageKey, code);
             try {
-                const response = await fetch(CODE_RUNNER_ENDPOINT, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        language: langConfig.language,
-                        version: langConfig.version,
-                        files: [{ name: langConfig.filename, content: code }]
-                    })
-                });
-
-                if (!response.ok) throw new Error('Execution failed');
-                const result = await response.json();
-                const outputText = result?.run?.output || result?.output || 'No output returned.';
+                let outputText = '';
+                if (CODE_RUNNER_ENDPOINT) {
+                    outputText = await runViaCustomEndpoint(langConfig, normalizedCode);
+                } else if (JUDGE0_ENDPOINT && JUDGE0_LANGUAGE_IDS[languageKey]) {
+                    outputText = await runViaJudge0(languageKey, normalizedCode);
+                } else if (languageKey === 'javascript') {
+                    outputText = await runJavascriptLocally(normalizedCode);
+                } else {
+                    throw new Error('No compatible runner is configured for this language.');
+                }
+                const trimmedOutput = String(outputText || '').trim();
+                if (!trimmedOutput || trimmedOutput === 'Execution complete (no stdout).') {
+                    const activeModule = playgroundState.snippetId
+                        ? modules.find(item => item.id === playgroundState.snippetId)
+                        : null;
+                    const activeTitle = activeModule ? getLocalizedModule(activeModule).title : 'Custom code';
+                    const languageLabel = SUPPORTED_LANGUAGES[languageKey]?.name || languageKey;
+                    outputText = [
+                        'Execution complete.',
+                        `Sample: ${activeTitle}`,
+                        `Language: ${languageLabel}`
+                    ].join('\n');
+                }
                 setOutput(outputText);
                 setStatus('Complete', 'Idle');
             } catch (error) {
-                setOutput('// Execution failed. Check your runner endpoint.');
+                const reason = error instanceof Error ? error.message : String(error);
+                setOutput(`// Execution failed.\n// ${reason}\n// Configure CODE_RUNNER_ENDPOINT for a private runner if needed.`);
                 setStatus('Error', 'Idle');
             }
         });
@@ -5819,20 +7992,146 @@ function shouldShowComments(moduleId) {
     return individualSetting !== undefined ? individualSetting : appState.showComments;
 }
 
+function isAssemblyModule(moduleId) {
+    return getModuleCategoryKey(moduleId) === 'assembly';
+}
+
+function isDiscreteModule(moduleId) {
+    return DISCRETE_MODULE_IDS.has(moduleId);
+}
+
+function getModuleById(moduleId) {
+    return modules.find((module) => module.id === moduleId) || null;
+}
+
+function getDefaultModuleLanguage(moduleId) {
+    if (isAssemblyModule(moduleId)) return 'assembly';
+    return 'java';
+}
+
+function getAvailableModeKeys(moduleId) {
+    const baseModes = ['code', 'pseudocode'];
+    if (isDiscreteModule(moduleId)) {
+        return ['discreteTheory', ...baseModes];
+    }
+    return baseModes;
+}
+
 function getModuleLanguage(moduleId) {
-    return appState.moduleLanguages.get(moduleId) || 'java';
+    const module = getModuleById(moduleId);
+    const savedLanguage = appState.moduleLanguages.get(moduleId);
+    const defaultLanguage = getDefaultModuleLanguage(moduleId);
+    if (savedLanguage && module?.codeExamples?.[savedLanguage]) {
+        return savedLanguage;
+    }
+    if (module?.codeExamples?.[defaultLanguage]) {
+        return defaultLanguage;
+    }
+    if (module?.codeExamples) {
+        const available = Object.keys(module.codeExamples);
+        if (available.length) return available[0];
+    }
+    return defaultLanguage;
 }
 
 function getModuleMode(moduleId) {
-    return appState.moduleModes.get(moduleId) || 'code';
+    const savedMode = appState.moduleModes.get(moduleId);
+    const availableModes = getAvailableModeKeys(moduleId);
+    if (savedMode && availableModes.includes(savedMode)) {
+        return savedMode;
+    }
+    return isDiscreteModule(moduleId) ? 'discreteTheory' : 'code';
+}
+
+function getDiscreteTheoryContent(module) {
+    const topics = (module?.topics || []).map((topic) => `• ${topic}`);
+    if (appState.language === 'es') {
+        return [
+            'Resumen Teórico Profundo',
+            `Módulo: ${module?.title || ''}`,
+            '',
+            'Conceptos clave:',
+            ...topics,
+            '',
+            'Marco de razonamiento:',
+            '1) Defina símbolos y supuestos antes de resolver.',
+            '2) Traduzca el enunciado a proposiciones y relaciones formales.',
+            '3) Justifique cada paso de forma lógica (no por intuición).',
+            '4) Use contraejemplos para validar o refutar afirmaciones.',
+            '',
+            'Explicación detallada:',
+            module?.explanation || '',
+            '',
+            'Checklist de práctica:',
+            '- Escriba definiciones precisas.',
+            '- Identifique hipótesis y conclusión.',
+            '- Verifique equivalencias y casos límite.',
+            '- Redacte una prueba clara, paso por paso.'
+        ].join('\n');
+    }
+
+    return [
+        'Deep Theory Summary',
+        `Module: ${module?.title || ''}`,
+        '',
+        'Core concepts:',
+        ...topics,
+        '',
+        'Reasoning framework:',
+        '1) Define symbols and assumptions before solving.',
+        '2) Translate statements into formal propositions/relations.',
+        '3) Justify every step logically, not by intuition alone.',
+        '4) Use counterexamples to validate or refute claims.',
+        '',
+        'Detailed explanation:',
+        module?.explanation || '',
+        '',
+        'Practice checklist:',
+        '- Write precise definitions.',
+        '- Identify hypothesis and conclusion.',
+        '- Verify equivalences and boundary cases.',
+        '- Present a clear step-by-step proof.'
+    ].join('\n');
+}
+
+function getTotalModuleCount() {
+    return Array.isArray(modules) ? modules.length : 0;
+}
+
+function getDynamicAchievementLevels() {
+    const totalModules = getTotalModuleCount();
+    return ACHIEVEMENT_LEVELS.map(level => (
+        level.id === 'luminary'
+            ? { ...level, threshold: totalModules }
+            : level
+    ));
+}
+
+function getCanonicalModuleCode(moduleId, preferredLanguage) {
+    const module = getModuleById(moduleId);
+    if (!module || !module.codeExamples) {
+        return { code: '', language: preferredLanguage || 'java' };
+    }
+    const requested = preferredLanguage || getDefaultModuleLanguage(moduleId);
+    if (module.codeExamples[requested]) {
+        return { code: module.codeExamples[requested], language: requested };
+    }
+    const defaultLanguage = getDefaultModuleLanguage(moduleId);
+    if (module.codeExamples[defaultLanguage]) {
+        return { code: module.codeExamples[defaultLanguage], language: defaultLanguage };
+    }
+    const runnableFallback = PLAYGROUND_RUNNABLE_LANGUAGES.find((lang) => module.codeExamples[lang]);
+    if (runnableFallback) {
+        return { code: module.codeExamples[runnableFallback], language: runnableFallback };
+    }
+    const firstLanguage = Object.keys(module.codeExamples)[0] || requested;
+    return { code: module.codeExamples[firstLanguage] || '', language: firstLanguage };
 }
 
 function getCodeExample(module) {
     const language = getModuleLanguage(module.id);
-    if (module.codeExamples && module.codeExamples[language]) {
-        return module.codeExamples[language];
-    }
-    return module.codeExample || 'Code example coming soon...';
+    const resolved = getCanonicalModuleCode(module.id, language);
+    return resolved.code || translateLiteral('Code example coming soon...', appState.language);
 }
 
 function processCode(code, moduleId) {
@@ -5840,12 +8139,13 @@ function processCode(code, moduleId) {
     const language = getModuleLanguage(moduleId);
     const mode = getModuleMode(moduleId);
 
+    let processedCode = code;
     if (mode === 'pseudocode') {
-        return convertToPseudocode(code, language, showCommentsForModule);
+        processedCode = convertToPseudocode(code, language, showCommentsForModule);
     } else if (!showCommentsForModule) {
-        return removeComments(code, language);
+        processedCode = removeComments(code, language);
     }
-    return code;
+    return translateCodeHumanText(processedCode);
 }
 
 function getDifficultyColor(difficulty) {
@@ -5900,11 +8200,12 @@ function applyCompactLayout() {
 }
 
 function updateProgress() {
-    const progressPercentage = Math.round((appState.completedModules.size / CONSTANTS.TOTAL_MODULES) * 100);
+    const totalModules = Math.max(getTotalModuleCount(), 1);
+    const progressPercentage = Math.round((appState.completedModules.size / totalModules) * 100);
 
     const progressStr = appState.language === 'es'
-        ? `${appState.completedModules.size} de ${CONSTANTS.TOTAL_MODULES} módulos completados`
-        : `${appState.completedModules.size} of ${CONSTANTS.TOTAL_MODULES} modules completed`;
+        ? `${appState.completedModules.size} de ${totalModules} módulos completados`
+        : `${appState.completedModules.size} of ${totalModules} modules completed`;
     document.getElementById('progress-text').textContent = progressStr;
     document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
     document.getElementById('progress-percentage').textContent = `${progressPercentage}%`;
@@ -6003,21 +8304,51 @@ function updateHeaderShrink() {
     }
 }
 
+function getModuleCategoryKey(moduleId) {
+    return MODULE_CATEGORY_BY_ID[moduleId] || 'dsa';
+}
+
+function getOrderedModules() {
+    const indexMap = new Map(MODULE_LEARNING_SEQUENCE.map((id, index) => [id, index]));
+    return [...modules].sort((a, b) => {
+        const aIndex = indexMap.has(a.id) ? indexMap.get(a.id) : Number.MAX_SAFE_INTEGER;
+        const bIndex = indexMap.has(b.id) ? indexMap.get(b.id) : Number.MAX_SAFE_INTEGER;
+        if (aIndex !== bIndex) return aIndex - bIndex;
+        return a.title.localeCompare(b.title);
+    });
+}
+
+function updateTopicFocusButtons() {
+    const active = appState.categoryFilter || 'all';
+    const buttons = document.querySelectorAll('[data-topic-filter]');
+    buttons.forEach((button) => {
+        const value = button.getAttribute('data-topic-filter') || 'all';
+        const isActive = value === active;
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+}
+
 function filterModules() {
     const searchTerm = appState.searchTerm.trim().toLowerCase();
     const hasSearch = searchTerm.length > 0;
     const difficultyFilter = appState.difficultyFilter;
+    const categoryFilter = appState.categoryFilter || 'all';
+    const orderedModules = getOrderedModules();
 
-    return modules.filter(module => {
+    return orderedModules.filter(module => {
+        const localized = getLocalizedModule(module);
+        const localizedTopics = localized.topics || [];
         const matchesSearch = !hasSearch ||
-            module.title.toLowerCase().includes(searchTerm) ||
-            module.description.toLowerCase().includes(searchTerm) ||
-            module.topics.some(topic => topic.toLowerCase().includes(searchTerm));
+            localized.title.toLowerCase().includes(searchTerm) ||
+            localized.description.toLowerCase().includes(searchTerm) ||
+            localizedTopics.some(topic => topic.toLowerCase().includes(searchTerm));
 
         const matchesDifficulty = difficultyFilter === 'all' || module.difficulty === difficultyFilter;
+        const matchesCategory = categoryFilter === 'all' || getModuleCategoryKey(module.id) === categoryFilter;
         const passesCompletionFilter = !appState.hideCompletedModules || !appState.completedModules.has(module.id);
 
-        return matchesSearch && matchesDifficulty && passesCompletionFilter;
+        return matchesSearch && matchesDifficulty && matchesCategory && passesCompletionFilter;
     });
 }
 
@@ -6025,52 +8356,75 @@ function renderModules() {
     const filteredModules = filterModules();
     const grid = document.getElementById('modules-grid');
     const searchResultsCount = document.getElementById('search-results-count');
-    const accentModuleTitles = new Set(['Stacks and Queues', 'Searching Algorithms']);
+    const totalOrderedModules = getOrderedModules();
+    const accentModuleIds = new Set(['stacks-queues', 'searching-algorithms']);
+    const localizedModuleMap = new Map(getLocalizedModules().map((module) => [module.id, module]));
 
     // Update search results count
-    if (filteredModules.length !== modules.length) {
-        searchResultsCount.textContent = `Showing ${filteredModules.length} of ${modules.length} modules`;
+    if (filteredModules.length !== totalOrderedModules.length) {
+        searchResultsCount.textContent = translateLiteral(`Showing ${filteredModules.length} of ${totalOrderedModules.length} modules`, appState.language);
         searchResultsCount.style.display = 'block';
     } else {
         searchResultsCount.style.display = 'none';
     }
 
     grid.innerHTML = filteredModules.map(module => {
+        const localizedModule = localizedModuleMap.get(module.id) || module;
         const isCompleted = appState.completedModules.has(module.id);
         const isCodeExpanded = appState.expandedCode.has(module.id);
         const currentLanguage = getModuleLanguage(module.id);
         const currentMode = getModuleMode(module.id);
+        const availableModes = getAvailableModeKeys(module.id);
+        const isDiscreteTheoryMode = currentMode === 'discreteTheory';
         const hasMultipleLanguages = module.codeExamples && Object.keys(module.codeExamples).length > 1;
+        const definitions = Array.isArray(localizedModule.definitions) && localizedModule.definitions.length === 5
+            ? localizedModule.definitions
+            : buildModuleDefinitions(localizedModule, appState.language === 'es' ? 'es' : 'en');
 
-        const codeToDisplay = getCodeExample(module);
-        const displayCode = isCodeExpanded ? codeToDisplay : truncateCode(codeToDisplay);
-        const showExpandButton = codeToDisplay.split('\n').length > CONSTANTS.CODE_PREVIEW_LINES;
+        const codeToDisplay = isDiscreteTheoryMode
+            ? getDiscreteTheoryContent(localizedModule)
+            : getCodeExample(module);
+        const previewLines = isAssemblyModule(module.id) ? 8 : CONSTANTS.CODE_PREVIEW_LINES;
+        const displayCode = isCodeExpanded ? codeToDisplay : truncateCode(codeToDisplay, previewLines);
+        const showExpandButton = codeToDisplay.split('\n').length > previewLines;
 
-        const processedCode = processCode(displayCode, module.id);
+        const processedCode = isDiscreteTheoryMode
+            ? displayCode
+            : processCode(displayCode, module.id);
+        const codeForDisplay = String(processedCode || '').replace(/^(?:\r?\n)+/, '');
 
-        const isAccentModule = accentModuleTitles.has(module.title);
+        const isAccentModule = accentModuleIds.has(module.id);
+        const isStarterModule = module.id === 'java-basics';
 
         const cardThemeClasses = isAccentModule ? 'module-card--accent' : 'bg-white border-slate-200';
+        const starterCardClass = isStarterModule ? 'starter-module-card' : '';
+        const starterTitleClass = isStarterModule ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl';
 
         return `
-            <div id="module-${module.id}" data-module-card="${module.id}" class="module-card ${cardThemeClasses} rounded-xl p-4 sm:p-6 shadow-xl border hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
+            <div id="module-${module.id}" data-module-card="${module.id}" class="module-card ${cardThemeClasses} ${starterCardClass} rounded-xl p-4 sm:p-6 shadow-xl border hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
                 <!-- Module Header -->
                 <div class="flex flex-col sm:flex-row justify-between items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
-                    <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 leading-tight ${isAccentModule ? 'module-accent-text' : ''}">
-                        ${module.title}
+                    <h3 class="${starterTitleClass} font-semibold text-indigo-600 leading-tight ${isAccentModule ? 'module-accent-text' : ''}">
+                        ${localizedModule.title}
                     </h3>
                     <span class="px-2 sm:px-2.5 py-1 rounded-lg text-xs sm:text-sm font-medium ${getDifficultyColor(module.difficulty)} whitespace-nowrap self-start sm:self-auto difficulty-badge">
-                        ${module.difficulty}
+                        ${translateLiteral(module.difficulty, appState.language)}
                     </span>
                 </div>
 
-                <p class="text-slate-600 mb-3 sm:mb-4 text-sm sm:text-base leading-relaxed ${isAccentModule ? 'module-accent-text' : ''}">${module.description}</p>
+                ${isStarterModule ? `
+                    <div class="starter-module-banner mb-3">
+                        ⭐ Starter Module: recommended first step for most learners
+                    </div>
+                ` : ''}
+
+                <p class="text-slate-600 mb-3 sm:mb-4 text-sm sm:text-base leading-relaxed ${isAccentModule ? 'module-accent-text' : ''}">${localizedModule.description}</p>
 
                 <!-- Topics -->
                 <div class="mb-3 sm:mb-4">
                     <h4 class="font-semibold mb-2 text-slate-800 text-sm">Topics Covered:</h4>
                     <div class="flex flex-wrap gap-1 sm:gap-1.5">
-                        ${module.topics.map(topic => `
+                        ${(localizedModule.topics || []).map(topic => `
                             <span class="px-2 py-0.5 sm:py-1 text-xs rounded-md font-medium bg-slate-100 text-slate-700 topic-badge">
                                 ${topic}
                             </span>
@@ -6083,7 +8437,7 @@ function renderModules() {
                     <!-- Code Header -->
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 px-3 py-2 border-b border-slate-200 bg-slate-100">
                         <div class="flex items-center gap-1.5">
-                            <span class="text-xs font-medium text-slate-600">💻 Code Example</span>
+                            <span class="text-xs font-medium text-slate-600">${isDiscreteTheoryMode ? (appState.language === 'es' ? '📘 Teoría de Matemáticas Discretas' : '📘 Discrete Mathematics Theory') : '💻 Code Example'}</span>
                             ${hasMultipleLanguages ? `
                                 <span class="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 font-medium">
                                     ${SUPPORTED_LANGUAGES[currentLanguage]?.icon} ${SUPPORTED_LANGUAGES[currentLanguage]?.name}
@@ -6092,6 +8446,11 @@ function renderModules() {
                             ${currentMode === 'pseudocode' ? `
                                 <span class="text-xs px-1.5 py-0.5 rounded bg-purple-100 text-purple-800 font-medium">
                                     📝 Pseudocode
+                                </span>
+                            ` : ''}
+                            ${currentMode === 'discreteTheory' ? `
+                                <span class="text-xs px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-medium">
+                                    📘 ${appState.language === 'es' ? 'Modo Teoría' : 'Theory Mode'}
                                 </span>
                             ` : ''}
                         </div>
@@ -6116,12 +8475,18 @@ function renderModules() {
                             ` : ''}
 
                             <!-- Code Mode Selector -->
-                            <select onchange="setModuleMode('${module.id}', this.value)" class="text-xs px-2 py-1 rounded border-0 font-medium ${currentMode === 'pseudocode' ? 'bg-purple-500 hover:bg-purple-600 text-white' : 'bg-indigo-500 hover:bg-indigo-600 text-white'}" title="Select Code Display Mode">
-                                ${Object.entries(CODE_MODES).map(([modeKey, modeInfo]) => `
+                            <select onchange="setModuleMode('${module.id}', this.value)" class="text-xs px-2 py-1 rounded border-0 font-medium ${currentMode === 'pseudocode' ? 'bg-purple-500 hover:bg-purple-600 text-white' : currentMode === 'discreteTheory' ? 'bg-amber-500 hover:bg-amber-600 text-white' : 'bg-indigo-500 hover:bg-indigo-600 text-white'}" title="Select Code Display Mode">
+                                ${availableModes.map((modeKey) => {
+            const modeInfo = CODE_MODES[modeKey];
+            const label = appState.language === 'es' && modeKey === 'discreteTheory'
+                ? 'Matemáticas Discretas'
+                : modeInfo.name;
+            return `
                                     <option value="${modeKey}" ${currentMode === modeKey ? 'selected' : ''} class="bg-white text-black">
-                                        ${modeInfo.icon} ${modeInfo.name}
+                                        ${modeInfo.icon} ${label}
                                     </option>
-                                `).join('')}
+                                `;
+        }).join('')}
                             </select>
 
                             <!-- Expand Button -->
@@ -6135,22 +8500,31 @@ function renderModules() {
 
                     <!-- Code Content -->
                     <div class="p-3 overflow-x-auto">
-                        <pre class="text-xs leading-relaxed">
-                            <code class="whitespace-pre-wrap font-mono">${processedCode}</code>
-                        </pre>
+                        <pre class="text-xs leading-relaxed"><code class="whitespace-pre-wrap font-mono">${codeForDisplay}</code></pre>
+                    </div>
+                </div>
+
+                <div class="bg-slate-50 border-slate-200 rounded-lg border p-3 sm:p-4 mb-3 sm:mb-4">
+                    <h4 class="font-semibold mb-2 text-slate-800 text-sm">${appState.language === 'es' ? '📘 Definiciones Clave' : '📘 Need-to-Know Definitions'}</h4>
+                    <div class="space-y-2">
+                        ${definitions.map((entry) => `
+                            <div class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                                <span class="font-semibold text-slate-900">${escapeHtml(entry.term)}:</span> ${escapeHtml(entry.definition)}
+                            </div>
+                        `).join('')}
                     </div>
                 </div>
 
                 <!-- Explanation -->
                 <div class="bg-indigo-50 border-indigo-200 border-l-4 border-l-indigo-500 p-3 sm:p-4 mb-3 sm:mb-4 rounded-r-lg">
-                    <div class="whitespace-pre-line text-xs sm:text-sm text-slate-800">${module.explanation}</div>
+                    <div class="whitespace-pre-line text-xs sm:text-sm text-slate-800">${localizedModule.explanation}</div>
                 </div>
 
                 <!-- Resources -->
                 <div class="mb-3 sm:mb-4">
                     <h4 class="font-semibold mb-2 text-slate-800 text-sm">📚 Learning Resources:</h4>
                     <div class="space-y-1">
-                        ${module.resources.map(resource => `
+                        ${(localizedModule.resources || []).map(resource => `
                             <div class="text-indigo-600 hover:text-indigo-800 text-xs transition-colors duration-200 cursor-pointer">
                                 • ${resource}
                             </div>
@@ -6160,12 +8534,12 @@ function renderModules() {
 
                 <!-- Buttons -->
                 <div class="space-y-2">
-                    <button onclick="openQuiz('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm ${quizData[module.id] && quizData[module.id].parts[0].questions.length > 0 ? 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white hover:-translate-y-0.5' : 'bg-gradient-to-r from-slate-400 to-slate-500 text-white cursor-not-allowed'}" ${!quizData[module.id] || quizData[module.id].parts[0].questions.length === 0 ? 'disabled' : ''}>
-                        ${quizData[module.id] && quizData[module.id].parts[0].questions.length > 0 ? '🧠 Take Quiz' : '🔒 Quiz Coming Soon'}
+                    <button onclick="openQuiz('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm ${getLocalizedQuizData(module.id) && getLocalizedQuizData(module.id).parts[0].questions.length > 0 ? 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white hover:-translate-y-0.5' : 'bg-gradient-to-r from-slate-400 to-slate-500 text-white cursor-not-allowed'}" ${!getLocalizedQuizData(module.id) || getLocalizedQuizData(module.id).parts[0].questions.length === 0 ? 'disabled' : ''}>
+                        ${getLocalizedQuizData(module.id) && getLocalizedQuizData(module.id).parts[0].questions.length > 0 ? translateLiteral('🧠 Take Quiz', appState.language) : translateLiteral('🔒 Quiz Coming Soon', appState.language)}
                     </button>
                     
                     <button onclick="toggleCompletion('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm ${isCompleted ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white hover:-translate-y-0.5' : 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white hover:-translate-y-0.5'}">
-                        ${isCompleted ? '✅ Completed!' : '📝 Mark as Complete'}
+                        ${isCompleted ? translateLiteral('✅ Completed!', appState.language) : translateLiteral('📝 Mark as Complete', appState.language)}
                     </button>
                 </div>
             </div>
@@ -6177,7 +8551,7 @@ function renderModules() {
 
 function getAchievementState() {
     const completed = appState.completedModules.size;
-    const sortedLevels = [...ACHIEVEMENT_LEVELS].sort((a, b) => a.threshold - b.threshold);
+    const sortedLevels = getDynamicAchievementLevels().sort((a, b) => a.threshold - b.threshold);
     let current = sortedLevels[0];
     let next = null;
 
@@ -6214,14 +8588,15 @@ function renderAchievements() {
     const totalLabel = document.getElementById('achievement-total-label');
     const nextHint = document.getElementById('achievement-next-hint');
 
-    if (badgeLabel) badgeLabel.textContent = current.label;
-    if (badgeName) badgeName.textContent = current.label;
+    if (badgeLabel) badgeLabel.textContent = translateLiteral(current.label, appState.language);
+    if (badgeName) badgeName.textContent = translateLiteral(current.label, appState.language);
     if (badgeIcon) badgeIcon.textContent = current.icon;
-    if (descriptionEl) descriptionEl.textContent = current.description;
-    if (totalLabel) totalLabel.textContent = `${CONSTANTS.TOTAL_MODULES} total modules`;
+    if (descriptionEl) descriptionEl.textContent = translateLiteral(current.description, appState.language);
+    const totalModules = getTotalModuleCount();
+    if (totalLabel) totalLabel.textContent = translateLiteral(`${totalModules} total modules`, appState.language);
 
     const previousThreshold = current.threshold;
-    const nextThreshold = next ? next.threshold : CONSTANTS.TOTAL_MODULES;
+    const nextThreshold = next ? next.threshold : totalModules;
     const span = Math.max(nextThreshold - previousThreshold, 1);
     const modulesTowardNext = next ? Math.max(0, completed - previousThreshold) : span;
     const progressPercent = next ? Math.min((modulesTowardNext / span) * 100, 100) : 100;
@@ -6232,16 +8607,16 @@ function renderAchievements() {
 
     if (progressLabel) {
         if (next) {
-            progressLabel.textContent = `${modulesTowardNext} / ${span} modules toward next badge`;
+            progressLabel.textContent = translateLiteral(`${modulesTowardNext} / ${span} modules toward next badge`, appState.language);
         } else {
-            progressLabel.textContent = `All achievements unlocked – ${completed} modules completed!`;
+            progressLabel.textContent = translateLiteral(`All achievements unlocked – ${completed} modules completed!`, appState.language);
         }
     }
 
     if (nextHint) {
         nextHint.textContent = next
-            ? `Next: ${next.label} at ${next.threshold} modules`
-            : 'Legend achieved! Keep challenging yourself.';
+            ? translateLiteral(`Next: ${next.label} at ${next.threshold} modules`, appState.language)
+            : translateLiteral('Legend achieved! Keep challenging yourself.', appState.language);
     }
 }
 
@@ -6268,10 +8643,12 @@ function highlightGlossaryText(text, searchTerm) {
 function renderGlossaryFilters() {
     const container = document.getElementById('glossary-categories');
     if (!container) return;
+    const localizedTerms = getLocalizedGlossaryTerms();
 
     container.innerHTML = glossaryCategories.map(category => {
         const isActive = appState.glossaryCategory === category;
-        const label = category === 'all' ? 'All Terms' : category;
+        const localizedCategory = localizedTerms.find(term => term.categoryKey && term.categoryKey.toLowerCase() === category.toLowerCase())?.categoryLabel;
+        const label = category === 'all' ? translateLiteral('All Terms', appState.language) : (localizedCategory || translateLiteral(category, appState.language));
         return `<button type="button" class="glossary-chip ${isActive ? 'active' : ''}" data-category="${category}">${escapeHtml(label)}</button>`;
     }).join('');
 
@@ -6291,23 +8668,29 @@ function renderGlossary() {
 
     const searchTerm = appState.glossarySearch.trim().toLowerCase();
     const selectedCategory = appState.glossaryCategory;
-    const filteredTerms = glossaryTerms.filter(term => {
-        const matchesCategory = selectedCategory === 'all' || term.category === selectedCategory;
+    const localizedTerms = getLocalizedGlossaryTerms();
+    const filteredTerms = localizedTerms.filter(term => {
+        const matchesCategory = selectedCategory === 'all' || term.categoryKey.toLowerCase() === selectedCategory.toLowerCase();
         if (!matchesCategory) return false;
         if (!searchTerm) return true;
         return (
             term.term.toLowerCase().includes(searchTerm) ||
             term.definition.toLowerCase().includes(searchTerm) ||
-            term.category.toLowerCase().includes(searchTerm)
+            term.categoryLabel.toLowerCase().includes(searchTerm)
         );
     });
 
     const content = document.getElementById('glossary-content');
     const stats = document.getElementById('glossary-stats');
     if (stats) {
-        const label = selectedCategory === 'all' ? 'All categories' : `Category: ${selectedCategory}`;
+        const selectedCategoryLabel = selectedCategory === 'all'
+            ? ''
+            : (localizedTerms.find(term => term.categoryKey.toLowerCase() === selectedCategory.toLowerCase())?.categoryLabel || selectedCategory);
+        const label = selectedCategory === 'all'
+            ? translateLiteral('All categories', appState.language)
+            : `${translateLiteral('Category:', appState.language)} ${selectedCategoryLabel}`;
         stats.innerHTML = `
-            <span><strong>${filteredTerms.length}</strong> of <strong>${glossaryTerms.length}</strong> terms</span>
+            <span><strong>${filteredTerms.length}</strong> ${translateLiteral('of', appState.language)} <strong>${localizedTerms.length}</strong> ${translateLiteral('terms', appState.language)}</span>
             <span>${escapeHtml(label)}</span>
         `;
     }
@@ -6327,7 +8710,7 @@ function renderGlossary() {
             <div class="flex justify-between items-start mb-2">
                 <h4 class="font-semibold text-lg text-indigo-600">${highlightGlossaryText(item.term, highlightTerm)}</h4>
                 <span class="text-xs px-2 py-1 rounded-full bg-indigo-100 text-indigo-700">
-                    ${escapeHtml(item.category)}
+                    ${escapeHtml(item.categoryLabel)}
                 </span>
             </div>
             <p class="text-sm leading-relaxed text-slate-800">${highlightGlossaryText(item.definition, highlightTerm)}</p>
@@ -6352,14 +8735,14 @@ function renderFlashcard() {
     }
 
     if (!totalCards) {
-        counter.textContent = 'No active session';
+        counter.textContent = translateLiteral('No active session', appState.language);
         content.innerHTML = `
             <div class="text-center text-slate-600">
-                <p class="text-lg font-semibold mb-2">Choose a module above</p>
-                <p class="text-sm">Start a ${desiredLength}-card session to load flashcards.</p>
+                <p class="text-lg font-semibold mb-2">${translateLiteral('Choose a module above', appState.language)}</p>
+                <p class="text-sm">${translateLiteral(`Start a ${desiredLength}-card session to load flashcards.`, appState.language)}</p>
             </div>
         `;
-        toggleButton.textContent = 'Show Answer';
+        toggleButton.textContent = translateLiteral('Show Answer', appState.language);
         toggleButton.disabled = true;
         prevButton.disabled = true;
         nextButton.disabled = true;
@@ -6369,15 +8752,15 @@ function renderFlashcard() {
         nextButton.classList.remove('hover:-translate-y-0.5');
         if (sessionMeta) {
             sessionMeta.textContent = deckSize
-                ? `${deckSize} cards available. Start a session to study them in batches of ${desiredLength}.`
-                : 'No cards available for this module yet.';
+                ? translateLiteral(`${deckSize} cards available. Start a session to study them in batches of ${desiredLength}.`, appState.language)
+                : translateLiteral('No cards available for this module yet.', appState.language);
         }
         return;
     }
 
     toggleButton.disabled = false;
     const card = session[appState.currentFlashcard];
-    counter.textContent = `Card ${appState.currentFlashcard + 1} of ${totalCards}`;
+    counter.textContent = translateLiteral(`Card ${appState.currentFlashcard + 1} of ${totalCards}`, appState.language);
 
     if (sessionMeta) {
         const repeats = deckSize && deckSize < desiredLength;
@@ -6388,24 +8771,24 @@ function renderFlashcard() {
         content.innerHTML = `
             <div class="text-center">
                 <div class="mb-6">
-                    <span class="bg-indigo-500 text-white px-4 py-2 rounded-full text-sm font-medium">Question</span>
+                    <span class="bg-indigo-500 text-white px-4 py-2 rounded-full text-sm font-medium">${translateLiteral('Question', appState.language)}</span>
                 </div>
                 <p class="text-xl mb-6 leading-relaxed">${card.question}</p>
-                <p class="text-sm text-slate-500">Click to reveal answer</p>
+                <p class="text-sm text-slate-500">${translateLiteral('Click to reveal answer', appState.language)}</p>
             </div>
         `;
-        toggleButton.textContent = 'Show Answer';
+        toggleButton.textContent = translateLiteral('Show Answer', appState.language);
     } else {
         content.innerHTML = `
             <div class="text-center">
                 <div class="mb-6">
-                    <span class="bg-emerald-500 text-white px-4 py-2 rounded-full text-sm font-medium">Answer</span>
+                    <span class="bg-emerald-500 text-white px-4 py-2 rounded-full text-sm font-medium">${translateLiteral('Answer', appState.language)}</span>
                 </div>
                 <div class="text-lg leading-relaxed whitespace-pre-line">${card.answer}</div>
-                <p class="text-sm mt-6 text-slate-500">Click to hide answer</p>
+                <p class="text-sm mt-6 text-slate-500">${translateLiteral('Click to hide answer', appState.language)}</p>
             </div>
         `;
-        toggleButton.textContent = 'Hide Answer';
+        toggleButton.textContent = translateLiteral('Hide Answer', appState.language);
     }
 
     prevButton.disabled = appState.currentFlashcard === 0;
@@ -6451,12 +8834,15 @@ function toggleModuleComments(moduleId) {
 }
 
 function setModuleLanguage(moduleId, language) {
+    const module = getModuleById(moduleId);
+    if (!module || !module.codeExamples || !module.codeExamples[language]) return;
     appState.moduleLanguages.set(moduleId, language);
     renderModules();
     saveToLocalStorage();
 }
 
 function setModuleMode(moduleId, mode) {
+    if (!getAvailableModeKeys(moduleId).includes(mode)) return;
     appState.moduleModes.set(moduleId, mode);
     renderModules();
     saveToLocalStorage();
@@ -6553,7 +8939,7 @@ function refreshFlashcardSession(moduleId = appState.selectedFlashcardModule, { 
         renderFlashcard();
         const meta = document.getElementById('flashcard-session-meta');
         if (meta && moduleId !== 'all' && moduleId !== 'general') {
-            meta.textContent = 'Complete this module and pass its quiz to unlock its flashcards.';
+            meta.textContent = translateLiteral('Complete this module and pass its quiz to unlock its flashcards.', appState.language);
         }
         if (persist) saveToLocalStorage();
         return;
@@ -6591,11 +8977,13 @@ function populateFlashcardModuleSelect() {
     const select = document.getElementById('flashcard-module-select');
     if (!select) return;
     const previousValue = select.value || appState.selectedFlashcardModule || 'all';
-    const options = ['<option value="all">All Modules (mix)</option>'];
+    const localizedModuleMap = new Map(getLocalizedModules().map((module) => [module.id, module]));
+    const options = [`<option value="all">${translateLiteral('All Modules (mix)', appState.language)}</option>`];
     modules.forEach((module, index) => {
+        const localizedModule = localizedModuleMap.get(module.id) || module;
         const unlocked = isFlashcardModuleAccessible(module.id);
-        const lockLabel = unlocked ? '' : ' (Complete quiz to unlock)';
-        options.push(`<option value="${module.id}" ${unlocked ? '' : 'disabled'}>${index + 1}. ${module.title}${lockLabel}</option>`);
+        const lockLabel = unlocked ? '' : ` (${translateLiteral('Complete quiz to unlock', appState.language)})`;
+        options.push(`<option value="${module.id}" ${unlocked ? '' : 'disabled'}>${index + 1}. ${localizedModule.title}${lockLabel}</option>`);
     });
     select.innerHTML = options.join('');
     const valueToSet = isFlashcardModuleAccessible(previousValue) ? previousValue : 'all';
@@ -6605,7 +8993,7 @@ function populateFlashcardModuleSelect() {
 
 // Quiz Functions
 function openQuiz(moduleId) {
-    const quiz = quizData[moduleId];
+    const quiz = getLocalizedQuizData(moduleId);
     if (!quiz || !quiz.parts[0].questions.length) return;
 
     appState.currentQuiz = {
@@ -6630,10 +9018,11 @@ function renderQuiz() {
     if (!appState.currentQuiz) return;
 
     const module = modules.find(m => m.id === appState.currentQuiz.moduleId);
+    const localizedModule = getLocalizedModule(module);
     const title = document.getElementById('quiz-title');
     const content = document.getElementById('quiz-content');
 
-    title.textContent = `🧠 Quiz: ${module?.title || 'Quiz'}`;
+    title.textContent = translateLiteral(`🧠 Quiz: ${localizedModule?.title || 'Quiz'}`, appState.language);
 
     if (!appState.currentQuiz.showResults) {
         const answeredCount = appState.currentQuiz.answers.filter(a => a !== null && a !== undefined).length;
@@ -6644,7 +9033,7 @@ function renderQuiz() {
             <div class="mb-6">
                 <div class="flex justify-between items-center mb-4">
                     <span class="text-sm quiz-progress-label">
-                        Question ${appState.currentQuiz.currentQuestion + 1} of ${totalCount} • ${answeredCount}/${totalCount} answered
+                        ${translateLiteral(`Question ${appState.currentQuiz.currentQuestion + 1} of ${totalCount} • ${answeredCount}/${totalCount} answered`, appState.language)}
                     </span>
                     <div class="h-2 bg-slate-800 rounded-full flex-1 ml-4 overflow-hidden border border-white/10">
                         <div class="h-full bg-indigo-500 transition-all duration-300" style="width: ${((appState.currentQuiz.currentQuestion + 1) / totalCount) * 100}%"></div>
@@ -6666,16 +9055,20 @@ function renderQuiz() {
             </div>
 
             <div class="text-sm text-slate-200 mb-4">
-                ${selected === null || selected === undefined ? 'Pick an answer to continue.' : 'Answer selected.'}
+                ${selected === null || selected === undefined
+                    ? translateLiteral('Pick an answer to continue.', appState.language)
+                    : translateLiteral('Answer selected.', appState.language)}
             </div>
 
             <div class="flex justify-between">
                 <button onclick="prevQuestion()" ${appState.currentQuiz.currentQuestion === 0 ? 'disabled' : ''} class="px-6 py-3 rounded-xl font-medium transition-all duration-200 quiz-nav-button secondary ${appState.currentQuiz.currentQuestion === 0 ? '' : ''}">
-                    Previous
+                    ${translateLiteral('Previous', appState.language)}
                 </button>
 
                 <button onclick="nextQuestion()" ${appState.currentQuiz.answers[appState.currentQuiz.currentQuestion] === null ? 'disabled' : ''} class="px-6 py-3 rounded-xl font-medium transition-all duration-200 quiz-nav-button primary">
-                    ${appState.currentQuiz.currentQuestion === appState.currentQuiz.questions.length - 1 ? 'Finish' : 'Next'}
+                    ${appState.currentQuiz.currentQuestion === appState.currentQuiz.questions.length - 1
+                        ? translateLiteral('Finish', appState.language)
+                        : translateLiteral('Next', appState.language)}
                 </button>
             </div>
         `;
@@ -6687,9 +9080,9 @@ function renderQuiz() {
                         ${appState.currentQuiz.score === appState.currentQuiz.questions.length ? '🎉' :
                 appState.currentQuiz.score >= appState.currentQuiz.questions.length * 0.7 ? '👏' : '📚'}
                     </div>
-                    <h4 class="text-3xl font-bold mb-2 text-indigo-600">Quiz Complete!</h4>
+                    <h4 class="text-3xl font-bold mb-2 text-indigo-600">${translateLiteral('Quiz Complete!', appState.language)}</h4>
                     <p class="text-xl text-slate-800">
-                        You scored ${appState.currentQuiz.score} out of ${appState.currentQuiz.questions.length}
+                        ${translateLiteral(`You scored ${appState.currentQuiz.score} out of ${appState.currentQuiz.questions.length}`, appState.language)}
                     </p>
                     <p class="text-lg text-slate-600">
                         (${Math.round((appState.currentQuiz.score / appState.currentQuiz.questions.length) * 100)}%)
@@ -6706,15 +9099,15 @@ function renderQuiz() {
                                 <div class="flex-1">
                                     <p class="font-medium mb-2 text-slate-800">${question.question}</p>
                                     <p class="text-sm text-slate-600">
-                                        <strong>Your answer:</strong> ${question.options[appState.currentQuiz.answers[index]]}
+                                        <strong>${translateLiteral('Your answer:', appState.language)}</strong> ${question.options[appState.currentQuiz.answers[index]]}
                                     </p>
                                     ${appState.currentQuiz.answers[index] !== question.correct ? `
                                         <p class="text-sm text-slate-600">
-                                            <strong>Correct answer:</strong> ${question.options[question.correct]}
+                                            <strong>${translateLiteral('Correct answer:', appState.language)}</strong> ${question.options[question.correct]}
                                         </p>
                                     ` : ''}
                                     <p class="text-sm mt-2 text-slate-800">
-                                        <strong>Explanation:</strong> ${question.explanation}
+                                        <strong>${translateLiteral('Explanation:', appState.language)}</strong> ${question.explanation}
                                     </p>
                                 </div>
                             </div>
@@ -6724,10 +9117,10 @@ function renderQuiz() {
 
                 <div class="flex gap-4 justify-center">
                     <button onclick="restartQuiz()" class="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-                        🔄 Retake Quiz
+                        ${translateLiteral('🔄 Retake Quiz', appState.language)}
                     </button>
                     <button onclick="closeQuiz()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-                        Close
+                        ${translateLiteral('Close', appState.language)}
                     </button>
                 </div>
             </div>
@@ -6784,7 +9177,7 @@ function restartQuiz() {
 
 // Other Functions
 function resetProgress() {
-    if (confirm('Are you sure you want to reset all progress?')) {
+    if (confirm(translateLiteral('Are you sure you want to reset all progress?', appState.language))) {
         appState.completedModules.clear();
         appState.completedQuizzes.clear();
         appState.expandedCode.clear();
@@ -6793,6 +9186,7 @@ function resetProgress() {
         appState.moduleModes.clear();
         appState.searchTerm = '';
         appState.difficultyFilter = 'all';
+        appState.categoryFilter = 'all';
         appState.glossarySearch = '';
         appState.glossaryCategory = 'all';
         appState.currentFlashcard = 0;
@@ -6808,6 +9202,7 @@ function resetProgress() {
         document.getElementById('search-input').value = '';
         document.getElementById('difficulty-filter').value = 'all';
         document.getElementById('glossary-search').value = '';
+        updateTopicFocusButtons();
 
         updateProgress();
         renderModules();
@@ -6860,6 +9255,7 @@ function init() {
     // Set initial form values
     document.getElementById('search-input').value = appState.searchTerm;
     document.getElementById('difficulty-filter').value = appState.difficultyFilter;
+    updateTopicFocusButtons();
 
     // Add event listeners
     document.getElementById('settings-btn').addEventListener('click', openSettings);
@@ -6947,6 +9343,15 @@ function init() {
         appState.difficultyFilter = e.target.value;
         renderModules();
         saveToLocalStorage();
+    });
+
+    document.querySelectorAll('[data-topic-filter]').forEach((button) => {
+        button.addEventListener('click', () => {
+            appState.categoryFilter = button.getAttribute('data-topic-filter') || 'all';
+            updateTopicFocusButtons();
+            renderModules();
+            saveToLocalStorage();
+        });
     });
 
     // Glossary search
@@ -7108,7 +9513,7 @@ function init() {
     if (langEnBtn) langEnBtn.addEventListener('click', () => setLanguage('en'));
     if (langEsBtn) langEsBtn.addEventListener('click', () => setLanguage('es'));
 
-    console.log('Java DSA Learning Hub initialized successfully!');
+    console.log('CS Course Atlas initialized successfully!');
 }
 
 // =================================
@@ -7187,7 +9592,7 @@ function updateStudyHabit(sessionTime) {
 
 function formatMinutes(minutes) {
     if (minutes < 60) {
-        return `${minutes} min`;
+        return translateLiteral(`${minutes} min`, appState.language);
     }
     const hours = Math.floor(minutes / 60);
     const remaining = minutes % 60;
@@ -7199,13 +9604,13 @@ function formatMinutes(minutes) {
 
 function getBreakReminder() {
     if (!studyTimer.isActive || !studyTimer.startTime) {
-        return '⏱ Break reminder in 25 min';
+        return translateLiteral('⏱ Break reminder in 25 min', appState.language);
     }
     const minutesElapsed = Math.floor((Date.now() - studyTimer.startTime) / 60000);
     if (minutesElapsed >= 25) {
-        return '🌿 Stretch & hydrate now!';
+        return translateLiteral('🌿 Stretch & hydrate now!', appState.language);
     }
-    return `⏱ Break in ${25 - minutesElapsed} min`;
+    return translateLiteral(`⏱ Break in ${25 - minutesElapsed} min`, appState.language);
 }
 
 function updateStudyTrackerUI() {
@@ -7222,16 +9627,20 @@ function updateStudyTrackerUI() {
     const totalMinutes = Math.max(0, Math.round((studyMetrics.totalTimeMs || 0) / 60000));
     const todayMinutes = Math.max(0, Math.round((studyMetrics.todayMs || 0) / 60000));
 
-    statusEl.textContent = studyTimer.isActive ? 'Focusing' : 'Idle';
+    statusEl.textContent = studyTimer.isActive
+        ? translateLiteral('Focusing', appState.language)
+        : translateLiteral('Idle', appState.language);
     statusEl.classList.toggle('bg-emerald-100', studyTimer.isActive);
     statusEl.classList.toggle('text-emerald-700', studyTimer.isActive);
 
     todayEl.textContent = `${todayMinutes} min`;
     totalEl.textContent = formatMinutes(totalMinutes);
-    streakEl.textContent = `${studyHabit.streak || 0} day${(studyHabit.streak || 0) === 1 ? '' : 's'}`;
+    streakEl.textContent = translateLiteral(`${studyHabit.streak || 0} day${(studyHabit.streak || 0) === 1 ? '' : 's'}`, appState.language);
 
     if (toggleBtn) {
-        toggleBtn.textContent = studyTimer.isActive ? 'Pause Focus Session' : 'Start Focus Session';
+        toggleBtn.textContent = studyTimer.isActive
+            ? translateLiteral('Pause Focus Session', appState.language)
+            : translateLiteral('Start Focus Session', appState.language);
     }
 
     if (breakEl) {
@@ -7285,23 +9694,24 @@ function renderInsights() {
 
     progressEl.textContent = `${normalizedProgress}%`;
     progressBar.style.width = `${normalizedProgress}%`;
-    completedEl.textContent = `${stats.completed} completed`;
-    totalEl.textContent = `${stats.total} total modules`;
+    completedEl.textContent = translateLiteral(`${stats.completed} completed`, appState.language);
+    totalEl.textContent = translateLiteral(`${stats.total} total modules`, appState.language);
 
     if (learningPathProgress) {
-        learningPathProgress.textContent = `${learningPath.progress}% complete`;
+        learningPathProgress.textContent = translateLiteral(`${learningPath.progress}% complete`, appState.language);
     }
 
     if (learningPathNext) {
         if (learningPath.next) {
-            const topics = (learningPath.next.topics || []).slice(0, 3).join(', ') || 'Core DSA';
+            const localizedNext = getLocalizedModule(learningPath.next);
+            const topics = (localizedNext.topics || []).slice(0, 3).join(', ') || translateLiteral('Core DSA', appState.language);
             learningPathNext.innerHTML = `
-                <p class="font-semibold text-indigo-600">${learningPath.next.title}</p>
-                <p class="text-xs text-slate-500 mb-1">${learningPath.next.difficulty} • ${topics}</p>
-                <p class="text-sm text-slate-600">${learningPath.next.description}</p>
+                <p class="font-semibold text-indigo-600">${localizedNext.title}</p>
+                <p class="text-xs text-slate-500 mb-1">${translateLiteral(learningPath.next.difficulty, appState.language)} • ${topics}</p>
+                <p class="text-sm text-slate-600">${localizedNext.description}</p>
             `;
         } else {
-            learningPathNext.textContent = 'Awesome job! You have explored all available modules.';
+            learningPathNext.textContent = translateLiteral('Awesome job! You have explored all available modules.', appState.language);
         }
     }
 
@@ -7312,15 +9722,16 @@ function renderInsights() {
 
         if (recommendations.length === 0) {
             recommendedList.innerHTML = `
-                <li class="text-xs text-slate-500">All modules completed. Check back soon for new content!</li>
+                <li class="text-xs text-slate-500">${translateLiteral('All modules completed. Check back soon for new content!', appState.language)}</li>
             `;
         } else {
             recommendedList.innerHTML = recommendations.map(module => {
-                const topics = (module.topics || []).slice(0, 3).join(', ') || 'Practice set';
+                const localizedModule = getLocalizedModule(module);
+                const topics = (localizedModule.topics || []).slice(0, 3).join(', ') || translateLiteral('Practice set', appState.language);
                 return `
                 <li>
                     <button class="recommended-link" onclick="focusModule('${module.id}')">
-                        <div class="font-semibold text-slate-800 dark:text-slate-100">${module.title}</div>
+                        <div class="font-semibold text-slate-800 dark:text-slate-100">${localizedModule.title}</div>
                         <div class="text-xs text-slate-500">${topics}</div>
                     </button>
                 </li>
@@ -7341,7 +9752,7 @@ function renderInsights() {
                 const percent = total ? Math.round((completed / total) * 100) : 0;
                 return `
                     <span class="insight-pill">
-                        ${level.charAt(0).toUpperCase() + level.slice(1)} · ${completed}/${total} (${percent}%)
+                        ${translateLiteral(level.charAt(0).toUpperCase() + level.slice(1), appState.language)} · ${completed}/${total} (${percent}%)
                     </span>
                 `;
             }).join('');
@@ -7349,63 +9760,65 @@ function renderInsights() {
 
         if (insightUpdates) {
         const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        insightUpdates.textContent = `Synced ${timestamp}`;
+        insightUpdates.textContent = translateLiteral(`Synced ${timestamp}`, appState.language);
     }
 
     if (highlightGoalEl) {
-        highlightGoalEl.textContent = `${weeklyGoal} modules/wk`;
+        highlightGoalEl.textContent = translateLiteral(`${weeklyGoal} modules/wk`, appState.language);
     }
     if (highlightGoalNoteEl) {
         highlightGoalNoteEl.textContent = modulesRemaining === 0
-            ? 'Goal complete! Review & reinforce.'
-            : `Finish in ~${finishWeeks} week${finishWeeks === 1 ? '' : 's'}`;
+            ? translateLiteral('Goal complete! Review & reinforce.', appState.language)
+            : translateLiteral(`Finish in ~${finishWeeks} week${finishWeeks === 1 ? '' : 's'}`, appState.language);
     }
     if (highlightFocusEl) {
-        highlightFocusEl.textContent = `${formatMinutes(todayMinutes)} today`;
+        highlightFocusEl.textContent = translateLiteral(`${formatMinutes(todayMinutes)} today`, appState.language);
     }
     if (highlightFocusNoteEl) {
-        highlightFocusNoteEl.textContent = `Lifetime ${formatMinutes(totalMinutes)}`;
+        highlightFocusNoteEl.textContent = translateLiteral(`Lifetime ${formatMinutes(totalMinutes)}`, appState.language);
     }
     if (highlightStreakValueEl) {
-        highlightStreakValueEl.textContent = `${streak}-day streak`;
+        highlightStreakValueEl.textContent = translateLiteral(`${streak}-day streak`, appState.language);
     }
     if (highlightStreakNoteEl) {
-        highlightStreakNoteEl.textContent = `Longest streak: ${longestStreak} day${longestStreak === 1 ? '' : 's'}`;
+        highlightStreakNoteEl.textContent = translateLiteral(`Longest streak: ${longestStreak} day${longestStreak === 1 ? '' : 's'}`, appState.language);
     }
     if (planLabelEl || planPillEl || planNoteEl) {
         const planSummary = getStudyPlanSummary();
         if (planLabelEl) planLabelEl.textContent = planSummary.label;
         if (planPillEl) planPillEl.textContent = planSummary.pill;
         if (planNoteEl) planNoteEl.textContent = planSummary.note;
-        if (planCtaEl) planCtaEl.textContent = planSummary.pill === 'Active' ? 'Edit plan' : 'Personalize';
+        if (planCtaEl) planCtaEl.textContent = planSummary.status === 'active'
+            ? translateLiteral('Edit plan', appState.language)
+            : translateLiteral('Personalize', appState.language);
     }
 
     if (momentumStreakEl) {
-        momentumStreakEl.textContent = `${streak} day${streak === 1 ? '' : 's'}`;
+        momentumStreakEl.textContent = translateLiteral(`${streak} day${streak === 1 ? '' : 's'}`, appState.language);
     }
     if (momentumTodayEl) {
         momentumTodayEl.textContent = formatMinutes(todayMinutes);
     }
     if (momentumLongestEl) {
-        momentumLongestEl.textContent = `${longestStreak} day${longestStreak === 1 ? '' : 's'}`;
+        momentumLongestEl.textContent = translateLiteral(`${longestStreak} day${longestStreak === 1 ? '' : 's'}`, appState.language);
     }
     if (momentumTrendEl) {
-        let trendLabel = 'Getting started';
-        if (streak >= 3 || todayMinutes >= 45) trendLabel = 'On track';
-        if (streak >= 7 || todayMinutes >= 90) trendLabel = 'Momentum unlocked';
+        let trendLabel = translateLiteral('Getting started', appState.language);
+        if (streak >= 3 || todayMinutes >= 45) trendLabel = translateLiteral('On track', appState.language);
+        if (streak >= 7 || todayMinutes >= 90) trendLabel = translateLiteral('Momentum unlocked', appState.language);
         momentumTrendEl.textContent = trendLabel;
     }
     if (momentumTipEl) {
-        let tip = 'Log a focus session to start building momentum.';
+        let tip = translateLiteral('Log a focus session to start building momentum.', appState.language);
         const weeklyNeed = modulesRemaining === 0 ? 0 : Math.min(modulesRemaining, weeklyGoal);
         if (modulesRemaining === 0) {
-            tip = 'All modules complete—spend time on flashcards or mentor a friend.';
+            tip = translateLiteral('All modules complete—spend time on flashcards or mentor a friend.', appState.language);
         } else if (streak >= 7) {
-            tip = '🔥 Your streak is on fire! Consider revisiting advanced challenge sets.';
+            tip = translateLiteral('🔥 Your streak is on fire! Consider revisiting advanced challenge sets.', appState.language);
         } else if (todayMinutes < 30) {
-            tip = 'Try a focused 30-minute sprint to lock in a module today.';
+            tip = translateLiteral('Try a focused 30-minute sprint to lock in a module today.', appState.language);
         } else {
-            tip = `Complete ${weeklyNeed} module${weeklyNeed === 1 ? '' : 's'} this week to stay on pace.`;
+            tip = translateLiteral(`Complete ${weeklyNeed} module${weeklyNeed === 1 ? '' : 's'} this week to stay on pace.`, appState.language);
         }
         momentumTipEl.textContent = tip;
     }
@@ -7479,7 +9892,7 @@ function showToast(message, type = 'info') {
             toast.classList.add('bg-blue-500');
     }
 
-    toast.textContent = message;
+    toast.textContent = translateLiteral(message, appState.language);
     document.body.appendChild(toast);
 
     // Animate in
@@ -7560,7 +9973,7 @@ function exportProgress() {
 
     const link = document.createElement('a');
     link.href = url;
-    link.download = `java-dsa-progress-${new Date().toISOString().split('T')[0]}.json`;
+    link.download = `cs-course-atlas-progress-${new Date().toISOString().split('T')[0]}.json`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -7581,10 +9994,17 @@ function importProgress(event) {
 
             if (importData.version && importData.progress) {
                 // Restore progress
-                appState.completedModules = new Set(importData.progress.completedModules);
-                appState.moduleComments = new Map(importData.progress.moduleSettings.comments);
-                appState.moduleLanguages = new Map(importData.progress.moduleSettings.languages);
-                appState.moduleModes = new Map(importData.progress.moduleSettings.modes);
+                appState.completedModules = new Set(remapStoredModuleIds(importData.progress.completedModules || []));
+                appState.moduleComments = new Map(remapStoredModuleEntryPairs(importData.progress.moduleSettings.comments || []));
+                appState.moduleLanguages = new Map(remapStoredModuleEntryPairs(importData.progress.moduleSettings.languages || []));
+                appState.moduleModes = sanitizeStoredModuleModes(
+                    new Map(remapStoredModuleEntryPairs(importData.progress.moduleSettings.modes || [], { allowLegacy: false }))
+                );
+                ['assembly-registers-memory', 'assembly-control-flow-procedures', 'assembly-arrays-strings-io'].forEach((moduleId) => {
+                    if (appState.moduleLanguages.get(moduleId) !== 'assembly') {
+                        appState.moduleLanguages.delete(moduleId);
+                    }
+                });
                 appState.darkMode = importData.progress.preferences.darkMode;
                 appState.showComments = importData.progress.preferences.showComments;
 
@@ -7622,7 +10042,7 @@ function printStudyGuide() {
         <!DOCTYPE html>
         <html>
         <head>
-            <title>Java DSA Study Guide</title>
+            <title>CS Course Atlas Study Guide</title>
             <style>
                 body { font-family: Arial, sans-serif; margin: 20px; }
                 h1 { color: #4f46e5; border-bottom: 2px solid #4f46e5; padding-bottom: 10px; }
@@ -7635,7 +10055,7 @@ function printStudyGuide() {
             </style>
         </head>
         <body>
-            <h1>Java DSA Study Guide</h1>
+            <h1>CS Course Atlas Study Guide</h1>
             <p>Generated on: ${new Date().toLocaleDateString()}</p>
             <p>Completed Modules: ${completedModules.length} of ${modules.length}</p>
             
@@ -7768,7 +10188,8 @@ function trackUsage(action, category = 'General') {
 // Module recommendation system
 function getRecommendedModules() {
     const completed = Array.from(appState.completedModules);
-    const incomplete = modules.filter(m => !completed.includes(m.id));
+    const orderedModules = getOrderedModules();
+    const incomplete = orderedModules.filter(m => !completed.includes(m.id));
 
     if (completed.length === 0) {
         // Recommend beginner modules
@@ -7777,7 +10198,7 @@ function getRecommendedModules() {
 
     // Simple recommendation based on completed modules
     const completedDifficulties = completed.map(id =>
-        modules.find(m => m.id === id)?.difficulty
+        orderedModules.find(m => m.id === id)?.difficulty
     ).filter(Boolean);
 
     const mostCommonDifficulty = completedDifficulties
@@ -7885,6 +10306,46 @@ function generateLearningPath() {
     return path;
 }
 
+function runLocalizationSmokeTest() {
+    const originalLanguage = appState.language;
+    const results = [];
+    const check = (label, condition) => {
+        results.push({ label, pass: Boolean(condition) });
+    };
+
+    try {
+        setLanguage('es');
+        renderModules();
+        renderGlossary();
+        renderFlashcard();
+        renderInsights();
+
+        check('header-title-spanish', (document.getElementById('main-title')?.textContent || '').toLowerCase().includes('cs course atlas'));
+        check('module-grid-rendered', (document.getElementById('modules-grid')?.children?.length || 0) > 0);
+        check('glossary-rendered', (document.getElementById('glossary-content')?.textContent || '').trim().length > 0);
+        check('assembly-topic-visible', (document.querySelector('[data-topic-filter=\"assembly\"]')?.textContent || '').trim().length > 0);
+        check('java-topic-visible', (document.querySelector('[data-topic-filter=\"java\"]')?.textContent || '').trim().length > 0);
+        check('git-topic-visible', (document.querySelector('[data-topic-filter=\"git\"]')?.textContent || '').trim().length > 0);
+        check('new-discrete-module-rendered', Boolean(document.getElementById('module-propositional-logic-proofs')));
+        check('new-assembly-module-rendered', Boolean(document.getElementById('module-assembly-registers-memory')));
+
+        setLanguage('en');
+        check('header-title-english', (document.getElementById('main-title')?.textContent || '').toLowerCase().includes('cs course atlas'));
+        check('dynamic-total-text', (document.getElementById('progress-text')?.textContent || '').includes(`of ${getTotalModuleCount()} modules`));
+    } catch (error) {
+        results.push({ label: 'runtime-error', pass: false, error: String(error?.message || error) });
+    } finally {
+        if (appState.language !== originalLanguage) {
+            setLanguage(originalLanguage);
+        }
+    }
+
+    return {
+        ok: results.every(item => item.pass),
+        results
+    };
+}
+
 // Add to the window object for global access
 window.javaDSAHub = {
     exportProgress,
@@ -7894,7 +10355,8 @@ window.javaDSAHub = {
     getModuleStats,
     getQuizStats,
     toggleTheme,
-    trackUsage
+    trackUsage,
+    runLocalizationSmokeTest
 };
 
 // Error boundary
@@ -7935,7 +10397,7 @@ window.addEventListener('resize', () => {
     updateHeaderShrink(); // Recalculate header shrinking on resize
 });
 
-console.log('Java DSA Learning Hub - All systems loaded successfully! 🚀');
+console.log('CS Course Atlas - All systems loaded successfully! 🚀');
 
 // Interactive Quiz Library (restored)
 function openInteractiveQuizLibrary() {
@@ -7959,14 +10421,15 @@ function populateInteractiveQuizModules() {
     if (!select) return;
     const options = Object.entries(quizData)
         .filter(([id, data]) => data?.parts?.[0]?.questions?.length)
-        .map(([id, data]) => {
-            const module = modules.find(m => m.id === id);
-            const title = module?.title || data?.title || id;
-            const count = data?.parts?.[0]?.questions?.length || 0;
-            return `<option value="${id}">${title} (${count} Qs)</option>`;
+        .map(([id]) => {
+            const localizedQuiz = getLocalizedQuizData(id) || quizData[id];
+            const module = getLocalizedModule(modules.find(m => m.id === id));
+            const title = module?.title || localizedQuiz?.title || id;
+            const count = localizedQuiz?.parts?.[0]?.questions?.length || 0;
+            return `<option value="${id}">${title} (${count} ${translateLiteral('Qs', appState.language)})</option>`;
         })
         .join('');
-    select.innerHTML = options || '<option disabled>No quizzes available</option>';
+    select.innerHTML = options || `<option disabled>${translateLiteral('No quizzes available', appState.language)}</option>`;
     select.onchange = (e) => loadInteractiveQuizModule(e.target.value);
 }
 
@@ -7974,7 +10437,7 @@ function loadInteractiveQuizModule(moduleId) {
     const select = document.getElementById('interactive-quiz-module');
     if (select && moduleId) select.value = moduleId;
     interactiveQuizState.moduleId = moduleId;
-    const questions = quizData[moduleId]?.parts?.[0]?.questions || [];
+    const questions = getLocalizedQuizData(moduleId)?.parts?.[0]?.questions || [];
     interactiveQuizState.questions = questions;
     interactiveQuizState.current = 0;
     interactiveQuizState.answers = new Array(questions.length).fill(null);
@@ -7990,7 +10453,7 @@ function renderInteractiveQuizQuestion() {
     const total = questions.length;
 
     if (!total) {
-        body.innerHTML = `<div class="p-6 rounded-xl bg-slate-50 border border-slate-200 text-slate-600">No questions available for this module yet.</div>`;
+        body.innerHTML = `<div class="p-6 rounded-xl bg-slate-50 border border-slate-200 text-slate-600">${translateLiteral('No questions available for this module yet.', appState.language)}</div>`;
         if (progress) progress.textContent = '';
         return;
     }
@@ -8002,13 +10465,13 @@ function renderInteractiveQuizQuestion() {
     const feedback = selected === null
         ? ''
         : selected === question.correct
-            ? `<p class="text-sm text-emerald-600 font-semibold mt-2">✅ Correct! ${question.explanation || ''}</p>`
-            : `<p class="text-sm text-rose-600 font-semibold mt-2">❌ Try again. ${question.explanation || ''}</p>`;
+            ? `<p class="text-sm text-emerald-600 font-semibold mt-2">✅ ${translateLiteral('Correct!', appState.language)} ${question.explanation || ''}</p>`
+            : `<p class="text-sm text-rose-600 font-semibold mt-2">❌ ${translateLiteral('Try again.', appState.language)} ${question.explanation || ''}</p>`;
 
     body.innerHTML = `
         <div class="flex items-center justify-between text-sm text-slate-600 mb-2">
-            <span>Question ${current + 1} of ${total}</span>
-            <span>${Math.round(((current + 1) / total) * 100)}% through</span>
+            <span>${translateLiteral(`Question ${current + 1} of ${total}`, appState.language)}</span>
+            <span>${Math.round(((current + 1) / total) * 100)}% ${translateLiteral('through', appState.language)}</span>
         </div>
         <div class="p-4 sm:p-5 rounded-xl border border-slate-200 bg-white shadow-sm">
             <h4 class="text-lg font-semibold text-slate-800 mb-4">${question.question}</h4>
@@ -8032,11 +10495,11 @@ function renderInteractiveQuizQuestion() {
             <div class="flex justify-between items-center mt-4 gap-3">
                 <button class="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 bg-white hover:border-indigo-300 hover:bg-indigo-50 transition"
                     ${current === 0 ? 'disabled' : ''} onclick="prevInteractiveQuizQuestion()">
-                    ◀ Previous
+                    ◀ ${translateLiteral('Previous', appState.language)}
                 </button>
                 <button class="px-4 py-2 rounded-lg bg-indigo-500 text-white font-semibold hover:bg-indigo-600 shadow-sm transition"
                     ${current >= total - 1 ? 'disabled' : ''} onclick="nextInteractiveQuizQuestion()">
-                    Next ▶
+                    ${translateLiteral('Next', appState.language)} ▶
                 </button>
             </div>
         </div>
@@ -8044,7 +10507,7 @@ function renderInteractiveQuizQuestion() {
 
     if (progress) {
         const answered = interactiveQuizState.answers.filter(a => a !== null).length;
-        progress.textContent = `${answered} answered • ${total} total`;
+        progress.textContent = translateLiteral(`${answered} answered • ${total} total`, appState.language);
     }
 }
 

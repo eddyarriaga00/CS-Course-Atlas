@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MultLearning Site - Master DSA, Assembly, Java, Python, JS, Discrete & More</title>
-    <meta name="description" content="MultLearning: DSA, Assembly, Java, Python, JavaScript, Discrete Mathematics, and more — interactive modules, examples, quizzes, and flashcards.">
+    <title>CS Course Atlas - Multi-Class Learning for Computer Science Students</title>
+    <meta name="description" content="CS Course Atlas: DSA, Assembly, Java, Python, JavaScript, Discrete Mathematics, and more — with Theory of Computation, C++ track, and Statistics coming soon.">
     <script>
         window.tailwind = window.tailwind || {};
         window.tailwind.config = {
@@ -41,10 +41,10 @@
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-3 gap-2.5">
                 <div class="w-full sm:w-auto transition-all duration-300 header-brand space-y-1">
                     <h1 id="main-title" class="font-bold leading-tight transition-all duration-300 text-xl sm:text-2xl lg:text-3xl tracking-tight" data-i18n="main.title">
-                        ☕ MultLearning Site
+                        🧭 CS Course Atlas
                     </h1>
                     <p id="main-subtitle" class="text-blue-100 text-xs sm:text-sm lg:text-base mt-0.5 transition-all duration-300 subtitle-collapsible text-[0.9rem]" data-i18n="main.subtitle">
-                        DSA, Assembly, Java, Python, JavaScript, Discrete, and more — interactive learning
+                        Multi-class learning for Computer Science students
                     </p>
                 </div>
                 <div id="header-buttons" class="flex flex-wrap gap-1.5 sm:gap-2 w-full sm:w-auto justify-start sm:justify-end transition-all duration-300 order-3 sm:order-2 gap-2 justify-end">
@@ -75,7 +75,7 @@
     <div id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <div class="text-center mb-8 sm:mb-10 hero-section rounded-2xl p-6 sm:p-8 shadow-2xl section-spacing backdrop-blur-md">
             <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 sm:mb-6 leading-tight text-slate-100" data-i18n="hero.title">
-                MultLearning: Master DSA, Assembly, and Beyond
+                CS Course Atlas: Learn Across Core CS Courses
             </h2>
             <p class="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed text-base sm:text-lg text-slate-200" data-i18n="hero.subtitle">
                 A comprehensive, beginner-friendly journey across Data Structures & Algorithms, Assembly, Java, Python, JavaScript, and Discrete Mathematics by Eddy Arriaga-B.
@@ -83,13 +83,69 @@
             </p>
         </div>
 
+        <section id="topic-focus-section" class="panel-surface rounded-xl p-5 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/65 border border-white/10 text-slate-100">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-4">
+                <div>
+                    <h3 class="text-xl sm:text-2xl font-semibold text-indigo-300">Topic Focus</h3>
+                    <p class="text-sm sm:text-base text-slate-200">Choose your primary track. This controls which major module family is shown.</p>
+                </div>
+                <span class="text-xs px-3 py-1.5 rounded-full bg-slate-800 border border-white/10 text-slate-200 font-semibold uppercase tracking-wide">Primary Filter</span>
+            </div>
+            <div id="topic-focus-toggle" class="topic-focus-toggle-grid">
+                <button type="button" class="topic-focus-btn is-active" data-topic-filter="all">
+                    <span class="topic-focus-title">All Topics</span>
+                    <span class="topic-focus-subtitle">Everything in one view</span>
+                </button>
+                <button type="button" class="topic-focus-btn" data-topic-filter="dsa">
+                    <span class="topic-focus-title">Data Structures & Algorithms</span>
+                    <span class="topic-focus-subtitle">Core coding interview track</span>
+                </button>
+                <button type="button" class="topic-focus-btn" data-topic-filter="discrete">
+                    <span class="topic-focus-title">Discrete Mathematics</span>
+                    <span class="topic-focus-subtitle">Proofs, counting, and math logic</span>
+                </button>
+                <button type="button" class="topic-focus-btn" data-topic-filter="java">
+                    <span class="topic-focus-title" data-i18n="topic.java.title">Java Learning</span>
+                    <span class="topic-focus-subtitle" data-i18n="topic.java.subtitle">Core Java syntax, OOP, tooling, and practical software workflows</span>
+                </button>
+                <button type="button" class="topic-focus-btn" data-topic-filter="git">
+                    <span class="topic-focus-title" data-i18n="topic.git.title">Git Learning</span>
+                    <span class="topic-focus-subtitle" data-i18n="topic.git.subtitle">Version control, branching, collaboration, and safe workflows</span>
+                </button>
+                <button type="button" class="topic-focus-btn" data-topic-filter="assembly">
+                    <span class="topic-focus-title" data-i18n="topic.assembly.title">Assembly Fundamentals</span>
+                    <span class="topic-focus-subtitle" data-i18n="topic.assembly.subtitle">Registers, memory, and low-level program flow</span>
+                </button>
+            </div>
+            <div class="topic-coming-soon-wrap mt-4">
+                <p class="text-xs uppercase tracking-wide font-semibold text-slate-300 mb-2" data-i18n="topic.comingSoon.heading">Coming Soon Tracks</p>
+                <div class="topic-coming-soon-grid">
+                    <div class="topic-coming-soon-card">
+                        <span class="topic-coming-pill" data-i18n="topic.comingSoon.label">Coming Soon</span>
+                        <span class="topic-focus-title" data-i18n="topic.comingSoon.toc.title">Theory of Computation</span>
+                        <span class="topic-focus-subtitle" data-i18n="topic.comingSoon.toc.subtitle">Automata, formal languages, computability, and complexity foundations</span>
+                    </div>
+                    <div class="topic-coming-soon-card">
+                        <span class="topic-coming-pill" data-i18n="topic.comingSoon.label">Coming Soon</span>
+                        <span class="topic-focus-title" data-i18n="topic.comingSoon.cpp.title">Dedicated C++ Learning Track</span>
+                        <span class="topic-focus-subtitle" data-i18n="topic.comingSoon.cpp.subtitle">C++ fundamentals, STL, memory model, and performance-oriented problem solving</span>
+                    </div>
+                    <div class="topic-coming-soon-card">
+                        <span class="topic-coming-pill" data-i18n="topic.comingSoon.label">Coming Soon</span>
+                        <span class="topic-focus-title" data-i18n="topic.comingSoon.stats.title">Statistics for CS</span>
+                        <span class="topic-focus-subtitle" data-i18n="topic.comingSoon.stats.subtitle">Probability, distributions, inference, and data-driven decision making</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <div id="progress-section" class="panel-surface progress-panel rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing border border-white/10 bg-slate-900/60 text-slate-100">
             <h3 class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 section-heading text-[1.05rem]" data-i18n="progress.heading">📊 Your Learning Progress</h3>
             <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 gap-5">
                 <div class="w-full space-y-2">
                     <p class="progress-kicker text-xs uppercase font-semibold text-[11px]" data-i18n="progress.kicker">Current journey</p>
                     <span id="progress-text" class="progress-summary block text-base sm:text-lg font-semibold mt-1 text-[1rem] text-slate-100">
-                        0 of 34 modules completed
+                        0 of 0 modules completed
                     </span>
                     <div class="progress-meter mt-3">
                         <div id="progress-bar" class="progress-meter-fill transition-all duration-500" style="width: 0%"></div>
@@ -131,7 +187,7 @@
                 </div>
                 <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs text-slate-500 mt-2 gap-1 text-slate-300">
                     <span id="achievement-progress-label">0 / 3 modules toward next badge</span>
-                    <span id="achievement-total-label">34 total modules</span>
+                    <span id="achievement-total-label">0 total modules</span>
                 </div>
             </div>
         </div>
@@ -226,7 +282,7 @@
                         </div>
                         <div class="text-right text-xs text-slate-500 text-slate-300">
                             <p id="insights-completed-count">0 completed</p>
-                            <p id="insights-total-count">34 total modules</p>
+                            <p id="insights-total-count">0 total modules</p>
                         </div>
                     </div>
                     <div class="insight-progress mb-3">
@@ -482,7 +538,7 @@
                         <button id="playground-reset" class="px-4 py-2 w-full sm:w-auto text-sm font-semibold rounded-lg border border-slate-200 bg-white text-white shadow-sm hover:-translate-y-0.5 transition bg-slate-800 text-slate-100 border-white/10">
                             🔄 Reset Editor
                         </button>
-                        <p class="text-xs text-slate-500 flex-1 text-slate-300">Uses the open Piston API when network access is available. Configure <code>CODE_RUNNER_ENDPOINT</code> in <code>js/script.js</code> to point to your own runner.</p>
+                        <p class="text-xs text-slate-500 flex-1 text-slate-300">Uses Judge0 by default when network access is available. Set <code>CODE_RUNNER_ENDPOINT</code> in <code>js/script.js</code> to route through your own private runner.</p>
                     </div>
                 </div>
                 <div class="playground-card">
@@ -508,12 +564,6 @@
                             <option value="beginner">Beginner</option>
                             <option value="intermediate">Intermediate</option>
                             <option value="advanced">Advanced</option>
-                        </select>
-                        <select id="category-filter" class="w-full sm:w-56 px-3 py-2 sm:py-2.5 rounded-lg border transition-all duration-200 text-sm sm:text-base bg-white border-slate-300 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-900/60 border-white/10 text-slate-100">
-                            <option value="all">All Topics</option>
-                            <option value="dsa">Data Structures & Algorithms</option>
-                            <option value="discrete">Discrete Mathematics</option>
-                            <option value="systems">Systems / Assembly</option>
                         </select>
                     </div>
                 </div>
@@ -570,7 +620,7 @@
             </div>
             <div class="border-t border-slate-200 mt-4 sm:mt-6 pt-3 sm:pt-4 text-center text-slate-500 border-white/10 text-slate-300">
                 <p class="text-sm">Created for CS students by Eddy Arriaga-B</p>
-                <p class="text-xs mt-1">Java DSA Learning Hub © 2024 | Open Source ❤️</p>
+                <p class="text-xs mt-1">CS Course Atlas © 2024 | Open Source ❤️</p>
             </div>
         </footer>
     </div>
@@ -749,8 +799,8 @@
                             <span class="settings-label-sub" data-i18n="settings.languageHint">Switch between English and Spanish / Cambia entre inglés y español.</span>
                         </div>
                         <div class="lang-toggle-group">
-                            <button id="lang-en-btn" class="lang-btn active" onclick="setLanguage(‘en’)">EN</button>
-                            <button id="lang-es-btn" class="lang-btn" onclick="setLanguage(‘es’)">ES</button>
+                            <button id="lang-en-btn" class="lang-btn active" onclick="setLanguage('en')">EN</button>
+                            <button id="lang-es-btn" class="lang-btn" onclick="setLanguage('es')">ES</button>
                         </div>
                     </div>
                 </div>
@@ -767,13 +817,13 @@
     <div id="glossary-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
             <div class="modal-panel rounded-2xl w-full max-w-5xl shadow-2xl flex flex-col bg-white text-slate-900 border border-slate-200 max-h-[90vh] overflow-hidden bg-slate-900 text-slate-100 border-white/10">
                 <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
-                    <h3 class="text-3xl font-semibold text-indigo-600 text-2xl">📚 Java DSA Glossary</h3>
+                    <h3 class="text-3xl font-semibold text-indigo-600 text-2xl">📚 CS Course Atlas Glossary</h3>
                     <button id="close-glossary" class="text-2xl transition-colors duration-200 hover:scale-110 text-slate-500 hover:text-slate-700 text-slate-200">×</button>
                 </div>
             <div class="p-6 pb-4 space-y-4 space-y-3 p-5">
                 <input type="text" id="glossary-search" placeholder="Search glossary terms..." class="w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-white border-slate-300 text-slate-900 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-400">
                 <div id="glossary-stats" class="glossary-stats text-xs sm:text-sm text-slate-500 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-slate-300">
-                    <span>Browse curated Java DSA terminology.</span>
+                    <span>Browse curated Computer Science terminology.</span>
                     <span>Filter by category to focus your study.</span>
                 </div>
                 <div id="glossary-categories" class="glossary-chip-row flex flex-wrap gap-2"></div>
@@ -886,34 +936,38 @@
     </div>
 
     <div id="account-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
-        <div class="modal-panel rounded-2xl w-full max-w-md shadow-2xl bg-white text-slate-900 border border-slate-200 bg-slate-900 text-slate-100 border-white/10">
+        <div class="modal-panel rounded-2xl w-full max-w-xl shadow-2xl bg-white text-slate-900 border border-slate-200 bg-slate-900 text-slate-100 border-white/10">
             <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
-                <h3 class="text-2xl font-semibold text-indigo-600 text-indigo-300">Create Account</h3>
-                <button id="close-account" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700 text-slate-200">×</button>
-            </div>
-            <div class="p-6 space-y-4">
                 <div>
-                    <label for="account-name" class="font-semibold text-slate-800 text-sm mb-1 block text-slate-200">Name</label>
-                    <input type="text" id="account-name" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 bg-slate-800 border-white/10 text-slate-100" placeholder="Eddy Arriaga">
+                    <h3 class="text-2xl font-semibold text-indigo-300">Account &amp; Secure Access</h3>
+                    <p class="text-sm text-slate-300 mt-1">Clean auth flow with secure session-based access.</p>
                 </div>
-                <div>
-                    <label for="account-email" class="font-semibold text-slate-800 text-sm mb-1 block text-slate-200">Email</label>
-                    <input type="email" id="account-email" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 bg-slate-800 border-white/10 text-slate-100" placeholder="you@email.com">
-                </div>
-                <div>
-                    <label for="account-goal" class="font-semibold text-slate-800 text-sm mb-1 block text-slate-200">Goal</label>
-                    <select id="account-goal" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 bg-slate-800 border-white/10 text-slate-100">
-                        <option value="exploring">Exploring DSA</option>
-                        <option value="coursework">University Coursework</option>
-                        <option value="interview">Interview Prep</option>
-                        <option value="upskilling">Upskilling at Work</option>
-                    </select>
-                </div>
-                <p class="text-xs text-slate-500 text-slate-300">Profiles save locally today. Drop in your API endpoint inside <code>js/script.js</code> when you are ready to sync accounts.</p>
+                <button id="close-account" class="text-2xl transition-colors duration-200 text-slate-200 hover:text-white">×</button>
             </div>
-            <div class="p-6 border-t border-slate-200 border-white/10">
-                <button id="save-account" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-3 rounded-xl font-medium">Save Profile</button>
+
+            <div class="p-6">
+                <div class="rounded-2xl border border-indigo-300/30 bg-gradient-to-br from-indigo-500/10 to-slate-900 p-5 space-y-4">
+                    <div class="grid grid-cols-2 gap-2 p-1 rounded-xl bg-slate-800/80 border border-white/10">
+                        <button id="account-auth-login-tab" type="button" class="px-4 py-2 rounded-lg text-sm font-semibold bg-violet-500 text-white transition-colors duration-200">Log In</button>
+                        <button id="account-auth-signup-tab" type="button" class="px-4 py-2 rounded-lg text-sm font-semibold bg-transparent text-slate-300 hover:text-white transition-colors duration-200">Sign Up</button>
+                    </div>
+                    <div>
+                        <label for="account-auth-email" class="font-semibold text-sm mb-1 block text-slate-200">Email / Username</label>
+                        <input type="text" id="account-auth-email" autocomplete="username" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="example@email.com">
+                    </div>
+                    <div>
+                        <label for="account-auth-password" class="font-semibold text-sm mb-1 block text-slate-200">Password</label>
+                        <input type="password" id="account-auth-password" autocomplete="current-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="••••••••">
+                    </div>
+                    <div id="account-auth-confirm-group" class="hidden">
+                        <label for="account-auth-confirm" class="font-semibold text-sm mb-1 block text-slate-200">Confirm Password</label>
+                        <input type="password" id="account-auth-confirm" autocomplete="new-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="••••••••">
+                    </div>
+                    <button id="account-auth-submit" type="button" class="w-full bg-violet-500 hover:bg-violet-600 text-white py-2.5 rounded-xl font-medium">Log In</button>
+                    <p id="account-auth-status" class="text-xs text-slate-300">Not authenticated.</p>
+                </div>
             </div>
+
         </div>
     </div>
 
@@ -970,6 +1024,7 @@
         </div>
     </div>
 
+    <script src="js/spanish-localization.js"></script>
     <script src="js/script.js"></script>
 </body>
 </html>
