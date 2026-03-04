@@ -51,9 +51,13 @@ function main() {
     modules.forEach((module) => {
         const category = MODULE_CATEGORY_BY_ID[module.id] || 'dsa';
         const codeExamples = module.codeExamples || {};
-        const javaCode = String(codeExamples.java || '').trim();
         const definitions = Array.isArray(module.definitions) ? module.definitions : [];
         const requiredRunnables = ['java', 'cpp', 'python', 'javascript'];
+        const requiredSetLanguages = category === 'assembly'
+            ? ['assembly', ...requiredRunnables]
+            : requiredRunnables;
+        const moduleSets = Array.isArray(module.codeExampleSets) ? module.codeExampleSets : [];
+        const expectedSetCount = Array.isArray(module.topics) ? module.topics.length : 0;
 
         if (category === 'assembly') {
             if (!String(codeExamples.assembly || '').trim()) {
@@ -83,6 +87,58 @@ function main() {
             if (source.trim() && !outputRegexByLanguage[lang].test(source)) {
                 errors.push(`Module "${module.id}" ${lang} sample appears to have no visible stdout.`);
             }
+        });
+
+        if (moduleSets.length !== expectedSetCount) {
+            errors.push(`Module "${module.id}" must have ${expectedSetCount} codeExampleSets (found ${moduleSets.length}).`);
+        }
+
+        const setIds = new Set();
+        moduleSets.forEach((setItem, setIndex) => {
+            const setId = String(setItem?.id || '').trim();
+            if (!setId) {
+                errors.push(`Module "${module.id}" has a set without a stable id at index ${setIndex}.`);
+            } else if (setIds.has(setId)) {
+                errors.push(`Module "${module.id}" has duplicate set id "${setId}".`);
+            } else {
+                setIds.add(setId);
+            }
+
+            const titleValue = setItem?.title;
+            const hasTitle = typeof titleValue === 'string'
+                ? !!titleValue.trim()
+                : !!(titleValue && typeof titleValue === 'object' && (titleValue.en || titleValue.es));
+            if (!hasTitle) {
+                errors.push(`Module "${module.id}" set "${setId || setIndex}" is missing title.`);
+            }
+
+            const descValue = setItem?.description;
+            const hasDescription = typeof descValue === 'string'
+                ? !!descValue.trim()
+                : !!(descValue && typeof descValue === 'object' && (descValue.en || descValue.es));
+            if (!hasDescription) {
+                errors.push(`Module "${module.id}" set "${setId || setIndex}" is missing description.`);
+            }
+
+            const setCodeExamples = setItem?.codeExamples || {};
+            requiredSetLanguages.forEach((lang) => {
+                if (!String(setCodeExamples[lang] || '').trim()) {
+                    errors.push(`Module "${module.id}" set "${setId || setIndex}" missing codeExamples.${lang}`);
+                }
+            });
+            requiredRunnables.forEach((lang) => {
+                const code = String(setCodeExamples[lang] || '');
+                if (code.trim() && !outputRegexByLanguage[lang].test(code)) {
+                    errors.push(`Module "${module.id}" set "${setId || setIndex}" ${lang} sample appears to have no visible stdout.`);
+                }
+            });
+
+            const setExpectedOutputs = setItem?.expectedOutputs || {};
+            requiredSetLanguages.forEach((lang) => {
+                if (!String(setExpectedOutputs[lang] || '').trim()) {
+                    errors.push(`Module "${module.id}" set "${setId || setIndex}" missing expectedOutputs.${lang}`);
+                }
+            });
         });
 
         if (definitions.length !== 5) {
@@ -147,6 +203,7 @@ function main() {
     console.log(`- modules: ${modules.length}`);
     console.log('- java/cpp/python/javascript parity: OK');
     console.log('- assembly + runnable parity: OK');
+    console.log('- full codeExampleSets coverage: OK');
     console.log('- definitions (5 each): OK');
     console.log('- topic filter/category split (java+git): OK');
     console.log('- no coaching output prompts: OK');

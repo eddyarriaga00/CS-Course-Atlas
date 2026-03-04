@@ -26,7 +26,7 @@ function loadBaseData() {
     extract(src, 'const modules = [', 'const INTERVIEW_EXAMPLES = ['),
     extract(src, 'const INTERVIEW_EXAMPLES = [', 'const NOTES_LIBRARY = ['),
     extract(src, 'const NOTES_LIBRARY = [', 'function initAccount()'),
-    '({ TRANSLATIONS, baseFlashcards, glossaryTerms, quizData, modules, INTERVIEW_EXAMPLES, NOTES_LIBRARY, dailyChallenges, studyTips })'
+    '({ MODULE_CATEGORY_BY_ID, TRANSLATIONS, baseFlashcards, glossaryTerms, quizData, modules, INTERVIEW_EXAMPLES, NOTES_LIBRARY, dailyChallenges, studyTips })'
   ].join('\n');
   return vm.runInNewContext(block, {});
 }
@@ -60,10 +60,48 @@ function main() {
   const base = loadBaseData();
   const spanish = loadSpanishLocalization();
   const content = spanish.content || {};
+  const source = fs.readFileSync(SCRIPT_PATH, 'utf8');
 
   const keyCoverage = verifyTranslationKeyCoverage(base.TRANSLATIONS);
   if (keyCoverage.missingEn.length) errors.push(`Missing EN translation keys: ${keyCoverage.missingEn.join(', ')}`);
   if (keyCoverage.missingEs.length) errors.push(`Missing ES translation keys: ${keyCoverage.missingEs.join(', ')}`);
+
+  const requiredRuntimeKeys = [
+    'module.starterBanner',
+    'module.topicsCovered',
+    'module.codeExample',
+    'module.discreteTheory',
+    'module.theoryMode',
+    'module.learningResources',
+    'module.definitionsHeading',
+    'module.tooltipHideComments',
+    'module.tooltipShowComments',
+    'module.tooltipSelectLanguage',
+    'module.tooltipSelectMode',
+    'module.modeCode',
+    'module.modePseudocode',
+    'module.commentsOn',
+    'module.commentsOff',
+    'module.collapse',
+    'module.expand',
+    'module.discreteModeLabel',
+    'module.showOutput',
+    'module.hideOutput',
+    'module.outputHeading',
+    'module.outputRunning',
+    'module.outputSourceLive',
+    'module.outputSourceFallback',
+    'module.outputAssemblyNote',
+    'module.outputUnavailableForMode'
+  ];
+  requiredRuntimeKeys.forEach((key) => {
+    if (!(key in (base.TRANSLATIONS.en || {}))) {
+      errors.push(`Missing EN runtime key: ${key}`);
+    }
+    if (!(key in (base.TRANSLATIONS.es || {}))) {
+      errors.push(`Missing ES runtime key: ${key}`);
+    }
+  });
 
   const moduleIds = base.modules.map(m => m.id);
   const localizedModuleIds = Object.keys(content.modules || {});
@@ -84,7 +122,38 @@ function main() {
     if (topicMismatch) errors.push(topicMismatch);
     const resourceMismatch = compareArrays(original.resources || [], localized.resources || [], `Module ${id} resources`);
     if (resourceMismatch) errors.push(resourceMismatch);
+
+    const category = (base.MODULE_CATEGORY_BY_ID || {})[id] || 'dsa';
+    const expectedCodeKeys = category === 'assembly'
+      ? ['assembly', 'java', 'cpp', 'python', 'javascript']
+      : ['java', 'cpp', 'python', 'javascript'];
+    const localizedCodeExamples = localized.codeExamples || {};
+    expectedCodeKeys.forEach((lang) => {
+      if (!localizedCodeExamples[lang] || typeof localizedCodeExamples[lang] !== 'string') {
+        errors.push(`Module ${id} missing localized codeExamples.${lang}`);
+      }
+    });
   });
+
+  const renderModulesStart = source.indexOf('function renderModules() {');
+  const renderModulesEnd = source.indexOf('function getAchievementState()', renderModulesStart);
+  if (renderModulesStart >= 0 && renderModulesEnd > renderModulesStart) {
+    const renderSource = source.slice(renderModulesStart, renderModulesEnd);
+    const staleEnglishPhrases = [
+      'Topics Covered:',
+      'Learning Resources:',
+      'Starter Module: recommended first step for most learners',
+      'Select Programming Language',
+      'Select Code Display Mode'
+    ];
+    staleEnglishPhrases.forEach((phrase) => {
+      if (renderSource.includes(phrase)) {
+        errors.push(`Stale hardcoded English phrase in renderModules: ${phrase}`);
+      }
+    });
+  } else {
+    errors.push('Unable to analyze renderModules source for stale English phrases.');
+  }
 
   const quizIds = Object.keys(base.quizData || {});
   quizIds.forEach((id) => {

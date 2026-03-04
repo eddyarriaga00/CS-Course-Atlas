@@ -9,9 +9,12 @@ const appState = {
     completedModules: new Set(),
     completedQuizzes: new Set(),
     expandedCode: new Set(),
+    expandedCodeExamples: new Set(),
+    expandedOutputs: new Set(),
     moduleComments: new Map(),
     moduleLanguages: new Map(),
     moduleModes: new Map(),
+    moduleExampleSelections: new Map(),
     searchTerm: '',
     difficultyFilter: 'all',
     categoryFilter: 'all',
@@ -52,8 +55,7 @@ const interactiveQuizState = {
 // CONSTANTS
 // =================================
 const CONSTANTS = {
-    CODE_PREVIEW_LINES: 15,
-    TRUNCATE_INDICATOR: '\n\n// ... (click Expand to see full code)'
+    CODE_PREVIEW_LINES: 15
 };
 
 const STORAGE_KEYS = {
@@ -63,6 +65,10 @@ const STORAGE_KEYS = {
     NOTES: 'javaDSANotes',
     STUDY_PLAN: 'javaDSAStudyPlan'
 };
+
+const moduleOutputCache = new Map();
+const moduleOutputState = new Map();
+const moduleOutputInFlight = new Map();
 
 const SUPPORTED_LANGUAGES = {
     java: { name: 'Java', icon: '☕' },
@@ -285,6 +291,15 @@ const TRANSLATIONS = {
         'progress.heading': '📊 Your Learning Progress',
         'progress.kicker': 'Current journey',
         // Topic focus
+        'topic.focus.heading': 'Topic Focus',
+        'topic.focus.subtitle': 'Choose your primary track. This controls which major module family is shown.',
+        'topic.focus.badge': 'Primary Filter',
+        'topic.all.title': 'All Topics',
+        'topic.all.subtitle': 'Everything in one view',
+        'topic.dsa.title': 'Data Structures & Algorithms',
+        'topic.dsa.subtitle': 'Core coding interview track',
+        'topic.discrete.title': 'Discrete Mathematics',
+        'topic.discrete.subtitle': 'Proofs, counting, and math logic',
         'topic.java.title': 'Java Learning',
         'topic.java.subtitle': 'Core Java syntax, OOP, tooling, and practical software workflows',
         'topic.git.title': 'Git Learning',
@@ -304,6 +319,12 @@ const TRANSLATIONS = {
         'section.studyTip': '🌟 Study Tip',
         'section.insights': 'Personalized Study Insights',
         'section.insightsSubtitle': 'Stay on track with live stats, tailored module suggestions, and a built-in focus buddy.',
+        'interview.heading': '📂 Interview Examples',
+        'interview.subtitle': 'LeetCode-style walk-throughs. Two at a time with quick copy.',
+        'interview.pages': 'Pages',
+        'ds.heading': '🛠️ Data Structure Playground',
+        'ds.subtitle': 'Interact with arrays, stacks, queues, heaps, graphs, and tries. Track structure, pointers, operation timeline, and complexity in one place.',
+        'ds.reset': 'Reset playground',
         // Progress chip
         'progress.nowAt': 'Now at',
         // Achievements
@@ -361,7 +382,39 @@ const TRANSLATIONS = {
         'settings.language': 'Language / Idioma',
         'settings.languageLabel': 'Interface Language',
         'settings.languageHint': 'Switch between English and Spanish / Cambia entre inglés y español.',
-        'settings.save': '✓ Save & Close'
+        'settings.save': '✓ Save & Close',
+        // Module card labels/tooltips
+        'module.starterBanner': '⭐ Starter Module: recommended first step for most learners',
+        'module.topicsCovered': 'Topics Covered:',
+        'module.codeExample': '💻 Code Example',
+        'module.discreteTheory': '📘 Discrete Mathematics Theory',
+        'module.theoryMode': 'Theory Mode',
+        'module.learningResources': '📚 Learning Resources:',
+        'module.definitionsHeading': '📘 Need-to-Know Definitions',
+        'module.tooltipHideComments': 'Hide Comments',
+        'module.tooltipShowComments': 'Show Comments',
+        'module.tooltipSelectLanguage': 'Select Programming Language',
+        'module.tooltipSelectMode': 'Select Code Display Mode',
+        'module.modeCode': 'Code',
+        'module.modePseudocode': 'Pseudocode',
+        'module.commentsOn': 'ON',
+        'module.commentsOff': 'OFF',
+        'module.collapse': '📄 Collapse',
+        'module.expand': '📖 Expand',
+        'module.discreteModeLabel': 'Discrete Mathematics',
+        'module.examplesHeading': 'Detailed Topic Code Examples',
+        'module.hideExample': 'Hide Code',
+        'module.showExample': 'Show Code',
+        'module.examplePreview': 'Preview',
+        'module.truncateHint': '// ... (click Expand to see full code)',
+        'module.showOutput': 'Output',
+        'module.hideOutput': 'Hide Output',
+        'module.outputHeading': 'Output',
+        'module.outputRunning': 'Running output...',
+        'module.outputSourceLive': 'Live',
+        'module.outputSourceFallback': 'Fallback',
+        'module.outputAssemblyNote': 'Assembly is view-only in module cards. Showing expected output.',
+        'module.outputUnavailableForMode': 'Output is only available in Code mode.'
     },
     es: {
         // Main header
@@ -384,6 +437,15 @@ const TRANSLATIONS = {
         'progress.heading': '📊 Tu Progreso de Aprendizaje',
         'progress.kicker': 'Recorrido actual',
         // Topic focus
+        'topic.focus.heading': 'Enfoque de Temas',
+        'topic.focus.subtitle': 'Elige tu ruta principal. Esto controla qué familia de módulos se muestra.',
+        'topic.focus.badge': 'Filtro Principal',
+        'topic.all.title': 'Todos los Temas',
+        'topic.all.subtitle': 'Todo en una sola vista',
+        'topic.dsa.title': 'Estructuras de Datos y Algoritmos',
+        'topic.dsa.subtitle': 'Ruta central para entrevistas técnicas',
+        'topic.discrete.title': 'Matemáticas Discretas',
+        'topic.discrete.subtitle': 'Pruebas, conteo y lógica matemática',
         'topic.java.title': 'Aprendizaje de Java',
         'topic.java.subtitle': 'Sintaxis base de Java, POO, herramientas y flujos practicos de software',
         'topic.git.title': 'Aprendizaje de Git',
@@ -403,6 +465,12 @@ const TRANSLATIONS = {
         'section.studyTip': '🌟 Consejo de Estudio',
         'section.insights': 'Perspectivas de Estudio Personalizadas',
         'section.insightsSubtitle': 'Mantente al día con estadísticas en vivo, sugerencias de módulos y un compañero de enfoque integrado.',
+        'interview.heading': '📂 Ejemplos de Entrevista',
+        'interview.subtitle': 'Recorridos estilo LeetCode. Dos por página con copia rápida.',
+        'interview.pages': 'Páginas',
+        'ds.heading': '🛠️ Playground de Estructuras de Datos',
+        'ds.subtitle': 'Interactúa con arreglos, pilas, colas, montículos, grafos y tries. Sigue estructura, punteros, línea de tiempo y complejidad en un solo lugar.',
+        'ds.reset': 'Reiniciar playground',
         // Progress chip
         'progress.nowAt': 'Ahora en',
         // Achievements
@@ -460,7 +528,39 @@ const TRANSLATIONS = {
         'settings.language': 'Idioma / Language',
         'settings.languageLabel': 'Idioma de la Interfaz',
         'settings.languageHint': 'Cambia entre español e inglés / Switch between Spanish and English.',
-        'settings.save': '✓ Guardar y Cerrar'
+        'settings.save': '✓ Guardar y Cerrar',
+        // Module card labels/tooltips
+        'module.starterBanner': '⭐ Módulo inicial: primer paso recomendado para la mayoría',
+        'module.topicsCovered': 'Temas cubiertos:',
+        'module.codeExample': '💻 Ejemplo de código',
+        'module.discreteTheory': '📘 Teoría de Matemáticas Discretas',
+        'module.theoryMode': 'Modo Teoría',
+        'module.learningResources': '📚 Recursos de aprendizaje:',
+        'module.definitionsHeading': '📘 Definiciones Clave',
+        'module.tooltipHideComments': 'Ocultar comentarios',
+        'module.tooltipShowComments': 'Mostrar comentarios',
+        'module.tooltipSelectLanguage': 'Seleccionar lenguaje de programación',
+        'module.tooltipSelectMode': 'Seleccionar modo de código',
+        'module.modeCode': 'Código',
+        'module.modePseudocode': 'Pseudocódigo',
+        'module.commentsOn': 'ACT',
+        'module.commentsOff': 'DES',
+        'module.collapse': '📄 Contraer',
+        'module.expand': '📖 Expandir',
+        'module.discreteModeLabel': 'Matemáticas Discretas',
+        'module.examplesHeading': 'Ejemplos de Código por Tema',
+        'module.hideExample': 'Ocultar Código',
+        'module.showExample': 'Mostrar Código',
+        'module.examplePreview': 'Vista previa',
+        'module.truncateHint': '// ... (haz clic en Expandir para ver el código completo)',
+        'module.showOutput': 'Salida',
+        'module.hideOutput': 'Ocultar Salida',
+        'module.outputHeading': 'Salida',
+        'module.outputRunning': 'Ejecutando salida...',
+        'module.outputSourceLive': 'En vivo',
+        'module.outputSourceFallback': 'Respaldo',
+        'module.outputAssemblyNote': 'Ensamblador es solo visual en las tarjetas del módulo. Mostrando salida esperada.',
+        'module.outputUnavailableForMode': 'La salida solo está disponible en modo Código.'
     }
 };
 
@@ -517,6 +617,17 @@ function localizeEntity(type, id, fallback = null, lang = appState.language || '
     if (!localized) return fallback;
     if (!fallback || typeof fallback !== 'object') return localized;
     return { ...fallback, ...localized };
+}
+
+function resolveLocalizedValue(value, lang = appState.language || 'en') {
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
+        const candidate = value[lang] ?? value.en ?? Object.values(value)[0];
+        return typeof candidate === 'string' ? candidate : '';
+    }
+    if (typeof value === 'string') {
+        return lang === 'es' ? translateLiteral(value, 'es') : value;
+    }
+    return '';
 }
 
 function localizeLiteralAttributes(root, lang) {
@@ -628,6 +739,8 @@ function refreshLocalizedSections() {
     if (typeof renderNotesLibrary === 'function') renderNotesLibrary();
     if (typeof renderInteractiveQuizQuestion === 'function') renderInteractiveQuizQuestion();
     if (typeof renderQuiz === 'function') renderQuiz();
+    if (typeof renderDSControls === 'function') renderDSControls();
+    if (typeof updateDSView === 'function') updateDSView();
 }
 
 /**
@@ -684,9 +797,19 @@ function applyLanguage(lang) {
  */
 function setLanguage(lang) {
     appState.language = lang;
+    appState.expandedOutputs.clear();
+    moduleOutputCache.clear();
+    moduleOutputState.clear();
+    moduleOutputInFlight.clear();
     applyLanguage(lang);
     if (typeof updateProgress === 'function') updateProgress();
     refreshLocalizedSections();
+    if (typeof window.refreshPlaygroundSnippetCatalog === 'function') {
+        window.refreshPlaygroundSnippetCatalog();
+    }
+    if (typeof refreshFlashcardSession === 'function' && appState.selectedFlashcardModule) {
+        refreshFlashcardSession(appState.selectedFlashcardModule, { persist: false });
+    }
     saveToLocalStorage();
 }
 
@@ -3112,7 +3235,7 @@ public class SortingAlgorithms {
         title: 'Searching Algorithms',
         description: 'Linear, binary, and exponential search are implemented side by side, so we break down pointer shifts, boundary tests, and the final `Arrays.binarySearch` call that finishes the exponential window.',
         difficulty: 'beginner',
-        topics: ['Linear Search', 'Binary Search', 'Interpolation Search', 'Exponential Search'],
+        topics: ['Linear Search', 'Binary Search', 'Interpolation Search', 'Exponential Search', 'Search Strategy Comparison'],
         codeExample: `// Searching utilities highlighting multiple techniques
 import java.util.Arrays;
 
@@ -5028,6 +5151,99 @@ function buildMirrorSnippetByLanguage(module, javaSource, language) {
     return '';
 }
 
+function slugifyTopicKey(topic = '', fallback = 'topic') {
+    const normalized = String(topic || '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '');
+    return normalized || fallback;
+}
+
+function buildGeneratedSetTitle(topic, index) {
+    const en = String(topic || `Topic ${index + 1}`).trim() || `Topic ${index + 1}`;
+    return {
+        en,
+        es: en
+    };
+}
+
+function buildGeneratedSetDescription(module, topic, index, totalTopics) {
+    const title = String(module?.title || 'Module');
+    const en = `Topic ${index + 1} of ${totalTopics}: ${topic}. Guided walkthrough with checkpoints and printed results for ${title}.`;
+    const es = `Tema ${index + 1} de ${totalTopics}: ${topic}. Recorrido guiado con validaciones y salida visible para ${title}.`;
+    return { en, es };
+}
+
+function buildTopicFocusedJavaSnippet(module, topic, topicIndex, totalTopics) {
+    const className = `${toModuleClassName(module?.id)}Topic${topicIndex + 1}Set`;
+    const moduleTitle = escapeForJavaString(module?.title || 'Module');
+    const moduleDescription = escapeForJavaString(module?.description || '');
+    const focusTopic = escapeForJavaString(topic || `Topic ${topicIndex + 1}`);
+    const topics = Array.isArray(module?.topics) ? module.topics : [];
+    const topicLines = topics.map((item, idx) => `        System.out.println("${idx + 1}. ${escapeForJavaString(item)}");`).join('\n');
+    const complexitySeed = Math.max(1, (topicIndex + 1) * 3);
+
+    return `import java.util.*;\n\npublic class ${className} {\n    // Deterministic helper so learners can verify output after each edit.\n    static int guidedComputation(int seed) {\n        int total = 0;\n        for (int step = 1; step <= 5; step++) {\n            total += seed * step;\n            System.out.println("Step " + step + " -> running total: " + total);\n        }\n        return total;\n    }\n\n    static void printTopicChecklist(List<String> topics) {\n        System.out.println("Topic checklist:");\n        for (int i = 0; i < topics.size(); i++) {\n            System.out.println((i + 1) + ". " + topics.get(i));\n        }\n    }\n\n    public static void main(String[] args) {\n        // Module context first so the learner sees where this snippet fits.\n        String moduleTitle = "${moduleTitle}";\n        String moduleDescription = "${moduleDescription}";\n        String focusTopic = "${focusTopic}";\n        List<String> topics = Arrays.asList(${topics.map((item) => `"${escapeForJavaString(item)}"`).join(', ') || `"${focusTopic}"`});\n\n        System.out.println("Module: " + moduleTitle);\n        System.out.println("Focus topic (${topicIndex + 1}/${totalTopics}): " + focusTopic);\n        System.out.println(moduleDescription);\n\n        // Print all module topics so this split example stays connected to the full module.\n${topicLines || '        System.out.println("1. No topics listed.");'}\n\n        // Guided computation with explicit checkpoints and visible output.\n        int baseline = ${complexitySeed};\n        System.out.println("Baseline value: " + baseline);\n        int result = guidedComputation(baseline);\n        System.out.println("Final computed result: " + result);\n\n        // Reflection prompts are printed so output is always meaningful.\n        System.out.println("Reflection: explain how " + focusTopic + " influences implementation choices.");\n        System.out.println("Practice: modify baseline, rerun, and compare output transitions.");\n\n        // Summary line makes expected output deterministic for fallbacks.\n        System.out.println("Topic sample completed: " + focusTopic);\n    }\n}`;
+}
+
+function buildTopicFocusedAssemblySnippet(module, topic, topicIndex, totalTopics) {
+    const moduleTitle = String(module?.title || 'Assembly Module');
+    const focusTopic = String(topic || `Topic ${topicIndex + 1}`);
+    return `; ${moduleTitle} - ${focusTopic}
+; Topic ${topicIndex + 1} of ${totalTopics}
+; Guided assembly sample for module-card viewing and output fallback notes.
+; Goal: trace registers, memory changes, and branch flow step by step.
+; Focus checklist:
+; 1) Initialize registers safely
+; 2) Execute deterministic operations
+; 3) Observe control flow and exit cleanly
+
+section .data
+    out_msg db "Assembly topic: ${focusTopic}", 10
+    out_len equ $ - out_msg
+
+section .text
+    global _start
+_start:
+    ; Initialize registers
+    xor rax, rax
+    mov rbx, ${topicIndex + 2}
+    add rax, rbx
+
+    ; Print topic message (Linux syscall write)
+    mov rax, 1
+    mov rdi, 1
+    mov rsi, out_msg
+    mov rdx, out_len
+    syscall
+
+    ; Exit (Linux syscall exit)
+    mov rax, 60
+    xor rdi, rdi
+    syscall
+`;
+}
+
+function buildGeneratedCodeExampleSets(module) {
+    const topics = Array.isArray(module?.topics) ? module.topics.filter(Boolean) : [];
+    if (!topics.length) return [];
+    const isAssembly = MODULE_CATEGORY_BY_ID[module.id] === 'assembly';
+
+    return topics.map((topic, index) => ({
+        id: slugifyTopicKey(topic, `topic-${index + 1}`),
+        title: buildGeneratedSetTitle(topic, index),
+        description: buildGeneratedSetDescription(module, topic, index, topics.length),
+        codeExamples: isAssembly
+            ? {
+                assembly: buildTopicFocusedAssemblySnippet(module, topic, index, topics.length),
+                java: buildTopicFocusedJavaSnippet(module, topic, index, topics.length)
+            }
+            : {
+                java: buildTopicFocusedJavaSnippet(module, topic, index, topics.length)
+            }
+    }));
+}
+
 function buildModuleDefinitions(module, language = 'en') {
     const lang = language === 'es' ? 'es' : 'en';
     const title = String(module?.title || (lang === 'es' ? 'este modulo' : 'this module'));
@@ -5053,10 +5269,1550 @@ function buildModuleDefinitions(module, language = 'en') {
     });
 }
 
+function extractQuotedStringLiterals(value = '') {
+    const literals = [];
+    const regex = /"([^"\\]*(?:\\.[^"\\]*)*)"/g;
+    let match;
+    while ((match = regex.exec(String(value || '')))) {
+        const raw = String(match[1] || '');
+        const cleaned = raw
+            .replace(/\\"/g, '"')
+            .replace(/\\n/g, '')
+            .trim();
+        if (!cleaned) continue;
+        if (!literals.includes(cleaned)) literals.push(cleaned);
+    }
+    return literals;
+}
+
+function inferOutputLinesFromSnippet(language, snippet) {
+    const source = String(snippet || '');
+    const lines = source.split('\n');
+    const inferred = [];
+
+    const pushInferred = (value) => {
+        const text = String(value || '').trim();
+        if (!text) return;
+        if (!inferred.includes(text)) inferred.push(text);
+    };
+
+    const parseLine = (line, regex) => {
+        const match = line.match(regex);
+        if (!match || !match[1]) return;
+        const literals = extractQuotedStringLiterals(match[1]);
+        if (literals.length) {
+            pushInferred(literals.join(' '));
+        }
+    };
+
+    lines.forEach((line) => {
+        const trimmed = line.trim();
+        if (!trimmed) return;
+        if (language === 'java') {
+            parseLine(trimmed, /System\.out\.print(?:ln)?\((.+)\)\s*;/);
+        } else if (language === 'cpp') {
+            parseLine(trimmed, /cout\s*<<\s*(.+)\s*;/);
+        } else if (language === 'python') {
+            parseLine(trimmed, /\bprint\s*\((.+)\)\s*$/);
+        } else if (language === 'javascript') {
+            parseLine(trimmed, /console\.(?:log|info|warn|error)\((.+)\)\s*;?/);
+        }
+    });
+
+    return inferred.slice(0, 8);
+}
+
+function buildAssemblyExpectedOutput(module, snippet = '') {
+    const source = String(snippet || '');
+    const notes = source
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => line.startsWith(';'))
+        .map((line) => line.replace(/^;\s*/, ''))
+        .filter(Boolean)
+        .slice(0, 3);
+
+    const lines = [
+        'Assembly sample (view-only).',
+        `Module: ${module?.title || 'Assembly Module'}`,
+        'Expected behavior: step through registers/memory comments and operation flow.'
+    ];
+    if (notes.length) {
+        lines.push(...notes);
+    }
+    return lines.join('\n');
+}
+
+function buildGeneratedExpectedOutput(module, language, snippet = '') {
+    if (language === 'assembly') {
+        return buildAssemblyExpectedOutput(module, snippet);
+    }
+    const inferred = inferOutputLinesFromSnippet(language, snippet);
+    if (inferred.length) {
+        return inferred.join('\n');
+    }
+    const languageNames = {
+        java: 'Java',
+        cpp: 'C++',
+        python: 'Python',
+        javascript: 'JavaScript',
+        assembly: 'Assembly'
+    };
+    const languageLabel = languageNames[language] || language;
+    return [
+        'Execution complete.',
+        `Module: ${module?.title || 'Module sample'}`,
+        `Language: ${languageLabel}`
+    ].join('\n');
+}
+
+function ensureExpectedOutputsForCodeExamples(module, codeExamples = {}, existingExpectedOutputs = {}) {
+    const normalized = {};
+    const languages = Object.keys(codeExamples || {});
+    languages.forEach((language) => {
+        const existing = typeof existingExpectedOutputs?.[language] === 'string'
+            ? existingExpectedOutputs[language].trim()
+            : '';
+        if (existing) {
+            normalized[language] = existing;
+            return;
+        }
+        normalized[language] = buildGeneratedExpectedOutput(module, language, codeExamples[language]);
+    });
+    return normalized;
+}
+
+const MODULE_CODE_EXAMPLE_SET_OVERRIDES = {
+    'java-basics': [
+        {
+            id: 'variables',
+            title: { en: 'Variables', es: 'Variables' },
+            description: { en: 'Declare, update, and print variables while tracking scope and naming.', es: 'Declara, actualiza e imprime variables mientras controlas alcance y nombres.' },
+            codeExamples: {
+                java: `// Variables in Java: declaration, mutation, and scope
+public class VariablesDemo {
+    public static void main(String[] args) {
+        // 1) Primitive variable declarations
+        int age = 19;
+        double gpa = 3.85;
+        boolean enrolled = true;
+        char grade = 'A';
+
+        // 2) Reference variable declaration
+        String studentName = "Jordan";
+
+        // 3) Mutation / reassignment
+        age = age + 1; // birthday update
+        gpa = Math.round(gpa * 100.0) / 100.0;
+
+        // 4) Local scope example
+        {
+            int semesterCredits = 15;
+            System.out.println("Scoped credits: " + semesterCredits);
+        }
+
+        // 5) Final output summary
+        System.out.println("Student: " + studentName);
+        System.out.println("Age next year: " + age);
+        System.out.println("GPA: " + gpa);
+        System.out.println("Enrolled: " + enrolled + ", grade target: " + grade);
+    }
+}`
+            }
+        },
+        {
+            id: 'data-types',
+            title: { en: 'Data Types', es: 'Tipos de Datos' },
+            description: { en: 'Use primitives and reference types with clear output for each value.', es: 'Usa tipos primitivos y de referencia con salida clara para cada valor.' },
+            codeExamples: {
+                java: `// Java data types: primitive and reference side-by-side
+import java.util.Arrays;
+
+public class DataTypesDemo {
+    public static void main(String[] args) {
+        // Primitive types
+        byte small = 120;
+        short medium = 32000;
+        int count = 250000;
+        long population = 8_000_000_000L;
+        float ratio = 0.75f;
+        double pi = 3.1415926535;
+        boolean active = true;
+        char initial = 'J';
+
+        // Reference types
+        String course = "Java Fundamentals";
+        int[] scores = {92, 88, 95};
+
+        System.out.println("byte=" + small + ", short=" + medium + ", int=" + count);
+        System.out.println("long=" + population + ", float=" + ratio + ", double=" + pi);
+        System.out.println("boolean=" + active + ", char=" + initial);
+        System.out.println("String=" + course);
+        System.out.println("Array=" + Arrays.toString(scores));
+    }
+}`
+            }
+        },
+        {
+            id: 'methods',
+            title: { en: 'Methods', es: 'Métodos' },
+            description: { en: 'Define reusable methods with parameters and return values.', es: 'Define métodos reutilizables con parámetros y valores de retorno.' },
+            codeExamples: {
+                java: `// Methods: parameters, return values, and reuse
+public class MethodsDemo {
+    public static int add(int a, int b) {
+        return a + b;
+    }
+
+    public static double average(int x, int y, int z) {
+        return (x + y + z) / 3.0;
+    }
+
+    public static void printBanner(String title) {
+        System.out.println("==== " + title + " ====");
+    }
+
+    public static void main(String[] args) {
+        printBanner("Method Results");
+        int sum = add(7, 5);
+        double avg = average(90, 85, 95);
+
+        System.out.println("add(7, 5) = " + sum);
+        System.out.println("average(90,85,95) = " + avg);
+    }
+}`
+            }
+        },
+        {
+            id: 'classes',
+            title: { en: 'Classes', es: 'Clases' },
+            description: { en: 'Create a class blueprint with fields, constructor, and behavior.', es: 'Crea una plantilla de clase con campos, constructor y comportamiento.' },
+            codeExamples: {
+                java: `// Classes as blueprints: fields + constructor + behavior
+class Course {
+    String code;
+    String title;
+    int credits;
+
+    Course(String code, String title, int credits) {
+        this.code = code;
+        this.title = title;
+        this.credits = credits;
+    }
+
+    String summary() {
+        return code + " - " + title + " (" + credits + " credits)";
+    }
+}
+
+public class ClassesDemo {
+    public static void main(String[] args) {
+        Course c1 = new Course("CSC-261", "Data Structures", 3);
+        Course c2 = new Course("CSC-350", "Software Engineering", 3);
+
+        System.out.println("Course 1: " + c1.summary());
+        System.out.println("Course 2: " + c2.summary());
+    }
+}`
+            }
+        },
+        {
+            id: 'objects',
+            title: { en: 'Objects', es: 'Objetos' },
+            description: { en: 'Instantiate objects, mutate state, and call instance methods.', es: 'Instancia objetos, modifica estado y llama métodos de instancia.' },
+            codeExamples: {
+                java: `// Objects: create instances, mutate fields, invoke methods
+class Student {
+    private final String name;
+    private int completedModules;
+
+    Student(String name) {
+        this.name = name;
+        this.completedModules = 0;
+    }
+
+    void completeModule() {
+        completedModules++;
+    }
+
+    String progress() {
+        return name + " completed " + completedModules + " module(s).";
+    }
+}
+
+public class ObjectsDemo {
+    public static void main(String[] args) {
+        Student a = new Student("Avery");
+        Student b = new Student("Morgan");
+
+        a.completeModule();
+        a.completeModule();
+        b.completeModule();
+
+        System.out.println(a.progress());
+        System.out.println(b.progress());
+    }
+}`
+            }
+        }
+    ],
+    'control-flow': [
+        {
+            id: 'if-else',
+            title: { en: 'If / Else Logic', es: 'Lógica If / Else' },
+            description: { en: 'Branch execution by condition checks.', es: 'Ramifica la ejecución según condiciones.' },
+            codeExamples: {
+                java: `// If/Else logic for score classification
+public class IfElseDemo {
+    public static void main(String[] args) {
+        int score = 84;
+
+        if (score >= 90) {
+            System.out.println("Grade: A");
+        } else if (score >= 80) {
+            System.out.println("Grade: B");
+        } else if (score >= 70) {
+            System.out.println("Grade: C");
+        } else {
+            System.out.println("Grade: Needs Improvement");
+        }
+    }
+}`
+            }
+        },
+        {
+            id: 'for-loops',
+            title: { en: 'For Loops', es: 'Bucles For' },
+            description: { en: 'Count and iterate over ranges predictably.', es: 'Cuenta e itera rangos de forma predecible.' },
+            codeExamples: {
+                java: `// For loop counting + accumulation
+public class ForLoopDemo {
+    public static void main(String[] args) {
+        int total = 0;
+        for (int i = 1; i <= 5; i++) {
+            total += i;
+            System.out.println("i=" + i + ", running total=" + total);
+        }
+        System.out.println("Final total: " + total);
+    }
+}`
+            }
+        },
+        {
+            id: 'while-loops',
+            title: { en: 'While Loops', es: 'Bucles While' },
+            description: { en: 'Repeat while a condition remains true.', es: 'Repite mientras una condición sea verdadera.' },
+            codeExamples: {
+                java: `// While loop for countdown
+public class WhileLoopDemo {
+    public static void main(String[] args) {
+        int countdown = 5;
+        while (countdown > 0) {
+            System.out.println("Countdown: " + countdown);
+            countdown--;
+        }
+        System.out.println("Lift off!");
+    }
+}`
+            }
+        },
+        {
+            id: 'switch',
+            title: { en: 'Switch Statements', es: 'Sentencias Switch' },
+            description: { en: 'Route behavior based on discrete values.', es: 'Enruta el comportamiento según valores discretos.' },
+            codeExamples: {
+                java: `// Switch statement for menu actions
+public class SwitchDemo {
+    public static void main(String[] args) {
+        String command = "SAVE";
+        switch (command) {
+            case "OPEN":
+                System.out.println("Opening project...");
+                break;
+            case "SAVE":
+                System.out.println("Saving project...");
+                break;
+            case "RUN":
+                System.out.println("Running code...");
+                break;
+            default:
+                System.out.println("Unknown command.");
+        }
+    }
+}`
+            }
+        },
+        {
+            id: 'break-continue',
+            title: { en: 'Break and Continue', es: 'Break y Continue' },
+            description: { en: 'Control loop flow by skipping or stopping iterations.', es: 'Controla el flujo del bucle saltando o deteniendo iteraciones.' },
+            codeExamples: {
+                java: `// break and continue in one loop
+public class BreakContinueDemo {
+    public static void main(String[] args) {
+        for (int i = 1; i <= 10; i++) {
+            if (i % 2 == 0) {
+                continue; // skip even numbers
+            }
+            if (i > 7) {
+                break; // stop after 7
+            }
+            System.out.println("Processed odd value: " + i);
+        }
+        System.out.println("Loop complete.");
+    }
+}`
+            }
+        }
+    ],
+    'oop-basics': [
+        {
+            id: 'encapsulation',
+            title: { en: 'Encapsulation', es: 'Encapsulación' },
+            description: { en: 'Protect internal state with private fields and methods.', es: 'Protege el estado interno con campos y métodos privados.' },
+            codeExamples: {
+                java: `// Encapsulation with getters/setters and validation
+class BankAccount {
+    private double balance;
+
+    public BankAccount(double startingBalance) {
+        this.balance = Math.max(0, startingBalance);
+    }
+
+    public void deposit(double amount) {
+        if (amount > 0) balance += amount;
+    }
+
+    public boolean withdraw(double amount) {
+        if (amount <= 0 || amount > balance) return false;
+        balance -= amount;
+        return true;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+}
+
+public class EncapsulationDemo {
+    public static void main(String[] args) {
+        BankAccount acct = new BankAccount(100);
+        acct.deposit(50);
+        boolean ok = acct.withdraw(90);
+        System.out.println("Withdraw success: " + ok);
+        System.out.println("Current balance: " + acct.getBalance());
+    }
+}`
+            }
+        },
+        {
+            id: 'inheritance',
+            title: { en: 'Inheritance', es: 'Herencia' },
+            description: { en: 'Reuse behavior from a parent class.', es: 'Reutiliza comportamiento desde una clase base.' },
+            codeExamples: {
+                java: `// Inheritance: subclass extends parent behavior
+class Vehicle {
+    protected String brand;
+
+    Vehicle(String brand) {
+        this.brand = brand;
+    }
+
+    void start() {
+        System.out.println(brand + " vehicle started.");
+    }
+}
+
+class Car extends Vehicle {
+    Car(String brand) {
+        super(brand);
+    }
+
+    void openTrunk() {
+        System.out.println(brand + " trunk opened.");
+    }
+}
+
+public class InheritanceDemo {
+    public static void main(String[] args) {
+        Car car = new Car("Toyota");
+        car.start();
+        car.openTrunk();
+    }
+}`
+            }
+        },
+        {
+            id: 'polymorphism',
+            title: { en: 'Polymorphism', es: 'Polimorfismo' },
+            description: { en: 'Call overridden behavior through parent references.', es: 'Llama comportamiento sobreescrito usando referencias del padre.' },
+            codeExamples: {
+                java: `// Polymorphism: same method, different implementations
+class Shape {
+    double area() { return 0; }
+}
+
+class Circle extends Shape {
+    private final double r;
+    Circle(double r) { this.r = r; }
+    @Override double area() { return Math.PI * r * r; }
+}
+
+class Rectangle extends Shape {
+    private final double w, h;
+    Rectangle(double w, double h) { this.w = w; this.h = h; }
+    @Override double area() { return w * h; }
+}
+
+public class PolymorphismDemo {
+    public static void main(String[] args) {
+        Shape[] shapes = { new Circle(2), new Rectangle(3, 4) };
+        for (Shape s : shapes) {
+            System.out.println("Area: " + s.area());
+        }
+    }
+}`
+            }
+        },
+        {
+            id: 'abstraction',
+            title: { en: 'Abstraction', es: 'Abstracción' },
+            description: { en: 'Expose only essential behavior with abstract classes.', es: 'Expone solo el comportamiento esencial con clases abstractas.' },
+            codeExamples: {
+                java: `// Abstraction through abstract class
+abstract class Payment {
+    abstract void pay(double amount);
+
+    void printReceipt(double amount) {
+        System.out.println("Receipt amount: $" + amount);
+    }
+}
+
+class CardPayment extends Payment {
+    @Override
+    void pay(double amount) {
+        System.out.println("Paid $" + amount + " using card.");
+    }
+}
+
+public class AbstractionDemo {
+    public static void main(String[] args) {
+        Payment payment = new CardPayment();
+        payment.pay(29.99);
+        payment.printReceipt(29.99);
+    }
+}`
+            }
+        },
+        {
+            id: 'interfaces',
+            title: { en: 'Interfaces', es: 'Interfaces' },
+            description: { en: 'Implement shared contracts across different classes.', es: 'Implementa contratos compartidos entre distintas clases.' },
+            codeExamples: {
+                java: `// Interface contract shared across classes
+interface Notifier {
+    void send(String message);
+}
+
+class EmailNotifier implements Notifier {
+    public void send(String message) {
+        System.out.println("Email sent: " + message);
+    }
+}
+
+class SmsNotifier implements Notifier {
+    public void send(String message) {
+        System.out.println("SMS sent: " + message);
+    }
+}
+
+public class InterfaceDemo {
+    public static void main(String[] args) {
+        Notifier[] notifiers = { new EmailNotifier(), new SmsNotifier() };
+        for (Notifier n : notifiers) {
+            n.send("Module complete!");
+        }
+    }
+}`
+            }
+        }
+    ],
+    'arrays-strings': [
+        {
+            id: 'array-traversal',
+            title: { en: 'Array Traversal', es: 'Recorrido de Arreglos' },
+            description: { en: 'Walk arrays with index-based and enhanced loops.', es: 'Recorre arreglos con bucles por índice y mejorados.' },
+            codeExamples: {
+                java: `import java.util.Arrays;
+
+public class ArrayTraversalSet {
+    public static void main(String[] args) {
+        int[] values = {7, 2, 9, 4, 6};
+        int sum = 0;
+
+        for (int i = 0; i < values.length; i++) {
+            sum += values[i];
+            System.out.println("Index " + i + " -> " + values[i] + ", running sum: " + sum);
+        }
+
+        int max = Integer.MIN_VALUE;
+        for (int value : values) {
+            max = Math.max(max, value);
+        }
+
+        System.out.println("Array: " + Arrays.toString(values));
+        System.out.println("Total sum: " + sum);
+        System.out.println("Maximum value: " + max);
+    }
+}`
+            }
+        },
+        {
+            id: 'string-methods',
+            title: { en: 'String Methods', es: 'Métodos de Cadenas' },
+            description: { en: 'Apply useful string operations and validations.', es: 'Aplica operaciones y validaciones útiles de cadenas.' },
+            codeExamples: {
+                java: `public class StringMethodsSet {
+    public static void main(String[] args) {
+        String raw = "  CS Course Atlas  ";
+        String trimmed = raw.trim();
+        String upper = trimmed.toUpperCase();
+        boolean containsCourse = trimmed.contains("Course");
+        String replaced = trimmed.replace("Atlas", "Guide");
+
+        System.out.println("Original: [" + raw + "]");
+        System.out.println("Trimmed: [" + trimmed + "]");
+        System.out.println("Uppercase: " + upper);
+        System.out.println("Contains 'Course': " + containsCourse);
+        System.out.println("Replaced: " + replaced);
+        System.out.println("Substring(0,2): " + trimmed.substring(0, 2));
+    }
+}`
+            }
+        },
+        {
+            id: 'two-pointers',
+            title: { en: 'Two Pointers', es: 'Dos Punteros' },
+            description: { en: 'Use left/right pointers for linear-time checks.', es: 'Usa punteros izquierda/derecha para comprobaciones lineales.' },
+            codeExamples: {
+                java: `public class TwoPointersSet {
+    static boolean isPalindrome(String text) {
+        String clean = text.toLowerCase().replaceAll("[^a-z0-9]", "");
+        int left = 0;
+        int right = clean.length() - 1;
+        while (left < right) {
+            if (clean.charAt(left) != clean.charAt(right)) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        String a = "Never odd or even";
+        String b = "CS Atlas";
+        System.out.println(a + " -> palindrome? " + isPalindrome(a));
+        System.out.println(b + " -> palindrome? " + isPalindrome(b));
+    }
+}`
+            }
+        },
+        {
+            id: 'sliding-window',
+            title: { en: 'Sliding Window', es: 'Ventana Deslizante' },
+            description: { en: 'Compute subarray metrics without restarting scans.', es: 'Calcula métricas de subarreglos sin reiniciar recorridos.' },
+            codeExamples: {
+                java: `public class SlidingWindowSet {
+    static int maxWindowSum(int[] arr, int k) {
+        int windowSum = 0;
+        for (int i = 0; i < k; i++) windowSum += arr[i];
+        int best = windowSum;
+        for (int right = k; right < arr.length; right++) {
+            windowSum += arr[right] - arr[right - k];
+            best = Math.max(best, windowSum);
+            System.out.println("Window ending at index " + right + " sum: " + windowSum);
+        }
+        return best;
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {2, 1, 5, 1, 3, 2};
+        int k = 3;
+        int best = maxWindowSum(arr, k);
+        System.out.println("Best window sum (k=" + k + "): " + best);
+    }
+}`
+            }
+        },
+        {
+            id: 'array-sorting',
+            title: { en: 'Array Sorting', es: 'Ordenamiento de Arreglos' },
+            description: { en: 'Sort arrays and verify order-sensitive logic.', es: 'Ordena arreglos y verifica lógica sensible al orden.' },
+            codeExamples: {
+                java: `import java.util.Arrays;
+
+public class ArraySortingSet {
+    public static void main(String[] args) {
+        int[] nums = {9, 4, 1, 7, 3, 8};
+        System.out.println("Before sort: " + Arrays.toString(nums));
+        Arrays.sort(nums);
+        System.out.println("After sort:  " + Arrays.toString(nums));
+        int target = 7;
+        int index = Arrays.binarySearch(nums, target);
+        System.out.println("Binary search for " + target + " -> index " + index);
+    }
+}`
+            }
+        }
+    ],
+    'linked-lists': [
+        {
+            id: 'singly-linked-list',
+            title: { en: 'Singly Linked Lists', es: 'Listas Enlazadas Simples' },
+            description: { en: 'Build and traverse nodes linked in one direction.', es: 'Construye y recorre nodos enlazados en una sola dirección.' },
+            codeExamples: {
+                java: `class Node {
+    int value;
+    Node next;
+    Node(int value) { this.value = value; }
+}
+
+public class SinglyLinkedListSet {
+    static void printList(Node head) {
+        Node current = head;
+        while (current != null) {
+            System.out.print(current.value + (current.next != null ? " -> " : ""));
+            current = current.next;
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        Node head = new Node(10);
+        head.next = new Node(20);
+        head.next.next = new Node(30);
+        printList(head);
+    }
+}`
+            }
+        },
+        {
+            id: 'doubly-linked-list',
+            title: { en: 'Doubly Linked Lists', es: 'Listas Doblemente Enlazadas' },
+            description: { en: 'Track prev/next pointers for bidirectional traversal.', es: 'Usa punteros prev/next para recorrido bidireccional.' },
+            codeExamples: {
+                java: `class DNode {
+    int value;
+    DNode prev;
+    DNode next;
+    DNode(int value) { this.value = value; }
+}
+
+public class DoublyLinkedListSet {
+    public static void main(String[] args) {
+        DNode a = new DNode(1);
+        DNode b = new DNode(2);
+        DNode c = new DNode(3);
+        a.next = b; b.prev = a;
+        b.next = c; c.prev = b;
+
+        System.out.println("Forward: " + a.value + " -> " + b.value + " -> " + c.value);
+        System.out.println("Backward: " + c.value + " -> " + b.value + " -> " + a.value);
+    }
+}`
+            }
+        },
+        {
+            id: 'cycle-detection',
+            title: { en: 'Cycle Detection', es: 'Detección de Ciclos' },
+            description: { en: 'Use fast/slow pointers to detect loops.', es: 'Usa punteros rápido/lento para detectar bucles.' },
+            codeExamples: {
+                java: `class CycleNode {
+    int value;
+    CycleNode next;
+    CycleNode(int value) { this.value = value; }
+}
+
+public class CycleDetectionSet {
+    static boolean hasCycle(CycleNode head) {
+        CycleNode slow = head;
+        CycleNode fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) return true;
+        }
+        return false;
+    }
+
+    public static void main(String[] args) {
+        CycleNode a = new CycleNode(1);
+        CycleNode b = new CycleNode(2);
+        CycleNode c = new CycleNode(3);
+        a.next = b; b.next = c; c.next = b; // cycle
+        System.out.println("Cycle present? " + hasCycle(a));
+    }
+}`
+            }
+        },
+        {
+            id: 'list-reversal',
+            title: { en: 'List Reversal', es: 'Inversión de Lista' },
+            description: { en: 'Reverse links in-place using three pointers.', es: 'Invierte enlaces en sitio usando tres punteros.' },
+            codeExamples: {
+                java: `class RevNode {
+    int value;
+    RevNode next;
+    RevNode(int value) { this.value = value; }
+}
+
+public class ListReversalSet {
+    static RevNode reverse(RevNode head) {
+        RevNode prev = null, current = head;
+        while (current != null) {
+            RevNode next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+        }
+        return prev;
+    }
+
+    static void print(RevNode head) {
+        for (RevNode c = head; c != null; c = c.next) {
+            System.out.print(c.value + (c.next != null ? " -> " : ""));
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        RevNode head = new RevNode(5);
+        head.next = new RevNode(6);
+        head.next.next = new RevNode(7);
+        System.out.print("Original: ");
+        print(head);
+        RevNode reversed = reverse(head);
+        System.out.print("Reversed: ");
+        print(reversed);
+    }
+}`
+            }
+        },
+        {
+            id: 'merge-lists',
+            title: { en: 'Merge Operations', es: 'Operaciones de Fusión' },
+            description: { en: 'Merge sorted linked lists with pointer comparisons.', es: 'Fusiona listas ordenadas con comparaciones de punteros.' },
+            codeExamples: {
+                java: `class MergeNode {
+    int value;
+    MergeNode next;
+    MergeNode(int value) { this.value = value; }
+}
+
+public class MergeListsSet {
+    static MergeNode merge(MergeNode a, MergeNode b) {
+        MergeNode dummy = new MergeNode(0);
+        MergeNode tail = dummy;
+        while (a != null && b != null) {
+            if (a.value <= b.value) {
+                tail.next = a;
+                a = a.next;
+            } else {
+                tail.next = b;
+                b = b.next;
+            }
+            tail = tail.next;
+        }
+        tail.next = (a != null) ? a : b;
+        return dummy.next;
+    }
+
+    static void print(MergeNode head) {
+        for (MergeNode c = head; c != null; c = c.next) {
+            System.out.print(c.value + (c.next != null ? " -> " : ""));
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        MergeNode a = new MergeNode(1); a.next = new MergeNode(4); a.next.next = new MergeNode(9);
+        MergeNode b = new MergeNode(2); b.next = new MergeNode(3); b.next.next = new MergeNode(10);
+        MergeNode merged = merge(a, b);
+        print(merged);
+    }
+}`
+            }
+        }
+    ],
+    'stacks-queues': [
+        {
+            id: 'stack-operations',
+            title: { en: 'Stack Operations', es: 'Operaciones de Pila' },
+            description: { en: 'Push, pop, and peek with clear LIFO traces.', es: 'Push, pop y peek con trazas claras de LIFO.' },
+            codeExamples: {
+                java: `import java.util.ArrayDeque;
+
+public class StackOperationsSet {
+    public static void main(String[] args) {
+        ArrayDeque<Integer> stack = new ArrayDeque<>();
+        stack.push(100);
+        stack.push(200);
+        stack.push(300);
+        System.out.println("Top element: " + stack.peek());
+        System.out.println("Popped: " + stack.pop());
+        System.out.println("After pop: " + stack);
+    }
+}`
+            }
+        },
+        {
+            id: 'queue-operations',
+            title: { en: 'Queue Operations', es: 'Operaciones de Cola' },
+            description: { en: 'Enqueue/dequeue with FIFO behavior tracking.', es: 'Enqueue/dequeue con seguimiento del comportamiento FIFO.' },
+            codeExamples: {
+                java: `import java.util.ArrayDeque;
+
+public class QueueOperationsSet {
+    public static void main(String[] args) {
+        ArrayDeque<String> queue = new ArrayDeque<>();
+        queue.offer("Task-A");
+        queue.offer("Task-B");
+        queue.offer("Task-C");
+        System.out.println("Front: " + queue.peek());
+        System.out.println("Dequeued: " + queue.poll());
+        System.out.println("Queue now: " + queue);
+    }
+}`
+            }
+        },
+        {
+            id: 'deque-usage',
+            title: { en: 'Deque Usage', es: 'Uso de Deque' },
+            description: { en: 'Use both ends for flexible queue/stack behavior.', es: 'Usa ambos extremos para comportamiento flexible de cola/pila.' },
+            codeExamples: {
+                java: `import java.util.ArrayDeque;
+
+public class DequeUsageSet {
+    public static void main(String[] args) {
+        ArrayDeque<Integer> deque = new ArrayDeque<>();
+        deque.addFirst(10);
+        deque.addLast(20);
+        deque.addFirst(5);
+        System.out.println("Deque state: " + deque);
+        System.out.println("removeFirst -> " + deque.removeFirst());
+        System.out.println("removeLast -> " + deque.removeLast());
+        System.out.println("Deque final: " + deque);
+    }
+}`
+            }
+        },
+        {
+            id: 'priority-queue',
+            title: { en: 'Priority Queue', es: 'Cola de Prioridad' },
+            description: { en: 'Process highest-priority elements first.', es: 'Procesa primero los elementos de mayor prioridad.' },
+            codeExamples: {
+                java: `import java.util.PriorityQueue;
+
+public class PriorityQueueSet {
+    public static void main(String[] args) {
+        PriorityQueue<Integer> pq = new PriorityQueue<>();
+        pq.offer(40);
+        pq.offer(10);
+        pq.offer(30);
+        pq.offer(20);
+        while (!pq.isEmpty()) {
+            System.out.println("Next priority: " + pq.poll());
+        }
+    }
+}`
+            }
+        },
+        {
+            id: 'practical-applications',
+            title: { en: 'Practical Applications', es: 'Aplicaciones Prácticas' },
+            description: { en: 'Apply stack and queue patterns to real tasks.', es: 'Aplica patrones de pila y cola a tareas reales.' },
+            codeExamples: {
+                java: `import java.util.ArrayDeque;
+
+public class PracticalApplicationsSet {
+    static boolean isBalanced(String s) {
+        ArrayDeque<Character> stack = new ArrayDeque<>();
+        for (char ch : s.toCharArray()) {
+            if (ch == '(') stack.push(ch);
+            else if (ch == ')') {
+                if (stack.isEmpty()) return false;
+                stack.pop();
+            }
+        }
+        return stack.isEmpty();
+    }
+
+    public static void main(String[] args) {
+        String expr = "((a+b)*(c-d))";
+        System.out.println("Balanced expression? " + isBalanced(expr));
+
+        ArrayDeque<String> tasks = new ArrayDeque<>();
+        tasks.offer("Compile");
+        tasks.offer("Run Tests");
+        tasks.offer("Deploy");
+        while (!tasks.isEmpty()) {
+            System.out.println("Processing task: " + tasks.poll());
+        }
+    }
+}`
+            }
+        }
+    ],
+    'searching-algorithms': [
+        {
+            id: 'linear-search',
+            title: { en: 'Linear Search', es: 'Búsqueda Lineal' },
+            description: { en: 'Scan each element until the target appears.', es: 'Recorre cada elemento hasta encontrar el objetivo.' },
+            codeExamples: {
+                java: `import java.util.Arrays;
+
+public class LinearSearchSet {
+    static int linearSearch(int[] arr, int target) {
+        for (int i = 0; i < arr.length; i++) {
+            System.out.println("Checking index " + i + " -> " + arr[i]);
+            if (arr[i] == target) return i;
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        int[] values = {14, 7, 23, 9, 31};
+        int target = 23;
+        int index = linearSearch(values, target);
+        System.out.println("Array: " + Arrays.toString(values));
+        System.out.println("Target " + target + " found at index: " + index);
+    }
+}`
+            }
+        },
+        {
+            id: 'binary-search',
+            title: { en: 'Binary Search', es: 'Búsqueda Binaria' },
+            description: { en: 'Use sorted order to cut the search space in half each step.', es: 'Usa el ordenamiento para reducir a la mitad el espacio de búsqueda.' },
+            codeExamples: {
+                java: `import java.util.Arrays;
+
+public class BinarySearchSet {
+    static int binarySearch(int[] sorted, int target) {
+        int left = 0, right = sorted.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            System.out.println("left=" + left + ", mid=" + mid + ", right=" + right + ", value=" + sorted[mid]);
+            if (sorted[mid] == target) return mid;
+            if (sorted[mid] < target) left = mid + 1;
+            else right = mid - 1;
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        int[] values = {3, 8, 12, 17, 24, 31, 44};
+        int target = 24;
+        System.out.println("Sorted array: " + Arrays.toString(values));
+        System.out.println("Index of " + target + ": " + binarySearch(values, target));
+    }
+}`
+            }
+        },
+        {
+            id: 'first-last-occurrence',
+            title: { en: 'First & Last Occurrence', es: 'Primera y Última Ocurrencia' },
+            description: { en: 'Find range boundaries for duplicate values in sorted data.', es: 'Encuentra los límites de un valor repetido en datos ordenados.' },
+            codeExamples: {
+                java: `import java.util.Arrays;
+
+public class FirstLastOccurrenceSet {
+    static int bound(int[] arr, int target, boolean findFirst) {
+        int left = 0, right = arr.length - 1, answer = -1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (arr[mid] == target) {
+                answer = mid;
+                if (findFirst) right = mid - 1;
+                else left = mid + 1;
+            } else if (arr[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return answer;
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {1, 2, 4, 4, 4, 7, 9};
+        int target = 4;
+        int first = bound(arr, target, true);
+        int last = bound(arr, target, false);
+        System.out.println("Array: " + Arrays.toString(arr));
+        System.out.println("Target " + target + " first index: " + first + ", last index: " + last);
+    }
+}`
+            }
+        },
+        {
+            id: 'hash-lookup',
+            title: { en: 'Hash Lookup Search', es: 'Búsqueda con Hash' },
+            description: { en: 'Use a hash map for near O(1) membership and complement lookup.', es: 'Usa un hash map para búsqueda de pertenencia y complementos en casi O(1).' },
+            codeExamples: {
+                java: `import java.util.HashMap;
+import java.util.Map;
+
+public class HashLookupSet {
+    static int[] twoSum(int[] arr, int target) {
+        Map<Integer, Integer> seen = new HashMap<>();
+        for (int i = 0; i < arr.length; i++) {
+            int complement = target - arr[i];
+            if (seen.containsKey(complement)) {
+                return new int[] { seen.get(complement), i };
+            }
+            seen.put(arr[i], i);
+        }
+        return new int[] { -1, -1 };
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {10, 15, 3, 7, 8};
+        int target = 18;
+        int[] result = twoSum(arr, target);
+        System.out.println("Two-sum target: " + target);
+        System.out.println("Indices: [" + result[0] + ", " + result[1] + "]");
+    }
+}`
+            }
+        },
+        {
+            id: 'search-comparison',
+            title: { en: 'Search Strategy Comparison', es: 'Comparación de Estrategias' },
+            description: { en: 'Compare linear vs binary operations on the same target.', es: 'Compara operaciones de búsqueda lineal y binaria para el mismo objetivo.' },
+            codeExamples: {
+                java: `import java.util.Arrays;
+
+public class SearchComparisonSet {
+    static int linearSteps(int[] arr, int target) {
+        int steps = 0;
+        for (int value : arr) {
+            steps++;
+            if (value == target) break;
+        }
+        return steps;
+    }
+
+    static int binarySteps(int[] arr, int target) {
+        int left = 0, right = arr.length - 1, steps = 0;
+        while (left <= right) {
+            steps++;
+            int mid = left + (right - left) / 2;
+            if (arr[mid] == target) break;
+            if (arr[mid] < target) left = mid + 1;
+            else right = mid - 1;
+        }
+        return steps;
+    }
+
+    public static void main(String[] args) {
+        int[] data = {2, 5, 8, 12, 16, 19, 24, 31, 42, 57};
+        int target = 31;
+        System.out.println("Data: " + Arrays.toString(data));
+        System.out.println("Linear steps: " + linearSteps(data, target));
+        System.out.println("Binary steps: " + binarySteps(data, target));
+    }
+}`
+            }
+        }
+    ],
+    'sorting-algorithms': [
+        {
+            id: 'bubble-sort',
+            title: { en: 'Bubble Sort', es: 'Ordenamiento Burbuja' },
+            description: { en: 'Swap adjacent inversions across repeated passes.', es: 'Intercambia inversiones adyacentes en pasadas repetidas.' },
+            codeExamples: {
+                java: `import java.util.Arrays;
+
+public class BubbleSortSet {
+    static void bubbleSort(int[] arr) {
+        for (int pass = 0; pass < arr.length - 1; pass++) {
+            boolean swapped = false;
+            for (int i = 0; i < arr.length - 1 - pass; i++) {
+                if (arr[i] > arr[i + 1]) {
+                    int temp = arr[i];
+                    arr[i] = arr[i + 1];
+                    arr[i + 1] = temp;
+                    swapped = true;
+                }
+            }
+            System.out.println("After pass " + (pass + 1) + ": " + Arrays.toString(arr));
+            if (!swapped) break;
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {9, 4, 6, 2, 8};
+        bubbleSort(arr);
+        System.out.println("Sorted: " + Arrays.toString(arr));
+    }
+}`
+            }
+        },
+        {
+            id: 'merge-sort',
+            title: { en: 'Merge Sort', es: 'Merge Sort' },
+            description: { en: 'Divide-and-conquer sorting with stable merging.', es: 'Ordenamiento divide y vencerás con combinación estable.' },
+            codeExamples: {
+                java: `import java.util.Arrays;
+
+public class MergeSortSet {
+    static void mergeSort(int[] arr, int left, int right) {
+        if (left >= right) return;
+        int mid = left + (right - left) / 2;
+        mergeSort(arr, left, mid);
+        mergeSort(arr, mid + 1, right);
+        merge(arr, left, mid, right);
+    }
+
+    static void merge(int[] arr, int left, int mid, int right) {
+        int[] temp = new int[right - left + 1];
+        int i = left, j = mid + 1, k = 0;
+        while (i <= mid && j <= right) {
+            temp[k++] = (arr[i] <= arr[j]) ? arr[i++] : arr[j++];
+        }
+        while (i <= mid) temp[k++] = arr[i++];
+        while (j <= right) temp[k++] = arr[j++];
+        for (int p = 0; p < temp.length; p++) arr[left + p] = temp[p];
+        System.out.println("Merged [" + left + "," + right + "]: " + Arrays.toString(Arrays.copyOfRange(arr, left, right + 1)));
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {12, 5, 7, 3, 19, 1};
+        mergeSort(arr, 0, arr.length - 1);
+        System.out.println("Sorted: " + Arrays.toString(arr));
+    }
+}`
+            }
+        },
+        {
+            id: 'quick-sort',
+            title: { en: 'Quick Sort', es: 'Quick Sort' },
+            description: { en: 'Partition around pivots for efficient average-case sorting.', es: 'Particiona por pivotes para ordenamiento eficiente en promedio.' },
+            codeExamples: {
+                java: `import java.util.Arrays;
+
+public class QuickSortSet {
+    static void quickSort(int[] arr, int low, int high) {
+        if (low >= high) return;
+        int pivotIndex = partition(arr, low, high);
+        System.out.println("Pivot fixed at " + pivotIndex + ": " + Arrays.toString(arr));
+        quickSort(arr, low, pivotIndex - 1);
+        quickSort(arr, pivotIndex + 1, high);
+    }
+
+    static int partition(int[] arr, int low, int high) {
+        int pivot = arr[high];
+        int i = low - 1;
+        for (int j = low; j < high; j++) {
+            if (arr[j] <= pivot) {
+                i++;
+                int temp = arr[i];
+                arr[i] = arr[j];
+                arr[j] = temp;
+            }
+        }
+        int temp = arr[i + 1];
+        arr[i + 1] = arr[high];
+        arr[high] = temp;
+        return i + 1;
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {33, 10, 55, 71, 29, 4};
+        quickSort(arr, 0, arr.length - 1);
+        System.out.println("Sorted: " + Arrays.toString(arr));
+    }
+}`
+            }
+        },
+        {
+            id: 'heap-sort',
+            title: { en: 'Heap Sort', es: 'Heap Sort' },
+            description: { en: 'Use a max-heap to repeatedly place largest values at the end.', es: 'Usa un max-heap para ubicar repetidamente los mayores valores al final.' },
+            codeExamples: {
+                java: `import java.util.Arrays;
+
+public class HeapSortSet {
+    static void heapSort(int[] arr) {
+        int n = arr.length;
+        for (int i = n / 2 - 1; i >= 0; i--) heapify(arr, n, i);
+        for (int end = n - 1; end > 0; end--) {
+            int temp = arr[0];
+            arr[0] = arr[end];
+            arr[end] = temp;
+            heapify(arr, end, 0);
+            System.out.println("Placed max at index " + end + ": " + Arrays.toString(arr));
+        }
+    }
+
+    static void heapify(int[] arr, int size, int root) {
+        int largest = root;
+        int left = 2 * root + 1;
+        int right = 2 * root + 2;
+        if (left < size && arr[left] > arr[largest]) largest = left;
+        if (right < size && arr[right] > arr[largest]) largest = right;
+        if (largest != root) {
+            int temp = arr[root];
+            arr[root] = arr[largest];
+            arr[largest] = temp;
+            heapify(arr, size, largest);
+        }
+    }
+
+    public static void main(String[] args) {
+        int[] arr = {14, 3, 27, 8, 19, 1};
+        heapSort(arr);
+        System.out.println("Sorted: " + Arrays.toString(arr));
+    }
+}`
+            }
+        },
+        {
+            id: 'stable-vs-unstable',
+            title: { en: 'Stable vs Unstable Sorts', es: 'Ordenamientos Estables e Inestables' },
+            description: { en: 'Understand why stable sorting matters for multi-key records.', es: 'Comprende por qué el ordenamiento estable importa en registros con varias claves.' },
+            codeExamples: {
+                java: `import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+public class StableSortSet {
+    static class Student {
+        String name;
+        int score;
+        Student(String name, int score) { this.name = name; this.score = score; }
+        @Override public String toString() { return name + "(" + score + ")"; }
+    }
+
+    public static void main(String[] args) {
+        List<Student> students = new ArrayList<>();
+        students.add(new Student("Ana", 90));
+        students.add(new Student("Luis", 85));
+        students.add(new Student("Mia", 90));
+        students.add(new Student("Noah", 85));
+
+        System.out.println("Before sort: " + students);
+        students.sort(Comparator.comparingInt(s -> s.score)); // Java sort is stable
+        System.out.println("After stable sort by score: " + students);
+        System.out.println("Notice same-score students keep original relative order.");
+    }
+}`
+            }
+        }
+    ],
+    recursion: [
+        {
+            id: 'base-case-pattern',
+            title: { en: 'Base Case Pattern', es: 'Patrón de Caso Base' },
+            description: { en: 'Define stopping conditions before recursive calls.', es: 'Define condiciones de parada antes de las llamadas recursivas.' },
+            codeExamples: {
+                java: `public class BaseCasePatternSet {
+    static void countdown(int n) {
+        if (n == 0) {
+            System.out.println("Reached base case.");
+            return;
+        }
+        System.out.println("n = " + n);
+        countdown(n - 1);
+    }
+
+    public static void main(String[] args) {
+        countdown(5);
+    }
+}`
+            }
+        },
+        {
+            id: 'factorial-fibonacci',
+            title: { en: 'Factorial & Fibonacci', es: 'Factorial y Fibonacci' },
+            description: { en: 'Practice classic recursive recurrence relations.', es: 'Practica relaciones de recurrencia clásicas con recursión.' },
+            codeExamples: {
+                java: `public class FactorialFibonacciSet {
+    static long factorial(int n) {
+        if (n <= 1) return 1;
+        return n * factorial(n - 1);
+    }
+
+    static int fibonacci(int n) {
+        if (n <= 1) return n;
+        return fibonacci(n - 1) + fibonacci(n - 2);
+    }
+
+    public static void main(String[] args) {
+        System.out.println("factorial(6) = " + factorial(6));
+        for (int i = 0; i <= 7; i++) {
+            System.out.println("fib(" + i + ") = " + fibonacci(i));
+        }
+    }
+}`
+            }
+        },
+        {
+            id: 'recursive-backtracking',
+            title: { en: 'Recursive Backtracking', es: 'Backtracking Recursivo' },
+            description: { en: 'Build decisions incrementally and undo state on return.', es: 'Construye decisiones de forma incremental y deshaz el estado al regresar.' },
+            codeExamples: {
+                java: `import java.util.ArrayList;
+import java.util.List;
+
+public class RecursiveBacktrackingSet {
+    static void subsets(int[] nums, int index, List<Integer> path, List<List<Integer>> result) {
+        if (index == nums.length) {
+            result.add(new ArrayList<>(path));
+            return;
+        }
+        subsets(nums, index + 1, path, result); // exclude
+        path.add(nums[index]);
+        subsets(nums, index + 1, path, result); // include
+        path.remove(path.size() - 1); // backtrack
+    }
+
+    public static void main(String[] args) {
+        int[] nums = {1, 2, 3};
+        List<List<Integer>> result = new ArrayList<>();
+        subsets(nums, 0, new ArrayList<>(), result);
+        System.out.println("Subsets count: " + result.size());
+        System.out.println("Subsets: " + result);
+    }
+}`
+            }
+        },
+        {
+            id: 'memoization',
+            title: { en: 'Memoization', es: 'Memoización' },
+            description: { en: 'Cache overlapping subproblems to avoid repeated recursion.', es: 'Almacena subproblemas traslapados para evitar recursión repetida.' },
+            codeExamples: {
+                java: `import java.util.HashMap;
+import java.util.Map;
+
+public class MemoizationSet {
+    static Map<Integer, Long> cache = new HashMap<>();
+
+    static long fibMemo(int n) {
+        if (n <= 1) return n;
+        if (cache.containsKey(n)) return cache.get(n);
+        long value = fibMemo(n - 1) + fibMemo(n - 2);
+        cache.put(n, value);
+        return value;
+    }
+
+    public static void main(String[] args) {
+        int n = 40;
+        long answer = fibMemo(n);
+        System.out.println("fibMemo(" + n + ") = " + answer);
+        System.out.println("Cache size: " + cache.size());
+    }
+}`
+            }
+        },
+        {
+            id: 'recursion-tree-tracing',
+            title: { en: 'Recursion Tree Tracing', es: 'Trazado del Árbol de Recursión' },
+            description: { en: 'Trace call depth and return flow to debug recursive logic.', es: 'Traza profundidad de llamadas y flujo de retorno para depurar recursión.' },
+            codeExamples: {
+                java: `public class RecursionTreeTracingSet {
+    static int traceSum(int n, int depth) {
+        String indent = "  ".repeat(depth);
+        System.out.println(indent + "Call: traceSum(" + n + ")");
+        if (n == 1) {
+            System.out.println(indent + "Return 1");
+            return 1;
+        }
+        int partial = traceSum(n - 1, depth + 1);
+        int total = n + partial;
+        System.out.println(indent + "Return " + total + " from n=" + n);
+        return total;
+    }
+
+    public static void main(String[] args) {
+        int n = 5;
+        int result = traceSum(n, 0);
+        System.out.println("Final result: " + result);
+    }
+}`
+            }
+        }
+    ]
+};
+
+function normalizeModuleCodeExampleSets(module) {
+    const overrideSets = MODULE_CODE_EXAMPLE_SET_OVERRIDES[module.id];
+    const sourceSets = Array.isArray(overrideSets) && overrideSets.length
+        ? overrideSets
+        : buildGeneratedCodeExampleSets(module);
+    if (!Array.isArray(sourceSets) || !sourceSets.length) return;
+    const isAssembly = MODULE_CATEGORY_BY_ID[module.id] === 'assembly';
+
+    module.codeExampleSets = sourceSets.map((exampleSet, index) => {
+        const setId = String(exampleSet.id || `example-${index + 1}`);
+        const setTitle = exampleSet.title || `Example ${index + 1}`;
+        const setDescription = exampleSet.description || '';
+        const setTitleText = typeof setTitle === 'string'
+            ? setTitle
+            : String(setTitle?.en || setTitle?.es || Object.values(setTitle || {})[0] || `Example ${index + 1}`);
+        const sourceCodeExamples = exampleSet.codeExamples && typeof exampleSet.codeExamples === 'object'
+            ? { ...exampleSet.codeExamples }
+            : {};
+        const sourceExpectedOutputs = exampleSet.expectedOutputs && typeof exampleSet.expectedOutputs === 'object'
+            ? { ...exampleSet.expectedOutputs }
+            : {};
+        const javaSource = typeof sourceCodeExamples.java === 'string' && sourceCodeExamples.java.trim()
+            ? sourceCodeExamples.java
+            : buildFallbackJavaSnippet({ ...module, title: `${module.title} • ${setTitleText}` });
+
+        const enhancedJava = ensureJavaSnippetHasVisibleOutput(module, addComprehensiveHeaderComments(module, javaSource));
+        const normalizedCodeExamples = { java: enhancedJava };
+
+        ['cpp', 'python', 'javascript'].forEach((language) => {
+            const existing = typeof sourceCodeExamples[language] === 'string' ? sourceCodeExamples[language].trim() : '';
+            normalizedCodeExamples[language] = hasVisibleOutputForLanguage(language, existing)
+                ? existing
+                : buildMirrorSnippetByLanguage({ ...module, title: `${module.title} - ${setTitleText}` }, enhancedJava, language);
+        });
+
+        if (isAssembly) {
+            const assemblySource = typeof sourceCodeExamples.assembly === 'string' && sourceCodeExamples.assembly.trim()
+                ? sourceCodeExamples.assembly
+                : buildTopicFocusedAssemblySnippet(module, setTitleText, index, sourceSets.length);
+            normalizedCodeExamples.assembly = assemblySource;
+        }
+
+        const normalizedExpectedOutputs = ensureExpectedOutputsForCodeExamples(
+            { ...module, title: `${module.title} - ${setTitleText}` },
+            normalizedCodeExamples,
+            sourceExpectedOutputs
+        );
+
+        return {
+            id: setId,
+            title: setTitle,
+            description: setDescription,
+            codeExamples: normalizedCodeExamples,
+            expectedOutputs: normalizedExpectedOutputs
+        };
+    });
+}
+
 function normalizeModuleCatalog(moduleList) {
     moduleList.forEach((module) => {
         const existingCodeExamples = module.codeExamples && typeof module.codeExamples === 'object'
             ? { ...module.codeExamples }
+            : {};
+        const existingExpectedOutputs = module.expectedOutputs && typeof module.expectedOutputs === 'object'
+            ? { ...module.expectedOutputs }
             : {};
         const isAssembly = MODULE_CATEGORY_BY_ID[module.id] === 'assembly';
 
@@ -5102,13 +6858,20 @@ function normalizeModuleCatalog(moduleList) {
             };
         }
 
+        module.expectedOutputs = ensureExpectedOutputsForCodeExamples(
+            module,
+            module.codeExamples,
+            existingExpectedOutputs
+        );
+
         module.definitions = buildModuleDefinitions(module, 'en');
+        normalizeModuleCodeExampleSets(module);
     });
 }
 
 normalizeModuleCatalog(modules);
-
-const flashcardDecks = generateFlashcardDecks(modules, baseFlashcards);
+// Compatibility anchor for validation scripts that slice the catalog runtime section.
+const flashcardDecks = null;
 
 const dailyChallenges = [
     {
@@ -5182,9 +6945,23 @@ function getLocalizedModule(module) {
     if (!module) return module;
     const localized = localizeEntity('modules', module.id, null);
     const language = appState.language === 'es' ? 'es' : 'en';
+    const localizedCodeExamples = normalizeLocalizedCodeExamples(
+        module.codeExamples || {},
+        localized?.codeExamples || {},
+        language
+    );
+    const localizedExpectedOutputs = normalizeLocalizedExpectedOutputs(
+        module.expectedOutputs || {},
+        localized?.expectedOutputs || {},
+        language
+    );
+    const localizedCodeExampleSets = normalizeLocalizedCodeExampleSets(module, localized || {}, language);
     if (!localized) {
         return {
             ...module,
+            codeExamples: localizedCodeExamples,
+            expectedOutputs: localizedExpectedOutputs,
+            codeExampleSets: localizedCodeExampleSets.length ? localizedCodeExampleSets : module.codeExampleSets,
             definitions: Array.isArray(module.definitions) && module.definitions.length === 5
                 ? module.definitions
                 : buildModuleDefinitions(module, language)
@@ -5202,6 +6979,11 @@ function getLocalizedModule(module) {
         ...localized,
         topics: localized.topics || module.topics,
         resources: localized.resources || module.resources,
+        codeExamples: localizedCodeExamples,
+        expectedOutputs: localizedExpectedOutputs,
+        codeExampleSets: localizedCodeExampleSets.length
+            ? localizedCodeExampleSets
+            : (localized.codeExampleSets || module.codeExampleSets),
         definitions: localizedDefinitions
     };
 }
@@ -5257,26 +7039,104 @@ function getLocalizedNotesLibrary() {
     });
 }
 
-function translateCodeHumanText(code) {
-    if (appState.language !== 'es' || typeof code !== 'string') return code;
+function translateTextByLanguage(text, lang = 'en') {
+    if (lang !== 'es') return String(text || '');
+    return String(text || '')
+        .split('\n')
+        .map((line) => translateLiteral(line, 'es'))
+        .join('\n');
+}
+
+function normalizeLocalizedCodeExamples(baseCodeExamples = {}, localizedCodeExamples = {}, lang = 'en') {
+    const merged = { ...baseCodeExamples, ...(localizedCodeExamples || {}) };
+    if (lang !== 'es') return merged;
+    Object.keys(baseCodeExamples || {}).forEach((languageKey) => {
+        const baseSnippet = String(baseCodeExamples?.[languageKey] || '');
+        const localizedSnippet = String(localizedCodeExamples?.[languageKey] || '');
+        if (localizedSnippet.trim()) return;
+        if (!baseSnippet.trim()) return;
+        merged[languageKey] = translateCodeHumanText(baseSnippet, 'es');
+    });
+    return merged;
+}
+
+function normalizeLocalizedExpectedOutputs(baseExpectedOutputs = {}, localizedExpectedOutputs = {}, lang = 'en') {
+    const merged = { ...baseExpectedOutputs, ...(localizedExpectedOutputs || {}) };
+    if (lang !== 'es') return merged;
+    Object.keys(baseExpectedOutputs || {}).forEach((languageKey) => {
+        const baseText = String(baseExpectedOutputs?.[languageKey] || '');
+        const localizedText = String(localizedExpectedOutputs?.[languageKey] || '');
+        if (localizedText.trim()) return;
+        if (!baseText.trim()) return;
+        merged[languageKey] = translateTextByLanguage(baseText, 'es');
+    });
+    return merged;
+}
+
+function normalizeLocalizedCodeExampleSets(module, localizedModuleEntity = {}, lang = 'en') {
+    const baseSets = Array.isArray(module?.codeExampleSets) ? module.codeExampleSets : [];
+    if (!baseSets.length) return [];
+    const localizedSets = Array.isArray(localizedModuleEntity?.codeExampleSets) ? localizedModuleEntity.codeExampleSets : [];
+    const localizedById = new Map(localizedSets.map((setItem) => [String(setItem.id), setItem]));
+
+    return baseSets.map((baseSet, index) => {
+        const setId = String(baseSet.id || `example-${index + 1}`);
+        const overlay = localizedById.get(setId) || {};
+        const baseTitleEn = resolveLocalizedValue(baseSet.title, 'en') || `Example ${index + 1}`;
+        const overlayTitleEs = resolveLocalizedValue(overlay.title, 'es');
+        const titleValue = lang === 'es'
+            ? { en: baseTitleEn, es: overlayTitleEs || translateLiteral(baseTitleEn, 'es') || baseTitleEn }
+            : (overlay.title || baseSet.title);
+
+        const baseDescEn = resolveLocalizedValue(baseSet.description, 'en') || '';
+        const overlayDescEs = resolveLocalizedValue(overlay.description, 'es');
+        const descriptionValue = lang === 'es'
+            ? { en: baseDescEn, es: overlayDescEs || translateLiteral(baseDescEn, 'es') || baseDescEn }
+            : (overlay.description || baseSet.description);
+
+        const codeExamples = normalizeLocalizedCodeExamples(baseSet.codeExamples || {}, overlay.codeExamples || {}, lang);
+        const expectedOutputs = normalizeLocalizedExpectedOutputs(baseSet.expectedOutputs || {}, overlay.expectedOutputs || {}, lang);
+
+        return {
+            ...baseSet,
+            ...overlay,
+            id: setId,
+            title: titleValue,
+            description: descriptionValue,
+            codeExamples,
+            expectedOutputs
+        };
+    });
+}
+
+function translateCodeHumanText(code, targetLanguage = appState.language) {
+    if (targetLanguage !== 'es' || typeof code !== 'string') return code;
     return code.split('\n').map((line) => {
         let nextLine = line;
         const trimmed = line.trim();
         const isCppDirective = /^#\s*(include|define|if|ifdef|ifndef|endif|pragma|import)\b/i.test(trimmed);
 
-        const slashCommentIdx = nextLine.indexOf('//');
-        if (slashCommentIdx >= 0) {
+        if (/^\s*;/.test(nextLine)) {
+            const semicolonIdx = nextLine.indexOf(';');
+            const head = nextLine.slice(0, semicolonIdx + 1);
+            const body = nextLine.slice(semicolonIdx + 1).trim();
+            const translated = translateLiteral(body, 'es');
+            nextLine = translated === body ? nextLine : `${head} ${translated}`;
+        } else {
+            const slashCommentIdx = nextLine.indexOf('//');
+            if (slashCommentIdx >= 0) {
             const head = nextLine.slice(0, slashCommentIdx + 2);
             const body = nextLine.slice(slashCommentIdx + 2).trim();
             const translated = translateLiteral(body, 'es');
             nextLine = translated === body ? nextLine : `${head} ${translated}`;
-        } else if (!isCppDirective) {
-            const hashCommentIdx = nextLine.indexOf('#');
-            if (hashCommentIdx >= 0) {
-                const head = nextLine.slice(0, hashCommentIdx + 1);
-                const body = nextLine.slice(hashCommentIdx + 1).trim();
-                const translated = translateLiteral(body, 'es');
-                nextLine = translated === body ? nextLine : `${head} ${translated}`;
+            } else if (!isCppDirective) {
+                const hashCommentIdx = nextLine.indexOf('#');
+                if (hashCommentIdx >= 0) {
+                    const head = nextLine.slice(0, hashCommentIdx + 1);
+                    const body = nextLine.slice(hashCommentIdx + 1).trim();
+                    const translated = translateLiteral(body, 'es');
+                    nextLine = translated === body ? nextLine : `${head} ${translated}`;
+                }
             }
         }
 
@@ -5295,68 +7155,115 @@ function translateCodeHumanText(code) {
     }).join('\n');
 }
 
-function generateFlashcardDecks(modulesData, generalCards = []) {
+function getFlashcardPromptTemplates(lang = 'en') {
+    if (lang === 'es') {
+        return {
+            defineTerm: 'Define "{term}" en el contexto de {module}.',
+            termUseCase: '¿Cuándo aplicarías "{term}" en un problema real?',
+            topicConnection: '¿Cómo se conecta "{topic}" con el objetivo principal de {module}?',
+            pitfallQuestion: '¿Qué error común debes evitar al estudiar {topic}?',
+            explanationQuestion: 'Resume la idea central que enseña {module}.',
+            explanationAnswerPrefix: 'Idea central:',
+            pitfallAnswerPrefix: 'Evita este error:',
+            useCaseAnswerPrefix: 'Caso práctico:',
+            connectionAnswerPrefix: 'Conexión clave:'
+        };
+    }
+    return {
+        defineTerm: 'Define "{term}" in the context of {module}.',
+        termUseCase: 'When would you apply "{term}" in a real problem?',
+        topicConnection: 'How does "{topic}" connect to the core goal of {module}?',
+        pitfallQuestion: 'What common mistake should you avoid when using {topic}?',
+        explanationQuestion: 'Summarize the core idea taught in {module}.',
+        explanationAnswerPrefix: 'Core idea:',
+        pitfallAnswerPrefix: 'Avoid this pitfall:',
+        useCaseAnswerPrefix: 'Practical use case:',
+        connectionAnswerPrefix: 'Key connection:'
+    };
+}
+
+function getLocalizedGeneralFlashcards(lang = appState.language || 'en') {
+    if (lang !== 'es') {
+        return baseFlashcards;
+    }
+    const localizedMap = CONTENT_I18N.es?.flashcards || {};
+    return baseFlashcards.map((card) => {
+        const localized = localizedMap?.[String(card.id)] || localizedMap?.[card.id];
+        if (!localized) {
+            return {
+                ...card,
+                question: translateLiteral(card.question, 'es'),
+                answer: translateLiteral(card.answer, 'es')
+            };
+        }
+        return {
+            ...card,
+            question: localized.question || card.question,
+            answer: localized.answer || card.answer
+        };
+    });
+}
+
+function toSentenceList(text = '') {
+    const source = String(text || '').replace(/\s+/g, ' ').trim();
+    if (!source) return [];
+    return source
+        .split(/(?<=[.!?])\s+/)
+        .map((sentence) => sentence.trim())
+        .filter(Boolean);
+}
+
+function buildModuleConceptFlashcards(module, lang = 'en') {
+    const templates = getFlashcardPromptTemplates(lang);
+    const cards = [];
+    const definitions = Array.isArray(module.definitions) && module.definitions.length
+        ? module.definitions.slice(0, 5)
+        : buildModuleDefinitions(module, lang);
+    const topics = Array.isArray(module.topics) ? module.topics.slice(0, 5) : [];
+    const explanationSentences = toSentenceList(module.explanation || module.description || '');
+    const primaryExplanation = explanationSentences[0] || module.description || '';
+    const secondaryExplanation = explanationSentences[1] || primaryExplanation;
+
+    definitions.slice(0, 3).forEach((entry) => {
+        cards.push({
+            moduleId: module.id,
+            question: interpolate(templates.defineTerm, { term: entry.term, module: module.title }),
+            answer: entry.definition
+        });
+        cards.push({
+            moduleId: module.id,
+            question: interpolate(templates.termUseCase, { term: entry.term, module: module.title }),
+            answer: `${templates.useCaseAnswerPrefix} ${secondaryExplanation}`
+        });
+    });
+
+    topics.slice(0, 4).forEach((topic) => {
+        cards.push({
+            moduleId: module.id,
+            question: interpolate(templates.topicConnection, { topic, module: module.title }),
+            answer: `${templates.connectionAnswerPrefix} ${primaryExplanation}`
+        });
+        cards.push({
+            moduleId: module.id,
+            question: interpolate(templates.pitfallQuestion, { topic, module: module.title }),
+            answer: `${templates.pitfallAnswerPrefix} ${secondaryExplanation}`
+        });
+    });
+
+    cards.push({
+        moduleId: module.id,
+        question: interpolate(templates.explanationQuestion, { module: module.title }),
+        answer: `${templates.explanationAnswerPrefix} ${primaryExplanation}`
+    });
+
+    return shuffleArray(cards).slice(0, 12);
+}
+
+function generateFlashcardDecks(modulesData, generalCards = [], lang = 'en') {
     const decks = {};
 
     modulesData.forEach(module => {
-        const cards = [];
-        const topics = module.topics || [];
-        const explanation = module.explanation || module.description || '';
-        const resources = (module.resources || [])
-            .map(resource => typeof resource === 'string' ? resource : resource?.text || resource?.url || '')
-            .filter(Boolean);
-
-        cards.push({
-            moduleId: module.id,
-            question: `What is the focus of ${module.title}?`,
-            answer: module.description
-        });
-
-        if (explanation) {
-            cards.push({
-                moduleId: module.id,
-                question: `Why is ${module.title} important for your CS learning journey?`,
-                answer: explanation
-            });
-        }
-
-        if (topics.length) {
-            cards.push({
-                moduleId: module.id,
-                question: `List some of the topics covered in ${module.title}.`,
-                answer: topics.join(', ')
-            });
-
-            topics.slice(0, 10).forEach(topic => {
-                cards.push({
-                    moduleId: module.id,
-                    question: `Which module should you revisit for ${topic}?`,
-                    answer: `${module.title} (${module.difficulty})`
-                });
-            });
-        }
-
-        cards.push({
-            moduleId: module.id,
-            question: `What is the difficulty level of ${module.title}?`,
-            answer: module.difficulty.charAt(0).toUpperCase() + module.difficulty.slice(1)
-        });
-
-        if (resources.length) {
-            cards.push({
-                moduleId: module.id,
-                question: `Name a supporting resource for ${module.title}.`,
-                answer: resources.join(', ')
-            });
-        }
-
-        cards.push({
-            moduleId: module.id,
-            question: `How would you describe ${module.title} to a classmate?`,
-            answer: module.description
-        });
-
-        decks[module.id] = cards;
+        decks[module.id] = buildModuleConceptFlashcards(module, lang);
     });
 
     const deckCollection = { ...decks };
@@ -5364,6 +7271,8 @@ function generateFlashcardDecks(modulesData, generalCards = []) {
     if (generalCards.length) {
         deckCollection.general = generalCards.map(card => ({
             ...card,
+            question: typeof card.question === 'string' ? translateLiteral(card.question, lang) : card.question,
+            answer: typeof card.answer === 'string' ? translateLiteral(card.answer, lang) : card.answer,
             moduleId: 'general'
         }));
     }
@@ -5376,7 +7285,29 @@ function generateFlashcardDecks(modulesData, generalCards = []) {
     return deckCollection;
 }
 
+const flashcardDeckCache = {};
+
+function getFlashcardDeckCollection(lang = appState.language || 'en') {
+    const normalizedLang = lang === 'es' ? 'es' : 'en';
+    if (flashcardDeckCache[normalizedLang]) {
+        return flashcardDeckCache[normalizedLang];
+    }
+    const sourceModules = normalizedLang === 'es'
+        ? getLocalizedModules().map((module) => ({
+            ...module,
+            definitions: Array.isArray(module.definitions) && module.definitions.length === 5
+                ? module.definitions
+                : buildModuleDefinitions(module, 'es')
+        }))
+        : modules;
+    const generalCards = getLocalizedGeneralFlashcards(normalizedLang);
+    const decks = generateFlashcardDecks(sourceModules, generalCards, normalizedLang);
+    flashcardDeckCache[normalizedLang] = decks;
+    return decks;
+}
+
 function getFlashcardDeck(moduleId) {
+    const flashcardDecks = getFlashcardDeckCollection(appState.language);
     if (moduleId === 'general') {
         return flashcardDecks.general || [];
     }
@@ -5533,9 +7464,11 @@ function saveToLocalStorage() {
         completedModules: Array.from(appState.completedModules),
         completedQuizzes: Array.from(appState.completedQuizzes),
         expandedCode: Array.from(appState.expandedCode),
+        expandedCodeExamples: Array.from(appState.expandedCodeExamples),
         moduleComments: Array.from(appState.moduleComments.entries()),
         moduleLanguages: Array.from(appState.moduleLanguages.entries()),
         moduleModes: Array.from(appState.moduleModes.entries()),
+        moduleExampleSelections: Array.from(appState.moduleExampleSelections.entries()),
         searchTerm: appState.searchTerm,
         difficultyFilter: appState.difficultyFilter,
         categoryFilter: appState.categoryFilter,
@@ -5607,6 +7540,39 @@ function sanitizeStoredModuleModes(modeMap) {
     return modeMap;
 }
 
+function sanitizeStoredExpandedCodeExamples(expandedSet) {
+    if (!(expandedSet instanceof Set)) return new Set();
+    const validModuleIds = getValidModuleIdSet();
+    const sanitized = new Set();
+    expandedSet.forEach((entry) => {
+        const value = String(entry || '');
+        const [moduleId, exampleId] = value.split('::');
+        if (!validModuleIds.has(moduleId) || !exampleId) return;
+        const module = getModuleById(moduleId);
+        const availableSets = Array.isArray(module?.codeExampleSets) ? module.codeExampleSets : [];
+        if (availableSets.some((set) => set.id === exampleId)) {
+            sanitized.add(value);
+        }
+    });
+    return sanitized;
+}
+
+function sanitizeStoredModuleExampleSelections(selectionMap) {
+    if (!(selectionMap instanceof Map)) return new Map();
+    const validModuleIds = getValidModuleIdSet();
+    const sanitized = new Map();
+    selectionMap.forEach((exampleId, moduleId) => {
+        if (!validModuleIds.has(moduleId)) return;
+        const module = getModuleById(moduleId);
+        const availableSets = Array.isArray(module?.codeExampleSets) ? module.codeExampleSets : [];
+        if (!availableSets.length) return;
+        if (availableSets.some((set) => set.id === exampleId)) {
+            sanitized.set(moduleId, exampleId);
+        }
+    });
+    return sanitized;
+}
+
 function sanitizeCategoryFilter(category) {
     const migrated = category === 'systems' ? 'java' : category;
     const valid = new Set(['all', 'dsa', 'discrete', 'java', 'git', 'assembly']);
@@ -5625,10 +7591,14 @@ function loadFromLocalStorage() {
             appState.showComments = state.showComments !== undefined ? state.showComments : true;
             appState.completedModules = new Set(remapStoredModuleIds(state.completedModules || []));
             appState.expandedCode = new Set(state.expandedCode || []);
+            appState.expandedCodeExamples = sanitizeStoredExpandedCodeExamples(new Set(state.expandedCodeExamples || []));
             appState.moduleComments = new Map(remapStoredModuleEntryPairs(state.moduleComments || []));
             appState.moduleLanguages = new Map(remapStoredModuleEntryPairs(state.moduleLanguages || []));
             appState.moduleModes = sanitizeStoredModuleModes(
                 new Map(remapStoredModuleEntryPairs(state.moduleModes || [], { allowLegacy: false }))
+            );
+            appState.moduleExampleSelections = sanitizeStoredModuleExampleSelections(
+                new Map(remapStoredModuleEntryPairs(state.moduleExampleSelections || [], { allowLegacy: false }))
             );
             appState.searchTerm = state.searchTerm || '';
             appState.difficultyFilter = state.difficultyFilter || 'all';
@@ -5836,67 +7806,424 @@ const NOTES_LIBRARY = [
 const DS_PLAYGROUND_CONFIG = {
     array: {
         label: 'Array',
-        hint: 'Arrays are great for indexed access and quick scans.',
-        primaryComplexity: { label: 'Insert', bigO: 'O(n)' },
-        complexitySummary: ['Access: O(1)', 'Search: O(n)', 'Insert: O(n)', 'Delete: O(n)'],
+        hint: {
+            en: 'Indexed contiguous storage for fast reads and linear inserts/deletes.',
+            es: 'Almacenamiento contiguo indexado para lecturas rápidas e inserciones/eliminaciones lineales.'
+        },
+        operations: { access: 'O(1)', search: 'O(n)', insert: 'O(n)', remove: 'O(n)' },
+        defaultOperation: 'insert',
         definitions: [
-            { term: 'Index', description: 'Zero-based position of an element.' },
-            { term: 'Contiguous', description: 'Stored in adjacent memory blocks.' }
-        ]
+            { term: 'Index', description: 'Zero-based position used for direct access.' },
+            { term: 'Contiguous memory', description: 'Elements are stored in adjacent slots.' },
+            { term: 'Shift cost', description: 'Middle insert/remove may shift many items.' }
+        ],
+        codeExamples: {
+            java: `import java.util.*;
+
+public class ArrayPlaygroundDemo {
+    public static void main(String[] args) {
+        List<Integer> arr = new ArrayList<>(Arrays.asList(4, 9, 2, 7));
+        arr.add(1, 5); // insert at index
+        arr.remove(arr.size() - 1); // remove last
+        int found = arr.indexOf(9); // linear search
+        System.out.println("Array state: " + arr);
+        System.out.println("Index of 9: " + found);
+    }
+}`,
+            cpp: `#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    vector<int> arr = {4, 9, 2, 7};
+    arr.insert(arr.begin() + 1, 5);
+    arr.pop_back();
+    auto it = find(arr.begin(), arr.end(), 9);
+    cout << "Array state: ";
+    for (int x : arr) cout << x << " ";
+    cout << "\\nIndex of 9: " << (it == arr.end() ? -1 : int(it - arr.begin())) << "\\n";
+    return 0;
+}`,
+            python: `def array_playground_demo():
+    arr = [4, 9, 2, 7]
+    arr.insert(1, 5)
+    arr.pop()
+    found = arr.index(9) if 9 in arr else -1
+    print("Array state:", arr)
+    print("Index of 9:", found)
+
+array_playground_demo()
+`,
+            javascript: `(function arrayPlaygroundDemo() {
+    const arr = [4, 9, 2, 7];
+    arr.splice(1, 0, 5);
+    arr.pop();
+    const found = arr.indexOf(9);
+    console.log("Array state:", arr);
+    console.log("Index of 9:", found);
+})();`
+        },
+        codeExplanations: {
+            java: {
+                en: 'Shows indexed insert, tail removal, and linear search with explicit output.',
+                es: 'Muestra inserción por índice, eliminación al final y búsqueda lineal con salida explícita.'
+            },
+            cpp: {
+                en: 'Uses vector insert/pop_back/find to mirror array operations and complexity tradeoffs.',
+                es: 'Usa vector insert/pop_back/find para reflejar operaciones de arreglo y sus costos.'
+            },
+            python: {
+                en: 'Uses list insert/pop/index and prints resulting state for quick verification.',
+                es: 'Usa list insert/pop/index e imprime el estado final para verificar resultados.'
+            },
+            javascript: {
+                en: 'Uses splice/pop/indexOf to keep behavior aligned with the visual controls.',
+                es: 'Usa splice/pop/indexOf para mantener el comportamiento alineado con los controles visuales.'
+            }
+        }
     },
     stack: {
         label: 'Stack',
-        hint: 'Last-In-First-Out (LIFO) structure for call stacks and undo.',
-        primaryComplexity: { label: 'Push/Pop', bigO: 'O(1)' },
-        complexitySummary: ['Push: O(1)', 'Pop: O(1)', 'Peek: O(1)'],
+        hint: {
+            en: 'LIFO model for undo flows, parsing, recursion simulation, and backtracking.',
+            es: 'Modelo LIFO para deshacer, análisis de expresiones, simulación de recursión y backtracking.'
+        },
+        operations: { push: 'O(1)', pop: 'O(1)', peek: 'O(1)' },
+        defaultOperation: 'push',
         definitions: [
-            { term: 'LIFO', description: 'Last element in is the first out.' },
-            { term: 'Use cases', description: 'Recursion, parsing, backtracking.' }
-        ]
+            { term: 'LIFO', description: 'Last in, first out access pattern.' },
+            { term: 'Top pointer', description: 'Marks the element returned by peek/pop.' },
+            { term: 'Underflow', description: 'Attempting pop on an empty stack.' }
+        ],
+        codeExamples: {
+            java: `import java.util.ArrayDeque;
+
+public class StackPlaygroundDemo {
+    public static void main(String[] args) {
+        ArrayDeque<Integer> stack = new ArrayDeque<>();
+        stack.push(3); stack.push(6); stack.push(9);
+        System.out.println("Top before pop: " + stack.peek());
+        int popped = stack.pop();
+        System.out.println("Popped value: " + popped);
+        System.out.println("Stack now: " + stack);
+    }
+}`,
+            cpp: `#include <iostream>
+#include <stack>
+using namespace std;
+
+int main() {
+    stack<int> st;
+    st.push(3); st.push(6); st.push(9);
+    cout << "Top before pop: " << st.top() << "\\n";
+    int popped = st.top(); st.pop();
+    cout << "Popped value: " << popped << "\\n";
+    cout << "Top now: " << (st.empty() ? -1 : st.top()) << "\\n";
+    return 0;
+}`,
+            python: `def stack_playground_demo():
+    stack = [3, 6, 9]
+    print("Top before pop:", stack[-1])
+    popped = stack.pop()
+    print("Popped value:", popped)
+    print("Stack now:", stack)
+
+stack_playground_demo()
+`,
+            javascript: `(function stackPlaygroundDemo() {
+    const stack = [3, 6, 9];
+    console.log("Top before pop:", stack[stack.length - 1]);
+    const popped = stack.pop();
+    console.log("Popped value:", popped);
+    console.log("Stack now:", stack);
+})();`
+        },
+        codeExplanations: {
+            java: { en: 'ArrayDeque gives O(1) push/pop at the top.', es: 'ArrayDeque entrega push/pop O(1) en la parte superior.' },
+            cpp: { en: 'std::stack models strict LIFO operations.', es: 'std::stack modela operaciones LIFO estrictas.' },
+            python: { en: 'Python list append/pop supports stack behavior cleanly.', es: 'La lista de Python con append/pop soporta comportamiento de pila de forma directa.' },
+            javascript: { en: 'JavaScript arrays naturally support stack push/pop semantics.', es: 'Los arreglos en JavaScript soportan naturalmente la semántica push/pop de pila.' }
+        }
     },
     queue: {
         label: 'Queue',
-        hint: 'First-In-First-Out (FIFO) for scheduling and BFS.',
-        primaryComplexity: { label: 'Enqueue/Dequeue', bigO: 'O(1)' },
-        complexitySummary: ['Enqueue: O(1)', 'Dequeue: O(1)', 'Peek: O(1)'],
+        hint: {
+            en: 'FIFO ordering for scheduling, BFS, buffering, and producer-consumer pipelines.',
+            es: 'Orden FIFO para planificación, BFS, buffering y flujos productor-consumidor.'
+        },
+        operations: { enqueue: 'O(1)', dequeue: 'O(1)', peek: 'O(1)' },
+        defaultOperation: 'enqueue',
         definitions: [
-            { term: 'FIFO', description: 'First element in is the first out.' },
-            { term: 'Use cases', description: 'BFS, task scheduling, streaming.' }
-        ]
+            { term: 'FIFO', description: 'First in, first out processing order.' },
+            { term: 'Front', description: 'Element removed by dequeue.' },
+            { term: 'Rear', description: 'Insertion point for enqueue.' }
+        ],
+        codeExamples: {
+            java: `import java.util.ArrayDeque;
+
+public class QueuePlaygroundDemo {
+    public static void main(String[] args) {
+        ArrayDeque<Integer> queue = new ArrayDeque<>();
+        queue.offer(5); queue.offer(8); queue.offer(11);
+        System.out.println("Front before dequeue: " + queue.peek());
+        int removed = queue.poll();
+        System.out.println("Dequeued value: " + removed);
+        System.out.println("Queue now: " + queue);
+    }
+}`,
+            cpp: `#include <iostream>
+#include <queue>
+using namespace std;
+
+int main() {
+    queue<int> q;
+    q.push(5); q.push(8); q.push(11);
+    cout << "Front before dequeue: " << q.front() << "\\n";
+    int removed = q.front(); q.pop();
+    cout << "Dequeued value: " << removed << "\\n";
+    cout << "Front now: " << (q.empty() ? -1 : q.front()) << "\\n";
+    return 0;
+}`,
+            python: `from collections import deque
+
+def queue_playground_demo():
+    queue = deque([5, 8, 11])
+    print("Front before dequeue:", queue[0])
+    removed = queue.popleft()
+    print("Dequeued value:", removed)
+    print("Queue now:", list(queue))
+
+queue_playground_demo()
+`,
+            javascript: `(function queuePlaygroundDemo() {
+    const queue = [5, 8, 11];
+    console.log("Front before dequeue:", queue[0]);
+    const removed = queue.shift();
+    console.log("Dequeued value:", removed);
+    console.log("Queue now:", queue);
+})();`
+        },
+        codeExplanations: {
+            java: { en: 'ArrayDeque supports queue operations through offer/poll/peek.', es: 'ArrayDeque soporta cola mediante offer/poll/peek.' },
+            cpp: { en: 'std::queue encapsulates FIFO behavior cleanly.', es: 'std::queue encapsula comportamiento FIFO de forma clara.' },
+            python: { en: 'collections.deque gives O(1) pops from the left.', es: 'collections.deque da extracciones O(1) por la izquierda.' },
+            javascript: { en: 'shift models dequeue; use with care for very large arrays.', es: 'shift modela dequeue; úsalo con cuidado en arreglos muy grandes.' }
+        }
     },
     heap: {
         label: 'Heap',
-        hint: 'Binary heap keeps min/max at the root for quick access.',
-        primaryComplexity: { label: 'Insert/Extract', bigO: 'O(log n)' },
-        complexitySummary: ['Insert: O(log n)', 'Extract min: O(log n)', 'Peek: O(1)'],
+        hint: {
+            en: 'Priority structure where root keeps min/max depending on heap type.',
+            es: 'Estructura de prioridad donde la raíz mantiene min/máx según el tipo de heap.'
+        },
+        operations: { insert: 'O(log n)', extract: 'O(log n)', peek: 'O(1)' },
+        defaultOperation: 'insert',
         definitions: [
-            { term: 'Heap property', description: 'Parent is <= children (min-heap).' },
-            { term: 'Use cases', description: 'Priority queues, top-K problems.' }
-        ]
+            { term: 'Heap property', description: 'Parent order relative to children is maintained.' },
+            { term: 'Heapify', description: 'Restore heap property after mutation.' },
+            { term: 'Priority queue', description: 'A heap-backed structure for top priority retrieval.' }
+        ],
+        codeExamples: {
+            java: `import java.util.PriorityQueue;
+
+public class HeapPlaygroundDemo {
+    public static void main(String[] args) {
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        minHeap.offer(7); minHeap.offer(2); minHeap.offer(9); minHeap.offer(5);
+        System.out.println("Min before extract: " + minHeap.peek());
+        int extracted = minHeap.poll();
+        System.out.println("Extracted: " + extracted);
+        System.out.println("Heap now: " + minHeap);
+    }
+}`,
+            cpp: `#include <iostream>
+#include <queue>
+#include <vector>
+using namespace std;
+
+int main() {
+    priority_queue<int, vector<int>, greater<int>> minHeap;
+    minHeap.push(7); minHeap.push(2); minHeap.push(9); minHeap.push(5);
+    cout << "Min before extract: " << minHeap.top() << "\\n";
+    int extracted = minHeap.top(); minHeap.pop();
+    cout << "Extracted: " << extracted << "\\n";
+    cout << "Min now: " << (minHeap.empty() ? -1 : minHeap.top()) << "\\n";
+    return 0;
+}`,
+            python: `import heapq
+
+def heap_playground_demo():
+    heap = [7, 2, 9, 5]
+    heapq.heapify(heap)
+    print("Min before extract:", heap[0])
+    extracted = heapq.heappop(heap)
+    print("Extracted:", extracted)
+    print("Heap now:", heap)
+
+heap_playground_demo()
+`,
+            javascript: `(function heapPlaygroundDemo() {
+    const values = [7, 2, 9, 5];
+    values.sort((a, b) => a - b); // simplified teaching mirror of min-heap root behavior
+    console.log("Min before extract:", values[0]);
+    const extracted = values.shift();
+    console.log("Extracted:", extracted);
+    console.log("Heap now (sorted mirror):", values);
+})();`
+        },
+        codeExplanations: {
+            java: { en: 'PriorityQueue is the standard min-heap implementation in Java.', es: 'PriorityQueue es la implementación estándar de min-heap en Java.' },
+            cpp: { en: 'priority_queue with greater<int> yields min-heap behavior.', es: 'priority_queue con greater<int> produce comportamiento de min-heap.' },
+            python: { en: 'heapq provides heapify/heappop for efficient priorities.', es: 'heapq ofrece heapify/heappop para prioridades eficientes.' },
+            javascript: { en: 'For teaching clarity this mirror uses sorted order to explain root extraction.', es: 'Para claridad didáctica este espejo usa ordenado para explicar extracción de raíz.' }
+        }
     },
     graph: {
         label: 'Graph',
-        hint: 'Nodes connected by edges. Great for BFS/DFS practice.',
-        primaryComplexity: { label: 'Add Edge', bigO: 'O(1)' },
-        complexitySummary: ['Add node: O(1)', 'Add edge: O(1)', 'Traversal: O(V + E)'],
+        hint: {
+            en: 'Nodes and edges model relationships, paths, and traversals like BFS/DFS.',
+            es: 'Nodos y aristas modelan relaciones, rutas y recorridos como BFS/DFS.'
+        },
+        operations: { addNode: 'O(1)', addEdge: 'O(1)', traversal: 'O(V + E)' },
+        defaultOperation: 'addEdge',
         definitions: [
-            { term: 'Vertex', description: 'A node in the graph.' },
-            { term: 'Edge', description: 'A connection between two nodes.' }
-        ]
+            { term: 'Vertex', description: 'A node representing an entity/state.' },
+            { term: 'Edge', description: 'A relation/connection between vertices.' },
+            { term: 'Adjacency list', description: 'Compact graph representation by neighbors.' }
+        ],
+        codeExamples: {
+            java: `import java.util.*;
+
+public class GraphPlaygroundDemo {
+    public static void main(String[] args) {
+        Map<String, List<String>> g = new HashMap<>();
+        g.put("A", new ArrayList<>(Arrays.asList("B", "C")));
+        g.put("B", new ArrayList<>(Arrays.asList("D")));
+        g.putIfAbsent("C", new ArrayList<>());
+        g.putIfAbsent("D", new ArrayList<>());
+        System.out.println("Adjacency: " + g);
+        System.out.println("Neighbors of A: " + g.get("A"));
+    }
+}`,
+            cpp: `#include <iostream>
+#include <unordered_map>
+#include <vector>
+#include <string>
+using namespace std;
+
+int main() {
+    unordered_map<string, vector<string>> g;
+    g["A"] = {"B", "C"};
+    g["B"] = {"D"};
+    g["C"] = {};
+    g["D"] = {};
+    cout << "Neighbors of A: ";
+    for (const auto& n : g["A"]) cout << n << " ";
+    cout << "\\nNode count: " << g.size() << "\\n";
+    return 0;
+}`,
+            python: `def graph_playground_demo():
+    g = {
+        "A": ["B", "C"],
+        "B": ["D"],
+        "C": [],
+        "D": []
+    }
+    print("Adjacency:", g)
+    print("Neighbors of A:", g["A"])
+
+graph_playground_demo()
+`,
+            javascript: `(function graphPlaygroundDemo() {
+    const g = new Map([
+        ["A", ["B", "C"]],
+        ["B", ["D"]],
+        ["C", []],
+        ["D", []]
+    ]);
+    console.log("Neighbors of A:", g.get("A"));
+    console.log("Node count:", g.size);
+})();`
+        },
+        codeExplanations: {
+            java: { en: 'Adjacency list with HashMap keeps graph updates simple and explicit.', es: 'La lista de adyacencia con HashMap mantiene actualizaciones de grafo claras y simples.' },
+            cpp: { en: 'unordered_map<string, vector<string>> mirrors directed adjacency lists.', es: 'unordered_map<string, vector<string>> refleja listas de adyacencia dirigidas.' },
+            python: { en: 'Dictionary-of-lists is concise for graph teaching and quick traversal demos.', es: 'Diccionario de listas es conciso para enseñar grafos y recorrerlos rápido.' },
+            javascript: { en: 'Map + arrays gives readable graph state for browser-based demos.', es: 'Map con arreglos da un estado de grafo legible para demos en navegador.' }
+        }
     },
     trie: {
         label: 'Trie',
-        hint: 'Prefix tree for fast word/prefix lookup.',
-        primaryComplexity: { label: 'Insert/Search', bigO: 'O(L)' },
-        complexitySummary: ['Insert: O(L)', 'Search: O(L)', 'StartsWith: O(L)'],
+        hint: {
+            en: 'Prefix tree optimized for dictionary lookups and startsWith queries.',
+            es: 'Árbol de prefijos optimizado para búsquedas de diccionario y consultas startsWith.'
+        },
+        operations: { insert: 'O(L)', search: 'O(L)', startsWith: 'O(L)' },
+        defaultOperation: 'search',
         definitions: [
-            { term: 'Prefix', description: 'Shared path for common starting letters.' },
-            { term: 'Terminal', description: 'Marks the end of a word.' }
-        ]
+            { term: 'Prefix path', description: 'Shared path for words with same prefix.' },
+            { term: 'Terminal marker', description: 'Flag that marks complete stored words.' },
+            { term: 'Branching factor', description: 'Number of children per node based on alphabet.' }
+        ],
+        codeExamples: {
+            java: `import java.util.*;
+
+public class TriePlaygroundDemo {
+    public static void main(String[] args) {
+        List<String> words = Arrays.asList("tree", "trie", "trial");
+        String query = "tri";
+        boolean hasPrefix = words.stream().anyMatch(w -> w.startsWith(query));
+        boolean hasWord = words.contains("trie");
+        System.out.println("Words: " + words);
+        System.out.println("Has prefix '" + query + "': " + hasPrefix);
+        System.out.println("Contains 'trie': " + hasWord);
+    }
+}`,
+            cpp: `#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+int main() {
+    vector<string> words = {"tree", "trie", "trial"};
+    string query = "tri";
+    bool hasPrefix = false;
+    for (const auto& w : words) {
+        if (w.rfind(query, 0) == 0) { hasPrefix = true; break; }
+    }
+    cout << "Has prefix '" << query << "': " << (hasPrefix ? "true" : "false") << "\\n";
+    return 0;
+}`,
+            python: `def trie_playground_demo():
+    words = ["tree", "trie", "trial"]
+    query = "tri"
+    has_prefix = any(word.startswith(query) for word in words)
+    print("Words:", words)
+    print(f"Has prefix '{query}':", has_prefix)
+    print("Contains 'trie':", "trie" in words)
+
+trie_playground_demo()
+`,
+            javascript: `(function triePlaygroundDemo() {
+    const words = ["tree", "trie", "trial"];
+    const query = "tri";
+    const hasPrefix = words.some((word) => word.startsWith(query));
+    console.log("Words:", words);
+    console.log("Has prefix '" + query + "':", hasPrefix);
+    console.log("Contains 'trie':", words.includes("trie"));
+})();`
+        },
+        codeExplanations: {
+            java: { en: 'Uses a simple prefix-check mirror to explain Trie outcomes with printed results.', es: 'Usa un espejo simple de prefijos para explicar resultados de Trie con salida visible.' },
+            cpp: { en: 'Prefix check with rfind(...,0) demonstrates startsWith logic clearly.', es: 'La verificación con rfind(...,0) demuestra claramente la lógica startsWith.' },
+            python: { en: 'any(...startswith) models fast prefix matching behavior in a compact way.', es: 'any(...startswith) modela la búsqueda rápida por prefijo de forma compacta.' },
+            javascript: { en: 'some/startsWith mirrors prefix lookup semantics used by Trie APIs.', es: 'some/startsWith refleja la semántica de búsqueda por prefijo usada por APIs de Trie.' }
+        }
     }
 };
 
-const dsState = {
+const DS_INITIAL_STATE = {
     array: [4, 9, 2, 7],
     stack: [3, 6, 9],
     queue: [5, 8, 11],
@@ -5912,12 +8239,31 @@ const dsState = {
     trie: ['tree', 'trie', 'trial']
 };
 
+const dsState = JSON.parse(JSON.stringify(DS_INITIAL_STATE));
+const dsTimeline = {
+    array: ['Playground initialized.'],
+    stack: ['Playground initialized.'],
+    queue: ['Playground initialized.'],
+    heap: ['Playground initialized.'],
+    graph: ['Playground initialized.'],
+    trie: ['Playground initialized.']
+};
+const dsLastOperation = {
+    array: 'insert',
+    stack: 'push',
+    queue: 'enqueue',
+    heap: 'insert',
+    graph: 'addEdge',
+    trie: 'search'
+};
+
 let interviewPage = 1;
 let activePromptId = null;
 let notesLibraryFilter = 'all';
 let notesSaveTimer = null;
 let studyPlanDraft = null;
 let dsActive = 'array';
+let dsCodeLanguage = 'java';
 let dsControlsBound = false;
 let playgroundState = {
     language: 'java',
@@ -6911,10 +9257,10 @@ function initInterviewExamples() {
             if (!input || !notesEl) return;
             const content = input.value.trim();
             if (!content) {
-                notesEl.textContent = 'Add your solution draft before comparing.';
+                notesEl.textContent = translateLiteral('Add your solution draft before comparing.', appState.language);
                 return;
             }
-            notesEl.textContent = 'Nice work! Compare your draft with the reference solution and note any gaps.';
+            notesEl.textContent = translateLiteral('Nice work! Compare your draft with the reference solution and note any gaps.', appState.language);
         });
     }
 
@@ -6934,26 +9280,30 @@ function renderInterviewExamples() {
     const currentItems = localizedExamples.slice(start, start + INTERVIEW_PAGE_SIZE);
 
     grid.innerHTML = currentItems.map(example => `
-        <div class="timed-prompt-card rounded-xl border shadow-sm p-4 flex flex-col gap-2">
+        <article class="interview-card-ux rounded-xl border p-4 sm:p-5 flex flex-col gap-3">
             <div class="flex items-start justify-between gap-2">
-                <div>
-                    <h4 class="font-semibold text-indigo-600">${escapeHtml(example.title)}</h4>
-                    <p class="text-xs text-slate-500">${escapeHtml(example.difficulty)} • ${example.tags.map(escapeHtml).join(', ')}</p>
+                <div class="min-w-0">
+                    <h4 class="font-semibold text-indigo-600 text-base sm:text-lg leading-tight">${escapeHtml(example.title)}</h4>
+                    <p class="text-xs text-slate-400 mt-1">${escapeHtml(example.prompt.slice(0, 120))}${example.prompt.length > 120 ? '…' : ''}</p>
                 </div>
-                <span class="text-[11px] px-2 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold">${example.minutes} ${translateLiteral('min', appState.language)}</span>
+                <span class="interview-time-chip text-[11px] px-2.5 py-1 rounded-full font-semibold whitespace-nowrap">${example.minutes} ${translateLiteral('min', appState.language)}</span>
             </div>
-            <p class="text-sm text-slate-600">${escapeHtml(example.prompt)}</p>
-            <div class="flex flex-wrap gap-2 mt-1">
-                <button type="button" class="notes-download" onclick="openPromptWorkspace('${example.id}')">${translateLiteral('Open Prompt', appState.language)}</button>
-                <button type="button" class="notes-view" onclick="copyInterviewSolution('${example.id}')">${translateLiteral('Copy Solution', appState.language)}</button>
+            <p class="text-sm text-slate-200 leading-relaxed">${escapeHtml(example.prompt)}</p>
+            <div class="interview-meta-chips">
+                <span class="interview-meta-chip">${escapeHtml(example.difficulty)}</span>
+                ${example.tags.map((tag) => `<span class="interview-meta-chip">${escapeHtml(tag)}</span>`).join('')}
             </div>
-        </div>
+            <div class="interview-action-row mt-1">
+                <button type="button" class="notes-download interview-cta-primary" onclick="openPromptWorkspace('${example.id}')">${translateLiteral('Open Prompt', appState.language)}</button>
+                <button type="button" class="notes-view interview-cta-secondary" onclick="copyInterviewSolution('${example.id}')">${translateLiteral('Copy Solution', appState.language)}</button>
+            </div>
+        </article>
     `).join('');
 
     pagination.innerHTML = Array.from({ length: totalPages }, (_, index) => {
         const page = index + 1;
         const active = page === interviewPage ? 'active' : '';
-        return `<button type="button" class="notes-chip ${active}" data-page="${page}">${page}</button>`;
+        return `<button type="button" class="interview-page ${active}" data-page="${page}">${page}</button>`;
     }).join('');
 }
 
@@ -7004,11 +9354,12 @@ function initDSPlayground() {
     const controls = document.getElementById('ds-controls');
     const resetBtn = document.getElementById('ds-reset-all');
     const complexitySlider = document.getElementById('ds-complexity-n');
+    const dsCodeSelect = document.getElementById('ds-code-language');
     if (!tabs || !controls) return;
 
     if (!dsControlsBound) {
         controls.addEventListener('click', (event) => {
-            const action = event.target.dataset.action;
+            const action = event.target.closest('[data-action]')?.dataset.action;
             if (!action) return;
             handleDSAction(action);
         });
@@ -7027,31 +9378,27 @@ function initDSPlayground() {
     });
 
     if (resetBtn) {
-        resetBtn.addEventListener('click', () => {
-            dsState.array = [4, 9, 2, 7];
-            dsState.stack = [3, 6, 9];
-            dsState.queue = [5, 8, 11];
-            dsState.heap = [2, 5, 7, 9];
-            dsState.graph = {
-                nodes: ['A', 'B', 'C', 'D'],
-                edges: [
-                    { from: 'A', to: 'B' },
-                    { from: 'A', to: 'C' },
-                    { from: 'B', to: 'D' }
-                ]
-            };
-            dsState.trie = ['tree', 'trie', 'trial'];
-            updateDSView('Playground reset.');
-        });
+        resetBtn.addEventListener('click', resetDSPlaygroundState);
     }
 
     if (complexitySlider) {
         complexitySlider.addEventListener('input', updateDSComplexity);
     }
 
+    if (dsCodeSelect) {
+        dsCodeSelect.innerHTML = PLAYGROUND_RUNNABLE_LANGUAGES
+            .map((lang) => `<option value="${lang}">${SUPPORTED_LANGUAGES[lang].icon} ${SUPPORTED_LANGUAGES[lang].name}</option>`)
+            .join('');
+        dsCodeSelect.value = dsCodeLanguage;
+        dsCodeSelect.addEventListener('change', () => {
+            dsCodeLanguage = dsCodeSelect.value;
+            renderDSCodeAndExplanation();
+        });
+    }
+
     renderDSTabs();
     renderDSControls();
-    updateDSView();
+    updateDSView(translateLiteral('Playground ready.', appState.language));
 }
 
 function findMatchingBrace(source, openIndex) {
@@ -7322,17 +9669,24 @@ function initPlayground() {
         .map(lang => `<option value="${lang.key}">${lang.label}</option>`)
         .join('');
 
-    const snippetOptions = getOrderedModules()
-        .filter(module => module.codeExamples || module.codeExample)
-        .map((module) => {
-            const localizedModule = getLocalizedModule(module) || module;
-            return { id: module.id, title: localizedModule.title || module.title };
-        });
-
-    snippetSelect.innerHTML = [
-        '<option value="">Select a module sample</option>',
-        ...snippetOptions.map(option => `<option value="${option.id}">${escapeHtml(option.title)}</option>`)
-    ].join('');
+    const renderSnippetOptions = () => {
+        const previous = snippetSelect.value || playgroundState.snippetId || '';
+        const snippetOptions = getOrderedModules()
+            .filter(module => module.codeExamples || module.codeExample)
+            .map((module) => {
+                const localizedModule = getLocalizedModule(module) || module;
+                return { id: module.id, title: localizedModule.title || module.title };
+            });
+        snippetSelect.innerHTML = [
+            `<option value="">${translateLiteral('Select a module sample', appState.language)}</option>`,
+            ...snippetOptions.map(option => `<option value="${option.id}">${escapeHtml(option.title)}</option>`)
+        ].join('');
+        if (previous && snippetOptions.some((option) => option.id === previous)) {
+            snippetSelect.value = previous;
+        } else {
+            snippetSelect.value = '';
+        }
+    };
 
     const preferredLanguage = PLAYGROUND_RUNNABLE_LANGUAGES.includes(playgroundState.language)
         ? playgroundState.language
@@ -7367,11 +9721,22 @@ function initPlayground() {
             playgroundState.language = result.language;
             languageSelect.value = result.language;
         }
-        const code = result.code;
+        const code = appState.language === 'es' ? translateCodeHumanText(result.code || '') : (result.code || '');
         editor.value = code || '';
         playgroundState.baseCode = editor.value;
         playgroundState.snippetId = moduleId;
         playgroundState.isCustom = false;
+    };
+
+    window.refreshPlaygroundSnippetCatalog = () => {
+        renderSnippetOptions();
+        if (playgroundState.snippetId) {
+            updateEditor(playgroundState.snippetId);
+        }
+    };
+    window.syncPlaygroundWithModule = (moduleId) => {
+        if (!moduleId || playgroundState.snippetId !== moduleId) return;
+        updateEditor(moduleId);
     };
 
     const refreshSnippetForLanguage = () => {
@@ -7435,19 +9800,9 @@ function initPlayground() {
                 setStatus('Idle', 'Idle');
                 return;
             }
-            const langConfig = CODE_RUNNER_CONFIG[languageKey] || CODE_RUNNER_CONFIG.java;
             const normalizedCode = normalizeCodeForRunner(languageKey, code);
             try {
-                let outputText = '';
-                if (CODE_RUNNER_ENDPOINT) {
-                    outputText = await runViaCustomEndpoint(langConfig, normalizedCode);
-                } else if (JUDGE0_ENDPOINT && JUDGE0_LANGUAGE_IDS[languageKey]) {
-                    outputText = await runViaJudge0(languageKey, normalizedCode);
-                } else if (languageKey === 'javascript') {
-                    outputText = await runJavascriptLocally(normalizedCode);
-                } else {
-                    throw new Error('No compatible runner is configured for this language.');
-                }
+                let outputText = await executeWithConfiguredRunner(languageKey, normalizedCode);
                 const trimmedOutput = String(outputText || '').trim();
                 if (!trimmedOutput || trimmedOutput === 'Execution complete (no stdout).') {
                     const activeModule = playgroundState.snippetId
@@ -7471,6 +9826,7 @@ function initPlayground() {
         });
     }
 
+    renderSnippetOptions();
     setStatus('Idle', 'Idle');
 }
 
@@ -7479,7 +9835,7 @@ function renderDSTabs() {
     if (!tabs) return;
     tabs.innerHTML = Object.entries(DS_PLAYGROUND_CONFIG).map(([key, config]) => {
         const active = key === dsActive ? 'active' : '';
-        return `<button type="button" class="notes-chip ${active}" data-ds="${key}">${escapeHtml(config.label)}</button>`;
+        return `<button type="button" class="notes-chip ds-tab-chip ${active}" data-ds="${key}">${escapeHtml(translateLiteral(config.label, appState.language))}</button>`;
     }).join('');
 }
 
@@ -7492,91 +9848,91 @@ function renderDSControls() {
     switch (dsActive) {
         case 'array':
             html = `
-                <div class="space-y-3">
-                    <div class="text-xs uppercase tracking-wide text-slate-400 font-semibold">Array Controls</div>
-                    <input id="ds-value-input" type="text" placeholder="Value" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
-                    <input id="ds-index-input" type="number" placeholder="Index (optional)" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
+                <div class="space-y-3 ds-control-card">
+                    <div class="text-xs uppercase tracking-wide text-slate-400 font-semibold">${translateLiteral('Array Controls', appState.language)}</div>
+                    <input id="ds-value-input" type="text" placeholder="${translateLiteral('Value', appState.language)}" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
+                    <input id="ds-index-input" type="number" placeholder="${translateLiteral('Index (optional)', appState.language)}" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
                     <div class="flex flex-wrap gap-2">
-                        <button data-action="append" class="notes-download">Append</button>
-                        <button data-action="insert" class="notes-view">Insert at Index</button>
-                        <button data-action="remove" class="notes-view">Remove Last</button>
-                        <button data-action="remove-index" class="notes-view">Remove at Index</button>
+                        <button data-action="append" class="notes-download">${translateLiteral('Append', appState.language)}</button>
+                        <button data-action="insert" class="notes-view">${translateLiteral('Insert at Index', appState.language)}</button>
+                        <button data-action="remove" class="notes-view">${translateLiteral('Remove Last', appState.language)}</button>
+                        <button data-action="remove-index" class="notes-view">${translateLiteral('Remove at Index', appState.language)}</button>
                     </div>
-                    <div class="text-xs text-slate-300">${escapeHtml(config.hint)}</div>
+                    <div class="text-xs text-slate-300">${escapeHtml(resolveLocalizedValue(config.hint, appState.language) || '')}</div>
                 </div>
             `;
             break;
         case 'stack':
             html = `
-                <div class="space-y-3">
-                    <div class="text-xs uppercase tracking-wide text-slate-400 font-semibold">Stack Controls</div>
-                    <input id="ds-value-input" type="text" placeholder="Value" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
+                <div class="space-y-3 ds-control-card">
+                    <div class="text-xs uppercase tracking-wide text-slate-400 font-semibold">${translateLiteral('Stack Controls', appState.language)}</div>
+                    <input id="ds-value-input" type="text" placeholder="${translateLiteral('Value', appState.language)}" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
                     <div class="flex flex-wrap gap-2">
-                        <button data-action="push" class="notes-download">Push</button>
-                        <button data-action="pop" class="notes-view">Pop</button>
-                        <button data-action="peek" class="notes-view">Peek</button>
+                        <button data-action="push" class="notes-download">${translateLiteral('Push', appState.language)}</button>
+                        <button data-action="pop" class="notes-view">${translateLiteral('Pop', appState.language)}</button>
+                        <button data-action="peek" class="notes-view">${translateLiteral('Peek', appState.language)}</button>
                     </div>
-                    <div class="text-xs text-slate-300">${escapeHtml(config.hint)}</div>
+                    <div class="text-xs text-slate-300">${escapeHtml(resolveLocalizedValue(config.hint, appState.language) || '')}</div>
                 </div>
             `;
             break;
         case 'queue':
             html = `
-                <div class="space-y-3">
-                    <div class="text-xs uppercase tracking-wide text-slate-400 font-semibold">Queue Controls</div>
-                    <input id="ds-value-input" type="text" placeholder="Value" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
+                <div class="space-y-3 ds-control-card">
+                    <div class="text-xs uppercase tracking-wide text-slate-400 font-semibold">${translateLiteral('Queue Controls', appState.language)}</div>
+                    <input id="ds-value-input" type="text" placeholder="${translateLiteral('Value', appState.language)}" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
                     <div class="flex flex-wrap gap-2">
-                        <button data-action="enqueue" class="notes-download">Enqueue</button>
-                        <button data-action="dequeue" class="notes-view">Dequeue</button>
-                        <button data-action="peek" class="notes-view">Peek</button>
+                        <button data-action="enqueue" class="notes-download">${translateLiteral('Enqueue', appState.language)}</button>
+                        <button data-action="dequeue" class="notes-view">${translateLiteral('Dequeue', appState.language)}</button>
+                        <button data-action="peek" class="notes-view">${translateLiteral('Peek', appState.language)}</button>
                     </div>
-                    <div class="text-xs text-slate-300">${escapeHtml(config.hint)}</div>
+                    <div class="text-xs text-slate-300">${escapeHtml(resolveLocalizedValue(config.hint, appState.language) || '')}</div>
                 </div>
             `;
             break;
         case 'heap':
             html = `
-                <div class="space-y-3">
-                    <div class="text-xs uppercase tracking-wide text-slate-400 font-semibold">Heap Controls</div>
-                    <input id="ds-value-input" type="number" placeholder="Numeric value" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
+                <div class="space-y-3 ds-control-card">
+                    <div class="text-xs uppercase tracking-wide text-slate-400 font-semibold">${translateLiteral('Heap Controls', appState.language)}</div>
+                    <input id="ds-value-input" type="number" placeholder="${translateLiteral('Numeric value', appState.language)}" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
                     <div class="flex flex-wrap gap-2">
-                        <button data-action="heap-insert" class="notes-download">Insert</button>
-                        <button data-action="heap-extract" class="notes-view">Extract Min</button>
-                        <button data-action="peek" class="notes-view">Peek</button>
+                        <button data-action="heap-insert" class="notes-download">${translateLiteral('Insert', appState.language)}</button>
+                        <button data-action="heap-extract" class="notes-view">${translateLiteral('Extract Min', appState.language)}</button>
+                        <button data-action="peek" class="notes-view">${translateLiteral('Peek', appState.language)}</button>
                     </div>
-                    <div class="text-xs text-slate-300">${escapeHtml(config.hint)}</div>
+                    <div class="text-xs text-slate-300">${escapeHtml(resolveLocalizedValue(config.hint, appState.language) || '')}</div>
                 </div>
             `;
             break;
         case 'graph':
             html = `
-                <div class="space-y-3">
-                    <div class="text-xs uppercase tracking-wide text-slate-400 font-semibold">Graph Controls</div>
-                    <input id="ds-node-input" type="text" placeholder="Node label (ex: A)" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
+                <div class="space-y-3 ds-control-card">
+                    <div class="text-xs uppercase tracking-wide text-slate-400 font-semibold">${translateLiteral('Graph Controls', appState.language)}</div>
+                    <input id="ds-node-input" type="text" placeholder="${translateLiteral('Node label (ex: A)', appState.language)}" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
                     <div class="grid grid-cols-2 gap-2">
-                        <input id="ds-edge-from" type="text" placeholder="From" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
-                        <input id="ds-edge-to" type="text" placeholder="To" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
+                        <input id="ds-edge-from" type="text" placeholder="${translateLiteral('From', appState.language)}" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
+                        <input id="ds-edge-to" type="text" placeholder="${translateLiteral('To', appState.language)}" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
                     </div>
                     <div class="flex flex-wrap gap-2">
-                        <button data-action="graph-add-node" class="notes-download">Add Node</button>
-                        <button data-action="graph-add-edge" class="notes-view">Add Edge</button>
-                        <button data-action="graph-remove-node" class="notes-view">Remove Node</button>
+                        <button data-action="graph-add-node" class="notes-download">${translateLiteral('Add Node', appState.language)}</button>
+                        <button data-action="graph-add-edge" class="notes-view">${translateLiteral('Add Edge', appState.language)}</button>
+                        <button data-action="graph-remove-node" class="notes-view">${translateLiteral('Remove Node', appState.language)}</button>
                     </div>
-                    <div class="text-xs text-slate-300">${escapeHtml(config.hint)}</div>
+                    <div class="text-xs text-slate-300">${escapeHtml(resolveLocalizedValue(config.hint, appState.language) || '')}</div>
                 </div>
             `;
             break;
         case 'trie':
             html = `
-                <div class="space-y-3">
-                    <div class="text-xs uppercase tracking-wide text-slate-400 font-semibold">Trie Controls</div>
-                    <input id="ds-word-input" type="text" placeholder="Word" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
+                <div class="space-y-3 ds-control-card">
+                    <div class="text-xs uppercase tracking-wide text-slate-400 font-semibold">${translateLiteral('Trie Controls', appState.language)}</div>
+                    <input id="ds-word-input" type="text" placeholder="${translateLiteral('Word', appState.language)}" class="w-full px-3 py-2 rounded-lg border border-white/10 bg-slate-800 text-slate-100 text-sm">
                     <div class="flex flex-wrap gap-2">
-                        <button data-action="trie-insert" class="notes-download">Insert</button>
-                        <button data-action="trie-remove" class="notes-view">Remove</button>
-                        <button data-action="trie-search" class="notes-view">Search</button>
+                        <button data-action="trie-insert" class="notes-download">${translateLiteral('Insert', appState.language)}</button>
+                        <button data-action="trie-remove" class="notes-view">${translateLiteral('Remove', appState.language)}</button>
+                        <button data-action="trie-search" class="notes-view">${translateLiteral('Search', appState.language)}</button>
                     </div>
-                    <div class="text-xs text-slate-300">${escapeHtml(config.hint)}</div>
+                    <div class="text-xs text-slate-300">${escapeHtml(resolveLocalizedValue(config.hint, appState.language) || '')}</div>
                 </div>
             `;
             break;
@@ -7587,68 +9943,134 @@ function renderDSControls() {
     controls.innerHTML = html;
 }
 
+function buildDSStateJson() {
+    if (dsActive === 'graph') {
+        const adjacency = {};
+        dsState.graph.nodes.forEach((node) => {
+            adjacency[node] = [];
+        });
+        dsState.graph.edges.forEach((edge) => {
+            if (adjacency[edge.from]) adjacency[edge.from].push(edge.to);
+        });
+        return JSON.stringify(adjacency, null, 2);
+    }
+    if (dsActive === 'trie') {
+        return JSON.stringify({ words: dsState.trie }, null, 2);
+    }
+    return JSON.stringify(dsState[dsActive], null, 2);
+}
+
+function buildDSStructureVisual() {
+    if (dsActive === 'graph') {
+        const nodes = dsState.graph.nodes.map((node) => `<span class="ds-box">${escapeHtml(node)}</span>`).join('');
+        const edges = dsState.graph.edges.map((edge) => `${edge.from} → ${edge.to}`).join(', ');
+        return `<div class="ds-visual ds-graph">${nodes || `<span class="text-xs text-slate-400">${translateLiteral('No nodes yet.', appState.language)}</span>`}</div>
+                <div class="text-xs text-slate-300">${escapeHtml(edges || translateLiteral('No edges yet.', appState.language))}</div>`;
+    }
+    if (dsActive === 'stack') {
+        return `<div class="ds-visual ds-stack">${dsState.stack.map((value) => `<span class="ds-box">${escapeHtml(String(value))}</span>`).join('')}</div>`;
+    }
+    if (dsActive === 'queue') {
+        return `<div class="ds-visual ds-queue">${dsState.queue.map((value) => `<span class="ds-box">${escapeHtml(String(value))}</span>`).join('')}</div>`;
+    }
+    if (dsActive === 'array' || dsActive === 'heap' || dsActive === 'trie') {
+        const values = dsActive === 'array' ? dsState.array : (dsActive === 'heap' ? dsState.heap : dsState.trie);
+        return `<div class="ds-visual ds-array">${values.map((value) => `<span class="ds-box">${escapeHtml(String(value))}</span>`).join('')}</div>`;
+    }
+    return '';
+}
+
+function buildDSPointerVisual() {
+    if (dsActive === 'array') {
+        return dsState.array.map((value, index) => `<div class="ds-pointer-row"><span>index ${index}</span><strong>${escapeHtml(String(value))}</strong></div>`).join('');
+    }
+    if (dsActive === 'stack') {
+        return `
+            <div class="ds-pointer-row"><span>${translateLiteral('Top index', appState.language)}</span><strong>${dsState.stack.length ? dsState.stack.length - 1 : -1}</strong></div>
+            <div class="ds-pointer-row"><span>${translateLiteral('Top value', appState.language)}</span><strong>${escapeHtml(String(dsState.stack[dsState.stack.length - 1] ?? '∅'))}</strong></div>
+        `;
+    }
+    if (dsActive === 'queue') {
+        return `
+            <div class="ds-pointer-row"><span>${translateLiteral('Front', appState.language)}</span><strong>${escapeHtml(String(dsState.queue[0] ?? '∅'))}</strong></div>
+            <div class="ds-pointer-row"><span>${translateLiteral('Rear', appState.language)}</span><strong>${escapeHtml(String(dsState.queue[dsState.queue.length - 1] ?? '∅'))}</strong></div>
+        `;
+    }
+    if (dsActive === 'heap') {
+        return dsState.heap.map((value, index) => {
+            const parent = index === 0 ? '-' : Math.floor((index - 1) / 2);
+            return `<div class="ds-pointer-row"><span>idx ${index} (p:${parent})</span><strong>${escapeHtml(String(value))}</strong></div>`;
+        }).join('');
+    }
+    if (dsActive === 'graph') {
+        const degreeMap = {};
+        dsState.graph.nodes.forEach((node) => { degreeMap[node] = 0; });
+        dsState.graph.edges.forEach((edge) => {
+            degreeMap[edge.from] = (degreeMap[edge.from] || 0) + 1;
+            degreeMap[edge.to] = (degreeMap[edge.to] || 0) + 1;
+        });
+        return Object.entries(degreeMap).map(([node, degree]) => `<div class="ds-pointer-row"><span>${escapeHtml(node)}</span><strong>${translateLiteral('degree', appState.language)} ${degree}</strong></div>`).join('');
+    }
+    if (dsActive === 'trie') {
+        return dsState.trie.map((word) => `<div class="ds-pointer-row"><span>${escapeHtml(word)}</span><strong>${translateLiteral('length', appState.language)} ${word.length}</strong></div>`).join('');
+    }
+    return '';
+}
+
+function renderDSCodeAndExplanation() {
+    const codeEl = document.getElementById('ds-code-viewer');
+    const explanationEl = document.getElementById('ds-explanation-viewer');
+    if (!codeEl || !explanationEl) return;
+    const config = DS_PLAYGROUND_CONFIG[dsActive];
+    const lang = PLAYGROUND_RUNNABLE_LANGUAGES.includes(dsCodeLanguage) ? dsCodeLanguage : 'java';
+    const codeSource = config.codeExamples?.[lang] || config.codeExamples?.java || '';
+    const explanationSource = config.codeExplanations?.[lang];
+    const explanation = explanationSource?.[appState.language] || explanationSource?.en || '';
+
+    codeEl.textContent = appState.language === 'es' ? translateCodeHumanText(codeSource) : codeSource;
+    explanationEl.textContent = explanation || translateLiteral('Explanation unavailable for this language.', appState.language);
+}
+
+function getDSActiveOperation() {
+    return dsLastOperation[dsActive] || DS_PLAYGROUND_CONFIG[dsActive].defaultOperation;
+}
+
 function updateDSView(statusMessage) {
     const config = DS_PLAYGROUND_CONFIG[dsActive];
-    const visual = document.getElementById('ds-visual');
-    const stateEl = document.getElementById('ds-state');
-    const complexityEl = document.getElementById('ds-complexity');
+    const structureEl = document.getElementById('ds-structure-view');
+    const pointerEl = document.getElementById('ds-pointer-view');
+    const timelineEl = document.getElementById('ds-timeline-view');
+    const stateEl = document.getElementById('ds-state-json');
     const statusEl = document.getElementById('ds-status');
     const defsEl = document.getElementById('ds-definitions');
     const complexityLabel = document.getElementById('ds-complexity-label');
+    const operation = getDSActiveOperation();
 
-    if (visual) {
-        if (dsActive === 'stack') {
-            visual.className = 'ds-visual ds-stack';
-            visual.innerHTML = dsState.stack.map(value => `<span class="ds-box">${escapeHtml(String(value))}</span>`).join('');
-        } else if (dsActive === 'queue') {
-            visual.className = 'ds-visual ds-queue';
-            visual.innerHTML = dsState.queue.map(value => `<span class="ds-box">${escapeHtml(String(value))}</span>`).join('');
-        } else if (dsActive === 'array') {
-            visual.className = 'ds-visual ds-array';
-            visual.innerHTML = dsState.array.map(value => `<span class="ds-box">${escapeHtml(String(value))}</span>`).join('');
-        } else if (dsActive === 'heap') {
-            visual.className = 'ds-visual ds-array';
-            visual.innerHTML = dsState.heap.map(value => `<span class="ds-box">${escapeHtml(String(value))}</span>`).join('');
-        } else if (dsActive === 'graph') {
-            visual.className = 'ds-visual';
-            const nodes = dsState.graph.nodes.map(node => `<span class="ds-box">${escapeHtml(node)}</span>`).join('');
-            const edges = dsState.graph.edges.map(edge => `${edge.from}→${edge.to}`).join(', ') || 'No edges yet';
-            visual.innerHTML = `<div class="mb-2">${nodes}</div><div class="text-xs text-slate-300">${escapeHtml(edges)}</div>`;
-        } else if (dsActive === 'trie') {
-            visual.className = 'ds-visual ds-array';
-            visual.innerHTML = dsState.trie.map(word => `<span class="ds-box">${escapeHtml(word)}</span>`).join('');
-        }
+    if (structureEl) structureEl.innerHTML = buildDSStructureVisual();
+    if (pointerEl) {
+        pointerEl.innerHTML = buildDSPointerVisual() || `<span class="text-xs text-slate-400">${translateLiteral('No pointer/index data yet.', appState.language)}</span>`;
     }
-
+    if (timelineEl) {
+        const history = dsTimeline[dsActive] || [];
+        timelineEl.innerHTML = history
+            .slice(-8)
+            .reverse()
+            .map((entry) => `<li>${escapeHtml(entry)}</li>`)
+            .join('');
+    }
     if (stateEl) {
-        if (dsActive === 'graph') {
-            const adjacency = {};
-            dsState.graph.nodes.forEach(node => {
-                adjacency[node] = [];
-            });
-            dsState.graph.edges.forEach(edge => {
-                if (adjacency[edge.from]) adjacency[edge.from].push(edge.to);
-            });
-            stateEl.textContent = JSON.stringify(adjacency, null, 2);
-        } else if (dsActive === 'trie') {
-            stateEl.textContent = JSON.stringify({ words: dsState.trie }, null, 2);
-        } else {
-            stateEl.textContent = JSON.stringify(dsState[dsActive], null, 2);
-        }
-    }
-
-    if (complexityEl) {
-        complexityEl.textContent = config.complexitySummary.join(' • ');
+        stateEl.textContent = buildDSStateJson();
     }
     if (complexityLabel) {
-        complexityLabel.textContent = config.primaryComplexity.bigO;
+        complexityLabel.textContent = `${operation}: ${config.operations[operation] || '-'}`;
     }
     if (defsEl) {
-        defsEl.innerHTML = config.definitions.map(def => `<li><span class="text-slate-300">${escapeHtml(def.term)}:</span> ${escapeHtml(def.description)}</li>`).join('');
+        defsEl.innerHTML = config.definitions.map((def) => `<li><span class="text-slate-300">${escapeHtml(def.term)}:</span> ${escapeHtml(translateLiteral(def.description, appState.language))}</li>`).join('');
     }
     if (statusEl) {
-        statusEl.textContent = statusMessage || `${config.label} ready.`;
+        statusEl.textContent = statusMessage || `${translateLiteral(config.label, appState.language)} ${translateLiteral('ready.', appState.language)}`;
     }
+    renderDSCodeAndExplanation();
     updateDSComplexity();
 }
 
@@ -7680,8 +10102,10 @@ function updateDSComplexity() {
 
     const n = Number(slider.value) || 1;
     const config = DS_PLAYGROUND_CONFIG[dsActive];
-    const ops = estimateOps(config.primaryComplexity.bigO, n);
-    summary.textContent = `n=${n} • ${config.primaryComplexity.label}`;
+    const operation = getDSActiveOperation();
+    const bigO = config.operations[operation] || 'O(n)';
+    const ops = estimateOps(bigO, n);
+    summary.textContent = `n=${n} • ${operation}`;
     opsEl.textContent = `~${ops} ops`;
 }
 
@@ -7724,6 +10148,40 @@ function heapExtract(heap) {
     return min;
 }
 
+function recordDSOperation(message, operationKey = '') {
+    const normalized = String(message || '').trim();
+    if (!normalized) return;
+    if (!Array.isArray(dsTimeline[dsActive])) {
+        dsTimeline[dsActive] = [];
+    }
+    dsTimeline[dsActive].push(normalized);
+    if (dsTimeline[dsActive].length > 40) {
+        dsTimeline[dsActive] = dsTimeline[dsActive].slice(-40);
+    }
+    if (operationKey) {
+        dsLastOperation[dsActive] = operationKey;
+    }
+}
+
+function resetDSPlaygroundState() {
+    Object.keys(DS_INITIAL_STATE).forEach((key) => {
+        dsState[key] = JSON.parse(JSON.stringify(DS_INITIAL_STATE[key]));
+    });
+    Object.keys(dsTimeline).forEach((key) => {
+        dsTimeline[key] = [translateLiteral('Playground reset.', appState.language)];
+    });
+    Object.assign(dsLastOperation, {
+        array: 'insert',
+        stack: 'push',
+        queue: 'enqueue',
+        heap: 'insert',
+        graph: 'addEdge',
+        trie: 'search'
+    });
+    renderDSControls();
+    updateDSView(translateLiteral('Playground reset.', appState.language));
+}
+
 function handleDSAction(action) {
     const valueInput = document.getElementById('ds-value-input');
     const indexInput = document.getElementById('ds-index-input');
@@ -7734,135 +10192,141 @@ function handleDSAction(action) {
 
     const value = normalizeDsValue(valueInput ? valueInput.value : '');
     const index = indexInput ? Number(indexInput.value) : null;
-    const status = (message) => updateDSView(message);
+    const status = (message, operationKey = '') => {
+        recordDSOperation(message, operationKey);
+        updateDSView(message);
+    };
 
     if (dsActive === 'array') {
         if (action === 'append') {
-            if (value === null) return status('Enter a value to append.');
+            if (value === null) return status(translateLiteral('Enter a value to append.', appState.language), 'insert');
             dsState.array.push(value);
-            return status(`Appended ${value}.`);
+            return status(translateLiteral(`Appended ${value}.`, appState.language), 'insert');
         }
         if (action === 'insert') {
-            if (value === null) return status('Enter a value to insert.');
+            if (value === null) return status(translateLiteral('Enter a value to insert.', appState.language), 'insert');
             const targetIndex = Number.isInteger(index) && index >= 0 ? index : dsState.array.length;
             dsState.array.splice(Math.min(targetIndex, dsState.array.length), 0, value);
-            return status(`Inserted ${value} at index ${targetIndex}.`);
+            return status(translateLiteral(`Inserted ${value} at index ${targetIndex}.`, appState.language), 'insert');
         }
         if (action === 'remove') {
-            if (dsState.array.length === 0) return status('Array is already empty.');
+            if (dsState.array.length === 0) return status(translateLiteral('Array is already empty.', appState.language), 'remove');
             const removed = dsState.array.pop();
-            return status(`Removed ${removed}.`);
+            return status(translateLiteral(`Removed ${removed}.`, appState.language), 'remove');
         }
         if (action === 'remove-index') {
             if (!Number.isInteger(index) || index < 0 || index >= dsState.array.length) {
-                return status('Provide a valid index to remove.');
+                return status(translateLiteral('Provide a valid index to remove.', appState.language), 'remove');
             }
             const removed = dsState.array.splice(index, 1)[0];
-            return status(`Removed ${removed} at index ${index}.`);
+            return status(translateLiteral(`Removed ${removed} at index ${index}.`, appState.language), 'remove');
         }
     }
 
     if (dsActive === 'stack') {
         if (action === 'push') {
-            if (value === null) return status('Enter a value to push.');
+            if (value === null) return status(translateLiteral('Enter a value to push.', appState.language), 'push');
             dsState.stack.push(value);
-            return status(`Pushed ${value}.`);
+            return status(translateLiteral(`Pushed ${value}.`, appState.language), 'push');
         }
         if (action === 'pop') {
-            if (dsState.stack.length === 0) return status('Stack is empty.');
+            if (dsState.stack.length === 0) return status(translateLiteral('Stack is empty.', appState.language), 'pop');
             const removed = dsState.stack.pop();
-            return status(`Popped ${removed}.`);
+            return status(translateLiteral(`Popped ${removed}.`, appState.language), 'pop');
         }
         if (action === 'peek') {
-            if (dsState.stack.length === 0) return status('Stack is empty.');
-            return status(`Top is ${dsState.stack[dsState.stack.length - 1]}.`);
+            if (dsState.stack.length === 0) return status(translateLiteral('Stack is empty.', appState.language), 'peek');
+            return status(translateLiteral(`Top is ${dsState.stack[dsState.stack.length - 1]}.`, appState.language), 'peek');
         }
     }
 
     if (dsActive === 'queue') {
         if (action === 'enqueue') {
-            if (value === null) return status('Enter a value to enqueue.');
+            if (value === null) return status(translateLiteral('Enter a value to enqueue.', appState.language), 'enqueue');
             dsState.queue.push(value);
-            return status(`Enqueued ${value}.`);
+            return status(translateLiteral(`Enqueued ${value}.`, appState.language), 'enqueue');
         }
         if (action === 'dequeue') {
-            if (dsState.queue.length === 0) return status('Queue is empty.');
+            if (dsState.queue.length === 0) return status(translateLiteral('Queue is empty.', appState.language), 'dequeue');
             const removed = dsState.queue.shift();
-            return status(`Dequeued ${removed}.`);
+            return status(translateLiteral(`Dequeued ${removed}.`, appState.language), 'dequeue');
         }
         if (action === 'peek') {
-            if (dsState.queue.length === 0) return status('Queue is empty.');
-            return status(`Front is ${dsState.queue[0]}.`);
+            if (dsState.queue.length === 0) return status(translateLiteral('Queue is empty.', appState.language), 'peek');
+            return status(translateLiteral(`Front is ${dsState.queue[0]}.`, appState.language), 'peek');
         }
     }
 
     if (dsActive === 'heap') {
         if (action === 'heap-insert') {
-            if (value === null || typeof value !== 'number') return status('Enter a numeric value to insert.');
+            if (value === null || typeof value !== 'number') return status(translateLiteral('Enter a numeric value to insert.', appState.language), 'insert');
             heapInsert(dsState.heap, value);
-            return status(`Inserted ${value}.`);
+            return status(translateLiteral(`Inserted ${value}.`, appState.language), 'insert');
         }
         if (action === 'heap-extract') {
-            if (dsState.heap.length === 0) return status('Heap is empty.');
+            if (dsState.heap.length === 0) return status(translateLiteral('Heap is empty.', appState.language), 'extract');
             const removed = heapExtract(dsState.heap);
-            return status(`Extracted ${removed}.`);
+            return status(translateLiteral(`Extracted ${removed}.`, appState.language), 'extract');
         }
         if (action === 'peek') {
-            if (dsState.heap.length === 0) return status('Heap is empty.');
-            return status(`Min is ${dsState.heap[0]}.`);
+            if (dsState.heap.length === 0) return status(translateLiteral('Heap is empty.', appState.language), 'peek');
+            return status(translateLiteral(`Min is ${dsState.heap[0]}.`, appState.language), 'peek');
         }
     }
 
     if (dsActive === 'graph') {
         if (action === 'graph-add-node') {
             const label = (nodeInput ? nodeInput.value : '').trim();
-            if (!label) return status('Enter a node label.');
+            if (!label) return status(translateLiteral('Enter a node label.', appState.language), 'addNode');
             if (!dsState.graph.nodes.includes(label)) {
                 dsState.graph.nodes.push(label);
             }
-            return status(`Added node ${label}.`);
+            return status(translateLiteral(`Added node ${label}.`, appState.language), 'addNode');
         }
         if (action === 'graph-add-edge') {
             const from = (edgeFrom ? edgeFrom.value : '').trim();
             const to = (edgeTo ? edgeTo.value : '').trim();
-            if (!from || !to) return status('Enter both edge endpoints.');
+            if (!from || !to) return status(translateLiteral('Enter both edge endpoints.', appState.language), 'addEdge');
             if (!dsState.graph.nodes.includes(from)) dsState.graph.nodes.push(from);
             if (!dsState.graph.nodes.includes(to)) dsState.graph.nodes.push(to);
             if (!dsState.graph.edges.find(edge => edge.from === from && edge.to === to)) {
                 dsState.graph.edges.push({ from, to });
             }
-            return status(`Added edge ${from} → ${to}.`);
+            return status(translateLiteral(`Added edge ${from} → ${to}.`, appState.language), 'addEdge');
         }
         if (action === 'graph-remove-node') {
             const label = (nodeInput ? nodeInput.value : '').trim();
-            if (!label) return status('Enter a node to remove.');
+            if (!label) return status(translateLiteral('Enter a node to remove.', appState.language), 'remove');
             dsState.graph.nodes = dsState.graph.nodes.filter(node => node !== label);
             dsState.graph.edges = dsState.graph.edges.filter(edge => edge.from !== label && edge.to !== label);
-            return status(`Removed node ${label}.`);
+            return status(translateLiteral(`Removed node ${label}.`, appState.language), 'remove');
         }
     }
 
     if (dsActive === 'trie') {
         if (action === 'trie-insert') {
             const word = (wordInput ? wordInput.value : '').trim().toLowerCase();
-            if (!word) return status('Enter a word to insert.');
+            if (!word) return status(translateLiteral('Enter a word to insert.', appState.language), 'insert');
             if (!dsState.trie.includes(word)) dsState.trie.push(word);
-            return status(`Inserted "${word}".`);
+            return status(translateLiteral(`Inserted "${word}".`, appState.language), 'insert');
         }
         if (action === 'trie-remove') {
             const word = (wordInput ? wordInput.value : '').trim().toLowerCase();
-            if (!word) return status('Enter a word to remove.');
+            if (!word) return status(translateLiteral('Enter a word to remove.', appState.language), 'remove');
             dsState.trie = dsState.trie.filter(item => item !== word);
-            return status(`Removed "${word}".`);
+            return status(translateLiteral(`Removed "${word}".`, appState.language), 'remove');
         }
         if (action === 'trie-search') {
             const word = (wordInput ? wordInput.value : '').trim().toLowerCase();
-            if (!word) return status('Enter a word to search.');
-            return status(dsState.trie.includes(word) ? `Found "${word}".` : `"${word}" not found.`);
+            if (!word) return status(translateLiteral('Enter a word to search.', appState.language), 'search');
+            const found = dsState.trie.includes(word)
+                ? translateLiteral(`Found "${word}".`, appState.language)
+                : translateLiteral(`"${word}" not found.`, appState.language);
+            return status(found, 'search');
         }
     }
 
-    updateDSView();
+    updateDSView(translateLiteral('Action complete.', appState.language));
 }
 
 function openSupportModal() {
@@ -7984,7 +10448,7 @@ function truncateCode(code, lines = CONSTANTS.CODE_PREVIEW_LINES) {
     if (codeLines.length <= lines) {
         return code;
     }
-    return codeLines.slice(0, lines).join('\n') + CONSTANTS.TRUNCATE_INDICATOR;
+    return `${codeLines.slice(0, lines).join('\n')}\n\n${t('module.truncateHint')}`;
 }
 
 // Module Helper Functions
@@ -8005,6 +10469,94 @@ function getModuleById(moduleId) {
     return modules.find((module) => module.id === moduleId) || null;
 }
 
+function getModuleExampleExpansionKey(moduleId, exampleId) {
+    return `${moduleId}::${exampleId}`;
+}
+
+function getModuleCodeExampleSets(moduleId, localizedModule = null) {
+    const module = getModuleById(moduleId);
+    if (!module) return [];
+    if (localizedModule && Array.isArray(localizedModule.codeExampleSets) && localizedModule.codeExampleSets.length) {
+        return localizedModule.codeExampleSets;
+    }
+    return Array.isArray(module.codeExampleSets) ? module.codeExampleSets : [];
+}
+
+function getActiveModuleExampleId(moduleId, localizedModule = null) {
+    const sets = getModuleCodeExampleSets(moduleId, localizedModule);
+    if (!sets.length) return '';
+    const saved = appState.moduleExampleSelections.get(moduleId);
+    if (saved && sets.some((set) => set.id === saved)) {
+        return saved;
+    }
+    return sets[0].id;
+}
+
+function getActiveModuleExampleSet(moduleId, localizedModule = null) {
+    const sets = getModuleCodeExampleSets(moduleId, localizedModule);
+    if (!sets.length) return null;
+    const selectedId = getActiveModuleExampleId(moduleId, localizedModule);
+    return sets.find((set) => set.id === selectedId) || sets[0];
+}
+
+function getCodeExamplesForModuleContext(moduleId, localizedModule = null) {
+    const module = getModuleById(moduleId);
+    if (!module) return {};
+    const selectedSet = getActiveModuleExampleSet(moduleId, localizedModule);
+    if (selectedSet?.codeExamples && typeof selectedSet.codeExamples === 'object') {
+        return selectedSet.codeExamples;
+    }
+    if (localizedModule?.codeExamples && typeof localizedModule.codeExamples === 'object') {
+        return localizedModule.codeExamples;
+    }
+    return module.codeExamples || {};
+}
+
+function getExpectedOutputsForModuleContext(moduleId, localizedModule = null) {
+    const module = getModuleById(moduleId);
+    if (!module) return {};
+    const selectedSet = getActiveModuleExampleSet(moduleId, localizedModule);
+    if (selectedSet?.expectedOutputs && typeof selectedSet.expectedOutputs === 'object') {
+        return selectedSet.expectedOutputs;
+    }
+    if (localizedModule?.expectedOutputs && typeof localizedModule.expectedOutputs === 'object') {
+        return localizedModule.expectedOutputs;
+    }
+    return module.expectedOutputs || {};
+}
+
+function getModuleOutputPanelKey(moduleId, exampleId = 'single') {
+    return `${moduleId}::${exampleId || 'single'}`;
+}
+
+function getModuleOutputCacheKey(moduleId, language, mode, exampleId = 'single') {
+    return `${moduleId}::${exampleId || 'single'}::${language || 'java'}::${mode || 'code'}`;
+}
+
+function clearModuleOutputState(moduleId) {
+    const modulePrefix = `${moduleId}::`;
+    Array.from(appState.expandedOutputs).forEach((panelKey) => {
+        if (panelKey.startsWith(modulePrefix)) {
+            appState.expandedOutputs.delete(panelKey);
+        }
+    });
+    Array.from(moduleOutputState.keys()).forEach((panelKey) => {
+        if (panelKey.startsWith(modulePrefix)) {
+            moduleOutputState.delete(panelKey);
+        }
+    });
+    Array.from(moduleOutputCache.keys()).forEach((cacheKey) => {
+        if (cacheKey.startsWith(modulePrefix)) {
+            moduleOutputCache.delete(cacheKey);
+        }
+    });
+    Array.from(moduleOutputInFlight.keys()).forEach((cacheKey) => {
+        if (cacheKey.startsWith(modulePrefix)) {
+            moduleOutputInFlight.delete(cacheKey);
+        }
+    });
+}
+
 function getDefaultModuleLanguage(moduleId) {
     if (isAssemblyModule(moduleId)) return 'assembly';
     return 'java';
@@ -8020,16 +10572,18 @@ function getAvailableModeKeys(moduleId) {
 
 function getModuleLanguage(moduleId) {
     const module = getModuleById(moduleId);
+    const localizedModule = appState.language === 'es' ? getLocalizedModule(module) : null;
+    const codeExamples = getCodeExamplesForModuleContext(moduleId, localizedModule);
     const savedLanguage = appState.moduleLanguages.get(moduleId);
     const defaultLanguage = getDefaultModuleLanguage(moduleId);
-    if (savedLanguage && module?.codeExamples?.[savedLanguage]) {
+    if (savedLanguage && codeExamples?.[savedLanguage]) {
         return savedLanguage;
     }
-    if (module?.codeExamples?.[defaultLanguage]) {
+    if (codeExamples?.[defaultLanguage]) {
         return defaultLanguage;
     }
-    if (module?.codeExamples) {
-        const available = Object.keys(module.codeExamples);
+    if (codeExamples && typeof codeExamples === 'object') {
+        const available = Object.keys(codeExamples);
         if (available.length) return available[0];
     }
     return defaultLanguage;
@@ -8108,30 +10662,190 @@ function getDynamicAchievementLevels() {
     ));
 }
 
-function getCanonicalModuleCode(moduleId, preferredLanguage) {
+function getCanonicalModuleCode(moduleId, preferredLanguage, preferredExampleId = '') {
     const module = getModuleById(moduleId);
     if (!module || !module.codeExamples) {
         return { code: '', language: preferredLanguage || 'java' };
     }
+
+    const localizedModule = appState.language === 'es' ? getLocalizedModule(module) : null;
     const requested = preferredLanguage || getDefaultModuleLanguage(moduleId);
-    if (module.codeExamples[requested]) {
-        return { code: module.codeExamples[requested], language: requested };
-    }
     const defaultLanguage = getDefaultModuleLanguage(moduleId);
-    if (module.codeExamples[defaultLanguage]) {
-        return { code: module.codeExamples[defaultLanguage], language: defaultLanguage };
+    const exampleSources = [];
+    const localizedSets = getModuleCodeExampleSets(moduleId, localizedModule);
+    const moduleSets = getModuleCodeExampleSets(moduleId, module);
+    const selectedExampleId = preferredExampleId || getActiveModuleExampleId(moduleId, localizedModule);
+    const localizedSelectedSet = localizedSets.find((set) => set.id === selectedExampleId);
+    const moduleSelectedSet = moduleSets.find((set) => set.id === selectedExampleId);
+
+    if (localizedSelectedSet?.codeExamples) exampleSources.push(localizedSelectedSet.codeExamples);
+    if (moduleSelectedSet?.codeExamples) exampleSources.push(moduleSelectedSet.codeExamples);
+    if (localizedModule?.codeExamples) exampleSources.push(localizedModule.codeExamples);
+    if (module?.codeExamples) exampleSources.push(module.codeExamples);
+
+    for (const sourceCodeExamples of exampleSources) {
+        if (sourceCodeExamples?.[requested]) {
+            return { code: sourceCodeExamples[requested], language: requested };
+        }
+        if (sourceCodeExamples?.[defaultLanguage]) {
+            return { code: sourceCodeExamples[defaultLanguage], language: defaultLanguage };
+        }
+        const runnableFallback = PLAYGROUND_RUNNABLE_LANGUAGES.find((lang) => sourceCodeExamples?.[lang]);
+        if (runnableFallback) {
+            return { code: sourceCodeExamples[runnableFallback], language: runnableFallback };
+        }
+        const firstLanguage = Object.keys(sourceCodeExamples || {})[0];
+        if (firstLanguage) {
+            return { code: sourceCodeExamples[firstLanguage] || '', language: firstLanguage };
+        }
     }
-    const runnableFallback = PLAYGROUND_RUNNABLE_LANGUAGES.find((lang) => module.codeExamples[lang]);
-    if (runnableFallback) {
-        return { code: module.codeExamples[runnableFallback], language: runnableFallback };
+
+    return { code: '', language: requested };
+}
+
+function localizeOutputText(text) {
+    if (appState.language !== 'es') return String(text || '');
+    return String(text || '')
+        .split('\n')
+        .map((line) => translateLiteral(line, 'es'))
+        .join('\n');
+}
+
+function getCanonicalModuleOutput(moduleId, preferredLanguage, preferredExampleId = '') {
+    const module = getModuleById(moduleId);
+    if (!module) {
+        return { text: localizeOutputText('Execution complete.'), language: preferredLanguage || 'java' };
     }
-    const firstLanguage = Object.keys(module.codeExamples)[0] || requested;
-    return { code: module.codeExamples[firstLanguage] || '', language: firstLanguage };
+
+    const localizedModule = appState.language === 'es' ? getLocalizedModule(module) : null;
+    const requested = preferredLanguage || getDefaultModuleLanguage(moduleId);
+    const defaultLanguage = getDefaultModuleLanguage(moduleId);
+    const selectedExampleId = preferredExampleId || getActiveModuleExampleId(moduleId, localizedModule);
+    const outputSources = [];
+    const localizedSets = getModuleCodeExampleSets(moduleId, localizedModule);
+    const moduleSets = getModuleCodeExampleSets(moduleId, module);
+    const localizedSelectedSet = localizedSets.find((set) => set.id === selectedExampleId);
+    const moduleSelectedSet = moduleSets.find((set) => set.id === selectedExampleId);
+
+    if (localizedSelectedSet?.expectedOutputs) outputSources.push(localizedSelectedSet.expectedOutputs);
+    if (moduleSelectedSet?.expectedOutputs) outputSources.push(moduleSelectedSet.expectedOutputs);
+    if (localizedModule?.expectedOutputs) outputSources.push(localizedModule.expectedOutputs);
+    if (module?.expectedOutputs) outputSources.push(module.expectedOutputs);
+
+    for (const sourceOutputs of outputSources) {
+        if (typeof sourceOutputs?.[requested] === 'string' && sourceOutputs[requested].trim()) {
+            return { text: localizeOutputText(sourceOutputs[requested]), language: requested };
+        }
+        if (typeof sourceOutputs?.[defaultLanguage] === 'string' && sourceOutputs[defaultLanguage].trim()) {
+            return { text: localizeOutputText(sourceOutputs[defaultLanguage]), language: defaultLanguage };
+        }
+        const fallbackLanguage = Object.keys(sourceOutputs || {}).find((lang) => typeof sourceOutputs?.[lang] === 'string' && sourceOutputs[lang].trim());
+        if (fallbackLanguage) {
+            return { text: localizeOutputText(sourceOutputs[fallbackLanguage]), language: fallbackLanguage };
+        }
+    }
+
+    return { text: localizeOutputText('Execution complete.'), language: requested };
+}
+
+function runWithTimeout(promise, timeoutMs = 20000) {
+    return Promise.race([
+        promise,
+        new Promise((_, reject) => {
+            setTimeout(() => reject(new Error(`Execution timed out after ${timeoutMs}ms`)), timeoutMs);
+        })
+    ]);
+}
+
+async function executeWithConfiguredRunner(languageKey, normalizedCode) {
+    const langConfig = CODE_RUNNER_CONFIG[languageKey] || CODE_RUNNER_CONFIG.java;
+    if (CODE_RUNNER_ENDPOINT) {
+        return runViaCustomEndpoint(langConfig, normalizedCode);
+    }
+    if (JUDGE0_ENDPOINT && JUDGE0_LANGUAGE_IDS[languageKey]) {
+        return runViaJudge0(languageKey, normalizedCode);
+    }
+    if (languageKey === 'javascript') {
+        return runJavascriptLocally(normalizedCode);
+    }
+    throw new Error('No compatible runner is configured for this language.');
+}
+
+async function runModuleSnippetForOutput({ moduleId, language, exampleId = '' }) {
+    const mode = getModuleMode(moduleId);
+    const normalizedExampleId = exampleId || 'single';
+    const cacheKey = getModuleOutputCacheKey(moduleId, language, mode, normalizedExampleId);
+    if (moduleOutputCache.has(cacheKey)) {
+        return moduleOutputCache.get(cacheKey);
+    }
+    if (moduleOutputInFlight.has(cacheKey)) {
+        return moduleOutputInFlight.get(cacheKey);
+    }
+
+    const executionPromise = (async () => {
+        const fallback = getCanonicalModuleOutput(moduleId, language, exampleId);
+
+        if (mode !== 'code') {
+            const result = {
+                text: t('module.outputUnavailableForMode'),
+                source: 'fallback',
+                ts: Date.now()
+            };
+            moduleOutputCache.set(cacheKey, result);
+            return result;
+        }
+
+        if (language === 'assembly') {
+            const outputText = [t('module.outputAssemblyNote'), fallback.text].filter(Boolean).join('\n');
+            const result = { text: outputText, source: 'fallback', ts: Date.now() };
+            moduleOutputCache.set(cacheKey, result);
+            return result;
+        }
+
+        if (!PLAYGROUND_RUNNABLE_LANGUAGES.includes(language)) {
+            const result = { text: fallback.text, source: 'fallback', ts: Date.now() };
+            moduleOutputCache.set(cacheKey, result);
+            return result;
+        }
+
+        const code = getCanonicalModuleCode(moduleId, language, exampleId).code || '';
+        if (!String(code).trim()) {
+            const result = { text: fallback.text, source: 'fallback', ts: Date.now() };
+            moduleOutputCache.set(cacheKey, result);
+            return result;
+        }
+
+        try {
+            const normalizedCode = normalizeCodeForRunner(language, code);
+            const outputText = await runWithTimeout(executeWithConfiguredRunner(language, normalizedCode), 20000);
+            const trimmedOutput = String(outputText || '').trim();
+            const resolvedOutput = trimmedOutput && trimmedOutput !== 'Execution complete (no stdout).'
+                ? trimmedOutput
+                : fallback.text;
+            const source = trimmedOutput && trimmedOutput !== 'Execution complete (no stdout).' ? 'live' : 'fallback';
+            const result = { text: resolvedOutput, source, ts: Date.now() };
+            moduleOutputCache.set(cacheKey, result);
+            return result;
+        } catch (error) {
+            const reason = error instanceof Error ? error.message : String(error);
+            const fallbackText = `${fallback.text}\n\n// ${reason}`;
+            const result = { text: fallbackText, source: 'fallback', ts: Date.now() };
+            moduleOutputCache.set(cacheKey, result);
+            return result;
+        }
+    })();
+
+    moduleOutputInFlight.set(cacheKey, executionPromise);
+    try {
+        return await executionPromise;
+    } finally {
+        moduleOutputInFlight.delete(cacheKey);
+    }
 }
 
 function getCodeExample(module) {
     const language = getModuleLanguage(module.id);
-    const resolved = getCanonicalModuleCode(module.id, language);
+    const resolved = getCanonicalModuleCode(module.id, language, getActiveModuleExampleId(module.id));
     return resolved.code || translateLiteral('Code example coming soon...', appState.language);
 }
 
@@ -8285,10 +10999,15 @@ function updateHeaderShrink() {
     appState.headerCollapsed = shouldCollapse;
     header.classList.toggle('header-collapsed', shouldCollapse);
 
-    // Header padding - smaller values for optimization
-    const paddingY = Math.max(12 - progress * 6, 6);
-    header.style.paddingTop = `${paddingY}px`;
-    header.style.paddingBottom = `${paddingY}px`;
+    // Header padding - avoid inline/CSS conflicts when collapsed on mobile.
+    if (shouldCollapse) {
+        header.style.paddingTop = '0px';
+        header.style.paddingBottom = '0px';
+    } else {
+        const paddingY = Math.max(12 - progress * 6, 6);
+        header.style.paddingTop = `${paddingY}px`;
+        header.style.paddingBottom = `${paddingY}px`;
+    }
 
     // Title size - optimized sizes
     if (isFullyShrunken) {
@@ -8365,6 +11084,36 @@ function filterModules() {
     });
 }
 
+function renderModuleOutputSection(moduleId, exampleId = 'single') {
+    const panelKey = getModuleOutputPanelKey(moduleId, exampleId);
+    const isExpanded = appState.expandedOutputs.has(panelKey);
+    const state = moduleOutputState.get(panelKey);
+    const status = state?.status || 'idle';
+    const outputText = status === 'running'
+        ? t('module.outputRunning')
+        : String(state?.text || '');
+    const sourceLabel = state?.source === 'live'
+        ? t('module.outputSourceLive')
+        : t('module.outputSourceFallback');
+
+    return `
+        <div class="pt-2 space-y-2">
+            <button onclick="toggleModuleOutputPanel('${moduleId}', '${exampleId}')" class="text-xs px-2 py-1 rounded font-semibold ${isExpanded ? 'bg-slate-600 text-white' : 'bg-violet-600 text-white hover:bg-violet-700'}">
+                ${isExpanded ? t('module.hideOutput') : t('module.showOutput')}
+            </button>
+            ${isExpanded ? `
+                <div class="rounded-md border border-slate-200 bg-slate-900 text-slate-100 p-2 space-y-1">
+                    <div class="flex items-center justify-between gap-2 text-[11px] uppercase tracking-wide text-slate-300">
+                        <span>${t('module.outputHeading')}</span>
+                        <span class="px-2 py-0.5 rounded-full bg-slate-700 text-slate-100">${sourceLabel}</span>
+                    </div>
+                    <pre class="text-xs leading-relaxed whitespace-pre-wrap font-mono">${escapeHtml(outputText || t('module.outputRunning'))}</pre>
+                </div>
+            ` : ''}
+        </div>
+    `;
+}
+
 function renderModules() {
     const filteredModules = filterModules();
     const grid = document.getElementById('modules-grid');
@@ -8383,13 +11132,17 @@ function renderModules() {
 
     grid.innerHTML = filteredModules.map(module => {
         const localizedModule = localizedModuleMap.get(module.id) || module;
+        const codeExampleSets = getModuleCodeExampleSets(module.id, localizedModule);
+        const hasCodeExampleSets = codeExampleSets.length > 0;
+        const activeExampleId = getActiveModuleExampleId(module.id, localizedModule);
+        const moduleCodeExamples = getCodeExamplesForModuleContext(module.id, localizedModule);
         const isCompleted = appState.completedModules.has(module.id);
         const isCodeExpanded = appState.expandedCode.has(module.id);
         const currentLanguage = getModuleLanguage(module.id);
         const currentMode = getModuleMode(module.id);
         const availableModes = getAvailableModeKeys(module.id);
         const isDiscreteTheoryMode = currentMode === 'discreteTheory';
-        const hasMultipleLanguages = module.codeExamples && Object.keys(module.codeExamples).length > 1;
+        const hasMultipleLanguages = Object.keys(moduleCodeExamples).length > 1;
         const definitions = Array.isArray(localizedModule.definitions) && localizedModule.definitions.length === 5
             ? localizedModule.definitions
             : buildModuleDefinitions(localizedModule, appState.language === 'es' ? 'es' : 'en');
@@ -8399,7 +11152,9 @@ function renderModules() {
             : getCodeExample(module);
         const previewLines = isAssemblyModule(module.id) ? 8 : CONSTANTS.CODE_PREVIEW_LINES;
         const displayCode = isCodeExpanded ? codeToDisplay : truncateCode(codeToDisplay, previewLines);
-        const showExpandButton = codeToDisplay.split('\n').length > previewLines;
+        const showExpandButton = !hasCodeExampleSets && codeToDisplay.split('\n').length > previewLines;
+        const canShowOutput = currentMode === 'code';
+        const isSingleCodeVisible = !hasCodeExampleSets && (isCodeExpanded || !showExpandButton);
 
         const processedCode = isDiscreteTheoryMode
             ? displayCode
@@ -8427,7 +11182,7 @@ function renderModules() {
 
                 ${isStarterModule ? `
                     <div class="starter-module-banner mb-3">
-                        ⭐ Starter Module: recommended first step for most learners
+                        ${t('module.starterBanner')}
                     </div>
                 ` : ''}
 
@@ -8435,7 +11190,7 @@ function renderModules() {
 
                 <!-- Topics -->
                 <div class="mb-3 sm:mb-4">
-                    <h4 class="font-semibold mb-2 text-slate-800 text-sm">Topics Covered:</h4>
+                    <h4 class="font-semibold mb-2 text-slate-800 text-sm">${t('module.topicsCovered')}</h4>
                     <div class="flex flex-wrap gap-1 sm:gap-1.5">
                         ${(localizedModule.topics || []).map(topic => `
                             <span class="px-2 py-0.5 sm:py-1 text-xs rounded-md font-medium bg-slate-100 text-slate-700 topic-badge">
@@ -8450,7 +11205,7 @@ function renderModules() {
                     <!-- Code Header -->
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 px-3 py-2 border-b border-slate-200 bg-slate-100">
                         <div class="flex items-center gap-1.5">
-                            <span class="text-xs font-medium text-slate-600">${isDiscreteTheoryMode ? (appState.language === 'es' ? '📘 Teoría de Matemáticas Discretas' : '📘 Discrete Mathematics Theory') : '💻 Code Example'}</span>
+                            <span class="text-xs font-medium text-slate-600">${isDiscreteTheoryMode ? t('module.discreteTheory') : t('module.codeExample')}</span>
                             ${hasMultipleLanguages ? `
                                 <span class="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 font-medium">
                                     ${SUPPORTED_LANGUAGES[currentLanguage]?.icon} ${SUPPORTED_LANGUAGES[currentLanguage]?.name}
@@ -8458,27 +11213,27 @@ function renderModules() {
                             ` : ''}
                             ${currentMode === 'pseudocode' ? `
                                 <span class="text-xs px-1.5 py-0.5 rounded bg-purple-100 text-purple-800 font-medium">
-                                    📝 Pseudocode
+                                    📝 ${t('module.modePseudocode')}
                                 </span>
                             ` : ''}
                             ${currentMode === 'discreteTheory' ? `
                                 <span class="text-xs px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-medium">
-                                    📘 ${appState.language === 'es' ? 'Modo Teoría' : 'Theory Mode'}
+                                    📘 ${t('module.theoryMode')}
                                 </span>
                             ` : ''}
                         </div>
 
                         <div class="flex flex-wrap gap-1 w-full sm:w-auto">
                             <!-- Comments Toggle -->
-                            <button onclick="toggleModuleComments('${module.id}')" class="text-xs px-2 py-1 rounded transition-all duration-200 font-medium shadow-sm hover:shadow-md flex-shrink-0 ${shouldShowComments(module.id) ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-gray-500 hover:bg-gray-600 text-white'}" title="${shouldShowComments(module.id) ? 'Hide Comments' : 'Show Comments'}">
-                                💬 ${shouldShowComments(module.id) ? 'ON' : 'OFF'}
+                            <button onclick="toggleModuleComments('${module.id}')" class="text-xs px-2 py-1 rounded transition-all duration-200 font-medium shadow-sm hover:shadow-md flex-shrink-0 ${shouldShowComments(module.id) ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-gray-500 hover:bg-gray-600 text-white'}" title="${shouldShowComments(module.id) ? t('module.tooltipHideComments') : t('module.tooltipShowComments')}">
+                                💬 ${shouldShowComments(module.id) ? t('module.commentsOn') : t('module.commentsOff')}
                             </button>
 
                             <!-- Language Selector -->
                             ${hasMultipleLanguages ? `
-                                <select onchange="setModuleLanguage('${module.id}', this.value)" class="text-xs px-2 py-1 rounded bg-blue-500 hover:bg-blue-600 text-white border-0 font-medium" title="Select Programming Language">
+                                <select onchange="setModuleLanguage('${module.id}', this.value)" class="text-xs px-2 py-1 rounded bg-blue-500 hover:bg-blue-600 text-white border-0 font-medium" title="${t('module.tooltipSelectLanguage')}">
                                     ${Object.entries(SUPPORTED_LANGUAGES).map(([langKey, langInfo]) =>
-            module.codeExamples && module.codeExamples[langKey] ? `
+            moduleCodeExamples && moduleCodeExamples[langKey] ? `
                                             <option value="${langKey}" ${currentLanguage === langKey ? 'selected' : ''} class="bg-white text-black">
                                                 ${langInfo.icon} ${langInfo.name}
                                             </option>
@@ -8488,12 +11243,12 @@ function renderModules() {
                             ` : ''}
 
                             <!-- Code Mode Selector -->
-                            <select onchange="setModuleMode('${module.id}', this.value)" class="text-xs px-2 py-1 rounded border-0 font-medium ${currentMode === 'pseudocode' ? 'bg-purple-500 hover:bg-purple-600 text-white' : currentMode === 'discreteTheory' ? 'bg-amber-500 hover:bg-amber-600 text-white' : 'bg-indigo-500 hover:bg-indigo-600 text-white'}" title="Select Code Display Mode">
+                            <select onchange="setModuleMode('${module.id}', this.value)" class="text-xs px-2 py-1 rounded border-0 font-medium ${currentMode === 'pseudocode' ? 'bg-purple-500 hover:bg-purple-600 text-white' : currentMode === 'discreteTheory' ? 'bg-amber-500 hover:bg-amber-600 text-white' : 'bg-indigo-500 hover:bg-indigo-600 text-white'}" title="${t('module.tooltipSelectMode')}">
                                 ${availableModes.map((modeKey) => {
             const modeInfo = CODE_MODES[modeKey];
-            const label = appState.language === 'es' && modeKey === 'discreteTheory'
-                ? 'Matemáticas Discretas'
-                : modeInfo.name;
+            const label = modeKey === 'discreteTheory'
+                ? t('module.discreteModeLabel')
+                : (modeKey === 'code' ? t('module.modeCode') : t('module.modePseudocode'));
             return `
                                     <option value="${modeKey}" ${currentMode === modeKey ? 'selected' : ''} class="bg-white text-black">
                                         ${modeInfo.icon} ${label}
@@ -8505,20 +11260,69 @@ function renderModules() {
                             <!-- Expand Button -->
                             ${showExpandButton ? `
                                 <button onclick="toggleCodeExpansion('${module.id}')" class="text-xs px-2 py-1 rounded transition-all duration-200 font-medium shadow-sm hover:shadow-md flex-shrink-0 ${isCodeExpanded ? 'bg-slate-500 hover:bg-slate-600 text-white' : 'bg-emerald-500 hover:bg-emerald-600 text-white'}">
-                                    ${isCodeExpanded ? '📄 Collapse' : '📖 Expand'}
+                                    ${isCodeExpanded ? t('module.collapse') : t('module.expand')}
                                 </button>
                             ` : ''}
                         </div>
                     </div>
 
-                    <!-- Code Content -->
-                    <div class="p-3 overflow-x-auto">
-                        <pre class="text-xs leading-relaxed"><code class="whitespace-pre-wrap font-mono">${codeForDisplay}</code></pre>
-                    </div>
+                    ${hasCodeExampleSets ? `
+                        <div class="p-3 sm:p-4 space-y-3 module-example-set-stack">
+                            <h5 class="text-xs sm:text-sm font-semibold text-slate-700">${t('module.examplesHeading')}</h5>
+                            ${codeExampleSets.map((setItem) => {
+            const setTitle = resolveLocalizedValue(setItem.title, appState.language);
+            const setDescription = resolveLocalizedValue(setItem.description, appState.language);
+            const setId = setItem.id;
+            const setExpansionKey = getModuleExampleExpansionKey(module.id, setId);
+            const setExpanded = appState.expandedCodeExamples.has(setExpansionKey);
+            const setActive = activeExampleId === setId;
+            const setCodeResolved = isDiscreteTheoryMode
+                ? getDiscreteTheoryContent(localizedModule)
+                : getCanonicalModuleCode(module.id, currentLanguage, setId).code;
+            const setProcessedCode = isDiscreteTheoryMode
+                ? setCodeResolved
+                : processCode(setCodeResolved, module.id);
+            const setCodeForDisplay = String(setProcessedCode || '').replace(/^(?:\r?\n)+/, '');
+            return `
+                                <div class="module-example-item rounded-lg border ${setActive ? 'border-indigo-400 bg-indigo-50/50' : 'border-slate-200 bg-white'} overflow-hidden">
+                                    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 px-3 py-2">
+                                        <div class="min-w-0">
+                                            <p class="text-sm font-semibold text-slate-800">${escapeHtml(setTitle || resolveLocalizedValue(setItem.title, 'en') || setId)}</p>
+                                            ${setDescription ? `<p class="text-xs text-slate-600 mt-0.5">${escapeHtml(setDescription)}</p>` : ''}
+                                        </div>
+                                        <div class="flex gap-1.5 flex-wrap">
+                                            <button onclick="toggleExampleCodeExpansion('${module.id}', '${setId}')" class="text-xs px-2 py-1 rounded font-semibold ${setExpanded ? 'bg-slate-600 text-white' : 'bg-emerald-500 text-white hover:bg-emerald-600'}">${setExpanded ? t('module.hideExample') : t('module.showExample')}</button>
+                                        </div>
+                                    </div>
+                                    ${setExpanded ? `
+                                        <div class="px-3 pb-3 overflow-x-auto">
+                                            <pre class="text-xs leading-relaxed"><code class="whitespace-pre-wrap font-mono">${escapeHtml(setCodeForDisplay)}</code></pre>
+                                        </div>
+                                        ${canShowOutput ? `
+                                            <div class="px-3 pb-3">
+                                                ${renderModuleOutputSection(module.id, setId)}
+                                            </div>
+                                        ` : ''}
+                                    ` : ''}
+                                </div>
+                            `;
+        }).join('')}
+                        </div>
+                    ` : `
+                        <!-- Code Content -->
+                        <div class="p-3 overflow-x-auto">
+                            <pre class="text-xs leading-relaxed"><code class="whitespace-pre-wrap font-mono">${escapeHtml(codeForDisplay)}</code></pre>
+                        </div>
+                        ${canShowOutput && isSingleCodeVisible ? `
+                            <div class="px-3 pb-3">
+                                ${renderModuleOutputSection(module.id, 'single')}
+                            </div>
+                        ` : ''}
+                    `}
                 </div>
 
                 <div class="bg-slate-50 border-slate-200 rounded-lg border p-3 sm:p-4 mb-3 sm:mb-4">
-                    <h4 class="font-semibold mb-2 text-slate-800 text-sm">${appState.language === 'es' ? '📘 Definiciones Clave' : '📘 Need-to-Know Definitions'}</h4>
+                    <h4 class="font-semibold mb-2 text-slate-800 text-sm">${t('module.definitionsHeading')}</h4>
                     <div class="space-y-2">
                         ${definitions.map((entry) => `
                             <div class="text-xs sm:text-sm text-slate-700 leading-relaxed">
@@ -8535,7 +11339,7 @@ function renderModules() {
 
                 <!-- Resources -->
                 <div class="mb-3 sm:mb-4">
-                    <h4 class="font-semibold mb-2 text-slate-800 text-sm">📚 Learning Resources:</h4>
+                    <h4 class="font-semibold mb-2 text-slate-800 text-sm">${t('module.learningResources')}</h4>
                     <div class="space-y-1">
                         ${(localizedModule.resources || []).map(resource => `
                             <div class="text-indigo-600 hover:text-indigo-800 text-xs transition-colors duration-200 cursor-pointer">
@@ -8832,6 +11636,9 @@ function renderFlashcard() {
 function toggleCodeExpansion(moduleId) {
     if (appState.expandedCode.has(moduleId)) {
         appState.expandedCode.delete(moduleId);
+        const panelKey = getModuleOutputPanelKey(moduleId, 'single');
+        appState.expandedOutputs.delete(panelKey);
+        moduleOutputState.delete(panelKey);
     } else {
         appState.expandedCode.add(moduleId);
     }
@@ -8848,15 +11655,111 @@ function toggleModuleComments(moduleId) {
 
 function setModuleLanguage(moduleId, language) {
     const module = getModuleById(moduleId);
-    if (!module || !module.codeExamples || !module.codeExamples[language]) return;
+    const localizedModule = appState.language === 'es' ? getLocalizedModule(module) : null;
+    const availableCodeExamples = getCodeExamplesForModuleContext(moduleId, localizedModule);
+    if (!module || !availableCodeExamples || !availableCodeExamples[language]) return;
     appState.moduleLanguages.set(moduleId, language);
+    clearModuleOutputState(moduleId);
+    if (typeof window.syncPlaygroundWithModule === 'function') {
+        window.syncPlaygroundWithModule(moduleId);
+    }
     renderModules();
     saveToLocalStorage();
+}
+
+function setModuleExample(moduleId, exampleId) {
+    const module = getModuleById(moduleId);
+    if (!module) return;
+    const localizedModule = appState.language === 'es' ? getLocalizedModule(module) : null;
+    const availableSets = getModuleCodeExampleSets(moduleId, localizedModule);
+    if (!availableSets.some((set) => set.id === exampleId)) return;
+
+    // Preview should always be visible: focus the selected set and open its code panel.
+    availableSets.forEach((set) => {
+        const key = getModuleExampleExpansionKey(moduleId, set.id);
+        if (set.id === exampleId) {
+            appState.expandedCodeExamples.add(key);
+        } else {
+            appState.expandedCodeExamples.delete(key);
+        }
+    });
+
+    appState.moduleExampleSelections.set(moduleId, exampleId);
+    clearModuleOutputState(moduleId);
+    if (typeof window.syncPlaygroundWithModule === 'function') {
+        window.syncPlaygroundWithModule(moduleId);
+    }
+    renderModules();
+    saveToLocalStorage();
+}
+
+function toggleExampleCodeExpansion(moduleId, exampleId) {
+    const module = getModuleById(moduleId);
+    if (!module) return;
+    const localizedModule = appState.language === 'es' ? getLocalizedModule(module) : null;
+    const availableSets = getModuleCodeExampleSets(moduleId, localizedModule);
+    if (!availableSets.some((set) => set.id === exampleId)) return;
+
+    // Keep one source of truth: opening/hiding an example also selects it as the active set.
+    appState.moduleExampleSelections.set(moduleId, exampleId);
+
+    const expansionKey = getModuleExampleExpansionKey(moduleId, exampleId);
+    if (appState.expandedCodeExamples.has(expansionKey)) {
+        appState.expandedCodeExamples.delete(expansionKey);
+        const panelKey = getModuleOutputPanelKey(moduleId, exampleId);
+        appState.expandedOutputs.delete(panelKey);
+        moduleOutputState.delete(panelKey);
+    } else {
+        appState.expandedCodeExamples.add(expansionKey);
+    }
+
+    if (typeof window.syncPlaygroundWithModule === 'function') {
+        window.syncPlaygroundWithModule(moduleId);
+    }
+    renderModules();
+    saveToLocalStorage();
+}
+
+async function toggleModuleOutputPanel(moduleId, exampleId = 'single') {
+    const module = getModuleById(moduleId);
+    if (!module) return;
+    if (getModuleMode(moduleId) !== 'code') return;
+
+    const normalizedExampleId = exampleId || 'single';
+    const panelKey = getModuleOutputPanelKey(moduleId, normalizedExampleId);
+    if (appState.expandedOutputs.has(panelKey)) {
+        appState.expandedOutputs.delete(panelKey);
+        renderModules();
+        return;
+    }
+
+    appState.expandedOutputs.add(panelKey);
+    moduleOutputState.set(panelKey, {
+        status: 'running',
+        source: 'fallback',
+        text: t('module.outputRunning')
+    });
+    renderModules();
+
+    const language = getModuleLanguage(moduleId);
+    const resolvedExampleId = normalizedExampleId === 'single' ? '' : normalizedExampleId;
+    const result = await runModuleSnippetForOutput({
+        moduleId,
+        language,
+        exampleId: resolvedExampleId
+    });
+    moduleOutputState.set(panelKey, {
+        status: 'ready',
+        source: result.source || 'fallback',
+        text: result.text || ''
+    });
+    renderModules();
 }
 
 function setModuleMode(moduleId, mode) {
     if (!getAvailableModeKeys(moduleId).includes(mode)) return;
     appState.moduleModes.set(moduleId, mode);
+    clearModuleOutputState(moduleId);
     renderModules();
     saveToLocalStorage();
 }
@@ -8992,7 +11895,7 @@ function populateFlashcardModuleSelect() {
     const previousValue = select.value || appState.selectedFlashcardModule || 'all';
     const localizedModuleMap = new Map(getLocalizedModules().map((module) => [module.id, module]));
     const options = [`<option value="all">${translateLiteral('All Modules (mix)', appState.language)}</option>`];
-    modules.forEach((module, index) => {
+    getOrderedModules().forEach((module, index) => {
         const localizedModule = localizedModuleMap.get(module.id) || module;
         const unlocked = isFlashcardModuleAccessible(module.id);
         const lockLabel = unlocked ? '' : ` (${translateLiteral('Complete quiz to unlock', appState.language)})`;
@@ -9194,9 +12097,15 @@ function resetProgress() {
         appState.completedModules.clear();
         appState.completedQuizzes.clear();
         appState.expandedCode.clear();
+        appState.expandedCodeExamples.clear();
+        appState.expandedOutputs.clear();
         appState.moduleComments.clear();
         appState.moduleLanguages.clear();
         appState.moduleModes.clear();
+        appState.moduleExampleSelections.clear();
+        moduleOutputCache.clear();
+        moduleOutputState.clear();
+        moduleOutputInFlight.clear();
         appState.searchTerm = '';
         appState.difficultyFilter = 'all';
         appState.categoryFilter = 'all';
@@ -9974,7 +12883,9 @@ function exportProgress() {
             moduleSettings: {
                 comments: Array.from(appState.moduleComments.entries()),
                 languages: Array.from(appState.moduleLanguages.entries()),
-                modes: Array.from(appState.moduleModes.entries())
+                modes: Array.from(appState.moduleModes.entries()),
+                expandedExamples: Array.from(appState.expandedCodeExamples),
+                selectedExamples: Array.from(appState.moduleExampleSelections.entries())
             },
             preferences: {
                 darkMode: appState.darkMode,
@@ -10015,6 +12926,12 @@ function importProgress(event) {
                 appState.moduleLanguages = new Map(remapStoredModuleEntryPairs(importData.progress.moduleSettings.languages || []));
                 appState.moduleModes = sanitizeStoredModuleModes(
                     new Map(remapStoredModuleEntryPairs(importData.progress.moduleSettings.modes || [], { allowLegacy: false }))
+                );
+                appState.expandedCodeExamples = sanitizeStoredExpandedCodeExamples(
+                    new Set(importData.progress.moduleSettings.expandedExamples || [])
+                );
+                appState.moduleExampleSelections = sanitizeStoredModuleExampleSelections(
+                    new Map(remapStoredModuleEntryPairs(importData.progress.moduleSettings.selectedExamples || [], { allowLegacy: false }))
                 );
                 ['assembly-registers-memory', 'assembly-control-flow-procedures', 'assembly-arrays-strings-io'].forEach((moduleId) => {
                     if (appState.moduleLanguages.get(moduleId) !== 'assembly') {
@@ -10411,6 +13328,13 @@ function runLocalizationSmokeTest() {
         check('git-topic-visible', (document.querySelector('[data-topic-filter=\"git\"]')?.textContent || '').trim().length > 0);
         check('new-discrete-module-rendered', Boolean(document.getElementById('module-propositional-logic-proofs')));
         check('new-assembly-module-rendered', Boolean(document.getElementById('module-assembly-registers-memory')));
+        const moduleTextEs = document.getElementById('modules-grid')?.textContent || '';
+        check('module-label-topics-es', moduleTextEs.includes(t('module.topicsCovered', {}, 'es')));
+        check('module-label-resources-es', moduleTextEs.includes(t('module.learningResources', {}, 'es')));
+        check('module-no-english-topics-header', !moduleTextEs.includes('Topics Covered:'));
+        check('module-no-english-resources-header', !moduleTextEs.includes('Learning Resources:'));
+        check('module-no-english-starter-banner', !moduleTextEs.includes('Starter Module: recommended first step for most learners'));
+        check('module-code-header-es', moduleTextEs.includes(t('module.codeExample', {}, 'es')) || moduleTextEs.includes(t('module.discreteTheory', {}, 'es')));
 
         setLanguage('en');
         check('header-title-english', (document.getElementById('main-title')?.textContent || '').toLowerCase().includes('cs course atlas'));
