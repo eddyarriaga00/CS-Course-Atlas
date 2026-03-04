@@ -69,6 +69,8 @@ const STORAGE_KEYS = {
 const moduleOutputCache = new Map();
 const moduleOutputState = new Map();
 const moduleOutputInFlight = new Map();
+const interviewRunState = new Map();
+const interviewRunInFlight = new Set();
 
 const SUPPORTED_LANGUAGES = {
     java: { name: 'Java', icon: '☕' },
@@ -94,6 +96,13 @@ const DIFFICULTY_COLORS = {
 
 const FLASHCARD_SESSION_SIZE = 20;
 const FREE_FLASHCARD_MODULES = 10;
+const FLASHCARD_TOPIC_DECKS = [
+    { id: 'topic:dsa', category: 'dsa', titleKey: 'flashcards.deck.topic.dsa' },
+    { id: 'topic:discrete', category: 'discrete', titleKey: 'flashcards.deck.topic.discrete' },
+    { id: 'topic:java', category: 'java', titleKey: 'flashcards.deck.topic.java' },
+    { id: 'topic:git', category: 'git', titleKey: 'flashcards.deck.topic.git' },
+    { id: 'topic:assembly', category: 'assembly', titleKey: 'flashcards.deck.topic.assembly' }
+];
 const THEME_OPTIONS = ['default', 'ocean', 'sunset', 'forest', 'minimal', 'space'];
 const THEME_CLASSES = THEME_OPTIONS.filter(option => option !== 'default').map(option => `theme-${option}`);
 const ACCENT_OPTIONS = ['indigo', 'emerald', 'amber', 'rose'];
@@ -125,6 +134,8 @@ const JUDGE0_LANGUAGE_IDS = {
 const NEON_API_PATHS = {
     session: '/api/auth/session',
     profile: '/api/profile',
+    userState: '/api/user-state',
+    support: '/api/support',
     login: '/api/auth/login',
     signup: '/api/auth/signup',
     logout: '/api/auth/logout'
@@ -133,8 +144,11 @@ const PROFILE_SYNC_CONFIG = {
     enabled: true,
     baseUrl: '',
     autoPullOnOpen: true,
-    autoPushOnSave: true
+    autoPushOnSave: true,
+    autoPullUserStateOnSession: true,
+    autoPushUserState: true
 };
+const USER_STATE_SYNC_DEBOUNCE_MS = 1600;
 const LEGACY_MODULE_ID_MAP = {
     'algorithm-analysis': 'propositional-logic-proofs',
     'number-theory': 'sets-relations-functions',
@@ -319,9 +333,26 @@ const TRANSLATIONS = {
         'section.studyTip': '🌟 Study Tip',
         'section.insights': 'Personalized Study Insights',
         'section.insightsSubtitle': 'Stay on track with live stats, tailored module suggestions, and a built-in focus buddy.',
+        'insights.lock.badge': 'Account Required',
+        'insights.lock.title': 'Sign in to unlock personalized insights',
+        'insights.lock.copy': 'Your dashboard analytics, focus momentum, and personalized recommendations are available after login so progress can sync safely.',
+        'insights.lock.cta': 'Log In / Sign Up',
+        'insights.lock.updates': 'Locked until login',
+        'insights.lock.status': 'Locked',
+        'insights.lock.sessionBtn': 'Sign in to start',
+        'insights.lock.break': 'Sign in to enable reminders',
         'interview.heading': '📂 Interview Examples',
         'interview.subtitle': 'LeetCode-style walk-throughs. Two at a time with quick copy.',
         'interview.pages': 'Pages',
+        'interview.runSolution': 'Run Solution',
+        'interview.running': 'Running...',
+        'interview.outputLabel': 'Output',
+        'interview.outputReady': 'Ready',
+        'interview.outputLive': 'Live execution',
+        'interview.outputFallback': 'Fallback output',
+        'interview.outputError': 'Execution error',
+        'interview.outputPlaceholder': 'Run the example solution to view output.',
+        'interview.runInWorkspace': 'Run in Workspace',
         'ds.heading': '🛠️ Data Structure Playground',
         'ds.subtitle': 'Interact with arrays, stacks, queues, heaps, graphs, and tries. Track structure, pointers, operation timeline, and complexity in one place.',
         'ds.reset': 'Reset playground',
@@ -332,6 +363,63 @@ const TRANSLATIONS = {
         // Support
         'support.heading': '❤️ Do you enjoy this website?',
         'support.subtitle': 'Help keep this resource free and updated with new content weekly!',
+        // Floating helper
+        'helper.badge': '💡 Quick Guide',
+        'helper.ariaLabel': 'Open quick website guide',
+        'helper.title': 'Website Quick Guide',
+        'helper.subtitle': 'A short tour of what each section does.',
+        'helper.closeAria': 'Close quick website guide',
+        'helper.goalTitle': 'Goal of CS Course Atlas',
+        'helper.goalText': 'Help Computer Science students learn faster across multiple classes with clear explanations, runnable examples, and guided practice tools.',
+        'helper.sectionModulesTitle': 'Modules',
+        'helper.sectionModulesText': 'Structured learning tracks with code examples, theory mode (for discrete), definitions, and resources.',
+        'helper.sectionPlaygroundTitle': 'Code Playground',
+        'helper.sectionPlaygroundText': 'Run Java, C++, Python, and JavaScript snippets, test edits, and inspect output quickly.',
+        'helper.sectionDataTitle': 'Data Structure Playground',
+        'helper.sectionDataText': 'Interactive visuals for arrays, stacks, queues, heaps, graphs, and tries with operation timeline and complexity view.',
+        'helper.sectionPracticeTitle': 'Practice Tools',
+        'helper.sectionPracticeText': 'Use flashcards, interactive quizzes, glossary, and interview examples to reinforce concepts.',
+        'helper.sectionProgressTitle': 'Progress + Settings',
+        'helper.sectionProgressText': 'Track completion, customize UI settings, and manage account/profile preferences.',
+        'helper.closeBtn': 'Got it',
+        // Footer
+        'footer.kicker': 'Built for Computer Science students',
+        'footer.title': 'CS Course Atlas Learning Hub',
+        'footer.subtitle': 'A multi-course study platform across DSA, Discrete Math, Java, Git, Assembly, and coding practice workflows.',
+        'footer.tag.multiCourse': 'Multi-course',
+        'footer.tag.handsOn': 'Hands-on Practice',
+        'footer.tag.bilingual': 'EN / ES Friendly',
+        'footer.quick.flashcards': '🎯 Open Flashcards',
+        'footer.quick.quizzes': '🧠 Start a Quiz',
+        'footer.quick.glossary': '📚 Browse Glossary',
+        'footer.tools.title': '📖 Study Tools',
+        'footer.tools.flashcards': '🎯 Practice Flashcards',
+        'footer.tools.glossary': '📚 CS Glossary',
+        'footer.tools.quizzes': '🧠 Interactive Quizzes',
+        'flashcards.deck.all': 'All Modules (mix)',
+        'flashcards.deck.topicGroup': 'Topic Decks',
+        'flashcards.deck.moduleGroup': 'Module Decks',
+        'flashcards.deck.topic.dsa': 'DSA Track',
+        'flashcards.deck.topic.discrete': 'Discrete Math Track',
+        'flashcards.deck.topic.java': 'Java Track',
+        'flashcards.deck.topic.git': 'Git Track',
+        'flashcards.deck.topic.assembly': 'Assembly Track',
+        'flashcards.deck.topic.locked': 'Complete quizzes in this track to unlock',
+        'flashcards.deck.topic.empty': 'No unlocked cards in this track yet. Complete quizzes in this track to unlock more flashcards.',
+        'flashcards.deck.module.locked': 'Complete quiz to unlock',
+        'flashcards.deck.startPrompt': 'Pick a deck to begin.',
+        'footer.features.title': '🚀 Core Features',
+        'footer.features.one': '💬 Individual Comment Controls',
+        'footer.features.two': '📝 Pseudocode Conversion',
+        'footer.features.three': '🛠️ Multi-Language Support',
+        'footer.features.four': '📱 Mobile-Optimized Design',
+        'footer.features.five': '🌙 Dark Mode Support',
+        'footer.support.title': '💖 Support the Project',
+        'footer.support.copy': 'Made with care for CS students. Help keep the platform free and continuously updated.',
+        'footer.support.coffee': '☕ Coffee',
+        'footer.support.sponsor': '💝 Sponsor',
+        'footer.bottom.author': 'Created for CS students by Eddy Arriaga-B',
+        'footer.bottom.copyright': 'CS Course Atlas © 2024 | Open Source ❤️',
         // Settings modal
         'settings.title': '⚙️ Settings',
         'settings.subtitle': 'Customize your learning experience',
@@ -465,9 +553,26 @@ const TRANSLATIONS = {
         'section.studyTip': '🌟 Consejo de Estudio',
         'section.insights': 'Perspectivas de Estudio Personalizadas',
         'section.insightsSubtitle': 'Mantente al día con estadísticas en vivo, sugerencias de módulos y un compañero de enfoque integrado.',
+        'insights.lock.badge': 'Cuenta Requerida',
+        'insights.lock.title': 'Inicia sesión para desbloquear insights personalizados',
+        'insights.lock.copy': 'Los análisis del panel, el impulso de enfoque y las recomendaciones personalizadas se habilitan después del inicio de sesión para sincronizar el progreso de forma segura.',
+        'insights.lock.cta': 'Iniciar Sesión / Registrarse',
+        'insights.lock.updates': 'Bloqueado hasta iniciar sesión',
+        'insights.lock.status': 'Bloqueado',
+        'insights.lock.sessionBtn': 'Inicia sesión para comenzar',
+        'insights.lock.break': 'Inicia sesión para habilitar recordatorios',
         'interview.heading': '📂 Ejemplos de Entrevista',
         'interview.subtitle': 'Recorridos estilo LeetCode. Dos por página con copia rápida.',
         'interview.pages': 'Páginas',
+        'interview.runSolution': 'Ejecutar solución',
+        'interview.running': 'Ejecutando...',
+        'interview.outputLabel': 'Salida',
+        'interview.outputReady': 'Listo',
+        'interview.outputLive': 'Ejecución en vivo',
+        'interview.outputFallback': 'Salida de respaldo',
+        'interview.outputError': 'Error de ejecución',
+        'interview.outputPlaceholder': 'Ejecuta la solución de ejemplo para ver la salida.',
+        'interview.runInWorkspace': 'Ejecutar en Workspace',
         'ds.heading': '🛠️ Playground de Estructuras de Datos',
         'ds.subtitle': 'Interactúa con arreglos, pilas, colas, montículos, grafos y tries. Sigue estructura, punteros, línea de tiempo y complejidad en un solo lugar.',
         'ds.reset': 'Reiniciar playground',
@@ -478,6 +583,63 @@ const TRANSLATIONS = {
         // Support
         'support.heading': '❤️ ¿Disfrutas este sitio web?',
         'support.subtitle': '¡Ayuda a mantener este recurso gratuito y actualizado con contenido nuevo cada semana!',
+        // Asistente flotante
+        'helper.badge': '💡 Guía Rápida',
+        'helper.ariaLabel': 'Abrir guía rápida del sitio web',
+        'helper.title': 'Guía Rápida del Sitio',
+        'helper.subtitle': 'Un recorrido corto de lo que hace cada sección.',
+        'helper.closeAria': 'Cerrar guía rápida del sitio web',
+        'helper.goalTitle': 'Objetivo de CS Course Atlas',
+        'helper.goalText': 'Ayudar a estudiantes de Ciencias de la Computación a aprender más rápido en múltiples clases con explicaciones claras, ejemplos ejecutables y herramientas guiadas de práctica.',
+        'helper.sectionModulesTitle': 'Módulos',
+        'helper.sectionModulesText': 'Rutas de aprendizaje estructuradas con ejemplos de código, modo teoría (para discreta), definiciones y recursos.',
+        'helper.sectionPlaygroundTitle': 'Playground de Código',
+        'helper.sectionPlaygroundText': 'Ejecuta snippets de Java, C++, Python y JavaScript, prueba cambios e inspecciona la salida rápidamente.',
+        'helper.sectionDataTitle': 'Playground de Estructuras',
+        'helper.sectionDataText': 'Visuales interactivos para arreglos, pilas, colas, montículos, grafos y tries con línea de tiempo de operaciones y vista de complejidad.',
+        'helper.sectionPracticeTitle': 'Herramientas de Práctica',
+        'helper.sectionPracticeText': 'Usa flashcards, cuestionarios interactivos, glosario y ejemplos de entrevista para reforzar conceptos.',
+        'helper.sectionProgressTitle': 'Progreso + Ajustes',
+        'helper.sectionProgressText': 'Monitorea avance, personaliza ajustes de la interfaz y administra preferencias de cuenta/perfil.',
+        'helper.closeBtn': 'Entendido',
+        // Footer
+        'footer.kicker': 'Creado para estudiantes de Ciencias de la Computación',
+        'footer.title': 'Centro de Aprendizaje CS Course Atlas',
+        'footer.subtitle': 'Una plataforma de estudio multi-curso para DSA, Matemáticas Discretas, Java, Git, Ensamblador y flujos de práctica de código.',
+        'footer.tag.multiCourse': 'Multi-curso',
+        'footer.tag.handsOn': 'Práctica Activa',
+        'footer.tag.bilingual': 'Amigable EN / ES',
+        'footer.quick.flashcards': '🎯 Abrir Tarjetas',
+        'footer.quick.quizzes': '🧠 Iniciar Quiz',
+        'footer.quick.glossary': '📚 Ver Glosario',
+        'footer.tools.title': '📖 Herramientas de Estudio',
+        'footer.tools.flashcards': '🎯 Practicar Tarjetas',
+        'footer.tools.glossary': '📚 Glosario de CS',
+        'footer.tools.quizzes': '🧠 Cuestionarios Interactivos',
+        'flashcards.deck.all': 'Todos los módulos (mezcla)',
+        'flashcards.deck.topicGroup': 'Mazos por tema',
+        'flashcards.deck.moduleGroup': 'Mazos por módulo',
+        'flashcards.deck.topic.dsa': 'Ruta de DSA',
+        'flashcards.deck.topic.discrete': 'Ruta de Matemática Discreta',
+        'flashcards.deck.topic.java': 'Ruta de Java',
+        'flashcards.deck.topic.git': 'Ruta de Git',
+        'flashcards.deck.topic.assembly': 'Ruta de Ensamblador',
+        'flashcards.deck.topic.locked': 'Completa quizzes de esta ruta para desbloquear',
+        'flashcards.deck.topic.empty': 'Aún no hay tarjetas desbloqueadas en esta ruta. Completa quizzes de esta ruta para desbloquear más tarjetas.',
+        'flashcards.deck.module.locked': 'Completa el quiz para desbloquear',
+        'flashcards.deck.startPrompt': 'Elige un mazo para comenzar.',
+        'footer.features.title': '🚀 Funciones Clave',
+        'footer.features.one': '💬 Controles de Comentarios Individuales',
+        'footer.features.two': '📝 Conversión a Pseudocódigo',
+        'footer.features.three': '🛠️ Soporte Multi-Lenguaje',
+        'footer.features.four': '📱 Diseño Optimizado para Móvil',
+        'footer.features.five': '🌙 Soporte de Modo Oscuro',
+        'footer.support.title': '💖 Apoya el Proyecto',
+        'footer.support.copy': 'Hecho con dedicación para estudiantes de CS. Ayuda a mantener la plataforma gratuita y en mejora continua.',
+        'footer.support.coffee': '☕ Café',
+        'footer.support.sponsor': '💝 Patrocinar',
+        'footer.bottom.author': 'Creado para estudiantes de CS por Eddy Arriaga-B',
+        'footer.bottom.copyright': 'CS Course Atlas © 2024 | Código Abierto ❤️',
         // Settings modal
         'settings.title': '⚙️ Ajustes',
         'settings.subtitle': 'Personaliza tu experiencia de aprendizaje',
@@ -6998,8 +7160,57 @@ function getLocalizedQuizData(moduleId) {
     return localizeEntity('quizData', moduleId, fallback);
 }
 
+function getGlossaryTrackCategoryLabel(categoryKey, lang = appState.language || 'en') {
+    const labels = {
+        en: {
+            dsa: 'DSA',
+            discrete: 'Discrete Mathematics',
+            java: 'Java',
+            git: 'Git',
+            assembly: 'Assembly'
+        },
+        es: {
+            dsa: 'DSA',
+            discrete: 'Matemáticas Discretas',
+            java: 'Java',
+            git: 'Git',
+            assembly: 'Ensamblador'
+        }
+    };
+    const normalizedLang = lang === 'es' ? 'es' : 'en';
+    return labels[normalizedLang]?.[categoryKey] || labels.en.dsa;
+}
+
+function buildCrossTrackGlossaryTerms(lang = appState.language || 'en') {
+    const localizedModules = lang === 'es' ? getLocalizedModules() : modules;
+    const seenTerms = new Set(glossaryTerms.map((term) => String(term.term || '').trim().toLowerCase()));
+    const generated = [];
+
+    localizedModules.forEach((module) => {
+        const categoryKey = getModuleCategoryKey(module.id);
+        const categoryLabel = getGlossaryTrackCategoryLabel(categoryKey, lang);
+        const definitions = Array.isArray(module.definitions) ? module.definitions.slice(0, 2) : [];
+        definitions.forEach((entry) => {
+            const term = String(entry?.term || '').trim();
+            const definition = String(entry?.definition || '').trim();
+            const normalizedTerm = term.toLowerCase();
+            if (!term || !definition || seenTerms.has(normalizedTerm)) return;
+            seenTerms.add(normalizedTerm);
+            generated.push({
+                term,
+                definition,
+                category: categoryLabel,
+                categoryKey: categoryLabel,
+                categoryLabel
+            });
+        });
+    });
+
+    return generated;
+}
+
 function getLocalizedGlossaryTerms() {
-    return glossaryTerms.map((term, index) => {
+    const localizedBaseTerms = glossaryTerms.map((term, index) => {
         const localized = localizeEntity('glossary', String(index), null);
         const merged = localized ? { ...term, ...localized } : { ...term };
         return {
@@ -7008,6 +7219,8 @@ function getLocalizedGlossaryTerms() {
             categoryLabel: localized?.category || term.category
         };
     });
+    const generatedTerms = buildCrossTrackGlossaryTerms(appState.language || 'en');
+    return [...localizedBaseTerms, ...generatedTerms];
 }
 
 function getLocalizedChallenge(challenge) {
@@ -7204,6 +7417,26 @@ function getLocalizedGeneralFlashcards(lang = appState.language || 'en') {
     });
 }
 
+function isFlashcardTopicDeck(moduleId) {
+    return String(moduleId || '').startsWith('topic:');
+}
+
+function getFlashcardTopicDeckInfo(moduleId) {
+    return FLASHCARD_TOPIC_DECKS.find((deck) => deck.id === moduleId) || null;
+}
+
+function getFlashcardTopicDeckLabel(moduleId, lang = appState.language || 'en') {
+    const deck = getFlashcardTopicDeckInfo(moduleId);
+    if (!deck) return '';
+    return t(deck.titleKey, {}, lang);
+}
+
+function getAccessibleTopicDeckModules(moduleId) {
+    const deck = getFlashcardTopicDeckInfo(moduleId);
+    if (!deck) return [];
+    return modules.filter((module) => getModuleCategoryKey(module.id) === deck.category && isFlashcardModuleAccessible(module.id));
+}
+
 function toSentenceList(text = '') {
     const source = String(text || '').replace(/\s+/g, ' ').trim();
     if (!source) return [];
@@ -7308,6 +7541,10 @@ function getFlashcardDeckCollection(lang = appState.language || 'en') {
 
 function getFlashcardDeck(moduleId) {
     const flashcardDecks = getFlashcardDeckCollection(appState.language);
+    if (isFlashcardTopicDeck(moduleId)) {
+        return getAccessibleTopicDeckModules(moduleId)
+            .flatMap((module) => flashcardDecks[module.id] || []);
+    }
     if (moduleId === 'general') {
         return flashcardDecks.general || [];
     }
@@ -7334,11 +7571,10 @@ function shuffleArray(array) {
 }
 
 function isFlashcardModuleAccessible(moduleId) {
-    if (!moduleId || moduleId === 'all' || moduleId === 'general') return true;
-    const moduleIndex = modules.findIndex(module => module.id === moduleId);
-    if (moduleIndex === -1) return true;
-    if (moduleIndex < FREE_FLASHCARD_MODULES) return true;
-    return appState.completedQuizzes.has(moduleId);
+    if (!moduleId || moduleId === 'all' || moduleId === 'general' || isFlashcardTopicDeck(moduleId)) {
+        return true;
+    }
+    return modules.some((module) => module.id === moduleId);
 }
 
 function markQuizCompleted(moduleId) {
@@ -7456,9 +7692,8 @@ function safeSetItem(key, value) {
     } catch (error) {}
 }
 
-// Local Storage Management
-function saveToLocalStorage() {
-    const stateToSave = {
+function buildSerializableAppState() {
+    return {
         darkMode: appState.darkMode,
         showComments: appState.showComments,
         completedModules: Array.from(appState.completedModules),
@@ -7489,7 +7724,48 @@ function saveToLocalStorage() {
         cardDepth: appState.cardDepth,
         language: appState.language
     };
+}
+
+function buildSerializableUserState() {
+    return {
+        appState: buildSerializableAppState(),
+        notesDraft: notesDraft || '',
+        studyPlanState: {
+            pace: studyPlanState?.pace || null,
+            focus: studyPlanState?.focus || null,
+            style: studyPlanState?.style || null,
+            notes: studyPlanState?.notes || ''
+        },
+        studyMetrics: {
+            totalTimeMs: Number(studyMetrics?.totalTimeMs || 0),
+            todayMs: Number(studyMetrics?.todayMs || 0),
+            todayDate: studyMetrics?.todayDate || null
+        },
+        studyHabit: {
+            streak: Number(studyHabit?.streak || 0),
+            longestStreak: Number(studyHabit?.longestStreak || 0),
+            lastDate: studyHabit?.lastDate || null
+        }
+    };
+}
+
+function queueUserStateSync() {
+    if (applyingRemoteUserState) return;
+    if (!PROFILE_SYNC_CONFIG.autoPushUserState || !PROFILE_SYNC_CONFIG.autoPushOnSave) return;
+    if (!hasNeonSyncConfig() || !hasAuthenticatedInsightsAccess()) return;
+    if (userStateSyncTimer) {
+        clearTimeout(userStateSyncTimer);
+    }
+    userStateSyncTimer = setTimeout(() => {
+        pushUserStateToNeon({ silent: true });
+    }, USER_STATE_SYNC_DEBOUNCE_MS);
+}
+
+// Local Storage Management
+function saveToLocalStorage() {
+    const stateToSave = buildSerializableAppState();
     safeSetItem('javaDSAHub', JSON.stringify(stateToSave));
+    queueUserStateSync();
 }
 
 function getCanonicalModuleId(moduleId) {
@@ -7635,6 +7911,132 @@ function loadFromLocalStorage() {
     }
 }
 
+function applyRemoteUserStateSnapshot(snapshot, options = {}) {
+    if (!snapshot || typeof snapshot !== 'object') return false;
+    const { persistLocal = true } = options;
+    const state = snapshot.appState && typeof snapshot.appState === 'object'
+        ? snapshot.appState
+        : snapshot;
+
+    applyingRemoteUserState = true;
+    try {
+        const prefersReduced = typeof window !== 'undefined'
+            && window.matchMedia
+            && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        appState.darkMode = state.darkMode !== undefined ? Boolean(state.darkMode) : appState.darkMode;
+        appState.showComments = state.showComments !== undefined ? Boolean(state.showComments) : appState.showComments;
+        appState.completedModules = new Set(remapStoredModuleIds(state.completedModules || []));
+        appState.expandedCode = new Set(state.expandedCode || []);
+        appState.expandedCodeExamples = sanitizeStoredExpandedCodeExamples(new Set(state.expandedCodeExamples || []));
+        appState.moduleComments = new Map(remapStoredModuleEntryPairs(state.moduleComments || []));
+        appState.moduleLanguages = new Map(remapStoredModuleEntryPairs(state.moduleLanguages || []));
+        appState.moduleModes = sanitizeStoredModuleModes(
+            new Map(remapStoredModuleEntryPairs(state.moduleModes || [], { allowLegacy: false }))
+        );
+        appState.moduleExampleSelections = sanitizeStoredModuleExampleSelections(
+            new Map(remapStoredModuleEntryPairs(state.moduleExampleSelections || [], { allowLegacy: false }))
+        );
+        appState.searchTerm = String(state.searchTerm || '');
+        appState.difficultyFilter = state.difficultyFilter || 'all';
+        appState.categoryFilter = sanitizeCategoryFilter(state.categoryFilter || appState.categoryFilter || 'all');
+        appState.glossaryCategory = state.glossaryCategory || 'all';
+        appState.currentFlashcard = Number(state.currentFlashcard || 0);
+        appState.selectedFlashcardModule = state.selectedFlashcardModule || 'all';
+        appState.theme = state.theme || appState.theme || 'default';
+        appState.fontScale = state.fontScale || appState.fontScale || 'base';
+        appState.completedQuizzes = new Set(remapStoredModuleIds(state.completedQuizzes || []));
+        appState.dailyChallengeId = state.dailyChallengeId || null;
+        appState.dailyChallengeDate = state.dailyChallengeDate || null;
+        appState.studyTipId = state.studyTipId || null;
+        appState.weeklyGoal = Number(state.weeklyGoal) || appState.weeklyGoal || 5;
+        appState.hideCompletedModules = Boolean(state.hideCompletedModules);
+        appState.compactLayout = Boolean(state.compactLayout);
+        appState.reduceMotion = state.reduceMotion !== undefined ? Boolean(state.reduceMotion) : (appState.reduceMotion || prefersReduced);
+        appState.highContrast = Boolean(state.highContrast);
+        appState.accent = ACCENT_OPTIONS.includes(state.accent) ? state.accent : (appState.accent || 'indigo');
+        appState.cardDepth = CARD_DEPTH_OPTIONS.includes(state.cardDepth) ? state.cardDepth : (appState.cardDepth || 'standard');
+        appState.language = ['en', 'es'].includes(state.language) ? state.language : (appState.language || 'en');
+
+        ['assembly-registers-memory', 'assembly-control-flow-procedures', 'assembly-arrays-strings-io'].forEach((moduleId) => {
+            if (appState.moduleLanguages.get(moduleId) !== 'assembly') {
+                appState.moduleLanguages.delete(moduleId);
+            }
+        });
+
+        if (typeof snapshot.notesDraft === 'string') {
+            notesDraft = snapshot.notesDraft;
+            saveNotesDraft(notesDraft);
+            const notesInput = document.getElementById('notes-input');
+            if (notesInput) notesInput.value = notesDraft;
+        }
+        if (snapshot.studyPlanState && typeof snapshot.studyPlanState === 'object') {
+            studyPlanState = {
+                pace: snapshot.studyPlanState.pace || null,
+                focus: snapshot.studyPlanState.focus || null,
+                style: snapshot.studyPlanState.style || null,
+                notes: snapshot.studyPlanState.notes || ''
+            };
+            saveStudyPlan();
+        }
+        if (snapshot.studyMetrics && typeof snapshot.studyMetrics === 'object') {
+            studyMetrics = {
+                ...loadStudyMetrics(),
+                ...snapshot.studyMetrics
+            };
+            saveStudyMetrics();
+        }
+        if (snapshot.studyHabit && typeof snapshot.studyHabit === 'object') {
+            studyHabit = {
+                ...loadStudyHabit(),
+                ...snapshot.studyHabit
+            };
+            saveStudyHabit();
+        }
+
+        applyFontScale();
+        applyTheme();
+        applyAccent();
+        applyCardDepth();
+        applyCompactLayout();
+        applyReduceMotion();
+        applyHighContrast();
+        updateDarkMode();
+        updateCommentsToggle();
+        updateHideCompletedToggle();
+        updateCompactLayoutToggle();
+        updateReduceMotionToggle();
+        updateHighContrastToggle();
+        updateProgress();
+        renderModules();
+        renderDailyChallenge();
+        renderStudyTip();
+        renderInsights();
+        renderAchievements();
+        renderNotesLibrary();
+        updateStudyTrackerUI();
+        applyLanguage(appState.language);
+        if (typeof window.refreshPlaygroundSnippetCatalog === 'function') {
+            window.refreshPlaygroundSnippetCatalog();
+        }
+
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) searchInput.value = appState.searchTerm;
+        const difficultyFilter = document.getElementById('difficulty-filter');
+        if (difficultyFilter) difficultyFilter.value = appState.difficultyFilter;
+        updateTopicFocusButtons();
+
+        if (persistLocal) {
+            safeSetItem('javaDSAHub', JSON.stringify(buildSerializableAppState()));
+        }
+        return true;
+    } catch (error) {
+        console.error('Failed to apply remote user state:', error);
+        return false;
+    } finally {
+        applyingRemoteUserState = false;
+    }
+}
+
 // =================================
 // EXTENDED FEATURES: NOTES, PLANS, INTERVIEWS, PLAYGROUND
 // =================================
@@ -7709,6 +8111,210 @@ const INTERVIEW_EXAMPLES = [
 ];
 
 const INTERVIEW_PAGE_SIZE = 2;
+
+const INTERVIEW_RUN_SAMPLES = {
+    'two-sum': {
+        language: 'java',
+        code: `import java.util.*;
+
+public class Main {
+    static int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> seen = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            int need = target - nums[i];
+            if (seen.containsKey(need)) {
+                return new int[] { seen.get(need), i };
+            }
+            seen.put(nums[i], i);
+        }
+        return new int[] { -1, -1 };
+    }
+
+    public static void main(String[] args) {
+        int[] answer = twoSum(new int[] {2, 7, 11, 15}, 9);
+        System.out.println("Indices: " + Arrays.toString(answer));
+    }
+}`,
+        expectedOutput: `Indices: [0, 1]`
+    },
+    'valid-parentheses': {
+        language: 'java',
+        code: `import java.util.*;
+
+public class Main {
+    static boolean isValid(String s) {
+        Deque<Character> stack = new ArrayDeque<>();
+        Map<Character, Character> pairs = new HashMap<>();
+        pairs.put(')', '(');
+        pairs.put(']', '[');
+        pairs.put('}', '{');
+        for (char c : s.toCharArray()) {
+            if (pairs.containsValue(c)) {
+                stack.push(c);
+            } else if (pairs.containsKey(c) && !stack.isEmpty() && pairs.get(c) == stack.peek()) {
+                stack.pop();
+            } else {
+                return false;
+            }
+        }
+        return stack.isEmpty();
+    }
+
+    public static void main(String[] args) {
+        System.out.println("()[]{} -> " + isValid("()[]{}"));
+        System.out.println("(] -> " + isValid("(]"));
+    }
+}`,
+        expectedOutput: `()[]{} -> true\n(] -> false`
+    },
+    'merge-two-lists': {
+        language: 'java',
+        code: `public class Main {
+    static class ListNode {
+        int val;
+        ListNode next;
+        ListNode(int val) { this.val = val; }
+    }
+
+    static ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+        ListNode dummy = new ListNode(0);
+        ListNode tail = dummy;
+        while (l1 != null && l2 != null) {
+            if (l1.val <= l2.val) {
+                tail.next = l1;
+                l1 = l1.next;
+            } else {
+                tail.next = l2;
+                l2 = l2.next;
+            }
+            tail = tail.next;
+        }
+        tail.next = (l1 != null) ? l1 : l2;
+        return dummy.next;
+    }
+
+    static ListNode build(int... values) {
+        ListNode dummy = new ListNode(0);
+        ListNode tail = dummy;
+        for (int value : values) {
+            tail.next = new ListNode(value);
+            tail = tail.next;
+        }
+        return dummy.next;
+    }
+
+    static String stringify(ListNode head) {
+        StringBuilder sb = new StringBuilder();
+        while (head != null) {
+            if (sb.length() > 0) sb.append(" -> ");
+            sb.append(head.val);
+            head = head.next;
+        }
+        return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        ListNode merged = mergeTwoLists(build(1, 2, 4), build(1, 3, 4));
+        System.out.println("Merged: " + stringify(merged));
+    }
+}`,
+        expectedOutput: `Merged: 1 -> 1 -> 2 -> 3 -> 4 -> 4`
+    },
+    'binary-search': {
+        language: 'java',
+        code: `public class Main {
+    static int binarySearch(int[] nums, int target) {
+        int left = 0;
+        int right = nums.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == target) return mid;
+            if (nums[mid] < target) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        int[] nums = {-1, 0, 3, 5, 9, 12};
+        System.out.println("target 9 -> " + binarySearch(nums, 9));
+        System.out.println("target 6 -> " + binarySearch(nums, 6));
+    }
+}`,
+        expectedOutput: `target 9 -> 4\ntarget 6 -> -1`
+    },
+    'bfs-grid': {
+        language: 'java',
+        code: `import java.util.*;
+
+public class Main {
+    static int shortestPath(int[][] grid) {
+        int n = grid.length;
+        int m = grid[0].length;
+        int[][] dirs = { {1, 0}, {-1, 0}, {0, 1}, {0, -1} };
+        boolean[][] seen = new boolean[n][m];
+        Queue<int[]> q = new ArrayDeque<>();
+        if (grid[0][0] == 1) return -1;
+        q.add(new int[] {0, 0, 0});
+        seen[0][0] = true;
+        while (!q.isEmpty()) {
+            int[] cur = q.poll();
+            int r = cur[0], c = cur[1], d = cur[2];
+            if (r == n - 1 && c == m - 1) return d;
+            for (int[] dir : dirs) {
+                int nr = r + dir[0], nc = c + dir[1];
+                if (nr >= 0 && nr < n && nc >= 0 && nc < m && grid[nr][nc] == 0 && !seen[nr][nc]) {
+                    seen[nr][nc] = true;
+                    q.add(new int[] {nr, nc, d + 1});
+                }
+            }
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        int[][] grid = {
+            {0, 0, 0},
+            {1, 1, 0},
+            {0, 0, 0}
+        };
+        System.out.println("Shortest path: " + shortestPath(grid));
+    }
+}`,
+        expectedOutput: `Shortest path: 4`
+    },
+    'top-k-frequent': {
+        language: 'java',
+        code: `import java.util.*;
+
+public class Main {
+    static int[] topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+        PriorityQueue<int[]> heap = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+        for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+            heap.offer(new int[] { entry.getKey(), entry.getValue() });
+            if (heap.size() > k) heap.poll();
+        }
+        int[] result = new int[k];
+        for (int i = k - 1; i >= 0; i--) {
+            result[i] = heap.poll()[0];
+        }
+        Arrays.sort(result);
+        return result;
+    }
+
+    public static void main(String[] args) {
+        int[] answer = topKFrequent(new int[] {1, 1, 1, 2, 2, 3}, 2);
+        System.out.println("Top k frequent: " + Arrays.toString(answer));
+    }
+}`,
+        expectedOutput: `Top k frequent: [1, 2]`
+    }
+};
 
 const NOTES_LIBRARY = [
     {
@@ -8277,6 +8883,10 @@ const accountAuthState = {
     isAuthenticated: false,
     sessionLabel: ''
 };
+let userStateSyncTimer = null;
+let userStateSyncInFlight = false;
+let applyingRemoteUserState = false;
+let neonCsrfToken = '';
 const LOCAL_EXAMPLE_AUTH = {
     username: 'example',
     password: 'example',
@@ -8285,6 +8895,7 @@ const LOCAL_EXAMPLE_AUTH = {
 
 function getDefaultAccountProfile() {
     return {
+        username: '',
         name: '',
         email: '',
         goal: 'exploring',
@@ -8303,9 +8914,12 @@ function loadAccountProfile() {
     }
     try {
         const parsed = JSON.parse(stored);
+        const legacyName = parsed.name || '';
+        const username = parsed.username || legacyName || '';
         return {
             ...defaults,
-            name: parsed.name || '',
+            username,
+            name: legacyName || username,
             email: parsed.email || '',
             goal: parsed.goal || 'exploring',
             serverUserId: parsed.serverUserId || parsed.neonSessionUserId || parsed.neonUserId || '',
@@ -8325,13 +8939,41 @@ function saveAccountProfile() {
 function updateAccountChip() {
     const chip = document.getElementById('account-chip');
     if (!chip) return;
-    const label = accountProfile.name || accountProfile.email;
+    const label = accountProfile.username || accountProfile.name || accountProfile.email;
     if (label) {
         chip.textContent = `👋 ${label}`;
         chip.classList.remove('hidden');
     } else {
         chip.textContent = '';
         chip.classList.add('hidden');
+    }
+}
+
+function hasAuthenticatedInsightsAccess() {
+    return Boolean(accountAuthState.isAuthenticated);
+}
+
+function updateInsightsAccessGate() {
+    const insightsSection = document.getElementById('insights-section');
+    const lockCard = document.getElementById('insights-auth-lock');
+    if (!insightsSection || !lockCard) {
+        return hasAuthenticatedInsightsAccess();
+    }
+    const unlocked = hasAuthenticatedInsightsAccess();
+    insightsSection.classList.toggle('insights-locked', !unlocked);
+    lockCard.classList.toggle('hidden', unlocked);
+    return unlocked;
+}
+
+function handleInsightsAccessStateChange() {
+    const unlocked = updateInsightsAccessGate();
+    if (!unlocked && studyTimer?.isActive) {
+        endStudySession({ notify: false });
+    }
+    if (typeof renderInsights === 'function') {
+        renderInsights();
+    } else if (typeof updateStudyTrackerUI === 'function') {
+        updateStudyTrackerUI();
     }
 }
 
@@ -8369,10 +9011,25 @@ function setAccountSyncState(status, message) {
     setAccountSyncUI(status, message, tone);
 }
 
+function setCsrfToken(token) {
+    neonCsrfToken = String(token || '').trim();
+    const head = document.head || document.querySelector('head');
+    if (!head) return;
+    let meta = document.querySelector('meta[name="csrf-token"]');
+    if (!meta) {
+        meta = document.createElement('meta');
+        meta.setAttribute('name', 'csrf-token');
+        head.appendChild(meta);
+    }
+    meta.setAttribute('content', neonCsrfToken);
+}
+
 function getCsrfToken() {
+    if (neonCsrfToken) return neonCsrfToken;
     const meta = document.querySelector('meta[name="csrf-token"]');
-    const token = meta ? meta.getAttribute('content') : '';
-    return String(token || '').trim();
+    const token = String(meta ? meta.getAttribute('content') : '').trim();
+    neonCsrfToken = token;
+    return token;
 }
 
 function setAccountAuthStatus(message, tone = 'neutral') {
@@ -8421,19 +9078,20 @@ function isNetworkAuthFailure(error) {
 }
 
 function applyLocalExampleAuth() {
+    setCsrfToken('');
     accountAuthState.isAuthenticated = true;
     accountAuthState.sessionLabel = LOCAL_EXAMPLE_AUTH.username;
     accountProfile.email = LOCAL_EXAMPLE_AUTH.username;
+    accountProfile.username = LOCAL_EXAMPLE_AUTH.username;
+    accountProfile.name = LOCAL_EXAMPLE_AUTH.username;
     accountProfile.serverUserId = LOCAL_EXAMPLE_AUTH.userId;
-    if (!accountProfile.name) {
-        accountProfile.name = 'Example User';
-    }
     saveAccountProfile();
     applyAccountProfileToForm();
     updateAccountChip();
     clearAuthPasswordFields();
     setAccountAuthStatus(`Authenticated as ${LOCAL_EXAMPLE_AUTH.username}`, 'success');
     refreshAccountPrimaryAuthButton();
+    handleInsightsAccessStateChange();
 }
 
 function setAccountAuthMode(mode) {
@@ -8442,10 +9100,12 @@ function setAccountAuthMode(mode) {
 
     const loginTab = document.getElementById('account-auth-login-tab');
     const signupTab = document.getElementById('account-auth-signup-tab');
+    const signupUsernameGroup = document.getElementById('account-auth-username-group');
     const confirmGroup = document.getElementById('account-auth-confirm-group');
     const submitBtn = document.getElementById('account-auth-submit');
     const passwordInput = document.getElementById('account-auth-password');
     const confirmInput = document.getElementById('account-auth-confirm');
+    const signupUsernameInput = document.getElementById('account-auth-username');
 
     const isSignup = nextMode === 'signup';
 
@@ -8459,9 +9119,18 @@ function setAccountAuthMode(mode) {
     if (confirmGroup) {
         confirmGroup.classList.toggle('hidden', !isSignup);
     }
+    if (signupUsernameGroup) {
+        signupUsernameGroup.classList.toggle('hidden', !isSignup);
+    }
     if (submitBtn) refreshAccountPrimaryAuthButton();
     if (passwordInput) {
         passwordInput.setAttribute('autocomplete', isSignup ? 'new-password' : 'current-password');
+    }
+    if (signupUsernameInput) {
+        signupUsernameInput.required = isSignup;
+        if (isSignup && !signupUsernameInput.value.trim() && accountProfile.username) {
+            signupUsernameInput.value = accountProfile.username;
+        }
     }
     if (confirmInput && !isSignup) {
         confirmInput.value = '';
@@ -8497,8 +9166,10 @@ function readAccountAuthForm() {
     const emailInput = document.getElementById('account-auth-email');
     const passwordInput = document.getElementById('account-auth-password');
     const confirmInput = document.getElementById('account-auth-confirm');
+    const usernameInput = document.getElementById('account-auth-username');
     return {
         email: emailInput ? emailInput.value.trim() : '',
+        username: usernameInput ? usernameInput.value.trim() : '',
         password: passwordInput ? passwordInput.value : '',
         confirm: confirmInput ? confirmInput.value : ''
     };
@@ -8527,7 +9198,10 @@ function isSecureApiBaseUrl(rawUrl) {
 
 function getConfiguredApiBaseUrl() {
     const appConfigBase = (typeof window !== 'undefined' && window.__APP_CONFIG?.apiBaseUrl)
+        || (typeof window !== 'undefined' && window.__APP_CONFIG?.neonApiBaseUrl)
         || (typeof window !== 'undefined' && window.APP_CONFIG?.apiBaseUrl)
+        || (typeof window !== 'undefined' && window.APP_CONFIG?.neonApiBaseUrl)
+        || (typeof window !== 'undefined' && window.NEON_API_BASE_URL)
         || '';
     return normalizeApiBaseUrl(PROFILE_SYNC_CONFIG.baseUrl || appConfigBase || '');
 }
@@ -8551,11 +9225,26 @@ function getSessionUserFromPayload(payload) {
         || payload?.data?.email
         || ''
     ).trim();
-    return { userId, userEmail };
+    const userUsername = String(
+        user?.username
+        || user?.name
+        || payload?.username
+        || payload?.data?.username
+        || ''
+    ).trim();
+    return { userId, userEmail, userUsername };
 }
 
 function getNeonProfileEndpoint() {
     return buildApiEndpoint(NEON_API_PATHS.profile);
+}
+
+function getNeonUserStateEndpoint() {
+    return buildApiEndpoint(NEON_API_PATHS.userState);
+}
+
+function getNeonSupportEndpoint() {
+    return buildApiEndpoint(NEON_API_PATHS.support);
 }
 
 function getNeonSessionEndpoint() {
@@ -8605,54 +9294,82 @@ async function neonFetch(url, options = {}) {
 }
 
 function applyAccountProfileToForm() {
-    const nameInput = document.getElementById('account-name');
+    const usernameInput = document.getElementById('account-username');
     const emailInput = document.getElementById('account-email');
     const goalInput = document.getElementById('account-goal');
     const authEmailInput = document.getElementById('account-auth-email');
+    const authUsernameInput = document.getElementById('account-auth-username');
 
-    if (nameInput) nameInput.value = accountProfile.name || '';
+    if (usernameInput) usernameInput.value = accountProfile.username || accountProfile.name || '';
     if (emailInput) emailInput.value = accountProfile.email || '';
     if (goalInput) goalInput.value = accountProfile.goal || 'exploring';
     if (authEmailInput) authEmailInput.value = accountProfile.email || '';
+    if (authUsernameInput) authUsernameInput.value = accountProfile.username || accountProfile.name || '';
 }
 
 function readAccountProfileFromForm() {
-    const nameInput = document.getElementById('account-name');
+    const usernameInput = document.getElementById('account-username');
     const emailInput = document.getElementById('account-email');
     const goalInput = document.getElementById('account-goal');
+    const resolvedUsername = usernameInput
+        ? usernameInput.value.trim()
+        : (accountProfile.username || accountProfile.name || '');
     return {
         ...accountProfile,
-        name: nameInput ? nameInput.value.trim() : '',
-        email: emailInput ? emailInput.value.trim() : '',
-        goal: goalInput ? goalInput.value : 'exploring'
+        username: resolvedUsername,
+        name: resolvedUsername,
+        email: emailInput ? emailInput.value.trim() : accountProfile.email || '',
+        goal: goalInput ? goalInput.value : accountProfile.goal || 'exploring'
     };
 }
 
 async function checkNeonSession(options = {}) {
     const { silent = false } = options;
     if (isLocalExampleSession()) {
+        setCsrfToken('');
         accountAuthState.isAuthenticated = true;
         accountAuthState.sessionLabel = LOCAL_EXAMPLE_AUTH.username;
         setAccountAuthStatus(`Authenticated as ${LOCAL_EXAMPLE_AUTH.username}`, 'success');
         refreshAccountPrimaryAuthButton();
+        handleInsightsAccessStateChange();
         return { userId: LOCAL_EXAMPLE_AUTH.userId, userLabel: LOCAL_EXAMPLE_AUTH.username };
     }
     if (!hasNeonSyncConfig()) {
+        setCsrfToken('');
         accountAuthState.isAuthenticated = false;
         accountAuthState.sessionLabel = '';
         setAccountAuthStatus('Auth server not configured.', 'neutral');
         refreshAccountPrimaryAuthButton();
+        handleInsightsAccessStateChange();
         return null;
     }
     const url = getNeonSessionEndpoint();
     try {
         const sessionPayload = await neonFetch(url, { method: 'GET' });
-        const { userId, userEmail } = getSessionUserFromPayload(sessionPayload);
+        const sessionCsrfToken = String(
+            sessionPayload?.csrfToken
+            || sessionPayload?.session?.csrfToken
+            || sessionPayload?.data?.csrfToken
+            || ''
+        ).trim();
+        if (sessionCsrfToken) {
+            setCsrfToken(sessionCsrfToken);
+        }
+        const { userId, userEmail, userUsername } = getSessionUserFromPayload(sessionPayload);
         if (userId) {
             accountProfile.serverUserId = userId;
-            saveAccountProfile();
         }
-        const userLabel = userEmail || userId || accountProfile.serverUserId;
+        if (userUsername) {
+            accountProfile.username = userUsername;
+            accountProfile.name = userUsername;
+        }
+        if (userEmail) {
+            accountProfile.email = userEmail;
+        }
+        saveAccountProfile();
+        applyAccountProfileToForm();
+        updateAccountChip();
+        const userLabel = userUsername || userEmail || userId || accountProfile.serverUserId;
         const message = userLabel
             ? `Session active for ${userLabel}`
             : 'Session endpoint reachable.';
@@ -8664,8 +9381,10 @@ async function checkNeonSession(options = {}) {
         );
         refreshAccountPrimaryAuthButton();
         setAccountSyncState('connected', message);
+        handleInsightsAccessStateChange();
         return { userId: userId || accountProfile.serverUserId, userLabel };
     } catch (error) {
+        setCsrfToken('');
         accountAuthState.isAuthenticated = false;
         accountAuthState.sessionLabel = '';
         setAccountAuthStatus(`Not authenticated: ${error.message}`, 'error');
@@ -8674,13 +9393,20 @@ async function checkNeonSession(options = {}) {
         if (!silent) {
             showToast(`Session check failed: ${error.message}`, 'error');
         }
+        handleInsightsAccessStateChange();
         return null;
     }
 }
 
 async function signOutAccountFlow(options = {}) {
     const { silent = false } = options;
+    if (userStateSyncTimer) {
+        clearTimeout(userStateSyncTimer);
+        userStateSyncTimer = null;
+    }
+    userStateSyncInFlight = false;
     await logoutAccountSession();
+    setCsrfToken('');
     accountAuthState.isAuthenticated = false;
     accountAuthState.sessionLabel = '';
     setAccountAuthStatus('Signed out.', 'neutral');
@@ -8692,6 +9418,7 @@ async function signOutAccountFlow(options = {}) {
     applyAccountProfileToForm();
     updateAccountChip();
     refreshAccountPrimaryAuthButton();
+    handleInsightsAccessStateChange();
     if (!silent) {
         showToast('Signed out successfully.', 'success');
     }
@@ -8710,7 +9437,7 @@ async function submitAccountAuth() {
         return;
     }
 
-    const { email, password, confirm } = readAccountAuthForm();
+    const { email, username, password, confirm } = readAccountAuthForm();
     const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || /^[a-zA-Z0-9._-]{3,}$/.test(email);
     if (!emailValid) {
         setAccountAuthStatus('Enter a valid email or username.', 'error');
@@ -8726,6 +9453,14 @@ async function submitAccountAuth() {
         setAccountAuthStatus('Password must be at least 8 characters.', 'error');
         showToast('Password must be at least 8 characters.', 'warning');
         return;
+    }
+    if (isSignup) {
+        const usernameValid = /^[a-zA-Z0-9._-]{3,}$/.test(username);
+        if (!usernameValid) {
+            setAccountAuthStatus('Username must be at least 3 characters (letters, numbers, . _ -).', 'error');
+            showToast('Enter a valid username for sign up.', 'warning');
+            return;
+        }
     }
     if (isSignup && password !== confirm) {
         setAccountAuthStatus('Passwords do not match.', 'error');
@@ -8747,23 +9482,35 @@ async function submitAccountAuth() {
     const endpoint = buildApiEndpoint(isSignup ? NEON_API_PATHS.signup : NEON_API_PATHS.login);
     const payload = { email, password };
     if (isSignup) {
+        payload.username = username;
         payload.confirmPassword = confirm;
     }
 
     setAuthSubmitBusy(true);
     setAccountAuthStatus(isSignup ? 'Creating account...' : 'Logging in...', 'info');
     try {
-        await neonFetch(endpoint, {
+        const authPayload = await neonFetch(endpoint, {
             method: 'POST',
             body: JSON.stringify(payload)
         });
+        const authCsrfToken = String(authPayload?.csrfToken || authPayload?.session?.csrfToken || '').trim();
+        if (authCsrfToken) {
+            setCsrfToken(authCsrfToken);
+        }
         clearAuthPasswordFields();
         accountProfile.email = email;
+        if (isSignup) {
+            accountProfile.username = username;
+            accountProfile.name = username;
+        }
         saveAccountProfile();
         applyAccountProfileToForm();
         const session = await checkNeonSession({ silent: true });
         if (session?.userId && PROFILE_SYNC_CONFIG.enabled) {
             await pullProfileFromNeon({ silent: true });
+            if (PROFILE_SYNC_CONFIG.autoPullUserStateOnSession) {
+                await pullUserStateFromNeon({ silent: true });
+            }
         }
         const successText = isSignup ? 'Account created and signed in successfully.' : 'Signed in successfully.';
         setAccountAuthStatus(successText, 'success');
@@ -8819,7 +9566,8 @@ async function pushProfileToNeon(options = {}) {
             body: JSON.stringify({
                 userId,
                 profile: {
-                    name: accountProfile.name,
+                    username: accountProfile.username || accountProfile.name,
+                    name: accountProfile.username || accountProfile.name,
                     email: accountProfile.email,
                     goal: accountProfile.goal
                 }
@@ -8858,7 +9606,9 @@ async function pullProfileFromNeon(options = {}) {
         const payload = await neonFetch(url, { method: 'GET' });
         const remoteProfile = payload?.profile || payload?.data?.profile || payload?.data || payload;
         if (remoteProfile && typeof remoteProfile === 'object') {
-            accountProfile.name = String(remoteProfile.name || accountProfile.name || '');
+            const remoteUsername = String(remoteProfile.username || remoteProfile.name || accountProfile.username || accountProfile.name || '').trim();
+            accountProfile.username = remoteUsername;
+            accountProfile.name = remoteUsername;
             accountProfile.email = String(remoteProfile.email || accountProfile.email || '');
             accountProfile.goal = String(remoteProfile.goal || accountProfile.goal || 'exploring');
             saveAccountProfile();
@@ -8879,6 +9629,71 @@ async function pullProfileFromNeon(options = {}) {
     }
 }
 
+async function pullUserStateFromNeon(options = {}) {
+    const { silent = false } = options;
+    if (!hasNeonSyncConfig() || !PROFILE_SYNC_CONFIG.autoPullUserStateOnSession) {
+        return false;
+    }
+    let userId = String(accountProfile.serverUserId || '').trim();
+    if (!userId) {
+        const session = await checkNeonSession({ silent: true });
+        userId = String(session?.userId || accountProfile.serverUserId || '').trim();
+    }
+    if (!userId) return false;
+
+    const url = `${getNeonUserStateEndpoint()}?userId=${encodeURIComponent(userId)}`;
+    try {
+        const payload = await neonFetch(url, { method: 'GET' });
+        const remoteState = payload?.state || payload?.data?.state || payload?.data || payload;
+        if (!remoteState || typeof remoteState !== 'object') {
+            return false;
+        }
+        const applied = applyRemoteUserStateSnapshot(remoteState, { persistLocal: true });
+        if (applied && !silent) {
+            showToast('Learning state pulled from backend.', 'success');
+        }
+        return applied;
+    } catch (error) {
+        if (!silent) {
+            showToast(`Failed to pull learning state: ${error.message}`, 'warning');
+        }
+        return false;
+    }
+}
+
+async function pushUserStateToNeon(options = {}) {
+    const { silent = false } = options;
+    if (!hasNeonSyncConfig() || !PROFILE_SYNC_CONFIG.autoPushUserState) {
+        return false;
+    }
+    if (userStateSyncInFlight) return false;
+    let userId = String(accountProfile.serverUserId || '').trim();
+    if (!userId) {
+        const session = await checkNeonSession({ silent: true });
+        userId = String(session?.userId || accountProfile.serverUserId || '').trim();
+    }
+    if (!userId) return false;
+
+    userStateSyncInFlight = true;
+    try {
+        await neonFetch(getNeonUserStateEndpoint(), {
+            method: 'PUT',
+            body: JSON.stringify({
+                userId,
+                state: buildSerializableUserState()
+            })
+        });
+        return true;
+    } catch (error) {
+        if (!silent) {
+            showToast(`Failed to sync learning state: ${error.message}`, 'warning');
+        }
+        return false;
+    } finally {
+        userStateSyncInFlight = false;
+    }
+}
+
 function openAccountModal() {
     const modal = document.getElementById('account-modal');
     if (!modal) return;
@@ -8888,10 +9703,15 @@ function openAccountModal() {
     setAccountAuthStatus('Checking session...', 'info');
     openModal('account-modal');
     if (PROFILE_SYNC_CONFIG.enabled) {
-        checkNeonSession({ silent: true });
-        if (PROFILE_SYNC_CONFIG.autoPullOnOpen) {
-            pullProfileFromNeon({ silent: true });
-        }
+        checkNeonSession({ silent: true }).then((session) => {
+            if (!session?.userId) return;
+            if (PROFILE_SYNC_CONFIG.autoPullOnOpen) {
+                pullProfileFromNeon({ silent: true });
+            }
+            if (PROFILE_SYNC_CONFIG.autoPullUserStateOnSession) {
+                pullUserStateFromNeon({ silent: true });
+            }
+        });
     }
 }
 
@@ -8907,6 +9727,7 @@ function initAccount() {
     const authSignupTab = document.getElementById('account-auth-signup-tab');
     const authSubmitBtn = document.getElementById('account-auth-submit');
     const authEmailInput = document.getElementById('account-auth-email');
+    const authUsernameInput = document.getElementById('account-auth-username');
     const authPasswordInput = document.getElementById('account-auth-password');
     const authConfirmInput = document.getElementById('account-auth-confirm');
 
@@ -8922,6 +9743,9 @@ function initAccount() {
             if (authEmailInput && !authEmailInput.value.trim() && accountProfile.email) {
                 authEmailInput.value = accountProfile.email;
             }
+            if (authUsernameInput && !authUsernameInput.value.trim() && (accountProfile.username || accountProfile.name)) {
+                authUsernameInput.value = accountProfile.username || accountProfile.name;
+            }
             await submitAccountAuth();
         });
     }
@@ -8931,6 +9755,7 @@ function initAccount() {
         await submitAccountAuth();
     };
     if (authEmailInput) authEmailInput.addEventListener('keydown', enterToSubmit);
+    if (authUsernameInput) authUsernameInput.addEventListener('keydown', enterToSubmit);
     if (authPasswordInput) authPasswordInput.addEventListener('keydown', enterToSubmit);
     if (authConfirmInput) authConfirmInput.addEventListener('keydown', enterToSubmit);
 
@@ -8948,11 +9773,31 @@ function initAccount() {
             } else {
                 showToast('Profile saved successfully.', 'success');
             }
+            queueUserStateSync();
         });
     }
     setAccountAuthMode('login');
-    setAccountAuthStatus('Not authenticated.', 'neutral');
+    if (isLocalExampleSession()) {
+        accountAuthState.isAuthenticated = true;
+        accountAuthState.sessionLabel = LOCAL_EXAMPLE_AUTH.username;
+        setAccountAuthStatus(`Authenticated as ${LOCAL_EXAMPLE_AUTH.username}`, 'success');
+    } else {
+        accountAuthState.isAuthenticated = false;
+        accountAuthState.sessionLabel = '';
+        setAccountAuthStatus('Not authenticated.', 'neutral');
+    }
     refreshAccountPrimaryAuthButton();
+    handleInsightsAccessStateChange();
+
+    if (hasNeonSyncConfig()) {
+        checkNeonSession({ silent: true }).then((session) => {
+            if (!session?.userId) return;
+            pullProfileFromNeon({ silent: true });
+            if (PROFILE_SYNC_CONFIG.autoPullUserStateOnSession) {
+                pullUserStateFromNeon({ silent: true });
+            }
+        });
+    }
 }
 
 function loadNotesDraft() {
@@ -8961,6 +9806,7 @@ function loadNotesDraft() {
 
 function saveNotesDraft(value) {
     safeSetItem(STORAGE_KEYS.NOTES, value || '');
+    queueUserStateSync();
 }
 
 function downloadTextFile(filename, text) {
@@ -9028,6 +9874,7 @@ function loadStudyPlan() {
 
 function saveStudyPlan() {
     safeSetItem(STORAGE_KEYS.STUDY_PLAN, JSON.stringify(studyPlanState));
+    queueUserStateSync();
 }
 
 function getStudyPlanSummary() {
@@ -9082,6 +9929,11 @@ function applyStudyPlanSelection(plan) {
 }
 
 function openStudyPlanModal() {
+    if (!hasAuthenticatedInsightsAccess()) {
+        showToast('Sign in to unlock personalized study insights.', 'info');
+        openAccountModal();
+        return;
+    }
     studyPlanDraft = { ...studyPlanState };
     applyStudyPlanSelection(studyPlanDraft);
     openModal('study-plan-modal');
@@ -9234,6 +10086,102 @@ function closeNotesDownloadModal() {
     modal.classList.add('hidden');
 }
 
+function getInterviewRunSample(exampleId) {
+    const sample = INTERVIEW_RUN_SAMPLES[exampleId];
+    if (sample) return sample;
+    return null;
+}
+
+function getInterviewRunStateRecord(exampleId) {
+    return interviewRunState.get(exampleId) || {
+        status: 'idle',
+        source: t('interview.outputReady'),
+        text: t('interview.outputPlaceholder')
+    };
+}
+
+function getInterviewOutputToneClass(status) {
+    if (status === 'success') return 'success';
+    if (status === 'fallback') return 'fallback';
+    if (status === 'error') return 'error';
+    return 'idle';
+}
+
+function setInterviewRunState(exampleId, nextState) {
+    const previous = getInterviewRunStateRecord(exampleId);
+    interviewRunState.set(exampleId, { ...previous, ...nextState });
+}
+
+function renderPromptWorkspaceOutput(exampleId) {
+    const outputMetaEl = document.getElementById('prompt-workspace-output-meta');
+    const outputEl = document.getElementById('prompt-workspace-output');
+    if (!outputMetaEl || !outputEl || !exampleId) return;
+    const state = getInterviewRunStateRecord(exampleId);
+    outputMetaEl.textContent = `${t('interview.outputLabel')}: ${state.source || t('interview.outputReady')}`;
+    outputEl.textContent = state.text || t('interview.outputPlaceholder');
+    outputEl.classList.remove('success', 'fallback', 'error');
+    const toneClass = getInterviewOutputToneClass(state.status);
+    if (toneClass !== 'idle') outputEl.classList.add(toneClass);
+}
+
+async function runInterviewExample(exampleId) {
+    if (!exampleId || interviewRunInFlight.has(exampleId)) return;
+    const sample = getInterviewRunSample(exampleId);
+    if (!sample) {
+        setInterviewRunState(exampleId, {
+            status: 'error',
+            source: t('interview.outputError'),
+            text: 'No runnable sample configured for this example yet.'
+        });
+        renderInterviewExamples();
+        if (activePromptId === exampleId) renderPromptWorkspaceOutput(exampleId);
+        return;
+    }
+
+    interviewRunInFlight.add(exampleId);
+    setInterviewRunState(exampleId, {
+        status: 'running',
+        source: t('interview.running'),
+        text: t('interview.running')
+    });
+    renderInterviewExamples();
+    if (activePromptId === exampleId) renderPromptWorkspaceOutput(exampleId);
+
+    try {
+        const languageKey = sample.language || 'java';
+        const normalizedCode = normalizeCodeForRunner(languageKey, sample.code || '');
+        const outputText = await runWithTimeout(executeWithConfiguredRunner(languageKey, normalizedCode), 20000);
+        const trimmed = String(outputText || '').trim();
+        if (trimmed && trimmed !== 'Execution complete (no stdout).') {
+            setInterviewRunState(exampleId, {
+                status: 'success',
+                source: t('interview.outputLive'),
+                text: trimmed
+            });
+        } else {
+            setInterviewRunState(exampleId, {
+                status: 'fallback',
+                source: t('interview.outputFallback'),
+                text: sample.expectedOutput || 'Execution completed.'
+            });
+        }
+    } catch (error) {
+        const reason = error instanceof Error ? error.message : String(error);
+        const fallbackText = sample.expectedOutput
+            ? `${sample.expectedOutput}\n\n// Live runner unavailable: ${reason}`
+            : `// Execution failed.\n// ${reason}`;
+        setInterviewRunState(exampleId, {
+            status: sample.expectedOutput ? 'fallback' : 'error',
+            source: sample.expectedOutput ? t('interview.outputFallback') : t('interview.outputError'),
+            text: fallbackText
+        });
+    } finally {
+        interviewRunInFlight.delete(exampleId);
+        renderInterviewExamples();
+        if (activePromptId === exampleId) renderPromptWorkspaceOutput(exampleId);
+    }
+}
+
 function initInterviewExamples() {
     const grid = document.getElementById('interview-examples-grid');
     const pagination = document.getElementById('interview-pagination');
@@ -9264,6 +10212,14 @@ function initInterviewExamples() {
         });
     }
 
+    const runWorkspaceBtn = document.getElementById('prompt-workspace-run');
+    if (runWorkspaceBtn) {
+        runWorkspaceBtn.addEventListener('click', async () => {
+            if (!activePromptId) return;
+            await runInterviewExample(activePromptId);
+        });
+    }
+
     renderInterviewExamples();
 }
 
@@ -9279,12 +10235,16 @@ function renderInterviewExamples() {
     const start = (interviewPage - 1) * INTERVIEW_PAGE_SIZE;
     const currentItems = localizedExamples.slice(start, start + INTERVIEW_PAGE_SIZE);
 
-    grid.innerHTML = currentItems.map(example => `
+    grid.innerHTML = currentItems.map(example => {
+        const runState = getInterviewRunStateRecord(example.id);
+        const running = runState.status === 'running';
+        const outputToneClass = getInterviewOutputToneClass(runState.status);
+        return `
         <article class="interview-card-ux rounded-xl border p-4 sm:p-5 flex flex-col gap-3">
             <div class="flex items-start justify-between gap-2">
                 <div class="min-w-0">
                     <h4 class="font-semibold text-indigo-600 text-base sm:text-lg leading-tight">${escapeHtml(example.title)}</h4>
-                    <p class="text-xs text-slate-400 mt-1">${escapeHtml(example.prompt.slice(0, 120))}${example.prompt.length > 120 ? '…' : ''}</p>
+                    <p class="interview-preview text-xs text-slate-400 mt-1">${escapeHtml(example.prompt)}</p>
                 </div>
                 <span class="interview-time-chip text-[11px] px-2.5 py-1 rounded-full font-semibold whitespace-nowrap">${example.minutes} ${translateLiteral('min', appState.language)}</span>
             </div>
@@ -9296,9 +10256,15 @@ function renderInterviewExamples() {
             <div class="interview-action-row mt-1">
                 <button type="button" class="notes-download interview-cta-primary" onclick="openPromptWorkspace('${example.id}')">${translateLiteral('Open Prompt', appState.language)}</button>
                 <button type="button" class="notes-view interview-cta-secondary" onclick="copyInterviewSolution('${example.id}')">${translateLiteral('Copy Solution', appState.language)}</button>
+                <button type="button" class="notes-view interview-cta-run ${running ? 'is-running' : ''}" onclick="runInterviewExample('${example.id}')" ${running ? 'disabled' : ''}>${running ? t('interview.running') : t('interview.runSolution')}</button>
+            </div>
+            <div class="interview-output-shell">
+                <div class="interview-output-meta">${t('interview.outputLabel')}: ${escapeHtml(runState.source || t('interview.outputReady'))}</div>
+                <pre class="interview-output-pre ${outputToneClass}">${escapeHtml(runState.text || t('interview.outputPlaceholder'))}</pre>
             </div>
         </article>
-    `).join('');
+        `;
+    }).join('');
 
     pagination.innerHTML = Array.from({ length: totalPages }, (_, index) => {
         const page = index + 1;
@@ -9320,6 +10286,7 @@ function openPromptWorkspace(exampleId) {
     const langEl = document.getElementById('prompt-workspace-language');
     const notesEl = document.getElementById('prompt-workspace-notes');
     const inputEl = document.getElementById('prompt-workspace-input');
+    const runBtn = document.getElementById('prompt-workspace-run');
 
     if (titleEl) titleEl.textContent = example.title;
     if (metaEl) metaEl.textContent = `${example.difficulty} • ${example.minutes} min • ${example.tags.join(', ')}`;
@@ -9328,6 +10295,8 @@ function openPromptWorkspace(exampleId) {
     if (langEl) langEl.textContent = example.language || 'Java';
     if (notesEl) notesEl.textContent = example.notes || '';
     if (inputEl) inputEl.value = '';
+    if (runBtn) runBtn.textContent = t('interview.runInWorkspace');
+    renderPromptWorkspaceOutput(exampleId);
 
     modal.classList.remove('hidden');
 }
@@ -9656,8 +10625,10 @@ function initPlayground() {
     const editor = document.getElementById('playground-editor');
     const runButton = document.getElementById('playground-run');
     const resetButton = document.getElementById('playground-reset');
+    const clearOutputButton = document.getElementById('playground-clear-output');
     const copyButton = document.getElementById('playground-copy');
     const output = document.getElementById('playground-output');
+    const outputMeta = document.getElementById('playground-output-meta');
     const status = document.getElementById('playground-status');
 
     if (!languageSelect || !snippetSelect || !editor || !output) return;
@@ -9694,18 +10665,43 @@ function initPlayground() {
     languageSelect.value = preferredLanguage;
     playgroundState.language = languageSelect.value || 'java';
 
-    const setStatus = (text, tone = 'Idle') => {
+    const setStatus = (text, tone = 'idle') => {
         if (!status) return;
         status.textContent = text;
-        status.dataset.state = tone;
+        status.dataset.state = String(tone || 'idle').toLowerCase();
     };
 
-    const setOutput = (text) => {
+    const setOutput = (text, options = {}) => {
+        const source = options.source || 'ready';
+        const languageLabel = options.language || '';
+        const tone = options.tone || 'ready';
         output.textContent = text;
+        output.classList.remove('success', 'error', 'fallback');
+        output.classList.add(tone);
+        if (outputMeta) {
+            const suffix = languageLabel ? ` • ${languageLabel}` : '';
+            outputMeta.textContent = `Source: ${source}${suffix}`;
+        }
     };
 
     const getPlaygroundCode = (moduleId, language) => {
         return getCanonicalModuleCode(moduleId, language);
+    };
+
+    const getFallbackOutputForSelection = (languageKey, moduleId = playgroundState.snippetId) => {
+        if (!moduleId) {
+            return {
+                text: 'Execution complete.',
+                source: 'Fallback',
+                tone: 'fallback'
+            };
+        }
+        const fallback = getCanonicalModuleOutput(moduleId, languageKey || playgroundState.language);
+        return {
+            text: fallback.text,
+            source: 'Fallback (expected output)',
+            tone: 'fallback'
+        };
     };
 
     const updateEditor = (moduleId) => {
@@ -9714,6 +10710,7 @@ function initPlayground() {
             playgroundState.baseCode = '';
             playgroundState.snippetId = '';
             playgroundState.isCustom = true;
+            setOutput(translateLiteral('// Select a sample and run to see output.', appState.language), { source: translateLiteral('Ready', appState.language), tone: 'ready' });
             return;
         }
         const result = getPlaygroundCode(moduleId, playgroundState.language);
@@ -9726,6 +10723,12 @@ function initPlayground() {
         playgroundState.baseCode = editor.value;
         playgroundState.snippetId = moduleId;
         playgroundState.isCustom = false;
+        setStatus(translateLiteral('Ready', appState.language), 'idle');
+        setOutput(translateLiteral('// Sample loaded. Click "Run Code" to execute.', appState.language), {
+            source: translateLiteral('Sample Loaded', appState.language),
+            language: SUPPORTED_LANGUAGES[playgroundState.language]?.name || playgroundState.language,
+            tone: 'ready'
+        });
     };
 
     window.refreshPlaygroundSnippetCatalog = () => {
@@ -9762,10 +10765,17 @@ function initPlayground() {
             if (playgroundState.baseCode) {
                 editor.value = playgroundState.baseCode;
                 playgroundState.isCustom = false;
-                setStatus('Reset sample', 'Idle');
+                setStatus('Reset sample', 'idle');
             } else {
                 editor.value = '';
             }
+        });
+    }
+
+    if (clearOutputButton) {
+        clearOutputButton.addEventListener('click', () => {
+            setOutput(translateLiteral('// Output cleared.', appState.language), { source: translateLiteral('Ready', appState.language), tone: 'ready' });
+            setStatus(translateLiteral('Idle', appState.language), 'idle');
         });
     }
 
@@ -9783,21 +10793,25 @@ function initPlayground() {
         runButton.addEventListener('click', async () => {
             const code = editor.value.trim();
             if (!code) {
-                setOutput('// Add code before running');
+                setOutput(translateLiteral('// Add code before running.', appState.language), { source: translateLiteral('Validation', appState.language), tone: 'error' });
                 return;
             }
 
-            setStatus('Running...', 'Running');
-            setOutput('// Running...');
+            runButton.disabled = true;
+            runButton.classList.add('opacity-80', 'cursor-not-allowed');
+            setStatus(translateLiteral('Running...', appState.language), 'running');
+            setOutput(translateLiteral('// Running...', appState.language), { source: translateLiteral('Live runner', appState.language), tone: 'ready' });
 
             const languageKey = playgroundState.language;
             if (!PLAYGROUND_RUNNABLE_LANGUAGES.includes(languageKey)) {
                 setOutput([
-                    'Execution skipped.',
+                    translateLiteral('Execution skipped.', appState.language),
                     `Language "${languageKey}" is view-only in module cards.`,
-                    'Playground execution currently supports: Java, C++, Python, and JavaScript.'
-                ].join('\n'));
-                setStatus('Idle', 'Idle');
+                    translateLiteral('Playground execution currently supports: Java, C++, Python, and JavaScript.', appState.language)
+                ].join('\n'), { source: translateLiteral('Unsupported language', appState.language), tone: 'error' });
+                setStatus(translateLiteral('Idle', appState.language), 'idle');
+                runButton.disabled = false;
+                runButton.classList.remove('opacity-80', 'cursor-not-allowed');
                 return;
             }
             const normalizedCode = normalizeCodeForRunner(languageKey, code);
@@ -9805,29 +10819,54 @@ function initPlayground() {
                 let outputText = await executeWithConfiguredRunner(languageKey, normalizedCode);
                 const trimmedOutput = String(outputText || '').trim();
                 if (!trimmedOutput || trimmedOutput === 'Execution complete (no stdout).') {
-                    const activeModule = playgroundState.snippetId
-                        ? modules.find(item => item.id === playgroundState.snippetId)
-                        : null;
-                    const activeTitle = activeModule ? getLocalizedModule(activeModule).title : 'Custom code';
-                    const languageLabel = SUPPORTED_LANGUAGES[languageKey]?.name || languageKey;
-                    outputText = [
-                        'Execution complete.',
-                        `Sample: ${activeTitle}`,
-                        `Language: ${languageLabel}`
-                    ].join('\n');
+                    const fallback = getFallbackOutputForSelection(languageKey);
+                    outputText = fallback.text;
+                    setOutput(outputText, {
+                        source: fallback.source,
+                        language: SUPPORTED_LANGUAGES[languageKey]?.name || languageKey,
+                        tone: fallback.tone
+                    });
+                    setStatus(translateLiteral('Fallback', appState.language), 'fallback');
+                } else {
+                    setOutput(outputText, {
+                        source: translateLiteral('Live execution', appState.language),
+                        language: SUPPORTED_LANGUAGES[languageKey]?.name || languageKey,
+                        tone: 'success'
+                    });
+                    setStatus(translateLiteral('Complete', appState.language), 'success');
                 }
-                setOutput(outputText);
-                setStatus('Complete', 'Idle');
             } catch (error) {
                 const reason = error instanceof Error ? error.message : String(error);
-                setOutput(`// Execution failed.\n// ${reason}\n// Configure CODE_RUNNER_ENDPOINT for a private runner if needed.`);
-                setStatus('Error', 'Idle');
+                const fallback = getFallbackOutputForSelection(languageKey);
+                if (playgroundState.snippetId) {
+                    const fallbackText = `${fallback.text}\n\n// Live runner unavailable: ${reason}`;
+                    setOutput(fallbackText, {
+                        source: fallback.source,
+                        language: SUPPORTED_LANGUAGES[languageKey]?.name || languageKey,
+                        tone: 'fallback'
+                    });
+                    setStatus(translateLiteral('Fallback', appState.language), 'fallback');
+                } else {
+                    setOutput(`// Execution failed.\n// ${reason}`, { source: 'Live runner error', tone: 'error' });
+                    setStatus(translateLiteral('Error', appState.language), 'error');
+                }
+            } finally {
+                runButton.disabled = false;
+                runButton.classList.remove('opacity-80', 'cursor-not-allowed');
             }
         });
     }
 
     renderSnippetOptions();
-    setStatus('Idle', 'Idle');
+    if (!snippetSelect.value && snippetSelect.options.length > 1) {
+        snippetSelect.value = snippetSelect.options[1].value;
+    }
+    if (snippetSelect.value) {
+        updateEditor(snippetSelect.value);
+    } else {
+        setOutput(translateLiteral('// Select a sample and run to see output.', appState.language), { source: translateLiteral('Ready', appState.language), tone: 'ready' });
+    }
+    setStatus(translateLiteral('Idle', appState.language), 'idle');
 }
 
 function renderDSTabs() {
@@ -10337,6 +11376,14 @@ function closeSupportModal() {
     closeModal('support-modal');
 }
 
+function openSiteGuideModal() {
+    openModal('site-guide-modal');
+}
+
+function closeSiteGuideModal() {
+    closeModal('site-guide-modal');
+}
+
 function initSupport() {
     const closeBtn = document.getElementById('close-support');
     const form = document.getElementById('support-form');
@@ -10351,9 +11398,38 @@ function initSupport() {
     }
 
     if (form) {
-        form.addEventListener('submit', (event) => {
+        form.addEventListener('submit', async (event) => {
             event.preventDefault();
-            showToast('Support request saved locally. We will reply soon!', 'success');
+            const moduleId = String(moduleSelect?.value || '').trim();
+            const topic = String(document.getElementById('support-topic')?.value || '').trim();
+            const message = String(document.getElementById('support-message')?.value || '').trim();
+            if (!message) {
+                showToast('Please add details so support can help quickly.', 'warning');
+                return;
+            }
+
+            if (hasNeonSyncConfig()) {
+                try {
+                    await neonFetch(getNeonSupportEndpoint(), {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            userId: String(accountProfile.serverUserId || '').trim() || null,
+                            email: accountProfile.email || null,
+                            moduleId: moduleId || null,
+                            topic: topic || null,
+                            message,
+                            language: appState.language || 'en',
+                            submittedAt: new Date().toISOString()
+                        })
+                    });
+                    showToast('Support request sent successfully.', 'success');
+                } catch (error) {
+                    showToast(`Support request failed: ${error.message}`, 'error');
+                    return;
+                }
+            } else {
+                showToast('Support request saved locally. Connect Neon backend to sync requests.', 'info');
+            }
             form.reset();
             closeSupportModal();
         });
@@ -11461,8 +12537,15 @@ function renderGlossaryFilters() {
     const container = document.getElementById('glossary-categories');
     if (!container) return;
     const localizedTerms = getLocalizedGlossaryTerms();
+    const categories = [
+        'all',
+        ...Array.from(new Set(localizedTerms.map(term => String(term.categoryKey || term.category || '').trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b))
+    ];
+    if (!categories.includes(appState.glossaryCategory)) {
+        appState.glossaryCategory = 'all';
+    }
 
-    container.innerHTML = glossaryCategories.map(category => {
+    container.innerHTML = categories.map(category => {
         const isActive = appState.glossaryCategory === category;
         const localizedCategory = localizedTerms.find(term => term.categoryKey && term.categoryKey.toLowerCase() === category.toLowerCase())?.categoryLabel;
         const label = category === 'all' ? translateLiteral('All Terms', appState.language) : (localizedCategory || translateLiteral(category, appState.language));
@@ -11487,7 +12570,8 @@ function renderGlossary() {
     const selectedCategory = appState.glossaryCategory;
     const localizedTerms = getLocalizedGlossaryTerms();
     const filteredTerms = localizedTerms.filter(term => {
-        const matchesCategory = selectedCategory === 'all' || term.categoryKey.toLowerCase() === selectedCategory.toLowerCase();
+        const termCategoryKey = String(term.categoryKey || term.category || '').toLowerCase();
+        const matchesCategory = selectedCategory === 'all' || termCategoryKey === selectedCategory.toLowerCase();
         if (!matchesCategory) return false;
         if (!searchTerm) return true;
         return (
@@ -11502,7 +12586,7 @@ function renderGlossary() {
     if (stats) {
         const selectedCategoryLabel = selectedCategory === 'all'
             ? ''
-            : (localizedTerms.find(term => term.categoryKey.toLowerCase() === selectedCategory.toLowerCase())?.categoryLabel || selectedCategory);
+            : (localizedTerms.find(term => String(term.categoryKey || '').toLowerCase() === selectedCategory.toLowerCase())?.categoryLabel || selectedCategory);
         const label = selectedCategory === 'all'
             ? translateLiteral('All categories', appState.language)
             : `${translateLiteral('Category:', appState.language)} ${selectedCategoryLabel}`;
@@ -11535,6 +12619,10 @@ function renderGlossary() {
     `).join('');
 }
 
+function formatFlashcardText(text = '') {
+    return escapeHtml(String(text || '')).replace(/\n/g, '<br>');
+}
+
 function renderFlashcard() {
     const session = appState.flashcardSession;
     const totalCards = session.length;
@@ -11545,22 +12633,50 @@ function renderFlashcard() {
     const prevButton = document.getElementById('prev-flashcard');
     const nextButton = document.getElementById('next-flashcard');
     const sessionMeta = document.getElementById('flashcard-session-meta');
+    const moduleLabel = document.getElementById('flashcard-module-label');
+    const progressPill = document.getElementById('flashcard-progress-pill');
+    const modePill = document.getElementById('flashcard-mode-pill');
+    const sessionProgress = document.getElementById('flashcard-session-progress');
     const desiredLength = appState.flashcardSessionLength || FLASHCARD_SESSION_SIZE;
     const deckSize = deck.length;
     if (!content || !counter || !toggleButton || !prevButton || !nextButton) {
         return;
     }
 
+    const selectedTopicDeckLabel = isFlashcardTopicDeck(appState.selectedFlashcardModule)
+        ? getFlashcardTopicDeckLabel(appState.selectedFlashcardModule, appState.language)
+        : '';
+    const selectedModule = modules.find((module) => module.id === appState.selectedFlashcardModule);
+    const selectedModuleLocalized = selectedModule ? getLocalizedModule(selectedModule) : null;
+    const selectedModuleLabel = appState.selectedFlashcardModule === 'all'
+        ? t('flashcards.deck.all')
+        : (selectedTopicDeckLabel || selectedModuleLocalized?.title || selectedModule?.title || translateLiteral('Custom deck', appState.language));
+    if (moduleLabel) {
+        moduleLabel.textContent = selectedModuleLabel;
+    }
+
     if (!totalCards) {
         counter.textContent = translateLiteral('No active session', appState.language);
         content.innerHTML = `
-            <div class="text-center text-slate-600">
+            <div class="flashcard-face flashcard-face-empty text-center text-slate-600">
+                <div class="flashcard-face-header">
+                    <span class="flashcard-tag">${translateLiteral('Ready', appState.language)}</span>
+                </div>
                 <p class="text-lg font-semibold mb-2">${translateLiteral('Choose a module above', appState.language)}</p>
                 <p class="text-sm">${translateLiteral(`Start a ${desiredLength}-card session to load flashcards.`, appState.language)}</p>
             </div>
         `;
         toggleButton.textContent = translateLiteral('Show Answer', appState.language);
         toggleButton.disabled = true;
+        if (progressPill) {
+            progressPill.textContent = `0 / ${desiredLength} ${translateLiteral('in session', appState.language)}`;
+        }
+        if (modePill) {
+            modePill.textContent = translateLiteral('Tap to flip', appState.language);
+        }
+        if (sessionProgress) {
+            sessionProgress.style.width = '0%';
+        }
         prevButton.disabled = true;
         nextButton.disabled = true;
         prevButton.classList.add('disabled:bg-slate-300', 'disabled:cursor-not-allowed');
@@ -11570,7 +12686,9 @@ function renderFlashcard() {
         if (sessionMeta) {
             sessionMeta.textContent = deckSize
                 ? translateLiteral(`${deckSize} cards available. Start a session to study them in batches of ${desiredLength}.`, appState.language)
-                : translateLiteral('No cards available for this module yet.', appState.language);
+                : (isFlashcardTopicDeck(appState.selectedFlashcardModule)
+                    ? t('flashcards.deck.topic.empty')
+                    : translateLiteral('No cards available for this module yet.', appState.language));
         }
         return;
     }
@@ -11578,6 +12696,13 @@ function renderFlashcard() {
     toggleButton.disabled = false;
     const card = session[appState.currentFlashcard];
     counter.textContent = translateLiteral(`Card ${appState.currentFlashcard + 1} of ${totalCards}`, appState.language);
+    if (progressPill) {
+        progressPill.textContent = `${appState.currentFlashcard + 1} / ${totalCards} ${translateLiteral('in session', appState.language)}`;
+    }
+    if (sessionProgress) {
+        const progressPercent = Math.max(0, Math.min(100, ((appState.currentFlashcard + 1) / totalCards) * 100));
+        sessionProgress.style.width = `${progressPercent}%`;
+    }
 
     if (sessionMeta) {
         const repeats = deckSize && deckSize < desiredLength;
@@ -11586,26 +12711,34 @@ function renderFlashcard() {
 
     if (!appState.showFlashcardAnswer) {
         content.innerHTML = `
-            <div class="text-center">
-                <div class="mb-6">
-                    <span class="bg-indigo-500 text-white px-4 py-2 rounded-full text-sm font-medium">${translateLiteral('Question', appState.language)}</span>
+            <div class="flashcard-face flashcard-face-question text-center">
+                <div class="flashcard-face-header">
+                    <span class="flashcard-tag">${translateLiteral('Question', appState.language)}</span>
+                    <span class="flashcard-mini">${translateLiteral('Think first', appState.language)}</span>
                 </div>
-                <p class="text-xl mb-6 leading-relaxed">${card.question}</p>
-                <p class="text-sm text-slate-500">${translateLiteral('Click to reveal answer', appState.language)}</p>
+                <p class="flashcard-main-text">${formatFlashcardText(card.question)}</p>
+                <p class="flashcard-hint">${translateLiteral('Click to reveal answer', appState.language)}</p>
             </div>
         `;
         toggleButton.textContent = translateLiteral('Show Answer', appState.language);
+        if (modePill) {
+            modePill.textContent = translateLiteral('Question side', appState.language);
+        }
     } else {
         content.innerHTML = `
-            <div class="text-center">
-                <div class="mb-6">
-                    <span class="bg-emerald-500 text-white px-4 py-2 rounded-full text-sm font-medium">${translateLiteral('Answer', appState.language)}</span>
+            <div class="flashcard-face flashcard-face-answer text-center">
+                <div class="flashcard-face-header">
+                    <span class="flashcard-tag flashcard-tag-answer">${translateLiteral('Answer', appState.language)}</span>
+                    <span class="flashcard-mini">${translateLiteral('Verify your reasoning', appState.language)}</span>
                 </div>
-                <div class="text-lg leading-relaxed whitespace-pre-line">${card.answer}</div>
-                <p class="text-sm mt-6 text-slate-500">${translateLiteral('Click to hide answer', appState.language)}</p>
+                <div class="flashcard-main-text flashcard-answer-text">${formatFlashcardText(card.answer)}</div>
+                <p class="flashcard-hint">${translateLiteral('Click to hide answer', appState.language)}</p>
             </div>
         `;
         toggleButton.textContent = translateLiteral('Hide Answer', appState.language);
+        if (modePill) {
+            modePill.textContent = translateLiteral('Answer side', appState.language);
+        }
     }
 
     prevButton.disabled = appState.currentFlashcard === 0;
@@ -11855,7 +12988,7 @@ function refreshFlashcardSession(moduleId = appState.selectedFlashcardModule, { 
         renderFlashcard();
         const meta = document.getElementById('flashcard-session-meta');
         if (meta && moduleId !== 'all' && moduleId !== 'general') {
-            meta.textContent = translateLiteral('Complete this module and pass its quiz to unlock its flashcards.', appState.language);
+            meta.textContent = t('flashcards.deck.module.locked');
         }
         if (persist) saveToLocalStorage();
         return;
@@ -11867,6 +13000,10 @@ function refreshFlashcardSession(moduleId = appState.selectedFlashcardModule, { 
         appState.currentFlashcard = 0;
         appState.showFlashcardAnswer = false;
         renderFlashcard();
+        const meta = document.getElementById('flashcard-session-meta');
+        if (meta && isFlashcardTopicDeck(moduleId)) {
+            meta.textContent = t('flashcards.deck.topic.empty');
+        }
         if (persist) saveToLocalStorage();
         return;
     }
@@ -11894,15 +13031,29 @@ function populateFlashcardModuleSelect() {
     if (!select) return;
     const previousValue = select.value || appState.selectedFlashcardModule || 'all';
     const localizedModuleMap = new Map(getLocalizedModules().map((module) => [module.id, module]));
-    const options = [`<option value="all">${translateLiteral('All Modules (mix)', appState.language)}</option>`];
+    const options = [`<option value="all">${t('flashcards.deck.all')}</option>`];
+
+    const topicOptions = FLASHCARD_TOPIC_DECKS.map((deck) => {
+        const unlockedModules = getAccessibleTopicDeckModules(deck.id);
+        const hasCards = unlockedModules.some((module) => isFlashcardModuleAccessible(module.id));
+        const lockLabel = hasCards ? '' : ` (${t('flashcards.deck.topic.locked')})`;
+        return `<option value="${deck.id}" ${hasCards ? '' : 'disabled'}>${escapeHtml(t(deck.titleKey))}${escapeHtml(lockLabel)}</option>`;
+    }).join('');
+    if (topicOptions) {
+        options.push(`<optgroup label="${escapeHtml(t('flashcards.deck.topicGroup'))}">${topicOptions}</optgroup>`);
+    }
+
+    const moduleOptions = [];
     getOrderedModules().forEach((module, index) => {
         const localizedModule = localizedModuleMap.get(module.id) || module;
         const unlocked = isFlashcardModuleAccessible(module.id);
-        const lockLabel = unlocked ? '' : ` (${translateLiteral('Complete quiz to unlock', appState.language)})`;
-        options.push(`<option value="${module.id}" ${unlocked ? '' : 'disabled'}>${index + 1}. ${localizedModule.title}${lockLabel}</option>`);
+        const lockLabel = unlocked ? '' : ` (${t('flashcards.deck.module.locked')})`;
+        moduleOptions.push(`<option value="${module.id}" ${unlocked ? '' : 'disabled'}>${index + 1}. ${localizedModule.title}${escapeHtml(lockLabel)}</option>`);
     });
+    options.push(`<optgroup label="${escapeHtml(t('flashcards.deck.moduleGroup'))}">${moduleOptions.join('')}</optgroup>`);
     select.innerHTML = options.join('');
-    const valueToSet = isFlashcardModuleAccessible(previousValue) ? previousValue : 'all';
+    const enabledValues = new Set(Array.from(select.options).filter((option) => !option.disabled).map((option) => option.value));
+    const valueToSet = enabledValues.has(previousValue) ? previousValue : 'all';
     select.value = valueToSet;
     appState.selectedFlashcardModule = valueToSet;
 }
@@ -12197,6 +13348,15 @@ function init() {
 
     document.getElementById('reset-btn').addEventListener('click', resetProgress);
 
+    const siteGuideButton = document.getElementById('site-guide-helper-btn');
+    const closeSiteGuideButton = document.getElementById('close-site-guide');
+    const closeSiteGuideFooterButton = document.getElementById('close-site-guide-footer');
+    const insightAuthOpenButton = document.getElementById('insights-auth-open-account');
+    if (siteGuideButton) siteGuideButton.addEventListener('click', openSiteGuideModal);
+    if (closeSiteGuideButton) closeSiteGuideButton.addEventListener('click', closeSiteGuideModal);
+    if (closeSiteGuideFooterButton) closeSiteGuideFooterButton.addEventListener('click', closeSiteGuideModal);
+    if (insightAuthOpenButton) insightAuthOpenButton.addEventListener('click', openAccountModal);
+
     const studyToggleButton = document.getElementById('study-session-toggle');
     if (studyToggleButton) {
         studyToggleButton.addEventListener('click', toggleManualStudySession);
@@ -12328,6 +13488,7 @@ function init() {
             if (e.target.id === 'account-modal') closeAccountModal();
             if (e.target.id === 'support-modal') closeSupportModal();
             if (e.target.id === 'interactive-quiz-modal') closeInteractiveQuizLibrary();
+            if (e.target.id === 'site-guide-modal') closeSiteGuideModal();
         }
     });
 
@@ -12339,6 +13500,7 @@ function init() {
             closeGlossary();
             closeFlashcards();
             closeQuiz();
+            closeSiteGuideModal();
         }
 
         // Arrow keys for flashcards (when flashcard modal is open)
@@ -12460,6 +13622,7 @@ function loadStudyMetrics() {
 
 function saveStudyMetrics() {
     safeSetItem(STORAGE_KEYS.STUDY_METRICS, JSON.stringify(studyMetrics));
+    queueUserStateSync();
 }
 
 function ensureTodayMetrics() {
@@ -12486,6 +13649,7 @@ function loadStudyHabit() {
 
 function saveStudyHabit() {
     safeSetItem(STORAGE_KEYS.STUDY_HABIT, JSON.stringify(studyHabit));
+    queueUserStateSync();
 }
 
 function updateStudyHabit(sessionTime) {
@@ -12548,6 +13712,21 @@ function updateStudyTrackerUI() {
 
     if (!statusEl || !todayEl || !totalEl || !streakEl) return;
 
+    if (!hasAuthenticatedInsightsAccess()) {
+        statusEl.textContent = t('insights.lock.status');
+        statusEl.classList.remove('bg-emerald-100', 'text-emerald-700');
+        todayEl.textContent = '--';
+        totalEl.textContent = '--';
+        streakEl.textContent = '0 days';
+        if (toggleBtn) {
+            toggleBtn.textContent = t('insights.lock.sessionBtn');
+        }
+        if (breakEl) {
+            breakEl.textContent = t('insights.lock.break');
+        }
+        return;
+    }
+
     ensureTodayMetrics();
     const totalMinutes = Math.max(0, Math.round((studyMetrics.totalTimeMs || 0) / 60000));
     const todayMinutes = Math.max(0, Math.round((studyMetrics.todayMs || 0) / 60000));
@@ -12600,6 +13779,15 @@ function renderInsights() {
     const momentumTipEl = document.getElementById('insight-momentum-tip');
 
     if (!progressEl || !progressBar) {
+        updateStudyTrackerUI();
+        return;
+    }
+
+    const hasAccess = updateInsightsAccessGate();
+    if (!hasAccess) {
+        if (insightUpdates) {
+            insightUpdates.textContent = t('insights.lock.updates');
+        }
         updateStudyTrackerUI();
         return;
     }
@@ -12763,6 +13951,11 @@ function focusModule(moduleId) {
 }
 
 function toggleManualStudySession() {
+    if (!hasAuthenticatedInsightsAccess()) {
+        showToast('Sign in to unlock personalized study insights.', 'info');
+        openAccountModal();
+        return;
+    }
     if (studyTimer.isActive) {
         endStudySession({ notify: false });
         showToast('Focus session logged. Nice work!', 'success');
@@ -13221,6 +14414,9 @@ let studyTimer = {
 };
 
 function startStudySession(options = {}) {
+    if (!hasAuthenticatedInsightsAccess()) {
+        return;
+    }
     if (studyTimer.isActive) return;
     const { notify = false } = options;
     studyTimer.startTime = Date.now();

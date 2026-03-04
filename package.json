@@ -1,0 +1,21 @@
+{
+  "name": "cs-course-atlas",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CS Course Atlas with Neon SQL backend",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "db:migrate": "node server/migrate.js",
+    "check:frontend": "node --check js/script.js"
+  },
+  "dependencies": {
+    "@neondatabase/serverless": "^0.10.4",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "helmet": "^8.1.0",
+    "ws": "^8.18.1"
+  }
+}
