@@ -21,7 +21,7 @@
                         }
                     },
                     fontFamily: {
-                        sans: ['Tiny5', 'Silkscreen', 'DotGothic16', 'monospace']
+                        sans: ['Pixelify Sans', 'Silkscreen', 'DotGothic16', 'monospace']
                     },
                     screens: {
                         xs: '480px'
@@ -32,9 +32,10 @@
     </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/vis-network@9.1.9/styles/vis-network.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Silkscreen:wght@400&family=Tiny5&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Pixelify+Sans:wght@400&family=Silkscreen:wght@400&display=swap" rel="stylesheet">
 </head>
 <body class="min-h-screen transition-all duration-300 bg-slate-50 text-slate-900 accent-indigo card-depth-standard font-sans" id="main-body">
     <header id="main-header" class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white sticky top-0 z-50 shadow-xl transition-all duration-300 backdrop-blur-md border-b border-white/10">
@@ -141,8 +142,11 @@
         </section>
 
         <div id="progress-section" class="panel-surface progress-panel rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing border border-white/10 bg-slate-900/60 text-slate-100">
-            <h3 class="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 section-heading text-[1.05rem]" data-i18n="progress.heading">📊 Your Learning Progress</h3>
-            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 gap-5">
+            <div class="flex items-center justify-between gap-3 mb-3 sm:mb-4">
+                <h3 class="text-lg sm:text-xl font-semibold section-heading text-[1.05rem]" data-i18n="progress.heading">📊 Your Learning Progress</h3>
+                <button type="button" class="section-collapse-toggle text-xs font-semibold px-3 py-1.5 rounded-full bg-violet-500/20 text-violet-100 border border-violet-200/40 hover:bg-violet-500/30" data-section-key="progress">Collapse</button>
+            </div>
+            <div class="progress-main-content flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 gap-5">
                 <div class="w-full space-y-2">
                     <p class="progress-kicker text-xs uppercase font-semibold text-[11px]" data-i18n="progress.kicker">Current journey</p>
                     <span id="progress-text" class="progress-summary block text-base sm:text-lg font-semibold mt-1 text-[1rem] text-slate-100">
@@ -166,29 +170,35 @@
         </div>
 
         <div id="achievements-card" class="panel-surface achievements-card rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl border border-white/10 bg-slate-900/60 text-slate-100">
-            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 gap-5">
-                <div>
-                    <p class="text-xs uppercase font-semibold tracking-widest text-slate-500 text-slate-300" data-i18n="achievements.heading">Learning Achievements</p>
-                    <h3 class="text-lg sm:text-xl font-semibold text-slate-900 flex items-center gap-2 section-heading text-[1.05rem] text-slate-100">
-                        🏅 <span id="achievement-badge-label">Trailhead Rookie</span>
-                    </h3>
-                    <p id="achievement-description" class="text-sm text-slate-600 mt-1 text-slate-200 text-[0.95rem]">Complete your first module to begin earning badges.</p>
-                </div>
-                <div class="text-left md:text-right">
-                    <div id="achievement-badge" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm badge-pill text-[0.9rem] bg-slate-800 border border-white/10">
-                        <span id="achievement-badge-icon" class="text-xl text-slate-100">🌱</span>
-                        <span id="achievement-badge-name" class="text-slate-100">Trailhead Rookie</span>
-                    </div>
-                    <p id="achievement-next-hint" class="text-xs text-slate-500 mt-1 text-slate-300">Next badge unlocks soon.</p>
-                </div>
+            <div class="flex items-center justify-between gap-3 mb-3">
+                <h3 class="text-lg sm:text-xl font-semibold section-heading text-[1.05rem] text-slate-100" data-i18n="achievements.heading">Learning Achievements</h3>
+                <button type="button" class="section-collapse-toggle text-xs font-semibold px-3 py-1.5 rounded-full bg-violet-500/20 text-violet-100 border border-violet-200/40 hover:bg-violet-500/30" data-section-key="achievements">Collapse</button>
             </div>
-            <div class="mt-4">
-                <div class="achievement-progress-track">
-                    <div id="achievement-progress-bar" class="achievement-progress-bar" style="width: 0%"></div>
+            <div class="achievements-main-content">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 gap-5">
+                    <div>
+                        <p class="text-xs uppercase font-semibold tracking-widest text-slate-500 text-slate-300" data-i18n="achievements.currentBadge">Current Badge</p>
+                        <h3 class="text-lg sm:text-xl font-semibold text-slate-900 flex items-center gap-2 section-heading text-[1.05rem] text-slate-100">
+                            🏅 <span id="achievement-badge-label">Trailhead Rookie</span>
+                        </h3>
+                        <p id="achievement-description" class="text-sm text-slate-600 mt-1 text-slate-200 text-[0.95rem]">Complete your first module to begin earning badges.</p>
+                    </div>
+                    <div class="text-left md:text-right">
+                        <div id="achievement-badge" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm badge-pill text-[0.9rem] bg-slate-800 border border-white/10">
+                            <span id="achievement-badge-icon" class="text-xl text-slate-100">🌱</span>
+                            <span id="achievement-badge-name" class="text-slate-100">Trailhead Rookie</span>
+                        </div>
+                        <p id="achievement-next-hint" class="text-xs text-slate-500 mt-1 text-slate-300">Next badge unlocks soon.</p>
+                    </div>
                 </div>
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs text-slate-500 mt-2 gap-1 text-slate-300">
-                    <span id="achievement-progress-label">0 / 3 modules toward next badge</span>
-                    <span id="achievement-total-label">0 total modules</span>
+                <div class="mt-4">
+                    <div class="achievement-progress-track">
+                        <div id="achievement-progress-bar" class="achievement-progress-bar" style="width: 0%"></div>
+                    </div>
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs text-slate-500 mt-2 gap-1 text-slate-300">
+                        <span id="achievement-progress-label">0 / 3 modules toward next badge</span>
+                        <span id="achievement-total-label">0 total modules</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1174,6 +1184,9 @@
     </div>
 
     <script src="js/spanish-localization.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/cytoscape@3.30.2/dist/cytoscape.min.js"></script>
+    <script src="https://unpkg.com/vis-network@9.1.9/dist/vis-network.min.js"></script>
     <script src="js/script.js"></script>
 </body>
 </html>

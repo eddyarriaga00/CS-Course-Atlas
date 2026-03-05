@@ -42,6 +42,8 @@ const appState = {
     cardDepth: 'standard',
     language: 'en',
     collapsedSections: {
+        progress: true,
+        achievements: true,
         dailyChallenge: true,
         studyTip: true,
         insights: true,
@@ -67,6 +69,8 @@ const CONSTANTS = {
 };
 
 const DEFAULT_COLLAPSED_SECTIONS = {
+    progress: true,
+    achievements: true,
     dailyChallenge: true,
     studyTip: true,
     insights: true,
@@ -84,6 +88,14 @@ const ASSEMBLY_MODULE_IDS = [
 const VALID_CATEGORY_FILTERS = new Set(['all', 'dsa', 'discrete', 'java', 'git', 'assembly']);
 
 const COLLAPSIBLE_SECTION_CONFIG = {
+    progress: {
+        containerSelector: '#progress-section',
+        bodySelectors: ['.progress-main-content', '.progress-pills']
+    },
+    achievements: {
+        containerSelector: '#achievements-card',
+        bodySelectors: ['.achievements-main-content']
+    },
     dailyChallenge: {
         containerSelector: '#daily-challenge-card',
         bodySelectors: ['#daily-challenge-description', '#daily-challenge-steps', '#daily-challenge-hint']
@@ -414,6 +426,7 @@ const TRANSLATIONS = {
         'progress.nowAt': 'Now at',
         // Achievements
         'achievements.heading': 'Learning Achievements',
+        'achievements.currentBadge': 'Current Badge',
         // Support
         'support.heading': '❤️ Do you enjoy this website?',
         'support.subtitle': 'Help keep this resource free and updated with new content weekly!',
@@ -433,6 +446,8 @@ const TRANSLATIONS = {
         'helper.sectionDataText': 'Interactive visuals for arrays, stacks, queues, heaps, graphs, and tries with operation timeline and complexity view.',
         'helper.sectionPracticeTitle': 'Practice Tools',
         'helper.sectionPracticeText': 'Use flashcards, interactive quizzes, glossary, and interview examples to reinforce concepts.',
+        'playground.gitReadOnly': 'Git walkthrough mode (read-only)',
+        'playground.gitReadOnlyHint': 'Git samples are locked for editing so you can focus on terminal commands and output.',
         'helper.sectionProgressTitle': 'Progress + Settings',
         'helper.sectionProgressText': 'Track completion, customize UI settings, and manage account/profile preferences.',
         'helper.closeBtn': 'Got it',
@@ -636,6 +651,7 @@ const TRANSLATIONS = {
         'progress.nowAt': 'Ahora en',
         // Achievements
         'achievements.heading': 'Logros de Aprendizaje',
+        'achievements.currentBadge': 'Insignia actual',
         // Support
         'support.heading': '❤️ ¿Disfrutas este sitio web?',
         'support.subtitle': '¡Ayuda a mantener este recurso gratuito y actualizado con contenido nuevo cada semana!',
@@ -655,6 +671,8 @@ const TRANSLATIONS = {
         'helper.sectionDataText': 'Visuales interactivos para arreglos, pilas, colas, montículos, grafos y tries con línea de tiempo de operaciones y vista de complejidad.',
         'helper.sectionPracticeTitle': 'Herramientas de Práctica',
         'helper.sectionPracticeText': 'Usa flashcards, cuestionarios interactivos, glosario y ejemplos de entrevista para reforzar conceptos.',
+        'playground.gitReadOnly': 'Modo Git guiado (solo lectura)',
+        'playground.gitReadOnlyHint': 'Las muestras de Git están bloqueadas para edición para que te enfoques en comandos de terminal y salida.',
         'helper.sectionProgressTitle': 'Progreso + Ajustes',
         'helper.sectionProgressText': 'Monitorea avance, personaliza ajustes de la interfaz y administra preferencias de cuenta/perfil.',
         'helper.closeBtn': 'Entendido',
@@ -5373,7 +5391,7 @@ function buildFallbackJavaSnippet(module) {
 }
 
 function buildGitJavaSnippet() {
-    return `import java.util.*;\n\npublic class GitBasicsWorkflowDemo {\n    public static void main(String[] args) {\n        // This runnable sample prints a practical Git workflow in execution order.\n        List<String> commands = Arrays.asList(\n            "git init",\n            "git branch -M main",\n            "git add .",\n            "git commit -m \\"feat: meaningful snapshot\\"",\n            "git checkout -b feature/safe-change",\n            "git fetch origin",\n            "git pull --rebase origin main",\n            "git push -u origin feature/safe-change",\n            "git checkout main",\n            "git merge --no-ff feature/safe-change",\n            "git revert <commit-hash>    // safe undo on shared history"\n        );\n\n        // Explain each command so beginners understand both syntax and intent.\n        System.out.println("Git learning walkthrough:");\n        for (int i = 0; i < commands.size(); i++) {\n            System.out.println((i + 1) + ". " + commands.get(i));\n        }\n\n        // Key mental model: working tree -> staging area -> repository history.\n        System.out.println("Model: working tree -> staging area -> commit history.");\n        System.out.println("Rule: use revert for shared history, restore for local cleanup.");\n    }\n}`;
+    return `import java.util.*;\n\npublic class GitBasicsWorkflowDemo {\n    static void section(String label) {\n        System.out.println("\\n=== " + label + " ===");\n    }\n\n    static void command(String cmd, String... output) {\n        System.out.println("$ " + cmd);\n        if (output.length == 0) {\n            System.out.println("  (no stdout)");\n            return;\n        }\n        for (String line : output) {\n            System.out.println("  " + line);\n        }\n    }\n\n    public static void main(String[] args) {\n        section("Git Basics Terminal Walkthrough");\n        System.out.println("Goal: show a safe branch-based workflow from init -> commit -> review -> merge -> undo.");\n        System.out.println("Model: working tree -> staging area -> commit history.");\n\n        section("Repository Setup");\n        command("git init", "Initialized empty Git repository in ./cs-atlas-demo/.git/");\n        command("git branch -M main", "Current branch renamed to main.");\n        command("git remote add origin https://github.com/your-org/cs-atlas-demo.git", "Remote 'origin' added.");\n\n        section("Staging and Commits");\n        command("git add README.md", "README.md moved to staging area.");\n        command("git commit -m \\"docs: add project overview\\"", "[main abc1234] docs: add project overview", " 1 file changed, 8 insertions(+)");\n        command("git status", "On branch main", "nothing to commit, working tree clean");\n\n        section("Branching and Merging");\n        command("git checkout -b feature/auth-flow", "Switched to a new branch 'feature/auth-flow'");\n        command("git push -u origin feature/auth-flow", "Branch pushed and tracking set.");\n        command("git checkout main && git merge --no-ff feature/auth-flow", "Merge made by the 'ort' strategy.");\n\n        section("Safe Undo");\n        command("git restore --staged README.md", "README.md unstaged (changes kept locally).");\n        command("git revert abc1234", "Created revert commit to safely undo shared history.");\n\n        section("Summary");\n        System.out.println("Use small commits, feature branches, pull/rebase before pushing, and revert for shared undo.");\n        System.out.println("Workflow complete.");\n    }\n}`;
 }
 
 function addComprehensiveHeaderComments(module, javaCode) {
@@ -5487,12 +5505,127 @@ function buildGeneratedSetTitle(topic, index) {
 
 function buildGeneratedSetDescription(module, topic, index, totalTopics) {
     const title = String(module?.title || 'Module');
+    if (module?.id === 'git-basics-workflow') {
+        const en = `Topic ${index + 1} of ${totalTopics}: ${topic}. Terminal-first walkthrough with realistic Git command output and safe workflow checkpoints.`;
+        const es = `Tema ${index + 1} de ${totalTopics}: ${topic}. Recorrido enfocado en terminal con salida realista de comandos Git y checkpoints de flujo seguro.`;
+        return { en, es };
+    }
     const en = `Topic ${index + 1} of ${totalTopics}: ${topic}. Guided walkthrough with checkpoints and printed results for ${title}.`;
     const es = `Tema ${index + 1} de ${totalTopics}: ${topic}. Recorrido guiado con validaciones y salida visible para ${title}.`;
     return { en, es };
 }
 
+function getGitWorkflowTopicScript(topic, topicIndex = 0) {
+    const normalized = slugifyTopicKey(topic, `topic-${topicIndex + 1}`);
+    const scripts = {
+        'repository-setup': {
+            objective: 'Initialize a repository correctly and confirm project state.',
+            commands: [
+                ['mkdir cs-atlas-demo', 'Created folder cs-atlas-demo'],
+                ['cd cs-atlas-demo', 'Now inside ./cs-atlas-demo'],
+                ['git init', 'Initialized empty Git repository in ./cs-atlas-demo/.git/'],
+                ['git branch -M main', 'Current branch renamed to main'],
+                ['git remote add origin https://github.com/your-org/cs-atlas-demo.git', "Remote 'origin' registered"],
+                ['git status', 'On branch main', 'No commits yet', 'nothing to commit (create/copy files and use "git add" to track)']
+            ],
+            recap: 'Repository is initialized, on main, and connected to origin.'
+        },
+        'staging-and-commits': {
+            objective: 'Stage only what belongs in the next commit and record a clean snapshot.',
+            commands: [
+                ['echo "# CS Atlas Demo" > README.md', 'README.md created'],
+                ['git status', 'Untracked files: README.md'],
+                ['git add README.md', 'Changes staged for commit'],
+                ['git commit -m "docs: add initial README"', '[main 9f31a2d] docs: add initial README', ' 1 file changed, 1 insertion(+)'],
+                ['git log --oneline -n 2', '9f31a2d docs: add initial README']
+            ],
+            recap: 'Working tree is clean and commit history contains one intentional snapshot.'
+        },
+        'branching-and-merging': {
+            objective: 'Isolate feature work and merge it back to main safely.',
+            commands: [
+                ['git checkout -b feature/profile-layout', "Switched to a new branch 'feature/profile-layout'"],
+                ['git add profile.html', 'profile.html staged'],
+                ['git commit -m "feat: improve profile layout"', '[feature/profile-layout 51ab44f] feat: improve profile layout'],
+                ['git checkout main', "Switched to branch 'main'"],
+                ['git merge --no-ff feature/profile-layout', "Merge made by the 'ort' strategy"]
+            ],
+            recap: 'Feature branch work merged into main with explicit merge history.'
+        },
+        'pull-rebase-basics': {
+            objective: 'Sync your branch with upstream changes before pushing.',
+            commands: [
+                ['git fetch origin', 'Fetched latest remote refs'],
+                ['git checkout feature/profile-layout', "Switched to branch 'feature/profile-layout'"],
+                ['git pull --rebase origin main', 'Rebased current branch on top of origin/main'],
+                ['git status', 'On branch feature/profile-layout', 'nothing to commit, working tree clean'],
+                ['git push -u origin feature/profile-layout', 'Branch pushed and tracking set']
+            ],
+            recap: 'Your feature branch is updated with main and safe to open for review.'
+        },
+        'merge-conflict-basics': {
+            objective: 'Resolve conflicts intentionally and finish the integration cleanly.',
+            commands: [
+                ['git merge feature/profile-layout', 'Auto-merging profile.html', 'CONFLICT (content): Merge conflict in profile.html'],
+                ['git status', 'You have unmerged paths.', 'both modified: profile.html'],
+                ['# edit profile.html and remove <<<<<<< ======= >>>>>>> markers', 'File manually resolved'],
+                ['git add profile.html', 'Conflict marked as resolved'],
+                ['git commit -m "fix: resolve profile layout merge conflict"', '[main 7ce31a1] fix: resolve profile layout merge conflict']
+            ],
+            recap: 'Conflict resolved by editing final content, then staging and committing resolution.'
+        },
+        'remote-collaboration': {
+            objective: 'Collaborate through tracked branches and pull requests.',
+            commands: [
+                ['git clone https://github.com/your-org/cs-atlas-demo.git', 'Repository cloned locally'],
+                ['git checkout -b feature/study-notes', "Switched to new branch 'feature/study-notes'"],
+                ['git push -u origin feature/study-notes', 'Remote branch created and tracking enabled'],
+                ['# open Pull Request on GitHub/GitLab', 'Review requested from teammates'],
+                ['git pull origin main', 'Merged latest main updates into local branch']
+            ],
+            recap: 'Branch tracking and PR reviews keep team changes organized and auditable.'
+        },
+        'safe-undo-with-restore-revert': {
+            objective: 'Use restore for local cleanup and revert for shared-history undo.',
+            commands: [
+                ['git restore --staged app.js', 'app.js removed from staging area'],
+                ['git restore app.js', 'Local uncommitted changes in app.js discarded'],
+                ['git revert 9f31a2d', 'Created new revert commit that undoes 9f31a2d safely'],
+                ['git log --oneline -n 3', '3d22d11 revert: docs add initial README', '9f31a2d docs: add initial README'],
+                ['git status', 'nothing to commit, working tree clean']
+            ],
+            recap: 'restore = local cleanup, revert = safe shared-history undo.'
+        }
+    };
+    return scripts[normalized] || scripts['repository-setup'];
+}
+
+function buildGitTopicJavaSnippet(module, topic, topicIndex, totalTopics) {
+    const className = `${toModuleClassName(module?.id)}Topic${topicIndex + 1}Set`;
+    const moduleTitle = escapeForJavaString(module?.title || 'Git Module');
+    const focusTopic = escapeForJavaString(topic || `Topic ${topicIndex + 1}`);
+    const script = getGitWorkflowTopicScript(topic, topicIndex);
+    const objective = escapeForJavaString(script.objective);
+    const recap = escapeForJavaString(script.recap);
+    const topicLines = (Array.isArray(module?.topics) ? module.topics : [])
+        .map((item, idx) => `        System.out.println("${idx + 1}. ${escapeForJavaString(item)}");`)
+        .join('\n');
+    const commandLines = script.commands
+        .map(([cmd, ...output]) => {
+            const escapedCommand = escapeForJavaString(cmd);
+            if (!output.length) return `        command("${escapedCommand}");`;
+            const outputArgs = output.map((line) => `"${escapeForJavaString(line)}"`).join(', ');
+            return `        command("${escapedCommand}", ${outputArgs});`;
+        })
+        .join('\n');
+
+    return `import java.util.*;\n\npublic class ${className} {\n    static void section(String label) {\n        System.out.println("\\n=== " + label + " ===");\n    }\n\n    static void command(String cmd, String... output) {\n        System.out.println("$ " + cmd);\n        if (output.length == 0) {\n            System.out.println("  (no stdout)");\n            return;\n        }\n        for (String line : output) {\n            System.out.println("  " + line);\n        }\n    }\n\n    public static void main(String[] args) {\n        section("Git Terminal Simulation");\n        System.out.println("Module: ${moduleTitle}");\n        System.out.println("Focus topic (${topicIndex + 1}/${totalTopics}): ${focusTopic}");\n        System.out.println("Objective: ${objective}");\n        System.out.println("Topic map:");\n${topicLines || '        System.out.println("1. No topics listed.");'}\n\n        section("${focusTopic}");\n${commandLines || '        command("git status", "No commands configured for this topic.");'}\n\n        section("Summary");\n        System.out.println("${recap}");\n        System.out.println("Practice: replay these commands in a real terminal with a throwaway repo.");\n        System.out.println("Git topic walkthrough complete: ${focusTopic}");\n    }\n}`;
+}
+
 function buildTopicFocusedJavaSnippet(module, topic, topicIndex, totalTopics) {
+    if (module?.id === 'git-basics-workflow') {
+        return buildGitTopicJavaSnippet(module, topic, topicIndex, totalTopics);
+    }
     const className = `${toModuleClassName(module?.id)}Topic${topicIndex + 1}Set`;
     const moduleTitle = escapeForJavaString(module?.title || 'Module');
     const moduleDescription = escapeForJavaString(module?.description || '');
@@ -9031,6 +9164,8 @@ let studyPlanDraft = null;
 let dsActive = 'array';
 let dsCodeLanguage = 'java';
 let dsControlsBound = false;
+let dsGraphCyInstance = null;
+let dsVisNetworkInstance = null;
 let playgroundState = {
     language: 'java',
     snippetId: '',
@@ -10848,6 +10983,17 @@ function initPlayground() {
         return getCanonicalModuleCode(moduleId, language);
     };
 
+    const isGitWalkthroughModule = (moduleId) => {
+        return Boolean(moduleId) && getModuleCategoryKey(moduleId) === 'git';
+    };
+
+    const applyEditorLockForModule = (moduleId) => {
+        const isReadOnly = isGitWalkthroughModule(moduleId);
+        editor.readOnly = isReadOnly;
+        editor.classList.toggle('playground-editor-readonly', isReadOnly);
+        editor.setAttribute('aria-readonly', isReadOnly ? 'true' : 'false');
+    };
+
     const getFallbackOutputForSelection = (languageKey, moduleId = playgroundState.snippetId) => {
         if (!moduleId) {
             return {
@@ -10870,6 +11016,7 @@ function initPlayground() {
             playgroundState.baseCode = '';
             playgroundState.snippetId = '';
             playgroundState.isCustom = true;
+            applyEditorLockForModule('');
             setOutput(translateLiteral('// Select a sample and run to see output.', appState.language), { source: translateLiteral('Ready', appState.language), tone: 'ready' });
             return;
         }
@@ -10883,8 +11030,12 @@ function initPlayground() {
         playgroundState.baseCode = editor.value;
         playgroundState.snippetId = moduleId;
         playgroundState.isCustom = false;
-        setStatus(translateLiteral('Ready', appState.language), 'idle');
-        setOutput(translateLiteral('// Sample loaded. Click "Run Code" to execute.', appState.language), {
+        const isGitWalkthrough = isGitWalkthroughModule(moduleId);
+        applyEditorLockForModule(moduleId);
+        setStatus(isGitWalkthrough ? t('playground.gitReadOnly') : translateLiteral('Ready', appState.language), 'idle');
+        setOutput(isGitWalkthrough
+            ? `// ${t('playground.gitReadOnlyHint')}\n// ${translateLiteral('Click "Run Code" to execute.', appState.language)}`
+            : translateLiteral('// Sample loaded. Click "Run Code" to execute.', appState.language), {
             source: translateLiteral('Sample Loaded', appState.language),
             language: SUPPORTED_LANGUAGES[playgroundState.language]?.name || playgroundState.language,
             tone: 'ready'
@@ -11160,11 +11311,23 @@ function buildDSStateJson() {
 }
 
 function buildDSStructureVisual() {
+    if (dsActive === 'array') {
+        return `
+            <div id="ds-d3-array-chart" class="ds-lib-canvas ds-d3-canvas"></div>
+            <div class="text-xs text-slate-300">${translateLiteral('D3.js visualization: bar heights track array values.', appState.language)}</div>
+        `;
+    }
     if (dsActive === 'graph') {
-        const nodes = dsState.graph.nodes.map((node) => `<span class="ds-box">${escapeHtml(node)}</span>`).join('');
-        const edges = dsState.graph.edges.map((edge) => `${edge.from} → ${edge.to}`).join(', ');
-        return `<div class="ds-visual ds-graph">${nodes || `<span class="text-xs text-slate-400">${translateLiteral('No nodes yet.', appState.language)}</span>`}</div>
-                <div class="text-xs text-slate-300">${escapeHtml(edges || translateLiteral('No edges yet.', appState.language))}</div>`;
+        return `
+            <div id="ds-cytoscape-graph" class="ds-lib-canvas ds-cytoscape-canvas"></div>
+            <div class="text-xs text-slate-300">${translateLiteral('Cytoscape.js visualization: interactive graph node-edge layout.', appState.language)}</div>
+        `;
+    }
+    if (dsActive === 'heap' || dsActive === 'trie') {
+        return `
+            <div id="ds-vis-network" class="ds-lib-canvas ds-vis-canvas"></div>
+            <div class="text-xs text-slate-300">${translateLiteral('vis-network visualization: node/edge structure map.', appState.language)}</div>
+        `;
     }
     if (dsActive === 'stack') {
         return `<div class="ds-visual ds-stack">${dsState.stack.map((value) => `<span class="ds-box">${escapeHtml(String(value))}</span>`).join('')}</div>`;
@@ -11172,11 +11335,290 @@ function buildDSStructureVisual() {
     if (dsActive === 'queue') {
         return `<div class="ds-visual ds-queue">${dsState.queue.map((value) => `<span class="ds-box">${escapeHtml(String(value))}</span>`).join('')}</div>`;
     }
-    if (dsActive === 'array' || dsActive === 'heap' || dsActive === 'trie') {
-        const values = dsActive === 'array' ? dsState.array : (dsActive === 'heap' ? dsState.heap : dsState.trie);
-        return `<div class="ds-visual ds-array">${values.map((value) => `<span class="ds-box">${escapeHtml(String(value))}</span>`).join('')}</div>`;
-    }
     return '';
+}
+
+function destroyDSVisualizationInstances() {
+    if (dsGraphCyInstance) {
+        try {
+            dsGraphCyInstance.destroy();
+        } catch (error) {
+            console.warn('Unable to destroy Cytoscape instance:', error);
+        }
+        dsGraphCyInstance = null;
+    }
+    if (dsVisNetworkInstance) {
+        try {
+            dsVisNetworkInstance.destroy();
+        } catch (error) {
+            console.warn('Unable to destroy vis-network instance:', error);
+        }
+        dsVisNetworkInstance = null;
+    }
+}
+
+function renderD3ArrayVisual(container) {
+    if (!container) return;
+    if (!window.d3 || typeof window.d3.select !== 'function') {
+        container.innerHTML = `<div class="ds-visual ds-array">${dsState.array.map((value) => `<span class="ds-box">${escapeHtml(String(value))}</span>`).join('')}</div>`;
+        return;
+    }
+
+    const data = dsState.array.map((value) => Number(value) || 0);
+    if (!data.length) {
+        container.innerHTML = `<span class="text-xs text-slate-400">${translateLiteral('No array values yet.', appState.language)}</span>`;
+        return;
+    }
+
+    const d3 = window.d3;
+    const width = Math.max(container.clientWidth, 220);
+    const height = 190;
+    const margin = { top: 12, right: 12, bottom: 24, left: 16 };
+
+    container.innerHTML = '';
+    const svg = d3.select(container)
+        .append('svg')
+        .attr('viewBox', `0 0 ${width} ${height}`)
+        .attr('width', '100%')
+        .attr('height', height)
+        .attr('class', 'ds-d3-svg');
+
+    const x = d3.scaleBand()
+        .domain(data.map((_, index) => index))
+        .range([margin.left, width - margin.right])
+        .padding(0.18);
+    const maxValue = Math.max(...data, 1);
+    const y = d3.scaleLinear()
+        .domain([0, maxValue])
+        .range([height - margin.bottom, margin.top]);
+
+    svg.append('g')
+        .attr('transform', `translate(0, ${height - margin.bottom})`)
+        .call(d3.axisBottom(x).tickFormat((index) => `i${index}`).tickSizeOuter(0))
+        .selectAll('text')
+        .attr('fill', '#cbd5e1')
+        .attr('font-size', 10);
+
+    const bars = svg.append('g')
+        .selectAll('rect')
+        .data(data, (_, index) => index)
+        .join('rect')
+        .attr('x', (_, index) => x(index))
+        .attr('width', x.bandwidth())
+        .attr('rx', 6)
+        .attr('fill', 'url(#ds-array-gradient)')
+        .attr('y', height - margin.bottom)
+        .attr('height', 0);
+
+    const defs = svg.append('defs');
+    const gradient = defs.append('linearGradient')
+        .attr('id', 'ds-array-gradient')
+        .attr('x1', '0%')
+        .attr('x2', '0%')
+        .attr('y1', '0%')
+        .attr('y2', '100%');
+    gradient.append('stop').attr('offset', '0%').attr('stop-color', '#a78bfa');
+    gradient.append('stop').attr('offset', '100%').attr('stop-color', '#6366f1');
+
+    bars.transition()
+        .duration(360)
+        .attr('y', (value) => y(value))
+        .attr('height', (value) => height - margin.bottom - y(value));
+
+    svg.append('g')
+        .selectAll('text')
+        .data(data)
+        .join('text')
+        .attr('x', (_, index) => (x(index) || 0) + x.bandwidth() / 2)
+        .attr('y', (value) => y(value) - 6)
+        .attr('text-anchor', 'middle')
+        .attr('font-size', 10)
+        .attr('fill', '#e2e8f0')
+        .text((value) => value);
+}
+
+function renderCytoscapeGraphVisual(container) {
+    if (!container) return;
+    if (!window.cytoscape || typeof window.cytoscape !== 'function') {
+        const nodes = dsState.graph.nodes.map((node) => `<span class="ds-box">${escapeHtml(node)}</span>`).join('');
+        const edges = dsState.graph.edges.map((edge) => `${edge.from} → ${edge.to}`).join(', ');
+        container.innerHTML = `<div class="ds-visual ds-graph">${nodes || `<span class="text-xs text-slate-400">${translateLiteral('No nodes yet.', appState.language)}</span>`}</div>
+            <div class="text-xs text-slate-300 mt-2">${escapeHtml(edges || translateLiteral('No edges yet.', appState.language))}</div>`;
+        return;
+    }
+
+    const nodes = dsState.graph.nodes.map((node) => ({
+        data: { id: String(node), label: String(node) }
+    }));
+    const edges = dsState.graph.edges.map((edge, index) => ({
+        data: {
+            id: `e${index}-${edge.from}-${edge.to}`,
+            source: String(edge.from),
+            target: String(edge.to)
+        }
+    }));
+    if (!nodes.length) {
+        container.innerHTML = `<span class="text-xs text-slate-400">${translateLiteral('No nodes yet.', appState.language)}</span>`;
+        return;
+    }
+
+    dsGraphCyInstance = window.cytoscape({
+        container,
+        elements: [...nodes, ...edges],
+        style: [
+            {
+                selector: 'node',
+                style: {
+                    'background-color': '#8b5cf6',
+                    label: 'data(label)',
+                    color: '#f8fafc',
+                    'text-valign': 'center',
+                    'text-halign': 'center',
+                    'font-size': 11,
+                    'font-weight': 700,
+                    width: 34,
+                    height: 34
+                }
+            },
+            {
+                selector: 'edge',
+                style: {
+                    width: 2,
+                    'line-color': '#60a5fa',
+                    'target-arrow-color': '#60a5fa',
+                    'target-arrow-shape': 'triangle',
+                    'curve-style': 'bezier'
+                }
+            }
+        ],
+        layout: {
+            name: 'breadthfirst',
+            directed: true,
+            padding: 14,
+            spacingFactor: 1.1,
+            fit: true
+        }
+    });
+}
+
+function buildVisHierarchyNodesAndEdges() {
+    if (dsActive === 'heap') {
+        const nodes = dsState.heap.map((value, index) => ({
+            id: index + 1,
+            label: String(value),
+            color: {
+                background: '#6366f1',
+                border: '#a78bfa',
+                highlight: { background: '#8b5cf6', border: '#c4b5fd' }
+            },
+            font: { color: '#f8fafc', size: 14, face: 'monospace' }
+        }));
+        const edges = [];
+        dsState.heap.forEach((_, index) => {
+            const left = index * 2 + 1;
+            const right = index * 2 + 2;
+            if (left < dsState.heap.length) edges.push({ from: index + 1, to: left + 1 });
+            if (right < dsState.heap.length) edges.push({ from: index + 1, to: right + 1 });
+        });
+        return { nodes, edges };
+    }
+
+    const root = { children: {}, terminal: false };
+    (dsState.trie || []).forEach((word) => {
+        let cursor = root;
+        String(word).split('').forEach((char) => {
+            if (!cursor.children[char]) {
+                cursor.children[char] = { children: {}, terminal: false };
+            }
+            cursor = cursor.children[char];
+        });
+        cursor.terminal = true;
+    });
+
+    const nodes = [];
+    const edges = [];
+    let nextId = 1;
+
+    const walk = (node, label = 'root', parentId = null) => {
+        const id = nextId++;
+        nodes.push({
+            id,
+            label,
+            color: {
+                background: node.terminal ? '#22c55e' : '#6366f1',
+                border: node.terminal ? '#86efac' : '#a78bfa',
+                highlight: { background: '#8b5cf6', border: '#c4b5fd' }
+            },
+            font: { color: '#f8fafc', size: 12, face: 'monospace' }
+        });
+        if (parentId !== null) edges.push({ from: parentId, to: id });
+        Object.entries(node.children).forEach(([char, child]) => walk(child, char, id));
+    };
+
+    walk(root);
+    return { nodes, edges };
+}
+
+function renderVisNetworkVisual(container) {
+    if (!container) return;
+    if (!window.vis || typeof window.vis.Network !== 'function') {
+        const values = dsActive === 'heap' ? dsState.heap : dsState.trie;
+        container.innerHTML = `<div class="ds-visual ds-array">${values.map((value) => `<span class="ds-box">${escapeHtml(String(value))}</span>`).join('')}</div>`;
+        return;
+    }
+    const { nodes, edges } = buildVisHierarchyNodesAndEdges();
+    if (!nodes.length) {
+        container.innerHTML = `<span class="text-xs text-slate-400">${translateLiteral('No nodes yet.', appState.language)}</span>`;
+        return;
+    }
+
+    const data = {
+        nodes: new window.vis.DataSet(nodes),
+        edges: new window.vis.DataSet(edges)
+    };
+    dsVisNetworkInstance = new window.vis.Network(container, data, {
+        layout: {
+            hierarchical: {
+                enabled: true,
+                direction: 'UD',
+                levelSeparation: 54,
+                nodeSpacing: 70
+            }
+        },
+        physics: false,
+        edges: {
+            color: '#60a5fa',
+            smooth: {
+                enabled: true,
+                type: 'cubicBezier',
+                roundness: 0.35
+            },
+            width: 2
+        },
+        interaction: {
+            dragNodes: true,
+            dragView: true,
+            zoomView: true
+        }
+    });
+}
+
+function renderDSLibraryVisuals() {
+    destroyDSVisualizationInstances();
+    const structureEl = document.getElementById('ds-structure-view');
+    if (!structureEl) return;
+
+    if (dsActive === 'array') {
+        renderD3ArrayVisual(document.getElementById('ds-d3-array-chart'));
+        return;
+    }
+    if (dsActive === 'graph') {
+        renderCytoscapeGraphVisual(document.getElementById('ds-cytoscape-graph'));
+        return;
+    }
+    if (dsActive === 'heap' || dsActive === 'trie') {
+        renderVisNetworkVisual(document.getElementById('ds-vis-network'));
+    }
 }
 
 function buildDSPointerVisual() {
@@ -11269,6 +11711,7 @@ function updateDSView(statusMessage) {
     if (statusEl) {
         statusEl.textContent = statusMessage || `${translateLiteral(config.label, appState.language)} ${translateLiteral('ready.', appState.language)}`;
     }
+    renderDSLibraryVisuals();
     renderDSCodeAndExplanation();
     updateDSComplexity();
 }
@@ -14366,7 +14809,7 @@ function printStudyGuide() {
         <head>
             <title>CS Course Atlas Study Guide</title>
             <style>
-                body { font-family: 'Tiny5', 'DotGothic16', monospace; margin: 20px; }
+                body { font-family: 'Pixelify Sans', 'Silkscreen', 'DotGothic16', monospace; margin: 20px; }
                 h1 { color: #4f46e5; border-bottom: 2px solid #4f46e5; padding-bottom: 10px; }
                 h2 { color: #6366f1; margin-top: 30px; }
                 .module { margin-bottom: 30px; page-break-inside: avoid; }
