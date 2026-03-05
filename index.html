@@ -21,7 +21,7 @@
                         }
                     },
                     fontFamily: {
-                        sans: ['Pixelify Sans', 'monospace']
+                        sans: ['Tiny5', 'Silkscreen', 'DotGothic16', 'monospace']
                     },
                     screens: {
                         xs: '480px'
@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Silkscreen:wght@400&family=Tiny5&display=swap" rel="stylesheet">
 </head>
 <body class="min-h-screen transition-all duration-300 bg-slate-50 text-slate-900 accent-indigo card-depth-standard font-sans" id="main-body">
     <header id="main-header" class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white sticky top-0 z-50 shadow-xl transition-all duration-300 backdrop-blur-md border-b border-white/10">
@@ -48,7 +48,7 @@
                         Multi-class learning for Computer Science students
                     </p>
                 </div>
-                <div id="header-buttons" class="flex flex-wrap gap-1.5 sm:gap-2 w-full sm:w-auto justify-start sm:justify-end transition-all duration-300 order-3 sm:order-2 gap-2 justify-end">
+                <div id="header-buttons" class="flex flex-wrap gap-2 w-full sm:w-auto justify-end sm:justify-end transition-all duration-300 order-3 sm:order-2">
                     <button id="flashcards-btn" type="button" onclick="openFlashcards()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
                         🎯 <span class="hidden xs:inline" data-i18n="btn.flashcards">Flashcards</span><span class="xs:hidden" data-i18n="btn.flashcardsShort">Cards</span>
                     </button>
@@ -59,13 +59,13 @@
                         🧠 <span class="hidden xs:inline" data-i18n="btn.quizzes">Interactive Quizzes</span><span class="xs:hidden" data-i18n="btn.quizzesShort">Quizzes</span>
                     </button>
                     <button id="settings-btn" type="button" onclick="openSettings()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
-                        ⚙️ <span class="hidden sm:inline" data-i18n="btn.settings">Settings</span>
+                        ⚙️ <span data-i18n="btn.settings">Settings</span>
                     </button>
                     <button id="reset-btn" type="button" onclick="resetProgress()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
-                        🔄 <span class="hidden sm:inline" data-i18n="btn.reset">Reset</span>
+                        🔄 <span data-i18n="btn.reset">Reset</span>
                     </button>
                     <button id="account-btn" type="button" onclick="openAccountModal()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
-                        👤 <span class="hidden sm:inline" data-i18n="btn.account">Account</span>
+                        👤 <span data-i18n="btn.account">Account</span>
                     </button>
                 </div>
                 <div id="account-chip" class="account-chip hidden sm:flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold order-2 sm:order-3 bg-slate-800 text-slate-100 border border-white/10"></div>
@@ -219,6 +219,7 @@
                     </div>
                     <div class="flex flex-col items-end gap-1">
                         <div class="flex items-center gap-2">
+                            <button type="button" class="section-collapse-toggle text-xs font-semibold px-3 py-1.5 rounded-full bg-violet-500/20 text-violet-100 border border-violet-200/40 hover:bg-violet-500/30" data-section-key="dailyChallenge">Collapse</button>
                             <button id="toggle-auto-rotate" class="text-[11px] font-semibold px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all duration-200 bg-slate-800 text-slate-100 border border-white/10 hover:bg-slate-700">Pause Auto</button>
                             <button id="refresh-challenge" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-indigo-100 text-indigo-700 hover:bg-indigo-200 transition-all duration-200 bg-indigo-500/20 text-indigo-100 border border-indigo-200/40 hover:bg-indigo-500/30">Shuffle</button>
                         </div>
@@ -232,7 +233,10 @@
             <div id="study-tip-card" class="panel-surface rounded-xl p-4 sm:p-5 shadow-xl border border-transparent bg-slate-900/60 border-white/10 text-slate-100">
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading text-[1.05rem] text-indigo-300" data-i18n="section.studyTip">🌟 Study Tip</h3>
-                    <button id="refresh-study-tip" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-all duration-200 bg-emerald-500/20 text-emerald-100 border border-emerald-200/40 hover:bg-emerald-500/30">New Tip</button>
+                    <div class="flex items-center gap-2">
+                        <button type="button" class="section-collapse-toggle text-xs font-semibold px-3 py-1.5 rounded-full bg-violet-500/20 text-violet-100 border border-violet-200/40 hover:bg-violet-500/30" data-section-key="studyTip">Collapse</button>
+                        <button id="refresh-study-tip" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-emerald-100 text-emerald-700 hover:bg-emerald-200 transition-all duration-200 bg-emerald-500/20 text-emerald-100 border border-emerald-200/40 hover:bg-emerald-500/30">New Tip</button>
+                    </div>
                 </div>
                 <p id="study-tip-text" class="text-sm text-slate-700 leading-relaxed text-slate-100 text-[0.95rem]"></p>
             </div>
@@ -244,7 +248,10 @@
                     <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading glow-text text-[1.05rem]" data-i18n="section.insights">Personalized Study Insights</h3>
                     <p class="text-sm text-slate-600 text-slate-200" data-i18n="section.insightsSubtitle">Stay on track with live stats, tailored module suggestions, and a built-in focus buddy.</p>
                 </div>
-                <div id="insight-updates" class="text-xs sm:text-sm text-indigo-600 font-medium text-indigo-200"></div>
+                <div class="flex items-center gap-2">
+                    <div id="insight-updates" class="text-xs sm:text-sm text-indigo-600 font-medium text-indigo-200"></div>
+                    <button type="button" class="section-collapse-toggle text-xs font-semibold px-3 py-1.5 rounded-full bg-violet-500/20 text-violet-100 border border-violet-200/40 hover:bg-violet-500/30" data-section-key="insights">Collapse</button>
+                </div>
             </div>
             <div id="insights-auth-lock" class="insights-auth-lock hidden">
                 <div class="insights-auth-lock-header">
@@ -380,6 +387,7 @@
                 <div class="flex items-center gap-2">
                     <span class="text-xs font-semibold text-slate-500 uppercase tracking-wide text-slate-300" data-i18n="interview.pages">Pages</span>
                     <div id="interview-pagination" class="flex items-center gap-1"></div>
+                    <button type="button" class="section-collapse-toggle text-xs font-semibold px-3 py-1.5 rounded-full bg-violet-500/20 text-violet-100 border border-violet-200/40 hover:bg-violet-500/30" data-section-key="interviewExamples">Collapse</button>
                 </div>
             </div>
             <div id="interview-examples-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
@@ -427,6 +435,7 @@
                     <p class="text-sm text-slate-600 text-slate-200">Jot down takeaways and export as a text file.</p>
                 </div>
                 <div class="flex gap-2">
+                    <button type="button" class="section-collapse-toggle px-3 py-2 rounded-lg bg-violet-500/20 text-violet-100 text-sm font-semibold border border-violet-200/40 hover:bg-violet-500/30" data-section-key="studyNotes">Collapse</button>
                     <button id="save-notes" class="px-3 py-2 rounded-lg bg-indigo-500 text-white text-sm font-semibold shadow-sm hover:bg-indigo-600 transition">Save</button>
                     <button id="download-notes" class="px-3 py-2 rounded-lg bg-slate-800 text-slate-100 text-sm font-semibold border border-white/10 shadow-sm hover:bg-slate-700 transition">Download TXT</button>
                 </div>
@@ -456,11 +465,12 @@
         <section id="ds-playground" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/40 border border-white/10 backdrop-blur-sm">
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-3 gap-4">
                 <div class="space-y-1">
-                    <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading" data-i18n="ds.heading">🛠️ Data Structure Playground</h3>
+                    <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading" data-i18n="ds.heading">🛠️ Data Structure Code Playground</h3>
                     <p class="text-sm text-slate-600 text-slate-200 text-[0.95rem]" data-i18n="ds.subtitle">Interact with arrays, stacks, queues, heaps, graphs, and tries. Track structure, pointers, operation timeline, and complexity in one place.</p>
                 </div>
                 <div class="flex flex-wrap gap-2 items-center gap-3">
                     <div class="flex flex-wrap gap-2" id="ds-tabs"></div>
+                    <button type="button" class="section-collapse-toggle text-xs px-3 py-1.5 rounded-lg bg-violet-500/20 text-violet-100 border border-violet-200/40 font-semibold hover:bg-violet-500/30" data-section-key="dsPlayground">Collapse</button>
                     <button id="ds-reset-all" class="text-xs px-3 py-1.5 rounded-lg visual-link font-semibold px-4 py-2" data-i18n="ds.reset">Reset playground</button>
                 </div>
             </div>
@@ -678,7 +688,7 @@
         </footer>
     </div>
 
-    <button id="site-guide-helper-btn" type="button" class="site-guide-fab" data-i18n="helper.badge" data-i18n-aria-label="helper.ariaLabel">
+    <button id="site-guide-helper-btn" type="button" class="site-guide-fab" data-i18n="helper.badge" data-i18n-aria-label="helper.ariaLabel" aria-haspopup="dialog" aria-controls="site-guide-modal" aria-expanded="false">
         💡 Quick Guide
     </button>
 
@@ -1120,16 +1130,16 @@
         </div>
     </div>
 
-    <div id="site-guide-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+    <div id="site-guide-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="site-guide-title">
         <div class="site-guide-modal-panel modal-panel rounded-2xl w-full max-w-2xl shadow-2xl bg-white text-slate-900 border border-slate-200 bg-slate-900 text-slate-100 border-white/10">
-            <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
+            <div class="site-guide-modal-header flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
                 <div>
-                    <h3 class="text-2xl font-semibold text-indigo-600 text-indigo-300" data-i18n="helper.title">Website Quick Guide</h3>
+                    <h3 id="site-guide-title" class="text-2xl font-semibold text-indigo-600 text-indigo-300" data-i18n="helper.title">Website Quick Guide</h3>
                     <p class="text-sm text-slate-600 text-slate-200 mt-1" data-i18n="helper.subtitle">A short tour of what each section does.</p>
                 </div>
-                <button id="close-site-guide" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700 text-slate-200" data-i18n-aria-label="helper.closeAria">×</button>
+                <button id="close-site-guide" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700 text-slate-200" data-i18n-aria-label="helper.closeAria" aria-label="Close quick guide">×</button>
             </div>
-            <div class="p-6 space-y-4 text-sm leading-relaxed">
+            <div class="site-guide-modal-body p-6 space-y-4 text-sm leading-relaxed">
                 <div class="site-guide-highlight p-4 rounded-xl border border-indigo-200/50 bg-indigo-50/80 bg-indigo-500/10 border-indigo-300/30">
                     <p class="font-semibold text-indigo-800 text-indigo-200" data-i18n="helper.goalTitle">Goal of CS Course Atlas</p>
                     <p class="text-slate-700 text-slate-100 mt-1" data-i18n="helper.goalText">Help Computer Science students learn faster across multiple classes with clear explanations, runnable examples, and guided practice tools.</p>
@@ -1144,7 +1154,7 @@
                         <p class="text-slate-600 text-slate-200" data-i18n="helper.sectionPlaygroundText">Run Java, C++, Python, and JavaScript snippets, test edits, and inspect output quickly.</p>
                     </div>
                     <div class="site-guide-row">
-                        <p class="font-semibold text-slate-800 text-slate-100" data-i18n="helper.sectionDataTitle">Data Structure Playground</p>
+                        <p class="font-semibold text-slate-800 text-slate-100" data-i18n="helper.sectionDataTitle">Data Structure Code Playground</p>
                         <p class="text-slate-600 text-slate-200" data-i18n="helper.sectionDataText">Interactive visuals for arrays, stacks, queues, heaps, graphs, and tries with operation timeline and complexity view.</p>
                     </div>
                     <div class="site-guide-row">
@@ -1157,7 +1167,7 @@
                     </div>
                 </div>
             </div>
-            <div class="p-6 pt-0">
+            <div class="site-guide-modal-footer p-6 pt-0">
                 <button id="close-site-guide-footer" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2.5 rounded-xl font-medium" data-i18n="helper.closeBtn">Got it</button>
             </div>
         </div>

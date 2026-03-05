@@ -40,7 +40,15 @@ const appState = {
     reduceMotion: false,
     highContrast: false,
     cardDepth: 'standard',
-    language: 'en'
+    language: 'en',
+    collapsedSections: {
+        dailyChallenge: true,
+        studyTip: true,
+        insights: true,
+        interviewExamples: true,
+        studyNotes: true,
+        dsPlayground: true
+    }
 };
 
 // Interactive quiz state
@@ -55,7 +63,51 @@ const interactiveQuizState = {
 // CONSTANTS
 // =================================
 const CONSTANTS = {
-    CODE_PREVIEW_LINES: 15
+    CODE_PREVIEW_LINES: 12
+};
+
+const DEFAULT_COLLAPSED_SECTIONS = {
+    dailyChallenge: true,
+    studyTip: true,
+    insights: true,
+    interviewExamples: true,
+    studyNotes: true,
+    dsPlayground: true
+};
+
+const ASSEMBLY_MODULE_IDS = [
+    'assembly-registers-memory',
+    'assembly-control-flow-procedures',
+    'assembly-arrays-strings-io'
+];
+
+const VALID_CATEGORY_FILTERS = new Set(['all', 'dsa', 'discrete', 'java', 'git', 'assembly']);
+
+const COLLAPSIBLE_SECTION_CONFIG = {
+    dailyChallenge: {
+        containerSelector: '#daily-challenge-card',
+        bodySelectors: ['#daily-challenge-description', '#daily-challenge-steps', '#daily-challenge-hint']
+    },
+    studyTip: {
+        containerSelector: '#study-tip-card',
+        bodySelectors: ['#study-tip-text']
+    },
+    insights: {
+        containerSelector: '#insights-section',
+        bodySelectors: ['#insights-auth-lock', '.insight-highlight-grid', '.insight-cards-grid']
+    },
+    interviewExamples: {
+        containerSelector: '#interview-examples',
+        bodySelectors: ['#interview-examples-grid']
+    },
+    studyNotes: {
+        containerSelector: '#notes-section',
+        bodySelectors: ['#notes-input']
+    },
+    dsPlayground: {
+        containerSelector: '#ds-playground',
+        bodySelectors: ['.grid.grid-cols-1.xl\\:grid-cols-12']
+    }
 };
 
 const STORAGE_KEYS = {
@@ -333,6 +385,8 @@ const TRANSLATIONS = {
         'section.studyTip': '🌟 Study Tip',
         'section.insights': 'Personalized Study Insights',
         'section.insightsSubtitle': 'Stay on track with live stats, tailored module suggestions, and a built-in focus buddy.',
+        'section.expand': 'Expand',
+        'section.collapse': 'Collapse',
         'insights.lock.badge': 'Account Required',
         'insights.lock.title': 'Sign in to unlock personalized insights',
         'insights.lock.copy': 'Your dashboard analytics, focus momentum, and personalized recommendations are available after login so progress can sync safely.',
@@ -353,7 +407,7 @@ const TRANSLATIONS = {
         'interview.outputError': 'Execution error',
         'interview.outputPlaceholder': 'Run the example solution to view output.',
         'interview.runInWorkspace': 'Run in Workspace',
-        'ds.heading': '🛠️ Data Structure Playground',
+        'ds.heading': '🛠️ Data Structure Code Playground',
         'ds.subtitle': 'Interact with arrays, stacks, queues, heaps, graphs, and tries. Track structure, pointers, operation timeline, and complexity in one place.',
         'ds.reset': 'Reset playground',
         // Progress chip
@@ -375,7 +429,7 @@ const TRANSLATIONS = {
         'helper.sectionModulesText': 'Structured learning tracks with code examples, theory mode (for discrete), definitions, and resources.',
         'helper.sectionPlaygroundTitle': 'Code Playground',
         'helper.sectionPlaygroundText': 'Run Java, C++, Python, and JavaScript snippets, test edits, and inspect output quickly.',
-        'helper.sectionDataTitle': 'Data Structure Playground',
+        'helper.sectionDataTitle': 'Data Structure Code Playground',
         'helper.sectionDataText': 'Interactive visuals for arrays, stacks, queues, heaps, graphs, and tries with operation timeline and complexity view.',
         'helper.sectionPracticeTitle': 'Practice Tools',
         'helper.sectionPracticeText': 'Use flashcards, interactive quizzes, glossary, and interview examples to reinforce concepts.',
@@ -553,6 +607,8 @@ const TRANSLATIONS = {
         'section.studyTip': '🌟 Consejo de Estudio',
         'section.insights': 'Perspectivas de Estudio Personalizadas',
         'section.insightsSubtitle': 'Mantente al día con estadísticas en vivo, sugerencias de módulos y un compañero de enfoque integrado.',
+        'section.expand': 'Expandir',
+        'section.collapse': 'Colapsar',
         'insights.lock.badge': 'Cuenta Requerida',
         'insights.lock.title': 'Inicia sesión para desbloquear insights personalizados',
         'insights.lock.copy': 'Los análisis del panel, el impulso de enfoque y las recomendaciones personalizadas se habilitan después del inicio de sesión para sincronizar el progreso de forma segura.',
@@ -573,7 +629,7 @@ const TRANSLATIONS = {
         'interview.outputError': 'Error de ejecución',
         'interview.outputPlaceholder': 'Ejecuta la solución de ejemplo para ver la salida.',
         'interview.runInWorkspace': 'Ejecutar en Workspace',
-        'ds.heading': '🛠️ Playground de Estructuras de Datos',
+        'ds.heading': '🛠️ Playground de Código de Estructuras de Datos',
         'ds.subtitle': 'Interactúa con arreglos, pilas, colas, montículos, grafos y tries. Sigue estructura, punteros, línea de tiempo y complejidad en un solo lugar.',
         'ds.reset': 'Reiniciar playground',
         // Progress chip
@@ -595,7 +651,7 @@ const TRANSLATIONS = {
         'helper.sectionModulesText': 'Rutas de aprendizaje estructuradas con ejemplos de código, modo teoría (para discreta), definiciones y recursos.',
         'helper.sectionPlaygroundTitle': 'Playground de Código',
         'helper.sectionPlaygroundText': 'Ejecuta snippets de Java, C++, Python y JavaScript, prueba cambios e inspecciona la salida rápidamente.',
-        'helper.sectionDataTitle': 'Playground de Estructuras',
+        'helper.sectionDataTitle': 'Playground de Código de Estructuras',
         'helper.sectionDataText': 'Visuales interactivos para arreglos, pilas, colas, montículos, grafos y tries con línea de tiempo de operaciones y vista de complejidad.',
         'helper.sectionPracticeTitle': 'Herramientas de Práctica',
         'helper.sectionPracticeText': 'Usa flashcards, cuestionarios interactivos, glosario y ejemplos de entrevista para reforzar conceptos.',
@@ -903,6 +959,106 @@ function refreshLocalizedSections() {
     if (typeof renderQuiz === 'function') renderQuiz();
     if (typeof renderDSControls === 'function') renderDSControls();
     if (typeof updateDSView === 'function') updateDSView();
+    renderSectionCollapsibles();
+}
+
+function normalizeCollapsedSections(input) {
+    const normalized = { ...DEFAULT_COLLAPSED_SECTIONS };
+    if (!input || typeof input !== 'object') return normalized;
+    Object.keys(DEFAULT_COLLAPSED_SECTIONS).forEach((key) => {
+        if (typeof input[key] === 'boolean') {
+            normalized[key] = input[key];
+        }
+    });
+    return normalized;
+}
+
+function getCollapsedSectionState(sectionKey) {
+    if (!Object.prototype.hasOwnProperty.call(DEFAULT_COLLAPSED_SECTIONS, sectionKey)) {
+        return false;
+    }
+    return appState.collapsedSections?.[sectionKey] ?? DEFAULT_COLLAPSED_SECTIONS[sectionKey];
+}
+
+function getCollapsibleSectionBodyElements(sectionKey) {
+    const config = COLLAPSIBLE_SECTION_CONFIG[sectionKey];
+    if (!config) return [];
+    const container = document.querySelector(config.containerSelector);
+    if (!container) return [];
+    const elements = [];
+    (config.bodySelectors || []).forEach((selector) => {
+        container.querySelectorAll(selector).forEach((node) => {
+            elements.push(node);
+        });
+    });
+    return elements;
+}
+
+function updateSectionCollapseButton(sectionKey) {
+    const button = document.querySelector(`.section-collapse-toggle[data-section-key="${sectionKey}"]`);
+    if (!button) return;
+    const collapsed = getCollapsedSectionState(sectionKey);
+    const label = collapsed ? t('section.expand') : t('section.collapse');
+    button.textContent = label;
+    button.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+    button.setAttribute('data-state', collapsed ? 'collapsed' : 'expanded');
+}
+
+function applySectionCollapsedState(sectionKey) {
+    const config = COLLAPSIBLE_SECTION_CONFIG[sectionKey];
+    if (!config) return;
+    const container = document.querySelector(config.containerSelector);
+    if (!container) return;
+    const collapsed = getCollapsedSectionState(sectionKey);
+    container.classList.toggle('section-collapsed', collapsed);
+    getCollapsibleSectionBodyElements(sectionKey).forEach((element) => {
+        if (collapsed) {
+            if (typeof element.dataset.collapsedDisplayValue === 'undefined') {
+                element.dataset.collapsedDisplayValue = element.style.display || '';
+            }
+            element.style.display = 'none';
+            element.setAttribute('aria-hidden', 'true');
+            return;
+        }
+
+        if (typeof element.dataset.collapsedDisplayValue !== 'undefined') {
+            element.style.display = element.dataset.collapsedDisplayValue;
+            delete element.dataset.collapsedDisplayValue;
+        } else {
+            element.style.removeProperty('display');
+        }
+        element.removeAttribute('aria-hidden');
+    });
+    updateSectionCollapseButton(sectionKey);
+}
+
+function renderSectionCollapsibles() {
+    Object.keys(COLLAPSIBLE_SECTION_CONFIG).forEach((sectionKey) => {
+        applySectionCollapsedState(sectionKey);
+    });
+}
+
+function toggleSectionCollapse(sectionKey) {
+    if (!Object.prototype.hasOwnProperty.call(DEFAULT_COLLAPSED_SECTIONS, sectionKey)) return;
+    if (!appState.collapsedSections || typeof appState.collapsedSections !== 'object') {
+        appState.collapsedSections = { ...DEFAULT_COLLAPSED_SECTIONS };
+    }
+    appState.collapsedSections[sectionKey] = !getCollapsedSectionState(sectionKey);
+    applySectionCollapsedState(sectionKey);
+    saveToLocalStorage();
+}
+
+function initSectionCollapsibles() {
+    appState.collapsedSections = normalizeCollapsedSections(appState.collapsedSections);
+    document.querySelectorAll('.section-collapse-toggle[data-section-key]').forEach((button) => {
+        if (button.dataset.boundCollapse === 'true') return;
+        button.dataset.boundCollapse = 'true';
+        const sectionKey = button.dataset.sectionKey;
+        button.addEventListener('click', () => {
+            toggleSectionCollapse(sectionKey);
+        });
+    });
+    renderSectionCollapsibles();
 }
 
 /**
@@ -7722,7 +7878,8 @@ function buildSerializableAppState() {
         reduceMotion: appState.reduceMotion,
         highContrast: appState.highContrast,
         cardDepth: appState.cardDepth,
-        language: appState.language
+        language: appState.language,
+        collapsedSections: normalizeCollapsedSections(appState.collapsedSections)
     };
 }
 
@@ -7851,8 +8008,15 @@ function sanitizeStoredModuleExampleSelections(selectionMap) {
 
 function sanitizeCategoryFilter(category) {
     const migrated = category === 'systems' ? 'java' : category;
-    const valid = new Set(['all', 'dsa', 'discrete', 'java', 'git', 'assembly']);
-    return valid.has(migrated) ? migrated : 'all';
+    return VALID_CATEGORY_FILTERS.has(migrated) ? migrated : 'all';
+}
+
+function enforceAssemblyModuleLanguageDefaults() {
+    ASSEMBLY_MODULE_IDS.forEach((moduleId) => {
+        if (appState.moduleLanguages.get(moduleId) !== 'assembly') {
+            appState.moduleLanguages.delete(moduleId);
+        }
+    });
 }
 
 function loadFromLocalStorage() {
@@ -7896,18 +8060,16 @@ function loadFromLocalStorage() {
             appState.accent = ACCENT_OPTIONS.includes(state.accent) ? state.accent : 'indigo';
             appState.cardDepth = CARD_DEPTH_OPTIONS.includes(state.cardDepth) ? state.cardDepth : 'standard';
             appState.language = ['en', 'es'].includes(state.language) ? state.language : 'en';
+            appState.collapsedSections = normalizeCollapsedSections(state.collapsedSections);
 
             // Keep assembly modules defaulting to Assembly unless explicitly set to Assembly.
-            ['assembly-registers-memory', 'assembly-control-flow-procedures', 'assembly-arrays-strings-io'].forEach((moduleId) => {
-                if (appState.moduleLanguages.get(moduleId) !== 'assembly') {
-                    appState.moduleLanguages.delete(moduleId);
-                }
-            });
+            enforceAssemblyModuleLanguageDefaults();
         } catch (e) {
             console.error('Failed to load saved state:', e);
         }
     } else {
         appState.reduceMotion = prefersReduced;
+        appState.collapsedSections = normalizeCollapsedSections(appState.collapsedSections);
     }
 }
 
@@ -7956,12 +8118,9 @@ function applyRemoteUserStateSnapshot(snapshot, options = {}) {
         appState.accent = ACCENT_OPTIONS.includes(state.accent) ? state.accent : (appState.accent || 'indigo');
         appState.cardDepth = CARD_DEPTH_OPTIONS.includes(state.cardDepth) ? state.cardDepth : (appState.cardDepth || 'standard');
         appState.language = ['en', 'es'].includes(state.language) ? state.language : (appState.language || 'en');
+        appState.collapsedSections = normalizeCollapsedSections(state.collapsedSections || appState.collapsedSections);
 
-        ['assembly-registers-memory', 'assembly-control-flow-procedures', 'assembly-arrays-strings-io'].forEach((moduleId) => {
-            if (appState.moduleLanguages.get(moduleId) !== 'assembly') {
-                appState.moduleLanguages.delete(moduleId);
-            }
-        });
+        enforceAssemblyModuleLanguageDefaults();
 
         if (typeof snapshot.notesDraft === 'string') {
             notesDraft = snapshot.notesDraft;
@@ -8015,6 +8174,7 @@ function applyRemoteUserStateSnapshot(snapshot, options = {}) {
         renderNotesLibrary();
         updateStudyTrackerUI();
         applyLanguage(appState.language);
+        renderSectionCollapsibles();
         if (typeof window.refreshPlaygroundSnippetCatalog === 'function') {
             window.refreshPlaygroundSnippetCatalog();
         }
@@ -11376,12 +11536,36 @@ function closeSupportModal() {
     closeModal('support-modal');
 }
 
+let siteGuideLastFocusedElement = null;
+
 function openSiteGuideModal() {
+    siteGuideLastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     openModal('site-guide-modal');
+    document.body.classList.add('site-guide-open');
+    const trigger = document.getElementById('site-guide-helper-btn');
+    if (trigger) trigger.setAttribute('aria-expanded', 'true');
+    const modal = document.getElementById('site-guide-modal');
+    if (modal) {
+        modal.scrollTop = 0;
+        const body = modal.querySelector('.site-guide-modal-body');
+        if (body) body.scrollTop = 0;
+    }
+    const closeButton = document.getElementById('close-site-guide');
+    if (closeButton) {
+        window.setTimeout(() => closeButton.focus(), 0);
+    }
 }
 
 function closeSiteGuideModal() {
     closeModal('site-guide-modal');
+    document.body.classList.remove('site-guide-open');
+    const trigger = document.getElementById('site-guide-helper-btn');
+    if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    const fallbackTarget = trigger instanceof HTMLElement ? trigger : null;
+    const focusTarget = siteGuideLastFocusedElement instanceof HTMLElement ? siteGuideLastFocusedElement : fallbackTarget;
+    if (focusTarget) {
+        window.setTimeout(() => focusTarget.focus(), 0);
+    }
 }
 
 function initSupport() {
@@ -12098,11 +12282,24 @@ function updateHeaderShrink() {
     subtitle.style.transform = subtitleOpacity < 0.3 ? 'translateY(-10px)' : 'translateY(0)';
 
     // Buttons
-    const buttonOpacity = Math.max(1 - progress * 1.2, 0);
-    const buttonScale = Math.max(1 - progress * 0.3, 0.7);
-    buttons.style.opacity = buttonOpacity;
-    buttons.style.transform = `scale(${buttonScale})`;
-    buttons.style.transformOrigin = 'top right';
+    const isMobileHeader = window.matchMedia('(max-width: 640px)').matches;
+    if (isMobileHeader) {
+        if (shouldCollapse) {
+            buttons.style.opacity = '0';
+            buttons.style.transform = 'scale(0.86)';
+            buttons.style.transformOrigin = 'top center';
+        } else {
+            buttons.style.opacity = '1';
+            buttons.style.transform = 'none';
+            buttons.style.transformOrigin = 'top center';
+        }
+    } else {
+        const buttonOpacity = Math.max(1 - progress * 1.2, 0);
+        const buttonScale = Math.max(1 - progress * 0.3, 0.7);
+        buttons.style.opacity = buttonOpacity;
+        buttons.style.transform = `scale(${buttonScale})`;
+        buttons.style.transformOrigin = 'top right';
+    }
 
     // Add/remove shadow
     if (isScrolled) {
@@ -12235,7 +12432,7 @@ function renderModules() {
         const processedCode = isDiscreteTheoryMode
             ? displayCode
             : processCode(displayCode, module.id);
-        const codeForDisplay = String(processedCode || '').replace(/^(?:\r?\n)+/, '');
+        const codeForDisplay = String(processedCode || '').replace(/^(?:\r?\n)+|(?:\r?\n)+$/g, '');
 
         const isAccentModule = accentModuleIds.has(module.id);
         const isStarterModule = module.id === 'java-basics';
@@ -12358,7 +12555,7 @@ function renderModules() {
             const setProcessedCode = isDiscreteTheoryMode
                 ? setCodeResolved
                 : processCode(setCodeResolved, module.id);
-            const setCodeForDisplay = String(setProcessedCode || '').replace(/^(?:\r?\n)+/, '');
+            const setCodeForDisplay = String(setProcessedCode || '').replace(/^(?:\r?\n)+|(?:\r?\n)+$/g, '');
             return `
                                 <div class="module-example-item rounded-lg border ${setActive ? 'border-indigo-400 bg-indigo-50/50' : 'border-slate-200 bg-white'} overflow-hidden">
                                     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 px-3 py-2">
@@ -12639,6 +12836,10 @@ function renderFlashcard() {
     const sessionProgress = document.getElementById('flashcard-session-progress');
     const desiredLength = appState.flashcardSessionLength || FLASHCARD_SESSION_SIZE;
     const deckSize = deck.length;
+    const flashcardsModal = document.getElementById('flashcards-modal');
+    if (flashcardsModal) {
+        flashcardsModal.classList.toggle('has-active-flashcard-session', totalCards > 0);
+    }
     if (!content || !counter || !toggleButton || !prevButton || !nextButton) {
         return;
     }
@@ -13270,6 +13471,7 @@ function resetProgress() {
         appState.dailyChallengeId = null;
         appState.dailyChallengeDate = null;
         appState.studyTipId = null;
+        appState.collapsedSections = { ...DEFAULT_COLLAPSED_SECTIONS };
 
         // Reset UI
         document.getElementById('search-input').value = '';
@@ -13283,6 +13485,7 @@ function resetProgress() {
         refreshFlashcardSession('all', { persist: false });
         renderDailyChallenge(true);
         renderStudyTip(true);
+        renderSectionCollapsibles();
         saveToLocalStorage();
     }
 }
@@ -13593,6 +13796,7 @@ function init() {
 
     // Apply saved language
     applyLanguage(appState.language);
+    initSectionCollapsibles();
 
     // Language toggle buttons
     const langEnBtn = document.getElementById('lang-en-btn');
@@ -14035,10 +14239,6 @@ function highlightSearchTerm(text, searchTerm) {
     return text.replace(regex, '<mark class="bg-yellow-200 px-1 rounded">$1</mark>');
 }
 
-function escapeRegExp(string) {
-    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
 // Module statistics
 function getModuleStats() {
     const total = modules.length;
@@ -14126,11 +14326,7 @@ function importProgress(event) {
                 appState.moduleExampleSelections = sanitizeStoredModuleExampleSelections(
                     new Map(remapStoredModuleEntryPairs(importData.progress.moduleSettings.selectedExamples || [], { allowLegacy: false }))
                 );
-                ['assembly-registers-memory', 'assembly-control-flow-procedures', 'assembly-arrays-strings-io'].forEach((moduleId) => {
-                    if (appState.moduleLanguages.get(moduleId) !== 'assembly') {
-                        appState.moduleLanguages.delete(moduleId);
-                    }
-                });
+                enforceAssemblyModuleLanguageDefaults();
                 appState.darkMode = importData.progress.preferences.darkMode;
                 appState.showComments = importData.progress.preferences.showComments;
 
@@ -14170,7 +14366,7 @@ function printStudyGuide() {
         <head>
             <title>CS Course Atlas Study Guide</title>
             <style>
-                body { font-family: Arial, sans-serif; margin: 20px; }
+                body { font-family: 'Tiny5', 'DotGothic16', monospace; margin: 20px; }
                 h1 { color: #4f46e5; border-bottom: 2px solid #4f46e5; padding-bottom: 10px; }
                 h2 { color: #6366f1; margin-top: 30px; }
                 .module { margin-bottom: 30px; page-break-inside: avoid; }
@@ -14302,6 +14498,18 @@ function canScrollElementInDirection(scroller, deltaY) {
     return true;
 }
 
+function canAnyScrollableAncestorHandleScroll(startNode, deltaY) {
+    let current = startNode instanceof Element ? startNode : null;
+    while (current && current !== document.body) {
+        if (isVerticallyScrollable(current) && canScrollElementInDirection(current, deltaY)) {
+            return true;
+        }
+        current = current.parentElement;
+    }
+    const rootScroller = document.scrollingElement || document.documentElement;
+    return canScrollElementInDirection(rootScroller, deltaY);
+}
+
 let iosOverscrollLockInitialized = false;
 let iosTouchStartY = 0;
 let iosTouchStartX = 0;
@@ -14326,7 +14534,10 @@ function initIOSOverscrollLock() {
         const deltaX = touch.clientX - iosTouchStartX;
         if (Math.abs(deltaY) <= Math.abs(deltaX)) return;
         const scroller = iosActiveScroller || getNearestScrollableAncestor(event.target);
-        if (!canScrollElementInDirection(scroller, deltaY)) {
+        const target = event.target instanceof Element ? event.target : null;
+        const canScroll = canScrollElementInDirection(scroller, deltaY) ||
+            (target ? canAnyScrollableAncestorHandleScroll(target, deltaY) : false);
+        if (!canScroll) {
             event.preventDefault();
         }
     }, { passive: false });
