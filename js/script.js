@@ -363,8 +363,11 @@ const TRANSLATIONS = {
         'btn.quizzes': 'Interactive Quizzes',
         'btn.quizzesShort': 'Quizzes',
         'btn.settings': 'Settings',
+        'btn.settingsShort': 'Set',
         'btn.reset': 'Reset',
+        'btn.resetShort': 'Reset',
         'btn.account': 'Account',
+        'btn.accountShort': 'Acct',
         // Progress
         'progress.heading': '📊 Your Learning Progress',
         'progress.kicker': 'Current journey',
@@ -588,8 +591,11 @@ const TRANSLATIONS = {
         'btn.quizzes': 'Cuestionarios',
         'btn.quizzesShort': 'Quiz',
         'btn.settings': 'Ajustes',
+        'btn.settingsShort': 'Ajustes',
         'btn.reset': 'Reiniciar',
+        'btn.resetShort': 'Reset',
         'btn.account': 'Cuenta',
+        'btn.accountShort': 'Cuenta',
         // Progress
         'progress.heading': '📊 Tu Progreso de Aprendizaje',
         'progress.kicker': 'Recorrido actual',
