@@ -5511,7 +5511,7 @@ function buildGeneratedSetTitle(topic, index) {
 
 function buildGeneratedSetDescription(module, topic, index, totalTopics) {
     const title = String(module?.title || 'Module');
-    if (module?.id === 'git-basics-workflow') {
+    if (isGitModule(module?.id)) {
         const en = `Topic ${index + 1} of ${totalTopics}: ${topic}. Terminal-first walkthrough with realistic Git command output and safe workflow checkpoints.`;
         const es = `Tema ${index + 1} de ${totalTopics}: ${topic}. Recorrido enfocado en terminal con salida realista de comandos Git y checkpoints de flujo seguro.`;
         return { en, es };
@@ -5629,7 +5629,7 @@ function buildGitTopicJavaSnippet(module, topic, topicIndex, totalTopics) {
 }
 
 function buildTopicFocusedJavaSnippet(module, topic, topicIndex, totalTopics) {
-    if (module?.id === 'git-basics-workflow') {
+    if (isGitModule(module?.id)) {
         return buildGitTopicJavaSnippet(module, topic, topicIndex, totalTopics);
     }
     const className = `${toModuleClassName(module?.id)}Topic${topicIndex + 1}Set`;
@@ -7274,7 +7274,7 @@ function normalizeModuleCatalog(moduleList) {
         const isAssembly = MODULE_CATEGORY_BY_ID[module.id] === 'assembly';
 
         let javaSource = '';
-        if (module.id === 'git-basics-workflow') {
+        if (isGitModule(module.id)) {
             javaSource = buildGitJavaSnippet();
         } else if (typeof existingCodeExamples.java === 'string' && existingCodeExamples.java.trim()) {
             javaSource = existingCodeExamples.java;
@@ -10989,12 +10989,8 @@ function initPlayground() {
         return getCanonicalModuleCode(moduleId, language);
     };
 
-    const isGitWalkthroughModule = (moduleId) => {
-        return Boolean(moduleId) && getModuleCategoryKey(moduleId) === 'git';
-    };
-
     const applyEditorLockForModule = (moduleId) => {
-        const isReadOnly = isGitWalkthroughModule(moduleId);
+        const isReadOnly = isGitModule(moduleId);
         editor.readOnly = isReadOnly;
         editor.classList.toggle('playground-editor-readonly', isReadOnly);
         editor.setAttribute('aria-readonly', isReadOnly ? 'true' : 'false');
@@ -11036,7 +11032,7 @@ function initPlayground() {
         playgroundState.baseCode = editor.value;
         playgroundState.snippetId = moduleId;
         playgroundState.isCustom = false;
-        const isGitWalkthrough = isGitWalkthroughModule(moduleId);
+        const isGitWalkthrough = isGitModule(moduleId);
         applyEditorLockForModule(moduleId);
         setStatus(isGitWalkthrough ? t('playground.gitReadOnly') : translateLiteral('Ready', appState.language), 'idle');
         setOutput(isGitWalkthrough
@@ -11363,10 +11359,14 @@ function destroyDSVisualizationInstances() {
     }
 }
 
+function renderDSFallbackBoxes(container, values) {
+    container.innerHTML = `<div class="ds-visual ds-array">${values.map((value) => `<span class="ds-box">${escapeHtml(String(value))}</span>`).join('')}</div>`;
+}
+
 function renderD3ArrayVisual(container) {
     if (!container) return;
     if (!window.d3 || typeof window.d3.select !== 'function') {
-        container.innerHTML = `<div class="ds-visual ds-array">${dsState.array.map((value) => `<span class="ds-box">${escapeHtml(String(value))}</span>`).join('')}</div>`;
+        renderDSFallbackBoxes(container, dsState.array);
         return;
     }
 
@@ -11569,7 +11569,7 @@ function renderVisNetworkVisual(container) {
     if (!container) return;
     if (!window.vis || typeof window.vis.Network !== 'function') {
         const values = dsActive === 'heap' ? dsState.heap : dsState.trie;
-        container.innerHTML = `<div class="ds-visual ds-array">${values.map((value) => `<span class="ds-box">${escapeHtml(String(value))}</span>`).join('')}</div>`;
+        renderDSFallbackBoxes(container, values);
         return;
     }
     const { nodes, edges } = buildVisHierarchyNodesAndEdges();
@@ -12172,6 +12172,10 @@ function isAssemblyModule(moduleId) {
 
 function isDiscreteModule(moduleId) {
     return DISCRETE_MODULE_IDS.has(moduleId);
+}
+
+function isGitModule(moduleId) {
+    return Boolean(moduleId) && getModuleCategoryKey(moduleId) === 'git';
 }
 
 function getModuleById(moduleId) {
