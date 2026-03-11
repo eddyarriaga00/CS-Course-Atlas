@@ -626,6 +626,97 @@ body.dark .notes-chip {
     color: #e2e8f0;
 }
 
+.books-empty-note {
+    border: 1px dashed var(--surface-border);
+    border-radius: 12px;
+    padding: 0.9rem;
+    color: var(--text-secondary-color);
+    font-size: 0.85rem;
+    text-align: center;
+}
+
+.books-author {
+    font-weight: 600;
+}
+
+.books-status-pill {
+    padding: 0.22rem 0.55rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    border: 1px solid transparent;
+    white-space: nowrap;
+}
+
+.books-status-available {
+    background: rgba(16, 185, 129, 0.18);
+    color: #059669;
+    border-color: rgba(16, 185, 129, 0.4);
+}
+
+.books-status-missing {
+    background: rgba(245, 158, 11, 0.18);
+    color: #b45309;
+    border-color: rgba(245, 158, 11, 0.4);
+}
+
+body.dark .books-status-available {
+    color: #6ee7b7;
+}
+
+body.dark .books-status-missing {
+    color: #fcd34d;
+}
+
+.notes-download.is-disabled,
+.notes-view:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.book-reader-panel {
+    width: min(96vw, 1100px);
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.book-reader-frame-shell {
+    flex: 1 1 auto;
+    min-height: 420px;
+    border-radius: 0.9rem;
+    overflow: hidden;
+    border: 1px solid rgba(148, 163, 184, 0.25);
+    background: rgba(15, 23, 42, 0.65);
+}
+
+.book-reader-frame {
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+    border: 0;
+    background: #0f172a;
+}
+
+@media (max-width: 640px) {
+    .book-reader-panel {
+        width: 100vw;
+        height: 100dvh;
+        max-height: 100dvh;
+        border-radius: 0 !important;
+        padding-bottom: calc(0.75rem + env(safe-area-inset-bottom));
+    }
+
+    .book-reader-frame-shell {
+        min-height: 50vh;
+    }
+
+    .book-reader-frame {
+        min-height: 50vh;
+    }
+}
+
 .reduce-motion * {
     animation-duration: 0ms !important;
     transition-duration: 0ms !important;
@@ -3320,6 +3411,8 @@ body.dark #settings-modal .modal-panel {
     gap: 1rem;
     overflow-y: auto;
     max-height: calc(90vh - 200px);
+    overscroll-behavior: contain;
+    scrollbar-gutter: stable both-edges;
     scrollbar-width: thin;
 }
 
@@ -5286,10 +5379,11 @@ body.dark:not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-min
     }
 
     #header-buttons .header-control span {
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
         max-width: 100%;
+        line-height: 1.15;
     }
 
     #main-header.header-collapsed > .header-inner #header-buttons {

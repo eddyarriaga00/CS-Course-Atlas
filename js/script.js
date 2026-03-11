@@ -466,6 +466,19 @@ const TRANSLATIONS = {
         'helper.workflowStep3': 'Lock understanding with quiz + flashcards.',
         'helper.workflowStep4': 'Save notes and track completion so insights stay accurate.',
         'helper.closeBtn': 'Got it',
+        'books.heading': '📚 Books Library',
+        'books.subtitle': 'Read full-length reference books directly in the website or download them for offline study.',
+        'books.badge': 'Reference Shelf',
+        'books.readerLabel': 'Book Reader',
+        'books.closeReader': 'Close Reader',
+        'books.read': 'Read Online',
+        'books.download': 'Download',
+        'books.available': 'Available',
+        'books.missing': 'Missing on this machine',
+        'books.empty': 'No books configured yet.',
+        'books.unavailable': 'Book file is unavailable on this machine.',
+        'flashcards.nav.prev': 'Previous',
+        'flashcards.nav.next': 'Next',
         // Footer
         'footer.kicker': 'Built for Computer Science students',
         'footer.title': 'CS Course Atlas Learning Hub',
@@ -706,6 +719,19 @@ const TRANSLATIONS = {
         'helper.workflowStep3': 'Fija el aprendizaje con quiz + flashcards.',
         'helper.workflowStep4': 'Guarda notas y marca progreso para mantener insights precisos.',
         'helper.closeBtn': 'Entendido',
+        'books.heading': '📚 Biblioteca de Libros',
+        'books.subtitle': 'Lee libros de referencia completos dentro del sitio o descárgalos para estudiar sin conexión.',
+        'books.badge': 'Biblioteca de Referencia',
+        'books.readerLabel': 'Lector de Libros',
+        'books.closeReader': 'Cerrar Lector',
+        'books.read': 'Leer en Sitio',
+        'books.download': 'Descargar',
+        'books.available': 'Disponible',
+        'books.missing': 'No disponible en esta máquina',
+        'books.empty': 'Aún no hay libros configurados.',
+        'books.unavailable': 'El archivo del libro no está disponible en esta máquina.',
+        'flashcards.nav.prev': 'Anterior',
+        'flashcards.nav.next': 'Siguiente',
         // Footer
         'footer.kicker': 'Creado para estudiantes de Ciencias de la Computación',
         'footer.title': 'Centro de Aprendizaje CS Course Atlas',
@@ -1003,6 +1029,7 @@ function refreshLocalizedSections() {
     if (typeof renderFlashcard === 'function') renderFlashcard();
     if (typeof renderInterviewExamples === 'function') renderInterviewExamples();
     if (typeof renderNotesLibrary === 'function') renderNotesLibrary();
+    if (typeof renderBooksLibrary === 'function') renderBooksLibrary();
     if (typeof renderInteractiveQuizQuestion === 'function') renderInteractiveQuizQuestion();
     if (typeof renderQuiz === 'function') renderQuiz();
     if (typeof renderDSControls === 'function') renderDSControls();
@@ -9253,6 +9280,7 @@ const dsLastOperation = {
 let interviewPage = 1;
 let activePromptId = null;
 let notesLibraryFilter = 'all';
+let booksLibrary = [];
 let notesSaveTimer = null;
 let studyPlanDraft = null;
 let dsActive = 'array';
@@ -10446,6 +10474,150 @@ function renderNotesLibrary() {
         </div>
     `).join('');
 }
+
+function getBookReadUrl(bookId) {
+    return `/api/books/${encodeURIComponent(bookId)}/read`;
+}
+
+function getBookDownloadUrl(bookId) {
+    return `/api/books/${encodeURIComponent(bookId)}/download`;
+}
+
+async function loadBooksLibrary() {
+    try {
+        const response = await fetch('/api/books', {
+            method: 'GET',
+            credentials: 'same-origin',
+            cache: 'no-store'
+        });
+        if (!response.ok) {
+            throw new Error(`Books API responded with ${response.status}`);
+        }
+        const payload = await response.json();
+        booksLibrary = Array.isArray(payload?.books) ? payload.books : [];
+    } catch (error) {
+        console.error('Failed to load books library:', error);
+        booksLibrary = [];
+    }
+    renderBooksLibrary();
+}
+
+function renderBooksLibrary() {
+    const listEl = document.getElementById('books-library-list');
+    if (!listEl) return;
+
+    if (!booksLibrary.length) {
+        listEl.innerHTML = `<div class="books-empty-note">${escapeHtml(t('books.empty'))}</div>`;
+        return;
+    }
+
+    listEl.innerHTML = booksLibrary.map((book) => {
+        const available = Boolean(book?.available);
+        const statusLabel = available ? t('books.available') : t('books.missing');
+        const statusClass = available ? 'books-status-available' : 'books-status-missing';
+        const pageCount = Number(book?.pages);
+        const metadata = [
+            book?.subject || '',
+            book?.edition || '',
+            Number.isFinite(pageCount) && pageCount > 0 ? `${pageCount} ${translateLiteral('pages', appState.language)}` : ''
+        ].filter(Boolean).join(' • ');
+
+        const downloadAttrs = available
+            ? `href="${escapeHtml(getBookDownloadUrl(book.id))}" target="_blank" rel="noopener noreferrer"`
+            : 'href="#" aria-disabled="true" tabindex="-1"';
+
+        return `
+            <div class="notes-card">
+                <div class="flex items-start justify-between gap-2">
+                    <h4>${escapeHtml(book?.title || 'Book')}</h4>
+                    <span class="books-status-pill ${statusClass}">${escapeHtml(statusLabel)}</span>
+                </div>
+                ${book?.author ? `<p class="books-author">${escapeHtml(book.author)}</p>` : ''}
+                ${book?.description ? `<p>${escapeHtml(book.description)}</p>` : ''}
+                ${metadata ? `<div class="text-xs text-slate-500">${escapeHtml(metadata)}</div>` : ''}
+                <div class="notes-actions mt-2">
+                    <button type="button" class="notes-view" data-book-action="read" data-book-id="${escapeHtml(String(book.id || ''))}" ${available ? '' : 'disabled'}>
+                        ${escapeHtml(t('books.read'))}
+                    </button>
+                    <a class="notes-download ${available ? '' : 'is-disabled'}" data-book-action="download" data-book-id="${escapeHtml(String(book.id || ''))}" ${downloadAttrs}>
+                        ${escapeHtml(t('books.download'))}
+                    </a>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function openBookReader(bookId) {
+    const book = booksLibrary.find((item) => item.id === bookId);
+    if (!book || !book.available) {
+        showToast(t('books.unavailable'), 'warning');
+        return;
+    }
+
+    const modal = document.getElementById('book-reader-modal');
+    const titleEl = document.getElementById('book-reader-title');
+    const metaEl = document.getElementById('book-reader-meta');
+    const frameEl = document.getElementById('book-reader-frame');
+    const downloadEl = document.getElementById('book-reader-download');
+
+    if (!modal || !frameEl) return;
+
+    if (titleEl) titleEl.textContent = book.title || 'Book';
+    if (metaEl) {
+        const pageCount = Number(book?.pages);
+        const detailLine = [
+            book?.author || '',
+            book?.edition || '',
+            Number.isFinite(pageCount) && pageCount > 0 ? `${pageCount} ${translateLiteral('pages', appState.language)}` : ''
+        ].filter(Boolean).join(' • ');
+        metaEl.textContent = detailLine;
+    }
+    if (downloadEl) {
+        downloadEl.href = getBookDownloadUrl(book.id);
+    }
+    frameEl.src = getBookReadUrl(book.id);
+    modal.classList.remove('hidden');
+}
+
+function closeBookReaderModal() {
+    const modal = document.getElementById('book-reader-modal');
+    const frameEl = document.getElementById('book-reader-frame');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    if (frameEl) frameEl.src = 'about:blank';
+}
+
+function initBooksLibrary() {
+    const listEl = document.getElementById('books-library-list');
+    if (!listEl) return;
+
+    listEl.addEventListener('click', (event) => {
+        const actionNode = event.target.closest('[data-book-action]');
+        if (!actionNode) return;
+        const action = actionNode.dataset.bookAction;
+        const bookId = actionNode.dataset.bookId;
+        if (!bookId) return;
+
+        if (action === 'read') {
+            event.preventDefault();
+            openBookReader(bookId);
+            return;
+        }
+
+        if (action === 'download') {
+            const book = booksLibrary.find((item) => item.id === bookId);
+            if (!book?.available) {
+                event.preventDefault();
+                showToast(t('books.unavailable'), 'warning');
+            }
+        }
+    });
+
+    loadBooksLibrary();
+}
+
+window.closeBookReaderModal = closeBookReaderModal;
 
 function openNotesDownloadModal(noteId) {
     const modal = document.getElementById('notes-download-modal');
@@ -14060,6 +14232,7 @@ function init() {
     initAccount();
     initNotes();
     initNotesLibrary();
+    initBooksLibrary();
     initInterviewExamples();
     initDSPlayground();
     initSupport();
@@ -14229,6 +14402,7 @@ function init() {
             if (e.target.id === 'support-modal') closeSupportModal();
             if (e.target.id === 'interactive-quiz-modal') closeInteractiveQuizLibrary();
             if (e.target.id === 'site-guide-modal') closeSiteGuideModal();
+            if (e.target.id === 'book-reader-modal') closeBookReaderModal();
         }
     });
 
@@ -14241,6 +14415,7 @@ function init() {
             closeFlashcards();
             closeQuiz();
             closeSiteGuideModal();
+            closeBookReaderModal();
         }
 
         // Arrow keys for flashcards (when flashcard modal is open)
@@ -15446,11 +15621,11 @@ function renderInteractiveQuizQuestion() {
             <div class="flex justify-between items-center mt-4 gap-3">
                 <button class="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 bg-white hover:border-indigo-300 hover:bg-indigo-50 transition"
                     ${current === 0 ? 'disabled' : ''} onclick="prevInteractiveQuizQuestion()">
-                    ◀ ${translateLiteral('Previous', appState.language)}
+                    ${translateLiteral('Previous', appState.language)}
                 </button>
                 <button class="px-4 py-2 rounded-lg bg-indigo-500 text-white font-semibold hover:bg-indigo-600 shadow-sm transition"
                     ${current >= total - 1 ? 'disabled' : ''} onclick="nextInteractiveQuizQuestion()">
-                    ${translateLiteral('Next', appState.language)} ▶
+                    ${translateLiteral('Next', appState.language)}
                 </button>
             </div>
         </div>

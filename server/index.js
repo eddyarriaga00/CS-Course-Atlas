@@ -1,5 +1,6 @@
 require('dotenv').config();
 
+const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const express = require('express');
@@ -24,6 +25,19 @@ const PORT = Number(process.env.PORT || 3000);
 const SESSION_COOKIE_NAME = process.env.SESSION_COOKIE_NAME || 'csatlas_session';
 const SESSION_TTL_DAYS = Number(process.env.SESSION_TTL_DAYS || 30);
 const isProduction = process.env.NODE_ENV === 'production';
+const siteRoot = path.resolve(__dirname, '..');
+const BOOK_LIBRARY = [
+    {
+        id: 'liang-java-9e',
+        title: 'Introduction to Java Programming (9th Edition)',
+        author: 'Y. Daniel Liang',
+        subject: 'Java',
+        edition: '9th Edition',
+        description: 'Core Java textbook with syntax, OOP, data structures, and problem-solving practice.',
+        pages: null,
+        filePath: process.env.LIANG_JAVA_BOOK_PATH || 'C:\\Users\\Eddy\\OneDrive - UNCG\\Introduction-to-Java-Programming-9th-Edition-Y-Daniel-Liang.pdf'
+    }
+];
 
 app.set('trust proxy', 1);
 app.use(helmet({ contentSecurityPolicy: false }));
@@ -50,6 +64,36 @@ function resolveClientIp(req) {
 
 function safeString(value, fallback = '') {
     return typeof value === 'string' ? value.trim() : fallback;
+}
+
+function resolveBookFilePath(book) {
+    const configuredPath = safeString(book?.filePath, '');
+    if (!configuredPath) return '';
+    return path.isAbsolute(configuredPath)
+        ? path.normalize(configuredPath)
+        : path.resolve(siteRoot, configuredPath);
+}
+
+function getBookById(bookId) {
+    return BOOK_LIBRARY.find((book) => book.id === bookId) || null;
+}
+
+function toBookClientModel(book) {
+    const absolutePath = resolveBookFilePath(book);
+    const available = Boolean(absolutePath && fs.existsSync(absolutePath));
+    const numericPages = Number(book?.pages);
+
+    return {
+        id: book.id,
+        title: book.title,
+        author: book.author || '',
+        description: book.description || '',
+        subject: book.subject || '',
+        edition: book.edition || '',
+        pages: Number.isFinite(numericPages) && numericPages > 0 ? numericPages : null,
+        available,
+        fileName: path.basename(absolutePath || book.filePath || '')
+    };
 }
 
 function assertSameOrigin(req, res, next) {
@@ -510,11 +554,46 @@ app.post('/api/support', assertSameOrigin, async (req, res) => {
     }
 });
 
+function sendBookFile(req, res, dispositionType) {
+    const book = getBookById(req.params.bookId);
+    if (!book) {
+        return res.status(404).json({ error: 'Book not found.' });
+    }
+
+    const absolutePath = resolveBookFilePath(book);
+    if (!absolutePath || !fs.existsSync(absolutePath)) {
+        return res.status(404).json({ error: 'Book file is not available on this server.' });
+    }
+
+    const fileName = path.basename(absolutePath).replace(/"/g, '');
+    res.setHeader('Content-Disposition', `${dispositionType}; filename="${fileName}"`);
+
+    return res.sendFile(absolutePath, (error) => {
+        if (error && !res.headersSent) {
+            res.status(error.statusCode || 500).json({ error: 'Unable to stream book file.' });
+        }
+    });
+}
+
+app.get('/api/books', (_req, res) => {
+    return res.json({
+        ok: true,
+        books: BOOK_LIBRARY.map(toBookClientModel)
+    });
+});
+
+app.get('/api/books/:bookId/read', (req, res) => {
+    return sendBookFile(req, res, 'inline');
+});
+
+app.get('/api/books/:bookId/download', (req, res) => {
+    return sendBookFile(req, res, 'attachment');
+});
+
 app.use('/api', (_req, res) => {
     return res.status(404).json({ error: 'API endpoint not found.' });
 });
 
-const siteRoot = path.resolve(__dirname, '..');
 app.use(express.static(siteRoot));
 
 app.get('*', (req, res) => {

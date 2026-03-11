@@ -472,6 +472,17 @@
             </div>
         </section>
 
+        <section id="books-library-section" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+                <div>
+                    <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading text-indigo-300" data-i18n="books.heading">📚 Books Library</h3>
+                    <p class="text-sm text-slate-600 text-slate-200" data-i18n="books.subtitle">Read full-length reference books directly in the website or download them for offline study.</p>
+                </div>
+                <span class="text-xs px-3 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold bg-slate-800 text-slate-100 border border-white/10" data-i18n="books.badge">Reference Shelf</span>
+            </div>
+            <div id="books-library-list" class="notes-scroll bg-slate-900/60 border border-white/10 rounded-xl"></div>
+        </section>
+
         <section id="ds-playground" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/40 border border-white/10 backdrop-blur-sm">
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-3 gap-4">
                 <div class="space-y-1">
@@ -555,6 +566,27 @@
             </div>
         </div>
 
+        <div id="book-reader-modal" class="prompt-modal hidden">
+            <div class="prompt-modal-backdrop" onclick="closeBookReaderModal()"></div>
+            <div class="prompt-modal-panel bg-slate-900 text-slate-100 border-white/10 book-reader-panel">
+                <div class="flex items-start justify-between gap-3 mb-3">
+                    <div>
+                        <p class="text-[11px] uppercase tracking-wide text-slate-500 font-semibold text-slate-300" data-i18n="books.readerLabel">Book Reader</p>
+                        <h3 id="book-reader-title" class="text-lg font-semibold text-indigo-300">Book</h3>
+                        <p id="book-reader-meta" class="text-xs text-slate-300"></p>
+                    </div>
+                    <button class="prompt-close text-slate-200" onclick="closeBookReaderModal()">✕</button>
+                </div>
+                <div class="book-reader-frame-shell">
+                    <iframe id="book-reader-frame" class="book-reader-frame" title="Book reader"></iframe>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <a id="book-reader-download" href="#" target="_blank" rel="noopener noreferrer" class="prompt-submit" data-i18n="books.download">Download</a>
+                    <button class="px-3 py-2 rounded-lg bg-slate-800 text-slate-100 border border-white/10" onclick="closeBookReaderModal()" data-i18n="books.closeReader">Close Reader</button>
+                </div>
+            </div>
+        </div>
+
         <section id="playground-section" class="content-backdrop rounded-2xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl border border-white/40 section-spacing bg-slate-900/60 border-white/10 text-slate-100">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3 mb-4">
                 <div>
@@ -588,7 +620,7 @@
                     <textarea id="playground-editor" spellcheck="false" class="playground-editor bg-slate-900 text-slate-100 border-white/10" aria-label="Playground editor"></textarea>
                     <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 mt-3 gap-3">
                         <button id="playground-run" class="purple-glow-button px-4 py-2 w-full sm:w-auto text-sm font-semibold flex items-center justify-center gap-1 bg-indigo-600 text-white">
-                            ▶️ Run Code
+                            Run Code
                         </button>
                         <button id="playground-reset" class="px-4 py-2 w-full sm:w-auto text-sm font-semibold rounded-lg border border-slate-200 bg-white text-white shadow-sm hover:-translate-y-0.5 transition bg-slate-800 text-slate-100 border-white/10">
                             🔄 Reset Editor
@@ -949,8 +981,8 @@
                         <span class="flashcard-pill" id="flashcard-mode-pill">Tap to flip</span>
                     </div>
                     <div class="flex items-center gap-2 flashcard-nav-actions">
-                        <button id="prev-flashcard" class="flashcard-nav-btn bg-slate-500 hover:bg-slate-600 text-white px-4 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5">← Prev</button>
-                        <button id="next-flashcard" class="flashcard-nav-btn bg-slate-500 hover:bg-slate-600 text-white px-4 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5">Next →</button>
+                        <button id="prev-flashcard" class="flashcard-nav-btn bg-slate-500 hover:bg-slate-600 text-white px-4 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5" data-i18n="flashcards.nav.prev">Previous</button>
+                        <button id="next-flashcard" class="flashcard-nav-btn bg-slate-500 hover:bg-slate-600 text-white px-4 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5" data-i18n="flashcards.nav.next">Next</button>
                         <button id="random-flashcard" class="flashcard-nav-btn bg-purple-500 hover:bg-purple-600 text-white px-4 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5">🔀 Random</button>
                     </div>
                 </div>
