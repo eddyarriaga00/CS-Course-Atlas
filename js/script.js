@@ -10,6 +10,7 @@ const appState = {
     completedQuizzes: new Set(),
     expandedCode: new Set(),
     expandedCodeExamples: new Set(),
+    expandedExampleExplanations: new Set(),
     expandedOutputs: new Set(),
     moduleComments: new Map(),
     moduleLanguages: new Map(),
@@ -18,8 +19,11 @@ const appState = {
     searchTerm: '',
     difficultyFilter: 'all',
     categoryFilter: 'all',
+    modulesPage: 1,
     glossarySearch: '',
     glossaryCategory: 'all',
+    glossarySort: 'smart',
+    glossaryLetter: 'all',
     currentFlashcard: 0,
     showFlashcardAnswer: false,
     currentQuiz: null,
@@ -41,6 +45,8 @@ const appState = {
     highContrast: false,
     cardDepth: 'standard',
     language: 'en',
+    currentRoute: '/home',
+    sidebarOpen: false,
     collapsedSections: {
         progress: true,
         achievements: true,
@@ -86,6 +92,106 @@ const ASSEMBLY_MODULE_IDS = [
 ];
 
 const VALID_CATEGORY_FILTERS = new Set(['all', 'dsa', 'discrete', 'java', 'git', 'assembly']);
+const VALID_GLOSSARY_SORTS = new Set(['smart', 'az', 'za', 'category']);
+const DEFAULT_ROUTE = '/home';
+const ROUTE_ALIAS_MAP = {
+    '/': '/home',
+    '/home': '/home',
+    '/tracks': '/tracks',
+    '/dsa': '/dsa',
+    '/java': '/java',
+    '/git': '/git',
+    '/assembly': '/assembly',
+    '/discrete-math': '/discrete-math',
+    '/flashcards': '/flashcards',
+    '/quizzes': '/quizzes',
+    '/playground': '/playground',
+    '/notes': '/notes',
+    '/support': '/support',
+    '/pricing': '/support',
+    '/about': '/about'
+};
+const TRACK_ROUTE_CATEGORY_MAP = {
+    '/tracks': 'all',
+    '/dsa': 'dsa',
+    '/java': 'java',
+    '/git': 'git',
+    '/assembly': 'assembly',
+    '/discrete-math': 'discrete'
+};
+const CATEGORY_ROUTE_MAP = {
+    all: '/tracks',
+    dsa: '/dsa',
+    java: '/java',
+    git: '/git',
+    assembly: '/assembly',
+    discrete: '/discrete-math'
+};
+const ROUTE_KEY_BY_PATH = {
+    '/home': 'route.home',
+    '/tracks': 'route.tracks',
+    '/dsa': 'route.dsa',
+    '/java': 'route.java',
+    '/git': 'route.git',
+    '/assembly': 'route.assembly',
+    '/discrete-math': 'route.discreteMath',
+    '/flashcards': 'route.flashcards',
+    '/quizzes': 'route.quizzes',
+    '/playground': 'route.playground',
+    '/notes': 'route.notes',
+    '/support': 'route.support',
+    '/about': 'route.about'
+};
+const ROUTE_SECTION_VISIBILITY = {
+    '/home': ['hero-section', 'progress-section', 'achievements-card', 'daily-study-grid', 'insights-section', 'support-section', 'main-footer'],
+    '/tracks': ['route-overview-section', 'topic-focus-section', 'search-section', 'modules-pagination-top', 'modules-grid', 'modules-pagination', 'main-footer'],
+    '/dsa': ['route-overview-section', 'topic-focus-section', 'search-section', 'modules-pagination-top', 'modules-grid', 'modules-pagination', 'main-footer'],
+    '/java': ['route-overview-section', 'topic-focus-section', 'search-section', 'modules-pagination-top', 'modules-grid', 'modules-pagination', 'main-footer'],
+    '/git': ['route-overview-section', 'topic-focus-section', 'search-section', 'modules-pagination-top', 'modules-grid', 'modules-pagination', 'main-footer'],
+    '/assembly': ['route-overview-section', 'topic-focus-section', 'search-section', 'modules-pagination-top', 'modules-grid', 'modules-pagination', 'main-footer'],
+    '/discrete-math': ['route-overview-section', 'topic-focus-section', 'search-section', 'modules-pagination-top', 'modules-grid', 'modules-pagination', 'main-footer'],
+    '/flashcards': ['route-overview-section', 'route-launchpad-section', 'main-footer'],
+    '/quizzes': ['route-overview-section', 'route-launchpad-section', 'interview-examples', 'main-footer'],
+    '/playground': ['route-overview-section', 'ds-playground', 'playground-section', 'main-footer'],
+    '/notes': ['route-overview-section', 'notes-section', 'notes-library-section', 'books-library-section', 'main-footer'],
+    '/support': ['route-overview-section', 'support-section', 'route-launchpad-section', 'main-footer'],
+    '/about': ['route-overview-section', 'hero-section', 'route-launchpad-section', 'main-footer']
+};
+const ROUTE_LAUNCHPAD_CONFIG = {
+    '/flashcards': {
+        titleKey: 'route.flashcards.launchTitle',
+        descriptionKey: 'route.flashcards.launchDescription',
+        actions: [
+            { type: 'button', labelKey: 'route.flashcards.openAction', handler: 'openFlashcards' }
+        ]
+    },
+    '/quizzes': {
+        titleKey: 'route.quizzes.launchTitle',
+        descriptionKey: 'route.quizzes.launchDescription',
+        actions: [
+            { type: 'button', labelKey: 'route.quizzes.openAction', handler: 'openInteractiveQuizLibrary' },
+            { type: 'button', labelKey: 'route.quizzes.examplesAction', handler: 'jumpToInterviewExamples' }
+        ]
+    },
+    '/support': {
+        titleKey: 'route.support.launchTitle',
+        descriptionKey: 'route.support.launchDescription',
+        actions: [
+            { type: 'button', labelKey: 'route.support.openAction', handler: 'openSupportModal' },
+            { type: 'link', labelKey: 'route.support.contactAction', href: 'contact-support.html' }
+        ]
+    },
+    '/about': {
+        titleKey: 'route.about.launchTitle',
+        descriptionKey: 'route.about.launchDescription',
+        actions: [
+            { type: 'button', labelKey: 'route.about.guideAction', handler: 'openSiteGuideModal' }
+        ]
+    }
+};
+const ALL_ROUTE_SECTION_IDS = Array.from(new Set(
+    Object.values(ROUTE_SECTION_VISIBILITY).reduce((acc, list) => acc.concat(list), [])
+));
 
 const COLLAPSIBLE_SECTION_CONFIG = {
     progress: {
@@ -127,7 +233,8 @@ const STORAGE_KEYS = {
     STUDY_HABIT: 'javaDSAStudyHabit',
     ACCOUNT: 'javaDSAAccountProfile',
     NOTES: 'javaDSANotes',
-    STUDY_PLAN: 'javaDSAStudyPlan'
+    STUDY_PLAN: 'javaDSAStudyPlan',
+    DS_PLAYGROUND: 'javaDSADataStructurePlayground'
 };
 
 const moduleOutputCache = new Map();
@@ -135,20 +242,21 @@ const moduleOutputState = new Map();
 const moduleOutputInFlight = new Map();
 const interviewRunState = new Map();
 const interviewRunInFlight = new Set();
+const interviewWorkspaceSelection = new Map();
 
 const SUPPORTED_LANGUAGES = {
-    java: { name: 'Java', icon: '‚òï' },
-    cpp: { name: 'C++', icon: '‚ö°' },
-    python: { name: 'Python', icon: 'üêç' },
-    javascript: { name: 'JavaScript', icon: 'üü®' },
-    assembly: { name: 'Assembly', icon: 'üß©' }
+    java: { name: 'Java', icon: 'J' },
+    cpp: { name: 'C++', icon: 'C++' },
+    python: { name: 'Python', icon: 'Py' },
+    javascript: { name: 'JavaScript', icon: 'JS' },
+    assembly: { name: 'Assembly', icon: 'ASM' }
 };
 const PLAYGROUND_RUNNABLE_LANGUAGES = ['java', 'cpp', 'python', 'javascript'];
 
 const CODE_MODES = {
-    code: { name: 'Code', icon: 'üíª' },
-    pseudocode: { name: 'Pseudocode', icon: 'üìù' },
-    discreteTheory: { name: 'Discrete Mathematics', icon: 'üìò' }
+    code: { name: 'Code', icon: '</>' },
+    pseudocode: { name: 'Pseudocode', icon: 'PS' },
+    discreteTheory: { name: 'Discrete Mathematics', icon: 'DM' }
 };
 
 const DIFFICULTY_COLORS = {
@@ -173,6 +281,34 @@ const ACCENT_OPTIONS = ['indigo', 'emerald', 'amber', 'rose'];
 const ACCENT_CLASSES = ACCENT_OPTIONS.map(option => `accent-${option}`);
 const CARD_DEPTH_OPTIONS = ['standard', 'flat', 'lifted'];
 const CARD_DEPTH_CLASSES = CARD_DEPTH_OPTIONS.map(option => `card-depth-${option}`);
+const ACCESSIBLE_MODAL_IDS = [
+    'settings-modal',
+    'glossary-modal',
+    'flashcards-modal',
+    'quiz-modal',
+    'study-plan-modal',
+    'account-modal',
+    'support-modal',
+    'interactive-quiz-modal',
+    'site-guide-modal',
+    'prompt-workspace-modal',
+    'notes-download-modal',
+    'book-reader-modal'
+];
+const MODAL_FOCUSABLE_SELECTOR = [
+    'a[href]',
+    'button:not([disabled])',
+    'input:not([disabled]):not([type="hidden"])',
+    'select:not([disabled])',
+    'textarea:not([disabled])',
+    '[tabindex]:not([tabindex="-1"])',
+    '[contenteditable="true"]'
+].join(',');
+const modalAccessibilityState = {
+    stack: [],
+    triggerById: new Map(),
+    strategyById: new Map()
+};
 const FONT_SCALE_CLASS_MAP = {
     compact: 'font-scale-compact',
     base: 'font-scale-base',
@@ -299,6 +435,12 @@ const MODULE_LEARNING_SEQUENCE = [
     'lambda-streams'
 ];
 
+const GUEST_STARTER_MODULE_IDS = {
+    dsa: 'arrays-strings',
+    java: 'java-basics',
+    git: 'git-basics-workflow'
+};
+
 const DISCRETE_MODULE_IDS = new Set([
     'propositional-logic-proofs',
     'sets-relations-functions',
@@ -310,35 +452,35 @@ const ACHIEVEMENT_LEVELS = [
         id: 'rookie',
         threshold: 0,
         label: 'Trailhead Rookie',
-        icon: 'üå±',
-        description: 'You have the map and motivation‚Äîcomplete your first module to leave the trailhead.',
+        icon: 'YO±',
+        description: 'You have the map and motivation - complete your first module to leave the trailhead.',
     },
     {
         id: 'scholar',
         threshold: 3,
         label: 'Sprouting Scholar',
-        icon: 'üìò',
+        icon: 'Y"~',
         description: 'Patterns are clicking. Keep finishing fundamentals to unlock tougher structures.',
     },
     {
         id: 'adventurer',
         threshold: 10,
         label: 'Algorithm Adventurer',
-        icon: 'üß≠',
+        icon: 'Yß≠',
         description: 'You navigate recursion, sorting, and graphs with confidence. Time to optimize.',
     },
     {
         id: 'dynamo',
         threshold: 20,
         label: 'Data Structure Dynamo',
-        icon: '‚ö°',
+        icon: '‚s°',
         description: 'You can dissect any implementation and rebuild it from memory. Keep the momentum.',
     },
     {
         id: 'luminary',
         threshold: 34,
         label: 'DSA Luminary',
-        icon: 'üíé',
+        icon: 'L',
         description: 'All modules conquered! Pay it forward by mentoring someone still on the path.',
     }
 ];
@@ -350,7 +492,7 @@ const ACHIEVEMENT_LEVELS = [
 const TRANSLATIONS = {
     en: {
         // Main header
-        'main.title': 'üß≠ CS Course Atlas',
+        'main.title': 'Yß≠ CS Course Atlas',
         'main.subtitle': 'Multi-class learning for Computer Science students',
         // Hero
         'hero.title': 'CS Course Atlas: Learn Across Core CS Courses',
@@ -368,8 +510,67 @@ const TRANSLATIONS = {
         'btn.resetShort': 'Reset',
         'btn.account': 'Account',
         'btn.accountShort': 'Acct',
+        'sidebar.toggle': 'Pages',
+        'sidebar.toggleAria': 'Toggle page navigation',
+        'sidebar.title': 'Pages',
+        'sidebar.closeAria': 'Close page navigation',
+        'sidebar.ariaLabel': 'Main pages',
+        'sidebar.home': 'Home',
+        'sidebar.tracks': 'Course Tracks',
+        'sidebar.dsa': 'DSA',
+        'sidebar.java': 'Java',
+        'sidebar.git': 'Git',
+        'sidebar.assembly': 'Assembly',
+        'sidebar.discreteMath': 'Discrete Math',
+        'sidebar.flashcards': 'Flashcards',
+        'sidebar.quizzes': 'Quizzes',
+        'sidebar.playground': 'Playground',
+        'sidebar.notes': 'Notes',
+        'sidebar.support': 'Support',
+        'sidebar.about': 'About',
+        'route.kicker': 'Current page',
+        'route.home.title': 'Home',
+        'route.home.description': 'Overview, momentum, and daily learning prompts in one place.',
+        'route.tracks.title': 'Course Tracks',
+        'route.tracks.description': 'Browse the full module catalog and filter by track, level, and keywords.',
+        'route.dsa.title': 'DSA Track',
+        'route.dsa.description': 'Data Structures and Algorithms modules only.',
+        'route.java.title': 'Java Track',
+        'route.java.description': 'Java-focused modules with practical code examples and explanations.',
+        'route.git.title': 'Git Track',
+        'route.git.description': 'Version control workflows, branching, and collaboration modules.',
+        'route.assembly.title': 'Assembly Track',
+        'route.assembly.description': 'Low-level memory, registers, and control flow modules.',
+        'route.discreteMath.title': 'Discrete Math Track',
+        'route.discreteMath.description': 'Proofs, logic, and core discrete math topics for CS.',
+        'route.flashcards.title': 'Flashcards',
+        'route.flashcards.description': 'Open flashcards to reinforce concepts quickly.',
+        'route.quizzes.title': 'Quizzes',
+        'route.quizzes.description': 'Run interactive quizzes and interview-style practice.',
+        'route.playground.title': 'Playground',
+        'route.playground.description': 'Use both coding sandboxes for quick experiments and deeper visualization.',
+        'route.notes.title': 'Notes & Library',
+        'route.notes.description': 'Write notes, browse cheat sheets, and read your book library.',
+        'route.support.title': 'Support',
+        'route.support.description': 'Ways to support the project and contact resources.',
+        'route.about.title': 'About',
+        'route.about.description': 'Mission, tools, and legal links for CS Course Atlas.',
+        'route.flashcards.launchTitle': 'Flashcard Practice',
+        'route.flashcards.launchDescription': 'Open the flashcard trainer and start a focused review session.',
+        'route.flashcards.openAction': 'Open Flashcards',
+        'route.quizzes.launchTitle': 'Quiz Practice',
+        'route.quizzes.launchDescription': 'Launch the quiz library or try interview-style coding examples.',
+        'route.quizzes.openAction': 'Open Quiz Library',
+        'route.quizzes.examplesAction': 'Interview Examples',
+        'route.support.launchTitle': 'Need Help or Want to Support?',
+        'route.support.launchDescription': 'Send a support request, open trust pages, or keep the platform free with donations.',
+        'route.support.openAction': 'Open Support Form',
+        'route.support.contactAction': 'Contact Page',
+        'route.about.launchTitle': 'About This Project',
+        'route.about.launchDescription': 'Use the quick guide, then review trust pages and project details.',
+        'route.about.guideAction': 'Open Quick Guide',
         // Progress
-        'progress.heading': 'üìä Your Learning Progress',
+        'progress.heading': 'Y"S Your Learning Progress',
         'progress.kicker': 'Current journey',
         // Topic focus
         'topic.focus.heading': 'Topic Focus',
@@ -396,21 +597,38 @@ const TRANSLATIONS = {
         'topic.comingSoon.stats.title': 'Statistics for CS',
         'topic.comingSoon.stats.subtitle': 'Probability, distributions, inference, and data-driven decision making',
         // Sections
-        'section.dailyChallenge': 'üî• Daily Challenge',
-        'section.studyTip': 'üåü Study Tip',
+        'section.dailyChallenge': 'Y"• Daily Challenge',
+        'section.studyTip': 'YOY Study Tip',
         'section.insights': 'Personalized Study Insights',
         'section.insightsSubtitle': 'Stay on track with live stats, tailored module suggestions, and a built-in focus buddy.',
         'section.expand': 'Expand',
         'section.collapse': 'Collapse',
-        'insights.lock.badge': 'Account Required',
+        'modules.pagination.prev': 'Previous',
+        'modules.pagination.next': 'Next',
+        'modules.pagination.summary': 'Page {current} of {total}',
+        'progress.emptyStart': 'Choose your first track to load modules.',
+        'achievements.emptyTotal': 'Choose a track to see module totals',
+        'insights.lock.badge': 'Guest Mode',
         'insights.lock.title': 'Sign in to unlock personalized insights',
-        'insights.lock.copy': 'Your dashboard analytics, focus momentum, and personalized recommendations are available after login so progress can sync safely.',
+        'insights.lock.copy': 'Your personalized analytics, focus momentum, and recommendations unlock after login so progress can sync securely.',
         'insights.lock.cta': 'Log In / Sign Up',
-        'insights.lock.updates': 'Locked until login',
-        'insights.lock.status': 'Locked',
-        'insights.lock.sessionBtn': 'Sign in to start',
-        'insights.lock.break': 'Sign in to enable reminders',
-        'interview.heading': 'üìÇ Interview Examples',
+        'insights.lock.updates': 'Guest mode active',
+        'insights.lock.status': 'Guest',
+        'insights.lock.sessionBtn': 'Create free account to sync',
+        'insights.lock.break': 'Guests can use modules, quizzes, and flashcards',
+        'insights.lock.totalHint': 'Select a track to see module totals',
+        'insights.lock.learningPathHint': 'Choose your first track to load modules.',
+        'insights.lock.sessionLog': 'Try a sample module, quiz, or flashcards to kick off your first session.',
+        'insights.lock.guestIntro': 'Start learning right now in guest mode:',
+        'insights.lock.guestDsa': 'Start with DSA Foundations',
+        'insights.lock.guestJava': 'Start with Java Core',
+        'insights.lock.guestGit': 'Start with Git Basics',
+        'insights.lock.guestQuiz': 'Try a sample quiz',
+        'insights.lock.guestFlashcards': 'Practice flashcards',
+        'insights.lock.guestNote': 'Save one local note',
+        'insights.lock.guestHint': 'Create a free account to sync progress across devices once you are ready.',
+        'auth.status.guest': 'Guest mode active. Create a free account to sync progress across devices.',
+        'interview.heading': 'Y", Interview Examples',
         'interview.subtitle': 'LeetCode-style walk-throughs. Two at a time with quick copy.',
         'interview.pages': 'Pages',
         'interview.runSolution': 'Run Solution',
@@ -422,7 +640,29 @@ const TRANSLATIONS = {
         'interview.outputError': 'Execution error',
         'interview.outputPlaceholder': 'Run the example solution to view output.',
         'interview.runInWorkspace': 'Run in Workspace',
-        'ds.heading': 'üõ†Ô∏è Data Structure Code Playground',
+        'interview.approach': 'Approach',
+        'interview.language': 'Language',
+        'interview.timedPractice': 'Timed Practice',
+        'interview.yourSolution': 'Your solution (write/paste)',
+        'interview.referenceSolution': 'Reference solution',
+        'interview.inputPlaceholder': 'Write your solution here...',
+        'interview.submitCompare': 'Submit and Compare',
+        'interview.analysisReady': 'Choose an approach to see when and why it applies.',
+        'interview.compareEmpty': 'Add your solution draft before comparing.',
+        'interview.compareSuccess': 'Nice work. Compare your draft with the reference and note differences in tradeoffs and complexity.',
+        'interview.detail.whenToUse': 'When to use',
+        'interview.detail.whyWorks': 'Why it works',
+        'interview.detail.complexity': 'Complexity',
+        'interview.detail.tradeoffs': 'Tradeoffs',
+        'interview.detail.pitfalls': 'Common pitfalls',
+        'interview.detail.steps': 'Implementation steps',
+        'interview.approachCount.one': '{count} approach',
+        'interview.approachCount.other': '{count} approaches',
+        'interview.languageCurrent': 'Language: {language}',
+        'interview.solutionCopied': 'Solution copied.',
+        'interview.solutionCopyError': 'Unable to copy solution.',
+        'interview.noRunnable': 'No runnable sample configured for this approach/language yet.',
+        'ds.heading': 'Y>†Ô∏è Data Structure Code Playground',
         'ds.subtitle': 'Interact with arrays, stacks, queues, heaps, graphs, and tries. Track structure, pointers, operation timeline, and complexity in one place.',
         'ds.reset': 'Reset playground',
         // Progress chip
@@ -434,7 +674,7 @@ const TRANSLATIONS = {
         'support.heading': '‚ù§Ô∏è Do you enjoy this website?',
         'support.subtitle': 'Help keep this resource free and updated with new content weekly!',
         // Floating helper
-        'helper.badge': 'üí° Quick Guide',
+        'helper.badge': 'Quick Guide',
         'helper.ariaLabel': 'Open quick website guide',
         'helper.title': 'Website Quick Guide',
         'helper.subtitle': 'A short tour of what each section does.',
@@ -466,7 +706,7 @@ const TRANSLATIONS = {
         'helper.workflowStep3': 'Lock understanding with quiz + flashcards.',
         'helper.workflowStep4': 'Save notes and track completion so insights stay accurate.',
         'helper.closeBtn': 'Got it',
-        'books.heading': 'üìö Books Library',
+        'books.heading': 'Y"s Books Library',
         'books.subtitle': 'Read full-length reference books directly in the website or download them for offline study.',
         'books.badge': 'Reference Shelf',
         'books.readerLabel': 'Book Reader',
@@ -477,6 +717,25 @@ const TRANSLATIONS = {
         'books.missing': 'Missing on this machine',
         'books.empty': 'No books configured yet.',
         'books.unavailable': 'Book file is unavailable on this machine.',
+        'glossary.title': 'CS Course Atlas Glossary',
+        'glossary.searchPlaceholder': 'Search glossary terms...',
+        'glossary.sortLabel': 'Sort',
+        'glossary.sort.smart': 'Smart Match',
+        'glossary.sort.az': 'A to Z',
+        'glossary.sort.za': 'Z to A',
+        'glossary.sort.category': 'Category',
+        'glossary.clearFilters': 'Clear filters',
+        'glossary.letter.all': 'All',
+        'glossary.category.all': 'All Terms',
+        'glossary.stats.summary': '{count} of {total} terms',
+        'glossary.stats.categoryAll': 'All categories',
+        'glossary.stats.category': 'Category: {category}',
+        'glossary.stats.letter': 'Letter: {letter}',
+        'glossary.empty': 'No terms matched your filters.',
+        'glossary.emptyHint': 'Try another search, category, or letter.',
+        'glossary.copy': 'Copy',
+        'glossary.copySuccess': 'Glossary entry copied.',
+        'glossary.copyError': 'Unable to copy glossary entry.',
         'flashcards.nav.prev': 'Previous',
         'flashcards.nav.next': 'Next',
         // Footer
@@ -486,13 +745,13 @@ const TRANSLATIONS = {
         'footer.tag.multiCourse': 'Multi-course',
         'footer.tag.handsOn': 'Hands-on Practice',
         'footer.tag.bilingual': 'EN / ES Friendly',
-        'footer.quick.flashcards': 'üéØ Open Flashcards',
-        'footer.quick.quizzes': 'üß† Start a Quiz',
-        'footer.quick.glossary': 'üìö Browse Glossary',
-        'footer.tools.title': 'üìñ Study Tools',
-        'footer.tools.flashcards': 'üéØ Practice Flashcards',
-        'footer.tools.glossary': 'üìö CS Glossary',
-        'footer.tools.quizzes': 'üß† Interactive Quizzes',
+        'footer.quick.flashcards': 'YZØ Open Flashcards',
+        'footer.quick.quizzes': 'Yß† Start a Quiz',
+        'footer.quick.glossary': 'Y"s Browse Glossary',
+        'footer.tools.title': 'Y"- Study Tools',
+        'footer.tools.flashcards': 'YZØ Practice Flashcards',
+        'footer.tools.glossary': 'Y"s CS Glossary',
+        'footer.tools.quizzes': 'Yß† Interactive Quizzes',
         'flashcards.deck.all': 'All Modules (mix)',
         'flashcards.deck.topicGroup': 'Topic Decks',
         'flashcards.deck.moduleGroup': 'Module Decks',
@@ -505,20 +764,25 @@ const TRANSLATIONS = {
         'flashcards.deck.topic.empty': 'No unlocked cards in this track yet. Complete quizzes in this track to unlock more flashcards.',
         'flashcards.deck.module.locked': 'Complete quiz to unlock',
         'flashcards.deck.startPrompt': 'Pick a deck to begin.',
-        'footer.features.title': 'üöÄ Core Features',
-        'footer.features.one': 'üí¨ Individual Comment Controls',
-        'footer.features.two': 'üìù Pseudocode Conversion',
-        'footer.features.three': 'üõ†Ô∏è Multi-Language Support',
-        'footer.features.four': 'üì± Mobile-Optimized Design',
-        'footer.features.five': 'üåô Dark Mode Support',
-        'footer.support.title': 'üíñ Support the Project',
+        'footer.features.title': 'Ys? Core Features',
+        'footer.features.one': 'Individual Comment Controls',
+        'footer.features.two': 'Y"ù Pseudocode Conversion',
+        'footer.features.three': 'Y>†Ô∏è Multi-Language Support',
+        'footer.features.four': 'Y"± Mobile-Optimized Design',
+        'footer.features.five': 'YOT Dark Mode Support',
+        'footer.support.title': 'Support the Project',
         'footer.support.copy': 'Made with care for CS students. Help keep the platform free and continuously updated.',
-        'footer.support.coffee': '‚òï Coffee',
-        'footer.support.sponsor': 'üíù Sponsor',
+        'footer.support.coffee': '‚~. Coffee',
+        'footer.support.sponsor': 'Sponsor',
+        'footer.trust.title': 'Trust & Legal',
+        'footer.trust.privacy': 'Privacy Policy',
+        'footer.trust.terms': 'Terms of Use',
+        'footer.trust.contact': 'Contact / Support',
+        'footer.trust.refunds': 'Donations & Refunds',
         'footer.bottom.author': 'Created for CS students by Eddy Arriaga-B',
         'footer.bottom.copyright': 'CS Course Atlas ¬© 2024 | Open Source ‚ù§Ô∏è',
         // Settings modal
-        'settings.title': '‚öôÔ∏è Settings',
+        'settings.title': '‚sTÔ∏è Settings',
         'settings.subtitle': 'Customize your learning experience',
         'settings.appearance': 'Appearance',
         'settings.darkMode': 'Dark Mode',
@@ -567,15 +831,15 @@ const TRANSLATIONS = {
         'settings.language': 'Language / Idioma',
         'settings.languageLabel': 'Interface Language',
         'settings.languageHint': 'Switch between English and Spanish / Cambia entre ingl√©s y espa√±ol.',
-        'settings.save': '‚úì Save & Close',
+        'settings.save': '‚o" Save & Close',
         // Module card labels/tooltips
         'module.starterBanner': '‚≠ê Starter Module: recommended first step for most learners',
         'module.topicsCovered': 'Topics Covered:',
-        'module.codeExample': 'üíª Code Example',
-        'module.discreteTheory': 'üìò Discrete Mathematics Theory',
+        'module.codeExample': 'Code Example',
+        'module.discreteTheory': 'Y"~ Discrete Mathematics Theory',
         'module.theoryMode': 'Theory Mode',
-        'module.learningResources': 'üìö Learning Resources:',
-        'module.definitionsHeading': 'üìò Need-to-Know Definitions',
+        'module.learningResources': 'Y"s Learning Resources:',
+        'module.definitionsHeading': 'Y"~ Need-to-Know Definitions',
         'module.tooltipHideComments': 'Hide Comments',
         'module.tooltipShowComments': 'Show Comments',
         'module.tooltipSelectLanguage': 'Select Programming Language',
@@ -584,8 +848,8 @@ const TRANSLATIONS = {
         'module.modePseudocode': 'Pseudocode',
         'module.commentsOn': 'ON',
         'module.commentsOff': 'OFF',
-        'module.collapse': 'üìÑ Collapse',
-        'module.expand': 'üìñ Expand',
+        'module.collapse': 'Y"" Collapse',
+        'module.expand': 'Y"- Expand',
         'module.discreteModeLabel': 'Discrete Mathematics',
         'module.examplesHeading': 'Detailed Topic Code Examples',
         'module.hideExample': 'Hide Code',
@@ -599,11 +863,14 @@ const TRANSLATIONS = {
         'module.outputSourceLive': 'Live',
         'module.outputSourceFallback': 'Fallback',
         'module.outputAssemblyNote': 'Assembly is view-only in module cards. Showing expected output.',
-        'module.outputUnavailableForMode': 'Output is only available in Code mode.'
+        'module.outputUnavailableForMode': 'Output is only available in Code mode.',
+        'module.deepExplanation': 'Deep Explanation',
+        'module.showDeepExplanation': 'Show Explanation',
+        'module.hideDeepExplanation': 'Hide Explanation'
     },
     es: {
         // Main header
-        'main.title': 'üß≠ CS Course Atlas',
+        'main.title': 'Yß≠ CS Course Atlas',
         'main.subtitle': 'Aprendizaje multi-curso para estudiantes de Ciencias de la Computaci√≥n',
         // Hero
         'hero.title': 'CS Course Atlas: Aprende en Cursos Clave de CS',
@@ -621,8 +888,67 @@ const TRANSLATIONS = {
         'btn.resetShort': 'Reset',
         'btn.account': 'Cuenta',
         'btn.accountShort': 'Cuenta',
+        'sidebar.toggle': 'Paginas',
+        'sidebar.toggleAria': 'Alternar navegacion de paginas',
+        'sidebar.title': 'Paginas',
+        'sidebar.closeAria': 'Cerrar navegacion de paginas',
+        'sidebar.ariaLabel': 'Paginas principales',
+        'sidebar.home': 'Inicio',
+        'sidebar.tracks': 'Rutas',
+        'sidebar.dsa': 'DSA',
+        'sidebar.java': 'Java',
+        'sidebar.git': 'Git',
+        'sidebar.assembly': 'Ensamblador',
+        'sidebar.discreteMath': 'Mate Discreta',
+        'sidebar.flashcards': 'Tarjetas',
+        'sidebar.quizzes': 'Quizzes',
+        'sidebar.playground': 'Playground',
+        'sidebar.notes': 'Notas',
+        'sidebar.support': 'Soporte',
+        'sidebar.about': 'Acerca de',
+        'route.kicker': 'Pagina actual',
+        'route.home.title': 'Inicio',
+        'route.home.description': 'Vista general, ritmo de estudio y retos diarios en un solo lugar.',
+        'route.tracks.title': 'Rutas de Curso',
+        'route.tracks.description': 'Explora todos los modulos y filtra por ruta, nivel y palabras clave.',
+        'route.dsa.title': 'Ruta DSA',
+        'route.dsa.description': 'Solo modulos de Estructuras de Datos y Algoritmos.',
+        'route.java.title': 'Ruta Java',
+        'route.java.description': 'Modulos enfocados en Java con ejemplos practicos y explicaciones.',
+        'route.git.title': 'Ruta Git',
+        'route.git.description': 'Flujos de control de versiones, ramas y colaboracion.',
+        'route.assembly.title': 'Ruta Ensamblador',
+        'route.assembly.description': 'Modulos de memoria, registros y control de flujo en bajo nivel.',
+        'route.discreteMath.title': 'Ruta Matematica Discreta',
+        'route.discreteMath.description': 'Pruebas, logica y temas esenciales de matematica discreta para CS.',
+        'route.flashcards.title': 'Tarjetas',
+        'route.flashcards.description': 'Abre tarjetas para reforzar conceptos rapidamente.',
+        'route.quizzes.title': 'Quizzes',
+        'route.quizzes.description': 'Haz quizzes interactivos y practica tipo entrevista.',
+        'route.playground.title': 'Playground',
+        'route.playground.description': 'Usa ambos sandboxes para experimentar y visualizar mejor.',
+        'route.notes.title': 'Notas y Biblioteca',
+        'route.notes.description': 'Escribe notas, revisa hojas de apoyo y lee libros de referencia.',
+        'route.support.title': 'Soporte',
+        'route.support.description': 'Formas de apoyar el proyecto y recursos de contacto.',
+        'route.about.title': 'Acerca de',
+        'route.about.description': 'Mision, herramientas y enlaces legales de CS Course Atlas.',
+        'route.flashcards.launchTitle': 'Practica con Tarjetas',
+        'route.flashcards.launchDescription': 'Abre el entrenador de tarjetas y empieza una sesion de repaso.',
+        'route.flashcards.openAction': 'Abrir Tarjetas',
+        'route.quizzes.launchTitle': 'Practica de Quiz',
+        'route.quizzes.launchDescription': 'Abre la biblioteca de quizzes o practica ejemplos de entrevista.',
+        'route.quizzes.openAction': 'Abrir Biblioteca de Quiz',
+        'route.quizzes.examplesAction': 'Ejemplos de Entrevista',
+        'route.support.launchTitle': 'Necesitas Ayuda o Quieres Apoyar?',
+        'route.support.launchDescription': 'Envia una solicitud, abre paginas de confianza o dona para mantener la plataforma gratis.',
+        'route.support.openAction': 'Abrir Formulario de Soporte',
+        'route.support.contactAction': 'Pagina de Contacto',
+        'route.about.launchTitle': 'Acerca de este Proyecto',
+        'route.about.launchDescription': 'Usa la guia rapida y luego revisa las paginas de confianza.',
+        'route.about.guideAction': 'Abrir Guia Rapida',
         // Progress
-        'progress.heading': 'üìä Tu Progreso de Aprendizaje',
+        'progress.heading': 'Y"S Tu Progreso de Aprendizaje',
         'progress.kicker': 'Recorrido actual',
         // Topic focus
         'topic.focus.heading': 'Enfoque de Temas',
@@ -649,21 +975,38 @@ const TRANSLATIONS = {
         'topic.comingSoon.stats.title': 'Estad√≠stica para CS',
         'topic.comingSoon.stats.subtitle': 'Probabilidad, distribuciones, inferencia y toma de decisiones basada en datos',
         // Sections
-        'section.dailyChallenge': 'üî• Desaf√≠o del D√≠a',
-        'section.studyTip': 'üåü Consejo de Estudio',
+        'section.dailyChallenge': 'Y"• Desaf√≠o del D√≠a',
+        'section.studyTip': 'YOY Consejo de Estudio',
         'section.insights': 'Perspectivas de Estudio Personalizadas',
         'section.insightsSubtitle': 'Mantente al d√≠a con estad√≠sticas en vivo, sugerencias de m√≥dulos y un compa√±ero de enfoque integrado.',
         'section.expand': 'Expandir',
         'section.collapse': 'Colapsar',
-        'insights.lock.badge': 'Cuenta Requerida',
+        'modules.pagination.prev': 'Anterior',
+        'modules.pagination.next': 'Siguiente',
+        'modules.pagination.summary': 'P√°gina {current} de {total}',
+        'progress.emptyStart': 'Elige tu primera ruta para cargar modulos.',
+        'achievements.emptyTotal': 'Elige una ruta para ver el total de modulos',
+        'insights.lock.badge': 'Modo Invitado',
         'insights.lock.title': 'Inicia sesi√≥n para desbloquear insights personalizados',
-        'insights.lock.copy': 'Los an√°lisis del panel, el impulso de enfoque y las recomendaciones personalizadas se habilitan despu√©s del inicio de sesi√≥n para sincronizar el progreso de forma segura.',
+        'insights.lock.copy': 'Tus analisis personalizados, impulso de enfoque y recomendaciones se desbloquean al iniciar sesion para sincronizar el progreso de forma segura.',
         'insights.lock.cta': 'Iniciar Sesi√≥n / Registrarse',
-        'insights.lock.updates': 'Bloqueado hasta iniciar sesi√≥n',
-        'insights.lock.status': 'Bloqueado',
-        'insights.lock.sessionBtn': 'Inicia sesi√≥n para comenzar',
-        'insights.lock.break': 'Inicia sesi√≥n para habilitar recordatorios',
-        'interview.heading': 'üìÇ Ejemplos de Entrevista',
+        'insights.lock.updates': 'Modo invitado activo',
+        'insights.lock.status': 'Invitado',
+        'insights.lock.sessionBtn': 'Crea cuenta gratis para sincronizar',
+        'insights.lock.break': 'Como invitado puedes usar modulos, quizzes y tarjetas',
+        'insights.lock.totalHint': 'Selecciona una ruta para ver totales',
+        'insights.lock.learningPathHint': 'Elige tu primera ruta para cargar modulos.',
+        'insights.lock.sessionLog': 'Prueba un modulo, quiz o tarjetas para iniciar tu primera sesion.',
+        'insights.lock.guestIntro': 'Empieza ahora mismo en modo invitado:',
+        'insights.lock.guestDsa': 'Comienza con Fundamentos DSA',
+        'insights.lock.guestJava': 'Comienza con Nucleo de Java',
+        'insights.lock.guestGit': 'Comienza con Git Basico',
+        'insights.lock.guestQuiz': 'Prueba un quiz de muestra',
+        'insights.lock.guestFlashcards': 'Practica con tarjetas',
+        'insights.lock.guestNote': 'Guarda una nota local',
+        'insights.lock.guestHint': 'Crea una cuenta gratis para sincronizar tu progreso entre dispositivos cuando quieras.',
+        'auth.status.guest': 'Modo invitado activo. Crea una cuenta gratis para sincronizar tu progreso entre dispositivos.',
+        'interview.heading': 'Y", Ejemplos de Entrevista',
         'interview.subtitle': 'Recorridos estilo LeetCode. Dos por p√°gina con copia r√°pida.',
         'interview.pages': 'P√°ginas',
         'interview.runSolution': 'Ejecutar soluci√≥n',
@@ -675,7 +1018,29 @@ const TRANSLATIONS = {
         'interview.outputError': 'Error de ejecuci√≥n',
         'interview.outputPlaceholder': 'Ejecuta la soluci√≥n de ejemplo para ver la salida.',
         'interview.runInWorkspace': 'Ejecutar en Workspace',
-        'ds.heading': 'üõ†Ô∏è Playground de C√≥digo de Estructuras de Datos',
+        'interview.approach': 'Enfoque',
+        'interview.language': 'Lenguaje',
+        'interview.timedPractice': 'Practica cronometrada',
+        'interview.yourSolution': 'Tu solucion (escribe/pega)',
+        'interview.referenceSolution': 'Solucion de referencia',
+        'interview.inputPlaceholder': 'Escribe tu solucion aqui...',
+        'interview.submitCompare': 'Enviar y comparar',
+        'interview.analysisReady': 'Elige un enfoque para ver cuando y por que aplica.',
+        'interview.compareEmpty': 'Agrega tu borrador de solucion antes de comparar.',
+        'interview.compareSuccess': 'Buen trabajo. Compara tu borrador con la referencia y anota diferencias de tradeoffs y complejidad.',
+        'interview.detail.whenToUse': 'Cuando usarlo',
+        'interview.detail.whyWorks': 'Por que funciona',
+        'interview.detail.complexity': 'Complejidad',
+        'interview.detail.tradeoffs': 'Tradeoffs',
+        'interview.detail.pitfalls': 'Errores comunes',
+        'interview.detail.steps': 'Pasos de implementacion',
+        'interview.approachCount.one': '{count} enfoque',
+        'interview.approachCount.other': '{count} enfoques',
+        'interview.languageCurrent': 'Lenguaje: {language}',
+        'interview.solutionCopied': 'Solucion copiada.',
+        'interview.solutionCopyError': 'No se pudo copiar la solucion.',
+        'interview.noRunnable': 'Aun no hay muestra ejecutable para este enfoque/lenguaje.',
+        'ds.heading': 'Y>†Ô∏è Playground de C√≥digo de Estructuras de Datos',
         'ds.subtitle': 'Interact√∫a con arreglos, pilas, colas, mont√≠culos, grafos y tries. Sigue estructura, punteros, l√≠nea de tiempo y complejidad en un solo lugar.',
         'ds.reset': 'Reiniciar playground',
         // Progress chip
@@ -687,7 +1052,7 @@ const TRANSLATIONS = {
         'support.heading': '‚ù§Ô∏è ¬øDisfrutas este sitio web?',
         'support.subtitle': '¬°Ayuda a mantener este recurso gratuito y actualizado con contenido nuevo cada semana!',
         // Asistente flotante
-        'helper.badge': 'üí° Gu√≠a R√°pida',
+        'helper.badge': 'Guia Rapida',
         'helper.ariaLabel': 'Abrir gu√≠a r√°pida del sitio web',
         'helper.title': 'Gu√≠a R√°pida del Sitio',
         'helper.subtitle': 'Un recorrido corto de lo que hace cada secci√≥n.',
@@ -719,7 +1084,7 @@ const TRANSLATIONS = {
         'helper.workflowStep3': 'Fija el aprendizaje con quiz + flashcards.',
         'helper.workflowStep4': 'Guarda notas y marca progreso para mantener insights precisos.',
         'helper.closeBtn': 'Entendido',
-        'books.heading': 'üìö Biblioteca de Libros',
+        'books.heading': 'Y"s Biblioteca de Libros',
         'books.subtitle': 'Lee libros de referencia completos dentro del sitio o desc√°rgalos para estudiar sin conexi√≥n.',
         'books.badge': 'Biblioteca de Referencia',
         'books.readerLabel': 'Lector de Libros',
@@ -730,6 +1095,25 @@ const TRANSLATIONS = {
         'books.missing': 'No disponible en esta m√°quina',
         'books.empty': 'A√∫n no hay libros configurados.',
         'books.unavailable': 'El archivo del libro no est√° disponible en esta m√°quina.',
+        'glossary.title': 'Glosario de CS Course Atlas',
+        'glossary.searchPlaceholder': 'Buscar terminos del glosario...',
+        'glossary.sortLabel': 'Ordenar',
+        'glossary.sort.smart': 'Coincidencia inteligente',
+        'glossary.sort.az': 'A a Z',
+        'glossary.sort.za': 'Z a A',
+        'glossary.sort.category': 'Categoria',
+        'glossary.clearFilters': 'Limpiar filtros',
+        'glossary.letter.all': 'Todas',
+        'glossary.category.all': 'Todos los terminos',
+        'glossary.stats.summary': '{count} de {total} terminos',
+        'glossary.stats.categoryAll': 'Todas las categorias',
+        'glossary.stats.category': 'Categoria: {category}',
+        'glossary.stats.letter': 'Letra: {letter}',
+        'glossary.empty': 'No hay terminos con esos filtros.',
+        'glossary.emptyHint': 'Prueba otra busqueda, categoria o letra.',
+        'glossary.copy': 'Copiar',
+        'glossary.copySuccess': 'Entrada del glosario copiada.',
+        'glossary.copyError': 'No se pudo copiar la entrada del glosario.',
         'flashcards.nav.prev': 'Anterior',
         'flashcards.nav.next': 'Siguiente',
         // Footer
@@ -739,13 +1123,13 @@ const TRANSLATIONS = {
         'footer.tag.multiCourse': 'Multi-curso',
         'footer.tag.handsOn': 'Pr√°ctica Activa',
         'footer.tag.bilingual': 'Amigable EN / ES',
-        'footer.quick.flashcards': 'üéØ Abrir Tarjetas',
-        'footer.quick.quizzes': 'üß† Iniciar Quiz',
-        'footer.quick.glossary': 'üìö Ver Glosario',
-        'footer.tools.title': 'üìñ Herramientas de Estudio',
-        'footer.tools.flashcards': 'üéØ Practicar Tarjetas',
-        'footer.tools.glossary': 'üìö Glosario de CS',
-        'footer.tools.quizzes': 'üß† Cuestionarios Interactivos',
+        'footer.quick.flashcards': 'YZØ Abrir Tarjetas',
+        'footer.quick.quizzes': 'Yß† Iniciar Quiz',
+        'footer.quick.glossary': 'Y"s Ver Glosario',
+        'footer.tools.title': 'Y"- Herramientas de Estudio',
+        'footer.tools.flashcards': 'YZØ Practicar Tarjetas',
+        'footer.tools.glossary': 'Y"s Glosario de CS',
+        'footer.tools.quizzes': 'Yß† Cuestionarios Interactivos',
         'flashcards.deck.all': 'Todos los m√≥dulos (mezcla)',
         'flashcards.deck.topicGroup': 'Mazos por tema',
         'flashcards.deck.moduleGroup': 'Mazos por m√≥dulo',
@@ -758,20 +1142,25 @@ const TRANSLATIONS = {
         'flashcards.deck.topic.empty': 'A√∫n no hay tarjetas desbloqueadas en esta ruta. Completa quizzes de esta ruta para desbloquear m√°s tarjetas.',
         'flashcards.deck.module.locked': 'Completa el quiz para desbloquear',
         'flashcards.deck.startPrompt': 'Elige un mazo para comenzar.',
-        'footer.features.title': 'üöÄ Funciones Clave',
-        'footer.features.one': 'üí¨ Controles de Comentarios Individuales',
-        'footer.features.two': 'üìù Conversi√≥n a Pseudoc√≥digo',
-        'footer.features.three': 'üõ†Ô∏è Soporte Multi-Lenguaje',
-        'footer.features.four': 'üì± Dise√±o Optimizado para M√≥vil',
-        'footer.features.five': 'üåô Soporte de Modo Oscuro',
-        'footer.support.title': 'üíñ Apoya el Proyecto',
+        'footer.features.title': 'Ys? Funciones Clave',
+        'footer.features.one': 'Controles de comentarios individuales',
+        'footer.features.two': 'Y"ù Conversi√≥n a Pseudoc√≥digo',
+        'footer.features.three': 'Y>†Ô∏è Soporte Multi-Lenguaje',
+        'footer.features.four': 'Y"± Dise√±o Optimizado para M√≥vil',
+        'footer.features.five': 'YOT Soporte de Modo Oscuro',
+        'footer.support.title': 'Apoya el Proyecto',
         'footer.support.copy': 'Hecho con dedicaci√≥n para estudiantes de CS. Ayuda a mantener la plataforma gratuita y en mejora continua.',
-        'footer.support.coffee': '‚òï Caf√©',
-        'footer.support.sponsor': 'üíù Patrocinar',
+        'footer.support.coffee': '‚~. Caf√©',
+        'footer.support.sponsor': 'Patrocinar',
+        'footer.trust.title': 'Confianza y Legal',
+        'footer.trust.privacy': 'Pol√≠tica de Privacidad',
+        'footer.trust.terms': 'T√©rminos de Uso',
+        'footer.trust.contact': 'Contacto / Soporte',
+        'footer.trust.refunds': 'Donaciones y Reembolsos',
         'footer.bottom.author': 'Creado para estudiantes de CS por Eddy Arriaga-B',
         'footer.bottom.copyright': 'CS Course Atlas ¬© 2024 | C√≥digo Abierto ‚ù§Ô∏è',
         // Settings modal
-        'settings.title': '‚öôÔ∏è Ajustes',
+        'settings.title': '‚sTÔ∏è Ajustes',
         'settings.subtitle': 'Personaliza tu experiencia de aprendizaje',
         'settings.appearance': 'Apariencia',
         'settings.darkMode': 'Modo Oscuro',
@@ -820,15 +1209,15 @@ const TRANSLATIONS = {
         'settings.language': 'Idioma / Language',
         'settings.languageLabel': 'Idioma de la Interfaz',
         'settings.languageHint': 'Cambia entre espa√±ol e ingl√©s / Switch between Spanish and English.',
-        'settings.save': '‚úì Guardar y Cerrar',
+        'settings.save': '‚o" Guardar y Cerrar',
         // Module card labels/tooltips
         'module.starterBanner': '‚≠ê M√≥dulo inicial: primer paso recomendado para la mayor√≠a',
         'module.topicsCovered': 'Temas cubiertos:',
-        'module.codeExample': 'üíª Ejemplo de c√≥digo',
-        'module.discreteTheory': 'üìò Teor√≠a de Matem√°ticas Discretas',
+        'module.codeExample': 'Ejemplo de codigo',
+        'module.discreteTheory': 'Y"~ Teor√≠a de Matem√°ticas Discretas',
         'module.theoryMode': 'Modo Teor√≠a',
-        'module.learningResources': 'üìö Recursos de aprendizaje:',
-        'module.definitionsHeading': 'üìò Definiciones Clave',
+        'module.learningResources': 'Y"s Recursos de aprendizaje:',
+        'module.definitionsHeading': 'Y"~ Definiciones Clave',
         'module.tooltipHideComments': 'Ocultar comentarios',
         'module.tooltipShowComments': 'Mostrar comentarios',
         'module.tooltipSelectLanguage': 'Seleccionar lenguaje de programaci√≥n',
@@ -837,8 +1226,8 @@ const TRANSLATIONS = {
         'module.modePseudocode': 'Pseudoc√≥digo',
         'module.commentsOn': 'ACT',
         'module.commentsOff': 'DES',
-        'module.collapse': 'üìÑ Contraer',
-        'module.expand': 'üìñ Expandir',
+        'module.collapse': 'Y"" Contraer',
+        'module.expand': 'Y"- Expandir',
         'module.discreteModeLabel': 'Matem√°ticas Discretas',
         'module.examplesHeading': 'Ejemplos de C√≥digo por Tema',
         'module.hideExample': 'Ocultar C√≥digo',
@@ -852,7 +1241,10 @@ const TRANSLATIONS = {
         'module.outputSourceLive': 'En vivo',
         'module.outputSourceFallback': 'Respaldo',
         'module.outputAssemblyNote': 'Ensamblador es solo visual en las tarjetas del m√≥dulo. Mostrando salida esperada.',
-        'module.outputUnavailableForMode': 'La salida solo est√° disponible en modo C√≥digo.'
+        'module.outputUnavailableForMode': 'La salida solo est√° disponible en modo C√≥digo.',
+        'module.deepExplanation': 'Explicacion Profunda',
+        'module.showDeepExplanation': 'Mostrar Explicacion',
+        'module.hideDeepExplanation': 'Ocultar Explicacion'
     }
 };
 
@@ -1034,6 +1426,10 @@ function refreshLocalizedSections() {
     if (typeof renderQuiz === 'function') renderQuiz();
     if (typeof renderDSControls === 'function') renderDSControls();
     if (typeof updateDSView === 'function') updateDSView();
+    if (activePromptId) {
+        if (typeof renderPromptWorkspaceReference === 'function') renderPromptWorkspaceReference(activePromptId);
+        if (typeof renderPromptWorkspaceOutput === 'function') renderPromptWorkspaceOutput(activePromptId);
+    }
     renderSectionCollapsibles();
 }
 
@@ -1203,7 +1599,296 @@ function setLanguage(lang) {
     if (typeof refreshFlashcardSession === 'function' && appState.selectedFlashcardModule) {
         refreshFlashcardSession(appState.selectedFlashcardModule, { persist: false });
     }
+    if (typeof renderRoute === 'function') {
+        renderRoute(appState.currentRoute || normalizeRoutePath(window.location.pathname || '/'), {
+            preserveScroll: true,
+            focusMain: false,
+            skipModuleRender: true
+        });
+    }
     saveToLocalStorage();
+}
+
+function normalizeRoutePath(pathname) {
+    const value = String(pathname || '/').trim().toLowerCase();
+    const withoutQuery = value.split('?')[0].split('#')[0];
+    let normalized = withoutQuery || '/';
+    if (!normalized.startsWith('/')) normalized = `/${normalized}`;
+    if (normalized.length > 1 && normalized.endsWith('/')) {
+        normalized = normalized.replace(/\/+$/g, '');
+    }
+    return ROUTE_ALIAS_MAP[normalized] || DEFAULT_ROUTE;
+}
+
+function getRouteForCategoryFilter(category) {
+    const key = String(category || 'all').toLowerCase();
+    return CATEGORY_ROUTE_MAP[key] || '/tracks';
+}
+
+function isSidebarDrawerMode() {
+    return window.matchMedia('(max-width: 1023px)').matches;
+}
+
+function setSidebarExpandedState(expanded) {
+    const toggleButton = document.getElementById('sidebar-toggle');
+    const sidebar = document.getElementById('app-sidebar');
+    const backdrop = document.getElementById('sidebar-backdrop');
+    const drawerMode = isSidebarDrawerMode();
+    if (toggleButton) {
+        toggleButton.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    }
+    if (sidebar) {
+        sidebar.setAttribute('aria-hidden', drawerMode ? (expanded ? 'false' : 'true') : 'false');
+    }
+    if (backdrop) {
+        backdrop.hidden = !drawerMode || !expanded;
+    }
+}
+
+function closeSidebar(options = {}) {
+    const { focusToggle = false } = options;
+    appState.sidebarOpen = false;
+    document.body.classList.remove('sidebar-open');
+    setSidebarExpandedState(false);
+    if (focusToggle) {
+        const toggleButton = document.getElementById('sidebar-toggle');
+        if (toggleButton) toggleButton.focus();
+    }
+}
+
+function openSidebar() {
+    if (!isSidebarDrawerMode()) return;
+    appState.sidebarOpen = true;
+    document.body.classList.add('sidebar-open');
+    setSidebarExpandedState(true);
+}
+
+function syncSidebarActiveLink(route) {
+    document.querySelectorAll('.sidebar-link[data-route-key]').forEach((link) => {
+        const linkRoute = normalizeRoutePath(link.getAttribute('data-route-key') || link.getAttribute('href') || '');
+        const isActive = route === linkRoute;
+        link.classList.toggle('active', isActive);
+        link.setAttribute('aria-current', isActive ? 'page' : 'false');
+    });
+}
+
+function setRouteSectionVisibility(sectionId, isVisible) {
+    const element = document.getElementById(sectionId);
+    if (!element) return;
+    element.hidden = !isVisible;
+    if (isVisible) {
+        element.removeAttribute('aria-hidden');
+    } else {
+        element.setAttribute('aria-hidden', 'true');
+    }
+}
+
+function applyRouteSectionVisibility(route) {
+    const visibleSections = new Set(ROUTE_SECTION_VISIBILITY[route] || ROUTE_SECTION_VISIBILITY[DEFAULT_ROUTE] || []);
+    ALL_ROUTE_SECTION_IDS.forEach((sectionId) => {
+        setRouteSectionVisibility(sectionId, visibleSections.has(sectionId));
+    });
+}
+
+function renderRouteOverview(route) {
+    const overviewSection = document.getElementById('route-overview-section');
+    const titleElement = document.getElementById('route-overview-title');
+    const descriptionElement = document.getElementById('route-overview-description');
+    if (!overviewSection || !titleElement || !descriptionElement) return;
+    if (overviewSection.hidden) return;
+
+    const routeKey = ROUTE_KEY_BY_PATH[route] || ROUTE_KEY_BY_PATH[DEFAULT_ROUTE];
+    titleElement.textContent = t(`${routeKey}.title`);
+    descriptionElement.textContent = t(`${routeKey}.description`);
+}
+
+function getRouteActionHandler(handlerName) {
+    if (handlerName === 'openFlashcards') {
+        return () => openFlashcards();
+    }
+    if (handlerName === 'openInteractiveQuizLibrary') {
+        return () => openInteractiveQuizLibrary();
+    }
+    if (handlerName === 'jumpToInterviewExamples') {
+        return () => {
+            const section = document.getElementById('interview-examples');
+            if (section) section.scrollIntoView({ behavior: appState.reduceMotion ? 'auto' : 'smooth', block: 'start' });
+        };
+    }
+    if (handlerName === 'openSupportModal') {
+        return () => openSupportModal();
+    }
+    if (handlerName === 'openSiteGuideModal') {
+        return () => openSiteGuideModal();
+    }
+    return null;
+}
+
+function renderRouteLaunchpad(route) {
+    const launchpadSection = document.getElementById('route-launchpad-section');
+    const titleElement = document.getElementById('route-launchpad-title');
+    const descriptionElement = document.getElementById('route-launchpad-description');
+    const actionsElement = document.getElementById('route-launchpad-actions');
+    if (!launchpadSection || !titleElement || !descriptionElement || !actionsElement) return;
+    actionsElement.innerHTML = '';
+    if (launchpadSection.hidden) return;
+
+    const config = ROUTE_LAUNCHPAD_CONFIG[route];
+    if (!config) return;
+
+    titleElement.textContent = t(config.titleKey);
+    descriptionElement.textContent = t(config.descriptionKey);
+
+    (config.actions || []).forEach((actionConfig) => {
+        if (actionConfig.type === 'link') {
+            const link = document.createElement('a');
+            link.className = 'route-launchpad-btn route-launchpad-link';
+            link.href = actionConfig.href || '#';
+            link.textContent = t(actionConfig.labelKey);
+            actionsElement.appendChild(link);
+            return;
+        }
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'route-launchpad-btn';
+        button.textContent = t(actionConfig.labelKey);
+        const handler = getRouteActionHandler(actionConfig.handler);
+        if (handler) {
+            button.addEventListener('click', handler);
+        }
+        actionsElement.appendChild(button);
+    });
+}
+
+function applyTrackRoute(route) {
+    if (!Object.prototype.hasOwnProperty.call(TRACK_ROUTE_CATEGORY_MAP, route)) {
+        return false;
+    }
+
+    const nextCategory = TRACK_ROUTE_CATEGORY_MAP[route];
+    const categoryChanged = appState.categoryFilter !== nextCategory;
+    const pageChanged = appState.modulesPage !== 1;
+
+    appState.categoryFilter = nextCategory;
+    appState.modulesPage = 1;
+    updateTopicFocusButtons();
+
+    return categoryChanged || pageChanged;
+}
+
+function renderRoute(route, options = {}) {
+    const normalizedRoute = normalizeRoutePath(route);
+    const {
+        preserveScroll = false,
+        focusMain = false,
+        skipModuleRender = false
+    } = options;
+
+    appState.currentRoute = normalizedRoute;
+    const trackRouteChanged = applyTrackRoute(normalizedRoute);
+    const isTrackRoute = Object.prototype.hasOwnProperty.call(TRACK_ROUTE_CATEGORY_MAP, normalizedRoute);
+    if (isTrackRoute && !skipModuleRender) {
+        renderModules();
+    }
+    if (trackRouteChanged) {
+        saveToLocalStorage();
+    }
+
+    applyRouteSectionVisibility(normalizedRoute);
+    renderRouteOverview(normalizedRoute);
+    renderRouteLaunchpad(normalizedRoute);
+    syncSidebarActiveLink(normalizedRoute);
+
+    const routeTitleKey = ROUTE_KEY_BY_PATH[normalizedRoute] || ROUTE_KEY_BY_PATH[DEFAULT_ROUTE];
+    document.title = `${t(`${routeTitleKey}.title`)} | CS Course Atlas`;
+
+    const routeSlug = normalizedRoute.replace(/^\/+/, '').replace(/[^\w-]/g, '') || 'home';
+    document.body.setAttribute('data-route', routeSlug);
+
+    if (!preserveScroll) {
+        window.scrollTo({ top: 0, behavior: appState.reduceMotion ? 'auto' : 'smooth' });
+    }
+
+    if (focusMain) {
+        const routeFocusTarget = document.getElementById('route-overview-section');
+        if (routeFocusTarget && !routeFocusTarget.hidden) {
+            routeFocusTarget.setAttribute('tabindex', '-1');
+            routeFocusTarget.focus();
+        }
+    }
+
+    if (!isSidebarDrawerMode()) {
+        closeSidebar();
+    }
+}
+
+function navigateToRoute(route, options = {}) {
+    const normalizedRoute = normalizeRoutePath(route);
+    const {
+        replaceHistory = false,
+        preserveScroll = false,
+        focusMain = true,
+        skipModuleRender = false
+    } = options;
+
+    const currentPath = normalizeRoutePath(window.location.pathname || '/');
+    const shouldReplace = replaceHistory || normalizedRoute === currentPath;
+    const historyState = { route: normalizedRoute };
+    if (shouldReplace) {
+        window.history.replaceState(historyState, '', normalizedRoute);
+    } else {
+        window.history.pushState(historyState, '', normalizedRoute);
+    }
+
+    renderRoute(normalizedRoute, { preserveScroll, focusMain, skipModuleRender });
+}
+
+function initRouteNavigation() {
+    const toggleButton = document.getElementById('sidebar-toggle');
+    const closeButton = document.getElementById('sidebar-close');
+    const backdrop = document.getElementById('sidebar-backdrop');
+    closeSidebar();
+
+    if (toggleButton && toggleButton.dataset.boundSidebarToggle !== 'true') {
+        toggleButton.dataset.boundSidebarToggle = 'true';
+        toggleButton.addEventListener('click', () => {
+            if (!isSidebarDrawerMode()) return;
+            if (appState.sidebarOpen) {
+                closeSidebar({ focusToggle: false });
+            } else {
+                openSidebar();
+            }
+        });
+    }
+    if (closeButton && closeButton.dataset.boundSidebarClose !== 'true') {
+        closeButton.dataset.boundSidebarClose = 'true';
+        closeButton.addEventListener('click', () => closeSidebar({ focusToggle: true }));
+    }
+    if (backdrop && backdrop.dataset.boundSidebarBackdrop !== 'true') {
+        backdrop.dataset.boundSidebarBackdrop = 'true';
+        backdrop.addEventListener('click', () => closeSidebar());
+    }
+
+    document.querySelectorAll('[data-route-link]').forEach((link) => {
+        if (link.dataset.boundRouteLink === 'true') return;
+        link.dataset.boundRouteLink = 'true';
+        link.addEventListener('click', (event) => {
+            if (event.defaultPrevented) return;
+            if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+            event.preventDefault();
+            navigateToRoute(link.getAttribute('href') || DEFAULT_ROUTE, { preserveScroll: false, focusMain: true });
+        });
+    });
+
+    if (document.body.dataset.boundRoutePopstate !== 'true') {
+        document.body.dataset.boundRoutePopstate = 'true';
+        window.addEventListener('popstate', () => {
+            renderRoute(window.location.pathname || DEFAULT_ROUTE, { preserveScroll: true, focusMain: false });
+        });
+    }
+
+    renderRoute(window.location.pathname || DEFAULT_ROUTE, { preserveScroll: true, focusMain: false });
 }
 
 appState.flashcardSessionLength = FLASHCARD_SESSION_SIZE;
@@ -1239,11 +1924,11 @@ const baseFlashcards = [
     {
         id: 4,
         question: "What is a LinkedList and when to use it?",
-        answer: "LinkedList stores elements as nodes with next pointers.\n\nUse when:\n‚Ä¢ Frequent insert/delete\n‚Ä¢ Unknown or changing size\n‚Ä¢ No random access needed"
+        answer: "LinkedList stores elements as nodes with next pointers.\n\nUse when:\n‚?¢ Frequent insert/delete\n‚?¢ Unknown or changing size\n‚?¢ No random access needed"
     },
     {
         id: 5,
-        question: "How does Floyd‚Äôs Cycle Detection Algorithm work?",
+        question: "How does Floyd‚?Ts Cycle Detection Algorithm work?",
         answer: "Use two pointers (slow and fast).\nIf there's a cycle, fast eventually meets slow.\nIf not, fast reaches null.\n\nUsed to detect loops in linked lists."
     },
     {
@@ -1283,13 +1968,13 @@ const baseFlashcards = [
     },
     {
         id: 13,
-        question: "What‚Äôs the difference between DFS and BFS?",
+        question: "What‚?Ts the difference between DFS and BFS?",
         answer: "DFS: Goes deep using stack/recursion\nBFS: Level-order using queue\n\nUsed for different types of graph exploration"
     },
     {
         id: 14,
         question: "What is a Heap?",
-        answer: "Binary tree with parent-child ordering.\nMin Heap: parent ‚â§ children\nMax Heap: parent ‚â• children\n\nUsed in Priority Queues"
+        answer: "Binary tree with parent-child ordering.\nMin Heap: parent ‚?§ children\nMax Heap: parent ‚?• children\n\nUsed in Priority Queues"
     },
     {
         id: 15,
@@ -1313,8 +1998,8 @@ const baseFlashcards = [
     },
     {
         id: 19,
-        question: "What‚Äôs the space and time of merge sort?",
-        answer: "Time: O(n log n)\nSpace: O(n)\n\nIt‚Äôs stable and works well on linked lists"
+        question: "What‚?Ts the space and time of merge sort?",
+        answer: "Time: O(n log n)\nSpace: O(n)\n\nIt‚?Ts stable and works well on linked lists"
     },
     {
         id: 20,
@@ -1338,7 +2023,7 @@ const baseFlashcards = [
     },
     {
         id: 24,
-        question: "What‚Äôs the difference between recursion and iteration?",
+        question: "What‚?Ts the difference between recursion and iteration?",
         answer: "Recursion: function calls itself\nIteration: uses loops\n\nRecursion is often cleaner but uses more stack space"
     },
     {
@@ -1353,7 +2038,7 @@ const baseFlashcards = [
     },
     {
         id: 27,
-        question: "What‚Äôs a priority queue?",
+        question: "What‚?Ts a priority queue?",
         answer: "Queue where elements are removed by priority.\nOften implemented with heaps."
     },
     {
@@ -1378,12 +2063,12 @@ const baseFlashcards = [
     },
     {
         id: 32,
-        question: "What‚Äôs a balanced binary tree?",
+        question: "What‚?Ts a balanced binary tree?",
         answer: "Tree where left and right subtrees of every node differ in height by at most 1"
     },
     {
         id: 33,
-        question: "What‚Äôs the difference between call stack and heap?",
+        question: "What‚?Ts the difference between call stack and heap?",
         answer: "Call stack: stores function calls\nHeap: stores dynamically allocated memory"
     },
     {
@@ -1393,7 +2078,7 @@ const baseFlashcards = [
     },
     {
         id: 35,
-        question: "What‚Äôs the difference between BFS and Dijkstra?",
+        question: "What‚?Ts the difference between BFS and Dijkstra?",
         answer: "BFS: for unweighted graphs\nDijkstra: for weighted graphs (no negative weights)"
     },
     {
@@ -1408,7 +2093,7 @@ const baseFlashcards = [
     },
     {
         id: 38,
-        question: "What‚Äôs the time complexity of hashmap operations?",
+        question: "What‚?Ts the time complexity of hashmap operations?",
         answer: "Average: O(1)\nWorst-case (with collisions): O(n)"
     },
     {
@@ -1434,7 +2119,7 @@ const baseFlashcards = [
     {
         id: 43,
         question: "What is topological sorting?",
-        answer: "Linear ordering of nodes in a DAG so u comes before v for all edges u ‚Üí v"
+        answer: "Linear ordering of nodes in a DAG so u comes before v for all edges u ‚?' v"
     },
     {
         id: 44,
@@ -1453,7 +2138,7 @@ const baseFlashcards = [
     },
     {
         id: 47,
-        question: "What‚Äôs the difference between min heap and max heap?",
+        question: "What‚?Ts the difference between min heap and max heap?",
         answer: "Min heap: smallest element at root\nMax heap: largest element at root"
     },
     {
@@ -1463,7 +2148,7 @@ const baseFlashcards = [
     },
     {
         id: 49,
-        question: "What‚Äôs the difference between a shallow copy and deep copy?",
+        question: "What‚?Ts the difference between a shallow copy and deep copy?",
         answer: "Shallow: copies reference\nDeep: copies entire object structure"
     },
     {
@@ -1593,7 +2278,7 @@ const glossaryTerms = [
     },
     {
         term: "Bubble Sort",
-        definition: "Simple sorting algorithm that repeatedly swaps adjacent elements if they‚Äôre in the wrong order.",
+        definition: "Simple sorting algorithm that repeatedly swaps adjacent elements if they‚?Tre in the wrong order.",
         category: "Algorithms"
     },
     {
@@ -1612,7 +2297,7 @@ const glossaryTerms = [
         category: "Data Structures"
     },
     {
-        term: "Floyd‚Äôs Cycle Detection",
+        term: "Floyd‚?Ts Cycle Detection",
         definition: "Algorithm that detects cycles in linked lists using two pointers moving at different speeds.",
         category: "Algorithms"
     },
@@ -1703,7 +2388,7 @@ const glossaryTerms = [
     },
     {
         term: "Topological Sort",
-        definition: "Linear ordering of graph vertices such that for every edge u ‚Üí v, u appears before v.",
+        definition: "Linear ordering of graph vertices such that for every edge u ‚?' v, u appears before v.",
         category: "Algorithms"
     },
     {
@@ -1712,7 +2397,7 @@ const glossaryTerms = [
         category: "Algorithms"
     },
     {
-        term: "Dijkstra‚Äôs Algorithm",
+        term: "Dijkstra‚?Ts Algorithm",
         definition: "Greedy algorithm to find the shortest path from a source to all vertices in a weighted graph.",
         category: "Algorithms"
     },
@@ -1722,12 +2407,12 @@ const glossaryTerms = [
         category: "Algorithms"
     },
     {
-        term: "Kruskal‚Äôs Algorithm",
+        term: "Kruskal‚?Ts Algorithm",
         definition: "Greedy algorithm to build a minimum spanning tree by sorting all edges by weight.",
         category: "Algorithms"
     },
     {
-        term: "Prim‚Äôs Algorithm",
+        term: "Prim‚?Ts Algorithm",
         definition: "Greedy algorithm that grows a minimum spanning tree from a starting node.",
         category: "Algorithms"
     }
@@ -1749,7 +2434,7 @@ const quizData = {
                     question: "What is the time complexity of accessing an element in an array by its index?",
                     options: ["O(1)", "O(log n)", "O(n)", "O(n¬≤)"],
                     correct: 0,
-                    explanation: "Random access arrays compute the memory address via base + index √ó element_size, so lookup cost is constant."
+                    explanation: "Random access arrays compute the memory address via base + index √- element_size, so lookup cost is constant."
                 },
                 {
                     id: 2,
@@ -1803,7 +2488,7 @@ const quizData = {
                     question: "Which data structure best validates balanced parentheses?",
                     options: ["Stack", "Queue", "Set", "Heap"],
                     correct: 0,
-                    explanation: "A stack mirrors nesting depth‚Äîpush for '(' and pop for ')'‚Äîso mismatches surface immediately."
+                    explanation: "A stack mirrors nesting depth - push for '(' and pop for ')' - so mismatches surface immediately."
                 },
                 {
                     id: 2,
@@ -1882,7 +2567,7 @@ const quizData = {
                 {
                     id: 1,
                     question: "A binary heap is stored efficiently in an array because:",
-                    options: ["It sorts automatically", "Parent/child indices follow simple math (i‚Üí2i+1/2i+2)", "It needs pointers", "Heapify needs recursion"],
+                    options: ["It sorts automatically", "Parent/child indices follow simple math (i‚?'2i+1/2i+2)", "It needs pointers", "Heapify needs recursion"],
                     correct: 1,
                     explanation: "Heap nodes correspond to contiguous indices, so tree relationships derive from arithmetic rather than explicit references."
                 },
@@ -2077,7 +2762,7 @@ const quizData = {
                 },
                 {
                     id: 2,
-                    question: "Implication p ‚Üí q is false only when:",
+                    question: "Implication p ‚?' q is false only when:",
                     options: ["p is false and q is true", "p is true and q is false", "p and q are both true", "p and q are both false"],
                     correct: 1,
                     explanation: "An implication fails only when the premise is true but the conclusion is false."
@@ -2097,7 +2782,7 @@ const quizData = {
             questions: [
                 {
                     id: 1,
-                    question: "For sets A and B, A ‚à© B means:",
+                    question: "For sets A and B, A ‚^© B means:",
                     options: ["Elements in A or B", "Elements in both A and B", "Elements only in A", "Ordered pairs from A and B"],
                     correct: 1,
                     explanation: "Intersection keeps only elements common to both sets."
@@ -2105,13 +2790,13 @@ const quizData = {
                 {
                     id: 2,
                     question: "A relation R on set A is:",
-                    options: ["A subset of A √ó A", "A function from A to A only", "A prime number list", "Always symmetric"],
+                    options: ["A subset of A √- A", "A function from A to A only", "A prime number list", "Always symmetric"],
                     correct: 0,
-                    explanation: "A relation on A is any subset of the Cartesian product A √ó A."
+                    explanation: "A relation on A is any subset of the Cartesian product A √- A."
                 },
                 {
                     id: 3,
-                    question: "A function f: A ‚Üí B is injective when:",
+                    question: "A function f: A ‚?' B is injective when:",
                     options: ["Every b in B has a preimage", "Distinct inputs map to distinct outputs", "A equals B", "It is always surjective"],
                     correct: 1,
                     explanation: "Injective (one-to-one) functions never map two different domain elements to the same codomain element."
@@ -2138,8 +2823,8 @@ const quizData = {
                 },
                 {
                     id: 3,
-                    question: "For independent events A and B, P(A ‚à© B) equals:",
-                    options: ["P(A) + P(B)", "P(A) / P(B)", "P(A) √ó P(B)", "1 - P(A)"],
+                    question: "For independent events A and B, P(A ‚^© B) equals:",
+                    options: ["P(A) + P(B)", "P(A) / P(B)", "P(A) √- P(B)", "1 - P(A)"],
                     correct: 2,
                     explanation: "Independence means one event does not affect the other, so intersection probability multiplies."
                 }
@@ -2192,7 +2877,7 @@ const quizData = {
                 },
                 {
                     id: 3,
-                    question: "Kruskal‚Äôs MST algorithm uses union-find to:",
+                    question: "Kruskal‚?Ts MST algorithm uses union-find to:",
                     options: ["Sort edges", "Detect when adding an edge would create a cycle", "Relax distances", "Count components"],
                     correct: 1,
                     explanation: "Before adding an edge, Kruskal checks whether its endpoints are already connected; union-find tracks that connectivity."
@@ -2276,7 +2961,7 @@ const quizData = {
                     question: "Splay trees are unique because they:",
                     options: ["Require coloring", "Move recently accessed nodes to the root via rotations", "Use heaps", "Need extra memory"],
                     correct: 1,
-                    explanation: "Splaying promotes locality‚Äîfrequently accessed nodes become easier to reach."
+                    explanation: "Splaying promotes locality - frequently accessed nodes become easier to reach."
                 }
             ]
         }]
@@ -3005,7 +3690,7 @@ const isPalindromeFunctional = str => {
     {
         id: 'linked-lists',
         title: 'Linked Lists',
-        description: 'We narrate every pointer move in `reverseList`, `hasCycle`, and `mergeTwoLists`, showing how temp nodes, tortoise‚Äìhare detection, and dummy heads keep lists consistent.',
+        description: 'We narrate every pointer move in `reverseList`, `hasCycle`, and `mergeTwoLists`, showing how temp nodes, tortoise - hare detection, and dummy heads keep lists consistent.',
         difficulty: 'intermediate',
         topics: ['Singly Linked Lists', 'Doubly Linked Lists', 'Cycle Detection', 'List Reversal', 'Merge Operations'],
         codeExamples: {
@@ -4016,8 +4701,8 @@ public class SetsRelationsFunctions {
         Map<Integer, Integer> f = new HashMap<>();
         f.put(1, 10); f.put(2, 20); f.put(3, 30);
 
-        System.out.println("A ‚à© B = " + intersection);
-        System.out.println("A ‚à™ B = " + union);
+        System.out.println("A ‚^© B = " + intersection);
+        System.out.println("A ‚^™ B = " + union);
         System.out.println("f is injective? " + isInjective(f));
     }
 }`,
@@ -4045,8 +4730,8 @@ int main() {
     }
     map<int, int> f = {{1, 10}, {2, 20}, {3, 30}};
 
-    cout << "A ‚à© B size = " << intersection.size() << "\\n";
-    cout << "A ‚à™ B size = " << uni.size() << "\\n";
+    cout << "A ‚^© B size = " << intersection.size() << "\\n";
+    cout << "A ‚^™ B size = " << uni.size() << "\\n";
     cout << boolalpha << "f is injective? " << isInjective(f) << "\\n";
     return 0;
 }`,
@@ -4058,8 +4743,8 @@ A = {1, 2, 3}
 B = {3, 4, 5}
 f = {1: 10, 2: 20, 3: 30}
 
-print("A ‚à© B =", A & B)
-print("A ‚à™ B =", A | B)
+print("A ‚^© B =", A & B)
+print("A ‚^™ B =", A | B)
 print("f is injective?", is_injective(f))`,
             javascript: `// Sets, relations, and functions mini demo
 const A = new Set([1, 2, 3]);
@@ -4071,8 +4756,8 @@ const f = new Map([[1, 10], [2, 20], [3, 30]]);
 const values = [...f.values()];
 const isInjective = new Set(values).size === values.length;
 
-console.log("A ‚à© B =", intersection);
-console.log("A ‚à™ B =", [...union]);
+console.log("A ‚^© B =", intersection);
+console.log("A ‚^™ B =", [...union]);
 console.log("f is injective?", isInjective);`
         },
         explanation: `You will model sets, binary relations, and mappings with concrete operations: membership tests, products, relation properties, and injective/surjective checks. The focus is building intuition used later in graph theory and proofs.`,
@@ -4540,7 +5225,7 @@ public class StringAlgorithms {
         System.out.println(\"KMP search index: \" + kmpSearch(text, pattern));
     }
 }`,
-        explanation: `We derive prefix-function tables for KMP, rolling hashes for Rabin-Karp, and good/bad character heuristics for Boyer‚ÄìMoore. Further topics include suffix arrays/automata, Z-algorithm, and how to combine hashing with binary search for substring problems.`,
+        explanation: `We derive prefix-function tables for KMP, rolling hashes for Rabin-Karp, and good/bad character heuristics for Boyer - Moore. Further topics include suffix arrays/automata, Z-algorithm, and how to combine hashing with binary search for substring problems.`,
         resources: ['Pattern Matching', 'String Processing Optimization']
     },
     {
@@ -5088,7 +5773,7 @@ public class ExceptionExample {
     {
         id: 'collections-framework',
         title: 'Java Collections Framework',
-        description: '`CollectionsExample` builds an `ArrayList`, `HashMap`, and `HashSet` inside `main`, highlighting adds, puts, and duplicate handling so each collection‚Äôs behavior is tangible.',
+        description: '`CollectionsExample` builds an `ArrayList`, `HashMap`, and `HashSet` inside `main`, highlighting adds, puts, and duplicate handling so each collection‚?Ts behavior is tangible.',
         difficulty: 'intermediate',
         topics: ['ArrayList', 'HashMap', 'HashSet', 'TreeMap', 'LinkedList', 'Iterators'],
         codeExample: `// Collections Framework
@@ -5244,7 +5929,7 @@ class ShapeFactory {
     {
         id: 'lambda-streams',
         title: 'Lambda Expressions & Streams',
-        description: 'The stream pipeline filters even numbers, maps them to squares, collects a list, then chains mapToInt/filter/average, so each stage‚Äôs role is spelled out in order.',
+        description: 'The stream pipeline filters even numbers, maps them to squares, collects a list, then chains mapToInt/filter/average, so each stage‚?Ts role is spelled out in order.',
         difficulty: 'advanced',
         topics: ['Lambda Expressions', 'Stream API', 'Method References', 'Functional Interfaces'],
         codeExample: `// Lambda and Streams
@@ -6831,7 +7516,7 @@ public class BinarySearchSet {
         },
         {
             id: 'first-last-occurrence',
-            title: { en: 'First & Last Occurrence', es: 'Primera y √öltima Ocurrencia' },
+            title: { en: 'First & Last Occurrence', es: 'Primera y √sltima Ocurrencia' },
             description: { en: 'Find range boundaries for duplicate values in sorted data.', es: 'Encuentra los l√≠mites de un valor repetido en datos ordenados.' },
             codeExamples: {
                 java: `import java.util.Arrays;
@@ -7256,6 +7941,514 @@ public class MemoizationSet {
     ]
 };
 
+const MODULE_DEEP_EXPLANATION_OVERRIDES = {
+    'java-basics': {
+        'variables': `Conceptual breakdown:
+- A variable is a typed name bound to a value. The declared type controls memory size, valid operations, and compiler checks.
+- In Java, local variables must be initialized before use, while fields receive default values.
+
+Code walkthrough:
+1) Primitive declarations (int, double, boolean, char) model fixed-size data with value semantics.
+2) String is a reference type; the variable stores a reference to an object, not raw character bytes inline.
+3) Reassignment (mutation) updates the current value bound to that variable name.
+4) The inner block demonstrates scope: semesterCredits exists only inside those braces.
+5) Final print lines reinforce reading and formatting multiple variable types together.
+
+Common mistakes to avoid:
+- Using a local variable before initialization.
+- Shadowing variable names in nested scopes and confusing which variable is active.
+- Assuming reference types behave like primitives during assignment and comparison.
+- Forgetting naming conventions: meaningful camelCase names improve maintainability.
+
+What to practice next:
+- Add final constants and attempt reassignment to see compiler errors.
+- Create two String references and compare with == versus .equals().
+- Add numeric casts (double -> int) and observe truncation.`,
+        'data-types': `Conceptual breakdown:
+- Java has two type families: primitives (store raw value) and reference types (store object references).
+- Choosing the right type is a correctness and performance decision, not just syntax.
+
+Code walkthrough:
+1) byte/short/int/long demonstrate increasing integer range and memory usage.
+2) float versus double highlights precision tradeoffs and literal suffix rules (f for float, L for long).
+3) boolean and char represent logical state and single UTF-16 code units.
+4) String and int[] demonstrate references to heap-allocated objects.
+5) Output formatting makes it easy to compare type behavior in one run.
+
+Common mistakes to avoid:
+- Implicitly assuming float has enough precision for financial calculations.
+- Overflow/underflow when arithmetic exceeds a primitive type range.
+- Confusing char with String.
+- Assuming arrays and strings are copied by value when assigned.
+
+What to practice next:
+- Print Integer.MIN_VALUE and Integer.MAX_VALUE and test overflow by adding 1.
+- Cast large doubles to int and inspect data loss.
+- Convert between String and numeric types safely with parsing/validation.`,
+        'methods': `Conceptual breakdown:
+- Methods package reusable behavior behind a name, signature, and return type.
+- Clean method design reduces duplication and improves testability.
+
+Code walkthrough:
+1) add(int, int) returns deterministic output from explicit inputs.
+2) average(int, int, int) uses 3.0 to force floating-point division.
+3) printBanner(String) is void: it performs behavior without returning data.
+4) main orchestrates method calls and stores results in local variables.
+5) Final prints separate computation from presentation.
+
+Common mistakes to avoid:
+- Integer division when a decimal result is expected.
+- Overly large methods that mix input parsing, business logic, and output.
+- Misusing static and instance methods.
+- Weak parameter names that hide intent.
+
+What to practice next:
+- Overload add with different parameter counts/types.
+- Extract repeated print logic into a helper method.
+- Write one pure method (no side effects) and one side-effect method, then compare usage.`,
+        'classes': `Conceptual breakdown:
+- A class is a blueprint describing state (fields) and behavior (methods).
+- Constructors enforce object initialization rules at creation time.
+
+Code walkthrough:
+1) Course fields define the minimum state every course object must carry.
+2) The constructor assigns incoming arguments using this to distinguish fields from parameters.
+3) summary() packages representation logic in one place.
+4) main creates multiple Course instances to show object-level state isolation.
+5) Printing summaries demonstrates encapsulated behavior reuse.
+
+Common mistakes to avoid:
+- Leaving required fields uninitialized.
+- Putting too much unrelated behavior into one class (low cohesion).
+- Exposing mutable fields directly when getters/setters or immutability are safer.
+- Forgetting to validate constructor parameters.
+
+What to practice next:
+- Make fields private and add getters.
+- Add input validation in constructor (e.g., credits > 0).
+- Override toString() and compare with custom summary().`,
+        'objects': `Conceptual breakdown:
+- Objects are runtime instances of classes; each holds its own state.
+- Variables a and b hold references, so assignment copies references, not object contents.
+
+Code walkthrough:
+1) Student constructor initializes name and completedModules.
+2) completeModule mutates object state through controlled behavior.
+3) progress builds a view string from current object fields.
+4) Two objects are created and mutated independently.
+5) Final prints verify each instance tracks its own lifecycle.
+
+Common mistakes to avoid:
+- Null reference usage before object construction.
+- Assuming two references point to different objects when they alias the same instance.
+- Leaking mutable internals directly from methods.
+- Comparing object identity and equality incorrectly.
+
+What to practice next:
+- Assign Student c = a and observe aliasing behavior.
+- Add equals/hashCode to define value-based equality.
+- Convert Student to immutable design and compare tradeoffs.`
+    },
+    'git-basics-workflow': {
+        'repository-setup': `Conceptual breakdown:
+- Repository setup defines your project boundary, default branch, and remote integration.
+- You are creating the graph root for all future commits.
+
+Workflow breakdown:
+1) git init creates .git metadata and a local history database.
+2) branch -M main sets your primary branch naming convention.
+3) remote add origin wires local and remote graph endpoints.
+4) status verifies current state before any history mutation.
+
+Common mistakes:
+- Skipping status checks and staging wrong files.
+- Misconfigured remote URL (push failures later).
+- Inconsistent default branch naming across teammates.
+
+Practice checks:
+- Run git remote -v and confirm fetch/push URLs.
+- Create a first commit and inspect HEAD and branch pointers.`,
+        'staging-and-commits': `Conceptual breakdown:
+- The index (staging area) is a deliberate checkpoint between working tree and commit history.
+- A good commit is small, coherent, and reversible.
+
+Workflow breakdown:
+1) Edit file in working tree.
+2) git add selects exact changes for the next commit snapshot.
+3) git commit records a new immutable node in history with message + metadata.
+4) git log confirms chronology and message quality.
+
+Common mistakes:
+- Committing unrelated changes together.
+- Vague commit messages that hide intent.
+- Assuming git add means changes are already committed.
+
+Practice checks:
+- Use git add -p for partial staging.
+- Make two tiny commits instead of one large mixed commit.`,
+        'branching-and-merging': `Conceptual breakdown:
+- A branch is a movable label to a commit; it is cheap and meant for isolation.
+- Merging integrates parallel histories while preserving collaboration context.
+
+Workflow breakdown:
+1) checkout -b creates and switches to a feature branch.
+2) Work and commit only feature-related edits.
+3) branch output confirms active branch marker.
+4) Later merge returns branch history into main.
+
+Common mistakes:
+- Developing directly on main.
+- Long-lived branches that drift far from main.
+- Merging without reading incoming changes first.
+
+Practice checks:
+- Create two feature branches and merge both.
+- Compare merge commit graph with fast-forward cases using git log --graph.`,
+        'pull-rebase-basics': `Conceptual breakdown:
+- fetch downloads remote objects without modifying your current branch.
+- rebase reapplies local commits on top of updated base for linear history.
+
+Workflow breakdown:
+1) git fetch origin refreshes remote-tracking branches.
+2) pull --rebase origin main updates your branch with minimal merge noise.
+3) push -u establishes upstream tracking for future push/pull shortcuts.
+
+Common mistakes:
+- Rebasing public/shared commits that teammates already depend on.
+- Ignoring rebase conflicts and continuing blindly.
+- Using pull defaults without understanding merge vs rebase behavior.
+
+Practice checks:
+- Run git status during rebase conflicts and resolve step-by-step.
+- Compare history shape after merge pull versus rebase pull.`,
+        'merge-conflict-basics': `Conceptual breakdown:
+- A merge conflict means Git cannot decide which line-level change is correct automatically.
+- Human intent must resolve semantic conflicts safely.
+
+Workflow breakdown:
+1) Open conflicted file and inspect markers.
+2) Decide final code, remove conflict markers, keep intended behavior.
+3) Stage resolved file and commit resolution.
+4) Re-run tests before completing merge/rebase continuation.
+
+Common mistakes:
+- Committing files that still contain markers.
+- Resolving mechanically without validating runtime behavior.
+- Forgetting to stage all resolved files.
+
+Practice checks:
+- Intentionally create a conflict in a test branch.
+- Resolve and verify with git diff --check and test execution.`,
+        'remote-collaboration': `Conceptual breakdown:
+- Collaboration relies on clear branch ownership, upstream tracking, and review-driven integration.
+- Remote branches are shared communication artifacts, not personal scratchpads.
+
+Workflow breakdown:
+1) push -u publishes branch and records upstream mapping.
+2) Team members review and discuss changes in PR context.
+3) main is updated through agreed merge strategy.
+4) Local branches sync regularly to avoid integration debt.
+
+Common mistakes:
+- Force-pushing shared branches without coordination.
+- Skipping review and merging unverified code.
+- Letting stale branches diverge for long periods.
+
+Practice checks:
+- Open a PR with a focused change and clear description.
+- Rebase/sync before final merge and verify CI status.`,
+        'safe-undo-with-restore-revert': `Conceptual breakdown:
+- Undo strategy depends on whether changes are local-only or already shared.
+- Prefer non-destructive operations for collaborative safety.
+
+Workflow breakdown:
+1) restore --staged removes file from index but keeps working edits.
+2) restore file discards local unstaged modifications.
+3) revert commit creates a new inverse commit on shared branches.
+4) Avoid rewriting shared history unless team has explicitly coordinated.
+
+Common mistakes:
+- Using reset --hard on shared branch history.
+- Reverting the wrong commit range.
+- Confusing working-tree cleanup with history surgery.
+
+Practice checks:
+- Revert a test commit and inspect before/after with git log.
+- Use reflog to understand how Git tracks HEAD movement.`
+    },
+    'control-flow': {
+        'if-else': `Conceptual breakdown:
+- if/else creates mutually exclusive execution paths based on boolean conditions.
+- Condition ordering matters: earlier branches can shadow later ones.
+
+Code walkthrough:
+1) score is evaluated from top branch to bottom.
+2) First true condition executes and chain stops.
+3) Final else acts as default fallback for unmatched values.
+
+Common mistakes:
+- Overlapping ranges in wrong order.
+- Forgetting boundary conditions (>= vs >).
+- Deep nesting where guard clauses or helper methods would be clearer.
+
+Practice checks:
+- Test scores at each boundary: 90, 89, 80, 79, 70, 69.
+- Refactor grade logic into a reusable method.`,
+        'for-loops': `Conceptual breakdown:
+- for loops encode counter initialization, continuation condition, and update in one compact structure.
+- They are ideal when iteration count is known or bounded.
+
+Code walkthrough:
+1) total starts at zero before loop.
+2) i advances predictably from 1 through 5.
+3) running total output shows state transition each iteration.
+4) final print confirms loop invariant outcome.
+
+Common mistakes:
+- Off-by-one errors in loop bounds.
+- Mutating loop counter inside loop body unexpectedly.
+- Mixing accumulation logic with unrelated side effects.
+
+Practice checks:
+- Change range to 1..n and verify formula n(n+1)/2.
+- Rewrite with descending loop and compare result.`,
+        'while-loops': `Conceptual breakdown:
+- while loops repeat as long as condition is true at loop entry.
+- They are best when iteration count is data-driven rather than fixed.
+
+Code walkthrough:
+1) countdown is checked before each iteration.
+2) body prints current value then decrements toward termination.
+3) when countdown reaches zero, condition fails and loop exits.
+
+Common mistakes:
+- Forgetting to update state, causing infinite loops.
+- Mutating the wrong variable in the condition path.
+- Using while when for would be clearer for simple counters.
+
+Practice checks:
+- Convert countdown to user-driven sentinel loop.
+- Add validation to stop on unexpected negative values.`,
+        'switch': `Conceptual breakdown:
+- switch dispatches behavior by discrete values and improves readability over long if/else chains.
+- Each case should represent one stable command/state branch.
+
+Code walkthrough:
+1) command is matched against case labels.
+2) break prevents fall-through into later cases.
+3) default handles unknown or unsupported values.
+
+Common mistakes:
+- Missing break in classic switch syntax.
+- Using switch for ranges (better handled by if/else).
+- Not normalizing input case/spacing before branching.
+
+Practice checks:
+- Add more commands and centralize shared behavior.
+- Convert to switch expression (modern Java) and compare clarity.`,
+        'break-continue': `Conceptual breakdown:
+- continue skips the rest of current iteration; break exits the loop entirely.
+- These are control refinements, not substitutes for clear loop design.
+
+Code walkthrough:
+1) continue filters out even values early.
+2) break stops processing once threshold is exceeded.
+3) Remaining output confirms only intended values were processed.
+
+Common mistakes:
+- Overusing break/continue, making control flow hard to reason about.
+- Creating hidden termination paths that bypass required cleanup.
+- Mixing loop filtering and business logic in unreadable order.
+
+Practice checks:
+- Rewrite using explicit condition guards and compare readability.
+- Add logging around break/continue decisions for debugging.`
+    },
+    'assembly-registers-memory': {
+        'cpu-registers': `Conceptual breakdown:
+- Registers are tiny, fast CPU storage locations used for immediate arithmetic and control decisions.
+- Understanding register roles helps you read assembly like state transitions, not random mnemonics.
+
+Code walkthrough lens:
+1) mov loads data into working registers.
+2) add transforms register state deterministically.
+3) Later instructions consume those register values for output/exit flow.
+
+Common mistakes:
+- Forgetting that different register sizes alias each other (eax/rax).
+- Overwriting a register before its value is consumed.
+- Assuming registers persist across procedure calls without convention guarantees.
+
+Practice checks:
+- Trace each register value after every instruction on paper.
+- Annotate live/dead register values per line.`,
+        'memory-addresses': `Conceptual breakdown:
+- Memory access uses addresses; load/store instructions move values between memory and registers.
+- Addressing modes determine how effective addresses are computed.
+
+Code walkthrough lens:
+1) Label-based operands resolve to memory addresses.
+2) Brackets indicate dereference (use value at address).
+3) Base + offset style access models arrays/struct fields.
+
+Common mistakes:
+- Confusing address value with data value.
+- Miscalculating offsets for element size/alignment.
+- Reading uninitialized memory regions.
+
+Practice checks:
+- Map symbolic labels to conceptual addresses.
+- Compute effective addresses for simple array indexing examples.`,
+        'load-store': `Conceptual breakdown:
+- Most low-level work is explicit data movement: load from memory, transform in register, store result.
+- This pattern is the backbone of loops, arithmetic kernels, and systems code.
+
+Code walkthrough lens:
+1) load valueA/valueB into working registers.
+2) perform ALU operation (add).
+3) optionally store or output resulting state.
+
+Common mistakes:
+- Mixing operand order conventions between assemblers/syntax styles.
+- Forgetting data width (byte/word/dword/qword) consistency.
+- Treating load/store as free; memory access latency matters.
+
+Practice checks:
+- Rewrite add sequence for subtraction and multiplication flows.
+- Explain which values are in memory versus registers at each step.`,
+        'data-sizes': `Conceptual breakdown:
+- Data width controls range, sign behavior, and instruction encoding.
+- Size mismatches are a major source of silent bugs and unintended truncation.
+
+Code walkthrough lens:
+1) Choose register/data directives matching intended width.
+2) Watch zero/sign extension when moving smaller values into larger registers.
+3) Keep arithmetic width consistent with expected result range.
+
+Common mistakes:
+- Truncation from narrowing writes.
+- Sign-extension surprises when mixing signed and unsigned interpretation.
+- Forgetting literal suffixes and directive sizes.
+
+Practice checks:
+- Run examples with edge values near width limits.
+- Annotate every variable/register with width and signedness.`,
+        'endian-awareness': `Conceptual breakdown:
+- Endianness defines byte ordering for multi-byte values in memory.
+- CPU arithmetic sees values abstractly, but memory inspection reveals byte order.
+
+Code walkthrough lens:
+1) Store a multi-byte value.
+2) Inspect individual bytes in memory order.
+3) Relate observed order to platform endianness assumptions.
+
+Common mistakes:
+- Serializing binary data without explicit byte-order protocol.
+- Misreading debugger memory dumps.
+- Assuming network/file byte order matches host order automatically.
+
+Practice checks:
+- Encode/decode a 32-bit value manually by bytes.
+- Compare host-order and network-order conversions in high-level language wrappers.`
+    },
+    'oop-basics': {
+        'encapsulation': `Conceptual breakdown:
+- Encapsulation hides internal state and exposes safe operations through methods.
+- Invariants (like non-negative balance) are protected at one boundary.
+
+Code walkthrough:
+1) balance is private: only class methods can mutate it.
+2) Constructor sanitizes starting value.
+3) deposit/withdraw enforce rules before state changes.
+4) getBalance offers controlled read access.
+
+Common mistakes:
+- Public mutable fields that bypass validation.
+- Methods that partially update state on failure paths.
+- Missing invariant checks in every mutation method.
+
+Practice checks:
+- Add transaction history list and keep it consistent with balance changes.
+- Throw exceptions for invalid operations and compare with boolean return approach.`,
+        'inheritance': `Conceptual breakdown:
+- Inheritance expresses an is-a relationship for behavior/state reuse.
+- Subclasses extend base functionality while preserving shared contract.
+
+Code walkthrough:
+1) Vehicle owns common field and start behavior.
+2) Car extends Vehicle and reuses inherited members.
+3) super constructor call ensures base initialization.
+
+Common mistakes:
+- Using inheritance when composition is a better fit.
+- Exposing protected internals too broadly.
+- Deep inheritance hierarchies with fragile coupling.
+
+Practice checks:
+- Add another subclass (Truck) and factor shared behavior thoughtfully.
+- Evaluate whether has-a composition would be cleaner for one behavior.`,
+        'polymorphism': `Conceptual breakdown:
+- Polymorphism lets one interface (Shape) dispatch to many concrete implementations at runtime.
+- Client code depends on abstractions, not concrete classes.
+
+Code walkthrough:
+1) Base type defines area contract.
+2) Subclasses override area with type-specific formulas.
+3) Shape[] iteration invokes correct override via dynamic dispatch.
+
+Common mistakes:
+- Forgetting @Override and accidentally overloading instead of overriding.
+- Base APIs that are too weak or too broad.
+- Downcasting prematurely and losing polymorphic benefits.
+
+Practice checks:
+- Add Triangle without changing loop logic.
+- Compute totals using only Shape references.`,
+        'abstraction': `Conceptual breakdown:
+- Abstraction exposes what an object does while hiding implementation details.
+- Abstract classes can provide shared concrete helpers plus required abstract methods.
+
+Code walkthrough:
+1) Payment defines abstract pay plus concrete printReceipt.
+2) CardPayment implements payment-specific behavior.
+3) Caller works with Payment reference, not concrete type.
+
+Common mistakes:
+- Mixing too many responsibilities in abstract base.
+- Creating abstract members with weak semantics.
+- Tight coupling between base class and subclass internals.
+
+Practice checks:
+- Add CashPayment and UpiPayment implementations.
+- Keep caller unchanged while extending behavior set.`,
+        'interfaces': `Conceptual breakdown:
+- Interfaces define capability contracts independent of inheritance trees.
+- Multiple classes can implement the same interface with different internal mechanics.
+
+Code walkthrough:
+1) Notifier contract declares send behavior.
+2) EmailNotifier and SmsNotifier provide concrete delivery strategies.
+3) Main iterates over Notifier[] and treats implementations uniformly.
+
+Common mistakes:
+- Fat interfaces with unrelated methods.
+- Leaking implementation-specific assumptions through interface design.
+- Ignoring dependency inversion and directly constructing concrete types everywhere.
+
+Practice checks:
+- Add PushNotifier and inject notifiers from configuration.
+- Write tests against the Notifier interface with fake implementations.`
+    }
+};
+
+function getModuleExampleDeepExplanation(moduleId, exampleId, setItem = null) {
+    const fromSet = resolveLocalizedValue(setItem?.deepExplanation, appState.language);
+    if (fromSet) return fromSet;
+    const moduleEntries = MODULE_DEEP_EXPLANATION_OVERRIDES[moduleId] || {};
+    const fromMap = resolveLocalizedValue(moduleEntries[exampleId], appState.language);
+    return fromMap || '';
+}
+
 function normalizeModuleCodeExampleSets(module) {
     const overrideSets = MODULE_CODE_EXAMPLE_SET_OVERRIDES[module.id];
     const sourceSets = Array.isArray(overrideSets) && overrideSets.length
@@ -7279,7 +8472,7 @@ function normalizeModuleCodeExampleSets(module) {
             : {};
         const javaSource = typeof sourceCodeExamples.java === 'string' && sourceCodeExamples.java.trim()
             ? sourceCodeExamples.java
-            : buildFallbackJavaSnippet({ ...module, title: `${module.title} ‚Ä¢ ${setTitleText}` });
+            : buildFallbackJavaSnippet({ ...module, title: `${module.title} ‚?¢ ${setTitleText}` });
 
         const enhancedJava = ensureJavaSnippetHasVisibleOutput(module, addComprehensiveHeaderComments(module, javaSource));
         const normalizedCodeExamples = { java: enhancedJava };
@@ -7385,24 +8578,46 @@ const dailyChallenges = [
     {
         id: 'arrays-two-pointer-refresh',
         title: 'Two-Pointer Sprint',
-        description: 'Recreate the palindrome checker from memory, then extend it to ignore emoji or punctuation.',
+        description: 'Recreate the palindrome checker from memory, then upgrade it for punctuation and Unicode edge cases.',
         steps: [
             'Rewrite the base palindrome helper without looking.',
-            'Add support for Unicode or emoji filtering.',
-            'Test with at least 3 tricky strings.'
+            'Add support for punctuation, whitespace, and mixed casing.',
+            'Test with at least 5 tricky strings and log expected vs actual.'
         ],
         moduleId: 'arrays-strings'
     },
     {
         id: 'linkedlist-cycle-visual',
         title: 'Cycle Detective',
-        description: 'Trace Floyd‚Äôs cycle algorithm with a custom diagram.',
+        description: 'Trace Floyd\'s cycle algorithm with a custom diagram and prove why pointers must meet.',
         steps: [
             'Draw a small linked list with a loop.',
             'Record the positions of slow/fast for 4 iterations.',
-            'Explain in your own words why they must meet.'
+            'Write a 3-sentence proof sketch in your own words.'
         ],
         moduleId: 'linked-lists'
+    },
+    {
+        id: 'stack-balance-audit',
+        title: 'Stack Balance Audit',
+        description: 'Build a balanced-brackets validator and test malformed expressions.',
+        steps: [
+            'Implement push/pop logic for (), {}, and [].',
+            'Feed at least 8 expressions, including nested and invalid forms.',
+            'Document one bug you hit and how you fixed it.'
+        ],
+        moduleId: 'stacks-queues'
+    },
+    {
+        id: 'queue-scheduler-mini',
+        title: 'Queue Scheduler Mini-Sim',
+        description: 'Model a simple task scheduler using queue operations.',
+        steps: [
+            'Enqueue 6 tasks with different priorities in comments.',
+            'Dequeue and process in order while logging each step.',
+            'Explain when a queue is better than a stack for this flow.'
+        ],
+        moduleId: 'stacks-queues'
     },
     {
         id: 'graphs-bfs-refresh',
@@ -7418,10 +8633,10 @@ const dailyChallenges = [
     {
         id: 'dp-table',
         title: 'DP Table Snapshot',
-        description: 'Freeze-frame the LIS dynamic programming table and annotate the transitions.',
+        description: 'Freeze-frame the LIS dynamic programming table and annotate every transition.',
         steps: [
             'Log the dp[] array after each iteration.',
-            'Summarize why LIS is O(n¬≤) here.',
+            'Summarize why LIS is O(n^2) in this version.',
             'Convert the solution to a tabulation diagram.'
         ],
         moduleId: 'dynamic-programming'
@@ -7433,20 +8648,58 @@ const dailyChallenges = [
         steps: [
             'Start with the sample array in the module.',
             'Track each left/right child comparison.',
-            'Explain when you‚Äôd reach for a heap instead of a sorted list.'
+            'Explain when you would reach for a heap instead of a sorted list.'
         ],
         moduleId: 'heaps'
+    },
+    {
+        id: 'recursion-call-trace',
+        title: 'Recursion Stack Trace',
+        description: 'Write a recursive function and manually trace each call/return frame.',
+        steps: [
+            'Choose factorial, fibonacci, or combination sum.',
+            'Record call depth and returned values for one input.',
+            'State the base case and the failure mode if it is missing.'
+        ],
+        moduleId: 'recursion'
+    },
+    {
+        id: 'hash-collision-lab',
+        title: 'Hash Collision Lab',
+        description: 'Simulate collisions and compare chaining vs linear probing behavior.',
+        steps: [
+            'Insert values that intentionally collide.',
+            'Track probe counts or chain lengths after each insert.',
+            'Summarize tradeoffs in a short paragraph.'
+        ],
+        moduleId: 'hash-tables'
+    },
+    {
+        id: 'sorting-comparator-pass',
+        title: 'Comparator Stress Test',
+        description: 'Implement one custom comparator sort and validate stability assumptions.',
+        steps: [
+            'Sort objects by two keys (primary and tie-breaker).',
+            'Verify output ordering with at least 10 records.',
+            'Note whether your method is stable and why.'
+        ],
+        moduleId: 'sorting-algorithms'
     }
 ];
 
 const studyTips = [
-    'Chunk study time into 25-minute deep work blocks and log them in the Focus Tracker.',
-    'Explain an algorithm out loud or to a rubber duck before reading the official solution.',
-    'Switch the global font size in Settings if your eyes feel strained‚Äîcomfort boosts focus.',
-    'Mark modules as complete only after you can summarize the code without peeking.',
-    'Use the Daily Challenge as your warm-up, then tackle a related module exercise.',
-    'Pair flashcards with code: after seeing a definition, open the module snippet it references.',
-    'Refresh the Study Tip when you finish a module to keep motivation high.'
+    'Start each session with a 5-minute retrieval warm-up: solve from memory before opening notes.',
+    'Use 25-minute focus blocks, then spend 5 minutes writing what you learned and what is still unclear.',
+    'When a bug appears, write the hypothesis first, then test one variable at a time to avoid random fixes.',
+    'Explain each algorithm out loud as if teaching a classmate; teaching exposes weak mental models fast.',
+    'Alternate concept review and coding reps: 15 minutes reading, 20 minutes implementing.',
+    'Track mistakes in a "bug journal" and review it weekly; repeated errors reveal what to drill next.',
+    'Before marking a module complete, re-implement one core example without copy-paste.',
+    'Use flashcards for definitions, then immediately run one related code snippet for reinforcement.',
+    'If attention drops, lower text size or contrast strain in Settings before forcing more time.',
+    'Convert one solved problem into pseudocode and then back into code to improve transfer skills.',
+    'End every session by choosing tomorrow\'s first task so startup friction is near zero.',
+    'Once per week, do a cumulative review across old modules to prevent forgetting.'
 ];
 
 function getLocalizedModule(module) {
@@ -8110,6 +9363,7 @@ function buildSerializableAppState() {
         completedQuizzes: Array.from(appState.completedQuizzes),
         expandedCode: Array.from(appState.expandedCode),
         expandedCodeExamples: Array.from(appState.expandedCodeExamples),
+        expandedExampleExplanations: Array.from(appState.expandedExampleExplanations),
         moduleComments: Array.from(appState.moduleComments.entries()),
         moduleLanguages: Array.from(appState.moduleLanguages.entries()),
         moduleModes: Array.from(appState.moduleModes.entries()),
@@ -8117,7 +9371,11 @@ function buildSerializableAppState() {
         searchTerm: appState.searchTerm,
         difficultyFilter: appState.difficultyFilter,
         categoryFilter: appState.categoryFilter,
+        modulesPage: appState.modulesPage,
+        glossarySearch: appState.glossarySearch,
         glossaryCategory: appState.glossaryCategory,
+        glossarySort: appState.glossarySort,
+        glossaryLetter: appState.glossaryLetter,
         currentFlashcard: appState.currentFlashcard,
         selectedFlashcardModule: appState.selectedFlashcardModule,
         theme: appState.theme,
@@ -8286,6 +9544,7 @@ function loadFromLocalStorage() {
             appState.completedModules = new Set(remapStoredModuleIds(state.completedModules || []));
             appState.expandedCode = new Set(state.expandedCode || []);
             appState.expandedCodeExamples = sanitizeStoredExpandedCodeExamples(new Set(state.expandedCodeExamples || []));
+            appState.expandedExampleExplanations = sanitizeStoredExpandedCodeExamples(new Set(state.expandedExampleExplanations || []));
             appState.moduleComments = new Map(remapStoredModuleEntryPairs(state.moduleComments || []));
             appState.moduleLanguages = new Map(remapStoredModuleEntryPairs(state.moduleLanguages || []));
             appState.moduleModes = sanitizeStoredModuleModes(
@@ -8297,7 +9556,14 @@ function loadFromLocalStorage() {
             appState.searchTerm = state.searchTerm || '';
             appState.difficultyFilter = state.difficultyFilter || 'all';
             appState.categoryFilter = sanitizeCategoryFilter(state.categoryFilter || 'all');
+            appState.modulesPage = Math.max(1, Number(state.modulesPage) || 1);
+            appState.glossarySearch = String(state.glossarySearch || '');
             appState.glossaryCategory = state.glossaryCategory || 'all';
+            appState.glossarySort = VALID_GLOSSARY_SORTS.has(state.glossarySort) ? state.glossarySort : 'smart';
+            appState.glossaryLetter = String(state.glossaryLetter || 'all').toUpperCase();
+            if (appState.glossaryLetter === 'ALL' || !appState.glossaryLetter.trim()) {
+                appState.glossaryLetter = 'all';
+            }
             appState.currentFlashcard = state.currentFlashcard || 0;
             appState.selectedFlashcardModule = state.selectedFlashcardModule || 'all';
             appState.theme = state.theme || 'default';
@@ -8344,6 +9610,7 @@ function applyRemoteUserStateSnapshot(snapshot, options = {}) {
         appState.completedModules = new Set(remapStoredModuleIds(state.completedModules || []));
         appState.expandedCode = new Set(state.expandedCode || []);
         appState.expandedCodeExamples = sanitizeStoredExpandedCodeExamples(new Set(state.expandedCodeExamples || []));
+        appState.expandedExampleExplanations = sanitizeStoredExpandedCodeExamples(new Set(state.expandedExampleExplanations || []));
         appState.moduleComments = new Map(remapStoredModuleEntryPairs(state.moduleComments || []));
         appState.moduleLanguages = new Map(remapStoredModuleEntryPairs(state.moduleLanguages || []));
         appState.moduleModes = sanitizeStoredModuleModes(
@@ -8355,7 +9622,14 @@ function applyRemoteUserStateSnapshot(snapshot, options = {}) {
         appState.searchTerm = String(state.searchTerm || '');
         appState.difficultyFilter = state.difficultyFilter || 'all';
         appState.categoryFilter = sanitizeCategoryFilter(state.categoryFilter || appState.categoryFilter || 'all');
+        appState.modulesPage = Math.max(1, Number(state.modulesPage) || appState.modulesPage || 1);
+        appState.glossarySearch = String(state.glossarySearch || appState.glossarySearch || '');
         appState.glossaryCategory = state.glossaryCategory || 'all';
+        appState.glossarySort = VALID_GLOSSARY_SORTS.has(state.glossarySort) ? state.glossarySort : (appState.glossarySort || 'smart');
+        appState.glossaryLetter = String(state.glossaryLetter || appState.glossaryLetter || 'all').toUpperCase();
+        if (appState.glossaryLetter === 'ALL' || !appState.glossaryLetter.trim()) {
+            appState.glossaryLetter = 'all';
+        }
         appState.currentFlashcard = Number(state.currentFlashcard || 0);
         appState.selectedFlashcardModule = state.selectedFlashcardModule || 'all';
         appState.theme = state.theme || appState.theme || 'default';
@@ -8458,25 +9732,52 @@ function applyRemoteUserStateSnapshot(snapshot, options = {}) {
 const INTERVIEW_EXAMPLES = [
     {
         id: 'two-sum',
-        title: 'Two Sum (Hash Map)',
+        title: 'Two Sum',
         difficulty: 'Beginner',
         minutes: 20,
         tags: ['Array', 'HashMap'],
-        prompt: 'Given an array of integers, return indices of the two numbers such that they add up to a target. Assume exactly one solution and that you cannot use the same element twice.',
-        solution: `// Java\npublic int[] twoSum(int[] nums, int target) {\n    Map<Integer, Integer> seen = new HashMap<>();\n    for (int i = 0; i < nums.length; i++) {\n        int need = target - nums[i];\n        if (seen.containsKey(need)) {\n            return new int[] { seen.get(need), i };\n        }\n        seen.put(nums[i], i);\n    }\n    return new int[] { -1, -1 };\n}`,
+        promptPreview: 'Find two indices whose values sum to target.',
+        prompt: 'Given an integer array nums and integer target, return indices of two numbers so nums[i] + nums[j] = target. Exactly one valid pair exists, and you cannot reuse the same index.',
+        solution: `// Java
+public int[] twoSum(int[] nums, int target) {
+    Map<Integer, Integer> seen = new HashMap<>();
+    for (int i = 0; i < nums.length; i++) {
+        int need = target - nums[i];
+        if (seen.containsKey(need)) {
+            return new int[] { seen.get(need), i };
+        }
+        seen.put(nums[i], i);
+    }
+    return new int[] { -1, -1 };
+}`,
         language: 'Java',
-        notes: 'Store value ‚Üí index so lookup is O(1).'
+        notes: 'Hash-map lookup gives O(n) time and is the standard baseline in interviews.'
     },
     {
         id: 'valid-parentheses',
-        title: 'Valid Parentheses (Stack)',
+        title: 'Valid Parentheses',
         difficulty: 'Beginner',
         minutes: 15,
         tags: ['Stack', 'String'],
-        prompt: 'Given a string containing ()[]{} brackets, determine if the string is valid. A valid string closes brackets in the correct order.',
-        solution: `// Java\npublic boolean isValid(String s) {\n    Deque<Character> stack = new ArrayDeque<>();\n    Map<Character, Character> pairs = Map.of(')', '(', ']', '[', '}', '{');\n    for (char c : s.toCharArray()) {\n        if (pairs.containsValue(c)) {\n            stack.push(c);\n        } else if (!stack.isEmpty() && pairs.get(c) == stack.peek()) {\n            stack.pop();\n        } else {\n            return false;\n        }\n    }\n    return stack.isEmpty();\n}`,
+        promptPreview: 'Validate bracket order using stack discipline.',
+        prompt: 'Given a string containing only ()[]{} characters, return true when every opening bracket is closed by the correct type in the correct order.',
+        solution: `// Java
+public boolean isValid(String s) {
+    Deque<Character> stack = new ArrayDeque<>();
+    Map<Character, Character> pairs = Map.of(')', '(', ']', '[', '}', '{');
+    for (char c : s.toCharArray()) {
+        if (pairs.containsValue(c)) {
+            stack.push(c);
+        } else if (!stack.isEmpty() && pairs.get(c) == stack.peek()) {
+            stack.pop();
+        } else {
+            return false;
+        }
+    }
+    return stack.isEmpty();
+}`,
         language: 'Java',
-        notes: 'Push opens, pop when matching closes arrive.'
+        notes: 'The stack tracks expected close order; any mismatch can fail immediately.'
     },
     {
         id: 'merge-two-lists',
@@ -8484,10 +9785,27 @@ const INTERVIEW_EXAMPLES = [
         difficulty: 'Beginner',
         minutes: 20,
         tags: ['Linked List', 'Two Pointers'],
-        prompt: 'Merge two sorted linked lists and return the head of the merged list. The resulting list should be sorted.',
-        solution: `// Java\npublic ListNode mergeTwoLists(ListNode l1, ListNode l2) {\n    ListNode dummy = new ListNode(0);\n    ListNode tail = dummy;\n    while (l1 != null && l2 != null) {\n        if (l1.val <= l2.val) {\n            tail.next = l1;\n            l1 = l1.next;\n        } else {\n            tail.next = l2;\n            l2 = l2.next;\n        }\n        tail = tail.next;\n    }\n    tail.next = (l1 != null) ? l1 : l2;\n    return dummy.next;\n}`,
+        promptPreview: 'Merge two sorted linked lists into one sorted list.',
+        prompt: 'You are given heads of two sorted linked lists. Merge them into one sorted linked list by re-linking nodes and return the merged head.',
+        solution: `// Java
+public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
+    ListNode dummy = new ListNode(0);
+    ListNode tail = dummy;
+    while (l1 != null && l2 != null) {
+        if (l1.val <= l2.val) {
+            tail.next = l1;
+            l1 = l1.next;
+        } else {
+            tail.next = l2;
+            l2 = l2.next;
+        }
+        tail = tail.next;
+    }
+    tail.next = (l1 != null) ? l1 : l2;
+    return dummy.next;
+}`,
         language: 'Java',
-        notes: 'Use a dummy head to simplify pointer updates.'
+        notes: 'Dummy-head iteration is reliable, readable, and avoids fragile head edge cases.'
     },
     {
         id: 'binary-search',
@@ -8495,21 +9813,55 @@ const INTERVIEW_EXAMPLES = [
         difficulty: 'Beginner',
         minutes: 15,
         tags: ['Array', 'Binary Search'],
-        prompt: 'Given a sorted array and a target value, return the index if found. Otherwise return -1.',
-        solution: `// Java\npublic int binarySearch(int[] nums, int target) {\n    int left = 0, right = nums.length - 1;\n    while (left <= right) {\n        int mid = left + (right - left) / 2;\n        if (nums[mid] == target) return mid;\n        if (nums[mid] < target) left = mid + 1;\n        else right = mid - 1;\n    }\n    return -1;\n}`,
+        promptPreview: 'Search a sorted array in logarithmic time.',
+        prompt: 'Given a sorted integer array and a target, return its index when present; otherwise return -1. The expected runtime is O(log n).',
+        solution: `// Java
+public int binarySearch(int[] nums, int target) {
+    int left = 0, right = nums.length - 1;
+    while (left <= right) {
+        int mid = left + (right - left) / 2;
+        if (nums[mid] == target) return mid;
+        if (nums[mid] < target) left = mid + 1;
+        else right = mid - 1;
+    }
+    return -1;
+}`,
         language: 'Java',
-        notes: 'Always shrink the search window based on mid.'
+        notes: 'Maintain the search window invariant and compute mid safely to avoid overflow.'
     },
     {
         id: 'bfs-grid',
-        title: 'Shortest Path in Grid (BFS)',
+        title: 'Shortest Path in Grid',
         difficulty: 'Intermediate',
         minutes: 30,
         tags: ['Graph', 'BFS'],
-        prompt: 'Given a grid with 0 = free and 1 = blocked, find the shortest path length from top-left to bottom-right using BFS.',
-        solution: `// Java\npublic int shortestPath(int[][] grid) {\n    int n = grid.length, m = grid[0].length;\n    int[][] dirs = { {1,0}, {-1,0}, {0,1}, {0,-1} };\n    boolean[][] seen = new boolean[n][m];\n    Queue<int[]> q = new ArrayDeque<>();\n    if (grid[0][0] == 1) return -1;\n    q.add(new int[] {0,0,0});\n    seen[0][0] = true;\n    while (!q.isEmpty()) {\n        int[] cur = q.poll();\n        int r = cur[0], c = cur[1], d = cur[2];\n        if (r == n - 1 && c == m - 1) return d;\n        for (int[] dir : dirs) {\n            int nr = r + dir[0], nc = c + dir[1];\n            if (nr >= 0 && nr < n && nc >= 0 && nc < m && grid[nr][nc] == 0 && !seen[nr][nc]) {\n                seen[nr][nc] = true;\n                q.add(new int[] {nr, nc, d + 1});\n            }\n        }\n    }\n    return -1;\n}`,
+        promptPreview: 'Use BFS to find minimum steps in an unweighted grid.',
+        prompt: 'Given a 0/1 grid where 0 is open and 1 is blocked, return the shortest number of moves from top-left to bottom-right using 4-direction movement, or -1 if unreachable.',
+        solution: `// Java
+public int shortestPath(int[][] grid) {
+    int n = grid.length, m = grid[0].length;
+    int[][] dirs = { {1,0}, {-1,0}, {0,1}, {0,-1} };
+    boolean[][] seen = new boolean[n][m];
+    Queue<int[]> q = new ArrayDeque<>();
+    if (grid[0][0] == 1) return -1;
+    q.add(new int[] {0,0,0});
+    seen[0][0] = true;
+    while (!q.isEmpty()) {
+        int[] cur = q.poll();
+        int r = cur[0], c = cur[1], d = cur[2];
+        if (r == n - 1 && c == m - 1) return d;
+        for (int[] dir : dirs) {
+            int nr = r + dir[0], nc = c + dir[1];
+            if (nr >= 0 && nr < n && nc >= 0 && nc < m && grid[nr][nc] == 0 && !seen[nr][nc]) {
+                seen[nr][nc] = true;
+                q.add(new int[] {nr, nc, d + 1});
+            }
+        }
+    }
+    return -1;
+}`,
         language: 'Java',
-        notes: 'BFS guarantees shortest path in unweighted graphs.'
+        notes: 'BFS explores by distance layers, so first arrival at target is guaranteed shortest.'
     },
     {
         id: 'top-k-frequent',
@@ -8517,13 +9869,25 @@ const INTERVIEW_EXAMPLES = [
         difficulty: 'Intermediate',
         minutes: 25,
         tags: ['HashMap', 'Heap'],
-        prompt: 'Given an array of integers, return the k most frequent elements.',
-        solution: `// Java\npublic int[] topKFrequent(int[] nums, int k) {\n    Map<Integer, Integer> freq = new HashMap<>();\n    for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);\n    PriorityQueue<int[]> heap = new PriorityQueue<>((a, b) -> a[1] - b[1]);\n    for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {\n        heap.offer(new int[] { entry.getKey(), entry.getValue() });\n        if (heap.size() > k) heap.poll();\n    }\n    int[] result = new int[k];\n    for (int i = k - 1; i >= 0; i--) result[i] = heap.poll()[0];\n    return result;\n}`,
+        promptPreview: 'Return the k values with highest frequency.',
+        prompt: 'Given an integer array nums and integer k, return the k most frequent values in any order. Design for better than full sort when possible.',
+        solution: `// Java
+public int[] topKFrequent(int[] nums, int k) {
+    Map<Integer, Integer> freq = new HashMap<>();
+    for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+    PriorityQueue<int[]> heap = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+    for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+        heap.offer(new int[] { entry.getKey(), entry.getValue() });
+        if (heap.size() > k) heap.poll();
+    }
+    int[] result = new int[k];
+    for (int i = k - 1; i >= 0; i--) result[i] = heap.poll()[0];
+    return result;
+}`,
         language: 'Java',
-        notes: 'Maintain a min-heap of size k for O(n log k).'
+        notes: 'Min-heap of size k gives O(n log k) and scales well when k is small.'
     }
 ];
-
 const INTERVIEW_PAGE_SIZE = 2;
 
 const INTERVIEW_RUN_SAMPLES = {
@@ -8727,6 +10091,961 @@ public class Main {
     }
 }`,
         expectedOutput: `Top k frequent: [1, 2]`
+    }
+};
+
+const INTERVIEW_SOLUTION_BANK = {
+    'two-sum': {
+        defaultApproachId: 'hash-map-one-pass',
+        approaches: [
+            {
+                id: 'hash-map-one-pass',
+                label: { en: 'Hash Map One-Pass', es: 'Hash Map en una pasada' },
+                applicability: 'Use this for unsorted arrays when you need O(n) time and can spend extra memory.',
+                explanation: 'Track seen values and their indices. For each number, ask whether its complement was already seen.',
+                complexity: 'Time O(n), Space O(n)',
+                languages: {
+                    java: {
+                        code: `import java.util.*;
+
+public class Main {
+    static int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> seen = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            int need = target - nums[i];
+            if (seen.containsKey(need)) return new int[] { seen.get(need), i };
+            seen.put(nums[i], i);
+        }
+        return new int[] { -1, -1 };
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Arrays.toString(twoSum(new int[] {2, 7, 11, 15}, 9)));
+    }
+}`,
+                        expectedOutput: `[0, 1]`
+                    },
+                    python: {
+                        code: `def two_sum(nums, target):
+    seen = {}
+    for i, value in enumerate(nums):
+        need = target - value
+        if need in seen:
+            return [seen[need], i]
+        seen[value] = i
+    return [-1, -1]
+
+if __name__ == "__main__":
+    print(two_sum([2, 7, 11, 15], 9))`,
+                        expectedOutput: `[0, 1]`
+                    },
+                    javascript: {
+                        code: `function twoSum(nums, target) {
+    const seen = new Map();
+    for (let i = 0; i < nums.length; i++) {
+        const need = target - nums[i];
+        if (seen.has(need)) return [seen.get(need), i];
+        seen.set(nums[i], i);
+    }
+    return [-1, -1];
+}
+
+console.log(JSON.stringify(twoSum([2, 7, 11, 15], 9)));`,
+                        expectedOutput: `[0,1]`
+                    }
+                }
+            },
+            {
+                id: 'sort-two-pointer',
+                label: { en: 'Sort + Two Pointers', es: 'Ordenar + Dos punteros' },
+                applicability: 'Use when you also want a sorted-value scan pattern. This is useful for variants like 3Sum.',
+                explanation: 'Sort value-index pairs, move pointers inward, and map back to original indices.',
+                complexity: 'Time O(n log n), Space O(n)',
+                languages: {
+                    java: {
+                        code: `import java.util.*;
+
+public class Main {
+    static int[] twoSumSortedPairs(int[] nums, int target) {
+        int[][] pairs = new int[nums.length][2];
+        for (int i = 0; i < nums.length; i++) pairs[i] = new int[] { nums[i], i };
+        Arrays.sort(pairs, Comparator.comparingInt(a -> a[0]));
+        int left = 0, right = pairs.length - 1;
+        while (left < right) {
+            int sum = pairs[left][0] + pairs[right][0];
+            if (sum == target) {
+                int a = pairs[left][1], b = pairs[right][1];
+                return a < b ? new int[] { a, b } : new int[] { b, a };
+            }
+            if (sum < target) left++;
+            else right--;
+        }
+        return new int[] { -1, -1 };
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Arrays.toString(twoSumSortedPairs(new int[] {2, 7, 11, 15}, 9)));
+    }
+}`,
+                        expectedOutput: `[0, 1]`
+                    },
+                    python: {
+                        code: `def two_sum_sorted_pairs(nums, target):
+    pairs = sorted((value, idx) for idx, value in enumerate(nums))
+    left, right = 0, len(pairs) - 1
+    while left < right:
+        total = pairs[left][0] + pairs[right][0]
+        if total == target:
+            a, b = pairs[left][1], pairs[right][1]
+            return [a, b] if a < b else [b, a]
+        if total < target:
+            left += 1
+        else:
+            right -= 1
+    return [-1, -1]
+
+if __name__ == "__main__":
+    print(two_sum_sorted_pairs([2, 7, 11, 15], 9))`,
+                        expectedOutput: `[0, 1]`
+                    }
+                }
+            }
+        ]
+    },
+    'valid-parentheses': {
+        defaultApproachId: 'stack-matching',
+        approaches: [
+            {
+                id: 'stack-matching',
+                label: { en: 'Stack Matching', es: 'Pila de emparejamiento' },
+                applicability: 'Use for bracket validation and any nested delimiter parsing.',
+                explanation: 'Push opening brackets, pop on valid closing brackets, and reject mismatches immediately.',
+                complexity: 'Time O(n), Space O(n)',
+                languages: {
+                    java: {
+                        code: `import java.util.*;
+
+public class Main {
+    static boolean isValid(String s) {
+        Deque<Character> stack = new ArrayDeque<>();
+        Map<Character, Character> pairs = Map.of(')', '(', ']', '[', '}', '{');
+        for (char c : s.toCharArray()) {
+            if (pairs.containsValue(c)) stack.push(c);
+            else if (!stack.isEmpty() && pairs.containsKey(c) && pairs.get(c) == stack.peek()) stack.pop();
+            else return false;
+        }
+        return stack.isEmpty();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(isValid("()[]{}"));
+        System.out.println(isValid("(]"));
+    }
+}`,
+                        expectedOutput: `true\nfalse`
+                    },
+                    python: {
+                        code: `def is_valid(s):
+    stack = []
+    pairs = {')': '(', ']': '[', '}': '{'}
+    opens = set(pairs.values())
+    for ch in s:
+        if ch in opens:
+            stack.append(ch)
+        elif stack and ch in pairs and stack[-1] == pairs[ch]:
+            stack.pop()
+        else:
+            return False
+    return len(stack) == 0
+
+if __name__ == "__main__":
+    print(is_valid("()[]{}"))
+    print(is_valid("(]"))`,
+                        expectedOutput: `True\nFalse`
+                    },
+                    javascript: {
+                        code: `function isValid(s) {
+    const stack = [];
+    const pairs = { ')': '(', ']': '[', '}': '{' };
+    const opens = new Set(Object.values(pairs));
+    for (const ch of s) {
+        if (opens.has(ch)) stack.push(ch);
+        else if (pairs[ch] && stack.length && stack[stack.length - 1] === pairs[ch]) stack.pop();
+        else return false;
+    }
+    return stack.length === 0;
+}
+
+console.log(isValid("()[]{}"));
+console.log(isValid("(]"));`,
+                        expectedOutput: `true\nfalse`
+                    }
+                }
+            },
+            {
+                id: 'replace-pairs',
+                label: { en: 'Repeated Pair Elimination', es: 'Eliminaci√≥n repetida de pares' },
+                applicability: 'Good for conceptual clarity on short strings, not for large inputs.',
+                explanation: 'Repeatedly remove (), [], and {} until no more changes occur.',
+                complexity: 'Time O(n^2), Space O(n)',
+                languages: {
+                    java: {
+                        code: `public class Main {
+    static boolean isValidByReplace(String s) {
+        String prev;
+        do {
+            prev = s;
+            s = s.replace("()", "").replace("[]", "").replace("{}", "");
+        } while (!s.equals(prev));
+        return s.isEmpty();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(isValidByReplace("()[]{}"));
+        System.out.println(isValidByReplace("(]"));
+    }
+}`,
+                        expectedOutput: `true\nfalse`
+                    },
+                    python: {
+                        code: `def is_valid_by_replace(s):
+    while True:
+        nxt = s.replace("()", "").replace("[]", "").replace("{}", "")
+        if nxt == s:
+            return s == ""
+        s = nxt
+
+if __name__ == "__main__":
+    print(is_valid_by_replace("()[]{}"))
+    print(is_valid_by_replace("(]"))`,
+                        expectedOutput: `True\nFalse`
+                    }
+                }
+            }
+        ]
+    },
+    'merge-two-lists': {
+        defaultApproachId: 'iterative-dummy',
+        approaches: [
+            {
+                id: 'iterative-dummy',
+                label: { en: 'Iterative with Dummy Node', es: 'Iterativo con nodo dummy' },
+                applicability: 'Best default for clarity and stack safety.',
+                explanation: 'Walk both lists once, attach the smaller node each step, and append the remainder.',
+                complexity: 'Time O(n + m), Space O(1)',
+                languages: {
+                    java: {
+                        code: `public class Main {
+    static class ListNode {
+        int val;
+        ListNode next;
+        ListNode(int val) { this.val = val; }
+    }
+
+    static ListNode merge(ListNode a, ListNode b) {
+        ListNode dummy = new ListNode(0), tail = dummy;
+        while (a != null && b != null) {
+            if (a.val <= b.val) { tail.next = a; a = a.next; }
+            else { tail.next = b; b = b.next; }
+            tail = tail.next;
+        }
+        tail.next = (a != null) ? a : b;
+        return dummy.next;
+    }
+
+    static ListNode build(int... values) {
+        ListNode dummy = new ListNode(0), tail = dummy;
+        for (int v : values) { tail.next = new ListNode(v); tail = tail.next; }
+        return dummy.next;
+    }
+
+    static String show(ListNode head) {
+        StringBuilder sb = new StringBuilder();
+        while (head != null) {
+            if (sb.length() > 0) sb.append(" ");
+            sb.append(head.val);
+            head = head.next;
+        }
+        return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(show(merge(build(1, 2, 4), build(1, 3, 4))));
+    }
+}`,
+                        expectedOutput: `1 1 2 3 4 4`
+                    },
+                    python: {
+                        code: `class ListNode:
+    def __init__(self, val=0, nxt=None):
+        self.val = val
+        self.next = nxt
+
+def merge(a, b):
+    dummy = ListNode()
+    tail = dummy
+    while a and b:
+        if a.val <= b.val:
+            tail.next, a = a, a.next
+        else:
+            tail.next, b = b, b.next
+        tail = tail.next
+    tail.next = a if a else b
+    return dummy.next
+
+def build(values):
+    dummy = ListNode()
+    tail = dummy
+    for v in values:
+        tail.next = ListNode(v)
+        tail = tail.next
+    return dummy.next
+
+def show(head):
+    out = []
+    while head:
+        out.append(str(head.val))
+        head = head.next
+    return " ".join(out)
+
+if __name__ == "__main__":
+    print(show(merge(build([1, 2, 4]), build([1, 3, 4]))))`,
+                        expectedOutput: `1 1 2 3 4 4`
+                    }
+                }
+            },
+            {
+                id: 'recursive-merge',
+                label: { en: 'Recursive Merge', es: 'Merge recursivo' },
+                applicability: 'Use when recursion is acceptable and you want compact pointer logic.',
+                explanation: 'Pick the smaller head recursively; each call solves a smaller merge subproblem.',
+                complexity: 'Time O(n + m), Space O(n + m) call stack',
+                languages: {
+                    java: {
+                        code: `public class Main {
+    static class ListNode {
+        int val;
+        ListNode next;
+        ListNode(int val) { this.val = val; }
+    }
+
+    static ListNode mergeRecursive(ListNode a, ListNode b) {
+        if (a == null) return b;
+        if (b == null) return a;
+        if (a.val <= b.val) {
+            a.next = mergeRecursive(a.next, b);
+            return a;
+        }
+        b.next = mergeRecursive(a, b.next);
+        return b;
+    }
+
+    static ListNode build(int... values) {
+        ListNode dummy = new ListNode(0), tail = dummy;
+        for (int v : values) { tail.next = new ListNode(v); tail = tail.next; }
+        return dummy.next;
+    }
+
+    static String show(ListNode head) {
+        StringBuilder sb = new StringBuilder();
+        while (head != null) {
+            if (sb.length() > 0) sb.append(" ");
+            sb.append(head.val);
+            head = head.next;
+        }
+        return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(show(mergeRecursive(build(1, 2, 4), build(1, 3, 4))));
+    }
+}`,
+                        expectedOutput: `1 1 2 3 4 4`
+                    },
+                    python: {
+                        code: `class ListNode:
+    def __init__(self, val=0, nxt=None):
+        self.val = val
+        self.next = nxt
+
+def merge_recursive(a, b):
+    if not a:
+        return b
+    if not b:
+        return a
+    if a.val <= b.val:
+        a.next = merge_recursive(a.next, b)
+        return a
+    b.next = merge_recursive(a, b.next)
+    return b
+
+def build(values):
+    dummy = ListNode()
+    tail = dummy
+    for v in values:
+        tail.next = ListNode(v)
+        tail = tail.next
+    return dummy.next
+
+def show(head):
+    out = []
+    while head:
+        out.append(str(head.val))
+        head = head.next
+    return " ".join(out)
+
+if __name__ == "__main__":
+    print(show(merge_recursive(build([1, 2, 4]), build([1, 3, 4]))))`,
+                        expectedOutput: `1 1 2 3 4 4`
+                    }
+                }
+            }
+        ]
+    },
+    'binary-search': {
+        defaultApproachId: 'iterative-window',
+        approaches: [
+            {
+                id: 'iterative-window',
+                label: { en: 'Iterative Window', es: 'Ventana iterativa' },
+                applicability: 'Best default for sorted arrays with tight space requirements.',
+                explanation: 'Shrink [left, right] around the target until found or exhausted.',
+                complexity: 'Time O(log n), Space O(1)',
+                languages: {
+                    java: {
+                        code: `public class Main {
+    static int binarySearch(int[] nums, int target) {
+        int left = 0, right = nums.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (nums[mid] == target) return mid;
+            if (nums[mid] < target) left = mid + 1;
+            else right = mid - 1;
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        int[] nums = {-1, 0, 3, 5, 9, 12};
+        System.out.println(binarySearch(nums, 9));
+        System.out.println(binarySearch(nums, 6));
+    }
+}`,
+                        expectedOutput: `4\n-1`
+                    },
+                    python: {
+                        code: `def binary_search(nums, target):
+    left, right = 0, len(nums) - 1
+    while left <= right:
+        mid = left + (right - left) // 2
+        if nums[mid] == target:
+            return mid
+        if nums[mid] < target:
+            left = mid + 1
+        else:
+            right = mid - 1
+    return -1
+
+if __name__ == "__main__":
+    arr = [-1, 0, 3, 5, 9, 12]
+    print(binary_search(arr, 9))
+    print(binary_search(arr, 6))`,
+                        expectedOutput: `4\n-1`
+                    },
+                    javascript: {
+                        code: `function binarySearch(nums, target) {
+    let left = 0;
+    let right = nums.length - 1;
+    while (left <= right) {
+        const mid = left + Math.floor((right - left) / 2);
+        if (nums[mid] === target) return mid;
+        if (nums[mid] < target) left = mid + 1;
+        else right = mid - 1;
+    }
+    return -1;
+}
+
+const arr = [-1, 0, 3, 5, 9, 12];
+console.log(binarySearch(arr, 9));
+console.log(binarySearch(arr, 6));`,
+                        expectedOutput: `4\n-1`
+                    }
+                }
+            },
+            {
+                id: 'recursive-search',
+                label: { en: 'Recursive Binary Search', es: 'B√∫squeda binaria recursiva' },
+                applicability: 'Useful when recursion makes divide-and-conquer proofs easier to reason about.',
+                explanation: 'Each call picks one half and recurses on a strictly smaller interval.',
+                complexity: 'Time O(log n), Space O(log n) call stack',
+                languages: {
+                    java: {
+                        code: `public class Main {
+    static int search(int[] nums, int target, int left, int right) {
+        if (left > right) return -1;
+        int mid = left + (right - left) / 2;
+        if (nums[mid] == target) return mid;
+        if (nums[mid] < target) return search(nums, target, mid + 1, right);
+        return search(nums, target, left, mid - 1);
+    }
+
+    public static void main(String[] args) {
+        int[] nums = {-1, 0, 3, 5, 9, 12};
+        System.out.println(search(nums, 9, 0, nums.length - 1));
+        System.out.println(search(nums, 6, 0, nums.length - 1));
+    }
+}`,
+                        expectedOutput: `4\n-1`
+                    },
+                    python: {
+                        code: `def search(nums, target, left, right):
+    if left > right:
+        return -1
+    mid = left + (right - left) // 2
+    if nums[mid] == target:
+        return mid
+    if nums[mid] < target:
+        return search(nums, target, mid + 1, right)
+    return search(nums, target, left, mid - 1)
+
+if __name__ == "__main__":
+    arr = [-1, 0, 3, 5, 9, 12]
+    print(search(arr, 9, 0, len(arr) - 1))
+    print(search(arr, 6, 0, len(arr) - 1))`,
+                        expectedOutput: `4\n-1`
+                    }
+                }
+            }
+        ]
+    },
+    'bfs-grid': {
+        defaultApproachId: 'bfs-shortest-path',
+        approaches: [
+            {
+                id: 'bfs-shortest-path',
+                label: { en: 'BFS Level Traversal', es: 'BFS por niveles' },
+                applicability: 'Best for unweighted grids where each move has equal cost.',
+                explanation: 'BFS explores by distance layers, so the first time you reach target is shortest.',
+                complexity: 'Time O(rows*cols), Space O(rows*cols)',
+                languages: {
+                    java: {
+                        code: `import java.util.*;
+
+public class Main {
+    static int shortestPath(int[][] grid) {
+        int n = grid.length, m = grid[0].length;
+        if (grid[0][0] == 1) return -1;
+        int[][] dirs = {{1,0},{-1,0},{0,1},{0,-1}};
+        boolean[][] seen = new boolean[n][m];
+        Queue<int[]> q = new ArrayDeque<>();
+        q.offer(new int[] {0, 0, 0});
+        seen[0][0] = true;
+        while (!q.isEmpty()) {
+            int[] cur = q.poll();
+            int r = cur[0], c = cur[1], d = cur[2];
+            if (r == n - 1 && c == m - 1) return d;
+            for (int[] dir : dirs) {
+                int nr = r + dir[0], nc = c + dir[1];
+                if (nr >= 0 && nr < n && nc >= 0 && nc < m && grid[nr][nc] == 0 && !seen[nr][nc]) {
+                    seen[nr][nc] = true;
+                    q.offer(new int[] {nr, nc, d + 1});
+                }
+            }
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        int[][] grid = {{0,0,0},{1,1,0},{0,0,0}};
+        System.out.println(shortestPath(grid));
+    }
+}`,
+                        expectedOutput: `4`
+                    },
+                    python: {
+                        code: `from collections import deque
+
+def shortest_path(grid):
+    n, m = len(grid), len(grid[0])
+    if grid[0][0] == 1:
+        return -1
+    dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+    seen = [[False] * m for _ in range(n)]
+    q = deque([(0, 0, 0)])
+    seen[0][0] = True
+    while q:
+        r, c, d = q.popleft()
+        if r == n - 1 and c == m - 1:
+            return d
+        for dr, dc in dirs:
+            nr, nc = r + dr, c + dc
+            if 0 <= nr < n and 0 <= nc < m and grid[nr][nc] == 0 and not seen[nr][nc]:
+                seen[nr][nc] = True
+                q.append((nr, nc, d + 1))
+    return -1
+
+if __name__ == "__main__":
+    grid = [[0, 0, 0], [1, 1, 0], [0, 0, 0]]
+    print(shortest_path(grid))`,
+                        expectedOutput: `4`
+                    },
+                    javascript: {
+                        code: `function shortestPath(grid) {
+    const rows = grid.length;
+    const cols = grid[0].length;
+    if (grid[0][0] === 1) return -1;
+    const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+    const seen = Array.from({ length: rows }, () => Array(cols).fill(false));
+    const queue = [[0, 0, 0]];
+    seen[0][0] = true;
+    let head = 0;
+    while (head < queue.length) {
+        const [r, c, d] = queue[head++];
+        if (r === rows - 1 && c === cols - 1) return d;
+        for (const [dr, dc] of dirs) {
+            const nr = r + dr;
+            const nc = c + dc;
+            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && grid[nr][nc] === 0 && !seen[nr][nc]) {
+                seen[nr][nc] = true;
+                queue.push([nr, nc, d + 1]);
+            }
+        }
+    }
+    return -1;
+}
+
+console.log(shortestPath([[0,0,0],[1,1,0],[0,0,0]]));`,
+                        expectedOutput: `4`
+                    }
+                }
+            },
+            {
+                id: 'dijkstra-priority-queue',
+                label: { en: 'Dijkstra with Priority Queue', es: 'Dijkstra con cola de prioridad' },
+                applicability: 'Useful generalization when movement costs are not uniform.',
+                explanation: 'Priority queue always expands the currently cheapest frontier node.',
+                complexity: 'Time O(V log V + E log V), Space O(V)',
+                languages: {
+                    java: {
+                        code: `import java.util.*;
+
+public class Main {
+    static int shortestPathDijkstra(int[][] grid) {
+        int n = grid.length, m = grid[0].length;
+        int[][] dist = new int[n][m];
+        for (int[] row : dist) Arrays.fill(row, Integer.MAX_VALUE);
+        PriorityQueue<int[]> pq = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));
+        if (grid[0][0] == 1) return -1;
+        dist[0][0] = 0;
+        pq.offer(new int[] {0, 0, 0});
+        int[][] dirs = {{1,0},{-1,0},{0,1},{0,-1}};
+        while (!pq.isEmpty()) {
+            int[] cur = pq.poll();
+            int d = cur[0], r = cur[1], c = cur[2];
+            if (d != dist[r][c]) continue;
+            if (r == n - 1 && c == m - 1) return d;
+            for (int[] dir : dirs) {
+                int nr = r + dir[0], nc = c + dir[1];
+                if (nr < 0 || nr >= n || nc < 0 || nc >= m || grid[nr][nc] == 1) continue;
+                int nd = d + 1;
+                if (nd < dist[nr][nc]) {
+                    dist[nr][nc] = nd;
+                    pq.offer(new int[] {nd, nr, nc});
+                }
+            }
+        }
+        return -1;
+    }
+
+    public static void main(String[] args) {
+        int[][] grid = {{0,0,0},{1,1,0},{0,0,0}};
+        System.out.println(shortestPathDijkstra(grid));
+    }
+}`,
+                        expectedOutput: `4`
+                    },
+                    python: {
+                        code: `import heapq
+
+def shortest_path_dijkstra(grid):
+    rows, cols = len(grid), len(grid[0])
+    if grid[0][0] == 1:
+        return -1
+    dist = [[10**9] * cols for _ in range(rows)]
+    dist[0][0] = 0
+    heap = [(0, 0, 0)]
+    dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+    while heap:
+        d, r, c = heapq.heappop(heap)
+        if d != dist[r][c]:
+            continue
+        if r == rows - 1 and c == cols - 1:
+            return d
+        for dr, dc in dirs:
+            nr, nc = r + dr, c + dc
+            if nr < 0 or nr >= rows or nc < 0 or nc >= cols or grid[nr][nc] == 1:
+                continue
+            nd = d + 1
+            if nd < dist[nr][nc]:
+                dist[nr][nc] = nd
+                heapq.heappush(heap, (nd, nr, nc))
+    return -1
+
+if __name__ == "__main__":
+    print(shortest_path_dijkstra([[0, 0, 0], [1, 1, 0], [0, 0, 0]]))`,
+                        expectedOutput: `4`
+                    }
+                }
+            }
+        ]
+    },
+    'top-k-frequent': {
+        defaultApproachId: 'min-heap',
+        approaches: [
+            {
+                id: 'min-heap',
+                label: { en: 'Min-Heap of Size k', es: 'Min-heap de tama√±o k' },
+                applicability: 'Strong default when k is much smaller than unique values.',
+                explanation: 'Keep only k best frequencies in a min-heap to avoid sorting every key.',
+                complexity: 'Time O(n log k), Space O(n)',
+                languages: {
+                    java: {
+                        code: `import java.util.*;
+
+public class Main {
+    static int[] topKFrequent(int[] nums, int k) {
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+        PriorityQueue<int[]> heap = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+        for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+            heap.offer(new int[] {entry.getKey(), entry.getValue()});
+            if (heap.size() > k) heap.poll();
+        }
+        int[] ans = new int[k];
+        for (int i = k - 1; i >= 0; i--) ans[i] = heap.poll()[0];
+        Arrays.sort(ans);
+        return ans;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Arrays.toString(topKFrequent(new int[] {1,1,1,2,2,3}, 2)));
+    }
+}`,
+                        expectedOutput: `[1, 2]`
+                    },
+                    python: {
+                        code: `from collections import Counter
+import heapq
+
+def top_k_frequent(nums, k):
+    freq = Counter(nums)
+    heap = []
+    for value, count in freq.items():
+        heapq.heappush(heap, (count, value))
+        if len(heap) > k:
+            heapq.heappop(heap)
+    ans = sorted(value for _, value in heap)
+    return ans
+
+if __name__ == "__main__":
+    print(top_k_frequent([1, 1, 1, 2, 2, 3], 2))`,
+                        expectedOutput: `[1, 2]`
+                    },
+                    javascript: {
+                        code: `function topKFrequent(nums, k) {
+    const freq = new Map();
+    for (const num of nums) freq.set(num, (freq.get(num) || 0) + 1);
+    const entries = [...freq.entries()].sort((a, b) => b[1] - a[1]).slice(0, k).map(([value]) => value);
+    entries.sort((a, b) => a - b);
+    return entries;
+}
+
+console.log(JSON.stringify(topKFrequent([1, 1, 1, 2, 2, 3], 2)));`,
+                        expectedOutput: `[1,2]`
+                    }
+                }
+            },
+            {
+                id: 'bucket-sort',
+                label: { en: 'Bucket by Frequency', es: 'Buckets por frecuencia' },
+                applicability: 'Use when you want linear-time behavior relative to input size.',
+                explanation: 'Map frequencies to buckets, then scan buckets from high to low.',
+                complexity: 'Time O(n), Space O(n)',
+                languages: {
+                    java: {
+                        code: `import java.util.*;
+
+public class Main {
+    static int[] topKFrequentBucket(int[] nums, int k) {
+        Map<Integer, Integer> freq = new HashMap<>();
+        for (int num : nums) freq.put(num, freq.getOrDefault(num, 0) + 1);
+        List<List<Integer>> buckets = new ArrayList<>();
+        for (int i = 0; i <= nums.length; i++) buckets.add(new ArrayList<>());
+        for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {
+            buckets.get(entry.getValue()).add(entry.getKey());
+        }
+        List<Integer> result = new ArrayList<>();
+        for (int i = buckets.size() - 1; i >= 0 && result.size() < k; i--) {
+            for (int value : buckets.get(i)) {
+                result.add(value);
+                if (result.size() == k) break;
+            }
+        }
+        Collections.sort(result);
+        return result.stream().mapToInt(Integer::intValue).toArray();
+    }
+
+    public static void main(String[] args) {
+        System.out.println(Arrays.toString(topKFrequentBucket(new int[] {1,1,1,2,2,3}, 2)));
+    }
+}`,
+                        expectedOutput: `[1, 2]`
+                    },
+                    python: {
+                        code: `from collections import Counter
+
+def top_k_frequent_bucket(nums, k):
+    freq = Counter(nums)
+    buckets = [[] for _ in range(len(nums) + 1)]
+    for value, count in freq.items():
+        buckets[count].append(value)
+    result = []
+    for count in range(len(buckets) - 1, -1, -1):
+        for value in buckets[count]:
+            result.append(value)
+            if len(result) == k:
+                return sorted(result)
+    return sorted(result)
+
+if __name__ == "__main__":
+    print(top_k_frequent_bucket([1, 1, 1, 2, 2, 3], 2))`,
+                        expectedOutput: `[1, 2]`
+                    }
+                }
+            }
+        ]
+    }
+};
+
+const INTERVIEW_APPROACH_GUIDES = {
+    'hash-map-one-pass': {
+        tradeoffs: 'Fast lookup but uses extra memory for the map.',
+        pitfalls: 'Check complement before inserting current value so duplicates are handled correctly.',
+        steps: [
+            'Create a hash map from value to index.',
+            'For each value, compute target - value.',
+            'If complement exists in map, return the pair of indices.',
+            'Otherwise store current value and continue.'
+        ]
+    },
+    'sort-two-pointer': {
+        tradeoffs: 'Sorting adds O(n log n) time and needs index tracking.',
+        pitfalls: 'Do not lose original indices after sorting value-index pairs.',
+        steps: [
+            'Create [value, originalIndex] pairs.',
+            'Sort pairs by value.',
+            'Move left/right pointers based on sum compared to target.',
+            'Map the found pair back to original indices.'
+        ]
+    },
+    'stack-matching': {
+        tradeoffs: 'Uses O(n) extra space in the worst nested case.',
+        pitfalls: 'Do not pop from an empty stack; that is an instant invalid case.',
+        steps: [
+            'Push opening brackets onto stack.',
+            'On closing bracket, verify stack top matches required opener.',
+            'Reject immediately on mismatch.',
+            'Return true only if stack is empty at the end.'
+        ]
+    },
+    'replace-pairs': {
+        tradeoffs: 'Simple conceptually but O(n^2) in repeated scans.',
+        pitfalls: 'Works for teaching but can time out on long strings.',
+        steps: [
+            'Repeatedly remove (), [], and {} substrings.',
+            'Stop when no further changes occur.',
+            'If string is empty then it was valid; otherwise invalid.'
+        ]
+    },
+    'iterative-dummy': {
+        tradeoffs: 'Best production default with O(1) extra space.',
+        pitfalls: 'Always advance tail after linking a node.',
+        steps: [
+            'Create dummy and tail pointers.',
+            'Compare current nodes from both lists and append smaller node.',
+            'Advance the list pointer that supplied the node.',
+            'Append remaining list when one side is exhausted.'
+        ]
+    },
+    'recursive-merge': {
+        tradeoffs: 'Elegant and short but uses call-stack space.',
+        pitfalls: 'Large lists can risk stack overflow in recursion-heavy environments.',
+        steps: [
+            'Base case: return non-null list when other is null.',
+            'Choose node with smaller value as next result node.',
+            'Recursively merge the remainder.',
+            'Return chosen node as merged head.'
+        ]
+    },
+    'iterative-window': {
+        tradeoffs: 'Most efficient and stack-safe for binary search.',
+        pitfalls: 'Update boundaries carefully to avoid infinite loops.',
+        steps: [
+            'Track left and right bounds.',
+            'Compute mid using left + (right - left) / 2.',
+            'Move left or right based on comparison to target.',
+            'Return -1 when bounds cross.'
+        ]
+    },
+    'recursive-search': {
+        tradeoffs: 'Readable divide-and-conquer framing but uses stack space.',
+        pitfalls: 'Base case left > right is required to avoid infinite recursion.',
+        steps: [
+            'If interval is empty, return -1.',
+            'Evaluate midpoint and compare to target.',
+            'Recurse into only one half each call.',
+            'Propagate found index back up.'
+        ]
+    },
+    'bfs-shortest-path': {
+        tradeoffs: 'Optimal for unweighted grids but memory-heavy on large maps.',
+        pitfalls: 'Mark cells visited when enqueuing, not when dequeuing.',
+        steps: [
+            'Validate starting cell is open.',
+            'Run BFS queue storing row, column, and distance.',
+            'Expand four-direction neighbors that are inside bounds and unvisited.',
+            'Return distance at first visit to goal.'
+        ]
+    },
+    'dijkstra-priority-queue': {
+        tradeoffs: 'More general than BFS but adds heap overhead for equal-weight grids.',
+        pitfalls: 'Skip stale heap entries by checking against current best distance.',
+        steps: [
+            'Initialize distance grid to infinity except start.',
+            'Use min-heap prioritized by current distance.',
+            'Relax neighbor distances and push improved states.',
+            'Stop when target is popped with minimal distance.'
+        ]
+    },
+    'min-heap': {
+        tradeoffs: 'Great when k is small, but heap operations add log(k) overhead.',
+        pitfalls: 'Keep heap capped at size k to preserve complexity bound.',
+        steps: [
+            'Count each number frequency with hash map.',
+            'Push [value, frequency] pairs into min-heap.',
+            'When heap exceeds k, pop smallest frequency.',
+            'Collect remaining heap elements as answer.'
+        ]
+    },
+    'bucket-sort': {
+        tradeoffs: 'Linear-time style but uses extra buckets up to n.',
+        pitfalls: 'Bucket array size should be nums.length + 1 to index by frequency.',
+        steps: [
+            'Build frequency map for all values.',
+            'Place each value into bucket indexed by its count.',
+            'Iterate buckets from high frequency to low.',
+            'Collect values until k elements are chosen.'
+        ]
     }
 };
 
@@ -9276,11 +11595,21 @@ const dsLastOperation = {
     graph: 'addEdge',
     trie: 'search'
 };
+const DS_UNDO_LIMIT = 30;
+const DS_RUN_OUTPUT_DEFAULT = {
+    tone: 'ready',
+    source: 'Ready',
+    text: 'Run the current example to view output here.'
+};
+let dsUndoStack = [];
+let dsRunOutputState = { ...DS_RUN_OUTPUT_DEFAULT };
 
 let interviewPage = 1;
 let activePromptId = null;
 let notesLibraryFilter = 'all';
 let booksLibrary = [];
+let lastRenderedModulesPageSize = 4;
+let modulesResizeDebounce = null;
 let notesSaveTimer = null;
 let studyPlanDraft = null;
 let dsActive = 'array';
@@ -9358,7 +11687,7 @@ function updateAccountChip() {
     if (!chip) return;
     const label = accountProfile.username || accountProfile.name || accountProfile.email;
     if (label) {
-        chip.textContent = `üëã ${label}`;
+        chip.textContent = `Y'< ${label}`;
         chip.classList.remove('hidden');
     } else {
         chip.textContent = '';
@@ -9552,6 +11881,7 @@ function setAccountAuthMode(mode) {
     if (confirmInput && !isSignup) {
         confirmInput.value = '';
     }
+    clearAccountAuthValidationState();
 }
 
 function clearAuthPasswordFields() {
@@ -9559,6 +11889,30 @@ function clearAuthPasswordFields() {
     const confirmInput = document.getElementById('account-auth-confirm');
     if (passwordInput) passwordInput.value = '';
     if (confirmInput) confirmInput.value = '';
+}
+
+function clearAccountAuthValidationState() {
+    [
+        'account-auth-email',
+        'account-auth-username',
+        'account-auth-password',
+        'account-auth-confirm'
+    ].forEach((fieldId) => {
+        const input = document.getElementById(fieldId);
+        if (!input) return;
+        input.classList.remove('is-invalid-field');
+        input.removeAttribute('aria-invalid');
+    });
+}
+
+function setAccountAuthFieldError(fieldId, message) {
+    const input = document.getElementById(fieldId);
+    if (input) {
+        input.classList.add('is-invalid-field');
+        input.setAttribute('aria-invalid', 'true');
+        input.focus();
+    }
+    setAccountAuthStatus(message, 'error');
 }
 
 function setAuthSubmitBusy(isBusy) {
@@ -9804,7 +12158,7 @@ async function checkNeonSession(options = {}) {
         setCsrfToken('');
         accountAuthState.isAuthenticated = false;
         accountAuthState.sessionLabel = '';
-        setAccountAuthStatus(`Not authenticated: ${error.message}`, 'error');
+        setAccountAuthStatus(t('auth.status.guest'), 'neutral');
         refreshAccountPrimaryAuthButton();
         setAccountSyncState('error', `Session check failed: ${error.message}`);
         if (!silent) {
@@ -9855,32 +12209,33 @@ async function submitAccountAuth() {
     }
 
     const { email, username, password, confirm } = readAccountAuthForm();
+    clearAccountAuthValidationState();
     const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || /^[a-zA-Z0-9._-]{3,}$/.test(email);
     if (!emailValid) {
-        setAccountAuthStatus('Enter a valid email or username.', 'error');
+        setAccountAuthFieldError('account-auth-email', 'Enter a valid email or username.');
         showToast('Enter a valid email or username.', 'warning');
         return;
     }
     if (!password) {
-        setAccountAuthStatus('Enter your password.', 'error');
+        setAccountAuthFieldError('account-auth-password', 'Enter your password.');
         showToast('Enter your password.', 'warning');
         return;
     }
     if (isSignup && password.length < 8) {
-        setAccountAuthStatus('Password must be at least 8 characters.', 'error');
+        setAccountAuthFieldError('account-auth-password', 'Password must be at least 8 characters.');
         showToast('Password must be at least 8 characters.', 'warning');
         return;
     }
     if (isSignup) {
         const usernameValid = /^[a-zA-Z0-9._-]{3,}$/.test(username);
         if (!usernameValid) {
-            setAccountAuthStatus('Username must be at least 3 characters (letters, numbers, . _ -).', 'error');
+            setAccountAuthFieldError('account-auth-username', 'Username must be at least 3 characters (letters, numbers, . _ -).');
             showToast('Enter a valid username for sign up.', 'warning');
             return;
         }
     }
     if (isSignup && password !== confirm) {
-        setAccountAuthStatus('Passwords do not match.', 'error');
+        setAccountAuthFieldError('account-auth-confirm', 'Passwords do not match.');
         showToast('Passwords do not match.', 'warning');
         return;
     }
@@ -10117,8 +12472,9 @@ function openAccountModal() {
     applyAccountProfileToForm();
     setAccountAuthMode(accountAuthState.mode);
     clearAuthPasswordFields();
+    clearAccountAuthValidationState();
     setAccountAuthStatus('Checking session...', 'info');
-    openModal('account-modal');
+    openModal('account-modal', { initialFocus: '#account-auth-email' });
     if (PROFILE_SYNC_CONFIG.enabled) {
         checkNeonSession({ silent: true }).then((session) => {
             if (!session?.userId) return;
@@ -10147,6 +12503,15 @@ function initAccount() {
     const authUsernameInput = document.getElementById('account-auth-username');
     const authPasswordInput = document.getElementById('account-auth-password');
     const authConfirmInput = document.getElementById('account-auth-confirm');
+    const authInputs = [authEmailInput, authUsernameInput, authPasswordInput, authConfirmInput].filter(Boolean);
+
+    authInputs.forEach((input) => {
+        input.setAttribute('aria-describedby', 'account-auth-status');
+        input.addEventListener('input', () => {
+            input.classList.remove('is-invalid-field');
+            input.removeAttribute('aria-invalid');
+        });
+    });
 
     if (closeBtn) closeBtn.addEventListener('click', closeAccountModal);
     if (authLoginTab) {
@@ -10201,7 +12566,7 @@ function initAccount() {
     } else {
         accountAuthState.isAuthenticated = false;
         accountAuthState.sessionLabel = '';
-        setAccountAuthStatus('Not authenticated.', 'neutral');
+        setAccountAuthStatus(t('auth.status.guest'), 'neutral');
     }
     refreshAccountPrimaryAuthButton();
     handleInsightsAccessStateChange();
@@ -10353,7 +12718,7 @@ function openStudyPlanModal() {
     }
     studyPlanDraft = { ...studyPlanState };
     applyStudyPlanSelection(studyPlanDraft);
-    openModal('study-plan-modal');
+    openModal('study-plan-modal', { initialFocus: '#study-plan-notes' });
 }
 
 function closeStudyPlanModal() {
@@ -10466,7 +12831,7 @@ function renderNotesLibrary() {
                 <span class="notes-chip">${escapeHtml(item.level)}</span>
             </div>
             <p>${escapeHtml(item.description)}</p>
-            <div class="text-xs text-slate-500">${translateLiteral('Category:', appState.language)} ${escapeHtml(item.categoryLabel || item.category)} ‚Ä¢ ${item.pages} ${translateLiteral('pages', appState.language)}</div>
+            <div class="text-xs text-slate-500">${translateLiteral('Category:', appState.language)} ${escapeHtml(item.categoryLabel || item.category)} ‚?¢ ${item.pages} ${translateLiteral('pages', appState.language)}</div>
             <div class="notes-actions mt-2">
                 <button type="button" class="notes-download" data-action="download" data-note-id="${escapeHtml(item.id)}">${translateLiteral('Download', appState.language)}</button>
                 <button type="button" class="notes-view" data-action="preview" data-note-id="${escapeHtml(item.id)}">${translateLiteral('Preview', appState.language)}</button>
@@ -10520,7 +12885,7 @@ function renderBooksLibrary() {
             book?.subject || '',
             book?.edition || '',
             Number.isFinite(pageCount) && pageCount > 0 ? `${pageCount} ${translateLiteral('pages', appState.language)}` : ''
-        ].filter(Boolean).join(' ‚Ä¢ ');
+        ].filter(Boolean).join(' ‚?¢ ');
 
         const downloadAttrs = available
             ? `href="${escapeHtml(getBookDownloadUrl(book.id))}" target="_blank" rel="noopener noreferrer"`
@@ -10570,21 +12935,21 @@ function openBookReader(bookId) {
             book?.author || '',
             book?.edition || '',
             Number.isFinite(pageCount) && pageCount > 0 ? `${pageCount} ${translateLiteral('pages', appState.language)}` : ''
-        ].filter(Boolean).join(' ‚Ä¢ ');
+        ].filter(Boolean).join(' ‚?¢ ');
         metaEl.textContent = detailLine;
     }
     if (downloadEl) {
         downloadEl.href = getBookDownloadUrl(book.id);
     }
     frameEl.src = getBookReadUrl(book.id);
-    modal.classList.remove('hidden');
+    openModal('book-reader-modal', { initialFocus: '#book-reader-download' });
 }
 
 function closeBookReaderModal() {
     const modal = document.getElementById('book-reader-modal');
     const frameEl = document.getElementById('book-reader-frame');
     if (!modal) return;
-    modal.classList.add('hidden');
+    closeModal('book-reader-modal');
     if (frameEl) frameEl.src = 'about:blank';
 }
 
@@ -10628,7 +12993,7 @@ function openNotesDownloadModal(noteId) {
     if (!modal || !note) return;
 
     if (titleEl) titleEl.textContent = note.title;
-    if (metaEl) metaEl.textContent = `${note.categoryLabel || note.category} ‚Ä¢ ${note.pages} ${translateLiteral('pages', appState.language)} ‚Ä¢ ${note.level}`;
+    if (metaEl) metaEl.textContent = `${note.categoryLabel || note.category} ‚?¢ ${note.pages} ${translateLiteral('pages', appState.language)} ‚?¢ ${note.level}`;
     if (donateLink) {
         donateLink.href = generatePayPalUrl(1, `${note.title} PDF`);
         donateLink.dataset.downloadUrl = note.downloadUrl || '';
@@ -10638,18 +13003,306 @@ function openNotesDownloadModal(noteId) {
             }
         };
     }
-    modal.classList.remove('hidden');
+    openModal('notes-download-modal', { initialFocus: '#notes-donate-link' });
 }
 
 function closeNotesDownloadModal() {
     const modal = document.getElementById('notes-download-modal');
     if (!modal) return;
-    modal.classList.add('hidden');
+    closeModal('notes-download-modal');
+}
+
+function normalizeInterviewLanguageKey(rawLanguage = '') {
+    const normalized = String(rawLanguage || '').trim().toLowerCase();
+    if (normalized === 'js' || normalized === 'node' || normalized === 'nodejs') return 'javascript';
+    if (normalized === 'c++' || normalized === 'cpp') return 'cpp';
+    if (PLAYGROUND_RUNNABLE_LANGUAGES.includes(normalized)) return normalized;
+    if (normalized === 'java' || normalized === 'python') return normalized;
+    return 'java';
+}
+
+function getInterviewLanguageDisplayName(languageKey = 'java') {
+    const normalized = normalizeInterviewLanguageKey(languageKey);
+    return SUPPORTED_LANGUAGES[normalized]?.name || normalized;
+}
+
+function resolveInterviewApproachLabel(approach) {
+    const label = resolveLocalizedValue(approach?.label, appState.language);
+    return String(label || approach?.id || translateLiteral('Approach', appState.language));
+}
+
+function getInterviewSolutionProfile(exampleId, localizedExample = null) {
+    const fromBank = INTERVIEW_SOLUTION_BANK[exampleId];
+    if (fromBank && Array.isArray(fromBank.approaches) && fromBank.approaches.length) {
+        return fromBank;
+    }
+
+    const fallbackExample = localizedExample || getLocalizedInterviewExamples().find((item) => item.id === exampleId);
+    const fallbackSample = INTERVIEW_RUN_SAMPLES[exampleId] || {};
+    const fallbackLanguage = normalizeInterviewLanguageKey(fallbackSample.language || fallbackExample?.language || 'java');
+    const fallbackCode = String(fallbackSample.code || fallbackExample?.solution || '').trim();
+    const fallbackExpectedOutput = String(fallbackSample.expectedOutput || '').trim();
+
+    return {
+        defaultApproachId: 'reference-solution',
+        approaches: [
+            {
+                id: 'reference-solution',
+                label: { en: 'Reference Solution', es: 'Solucion de referencia' },
+                applicability: fallbackExample?.notes || '',
+                explanation: fallbackExample?.notes || '',
+                complexity: '',
+                languages: {
+                    [fallbackLanguage]: {
+                        code: fallbackCode,
+                        expectedOutput: fallbackExpectedOutput
+                    }
+                }
+            }
+        ]
+    };
+}
+
+function getInterviewWorkspaceSelection(exampleId, profile) {
+    const safeProfile = profile || getInterviewSolutionProfile(exampleId);
+    const approaches = Array.isArray(safeProfile?.approaches) ? safeProfile.approaches : [];
+    if (!approaches.length) {
+        return {
+            approachId: '',
+            language: 'java',
+            approach: null,
+            availableLanguages: []
+        };
+    }
+
+    const stored = interviewWorkspaceSelection.get(exampleId) || {};
+    const initialApproachId = String(stored.approachId || safeProfile.defaultApproachId || approaches[0].id || '').trim();
+    const activeApproach = approaches.find((item) => item.id === initialApproachId) || approaches[0];
+
+    const supportedLanguageKeys = Object.keys(activeApproach?.languages || {})
+        .map(normalizeInterviewLanguageKey)
+        .filter((lang, index, arr) => PLAYGROUND_RUNNABLE_LANGUAGES.includes(lang) && arr.indexOf(lang) === index);
+
+    const availableLanguages = supportedLanguageKeys.length
+        ? supportedLanguageKeys
+        : ['java'];
+
+    const preferredLanguage = normalizeInterviewLanguageKey(stored.language || activeApproach?.defaultLanguage || availableLanguages[0]);
+    const selectedLanguage = availableLanguages.includes(preferredLanguage)
+        ? preferredLanguage
+        : availableLanguages[0];
+
+    const selection = {
+        approachId: String(activeApproach.id || ''),
+        language: selectedLanguage,
+        approach: activeApproach,
+        availableLanguages
+    };
+
+    interviewWorkspaceSelection.set(exampleId, {
+        approachId: selection.approachId,
+        language: selection.language
+    });
+
+    return selection;
+}
+
+function setInterviewWorkspaceSelection(exampleId, patch = {}) {
+    const previous = interviewWorkspaceSelection.get(exampleId) || {};
+    const next = {
+        approachId: String(patch.approachId || previous.approachId || '').trim(),
+        language: normalizeInterviewLanguageKey(patch.language || previous.language || 'java')
+    };
+    interviewWorkspaceSelection.set(exampleId, next);
+}
+
+function getInterviewSelectedSolution(exampleId, localizedExample = null) {
+    const example = localizedExample || getLocalizedInterviewExamples().find((item) => item.id === exampleId);
+    if (!example) return null;
+
+    const profile = getInterviewSolutionProfile(exampleId, example);
+    const selection = getInterviewWorkspaceSelection(exampleId, profile);
+    const approach = selection.approach;
+    if (!approach) return null;
+
+    const languageKey = selection.language;
+    const languageSample = approach?.languages?.[languageKey] || null;
+
+    return {
+        example,
+        profile,
+        selection,
+        approach,
+        languageKey,
+        languageSample
+    };
+}
+
+function getInterviewApproachGuide(approach) {
+    const guideId = String(approach?.id || '').trim();
+    if (!guideId) return null;
+    return INTERVIEW_APPROACH_GUIDES[guideId] || null;
+}
+
+function resolveInterviewDetailText(value) {
+    if (Array.isArray(value)) {
+        return value
+            .map((item) => resolveInterviewDetailText(item))
+            .map((item) => String(item || '').trim())
+            .filter(Boolean)
+            .join(' | ');
+    }
+    const localized = resolveLocalizedValue(value, appState.language);
+    return String(localized || '').trim();
+}
+
+function resolveInterviewDetailList(value) {
+    if (!Array.isArray(value)) return [];
+    return value
+        .map((item) => resolveInterviewDetailText(item))
+        .map((item) => String(item || '').trim())
+        .filter(Boolean);
+}
+
+function buildInterviewApproachSummary(approach, fallbackSummary = '') {
+    const explanation = resolveInterviewDetailText(approach?.explanation);
+    const applicability = resolveInterviewDetailText(approach?.applicability);
+    const complexity = resolveInterviewDetailText(approach?.complexity);
+    const fallback = String(fallbackSummary || '').trim();
+    return explanation || applicability || complexity || fallback || t('interview.analysisReady');
+}
+
+function buildInterviewApproachDetails(approach) {
+    const guide = getInterviewApproachGuide(approach);
+    const rows = [
+        {
+            label: t('interview.detail.whenToUse'),
+            text: resolveInterviewDetailText(approach?.applicability)
+        },
+        {
+            label: t('interview.detail.whyWorks'),
+            text: resolveInterviewDetailText(approach?.explanation)
+        },
+        {
+            label: t('interview.detail.complexity'),
+            text: resolveInterviewDetailText(approach?.complexity)
+        },
+        {
+            label: t('interview.detail.tradeoffs'),
+            text: resolveInterviewDetailText(approach?.tradeoffs || guide?.tradeoffs)
+        },
+        {
+            label: t('interview.detail.pitfalls'),
+            text: resolveInterviewDetailText(approach?.pitfalls || guide?.pitfalls)
+        }
+    ].filter((row) => String(row.text || '').trim());
+
+    const steps = resolveInterviewDetailList(approach?.steps || guide?.steps || []);
+    if (steps.length) {
+        rows.push({
+            label: t('interview.detail.steps'),
+            items: steps
+        });
+    }
+
+    return rows;
+}
+
+function buildInterviewApproachDetailsMarkup(rows = []) {
+    if (!Array.isArray(rows) || !rows.length) return '';
+    return rows.map((row) => {
+        if (Array.isArray(row.items) && row.items.length) {
+            return `<section class="interview-approach-detail-item"><p class="interview-approach-detail-label">${escapeHtml(row.label)}</p><ul class="interview-approach-detail-value interview-approach-detail-list">${row.items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>`;
+        }
+        return `<section class="interview-approach-detail-item"><p class="interview-approach-detail-label">${escapeHtml(row.label)}</p><p class="interview-approach-detail-value">${escapeHtml(row.text || '')}</p></section>`;
+    }).join('');
+}
+
+function renderPromptWorkspaceReference(exampleId) {
+    const selected = getInterviewSelectedSolution(exampleId);
+    if (!selected) return;
+
+    const {
+        example,
+        profile,
+        selection,
+        approach,
+        languageKey,
+        languageSample
+    } = selected;
+
+    const titleEl = document.getElementById('prompt-workspace-title');
+    const metaEl = document.getElementById('prompt-workspace-meta');
+    const promptEl = document.getElementById('prompt-workspace-prompt');
+    const solutionEl = document.getElementById('prompt-workspace-solution');
+    const notesEl = document.getElementById('prompt-workspace-notes');
+    const summaryEl = document.getElementById('prompt-workspace-approach-summary');
+    const detailsEl = document.getElementById('prompt-workspace-approach-details');
+    const approachSelectEl = document.getElementById('prompt-workspace-approach');
+    const languageSelectEl = document.getElementById('prompt-workspace-language-select');
+    const runBtn = document.getElementById('prompt-workspace-run');
+
+    if (titleEl) titleEl.textContent = example.title;
+    if (promptEl) promptEl.textContent = example.prompt;
+
+    if (approachSelectEl) {
+        approachSelectEl.innerHTML = profile.approaches
+            .map((item) => `<option value="${escapeHtml(item.id)}">${escapeHtml(resolveInterviewApproachLabel(item))}</option>`)
+            .join('');
+        approachSelectEl.value = selection.approachId;
+        approachSelectEl.setAttribute('aria-label', t('interview.approach'));
+    }
+
+    if (languageSelectEl) {
+        languageSelectEl.innerHTML = selection.availableLanguages
+            .map((lang) => `<option value="${lang}">${escapeHtml(getInterviewLanguageDisplayName(lang))}</option>`)
+            .join('');
+        languageSelectEl.value = languageKey;
+        languageSelectEl.setAttribute('aria-label', t('interview.language'));
+    }
+
+    const approachLabel = resolveInterviewApproachLabel(approach);
+    const languageLabel = getInterviewLanguageDisplayName(languageKey);
+    const tags = Array.isArray(example.tags) ? example.tags : [];
+    if (metaEl) {
+        metaEl.textContent = `${example.difficulty} . ${example.minutes} ${translateLiteral('min', appState.language)} . ${tags.join(', ')} . ${approachLabel} (${languageLabel})`;
+    }
+
+    const summaryText = buildInterviewApproachSummary(approach, example.notes || '');
+    if (summaryEl) {
+        summaryEl.textContent = summaryText;
+    }
+
+    const detailRows = buildInterviewApproachDetails(approach);
+    if (detailsEl) {
+        detailsEl.innerHTML = buildInterviewApproachDetailsMarkup(detailRows);
+    }
+
+    if (notesEl) {
+        notesEl.textContent = t('interview.analysisReady');
+    }
+
+    const codeText = String(languageSample?.code || example.solution || '').trim();
+    if (solutionEl) solutionEl.textContent = translateCodeHumanText(codeText);
+
+    if (runBtn) {
+        runBtn.textContent = `${t('interview.runInWorkspace')} (${languageLabel})`;
+        runBtn.setAttribute('aria-label', runBtn.textContent);
+    }
 }
 
 function getInterviewRunSample(exampleId) {
-    const sample = INTERVIEW_RUN_SAMPLES[exampleId];
-    if (sample) return sample;
+    const selected = getInterviewSelectedSolution(exampleId);
+    if (selected?.languageSample?.code) {
+        return {
+            language: selected.languageKey,
+            code: selected.languageSample.code,
+            expectedOutput: selected.languageSample.expectedOutput || ''
+        };
+    }
+
+    const fallbackSample = INTERVIEW_RUN_SAMPLES[exampleId];
+    if (fallbackSample) return fallbackSample;
     return null;
 }
 
@@ -10692,37 +13345,39 @@ async function runInterviewExample(exampleId) {
         setInterviewRunState(exampleId, {
             status: 'error',
             source: t('interview.outputError'),
-            text: 'No runnable sample configured for this example yet.'
+            text: t('interview.noRunnable')
         });
         renderInterviewExamples();
         if (activePromptId === exampleId) renderPromptWorkspaceOutput(exampleId);
         return;
     }
 
+    const languageKey = normalizeInterviewLanguageKey(sample.language || 'java');
+    const languageLabel = getInterviewLanguageDisplayName(languageKey);
+
     interviewRunInFlight.add(exampleId);
     setInterviewRunState(exampleId, {
         status: 'running',
-        source: t('interview.running'),
+        source: `${t('interview.running')} (${languageLabel})`,
         text: t('interview.running')
     });
     renderInterviewExamples();
     if (activePromptId === exampleId) renderPromptWorkspaceOutput(exampleId);
 
     try {
-        const languageKey = sample.language || 'java';
         const normalizedCode = normalizeCodeForRunner(languageKey, sample.code || '');
         const outputText = await runWithTimeout(executeWithConfiguredRunner(languageKey, normalizedCode), 20000);
         const trimmed = String(outputText || '').trim();
         if (trimmed && trimmed !== 'Execution complete (no stdout).') {
             setInterviewRunState(exampleId, {
                 status: 'success',
-                source: t('interview.outputLive'),
+                source: `${t('interview.outputLive')} (${languageLabel})`,
                 text: trimmed
             });
         } else {
             setInterviewRunState(exampleId, {
                 status: 'fallback',
-                source: t('interview.outputFallback'),
+                source: `${t('interview.outputFallback')} (${languageLabel})`,
                 text: sample.expectedOutput || 'Execution completed.'
             });
         }
@@ -10733,7 +13388,7 @@ async function runInterviewExample(exampleId) {
             : `// Execution failed.\n// ${reason}`;
         setInterviewRunState(exampleId, {
             status: sample.expectedOutput ? 'fallback' : 'error',
-            source: sample.expectedOutput ? t('interview.outputFallback') : t('interview.outputError'),
+            source: sample.expectedOutput ? `${t('interview.outputFallback')} (${languageLabel})` : t('interview.outputError'),
             text: fallbackText
         });
     } finally {
@@ -10766,10 +13421,10 @@ function initInterviewExamples() {
             if (!input || !notesEl) return;
             const content = input.value.trim();
             if (!content) {
-                notesEl.textContent = translateLiteral('Add your solution draft before comparing.', appState.language);
+                notesEl.textContent = t('interview.compareEmpty');
                 return;
             }
-            notesEl.textContent = translateLiteral('Nice work! Compare your draft with the reference solution and note any gaps.', appState.language);
+            notesEl.textContent = t('interview.compareSuccess');
         });
     }
 
@@ -10781,7 +13436,69 @@ function initInterviewExamples() {
         });
     }
 
+    const approachSelectEl = document.getElementById('prompt-workspace-approach');
+    if (approachSelectEl) {
+        approachSelectEl.addEventListener('change', () => {
+            if (!activePromptId) return;
+            setInterviewWorkspaceSelection(activePromptId, { approachId: approachSelectEl.value });
+            renderPromptWorkspaceReference(activePromptId);
+            renderPromptWorkspaceOutput(activePromptId);
+        });
+    }
+
+    const languageSelectEl = document.getElementById('prompt-workspace-language-select');
+    if (languageSelectEl) {
+        languageSelectEl.addEventListener('change', () => {
+            if (!activePromptId) return;
+            setInterviewWorkspaceSelection(activePromptId, { language: languageSelectEl.value });
+            renderPromptWorkspaceReference(activePromptId);
+            renderPromptWorkspaceOutput(activePromptId);
+        });
+    }
+
     renderInterviewExamples();
+}
+
+function summarizeInterviewApproachText(text = '', maxLength = 170) {
+    const normalized = String(text || '').replace(/\s+/g, ' ').trim();
+    if (!normalized) return '';
+    if (normalized.length <= maxLength) return normalized;
+    return `${normalized.slice(0, Math.max(0, maxLength - 3)).trimEnd()}...`;
+}
+
+function buildInterviewApproachPreviewMarkup(profile) {
+    const approaches = Array.isArray(profile?.approaches) ? profile.approaches : [];
+    if (!approaches.length) return '';
+
+    return approaches.map((approach) => {
+        const label = resolveInterviewApproachLabel(approach);
+        const applicability = resolveInterviewDetailText(approach?.applicability);
+        const explanation = resolveInterviewDetailText(approach?.explanation);
+        const complexity = resolveInterviewDetailText(approach?.complexity);
+        const summary = summarizeInterviewApproachText([applicability || explanation, complexity].filter(Boolean).join(' | '));
+
+        return `<li class="interview-approach-preview-item"><p class="interview-approach-preview-title">${escapeHtml(label)}</p><p class="interview-approach-preview-text">${escapeHtml(summary || t('interview.analysisReady'))}</p></li>`;
+    }).join('');
+}
+
+function handleInterviewCardApproachChange(exampleId, approachId) {
+    if (!exampleId) return;
+    setInterviewWorkspaceSelection(exampleId, { approachId });
+    renderInterviewExamples();
+    if (activePromptId === exampleId) {
+        renderPromptWorkspaceReference(exampleId);
+        renderPromptWorkspaceOutput(exampleId);
+    }
+}
+
+function handleInterviewCardLanguageChange(exampleId, languageKey) {
+    if (!exampleId) return;
+    setInterviewWorkspaceSelection(exampleId, { language: languageKey });
+    renderInterviewExamples();
+    if (activePromptId === exampleId) {
+        renderPromptWorkspaceReference(exampleId);
+        renderPromptWorkspaceOutput(exampleId);
+    }
 }
 
 function renderInterviewExamples() {
@@ -10796,24 +13513,53 @@ function renderInterviewExamples() {
     const start = (interviewPage - 1) * INTERVIEW_PAGE_SIZE;
     const currentItems = localizedExamples.slice(start, start + INTERVIEW_PAGE_SIZE);
 
-    grid.innerHTML = currentItems.map(example => {
+    grid.innerHTML = currentItems.map((example) => {
         const runState = getInterviewRunStateRecord(example.id);
         const running = runState.status === 'running';
         const outputToneClass = getInterviewOutputToneClass(runState.status);
+        const profile = getInterviewSolutionProfile(example.id, example);
+        const selection = getInterviewWorkspaceSelection(example.id, profile);
+        const approachList = Array.isArray(profile.approaches) ? profile.approaches : [];
+        const approachCount = approachList.length || 1;
+        const languageLabel = getInterviewLanguageDisplayName(selection.language);
+        const promptPreview = String(example.promptPreview || example.prompt || '').trim();
+        const promptBody = String(example.prompt || '').trim();
+        const tags = Array.isArray(example.tags) ? example.tags : [];
+        const approachMeta = `${tc('interview.approachCount', approachCount, { count: approachCount })} | ${t('interview.languageCurrent', { language: languageLabel })}`;
+        const approachOptions = approachList
+            .map((item) => `<option value="${escapeHtml(item.id)}" ${item.id === selection.approachId ? 'selected' : ''}>${escapeHtml(resolveInterviewApproachLabel(item))}</option>`)
+            .join('');
+        const languageOptions = selection.availableLanguages
+            .map((lang) => `<option value="${escapeHtml(lang)}" ${lang === selection.language ? 'selected' : ''}>${escapeHtml(getInterviewLanguageDisplayName(lang))}</option>`)
+            .join('');
+        const approachPreview = buildInterviewApproachPreviewMarkup(profile);
+
         return `
         <article class="interview-card-ux rounded-xl border p-4 sm:p-5 flex flex-col gap-3">
             <div class="flex items-start justify-between gap-2">
                 <div class="min-w-0">
                     <h4 class="font-semibold text-indigo-600 text-base sm:text-lg leading-tight">${escapeHtml(example.title)}</h4>
-                    <p class="interview-preview text-xs text-slate-400 mt-1">${escapeHtml(example.prompt)}</p>
+                    <p class="interview-preview text-xs text-slate-400 mt-1">${escapeHtml(promptPreview)}</p>
                 </div>
                 <span class="interview-time-chip text-[11px] px-2.5 py-1 rounded-full font-semibold whitespace-nowrap">${example.minutes} ${translateLiteral('min', appState.language)}</span>
             </div>
-            <p class="text-sm text-slate-200 leading-relaxed">${escapeHtml(example.prompt)}</p>
+            <p class="text-sm text-slate-200 leading-relaxed">${escapeHtml(promptBody)}</p>
             <div class="interview-meta-chips">
                 <span class="interview-meta-chip">${escapeHtml(example.difficulty)}</span>
-                ${example.tags.map((tag) => `<span class="interview-meta-chip">${escapeHtml(tag)}</span>`).join('')}
+                ${tags.map((tag) => `<span class="interview-meta-chip">${escapeHtml(tag)}</span>`).join('')}
             </div>
+            <p class="text-xs text-slate-400">${escapeHtml(approachMeta)}</p>
+            <div class="interview-chooser-grid" aria-label="Interview solution selectors">
+                <label class="interview-chooser-field">
+                    <span>${t('interview.approach')}</span>
+                    <select aria-label="${escapeHtml(t('interview.approach'))}" onchange="handleInterviewCardApproachChange('${example.id}', this.value)">${approachOptions}</select>
+                </label>
+                <label class="interview-chooser-field">
+                    <span>${t('interview.language')}</span>
+                    <select aria-label="${escapeHtml(t('interview.language'))}" onchange="handleInterviewCardLanguageChange('${example.id}', this.value)">${languageOptions}</select>
+                </label>
+            </div>
+            <ul class="interview-approach-preview-list">${approachPreview}</ul>
             <div class="interview-action-row mt-1">
                 <button type="button" class="notes-download interview-cta-primary" onclick="openPromptWorkspace('${example.id}')">${translateLiteral('Open Prompt', appState.language)}</button>
                 <button type="button" class="notes-view interview-cta-secondary" onclick="copyInterviewSolution('${example.id}')">${translateLiteral('Copy Solution', appState.language)}</button>
@@ -10840,49 +13586,259 @@ function openPromptWorkspace(exampleId) {
     if (!modal || !example) return;
 
     activePromptId = exampleId;
-    const titleEl = document.getElementById('prompt-workspace-title');
-    const metaEl = document.getElementById('prompt-workspace-meta');
-    const promptEl = document.getElementById('prompt-workspace-prompt');
-    const solutionEl = document.getElementById('prompt-workspace-solution');
-    const langEl = document.getElementById('prompt-workspace-language');
-    const notesEl = document.getElementById('prompt-workspace-notes');
-    const inputEl = document.getElementById('prompt-workspace-input');
-    const runBtn = document.getElementById('prompt-workspace-run');
 
-    if (titleEl) titleEl.textContent = example.title;
-    if (metaEl) metaEl.textContent = `${example.difficulty} ‚Ä¢ ${example.minutes} min ‚Ä¢ ${example.tags.join(', ')}`;
-    if (promptEl) promptEl.textContent = example.prompt;
-    if (solutionEl) solutionEl.textContent = translateCodeHumanText(example.solution);
-    if (langEl) langEl.textContent = example.language || 'Java';
-    if (notesEl) notesEl.textContent = example.notes || '';
+    const inputEl = document.getElementById('prompt-workspace-input');
     if (inputEl) inputEl.value = '';
-    if (runBtn) runBtn.textContent = t('interview.runInWorkspace');
+
+    renderPromptWorkspaceReference(exampleId);
     renderPromptWorkspaceOutput(exampleId);
 
-    modal.classList.remove('hidden');
+    openModal('prompt-workspace-modal', { initialFocus: '#prompt-workspace-input' });
 }
 
 function closePromptWorkspace() {
     const modal = document.getElementById('prompt-workspace-modal');
     if (!modal) return;
-    modal.classList.add('hidden');
+    closeModal('prompt-workspace-modal');
     activePromptId = null;
 }
 
 function copyInterviewSolution(exampleId) {
-    const example = getLocalizedInterviewExamples().find(item => item.id === exampleId);
-    if (!example) return;
-    navigator.clipboard.writeText(translateCodeHumanText(example.solution)).then(() => {
-        showToast('Solution copied!', 'success');
+    const selected = getInterviewSelectedSolution(exampleId);
+    if (!selected) return;
+    const fallbackCode = String(selected.example?.solution || '').trim();
+    const codeToCopy = String(selected.languageSample?.code || fallbackCode).trim();
+    if (!codeToCopy) {
+        showToast(t('interview.solutionCopyError'), 'error');
+        return;
+    }
+
+    navigator.clipboard.writeText(translateCodeHumanText(codeToCopy)).then(() => {
+        showToast(t('interview.solutionCopied'), 'success');
     }).catch(() => {
-        showToast('Unable to copy solution', 'error');
+        showToast(t('interview.solutionCopyError'), 'error');
     });
+}
+function deepCloneJson(value) {
+    return JSON.parse(JSON.stringify(value));
+}
+
+function createDSUndoSnapshot() {
+    return {
+        active: dsActive,
+        codeLanguage: dsCodeLanguage,
+        state: deepCloneJson(dsState),
+        timeline: deepCloneJson(dsTimeline),
+        lastOperation: deepCloneJson(dsLastOperation),
+        runOutput: deepCloneJson(dsRunOutputState)
+    };
+}
+
+function sanitizeDSTimelineEntries(entries) {
+    if (!Array.isArray(entries) || !entries.length) {
+        return ['Playground initialized.'];
+    }
+    return entries
+        .map((entry) => String(entry || '').trim())
+        .filter(Boolean)
+        .slice(-40);
+}
+
+function applyDSSnapshot(snapshot, statusMessage = '') {
+    if (!snapshot || typeof snapshot !== 'object') return;
+
+    Object.keys(DS_INITIAL_STATE).forEach((key) => {
+        const candidate = snapshot.state?.[key];
+        const fallback = DS_INITIAL_STATE[key];
+        dsState[key] = deepCloneJson(candidate !== undefined ? candidate : fallback);
+    });
+
+    Object.keys(dsTimeline).forEach((key) => {
+        dsTimeline[key] = sanitizeDSTimelineEntries(snapshot.timeline?.[key]);
+    });
+
+    Object.keys(dsLastOperation).forEach((key) => {
+        const nextOperation = String(snapshot.lastOperation?.[key] || '').trim();
+        if (nextOperation) {
+            dsLastOperation[key] = nextOperation;
+        }
+    });
+
+    if (DS_PLAYGROUND_CONFIG[snapshot.active]) {
+        dsActive = snapshot.active;
+    }
+    if (PLAYGROUND_RUNNABLE_LANGUAGES.includes(snapshot.codeLanguage)) {
+        dsCodeLanguage = snapshot.codeLanguage;
+    }
+
+    const nextRunOutput = snapshot.runOutput && typeof snapshot.runOutput === 'object'
+        ? snapshot.runOutput
+        : DS_RUN_OUTPUT_DEFAULT;
+    dsRunOutputState = {
+        tone: String(nextRunOutput.tone || DS_RUN_OUTPUT_DEFAULT.tone),
+        source: String(nextRunOutput.source || DS_RUN_OUTPUT_DEFAULT.source),
+        text: String(nextRunOutput.text || DS_RUN_OUTPUT_DEFAULT.text)
+    };
+
+    renderDSTabs();
+    renderDSControls();
+    updateDSView(statusMessage || translateLiteral('Restored playground snapshot.', appState.language));
+    saveDSPlaygroundState();
+}
+
+function pushDSUndoSnapshot() {
+    dsUndoStack.push(createDSUndoSnapshot());
+    if (dsUndoStack.length > DS_UNDO_LIMIT) {
+        dsUndoStack = dsUndoStack.slice(-DS_UNDO_LIMIT);
+    }
+    updateDSUndoButton();
+}
+
+function updateDSUndoButton() {
+    const undoBtn = document.getElementById('ds-undo-action');
+    if (!undoBtn) return;
+    const canUndo = dsUndoStack.length > 0;
+    undoBtn.disabled = !canUndo;
+    undoBtn.classList.toggle('opacity-60', !canUndo);
+    undoBtn.classList.toggle('cursor-not-allowed', !canUndo);
+}
+
+function renderDSRunOutput() {
+    const outputEl = document.getElementById('ds-run-output');
+    const metaEl = document.getElementById('ds-run-meta');
+    if (!outputEl || !metaEl) return;
+    const tone = String(dsRunOutputState.tone || 'ready');
+    outputEl.className = `ds-run-output ${tone}`;
+    outputEl.textContent = String(dsRunOutputState.text || DS_RUN_OUTPUT_DEFAULT.text);
+    metaEl.textContent = `Output: ${String(dsRunOutputState.source || DS_RUN_OUTPUT_DEFAULT.source)}`;
+}
+
+function setDSRunOutput(text, options = {}) {
+    const {
+        source = 'Ready',
+        tone = 'ready'
+    } = options;
+    dsRunOutputState = {
+        tone: String(tone || 'ready'),
+        source: String(source || 'Ready'),
+        text: String(text || '')
+    };
+    renderDSRunOutput();
+    saveDSPlaygroundState();
+}
+
+function getDSRunFallbackOutput() {
+    return [
+        translateLiteral('Live runner unavailable. Showing current structure snapshot.', appState.language),
+        '',
+        buildDSStateJson()
+    ].join('\n');
+}
+
+async function runDSExampleInSection() {
+    const runBtn = document.getElementById('ds-run-example');
+    if (runBtn) {
+        runBtn.disabled = true;
+        runBtn.classList.add('opacity-80', 'cursor-not-allowed');
+    }
+
+    const language = PLAYGROUND_RUNNABLE_LANGUAGES.includes(dsCodeLanguage) ? dsCodeLanguage : 'java';
+    const config = DS_PLAYGROUND_CONFIG[dsActive];
+    const code = String(config?.codeExamples?.[language] || config?.codeExamples?.java || '').trim();
+
+    if (!code) {
+        setDSRunOutput(
+            translateLiteral('No runnable code is available for this structure.', appState.language),
+            { source: translateLiteral('Validation', appState.language), tone: 'error' }
+        );
+        if (runBtn) {
+            runBtn.disabled = false;
+            runBtn.classList.remove('opacity-80', 'cursor-not-allowed');
+        }
+        return;
+    }
+
+    setDSRunOutput(
+        translateLiteral('// Running DS example...', appState.language),
+        { source: translateLiteral('Running', appState.language), tone: 'running' }
+    );
+
+    try {
+        const normalizedCode = normalizeCodeForRunner(language, code);
+        const output = language === 'javascript'
+            ? await runJavascriptLocally(normalizedCode)
+            : await executeWithConfiguredRunner(language, normalizedCode);
+
+        const cleaned = String(output || '').trim();
+        if (!cleaned || cleaned === 'Execution complete (no stdout).') {
+            const fallback = getDSRunFallbackOutput();
+            setDSRunOutput(fallback, {
+                source: translateLiteral('Fallback snapshot', appState.language),
+                tone: 'fallback'
+            });
+        } else {
+            setDSRunOutput(cleaned, {
+                source: translateLiteral('Live execution', appState.language),
+                tone: 'success'
+            });
+        }
+    } catch (error) {
+        const reason = error instanceof Error ? error.message : String(error);
+        const fallback = `${getDSRunFallbackOutput()}\n\n// Runner detail: ${reason}`;
+        setDSRunOutput(fallback, {
+            source: translateLiteral('Fallback snapshot', appState.language),
+            tone: 'fallback'
+        });
+    } finally {
+        if (runBtn) {
+            runBtn.disabled = false;
+            runBtn.classList.remove('opacity-80', 'cursor-not-allowed');
+        }
+    }
+}
+
+function undoDSAction() {
+    if (!dsUndoStack.length) {
+        updateDSView(translateLiteral('Nothing to undo yet.', appState.language));
+        updateDSUndoButton();
+        return;
+    }
+    const snapshot = dsUndoStack.pop();
+    applyDSSnapshot(snapshot, translateLiteral('Undid the last DS action.', appState.language));
+    updateDSUndoButton();
+}
+
+function saveDSPlaygroundState() {
+    const payload = {
+        active: dsActive,
+        codeLanguage: dsCodeLanguage,
+        state: dsState,
+        timeline: dsTimeline,
+        lastOperation: dsLastOperation,
+        runOutput: dsRunOutputState
+    };
+    safeSetItem(STORAGE_KEYS.DS_PLAYGROUND, JSON.stringify(payload));
+}
+
+function loadDSPlaygroundState() {
+    const stored = safeGetItem(STORAGE_KEYS.DS_PLAYGROUND);
+    if (!stored) return;
+    try {
+        const parsed = JSON.parse(stored);
+        if (!parsed || typeof parsed !== 'object') return;
+        applyDSSnapshot(parsed, translateLiteral('Playground restored from your last session.', appState.language));
+        dsUndoStack = [];
+    } catch (error) {
+        console.warn('Unable to load DS playground state:', error);
+    }
 }
 
 function initDSPlayground() {
     const tabs = document.getElementById('ds-tabs');
     const controls = document.getElementById('ds-controls');
     const resetBtn = document.getElementById('ds-reset-all');
+    const undoBtn = document.getElementById('ds-undo-action');
+    const runBtn = document.getElementById('ds-run-example');
     const complexitySlider = document.getElementById('ds-complexity-n');
     const dsCodeSelect = document.getElementById('ds-code-language');
     if (!tabs || !controls) return;
@@ -10905,10 +13861,17 @@ function initDSPlayground() {
         renderDSTabs();
         renderDSControls();
         updateDSView();
+        saveDSPlaygroundState();
     });
 
     if (resetBtn) {
         resetBtn.addEventListener('click', resetDSPlaygroundState);
+    }
+    if (undoBtn) {
+        undoBtn.addEventListener('click', undoDSAction);
+    }
+    if (runBtn) {
+        runBtn.addEventListener('click', runDSExampleInSection);
     }
 
     if (complexitySlider) {
@@ -10923,12 +13886,16 @@ function initDSPlayground() {
         dsCodeSelect.addEventListener('change', () => {
             dsCodeLanguage = dsCodeSelect.value;
             renderDSCodeAndExplanation();
+            saveDSPlaygroundState();
         });
     }
 
+    loadDSPlaygroundState();
     renderDSTabs();
     renderDSControls();
     updateDSView(translateLiteral('Playground ready.', appState.language));
+    renderDSRunOutput();
+    updateDSUndoButton();
 }
 
 function findMatchingBrace(source, openIndex) {
@@ -11240,7 +14207,7 @@ function initPlayground() {
         output.classList.remove('success', 'error', 'fallback');
         output.classList.add(tone);
         if (outputMeta) {
-            const suffix = languageLabel ? ` ‚Ä¢ ${languageLabel}` : '';
+            const suffix = languageLabel ? ` ‚?¢ ${languageLabel}` : '';
             outputMeta.textContent = `Source: ${source}${suffix}`;
         }
     };
@@ -11707,7 +14674,7 @@ function renderCytoscapeGraphVisual(container) {
     if (!container) return;
     if (!window.cytoscape || typeof window.cytoscape !== 'function') {
         const nodes = dsState.graph.nodes.map((node) => `<span class="ds-box">${escapeHtml(node)}</span>`).join('');
-        const edges = dsState.graph.edges.map((edge) => `${edge.from} ‚Üí ${edge.to}`).join(', ');
+        const edges = dsState.graph.edges.map((edge) => `${edge.from} ‚?' ${edge.to}`).join(', ');
         container.innerHTML = `<div class="ds-visual ds-graph">${nodes || `<span class="text-xs text-slate-400">${translateLiteral('No nodes yet.', appState.language)}</span>`}</div>
             <div class="text-xs text-slate-300 mt-2">${escapeHtml(edges || translateLiteral('No edges yet.', appState.language))}</div>`;
         return;
@@ -11894,13 +14861,13 @@ function buildDSPointerVisual() {
     if (dsActive === 'stack') {
         return `
             <div class="ds-pointer-row"><span>${translateLiteral('Top index', appState.language)}</span><strong>${dsState.stack.length ? dsState.stack.length - 1 : -1}</strong></div>
-            <div class="ds-pointer-row"><span>${translateLiteral('Top value', appState.language)}</span><strong>${escapeHtml(String(dsState.stack[dsState.stack.length - 1] ?? '‚àÖ'))}</strong></div>
+            <div class="ds-pointer-row"><span>${translateLiteral('Top value', appState.language)}</span><strong>${escapeHtml(String(dsState.stack[dsState.stack.length - 1] ?? '‚^.'))}</strong></div>
         `;
     }
     if (dsActive === 'queue') {
         return `
-            <div class="ds-pointer-row"><span>${translateLiteral('Front', appState.language)}</span><strong>${escapeHtml(String(dsState.queue[0] ?? '‚àÖ'))}</strong></div>
-            <div class="ds-pointer-row"><span>${translateLiteral('Rear', appState.language)}</span><strong>${escapeHtml(String(dsState.queue[dsState.queue.length - 1] ?? '‚àÖ'))}</strong></div>
+            <div class="ds-pointer-row"><span>${translateLiteral('Front', appState.language)}</span><strong>${escapeHtml(String(dsState.queue[0] ?? '‚^.'))}</strong></div>
+            <div class="ds-pointer-row"><span>${translateLiteral('Rear', appState.language)}</span><strong>${escapeHtml(String(dsState.queue[dsState.queue.length - 1] ?? '‚^.'))}</strong></div>
         `;
     }
     if (dsActive === 'heap') {
@@ -11979,6 +14946,8 @@ function updateDSView(statusMessage) {
     }
     renderDSLibraryVisuals();
     renderDSCodeAndExplanation();
+    renderDSRunOutput();
+    updateDSUndoButton();
     updateDSComplexity();
 }
 
@@ -12013,7 +14982,7 @@ function updateDSComplexity() {
     const operation = getDSActiveOperation();
     const bigO = config.operations[operation] || 'O(n)';
     const ops = estimateOps(bigO, n);
-    summary.textContent = `n=${n} ‚Ä¢ ${operation}`;
+    summary.textContent = `n=${n} ‚?¢ ${operation}`;
     opsEl.textContent = `~${ops} ops`;
 }
 
@@ -12072,6 +15041,7 @@ function recordDSOperation(message, operationKey = '') {
 }
 
 function resetDSPlaygroundState() {
+    pushDSUndoSnapshot();
     Object.keys(DS_INITIAL_STATE).forEach((key) => {
         dsState[key] = JSON.parse(JSON.stringify(DS_INITIAL_STATE[key]));
     });
@@ -12086,8 +15056,10 @@ function resetDSPlaygroundState() {
         graph: 'addEdge',
         trie: 'search'
     });
+    dsRunOutputState = { ...DS_RUN_OUTPUT_DEFAULT };
     renderDSControls();
     updateDSView(translateLiteral('Playground reset.', appState.language));
+    saveDSPlaygroundState();
 }
 
 function handleDSAction(action) {
@@ -12103,22 +15075,26 @@ function handleDSAction(action) {
     const status = (message, operationKey = '') => {
         recordDSOperation(message, operationKey);
         updateDSView(message);
+        saveDSPlaygroundState();
     };
 
     if (dsActive === 'array') {
         if (action === 'append') {
             if (value === null) return status(translateLiteral('Enter a value to append.', appState.language), 'insert');
+            pushDSUndoSnapshot();
             dsState.array.push(value);
             return status(translateLiteral(`Appended ${value}.`, appState.language), 'insert');
         }
         if (action === 'insert') {
             if (value === null) return status(translateLiteral('Enter a value to insert.', appState.language), 'insert');
+            pushDSUndoSnapshot();
             const targetIndex = Number.isInteger(index) && index >= 0 ? index : dsState.array.length;
             dsState.array.splice(Math.min(targetIndex, dsState.array.length), 0, value);
             return status(translateLiteral(`Inserted ${value} at index ${targetIndex}.`, appState.language), 'insert');
         }
         if (action === 'remove') {
             if (dsState.array.length === 0) return status(translateLiteral('Array is already empty.', appState.language), 'remove');
+            pushDSUndoSnapshot();
             const removed = dsState.array.pop();
             return status(translateLiteral(`Removed ${removed}.`, appState.language), 'remove');
         }
@@ -12126,6 +15102,7 @@ function handleDSAction(action) {
             if (!Number.isInteger(index) || index < 0 || index >= dsState.array.length) {
                 return status(translateLiteral('Provide a valid index to remove.', appState.language), 'remove');
             }
+            pushDSUndoSnapshot();
             const removed = dsState.array.splice(index, 1)[0];
             return status(translateLiteral(`Removed ${removed} at index ${index}.`, appState.language), 'remove');
         }
@@ -12134,11 +15111,13 @@ function handleDSAction(action) {
     if (dsActive === 'stack') {
         if (action === 'push') {
             if (value === null) return status(translateLiteral('Enter a value to push.', appState.language), 'push');
+            pushDSUndoSnapshot();
             dsState.stack.push(value);
             return status(translateLiteral(`Pushed ${value}.`, appState.language), 'push');
         }
         if (action === 'pop') {
             if (dsState.stack.length === 0) return status(translateLiteral('Stack is empty.', appState.language), 'pop');
+            pushDSUndoSnapshot();
             const removed = dsState.stack.pop();
             return status(translateLiteral(`Popped ${removed}.`, appState.language), 'pop');
         }
@@ -12151,11 +15130,13 @@ function handleDSAction(action) {
     if (dsActive === 'queue') {
         if (action === 'enqueue') {
             if (value === null) return status(translateLiteral('Enter a value to enqueue.', appState.language), 'enqueue');
+            pushDSUndoSnapshot();
             dsState.queue.push(value);
             return status(translateLiteral(`Enqueued ${value}.`, appState.language), 'enqueue');
         }
         if (action === 'dequeue') {
             if (dsState.queue.length === 0) return status(translateLiteral('Queue is empty.', appState.language), 'dequeue');
+            pushDSUndoSnapshot();
             const removed = dsState.queue.shift();
             return status(translateLiteral(`Dequeued ${removed}.`, appState.language), 'dequeue');
         }
@@ -12168,11 +15149,13 @@ function handleDSAction(action) {
     if (dsActive === 'heap') {
         if (action === 'heap-insert') {
             if (value === null || typeof value !== 'number') return status(translateLiteral('Enter a numeric value to insert.', appState.language), 'insert');
+            pushDSUndoSnapshot();
             heapInsert(dsState.heap, value);
             return status(translateLiteral(`Inserted ${value}.`, appState.language), 'insert');
         }
         if (action === 'heap-extract') {
             if (dsState.heap.length === 0) return status(translateLiteral('Heap is empty.', appState.language), 'extract');
+            pushDSUndoSnapshot();
             const removed = heapExtract(dsState.heap);
             return status(translateLiteral(`Extracted ${removed}.`, appState.language), 'extract');
         }
@@ -12186,25 +15169,38 @@ function handleDSAction(action) {
         if (action === 'graph-add-node') {
             const label = (nodeInput ? nodeInput.value : '').trim();
             if (!label) return status(translateLiteral('Enter a node label.', appState.language), 'addNode');
-            if (!dsState.graph.nodes.includes(label)) {
-                dsState.graph.nodes.push(label);
+            if (dsState.graph.nodes.includes(label)) {
+                return status(translateLiteral(`Node ${label} already exists.`, appState.language), 'addNode');
             }
+            pushDSUndoSnapshot();
+            dsState.graph.nodes.push(label);
             return status(translateLiteral(`Added node ${label}.`, appState.language), 'addNode');
         }
         if (action === 'graph-add-edge') {
             const from = (edgeFrom ? edgeFrom.value : '').trim();
             const to = (edgeTo ? edgeTo.value : '').trim();
             if (!from || !to) return status(translateLiteral('Enter both edge endpoints.', appState.language), 'addEdge');
-            if (!dsState.graph.nodes.includes(from)) dsState.graph.nodes.push(from);
-            if (!dsState.graph.nodes.includes(to)) dsState.graph.nodes.push(to);
-            if (!dsState.graph.edges.find(edge => edge.from === from && edge.to === to)) {
+            const hasFrom = dsState.graph.nodes.includes(from);
+            const hasTo = dsState.graph.nodes.includes(to);
+            const hasEdge = Boolean(dsState.graph.edges.find(edge => edge.from === from && edge.to === to));
+            if (hasFrom && hasTo && hasEdge) {
+                return status(translateLiteral(`Edge from ${from} to ${to} already exists.`, appState.language), 'addEdge');
+            }
+            pushDSUndoSnapshot();
+            if (!hasFrom) dsState.graph.nodes.push(from);
+            if (!hasTo) dsState.graph.nodes.push(to);
+            if (!hasEdge) {
                 dsState.graph.edges.push({ from, to });
             }
-            return status(translateLiteral(`Added edge ${from} ‚Üí ${to}.`, appState.language), 'addEdge');
+            return status(translateLiteral(`Added edge from ${from} to ${to}.`, appState.language), 'addEdge');
         }
         if (action === 'graph-remove-node') {
             const label = (nodeInput ? nodeInput.value : '').trim();
             if (!label) return status(translateLiteral('Enter a node to remove.', appState.language), 'remove');
+            if (!dsState.graph.nodes.includes(label)) {
+                return status(translateLiteral(`Node ${label} was not found.`, appState.language), 'remove');
+            }
+            pushDSUndoSnapshot();
             dsState.graph.nodes = dsState.graph.nodes.filter(node => node !== label);
             dsState.graph.edges = dsState.graph.edges.filter(edge => edge.from !== label && edge.to !== label);
             return status(translateLiteral(`Removed node ${label}.`, appState.language), 'remove');
@@ -12215,12 +15211,20 @@ function handleDSAction(action) {
         if (action === 'trie-insert') {
             const word = (wordInput ? wordInput.value : '').trim().toLowerCase();
             if (!word) return status(translateLiteral('Enter a word to insert.', appState.language), 'insert');
-            if (!dsState.trie.includes(word)) dsState.trie.push(word);
+            if (dsState.trie.includes(word)) {
+                return status(translateLiteral(`"${word}" already exists.`, appState.language), 'insert');
+            }
+            pushDSUndoSnapshot();
+            dsState.trie.push(word);
             return status(translateLiteral(`Inserted "${word}".`, appState.language), 'insert');
         }
         if (action === 'trie-remove') {
             const word = (wordInput ? wordInput.value : '').trim().toLowerCase();
             if (!word) return status(translateLiteral('Enter a word to remove.', appState.language), 'remove');
+            if (!dsState.trie.includes(word)) {
+                return status(translateLiteral(`"${word}" was not found.`, appState.language), 'remove');
+            }
+            pushDSUndoSnapshot();
             dsState.trie = dsState.trie.filter(item => item !== word);
             return status(translateLiteral(`Removed "${word}".`, appState.language), 'remove');
         }
@@ -12236,9 +15240,8 @@ function handleDSAction(action) {
 
     updateDSView(translateLiteral('Action complete.', appState.language));
 }
-
 function openSupportModal() {
-    openModal('support-modal');
+    openModal('support-modal', { initialFocus: '#support-topic' });
 }
 
 function closeSupportModal() {
@@ -12249,7 +15252,7 @@ let siteGuideLastFocusedElement = null;
 
 function openSiteGuideModal() {
     siteGuideLastFocusedElement = document.activeElement instanceof HTMLElement ? document.activeElement : null;
-    openModal('site-guide-modal');
+    openModal('site-guide-modal', { initialFocus: '#close-site-guide' });
     document.body.classList.add('site-guide-open');
     const trigger = document.getElementById('site-guide-helper-btn');
     if (trigger) trigger.setAttribute('aria-expanded', 'true');
@@ -12259,14 +15262,10 @@ function openSiteGuideModal() {
         const body = modal.querySelector('.site-guide-modal-body');
         if (body) body.scrollTop = 0;
     }
-    const closeButton = document.getElementById('close-site-guide');
-    if (closeButton) {
-        window.setTimeout(() => closeButton.focus(), 0);
-    }
 }
 
 function closeSiteGuideModal() {
-    closeModal('site-guide-modal');
+    closeModal('site-guide-modal', { restoreFocus: false });
     document.body.classList.remove('site-guide-open');
     const trigger = document.getElementById('site-guide-helper-btn');
     if (trigger) trigger.setAttribute('aria-expanded', 'false');
@@ -12281,6 +15280,26 @@ function initSupport() {
     const closeBtn = document.getElementById('close-support');
     const form = document.getElementById('support-form');
     const moduleSelect = document.getElementById('support-module');
+    const topicInput = document.getElementById('support-topic');
+    const messageInput = document.getElementById('support-message');
+    const errorEl = document.getElementById('support-form-error');
+
+    const clearSupportError = () => {
+        if (errorEl) errorEl.textContent = '';
+        if (messageInput) {
+            messageInput.classList.remove('is-invalid-field');
+            messageInput.removeAttribute('aria-invalid');
+        }
+    };
+
+    const setSupportError = (message) => {
+        if (errorEl) errorEl.textContent = message;
+        if (messageInput) {
+            messageInput.classList.add('is-invalid-field');
+            messageInput.setAttribute('aria-invalid', 'true');
+            messageInput.focus();
+        }
+    };
 
     if (moduleSelect && moduleSelect.options.length === 0) {
         moduleSelect.innerHTML = modules.map(module => `<option value="${escapeHtml(module.id)}">${escapeHtml(module.title)}</option>`).join('');
@@ -12291,12 +15310,20 @@ function initSupport() {
     }
 
     if (form) {
+        if (messageInput) {
+            messageInput.addEventListener('input', clearSupportError);
+        }
+        if (topicInput) {
+            topicInput.addEventListener('input', clearSupportError);
+        }
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
             const moduleId = String(moduleSelect?.value || '').trim();
-            const topic = String(document.getElementById('support-topic')?.value || '').trim();
-            const message = String(document.getElementById('support-message')?.value || '').trim();
+            const topic = String(topicInput?.value || '').trim();
+            const message = String(messageInput?.value || '').trim();
+            clearSupportError();
             if (!message) {
+                setSupportError('Please add details so support can help quickly.');
                 showToast('Please add details so support can help quickly.', 'warning');
                 return;
             }
@@ -12315,8 +15342,10 @@ function initSupport() {
                             submittedAt: new Date().toISOString()
                         })
                     });
+                    clearSupportError();
                     showToast('Support request sent successfully.', 'success');
                 } catch (error) {
+                    setSupportError(`Support request failed: ${error.message}`);
                     showToast(`Support request failed: ${error.message}`, 'error');
                     return;
                 }
@@ -12324,6 +15353,7 @@ function initSupport() {
                 showToast('Support request saved locally. Connect Neon backend to sync requests.', 'info');
             }
             form.reset();
+            clearSupportError();
             closeSupportModal();
         });
     }
@@ -12335,19 +15365,19 @@ function removeComments(code, language = 'java') {
     switch (language) {
         case 'python':
             processedCode = code.split('\n').map(line => {
-                if (line.match(/^\s*#\s*[üéØüìöüîíüèóÔ∏èüîìüîÑüìùüìäüÜïüîçüåüüí™üîÄ‚ö°üßÆüé®üîß]/)) return line;
+                if (line.match(/^\s*#\s*[\[\]A-Za-z0-9]/)) return line;
                 return line.replace(/#.*$/, '').trimEnd();
             }).join('\n').replace(/"""[\s\S]*?"""/g, '').replace(/'''[\s\S]*?'''/g, '');
             break;
         case 'javascript':
             processedCode = code.split('\n').map(line => {
-                if (line.match(/^\s*\/\/\s*[üéØüìöüîíüèóÔ∏èüîìüîÑüìùüìäüÜïüîçüåüüí™üîÄ‚ö°üßÆüé®üîß]/)) return line;
+                if (line.match(/^\s*\/\/\s*[\[\]A-Za-z0-9]/)) return line;
                 return line.replace(/\/\/.*$/, '').trimEnd();
             }).join('\n').replace(/\/\*[\s\S]*?\*\//g, '');
             break;
         default: // java, cpp
             processedCode = code.split('\n').map(line => {
-                if (line.match(/^\s*\/\/\s*[üéØüìöüîíüèóÔ∏èüîìüîÑüìùüìäüÜïüîçüåüüí™üîÄ‚ö°üßÆüé®üîß]/)) return line;
+                if (line.match(/^\s*\/\/\s*[\[\]A-Za-z0-9]/)) return line;
                 return line.replace(/\/\/.*$/, '').trimEnd();
             }).join('\n').replace(/\/\*[\s\S]*?\*\//g, '');
             break;
@@ -12439,6 +15469,10 @@ function getModuleById(moduleId) {
 }
 
 function getModuleExampleExpansionKey(moduleId, exampleId) {
+    return `${moduleId}::${exampleId}`;
+}
+
+function getModuleExampleDeepExplanationKey(moduleId, exampleId) {
     return `${moduleId}::${exampleId}`;
 }
 
@@ -12568,7 +15602,7 @@ function getModuleMode(moduleId) {
 }
 
 function getDiscreteTheoryContent(module) {
-    const topics = (module?.topics || []).map((topic) => `‚Ä¢ ${topic}`);
+    const topics = (module?.topics || []).map((topic) => `‚?¢ ${topic}`);
     if (appState.language === 'es') {
         return [
             'Resumen Te√≥rico Profundo',
@@ -12885,18 +15919,22 @@ function applyCompactLayout() {
 
 function updateProgress() {
     const totalModules = Math.max(getTotalModuleCount(), 1);
-    const progressPercentage = Math.round((appState.completedModules.size / totalModules) * 100);
+    const completed = appState.completedModules.size;
+    const progressPercentage = Math.round((completed / totalModules) * 100);
 
-    const progressStr = appState.language === 'es'
-        ? `${appState.completedModules.size} de ${totalModules} m√≥dulos completados`
-        : `${appState.completedModules.size} of ${totalModules} modules completed`;
+    const progressStr = completed === 0
+        ? (appState.language === 'es'
+            ? `Elige tu primera ruta para cargar modulos. 0 de ${totalModules} modulos completados`
+            : `Choose your first track to load modules. 0 of ${totalModules} modules completed`)
+        : (appState.language === 'es'
+            ? `${completed} de ${totalModules} m√≥dulos completados`
+            : `${completed} of ${totalModules} modules completed`);
     document.getElementById('progress-text').textContent = progressStr;
     document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
     document.getElementById('progress-percentage').textContent = `${progressPercentage}%`;
 
     renderAchievements();
 }
-
 function updateDarkMode() {
     const body = document.body;
     const darkModeSlider = document.getElementById('dark-mode-slider');
@@ -13066,6 +16104,85 @@ function filterModules() {
     });
 }
 
+function getModulesPageSize() {
+    const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1280;
+    if (viewportWidth >= 640) return 4;
+    return 2;
+}
+
+function getModulesPaginationModel(currentPage, totalPages) {
+    const pages = new Set([1, totalPages, currentPage, currentPage - 1, currentPage + 1]);
+    const normalized = Array.from(pages)
+        .filter((page) => page >= 1 && page <= totalPages)
+        .sort((a, b) => a - b);
+
+    const model = [];
+    let previous = null;
+    normalized.forEach((page) => {
+        if (previous !== null && page - previous > 1) {
+            model.push('ellipsis');
+        }
+        model.push(page);
+        previous = page;
+    });
+    return model;
+}
+
+function goToModulesPage(page) {
+    const requestedPage = Number(page);
+    if (!Number.isFinite(requestedPage)) return;
+
+    const totalModules = filterModules().length;
+    const totalPages = Math.max(1, Math.ceil(totalModules / getModulesPageSize()));
+    const nextPage = Math.min(totalPages, Math.max(1, Math.floor(requestedPage)));
+    if (nextPage === appState.modulesPage) return;
+
+    appState.modulesPage = nextPage;
+    renderModules();
+    saveToLocalStorage();
+}
+
+function renderModulesPagination(totalItems, pageSize) {
+    const topPagination = document.getElementById('modules-pagination-top');
+    const bottomPagination = document.getElementById('modules-pagination');
+    if (!topPagination || !bottomPagination) return;
+
+    const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+    appState.modulesPage = Math.min(totalPages, Math.max(1, Number(appState.modulesPage) || 1));
+
+    if (totalPages <= 1) {
+        topPagination.innerHTML = '';
+        bottomPagination.innerHTML = '';
+        topPagination.style.display = 'none';
+        bottomPagination.style.display = 'none';
+        return;
+    }
+
+    const paginationModel = getModulesPaginationModel(appState.modulesPage, totalPages);
+    const currentPage = appState.modulesPage;
+    const controlsMarkup = `
+        <button type="button" class="pagination-button px-3 py-1.5 text-xs border border-slate-300 ${currentPage === 1 ? '' : 'hover:-translate-y-0.5'}" onclick="goToModulesPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+            ${escapeHtml(t('modules.pagination.prev'))}
+        </button>
+        ${paginationModel.map((entry) => {
+            if (entry === 'ellipsis') {
+                return '<span class="modules-pagination-ellipsis px-1 text-slate-300">...</span>';
+            }
+            const isActive = entry === currentPage;
+            return `<button type="button" class="pagination-button px-3 py-1.5 text-xs border border-slate-300 ${isActive ? 'active' : ''}" onclick="goToModulesPage(${entry})">${entry}</button>`;
+        }).join('')}
+        <button type="button" class="pagination-button px-3 py-1.5 text-xs border border-slate-300 ${currentPage === totalPages ? '' : 'hover:-translate-y-0.5'}" onclick="goToModulesPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+            ${escapeHtml(t('modules.pagination.next'))}
+        </button>
+        <span class="modules-page-summary">${escapeHtml(t('modules.pagination.summary', { current: currentPage, total: totalPages }))}</span>
+    `;
+
+    topPagination.innerHTML = controlsMarkup;
+    bottomPagination.innerHTML = controlsMarkup;
+    topPagination.style.display = 'flex';
+    bottomPagination.style.display = 'flex';
+}
+
 function renderModuleOutputSection(moduleId, exampleId = 'single') {
     const panelKey = getModuleOutputPanelKey(moduleId, exampleId);
     const isExpanded = appState.expandedOutputs.has(panelKey);
@@ -13103,6 +16220,12 @@ function renderModules() {
     const totalOrderedModules = getOrderedModules();
     const accentModuleIds = new Set(['stacks-queues', 'searching-algorithms']);
     const localizedModuleMap = new Map(getLocalizedModules().map((module) => [module.id, module]));
+    const modulesPerPage = getModulesPageSize();
+    lastRenderedModulesPageSize = modulesPerPage;
+    const totalPages = Math.max(1, Math.ceil(filteredModules.length / modulesPerPage));
+    appState.modulesPage = Math.min(totalPages, Math.max(1, Number(appState.modulesPage) || 1));
+    const startIndex = (appState.modulesPage - 1) * modulesPerPage;
+    const pagedModules = filteredModules.slice(startIndex, startIndex + modulesPerPage);
 
     // Update search results count
     if (filteredModules.length !== totalOrderedModules.length) {
@@ -13112,7 +16235,9 @@ function renderModules() {
         searchResultsCount.style.display = 'none';
     }
 
-    grid.innerHTML = filteredModules.map(module => {
+    renderModulesPagination(filteredModules.length, modulesPerPage);
+
+    grid.innerHTML = pagedModules.map(module => {
         const localizedModule = localizedModuleMap.get(module.id) || module;
         const codeExampleSets = getModuleCodeExampleSets(module.id, localizedModule);
         const hasCodeExampleSets = codeExampleSets.length > 0;
@@ -13195,12 +16320,12 @@ function renderModules() {
                             ` : ''}
                             ${currentMode === 'pseudocode' ? `
                                 <span class="text-xs px-1.5 py-0.5 rounded bg-purple-100 text-purple-800 font-medium">
-                                    üìù ${t('module.modePseudocode')}
+                                    Y"ù ${t('module.modePseudocode')}
                                 </span>
                             ` : ''}
                             ${currentMode === 'discreteTheory' ? `
                                 <span class="text-xs px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-medium">
-                                    üìò ${t('module.theoryMode')}
+                                    Y"~ ${t('module.theoryMode')}
                                 </span>
                             ` : ''}
                         </div>
@@ -13208,7 +16333,7 @@ function renderModules() {
                         <div class="flex flex-wrap gap-1 w-full sm:w-auto">
                             <!-- Comments Toggle -->
                             <button onclick="toggleModuleComments('${module.id}')" class="text-xs px-2 py-1 rounded transition-all duration-200 font-medium shadow-sm hover:shadow-md flex-shrink-0 ${shouldShowComments(module.id) ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-gray-500 hover:bg-gray-600 text-white'}" title="${shouldShowComments(module.id) ? t('module.tooltipHideComments') : t('module.tooltipShowComments')}">
-                                üí¨ ${shouldShowComments(module.id) ? t('module.commentsOn') : t('module.commentsOff')}
+                                Y'¨ ${shouldShowComments(module.id) ? t('module.commentsOn') : t('module.commentsOff')}
                             </button>
 
                             <!-- Language Selector -->
@@ -13265,6 +16390,10 @@ function renderModules() {
                 ? setCodeResolved
                 : processCode(setCodeResolved, module.id);
             const setCodeForDisplay = String(setProcessedCode || '').replace(/^(?:\r?\n)+|(?:\r?\n)+$/g, '');
+            const setDeepExplanationText = String(getModuleExampleDeepExplanation(module.id, setId, setItem) || '').trim();
+            const hasDeepExplanation = Boolean(setDeepExplanationText);
+            const setDeepExplanationKey = getModuleExampleDeepExplanationKey(module.id, setId);
+            const setDeepExplanationExpanded = hasDeepExplanation && appState.expandedExampleExplanations.has(setDeepExplanationKey);
             return `
                                 <div class="module-example-item rounded-lg border ${setActive ? 'border-indigo-400 bg-indigo-50/50' : 'border-slate-200 bg-white'} overflow-hidden">
                                     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 px-3 py-2">
@@ -13273,9 +16402,20 @@ function renderModules() {
                                             ${setDescription ? `<p class="text-xs text-slate-600 mt-0.5">${escapeHtml(setDescription)}</p>` : ''}
                                         </div>
                                         <div class="flex gap-1.5 flex-wrap">
+                                            ${hasDeepExplanation ? `
+                                                <button onclick="toggleExampleDeepExplanation('${module.id}', '${setId}')" class="text-xs px-2 py-1 rounded font-semibold ${setDeepExplanationExpanded ? 'bg-amber-700 text-white hover:bg-amber-800' : 'bg-amber-500 text-white hover:bg-amber-600'}">${setDeepExplanationExpanded ? t('module.hideDeepExplanation') : t('module.showDeepExplanation')}</button>
+                                            ` : ''}
                                             <button onclick="toggleExampleCodeExpansion('${module.id}', '${setId}')" class="text-xs px-2 py-1 rounded font-semibold ${setExpanded ? 'bg-slate-600 text-white' : 'bg-emerald-500 text-white hover:bg-emerald-600'}">${setExpanded ? t('module.hideExample') : t('module.showExample')}</button>
                                         </div>
                                     </div>
+                                    ${setDeepExplanationExpanded ? `
+                                        <div class="px-3 pb-3">
+                                            <div class="module-deep-explanation-box rounded-md p-3">
+                                                <p class="module-deep-explanation-label text-xs font-semibold mb-1">${t('module.deepExplanation')}</p>
+                                                <div class="whitespace-pre-line text-xs sm:text-sm module-deep-explanation-text">${escapeHtml(setDeepExplanationText)}</div>
+                                            </div>
+                                        </div>
+                                    ` : ''}
                                     ${setExpanded ? `
                                         <div class="px-3 pb-3 overflow-x-auto">
                                             <pre class="text-xs leading-relaxed"><code class="whitespace-pre-wrap font-mono">${escapeHtml(setCodeForDisplay)}</code></pre>
@@ -13325,7 +16465,7 @@ function renderModules() {
                     <div class="space-y-1">
                         ${(localizedModule.resources || []).map(resource => `
                             <div class="text-indigo-600 hover:text-indigo-800 text-xs transition-colors duration-200 cursor-pointer">
-                                ‚Ä¢ ${resource}
+                                ‚?¢ ${resource}
                             </div>
                         `).join('')}
                     </div>
@@ -13334,11 +16474,11 @@ function renderModules() {
                 <!-- Buttons -->
                 <div class="space-y-2">
                     <button onclick="openQuiz('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm ${getLocalizedQuizData(module.id) && getLocalizedQuizData(module.id).parts[0].questions.length > 0 ? 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white hover:-translate-y-0.5' : 'bg-gradient-to-r from-slate-400 to-slate-500 text-white cursor-not-allowed'}" ${!getLocalizedQuizData(module.id) || getLocalizedQuizData(module.id).parts[0].questions.length === 0 ? 'disabled' : ''}>
-                        ${getLocalizedQuizData(module.id) && getLocalizedQuizData(module.id).parts[0].questions.length > 0 ? translateLiteral('üß† Take Quiz', appState.language) : translateLiteral('üîí Quiz Coming Soon', appState.language)}
+                        ${getLocalizedQuizData(module.id) && getLocalizedQuizData(module.id).parts[0].questions.length > 0 ? translateLiteral('Take Quiz', appState.language) : translateLiteral('Quiz Coming Soon', appState.language)}
                     </button>
                     
                     <button onclick="toggleCompletion('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm ${isCompleted ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white hover:-translate-y-0.5' : 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white hover:-translate-y-0.5'}">
-                        ${isCompleted ? translateLiteral('‚úÖ Completed!', appState.language) : translateLiteral('üìù Mark as Complete', appState.language)}
+                        ${isCompleted ? translateLiteral('‚o. Completed!', appState.language) : translateLiteral('Y"ù Mark as Complete', appState.language)}
                     </button>
                 </div>
             </div>
@@ -13408,7 +16548,7 @@ function renderAchievements() {
         if (next) {
             progressLabel.textContent = translateLiteral(`${modulesTowardNext} / ${span} modules toward next badge`, appState.language);
         } else {
-            progressLabel.textContent = translateLiteral(`All achievements unlocked ‚Äì ${completed} modules completed!`, appState.language);
+            progressLabel.textContent = translateLiteral(`All achievements unlocked  -  ${completed} modules completed!`, appState.language);
         }
     }
 
@@ -13439,13 +16579,140 @@ function highlightGlossaryText(text, searchTerm) {
     return safe.replace(pattern, '<span class="glossary-highlight">$1</span>');
 }
 
-function renderGlossaryFilters() {
+function getGlossarySortOptions() {
+    return [
+        { value: 'smart', label: t('glossary.sort.smart') },
+        { value: 'az', label: t('glossary.sort.az') },
+        { value: 'za', label: t('glossary.sort.za') },
+        { value: 'category', label: t('glossary.sort.category') }
+    ];
+}
+
+function renderGlossarySortControl() {
+    const select = document.getElementById('glossary-sort');
+    if (!select) return;
+    if (!VALID_GLOSSARY_SORTS.has(appState.glossarySort)) {
+        appState.glossarySort = 'smart';
+    }
+    select.innerHTML = getGlossarySortOptions()
+        .map((option) => `<option value="${option.value}">${escapeHtml(option.label)}</option>`)
+        .join('');
+    select.value = appState.glossarySort;
+}
+
+function getGlossaryLeadingCharacter(text = '') {
+    const normalized = String(text || '')
+        .trim()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '');
+    const first = normalized.charAt(0).toUpperCase();
+    if (!first) return '#';
+    return /[A-Z0-9]/.test(first) ? first : '#';
+}
+
+function getGlossarySmartScore(term, searchTerm) {
+    if (!searchTerm) return 3;
+    const termText = String(term.term || '').toLowerCase();
+    const definitionText = String(term.definition || '').toLowerCase();
+    const categoryText = String(term.categoryLabel || term.category || '').toLowerCase();
+    if (termText === searchTerm) return 0;
+    if (termText.startsWith(searchTerm)) return 1;
+    if (termText.includes(searchTerm)) return 2;
+    if (definitionText.includes(searchTerm)) return 3;
+    if (categoryText.includes(searchTerm)) return 4;
+    return 5;
+}
+
+function sortGlossaryTerms(terms, searchTerm) {
+    const sorted = terms.slice();
+    const compareTerm = (a, b) => String(a.term || '').localeCompare(String(b.term || ''), undefined, { sensitivity: 'base' });
+
+    if (appState.glossarySort === 'za') {
+        sorted.sort((a, b) => compareTerm(b, a));
+        return sorted;
+    }
+
+    if (appState.glossarySort === 'category') {
+        sorted.sort((a, b) => {
+            const categoryCompare = String(a.categoryLabel || a.category || '').localeCompare(
+                String(b.categoryLabel || b.category || ''),
+                undefined,
+                { sensitivity: 'base' }
+            );
+            if (categoryCompare !== 0) return categoryCompare;
+            return compareTerm(a, b);
+        });
+        return sorted;
+    }
+
+    if (appState.glossarySort === 'smart') {
+        sorted.sort((a, b) => {
+            const scoreCompare = getGlossarySmartScore(a, searchTerm) - getGlossarySmartScore(b, searchTerm);
+            if (scoreCompare !== 0) return scoreCompare;
+            return compareTerm(a, b);
+        });
+        return sorted;
+    }
+
+    sorted.sort(compareTerm);
+    return sorted;
+}
+
+function renderGlossaryLetterFilters(letters = []) {
+    const container = document.getElementById('glossary-letters');
+    if (!container) return;
+
+    const uniqueLetters = Array.from(new Set(letters.filter(Boolean))).sort((a, b) => {
+        if (a === '#') return 1;
+        if (b === '#') return -1;
+        return a.localeCompare(b);
+    });
+    const options = ['all', ...uniqueLetters];
+    if (!options.includes(appState.glossaryLetter)) {
+        appState.glossaryLetter = 'all';
+    }
+
+    container.innerHTML = options.map((letter) => {
+        const isActive = appState.glossaryLetter === letter;
+        const label = letter === 'all' ? t('glossary.letter.all') : letter;
+        return `<button type="button" class="glossary-chip glossary-letter-chip ${isActive ? 'active' : ''}" data-letter="${letter}">${escapeHtml(label)}</button>`;
+    }).join('');
+
+    Array.from(container.querySelectorAll('button')).forEach((button) => {
+        button.addEventListener('click', () => {
+            const selectedLetter = button.dataset.letter || 'all';
+            if (appState.glossaryLetter === selectedLetter) return;
+            appState.glossaryLetter = selectedLetter;
+            renderGlossary();
+            saveToLocalStorage();
+        });
+    });
+}
+
+function copyGlossaryEntry(term, definition) {
+    const content = `${String(term || '').trim()}\n${String(definition || '').trim()}`.trim();
+    if (!content || !navigator.clipboard || typeof navigator.clipboard.writeText !== 'function') {
+        showToast(t('glossary.copyError'), 'error');
+        return;
+    }
+    navigator.clipboard.writeText(content)
+        .then(() => showToast(t('glossary.copySuccess'), 'success'))
+        .catch(() => showToast(t('glossary.copyError'), 'error'));
+}
+
+function renderGlossaryFilters(localizedTerms = getLocalizedGlossaryTerms()) {
     const container = document.getElementById('glossary-categories');
     if (!container) return;
-    const localizedTerms = getLocalizedGlossaryTerms();
+    appState.glossaryCategory = String(appState.glossaryCategory || 'all').toLowerCase();
     const categories = [
         'all',
-        ...Array.from(new Set(localizedTerms.map(term => String(term.categoryKey || term.category || '').trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b))
+        ...Array.from(
+            new Set(
+                localizedTerms
+                    .map((term) => String(term.categoryKey || term.category || '').trim().toLowerCase())
+                    .filter(Boolean)
+            )
+        ).sort((a, b) => a.localeCompare(b))
     ];
     if (!categories.includes(appState.glossaryCategory)) {
         appState.glossaryCategory = 'all';
@@ -13454,7 +16721,7 @@ function renderGlossaryFilters() {
     container.innerHTML = categories.map(category => {
         const isActive = appState.glossaryCategory === category;
         const localizedCategory = localizedTerms.find(term => term.categoryKey && term.categoryKey.toLowerCase() === category.toLowerCase())?.categoryLabel;
-        const label = category === 'all' ? translateLiteral('All Terms', appState.language) : (localizedCategory || translateLiteral(category, appState.language));
+        const label = category === 'all' ? t('glossary.category.all') : (localizedCategory || translateLiteral(category, appState.language));
         return `<button type="button" class="glossary-chip ${isActive ? 'active' : ''}" data-category="${category}">${escapeHtml(label)}</button>`;
     }).join('');
 
@@ -13463,6 +16730,7 @@ function renderGlossaryFilters() {
             const selectedCategory = button.dataset.category || 'all';
             if (appState.glossaryCategory === selectedCategory) return;
             appState.glossaryCategory = selectedCategory;
+            appState.glossaryLetter = 'all';
             renderGlossary();
             saveToLocalStorage();
         });
@@ -13470,12 +16738,18 @@ function renderGlossaryFilters() {
 }
 
 function renderGlossary() {
-    renderGlossaryFilters();
+    renderGlossarySortControl();
 
     const searchTerm = appState.glossarySearch.trim().toLowerCase();
-    const selectedCategory = appState.glossaryCategory;
     const localizedTerms = getLocalizedGlossaryTerms();
-    const filteredTerms = localizedTerms.filter(term => {
+    renderGlossaryFilters(localizedTerms);
+    const selectedCategory = appState.glossaryCategory;
+
+    if (appState.glossaryLetter !== 'all') {
+        appState.glossaryLetter = String(appState.glossaryLetter || '').toUpperCase();
+    }
+
+    const categorySearchFiltered = localizedTerms.filter(term => {
         const termCategoryKey = String(term.categoryKey || term.category || '').toLowerCase();
         const matchesCategory = selectedCategory === 'all' || termCategoryKey === selectedCategory.toLowerCase();
         if (!matchesCategory) return false;
@@ -13483,9 +16757,19 @@ function renderGlossary() {
         return (
             term.term.toLowerCase().includes(searchTerm) ||
             term.definition.toLowerCase().includes(searchTerm) ||
-            term.categoryLabel.toLowerCase().includes(searchTerm)
+            String(term.categoryLabel || term.category || '').toLowerCase().includes(searchTerm)
         );
     });
+
+    const availableLetters = Array.from(
+        new Set(categorySearchFiltered.map((term) => getGlossaryLeadingCharacter(term.term)))
+    );
+    renderGlossaryLetterFilters(availableLetters);
+
+    const filteredTerms = categorySearchFiltered.filter((term) => (
+        appState.glossaryLetter === 'all' || getGlossaryLeadingCharacter(term.term) === appState.glossaryLetter
+    ));
+    const sortedTerms = sortGlossaryTerms(filteredTerms, searchTerm);
 
     const content = document.getElementById('glossary-content');
     const stats = document.getElementById('glossary-stats');
@@ -13493,36 +16777,60 @@ function renderGlossary() {
         const selectedCategoryLabel = selectedCategory === 'all'
             ? ''
             : (localizedTerms.find(term => String(term.categoryKey || '').toLowerCase() === selectedCategory.toLowerCase())?.categoryLabel || selectedCategory);
-        const label = selectedCategory === 'all'
-            ? translateLiteral('All categories', appState.language)
-            : `${translateLiteral('Category:', appState.language)} ${selectedCategoryLabel}`;
+        const categoryLabel = selectedCategory === 'all'
+            ? t('glossary.stats.categoryAll')
+            : t('glossary.stats.category', { category: selectedCategoryLabel });
+        const activeLetterLabel = appState.glossaryLetter === 'all' ? t('glossary.letter.all') : appState.glossaryLetter;
+        const letterLabel = t('glossary.stats.letter', { letter: activeLetterLabel });
+        const summaryLabel = t('glossary.stats.summary', {
+            count: sortedTerms.length,
+            total: localizedTerms.length
+        });
         stats.innerHTML = `
-            <span><strong>${filteredTerms.length}</strong> ${translateLiteral('of', appState.language)} <strong>${localizedTerms.length}</strong> ${translateLiteral('terms', appState.language)}</span>
-            <span>${escapeHtml(label)}</span>
+            <span class="glossary-stat-pill">${escapeHtml(summaryLabel)}</span>
+            <span class="glossary-stat-pill">${escapeHtml(categoryLabel)}</span>
+            <span class="glossary-stat-pill">${escapeHtml(letterLabel)}</span>
         `;
     }
 
-    if (filteredTerms.length === 0) {
+    if (sortedTerms.length === 0) {
         content.innerHTML = `
-            <div class="col-span-2 text-center py-12">
-                <p class="text-lg text-slate-600">No terms found matching your search.</p>
+            <div class="col-span-2 glossary-empty-state text-center py-12 px-4">
+                <p class="glossary-empty-title text-lg font-semibold">${escapeHtml(t('glossary.empty'))}</p>
+                <p class="glossary-empty-hint mt-1 text-sm">${escapeHtml(t('glossary.emptyHint'))}</p>
             </div>
         `;
         return;
     }
 
     const highlightTerm = appState.glossarySearch.trim();
-    content.innerHTML = filteredTerms.map(item => `
-        <div class="p-4 rounded-xl border transition-all duration-200 hover:shadow-lg bg-slate-50 border-slate-200 hover:bg-white">
-            <div class="flex justify-between items-start mb-2">
-                <h4 class="font-semibold text-lg text-indigo-600">${highlightGlossaryText(item.term, highlightTerm)}</h4>
-                <span class="text-xs px-2 py-1 rounded-full bg-indigo-100 text-indigo-700">
-                    ${escapeHtml(item.categoryLabel)}
-                </span>
+    content.innerHTML = sortedTerms.map((item) => `
+        <div class="glossary-card p-4 rounded-xl border transition-all duration-200 hover:shadow-lg border-slate-200 hover:bg-white">
+            <div class="glossary-card-header mb-2">
+                <h4 class="glossary-term-title font-semibold text-lg">${highlightGlossaryText(item.term, highlightTerm)}</h4>
+                <div class="glossary-card-meta">
+                    <span class="glossary-category-badge text-xs px-2 py-1 rounded-full">${escapeHtml(item.categoryLabel || item.category || '')}</span>
+                    <button type="button" class="glossary-copy-btn" data-term="${encodeURIComponent(String(item.term || ''))}" data-definition="${encodeURIComponent(String(item.definition || ''))}">${escapeHtml(t('glossary.copy'))}</button>
+                </div>
             </div>
-            <p class="text-sm leading-relaxed text-slate-800">${highlightGlossaryText(item.definition, highlightTerm)}</p>
+            <p class="glossary-term-definition text-sm leading-relaxed">${highlightGlossaryText(item.definition, highlightTerm)}</p>
         </div>
     `).join('');
+
+    Array.from(content.querySelectorAll('.glossary-copy-btn')).forEach((button) => {
+        button.addEventListener('click', () => {
+            let term = '';
+            let definition = '';
+            try {
+                term = decodeURIComponent(button.dataset.term || '');
+                definition = decodeURIComponent(button.dataset.definition || '');
+            } catch (error) {
+                term = String(button.dataset.term || '');
+                definition = String(button.dataset.definition || '');
+            }
+            copyGlossaryEntry(term, definition);
+        });
+    });
 }
 
 function formatFlashcardText(text = '') {
@@ -13616,7 +16924,7 @@ function renderFlashcard() {
 
     if (sessionMeta) {
         const repeats = deckSize && deckSize < desiredLength;
-        sessionMeta.textContent = `${totalCards} card session ‚Ä¢ ${deckSize} cards in deck${repeats ? ` (deck repeats to reach ${desiredLength})` : ''}`;
+        sessionMeta.textContent = `${totalCards} card session ‚?¢ ${deckSize} cards in deck${repeats ? ` (deck repeats to reach ${desiredLength})` : ''}`;
     }
 
     if (!appState.showFlashcardAnswer) {
@@ -13677,7 +16985,8 @@ function renderFlashcard() {
 
 // Module Functions
 function toggleCodeExpansion(moduleId) {
-    if (appState.expandedCode.has(moduleId)) {
+    const isOpening = !appState.expandedCode.has(moduleId);
+    if (!isOpening) {
         appState.expandedCode.delete(moduleId);
         const panelKey = getModuleOutputPanelKey(moduleId, 'single');
         appState.expandedOutputs.delete(panelKey);
@@ -13687,6 +16996,10 @@ function toggleCodeExpansion(moduleId) {
     }
     renderModules();
     saveToLocalStorage();
+
+    if (isOpening) {
+        void openModuleOutputPanelAndRun(moduleId, 'single');
+    }
 }
 
 function toggleModuleComments(moduleId) {
@@ -13734,6 +17047,8 @@ function setModuleExample(moduleId, exampleId) {
     }
     renderModules();
     saveToLocalStorage();
+
+    void openModuleOutputPanelAndRun(moduleId, exampleId);
 }
 
 function toggleExampleCodeExpansion(moduleId, exampleId) {
@@ -13747,7 +17062,8 @@ function toggleExampleCodeExpansion(moduleId, exampleId) {
     appState.moduleExampleSelections.set(moduleId, exampleId);
 
     const expansionKey = getModuleExampleExpansionKey(moduleId, exampleId);
-    if (appState.expandedCodeExamples.has(expansionKey)) {
+    const isOpening = !appState.expandedCodeExamples.has(expansionKey);
+    if (!isOpening) {
         appState.expandedCodeExamples.delete(expansionKey);
         const panelKey = getModuleOutputPanelKey(moduleId, exampleId);
         appState.expandedOutputs.delete(panelKey);
@@ -13761,21 +17077,39 @@ function toggleExampleCodeExpansion(moduleId, exampleId) {
     }
     renderModules();
     saveToLocalStorage();
+
+    if (isOpening) {
+        void openModuleOutputPanelAndRun(moduleId, exampleId);
+    }
 }
 
-async function toggleModuleOutputPanel(moduleId, exampleId = 'single') {
+function toggleExampleDeepExplanation(moduleId, exampleId) {
+    const module = getModuleById(moduleId);
+    if (!module) return;
+    const localizedModule = appState.language === 'es' ? getLocalizedModule(module) : null;
+    const availableSets = getModuleCodeExampleSets(moduleId, localizedModule);
+    const setItem = availableSets.find((set) => set.id === exampleId);
+    if (!setItem) return;
+    const explanationText = getModuleExampleDeepExplanation(moduleId, exampleId, setItem);
+    if (!String(explanationText || '').trim()) return;
+
+    const expansionKey = getModuleExampleDeepExplanationKey(moduleId, exampleId);
+    if (appState.expandedExampleExplanations.has(expansionKey)) {
+        appState.expandedExampleExplanations.delete(expansionKey);
+    } else {
+        appState.expandedExampleExplanations.add(expansionKey);
+    }
+    renderModules();
+    saveToLocalStorage();
+}
+
+async function openModuleOutputPanelAndRun(moduleId, exampleId = 'single') {
     const module = getModuleById(moduleId);
     if (!module) return;
     if (getModuleMode(moduleId) !== 'code') return;
 
     const normalizedExampleId = exampleId || 'single';
     const panelKey = getModuleOutputPanelKey(moduleId, normalizedExampleId);
-    if (appState.expandedOutputs.has(panelKey)) {
-        appState.expandedOutputs.delete(panelKey);
-        renderModules();
-        return;
-    }
-
     appState.expandedOutputs.add(panelKey);
     moduleOutputState.set(panelKey, {
         status: 'running',
@@ -13791,12 +17125,31 @@ async function toggleModuleOutputPanel(moduleId, exampleId = 'single') {
         language,
         exampleId: resolvedExampleId
     });
+
+    if (!appState.expandedOutputs.has(panelKey)) return;
+
     moduleOutputState.set(panelKey, {
         status: 'ready',
         source: result.source || 'fallback',
         text: result.text || ''
     });
     renderModules();
+}
+
+async function toggleModuleOutputPanel(moduleId, exampleId = 'single') {
+    const module = getModuleById(moduleId);
+    if (!module) return;
+    if (getModuleMode(moduleId) !== 'code') return;
+
+    const normalizedExampleId = exampleId || 'single';
+    const panelKey = getModuleOutputPanelKey(moduleId, normalizedExampleId);
+    if (appState.expandedOutputs.has(panelKey)) {
+        appState.expandedOutputs.delete(panelKey);
+        renderModules();
+        return;
+    }
+
+    await openModuleOutputPanelAndRun(moduleId, normalizedExampleId);
 }
 
 function setModuleMode(moduleId, mode) {
@@ -13820,24 +17173,28 @@ function toggleCompletion(moduleId) {
 
 // Modal Functions
 function openSettings() {
-    document.getElementById('settings-modal').style.display = 'flex';
+    openModal('settings-modal', { initialFocus: '#close-settings' });
 }
 
 function closeSettings() {
-    document.getElementById('settings-modal').style.display = 'none';
+    closeModal('settings-modal');
 }
 
 function openGlossary() {
-    document.getElementById('glossary-modal').style.display = 'flex';
     renderGlossary();
+    const searchInput = document.getElementById('glossary-search');
+    if (searchInput) {
+        searchInput.value = appState.glossarySearch || '';
+    }
+    openModal('glossary-modal', { initialFocus: '#glossary-search' });
 }
 
 function closeGlossary() {
-    document.getElementById('glossary-modal').style.display = 'none';
+    closeModal('glossary-modal');
 }
 
 function openFlashcards() {
-    document.getElementById('flashcards-modal').style.display = 'flex';
+    openModal('flashcards-modal', { initialFocus: '#flashcard-module-select' });
     populateFlashcardModuleSelect();
     const moduleSelect = document.getElementById('flashcard-module-select');
     if (moduleSelect) {
@@ -13851,7 +17208,7 @@ function openFlashcards() {
 }
 
 function closeFlashcards() {
-    document.getElementById('flashcards-modal').style.display = 'none';
+    closeModal('flashcards-modal');
 }
 
 // Flashcard Functions
@@ -13982,12 +17339,12 @@ function openQuiz(moduleId) {
         score: 0
     };
 
-    document.getElementById('quiz-modal').style.display = 'flex';
+    openModal('quiz-modal', { initialFocus: '#close-quiz' });
     renderQuiz();
 }
 
 function closeQuiz() {
-    document.getElementById('quiz-modal').style.display = 'none';
+    closeModal('quiz-modal');
     appState.currentQuiz = null;
 }
 
@@ -13999,7 +17356,7 @@ function renderQuiz() {
     const title = document.getElementById('quiz-title');
     const content = document.getElementById('quiz-content');
 
-    title.textContent = translateLiteral(`üß† Quiz: ${localizedModule?.title || 'Quiz'}`, appState.language);
+    title.textContent = translateLiteral(`Yß† Quiz: ${localizedModule?.title || 'Quiz'}`, appState.language);
 
     if (!appState.currentQuiz.showResults) {
         const answeredCount = appState.currentQuiz.answers.filter(a => a !== null && a !== undefined).length;
@@ -14010,7 +17367,7 @@ function renderQuiz() {
             <div class="mb-6">
                 <div class="flex justify-between items-center mb-4">
                     <span class="text-sm quiz-progress-label">
-                        ${translateLiteral(`Question ${appState.currentQuiz.currentQuestion + 1} of ${totalCount} ‚Ä¢ ${answeredCount}/${totalCount} answered`, appState.language)}
+                        ${translateLiteral(`Question ${appState.currentQuiz.currentQuestion + 1} of ${totalCount} ‚?¢ ${answeredCount}/${totalCount} answered`, appState.language)}
                     </span>
                     <div class="h-2 bg-slate-800 rounded-full flex-1 ml-4 overflow-hidden border border-white/10">
                         <div class="h-full bg-indigo-500 transition-all duration-300" style="width: ${((appState.currentQuiz.currentQuestion + 1) / totalCount) * 100}%"></div>
@@ -14054,8 +17411,8 @@ function renderQuiz() {
             <div class="text-center">
                 <div class="mb-6">
                     <div class="text-6xl mb-4">
-                        ${appState.currentQuiz.score === appState.currentQuiz.questions.length ? 'üéâ' :
-                appState.currentQuiz.score >= appState.currentQuiz.questions.length * 0.7 ? 'üëè' : 'üìö'}
+                        ${appState.currentQuiz.score === appState.currentQuiz.questions.length ? 'PERFECT' :
+                appState.currentQuiz.score >= appState.currentQuiz.questions.length * 0.7 ? 'PASS' : 'RETRY'}
                     </div>
                     <h4 class="text-3xl font-bold mb-2 text-indigo-600">${translateLiteral('Quiz Complete!', appState.language)}</h4>
                     <p class="text-xl text-slate-800">
@@ -14071,7 +17428,7 @@ function renderQuiz() {
                         <div class="text-left p-4 rounded-xl border ${appState.currentQuiz.answers[index] === question.correct ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'}">
                             <div class="flex items-start gap-3">
                                 <span class="text-xl">
-                                    ${appState.currentQuiz.answers[index] === question.correct ? '‚úÖ' : '‚ùå'}
+                                    ${appState.currentQuiz.answers[index] === question.correct ? '‚o.' : '‚ùO'}
                                 </span>
                                 <div class="flex-1">
                                     <p class="font-medium mb-2 text-slate-800">${question.question}</p>
@@ -14094,7 +17451,7 @@ function renderQuiz() {
 
                 <div class="flex gap-4 justify-center">
                     <button onclick="restartQuiz()" class="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-                        ${translateLiteral('üîÑ Retake Quiz', appState.language)}
+                        ${translateLiteral('Y"" Retake Quiz', appState.language)}
                     </button>
                     <button onclick="closeQuiz()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
                         ${translateLiteral('Close', appState.language)}
@@ -14159,6 +17516,7 @@ function resetProgress() {
         appState.completedQuizzes.clear();
         appState.expandedCode.clear();
         appState.expandedCodeExamples.clear();
+        appState.expandedExampleExplanations.clear();
         appState.expandedOutputs.clear();
         appState.moduleComments.clear();
         appState.moduleLanguages.clear();
@@ -14170,8 +17528,11 @@ function resetProgress() {
         appState.searchTerm = '';
         appState.difficultyFilter = 'all';
         appState.categoryFilter = 'all';
+        appState.modulesPage = 1;
         appState.glossarySearch = '';
         appState.glossaryCategory = 'all';
+        appState.glossarySort = 'smart';
+        appState.glossaryLetter = 'all';
         appState.currentFlashcard = 0;
         appState.showFlashcardAnswer = false;
         appState.currentQuiz = null;
@@ -14186,6 +17547,8 @@ function resetProgress() {
         document.getElementById('search-input').value = '';
         document.getElementById('difficulty-filter').value = 'all';
         document.getElementById('glossary-search').value = '';
+        const glossarySortSelect = document.getElementById('glossary-sort');
+        if (glossarySortSelect) glossarySortSelect.value = 'smart';
         updateTopicFocusButtons();
 
         updateProgress();
@@ -14238,10 +17601,12 @@ function init() {
     initSupport();
     initPlayground();
     initIOSOverscrollLock();
+    initializeAccessibilityInfrastructure();
 
     // Set initial form values
     document.getElementById('search-input').value = appState.searchTerm;
     document.getElementById('difficulty-filter').value = appState.difficultyFilter;
+    document.getElementById('glossary-search').value = appState.glossarySearch || '';
     updateTopicFocusButtons();
     appState.scrollY = window.scrollY || 0;
     updateHeaderShrink();
@@ -14265,10 +17630,22 @@ function init() {
     const closeSiteGuideButton = document.getElementById('close-site-guide');
     const closeSiteGuideFooterButton = document.getElementById('close-site-guide-footer');
     const insightAuthOpenButton = document.getElementById('insights-auth-open-account');
+    const guestStartDsaButton = document.getElementById('guest-start-dsa');
+    const guestStartJavaButton = document.getElementById('guest-start-java');
+    const guestStartGitButton = document.getElementById('guest-start-git');
+    const guestStartQuizButton = document.getElementById('guest-start-quiz');
+    const guestStartFlashcardsButton = document.getElementById('guest-start-flashcards');
+    const guestSaveNoteButton = document.getElementById('guest-save-note');
     if (siteGuideButton) siteGuideButton.addEventListener('click', openSiteGuideModal);
     if (closeSiteGuideButton) closeSiteGuideButton.addEventListener('click', closeSiteGuideModal);
     if (closeSiteGuideFooterButton) closeSiteGuideFooterButton.addEventListener('click', closeSiteGuideModal);
     if (insightAuthOpenButton) insightAuthOpenButton.addEventListener('click', openAccountModal);
+    if (guestStartDsaButton) guestStartDsaButton.addEventListener('click', () => startGuestTrack('dsa'));
+    if (guestStartJavaButton) guestStartJavaButton.addEventListener('click', () => startGuestTrack('java'));
+    if (guestStartGitButton) guestStartGitButton.addEventListener('click', () => startGuestTrack('git'));
+    if (guestStartQuizButton) guestStartQuizButton.addEventListener('click', openGuestSampleQuiz);
+    if (guestStartFlashcardsButton) guestStartFlashcardsButton.addEventListener('click', openFlashcards);
+    if (guestSaveNoteButton) guestSaveNoteButton.addEventListener('click', saveGuestSampleNote);
 
     const studyToggleButton = document.getElementById('study-session-toggle');
     if (studyToggleButton) {
@@ -14294,6 +17671,7 @@ function init() {
     if (hideCompletedToggle) {
         hideCompletedToggle.addEventListener('click', () => {
             appState.hideCompletedModules = !appState.hideCompletedModules;
+            appState.modulesPage = 1;
             updateHideCompletedToggle();
             renderModules();
             saveToLocalStorage();
@@ -14333,30 +17711,68 @@ function init() {
     // Search and filter
     document.getElementById('search-input').addEventListener('input', (e) => {
         appState.searchTerm = e.target.value;
+        appState.modulesPage = 1;
         renderModules();
         saveToLocalStorage();
     });
 
     document.getElementById('difficulty-filter').addEventListener('change', (e) => {
         appState.difficultyFilter = e.target.value;
+        appState.modulesPage = 1;
         renderModules();
         saveToLocalStorage();
     });
 
     document.querySelectorAll('[data-topic-filter]').forEach((button) => {
         button.addEventListener('click', () => {
-            appState.categoryFilter = button.getAttribute('data-topic-filter') || 'all';
+            const selectedCategory = button.getAttribute('data-topic-filter') || 'all';
+            appState.categoryFilter = selectedCategory;
+            appState.modulesPage = 1;
             updateTopicFocusButtons();
             renderModules();
             saveToLocalStorage();
+            const targetRoute = getRouteForCategoryFilter(selectedCategory);
+            if (targetRoute !== appState.currentRoute) {
+                navigateToRoute(targetRoute, {
+                    preserveScroll: true,
+                    focusMain: false,
+                    skipModuleRender: true
+                });
+            }
         });
     });
 
     // Glossary search
     document.getElementById('glossary-search').addEventListener('input', (e) => {
         appState.glossarySearch = e.target.value;
+        appState.glossaryLetter = 'all';
         renderGlossary();
+        saveToLocalStorage();
     });
+
+    const glossarySortSelect = document.getElementById('glossary-sort');
+    if (glossarySortSelect) {
+        glossarySortSelect.addEventListener('change', (e) => {
+            const selectedSort = String(e.target.value || 'smart');
+            appState.glossarySort = VALID_GLOSSARY_SORTS.has(selectedSort) ? selectedSort : 'smart';
+            renderGlossary();
+            saveToLocalStorage();
+        });
+    }
+
+    const glossaryResetButton = document.getElementById('glossary-reset-filters');
+    if (glossaryResetButton) {
+        glossaryResetButton.addEventListener('click', () => {
+            appState.glossarySearch = '';
+            appState.glossaryCategory = 'all';
+            appState.glossarySort = 'smart';
+            appState.glossaryLetter = 'all';
+            const searchInput = document.getElementById('glossary-search');
+            if (searchInput) searchInput.value = '';
+            renderGlossary();
+            saveToLocalStorage();
+        });
+    }
 
     // Flashcard event listeners
     document.getElementById('prev-flashcard').addEventListener('click', prevFlashcard);
@@ -14364,6 +17780,11 @@ function init() {
     document.getElementById('random-flashcard').addEventListener('click', randomFlashcard);
     document.getElementById('toggle-flashcard-answer').addEventListener('click', toggleFlashcardAnswer);
     document.getElementById('flashcard-content').addEventListener('click', toggleFlashcardAnswer);
+    document.getElementById('flashcard-content').addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        event.preventDefault();
+        toggleFlashcardAnswer();
+    });
     populateFlashcardModuleSelect();
     const flashcardModuleSelect = document.getElementById('flashcard-module-select');
     if (flashcardModuleSelect) {
@@ -14390,36 +17811,49 @@ function init() {
         updateHeaderShrink();
     });
 
+    window.addEventListener('resize', () => {
+        if (!isSidebarDrawerMode() && appState.sidebarOpen) {
+            closeSidebar();
+        }
+        if (modulesResizeDebounce) {
+            clearTimeout(modulesResizeDebounce);
+        }
+        modulesResizeDebounce = setTimeout(() => {
+            const nextPageSize = getModulesPageSize();
+            if (nextPageSize === lastRenderedModulesPageSize) return;
+            renderModules();
+        }, 120);
+    });
+
     // Modal backdrop clicks
     document.addEventListener('click', (e) => {
         if (e.target.classList.contains('fixed') && e.target.classList.contains('inset-0')) {
-            if (e.target.id === 'settings-modal') closeSettings();
-            if (e.target.id === 'glossary-modal') closeGlossary();
-            if (e.target.id === 'flashcards-modal') closeFlashcards();
-            if (e.target.id === 'quiz-modal') closeQuiz();
-            if (e.target.id === 'study-plan-modal') closeStudyPlanModal();
-            if (e.target.id === 'account-modal') closeAccountModal();
-            if (e.target.id === 'support-modal') closeSupportModal();
-            if (e.target.id === 'interactive-quiz-modal') closeInteractiveQuizLibrary();
-            if (e.target.id === 'site-guide-modal') closeSiteGuideModal();
-            if (e.target.id === 'book-reader-modal') closeBookReaderModal();
+            closeModalById(e.target.id);
         }
     });
 
     // Keyboard shortcuts
     document.addEventListener('keydown', (e) => {
-        // Escape key to close modals
-        if (e.key === 'Escape') {
-            closeSettings();
-            closeGlossary();
-            closeFlashcards();
-            closeQuiz();
-            closeSiteGuideModal();
-            closeBookReaderModal();
+        if (e.key === 'Tab' && trapFocusInActiveModal(e)) {
+            return;
+        }
+        if (e.key === 'Escape' && appState.sidebarOpen && isSidebarDrawerMode()) {
+            e.preventDefault();
+            closeSidebar({ focusToggle: true });
+            return;
+        }
+
+        const activeModalId = getActiveModalId();
+
+        // Escape key closes only the top-most modal.
+        if (e.key === 'Escape' && activeModalId) {
+            e.preventDefault();
+            closeModalById(activeModalId);
+            return;
         }
 
         // Arrow keys for flashcards (when flashcard modal is open)
-        if (document.getElementById('flashcards-modal').style.display === 'flex') {
+        if (activeModalId === 'flashcards-modal') {
             if (e.key === 'ArrowLeft') {
                 e.preventDefault();
                 prevFlashcard();
@@ -14509,6 +17943,7 @@ function init() {
     // Apply saved language
     applyLanguage(appState.language);
     initSectionCollapsibles();
+    initRouteNavigation();
 
     // Language toggle buttons
     const langEnBtn = document.getElementById('lang-en-btn');
@@ -14613,7 +18048,7 @@ function getBreakReminder() {
     }
     const minutesElapsed = Math.floor((Date.now() - studyTimer.startTime) / 60000);
     if (minutesElapsed >= 25) {
-        return translateLiteral('üåø Stretch & hydrate now!', appState.language);
+        return translateLiteral('YOø Stretch & hydrate now!', appState.language);
     }
     return translateLiteral(`‚è± Break in ${25 - minutesElapsed} min`, appState.language);
 }
@@ -14625,20 +18060,28 @@ function updateStudyTrackerUI() {
     const streakEl = document.getElementById('study-streak-count');
     const toggleBtn = document.getElementById('study-session-toggle');
     const breakEl = document.getElementById('next-break-pill');
+    const copyEl = document.getElementById('study-session-copy');
+    const logEl = document.getElementById('study-session-log');
 
     if (!statusEl || !todayEl || !totalEl || !streakEl) return;
 
     if (!hasAuthenticatedInsightsAccess()) {
         statusEl.textContent = t('insights.lock.status');
         statusEl.classList.remove('bg-emerald-100', 'text-emerald-700');
-        todayEl.textContent = '--';
-        totalEl.textContent = '--';
-        streakEl.textContent = '0 days';
+        todayEl.textContent = appState.language === 'es' ? 'Prueba un quiz' : 'Try a sample quiz';
+        totalEl.textContent = appState.language === 'es' ? 'Modo local invitado' : 'Guest local mode';
+        streakEl.textContent = appState.language === 'es' ? 'Inicia tras login' : 'Starts after login';
         if (toggleBtn) {
             toggleBtn.textContent = t('insights.lock.sessionBtn');
         }
         if (breakEl) {
             breakEl.textContent = t('insights.lock.break');
+        }
+        if (copyEl) {
+            copyEl.textContent = t('insights.lock.learningPathHint');
+        }
+        if (logEl) {
+            logEl.textContent = t('insights.lock.sessionLog');
         }
         return;
     }
@@ -14704,6 +18147,106 @@ function renderInsights() {
         if (insightUpdates) {
             insightUpdates.textContent = t('insights.lock.updates');
         }
+        if (progressEl) {
+            progressEl.textContent = '--';
+        }
+        if (progressBar) {
+            progressBar.style.width = '0%';
+        }
+        if (completedEl) {
+            completedEl.textContent = appState.language === 'es'
+                ? 'Modo invitado activo'
+                : 'Guest mode active';
+        }
+        if (totalEl) {
+            totalEl.textContent = t('insights.lock.totalHint');
+        }
+        if (learningPathProgress) {
+            learningPathProgress.textContent = appState.language === 'es'
+                ? 'Empieza aqui'
+                : 'Start here';
+        }
+        if (learningPathNext) {
+            learningPathNext.textContent = t('insights.lock.learningPathHint');
+        }
+        if (recommendedList) {
+            recommendedList.innerHTML = `
+                <li><button class="recommended-link" onclick="startGuestTrack('dsa')">${t('insights.lock.guestDsa')}</button></li>
+                <li><button class="recommended-link" onclick="startGuestTrack('git')">${t('insights.lock.guestGit')}</button></li>
+                <li><button class="recommended-link" onclick="startGuestTrack('java')">${t('insights.lock.guestJava')}</button></li>
+            `;
+        }
+        if (highlightGoalEl) {
+            highlightGoalEl.textContent = appState.language === 'es'
+                ? '3 modulos de arranque'
+                : '3 starter modules';
+        }
+        if (highlightGoalNoteEl) {
+            highlightGoalNoteEl.textContent = appState.language === 'es'
+                ? 'Empieza por DSA, Git o Java'
+                : 'Start with DSA, Git, or Java';
+        }
+        if (highlightFocusEl) {
+            highlightFocusEl.textContent = appState.language === 'es'
+                ? 'Prueba una mini sesion'
+                : 'Try a mini session';
+        }
+        if (highlightFocusNoteEl) {
+            highlightFocusNoteEl.textContent = appState.language === 'es'
+                ? 'Usa quiz o tarjetas sin cuenta'
+                : 'Use quizzes or flashcards without an account';
+        }
+        if (highlightStreakValueEl) {
+            highlightStreakValueEl.textContent = appState.language === 'es'
+                ? 'Listo para iniciar'
+                : 'Ready to start';
+        }
+        if (highlightStreakNoteEl) {
+            highlightStreakNoteEl.textContent = appState.language === 'es'
+                ? 'El seguimiento completo inicia con login'
+                : 'Full streak tracking starts after login';
+        }
+        if (planLabelEl) {
+            planLabelEl.textContent = appState.language === 'es'
+                ? 'Plan invitado'
+                : 'Guest plan';
+        }
+        if (planPillEl) {
+            planPillEl.textContent = appState.language === 'es'
+                ? 'Vista previa'
+                : 'Preview';
+        }
+        if (planNoteEl) {
+            planNoteEl.textContent = appState.language === 'es'
+                ? 'Inicia sesion para personalizar ritmo y objetivos.'
+                : 'Sign in to personalize your pace and goals.';
+        }
+        if (planCtaEl) {
+            planCtaEl.textContent = t('insights.lock.cta');
+        }
+        if (momentumStreakEl) {
+            momentumStreakEl.textContent = appState.language === 'es'
+                ? 'Empieza hoy'
+                : 'Start today';
+        }
+        if (momentumTodayEl) {
+            momentumTodayEl.textContent = appState.language === 'es'
+                ? '15 min'
+                : '15 min';
+        }
+        if (momentumLongestEl) {
+            momentumLongestEl.textContent = appState.language === 'es'
+                ? 'Tu primer streak'
+                : 'Your first streak';
+        }
+        if (momentumTrendEl) {
+            momentumTrendEl.textContent = appState.language === 'es'
+                ? 'Calentando'
+                : 'Warming up';
+        }
+        if (momentumTipEl) {
+            momentumTipEl.textContent = t('insights.lock.sessionLog');
+        }
         updateStudyTrackerUI();
         return;
     }
@@ -14736,7 +18279,7 @@ function renderInsights() {
             const topics = (localizedNext.topics || []).slice(0, 3).join(', ') || translateLiteral('Core DSA', appState.language);
             learningPathNext.innerHTML = `
                 <p class="font-semibold text-indigo-600">${localizedNext.title}</p>
-                <p class="text-xs text-slate-500 mb-1">${translateLiteral(learningPath.next.difficulty, appState.language)} ‚Ä¢ ${topics}</p>
+                <p class="text-xs text-slate-500 mb-1">${translateLiteral(learningPath.next.difficulty, appState.language)} ‚?¢ ${topics}</p>
                 <p class="text-sm text-slate-600">${localizedNext.description}</p>
             `;
         } else {
@@ -14841,9 +18384,9 @@ function renderInsights() {
         let tip = translateLiteral('Log a focus session to start building momentum.', appState.language);
         const weeklyNeed = modulesRemaining === 0 ? 0 : Math.min(modulesRemaining, weeklyGoal);
         if (modulesRemaining === 0) {
-            tip = translateLiteral('All modules complete‚Äîspend time on flashcards or mentor a friend.', appState.language);
+            tip = translateLiteral('All modules complete - spend time on flashcards or mentor a friend.', appState.language);
         } else if (streak >= 7) {
-            tip = translateLiteral('üî• Your streak is on fire! Consider revisiting advanced challenge sets.', appState.language);
+            tip = translateLiteral('Y"• Your streak is on fire! Consider revisiting advanced challenge sets.', appState.language);
         } else if (todayMinutes < 30) {
             tip = translateLiteral('Try a focused 30-minute sprint to lock in a module today.', appState.language);
         } else {
@@ -14864,6 +18407,84 @@ function focusModule(moduleId) {
     target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     target.classList.add('module-highlight');
     setTimeout(() => target.classList.remove('module-highlight'), 1600);
+}
+
+function startGuestTrack(trackKey) {
+    const normalized = String(trackKey || '').toLowerCase();
+    const moduleId = GUEST_STARTER_MODULE_IDS[normalized];
+    if (!moduleId) return;
+
+    appState.categoryFilter = normalized;
+    appState.difficultyFilter = 'all';
+    appState.hideCompletedModules = false;
+    appState.searchTerm = '';
+    appState.modulesPage = 1;
+
+    const searchInput = document.getElementById('search-input');
+    const difficultySelect = document.getElementById('difficulty-filter');
+    if (searchInput) searchInput.value = '';
+    if (difficultySelect) difficultySelect.value = 'all';
+
+    updateHideCompletedToggle();
+    updateTopicFocusButtons();
+    renderModules();
+    saveToLocalStorage();
+    const targetRoute = getRouteForCategoryFilter(normalized);
+    if (targetRoute !== appState.currentRoute) {
+        navigateToRoute(targetRoute, {
+            preserveScroll: true,
+            focusMain: false,
+            skipModuleRender: true
+        });
+    }
+
+    const modulesGrid = document.getElementById('modules-grid');
+    if (modulesGrid) {
+        modulesGrid.scrollIntoView({ behavior: appState.reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    }
+    setTimeout(() => focusModule(moduleId), appState.reduceMotion ? 30 : 220);
+}
+
+function openGuestSampleQuiz() {
+    const sampleModuleId = 'java-basics';
+    const sampleQuiz = getLocalizedQuizData(sampleModuleId);
+    navigateToRoute('/quizzes', { preserveScroll: true, focusMain: false, skipModuleRender: true });
+    if (sampleQuiz?.parts?.[0]?.questions?.length) {
+        openQuiz(sampleModuleId);
+        return;
+    }
+    openInteractiveQuizLibrary();
+}
+
+function saveGuestSampleNote() {
+    const notesInput = document.getElementById('notes-input');
+    if (!notesInput) return;
+
+    const sampleNote = appState.language === 'es'
+        ? `[Nota de ejemplo]
+Variables en Java guardan un tipo fijo y un nombre reutilizable.
+- int edad = 20; define tipo y valor
+- String nombre = "Eddy"; usa referencia de objeto
+- Usa nombres claros y consistentes para lectura rapida`
+        : `[Sample note]
+Java variables store a fixed type and a reusable name.
+- int age = 20; sets type and value
+- String name = "Eddy"; stores an object reference
+- Use clear names so code reads like plain language`;
+
+    const marker = sampleNote.split('\n')[0];
+    const current = String(notesInput.value || '').trim();
+    if (!current.includes(marker)) {
+        notesInput.value = current ? `${current}\n\n${sampleNote}` : sampleNote;
+    }
+    notesDraft = notesInput.value;
+    saveNotesDraft(notesDraft);
+
+    showToast(appState.language === 'es' ? 'Nota local guardada.' : 'Local note saved.', 'success');
+    const notesSection = document.getElementById('notes-section');
+    if (notesSection) {
+        notesSection.scrollIntoView({ behavior: appState.reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    }
 }
 
 function toggleManualStudySession() {
@@ -15523,7 +19144,7 @@ window.addEventListener('resize', () => {
     updateHeaderShrink(); // Recalculate header shrinking on resize
 });
 
-console.log('CS Course Atlas - All systems loaded successfully! üöÄ');
+console.log('CS Course Atlas - All systems loaded successfully! Ys?');
 
 // Interactive Quiz Library (restored)
 function openInteractiveQuizLibrary() {
@@ -15535,7 +19156,7 @@ function openInteractiveQuizLibrary() {
     const firstOption = select.options[0];
     const initialModule = interactiveQuizState.moduleId || (firstOption ? firstOption.value : null);
     loadInteractiveQuizModule(initialModule);
-    openModal('interactive-quiz-modal');
+    openModal('interactive-quiz-modal', { initialFocus: '#interactive-quiz-module' });
 }
 
 function closeInteractiveQuizLibrary() {
@@ -15591,8 +19212,8 @@ function renderInteractiveQuizQuestion() {
     const feedback = selected === null
         ? ''
         : selected === question.correct
-            ? `<p class="text-sm text-emerald-600 font-semibold mt-2">‚úÖ ${translateLiteral('Correct!', appState.language)} ${question.explanation || ''}</p>`
-            : `<p class="text-sm text-rose-600 font-semibold mt-2">‚ùå ${translateLiteral('Try again.', appState.language)} ${question.explanation || ''}</p>`;
+            ? `<p class="text-sm text-emerald-600 font-semibold mt-2">‚o. ${translateLiteral('Correct!', appState.language)} ${question.explanation || ''}</p>`
+            : `<p class="text-sm text-rose-600 font-semibold mt-2">‚ùO ${translateLiteral('Try again.', appState.language)} ${question.explanation || ''}</p>`;
 
     body.innerHTML = `
         <div class="flex items-center justify-between text-sm text-slate-600 mb-2">
@@ -15633,7 +19254,7 @@ function renderInteractiveQuizQuestion() {
 
     if (progress) {
         const answered = interactiveQuizState.answers.filter(a => a !== null).length;
-        progress.textContent = translateLiteral(`${answered} answered ‚Ä¢ ${total} total`, appState.language);
+        progress.textContent = translateLiteral(`${answered} answered ‚?¢ ${total} total`, appState.language);
     }
 }
 
@@ -15656,17 +19277,215 @@ function prevInteractiveQuizQuestion() {
     }
 }
 
-// Generic modal helpers (fallback for interactive quiz and others)
-function openModal(modalId) {
+// Generic modal helpers (accessible focus, keyboard, and scroll management)
+function isModalOpen(modalId) {
     const modal = document.getElementById(modalId);
-    if (!modal) return;
-    modal.style.display = 'flex';
-    modal.setAttribute('aria-hidden', 'false');
+    if (!modal) return false;
+    if (modal.classList.contains('hidden')) return false;
+    const computedDisplay = window.getComputedStyle(modal).display;
+    return computedDisplay !== 'none' && modal.getAttribute('aria-hidden') !== 'true';
 }
 
-function closeModal(modalId) {
+function getActiveModalId() {
+    for (let index = modalAccessibilityState.stack.length - 1; index >= 0; index--) {
+        const modalId = modalAccessibilityState.stack[index];
+        if (isModalOpen(modalId)) return modalId;
+        modalAccessibilityState.stack.splice(index, 1);
+    }
+    return null;
+}
+
+function getModalFocusableElements(modal) {
+    if (!modal) return [];
+    return Array.from(modal.querySelectorAll(MODAL_FOCUSABLE_SELECTOR))
+        .filter((element) => {
+            if (!(element instanceof HTMLElement)) return false;
+            if (element.hasAttribute('disabled')) return false;
+            if (element.getAttribute('aria-hidden') === 'true') return false;
+            const style = window.getComputedStyle(element);
+            return style.display !== 'none' && style.visibility !== 'hidden';
+        });
+}
+
+function resolveModalFocusTarget(modal, preferredTarget = null) {
+    if (!(modal instanceof HTMLElement)) return null;
+    if (preferredTarget instanceof HTMLElement && modal.contains(preferredTarget)) {
+        return preferredTarget;
+    }
+    if (typeof preferredTarget === 'string' && preferredTarget.trim()) {
+        const scoped = modal.querySelector(preferredTarget);
+        if (scoped instanceof HTMLElement) return scoped;
+        const global = document.querySelector(preferredTarget);
+        if (global instanceof HTMLElement && modal.contains(global)) return global;
+    }
+    const focusables = getModalFocusableElements(modal);
+    if (focusables.length) return focusables[0];
+    return modal;
+}
+
+function syncModalBodyState() {
+    const hasOpenModal = Boolean(getActiveModalId());
+    document.body.classList.toggle('modal-open', hasOpenModal);
+}
+
+function initializeAccessibilityInfrastructure() {
+    ACCESSIBLE_MODAL_IDS.forEach((modalId) => {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+        const strategy = modal.classList.contains('hidden') ? 'hidden-class' : 'display';
+        modalAccessibilityState.strategyById.set(modalId, strategy);
+        if (!modal.hasAttribute('role')) {
+            modal.setAttribute('role', 'dialog');
+        }
+        if (!modal.hasAttribute('aria-modal')) {
+            modal.setAttribute('aria-modal', 'true');
+        }
+        if (!modal.hasAttribute('tabindex')) {
+            modal.setAttribute('tabindex', '-1');
+        }
+        if (!modal.hasAttribute('aria-hidden')) {
+            modal.setAttribute('aria-hidden', isModalOpen(modalId) ? 'false' : 'true');
+        }
+    });
+    syncModalBodyState();
+}
+
+function openModal(modalId, options = {}) {
     const modal = document.getElementById(modalId);
     if (!modal) return;
-    modal.style.display = 'none';
-    modal.setAttribute('aria-hidden', 'true');
+    const strategy = modalAccessibilityState.strategyById.get(modalId)
+        || (modal.classList.contains('hidden') ? 'hidden-class' : 'display');
+    modalAccessibilityState.strategyById.set(modalId, strategy);
+
+    const triggerElement = options.triggerElement instanceof HTMLElement
+        ? options.triggerElement
+        : (document.activeElement instanceof HTMLElement ? document.activeElement : null);
+    modalAccessibilityState.triggerById.set(modalId, triggerElement);
+
+    if (strategy === 'hidden-class') {
+        modal.classList.remove('hidden');
+    } else {
+        modal.style.display = 'flex';
+    }
+    modal.setAttribute('aria-hidden', 'false');
+
+    const existingIndex = modalAccessibilityState.stack.indexOf(modalId);
+    if (existingIndex >= 0) {
+        modalAccessibilityState.stack.splice(existingIndex, 1);
+    }
+    modalAccessibilityState.stack.push(modalId);
+    syncModalBodyState();
+
+    const focusTarget = resolveModalFocusTarget(modal, options.initialFocus);
+    window.setTimeout(() => {
+        if (focusTarget instanceof HTMLElement) {
+            focusTarget.focus();
+        }
+    }, 0);
 }
+
+function closeModal(modalId, options = {}) {
+    const modal = document.getElementById(modalId);
+    if (!modal) return;
+    const strategy = modalAccessibilityState.strategyById.get(modalId)
+        || (modal.classList.contains('prompt-modal') ? 'hidden-class' : 'display');
+
+    if (strategy === 'hidden-class') {
+        modal.classList.add('hidden');
+    } else {
+        modal.style.display = 'none';
+    }
+    modal.setAttribute('aria-hidden', 'true');
+
+    const stackIndex = modalAccessibilityState.stack.lastIndexOf(modalId);
+    if (stackIndex >= 0) {
+        modalAccessibilityState.stack.splice(stackIndex, 1);
+    }
+    syncModalBodyState();
+
+    if (options.restoreFocus === false) return;
+    const explicitTarget = options.restoreFocusTo instanceof HTMLElement ? options.restoreFocusTo : null;
+    const triggerElement = explicitTarget || modalAccessibilityState.triggerById.get(modalId);
+    if (triggerElement instanceof HTMLElement && document.contains(triggerElement)) {
+        window.setTimeout(() => triggerElement.focus(), 0);
+    }
+}
+
+function closeModalById(modalId) {
+    if (!modalId) return;
+    switch (modalId) {
+        case 'settings-modal':
+            closeSettings();
+            break;
+        case 'glossary-modal':
+            closeGlossary();
+            break;
+        case 'flashcards-modal':
+            closeFlashcards();
+            break;
+        case 'quiz-modal':
+            closeQuiz();
+            break;
+        case 'study-plan-modal':
+            closeStudyPlanModal();
+            break;
+        case 'account-modal':
+            closeAccountModal();
+            break;
+        case 'support-modal':
+            closeSupportModal();
+            break;
+        case 'interactive-quiz-modal':
+            closeInteractiveQuizLibrary();
+            break;
+        case 'site-guide-modal':
+            closeSiteGuideModal();
+            break;
+        case 'prompt-workspace-modal':
+            closePromptWorkspace();
+            break;
+        case 'notes-download-modal':
+            closeNotesDownloadModal();
+            break;
+        case 'book-reader-modal':
+            closeBookReaderModal();
+            break;
+        default:
+            closeModal(modalId);
+            break;
+    }
+}
+
+function trapFocusInActiveModal(event) {
+    const activeModalId = getActiveModalId();
+    if (!activeModalId) return false;
+    const modal = document.getElementById(activeModalId);
+    if (!modal) return false;
+    const focusables = getModalFocusableElements(modal);
+    if (!focusables.length) {
+        event.preventDefault();
+        modal.focus();
+        return true;
+    }
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    const active = document.activeElement;
+
+    if (event.shiftKey) {
+        if (active === first || !modal.contains(active)) {
+            event.preventDefault();
+            last.focus();
+            return true;
+        }
+        return false;
+    }
+
+    if (active === last || !modal.contains(active)) {
+        event.preventDefault();
+        first.focus();
+        return true;
+    }
+    return false;
+}
+
+
