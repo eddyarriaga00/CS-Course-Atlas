@@ -50,6 +50,9 @@
                     </p>
                 </div>
                 <div id="header-buttons" class="flex flex-wrap gap-2 w-full sm:w-auto justify-end sm:justify-end transition-all duration-300 order-3 sm:order-2">
+                    <button id="sidebar-toggle" type="button" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm" aria-controls="app-sidebar" aria-expanded="false" data-i18n-aria-label="sidebar.toggleAria">
+                        ☰ <span data-i18n="sidebar.toggle">Pages</span>
+                    </button>
                     <button id="flashcards-btn" type="button" onclick="openFlashcards()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
                         🎯 <span class="hidden xs:inline" data-i18n="btn.flashcards">Flashcards</span><span class="xs:hidden" data-i18n="btn.flashcardsShort">Cards</span>
                     </button>
@@ -74,8 +77,46 @@
         </div>
     </header>
 
-    <div id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        <div class="text-center mb-8 sm:mb-10 hero-section rounded-2xl p-6 sm:p-8 shadow-2xl section-spacing backdrop-blur-md">
+    <div id="sidebar-backdrop" class="sidebar-backdrop" hidden></div>
+    <div id="app-shell" class="app-shell">
+        <aside id="app-sidebar" class="app-sidebar" aria-label="Primary site navigation" data-i18n-aria-label="sidebar.ariaLabel">
+            <div class="app-sidebar-inner">
+                <div class="app-sidebar-head">
+                    <h2 class="app-sidebar-title" data-i18n="sidebar.title">Pages</h2>
+                    <button id="sidebar-close" type="button" class="app-sidebar-close" data-i18n-aria-label="sidebar.closeAria">×</button>
+                </div>
+                <nav id="sidebar-nav" class="sidebar-nav" aria-label="Main pages" data-i18n-aria-label="sidebar.ariaLabel">
+                    <a href="/home" class="sidebar-link" data-route-link data-route-key="/home" data-i18n="sidebar.home">Home</a>
+                    <a href="/tracks" class="sidebar-link" data-route-link data-route-key="/tracks" data-i18n="sidebar.tracks">Course Tracks</a>
+                    <a href="/dsa" class="sidebar-link" data-route-link data-route-key="/dsa" data-i18n="sidebar.dsa">DSA</a>
+                    <a href="/java" class="sidebar-link" data-route-link data-route-key="/java" data-i18n="sidebar.java">Java</a>
+                    <a href="/git" class="sidebar-link" data-route-link data-route-key="/git" data-i18n="sidebar.git">Git</a>
+                    <a href="/assembly" class="sidebar-link" data-route-link data-route-key="/assembly" data-i18n="sidebar.assembly">Assembly</a>
+                    <a href="/discrete-math" class="sidebar-link" data-route-link data-route-key="/discrete-math" data-i18n="sidebar.discreteMath">Discrete Math</a>
+                    <a href="/flashcards" class="sidebar-link" data-route-link data-route-key="/flashcards" data-i18n="sidebar.flashcards">Flashcards</a>
+                    <a href="/quizzes" class="sidebar-link" data-route-link data-route-key="/quizzes" data-i18n="sidebar.quizzes">Quizzes</a>
+                    <a href="/playground" class="sidebar-link" data-route-link data-route-key="/playground" data-i18n="sidebar.playground">Playground</a>
+                    <a href="/notes" class="sidebar-link" data-route-link data-route-key="/notes" data-i18n="sidebar.notes">Notes</a>
+                    <a href="/support" class="sidebar-link" data-route-link data-route-key="/support" data-i18n="sidebar.support">Support</a>
+                    <a href="/about" class="sidebar-link" data-route-link data-route-key="/about" data-i18n="sidebar.about">About</a>
+                </nav>
+            </div>
+        </aside>
+
+        <div id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <section id="route-overview-section" class="route-overview-section panel-surface rounded-xl p-4 sm:p-5 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100" hidden aria-live="polite">
+            <p id="route-overview-kicker" class="text-[11px] uppercase tracking-wider font-semibold text-slate-300" data-i18n="route.kicker">Current page</p>
+            <h2 id="route-overview-title" class="text-xl sm:text-2xl font-semibold text-indigo-300 mt-1"></h2>
+            <p id="route-overview-description" class="text-sm sm:text-base text-slate-200 mt-1"></p>
+        </section>
+
+        <section id="route-launchpad-section" class="route-launchpad-section panel-surface rounded-xl p-4 sm:p-5 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100" hidden>
+            <h3 id="route-launchpad-title" class="text-lg sm:text-xl font-semibold text-indigo-300"></h3>
+            <p id="route-launchpad-description" class="text-sm sm:text-base text-slate-200 mt-1"></p>
+            <div id="route-launchpad-actions" class="route-launchpad-actions mt-3"></div>
+        </section>
+
+        <div id="hero-section" class="text-center mb-8 sm:mb-10 hero-section rounded-2xl p-6 sm:p-8 shadow-2xl section-spacing backdrop-blur-md">
             <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 sm:mb-6 leading-tight text-slate-100" data-i18n="hero.title">
                 CS Course Atlas: Learn Across Core CS Courses
             </h2>
@@ -149,8 +190,8 @@
             <div class="progress-main-content flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 gap-5">
                 <div class="w-full space-y-2">
                     <p class="progress-kicker text-xs uppercase font-semibold text-[11px]" data-i18n="progress.kicker">Current journey</p>
-                    <span id="progress-text" class="progress-summary block text-base sm:text-lg font-semibold mt-1 text-[1rem] text-slate-100">
-                        0 of 0 modules completed
+                    <span id="progress-text" class="progress-summary block text-base sm:text-lg font-semibold mt-1 text-[1rem] text-slate-100" data-i18n="progress.emptyStart">
+                        Choose your first track to load modules.
                     </span>
                     <div class="progress-meter mt-3">
                         <div id="progress-bar" class="progress-meter-fill transition-all duration-500" style="width: 0%"></div>
@@ -164,7 +205,7 @@
             </div>
             <div class="progress-pills flex flex-wrap gap-2 mt-4 text-xs sm:text-sm text-[12.5px] text-slate-200">
                 <span class="progress-pill bg-slate-800 border border-white/10 text-slate-100">🎯 Next milestone at 25%</span>
-                <span class="progress-pill bg-slate-800 border border-white/10 text-slate-100">⚡ Flashcards unlock at 50%</span>
+                <span class="progress-pill bg-slate-800 border border-white/10 text-slate-100">⚡ Flashcards are open now; more decks unlock as you progress</span>
                 <span class="progress-pill bg-slate-800 border border-white/10 text-slate-100">💡 Tip: Use the Focus Tracker to stay on pace</span>
             </div>
         </div>
@@ -197,13 +238,13 @@
                     </div>
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs text-slate-500 mt-2 gap-1 text-slate-300">
                         <span id="achievement-progress-label">0 / 3 modules toward next badge</span>
-                        <span id="achievement-total-label">0 total modules</span>
+                        <span id="achievement-total-label" data-i18n="achievements.emptyTotal">Choose a track to see module totals</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="support-card rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 text-center shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
+        <div id="support-section" class="support-card rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 text-center shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
             <h3 class="text-lg sm:text-xl font-semibold mb-2 sm:mb-3 section-heading text-[1.05rem] text-slate-100" data-i18n="support.heading">❤️ Do you enjoy this website?</h3>
             <p class="mb-3 sm:mb-4 opacity-90 text-sm sm:text-base text-slate-200" data-i18n="support.subtitle">Help keep this resource free and updated with new content weekly!</p>
             <div class="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3">
@@ -220,7 +261,7 @@
             <p class="text-xs mt-2 sm:mt-3 opacity-75 text-slate-300">Created for CS students by Eddy Arriaga-Barrientos</p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-5 sm:mb-6 section-spacing gap-5">
+        <div id="daily-study-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-5 sm:mb-6 section-spacing gap-5">
             <div id="daily-challenge-card" class="panel-surface rounded-xl p-4 sm:p-5 shadow-xl border border-transparent bg-slate-900/60 border-white/10 text-slate-100">
                 <div class="flex items-start justify-between gap-3 mb-3 gap-2.5">
                     <div>
@@ -265,10 +306,22 @@
             </div>
             <div id="insights-auth-lock" class="insights-auth-lock hidden">
                 <div class="insights-auth-lock-header">
-                    <span class="insights-auth-lock-pill" data-i18n="insights.lock.badge">Account Required</span>
+                    <span class="insights-auth-lock-pill" data-i18n="insights.lock.badge">Guest Mode</span>
                 </div>
                 <h4 class="insights-auth-lock-title" data-i18n="insights.lock.title">Sign in to unlock personalized insights</h4>
-                <p class="insights-auth-lock-copy" data-i18n="insights.lock.copy">Your dashboard analytics, focus momentum, and personalized recommendations are available after login so progress can sync safely.</p>
+                <p class="insights-auth-lock-copy" data-i18n="insights.lock.copy">Your personalized analytics, focus momentum, and recommendations unlock after login so progress can sync securely.</p>
+                <div class="insights-guest-starter" aria-label="Guest starter actions">
+                    <p class="insights-guest-starter-title" data-i18n="insights.lock.guestIntro">Start learning right now in guest mode:</p>
+                    <div class="insights-guest-actions">
+                        <button id="guest-start-dsa" type="button" class="insights-guest-action" data-i18n="insights.lock.guestDsa">Start with DSA Foundations</button>
+                        <button id="guest-start-java" type="button" class="insights-guest-action" data-i18n="insights.lock.guestJava">Start with Java Core</button>
+                        <button id="guest-start-git" type="button" class="insights-guest-action" data-i18n="insights.lock.guestGit">Start with Git Basics</button>
+                        <button id="guest-start-quiz" type="button" class="insights-guest-action" data-i18n="insights.lock.guestQuiz">Try a sample quiz</button>
+                        <button id="guest-start-flashcards" type="button" class="insights-guest-action" data-i18n="insights.lock.guestFlashcards">Practice flashcards</button>
+                        <button id="guest-save-note" type="button" class="insights-guest-action" data-i18n="insights.lock.guestNote">Save one local note</button>
+                    </div>
+                    <p class="insights-guest-starter-hint" data-i18n="insights.lock.guestHint">Create a free account to sync progress across devices once you are ready.</p>
+                </div>
                 <button id="insights-auth-open-account" type="button" class="insights-auth-lock-button" data-i18n="insights.lock.cta">Log In / Sign Up</button>
             </div>
             <div class="insight-highlight-grid mb-4 gap-3">
@@ -308,7 +361,7 @@
                         </div>
                         <div class="text-right text-xs text-slate-500 text-slate-300">
                             <p id="insights-completed-count">0 completed</p>
-                            <p id="insights-total-count">0 total modules</p>
+                            <p id="insights-total-count" data-i18n="insights.lock.totalHint">Select a track to see module totals</p>
                         </div>
                     </div>
                     <div class="insight-progress mb-3">
@@ -323,8 +376,8 @@
                         <p class="text-xs uppercase tracking-wide text-slate-500 text-slate-300">Recommended Next</p>
                         <span id="learning-path-progress" class="text-xs px-2 py-1 rounded-full bg-indigo-100 text-indigo-700 font-semibold bg-indigo-500/20 text-indigo-200 border border-indigo-300/40">0% complete</span>
                     </div>
-                    <div id="learning-path-next" class="mb-4 text-sm text-slate-700 text-slate-200">
-                        Keep learning to unlock personalized suggestions.
+                    <div id="learning-path-next" class="mb-4 text-sm text-slate-700 text-slate-200" data-i18n="insights.lock.learningPathHint">
+                        Choose your first track to load modules.
                     </div>
                     <div>
                         <p class="text-xs uppercase tracking-wide text-slate-500 mb-2 text-slate-300">Quick Picks</p>
@@ -360,7 +413,7 @@
                             <button id="log-study-session" class="px-3 py-1.5 rounded-lg bg-emerald-500 text-white text-xs font-semibold shadow-sm hover:bg-emerald-600 transition">Log +5 min</button>
                             <button id="study-session-toggle" class="insight-button purple-glow-button w-full text-center text-sm font-semibold">Start Focus Session</button>
                         </div>
-                        <div class="text-xs text-slate-500 mt-1 text-slate-300" id="study-session-log">No sessions yet.</div>
+                        <div class="text-xs text-slate-500 mt-1 text-slate-300" id="study-session-log" data-i18n="insights.lock.sessionLog">Try a sample module, quiz, or flashcards to kick off your first session.</div>
                     </div>
                 </div>
 
@@ -403,36 +456,47 @@
             <div id="interview-examples-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </section>
 
-        <div id="prompt-workspace-modal" class="prompt-modal hidden">
+        <div id="prompt-workspace-modal" class="prompt-modal hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="prompt-workspace-title">
             <div class="prompt-modal-backdrop" onclick="closePromptWorkspace()"></div>
             <div class="prompt-modal-panel bg-slate-900 text-slate-100 border-white/10">
                 <div class="flex items-start justify-between gap-3 mb-3">
                     <div>
-                        <p class="text-[11px] uppercase tracking-wide text-slate-500 font-semibold text-slate-300">Timed Practice</p>
+                        <p class="text-[11px] uppercase tracking-wide text-slate-500 font-semibold text-slate-300" data-i18n="interview.timedPractice">Timed Practice</p>
                         <h3 id="prompt-workspace-title" class="text-lg font-semibold text-indigo-600 text-indigo-300">Interview Prompt</h3>
                         <p id="prompt-workspace-meta" class="text-xs text-slate-500 mt-0.5 text-slate-300"></p>
                     </div>
-                    <button class="prompt-close text-slate-200" onclick="closePromptWorkspace()">✕</button>
+                    <button type="button" class="prompt-close text-slate-200" onclick="closePromptWorkspace()" aria-label="Close prompt workspace">✕</button>
                 </div>
                 <p id="prompt-workspace-prompt" class="text-sm text-slate-700 mb-3 text-slate-200"></p>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
                     <div class="flex flex-col gap-2">
-                        <label class="text-xs font-semibold text-slate-600 text-slate-300">Your solution (write/paste)</label>
-                        <textarea id="prompt-workspace-input" class="prompt-editor bg-slate-900 text-slate-100 border-white/10" rows="12" placeholder="Write your solution here..."></textarea>
-                        <button id="prompt-workspace-submit" class="prompt-submit">Submit & Compare</button>
+                        <label for="prompt-workspace-input" class="text-xs font-semibold text-slate-600 text-slate-300" data-i18n="interview.yourSolution">Your solution (write/paste)</label>
+                        <textarea id="prompt-workspace-input" class="prompt-editor bg-slate-900 text-slate-100 border-white/10" rows="12" placeholder="Write your solution here..." data-i18n-placeholder="interview.inputPlaceholder" aria-label="Interview solution editor"></textarea>
+                        <button id="prompt-workspace-submit" class="prompt-submit" data-i18n="interview.submitCompare">Submit & Compare</button>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div class="flex items-center justify-between">
-                            <label class="text-xs font-semibold text-slate-600 text-slate-300">Reference solution</label>
-                            <span id="prompt-workspace-language" class="text-[11px] px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 font-semibold bg-slate-800 text-slate-100 border border-white/10"></span>
+                        <div class="flex flex-wrap items-end justify-between gap-2">
+                            <label class="text-xs font-semibold text-slate-600 text-slate-300" data-i18n="interview.referenceSolution">Reference solution</label>
+                            <div class="flex items-end gap-2 flex-wrap">
+                                <div class="interview-workspace-field">
+                                    <label for="prompt-workspace-approach" class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide" data-i18n="interview.approach">Approach</label>
+                                    <select id="prompt-workspace-approach" class="text-xs rounded-md border border-white/10 bg-slate-800 text-slate-100 px-2 py-1" aria-label="Interview solution approach"></select>
+                                </div>
+                                <div class="interview-workspace-field">
+                                    <label for="prompt-workspace-language-select" class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide" data-i18n="interview.language">Language</label>
+                                    <select id="prompt-workspace-language-select" class="text-xs rounded-md border border-white/10 bg-slate-800 text-slate-100 px-2 py-1" aria-label="Interview solution language"></select>
+                                </div>
+                            </div>
                         </div>
+                        <div id="prompt-workspace-approach-summary" class="interview-approach-summary text-xs text-slate-300"></div>
+                        <div id="prompt-workspace-approach-details" class="interview-approach-details"></div>
                         <pre id="prompt-workspace-solution" class="prompt-solution bg-slate-900 text-slate-100 border-white/10"></pre>
-                        <button id="prompt-workspace-run" class="notes-download interview-cta-primary">Run in Workspace</button>
+                        <button id="prompt-workspace-run" class="notes-download interview-cta-primary" data-i18n="interview.runInWorkspace">Run in Workspace</button>
                         <div class="interview-output-shell">
                             <div id="prompt-workspace-output-meta" class="interview-output-meta">Output: Ready</div>
                             <pre id="prompt-workspace-output" class="interview-output-pre">Run the example solution to view output.</pre>
                         </div>
-                        <p id="prompt-workspace-notes" class="text-xs text-slate-600 text-slate-300"></p>
+                        <p id="prompt-workspace-notes" class="text-xs text-slate-600 text-slate-300" data-i18n="interview.analysisReady">Choose an approach to see when and why it applies.</p>
                     </div>
                 </div>
             </div>
@@ -450,7 +514,7 @@
                     <button id="download-notes" class="px-3 py-2 rounded-lg bg-slate-800 text-slate-100 text-sm font-semibold border border-white/10 shadow-sm hover:bg-slate-700 transition">Download TXT</button>
                 </div>
             </div>
-            <textarea id="notes-input" rows="6" class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-800 border-white/10 text-slate-100 placeholder-slate-400" placeholder="Write your notes here..."></textarea>
+            <textarea id="notes-input" rows="6" class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-800 border-white/10 text-slate-100 placeholder-slate-400" placeholder="Write your notes here..." aria-label="Study notes"></textarea>
         </section>
 
         <section id="notes-library-section" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
@@ -481,6 +545,7 @@
                 <span class="text-xs px-3 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold bg-slate-800 text-slate-100 border border-white/10" data-i18n="books.badge">Reference Shelf</span>
             </div>
             <div id="books-library-list" class="notes-scroll bg-slate-900/60 border border-white/10 rounded-xl"></div>
+            <p class="text-xs text-slate-300 mt-3">More textbooks can be added here over time with read/download support.</p>
         </section>
 
         <section id="ds-playground" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/40 border border-white/10 backdrop-blur-sm">
@@ -492,6 +557,8 @@
                 <div class="flex flex-wrap gap-2 items-center gap-3">
                     <div class="flex flex-wrap gap-2" id="ds-tabs"></div>
                     <button type="button" class="section-collapse-toggle text-xs px-3 py-1.5 rounded-lg bg-violet-500/20 text-violet-100 border border-violet-200/40 font-semibold hover:bg-violet-500/30" data-section-key="dsPlayground">Collapse</button>
+                    <button id="ds-run-example" type="button" class="text-xs px-3 py-1.5 rounded-lg notes-download font-semibold">Run in Section</button>
+                    <button id="ds-undo-action" type="button" class="text-xs px-3 py-1.5 rounded-lg notes-view font-semibold" disabled>Undo</button>
                     <button id="ds-reset-all" class="text-xs px-3 py-1.5 rounded-lg visual-link font-semibold px-4 py-2" data-i18n="ds.reset">Reset playground</button>
                 </div>
             </div>
@@ -537,17 +604,21 @@
                         <div class="ds-panel-card p-4 rounded-xl border border-white/10 bg-slate-900/70 space-y-2">
                             <div class="flex items-center justify-between gap-2">
                                 <div class="text-xs uppercase tracking-wide text-slate-300 font-semibold">Code + Explanation</div>
-                                <select id="ds-code-language" class="text-xs rounded-md border border-white/10 bg-slate-800 text-slate-100 px-2 py-1"></select>
+                                <select id="ds-code-language" class="text-xs rounded-md border border-white/10 bg-slate-800 text-slate-100 px-2 py-1" aria-label="Data structure code language"></select>
                             </div>
                             <pre id="ds-code-viewer" class="text-xs whitespace-pre-wrap font-mono bg-slate-950/70 border border-white/10 rounded-lg p-3 overflow-auto min-h-[220px]"></pre>
                             <p id="ds-explanation-viewer" class="text-xs text-slate-200 leading-relaxed"></p>
+                            <div class="ds-run-shell">
+                                <div id="ds-run-meta" class="ds-run-meta">Output: Ready</div>
+                                <pre id="ds-run-output" class="ds-run-output">Run the current example to view output here.</pre>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <div id="notes-download-modal" class="prompt-modal hidden">
+        <div id="notes-download-modal" class="prompt-modal hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="notes-download-title">
             <div class="prompt-modal-backdrop" onclick="closeNotesDownloadModal()"></div>
             <div class="prompt-modal-panel bg-slate-900 text-slate-100 border-white/10">
                 <div class="flex items-start justify-between gap-3 mb-3">
@@ -556,17 +627,17 @@
                         <h3 id="notes-download-title" class="text-lg font-semibold text-indigo-600 text-indigo-300">Notes PDF</h3>
                         <p id="notes-download-meta" class="text-xs text-slate-500 text-slate-300"></p>
                     </div>
-                    <button class="prompt-close text-slate-200" onclick="closeNotesDownloadModal()">✕</button>
+                    <button type="button" class="prompt-close text-slate-200" onclick="closeNotesDownloadModal()" aria-label="Close notes download dialog">✕</button>
                 </div>
                 <p class="text-sm text-slate-700 mb-3 text-slate-200">To download, please support with a $1 donation. The PDF will open after you click donate.</p>
                 <div class="flex flex-wrap gap-2">
                     <a id="notes-donate-link" href="#" target="_blank" rel="noopener noreferrer" class="prompt-submit">Donate $1 & Download</a>
-                    <button class="px-3 py-2 rounded-lg bg-slate-200 text-slate-700 font-semibold bg-slate-800 text-slate-100 border border-white/10" onclick="closeNotesDownloadModal()">Maybe later</button>
+                    <button type="button" class="px-3 py-2 rounded-lg bg-slate-200 text-slate-700 font-semibold bg-slate-800 text-slate-100 border border-white/10" onclick="closeNotesDownloadModal()">Maybe later</button>
                 </div>
             </div>
         </div>
 
-        <div id="book-reader-modal" class="prompt-modal hidden">
+        <div id="book-reader-modal" class="prompt-modal hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="book-reader-title">
             <div class="prompt-modal-backdrop" onclick="closeBookReaderModal()"></div>
             <div class="prompt-modal-panel bg-slate-900 text-slate-100 border-white/10 book-reader-panel">
                 <div class="flex items-start justify-between gap-3 mb-3">
@@ -575,14 +646,14 @@
                         <h3 id="book-reader-title" class="text-lg font-semibold text-indigo-300">Book</h3>
                         <p id="book-reader-meta" class="text-xs text-slate-300"></p>
                     </div>
-                    <button class="prompt-close text-slate-200" onclick="closeBookReaderModal()">✕</button>
+                    <button type="button" class="prompt-close text-slate-200" onclick="closeBookReaderModal()" aria-label="Close book reader">✕</button>
                 </div>
                 <div class="book-reader-frame-shell">
                     <iframe id="book-reader-frame" class="book-reader-frame" title="Book reader"></iframe>
                 </div>
                 <div class="flex flex-wrap gap-2 mt-3">
                     <a id="book-reader-download" href="#" target="_blank" rel="noopener noreferrer" class="prompt-submit" data-i18n="books.download">Download</a>
-                    <button class="px-3 py-2 rounded-lg bg-slate-800 text-slate-100 border border-white/10" onclick="closeBookReaderModal()" data-i18n="books.closeReader">Close Reader</button>
+                    <button type="button" class="px-3 py-2 rounded-lg bg-slate-800 text-slate-100 border border-white/10" onclick="closeBookReaderModal()" data-i18n="books.closeReader">Close Reader</button>
                 </div>
             </div>
         </div>
@@ -647,10 +718,10 @@
             <div class="flex flex-col gap-3">
         <div class="w-full flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2 gap-3">
                     <div class="flex-1">
-                        <input type="text" id="search-input" placeholder="Search modules by title, description, or topics..." class="w-full px-3 py-2 sm:py-2.5 rounded-lg border transition-all duration-200 text-sm sm:text-base bg-white border-slate-300 text-slate-900 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-900/60 border-white/10 text-slate-100 placeholder-slate-400">
+                        <input type="text" id="search-input" placeholder="Search modules by title, description, or topics..." class="w-full px-3 py-2 sm:py-2.5 rounded-lg border transition-all duration-200 text-sm sm:text-base bg-white border-slate-300 text-slate-900 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-900/60 border-white/10 text-slate-100 placeholder-slate-400" aria-label="Search modules">
                     </div>
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                        <select id="difficulty-filter" class="w-full sm:w-48 px-3 py-2 sm:py-2.5 rounded-lg border transition-all duration-200 text-sm sm:text-base bg-white border-slate-300 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-900/60 border-white/10 text-slate-100">
+                        <select id="difficulty-filter" class="w-full sm:w-48 px-3 py-2 sm:py-2.5 rounded-lg border transition-all duration-200 text-sm sm:text-base bg-white border-slate-300 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-900/60 border-white/10 text-slate-100" aria-label="Filter modules by difficulty">
                             <option value="all">All Levels</option>
                             <option value="beginner">Beginner</option>
                             <option value="intermediate">Intermediate</option>
@@ -720,8 +791,17 @@
                             </a>
                         </div>
                     </article>
-                </div>
 
+                    <article class="site-footer-card">
+                        <h5 class="site-footer-card-title" data-i18n="footer.trust.title">Trust &amp; Legal</h5>
+                        <div class="site-footer-card-list">
+                            <a class="footer-link" href="privacy-policy.html" data-i18n="footer.trust.privacy">Privacy Policy</a>
+                            <a class="footer-link" href="terms-of-use.html" data-i18n="footer.trust.terms">Terms of Use</a>
+                            <a class="footer-link" href="contact-support.html" data-i18n="footer.trust.contact">Contact / Support</a>
+                            <a class="footer-link" href="donations-refunds.html" data-i18n="footer.trust.refunds">Donations &amp; Refunds</a>
+                        </div>
+                    </article>
+                </div>
                 <div class="site-footer-bottom">
                     <p data-i18n="footer.bottom.author">Created for CS students by Eddy Arriaga-B</p>
                     <p data-i18n="footer.bottom.copyright">CS Course Atlas © 2024 | Open Source ❤️</p>
@@ -729,21 +809,22 @@
             </div>
         </footer>
     </div>
+    </div>
 
     <button id="site-guide-helper-btn" type="button" class="site-guide-fab" data-i18n="helper.badge" data-i18n-aria-label="helper.ariaLabel" aria-haspopup="dialog" aria-controls="site-guide-modal" aria-expanded="false">
         💡 Quick Guide
     </button>
 
-    <div id="settings-modal" class="modal-backdrop fixed inset-0 flex items-center justify-center z-50 p-4" style="display: none; background: rgba(5,8,18,0.65); backdrop-filter: blur(6px);">
+    <div id="settings-modal" class="modal-backdrop fixed inset-0 flex items-center justify-center z-50 p-4" style="display: none; background: rgba(5,8,18,0.65); backdrop-filter: blur(6px);" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="settings-modal-title">
         <div class="modal-panel w-full shadow-2xl" style="max-width: 32rem; background: var(--surface-primary); border: 1px solid var(--surface-border);">
             <!-- Gradient Header -->
             <div class="settings-modal-header">
                 <div style="display:flex; justify-content:space-between; align-items:flex-start; position:relative; z-index:1;">
                     <div>
-                        <h3 data-i18n="settings.title">⚙️ Settings</h3>
+                        <h3 id="settings-modal-title" data-i18n="settings.title">⚙️ Settings</h3>
                         <p data-i18n="settings.subtitle">Customize your learning experience</p>
                     </div>
-                    <button id="close-settings" class="settings-modal-header-close" aria-label="Close settings">×</button>
+                    <button id="close-settings" type="button" class="settings-modal-header-close" aria-label="Close settings">×</button>
                 </div>
             </div>
 
@@ -923,35 +1004,41 @@
         </div>
     </div>
 
-    <div id="glossary-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
-            <div class="modal-panel rounded-2xl w-full max-w-5xl shadow-2xl flex flex-col bg-white text-slate-900 border border-slate-200 max-h-[90vh] overflow-hidden bg-slate-900 text-slate-100 border-white/10">
-                <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
-                    <h3 class="text-3xl font-semibold text-indigo-600 text-2xl">📚 CS Course Atlas Glossary</h3>
-                    <button id="close-glossary" class="text-2xl transition-colors duration-200 hover:scale-110 text-slate-500 hover:text-slate-700 text-slate-200">×</button>
+    <div id="glossary-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="glossary-modal-title">
+        <div class="modal-panel rounded-2xl w-full max-w-5xl shadow-2xl flex flex-col bg-white text-slate-900 border border-slate-200 max-h-[90vh] overflow-hidden bg-slate-900 text-slate-100 border-white/10">
+            <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
+                <h3 id="glossary-modal-title" class="text-3xl font-semibold text-indigo-600 text-2xl" data-i18n="glossary.title">CS Course Atlas Glossary</h3>
+                <button id="close-glossary" type="button" class="text-2xl transition-colors duration-200 hover:scale-110 text-slate-500 hover:text-slate-700 text-slate-200" aria-label="Close glossary">×</button>
+            </div>
+            <div class="glossary-modal-body p-5 sm:p-6 pb-4 space-y-4">
+                <input type="text" id="glossary-search" data-i18n-placeholder="glossary.searchPlaceholder" placeholder="Search glossary terms..." class="w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-white border-slate-300 text-slate-900 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-400">
+                <div class="glossary-controls">
+                    <div class="glossary-sort-control">
+                        <label for="glossary-sort" class="glossary-control-label" data-i18n="glossary.sortLabel">Sort</label>
+                        <select id="glossary-sort" class="glossary-sort-select"></select>
+                    </div>
+                    <button id="glossary-reset-filters" type="button" class="glossary-reset-btn" data-i18n="glossary.clearFilters">Clear filters</button>
                 </div>
-            <div class="p-6 pb-4 space-y-4 space-y-3 p-5">
-                <input type="text" id="glossary-search" placeholder="Search glossary terms..." class="w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-white border-slate-300 text-slate-900 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-400">
                 <div id="glossary-stats" class="glossary-stats text-xs sm:text-sm text-slate-500 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-slate-300">
                     <span>Browse curated Computer Science terminology.</span>
                     <span>Filter by category to focus your study.</span>
                 </div>
                 <div id="glossary-categories" class="glossary-chip-row flex flex-wrap gap-2"></div>
+                <div id="glossary-letters" class="glossary-letter-row flex flex-wrap gap-2"></div>
             </div>
-            <div class="flex-1 overflow-y-auto px-6 pb-6 px-5 pb-5">
-                <div id="glossary-content" class="grid grid-cols-1 md:grid-cols-2 gap-4 gap-3">
-                    </div>
+            <div class="flex-1 overflow-y-auto px-5 sm:px-6 pb-5 sm:pb-6">
+                <div id="glossary-content" class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4"></div>
             </div>
         </div>
     </div>
-
-    <div id="flashcards-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+    <div id="flashcards-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="flashcards-modal-title">
         <div class="flashcards-modal-panel rounded-2xl w-full max-w-5xl shadow-2xl bg-white text-slate-900 border border-slate-200 bg-slate-900 text-slate-100 border-white/10">
             <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
                 <div>
-                    <h3 class="text-3xl font-semibold text-indigo-600 text-indigo-300">🎯 Flashcards Studio</h3>
+                    <h3 id="flashcards-modal-title" class="text-3xl font-semibold text-indigo-600 text-indigo-300">🎯 Flashcards Studio</h3>
                     <p class="text-sm text-slate-300 mt-1">Study by deck, run focused sessions, and flip quickly with clean progress tracking.</p>
                 </div>
-                <button id="close-flashcards" class="text-2xl transition-colors duration-200 hover:scale-110 text-slate-500 hover:text-slate-700 text-slate-200">×</button>
+                <button id="close-flashcards" type="button" class="text-2xl transition-colors duration-200 hover:scale-110 text-slate-500 hover:text-slate-700 text-slate-200" aria-label="Close flashcards">×</button>
             </div>
             <div class="flashcards-shell p-8 text-slate-100">
                 <div class="flashcards-top-grid mb-6">
@@ -988,7 +1075,7 @@
                 </div>
 
                 <div class="flashcards-grid mb-4 flashcards-stage">
-                    <div class="flashcard-shell cursor-pointer" id="flashcard-content"></div>
+                    <div class="flashcard-shell cursor-pointer" id="flashcard-content" role="button" tabindex="0" aria-label="Flashcard content. Press Enter or Space to flip."></div>
                 </div>
 
                 <div class="flashcard-controls">
@@ -998,22 +1085,22 @@
         </div>
     </div>
 
-    <div id="quiz-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+    <div id="quiz-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="quiz-title">
         <div class="rounded-2xl w-full max-w-4xl shadow-2xl bg-white text-slate-900 border border-slate-200 max-h-90vh overflow-y-auto bg-slate-900 text-slate-100 border-white/10">
             <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
                 <h3 id="quiz-title" class="text-2xl font-semibold text-indigo-600 text-indigo-300">🧠 Quiz</h3>
-                <button id="close-quiz" class="text-2xl transition-colors duration-200 hover:scale-110 text-slate-500 hover:text-slate-700 text-slate-200">×</button>
+                <button id="close-quiz" type="button" class="text-2xl transition-colors duration-200 hover:scale-110 text-slate-500 hover:text-slate-700 text-slate-200" aria-label="Close quiz">×</button>
             </div>
             <div id="quiz-content" class="p-8 text-slate-100">
                 </div>
         </div>
     </div>
 
-    <div id="study-plan-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+    <div id="study-plan-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="study-plan-title">
         <div class="modal-panel rounded-2xl w-full max-w-xl shadow-2xl bg-white text-slate-900 border border-slate-200 bg-slate-900 text-slate-100 border-white/10">
             <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
-                <h3 class="text-2xl font-semibold text-indigo-600 text-indigo-300">Build Your Study Plan</h3>
-                <button id="close-study-plan" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700 text-slate-200">×</button>
+                <h3 id="study-plan-title" class="text-2xl font-semibold text-indigo-600 text-indigo-300">Build Your Study Plan</h3>
+                <button id="close-study-plan" type="button" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700 text-slate-200" aria-label="Close study plan">×</button>
             </div>
             <div class="p-6 space-y-5">
                 <div>
@@ -1051,21 +1138,21 @@
         </div>
     </div>
 
-    <div id="account-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
-        <div class="modal-panel rounded-2xl w-full max-w-xl shadow-2xl bg-white text-slate-900 border border-slate-200 bg-slate-900 text-slate-100 border-white/10">
-            <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
+    <div id="account-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="account-modal-title">
+        <div class="modal-panel account-modal-panel rounded-2xl w-full max-w-xl shadow-2xl bg-white text-slate-900 border border-slate-200 bg-slate-900 text-slate-100 border-white/10">
+            <div class="account-modal-header flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
                 <div>
-                    <h3 class="text-2xl font-semibold text-indigo-300">Account &amp; Secure Access</h3>
+                    <h3 id="account-modal-title" class="text-2xl font-semibold text-indigo-300">Account &amp; Secure Access</h3>
                     <p class="text-sm text-slate-300 mt-1">Clean auth flow with secure session-based access.</p>
                 </div>
-                <button id="close-account" class="text-2xl transition-colors duration-200 text-slate-200 hover:text-white">×</button>
+                <button id="close-account" type="button" class="account-modal-header-close text-2xl transition-colors duration-200 text-slate-200 hover:text-white" aria-label="Close account dialog">&times;</button>
             </div>
 
-            <div class="p-6">
-                <div class="rounded-2xl border border-indigo-300/30 bg-gradient-to-br from-indigo-500/10 to-slate-900 p-5 space-y-4">
-                    <div class="grid grid-cols-2 gap-2 p-1 rounded-xl bg-slate-800/80 border border-white/10">
-                        <button id="account-auth-login-tab" type="button" class="px-4 py-2 rounded-lg text-sm font-semibold bg-violet-500 text-white transition-colors duration-200">Log In</button>
-                        <button id="account-auth-signup-tab" type="button" class="px-4 py-2 rounded-lg text-sm font-semibold bg-transparent text-slate-300 hover:text-white transition-colors duration-200">Sign Up</button>
+            <div class="account-modal-body p-6">
+                <div class="account-auth-card rounded-2xl border border-indigo-300/30 bg-gradient-to-br from-indigo-500/10 to-slate-900 p-5 space-y-4">
+                    <div class="account-auth-tabs grid grid-cols-2 gap-2 p-1 rounded-xl bg-slate-800/80 border border-white/10">
+                        <button id="account-auth-login-tab" type="button" class="account-auth-tab px-4 py-2 rounded-lg text-sm font-semibold bg-violet-500 text-white transition-colors duration-200">Log In</button>
+                        <button id="account-auth-signup-tab" type="button" class="account-auth-tab px-4 py-2 rounded-lg text-sm font-semibold bg-transparent text-slate-300 hover:text-white transition-colors duration-200">Sign Up</button>
                     </div>
                     <div>
                         <label for="account-auth-email" class="font-semibold text-sm mb-1 block text-slate-200">Email</label>
@@ -1083,11 +1170,11 @@
                         <label for="account-auth-confirm" class="font-semibold text-sm mb-1 block text-slate-200">Confirm Password</label>
                         <input type="password" id="account-auth-confirm" autocomplete="new-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="••••••••">
                     </div>
-                    <button id="account-auth-submit" type="button" class="w-full bg-violet-500 hover:bg-violet-600 text-white py-2.5 rounded-xl font-medium">Log In</button>
-                    <p id="account-auth-status" class="text-xs text-slate-300">Not authenticated.</p>
+                    <button id="account-auth-submit" type="button" class="account-primary-btn w-full bg-violet-500 hover:bg-violet-600 text-white py-2.5 rounded-xl font-medium">Log In</button>
+                    <p id="account-auth-status" class="text-xs text-slate-300" role="status" aria-live="polite" data-i18n="auth.status.guest">Guest mode active. Create a free account to sync progress across devices.</p>
                 </div>
 
-                <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-5 space-y-4 mt-4">
+                <div class="account-profile-card rounded-2xl border border-white/10 bg-slate-900/70 p-5 space-y-4 mt-4">
                     <div class="flex items-center justify-between gap-2">
                         <h4 class="text-base font-semibold text-indigo-300">Profile Settings</h4>
                         <span id="account-sync-status" class="text-xs font-semibold px-2.5 py-1 rounded-full border bg-slate-800 border-white/10 text-slate-200">idle</span>
@@ -1111,7 +1198,7 @@
                             </select>
                         </div>
                     </div>
-                    <button id="save-account" type="button" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2.5 rounded-xl font-medium">Save Profile Settings</button>
+                    <button id="save-account" type="button" class="account-primary-btn w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2.5 rounded-xl font-medium">Save Profile Settings</button>
                     <p id="account-sync-meta" class="text-xs text-slate-300">Profile sync status will appear here.</p>
                 </div>
             </div>
@@ -1119,11 +1206,11 @@
         </div>
     </div>
 
-    <div id="support-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+    <div id="support-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="support-modal-title">
         <div class="modal-panel rounded-2xl w-full max-w-lg shadow-2xl bg-white text-slate-900 border border-slate-200 bg-slate-900 text-slate-100 border-white/10">
             <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
-                <h3 class="text-2xl font-semibold text-indigo-600 text-indigo-300">Student Support</h3>
-                <button id="close-support" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700 text-slate-200">×</button>
+                <h3 id="support-modal-title" class="text-2xl font-semibold text-indigo-600 text-indigo-300">Student Support</h3>
+                <button id="close-support" type="button" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700 text-slate-200" aria-label="Close support dialog">×</button>
             </div>
             <form id="support-form" class="p-6 space-y-4">
                 <div>
@@ -1136,8 +1223,9 @@
                 </div>
                 <div>
                     <label for="support-message" class="font-semibold text-slate-800 text-sm mb-1 block text-slate-200">Message</label>
-                    <textarea id="support-message" rows="4" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 bg-slate-800 border-white/10 text-slate-100" placeholder="Provide detail so a mentor can help quickly."></textarea>
+                    <textarea id="support-message" rows="4" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 bg-slate-800 border-white/10 text-slate-100" placeholder="Provide detail so a mentor can help quickly." aria-describedby="support-form-error"></textarea>
                 </div>
+                <p id="support-form-error" class="form-error-text" role="alert" aria-live="assertive"></p>
                 <div class="space-y-2">
                     <p class="text-xs text-slate-500 text-slate-300">Submitting routes your note to the mentor inbox. Responses arrive via email once live.</p>
                     <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl font-medium">Send Support Request</button>
@@ -1146,15 +1234,15 @@
         </div>
     </div>
 
-    <div id="interactive-quiz-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+    <div id="interactive-quiz-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="interactive-quiz-title">
         <div class="modal-panel rounded-2xl w-full max-w-5xl shadow-2xl bg-white text-slate-900 border border-slate-200 bg-slate-900 text-slate-100 border-white/10">
             <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
                 <div>
                     <p class="text-xs uppercase tracking-wide text-slate-500 font-semibold text-slate-300">Quick Practice</p>
-                    <h3 class="text-2xl font-semibold text-indigo-600 text-indigo-300">Interactive Quizzes</h3>
+                    <h3 id="interactive-quiz-title" class="text-2xl font-semibold text-indigo-600 text-indigo-300">Interactive Quizzes</h3>
                     <p class="text-sm text-slate-600 text-slate-200">Pick any module, answer each question with instant feedback, and revisit explanations.</p>
                 </div>
-                <button id="close-interactive-quiz" onclick="closeInteractiveQuizLibrary()" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700 text-slate-200">×</button>
+                <button id="close-interactive-quiz" type="button" onclick="closeInteractiveQuizLibrary()" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700 text-slate-200" aria-label="Close interactive quizzes">×</button>
             </div>
             <div class="p-6 space-y-4">
                 <div class="flex flex-col lg:flex-row lg:items-center gap-3">
@@ -1246,3 +1334,4 @@
     <script src="js/script.js"></script>
 </body>
 </html>
+

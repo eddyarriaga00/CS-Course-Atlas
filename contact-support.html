@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact and Support | CS Course Atlas</title>
+    <meta name="description" content="Contact and support options for CS Course Atlas.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Pixelify+Sans:wght@400&family=Silkscreen:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/trust-pages.css">
+</head>
+<body>
+    <header class="trust-header">
+        <div class="trust-shell trust-header-inner">
+            <a class="trust-home-link" href="index.html">Back to CS Course Atlas</a>
+            <nav class="trust-nav" aria-label="Trust pages">
+                <a class="trust-nav-link" href="privacy-policy.html">Privacy Policy</a>
+                <a class="trust-nav-link" href="terms-of-use.html">Terms of Use</a>
+                <a class="trust-nav-link is-active" href="contact-support.html">Contact / Support</a>
+                <a class="trust-nav-link" href="donations-refunds.html">Donations &amp; Refunds</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="trust-main">
+        <article class="trust-card">
+            <h1>Contact and Support</h1>
+            <p class="trust-meta">Last updated: March 11, 2026</p>
+            <p>Use this page for questions, bug reports, content corrections, or support needs related to CS Course Atlas.</p>
+
+            <div class="contact-grid">
+                <section class="contact-card">
+                    <h3>In-App Support</h3>
+                    <p>Use the form below to send a support request directly to the platform support queue.</p>
+                </section>
+                <section class="contact-card">
+                    <h3>Response Goal</h3>
+                    <p>Most requests receive an initial response within 2 to 5 business days.</p>
+                </section>
+                <section class="contact-card">
+                    <h3>Bug Reports</h3>
+                    <p>Include steps to reproduce, expected behavior, and what happened instead.</p>
+                </section>
+                <section class="contact-card">
+                    <h3>Billing Questions</h3>
+                    <p>For donation charge concerns, include transaction date, amount, and receipt ID.</p>
+                </section>
+            </div>
+
+            <form id="public-support-form" class="support-form" novalidate>
+                <div class="support-form-grid">
+                    <div class="support-field">
+                        <label for="support-email">Email (optional)</label>
+                        <input id="support-email" name="email" type="email" maxlength="255" placeholder="you@example.com">
+                    </div>
+                    <div class="support-field">
+                        <label for="support-module-id">Module (optional)</label>
+                        <select id="support-module-id" name="moduleId">
+                            <option value="">General support</option>
+                            <option value="java-basics">Java Fundamentals</option>
+                            <option value="git-basics-workflow">Git Basics</option>
+                            <option value="control-flow">Control Flow</option>
+                            <option value="oop-basics">OOP Basics</option>
+                            <option value="collections-framework">Collections Framework</option>
+                            <option value="data-structures">Data Structures</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="support-field" style="margin-top:0.72rem;">
+                    <label for="support-topic">Topic</label>
+                    <input id="support-topic" name="topic" type="text" maxlength="200" placeholder="Example: Quiz grading bug or donation receipt question">
+                </div>
+
+                <div class="support-field" style="margin-top:0.72rem;">
+                    <label for="support-message">Message</label>
+                    <textarea id="support-message" name="message" maxlength="5000" required placeholder="Describe your issue clearly, including what you expected and what happened."></textarea>
+                </div>
+
+                <div class="support-actions">
+                    <button id="support-submit" class="support-submit" type="submit">Send Support Request</button>
+                    <p id="support-status" class="support-status" role="status" aria-live="polite"></p>
+                </div>
+            </form>
+
+            <div class="trust-note">Need immediate self-help? Return to the main site and use Quick Guide, Settings, and module definitions to troubleshoot common issues.</div>
+
+            <div class="trust-footer">
+                <p>CS Course Atlas Contact and Support</p>
+            </div>
+        </article>
+    </main>
+
+    <script>
+        (function () {
+            const form = document.getElementById('public-support-form');
+            const submitButton = document.getElementById('support-submit');
+            const status = document.getElementById('support-status');
+            const emailInput = document.getElementById('support-email');
+            const moduleInput = document.getElementById('support-module-id');
+            const topicInput = document.getElementById('support-topic');
+            const messageInput = document.getElementById('support-message');
+
+            function showStatus(kind, text) {
+                status.textContent = text;
+                status.className = 'support-status is-visible ' + kind;
+            }
+
+            form.addEventListener('submit', async function (event) {
+                event.preventDefault();
+                const message = messageInput.value.trim();
+                if (!message) {
+                    showStatus('error', 'Message is required.');
+                    messageInput.focus();
+                    return;
+                }
+
+                submitButton.disabled = true;
+                showStatus('success', 'Sending...');
+
+                const payload = {
+                    email: emailInput.value.trim() || null,
+                    moduleId: moduleInput.value || null,
+                    topic: topicInput.value.trim() || null,
+                    message,
+                    language: 'en'
+                };
+
+                try {
+                    const response = await fetch('/api/support', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        credentials: 'omit',
+                        body: JSON.stringify(payload)
+                    });
+
+                    const data = await response.json().catch(function () {
+                        return {};
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(data.error || 'Unable to submit request right now.');
+                    }
+
+                    form.reset();
+                    const requestLabel = data && data.requestId ? ' Request ID: ' + data.requestId + '.' : '';
+                    showStatus('success', 'Support request submitted.' + requestLabel);
+                } catch (error) {
+                    showStatus('error', error.message || 'Unable to submit request right now.');
+                } finally {
+                    submitButton.disabled = false;
+                }
+            });
+        }());
+    </script>
+</body>
+</html>
