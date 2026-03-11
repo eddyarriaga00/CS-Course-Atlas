@@ -4652,6 +4652,37 @@ body.dark .site-guide-row {
     background: rgba(148, 163, 184, 0.08);
 }
 
+.site-guide-row-title {
+    margin-bottom: 0.2rem;
+}
+
+.site-guide-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.22rem 0.58rem;
+    border-radius: 999px;
+    border: 1px solid rgba(16, 185, 129, 0.35);
+    background: rgba(16, 185, 129, 0.12);
+    color: #d1fae5;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.site-guide-checklist {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: grid;
+    gap: 0.35rem;
+    color: #e2e8f0;
+}
+
+body:not(.dark) .site-guide-checklist {
+    color: #334155;
+}
+
 @media (max-width: 640px) {
     .site-guide-fab {
         right: max(10px, env(safe-area-inset-right));
@@ -4706,6 +4737,12 @@ body.dark .site-guide-row {
     #site-guide-modal .site-guide-row {
         padding: 0.62rem 0.68rem;
         border-radius: 0.72rem;
+    }
+
+    #site-guide-modal .site-guide-checklist {
+        gap: 0.32rem;
+        font-size: 0.8rem;
+        padding-left: 0.95rem;
     }
 
     #site-guide-modal .site-guide-modal-footer {

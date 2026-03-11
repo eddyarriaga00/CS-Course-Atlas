@@ -441,6 +441,11 @@ const TRANSLATIONS = {
         'helper.closeAria': 'Close quick website guide',
         'helper.goalTitle': 'Goal of CS Course Atlas',
         'helper.goalText': 'Help Computer Science students learn faster across multiple classes with clear explanations, runnable examples, and guided practice tools.',
+        'helper.startTitle': 'Start Here (3 steps)',
+        'helper.startChip': 'Fast setup',
+        'helper.startStep1': 'Pick a Topic Focus and open the first module in that track.',
+        'helper.startStep2': 'Use Code Playground or Data Structure Playground to practice immediately.',
+        'helper.startStep3': 'Finish with a quiz + flashcards and mark progress complete.',
         'helper.sectionModulesTitle': 'Modules',
         'helper.sectionModulesText': 'Structured learning tracks with code examples, theory mode (for discrete), definitions, and resources.',
         'helper.sectionPlaygroundTitle': 'Code Playground',
@@ -449,10 +454,17 @@ const TRANSLATIONS = {
         'helper.sectionDataText': 'Interactive visuals for arrays, stacks, queues, heaps, graphs, and tries with operation timeline and complexity view.',
         'helper.sectionPracticeTitle': 'Practice Tools',
         'helper.sectionPracticeText': 'Use flashcards, interactive quizzes, glossary, and interview examples to reinforce concepts.',
+        'helper.sectionResourcesTitle': 'Notes + Books Library',
+        'helper.sectionResourcesText': 'Use Notes Library for cheat sheets and the Books area for longer references you can read or download.',
         'playground.gitReadOnly': 'Git walkthrough mode (read-only)',
         'playground.gitReadOnlyHint': 'Git samples are locked for editing so you can focus on terminal commands and output.',
         'helper.sectionProgressTitle': 'Progress + Settings',
         'helper.sectionProgressText': 'Track completion, customize UI settings, and manage account/profile preferences.',
+        'helper.workflowTitle': 'Recommended Study Workflow',
+        'helper.workflowStep1': 'Learn concept in a module and read key definitions.',
+        'helper.workflowStep2': 'Run/modify code and verify output.',
+        'helper.workflowStep3': 'Lock understanding with quiz + flashcards.',
+        'helper.workflowStep4': 'Save notes and track completion so insights stay accurate.',
         'helper.closeBtn': 'Got it',
         // Footer
         'footer.kicker': 'Built for Computer Science students',
@@ -669,6 +681,11 @@ const TRANSLATIONS = {
         'helper.closeAria': 'Cerrar guía rápida del sitio web',
         'helper.goalTitle': 'Objetivo de CS Course Atlas',
         'helper.goalText': 'Ayudar a estudiantes de Ciencias de la Computación a aprender más rápido en múltiples clases con explicaciones claras, ejemplos ejecutables y herramientas guiadas de práctica.',
+        'helper.startTitle': 'Empieza Aquí (3 pasos)',
+        'helper.startChip': 'Inicio rápido',
+        'helper.startStep1': 'Elige un Enfoque de Tema y abre el primer módulo de esa ruta.',
+        'helper.startStep2': 'Usa el Playground de Código o de Estructuras para practicar de inmediato.',
+        'helper.startStep3': 'Cierra con quiz + flashcards y marca el progreso como completado.',
         'helper.sectionModulesTitle': 'Módulos',
         'helper.sectionModulesText': 'Rutas de aprendizaje estructuradas con ejemplos de código, modo teoría (para discreta), definiciones y recursos.',
         'helper.sectionPlaygroundTitle': 'Playground de Código',
@@ -677,10 +694,17 @@ const TRANSLATIONS = {
         'helper.sectionDataText': 'Visuales interactivos para arreglos, pilas, colas, montículos, grafos y tries con línea de tiempo de operaciones y vista de complejidad.',
         'helper.sectionPracticeTitle': 'Herramientas de Práctica',
         'helper.sectionPracticeText': 'Usa flashcards, cuestionarios interactivos, glosario y ejemplos de entrevista para reforzar conceptos.',
+        'helper.sectionResourcesTitle': 'Biblioteca de Notas + Libros',
+        'helper.sectionResourcesText': 'Usa la Biblioteca de Notas para guías rápidas y el área de Libros para referencias más largas que puedes leer o descargar.',
         'playground.gitReadOnly': 'Modo Git guiado (solo lectura)',
         'playground.gitReadOnlyHint': 'Las muestras de Git están bloqueadas para edición para que te enfoques en comandos de terminal y salida.',
         'helper.sectionProgressTitle': 'Progreso + Ajustes',
         'helper.sectionProgressText': 'Monitorea avance, personaliza ajustes de la interfaz y administra preferencias de cuenta/perfil.',
+        'helper.workflowTitle': 'Flujo de Estudio Recomendado',
+        'helper.workflowStep1': 'Aprende el concepto en un módulo y revisa las definiciones clave.',
+        'helper.workflowStep2': 'Ejecuta/modifica código y verifica la salida.',
+        'helper.workflowStep3': 'Fija el aprendizaje con quiz + flashcards.',
+        'helper.workflowStep4': 'Guarda notas y marca progreso para mantener insights precisos.',
         'helper.closeBtn': 'Entendido',
         // Footer
         'footer.kicker': 'Creado para estudiantes de Ciencias de la Computación',
@@ -7617,9 +7641,73 @@ function normalizeLocalizedCodeExampleSets(module, localizedModuleEntity = {}, l
     });
 }
 
+const CODE_COMMENT_FALLBACK_PHRASES_ES = [
+    ['Java parity markers (mirrors important Java output checkpoints)', 'Marcadores de paridad de Java (reflejan puntos clave de salida)'],
+    ['Topic checklist to ensure full conceptual coverage', 'Lista de temas para asegurar cobertura conceptual completa'],
+    ['This script keeps the same conceptual checkpoints and prints them clearly.', 'Este script mantiene los mismos puntos conceptuales y los imprime con claridad.'],
+    ['This keeps the same instructional checkpoints and visible output.', 'Esto mantiene los mismos puntos de instruccion y salida visible.'],
+    ['JavaScript mirror of the updated Java module sample.', 'Espejo en JavaScript del ejemplo actualizado en Java.'],
+    ['Python mirror of the updated Java module sample.', 'Espejo en Python del ejemplo actualizado en Java.'],
+    ['C++ mirror of the updated Java module sample.', 'Espejo en C++ del ejemplo actualizado en Java.'],
+    ['Java parity checkpoints from Java sample:', 'Puntos de paridad del ejemplo en Java:'],
+    ['High-level module walkthrough marker', 'Marcador de recorrido general del modulo'],
+    ['Runtime marker for learners', 'Marcador de ejecucion para estudiantes'],
+    ['- Follow inline comments from top to bottom.', '- Sigue los comentarios en linea de arriba hacia abajo.'],
+    ['- Run once, then edit one concept at a time and rerun.', '- Ejecuta una vez, luego edita un concepto a la vez y vuelve a ejecutar.'],
+    ['- Verify output after each logical step.', '- Verifica la salida despues de cada paso logico.'],
+    ['High-level module context', 'Contexto general del modulo'],
+    ['Reading strategy:', 'Estrategia de lectura:'],
+    ['Coverage goals:', 'Objetivos de cobertura:']
+];
+
+function translateCodeCommentBody(commentBody, targetLanguage = appState.language) {
+    if (targetLanguage !== 'es') return commentBody;
+    const original = String(commentBody ?? '');
+    const trimmed = original.trim();
+    if (!trimmed) return original;
+
+    const direct = translateLiteral(trimmed, 'es');
+    if (direct !== trimmed) {
+        return original.replace(trimmed, direct);
+    }
+
+    let translated = trimmed;
+    CODE_COMMENT_FALLBACK_PHRASES_ES.forEach(([sourcePhrase, targetPhrase]) => {
+        const pattern = new RegExp(escapeRegExp(sourcePhrase), 'gi');
+        translated = translated.replace(pattern, targetPhrase);
+    });
+
+    if (translated === trimmed) return original;
+    return original.replace(trimmed, translated);
+}
+
+function translateBlockComment(blockComment, targetLanguage = appState.language) {
+    if (targetLanguage !== 'es') return blockComment;
+    const source = String(blockComment || '');
+    if (!source.startsWith('/*') || !source.endsWith('*/')) return source;
+
+    const inner = source.slice(2, -2);
+    const translatedInner = inner.split('\n').map((line) => {
+        const match = line.match(/^(\s*\*?\s?)(.*?)(\s*)$/);
+        if (!match) return line;
+        const prefix = match[1];
+        const body = match[2];
+        const suffix = match[3];
+        if (!String(body || '').trim()) return line;
+        const translatedBody = translateCodeCommentBody(body, targetLanguage);
+        return `${prefix}${translatedBody}${suffix}`;
+    }).join('\n');
+
+    return `/*${translatedInner}*/`;
+}
+
 function translateCodeHumanText(code, targetLanguage = appState.language) {
     if (targetLanguage !== 'es' || typeof code !== 'string') return code;
-    return code.split('\n').map((line) => {
+    const withTranslatedBlockComments = code.replace(/\/\*[\s\S]*?\*\//g, (blockComment) => {
+        return translateBlockComment(blockComment, targetLanguage);
+    });
+
+    return withTranslatedBlockComments.split('\n').map((line) => {
         let nextLine = line;
         const trimmed = line.trim();
         const isCppDirective = /^#\s*(include|define|if|ifdef|ifndef|endif|pragma|import)\b/i.test(trimmed);
@@ -7627,23 +7715,23 @@ function translateCodeHumanText(code, targetLanguage = appState.language) {
         if (/^\s*;/.test(nextLine)) {
             const semicolonIdx = nextLine.indexOf(';');
             const head = nextLine.slice(0, semicolonIdx + 1);
-            const body = nextLine.slice(semicolonIdx + 1).trim();
-            const translated = translateLiteral(body, 'es');
-            nextLine = translated === body ? nextLine : `${head} ${translated}`;
+            const body = nextLine.slice(semicolonIdx + 1);
+            const translatedBody = translateCodeCommentBody(body, targetLanguage);
+            nextLine = translatedBody === body ? nextLine : `${head}${translatedBody}`;
         } else {
             const slashCommentIdx = nextLine.indexOf('//');
             if (slashCommentIdx >= 0) {
-            const head = nextLine.slice(0, slashCommentIdx + 2);
-            const body = nextLine.slice(slashCommentIdx + 2).trim();
-            const translated = translateLiteral(body, 'es');
-            nextLine = translated === body ? nextLine : `${head} ${translated}`;
+                const head = nextLine.slice(0, slashCommentIdx + 2);
+                const body = nextLine.slice(slashCommentIdx + 2);
+                const translatedBody = translateCodeCommentBody(body, targetLanguage);
+                nextLine = translatedBody === body ? nextLine : `${head}${translatedBody}`;
             } else if (!isCppDirective) {
                 const hashCommentIdx = nextLine.indexOf('#');
                 if (hashCommentIdx >= 0) {
                     const head = nextLine.slice(0, hashCommentIdx + 1);
-                    const body = nextLine.slice(hashCommentIdx + 1).trim();
-                    const translated = translateLiteral(body, 'es');
-                    nextLine = translated === body ? nextLine : `${head} ${translated}`;
+                    const body = nextLine.slice(hashCommentIdx + 1);
+                    const translatedBody = translateCodeCommentBody(body, targetLanguage);
+                    nextLine = translatedBody === body ? nextLine : `${head}${translatedBody}`;
                 }
             }
         }
