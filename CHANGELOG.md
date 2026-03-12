@@ -95,3 +95,31 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Frontend syntax check: `node --check js/script.js` (pass).
 - Backend syntax checks: `node --check server/index.js`, `server/security.js`, `server/db.js` (pass).
 
+### Refactor and Stability Sweep
+- Refactored module code-example-set override merging to prioritize stable set IDs and prevent ID collisions when topic counts change.
+- Fixed duplicate set-id and coverage regressions in `intro-to-coding` code example sets.
+- Added missing quiz coverage for new modules:
+  - `git-branching-merging`
+  - `java-memory-jvm`
+  - `discrete-graph-theory`
+  - `assembly-addressing-modes`
+  - `backtracking-patterns`
+- Rebuilt Spanish localization with full module/quiz parity, including localized module `codeExamples` and preserved resource URL objects.
+- Hardened localization generation for iCloud/workspace compatibility:
+  - cache path fallback when root dotfile is not writable
+  - serialized cache writes to prevent duplicate/conflict cache files
+  - block-comment translation support
+  - whitespace-tolerant literal translation lookup
+  - C/C++ preprocessor directive guard (prevents `#include` corruption)
+- Updated localization verifier function-boundary detection to remain stable with updated function signatures.
+- Added ignore rules for localization cache artifacts:
+  - `.translation-cache-es.json`
+  - `scripts/translation-cache-es.cache*.json`
+- Validation pass (all green):
+  - `node scripts/verify_catalog_integrity.js`
+  - `node scripts/verify_module_examples.js`
+  - `node scripts/verify_localization.js`
+  - `node scripts/verify_css_integrity.js`
+  - `node scripts/verify_module_outputs.js`
+  - `node scripts/verify_spanish_code_examples.js`
+

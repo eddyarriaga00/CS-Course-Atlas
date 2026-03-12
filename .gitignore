@@ -3,3 +3,5 @@ node_modules/
 .DS_Store
 .playwright-cli/
 output/
+.translation-cache-es.json
+scripts/translation-cache-es.cache*.json

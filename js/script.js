@@ -4332,6 +4332,141 @@ const quizData = {
                 }
             ]
         }]
+    },
+    'git-branching-merging': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Why do teams open pull requests from feature branches instead of committing directly to main?",
+                    options: ["To avoid using git pull", "To add review, CI checks, and safer merge control", "To reduce commit history size", "Because rebasing only works on branches"],
+                    correct: 1,
+                    explanation: "Feature branches isolate work and PRs add review plus automated validation before merging into main."
+                },
+                {
+                    id: 2,
+                    question: "A safe first step when you hit a merge conflict is to:",
+                    options: ["Delete the conflicted file", "Run git push --force immediately", "Read conflict markers and resolve file-by-file, then test", "Reset all branches to origin/main"],
+                    correct: 2,
+                    explanation: "You should resolve conflicts deliberately, verify behavior, and only then complete the merge/rebase flow."
+                },
+                {
+                    id: 3,
+                    question: "When should you prefer revert over reset for undoing shared history?",
+                    options: ["When branch is local-only", "When commit is already pushed and others may depend on it", "When you want to rewrite all history", "Never"],
+                    correct: 1,
+                    explanation: "Revert creates a new inverse commit, preserving published history safely for collaborators."
+                }
+            ]
+        }]
+    },
+    'java-memory-jvm': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Objects created with new in Java are typically stored in:",
+                    options: ["The call stack", "The heap", "CPU registers only", "Thread local native memory only"],
+                    correct: 1,
+                    explanation: "References may live on the stack, but object instances are allocated in heap-managed memory."
+                },
+                {
+                    id: 2,
+                    question: "The purpose of the JVM garbage collector is to:",
+                    options: ["Sort arrays faster", "Reclaim memory for unreachable objects", "Compile Java into Python", "Prevent all memory leaks automatically"],
+                    correct: 1,
+                    explanation: "GC identifies unreachable objects and recovers heap space to reduce manual memory management burden."
+                },
+                {
+                    id: 3,
+                    question: "A memory leak can still happen in Java when:",
+                    options: ["The JVM is running", "References to unused objects are kept alive unintentionally", "Using primitive types", "Using final variables"],
+                    correct: 1,
+                    explanation: "If references remain reachable (for example in long-lived collections), GC cannot reclaim that memory."
+                }
+            ]
+        }]
+    },
+    'discrete-graph-theory': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "In graph theory, a path is:",
+                    options: ["Any random list of nodes", "A sequence of vertices where consecutive vertices are connected by edges", "Only a cycle", "Only a weighted route"],
+                    correct: 1,
+                    explanation: "A path requires adjacency between each consecutive pair in the sequence."
+                },
+                {
+                    id: 2,
+                    question: "A graph is connected when:",
+                    options: ["It has no cycles", "Every vertex is reachable from every other vertex", "It has at least one edge", "It is directed"],
+                    correct: 1,
+                    explanation: "Connectivity means there is some path between every pair of vertices."
+                },
+                {
+                    id: 3,
+                    question: "Breadth-first search is especially useful for:",
+                    options: ["Deep recursion only", "Finding shortest path length in unweighted graphs", "Sorting all edges by weight", "Computing matrix determinants"],
+                    correct: 1,
+                    explanation: "BFS explores level by level, giving shortest hop counts in unweighted graphs."
+                }
+            ]
+        }]
+    },
+    'assembly-addressing-modes': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Immediate addressing means the instruction operand is:",
+                    options: ["Stored in memory at an address register", "A literal value encoded directly in the instruction", "Always the stack pointer", "Always fetched from cache line 0"],
+                    correct: 1,
+                    explanation: "Immediate mode embeds a constant directly in the instruction stream."
+                },
+                {
+                    id: 2,
+                    question: "Register-indirect addressing typically uses:",
+                    options: ["A register as a pointer to memory", "Two immediate constants", "A hardcoded absolute address only", "No operand at all"],
+                    correct: 0,
+                    explanation: "The register holds an address; the CPU dereferences it to read/write memory."
+                },
+                {
+                    id: 3,
+                    question: "Base + offset addressing is common because it:",
+                    options: ["Eliminates memory access", "Helps index structured data like arrays and stack frames", "Prevents branching", "Only works in 8-bit CPUs"],
+                    correct: 1,
+                    explanation: "Using a base register plus displacement is efficient for structured layouts in memory."
+                }
+            ]
+        }]
+    },
+    'backtracking-patterns': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Backtracking is best described as:",
+                    options: ["A pure greedy method", "Systematically exploring choices and undoing partial decisions when constraints fail", "A sorting algorithm", "A hashing strategy"],
+                    correct: 1,
+                    explanation: "It builds candidate states, prunes invalid paths, and reverts state to explore alternatives."
+                },
+                {
+                    id: 2,
+                    question: "Pruning in backtracking improves performance by:",
+                    options: ["Adding randomization", "Skipping branches that cannot lead to valid solutions", "Using more recursion depth", "Sorting outputs alphabetically"],
+                    correct: 1,
+                    explanation: "Early elimination of impossible branches reduces the search space significantly."
+                },
+                {
+                    id: 3,
+                    question: "A common implementation pattern in backtracking is to:",
+                    options: ["Mutate state without undo", "Track choices recursively, then undo (pop/unmark) on return", "Use only loops with no recursion", "Store everything globally forever"],
+                    correct: 1,
+                    explanation: "The choose-explore-unchoose cycle keeps each recursive frame logically isolated."
+                }
+            ]
+        }]
     }
 };
 // Modules Data (Complete with ALL LANGUAGES)
@@ -10058,9 +10193,76 @@ function getModuleExampleDeepExplanation(moduleId, exampleId, setItem = null) {
 
 function normalizeModuleCodeExampleSets(module) {
     const overrideSets = MODULE_CODE_EXAMPLE_SET_OVERRIDES[module.id];
+    const generatedSets = buildGeneratedCodeExampleSets(module);
     const sourceSets = Array.isArray(overrideSets) && overrideSets.length
-        ? overrideSets
-        : buildGeneratedCodeExampleSets(module);
+        ? (() => {
+            const generatedIds = new Set(
+                generatedSets
+                    .map((setItem) => String(setItem?.id || '').trim())
+                    .filter(Boolean)
+            );
+            const overridesById = new Map();
+            overrideSets.forEach((setItem, index) => {
+                if (!setItem || typeof setItem !== 'object') return;
+                const overrideId = String(setItem.id || '').trim();
+                if (!overrideId || overridesById.has(overrideId)) return;
+                overridesById.set(overrideId, { setItem, index });
+            });
+
+            const usedOverrideIndexes = new Set();
+            return generatedSets.map((generatedSet, index) => {
+                const generatedId = String(generatedSet?.id || '').trim();
+                let overrideMatch = null;
+
+                if (generatedId && overridesById.has(generatedId)) {
+                    overrideMatch = overridesById.get(generatedId);
+                } else {
+                    const fallbackSet = overrideSets[index];
+                    if (fallbackSet && typeof fallbackSet === 'object') {
+                        const fallbackId = String(fallbackSet.id || '').trim();
+                        const hasIdCollision = fallbackId
+                            && fallbackId !== generatedId
+                            && generatedIds.has(fallbackId);
+                        if (!hasIdCollision) {
+                            overrideMatch = { setItem: fallbackSet, index };
+                        }
+                    }
+                }
+
+                if (!overrideMatch || usedOverrideIndexes.has(overrideMatch.index)) {
+                    return generatedSet;
+                }
+                usedOverrideIndexes.add(overrideMatch.index);
+                const overrideSet = overrideMatch.setItem;
+
+                const generatedCodeExamples = generatedSet?.codeExamples && typeof generatedSet.codeExamples === 'object'
+                    ? generatedSet.codeExamples
+                    : {};
+                const overrideCodeExamples = overrideSet?.codeExamples && typeof overrideSet.codeExamples === 'object'
+                    ? overrideSet.codeExamples
+                    : {};
+                const generatedExpectedOutputs = generatedSet?.expectedOutputs && typeof generatedSet.expectedOutputs === 'object'
+                    ? generatedSet.expectedOutputs
+                    : {};
+                const overrideExpectedOutputs = overrideSet?.expectedOutputs && typeof overrideSet.expectedOutputs === 'object'
+                    ? overrideSet.expectedOutputs
+                    : {};
+
+                return {
+                    ...generatedSet,
+                    ...overrideSet,
+                    codeExamples: {
+                        ...generatedCodeExamples,
+                        ...overrideCodeExamples
+                    },
+                    expectedOutputs: {
+                        ...generatedExpectedOutputs,
+                        ...overrideExpectedOutputs
+                    }
+                };
+            });
+        })()
+        : generatedSets;
     if (!Array.isArray(sourceSets) || !sourceSets.length) return;
     const isAssembly = MODULE_CATEGORY_BY_ID[module.id] === 'assembly';
 

@@ -136,7 +136,7 @@ function main() {
   });
 
   const renderModulesStart = source.indexOf('function renderModules() {');
-  const renderModulesEnd = source.indexOf('function getAchievementState()', renderModulesStart);
+  const renderModulesEnd = source.indexOf('function getAchievementState(', renderModulesStart);
   if (renderModulesStart >= 0 && renderModulesEnd > renderModulesStart) {
     const renderSource = source.slice(renderModulesStart, renderModulesEnd);
     const staleEnglishPhrases = [
