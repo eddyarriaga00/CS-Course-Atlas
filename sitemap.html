@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sitemap | CS Course Atlas</title>
+        <meta name="description" content="Human-readable sitemap for CS Course Atlas route pages, module pages, and trust pages.">
+        <meta name="robots" content="index,follow,max-image-preview:large">
+        <meta name="google-site-verification" content="REPLACE_WITH_GOOGLE_SEARCH_CONSOLE_TOKEN">
+        <link rel="canonical" href="https://eddyarriaga00.github.io/CS-Course-Atlas/sitemap.html">
+        <meta property="og:type" content="website">
+        <meta property="og:site_name" content="CS Course Atlas">
+        <meta property="og:title" content="Sitemap | CS Course Atlas">
+        <meta property="og:description" content="Human-readable sitemap for CS Course Atlas route pages, module pages, and trust pages.">
+        <meta property="og:url" content="https://eddyarriaga00.github.io/CS-Course-Atlas/sitemap.html">
+        <meta property="twitter:card" content="summary_large_image">
+        <meta property="twitter:title" content="Sitemap | CS Course Atlas">
+        <meta property="twitter:description" content="Human-readable sitemap for CS Course Atlas route pages, module pages, and trust pages.">
+        <link rel="icon" href="data:,">
+        <link rel="stylesheet" href="css/tailwind.css">
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Pixelify+Sans:wght@400&family=Silkscreen:wght@400&display=swap" rel="stylesheet">
+        <style>
+        :root {
+            color-scheme: dark;
+            --seo-bg-top: #020617;
+            --seo-bg-base: #0f172a;
+            --seo-bg-bottom: #111827;
+            --seo-panel: rgba(15, 23, 42, 0.72);
+            --seo-panel-soft: rgba(30, 41, 59, 0.7);
+            --seo-border: rgba(255, 255, 255, 0.12);
+            --seo-border-strong: rgba(165, 180, 252, 0.45);
+            --seo-text: #e2e8f0;
+            --seo-muted: #cbd5e1;
+            --seo-link: #93c5fd;
+            --seo-link-hover: #dbeafe;
+            --seo-brand-a: rgba(37, 99, 235, 0.9);
+            --seo-brand-b: rgba(79, 70, 229, 0.9);
+            --seo-brand-c: rgba(124, 58, 237, 0.9);
+            --seo-btn-grad-a: rgba(59, 130, 246, 0.22);
+            --seo-btn-grad-b: rgba(124, 58, 237, 0.22);
+        }
+        * { box-sizing: border-box; }
+        body.seo-page {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Pixelify Sans", "Silkscreen", "DotGothic16", monospace;
+            background:
+                radial-gradient(circle at 8% -6%, rgba(59, 130, 246, 0.26), transparent 42%),
+                radial-gradient(circle at 92% -8%, rgba(124, 58, 237, 0.28), transparent 44%),
+                linear-gradient(180deg, var(--seo-bg-top) 0%, var(--seo-bg-base) 56%, var(--seo-bg-bottom) 100%);
+            color: var(--seo-text);
+            line-height: 1.6;
+        }
+        .shell {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 1rem 1rem 2.2rem;
+        }
+        .top-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 0.7rem 0.8rem;
+            border: 1px solid var(--seo-border);
+            border-radius: 0.95rem;
+            background: linear-gradient(90deg, var(--seo-brand-a), var(--seo-brand-b), var(--seo-brand-c));
+            box-shadow: 0 16px 34px rgba(2, 6, 23, 0.32);
+        }
+        .top-nav a,
+        .top-nav button {
+            -webkit-appearance: none;
+            appearance: none;
+            text-decoration: none;
+            color: #f8fafc;
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            padding: 0.45rem 0.75rem;
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.45);
+            font-size: 0.82rem;
+            font-weight: 700;
+            line-height: 1.15;
+            cursor: pointer;
+            transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease;
+        }
+        .top-nav a:hover,
+        .top-nav button:hover {
+            background: rgba(15, 23, 42, 0.68);
+            border-color: var(--seo-border-strong);
+            transform: translateY(-1px);
+        }
+        .top-nav a:focus-visible,
+        .top-nav button:focus-visible {
+            outline: 2px solid #93c5fd;
+            outline-offset: 2px;
+        }
+        .top-nav .back-control {
+            background: linear-gradient(120deg, rgba(15, 23, 42, 0.76), rgba(30, 41, 59, 0.72));
+            border-color: rgba(191, 219, 254, 0.68);
+        }
+        .hero {
+            border: 1px solid var(--seo-border);
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.76));
+            border-radius: 1rem;
+            padding: 1.15rem 1.15rem;
+            box-shadow: 0 20px 44px rgba(2, 6, 23, 0.38);
+        }
+        h1 { margin: 0; font-size: clamp(1.55rem, 2.9vw, 2.1rem); color: #e0e7ff; line-height: 1.2; }
+        h2 { margin: 1.2rem 0 0.5rem; font-size: 1.06rem; color: #c7d2fe; }
+        p { margin: 0.45rem 0; color: var(--seo-muted); }
+        .cta-row {
+            margin-top: 0.8rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.55rem;
+        }
+        .cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            text-decoration: none;
+            color: #f8fafc;
+            background: linear-gradient(120deg, rgba(59, 130, 246, 0.36), rgba(124, 58, 237, 0.35));
+            border: 1px solid rgba(129, 140, 248, 0.52);
+            border-radius: 999px;
+            padding: 0.46rem 0.75rem;
+            font-size: 0.84rem;
+            font-weight: 700;
+            transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease;
+        }
+        .cta:hover {
+            background: linear-gradient(120deg, rgba(37, 99, 235, 0.45), rgba(109, 40, 217, 0.4));
+            border-color: rgba(165, 180, 252, 0.66);
+            transform: translateY(-1px);
+        }
+        ul {
+            margin: 0.45rem 0 0;
+            padding-left: 1.2rem;
+            list-style: disc;
+        }
+        li { margin: 0.26rem 0; }
+        a { color: var(--seo-link); }
+        a:hover { color: var(--seo-link-hover); }
+        .panel {
+            margin-top: 1rem;
+            border: 1px solid var(--seo-border);
+            border-radius: 0.95rem;
+            padding: 0.95rem 1rem;
+            background: linear-gradient(160deg, var(--seo-panel), var(--seo-panel-soft));
+            box-shadow: 0 14px 32px rgba(2, 6, 23, 0.22);
+        }
+        .meta { color: var(--seo-muted); font-size: 0.9rem; }
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 0.75rem;
+        }
+        .module-card {
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 0.8rem;
+            padding: 0.65rem 0.75rem;
+            background: rgba(15, 23, 42, 0.58);
+        }
+        .module-card h3 {
+            margin: 0;
+            font-size: 0.95rem;
+            color: #dbeafe;
+        }
+        .module-card p {
+            margin-top: 0.28rem;
+            font-size: 0.83rem;
+            color: #cbd5e1;
+        }
+        .footer {
+            margin-top: 1.2rem;
+            font-size: 0.83rem;
+            color: var(--seo-muted);
+        }
+        @media (max-width: 640px) {
+            .shell { padding: 0.85rem 0.7rem 1.5rem; }
+            .top-nav { gap: 0.45rem; }
+            .top-nav a,
+            .top-nav button { font-size: 0.76rem; padding: 0.42rem 0.62rem; }
+            .hero { padding: 0.9rem 0.92rem; }
+        }
+    </style>
+    </head>
+<body class="seo-page">
+    <div class="shell">
+        <nav class="top-nav" aria-label="Sitemap navigation">
+            <button type="button" class="back-control" data-back-fallback="tracks.html">&#8592; Back</button>
+            <a href="index.html">Interactive App</a>
+            <a href="tracks.html">Track Pages</a>
+            <a href="modules/index.html">Module Directory</a>
+            <a href="sitemap.xml">XML Sitemap</a>
+        </nav>
+        <header class="hero">
+            <h1>CS Course Atlas Sitemap</h1>
+            <p class="meta">Human-readable page index for route pages, modules, and trust content.</p>
+            <div class="cta-row">
+                <a class="cta" href="sitemap.xml">Open XML Sitemap</a>
+                <a class="cta" href="tracks.html">Open Track Pages</a>
+                <a class="cta" href="modules/index.html">Open Module Directory</a>
+            </div>
+        </header>
+        <section class="panel">
+            <h2>Core Pages</h2>
+            <ul>
+            <li>
+                <a href="index.html">Root</a>
+                <span class="meta">(/)</span>
+            </li>
+            <li>
+                <a href="index.html">Interactive App</a>
+                <span class="meta">(/index.html)</span>
+            </li>
+            <li>
+                <a href="sitemap.html">Sitemap</a>
+                <span class="meta">(/sitemap.html)</span>
+            </li>
+            <li>
+                <a href="sitemap.xml">XML Sitemap</a>
+                <span class="meta">(/sitemap.xml)</span>
+            </li></ul>
+        </section><section class="panel">
+            <h2>Routes Pages</h2>
+            <ul>
+            <li>
+                <a href="about.html">About CS Course Atlas</a>
+                <span class="meta">(/about.html)</span>
+            </li>
+            <li>
+                <a href="assembly.html">Assembly Track</a>
+                <span class="meta">(/assembly.html)</span>
+            </li>
+            <li>
+                <a href="discrete-math.html">Discrete Math Track</a>
+                <span class="meta">(/discrete-math.html)</span>
+            </li>
+            <li>
+                <a href="dsa.html">Data Structures and Algorithms Track</a>
+                <span class="meta">(/dsa.html)</span>
+            </li>
+            <li>
+                <a href="flashcards.html">Flashcards</a>
+                <span class="meta">(/flashcards.html)</span>
+            </li>
+            <li>
+                <a href="git.html">Git Track</a>
+                <span class="meta">(/git.html)</span>
+            </li>
+            <li>
+                <a href="home.html">CS Course Atlas Home</a>
+                <span class="meta">(/home.html)</span>
+            </li>
+            <li>
+                <a href="java.html">Java Track</a>
+                <span class="meta">(/java.html)</span>
+            </li>
+            <li>
+                <a href="notes.html">Notes and Library</a>
+                <span class="meta">(/notes.html)</span>
+            </li>
+            <li>
+                <a href="playground.html">Code Playground</a>
+                <span class="meta">(/playground.html)</span>
+            </li>
+            <li>
+                <a href="quizzes.html">Interactive Quizzes</a>
+                <span class="meta">(/quizzes.html)</span>
+            </li>
+            <li>
+                <a href="support.html">Support and Contact</a>
+                <span class="meta">(/support.html)</span>
+            </li>
+            <li>
+                <a href="tracks.html">Course Tracks</a>
+                <span class="meta">(/tracks.html)</span>
+            </li></ul>
+        </section><section class="panel">
+            <h2>Modules Pages</h2>
+            <ul>
+            <li>
+                <a href="modules/advanced-trees.html">Advanced Tree Structures</a>
+                <span class="meta">(/modules/advanced-trees.html)</span>
+            </li>
+            <li>
+                <a href="modules/arrays-strings.html">Arrays and Strings</a>
+                <span class="meta">(/modules/arrays-strings.html)</span>
+            </li>
+            <li>
+                <a href="modules/assembly-addressing-modes.html">Assembly Addressing Modes and Stack Frames</a>
+                <span class="meta">(/modules/assembly-addressing-modes.html)</span>
+            </li>
+            <li>
+                <a href="modules/assembly-arrays-strings-io.html">Assembly Arrays, Strings, and Basic I/O</a>
+                <span class="meta">(/modules/assembly-arrays-strings-io.html)</span>
+            </li>
+            <li>
+                <a href="modules/assembly-control-flow-procedures.html">Assembly Control Flow and Procedures</a>
+                <span class="meta">(/modules/assembly-control-flow-procedures.html)</span>
+            </li>
+            <li>
+                <a href="modules/assembly-registers-memory.html">Assembly Registers and Memory Basics</a>
+                <span class="meta">(/modules/assembly-registers-memory.html)</span>
+            </li>
+            <li>
+                <a href="modules/backtracking-patterns.html">Backtracking Patterns</a>
+                <span class="meta">(/modules/backtracking-patterns.html)</span>
+            </li>
+            <li>
+                <a href="modules/binary-indexed-trees.html">Binary Indexed Trees (Fenwick Trees)</a>
+                <span class="meta">(/modules/binary-indexed-trees.html)</span>
+            </li>
+            <li>
+                <a href="modules/bit-manipulation.html">Bit Manipulation</a>
+                <span class="meta">(/modules/bit-manipulation.html)</span>
+            </li>
+            <li>
+                <a href="modules/collections-framework.html">Java Collections Framework</a>
+                <span class="meta">(/modules/collections-framework.html)</span>
+            </li>
+            <li>
+                <a href="modules/combinatorics-discrete-probability.html">Combinatorics and Discrete Probability</a>
+                <span class="meta">(/modules/combinatorics-discrete-probability.html)</span>
+            </li>
+            <li>
+                <a href="modules/control-flow.html">Control Flow Statements</a>
+                <span class="meta">(/modules/control-flow.html)</span>
+            </li>
+            <li>
+                <a href="modules/design-patterns.html">Design Patterns</a>
+                <span class="meta">(/modules/design-patterns.html)</span>
+            </li>
+            <li>
+                <a href="modules/discrete-graph-theory.html">Discrete Graph Theory Foundations</a>
+                <span class="meta">(/modules/discrete-graph-theory.html)</span>
+            </li>
+            <li>
+                <a href="modules/dynamic-programming.html">Dynamic Programming</a>
+                <span class="meta">(/modules/dynamic-programming.html)</span>
+            </li>
+            <li>
+                <a href="modules/exception-handling.html">Exception Handling</a>
+                <span class="meta">(/modules/exception-handling.html)</span>
+            </li>
+            <li>
+                <a href="modules/file-io.html">File Input/Output</a>
+                <span class="meta">(/modules/file-io.html)</span>
+            </li>
+            <li>
+                <a href="modules/generics.html">Java Generics</a>
+                <span class="meta">(/modules/generics.html)</span>
+            </li>
+            <li>
+                <a href="modules/git-basics-workflow.html">Git Basics and Collaboration Workflow</a>
+                <span class="meta">(/modules/git-basics-workflow.html)</span>
+            </li>
+            <li>
+                <a href="modules/git-branching-merging.html">Git Branching, Merging, and Pull Requests</a>
+                <span class="meta">(/modules/git-branching-merging.html)</span>
+            </li>
+            <li>
+                <a href="modules/graph-algorithms.html">Graph Algorithms</a>
+                <span class="meta">(/modules/graph-algorithms.html)</span>
+            </li>
+            <li>
+                <a href="modules/greedy-algorithms.html">Greedy Algorithms</a>
+                <span class="meta">(/modules/greedy-algorithms.html)</span>
+            </li>
+            <li>
+                <a href="modules/hash-tables.html">Hash Tables and Maps</a>
+                <span class="meta">(/modules/hash-tables.html)</span>
+            </li>
+            <li>
+                <a href="modules/heaps.html">Heaps and Priority Queues</a>
+                <span class="meta">(/modules/heaps.html)</span>
+            </li>
+            <li>
+                <a href="modules/index.html">Module Directory</a>
+                <span class="meta">(/modules/index.html)</span>
+            </li>
+            <li>
+                <a href="modules/intro-to-coding.html">Introduction to Coding</a>
+                <span class="meta">(/modules/intro-to-coding.html)</span>
+            </li>
+            <li>
+                <a href="modules/java-basics.html">Java Fundamentals</a>
+                <span class="meta">(/modules/java-basics.html)</span>
+            </li>
+            <li>
+                <a href="modules/java-memory-jvm.html">Java Memory and JVM Fundamentals</a>
+                <span class="meta">(/modules/java-memory-jvm.html)</span>
+            </li>
+            <li>
+                <a href="modules/jdbc-basics.html">Database Connectivity (JDBC)</a>
+                <span class="meta">(/modules/jdbc-basics.html)</span>
+            </li>
+            <li>
+                <a href="modules/lambda-streams.html">Lambda Expressions &amp; Streams</a>
+                <span class="meta">(/modules/lambda-streams.html)</span>
+            </li>
+            <li>
+                <a href="modules/linked-lists.html">Linked Lists</a>
+                <span class="meta">(/modules/linked-lists.html)</span>
+            </li>
+            <li>
+                <a href="modules/multithreading.html">Multithreading Basics</a>
+                <span class="meta">(/modules/multithreading.html)</span>
+            </li>
+            <li>
+                <a href="modules/oop-basics.html">Object-Oriented Programming</a>
+                <span class="meta">(/modules/oop-basics.html)</span>
+            </li>
+            <li>
+                <a href="modules/propositional-logic-proofs.html">Propositional Logic and Proof Basics</a>
+                <span class="meta">(/modules/propositional-logic-proofs.html)</span>
+            </li>
+            <li>
+                <a href="modules/recursion.html">Recursion and Backtracking</a>
+                <span class="meta">(/modules/recursion.html)</span>
+            </li>
+            <li>
+                <a href="modules/searching-algorithms.html">Searching Algorithms</a>
+                <span class="meta">(/modules/searching-algorithms.html)</span>
+            </li>
+            <li>
+                <a href="modules/segment-trees.html">Segment Trees</a>
+                <span class="meta">(/modules/segment-trees.html)</span>
+            </li>
+            <li>
+                <a href="modules/sets-relations-functions.html">Sets, Relations, and Functions</a>
+                <span class="meta">(/modules/sets-relations-functions.html)</span>
+            </li>
+            <li>
+                <a href="modules/sorting-algorithms.html">Sorting Algorithms</a>
+                <span class="meta">(/modules/sorting-algorithms.html)</span>
+            </li>
+            <li>
+                <a href="modules/stacks-queues.html">Stacks and Queues</a>
+                <span class="meta">(/modules/stacks-queues.html)</span>
+            </li>
+            <li>
+                <a href="modules/string-algorithms.html">Advanced String Algorithms</a>
+                <span class="meta">(/modules/string-algorithms.html)</span>
+            </li>
+            <li>
+                <a href="modules/testing-junit.html">Unit Testing with JUnit</a>
+                <span class="meta">(/modules/testing-junit.html)</span>
+            </li>
+            <li>
+                <a href="modules/trees-basics.html">Binary Trees</a>
+                <span class="meta">(/modules/trees-basics.html)</span>
+            </li>
+            <li>
+                <a href="modules/tries.html">Tries (Prefix Trees)</a>
+                <span class="meta">(/modules/tries.html)</span>
+            </li>
+            <li>
+                <a href="modules/union-find.html">Union-Find (Disjoint Set)</a>
+                <span class="meta">(/modules/union-find.html)</span>
+            </li></ul>
+        </section><section class="panel">
+            <h2>Trust Pages</h2>
+            <ul>
+            <li>
+                <a href="contact-support.html">Contact / Support</a>
+                <span class="meta">(/contact-support.html)</span>
+            </li>
+            <li>
+                <a href="donations-refunds.html">Donations &amp; Refunds</a>
+                <span class="meta">(/donations-refunds.html)</span>
+            </li>
+            <li>
+                <a href="privacy-policy.html">Privacy Policy</a>
+                <span class="meta">(/privacy-policy.html)</span>
+            </li>
+            <li>
+                <a href="terms-of-use.html">Terms of Use</a>
+                <span class="meta">(/terms-of-use.html)</span>
+            </li></ul>
+        </section>
+        <footer class="footer">
+            <p>66 indexed URLs generated automatically.</p>
+        </footer>
+    </div>
+    <script>
+    (() => {
+        const controls = document.querySelectorAll('[data-back-fallback]');
+        controls.forEach((control) => {
+            control.addEventListener('click', (event) => {
+                event.preventDefault();
+                const fallback = control.getAttribute('data-back-fallback') || 'index.html';
+                let hasSameOriginReferrer = false;
+                try {
+                    hasSameOriginReferrer =
+                        Boolean(document.referrer) &&
+                        new URL(document.referrer).origin === window.location.origin;
+                } catch (error) {
+                    hasSameOriginReferrer = false;
+                }
+                if (hasSameOriginReferrer && window.history.length > 1) {
+                    window.history.back();
+                    return;
+                }
+                window.location.href = fallback;
+            });
+        });
+    })();
+    </script>
+</body>
+</html>

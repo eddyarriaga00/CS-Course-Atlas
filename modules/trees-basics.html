@@ -26,16 +26,20 @@
         <style>
         :root {
             color-scheme: dark;
-            --seo-bg-top: #05070f;
+            --seo-bg-top: #020617;
             --seo-bg-base: #0f172a;
+            --seo-bg-bottom: #111827;
             --seo-panel: rgba(15, 23, 42, 0.72);
-            --seo-panel-soft: rgba(30, 41, 59, 0.66);
-            --seo-border: rgba(255, 255, 255, 0.16);
-            --seo-border-strong: rgba(165, 180, 252, 0.5);
+            --seo-panel-soft: rgba(30, 41, 59, 0.7);
+            --seo-border: rgba(255, 255, 255, 0.12);
+            --seo-border-strong: rgba(165, 180, 252, 0.45);
             --seo-text: #e2e8f0;
             --seo-muted: #cbd5e1;
             --seo-link: #93c5fd;
             --seo-link-hover: #dbeafe;
+            --seo-brand-a: rgba(37, 99, 235, 0.9);
+            --seo-brand-b: rgba(79, 70, 229, 0.9);
+            --seo-brand-c: rgba(124, 58, 237, 0.9);
             --seo-btn-grad-a: rgba(59, 130, 246, 0.22);
             --seo-btn-grad-b: rgba(124, 58, 237, 0.22);
         }
@@ -45,22 +49,27 @@
             min-height: 100vh;
             font-family: "Pixelify Sans", "Silkscreen", "DotGothic16", monospace;
             background:
-                radial-gradient(circle at 6% -8%, rgba(124, 58, 237, 0.34), transparent 46%),
-                radial-gradient(circle at 94% -14%, rgba(56, 189, 248, 0.24), transparent 48%),
-                linear-gradient(180deg, var(--seo-bg-top) 0%, var(--seo-bg-base) 58%, #111827 100%);
+                radial-gradient(circle at 8% -6%, rgba(59, 130, 246, 0.26), transparent 42%),
+                radial-gradient(circle at 92% -8%, rgba(124, 58, 237, 0.28), transparent 44%),
+                linear-gradient(180deg, var(--seo-bg-top) 0%, var(--seo-bg-base) 56%, var(--seo-bg-bottom) 100%);
             color: var(--seo-text);
             line-height: 1.6;
         }
         .shell {
-            max-width: 1120px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 1rem 1rem 2.4rem;
+            padding: 1rem 1rem 2.2rem;
         }
         .top-nav {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.55rem;
+            gap: 0.5rem;
             margin-bottom: 1rem;
+            padding: 0.7rem 0.8rem;
+            border: 1px solid var(--seo-border);
+            border-radius: 0.95rem;
+            background: linear-gradient(90deg, var(--seo-brand-a), var(--seo-brand-b), var(--seo-brand-c));
+            box-shadow: 0 16px 34px rgba(2, 6, 23, 0.32);
         }
         .top-nav a,
         .top-nav button {
@@ -68,10 +77,10 @@
             appearance: none;
             text-decoration: none;
             color: #f8fafc;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.24);
             padding: 0.45rem 0.75rem;
-            border-radius: 0.75rem;
-            background: rgba(15, 23, 42, 0.62);
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.45);
             font-size: 0.82rem;
             font-weight: 700;
             line-height: 1.15;
@@ -80,7 +89,7 @@
         }
         .top-nav a:hover,
         .top-nav button:hover {
-            background: rgba(79, 70, 229, 0.32);
+            background: rgba(15, 23, 42, 0.68);
             border-color: var(--seo-border-strong);
             transform: translateY(-1px);
         }
@@ -90,18 +99,18 @@
             outline-offset: 2px;
         }
         .top-nav .back-control {
-            background: linear-gradient(120deg, var(--seo-btn-grad-a), var(--seo-btn-grad-b));
-            border-color: rgba(125, 211, 252, 0.42);
+            background: linear-gradient(120deg, rgba(15, 23, 42, 0.76), rgba(30, 41, 59, 0.72));
+            border-color: rgba(191, 219, 254, 0.68);
         }
         .hero {
             border: 1px solid var(--seo-border);
-            background: linear-gradient(145deg, rgba(30, 41, 59, 0.88), rgba(30, 27, 75, 0.73));
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.76));
             border-radius: 1rem;
-            padding: 1.05rem 1.15rem;
-            box-shadow: 0 18px 40px rgba(2, 6, 23, 0.34);
+            padding: 1.15rem 1.15rem;
+            box-shadow: 0 20px 44px rgba(2, 6, 23, 0.38);
         }
-        h1 { margin: 0; font-size: clamp(1.5rem, 2.8vw, 2rem); color: #e0e7ff; }
-        h2 { margin: 1.2rem 0 0.5rem; font-size: 1.08rem; color: #bfdbfe; }
+        h1 { margin: 0; font-size: clamp(1.55rem, 2.9vw, 2.1rem); color: #e0e7ff; line-height: 1.2; }
+        h2 { margin: 1.2rem 0 0.5rem; font-size: 1.06rem; color: #c7d2fe; }
         p { margin: 0.45rem 0; color: var(--seo-muted); }
         .cta-row {
             margin-top: 0.8rem;
@@ -115,9 +124,9 @@
             gap: 0.35rem;
             text-decoration: none;
             color: #f8fafc;
-            background: linear-gradient(120deg, rgba(59, 130, 246, 0.28), rgba(124, 58, 237, 0.3));
+            background: linear-gradient(120deg, rgba(59, 130, 246, 0.36), rgba(124, 58, 237, 0.35));
             border: 1px solid rgba(129, 140, 248, 0.52);
-            border-radius: 0.65rem;
+            border-radius: 999px;
             padding: 0.46rem 0.75rem;
             font-size: 0.84rem;
             font-weight: 700;
@@ -154,7 +163,7 @@
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 0.8rem;
             padding: 0.65rem 0.75rem;
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(15, 23, 42, 0.58);
         }
         .module-card h3 {
             margin: 0;
@@ -175,7 +184,7 @@
             .shell { padding: 0.85rem 0.7rem 1.5rem; }
             .top-nav { gap: 0.45rem; }
             .top-nav a,
-            .top-nav button { font-size: 0.78rem; padding: 0.42rem 0.62rem; }
+            .top-nav button { font-size: 0.76rem; padding: 0.42rem 0.62rem; }
             .hero { padding: 0.9rem 0.92rem; }
         }
     </style>
@@ -187,7 +196,8 @@
             <a href="../index.html">Interactive App</a>
             <a href="../dsa.html">Data Structures and Algorithms Track Page</a>
             <a href="index.html">Module Directory</a>
-            <a href="../sitemap.xml">Sitemap</a>
+            <a href="../sitemap.html">Sitemap</a>
+            <a href="../sitemap.xml">XML</a>
         </nav>
         <header class="hero">
             <h1>Binary Trees</h1>
@@ -195,6 +205,7 @@
             <div class="cta-row">
                 <a class="cta" href="../index.html?route=%2Fdsa&module=trees-basics">Open This Module in Interactive App</a>
                 <a class="cta" href="../dsa.html">View Data Structures and Algorithms Track Landing Page</a>
+                <a class="cta" href="../sitemap.html">Open Sitemap</a>
             </div>
         </header>
         <section class="panel">

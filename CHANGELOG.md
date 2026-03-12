@@ -182,3 +182,10 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Added local API base auto-detection in frontend runtime:
   - when no API base is configured and app runs on localhost (non-3000 port), API calls now target `http://localhost:3000` (or `https://localhost:3000` when applicable).
 
+### SEO Pages and Sitemap Refresh
+- Restyled generated route pages (`home`, `tracks`, track pages, and tool landing pages) to better match the main site visual system with consistent gradient navigation, pill actions, and surface cards.
+- Refreshed generated module pages and `modules/index.html` so directory/track navigation and CTA patterns are consistent across desktop/mobile.
+- Added a human-readable sitemap page (`sitemap.html`) and linked route/module pages to it.
+- Added XML sitemap styling via `sitemap.xsl` and connected it using the `<?xml-stylesheet ...?>` directive in `sitemap.xml`.
+- Extended sitemap generation with `changefreq` and `priority` metadata and kept `robots.txt` pointed at the XML sitemap.
+

@@ -204,6 +204,11 @@ function toAbsolute(pathname) {
     return `${SITE_URL}${normalized}`;
 }
 
+function toRelative(pathname) {
+    if (pathname === '/') return 'index.html';
+    return String(pathname || '/').replace(/^\//, '');
+}
+
 function truncateDescription(value, max = 155) {
     const text = String(value || '').replace(/\s+/g, ' ').trim();
     if (!text) return '';
@@ -215,16 +220,20 @@ function baseStyles() {
     return `
         :root {
             color-scheme: dark;
-            --seo-bg-top: #05070f;
+            --seo-bg-top: #020617;
             --seo-bg-base: #0f172a;
+            --seo-bg-bottom: #111827;
             --seo-panel: rgba(15, 23, 42, 0.72);
-            --seo-panel-soft: rgba(30, 41, 59, 0.66);
-            --seo-border: rgba(255, 255, 255, 0.16);
-            --seo-border-strong: rgba(165, 180, 252, 0.5);
+            --seo-panel-soft: rgba(30, 41, 59, 0.7);
+            --seo-border: rgba(255, 255, 255, 0.12);
+            --seo-border-strong: rgba(165, 180, 252, 0.45);
             --seo-text: #e2e8f0;
             --seo-muted: #cbd5e1;
             --seo-link: #93c5fd;
             --seo-link-hover: #dbeafe;
+            --seo-brand-a: rgba(37, 99, 235, 0.9);
+            --seo-brand-b: rgba(79, 70, 229, 0.9);
+            --seo-brand-c: rgba(124, 58, 237, 0.9);
             --seo-btn-grad-a: rgba(59, 130, 246, 0.22);
             --seo-btn-grad-b: rgba(124, 58, 237, 0.22);
         }
@@ -234,22 +243,27 @@ function baseStyles() {
             min-height: 100vh;
             font-family: "Pixelify Sans", "Silkscreen", "DotGothic16", monospace;
             background:
-                radial-gradient(circle at 6% -8%, rgba(124, 58, 237, 0.34), transparent 46%),
-                radial-gradient(circle at 94% -14%, rgba(56, 189, 248, 0.24), transparent 48%),
-                linear-gradient(180deg, var(--seo-bg-top) 0%, var(--seo-bg-base) 58%, #111827 100%);
+                radial-gradient(circle at 8% -6%, rgba(59, 130, 246, 0.26), transparent 42%),
+                radial-gradient(circle at 92% -8%, rgba(124, 58, 237, 0.28), transparent 44%),
+                linear-gradient(180deg, var(--seo-bg-top) 0%, var(--seo-bg-base) 56%, var(--seo-bg-bottom) 100%);
             color: var(--seo-text);
             line-height: 1.6;
         }
         .shell {
-            max-width: 1120px;
+            max-width: 1280px;
             margin: 0 auto;
-            padding: 1rem 1rem 2.4rem;
+            padding: 1rem 1rem 2.2rem;
         }
         .top-nav {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.55rem;
+            gap: 0.5rem;
             margin-bottom: 1rem;
+            padding: 0.7rem 0.8rem;
+            border: 1px solid var(--seo-border);
+            border-radius: 0.95rem;
+            background: linear-gradient(90deg, var(--seo-brand-a), var(--seo-brand-b), var(--seo-brand-c));
+            box-shadow: 0 16px 34px rgba(2, 6, 23, 0.32);
         }
         .top-nav a,
         .top-nav button {
@@ -257,10 +271,10 @@ function baseStyles() {
             appearance: none;
             text-decoration: none;
             color: #f8fafc;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.24);
             padding: 0.45rem 0.75rem;
-            border-radius: 0.75rem;
-            background: rgba(15, 23, 42, 0.62);
+            border-radius: 999px;
+            background: rgba(15, 23, 42, 0.45);
             font-size: 0.82rem;
             font-weight: 700;
             line-height: 1.15;
@@ -269,7 +283,7 @@ function baseStyles() {
         }
         .top-nav a:hover,
         .top-nav button:hover {
-            background: rgba(79, 70, 229, 0.32);
+            background: rgba(15, 23, 42, 0.68);
             border-color: var(--seo-border-strong);
             transform: translateY(-1px);
         }
@@ -279,18 +293,18 @@ function baseStyles() {
             outline-offset: 2px;
         }
         .top-nav .back-control {
-            background: linear-gradient(120deg, var(--seo-btn-grad-a), var(--seo-btn-grad-b));
-            border-color: rgba(125, 211, 252, 0.42);
+            background: linear-gradient(120deg, rgba(15, 23, 42, 0.76), rgba(30, 41, 59, 0.72));
+            border-color: rgba(191, 219, 254, 0.68);
         }
         .hero {
             border: 1px solid var(--seo-border);
-            background: linear-gradient(145deg, rgba(30, 41, 59, 0.88), rgba(30, 27, 75, 0.73));
+            background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.76));
             border-radius: 1rem;
-            padding: 1.05rem 1.15rem;
-            box-shadow: 0 18px 40px rgba(2, 6, 23, 0.34);
+            padding: 1.15rem 1.15rem;
+            box-shadow: 0 20px 44px rgba(2, 6, 23, 0.38);
         }
-        h1 { margin: 0; font-size: clamp(1.5rem, 2.8vw, 2rem); color: #e0e7ff; }
-        h2 { margin: 1.2rem 0 0.5rem; font-size: 1.08rem; color: #bfdbfe; }
+        h1 { margin: 0; font-size: clamp(1.55rem, 2.9vw, 2.1rem); color: #e0e7ff; line-height: 1.2; }
+        h2 { margin: 1.2rem 0 0.5rem; font-size: 1.06rem; color: #c7d2fe; }
         p { margin: 0.45rem 0; color: var(--seo-muted); }
         .cta-row {
             margin-top: 0.8rem;
@@ -304,9 +318,9 @@ function baseStyles() {
             gap: 0.35rem;
             text-decoration: none;
             color: #f8fafc;
-            background: linear-gradient(120deg, rgba(59, 130, 246, 0.28), rgba(124, 58, 237, 0.3));
+            background: linear-gradient(120deg, rgba(59, 130, 246, 0.36), rgba(124, 58, 237, 0.35));
             border: 1px solid rgba(129, 140, 248, 0.52);
-            border-radius: 0.65rem;
+            border-radius: 999px;
             padding: 0.46rem 0.75rem;
             font-size: 0.84rem;
             font-weight: 700;
@@ -343,7 +357,7 @@ function baseStyles() {
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 0.8rem;
             padding: 0.65rem 0.75rem;
-            background: rgba(15, 23, 42, 0.6);
+            background: rgba(15, 23, 42, 0.58);
         }
         .module-card h3 {
             margin: 0;
@@ -364,7 +378,7 @@ function baseStyles() {
             .shell { padding: 0.85rem 0.7rem 1.5rem; }
             .top-nav { gap: 0.45rem; }
             .top-nav a,
-            .top-nav button { font-size: 0.78rem; padding: 0.42rem 0.62rem; }
+            .top-nav button { font-size: 0.76rem; padding: 0.42rem 0.62rem; }
             .hero { padding: 0.9rem 0.92rem; }
         }
     `;
@@ -468,6 +482,7 @@ ${headTemplate({
             <a href="assembly.html">Assembly</a>
             <a href="discrete-math.html">Discrete Math</a>
             <a href="modules/index.html">Module Directory</a>
+            <a href="sitemap.html">Sitemap</a>
         </nav>
         <header class="hero">
             <h1>${escapeHtml(routeConfig.heading)}</h1>
@@ -475,7 +490,8 @@ ${headTemplate({
             <div class="cta-row">
                 <a class="cta" href="${appHref}">Open Interactive View</a>
                 <a class="cta" href="modules/index.html">Browse Module Pages</a>
-                <a class="cta" href="sitemap.xml">View Sitemap</a>
+                <a class="cta" href="sitemap.html">Open Sitemap Page</a>
+                <a class="cta" href="sitemap.xml">XML Sitemap</a>
             </div>
         </header>
         <section class="panel">
@@ -521,7 +537,8 @@ ${headTemplate({
             ${backControlMarkup('../tracks.html')}
             <a href="../index.html">Interactive App</a>
             <a href="../tracks.html">Track Pages</a>
-            <a href="../sitemap.xml">Sitemap</a>
+            <a href="../sitemap.html">Sitemap</a>
+            <a href="../sitemap.xml">XML</a>
         </nav>
         <header class="hero">
             <h1>CS Course Atlas Module Directory</h1>
@@ -529,6 +546,7 @@ ${headTemplate({
             <div class="cta-row">
                 <a class="cta" href="../index.html?route=%2Ftracks">Open Interactive Track View</a>
                 <a class="cta" href="../home.html">Go to Home Landing Page</a>
+                <a class="cta" href="../sitemap.html">Open Sitemap</a>
             </div>
         </header>
         ${sections}
@@ -572,7 +590,8 @@ ${headTemplate({
             <a href="../index.html">Interactive App</a>
             <a href="../${trackPage}">${escapeHtml(categoryLabel)} Track Page</a>
             <a href="index.html">Module Directory</a>
-            <a href="../sitemap.xml">Sitemap</a>
+            <a href="../sitemap.html">Sitemap</a>
+            <a href="../sitemap.xml">XML</a>
         </nav>
         <header class="hero">
             <h1>${escapeHtml(module.title)}</h1>
@@ -580,6 +599,7 @@ ${headTemplate({
             <div class="cta-row">
                 <a class="cta" href="${appLink}">Open This Module in Interactive App</a>
                 <a class="cta" href="../${trackPage}">View ${escapeHtml(categoryLabel)} Track Landing Page</a>
+                <a class="cta" href="../sitemap.html">Open Sitemap</a>
             </div>
         </header>
         <section class="panel">
@@ -607,27 +627,174 @@ ${headTemplate({
 </html>`;
 }
 
-function generateSitemap(routePages, modules) {
+function buildSitemapEntries(routePages, modules) {
+    const entries = new Map();
+    const register = (pathname, label, section, priority = '0.7', changefreq = 'weekly') => {
+        if (!entries.has(pathname)) {
+            entries.set(pathname, { pathname, label, section, priority, changefreq });
+        }
+    };
+
+    register('/', 'Root', 'Core', '1.0', 'weekly');
+    register('/index.html', 'Interactive App', 'Core', '1.0', 'daily');
+    register('/sitemap.html', 'Sitemap', 'Core', '0.6', 'weekly');
+    register('/sitemap.xml', 'XML Sitemap', 'Core', '0.6', 'weekly');
+    register('/privacy-policy.html', 'Privacy Policy', 'Trust', '0.5', 'monthly');
+    register('/terms-of-use.html', 'Terms of Use', 'Trust', '0.5', 'monthly');
+    register('/contact-support.html', 'Contact / Support', 'Trust', '0.5', 'monthly');
+    register('/donations-refunds.html', 'Donations & Refunds', 'Trust', '0.5', 'monthly');
+    register('/modules/index.html', 'Module Directory', 'Modules', '0.9', 'weekly');
+
+    routePages.forEach((item) => {
+        register(`/${item.filename}`, item.heading, 'Routes', item.route === '/home' || item.route === '/tracks' ? '0.9' : '0.8', 'weekly');
+    });
+    modules.forEach((item) => {
+        register(`/modules/${item.id}.html`, item.title, 'Modules', '0.7', 'weekly');
+    });
+
+    return Array.from(entries.values()).sort((a, b) => a.pathname.localeCompare(b.pathname));
+}
+
+function generateSitemap(entries) {
     const today = new Date().toISOString().slice(0, 10);
-    const paths = new Set([
-        '/',
-        '/index.html',
-        ...routePages.map((item) => `/${item.filename}`),
-        '/privacy-policy.html',
-        '/terms-of-use.html',
-        '/contact-support.html',
-        '/donations-refunds.html',
-        '/modules/index.html',
-        ...modules.map((item) => `/modules/${item.id}.html`)
-    ]);
-    const entries = Array.from(paths).sort().map((pathname) => `  <url>
-    <loc>${toAbsolute(pathname)}</loc>
+    const urlEntries = entries.map((entry) => `  <url>
+    <loc>${toAbsolute(entry.pathname)}</loc>
     <lastmod>${today}</lastmod>
+    <changefreq>${entry.changefreq}</changefreq>
+    <priority>${entry.priority}</priority>
   </url>`).join('\n');
     return `<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="sitemap.xsl"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${entries}
+${urlEntries}
 </urlset>
+`;
+}
+
+function sitemapPageHtml(entries) {
+    const sections = entries.reduce((acc, entry) => {
+        if (!acc[entry.section]) acc[entry.section] = [];
+        acc[entry.section].push(entry);
+        return acc;
+    }, {});
+    const order = ['Core', 'Routes', 'Modules', 'Trust'];
+    const blocks = order.map((section) => {
+        const list = sections[section] || [];
+        if (!list.length) return '';
+        const links = list.map((entry) => `
+            <li>
+                <a href="${escapeHtml(toRelative(entry.pathname))}">${escapeHtml(entry.label)}</a>
+                <span class="meta">(${escapeHtml(entry.pathname)})</span>
+            </li>`).join('');
+        return `<section class="panel">
+            <h2>${escapeHtml(section)} Pages</h2>
+            <ul>${links}</ul>
+        </section>`;
+    }).join('');
+
+    return `<!DOCTYPE html>
+<html lang="en">
+${headTemplate({
+    title: 'Sitemap | CS Course Atlas',
+    description: 'Human-readable sitemap for CS Course Atlas route pages, module pages, and trust pages.',
+    canonicalPath: '/sitemap.html',
+    assetPrefix: ''
+})}
+<body class="seo-page">
+    <div class="shell">
+        <nav class="top-nav" aria-label="Sitemap navigation">
+            ${backControlMarkup('tracks.html')}
+            <a href="index.html">Interactive App</a>
+            <a href="tracks.html">Track Pages</a>
+            <a href="modules/index.html">Module Directory</a>
+            <a href="sitemap.xml">XML Sitemap</a>
+        </nav>
+        <header class="hero">
+            <h1>CS Course Atlas Sitemap</h1>
+            <p class="meta">Human-readable page index for route pages, modules, and trust content.</p>
+            <div class="cta-row">
+                <a class="cta" href="sitemap.xml">Open XML Sitemap</a>
+                <a class="cta" href="tracks.html">Open Track Pages</a>
+                <a class="cta" href="modules/index.html">Open Module Directory</a>
+            </div>
+        </header>
+        ${blocks}
+        <footer class="footer">
+            <p>${entries.length} indexed URLs generated automatically.</p>
+        </footer>
+    </div>
+    ${backControlScript()}
+</body>
+</html>`;
+}
+
+function generateSitemapXsl() {
+    return `<?xml version="1.0" encoding="UTF-8"?>
+<xsl:stylesheet version="1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+    xmlns:s="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <xsl:output method="html" encoding="UTF-8" indent="yes" />
+    <xsl:template match="/">
+        <html lang="en">
+            <head>
+                <meta charset="UTF-8" />
+                <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+                <title>CS Course Atlas XML Sitemap</title>
+                <style>
+                    * { box-sizing: border-box; }
+                    body {
+                        margin: 0;
+                        min-height: 100vh;
+                        font-family: 'Pixelify Sans', 'Silkscreen', 'DotGothic16', monospace;
+                        background: linear-gradient(180deg, #020617 0%, #0f172a 60%, #111827 100%);
+                        color: #e2e8f0;
+                    }
+                    .shell { max-width: 1200px; margin: 0 auto; padding: 1rem; }
+                    .hero {
+                        border: 1px solid rgba(148, 163, 184, 0.35);
+                        border-radius: 1rem;
+                        background: rgba(15, 23, 42, 0.8);
+                        padding: 1rem;
+                    }
+                    h1 { margin: 0; color: #e0e7ff; }
+                    p { color: #cbd5e1; }
+                    a { color: #93c5fd; }
+                    table { width: 100%; border-collapse: collapse; margin-top: 0.9rem; }
+                    th, td { text-align: left; padding: 0.55rem 0.65rem; border-bottom: 1px solid rgba(148, 163, 184, 0.32); }
+                    th { color: #c7d2fe; }
+                </style>
+            </head>
+            <body>
+                <div class="shell">
+                    <section class="hero">
+                        <h1>CS Course Atlas XML Sitemap</h1>
+                        <p>Styled XML view for sitemap inspection.</p>
+                    </section>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>URL</th>
+                                <th>Last Modified</th>
+                                <th>Change Frequency</th>
+                                <th>Priority</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <xsl:for-each select="s:urlset/s:url">
+                                <tr>
+                                    <td><a href="{s:loc}"><xsl:value-of select="s:loc" /></a></td>
+                                    <td><xsl:value-of select="s:lastmod" /></td>
+                                    <td><xsl:value-of select="s:changefreq" /></td>
+                                    <td><xsl:value-of select="s:priority" /></td>
+                                </tr>
+                            </xsl:for-each>
+                        </tbody>
+                    </table>
+                </div>
+            </body>
+        </html>
+    </xsl:template>
+</xsl:stylesheet>
 `;
 }
 
@@ -682,10 +849,13 @@ function main() {
         writeFile(path.join(MODULES_DIR, `${module.id}.html`), html);
     });
 
-    writeFile(path.join(ROOT, 'sitemap.xml'), generateSitemap(ROUTE_PAGES, modules));
+    const sitemapEntries = buildSitemapEntries(ROUTE_PAGES, modules);
+    writeFile(path.join(ROOT, 'sitemap.html'), sitemapPageHtml(sitemapEntries));
+    writeFile(path.join(ROOT, 'sitemap.xml'), generateSitemap(sitemapEntries));
+    writeFile(path.join(ROOT, 'sitemap.xsl'), generateSitemapXsl());
     writeFile(path.join(ROOT, 'robots.txt'), generateRobots());
 
-    console.log(`Generated ${ROUTE_PAGES.length} route pages and ${modules.length} module pages.`);
+    console.log(`Generated ${ROUTE_PAGES.length} route pages, ${modules.length} module pages, and sitemap assets.`);
 }
 
 main();
