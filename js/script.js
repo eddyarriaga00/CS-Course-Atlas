@@ -307,6 +307,16 @@ const ROUTE_LAUNCHPAD_CONFIG = {
         ]
     }
 };
+const ROUTE_TOOL_AUTO_LAUNCH_CONFIG = {
+    '/flashcards': {
+        handler: 'openFlashcards',
+        modalId: 'flashcards-modal'
+    },
+    '/quizzes': {
+        handler: 'openInteractiveQuizLibrary',
+        modalId: 'interactive-quiz-modal'
+    }
+};
 const ALL_ROUTE_SECTION_IDS = Array.from(new Set(
     Object.values(ROUTE_SECTION_VISIBILITY).reduce((acc, list) => acc.concat(list), [])
 ));
@@ -697,9 +707,9 @@ const TRANSLATIONS = {
         'route.discreteMath.title': 'Discrete Math Track',
         'route.discreteMath.description': 'Proofs, logic, and core discrete math topics for CS.',
         'route.flashcards.title': 'Flashcards',
-        'route.flashcards.description': 'Open flashcards to reinforce concepts quickly.',
+        'route.flashcards.description': 'Flashcards launches directly from this page for fast recall practice.',
         'route.quizzes.title': 'Quizzes',
-        'route.quizzes.description': 'Run interactive quizzes and interview-style practice.',
+        'route.quizzes.description': 'Quiz tools launch directly from this page with interview-style practice support.',
         'route.playground.title': 'Playground',
         'route.playground.description': 'Use both coding sandboxes for quick experiments and deeper visualization.',
         'route.notes.title': 'Notes & Library',
@@ -709,10 +719,10 @@ const TRANSLATIONS = {
         'route.about.title': 'About',
         'route.about.description': 'Creator profile, project scope, updates, trust links, and feedback options.',
         'route.flashcards.launchTitle': 'Flashcard Practice',
-        'route.flashcards.launchDescription': 'Open the flashcard trainer and start a focused review session.',
+        'route.flashcards.launchDescription': 'The sidebar Flashcards page opens the trainer automatically. Use this button anytime to reopen it.',
         'route.flashcards.openAction': 'Open Flashcards',
         'route.quizzes.launchTitle': 'Quiz Practice',
-        'route.quizzes.launchDescription': 'Launch the quiz library or try interview-style coding examples.',
+        'route.quizzes.launchDescription': 'The sidebar Quizzes page opens the quiz library automatically. You can still reopen it here or jump to interview examples.',
         'route.quizzes.openAction': 'Open Quiz Library',
         'route.quizzes.examplesAction': 'Interview Examples',
         'route.support.launchTitle': 'Need Help or Want to Support?',
@@ -1199,9 +1209,9 @@ const TRANSLATIONS = {
         'route.discreteMath.title': 'Ruta Matematica Discreta',
         'route.discreteMath.description': 'Pruebas, logica y temas esenciales de matematica discreta para CS.',
         'route.flashcards.title': 'Tarjetas',
-        'route.flashcards.description': 'Abre tarjetas para reforzar conceptos rapidamente.',
+        'route.flashcards.description': 'Tarjetas se abre directamente desde esta pagina para repaso rapido.',
         'route.quizzes.title': 'Quizzes',
-        'route.quizzes.description': 'Haz quizzes interactivos y practica tipo entrevista.',
+        'route.quizzes.description': 'Las herramientas de quiz se abren directo en esta pagina con practica tipo entrevista.',
         'route.playground.title': 'Playground',
         'route.playground.description': 'Usa ambos sandboxes para experimentar y visualizar mejor.',
         'route.notes.title': 'Notas y Biblioteca',
@@ -1211,10 +1221,10 @@ const TRANSLATIONS = {
         'route.about.title': 'Acerca de',
         'route.about.description': 'Perfil del creador, alcance del proyecto, actualizaciones, enlaces legales y opciones de feedback.',
         'route.flashcards.launchTitle': 'Practica con Tarjetas',
-        'route.flashcards.launchDescription': 'Abre el entrenador de tarjetas y empieza una sesion de repaso.',
+        'route.flashcards.launchDescription': 'La pagina de Tarjetas del menu lateral abre el entrenador automaticamente. Usa este boton para abrirlo otra vez cuando quieras.',
         'route.flashcards.openAction': 'Abrir Tarjetas',
         'route.quizzes.launchTitle': 'Practica de Quiz',
-        'route.quizzes.launchDescription': 'Abre la biblioteca de quizzes o practica ejemplos de entrevista.',
+        'route.quizzes.launchDescription': 'La pagina de Quizzes del menu lateral abre la biblioteca automaticamente. Tambien puedes abrirla otra vez o saltar a ejemplos de entrevista.',
         'route.quizzes.openAction': 'Abrir Biblioteca de Quiz',
         'route.quizzes.examplesAction': 'Ejemplos de Entrevista',
         'route.support.launchTitle': 'Necesitas Ayuda o Quieres Apoyar?',
@@ -2441,6 +2451,24 @@ function renderRouteLaunchpad(route) {
     });
 }
 
+function runRouteToolAutoLaunch(route, options = {}) {
+    const { force = false } = options;
+    const config = ROUTE_TOOL_AUTO_LAUNCH_CONFIG[route];
+    if (!config) return;
+
+    const activeModalId = getActiveModalId();
+    if (!force && activeModalId === config.modalId) return;
+
+    if (activeModalId && activeModalId !== config.modalId) {
+        closeModalById(activeModalId);
+    }
+
+    const handler = getRouteActionHandler(config.handler);
+    if (typeof handler === 'function') {
+        handler();
+    }
+}
+
 function applyTrackRoute(route) {
     if (!Object.prototype.hasOwnProperty.call(TRACK_ROUTE_CATEGORY_MAP, route)) {
         return false;
@@ -2606,7 +2634,8 @@ function renderRoute(route, options = {}) {
     const {
         preserveScroll = false,
         focusMain = false,
-        skipModuleRender = false
+        skipModuleRender = false,
+        triggerRouteToolLaunch = false
     } = options;
 
     const previousRoute = normalizeRoutePath(appState.currentRoute || DEFAULT_ROUTE);
@@ -2661,6 +2690,12 @@ function renderRoute(route, options = {}) {
         closeSidebar();
     }
 
+    if (routeChanged || triggerRouteToolLaunch) {
+        runRouteToolAutoLaunch(normalizedRoute, {
+            force: Boolean(triggerRouteToolLaunch && !routeChanged)
+        });
+    }
+
     requestAnimationFrame(() => {
         updatePageJumpButton();
         queueMotionEnhancements({ reset: true });
@@ -2673,7 +2708,8 @@ function navigateToRoute(route, options = {}) {
         replaceHistory = false,
         preserveScroll = false,
         focusMain = true,
-        skipModuleRender = false
+        skipModuleRender = false,
+        triggerRouteToolLaunch = true
     } = options;
 
     const currentPath = normalizeRoutePath(window.location.pathname || '/');
@@ -2686,7 +2722,7 @@ function navigateToRoute(route, options = {}) {
         window.history.pushState(historyState, '', nextHistoryPath);
     }
 
-    renderRoute(normalizedRoute, { preserveScroll, focusMain, skipModuleRender });
+    renderRoute(normalizedRoute, { preserveScroll, focusMain, skipModuleRender, triggerRouteToolLaunch });
 }
 
 function startLearningJourney() {
@@ -20164,7 +20200,8 @@ function openQuizFromGlobalSearch(moduleId) {
     navigateToRoute('/quizzes', {
         preserveScroll: true,
         focusMain: false,
-        skipModuleRender: true
+        skipModuleRender: true,
+        triggerRouteToolLaunch: false
     });
     const quiz = getLocalizedQuizData(moduleId);
     if (quiz?.parts?.[0]?.questions?.length) {
@@ -23042,7 +23079,12 @@ function startGuestTrack(trackKey) {
 function openGuestSampleQuiz() {
     const sampleModuleId = 'java-basics';
     const sampleQuiz = getLocalizedQuizData(sampleModuleId);
-    navigateToRoute('/quizzes', { preserveScroll: true, focusMain: false, skipModuleRender: true });
+    navigateToRoute('/quizzes', {
+        preserveScroll: true,
+        focusMain: false,
+        skipModuleRender: true,
+        triggerRouteToolLaunch: false
+    });
     if (sampleQuiz?.parts?.[0]?.questions?.length) {
         openQuiz(sampleModuleId);
         return;

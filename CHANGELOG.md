@@ -9,6 +9,12 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Added race-safe session state updates so older in-flight session checks cannot overwrite newer auth state.
 - Added session recheck retry logic for login/OAuth/modal-open initialization paths to stabilize cross-site cookie/session propagation timing on mobile.
 
+### Sidebar Route Tool Launch
+- Updated left-sidebar route navigation for `/flashcards` and `/quizzes` to auto-launch their tools immediately, removing the extra "open" click step.
+- Preserved top-menu behavior (header buttons still open the same modal overlays directly).
+- Added route-launch safeguards so direct quiz-open flows (global search and guest sample quiz) can still open module-specific quizzes without interference.
+- Updated EN/ES route copy to clarify that sidebar pages open these tools automatically.
+
 ### API Security Hardening
 - Added API request-surface guards to block risky HTTP methods (`TRACE`/`TRACK`/`CONNECT`), overlong request URIs, and oversized header values.
 - Added null-byte payload rejection for mutating JSON requests.
