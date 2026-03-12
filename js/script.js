@@ -96,6 +96,8 @@ const VALID_GLOSSARY_SORTS = new Set(['smart', 'az', 'za', 'category']);
 const DEFAULT_ROUTE = '/home';
 const ROUTE_ALIAS_MAP = {
     '/': '/home',
+    '/index': '/home',
+    '/index.html': '/home',
     '/home': '/home',
     '/tracks': '/tracks',
     '/dsa': '/dsa',
@@ -112,6 +114,7 @@ const ROUTE_ALIAS_MAP = {
     '/about': '/about'
 };
 const TRACK_ROUTE_CATEGORY_MAP = {
+    '/home': 'all',
     '/tracks': 'all',
     '/dsa': 'dsa',
     '/java': 'java',
@@ -143,7 +146,7 @@ const ROUTE_KEY_BY_PATH = {
     '/about': 'route.about'
 };
 const ROUTE_SECTION_VISIBILITY = {
-    '/home': ['hero-section', 'progress-section', 'achievements-card', 'daily-study-grid', 'insights-section', 'support-section', 'main-footer'],
+    '/home': ['hero-section', 'progress-section', 'achievements-card', 'daily-study-grid', 'insights-section', 'route-overview-section', 'topic-focus-section', 'search-section', 'modules-pagination-top', 'modules-grid', 'modules-pagination', 'support-section', 'main-footer'],
     '/tracks': ['route-overview-section', 'topic-focus-section', 'search-section', 'modules-pagination-top', 'modules-grid', 'modules-pagination', 'main-footer'],
     '/dsa': ['route-overview-section', 'topic-focus-section', 'search-section', 'modules-pagination-top', 'modules-grid', 'modules-pagination', 'main-footer'],
     '/java': ['route-overview-section', 'topic-focus-section', 'search-section', 'modules-pagination-top', 'modules-grid', 'modules-pagination', 'main-footer'],
@@ -245,11 +248,11 @@ const interviewRunInFlight = new Set();
 const interviewWorkspaceSelection = new Map();
 
 const SUPPORTED_LANGUAGES = {
-    java: { name: 'Java', icon: 'J' },
-    cpp: { name: 'C++', icon: 'C++' },
-    python: { name: 'Python', icon: 'Py' },
-    javascript: { name: 'JavaScript', icon: 'JS' },
-    assembly: { name: 'Assembly', icon: 'ASM' }
+    java: { name: 'Java', icon: '\u2615' },
+    cpp: { name: 'C++', icon: '\u2699\uFE0F' },
+    python: { name: 'Python', icon: '\u{1F40D}' },
+    javascript: { name: 'JavaScript', icon: '\u26A1' },
+    assembly: { name: 'Assembly', icon: '\u2692\uFE0F' }
 };
 const PLAYGROUND_RUNNABLE_LANGUAGES = ['java', 'cpp', 'python', 'javascript'];
 
@@ -452,35 +455,35 @@ const ACHIEVEMENT_LEVELS = [
         id: 'rookie',
         threshold: 0,
         label: 'Trailhead Rookie',
-        icon: 'YO±',
+        icon: '\u{1F331}',
         description: 'You have the map and motivation - complete your first module to leave the trailhead.',
     },
     {
         id: 'scholar',
         threshold: 3,
         label: 'Sprouting Scholar',
-        icon: 'Y"~',
+        icon: '\u{1F33F}',
         description: 'Patterns are clicking. Keep finishing fundamentals to unlock tougher structures.',
     },
     {
         id: 'adventurer',
         threshold: 10,
         label: 'Algorithm Adventurer',
-        icon: 'Yß≠',
+        icon: '\u{1F9ED}',
         description: 'You navigate recursion, sorting, and graphs with confidence. Time to optimize.',
     },
     {
         id: 'dynamo',
         threshold: 20,
         label: 'Data Structure Dynamo',
-        icon: '‚s°',
+        icon: '\u26A1',
         description: 'You can dissect any implementation and rebuild it from memory. Keep the momentum.',
     },
     {
         id: 'luminary',
         threshold: 34,
         label: 'DSA Luminary',
-        icon: 'L',
+        icon: '\u{1F3C6}',
         description: 'All modules conquered! Pay it forward by mentoring someone still on the path.',
     }
 ];
@@ -492,7 +495,7 @@ const ACHIEVEMENT_LEVELS = [
 const TRANSLATIONS = {
     en: {
         // Main header
-        'main.title': 'Yß≠ CS Course Atlas',
+        'main.title': '\u{1F9ED} CS Course Atlas',
         'main.subtitle': 'Multi-class learning for Computer Science students',
         // Hero
         'hero.title': 'CS Course Atlas: Learn Across Core CS Courses',
@@ -570,7 +573,7 @@ const TRANSLATIONS = {
         'route.about.launchDescription': 'Use the quick guide, then review trust pages and project details.',
         'route.about.guideAction': 'Open Quick Guide',
         // Progress
-        'progress.heading': 'Y"S Your Learning Progress',
+        'progress.heading': '\u{1F4CA} Your Learning Progress',
         'progress.kicker': 'Current journey',
         // Topic focus
         'topic.focus.heading': 'Topic Focus',
@@ -597,8 +600,8 @@ const TRANSLATIONS = {
         'topic.comingSoon.stats.title': 'Statistics for CS',
         'topic.comingSoon.stats.subtitle': 'Probability, distributions, inference, and data-driven decision making',
         // Sections
-        'section.dailyChallenge': 'Y"• Daily Challenge',
-        'section.studyTip': 'YOY Study Tip',
+        'section.dailyChallenge': '\u{1F3AF} Daily Challenge',
+        'section.studyTip': '\u{1F4A1} Study Tip',
         'section.insights': 'Personalized Study Insights',
         'section.insightsSubtitle': 'Stay on track with live stats, tailored module suggestions, and a built-in focus buddy.',
         'section.expand': 'Expand',
@@ -628,7 +631,7 @@ const TRANSLATIONS = {
         'insights.lock.guestNote': 'Save one local note',
         'insights.lock.guestHint': 'Create a free account to sync progress across devices once you are ready.',
         'auth.status.guest': 'Guest mode active. Create a free account to sync progress across devices.',
-        'interview.heading': 'Y", Interview Examples',
+        'interview.heading': '\u{1F4C2} Interview Examples',
         'interview.subtitle': 'LeetCode-style walk-throughs. Two at a time with quick copy.',
         'interview.pages': 'Pages',
         'interview.runSolution': 'Run Solution',
@@ -662,7 +665,7 @@ const TRANSLATIONS = {
         'interview.solutionCopied': 'Solution copied.',
         'interview.solutionCopyError': 'Unable to copy solution.',
         'interview.noRunnable': 'No runnable sample configured for this approach/language yet.',
-        'ds.heading': 'Y>†Ô∏è Data Structure Code Playground',
+        'ds.heading': '\u{1F6E0}\uFE0F Data Structure Code Playground',
         'ds.subtitle': 'Interact with arrays, stacks, queues, heaps, graphs, and tries. Track structure, pointers, operation timeline, and complexity in one place.',
         'ds.reset': 'Reset playground',
         // Progress chip
@@ -671,7 +674,7 @@ const TRANSLATIONS = {
         'achievements.heading': 'Learning Achievements',
         'achievements.currentBadge': 'Current Badge',
         // Support
-        'support.heading': '‚ù§Ô∏è Do you enjoy this website?',
+        'support.heading': '\u2764\uFE0F Do you enjoy this website?',
         'support.subtitle': 'Help keep this resource free and updated with new content weekly!',
         // Floating helper
         'helper.badge': 'Quick Guide',
@@ -706,7 +709,7 @@ const TRANSLATIONS = {
         'helper.workflowStep3': 'Lock understanding with quiz + flashcards.',
         'helper.workflowStep4': 'Save notes and track completion so insights stay accurate.',
         'helper.closeBtn': 'Got it',
-        'books.heading': 'Y"s Books Library',
+        'books.heading': '\u{1F4DA} Books Library',
         'books.subtitle': 'Read full-length reference books directly in the website or download them for offline study.',
         'books.badge': 'Reference Shelf',
         'books.readerLabel': 'Book Reader',
@@ -745,13 +748,13 @@ const TRANSLATIONS = {
         'footer.tag.multiCourse': 'Multi-course',
         'footer.tag.handsOn': 'Hands-on Practice',
         'footer.tag.bilingual': 'EN / ES Friendly',
-        'footer.quick.flashcards': 'YZØ Open Flashcards',
-        'footer.quick.quizzes': 'Yß† Start a Quiz',
-        'footer.quick.glossary': 'Y"s Browse Glossary',
-        'footer.tools.title': 'Y"- Study Tools',
-        'footer.tools.flashcards': 'YZØ Practice Flashcards',
-        'footer.tools.glossary': 'Y"s CS Glossary',
-        'footer.tools.quizzes': 'Yß† Interactive Quizzes',
+        'footer.quick.flashcards': '\u{1F3AF} Open Flashcards',
+        'footer.quick.quizzes': '\u{1F9E0} Start a Quiz',
+        'footer.quick.glossary': '\u{1F4DA} Browse Glossary',
+        'footer.tools.title': '\u{1F9F0} Study Tools',
+        'footer.tools.flashcards': '\u{1F3AF} Practice Flashcards',
+        'footer.tools.glossary': '\u{1F4DA} CS Glossary',
+        'footer.tools.quizzes': '\u{1F9E0} Interactive Quizzes',
         'flashcards.deck.all': 'All Modules (mix)',
         'flashcards.deck.topicGroup': 'Topic Decks',
         'flashcards.deck.moduleGroup': 'Module Decks',
@@ -764,15 +767,15 @@ const TRANSLATIONS = {
         'flashcards.deck.topic.empty': 'No unlocked cards in this track yet. Complete quizzes in this track to unlock more flashcards.',
         'flashcards.deck.module.locked': 'Complete quiz to unlock',
         'flashcards.deck.startPrompt': 'Pick a deck to begin.',
-        'footer.features.title': 'Ys? Core Features',
+        'footer.features.title': '\u{1F680} Core Features',
         'footer.features.one': 'Individual Comment Controls',
-        'footer.features.two': 'Y"ù Pseudocode Conversion',
-        'footer.features.three': 'Y>†Ô∏è Multi-Language Support',
-        'footer.features.four': 'Y"± Mobile-Optimized Design',
-        'footer.features.five': 'YOT Dark Mode Support',
+        'footer.features.two': '\u{1F9E9} Pseudocode Conversion',
+        'footer.features.three': '\u{1F6E0}\uFE0F Multi-Language Support',
+        'footer.features.four': '\u{1F4F1} Mobile-Optimized Design',
+        'footer.features.five': '\u{1F319} Dark Mode Support',
         'footer.support.title': 'Support the Project',
         'footer.support.copy': 'Made with care for CS students. Help keep the platform free and continuously updated.',
-        'footer.support.coffee': '‚~. Coffee',
+        'footer.support.coffee': '\u2615 Coffee',
         'footer.support.sponsor': 'Sponsor',
         'footer.trust.title': 'Trust & Legal',
         'footer.trust.privacy': 'Privacy Policy',
@@ -780,9 +783,9 @@ const TRANSLATIONS = {
         'footer.trust.contact': 'Contact / Support',
         'footer.trust.refunds': 'Donations & Refunds',
         'footer.bottom.author': 'Created for CS students by Eddy Arriaga-B',
-        'footer.bottom.copyright': 'CS Course Atlas ¬© 2024 | Open Source ‚ù§Ô∏è',
+        'footer.bottom.copyright': 'CS Course Atlas \u00A9 2024 | Open Source \u2764\uFE0F',
         // Settings modal
-        'settings.title': '‚sTÔ∏è Settings',
+        'settings.title': '\u2699\uFE0F Settings',
         'settings.subtitle': 'Customize your learning experience',
         'settings.appearance': 'Appearance',
         'settings.darkMode': 'Dark Mode',
@@ -831,15 +834,15 @@ const TRANSLATIONS = {
         'settings.language': 'Language / Idioma',
         'settings.languageLabel': 'Interface Language',
         'settings.languageHint': 'Switch between English and Spanish / Cambia entre ingl√©s y espa√±ol.',
-        'settings.save': '‚o" Save & Close',
+        'settings.save': '\u2705 Save & Close',
         // Module card labels/tooltips
-        'module.starterBanner': '‚≠ê Starter Module: recommended first step for most learners',
+        'module.starterBanner': '\u2B50 Starter Module: recommended first step for most learners',
         'module.topicsCovered': 'Topics Covered:',
-        'module.codeExample': 'Code Example',
-        'module.discreteTheory': 'Y"~ Discrete Mathematics Theory',
+        'module.codeExample': '\u{1F4BB} Code Example',
+        'module.discreteTheory': '\u{1F4D8} Discrete Mathematics Theory',
         'module.theoryMode': 'Theory Mode',
-        'module.learningResources': 'Y"s Learning Resources:',
-        'module.definitionsHeading': 'Y"~ Need-to-Know Definitions',
+        'module.learningResources': '\u{1F4DA} Learning Resources:',
+        'module.definitionsHeading': '\u{1F4D6} Need-to-Know Definitions',
         'module.tooltipHideComments': 'Hide Comments',
         'module.tooltipShowComments': 'Show Comments',
         'module.tooltipSelectLanguage': 'Select Programming Language',
@@ -848,8 +851,8 @@ const TRANSLATIONS = {
         'module.modePseudocode': 'Pseudocode',
         'module.commentsOn': 'ON',
         'module.commentsOff': 'OFF',
-        'module.collapse': 'Y"" Collapse',
-        'module.expand': 'Y"- Expand',
+        'module.collapse': '\u{1F53D} Collapse',
+        'module.expand': '\u{1F53C} Expand',
         'module.discreteModeLabel': 'Discrete Mathematics',
         'module.examplesHeading': 'Detailed Topic Code Examples',
         'module.hideExample': 'Hide Code',
@@ -870,7 +873,7 @@ const TRANSLATIONS = {
     },
     es: {
         // Main header
-        'main.title': 'Yß≠ CS Course Atlas',
+        'main.title': '\u{1F9ED} CS Course Atlas',
         'main.subtitle': 'Aprendizaje multi-curso para estudiantes de Ciencias de la Computaci√≥n',
         // Hero
         'hero.title': 'CS Course Atlas: Aprende en Cursos Clave de CS',
@@ -948,7 +951,7 @@ const TRANSLATIONS = {
         'route.about.launchDescription': 'Usa la guia rapida y luego revisa las paginas de confianza.',
         'route.about.guideAction': 'Abrir Guia Rapida',
         // Progress
-        'progress.heading': 'Y"S Tu Progreso de Aprendizaje',
+        'progress.heading': '\u{1F4CA} Tu Progreso de Aprendizaje',
         'progress.kicker': 'Recorrido actual',
         // Topic focus
         'topic.focus.heading': 'Enfoque de Temas',
@@ -975,8 +978,8 @@ const TRANSLATIONS = {
         'topic.comingSoon.stats.title': 'Estad√≠stica para CS',
         'topic.comingSoon.stats.subtitle': 'Probabilidad, distribuciones, inferencia y toma de decisiones basada en datos',
         // Sections
-        'section.dailyChallenge': 'Y"• Desaf√≠o del D√≠a',
-        'section.studyTip': 'YOY Consejo de Estudio',
+        'section.dailyChallenge': '\u{1F3AF} Desaf\u00edo del D\u00eda',
+        'section.studyTip': '\u{1F4A1} Consejo de Estudio',
         'section.insights': 'Perspectivas de Estudio Personalizadas',
         'section.insightsSubtitle': 'Mantente al d√≠a con estad√≠sticas en vivo, sugerencias de m√≥dulos y un compa√±ero de enfoque integrado.',
         'section.expand': 'Expandir',
@@ -1006,7 +1009,7 @@ const TRANSLATIONS = {
         'insights.lock.guestNote': 'Guarda una nota local',
         'insights.lock.guestHint': 'Crea una cuenta gratis para sincronizar tu progreso entre dispositivos cuando quieras.',
         'auth.status.guest': 'Modo invitado activo. Crea una cuenta gratis para sincronizar tu progreso entre dispositivos.',
-        'interview.heading': 'Y", Ejemplos de Entrevista',
+        'interview.heading': '\u{1F4C2} Ejemplos de Entrevista',
         'interview.subtitle': 'Recorridos estilo LeetCode. Dos por p√°gina con copia r√°pida.',
         'interview.pages': 'P√°ginas',
         'interview.runSolution': 'Ejecutar soluci√≥n',
@@ -1040,7 +1043,7 @@ const TRANSLATIONS = {
         'interview.solutionCopied': 'Solucion copiada.',
         'interview.solutionCopyError': 'No se pudo copiar la solucion.',
         'interview.noRunnable': 'Aun no hay muestra ejecutable para este enfoque/lenguaje.',
-        'ds.heading': 'Y>†Ô∏è Playground de C√≥digo de Estructuras de Datos',
+        'ds.heading': '\u{1F6E0}\uFE0F Playground de C\u00f3digo de Estructuras de Datos',
         'ds.subtitle': 'Interact√∫a con arreglos, pilas, colas, mont√≠culos, grafos y tries. Sigue estructura, punteros, l√≠nea de tiempo y complejidad en un solo lugar.',
         'ds.reset': 'Reiniciar playground',
         // Progress chip
@@ -1049,7 +1052,7 @@ const TRANSLATIONS = {
         'achievements.heading': 'Logros de Aprendizaje',
         'achievements.currentBadge': 'Insignia actual',
         // Support
-        'support.heading': '‚ù§Ô∏è ¬øDisfrutas este sitio web?',
+        'support.heading': '\u2764\uFE0F \u00bfDisfrutas este sitio web?',
         'support.subtitle': '¬°Ayuda a mantener este recurso gratuito y actualizado con contenido nuevo cada semana!',
         // Asistente flotante
         'helper.badge': 'Guia Rapida',
@@ -1084,7 +1087,7 @@ const TRANSLATIONS = {
         'helper.workflowStep3': 'Fija el aprendizaje con quiz + flashcards.',
         'helper.workflowStep4': 'Guarda notas y marca progreso para mantener insights precisos.',
         'helper.closeBtn': 'Entendido',
-        'books.heading': 'Y"s Biblioteca de Libros',
+        'books.heading': '\u{1F4DA} Biblioteca de Libros',
         'books.subtitle': 'Lee libros de referencia completos dentro del sitio o desc√°rgalos para estudiar sin conexi√≥n.',
         'books.badge': 'Biblioteca de Referencia',
         'books.readerLabel': 'Lector de Libros',
@@ -1123,13 +1126,13 @@ const TRANSLATIONS = {
         'footer.tag.multiCourse': 'Multi-curso',
         'footer.tag.handsOn': 'Pr√°ctica Activa',
         'footer.tag.bilingual': 'Amigable EN / ES',
-        'footer.quick.flashcards': 'YZØ Abrir Tarjetas',
-        'footer.quick.quizzes': 'Yß† Iniciar Quiz',
-        'footer.quick.glossary': 'Y"s Ver Glosario',
-        'footer.tools.title': 'Y"- Herramientas de Estudio',
-        'footer.tools.flashcards': 'YZØ Practicar Tarjetas',
-        'footer.tools.glossary': 'Y"s Glosario de CS',
-        'footer.tools.quizzes': 'Yß† Cuestionarios Interactivos',
+        'footer.quick.flashcards': '\u{1F3AF} Abrir Tarjetas',
+        'footer.quick.quizzes': '\u{1F9E0} Iniciar Quiz',
+        'footer.quick.glossary': '\u{1F4DA} Ver Glosario',
+        'footer.tools.title': '\u{1F9F0} Herramientas de Estudio',
+        'footer.tools.flashcards': '\u{1F3AF} Practicar Tarjetas',
+        'footer.tools.glossary': '\u{1F4DA} Glosario de CS',
+        'footer.tools.quizzes': '\u{1F9E0} Cuestionarios Interactivos',
         'flashcards.deck.all': 'Todos los m√≥dulos (mezcla)',
         'flashcards.deck.topicGroup': 'Mazos por tema',
         'flashcards.deck.moduleGroup': 'Mazos por m√≥dulo',
@@ -1142,15 +1145,15 @@ const TRANSLATIONS = {
         'flashcards.deck.topic.empty': 'A√∫n no hay tarjetas desbloqueadas en esta ruta. Completa quizzes de esta ruta para desbloquear m√°s tarjetas.',
         'flashcards.deck.module.locked': 'Completa el quiz para desbloquear',
         'flashcards.deck.startPrompt': 'Elige un mazo para comenzar.',
-        'footer.features.title': 'Ys? Funciones Clave',
+        'footer.features.title': '\u{1F680} Funciones Clave',
         'footer.features.one': 'Controles de comentarios individuales',
-        'footer.features.two': 'Y"ù Conversi√≥n a Pseudoc√≥digo',
-        'footer.features.three': 'Y>†Ô∏è Soporte Multi-Lenguaje',
-        'footer.features.four': 'Y"± Dise√±o Optimizado para M√≥vil',
-        'footer.features.five': 'YOT Soporte de Modo Oscuro',
+        'footer.features.two': '\u{1F9E9} Conversi\u00f3n a Pseudoc\u00f3digo',
+        'footer.features.three': '\u{1F6E0}\uFE0F Soporte Multi-Lenguaje',
+        'footer.features.four': '\u{1F4F1} Dise\u00f1o Optimizado para M\u00f3vil',
+        'footer.features.five': '\u{1F319} Soporte de Modo Oscuro',
         'footer.support.title': 'Apoya el Proyecto',
         'footer.support.copy': 'Hecho con dedicaci√≥n para estudiantes de CS. Ayuda a mantener la plataforma gratuita y en mejora continua.',
-        'footer.support.coffee': '‚~. Caf√©',
+        'footer.support.coffee': '\u2615 Caf\u00e9',
         'footer.support.sponsor': 'Patrocinar',
         'footer.trust.title': 'Confianza y Legal',
         'footer.trust.privacy': 'Pol√≠tica de Privacidad',
@@ -1158,9 +1161,9 @@ const TRANSLATIONS = {
         'footer.trust.contact': 'Contacto / Soporte',
         'footer.trust.refunds': 'Donaciones y Reembolsos',
         'footer.bottom.author': 'Creado para estudiantes de CS por Eddy Arriaga-B',
-        'footer.bottom.copyright': 'CS Course Atlas ¬© 2024 | C√≥digo Abierto ‚ù§Ô∏è',
+        'footer.bottom.copyright': 'CS Course Atlas \u00A9 2024 | C\u00f3digo Abierto \u2764\uFE0F',
         // Settings modal
-        'settings.title': '‚sTÔ∏è Ajustes',
+        'settings.title': '\u2699\uFE0F Ajustes',
         'settings.subtitle': 'Personaliza tu experiencia de aprendizaje',
         'settings.appearance': 'Apariencia',
         'settings.darkMode': 'Modo Oscuro',
@@ -1209,15 +1212,15 @@ const TRANSLATIONS = {
         'settings.language': 'Idioma / Language',
         'settings.languageLabel': 'Idioma de la Interfaz',
         'settings.languageHint': 'Cambia entre espa√±ol e ingl√©s / Switch between Spanish and English.',
-        'settings.save': '‚o" Guardar y Cerrar',
+        'settings.save': '\u2705 Guardar y Cerrar',
         // Module card labels/tooltips
-        'module.starterBanner': '‚≠ê M√≥dulo inicial: primer paso recomendado para la mayor√≠a',
+        'module.starterBanner': '\u2B50 M\u00f3dulo inicial: primer paso recomendado para la mayor\u00eda',
         'module.topicsCovered': 'Temas cubiertos:',
-        'module.codeExample': 'Ejemplo de codigo',
-        'module.discreteTheory': 'Y"~ Teor√≠a de Matem√°ticas Discretas',
+        'module.codeExample': '\u{1F4BB} Ejemplo de codigo',
+        'module.discreteTheory': '\u{1F4D8} Teor\u00eda de Matem\u00e1ticas Discretas',
         'module.theoryMode': 'Modo Teor√≠a',
-        'module.learningResources': 'Y"s Recursos de aprendizaje:',
-        'module.definitionsHeading': 'Y"~ Definiciones Clave',
+        'module.learningResources': '\u{1F4DA} Recursos de aprendizaje:',
+        'module.definitionsHeading': '\u{1F4D6} Definiciones Clave',
         'module.tooltipHideComments': 'Ocultar comentarios',
         'module.tooltipShowComments': 'Mostrar comentarios',
         'module.tooltipSelectLanguage': 'Seleccionar lenguaje de programaci√≥n',
@@ -1226,8 +1229,8 @@ const TRANSLATIONS = {
         'module.modePseudocode': 'Pseudoc√≥digo',
         'module.commentsOn': 'ACT',
         'module.commentsOff': 'DES',
-        'module.collapse': 'Y"" Contraer',
-        'module.expand': 'Y"- Expandir',
+        'module.collapse': '\u{1F53D} Contraer',
+        'module.expand': '\u{1F53C} Expandir',
         'module.discreteModeLabel': 'Matem√°ticas Discretas',
         'module.examplesHeading': 'Ejemplos de C√≥digo por Tema',
         'module.hideExample': 'Ocultar C√≥digo',
@@ -1579,6 +1582,7 @@ function applyLanguage(lang) {
     document.documentElement.lang = lang;
     translateDomLiterals(lang);
     setDomLocalizationObserver(lang);
+    syncDesktopSidebarIconMode();
 }
 
 /**
@@ -1614,6 +1618,14 @@ function normalizeRoutePath(pathname) {
     const withoutQuery = value.split('?')[0].split('#')[0];
     let normalized = withoutQuery || '/';
     if (!normalized.startsWith('/')) normalized = `/${normalized}`;
+    const appBasePath = String(APP_BASE_PATH || '').trim().toLowerCase();
+    if (appBasePath && appBasePath !== '/') {
+        if (normalized === appBasePath) {
+            normalized = '/';
+        } else if (normalized.startsWith(`${appBasePath}/`)) {
+            normalized = normalized.slice(appBasePath.length) || '/';
+        }
+    }
     if (normalized.length > 1 && normalized.endsWith('/')) {
         normalized = normalized.replace(/\/+$/g, '');
     }
@@ -1629,6 +1641,24 @@ function isSidebarDrawerMode() {
     return window.matchMedia('(max-width: 1023px)').matches;
 }
 
+function isSidebarInlineMode() {
+    return window.matchMedia('(min-width: 1024px)').matches;
+}
+
+function syncDesktopSidebarIconMode() {
+    if (!document.body) return;
+
+    document.querySelectorAll('.sidebar-link[data-route-key]').forEach((link) => {
+        if (!(link instanceof HTMLElement)) return;
+        const label = String(link.textContent || '').trim();
+        if (!label) return;
+        link.setAttribute('title', label);
+        link.setAttribute('aria-label', label);
+    });
+
+    const shouldCollapseToIcons = isSidebarInlineMode() && document.body.classList.contains('modal-open');
+    document.body.classList.toggle('sidebar-icon-only', shouldCollapseToIcons);
+}
 function setSidebarExpandedState(expanded) {
     const toggleButton = document.getElementById('sidebar-toggle');
     const sidebar = document.getElementById('app-sidebar');
@@ -1643,6 +1673,7 @@ function setSidebarExpandedState(expanded) {
     if (backdrop) {
         backdrop.hidden = !drawerMode || !expanded;
     }
+    syncDesktopSidebarIconMode();
 }
 
 function closeSidebar(options = {}) {
@@ -1670,6 +1701,7 @@ function syncSidebarActiveLink(route) {
         link.classList.toggle('active', isActive);
         link.setAttribute('aria-current', isActive ? 'page' : 'false');
     });
+    syncDesktopSidebarIconMode();
 }
 
 function setRouteSectionVisibility(sectionId, isVisible) {
@@ -1678,8 +1710,10 @@ function setRouteSectionVisibility(sectionId, isVisible) {
     element.hidden = !isVisible;
     if (isVisible) {
         element.removeAttribute('aria-hidden');
+        element.style.removeProperty('display');
     } else {
         element.setAttribute('aria-hidden', 'true');
+        element.style.setProperty('display', 'none', 'important');
     }
 }
 
@@ -1834,11 +1868,12 @@ function navigateToRoute(route, options = {}) {
 
     const currentPath = normalizeRoutePath(window.location.pathname || '/');
     const shouldReplace = replaceHistory || normalizedRoute === currentPath;
+    const nextHistoryPath = withAppBasePath(normalizedRoute);
     const historyState = { route: normalizedRoute };
     if (shouldReplace) {
-        window.history.replaceState(historyState, '', normalizedRoute);
+        window.history.replaceState(historyState, '', nextHistoryPath);
     } else {
-        window.history.pushState(historyState, '', normalizedRoute);
+        window.history.pushState(historyState, '', nextHistoryPath);
     }
 
     renderRoute(normalizedRoute, { preserveScroll, focusMain, skipModuleRender });
@@ -1849,6 +1884,7 @@ function initRouteNavigation() {
     const closeButton = document.getElementById('sidebar-close');
     const backdrop = document.getElementById('sidebar-backdrop');
     closeSidebar();
+    syncDesktopSidebarIconMode();
 
     if (toggleButton && toggleButton.dataset.boundSidebarToggle !== 'true') {
         toggleButton.dataset.boundSidebarToggle = 'true';
@@ -1873,6 +1909,8 @@ function initRouteNavigation() {
     document.querySelectorAll('[data-route-link]').forEach((link) => {
         if (link.dataset.boundRouteLink === 'true') return;
         link.dataset.boundRouteLink = 'true';
+        const declaredRoute = normalizeRoutePath(link.getAttribute('data-route-key') || link.getAttribute('href') || DEFAULT_ROUTE);
+        link.setAttribute('href', withAppBasePath(declaredRoute));
         link.addEventListener('click', (event) => {
             if (event.defaultPrevented) return;
             if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
@@ -1924,11 +1962,11 @@ const baseFlashcards = [
     {
         id: 4,
         question: "What is a LinkedList and when to use it?",
-        answer: "LinkedList stores elements as nodes with next pointers.\n\nUse when:\n‚?¢ Frequent insert/delete\n‚?¢ Unknown or changing size\n‚?¢ No random access needed"
+        answer: "LinkedList stores elements as nodes with next pointers.\n\nUse when:\n? Frequent insert/delete\n? Unknown or changing size\n? No random access needed"
     },
     {
         id: 5,
-        question: "How does Floyd‚?Ts Cycle Detection Algorithm work?",
+        question: "How does Floyd's Cycle Detection Algorithm work?",
         answer: "Use two pointers (slow and fast).\nIf there's a cycle, fast eventually meets slow.\nIf not, fast reaches null.\n\nUsed to detect loops in linked lists."
     },
     {
@@ -1968,13 +2006,13 @@ const baseFlashcards = [
     },
     {
         id: 13,
-        question: "What‚?Ts the difference between DFS and BFS?",
+        question: "What's the difference between DFS and BFS?",
         answer: "DFS: Goes deep using stack/recursion\nBFS: Level-order using queue\n\nUsed for different types of graph exploration"
     },
     {
         id: 14,
         question: "What is a Heap?",
-        answer: "Binary tree with parent-child ordering.\nMin Heap: parent ‚?§ children\nMax Heap: parent ‚?• children\n\nUsed in Priority Queues"
+        answer: "Binary tree with parent-child ordering.\nMin Heap: parent ? children\nMax Heap: parent ? children\n\nUsed in Priority Queues"
     },
     {
         id: 15,
@@ -1998,8 +2036,8 @@ const baseFlashcards = [
     },
     {
         id: 19,
-        question: "What‚?Ts the space and time of merge sort?",
-        answer: "Time: O(n log n)\nSpace: O(n)\n\nIt‚?Ts stable and works well on linked lists"
+        question: "What's the space and time of merge sort?",
+        answer: "Time: O(n log n)\nSpace: O(n)\n\nIt's stable and works well on linked lists"
     },
     {
         id: 20,
@@ -2023,7 +2061,7 @@ const baseFlashcards = [
     },
     {
         id: 24,
-        question: "What‚?Ts the difference between recursion and iteration?",
+        question: "What's the difference between recursion and iteration?",
         answer: "Recursion: function calls itself\nIteration: uses loops\n\nRecursion is often cleaner but uses more stack space"
     },
     {
@@ -2038,7 +2076,7 @@ const baseFlashcards = [
     },
     {
         id: 27,
-        question: "What‚?Ts a priority queue?",
+        question: "What's a priority queue?",
         answer: "Queue where elements are removed by priority.\nOften implemented with heaps."
     },
     {
@@ -2063,12 +2101,12 @@ const baseFlashcards = [
     },
     {
         id: 32,
-        question: "What‚?Ts a balanced binary tree?",
+        question: "What's a balanced binary tree?",
         answer: "Tree where left and right subtrees of every node differ in height by at most 1"
     },
     {
         id: 33,
-        question: "What‚?Ts the difference between call stack and heap?",
+        question: "What's the difference between call stack and heap?",
         answer: "Call stack: stores function calls\nHeap: stores dynamically allocated memory"
     },
     {
@@ -2078,7 +2116,7 @@ const baseFlashcards = [
     },
     {
         id: 35,
-        question: "What‚?Ts the difference between BFS and Dijkstra?",
+        question: "What's the difference between BFS and Dijkstra?",
         answer: "BFS: for unweighted graphs\nDijkstra: for weighted graphs (no negative weights)"
     },
     {
@@ -2093,7 +2131,7 @@ const baseFlashcards = [
     },
     {
         id: 38,
-        question: "What‚?Ts the time complexity of hashmap operations?",
+        question: "What's the time complexity of hashmap operations?",
         answer: "Average: O(1)\nWorst-case (with collisions): O(n)"
     },
     {
@@ -2119,7 +2157,7 @@ const baseFlashcards = [
     {
         id: 43,
         question: "What is topological sorting?",
-        answer: "Linear ordering of nodes in a DAG so u comes before v for all edges u ‚?' v"
+        answer: "Linear ordering of nodes in a DAG so u comes before v for all edges u ? v"
     },
     {
         id: 44,
@@ -2138,7 +2176,7 @@ const baseFlashcards = [
     },
     {
         id: 47,
-        question: "What‚?Ts the difference between min heap and max heap?",
+        question: "What's the difference between min heap and max heap?",
         answer: "Min heap: smallest element at root\nMax heap: largest element at root"
     },
     {
@@ -2148,7 +2186,7 @@ const baseFlashcards = [
     },
     {
         id: 49,
-        question: "What‚?Ts the difference between a shallow copy and deep copy?",
+        question: "What's the difference between a shallow copy and deep copy?",
         answer: "Shallow: copies reference\nDeep: copies entire object structure"
     },
     {
@@ -2278,7 +2316,7 @@ const glossaryTerms = [
     },
     {
         term: "Bubble Sort",
-        definition: "Simple sorting algorithm that repeatedly swaps adjacent elements if they‚?Tre in the wrong order.",
+        definition: "Simple sorting algorithm that repeatedly swaps adjacent elements if they're in the wrong order.",
         category: "Algorithms"
     },
     {
@@ -2297,7 +2335,7 @@ const glossaryTerms = [
         category: "Data Structures"
     },
     {
-        term: "Floyd‚?Ts Cycle Detection",
+        term: "Floyd's Cycle Detection",
         definition: "Algorithm that detects cycles in linked lists using two pointers moving at different speeds.",
         category: "Algorithms"
     },
@@ -2388,7 +2426,7 @@ const glossaryTerms = [
     },
     {
         term: "Topological Sort",
-        definition: "Linear ordering of graph vertices such that for every edge u ‚?' v, u appears before v.",
+        definition: "Linear ordering of graph vertices such that for every edge u ? v, u appears before v.",
         category: "Algorithms"
     },
     {
@@ -2397,7 +2435,7 @@ const glossaryTerms = [
         category: "Algorithms"
     },
     {
-        term: "Dijkstra‚?Ts Algorithm",
+        term: "Dijkstra's Algorithm",
         definition: "Greedy algorithm to find the shortest path from a source to all vertices in a weighted graph.",
         category: "Algorithms"
     },
@@ -2407,12 +2445,12 @@ const glossaryTerms = [
         category: "Algorithms"
     },
     {
-        term: "Kruskal‚?Ts Algorithm",
+        term: "Kruskal's Algorithm",
         definition: "Greedy algorithm to build a minimum spanning tree by sorting all edges by weight.",
         category: "Algorithms"
     },
     {
-        term: "Prim‚?Ts Algorithm",
+        term: "Prim's Algorithm",
         definition: "Greedy algorithm that grows a minimum spanning tree from a starting node.",
         category: "Algorithms"
     }
@@ -2434,7 +2472,7 @@ const quizData = {
                     question: "What is the time complexity of accessing an element in an array by its index?",
                     options: ["O(1)", "O(log n)", "O(n)", "O(n¬≤)"],
                     correct: 0,
-                    explanation: "Random access arrays compute the memory address via base + index √- element_size, so lookup cost is constant."
+                    explanation: "Random access arrays compute the memory address via base + index ? element_size, so lookup cost is constant."
                 },
                 {
                     id: 2,
@@ -2542,7 +2580,7 @@ const quizData = {
                     question: "The load factor of a hash table measures:",
                     options: ["Average probe length", "Entries divided by bucket count", "Number of collisions", "Memory usage"],
                     correct: 1,
-                    explanation: "Load factor Œ± = n / m drives when to resize; keeping Œ± bounded retains O(1) average operations."
+                    explanation: "Load factor ? = n / m drives when to resize; keeping ? bounded retains O(1) average operations."
                 },
                 {
                     id: 2,
@@ -2567,7 +2605,7 @@ const quizData = {
                 {
                     id: 1,
                     question: "A binary heap is stored efficiently in an array because:",
-                    options: ["It sorts automatically", "Parent/child indices follow simple math (i‚?'2i+1/2i+2)", "It needs pointers", "Heapify needs recursion"],
+                    options: ["It sorts automatically", "Parent/child indices follow simple math (i?2i+1/2i+2)", "It needs pointers", "Heapify needs recursion"],
                     correct: 1,
                     explanation: "Heap nodes correspond to contiguous indices, so tree relationships derive from arithmetic rather than explicit references."
                 },
@@ -2762,7 +2800,7 @@ const quizData = {
                 },
                 {
                     id: 2,
-                    question: "Implication p ‚?' q is false only when:",
+                    question: "Implication p ? q is false only when:",
                     options: ["p is false and q is true", "p is true and q is false", "p and q are both true", "p and q are both false"],
                     correct: 1,
                     explanation: "An implication fails only when the premise is true but the conclusion is false."
@@ -2782,7 +2820,7 @@ const quizData = {
             questions: [
                 {
                     id: 1,
-                    question: "For sets A and B, A ‚^© B means:",
+                    question: "For sets A and B, A ? B means:",
                     options: ["Elements in A or B", "Elements in both A and B", "Elements only in A", "Ordered pairs from A and B"],
                     correct: 1,
                     explanation: "Intersection keeps only elements common to both sets."
@@ -2790,13 +2828,13 @@ const quizData = {
                 {
                     id: 2,
                     question: "A relation R on set A is:",
-                    options: ["A subset of A √- A", "A function from A to A only", "A prime number list", "Always symmetric"],
+                    options: ["A subset of A ? A", "A function from A to A only", "A prime number list", "Always symmetric"],
                     correct: 0,
-                    explanation: "A relation on A is any subset of the Cartesian product A √- A."
+                    explanation: "A relation on A is any subset of the Cartesian product A ? A."
                 },
                 {
                     id: 3,
-                    question: "A function f: A ‚?' B is injective when:",
+                    question: "A function f: A ? B is injective when:",
                     options: ["Every b in B has a preimage", "Distinct inputs map to distinct outputs", "A equals B", "It is always surjective"],
                     correct: 1,
                     explanation: "Injective (one-to-one) functions never map two different domain elements to the same codomain element."
@@ -2823,8 +2861,8 @@ const quizData = {
                 },
                 {
                     id: 3,
-                    question: "For independent events A and B, P(A ‚^© B) equals:",
-                    options: ["P(A) + P(B)", "P(A) / P(B)", "P(A) √- P(B)", "1 - P(A)"],
+                    question: "For independent events A and B, P(A ? B) equals:",
+                    options: ["P(A) + P(B)", "P(A) / P(B)", "P(A) ? P(B)", "1 - P(A)"],
                     correct: 2,
                     explanation: "Independence means one event does not affect the other, so intersection probability multiplies."
                 }
@@ -2877,7 +2915,7 @@ const quizData = {
                 },
                 {
                     id: 3,
-                    question: "Kruskal‚?Ts MST algorithm uses union-find to:",
+                    question: "Kruskal's MST algorithm uses union-find to:",
                     options: ["Sort edges", "Detect when adding an edge would create a cycle", "Relax distances", "Count components"],
                     correct: 1,
                     explanation: "Before adding an edge, Kruskal checks whether its endpoints are already connected; union-find tracks that connectivity."
@@ -4701,8 +4739,8 @@ public class SetsRelationsFunctions {
         Map<Integer, Integer> f = new HashMap<>();
         f.put(1, 10); f.put(2, 20); f.put(3, 30);
 
-        System.out.println("A ‚^© B = " + intersection);
-        System.out.println("A ‚^™ B = " + union);
+        System.out.println("A ? B = " + intersection);
+        System.out.println("A ? B = " + union);
         System.out.println("f is injective? " + isInjective(f));
     }
 }`,
@@ -4730,8 +4768,8 @@ int main() {
     }
     map<int, int> f = {{1, 10}, {2, 20}, {3, 30}};
 
-    cout << "A ‚^© B size = " << intersection.size() << "\\n";
-    cout << "A ‚^™ B size = " << uni.size() << "\\n";
+    cout << "A ? B size = " << intersection.size() << "\\n";
+    cout << "A ? B size = " << uni.size() << "\\n";
     cout << boolalpha << "f is injective? " << isInjective(f) << "\\n";
     return 0;
 }`,
@@ -4743,8 +4781,8 @@ A = {1, 2, 3}
 B = {3, 4, 5}
 f = {1: 10, 2: 20, 3: 30}
 
-print("A ‚^© B =", A & B)
-print("A ‚^™ B =", A | B)
+print("A ? B =", A & B)
+print("A ? B =", A | B)
 print("f is injective?", is_injective(f))`,
             javascript: `// Sets, relations, and functions mini demo
 const A = new Set([1, 2, 3]);
@@ -4756,8 +4794,8 @@ const f = new Map([[1, 10], [2, 20], [3, 30]]);
 const values = [...f.values()];
 const isInjective = new Set(values).size === values.length;
 
-console.log("A ‚^© B =", intersection);
-console.log("A ‚^™ B =", [...union]);
+console.log("A ? B =", intersection);
+console.log("A ? B =", [...union]);
 console.log("f is injective?", isInjective);`
         },
         explanation: `You will model sets, binary relations, and mappings with concrete operations: membership tests, products, relation properties, and injective/surjective checks. The focus is building intuition used later in graph theory and proofs.`,
@@ -5773,7 +5811,7 @@ public class ExceptionExample {
     {
         id: 'collections-framework',
         title: 'Java Collections Framework',
-        description: '`CollectionsExample` builds an `ArrayList`, `HashMap`, and `HashSet` inside `main`, highlighting adds, puts, and duplicate handling so each collection‚?Ts behavior is tangible.',
+        description: '`CollectionsExample` builds an `ArrayList`, `HashMap`, and `HashSet` inside `main`, highlighting adds, puts, and duplicate handling so each collection\'s behavior is tangible.',
         difficulty: 'intermediate',
         topics: ['ArrayList', 'HashMap', 'HashSet', 'TreeMap', 'LinkedList', 'Iterators'],
         codeExample: `// Collections Framework
@@ -5929,7 +5967,7 @@ class ShapeFactory {
     {
         id: 'lambda-streams',
         title: 'Lambda Expressions & Streams',
-        description: 'The stream pipeline filters even numbers, maps them to squares, collects a list, then chains mapToInt/filter/average, so each stage‚?Ts role is spelled out in order.',
+        description: 'The stream pipeline filters even numbers, maps them to squares, collects a list, then chains mapToInt/filter/average, so each stage\'s role is spelled out in order.',
         difficulty: 'advanced',
         topics: ['Lambda Expressions', 'Stream API', 'Method References', 'Functional Interfaces'],
         codeExample: `// Lambda and Streams
@@ -7516,7 +7554,7 @@ public class BinarySearchSet {
         },
         {
             id: 'first-last-occurrence',
-            title: { en: 'First & Last Occurrence', es: 'Primera y √sltima Ocurrencia' },
+            title: { en: 'First & Last Occurrence', es: 'Primera y ?ltima Ocurrencia' },
             description: { en: 'Find range boundaries for duplicate values in sorted data.', es: 'Encuentra los l√≠mites de un valor repetido en datos ordenados.' },
             codeExamples: {
                 java: `import java.util.Arrays;
@@ -8472,7 +8510,7 @@ function normalizeModuleCodeExampleSets(module) {
             : {};
         const javaSource = typeof sourceCodeExamples.java === 'string' && sourceCodeExamples.java.trim()
             ? sourceCodeExamples.java
-            : buildFallbackJavaSnippet({ ...module, title: `${module.title} ‚?¢ ${setTitleText}` });
+            : buildFallbackJavaSnippet({ ...module, title: `${module.title} \u2022 ${setTitleText}` });
 
         const enhancedJava = ensureJavaSnippetHasVisibleOutput(module, addComprehensiveHeaderComments(module, javaSource));
         const normalizedCodeExamples = { java: enhancedJava };
@@ -8481,7 +8519,7 @@ function normalizeModuleCodeExampleSets(module) {
             const existing = typeof sourceCodeExamples[language] === 'string' ? sourceCodeExamples[language].trim() : '';
             normalizedCodeExamples[language] = hasVisibleOutputForLanguage(language, existing)
                 ? existing
-                : buildMirrorSnippetByLanguage({ ...module, title: `${module.title} - ${setTitleText}` }, enhancedJava, language);
+                : buildMirrorSnippetByLanguage({ ...module, title: `${module.title} \u2022 ${setTitleText}` }, enhancedJava, language);
         });
 
         if (isAssembly) {
@@ -8492,7 +8530,7 @@ function normalizeModuleCodeExampleSets(module) {
         }
 
         const normalizedExpectedOutputs = ensureExpectedOutputsForCodeExamples(
-            { ...module, title: `${module.title} - ${setTitleText}` },
+            { ...module, title: `${module.title} \u2022 ${setTitleText}` },
             normalizedCodeExamples,
             sourceExpectedOutputs
         );
@@ -11687,7 +11725,7 @@ function updateAccountChip() {
     if (!chip) return;
     const label = accountProfile.username || accountProfile.name || accountProfile.email;
     if (label) {
-        chip.textContent = `Y'< ${label}`;
+        chip.textContent = `üë§ ${label}`;
         chip.classList.remove('hidden');
     } else {
         chip.textContent = '';
@@ -11946,9 +11984,40 @@ function readAccountAuthForm() {
     };
 }
 
+function getScriptDerivedBasePath() {
+    if (typeof document === 'undefined' || typeof window === 'undefined') return '';
+    const scriptEl = document.querySelector('script[src*="js/script.js"]');
+    const scriptSrc = scriptEl?.getAttribute('src');
+    if (!scriptSrc) return '';
+    try {
+        const parsed = new URL(scriptSrc, window.location.href);
+        return parsed.pathname
+            .replace(/\/js\/script\.js(?:\?.*)?$/i, '')
+            .replace(/\/+$/, '');
+    } catch (error) {
+        return '';
+    }
+}
+
+const APP_BASE_PATH = getScriptDerivedBasePath();
+
+function withAppBasePath(path) {
+    const normalizedPath = String(path || '').trim();
+    if (!normalizedPath.startsWith('/')) return normalizedPath;
+    if (!APP_BASE_PATH) return normalizedPath;
+    return `${APP_BASE_PATH}${normalizedPath}`;
+}
+
+function isLocalhostRuntime() {
+    if (typeof window === 'undefined') return false;
+    const hostname = String(window.location.hostname || '').toLowerCase();
+    return hostname === 'localhost' || hostname === '127.0.0.1';
+}
+
 function buildApiEndpoint(path) {
     const base = getConfiguredApiBaseUrl();
-    return `${base}${path}`;
+    if (base) return `${base}${path}`;
+    return withAppBasePath(path);
 }
 
 function normalizeApiBaseUrl(rawUrl) {
@@ -11975,6 +12044,13 @@ function getConfiguredApiBaseUrl() {
         || (typeof window !== 'undefined' && window.NEON_API_BASE_URL)
         || '';
     return normalizeApiBaseUrl(PROFILE_SYNC_CONFIG.baseUrl || appConfigBase || '');
+}
+
+function isApiRuntimeAvailable() {
+    const configuredBase = getConfiguredApiBaseUrl();
+    if (configuredBase) return isSecureApiBaseUrl(configuredBase);
+    if (!isLocalhostRuntime() || typeof window === 'undefined') return false;
+    return String(window.location.port || '') === '3000';
 }
 
 function getSessionUserFromPayload(payload) {
@@ -12023,8 +12099,7 @@ function getNeonSessionEndpoint() {
 }
 
 function hasNeonSyncConfig() {
-    return PROFILE_SYNC_CONFIG.enabled
-        && isSecureApiBaseUrl(getConfiguredApiBaseUrl());
+    return PROFILE_SYNC_CONFIG.enabled && isApiRuntimeAvailable();
 }
 
 async function neonFetch(url, options = {}) {
@@ -12160,9 +12235,15 @@ async function checkNeonSession(options = {}) {
         accountAuthState.sessionLabel = '';
         setAccountAuthStatus(t('auth.status.guest'), 'neutral');
         refreshAccountPrimaryAuthButton();
-        setAccountSyncState('error', `Session check failed: ${error.message}`);
-        if (!silent) {
-            showToast(`Session check failed: ${error.message}`, 'error');
+        const reason = error instanceof Error ? error.message : String(error);
+        const normalizedReason = reason.toLowerCase();
+        const isUnauthenticated = normalizedReason.includes('not authenticated') || normalizedReason.includes('401');
+        setAccountSyncState(
+            isUnauthenticated ? 'connected' : 'error',
+            isUnauthenticated ? 'Guest mode active.' : `Session check failed: ${reason}`
+        );
+        if (!silent && !isUnauthenticated) {
+            showToast(`Session check failed: ${reason}`, 'error');
         }
         handleInsightsAccessStateChange();
         return null;
@@ -12831,7 +12912,7 @@ function renderNotesLibrary() {
                 <span class="notes-chip">${escapeHtml(item.level)}</span>
             </div>
             <p>${escapeHtml(item.description)}</p>
-            <div class="text-xs text-slate-500">${translateLiteral('Category:', appState.language)} ${escapeHtml(item.categoryLabel || item.category)} ‚?¢ ${item.pages} ${translateLiteral('pages', appState.language)}</div>
+            <div class="text-xs text-slate-500">${translateLiteral('Category:', appState.language)} ${escapeHtml(item.categoryLabel || item.category)} ? ${item.pages} ${translateLiteral('pages', appState.language)}</div>
             <div class="notes-actions mt-2">
                 <button type="button" class="notes-download" data-action="download" data-note-id="${escapeHtml(item.id)}">${translateLiteral('Download', appState.language)}</button>
                 <button type="button" class="notes-view" data-action="preview" data-note-id="${escapeHtml(item.id)}">${translateLiteral('Preview', appState.language)}</button>
@@ -12841,16 +12922,21 @@ function renderNotesLibrary() {
 }
 
 function getBookReadUrl(bookId) {
-    return `/api/books/${encodeURIComponent(bookId)}/read`;
+    return buildApiEndpoint(`/api/books/${encodeURIComponent(bookId)}/read`);
 }
 
 function getBookDownloadUrl(bookId) {
-    return `/api/books/${encodeURIComponent(bookId)}/download`;
+    return buildApiEndpoint(`/api/books/${encodeURIComponent(bookId)}/download`);
 }
 
 async function loadBooksLibrary() {
+    if (!isApiRuntimeAvailable()) {
+        booksLibrary = [];
+        renderBooksLibrary();
+        return;
+    }
     try {
-        const response = await fetch('/api/books', {
+        const response = await fetch(buildApiEndpoint('/api/books'), {
             method: 'GET',
             credentials: 'same-origin',
             cache: 'no-store'
@@ -12885,7 +12971,7 @@ function renderBooksLibrary() {
             book?.subject || '',
             book?.edition || '',
             Number.isFinite(pageCount) && pageCount > 0 ? `${pageCount} ${translateLiteral('pages', appState.language)}` : ''
-        ].filter(Boolean).join(' ‚?¢ ');
+        ].filter(Boolean).join(' ? ');
 
         const downloadAttrs = available
             ? `href="${escapeHtml(getBookDownloadUrl(book.id))}" target="_blank" rel="noopener noreferrer"`
@@ -12935,7 +13021,7 @@ function openBookReader(bookId) {
             book?.author || '',
             book?.edition || '',
             Number.isFinite(pageCount) && pageCount > 0 ? `${pageCount} ${translateLiteral('pages', appState.language)}` : ''
-        ].filter(Boolean).join(' ‚?¢ ');
+        ].filter(Boolean).join(' ? ');
         metaEl.textContent = detailLine;
     }
     if (downloadEl) {
@@ -12993,7 +13079,7 @@ function openNotesDownloadModal(noteId) {
     if (!modal || !note) return;
 
     if (titleEl) titleEl.textContent = note.title;
-    if (metaEl) metaEl.textContent = `${note.categoryLabel || note.category} ‚?¢ ${note.pages} ${translateLiteral('pages', appState.language)} ‚?¢ ${note.level}`;
+    if (metaEl) metaEl.textContent = `${note.categoryLabel || note.category} ? ${note.pages} ${translateLiteral('pages', appState.language)} ? ${note.level}`;
     if (donateLink) {
         donateLink.href = generatePayPalUrl(1, `${note.title} PDF`);
         donateLink.dataset.downloadUrl = note.downloadUrl || '';
@@ -14207,7 +14293,7 @@ function initPlayground() {
         output.classList.remove('success', 'error', 'fallback');
         output.classList.add(tone);
         if (outputMeta) {
-            const suffix = languageLabel ? ` ‚?¢ ${languageLabel}` : '';
+            const suffix = languageLabel ? ` ? ${languageLabel}` : '';
             outputMeta.textContent = `Source: ${source}${suffix}`;
         }
     };
@@ -14674,7 +14760,7 @@ function renderCytoscapeGraphVisual(container) {
     if (!container) return;
     if (!window.cytoscape || typeof window.cytoscape !== 'function') {
         const nodes = dsState.graph.nodes.map((node) => `<span class="ds-box">${escapeHtml(node)}</span>`).join('');
-        const edges = dsState.graph.edges.map((edge) => `${edge.from} ‚?' ${edge.to}`).join(', ');
+        const edges = dsState.graph.edges.map((edge) => `${edge.from} ? ${edge.to}`).join(', ');
         container.innerHTML = `<div class="ds-visual ds-graph">${nodes || `<span class="text-xs text-slate-400">${translateLiteral('No nodes yet.', appState.language)}</span>`}</div>
             <div class="text-xs text-slate-300 mt-2">${escapeHtml(edges || translateLiteral('No edges yet.', appState.language))}</div>`;
         return;
@@ -14861,13 +14947,13 @@ function buildDSPointerVisual() {
     if (dsActive === 'stack') {
         return `
             <div class="ds-pointer-row"><span>${translateLiteral('Top index', appState.language)}</span><strong>${dsState.stack.length ? dsState.stack.length - 1 : -1}</strong></div>
-            <div class="ds-pointer-row"><span>${translateLiteral('Top value', appState.language)}</span><strong>${escapeHtml(String(dsState.stack[dsState.stack.length - 1] ?? '‚^.'))}</strong></div>
+            <div class="ds-pointer-row"><span>${translateLiteral('Top value', appState.language)}</span><strong>${escapeHtml(String(dsState.stack[dsState.stack.length - 1] ?? '‚àÖ'))}</strong></div>
         `;
     }
     if (dsActive === 'queue') {
         return `
-            <div class="ds-pointer-row"><span>${translateLiteral('Front', appState.language)}</span><strong>${escapeHtml(String(dsState.queue[0] ?? '‚^.'))}</strong></div>
-            <div class="ds-pointer-row"><span>${translateLiteral('Rear', appState.language)}</span><strong>${escapeHtml(String(dsState.queue[dsState.queue.length - 1] ?? '‚^.'))}</strong></div>
+            <div class="ds-pointer-row"><span>${translateLiteral('Front', appState.language)}</span><strong>${escapeHtml(String(dsState.queue[0] ?? '‚àÖ'))}</strong></div>
+            <div class="ds-pointer-row"><span>${translateLiteral('Rear', appState.language)}</span><strong>${escapeHtml(String(dsState.queue[dsState.queue.length - 1] ?? '‚àÖ'))}</strong></div>
         `;
     }
     if (dsActive === 'heap') {
@@ -14982,7 +15068,7 @@ function updateDSComplexity() {
     const operation = getDSActiveOperation();
     const bigO = config.operations[operation] || 'O(n)';
     const ops = estimateOps(bigO, n);
-    summary.textContent = `n=${n} ‚?¢ ${operation}`;
+    summary.textContent = `n=${n} ? ${operation}`;
     opsEl.textContent = `~${ops} ops`;
 }
 
@@ -15602,7 +15688,7 @@ function getModuleMode(moduleId) {
 }
 
 function getDiscreteTheoryContent(module) {
-    const topics = (module?.topics || []).map((topic) => `‚?¢ ${topic}`);
+    const topics = (module?.topics || []).map((topic) => `\u2022 ${topic}`);
     if (appState.language === 'es') {
         return [
             'Resumen Te√≥rico Profundo',
@@ -16320,12 +16406,12 @@ function renderModules() {
                             ` : ''}
                             ${currentMode === 'pseudocode' ? `
                                 <span class="text-xs px-1.5 py-0.5 rounded bg-purple-100 text-purple-800 font-medium">
-                                    Y"ù ${t('module.modePseudocode')}
+                                    \u{1F9ED} ${t('module.modePseudocode')}
                                 </span>
                             ` : ''}
                             ${currentMode === 'discreteTheory' ? `
                                 <span class="text-xs px-1.5 py-0.5 rounded bg-amber-100 text-amber-800 font-medium">
-                                    Y"~ ${t('module.theoryMode')}
+                                    \u{1F4DA} ${t('module.theoryMode')}
                                 </span>
                             ` : ''}
                         </div>
@@ -16333,7 +16419,7 @@ function renderModules() {
                         <div class="flex flex-wrap gap-1 w-full sm:w-auto">
                             <!-- Comments Toggle -->
                             <button onclick="toggleModuleComments('${module.id}')" class="text-xs px-2 py-1 rounded transition-all duration-200 font-medium shadow-sm hover:shadow-md flex-shrink-0 ${shouldShowComments(module.id) ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-gray-500 hover:bg-gray-600 text-white'}" title="${shouldShowComments(module.id) ? t('module.tooltipHideComments') : t('module.tooltipShowComments')}">
-                                Y'¨ ${shouldShowComments(module.id) ? t('module.commentsOn') : t('module.commentsOff')}
+                                \u{1F4AC} ${shouldShowComments(module.id) ? t('module.commentsOn') : t('module.commentsOff')}
                             </button>
 
                             <!-- Language Selector -->
@@ -16465,7 +16551,7 @@ function renderModules() {
                     <div class="space-y-1">
                         ${(localizedModule.resources || []).map(resource => `
                             <div class="text-indigo-600 hover:text-indigo-800 text-xs transition-colors duration-200 cursor-pointer">
-                                ‚?¢ ${resource}
+                                \u2022 ${resource}
                             </div>
                         `).join('')}
                     </div>
@@ -16478,7 +16564,7 @@ function renderModules() {
                     </button>
                     
                     <button onclick="toggleCompletion('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm ${isCompleted ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white hover:-translate-y-0.5' : 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white hover:-translate-y-0.5'}">
-                        ${isCompleted ? translateLiteral('‚o. Completed!', appState.language) : translateLiteral('Y"ù Mark as Complete', appState.language)}
+                        ${isCompleted ? translateLiteral('\u2705 Completed!', appState.language) : translateLiteral('\u{1F3AF} Mark as Complete', appState.language)}
                     </button>
                 </div>
             </div>
@@ -16924,7 +17010,7 @@ function renderFlashcard() {
 
     if (sessionMeta) {
         const repeats = deckSize && deckSize < desiredLength;
-        sessionMeta.textContent = `${totalCards} card session ‚?¢ ${deckSize} cards in deck${repeats ? ` (deck repeats to reach ${desiredLength})` : ''}`;
+        sessionMeta.textContent = `${totalCards} card session ? ${deckSize} cards in deck${repeats ? ` (deck repeats to reach ${desiredLength})` : ''}`;
     }
 
     if (!appState.showFlashcardAnswer) {
@@ -17356,7 +17442,7 @@ function renderQuiz() {
     const title = document.getElementById('quiz-title');
     const content = document.getElementById('quiz-content');
 
-    title.textContent = translateLiteral(`Yß† Quiz: ${localizedModule?.title || 'Quiz'}`, appState.language);
+    title.textContent = translateLiteral(`üß† Quiz: ${localizedModule?.title || 'Quiz'}`, appState.language);
 
     if (!appState.currentQuiz.showResults) {
         const answeredCount = appState.currentQuiz.answers.filter(a => a !== null && a !== undefined).length;
@@ -17367,7 +17453,7 @@ function renderQuiz() {
             <div class="mb-6">
                 <div class="flex justify-between items-center mb-4">
                     <span class="text-sm quiz-progress-label">
-                        ${translateLiteral(`Question ${appState.currentQuiz.currentQuestion + 1} of ${totalCount} ‚?¢ ${answeredCount}/${totalCount} answered`, appState.language)}
+                        ${translateLiteral(`Question ${appState.currentQuiz.currentQuestion + 1} of ${totalCount} ? ${answeredCount}/${totalCount} answered`, appState.language)}
                     </span>
                     <div class="h-2 bg-slate-800 rounded-full flex-1 ml-4 overflow-hidden border border-white/10">
                         <div class="h-full bg-indigo-500 transition-all duration-300" style="width: ${((appState.currentQuiz.currentQuestion + 1) / totalCount) * 100}%"></div>
@@ -17428,7 +17514,7 @@ function renderQuiz() {
                         <div class="text-left p-4 rounded-xl border ${appState.currentQuiz.answers[index] === question.correct ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'}">
                             <div class="flex items-start gap-3">
                                 <span class="text-xl">
-                                    ${appState.currentQuiz.answers[index] === question.correct ? '‚o.' : '‚ùO'}
+                                    ${appState.currentQuiz.answers[index] === question.correct ? '?' : '?'}
                                 </span>
                                 <div class="flex-1">
                                     <p class="font-medium mb-2 text-slate-800">${question.question}</p>
@@ -17451,7 +17537,7 @@ function renderQuiz() {
 
                 <div class="flex gap-4 justify-center">
                     <button onclick="restartQuiz()" class="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-                        ${translateLiteral('Y"" Retake Quiz', appState.language)}
+                        ${translateLiteral('üîÅ Retake Quiz', appState.language)}
                     </button>
                     <button onclick="closeQuiz()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
                         ${translateLiteral('Close', appState.language)}
@@ -17815,6 +17901,7 @@ function init() {
         if (!isSidebarDrawerMode() && appState.sidebarOpen) {
             closeSidebar();
         }
+        syncDesktopSidebarIconMode();
         if (modulesResizeDebounce) {
             clearTimeout(modulesResizeDebounce);
         }
@@ -18044,13 +18131,13 @@ function formatMinutes(minutes) {
 
 function getBreakReminder() {
     if (!studyTimer.isActive || !studyTimer.startTime) {
-        return translateLiteral('‚è± Break reminder in 25 min', appState.language);
+        return translateLiteral('? Break reminder in 25 min', appState.language);
     }
     const minutesElapsed = Math.floor((Date.now() - studyTimer.startTime) / 60000);
     if (minutesElapsed >= 25) {
-        return translateLiteral('YOø Stretch & hydrate now!', appState.language);
+        return translateLiteral('üßò Stretch & hydrate now!', appState.language);
     }
-    return translateLiteral(`‚è± Break in ${25 - minutesElapsed} min`, appState.language);
+    return translateLiteral(`? Break in ${25 - minutesElapsed} min`, appState.language);
 }
 
 function updateStudyTrackerUI() {
@@ -18279,7 +18366,7 @@ function renderInsights() {
             const topics = (localizedNext.topics || []).slice(0, 3).join(', ') || translateLiteral('Core DSA', appState.language);
             learningPathNext.innerHTML = `
                 <p class="font-semibold text-indigo-600">${localizedNext.title}</p>
-                <p class="text-xs text-slate-500 mb-1">${translateLiteral(learningPath.next.difficulty, appState.language)} ‚?¢ ${topics}</p>
+                <p class="text-xs text-slate-500 mb-1">${translateLiteral(learningPath.next.difficulty, appState.language)} ? ${topics}</p>
                 <p class="text-sm text-slate-600">${localizedNext.description}</p>
             `;
         } else {
@@ -18386,7 +18473,7 @@ function renderInsights() {
         if (modulesRemaining === 0) {
             tip = translateLiteral('All modules complete - spend time on flashcards or mentor a friend.', appState.language);
         } else if (streak >= 7) {
-            tip = translateLiteral('Y"• Your streak is on fire! Consider revisiting advanced challenge sets.', appState.language);
+            tip = translateLiteral('üî• Your streak is on fire! Consider revisiting advanced challenge sets.', appState.language);
         } else if (todayMinutes < 30) {
             tip = translateLiteral('Try a focused 30-minute sprint to lock in a module today.', appState.language);
         } else {
@@ -18887,7 +18974,7 @@ function optimizeForMobile() {
 function registerServiceWorker() {
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('/sw.js')
+            navigator.serviceWorker.register(withAppBasePath('/sw.js'))
                 .then(registration => {
                     console.log('SW registered: ', registration);
                 })
@@ -19142,9 +19229,10 @@ document.addEventListener('DOMContentLoaded', () => {
 window.addEventListener('resize', () => {
     optimizeForMobile();
     updateHeaderShrink(); // Recalculate header shrinking on resize
+    syncDesktopSidebarIconMode();
 });
 
-console.log('CS Course Atlas - All systems loaded successfully! Ys?');
+console.log('CS Course Atlas - All systems loaded successfully! üöÄ');
 
 // Interactive Quiz Library (restored)
 function openInteractiveQuizLibrary() {
@@ -19212,8 +19300,8 @@ function renderInteractiveQuizQuestion() {
     const feedback = selected === null
         ? ''
         : selected === question.correct
-            ? `<p class="text-sm text-emerald-600 font-semibold mt-2">‚o. ${translateLiteral('Correct!', appState.language)} ${question.explanation || ''}</p>`
-            : `<p class="text-sm text-rose-600 font-semibold mt-2">‚ùO ${translateLiteral('Try again.', appState.language)} ${question.explanation || ''}</p>`;
+            ? `<p class="text-sm text-emerald-600 font-semibold mt-2">? ${translateLiteral('Correct!', appState.language)} ${question.explanation || ''}</p>`
+            : `<p class="text-sm text-rose-600 font-semibold mt-2">? ${translateLiteral('Try again.', appState.language)} ${question.explanation || ''}</p>`;
 
     body.innerHTML = `
         <div class="flex items-center justify-between text-sm text-slate-600 mb-2">
@@ -19254,7 +19342,7 @@ function renderInteractiveQuizQuestion() {
 
     if (progress) {
         const answered = interactiveQuizState.answers.filter(a => a !== null).length;
-        progress.textContent = translateLiteral(`${answered} answered ‚?¢ ${total} total`, appState.language);
+        progress.textContent = translateLiteral(`${answered} answered ? ${total} total`, appState.language);
     }
 }
 
@@ -19326,6 +19414,7 @@ function resolveModalFocusTarget(modal, preferredTarget = null) {
 function syncModalBodyState() {
     const hasOpenModal = Boolean(getActiveModalId());
     document.body.classList.toggle('modal-open', hasOpenModal);
+    syncDesktopSidebarIconMode();
 }
 
 function initializeAccessibilityInfrastructure() {

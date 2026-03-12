@@ -267,7 +267,12 @@ app.get('/api/auth/session', async (req, res) => {
     try {
         const session = await getSessionFromRequest(req);
         if (!session) {
-            return res.status(401).json({ authenticated: false, error: 'Not authenticated.' });
+            return res.json({
+                authenticated: false,
+                session: null,
+                user: null,
+                csrfToken: ''
+            });
         }
         return res.json(sessionResponsePayload(session));
     } catch (error) {

@@ -76,6 +76,11 @@ html.font-scale-spacious {
     font-size: 16px;
 }
 
+/* Keep HTML hidden attribute authoritative across utility/layout overrides. */
+[hidden] {
+    display: none !important;
+}
+
 .modal-panel {
     max-height: min(92vh, 780px);
     overflow-y: auto;
@@ -2234,7 +2239,7 @@ html.dark {
 }
 
 :root {
-    --atlas-ui-font: 'Pixelify Sans', 'Silkscreen', 'DotGothic16', monospace;
+    --atlas-ui-font: 'Pixelify Sans', 'Silkscreen', 'DotGothic16', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', 'Twemoji Mozilla', monospace;
 }
 
 body {
@@ -3730,6 +3735,10 @@ body::after {
 #settings-modal .modal-panel {
     max-width: 32rem;
     width: 100%;
+    max-height: min(92dvh, 860px);
+    height: auto;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
     border-radius: 1.75rem !important;
 }
@@ -3796,15 +3805,52 @@ body.dark #settings-modal .modal-panel {
     padding: 1.25rem 1.5rem;
     display: flex;
     flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
     gap: 1rem;
     overflow-y: auto;
-    max-height: calc(90vh - 200px);
+    overflow-x: hidden;
+    max-height: none;
     overscroll-behavior: contain;
-    scrollbar-gutter: stable both-edges;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    padding-bottom: 1.35rem;
+    scrollbar-gutter: stable;
     scrollbar-width: thin;
+    scrollbar-color: rgba(124, 58, 237, 0.72) rgba(148, 163, 184, 0.22);
+}
+
+.settings-modal-body::-webkit-scrollbar {
+    width: 10px;
+}
+
+.settings-modal-body::-webkit-scrollbar-track {
+    background: rgba(148, 163, 184, 0.20);
+    border-radius: 999px;
+}
+
+.settings-modal-body::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(124, 58, 237, 0.86), rgba(168, 85, 247, 0.86));
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+.settings-modal-body::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(91, 33, 182, 0.90), rgba(147, 51, 234, 0.90));
+    background-clip: padding-box;
+}
+
+body.dark .settings-modal-body {
+    scrollbar-color: rgba(167, 139, 250, 0.88) rgba(30, 41, 59, 0.72);
+}
+
+body.dark .settings-modal-body::-webkit-scrollbar-track {
+    background: rgba(30, 41, 59, 0.72);
 }
 
 .settings-modal-footer {
+    flex: 0 0 auto;
     padding: 1rem 1.5rem 1.5rem;
     border-top: 1px solid var(--surface-border);
     background: var(--surface-primary);
@@ -4359,6 +4405,7 @@ body.dark::after {
         min-height: 0;
         max-height: none;
         overflow-y: auto;
+        overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
         padding: 1rem;
         padding-bottom: calc(1rem + env(safe-area-inset-bottom));
@@ -6560,14 +6607,23 @@ body.dark:not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-min
         max-width: 1640px;
         margin: 0 auto;
         padding: 0 0.75rem;
+        transition: grid-template-columns 180ms ease;
     }
 
     #app-sidebar {
         position: sticky;
-        top: 5.3rem;
+        margin-top: 0.85rem;
+        top: 6.1rem;
         align-self: start;
-        max-height: calc(100dvh - 6rem);
+        max-height: calc(100dvh - 7.65rem);
         overflow-y: auto;
+    }
+
+    /* When the header compacts on scroll, pull the sidebar up to keep density. */
+    #main-header.header-collapsed ~ #app-shell #app-sidebar {
+        margin-top: 0.2rem;
+        top: 3rem;
+        max-height: calc(100dvh - 3.75rem);
     }
 
     #app-shell #main-content {
@@ -6583,6 +6639,46 @@ body.dark:not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-min
 
     .app-sidebar-close {
         display: none;
+    }
+
+    body.sidebar-icon-only #app-shell {
+        grid-template-columns: 86px minmax(0, 1fr);
+    }
+
+    body.sidebar-icon-only #app-sidebar .app-sidebar-inner {
+        padding: 0.7rem 0.45rem;
+    }
+
+    body.sidebar-icon-only #app-sidebar .app-sidebar-head {
+        margin-bottom: 0.45rem;
+        justify-content: center;
+    }
+
+    body.sidebar-icon-only #app-sidebar .app-sidebar-title {
+        display: none;
+    }
+
+    body.sidebar-icon-only #app-sidebar .sidebar-nav {
+        gap: 0.45rem;
+        justify-items: center;
+    }
+
+    body.sidebar-icon-only #app-sidebar .sidebar-link {
+        width: 2.75rem;
+        min-height: 2.75rem;
+        padding: 0.45rem;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0;
+        line-height: 0;
+    }
+
+    body.sidebar-icon-only #app-sidebar .sidebar-link::before {
+        content: attr(data-sidebar-icon);
+        font-size: 1.12rem;
+        line-height: 1;
     }
 }
 
@@ -6640,6 +6736,193 @@ body.dark:not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-min
     #header-buttons::-webkit-scrollbar {
         height: 6px;
     }
+}
+
+/* ==== Unified Palette Pass: Dark Purple + Light Blue ==== */
+:root {
+    --accent-primary: #6f56ff;
+    --accent-secondary: #63b6ff;
+    --accent-tertiary: #8a7cff;
+    --accent-surface: rgba(111, 86, 255, 0.2);
+    --accent-shadow: rgba(99, 182, 255, 0.28);
+    --surface-primary: #171236;
+    --surface-secondary: #21194a;
+    --surface-accent: #2a2360;
+    --surface-muted: #322b72;
+    --surface-border: rgba(125, 145, 255, 0.26);
+    --text-primary-color: #e9eeff;
+    --text-secondary-color: #b8c7f3;
+}
+
+body,
+body.dark {
+    background: linear-gradient(150deg, #0f0a26, #171236, #1f1845, #102342) !important;
+    background-size: 260% 260% !important;
+    color: var(--text-primary-color) !important;
+}
+
+body::after {
+    background: radial-gradient(circle at 12% 12%, rgba(111, 86, 255, 0.28), transparent 42%),
+                radial-gradient(circle at 82% 10%, rgba(99, 182, 255, 0.2), transparent 40%),
+                radial-gradient(circle at 54% 88%, rgba(111, 86, 255, 0.18), transparent 38%) !important;
+}
+
+#main-header {
+    background: linear-gradient(120deg, #1c1542, #2f2570, #3a2f86, #365ca8, #4ea9f4) !important;
+    border-bottom-color: rgba(148, 163, 255, 0.28) !important;
+}
+
+#main-header .header-control {
+    background: rgba(20, 28, 62, 0.56) !important;
+    border-color: rgba(148, 181, 255, 0.34) !important;
+    color: #e8eeff !important;
+}
+
+#main-header .header-control:hover {
+    background: rgba(28, 40, 88, 0.72) !important;
+    border-color: rgba(148, 197, 255, 0.52) !important;
+}
+
+#main-content .panel-surface,
+#main-content .content-backdrop,
+#main-content .support-card,
+#main-content #main-footer,
+#main-content .module-card,
+#main-content .insight-card,
+#main-content .insight-highlight-card,
+#main-content .playground-card,
+#search-section,
+#progress-section,
+#achievements-card {
+    background: linear-gradient(145deg, rgba(25, 19, 58, 0.95), rgba(35, 28, 78, 0.92)) !important;
+    border-color: rgba(126, 147, 255, 0.26) !important;
+    color: var(--text-primary-color) !important;
+}
+
+body:not(.dark) #main-content .bg-slate-900,
+body:not(.dark) #main-content .bg-slate-900\/70,
+body:not(.dark) #main-content .bg-slate-900\/60,
+body:not(.dark) #main-content .bg-slate-800,
+body:not(.dark) #main-content .bg-slate-800\/60,
+body:not(.dark) #main-content .bg-slate-700,
+body:not(.dark) #main-content .bg-slate-100,
+body:not(.dark) #main-content .bg-slate-50,
+body:not(.dark) .modal-panel,
+body:not(.dark) .modal-panel.bg-slate-900,
+body:not(.dark) .modal-panel.bg-slate-900\/60,
+body:not(.dark) .modal-panel.bg-slate-900\/70 {
+    background-color: rgba(24, 19, 56, 0.95) !important;
+    color: #e9eeff !important;
+    border-color: rgba(126, 147, 255, 0.28) !important;
+}
+
+#main-content .text-slate-100,
+#main-content .text-slate-200,
+#main-content .text-slate-300,
+#main-content .text-slate-400,
+#main-content .text-slate-500,
+#main-content .text-slate-600,
+#main-content .text-slate-700,
+#main-content .text-slate-800,
+#main-content .text-slate-900 {
+    color: #d8e4ff !important;
+}
+
+#main-content .text-indigo-600,
+#main-content .text-indigo-400,
+#main-content .text-indigo-300 {
+    color: #9fd2ff !important;
+}
+
+#main-content .bg-indigo-50 {
+    background-color: rgba(88, 102, 200, 0.2) !important;
+}
+
+#main-content .border-indigo-200 {
+    border-color: rgba(126, 170, 255, 0.36) !important;
+}
+
+#main-content input,
+#main-content select,
+#main-content textarea,
+.modal-panel input,
+.modal-panel select,
+.modal-panel textarea {
+    background-color: rgba(16, 21, 50, 0.74) !important;
+    border-color: rgba(120, 143, 255, 0.32) !important;
+    color: #e9eeff !important;
+}
+
+#main-content input:focus,
+#main-content select:focus,
+#main-content textarea:focus,
+.modal-panel input:focus,
+.modal-panel select:focus,
+.modal-panel textarea:focus {
+    border-color: #86c5ff !important;
+    box-shadow: 0 0 0 3px rgba(99, 182, 255, 0.24) !important;
+}
+
+.section-heading::before {
+    background: linear-gradient(180deg, #8d6bff, #63b6ff) !important;
+    box-shadow: 0 6px 18px rgba(99, 182, 255, 0.34) !important;
+}
+
+.progress-meter-fill,
+#progress-bar,
+.insight-progress-bar,
+.achievement-progress-bar {
+    background: linear-gradient(90deg, #7c63ff, #63b6ff, #8f7fff) !important;
+    box-shadow: 0 0 16px rgba(99, 182, 255, 0.32) !important;
+}
+
+.settings-section.appearance,
+.settings-section.layout,
+.settings-section.accessibility,
+.settings-section.learning,
+.settings-section.language {
+    background: linear-gradient(135deg, rgba(95, 83, 182, 0.2), rgba(99, 182, 255, 0.08)) !important;
+    border-color: rgba(133, 168, 255, 0.3) !important;
+}
+
+.settings-section.appearance .settings-section-header,
+.settings-section.layout .settings-section-header,
+.settings-section.accessibility .settings-section-header,
+.settings-section.learning .settings-section-header,
+.settings-section.language .settings-section-header {
+    color: #9ac9ff !important;
+    border-bottom-color: rgba(126, 170, 255, 0.3) !important;
+}
+
+::-webkit-scrollbar-track {
+    background: #151133 !important;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, #7c63ff, #63b6ff) !important;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #6650dc, #4aa2e8) !important;
+}
+
+/* Keep module action colors intentionally distinct (requested). */
+#modules-grid .module-card button[onclick^="openQuiz"]:not([disabled]) {
+    background-image: linear-gradient(90deg, #f59e0b, #f97316) !important;
+    border-color: rgba(251, 191, 36, 0.45) !important;
+    color: #ffffff !important;
+}
+
+#modules-grid .module-card button[onclick^="openQuiz"][disabled] {
+    background-image: linear-gradient(90deg, #475569, #334155) !important;
+    border-color: rgba(148, 163, 184, 0.35) !important;
+    color: #e2e8f0 !important;
+}
+
+#modules-grid .module-card button[onclick^="toggleCompletion"] {
+    background-image: linear-gradient(90deg, #22c55e, #10b981) !important;
+    border-color: rgba(52, 211, 153, 0.46) !important;
+    color: #ffffff !important;
 }
 
 
