@@ -6691,16 +6691,16 @@ body.dark:not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-min
     gap: 0.35rem;
 }
 
-.sidebar-tracks-icon-link {
-    display: none;
-}
-
 .sidebar-group-toggle {
     width: 100%;
     text-align: left;
     cursor: pointer;
     font: inherit;
     appearance: none;
+}
+
+.sidebar-group .sidebar-tracks-icon-link {
+    display: none !important;
 }
 
 body:not(.sidebar-icon-only) #app-sidebar .sidebar-group-toggle {
@@ -6907,7 +6907,7 @@ body:not(.sidebar-icon-only) #app-sidebar .sidebar-group-toggle {
     }
 
     body.sidebar-icon-only #app-sidebar .sidebar-tracks-icon-link {
-        display: flex;
+        display: flex !important;
     }
 
     body.sidebar-icon-only #app-sidebar .sidebar-submenu {
@@ -7444,7 +7444,7 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
     }
 
     body.sidebar-icon-only #app-sidebar .sidebar-tracks-icon-link {
-        display: flex;
+        display: flex !important;
     }
 
     body.sidebar-icon-only #app-sidebar .sidebar-submenu {
