@@ -48,6 +48,7 @@ const appState = {
     currentRoute: '/home',
     sidebarOpen: false,
     sidebarManualCollapsed: false,
+    sidebarMobileExpanded: false,
     collapsedSections: {
         progress: true,
         achievements: true,
@@ -1670,13 +1671,15 @@ function updateSidebarCollapseToggleButton() {
     const collapseButton = document.getElementById('sidebar-collapse-toggle');
     if (!collapseButton) return;
 
+    const mobileMode = isSidebarMobileRailMode();
     const inlineMode = isSidebarInlineMode();
-    collapseButton.hidden = !inlineMode;
-    collapseButton.setAttribute('aria-hidden', inlineMode ? 'false' : 'true');
-    if (!inlineMode) return;
+    const showToggle = mobileMode || inlineMode;
+    collapseButton.hidden = !showToggle;
+    collapseButton.setAttribute('aria-hidden', showToggle ? 'false' : 'true');
+    if (!showToggle) return;
 
     const isCollapsed = document.body.classList.contains('sidebar-icon-only');
-    const isAutoLocked = isSidebarAutoCollapsedByTopMenu();
+    const isAutoLocked = inlineMode && isSidebarAutoCollapsedByTopMenu();
     const glyph = collapseButton.querySelector('.sidebar-collapse-glyph');
     if (glyph) {
         glyph.textContent = isCollapsed
@@ -1705,8 +1708,11 @@ function syncDesktopSidebarIconMode() {
         link.setAttribute('aria-label', label);
     });
 
-    const shouldCollapseToIcons = isSidebarMobileRailMode()
-        || (isSidebarInlineMode() && (appState.sidebarManualCollapsed || isSidebarAutoCollapsedByTopMenu()));
+    const mobileMode = isSidebarMobileRailMode();
+    const inlineMode = isSidebarInlineMode();
+    const shouldCollapseToIcons = mobileMode
+        ? !appState.sidebarMobileExpanded
+        : (inlineMode && (appState.sidebarManualCollapsed || isSidebarAutoCollapsedByTopMenu()));
     document.body.classList.toggle('sidebar-icon-only', shouldCollapseToIcons);
     updateSidebarCollapseToggleButton();
 }
@@ -1956,6 +1962,12 @@ function initRouteNavigation() {
     if (collapseButton && collapseButton.dataset.boundSidebarCollapse !== 'true') {
         collapseButton.dataset.boundSidebarCollapse = 'true';
         collapseButton.addEventListener('click', () => {
+            if (isSidebarMobileRailMode()) {
+                appState.sidebarMobileExpanded = !appState.sidebarMobileExpanded;
+                syncDesktopSidebarIconMode();
+                saveToLocalStorage();
+                return;
+            }
             if (!isSidebarInlineMode()) return;
             if (isSidebarAutoCollapsedByTopMenu()) return;
             appState.sidebarManualCollapsed = !appState.sidebarManualCollapsed;
@@ -9492,6 +9504,7 @@ function buildSerializableAppState() {
         cardDepth: appState.cardDepth,
         language: appState.language,
         sidebarManualCollapsed: appState.sidebarManualCollapsed,
+        sidebarMobileExpanded: appState.sidebarMobileExpanded,
         collapsedSections: normalizeCollapsedSections(appState.collapsedSections)
     };
 }
@@ -9682,6 +9695,7 @@ function loadFromLocalStorage() {
             appState.cardDepth = CARD_DEPTH_OPTIONS.includes(state.cardDepth) ? state.cardDepth : 'standard';
             appState.language = ['en', 'es'].includes(state.language) ? state.language : 'en';
             appState.sidebarManualCollapsed = Boolean(state.sidebarManualCollapsed);
+            appState.sidebarMobileExpanded = Boolean(state.sidebarMobileExpanded);
             appState.collapsedSections = normalizeCollapsedSections(state.collapsedSections);
 
             // Keep assembly modules defaulting to Assembly unless explicitly set to Assembly.
@@ -9751,6 +9765,9 @@ function applyRemoteUserStateSnapshot(snapshot, options = {}) {
         appState.sidebarManualCollapsed = state.sidebarManualCollapsed !== undefined
             ? Boolean(state.sidebarManualCollapsed)
             : Boolean(appState.sidebarManualCollapsed);
+        appState.sidebarMobileExpanded = state.sidebarMobileExpanded !== undefined
+            ? Boolean(state.sidebarMobileExpanded)
+            : Boolean(appState.sidebarMobileExpanded);
         appState.collapsedSections = normalizeCollapsedSections(state.collapsedSections || appState.collapsedSections);
 
         enforceAssemblyModuleLanguageDefaults();
@@ -17745,6 +17762,8 @@ function resetProgress() {
         appState.dailyChallengeId = null;
         appState.dailyChallengeDate = null;
         appState.studyTipId = null;
+        appState.sidebarManualCollapsed = false;
+        appState.sidebarMobileExpanded = false;
         appState.collapsedSections = { ...DEFAULT_COLLAPSED_SECTIONS };
 
         // Reset UI
@@ -17762,6 +17781,7 @@ function resetProgress() {
         renderDailyChallenge(true);
         renderStudyTip(true);
         renderSectionCollapsibles();
+        syncDesktopSidebarIconMode();
         saveToLocalStorage();
     }
 }
