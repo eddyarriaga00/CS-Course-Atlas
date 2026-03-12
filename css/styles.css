@@ -7303,4 +7303,44 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
     }
 }
 
+/* Desktop/laptop top menu parity with the mobile compact labeled style. */
+@media (min-width: 1024px) {
+    #header-buttons {
+        display: grid !important;
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        width: min(100%, 31rem) !important;
+        gap: 0.45rem !important;
+        justify-content: end !important;
+        align-items: stretch;
+    }
+
+    #header-buttons .header-control {
+        width: 100%;
+        min-width: 0;
+        min-height: 38px;
+        padding: 0.4rem 0.52rem !important;
+        justify-content: center;
+        text-align: center;
+        font-size: 0.72rem !important;
+        line-height: 1.08;
+        gap: 0.3rem !important;
+    }
+
+    #header-buttons .header-control span {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+        line-height: 1.08;
+    }
+
+    #header-buttons .header-control .xs\:inline {
+        display: none !important;
+    }
+
+    #header-buttons .header-control .xs\:hidden {
+        display: inline !important;
+    }
+}
+
 
