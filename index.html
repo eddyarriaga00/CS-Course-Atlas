@@ -26,6 +26,8 @@
     <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Pixelify+Sans:wght@400&family=Silkscreen:wght@400&display=swap" rel="stylesheet">
 </head>
 <body class="min-h-screen transition-all duration-300 bg-slate-50 text-slate-900 accent-indigo card-depth-standard font-sans" id="main-body">
+    <a href="#main-content" class="skip-link" data-i18n="a11y.skipToContent">Skip to main content</a>
+    <div id="sr-announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
     <header id="main-header" class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white sticky top-0 z-50 shadow-xl transition-all duration-300 backdrop-blur-md border-b border-white/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 header-inner py-2">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-3 gap-2.5">
@@ -127,7 +129,7 @@
             </div>
         </aside>
 
-        <div id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <section id="route-overview-section" class="route-overview-section panel-surface rounded-xl p-4 sm:p-5 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100" hidden aria-live="polite">
             <p id="route-overview-kicker" class="text-[11px] uppercase tracking-wider font-semibold text-slate-300" data-i18n="route.kicker">Current page</p>
             <h2 id="route-overview-title" class="text-xl sm:text-2xl font-semibold text-indigo-300 mt-1"></h2>
@@ -460,7 +462,7 @@
             <div class="progress-main-content flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 gap-5">
                 <div class="w-full space-y-2">
                     <p class="progress-kicker text-xs uppercase font-semibold text-[11px]" data-i18n="progress.kicker">Current journey</p>
-                    <span id="progress-text" class="progress-summary block text-base sm:text-lg font-semibold mt-1 text-[1rem] text-slate-100" data-i18n="progress.emptyStart">
+                    <span id="progress-text" class="progress-summary block text-base sm:text-lg font-semibold mt-1 text-[1rem] text-slate-100" data-i18n="progress.emptyStart" role="status" aria-live="polite" aria-atomic="true">
                         Choose your first track to load modules.
                     </span>
                     <div class="progress-meter mt-3">
@@ -492,7 +494,7 @@
                         <h3 class="text-lg sm:text-xl font-semibold text-slate-900 flex items-center gap-2 section-heading text-[1.05rem] text-slate-100">
                             🏅 <span id="achievement-badge-label">Trailhead Rookie</span>
                         </h3>
-                        <p id="achievement-description" class="text-sm text-slate-600 mt-1 text-slate-200 text-[0.95rem]">Complete your first module to begin earning badges.</p>
+                        <p id="achievement-description" class="text-sm text-slate-600 mt-1 text-slate-200 text-[0.95rem]" role="status" aria-live="polite" aria-atomic="true">Complete your first module to begin earning badges.</p>
                     </div>
                     <div class="text-left md:text-right">
                         <div id="achievement-badge" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm badge-pill text-[0.9rem] bg-slate-800 border border-white/10">
@@ -544,7 +546,7 @@
                             <button id="toggle-auto-rotate" class="text-[11px] font-semibold px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all duration-200 bg-slate-800 text-slate-100 border border-white/10 hover:bg-slate-700">Pause Auto</button>
                             <button id="refresh-challenge" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-indigo-100 text-indigo-700 hover:bg-indigo-200 transition-all duration-200 bg-indigo-500/20 text-indigo-100 border border-indigo-200/40 hover:bg-indigo-500/30">Shuffle</button>
                         </div>
-                        <div id="rotation-status" class="text-[11px] text-slate-500 text-right text-slate-300">Auto-shuffling every 9s (synced)</div>
+                        <div id="rotation-status" class="text-[11px] text-slate-500 text-right text-slate-300" role="status" aria-live="polite">Auto-shuffling every 9s (synced)</div>
                     </div>
                 </div>
                 <p id="daily-challenge-description" class="text-sm text-slate-600 mb-3 text-slate-200"></p>
@@ -570,7 +572,7 @@
                     <p class="text-sm text-slate-600 text-slate-200" data-i18n="section.insightsSubtitle">Stay on track with live stats, tailored module suggestions, and a built-in focus buddy.</p>
                 </div>
                 <div class="flex items-center gap-2">
-                    <div id="insight-updates" class="text-xs sm:text-sm text-indigo-600 font-medium text-indigo-200"></div>
+                    <div id="insight-updates" class="text-xs sm:text-sm text-indigo-600 font-medium text-indigo-200" role="status" aria-live="polite"></div>
                     <button type="button" class="section-collapse-toggle text-xs font-semibold px-3 py-1.5 rounded-full bg-violet-500/20 text-violet-100 border border-violet-200/40 hover:bg-violet-500/30" data-section-key="insights">Collapse</button>
                 </div>
             </div>
@@ -683,7 +685,7 @@
                             <button id="log-study-session" class="px-3 py-1.5 rounded-lg bg-emerald-500 text-white text-xs font-semibold shadow-sm hover:bg-emerald-600 transition">Log +5 min</button>
                             <button id="study-session-toggle" class="insight-button purple-glow-button w-full text-center text-sm font-semibold">Start Focus Session</button>
                         </div>
-                        <div class="text-xs text-slate-500 mt-1 text-slate-300" id="study-session-log" data-i18n="insights.lock.sessionLog">Try a sample module, quiz, or flashcards to kick off your first session.</div>
+                        <div class="text-xs text-slate-500 mt-1 text-slate-300" id="study-session-log" role="status" aria-live="polite" data-i18n="insights.lock.sessionLog">Try a sample module, quiz, or flashcards to kick off your first session.</div>
                     </div>
                 </div>
 
@@ -869,7 +871,7 @@
                         <div class="ds-panel-card p-4 rounded-xl border border-white/10 bg-slate-900/70 space-y-2">
                             <div class="text-xs uppercase tracking-wide text-slate-300 font-semibold">State JSON</div>
                             <pre id="ds-state-json" class="text-sm whitespace-pre-wrap text-[0.9rem]"></pre>
-                            <div id="ds-status" class="text-xs text-indigo-200"></div>
+                            <div id="ds-status" class="text-xs text-indigo-200" role="status" aria-live="polite"></div>
                             <div class="pt-2 border-t border-white/10">
                                 <div class="text-xs font-semibold text-slate-200 mb-1">Need-to-Know Terms</div>
                                 <ul id="ds-definitions" class="text-xs space-y-1 text-slate-200"></ul>
@@ -938,7 +940,7 @@
                     <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading glow-text text-indigo-300">Code Playground</h3>
                     <p class="text-sm text-slate-600 text-slate-200">Run quick Java, Python, C++, or JavaScript snippets through the sandbox API and iterate without leaving the page.</p>
                 </div>
-                <div id="playground-status" class="text-xs px-3 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold uppercase tracking-wider text-center bg-slate-800 text-slate-100 border border-white/10">Idle</div>
+                <div id="playground-status" class="text-xs px-3 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold uppercase tracking-wider text-center bg-slate-800 text-slate-100 border border-white/10" role="status" aria-live="polite">Idle</div>
             </div>
             <div class="playground-grid">
                 <div class="playground-card">
@@ -1085,7 +1087,7 @@
                 </div>
             </div>
         </footer>
-    </div>
+    </main>
     </div>
 
     <button id="site-guide-helper-btn" type="button" class="site-guide-fab" data-i18n="helper.badge" data-i18n-aria-label="helper.ariaLabel" aria-haspopup="dialog" aria-controls="site-guide-modal" aria-expanded="false">
@@ -1119,7 +1121,7 @@
                         <div class="settings-label">
                             <span class="settings-label-main" data-i18n="settings.darkMode">Dark Mode</span>
                         </div>
-                        <button id="dark-mode-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                        <button id="dark-mode-toggle" type="button" role="switch" aria-checked="false" data-i18n-aria-label="settings.darkMode" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
                             <div id="dark-mode-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
                         </button>
                     </div>
@@ -1169,7 +1171,7 @@
                             <span class="settings-label-main" data-i18n="settings.compactLayout">Compact Module Layout</span>
                             <span class="settings-label-sub" data-i18n="settings.compactLayoutHint">Denser cards for widescreen or multi-tasking.</span>
                         </div>
-                        <button id="compact-layout-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                        <button id="compact-layout-toggle" type="button" role="switch" aria-checked="false" data-i18n-aria-label="settings.compactLayout" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
                             <div id="compact-layout-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
                         </button>
                     </div>
@@ -1198,7 +1200,7 @@
                             <span class="settings-label-main" data-i18n="settings.reduceMotion">Reduce Motion</span>
                             <span class="settings-label-sub" data-i18n="settings.reduceMotionHint">Limit animations for focus and accessibility.</span>
                         </div>
-                        <button id="reduce-motion-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                        <button id="reduce-motion-toggle" type="button" role="switch" aria-checked="false" data-i18n-aria-label="settings.reduceMotion" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
                             <div id="reduce-motion-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
                         </button>
                     </div>
@@ -1208,7 +1210,7 @@
                             <span class="settings-label-main" data-i18n="settings.highContrast">High Contrast Text</span>
                             <span class="settings-label-sub" data-i18n="settings.highContrastHint">Boost text contrast for readability.</span>
                         </div>
-                        <button id="high-contrast-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                        <button id="high-contrast-toggle" type="button" role="switch" aria-checked="false" data-i18n-aria-label="settings.highContrast" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
                             <div id="high-contrast-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
                         </button>
                     </div>
@@ -1226,7 +1228,7 @@
                             <span class="settings-label-main" data-i18n="settings.showComments">Show Code Comments</span>
                             <span class="settings-label-sub" data-i18n="settings.showCommentsHint">Each module can override this setting.</span>
                         </div>
-                        <button id="comments-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-indigo-600" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                        <button id="comments-toggle" type="button" role="switch" aria-checked="true" data-i18n-aria-label="settings.showComments" class="w-14 h-7 rounded-full transition-colors duration-200 bg-indigo-600" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
                             <div id="comments-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-7" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
                         </button>
                     </div>
@@ -1236,7 +1238,7 @@
                             <span class="settings-label-main" data-i18n="settings.hideCompleted">Hide Completed Modules</span>
                             <span class="settings-label-sub" data-i18n="settings.hideCompletedHint">Keep your grid focused on what’s left.</span>
                         </div>
-                        <button id="hide-completed-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                        <button id="hide-completed-toggle" type="button" role="switch" aria-checked="false" data-i18n-aria-label="settings.hideCompleted" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
                             <div id="hide-completed-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
                         </button>
                     </div>
@@ -1266,8 +1268,8 @@
                             <span class="settings-label-sub" data-i18n="settings.languageHint">Switch between English and Spanish / Cambia entre inglés y español.</span>
                         </div>
                         <div class="lang-toggle-group">
-                            <button id="lang-en-btn" class="lang-btn active" onclick="setLanguage('en')">EN</button>
-                            <button id="lang-es-btn" class="lang-btn" onclick="setLanguage('es')">ES</button>
+                            <button id="lang-en-btn" type="button" class="lang-btn active" onclick="setLanguage('en')" aria-pressed="true">EN</button>
+                            <button id="lang-es-btn" type="button" class="lang-btn" onclick="setLanguage('es')" aria-pressed="false">ES</button>
                         </div>
                     </div>
                 </div>
@@ -1288,7 +1290,7 @@
                 <button id="close-glossary" type="button" class="text-2xl transition-colors duration-200 hover:scale-110 text-slate-500 hover:text-slate-700 text-slate-200" aria-label="Close glossary">×</button>
             </div>
             <div class="glossary-modal-body p-5 sm:p-6 pb-4 space-y-4">
-                <input type="text" id="glossary-search" data-i18n-placeholder="glossary.searchPlaceholder" placeholder="Search glossary terms..." class="w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-white border-slate-300 text-slate-900 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-400">
+                <input type="text" id="glossary-search" data-i18n-placeholder="glossary.searchPlaceholder" data-i18n-aria-label="glossary.searchAria" placeholder="Search glossary terms..." class="w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-white border-slate-300 text-slate-900 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-400">
                 <div class="glossary-toolbar">
                     <div id="glossary-stats" class="glossary-stats text-xs sm:text-sm text-slate-500 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-slate-300">
                         <span>Browse curated Computer Science terminology.</span>

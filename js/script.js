@@ -588,6 +588,7 @@ const TRANSLATIONS = {
         // Main header
         'main.title': '\u{1F9ED} CS Course Atlas',
         'main.subtitle': 'Multi-class learning for Computer Science students',
+        'a11y.skipToContent': 'Skip to main content',
         // Hero
         'hero.title': 'CS Course Atlas: Learn Across Core CS Courses',
         'hero.subtitle': 'A comprehensive, beginner-friendly journey across Data Structures & Algorithms, Assembly, Java, Python, JavaScript, and Discrete Mathematics by Eddy Arriaga-B. Each module includes detailed explanations, extensive code examples where applicable, and practical exercises.',
@@ -849,7 +850,7 @@ const TRANSLATIONS = {
         'support.subtitle': 'Help keep this resource free and updated with new content weekly!',
         // Floating helper
         'helper.badge': 'Quick Guide',
-        'helper.ariaLabel': 'Open quick website guide',
+        'helper.ariaLabel': 'Quick Guide',
         'helper.title': 'Website Quick Guide',
         'helper.subtitle': 'A short tour of what each section does.',
         'helper.closeAria': 'Close quick website guide',
@@ -893,6 +894,7 @@ const TRANSLATIONS = {
         'books.unavailable': 'Book file is unavailable on this machine.',
         'glossary.title': 'CS Course Atlas Glossary',
         'glossary.searchPlaceholder': 'Search glossary terms...',
+        'glossary.searchAria': 'Search glossary terms',
         'glossary.sortLabel': 'Sort',
         'glossary.sort.smart': 'Smart Match',
         'glossary.sort.az': 'A to Z',
@@ -1047,6 +1049,7 @@ const TRANSLATIONS = {
         // Main header
         'main.title': '\u{1F9ED} CS Course Atlas',
         'main.subtitle': 'Aprendizaje multi-curso para estudiantes de Ciencias de la Computación',
+        'a11y.skipToContent': 'Saltar al contenido principal',
         // Hero
         'hero.title': 'CS Course Atlas: Aprende en Cursos Clave de CS',
         'hero.subtitle': 'Un recorrido completo y amigable para principiantes a través de Estructuras de Datos y Algoritmos, Ensamblador, Java, Python, JavaScript y Matemáticas Discretas por Eddy Arriaga-B. Cada módulo incluye explicaciones detalladas, amplios ejemplos de código y ejercicios prácticos.',
@@ -1308,7 +1311,7 @@ const TRANSLATIONS = {
         'support.subtitle': '¡Ayuda a mantener este recurso gratuito y actualizado con contenido nuevo cada semana!',
         // Asistente flotante
         'helper.badge': 'Guia Rapida',
-        'helper.ariaLabel': 'Abrir guía rápida del sitio web',
+        'helper.ariaLabel': 'Guia Rapida',
         'helper.title': 'Guía Rápida del Sitio',
         'helper.subtitle': 'Un recorrido corto de lo que hace cada sección.',
         'helper.closeAria': 'Cerrar guía rápida del sitio web',
@@ -1352,6 +1355,7 @@ const TRANSLATIONS = {
         'books.unavailable': 'El archivo del libro no está disponible en esta máquina.',
         'glossary.title': 'Glosario de CS Course Atlas',
         'glossary.searchPlaceholder': 'Buscar terminos del glosario...',
+        'glossary.searchAria': 'Buscar terminos del glosario',
         'glossary.sortLabel': 'Ordenar',
         'glossary.sort.smart': 'Coincidencia inteligente',
         'glossary.sort.az': 'A a Z',
@@ -1896,6 +1900,8 @@ function applyLanguage(lang) {
     const esBtn = document.getElementById('lang-es-btn');
     if (enBtn) enBtn.classList.toggle('active', lang === 'en');
     if (esBtn) esBtn.classList.toggle('active', lang === 'es');
+    if (enBtn) enBtn.setAttribute('aria-pressed', lang === 'en' ? 'true' : 'false');
+    if (esBtn) esBtn.setAttribute('aria-pressed', lang === 'es' ? 'true' : 'false');
 
     // Store on html element for CSS targeting if needed
     document.documentElement.setAttribute('data-lang', lang);
@@ -18103,19 +18109,31 @@ function updateProgress() {
 function updateDarkMode() {
     const body = document.body;
     const darkModeSlider = document.getElementById('dark-mode-slider');
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
 
     if (appState.darkMode) {
         body.classList.add('dark');
-        document.getElementById('dark-mode-toggle').classList.remove('bg-slate-300');
-        document.getElementById('dark-mode-toggle').classList.add('bg-indigo-600');
-        darkModeSlider.classList.remove('translate-x-0.5');
-        darkModeSlider.classList.add('translate-x-7');
+        if (darkModeToggle) {
+            darkModeToggle.classList.remove('bg-slate-300');
+            darkModeToggle.classList.add('bg-indigo-600');
+        }
+        if (darkModeSlider) {
+            darkModeSlider.classList.remove('translate-x-0.5');
+            darkModeSlider.classList.add('translate-x-7');
+        }
     } else {
         body.classList.remove('dark');
-        document.getElementById('dark-mode-toggle').classList.remove('bg-indigo-600');
-        document.getElementById('dark-mode-toggle').classList.add('bg-slate-300');
-        darkModeSlider.classList.remove('translate-x-7');
-        darkModeSlider.classList.add('translate-x-0.5');
+        if (darkModeToggle) {
+            darkModeToggle.classList.remove('bg-indigo-600');
+            darkModeToggle.classList.add('bg-slate-300');
+        }
+        if (darkModeSlider) {
+            darkModeSlider.classList.remove('translate-x-7');
+            darkModeSlider.classList.add('translate-x-0.5');
+        }
+    }
+    if (darkModeToggle) {
+        darkModeToggle.setAttribute('aria-checked', appState.darkMode ? 'true' : 'false');
     }
 }
 
@@ -18125,6 +18143,7 @@ function syncToggleState(toggleId, sliderId, isActive) {
     if (!toggle || !slider) return;
     toggle.classList.toggle('bg-indigo-600', isActive);
     toggle.classList.toggle('bg-slate-300', !isActive);
+    toggle.setAttribute('aria-checked', isActive ? 'true' : 'false');
     slider.classList.toggle('translate-x-7', isActive);
     slider.classList.toggle('translate-x-0.5', !isActive);
 }
@@ -20839,6 +20858,9 @@ function copyCodeToClipboard(moduleId) {
 function showToast(message, type = 'info') {
     const toast = document.createElement('div');
     toast.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium transition-all duration-300 transform translate-x-full`;
+    toast.setAttribute('role', type === 'error' ? 'alert' : 'status');
+    toast.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
+    toast.setAttribute('aria-atomic', 'true');
 
     switch (type) {
         case 'success':
@@ -20854,8 +20876,10 @@ function showToast(message, type = 'info') {
             toast.classList.add('bg-blue-500');
     }
 
-    toast.textContent = translateLiteral(message, appState.language);
+    const localizedMessage = translateLiteral(message, appState.language);
+    toast.textContent = localizedMessage;
     document.body.appendChild(toast);
+    announceToScreenReader(localizedMessage);
 
     // Animate in
     setTimeout(() => {
@@ -20866,7 +20890,9 @@ function showToast(message, type = 'info') {
     setTimeout(() => {
         toast.classList.add('translate-x-full');
         setTimeout(() => {
-            document.body.removeChild(toast);
+            if (toast.parentNode) {
+                document.body.removeChild(toast);
+            }
         }, 300);
     }, 3000);
 }
@@ -21072,16 +21098,27 @@ function measurePerformance(name, fn) {
 
 // Accessibility improvements
 function announceToScreenReader(message) {
-    const announcement = document.createElement('div');
-    announcement.setAttribute('aria-live', 'polite');
-    announcement.setAttribute('aria-atomic', 'true');
-    announcement.className = 'sr-only';
-    announcement.textContent = message;
+    const text = translateLiteral(message, appState.language);
+    const announcer = document.getElementById('sr-announcer');
+    if (announcer) {
+        announcer.textContent = '';
+        window.requestAnimationFrame(() => {
+            announcer.textContent = text;
+        });
+        return;
+    }
 
-    document.body.appendChild(announcement);
+    const fallback = document.createElement('div');
+    fallback.setAttribute('aria-live', 'polite');
+    fallback.setAttribute('aria-atomic', 'true');
+    fallback.className = 'sr-only';
+    fallback.textContent = text;
 
+    document.body.appendChild(fallback);
     setTimeout(() => {
-        document.body.removeChild(announcement);
+        if (fallback.parentNode) {
+            document.body.removeChild(fallback);
+        }
     }, 1000);
 }
 
