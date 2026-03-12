@@ -21461,6 +21461,7 @@ function init() {
     const closeSiteGuideButton = document.getElementById('close-site-guide');
     const closeSiteGuideFooterButton = document.getElementById('close-site-guide-footer');
     const insightAuthOpenButton = document.getElementById('insights-auth-open-account');
+    const insightGuestPlanOpenButton = document.getElementById('insights-guest-plan-open');
     const guestStartDsaButton = document.getElementById('guest-start-dsa');
     const guestStartJavaButton = document.getElementById('guest-start-java');
     const guestStartGitButton = document.getElementById('guest-start-git');
@@ -21472,6 +21473,7 @@ function init() {
     if (closeSiteGuideButton) closeSiteGuideButton.addEventListener('click', closeSiteGuideModal);
     if (closeSiteGuideFooterButton) closeSiteGuideFooterButton.addEventListener('click', closeSiteGuideModal);
     if (insightAuthOpenButton) insightAuthOpenButton.addEventListener('click', openAccountModal);
+    if (insightGuestPlanOpenButton) insightGuestPlanOpenButton.addEventListener('click', openStudyPlanModal);
     if (guestStartDsaButton) guestStartDsaButton.addEventListener('click', () => startGuestTrack('dsa'));
     if (guestStartJavaButton) guestStartJavaButton.addEventListener('click', () => startGuestTrack('java'));
     if (guestStartGitButton) guestStartGitButton.addEventListener('click', () => startGuestTrack('git'));
@@ -22028,14 +22030,34 @@ function renderInsights() {
             `;
         }
         if (highlightGoalEl) {
+            const paceGoalMap = { light: 3, balanced: 5, intense: 8 };
+            const previewGoal = paceGoalMap[studyPlanState?.pace] || 3;
             highlightGoalEl.textContent = appState.language === 'es'
-                ? '3 modulos de arranque'
-                : '3 starter modules';
+                ? `${previewGoal} modulos/semana`
+                : `${previewGoal} modules/wk`;
         }
         if (highlightGoalNoteEl) {
-            highlightGoalNoteEl.textContent = appState.language === 'es'
-                ? 'Empieza por DSA, Git o Java'
-                : 'Start with DSA, Git, or Java';
+            const focusLabelByKey = {
+                foundations: appState.language === 'es' ? 'Fundamentos' : 'Foundations',
+                interview: appState.language === 'es' ? 'Preparacion entrevista' : 'Interview prep',
+                projects: appState.language === 'es' ? 'Proyectos' : 'Projects'
+            };
+            const styleLabelByKey = {
+                visual: appState.language === 'es' ? 'Visual' : 'Visual',
+                practice: appState.language === 'es' ? 'Practica' : 'Practice',
+                blended: appState.language === 'es' ? 'Mixto' : 'Blended'
+            };
+            if (studyPlanState?.focus || studyPlanState?.style) {
+                const focusText = focusLabelByKey[studyPlanState?.focus] || (appState.language === 'es' ? 'Fundamentos' : 'Foundations');
+                const styleText = styleLabelByKey[studyPlanState?.style] || (appState.language === 'es' ? 'Mixto' : 'Blended');
+                highlightGoalNoteEl.textContent = appState.language === 'es'
+                    ? `Enfoque: ${focusText} • Estilo: ${styleText}`
+                    : `Focus: ${focusText} • Style: ${styleText}`;
+            } else {
+                highlightGoalNoteEl.textContent = appState.language === 'es'
+                    ? 'Empieza por DSA, Git o Java'
+                    : 'Start with DSA, Git, or Java';
+            }
         }
         if (highlightFocusEl) {
             highlightFocusEl.textContent = appState.language === 'es'
@@ -22058,9 +22080,10 @@ function renderInsights() {
                 : 'Full streak tracking starts after login';
         }
         if (planLabelEl) {
-            planLabelEl.textContent = appState.language === 'es'
-                ? 'Plan invitado'
-                : 'Guest plan';
+            const planSummary = getStudyPlanSummary();
+            planLabelEl.textContent = planSummary.status === 'active'
+                ? planSummary.label
+                : (appState.language === 'es' ? 'Plan invitado' : 'Guest plan');
         }
         if (planPillEl) {
             planPillEl.textContent = appState.language === 'es'
@@ -22068,9 +22091,17 @@ function renderInsights() {
                 : 'Preview';
         }
         if (planNoteEl) {
-            planNoteEl.textContent = appState.language === 'es'
-                ? 'Inicia sesion para personalizar ritmo y objetivos.'
-                : 'Sign in to personalize your pace and goals.';
+            const planSummary = getStudyPlanSummary();
+            if (planSummary.status === 'active') {
+                const syncHint = appState.language === 'es'
+                    ? 'Inicia sesion para sincronizar este plan.'
+                    : 'Sign in to sync this plan.';
+                planNoteEl.textContent = `${planSummary.note} ${syncHint}`;
+            } else {
+                planNoteEl.textContent = appState.language === 'es'
+                    ? 'Inicia sesion para personalizar ritmo y objetivos.'
+                    : 'Sign in to personalize your pace and goals.';
+            }
         }
         if (planCtaEl) {
             planCtaEl.textContent = t('insights.lock.planPreviewCta');

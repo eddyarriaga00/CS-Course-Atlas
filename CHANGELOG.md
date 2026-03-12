@@ -81,6 +81,13 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Added authenticated-only notification persistence for module completion + achievement unlock events.
 - Added explicit privacy/support messaging: personalized profile and achievement-notification persistence is account-only.
 
+### Guest Insights UX Patch
+- Fixed guest-mode study-plan preview flow so personalization controls are reachable without login:
+  - added dedicated guest preview button in the insights lock card
+  - bound guest preview button to open the study-plan modal directly
+- Updated guest insights summary rendering to reflect selected preview plan choices (pace/focus/style) instead of always showing static defaults.
+- Kept account-only sync behavior unchanged while improving immediate feedback for guest selections.
+
 ### Learning Content Expansion
 - Expanded the `Introduction to Coding` module with deeper topics, richer explanation flow, and additional beginner resources.
 - Added new modules for current tracks:

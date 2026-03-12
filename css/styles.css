@@ -6438,6 +6438,12 @@ body:not(.dark) .site-guide-checklist {
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.insights-auth-lock-preview-button {
+    margin-bottom: 0.5rem;
+    width: 100%;
+    background: linear-gradient(135deg, #2563eb, #4f46e5);
+}
+
 .insights-auth-lock-button:hover {
     transform: translateY(-1px);
     box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
@@ -6452,6 +6458,11 @@ body:not(.dark) .site-guide-checklist {
     max-height: none;
     overflow: visible;
     margin-bottom: 0.45rem !important;
+}
+
+#insights-section.insights-locked .plan-highlight,
+#insights-section.insights-locked #insight-plan-cta {
+    pointer-events: auto;
 }
 
 #insights-section.insights-locked .insight-highlight-grid::after {
