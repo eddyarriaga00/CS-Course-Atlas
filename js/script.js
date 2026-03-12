@@ -209,7 +209,7 @@ const ROUTE_SECTION_VISIBILITY = {
     '/playground': ['route-overview-section', 'ds-playground', 'playground-section', 'main-footer'],
     '/notes': ['route-overview-section', 'notes-section', 'notes-library-section', 'books-library-section', 'main-footer'],
     '/support': ['route-overview-section', 'support-section', 'route-launchpad-section', 'main-footer'],
-    '/about': ['route-overview-section', 'hero-section', 'route-launchpad-section', 'main-footer']
+    '/about': ['route-overview-section', 'hero-section', 'about-credibility-section', 'route-launchpad-section', 'main-footer']
 };
 const ROUTE_LAUNCHPAD_CONFIG = {
     '/flashcards': {
@@ -239,7 +239,9 @@ const ROUTE_LAUNCHPAD_CONFIG = {
         titleKey: 'route.about.launchTitle',
         descriptionKey: 'route.about.launchDescription',
         actions: [
-            { type: 'button', labelKey: 'route.about.guideAction', handler: 'openSiteGuideModal' }
+            { type: 'button', labelKey: 'route.about.guideAction', handler: 'openSiteGuideModal' },
+            { type: 'button', labelKey: 'route.about.feedbackAction', handler: 'scrollToAboutFeedback' },
+            { type: 'link', labelKey: 'route.about.repoAction', href: 'https://github.com/eddyarriaga00/CS-Course-Atlas', target: '_blank', rel: 'noopener noreferrer' }
         ]
     }
 };
@@ -624,7 +626,7 @@ const TRANSLATIONS = {
         'route.support.title': 'Support',
         'route.support.description': 'Ways to support the project and contact resources.',
         'route.about.title': 'About',
-        'route.about.description': 'Mission, tools, and legal links for CS Course Atlas.',
+        'route.about.description': 'Creator profile, project scope, updates, trust links, and feedback options.',
         'route.flashcards.launchTitle': 'Flashcard Practice',
         'route.flashcards.launchDescription': 'Open the flashcard trainer and start a focused review session.',
         'route.flashcards.openAction': 'Open Flashcards',
@@ -637,8 +639,65 @@ const TRANSLATIONS = {
         'route.support.openAction': 'Open Support Form',
         'route.support.contactAction': 'Contact Page',
         'route.about.launchTitle': 'About This Project',
-        'route.about.launchDescription': 'Use the quick guide, then review trust pages and project details.',
+        'route.about.launchDescription': 'Review founder context, scope, updates, and trust pages in one place.',
         'route.about.guideAction': 'Open Quick Guide',
+        'route.about.feedbackAction': 'Give Feedback',
+        'route.about.repoAction': 'Open GitHub Repo',
+        'about.kicker': 'Project Credibility',
+        'about.heading': 'About CS Course Atlas',
+        'about.subtitle': 'Who built this site, why it exists, what is supported now, and what is next.',
+        'about.who.title': 'Who I Am',
+        'about.who.body': 'I am Eddy Arriaga-Barrientos, the creator of CS Course Atlas. I built this as a practical study system for students who need one place to learn across multiple CS classes.',
+        'about.why.title': 'Why I Built It',
+        'about.why.body': 'Most students have to jump between disconnected tools for notes, examples, quizzes, and review. This platform combines those workflows so learning paths stay clear and consistent.',
+        'about.courses.title': 'What Courses It Helps With',
+        'about.courses.one': 'Data Structures and Algorithms (DSA)',
+        'about.courses.two': 'Java Programming',
+        'about.courses.three': 'Discrete Mathematics',
+        'about.courses.four': 'Git and Version Control',
+        'about.courses.five': 'Assembly Fundamentals',
+        'about.supports.title': 'What The Site Currently Supports',
+        'about.supports.one': 'Structured modules with explanations and code examples',
+        'about.supports.two': 'Practice tools: flashcards, quizzes, glossary, and playgrounds',
+        'about.supports.three': 'Progress tracking, notes, and mobile-friendly navigation',
+        'about.supports.four': 'Account workflows with secure profile update flows',
+        'about.progress.title': 'What Is Still In Progress',
+        'about.progress.one': 'Expanded track depth for additional CS classes',
+        'about.progress.two': 'Broader account sync and cloud persistence rollout',
+        'about.progress.three': 'More guided learning paths and long-form practice packs',
+        'about.links.title': 'Project Links',
+        'about.links.repo': 'GitHub Repository',
+        'about.links.changelog': 'Changelog / Updates Log',
+        'about.links.contact': 'Contact / Support Page',
+        'about.links.privacyPrompt': 'If you create an account, review these pages:',
+        'about.links.privacy': 'Privacy Policy',
+        'about.links.terms': 'Terms of Use',
+        'about.updates.title': 'Recent Updates',
+        'about.updates.one': 'Beginner-first homepage flow with guided start paths',
+        'about.updates.two': 'Improved responsive navigation for mobile, tablet, and laptops',
+        'about.updates.three': 'Expanded introduction-to-coding module and linked resources',
+        'about.updates.four': 'Stronger account and profile security flow groundwork',
+        'about.feedback.title': 'Contact / Feedback Form',
+        'about.feedback.subtitle': 'Share bugs, requests, or feedback directly from this page.',
+        'about.feedback.openSupport': 'Open Full Support Form',
+        'about.feedback.nameLabel': 'Name',
+        'about.feedback.namePlaceholder': 'Your name',
+        'about.feedback.emailLabel': 'Email',
+        'about.feedback.emailPlaceholder': 'you@example.com',
+        'about.feedback.typeLabel': 'Feedback Type',
+        'about.feedback.type.general': 'General feedback',
+        'about.feedback.type.bug': 'Bug report',
+        'about.feedback.type.content': 'Content request',
+        'about.feedback.type.feature': 'Feature request',
+        'about.feedback.messageLabel': 'Message',
+        'about.feedback.messagePlaceholder': 'What should be improved?',
+        'about.feedback.privacyNote': 'Do not include sensitive personal data. Your message is used to improve CS Course Atlas.',
+        'about.feedback.submit': 'Send Feedback',
+        'about.feedback.error.messageRequired': 'Please add details before submitting feedback.',
+        'about.feedback.error.emailInvalid': 'Enter a valid email address or leave it blank.',
+        'about.feedback.error.submit': 'Feedback submission failed',
+        'about.feedback.success.remote': 'Feedback sent successfully.',
+        'about.feedback.success.local': 'Feedback saved locally. Connect Neon backend to sync submissions.',
         // Progress
         'progress.heading': '\u{1F4CA} Your Learning Progress',
         'progress.kicker': 'Current journey',
@@ -1026,7 +1085,7 @@ const TRANSLATIONS = {
         'route.support.title': 'Soporte',
         'route.support.description': 'Formas de apoyar el proyecto y recursos de contacto.',
         'route.about.title': 'Acerca de',
-        'route.about.description': 'Mision, herramientas y enlaces legales de CS Course Atlas.',
+        'route.about.description': 'Perfil del creador, alcance del proyecto, actualizaciones, enlaces legales y opciones de feedback.',
         'route.flashcards.launchTitle': 'Practica con Tarjetas',
         'route.flashcards.launchDescription': 'Abre el entrenador de tarjetas y empieza una sesion de repaso.',
         'route.flashcards.openAction': 'Abrir Tarjetas',
@@ -1039,8 +1098,65 @@ const TRANSLATIONS = {
         'route.support.openAction': 'Abrir Formulario de Soporte',
         'route.support.contactAction': 'Pagina de Contacto',
         'route.about.launchTitle': 'Acerca de este Proyecto',
-        'route.about.launchDescription': 'Usa la guia rapida y luego revisa las paginas de confianza.',
+        'route.about.launchDescription': 'Revisa el contexto del creador, el alcance, las actualizaciones y las paginas de confianza en un solo lugar.',
         'route.about.guideAction': 'Abrir Guia Rapida',
+        'route.about.feedbackAction': 'Enviar Feedback',
+        'route.about.repoAction': 'Abrir Repo en GitHub',
+        'about.kicker': 'Credibilidad del Proyecto',
+        'about.heading': 'Acerca de CS Course Atlas',
+        'about.subtitle': 'Quien construyo este sitio, por que existe, que soporta hoy y que sigue despues.',
+        'about.who.title': 'Quien Soy',
+        'about.who.body': 'Soy Eddy Arriaga-Barrientos, creador de CS Course Atlas. Lo construi como un sistema practico de estudio para estudiantes que necesitan aprender en un solo lugar varias materias de CS.',
+        'about.why.title': 'Por Que Lo Construi',
+        'about.why.body': 'Muchos estudiantes saltan entre herramientas desconectadas para notas, ejemplos, quizzes y repaso. Esta plataforma une esos flujos para que el aprendizaje sea claro y consistente.',
+        'about.courses.title': 'Que Cursos Ayuda a Estudiar',
+        'about.courses.one': 'Estructuras de Datos y Algoritmos (DSA)',
+        'about.courses.two': 'Programacion en Java',
+        'about.courses.three': 'Matematica Discreta',
+        'about.courses.four': 'Git y Control de Versiones',
+        'about.courses.five': 'Fundamentos de Ensamblador',
+        'about.supports.title': 'Lo Que El Sitio Soporta Actualmente',
+        'about.supports.one': 'Modulos estructurados con explicaciones y ejemplos de codigo',
+        'about.supports.two': 'Herramientas de practica: tarjetas, quizzes, glosario y playgrounds',
+        'about.supports.three': 'Seguimiento de progreso, notas y navegacion amigable para movil',
+        'about.supports.four': 'Flujos de cuenta con actualizaciones de perfil seguras',
+        'about.progress.title': 'Lo Que Aun Esta En Progreso',
+        'about.progress.one': 'Mayor profundidad de rutas para cursos adicionales de CS',
+        'about.progress.two': 'Despliegue mas amplio de sincronizacion de cuenta y persistencia en la nube',
+        'about.progress.three': 'Mas rutas guiadas y paquetes de practica de mayor profundidad',
+        'about.links.title': 'Enlaces del Proyecto',
+        'about.links.repo': 'Repositorio en GitHub',
+        'about.links.changelog': 'Registro de Cambios / Actualizaciones',
+        'about.links.contact': 'Pagina de Contacto / Soporte',
+        'about.links.privacyPrompt': 'Si creas una cuenta, revisa estas paginas:',
+        'about.links.privacy': 'Politica de Privacidad',
+        'about.links.terms': 'Terminos de Uso',
+        'about.updates.title': 'Actualizaciones Recientes',
+        'about.updates.one': 'Flujo de inicio para principiantes con rutas guiadas',
+        'about.updates.two': 'Navegacion responsive mejorada para movil, tablet y laptops',
+        'about.updates.three': 'Modulo de introduccion a programacion expandido con recursos vinculados',
+        'about.updates.four': 'Base de seguridad mas fuerte para cuenta y perfil',
+        'about.feedback.title': 'Formulario de Contacto / Feedback',
+        'about.feedback.subtitle': 'Comparte errores, solicitudes o feedback directo desde esta pagina.',
+        'about.feedback.openSupport': 'Abrir Formulario Completo de Soporte',
+        'about.feedback.nameLabel': 'Nombre',
+        'about.feedback.namePlaceholder': 'Tu nombre',
+        'about.feedback.emailLabel': 'Correo',
+        'about.feedback.emailPlaceholder': 'tu@correo.com',
+        'about.feedback.typeLabel': 'Tipo de Feedback',
+        'about.feedback.type.general': 'Feedback general',
+        'about.feedback.type.bug': 'Reporte de bug',
+        'about.feedback.type.content': 'Solicitud de contenido',
+        'about.feedback.type.feature': 'Solicitud de funcionalidad',
+        'about.feedback.messageLabel': 'Mensaje',
+        'about.feedback.messagePlaceholder': 'Que deberia mejorarse?',
+        'about.feedback.privacyNote': 'No incluyas datos personales sensibles. Tu mensaje se usa para mejorar CS Course Atlas.',
+        'about.feedback.submit': 'Enviar Feedback',
+        'about.feedback.error.messageRequired': 'Agrega detalles antes de enviar feedback.',
+        'about.feedback.error.emailInvalid': 'Ingresa un correo valido o dejalo vacio.',
+        'about.feedback.error.submit': 'Fallo el envio de feedback',
+        'about.feedback.success.remote': 'Feedback enviado correctamente.',
+        'about.feedback.success.local': 'Feedback guardado localmente. Conecta Neon backend para sincronizar envios.',
         // Progress
         'progress.heading': '\u{1F4CA} Tu Progreso de Aprendizaje',
         'progress.kicker': 'Recorrido actual',
@@ -2038,6 +2154,17 @@ function getRouteActionHandler(handlerName) {
     if (handlerName === 'openSiteGuideModal') {
         return () => openSiteGuideModal();
     }
+    if (handlerName === 'scrollToAboutFeedback') {
+        return () => {
+            const form = document.getElementById('about-feedback-form');
+            if (!form) return;
+            form.scrollIntoView({ behavior: appState.reduceMotion ? 'auto' : 'smooth', block: 'start' });
+            const firstField = document.getElementById('about-feedback-name');
+            if (firstField instanceof HTMLElement) {
+                window.setTimeout(() => firstField.focus(), appState.reduceMotion ? 0 : 120);
+            }
+        };
+    }
     return null;
 }
 
@@ -2061,6 +2188,8 @@ function renderRouteLaunchpad(route) {
             const link = document.createElement('a');
             link.className = 'route-launchpad-btn route-launchpad-link';
             link.href = actionConfig.href || '#';
+            if (actionConfig.target) link.target = actionConfig.target;
+            if (actionConfig.rel) link.rel = actionConfig.rel;
             link.textContent = t(actionConfig.labelKey);
             actionsElement.appendChild(link);
             return;
@@ -17107,6 +17236,133 @@ function initSupport() {
     }
 }
 
+function initAboutFeedbackForm() {
+    const form = document.getElementById('about-feedback-form');
+    const nameInput = document.getElementById('about-feedback-name');
+    const emailInput = document.getElementById('about-feedback-email');
+    const typeSelect = document.getElementById('about-feedback-type');
+    const messageInput = document.getElementById('about-feedback-message');
+    const errorEl = document.getElementById('about-feedback-error');
+    const openSupportBtn = document.getElementById('about-feedback-open-support');
+    if (!form) return;
+
+    const clearError = () => {
+        if (errorEl) errorEl.textContent = '';
+        if (messageInput) {
+            messageInput.classList.remove('is-invalid-field');
+            messageInput.removeAttribute('aria-invalid');
+        }
+        if (emailInput) {
+            emailInput.classList.remove('is-invalid-field');
+            emailInput.removeAttribute('aria-invalid');
+        }
+    };
+
+    const setError = (message, field = messageInput) => {
+        if (errorEl) errorEl.textContent = message;
+        if (field) {
+            field.classList.add('is-invalid-field');
+            field.setAttribute('aria-invalid', 'true');
+            field.focus();
+        }
+    };
+
+    if (openSupportBtn) {
+        openSupportBtn.addEventListener('click', () => {
+            openSupportModal();
+        });
+    }
+
+    if (emailInput && !emailInput.value.trim() && accountProfile.email) {
+        emailInput.value = accountProfile.email;
+    }
+
+    if (messageInput) messageInput.addEventListener('input', clearError);
+    if (emailInput) emailInput.addEventListener('input', clearError);
+    if (nameInput) nameInput.addEventListener('input', clearError);
+
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        clearError();
+
+        const name = String(nameInput?.value || '').trim();
+        const email = String(emailInput?.value || '').trim().toLowerCase();
+        const feedbackType = String(typeSelect?.value || 'general').trim();
+        const message = String(messageInput?.value || '').trim();
+
+        if (!message) {
+            const warning = t('about.feedback.error.messageRequired');
+            setError(warning, messageInput);
+            showToast(warning, 'warning');
+            return;
+        }
+
+        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            const warning = t('about.feedback.error.emailInvalid');
+            setError(warning, emailInput);
+            showToast(warning, 'warning');
+            return;
+        }
+
+        const composedMessage = [
+            name ? `Name: ${name}` : null,
+            email ? `Email: ${email}` : null,
+            `Feedback type: ${feedbackType}`,
+            '',
+            message
+        ].filter(Boolean).join('\n');
+
+        if (hasNeonSyncConfig()) {
+            try {
+                await neonFetch(getNeonSupportEndpoint(), {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        userId: String(accountProfile.serverUserId || '').trim() || null,
+                        email: email || accountProfile.email || null,
+                        moduleId: 'about-page',
+                        topic: `Website feedback (${feedbackType})`,
+                        message: composedMessage,
+                        language: appState.language || 'en',
+                        submittedAt: new Date().toISOString()
+                    })
+                });
+                showToast(t('about.feedback.success.remote'), 'success');
+            } catch (error) {
+                const reason = error?.message || 'Unknown error';
+                const prefix = t('about.feedback.error.submit');
+                const fullMessage = `${prefix}: ${reason}`;
+                setError(fullMessage, messageInput);
+                showToast(fullMessage, 'error');
+                return;
+            }
+        } else {
+            const localFeedbackKey = 'cs_course_atlas_about_feedback_local';
+            let pending = [];
+            try {
+                const parsed = JSON.parse(localStorage.getItem(localFeedbackKey) || '[]');
+                if (Array.isArray(parsed)) pending = parsed;
+            } catch (error) {
+                pending = [];
+            }
+            pending.push({
+                name: name || null,
+                email: email || null,
+                feedbackType,
+                message,
+                language: appState.language || 'en',
+                submittedAt: new Date().toISOString()
+            });
+            localStorage.setItem(localFeedbackKey, JSON.stringify(pending.slice(-25)));
+            showToast(t('about.feedback.success.local'), 'info');
+        }
+
+        form.reset();
+        if (typeSelect) typeSelect.value = 'general';
+        if (emailInput && accountProfile.email) emailInput.value = accountProfile.email;
+        clearError();
+    });
+}
+
 // Code Processing Functions
 function removeComments(code, language = 'java') {
     let processedCode = code;
@@ -19497,6 +19753,7 @@ function init() {
     initInterviewExamples();
     initDSPlayground();
     initSupport();
+    initAboutFeedbackForm();
     initPlayground();
     initIOSOverscrollLock();
     initializeAccessibilityInfrastructure();
