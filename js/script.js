@@ -131,20 +131,48 @@ const ROUTE_ALIAS_MAP = {
     '/': '/home',
     '/index': '/home',
     '/index.html': '/home',
+    '/home.html': '/home',
     '/home': '/home',
+    '/tracks.html': '/tracks',
     '/tracks': '/tracks',
+    '/dsa.html': '/dsa',
     '/dsa': '/dsa',
+    '/java.html': '/java',
     '/java': '/java',
+    '/git.html': '/git',
     '/git': '/git',
+    '/assembly.html': '/assembly',
     '/assembly': '/assembly',
+    '/discrete-math.html': '/discrete-math',
     '/discrete-math': '/discrete-math',
+    '/flashcards.html': '/flashcards',
     '/flashcards': '/flashcards',
+    '/quizzes.html': '/quizzes',
     '/quizzes': '/quizzes',
+    '/playground.html': '/playground',
     '/playground': '/playground',
+    '/notes.html': '/notes',
     '/notes': '/notes',
+    '/support.html': '/support',
     '/support': '/support',
     '/pricing': '/support',
+    '/about.html': '/about',
     '/about': '/about'
+};
+const ROUTE_DOCUMENT_PATH_MAP = {
+    '/home': '/index.html',
+    '/tracks': '/tracks.html',
+    '/dsa': '/dsa.html',
+    '/java': '/java.html',
+    '/git': '/git.html',
+    '/assembly': '/assembly.html',
+    '/discrete-math': '/discrete-math.html',
+    '/flashcards': '/flashcards.html',
+    '/quizzes': '/quizzes.html',
+    '/playground': '/playground.html',
+    '/notes': '/notes.html',
+    '/support': '/support.html',
+    '/about': '/about.html'
 };
 const TRACK_ROUTE_CATEGORY_MAP = {
     '/home': 'all',
@@ -183,6 +211,7 @@ const HOME_SECTION_ORDER = [
     'hero-section',
     'home-beginner-onboarding-section',
     'home-guided-start-section',
+    'home-seo-links-section',
     'topic-focus-section',
     'home-advanced-tools-section',
     'search-section',
@@ -1923,6 +1952,71 @@ function normalizeRoutePath(pathname) {
     return ROUTE_ALIAS_MAP[normalized] || DEFAULT_ROUTE;
 }
 
+function getRouteDocumentPath(route) {
+    const normalizedRoute = normalizeRoutePath(route || DEFAULT_ROUTE);
+    return ROUTE_DOCUMENT_PATH_MAP[normalizedRoute] || ROUTE_DOCUMENT_PATH_MAP[DEFAULT_ROUTE] || '/index.html';
+}
+
+function getInitialNavigationRequest() {
+    if (typeof window === 'undefined') {
+        return { route: DEFAULT_ROUTE, moduleId: '' };
+    }
+    const params = new URLSearchParams(window.location.search || '');
+    const requestedRoute = params.get('route') || window.location.pathname || DEFAULT_ROUTE;
+    const requestedModule = String(params.get('module') || '').trim().toLowerCase();
+    return {
+        route: normalizeRoutePath(requestedRoute),
+        moduleId: requestedModule
+    };
+}
+
+function setSeoMetaByName(name, content) {
+    if (typeof document === 'undefined' || !name) return;
+    let node = document.querySelector(`meta[name="${name}"]`);
+    if (!(node instanceof HTMLMetaElement)) {
+        node = document.createElement('meta');
+        node.setAttribute('name', name);
+        document.head.appendChild(node);
+    }
+    node.setAttribute('content', content);
+}
+
+function setSeoMetaByProperty(property, content) {
+    if (typeof document === 'undefined' || !property) return;
+    let node = document.querySelector(`meta[property="${property}"]`);
+    if (!(node instanceof HTMLMetaElement)) {
+        node = document.createElement('meta');
+        node.setAttribute('property', property);
+        document.head.appendChild(node);
+    }
+    node.setAttribute('content', content);
+}
+
+function updateRouteSeoMeta(route) {
+    const normalizedRoute = normalizeRoutePath(route || DEFAULT_ROUTE);
+    const routeKey = ROUTE_KEY_BY_PATH[normalizedRoute] || ROUTE_KEY_BY_PATH[DEFAULT_ROUTE];
+    const title = `${t(`${routeKey}.title`)} | CS Course Atlas`;
+    const description = t(`${routeKey}.description`);
+    document.title = title;
+    setSeoMetaByName('description', description);
+    setSeoMetaByProperty('og:title', title);
+    setSeoMetaByProperty('og:description', description);
+    setSeoMetaByProperty('twitter:title', title);
+    setSeoMetaByProperty('twitter:description', description);
+    if (typeof window !== 'undefined') {
+        const canonicalPath = withAppBasePath(getRouteDocumentPath(normalizedRoute));
+        const canonicalHref = `${window.location.origin}${canonicalPath}`;
+        let canonicalEl = document.querySelector('link[rel="canonical"]');
+        if (!(canonicalEl instanceof HTMLLinkElement)) {
+            canonicalEl = document.createElement('link');
+            canonicalEl.setAttribute('rel', 'canonical');
+            document.head.appendChild(canonicalEl);
+        }
+        canonicalEl.setAttribute('href', canonicalHref);
+        setSeoMetaByProperty('og:url', canonicalHref);
+    }
+}
+
 function getRouteForCategoryFilter(category) {
     const key = String(category || 'all').toLowerCase();
     return CATEGORY_ROUTE_MAP[key] || '/tracks';
@@ -2291,8 +2385,7 @@ function renderRoute(route, options = {}) {
     syncSidebarActiveLink(normalizedRoute);
     renderSectionCollapsibles();
 
-    const routeTitleKey = ROUTE_KEY_BY_PATH[normalizedRoute] || ROUTE_KEY_BY_PATH[DEFAULT_ROUTE];
-    document.title = `${t(`${routeTitleKey}.title`)} | CS Course Atlas`;
+    updateRouteSeoMeta(normalizedRoute);
 
     const routeSlug = normalizedRoute.replace(/^\/+/, '').replace(/[^\w-]/g, '') || 'home';
     document.body.setAttribute('data-route', routeSlug);
@@ -2325,7 +2418,7 @@ function navigateToRoute(route, options = {}) {
 
     const currentPath = normalizeRoutePath(window.location.pathname || '/');
     const shouldReplace = replaceHistory || normalizedRoute === currentPath;
-    const nextHistoryPath = withAppBasePath(normalizedRoute);
+    const nextHistoryPath = withAppBasePath(getRouteDocumentPath(normalizedRoute));
     const historyState = { route: normalizedRoute };
     if (shouldReplace) {
         window.history.replaceState(historyState, '', nextHistoryPath);
@@ -2361,6 +2454,41 @@ function startGuidedPath(pathKey) {
         return;
     }
     navigateToRoute('/home', { focusMain: true });
+}
+
+function applyInitialModuleDeepLink(moduleId) {
+    const normalizedId = String(moduleId || '').trim().toLowerCase();
+    if (!normalizedId) return false;
+    const module = getModuleById(normalizedId);
+    if (!module) return false;
+
+    const moduleCategory = getModuleCategoryKey(normalizedId);
+    if (VALID_CATEGORY_FILTERS.has(moduleCategory)) {
+        appState.categoryFilter = moduleCategory;
+    }
+    appState.modulesPage = 1;
+    appState.searchTerm = '';
+    appState.difficultyFilter = 'all';
+    appState.hideCompletedModules = false;
+
+    const searchInput = document.getElementById('search-input');
+    const difficultySelect = document.getElementById('difficulty-filter');
+    if (searchInput) searchInput.value = '';
+    if (difficultySelect) difficultySelect.value = 'all';
+    updateHideCompletedToggle();
+    updateTopicFocusButtons();
+
+    const targetRoute = getRouteForCategoryFilter(moduleCategory);
+    renderRoute(targetRoute, { preserveScroll: true, focusMain: false, skipModuleRender: false });
+
+    window.setTimeout(() => {
+        const modulesGrid = document.getElementById('modules-grid');
+        if (modulesGrid) {
+            modulesGrid.scrollIntoView({ behavior: appState.reduceMotion ? 'auto' : 'smooth', block: 'start' });
+        }
+        focusModule(normalizedId);
+    }, appState.reduceMotion ? 20 : 180);
+    return true;
 }
 
 function initRouteNavigation() {
@@ -2427,13 +2555,13 @@ function initRouteNavigation() {
         if (link.dataset.boundRouteLink === 'true') return;
         link.dataset.boundRouteLink = 'true';
         const declaredRoute = normalizeRoutePath(link.getAttribute('data-route-key') || link.getAttribute('href') || DEFAULT_ROUTE);
-        link.setAttribute('href', withAppBasePath(declaredRoute));
+        link.setAttribute('href', withAppBasePath(getRouteDocumentPath(declaredRoute)));
         link.addEventListener('click', (event) => {
             if (event.defaultPrevented) return;
             if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
             event.preventDefault();
 
-            const targetRoute = normalizeRoutePath(link.getAttribute('href') || declaredRoute || DEFAULT_ROUTE);
+            const targetRoute = declaredRoute;
             syncSidebarActiveLink(targetRoute);
 
             // On laptop/desktop, auto-collapse the pages menu after route selection.
@@ -2455,11 +2583,19 @@ function initRouteNavigation() {
     if (document.body.dataset.boundRoutePopstate !== 'true') {
         document.body.dataset.boundRoutePopstate = 'true';
         window.addEventListener('popstate', () => {
-            renderRoute(window.location.pathname || DEFAULT_ROUTE, { preserveScroll: true, focusMain: false });
+            const navigationRequest = getInitialNavigationRequest();
+            renderRoute(navigationRequest.route, { preserveScroll: true, focusMain: false });
+            if (navigationRequest.moduleId) {
+                applyInitialModuleDeepLink(navigationRequest.moduleId);
+            }
         });
     }
 
-    renderRoute(window.location.pathname || DEFAULT_ROUTE, { preserveScroll: true, focusMain: false });
+    const navigationRequest = getInitialNavigationRequest();
+    renderRoute(navigationRequest.route, { preserveScroll: true, focusMain: false });
+    if (navigationRequest.moduleId) {
+        applyInitialModuleDeepLink(navigationRequest.moduleId);
+    }
 }
 
 appState.flashcardSessionLength = FLASHCARD_SESSION_SIZE;

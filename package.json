@@ -10,7 +10,8 @@
     "db:migrate": "node server/migrate.js",
     "check:frontend": "node --check js/script.js",
     "build:css": "tailwindcss -c tailwind.config.cjs -i ./css/tailwind.input.css -o ./css/tailwind.css --minify",
-    "dev:css": "tailwindcss -c tailwind.config.cjs -i ./css/tailwind.input.css -o ./css/tailwind.css --watch"
+    "dev:css": "tailwindcss -c tailwind.config.cjs -i ./css/tailwind.input.css -o ./css/tailwind.css --watch",
+    "build:seo": "node scripts/build-seo-pages.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",

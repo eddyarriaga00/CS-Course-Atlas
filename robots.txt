@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://eddyarriaga00.github.io/CS-Course-Atlas/sitemap.xml

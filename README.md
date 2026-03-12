@@ -48,6 +48,19 @@ Run `npm run build:css` after CSS/Tailwind changes.
 - Auth not working on static preview:
 Use full-stack mode (`npm start`), not `py -m http.server`.
 
+### 4) Build SEO pages (recommended before launch)
+This generates crawlable route pages, module pages, `sitemap.xml`, and `robots.txt`.
+
+```bash
+npm run build:seo
+```
+
+Generated outputs:
+- `home.html`, `tracks.html`, `dsa.html`, `java.html`, `git.html`, `assembly.html`, `discrete-math.html`, `flashcards.html`, `quizzes.html`, `playground.html`, `notes.html`, `support.html`, `about.html`
+- `modules/index.html` and one page per module under `modules/`
+- `sitemap.xml`
+- `robots.txt`
+
 ## Overview
 CS Course Atlas helps learners study through structured modules, code examples, quizzes, flashcards, glossary tools, and notes in one place.
 
@@ -62,6 +75,15 @@ CS Course Atlas helps learners study through structured modules, code examples, 
 
 ## Live Website
 - Main site: [https://eddyarriaga00.github.io/CS-Course-Atlas/](https://eddyarriaga00.github.io/CS-Course-Atlas/)
+
+## Launch SEO Checklist
+- Run `npm run build:seo` to refresh crawlable landing pages and sitemap.
+- Confirm `sitemap.xml` is reachable on production.
+- In Google Search Console:
+  - Add property for `https://eddyarriaga00.github.io/CS-Course-Atlas/`
+  - Replace the `google-site-verification` meta token in page `<head>` tags
+  - Submit sitemap URL: `https://eddyarriaga00.github.io/CS-Course-Atlas/sitemap.xml`
+- Verify mobile page rendering for `home.html`, `tracks.html`, and `modules/index.html`.
 
 ## Local Development Notes
 - Public-site checks: use static preview mode from the Quick Guide.
