@@ -6838,7 +6838,7 @@ body.dark:not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-min
 
     body.sidebar-icon-only #app-sidebar .app-sidebar-head {
         margin-bottom: 0.45rem;
-        justify-content: flex-end;
+        justify-content: center;
     }
 
     body.sidebar-icon-only #app-sidebar .app-sidebar-title {
@@ -6848,12 +6848,12 @@ body.dark:not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-min
     body.sidebar-icon-only #app-sidebar .app-sidebar-head-actions {
         margin-left: 0;
         width: 100%;
-        justify-content: flex-end;
+        justify-content: center;
     }
 
     body.sidebar-icon-only #app-sidebar .app-sidebar-collapse-toggle {
         min-width: 2.75rem;
-        height: 2.2rem;
+        height: 2.75rem;
         padding: 0;
     }
 
@@ -6883,6 +6883,14 @@ body.dark:not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-min
     body.sidebar-icon-only #app-sidebar .sidebar-group-toggle .sidebar-group-toggle-label,
     body.sidebar-icon-only #app-sidebar .sidebar-group-toggle .sidebar-group-toggle-caret {
         display: none;
+    }
+
+    body.sidebar-icon-only #app-sidebar .sidebar-group-toggle {
+        justify-content: center;
+    }
+
+    body.sidebar-icon-only #app-sidebar #sidebar-tracks-toggle::before {
+        content: '\01F9ED';
     }
 
     body.sidebar-icon-only #app-sidebar .sidebar-submenu {
@@ -7381,6 +7389,14 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
     body.sidebar-icon-only #app-sidebar .sidebar-group-toggle .sidebar-group-toggle-label,
     body.sidebar-icon-only #app-sidebar .sidebar-group-toggle .sidebar-group-toggle-caret {
         display: none;
+    }
+
+    body.sidebar-icon-only #app-sidebar .sidebar-group-toggle {
+        justify-content: center;
+    }
+
+    body.sidebar-icon-only #app-sidebar #sidebar-tracks-toggle::before {
+        content: '\01F9ED';
     }
 
     body.sidebar-icon-only #app-sidebar .sidebar-submenu {

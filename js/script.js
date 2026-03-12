@@ -2038,20 +2038,8 @@ function initRouteNavigation() {
         tracksToggle.addEventListener('click', (event) => {
             event.preventDefault();
             const isIconOnly = document.body.classList.contains('sidebar-icon-only');
-            if (isIconOnly && isSidebarMobileRailMode()) {
-                appState.sidebarMobileExpanded = true;
-                appState.sidebarTracksExpanded = true;
-                syncDesktopSidebarIconMode();
-                saveToLocalStorage();
-                return;
-            }
-            if (isIconOnly && isSidebarInlineMode()) {
-                appState.sidebarTracksExpanded = true;
-                if (!isSidebarAutoCollapsedByTopMenu()) {
-                    appState.sidebarManualCollapsed = false;
-                }
-                syncDesktopSidebarIconMode();
-                saveToLocalStorage();
+            if (isIconOnly) {
+                navigateToRoute('/tracks', { preserveScroll: false, focusMain: true });
                 return;
             }
 
