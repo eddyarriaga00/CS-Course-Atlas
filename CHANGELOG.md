@@ -230,3 +230,8 @@ All notable changes to **CS Course Atlas** are documented in this file.
   - changed backend `SUPPORTED_OAUTH_PROVIDERS` to only `google` and `github` so `/api/auth/oauth/providers` no longer advertises Apple
 - Removed Apple OAuth env entries from `render.yaml` and `.env.example`.
 - Updated deployment docs (`README.md`, `server/README.md`) to document Google/GitHub-only OAuth setup.
+
+### Auth Status Messaging
+- Replaced `Guest mode active` account-status copy with a signed-out message that directs users to log in or create an account.
+- Updated unauthenticated session-check status text from `Guest mode active.` to `Not signed in.`
+- Updated insights lock status label from `Guest mode active` to `Preview mode active` (EN/ES).

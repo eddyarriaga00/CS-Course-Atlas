@@ -839,7 +839,7 @@ const TRANSLATIONS = {
         'insights.lock.title': 'Sign in to unlock personalized insights',
         'insights.lock.copy': 'Your personalized analytics, focus momentum, and recommendations unlock after login so progress can sync securely.',
         'insights.lock.cta': 'Log In / Sign Up',
-        'insights.lock.updates': 'Guest mode active',
+    'insights.lock.updates': 'Preview mode active',
         'insights.lock.status': 'Guest',
         'insights.lock.sessionBtn': 'Create free account to sync',
         'insights.lock.break': 'Guests can use modules, quizzes, and flashcards',
@@ -855,7 +855,7 @@ const TRANSLATIONS = {
         'insights.lock.guestNote': 'Save one local note',
         'insights.lock.guestHint': 'Create a free account to sync progress across devices once you are ready.',
         'insights.lock.planPreviewCta': 'Personalize (Preview)',
-        'auth.status.guest': 'Guest mode active. Create a free account to sync progress across devices.',
+    'auth.status.guest': 'Not signed in. Log in or create a free account to sync progress across devices.',
         'interview.heading': '\u{1F4C2} Interview Examples',
         'interview.subtitle': 'LeetCode-style walk-throughs. Two at a time with quick copy.',
         'interview.pages': 'Pages',
@@ -1337,7 +1337,7 @@ const TRANSLATIONS = {
         'insights.lock.title': 'Inicia sesión para desbloquear insights personalizados',
         'insights.lock.copy': 'Tus analisis personalizados, impulso de enfoque y recomendaciones se desbloquean al iniciar sesion para sincronizar el progreso de forma segura.',
         'insights.lock.cta': 'Iniciar Sesión / Registrarse',
-        'insights.lock.updates': 'Modo invitado activo',
+    'insights.lock.updates': 'Modo de vista previa activo',
         'insights.lock.status': 'Invitado',
         'insights.lock.sessionBtn': 'Crea cuenta gratis para sincronizar',
         'insights.lock.break': 'Como invitado puedes usar modulos, quizzes y tarjetas',
@@ -1353,7 +1353,7 @@ const TRANSLATIONS = {
         'insights.lock.guestNote': 'Guarda una nota local',
         'insights.lock.guestHint': 'Crea una cuenta gratis para sincronizar tu progreso entre dispositivos cuando quieras.',
         'insights.lock.planPreviewCta': 'Personalizar (Vista previa)',
-        'auth.status.guest': 'Modo invitado activo. Crea una cuenta gratis para sincronizar tu progreso entre dispositivos.',
+    'auth.status.guest': 'No has iniciado sesion. Inicia sesion o crea una cuenta gratis para sincronizar tu progreso entre dispositivos.',
         'interview.heading': '\u{1F4C2} Ejemplos de Entrevista',
         'interview.subtitle': 'Recorridos estilo LeetCode. Dos por página con copia rápida.',
         'interview.pages': 'Páginas',
@@ -14897,7 +14897,7 @@ async function checkNeonSession(options = {}) {
         const isUnauthenticated = normalizedReason.includes('not authenticated') || normalizedReason.includes('401');
         setAccountSyncState(
             isUnauthenticated ? 'connected' : 'error',
-            isUnauthenticated ? 'Guest mode active.' : `Session check failed: ${reason}`
+            isUnauthenticated ? 'Not signed in.' : `Session check failed: ${reason}`
         );
         if (!silent && !isUnauthenticated) {
             showToast(`Session check failed: ${reason}`, 'error');
