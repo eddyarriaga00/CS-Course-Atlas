@@ -4472,26 +4472,27 @@ body.dark::after {
     }
 
     #settings-modal {
-        padding: 0 !important;
-        align-items: stretch !important;
-        justify-content: stretch !important;
+        padding: calc(0.55rem + env(safe-area-inset-top)) 0.6rem calc(0.55rem + env(safe-area-inset-bottom)) !important;
+        align-items: flex-start !important;
+        justify-content: center !important;
     }
 
     #settings-modal .modal-panel {
-        max-width: 100%;
-        margin: 0;
-        width: 100vw;
-        height: 100dvh;
-        min-height: 100dvh;
-        border-radius: 0 !important;
-        max-height: 100dvh;
+        max-width: min(100%, 32rem) !important;
+        margin: 0 auto;
+        width: min(100%, 32rem);
+        height: auto;
+        min-height: 0;
+        border-radius: 1.25rem !important;
+        max-height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 1.2rem) !important;
         display: flex;
         flex-direction: column;
+        overflow: hidden;
     }
 
     .settings-modal-header {
-        border-radius: 0 !important;
-        padding-top: calc(1rem + env(safe-area-inset-top));
+        border-radius: 1.25rem 1.25rem 0 0 !important;
+        padding: 0.95rem 1rem 0.82rem !important;
     }
 
     .settings-modal-body {
@@ -4501,8 +4502,8 @@ body.dark::after {
         overflow-y: auto;
         overflow-x: hidden;
         -webkit-overflow-scrolling: touch;
-        padding: 1rem;
-        padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+        padding: 0.85rem 0.95rem;
+        padding-bottom: calc(0.9rem + env(safe-area-inset-bottom));
     }
 
     .settings-modal-footer {
@@ -4919,7 +4920,7 @@ body.dark::after {
     }
 
     #flashcards-modal #flashcard-content.flashcard-shell {
-        min-height: 250px;
+        min-height: 220px;
     }
 }
 
@@ -7183,24 +7184,26 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
     #flashcards-modal,
     #quiz-modal,
     #interactive-quiz-modal,
-    #account-modal {
-        padding: 0 !important;
-        align-items: stretch !important;
-        justify-content: stretch !important;
+    #account-modal,
+    #settings-modal {
+        padding: calc(0.55rem + env(safe-area-inset-top)) 0.6rem calc(0.55rem + env(safe-area-inset-bottom)) !important;
+        align-items: flex-start !important;
+        justify-content: center !important;
     }
 
     #glossary-modal .modal-panel,
     #flashcards-modal .flashcards-modal-panel,
     #quiz-modal > div:first-child,
     #interactive-quiz-modal .modal-panel,
-    #account-modal .account-modal-panel {
-        width: 100vw;
-        max-width: 100vw;
-        margin: 0;
-        height: 100dvh;
-        min-height: 100dvh;
-        max-height: 100dvh !important;
-        border-radius: 0 !important;
+    #account-modal .account-modal-panel,
+    #settings-modal .modal-panel {
+        width: min(100%, 31rem);
+        max-width: calc(100vw - 1.2rem);
+        margin: 0 auto;
+        height: auto;
+        min-height: 0;
+        max-height: calc(100dvh - env(safe-area-inset-top) - env(safe-area-inset-bottom) - 1.2rem) !important;
+        border-radius: 1.2rem !important;
         display: flex;
         flex-direction: column;
         overflow: hidden;
@@ -7210,22 +7213,33 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
     #flashcards-modal .flashcards-modal-panel > .flex,
     #quiz-modal > div:first-child > .flex,
     #interactive-quiz-modal .modal-panel > .flex,
-    #account-modal .account-modal-panel > .account-modal-header {
-        padding-top: calc(0.9rem + env(safe-area-inset-top)) !important;
+    #account-modal .account-modal-panel > .account-modal-header,
+    #settings-modal .settings-modal-header {
+        padding-top: 0.85rem !important;
         padding-right: 0.9rem !important;
         padding-left: 0.9rem !important;
-        padding-bottom: 0.7rem !important;
+        padding-bottom: 0.68rem !important;
         align-items: flex-start;
-        gap: 0.6rem;
+        gap: 0.42rem;
     }
 
     #flashcards-modal #flashcards-modal-title,
     #quiz-modal #quiz-title,
     #interactive-quiz-modal #interactive-quiz-title,
     #glossary-modal #glossary-modal-title,
-    #account-modal #account-modal-title {
-        font-size: 1.15rem !important;
-        line-height: 1.25 !important;
+    #account-modal #account-modal-title,
+    #settings-modal #settings-modal-title {
+        font-size: 1.05rem !important;
+        line-height: 1.2 !important;
+    }
+
+    #flashcards-modal .flashcards-modal-panel > .flex p,
+    #interactive-quiz-modal .modal-panel > .flex p,
+    #account-modal .account-modal-header p,
+    #settings-modal .settings-modal-header p {
+        font-size: 0.74rem !important;
+        line-height: 1.28 !important;
+        margin-top: 0.18rem !important;
     }
 
     #glossary-modal .glossary-modal-body,
@@ -7233,7 +7247,8 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
     #flashcards-modal .flashcards-shell,
     #quiz-modal #quiz-content,
     #interactive-quiz-modal .modal-panel > .p-6,
-    #account-modal .account-modal-body {
+    #account-modal .account-modal-body,
+    #settings-modal .settings-modal-body {
         flex: 1 1 auto;
         min-height: 0;
         overflow-y: auto;
@@ -7243,7 +7258,8 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
 
     #quiz-modal #quiz-content,
     #interactive-quiz-modal .modal-panel > .p-6,
-    #account-modal .account-modal-body {
+    #account-modal .account-modal-body,
+    #settings-modal .settings-modal-body {
         padding-left: 0.9rem !important;
         padding-right: 0.9rem !important;
         padding-bottom: calc(0.95rem + env(safe-area-inset-bottom)) !important;
@@ -7281,7 +7297,7 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
     }
 
     #flashcards-modal .flashcards-shell {
-        padding: 0.9rem !important;
+        padding: 0.75rem !important;
     }
 }
 
