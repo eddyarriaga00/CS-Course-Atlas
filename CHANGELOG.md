@@ -42,6 +42,18 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Added a visible roadmap section on the interactive home view with three clear statuses: live now, in progress, and planned next.
 - Added the same roadmap framing to the standalone crawlable home.html page so public visitors see intentional progress before logging in.
 - Added roadmap localization keys for both English and Spanish.
+
+### Upcoming Tracks
+- Expanded the `Coming Soon Tracks` panel to include:
+  - Operating Systems
+  - Computer Networks
+  - Advanced Algorithms
+  - Programming Languages
+  - Software Engineering
+  - Computer Architecture
+  - Cybersecurity
+- Added EN/ES localization keys and subtitles for all new upcoming tracks.
+- Updated homepage metadata summary to reflect the expanded upcoming-track lineup.
 ### Navigation and UX Fixes
 - Fixed the pseudocode mode badge/icon in module controls (`📝`).
 - Removed the injected `"Program finished."` line from Java wrapper execution output.
