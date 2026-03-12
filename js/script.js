@@ -1681,19 +1681,26 @@ function isTrackRoutePath(route) {
 function syncSidebarTracksGroup(route = appState.currentRoute) {
     const tracksToggle = document.getElementById('sidebar-tracks-toggle');
     const tracksSubmenu = document.getElementById('sidebar-tracks-submenu');
+    const tracksIconLink = document.getElementById('sidebar-tracks-icon-link');
     if (!(tracksToggle instanceof HTMLElement) || !(tracksSubmenu instanceof HTMLElement)) return;
 
     const normalizedRoute = normalizeRoutePath(route || DEFAULT_ROUTE);
     const isActiveTrackRoute = isTrackRoutePath(normalizedRoute);
     const isIconOnly = Boolean(document.body && document.body.classList.contains('sidebar-icon-only'));
     const shouldExpand = !isIconOnly && Boolean(appState.sidebarTracksExpanded);
-    const shouldToggleBeActive = isActiveTrackRoute && isIconOnly;
+    const shouldToggleBeActive = false;
+    const shouldIconLinkBeActive = isActiveTrackRoute && isIconOnly;
 
     tracksToggle.classList.toggle('active', shouldToggleBeActive);
     tracksToggle.classList.toggle('expanded', shouldExpand);
     tracksToggle.setAttribute('aria-current', shouldToggleBeActive ? 'page' : 'false');
     tracksToggle.setAttribute('aria-expanded', shouldExpand ? 'true' : 'false');
     tracksSubmenu.hidden = !shouldExpand;
+
+    if (tracksIconLink instanceof HTMLElement) {
+        tracksIconLink.classList.toggle('active', shouldIconLinkBeActive);
+        tracksIconLink.setAttribute('aria-current', shouldIconLinkBeActive ? 'page' : 'false');
+    }
 }
 
 function updateSidebarCollapseToggleButton() {
