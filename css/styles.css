@@ -6789,7 +6789,7 @@ body.dark:not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-min
 @media (min-width: 1024px) {
     #app-shell {
         display: grid;
-        grid-template-columns: minmax(252px, 332px) minmax(0, 1fr);
+        grid-template-columns: minmax(228px, 280px) minmax(0, 1fr);
         gap: clamp(0.75rem, 1.7vw, 1.4rem);
         max-width: 1640px;
         margin: 0 auto;
@@ -6895,6 +6895,22 @@ body.dark:not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-min
 
     body.sidebar-icon-only #app-sidebar .sidebar-submenu {
         display: none !important;
+    }
+
+    body:not(.sidebar-icon-only) #app-sidebar .sidebar-nav {
+        gap: 0.5rem;
+    }
+
+    body:not(.sidebar-icon-only) #app-sidebar .sidebar-link {
+        min-height: 2.55rem;
+        padding: 0.62rem 0.78rem;
+        display: flex;
+        align-items: center;
+    }
+
+    body:not(.sidebar-icon-only) #app-sidebar .sidebar-submenu-link {
+        min-height: 2.35rem;
+        padding: 0.55rem 0.72rem;
     }
 }
 
