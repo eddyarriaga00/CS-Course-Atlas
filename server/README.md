@@ -92,7 +92,10 @@ This repo includes a production `render.yaml` for API hosting as `cs-course-atla
 - Sensitive auth/profile/user-state responses are marked `Cache-Control: no-store`.
 - API and auth/support routes have in-memory rate limiting by IP.
 - Login/signup also enforce persistent identity+IP lockout windows via SQL-backed throttling.
+- Login identifier format/length checks reduce abuse and malformed-auth payload pressure before DB work.
 - Mutating API payloads are inspected for prototype-pollution keys and abusive JSON shapes (depth/key/array/string caps).
+- API request surface limits block oversized headers, overlong request targets, and risky HTTP methods (`TRACE`/`TRACK`/`CONNECT`).
+- In-memory IP rate-limit maps now cap tracked key cardinality to reduce memory pressure during distributed abuse bursts.
 - Email changes use one-time 6-digit PIN verification with expiry + attempt limits.
 - Optional host allowlist protection is available via `ALLOWED_HOSTS`.
 - Optional Fetch Metadata enforcement blocks cross-site state-changing API requests.

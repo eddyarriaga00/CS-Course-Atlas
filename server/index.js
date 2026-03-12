@@ -47,6 +47,11 @@ const JSON_MAX_DEPTH = readPositiveInteger(process.env.JSON_MAX_DEPTH, 12);
 const JSON_MAX_KEYS = readPositiveInteger(process.env.JSON_MAX_KEYS, 1500);
 const JSON_MAX_ARRAY_LENGTH = readPositiveInteger(process.env.JSON_MAX_ARRAY_LENGTH, 250);
 const JSON_MAX_STRING_LENGTH = readPositiveInteger(process.env.JSON_MAX_STRING_LENGTH, 10_000);
+const API_MAX_URL_LENGTH = readPositiveInteger(process.env.API_MAX_URL_LENGTH, 4_096);
+const MAX_HEADER_VALUE_LENGTH = readPositiveInteger(process.env.MAX_HEADER_VALUE_LENGTH, 8_192);
+const RATE_LIMIT_MAX_KEYS = readPositiveInteger(process.env.RATE_LIMIT_MAX_KEYS, 50_000);
+const MAX_USER_AGENT_LENGTH = readPositiveInteger(process.env.MAX_USER_AGENT_LENGTH, 512);
+const AUTH_IDENTIFIER_MAX_LENGTH = readPositiveInteger(process.env.AUTH_IDENTIFIER_MAX_LENGTH, 320);
 const SERVER_REQUEST_TIMEOUT_MS = readPositiveInteger(process.env.SERVER_REQUEST_TIMEOUT_MS, 30_000);
 const SERVER_HEADERS_TIMEOUT_MS = readPositiveInteger(process.env.SERVER_HEADERS_TIMEOUT_MS, 35_000);
 const SERVER_KEEP_ALIVE_TIMEOUT_MS = readPositiveInteger(process.env.SERVER_KEEP_ALIVE_TIMEOUT_MS, 5_000);
@@ -114,6 +119,7 @@ const BLOCKED_STATIC_FILES = Object.freeze(new Set([
 ]));
 const CORS_ALLOWED_METHODS = Object.freeze(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']);
 const CORS_ALLOWED_HEADERS = Object.freeze(['Content-Type', 'X-CSRF-Token', 'X-Requested-With']);
+const BLOCKED_API_METHODS = new Set(['TRACE', 'TRACK', 'CONNECT']);
 const BOOK_LIBRARY = [
     {
         id: 'liang-java-9e',
@@ -149,6 +155,7 @@ app.use(cookieParser());
 app.use(attachRequestId);
 app.use(setAdditionalSecurityHeaders);
 app.use(enforceHostAllowlist);
+app.use('/api', enforceApiRequestSurfaceLimits);
 app.use('/api', applyCorsForApi);
 app.use('/api', enforceFetchMetadata);
 app.use('/api', enforceJsonMutationContentType);
@@ -227,6 +234,17 @@ function resolveClientIp(req) {
 
 function safeString(value, fallback = '') {
     return typeof value === 'string' ? value.trim() : fallback;
+}
+
+function truncateForStorage(value, maxLength, fallback = '') {
+    const normalized = safeString(value, fallback);
+    if (!normalized) {
+        return normalized;
+    }
+    if (normalized.length <= maxLength) {
+        return normalized;
+    }
+    return normalized.slice(0, maxLength);
 }
 
 function readOptionalOAuthEnv(value) {
@@ -489,6 +507,61 @@ function enforceHostAllowlist(req, res, next) {
     return next();
 }
 
+function findOversizedHeader(headers, maxLength) {
+    if (!headers || typeof headers !== 'object') return '';
+    for (const [name, value] of Object.entries(headers)) {
+        if (Array.isArray(value)) {
+            const hasOversizedEntry = value.some((entry) => (
+                typeof entry === 'string' && Buffer.byteLength(entry, 'utf8') > maxLength
+            ));
+            if (hasOversizedEntry) {
+                return name;
+            }
+            continue;
+        }
+        if (typeof value === 'string' && Buffer.byteLength(value, 'utf8') > maxLength) {
+            return name;
+        }
+    }
+    return '';
+}
+
+function enforceApiRequestSurfaceLimits(req, res, next) {
+    const method = safeString(req.method).toUpperCase();
+    if (BLOCKED_API_METHODS.has(method)) {
+        logSecurityEvent('blocked_api_method', {
+            method,
+            path: req.path,
+            requestId: req.requestId || ''
+        });
+        return res.status(405).json({ error: `${method} is not allowed.` });
+    }
+
+    const requestTarget = String(req.originalUrl || req.url || '');
+    if (requestTarget.length > API_MAX_URL_LENGTH) {
+        logSecurityEvent('blocked_request_target_too_long', {
+            path: req.path,
+            requestId: req.requestId || '',
+            length: requestTarget.length,
+            limit: API_MAX_URL_LENGTH
+        });
+        return res.status(414).json({ error: 'Request URI is too long.' });
+    }
+
+    const oversizedHeader = findOversizedHeader(req.headers, MAX_HEADER_VALUE_LENGTH);
+    if (oversizedHeader) {
+        logSecurityEvent('blocked_header_too_large', {
+            path: req.path,
+            requestId: req.requestId || '',
+            header: oversizedHeader,
+            limit: MAX_HEADER_VALUE_LENGTH
+        });
+        return res.status(431).json({ error: 'One or more request headers are too large.' });
+    }
+
+    return next();
+}
+
 function enforceFetchMetadata(req, res, next) {
     if (!ENFORCE_FETCH_METADATA) {
         return next();
@@ -539,6 +612,9 @@ function inspectPayloadForSecurity(value, context, depth = 0) {
 
     if (typeof value === 'string' && value.length > JSON_MAX_STRING_LENGTH) {
         return 'JSON payload includes an excessively long string value.';
+    }
+    if (typeof value === 'string' && value.includes('\u0000')) {
+        return 'JSON payload includes blocked null byte characters.';
     }
 
     if (Array.isArray(value)) {
@@ -1261,14 +1337,16 @@ async function resolveOAuthUser(profile) {
 
 function createRateLimiter({ windowMs, maxRequests, keyPrefix }) {
     const hits = new Map();
-    const cleanupInterval = Math.max(windowMs, 30_000);
-    const cleanupTimer = setInterval(() => {
-        const now = Date.now();
+    const pruneExpiredHits = (now) => {
         for (const [key, value] of hits.entries()) {
             if (value.resetAt <= now) {
                 hits.delete(key);
             }
         }
+    };
+    const cleanupInterval = Math.max(windowMs, 30_000);
+    const cleanupTimer = setInterval(() => {
+        pruneExpiredHits(Date.now());
     }, cleanupInterval);
     cleanupTimer.unref();
 
@@ -1276,9 +1354,26 @@ function createRateLimiter({ windowMs, maxRequests, keyPrefix }) {
         const now = Date.now();
         const clientIp = resolveClientIp(req) || 'unknown';
         const key = `${keyPrefix}:${clientIp}`;
+        const keyAlreadyTracked = hits.has(key);
         let state = hits.get(key);
 
         if (!state || state.resetAt <= now) {
+            if (!keyAlreadyTracked && hits.size >= RATE_LIMIT_MAX_KEYS) {
+                pruneExpiredHits(now);
+                if (hits.size >= RATE_LIMIT_MAX_KEYS) {
+                    logSecurityEvent('rate_limiter_capacity_exceeded', {
+                        keyPrefix,
+                        path: req.path,
+                        method: safeString(req.method).toUpperCase(),
+                        ip: clientIp,
+                        requestId: req.requestId || '',
+                        activeKeys: hits.size,
+                        maxKeys: RATE_LIMIT_MAX_KEYS
+                    });
+                    res.setHeader('Retry-After', '5');
+                    return res.status(503).json({ error: 'Service is temporarily busy. Please retry shortly.' });
+                }
+            }
             state = { count: 0, resetAt: now + windowMs };
         }
 
@@ -1725,7 +1820,7 @@ async function createSession(res, req, userId) {
             tokenHash,
             csrfToken,
             hashIpAddress(resolveClientIp(req)),
-            safeString(req.headers['user-agent'], null),
+            truncateForStorage(req.headers['user-agent'], MAX_USER_AGENT_LENGTH, null),
             expiresAt.toISOString()
         ]
     );
@@ -2079,6 +2174,16 @@ app.post('/api/auth/login', assertSameOrigin, async (req, res) => {
 
     if (!identity || !password) {
         return res.status(400).json({ error: 'Email/username and password are required.' });
+    }
+    if (identity.length > AUTH_IDENTIFIER_MAX_LENGTH) {
+        return res.status(401).json({ error: 'Invalid credentials.' });
+    }
+    const identityLooksLikeEmail = identity.includes('@');
+    const identityIsValid = identityLooksLikeEmail
+        ? isValidEmail(identity)
+        : isValidUsername(identity);
+    if (!identityIsValid) {
+        return res.status(401).json({ error: 'Invalid credentials.' });
     }
     if (password.length > PASSWORD_MAX_LENGTH) {
         return res.status(401).json({ error: 'Invalid credentials.' });
