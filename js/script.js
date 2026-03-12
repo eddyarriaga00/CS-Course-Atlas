@@ -14017,7 +14017,7 @@ async function handleAuthProviderClick(providerKey, providerLabel) {
         return;
     }
 
-    const returnTo = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    const returnTo = window.location.href;
     const startEndpoint = buildNeonOAuthStartEndpoint(providerKey);
     const redirectUrl = `${startEndpoint}?returnTo=${encodeURIComponent(returnTo)}`;
     setAccountAuthStatus(`Redirecting to ${providerLabel}...`, 'info');

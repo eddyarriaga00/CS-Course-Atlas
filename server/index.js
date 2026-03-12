@@ -776,13 +776,50 @@ function verifyAndDecodeOAuthState(token) {
 }
 
 function sanitizeOAuthReturnPath(rawReturnPath) {
-    const fallbackPath = OAUTH_POST_LOGIN_FALLBACK_PATH.startsWith('/')
-        ? OAUTH_POST_LOGIN_FALLBACK_PATH
-        : '/index.html';
+    const fallbackPath = resolveOAuthReturnCandidate(OAUTH_POST_LOGIN_FALLBACK_PATH, '/index.html');
     const candidate = safeString(rawReturnPath);
     if (!candidate) {
         return fallbackPath;
     }
+    return resolveOAuthReturnCandidate(candidate, fallbackPath);
+}
+
+function appendOAuthResultToPath(basePath, entries) {
+    const base = safeString(basePath);
+    const isAbsolute = /^https?:\/\//i.test(base);
+    const parsed = isAbsolute ? new URL(base) : new URL(base, 'http://localhost');
+    for (const [key, value] of entries) {
+        if (!key) continue;
+        if (value == null || value === '') {
+            parsed.searchParams.delete(key);
+            continue;
+        }
+        parsed.searchParams.set(key, String(value));
+    }
+    if (isAbsolute) {
+        return `${parsed.origin}${parsed.pathname}${parsed.search}${parsed.hash}`;
+    }
+    return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+}
+
+function isAllowedOAuthReturnOrigin(origin) {
+    const normalizedOrigin = normalizeOriginHeader(origin);
+    if (!normalizedOrigin) return false;
+    if (ALLOWED_ORIGINS.has(normalizedOrigin)) {
+        return true;
+    }
+    if (!isProduction) {
+        try {
+            const parsed = new URL(normalizedOrigin);
+            return isLoopbackHostname(parsed.hostname);
+        } catch (_error) {
+            return false;
+        }
+    }
+    return false;
+}
+
+function sanitizeRelativeOAuthReturnPath(candidate, fallbackPath) {
     if (candidate.startsWith('//') || !candidate.startsWith('/')) {
         return fallbackPath;
     }
@@ -804,17 +841,36 @@ function sanitizeOAuthReturnPath(rawReturnPath) {
     }
 }
 
-function appendOAuthResultToPath(basePath, entries) {
-    const parsed = new URL(basePath, 'http://localhost');
-    for (const [key, value] of entries) {
-        if (!key) continue;
-        if (value == null || value === '') {
-            parsed.searchParams.delete(key);
-            continue;
+function sanitizeAbsoluteOAuthReturnUrl(candidate) {
+    try {
+        const parsed = new URL(candidate);
+        if (!['http:', 'https:'].includes(parsed.protocol)) {
+            return '';
         }
-        parsed.searchParams.set(key, String(value));
+        if (!isAllowedOAuthReturnOrigin(`${parsed.protocol}//${parsed.host}`)) {
+            return '';
+        }
+        if (!parsed.pathname || !parsed.pathname.startsWith('/')) {
+            return '';
+        }
+        if (parsed.pathname.startsWith('/api/')) {
+            return '';
+        }
+        if (isBlockedStaticPath(parsed.pathname)) {
+            return '';
+        }
+        return `${parsed.origin}${parsed.pathname}${parsed.search}${parsed.hash}`;
+    } catch (_error) {
+        return '';
     }
-    return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+}
+
+function resolveOAuthReturnCandidate(candidateValue, fallbackPath) {
+    const candidate = safeString(candidateValue);
+    if (!candidate) return fallbackPath;
+    const absoluteTarget = sanitizeAbsoluteOAuthReturnUrl(candidate);
+    if (absoluteTarget) return absoluteTarget;
+    return sanitizeRelativeOAuthReturnPath(candidate, fallbackPath);
 }
 
 async function fetchJsonWithTimeout(url, options = {}, timeoutMs = 12_000) {

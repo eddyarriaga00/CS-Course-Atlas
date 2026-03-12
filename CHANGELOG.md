@@ -241,3 +241,9 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Added route-aware animation refresh hooks so new route/module renders animate smoothly without removing existing UI.
 - Added subtle ambient panel drift and CTA glow animations for core home/insights surfaces.
 - Integrated reduced-motion safeguards so all new effects automatically disable when motion reduction is enabled.
+
+### OAuth Redirect Fix
+- Fixed Google OAuth post-login redirect behavior for split frontend/backend hosting:
+  - frontend now sends an absolute `returnTo` URL during OAuth start
+  - backend now safely accepts absolute callback return URLs only when origin is trusted via `ALLOWED_ORIGINS`
+  - OAuth callback now redirects users back to the public frontend origin instead of the API host page
