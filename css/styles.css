@@ -6737,13 +6737,22 @@ body:not(.sidebar-icon-only) #app-sidebar .sidebar-group-toggle {
     background: rgba(20, 31, 50, 0.62);
 }
 
-.sidebar-link:hover,
 .sidebar-link:focus-visible {
     background: rgba(79, 70, 229, 0.38);
     border-color: rgba(129, 140, 248, 0.6);
     box-shadow: 0 10px 20px rgba(79, 70, 229, 0.24);
     transform: translateY(-1px);
     outline: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .sidebar-link:hover {
+        background: rgba(79, 70, 229, 0.38);
+        border-color: rgba(129, 140, 248, 0.6);
+        box-shadow: 0 10px 20px rgba(79, 70, 229, 0.24);
+        transform: translateY(-1px);
+        outline: none;
+    }
 }
 
 .sidebar-link.active {

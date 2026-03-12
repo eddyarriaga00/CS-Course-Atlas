@@ -1687,10 +1687,11 @@ function syncSidebarTracksGroup(route = appState.currentRoute) {
     const isActiveTrackRoute = isTrackRoutePath(normalizedRoute);
     const isIconOnly = Boolean(document.body && document.body.classList.contains('sidebar-icon-only'));
     const shouldExpand = !isIconOnly && Boolean(appState.sidebarTracksExpanded);
+    const shouldToggleBeActive = isActiveTrackRoute && isIconOnly;
 
-    tracksToggle.classList.toggle('active', isActiveTrackRoute);
+    tracksToggle.classList.toggle('active', shouldToggleBeActive);
     tracksToggle.classList.toggle('expanded', shouldExpand);
-    tracksToggle.setAttribute('aria-current', isActiveTrackRoute ? 'page' : 'false');
+    tracksToggle.setAttribute('aria-current', shouldToggleBeActive ? 'page' : 'false');
     tracksToggle.setAttribute('aria-expanded', shouldExpand ? 'true' : 'false');
     tracksSubmenu.hidden = !shouldExpand;
 }
@@ -2058,7 +2059,23 @@ function initRouteNavigation() {
             if (event.defaultPrevented) return;
             if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
             event.preventDefault();
-            navigateToRoute(link.getAttribute('href') || DEFAULT_ROUTE, { preserveScroll: false, focusMain: true });
+
+            const targetRoute = normalizeRoutePath(link.getAttribute('href') || declaredRoute || DEFAULT_ROUTE);
+            syncSidebarActiveLink(targetRoute);
+
+            // On laptop/desktop, auto-collapse the pages menu after route selection.
+            if (isSidebarInlineMode() && !isSidebarAutoCollapsedByTopMenu() && !document.body.classList.contains('sidebar-icon-only')) {
+                appState.sidebarManualCollapsed = true;
+                syncDesktopSidebarIconMode();
+                saveToLocalStorage();
+            }
+
+            // Prevent sticky touch focus styles from lingering in the mobile rail.
+            if (isSidebarMobileRailMode() && link instanceof HTMLElement) {
+                link.blur();
+            }
+
+            navigateToRoute(targetRoute, { preserveScroll: false, focusMain: true });
         });
     });
 
