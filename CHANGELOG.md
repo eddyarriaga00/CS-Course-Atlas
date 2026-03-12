@@ -21,6 +21,11 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Added per-module `Show all topics` / `Show fewer topics` toggle controls.
 - Persisted topic expansion state in local storage, synced user-state snapshots, and progress export/import metadata.
 
+### Detailed Topic Examples UX
+- Updated module detailed topic code examples to show the first 4 items by default.
+- Added per-module expand/collapse control directly under the visible example list to reveal or hide the remaining detailed examples.
+- Persisted detailed-example-list expansion state in local storage, synced user-state snapshots, and progress export/import metadata.
+
 ### Accessibility
 - Added a skip link for keyboard users and a persistent screen-reader announcer.
 - Converted the primary content wrapper to a semantic `<main>` landmark.

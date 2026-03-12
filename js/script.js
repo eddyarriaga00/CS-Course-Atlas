@@ -10,6 +10,7 @@ const appState = {
     completedQuizzes: new Set(),
     expandedCode: new Set(),
     expandedModuleTopics: new Set(),
+    expandedDetailedExampleLists: new Set(),
     expandedCodeExamples: new Set(),
     expandedExampleExplanations: new Set(),
     expandedOutputs: new Set(),
@@ -1101,6 +1102,8 @@ const TRANSLATIONS = {
         'module.topicsCovered': 'Topics Covered:',
         'module.showAllTopics': 'Show all topics ({count} more)',
         'module.showFewerTopics': 'Show fewer topics',
+        'module.expandDetailedExamples': 'Expand detailed examples ({count} more)',
+        'module.collapseDetailedExamples': 'Collapse detailed examples',
         'module.codeExample': '\u{1F4BB} Code Example',
         'module.discreteTheory': '\u{1F4D8} Discrete Mathematics Theory',
         'module.theoryMode': 'Theory Mode',
@@ -1601,6 +1604,8 @@ const TRANSLATIONS = {
         'module.topicsCovered': 'Temas cubiertos:',
         'module.showAllTopics': 'Mostrar todos los temas ({count} m\u00e1s)',
         'module.showFewerTopics': 'Mostrar menos temas',
+        'module.expandDetailedExamples': 'Expandir ejemplos detallados ({count} m\u00e1s)',
+        'module.collapseDetailedExamples': 'Contraer ejemplos detallados',
         'module.codeExample': '\u{1F4BB} Ejemplo de codigo',
         'module.discreteTheory': '\u{1F4D8} Teor\u00eda de Matem\u00e1ticas Discretas',
         'module.theoryMode': 'Modo Teoría',
@@ -2460,6 +2465,10 @@ function collapseAllModulePanels() {
     }
     if (appState.expandedModuleTopics.size > 0) {
         appState.expandedModuleTopics.clear();
+        changed = true;
+    }
+    if (appState.expandedDetailedExampleLists.size > 0) {
+        appState.expandedDetailedExampleLists.clear();
         changed = true;
     }
     if (appState.expandedCodeExamples.size > 0) {
@@ -11551,6 +11560,7 @@ function buildSerializableAppState() {
         completedQuizzes: Array.from(appState.completedQuizzes),
         expandedCode: Array.from(appState.expandedCode),
         expandedModuleTopics: Array.from(appState.expandedModuleTopics),
+        expandedDetailedExampleLists: Array.from(appState.expandedDetailedExampleLists),
         expandedCodeExamples: Array.from(appState.expandedCodeExamples),
         expandedExampleExplanations: Array.from(appState.expandedExampleExplanations),
         moduleComments: Array.from(appState.moduleComments.entries()),
@@ -11741,6 +11751,7 @@ function loadFromLocalStorage() {
             appState.completedModules = new Set(remapStoredModuleIds(state.completedModules || []));
             appState.expandedCode = new Set(state.expandedCode || []);
             appState.expandedModuleTopics = new Set(remapStoredModuleIds(state.expandedModuleTopics || []));
+            appState.expandedDetailedExampleLists = new Set(remapStoredModuleIds(state.expandedDetailedExampleLists || []));
             appState.expandedCodeExamples = sanitizeStoredExpandedCodeExamples(new Set(state.expandedCodeExamples || []));
             appState.expandedExampleExplanations = sanitizeStoredExpandedCodeExamples(new Set(state.expandedExampleExplanations || []));
             appState.moduleComments = new Map(remapStoredModuleEntryPairs(state.moduleComments || []));
@@ -11819,6 +11830,7 @@ function applyRemoteUserStateSnapshot(snapshot, options = {}) {
         appState.completedModules = new Set(remapStoredModuleIds(state.completedModules || []));
         appState.expandedCode = new Set(state.expandedCode || []);
         appState.expandedModuleTopics = new Set(remapStoredModuleIds(state.expandedModuleTopics || []));
+        appState.expandedDetailedExampleLists = new Set(remapStoredModuleIds(state.expandedDetailedExampleLists || []));
         appState.expandedCodeExamples = sanitizeStoredExpandedCodeExamples(new Set(state.expandedCodeExamples || []));
         appState.expandedExampleExplanations = sanitizeStoredExpandedCodeExamples(new Set(state.expandedExampleExplanations || []));
         appState.moduleComments = new Map(remapStoredModuleEntryPairs(state.moduleComments || []));
@@ -20544,6 +20556,13 @@ function renderModules() {
         const localizedModule = localizedModuleMap.get(module.id) || module;
         const codeExampleSets = getModuleCodeExampleSets(module.id, localizedModule);
         const hasCodeExampleSets = codeExampleSets.length > 0;
+        const detailedExamplesVisibleByDefault = 4;
+        const detailedExamplesExpanded = appState.expandedDetailedExampleLists.has(module.id);
+        const visibleCodeExampleSets = detailedExamplesExpanded
+            ? codeExampleSets
+            : codeExampleSets.slice(0, detailedExamplesVisibleByDefault);
+        const hasHiddenDetailedExamples = codeExampleSets.length > detailedExamplesVisibleByDefault;
+        const hiddenDetailedExampleCount = Math.max(0, codeExampleSets.length - visibleCodeExampleSets.length);
         const activeExampleId = getActiveModuleExampleId(module.id, localizedModule);
         const moduleCodeExamples = getCodeExamplesForModuleContext(module.id, localizedModule);
         const isCompleted = appState.completedModules.has(module.id);
@@ -20702,7 +20721,7 @@ function renderModules() {
                     ${hasCodeExampleSets ? `
                         <div class="p-3 sm:p-4 space-y-3 module-example-set-stack">
                             <h5 class="text-xs sm:text-sm font-semibold text-slate-700">${t('module.examplesHeading')}</h5>
-                            ${codeExampleSets.map((setItem) => {
+                            ${visibleCodeExampleSets.map((setItem) => {
             const setTitle = resolveLocalizedValue(setItem.title, appState.language);
             const setDescription = resolveLocalizedValue(setItem.description, appState.language);
             const setId = setItem.id;
@@ -20755,6 +20774,20 @@ function renderModules() {
                                 </div>
                             `;
         }).join('')}
+                            ${hasHiddenDetailedExamples ? `
+                                <div class="pt-1">
+                                    <button
+                                        type="button"
+                                        onclick="toggleModuleDetailedExamples('${module.id}')"
+                                        class="text-xs font-semibold text-indigo-600 hover:text-indigo-700 underline-offset-2 hover:underline"
+                                        aria-expanded="${detailedExamplesExpanded ? 'true' : 'false'}"
+                                    >
+                                        ${detailedExamplesExpanded
+            ? t('module.collapseDetailedExamples')
+            : t('module.expandDetailedExamples', { count: hiddenDetailedExampleCount })}
+                                    </button>
+                                </div>
+                            ` : ''}
                         </div>
                     ` : `
                         <!-- Code Content -->
@@ -21460,6 +21493,18 @@ function toggleModuleTopics(moduleId) {
     saveToLocalStorage();
 }
 
+function toggleModuleDetailedExamples(moduleId) {
+    const module = getModuleById(moduleId);
+    if (!module) return;
+    if (appState.expandedDetailedExampleLists.has(moduleId)) {
+        appState.expandedDetailedExampleLists.delete(moduleId);
+    } else {
+        appState.expandedDetailedExampleLists.add(moduleId);
+    }
+    renderModules();
+    saveToLocalStorage();
+}
+
 function toggleModuleComments(moduleId) {
     const currentSetting = appState.moduleComments.get(moduleId);
     appState.moduleComments.set(moduleId, currentSetting === undefined ? !appState.showComments : !currentSetting);
@@ -21998,6 +22043,7 @@ function resetProgress() {
         appState.completedQuizzes.clear();
         appState.expandedCode.clear();
         appState.expandedModuleTopics.clear();
+        appState.expandedDetailedExampleLists.clear();
         appState.expandedCodeExamples.clear();
         appState.expandedExampleExplanations.clear();
         appState.expandedOutputs.clear();
@@ -23167,6 +23213,7 @@ function exportProgress() {
                 languages: Array.from(appState.moduleLanguages.entries()),
                 modes: Array.from(appState.moduleModes.entries()),
                 expandedTopics: Array.from(appState.expandedModuleTopics),
+                expandedDetailedExamples: Array.from(appState.expandedDetailedExampleLists),
                 expandedExamples: Array.from(appState.expandedCodeExamples),
                 selectedExamples: Array.from(appState.moduleExampleSelections.entries())
             },
@@ -23212,6 +23259,9 @@ function importProgress(event) {
                 );
                 appState.expandedModuleTopics = new Set(
                     remapStoredModuleIds(importData.progress.moduleSettings.expandedTopics || [])
+                );
+                appState.expandedDetailedExampleLists = new Set(
+                    remapStoredModuleIds(importData.progress.moduleSettings.expandedDetailedExamples || [])
                 );
                 appState.expandedCodeExamples = sanitizeStoredExpandedCodeExamples(
                     new Set(importData.progress.moduleSettings.expandedExamples || [])
