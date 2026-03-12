@@ -17451,41 +17451,41 @@ function renderQuiz() {
 
         content.innerHTML = `
             <div class="mb-6">
-                <div class="flex justify-between items-center mb-4">
-                    <span class="text-sm quiz-progress-label">
+                <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
+                    <span class="text-xs sm:text-sm quiz-progress-label break-words">
                         ${translateLiteral(`Question ${appState.currentQuiz.currentQuestion + 1} of ${totalCount} ? ${answeredCount}/${totalCount} answered`, appState.language)}
                     </span>
-                    <div class="h-2 bg-slate-800 rounded-full flex-1 ml-4 overflow-hidden border border-white/10">
+                    <div class="h-2 bg-slate-800 rounded-full w-full sm:flex-1 sm:ml-4 overflow-hidden border border-white/10">
                         <div class="h-full bg-indigo-500 transition-all duration-300" style="width: ${((appState.currentQuiz.currentQuestion + 1) / totalCount) * 100}%"></div>
                     </div>
                 </div>
-                <h4 class="text-xl font-semibold mb-6 text-white">
+                <h4 class="text-lg sm:text-xl font-semibold mb-5 sm:mb-6 text-white leading-relaxed break-words">
                     ${appState.currentQuiz.questions[appState.currentQuiz.currentQuestion].question}
                 </h4>
             </div>
 
-            <div class="space-y-3 mb-8">
+            <div class="space-y-3 mb-6 sm:mb-8">
                 ${appState.currentQuiz.questions[appState.currentQuiz.currentQuestion].options.map((option, index) => `
-                    <button onclick="answerQuestion(${index})" class="w-full p-4 text-left rounded-xl border-2 transition-all duration-200 quiz-option text-white ${appState.currentQuiz.answers[appState.currentQuiz.currentQuestion] === index ? 'border-indigo-400 bg-slate-800/80' : 'border-white/15 bg-slate-900/80 hover:border-indigo-300'}">
-                        <span class="font-medium text-white">
+                    <button onclick="answerQuestion(${index})" class="w-full p-3 sm:p-4 text-left rounded-xl border-2 transition-all duration-200 quiz-option text-white ${appState.currentQuiz.answers[appState.currentQuiz.currentQuestion] === index ? 'border-indigo-400 bg-slate-800/80' : 'border-white/15 bg-slate-900/80 hover:border-indigo-300'}">
+                        <span class="font-medium text-white break-words">
                             ${String.fromCharCode(65 + index)}. ${option}
                         </span>
                     </button>
                 `).join('')}
             </div>
 
-            <div class="text-sm text-slate-200 mb-4">
+            <div class="text-sm text-slate-200 mb-4 break-words">
                 ${selected === null || selected === undefined
                     ? translateLiteral('Pick an answer to continue.', appState.language)
                     : translateLiteral('Answer selected.', appState.language)}
             </div>
 
-            <div class="flex justify-between">
-                <button onclick="prevQuestion()" ${appState.currentQuiz.currentQuestion === 0 ? 'disabled' : ''} class="px-6 py-3 rounded-xl font-medium transition-all duration-200 quiz-nav-button secondary ${appState.currentQuiz.currentQuestion === 0 ? '' : ''}">
+            <div class="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 sm:justify-between">
+                <button onclick="prevQuestion()" ${appState.currentQuiz.currentQuestion === 0 ? 'disabled' : ''} class="w-full sm:w-auto px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl font-medium transition-all duration-200 quiz-nav-button secondary ${appState.currentQuiz.currentQuestion === 0 ? '' : ''}">
                     ${translateLiteral('Previous', appState.language)}
                 </button>
 
-                <button onclick="nextQuestion()" ${appState.currentQuiz.answers[appState.currentQuiz.currentQuestion] === null ? 'disabled' : ''} class="px-6 py-3 rounded-xl font-medium transition-all duration-200 quiz-nav-button primary">
+                <button onclick="nextQuestion()" ${appState.currentQuiz.answers[appState.currentQuiz.currentQuestion] === null ? 'disabled' : ''} class="w-full sm:w-auto px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl font-medium transition-all duration-200 quiz-nav-button primary">
                     ${appState.currentQuiz.currentQuestion === appState.currentQuiz.questions.length - 1
                         ? translateLiteral('Finish', appState.language)
                         : translateLiteral('Next', appState.language)}
@@ -17496,15 +17496,15 @@ function renderQuiz() {
         content.innerHTML = `
             <div class="text-center">
                 <div class="mb-6">
-                    <div class="text-6xl mb-4">
+                    <div class="text-4xl sm:text-6xl mb-4">
                         ${appState.currentQuiz.score === appState.currentQuiz.questions.length ? 'PERFECT' :
                 appState.currentQuiz.score >= appState.currentQuiz.questions.length * 0.7 ? 'PASS' : 'RETRY'}
                     </div>
-                    <h4 class="text-3xl font-bold mb-2 text-indigo-600">${translateLiteral('Quiz Complete!', appState.language)}</h4>
-                    <p class="text-xl text-slate-800">
+                    <h4 class="text-2xl sm:text-3xl font-bold mb-2 text-indigo-600">${translateLiteral('Quiz Complete!', appState.language)}</h4>
+                    <p class="text-base sm:text-xl text-slate-800 break-words">
                         ${translateLiteral(`You scored ${appState.currentQuiz.score} out of ${appState.currentQuiz.questions.length}`, appState.language)}
                     </p>
-                    <p class="text-lg text-slate-600">
+                    <p class="text-base sm:text-lg text-slate-600">
                         (${Math.round((appState.currentQuiz.score / appState.currentQuiz.questions.length) * 100)}%)
                     </p>
                 </div>
@@ -17517,16 +17517,16 @@ function renderQuiz() {
                                     ${appState.currentQuiz.answers[index] === question.correct ? '?' : '?'}
                                 </span>
                                 <div class="flex-1">
-                                    <p class="font-medium mb-2 text-slate-800">${question.question}</p>
-                                    <p class="text-sm text-slate-600">
+                                    <p class="font-medium mb-2 text-slate-800 break-words">${question.question}</p>
+                                    <p class="text-sm text-slate-600 break-words">
                                         <strong>${translateLiteral('Your answer:', appState.language)}</strong> ${question.options[appState.currentQuiz.answers[index]]}
                                     </p>
                                     ${appState.currentQuiz.answers[index] !== question.correct ? `
-                                        <p class="text-sm text-slate-600">
+                                        <p class="text-sm text-slate-600 break-words">
                                             <strong>${translateLiteral('Correct answer:', appState.language)}</strong> ${question.options[question.correct]}
                                         </p>
                                     ` : ''}
-                                    <p class="text-sm mt-2 text-slate-800">
+                                    <p class="text-sm mt-2 text-slate-800 break-words">
                                         <strong>${translateLiteral('Explanation:', appState.language)}</strong> ${question.explanation}
                                     </p>
                                 </div>
@@ -17535,11 +17535,11 @@ function renderQuiz() {
                     `).join('')}
                 </div>
 
-                <div class="flex gap-4 justify-center">
-                    <button onclick="restartQuiz()" class="bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                    <button onclick="restartQuiz()" class="w-full sm:w-auto bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
                         ${translateLiteral('🔁 Retake Quiz', appState.language)}
                     </button>
-                    <button onclick="closeQuiz()" class="bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
+                    <button onclick="closeQuiz()" class="w-full sm:w-auto bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
                         ${translateLiteral('Close', appState.language)}
                     </button>
                 </div>
@@ -19304,12 +19304,12 @@ function renderInteractiveQuizQuestion() {
             : `<p class="text-sm text-rose-600 font-semibold mt-2">? ${translateLiteral('Try again.', appState.language)} ${question.explanation || ''}</p>`;
 
     body.innerHTML = `
-        <div class="flex items-center justify-between text-sm text-slate-600 mb-2">
-            <span>${translateLiteral(`Question ${current + 1} of ${total}`, appState.language)}</span>
-            <span>${Math.round(((current + 1) / total) * 100)}% ${translateLiteral('through', appState.language)}</span>
+        <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between text-xs sm:text-sm text-slate-600 mb-2">
+            <span class="break-words">${translateLiteral(`Question ${current + 1} of ${total}`, appState.language)}</span>
+            <span class="break-words">${Math.round(((current + 1) / total) * 100)}% ${translateLiteral('through', appState.language)}</span>
         </div>
-        <div class="p-4 sm:p-5 rounded-xl border border-slate-200 bg-white shadow-sm">
-            <h4 class="text-lg font-semibold text-slate-800 mb-4">${question.question}</h4>
+        <div class="p-3 sm:p-5 rounded-xl border border-slate-200 bg-white shadow-sm">
+            <h4 class="text-base sm:text-lg font-semibold text-slate-800 mb-4 leading-relaxed break-words">${question.question}</h4>
             <div class="space-y-2">
                 ${question.options.map((option, idx) => {
                     const isSelected = selected === idx;
@@ -19320,19 +19320,19 @@ function renderInteractiveQuizQuestion() {
                         else if (isSelected) stateClass = 'border-rose-500 bg-rose-50';
                     }
                     return `
-                        <button class="w-full text-left p-3 rounded-lg border transition-all duration-200 ${stateClass}"
+                        <button class="w-full text-left p-2.5 sm:p-3 rounded-lg border transition-all duration-200 ${stateClass}"
                             onclick="answerInteractiveQuiz(${idx})">
-                            <span class="font-medium text-slate-800">${String.fromCharCode(65 + idx)}. ${option}</span>
+                            <span class="font-medium text-slate-800 break-words">${String.fromCharCode(65 + idx)}. ${option}</span>
                         </button>`;
                 }).join('')}
             </div>
             ${feedback}
-            <div class="flex justify-between items-center mt-4 gap-3">
-                <button class="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 bg-white hover:border-indigo-300 hover:bg-indigo-50 transition"
+            <div class="flex flex-col-reverse sm:flex-row sm:justify-between sm:items-center mt-4 gap-2 sm:gap-3">
+                <button class="w-full sm:w-auto px-4 py-2 rounded-lg border border-slate-200 text-slate-700 bg-white hover:border-indigo-300 hover:bg-indigo-50 transition"
                     ${current === 0 ? 'disabled' : ''} onclick="prevInteractiveQuizQuestion()">
                     ${translateLiteral('Previous', appState.language)}
                 </button>
-                <button class="px-4 py-2 rounded-lg bg-indigo-500 text-white font-semibold hover:bg-indigo-600 shadow-sm transition"
+                <button class="w-full sm:w-auto px-4 py-2 rounded-lg bg-indigo-500 text-white font-semibold hover:bg-indigo-600 shadow-sm transition"
                     ${current >= total - 1 ? 'disabled' : ''} onclick="nextInteractiveQuizQuestion()">
                     ${translateLiteral('Next', appState.language)}
                 </button>

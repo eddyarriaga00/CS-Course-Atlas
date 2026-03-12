@@ -6925,4 +6925,100 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
     color: #ffffff !important;
 }
 
+/* Mobile fit pass for top-menu modals (quizzes + related panels). */
+@media (max-width: 640px) {
+    #glossary-modal,
+    #flashcards-modal,
+    #quiz-modal,
+    #interactive-quiz-modal,
+    #account-modal {
+        padding: 0 !important;
+        align-items: stretch !important;
+        justify-content: stretch !important;
+    }
+
+    #glossary-modal .modal-panel,
+    #flashcards-modal .flashcards-modal-panel,
+    #quiz-modal > div:first-child,
+    #interactive-quiz-modal .modal-panel,
+    #account-modal .account-modal-panel {
+        width: 100vw;
+        max-width: 100vw;
+        margin: 0;
+        height: 100dvh;
+        min-height: 100dvh;
+        max-height: 100dvh !important;
+        border-radius: 0 !important;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    #glossary-modal .modal-panel > .flex,
+    #flashcards-modal .flashcards-modal-panel > .flex,
+    #quiz-modal > div:first-child > .flex,
+    #interactive-quiz-modal .modal-panel > .flex,
+    #account-modal .account-modal-panel > .account-modal-header {
+        padding-top: calc(0.9rem + env(safe-area-inset-top)) !important;
+        padding-right: 0.9rem !important;
+        padding-left: 0.9rem !important;
+        padding-bottom: 0.7rem !important;
+        align-items: flex-start;
+        gap: 0.6rem;
+    }
+
+    #flashcards-modal #flashcards-modal-title,
+    #quiz-modal #quiz-title,
+    #interactive-quiz-modal #interactive-quiz-title,
+    #glossary-modal #glossary-modal-title,
+    #account-modal #account-modal-title {
+        font-size: 1.15rem !important;
+        line-height: 1.25 !important;
+    }
+
+    #glossary-modal .glossary-modal-body,
+    #glossary-modal .flex-1.overflow-y-auto,
+    #flashcards-modal .flashcards-shell,
+    #quiz-modal #quiz-content,
+    #interactive-quiz-modal .modal-panel > .p-6,
+    #account-modal .account-modal-body {
+        flex: 1 1 auto;
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #quiz-modal #quiz-content,
+    #interactive-quiz-modal .modal-panel > .p-6,
+    #account-modal .account-modal-body {
+        padding-left: 0.9rem !important;
+        padding-right: 0.9rem !important;
+        padding-bottom: calc(0.95rem + env(safe-area-inset-bottom)) !important;
+    }
+
+    #glossary-modal .glossary-modal-body {
+        padding: 0.8rem 0.9rem 0.75rem !important;
+    }
+
+    #glossary-modal .flex-1.overflow-y-auto {
+        padding-left: 0.9rem !important;
+        padding-right: 0.9rem !important;
+        padding-bottom: calc(0.95rem + env(safe-area-inset-bottom)) !important;
+    }
+
+    #quiz-content,
+    #interactive-quiz-body {
+        overflow-wrap: anywhere;
+    }
+
+    #interactive-quiz-modal #interactive-quiz-progress {
+        font-size: 0.8rem;
+    }
+
+    #flashcards-modal .flashcards-shell {
+        padding: 0.9rem !important;
+    }
+}
+
 
