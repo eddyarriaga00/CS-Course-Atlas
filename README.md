@@ -27,6 +27,8 @@ This is the recommended way to preview what users will see on the public site.
 ```bash
 git clone https://github.com/eddyarriaga00/Java-DSA-Helper.git
 cd Java-DSA-Helper
+npm install
+npm run build:css
 py -m http.server 4173
 ```
 
@@ -47,6 +49,7 @@ Requires a `.env` with backend settings (for example `DATABASE_URL`).
 - HTML
 - CSS
 - JavaScript
+- Tailwind CSS (compiled locally for production)
 - Node.js + Express (optional backend features)
 
 ## Support
