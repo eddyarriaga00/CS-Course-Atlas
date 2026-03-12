@@ -32,6 +32,7 @@ Use this if you are testing login/profile/state persistence.
 npm install
 copy .env.example .env
 npm run db:migrate
+npm run db:doctor
 npm start
 ```
 
@@ -51,13 +52,16 @@ GitHub Pages is static-only, so auth/session + SQL must run on a separate Node h
    - `SESSION_COOKIE_SAME_SITE=none`
    - `SESSION_COOKIE_SECURE=true`
 3. Run migrations on the deployed backend: `npm run db:migrate`
-4. Set frontend API base in `js/app-config.js`:
+4. Verify deployment DB wiring: `npm run db:doctor`
+5. Set frontend API base in `js/app-config.js`:
    - `window.__APP_CONFIG.apiBaseUrl = "https://<your-api-domain>"`
-5. Push to `main` so GitHub Pages serves frontend updates.
+6. Push to `main` so GitHub Pages serves frontend updates.
 
 ### 3) Common issues
 - `DATABASE_URL is required for Neon SQL connection`:
 Set `DATABASE_URL` in `.env` before `npm start`.
+- `db:doctor` reports missing tables:
+Run `npm run db:migrate` on the same environment/branch, then re-run `npm run db:doctor`.
 - Styling looks outdated:
 Run `npm run build:css` after CSS/Tailwind changes.
 - Auth not working on static preview:

@@ -140,3 +140,10 @@ All notable changes to **CS Course Atlas** are documented in this file.
   - `README.md` includes GitHub Pages + external Node API release path
   - `server/README.md` includes required cross-origin cookie/env settings
 
+### Neon Diagnostics
+- Added `npm run db:doctor` command (`scripts/neon-doctor.js`) to verify:
+  - Neon connection handshake (version/database/role)
+  - required schema table presence
+  - basic user table query health
+- Updated setup docs to include `db:doctor` immediately after migrations for faster production validation.
+

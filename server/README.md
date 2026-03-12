@@ -44,7 +44,13 @@ Important for public cross-origin frontend (for example GitHub Pages -> API host
 npm run db:migrate
 ```
 
-4. Start server:
+4. Verify Neon connection + required tables:
+
+```bash
+npm run db:doctor
+```
+
+5. Start server:
 
 ```bash
 npm run start
