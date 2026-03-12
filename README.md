@@ -125,6 +125,16 @@ CS Course Atlas helps learners study through structured modules, code examples, 
 - Tailwind CSS (compiled locally for production)
 - Node.js + Express (optional backend features)
 
+## Project Layout
+- `index.html` stays at project root as the primary app entrypoint.
+- `modules/` contains crawlable per-module pages.
+- `server/` contains backend API/auth/SQL code.
+- `scripts/` contains build/verification/diagnostic scripts.
+- `docs/` contains project documentation and reports:
+  - `docs/SEARCH_CONSOLE_SETUP.md`
+  - `docs/reports/security_best_practices_report.md`
+- `backups/js/` contains archived JS snapshots (non-runtime).
+
 ## Support
 - GitHub: [https://github.com/eddyarriaga00/CS-Course-Atlas](https://github.com/eddyarriaga00/CS-Course-Atlas)
 - Donate: [PayPal Support](https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=5.00&currency_code=USD&item_name=CS%20Course%20Atlas%20-%20Coffee%20Support)

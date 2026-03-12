@@ -38,6 +38,8 @@ jobs:
             --exclude 'node_modules' \
             --exclude '.playwright-cli' \
             --exclude 'output' \
+            --exclude 'backups' \
+            --exclude 'docs' \
             --exclude 'server' \
             --exclude 'scripts' \
             --exclude 'package.json' \

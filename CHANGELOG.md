@@ -67,7 +67,7 @@ All notable changes to **CS Course Atlas** are documented in this file.
   - blocked debug PIN response behavior in production
   - added a production warning event if log mode was requested
 - Reduced health endpoint metadata leakage (`/api/health` now returns generic service status).
-- Added a full audit report at `security_best_practices_report.md`.
+- Added a full audit report at `docs/reports/security_best_practices_report.md`.
 ### Navigation and UX Fixes
 - Fixed the pseudocode mode badge/icon in module controls (`📝`).
 - Removed the injected `"Program finished."` line from Java wrapper execution output.
@@ -206,3 +206,11 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Added OAuth secret placeholders in Blueprint (`GOOGLE_*`, `APPLE_*`, `GITHUB_*`) and generated `OAUTH_STATE_SECRET` support.
 - Updated frontend runtime config (`js/app-config.js`) to target `https://cs-course-atlas-api.onrender.com` on public hosts (`eddyarriaga00.github.io`, `cscourseatlas.com`, `www.cscourseatlas.com`).
 - Updated deployment docs (`README.md`, `server/README.md`) with direct Render Blueprint import URL and exact OAuth callback URLs.
+### Repository Organization
+- Kept `index.html` at the project root as requested.
+- Moved root documentation files into `docs/`:
+  - `docs/SEARCH_CONSOLE_SETUP.md`
+  - `docs/reports/security_best_practices_report.md`
+- Moved archived script snapshot into `backups/js/script.js.bak_interview_patch`.
+- Added `docs/README.md` and a new `Project Layout` section in `README.md`.
+- Updated GitHub Pages deploy workflow to exclude `docs/` and `backups/` from published site artifacts.
