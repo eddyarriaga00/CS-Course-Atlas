@@ -33,6 +33,7 @@ npm install
 cp .env.example .env
 # Fill DATABASE_URL with your Neon connection string
 # Recommended: include sslmode=require&channel_binding=require
+# Optional: set LIANG_JAVA_BOOK_PATH to your local/server PDF path
 ```
 
 Important for public cross-origin frontend (for example GitHub Pages -> API host):
@@ -100,6 +101,7 @@ This repo includes a production `render.yaml` for API hosting as `cs-course-atla
 - Optional host allowlist protection is available via `ALLOWED_HOSTS`.
 - Optional Fetch Metadata enforcement blocks cross-site state-changing API requests.
 - Optional strict JSON content-type enforcement on mutating API endpoints.
+- Books library supports `LIANG_JAVA_BOOK_PATH` plus fallback list `LIANG_JAVA_BOOK_PATHS` for local/server-specific PDF locations.
 - Query parser is set to `simple` to avoid nested query object abuse.
 - JSON body parser rejects malformed payloads and oversized requests.
 - Security headers are set with `helmet`, and `X-Powered-By` is disabled.

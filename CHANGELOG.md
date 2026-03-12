@@ -26,6 +26,11 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Added per-module expand/collapse control directly under the visible example list to reveal or hide the remaining detailed examples.
 - Persisted detailed-example-list expansion state in local storage, synced user-state snapshots, and progress export/import metadata.
 
+### Books Library Reliability
+- Updated backend book resolution to support prioritized path candidates for the Liang Java PDF (env path + fallback list + local defaults).
+- Added support for `LIANG_JAVA_BOOK_PATHS` (comma/semicolon/newline-separated) for flexible multi-path server deployment.
+- Added safer file-existence checks and candidate-based filename resolution for `/api/books`, read, and download flows.
+
 ### Accessibility
 - Added a skip link for keyboard users and a persistent screen-reader announcer.
 - Converted the primary content wrapper to a semantic `<main>` landmark.

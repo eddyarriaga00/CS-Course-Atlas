@@ -120,6 +120,15 @@ const BLOCKED_STATIC_FILES = Object.freeze(new Set([
 const CORS_ALLOWED_METHODS = Object.freeze(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']);
 const CORS_ALLOWED_HEADERS = Object.freeze(['Content-Type', 'X-CSRF-Token', 'X-Requested-With']);
 const BLOCKED_API_METHODS = new Set(['TRACE', 'TRACK', 'CONNECT']);
+const DEFAULT_LIANG_BOOK_FILENAME = 'Introduction-to-Java-Programming-9th-Edition-Y-Daniel-Liang.pdf';
+const DEFAULT_LIANG_BOOK_PATHS = Object.freeze(
+    [
+        safeString(process.env.LIANG_JAVA_BOOK_PATH),
+        ...parseDelimitedPathList(process.env.LIANG_JAVA_BOOK_PATHS),
+        `C:\\Users\\Eddy\\Downloads\\${DEFAULT_LIANG_BOOK_FILENAME}`,
+        `C:\\Users\\Eddy\\OneDrive - UNCG\\${DEFAULT_LIANG_BOOK_FILENAME}`
+    ].map((candidate) => safeString(candidate)).filter(Boolean)
+);
 const BOOK_LIBRARY = [
     {
         id: 'liang-java-9e',
@@ -129,7 +138,8 @@ const BOOK_LIBRARY = [
         edition: '9th Edition',
         description: 'Core Java textbook with syntax, OOP, data structures, and problem-solving practice.',
         pages: null,
-        filePath: process.env.LIANG_JAVA_BOOK_PATH || 'C:\\Users\\Eddy\\OneDrive - UNCG\\Introduction-to-Java-Programming-9th-Edition-Y-Daniel-Liang.pdf'
+        filePath: DEFAULT_LIANG_BOOK_PATHS[0] || '',
+        filePaths: DEFAULT_LIANG_BOOK_PATHS
     }
 ];
 
@@ -274,6 +284,15 @@ function parseBooleanEnv(value, fallbackValue) {
     if (['1', 'true', 'yes', 'on'].includes(raw)) return true;
     if (['0', 'false', 'no', 'off'].includes(raw)) return false;
     return Boolean(fallbackValue);
+}
+
+function parseDelimitedPathList(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return [];
+    return raw
+        .split(/[;,\n]/)
+        .map((entry) => safeString(entry))
+        .filter(Boolean);
 }
 
 function parseTrustProxySetting(value, fallbackValue = 0) {
@@ -1401,12 +1420,49 @@ function createRateLimiter({ windowMs, maxRequests, keyPrefix }) {
     };
 }
 
+function doesFileExist(filePath) {
+    if (!filePath) return false;
+    try {
+        return fs.existsSync(filePath);
+    } catch (_error) {
+        return false;
+    }
+}
+
+function getBookPathCandidates(book) {
+    const candidates = [];
+    const addCandidate = (rawCandidate) => {
+        const candidate = safeString(rawCandidate);
+        if (!candidate) return;
+        const resolved = path.isAbsolute(candidate)
+            ? path.normalize(candidate)
+            : path.resolve(siteRoot, candidate);
+        const normalizedKey = resolved.toLowerCase();
+        if (candidates.some((entry) => entry.key === normalizedKey)) {
+            return;
+        }
+        candidates.push({
+            key: normalizedKey,
+            path: resolved
+        });
+    };
+
+    addCandidate(book?.filePath);
+    if (Array.isArray(book?.filePaths)) {
+        book.filePaths.forEach(addCandidate);
+    }
+
+    return candidates.map((entry) => entry.path);
+}
+
 function resolveBookFilePath(book) {
-    const configuredPath = safeString(book?.filePath, '');
-    if (!configuredPath) return '';
-    return path.isAbsolute(configuredPath)
-        ? path.normalize(configuredPath)
-        : path.resolve(siteRoot, configuredPath);
+    const candidates = getBookPathCandidates(book);
+    for (const candidate of candidates) {
+        if (doesFileExist(candidate)) {
+            return candidate;
+        }
+    }
+    return candidates[0] || '';
 }
 
 function getBookById(bookId) {
@@ -1414,8 +1470,9 @@ function getBookById(bookId) {
 }
 
 function toBookClientModel(book) {
+    const candidatePaths = getBookPathCandidates(book);
     const absolutePath = resolveBookFilePath(book);
-    const available = Boolean(absolutePath && fs.existsSync(absolutePath));
+    const available = doesFileExist(absolutePath);
     const numericPages = Number(book?.pages);
 
     return {
@@ -1427,7 +1484,7 @@ function toBookClientModel(book) {
         edition: book.edition || '',
         pages: Number.isFinite(numericPages) && numericPages > 0 ? numericPages : null,
         available,
-        fileName: path.basename(absolutePath || book.filePath || '')
+        fileName: path.basename(absolutePath || candidatePaths[0] || '')
     };
 }
 
@@ -2770,7 +2827,7 @@ function sendBookFile(req, res, dispositionType) {
     }
 
     const absolutePath = resolveBookFilePath(book);
-    if (!absolutePath || !fs.existsSync(absolutePath)) {
+    if (!doesFileExist(absolutePath)) {
         return res.status(404).json({ error: 'Book file is not available on this server.' });
     }
 
