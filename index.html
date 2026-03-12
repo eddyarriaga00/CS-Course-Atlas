@@ -101,12 +101,27 @@
                 </div>
                 <nav id="sidebar-nav" class="sidebar-nav" aria-label="Main pages" data-i18n-aria-label="sidebar.ariaLabel">
                     <a href="/home" class="sidebar-link" data-route-link data-route-key="/home" data-sidebar-icon="&#127968;" data-i18n="sidebar.home">Home</a>
-                    <a href="/tracks" class="sidebar-link" data-route-link data-route-key="/tracks" data-sidebar-icon="&#128506;" data-i18n="sidebar.tracks">Course Tracks</a>
-                    <a href="/dsa" class="sidebar-link" data-route-link data-route-key="/dsa" data-sidebar-icon="&#129518;" data-i18n="sidebar.dsa">DSA</a>
-                    <a href="/java" class="sidebar-link" data-route-link data-route-key="/java" data-sidebar-icon="&#9749;" data-i18n="sidebar.java">Java</a>
-                    <a href="/git" class="sidebar-link" data-route-link data-route-key="/git" data-sidebar-icon="&#128736;" data-i18n="sidebar.git">Git</a>
-                    <a href="/assembly" class="sidebar-link" data-route-link data-route-key="/assembly" data-sidebar-icon="&#9881;" data-i18n="sidebar.assembly">Assembly</a>
-                    <a href="/discrete-math" class="sidebar-link" data-route-link data-route-key="/discrete-math" data-sidebar-icon="&#128200;" data-i18n="sidebar.discreteMath">Discrete Math</a>
+                    <div id="sidebar-tracks-group" class="sidebar-group">
+                        <button
+                            id="sidebar-tracks-toggle"
+                            type="button"
+                            class="sidebar-link sidebar-group-toggle"
+                            data-sidebar-icon="&#128506;"
+                            aria-expanded="false"
+                            aria-controls="sidebar-tracks-submenu"
+                            data-i18n-aria-label="sidebar.tracksToggleAria">
+                            <span class="sidebar-group-toggle-label" data-i18n="sidebar.tracks">Course Tracks</span>
+                            <span class="sidebar-group-toggle-caret" aria-hidden="true">&#9662;</span>
+                        </button>
+                        <div id="sidebar-tracks-submenu" class="sidebar-submenu" hidden>
+                            <a href="/tracks" class="sidebar-link sidebar-submenu-link" data-route-link data-route-key="/tracks" data-sidebar-icon="&#128506;" data-i18n="sidebar.tracksAll">All Tracks</a>
+                            <a href="/dsa" class="sidebar-link sidebar-submenu-link" data-route-link data-route-key="/dsa" data-sidebar-icon="&#129518;" data-i18n="sidebar.dsa">DSA</a>
+                            <a href="/java" class="sidebar-link sidebar-submenu-link" data-route-link data-route-key="/java" data-sidebar-icon="&#9749;" data-i18n="sidebar.java">Java</a>
+                            <a href="/git" class="sidebar-link sidebar-submenu-link" data-route-link data-route-key="/git" data-sidebar-icon="&#128736;" data-i18n="sidebar.git">Git</a>
+                            <a href="/assembly" class="sidebar-link sidebar-submenu-link" data-route-link data-route-key="/assembly" data-sidebar-icon="&#9881;" data-i18n="sidebar.assembly">Assembly</a>
+                            <a href="/discrete-math" class="sidebar-link sidebar-submenu-link" data-route-link data-route-key="/discrete-math" data-sidebar-icon="&#128200;" data-i18n="sidebar.discreteMath">Discrete Math</a>
+                        </div>
+                    </div>
                     <a href="/flashcards" class="sidebar-link" data-route-link data-route-key="/flashcards" data-sidebar-icon="&#127919;" data-i18n="sidebar.flashcards">Flashcards</a>
                     <a href="/quizzes" class="sidebar-link" data-route-link data-route-key="/quizzes" data-sidebar-icon="&#129504;" data-i18n="sidebar.quizzes">Quizzes</a>
                     <a href="/playground" class="sidebar-link" data-route-link data-route-key="/playground" data-sidebar-icon="&#128187;" data-i18n="sidebar.playground">Playground</a>

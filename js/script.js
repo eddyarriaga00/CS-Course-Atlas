@@ -49,6 +49,7 @@ const appState = {
     sidebarOpen: false,
     sidebarManualCollapsed: false,
     sidebarMobileExpanded: false,
+    sidebarTracksExpanded: false,
     collapsedSections: {
         progress: true,
         achievements: true,
@@ -124,6 +125,7 @@ const TRACK_ROUTE_CATEGORY_MAP = {
     '/assembly': 'assembly',
     '/discrete-math': 'discrete'
 };
+const COURSE_TRACK_ROUTE_PATHS = new Set(['/tracks', '/dsa', '/java', '/git', '/assembly', '/discrete-math']);
 const CATEGORY_ROUTE_MAP = {
     all: '/tracks',
     dsa: '/dsa',
@@ -527,6 +529,8 @@ const TRANSLATIONS = {
         'sidebar.ariaLabel': 'Main pages',
         'sidebar.home': 'Home',
         'sidebar.tracks': 'Course Tracks',
+        'sidebar.tracksAll': 'All Tracks',
+        'sidebar.tracksToggleAria': 'Toggle course track pages',
         'sidebar.dsa': 'DSA',
         'sidebar.java': 'Java',
         'sidebar.git': 'Git',
@@ -911,6 +915,8 @@ const TRANSLATIONS = {
         'sidebar.ariaLabel': 'Paginas principales',
         'sidebar.home': 'Inicio',
         'sidebar.tracks': 'Rutas',
+        'sidebar.tracksAll': 'Todas las rutas',
+        'sidebar.tracksToggleAria': 'Alternar rutas del curso',
         'sidebar.dsa': 'DSA',
         'sidebar.java': 'Java',
         'sidebar.git': 'Git',
@@ -1667,6 +1673,28 @@ function isSidebarAutoCollapsedByTopMenu() {
     return isSidebarInlineMode() && document.body.classList.contains('modal-open');
 }
 
+function isTrackRoutePath(route) {
+    const normalizedRoute = normalizeRoutePath(route || DEFAULT_ROUTE);
+    return COURSE_TRACK_ROUTE_PATHS.has(normalizedRoute);
+}
+
+function syncSidebarTracksGroup(route = appState.currentRoute) {
+    const tracksToggle = document.getElementById('sidebar-tracks-toggle');
+    const tracksSubmenu = document.getElementById('sidebar-tracks-submenu');
+    if (!(tracksToggle instanceof HTMLElement) || !(tracksSubmenu instanceof HTMLElement)) return;
+
+    const normalizedRoute = normalizeRoutePath(route || DEFAULT_ROUTE);
+    const isActiveTrackRoute = isTrackRoutePath(normalizedRoute);
+    const isIconOnly = Boolean(document.body && document.body.classList.contains('sidebar-icon-only'));
+    const shouldExpand = !isIconOnly && Boolean(appState.sidebarTracksExpanded);
+
+    tracksToggle.classList.toggle('active', isActiveTrackRoute);
+    tracksToggle.classList.toggle('expanded', shouldExpand);
+    tracksToggle.setAttribute('aria-current', isActiveTrackRoute ? 'page' : 'false');
+    tracksToggle.setAttribute('aria-expanded', shouldExpand ? 'true' : 'false');
+    tracksSubmenu.hidden = !shouldExpand;
+}
+
 function updateSidebarCollapseToggleButton() {
     const collapseButton = document.getElementById('sidebar-collapse-toggle');
     if (!collapseButton) return;
@@ -1707,6 +1735,14 @@ function syncDesktopSidebarIconMode() {
         link.setAttribute('title', label);
         link.setAttribute('aria-label', label);
     });
+    const tracksToggle = document.getElementById('sidebar-tracks-toggle');
+    if (tracksToggle instanceof HTMLElement) {
+        const labelNode = tracksToggle.querySelector('.sidebar-group-toggle-label');
+        const label = String(labelNode?.textContent || tracksToggle.textContent || '').trim();
+        if (label) {
+            tracksToggle.setAttribute('title', label);
+        }
+    }
 
     const mobileMode = isSidebarMobileRailMode();
     const inlineMode = isSidebarInlineMode();
@@ -1721,6 +1757,7 @@ function syncDesktopSidebarIconMode() {
     if (backdrop) {
         backdrop.hidden = !mobileExpanded;
     }
+    syncSidebarTracksGroup(appState.currentRoute);
     updateSidebarCollapseToggleButton();
 }
 function setSidebarExpandedState(expanded) {
@@ -1887,12 +1924,18 @@ function renderRoute(route, options = {}) {
     } = options;
 
     appState.currentRoute = normalizedRoute;
+    const isTrackRoute = isTrackRoutePath(normalizedRoute);
+    let sidebarTracksChanged = false;
+    if (isTrackRoute && !appState.sidebarTracksExpanded) {
+        appState.sidebarTracksExpanded = true;
+        sidebarTracksChanged = true;
+    }
     const trackRouteChanged = applyTrackRoute(normalizedRoute);
-    const isTrackRoute = Object.prototype.hasOwnProperty.call(TRACK_ROUTE_CATEGORY_MAP, normalizedRoute);
-    if (isTrackRoute && !skipModuleRender) {
+    const isModulesRoute = Object.prototype.hasOwnProperty.call(TRACK_ROUTE_CATEGORY_MAP, normalizedRoute);
+    if (isModulesRoute && !skipModuleRender) {
         renderModules();
     }
-    if (trackRouteChanged) {
+    if (trackRouteChanged || sidebarTracksChanged) {
         saveToLocalStorage();
     }
 
@@ -1950,6 +1993,7 @@ function initRouteNavigation() {
     const toggleButton = document.getElementById('sidebar-toggle');
     const closeButton = document.getElementById('sidebar-close');
     const collapseButton = document.getElementById('sidebar-collapse-toggle');
+    const tracksToggle = document.getElementById('sidebar-tracks-toggle');
     const backdrop = document.getElementById('sidebar-backdrop');
     closeSidebar();
     syncDesktopSidebarIconMode();
@@ -1988,6 +2032,33 @@ function initRouteNavigation() {
     if (backdrop && backdrop.dataset.boundSidebarBackdrop !== 'true') {
         backdrop.dataset.boundSidebarBackdrop = 'true';
         backdrop.addEventListener('click', () => closeSidebar());
+    }
+    if (tracksToggle && tracksToggle.dataset.boundSidebarTracksToggle !== 'true') {
+        tracksToggle.dataset.boundSidebarTracksToggle = 'true';
+        tracksToggle.addEventListener('click', (event) => {
+            event.preventDefault();
+            const isIconOnly = document.body.classList.contains('sidebar-icon-only');
+            if (isIconOnly && isSidebarMobileRailMode()) {
+                appState.sidebarMobileExpanded = true;
+                appState.sidebarTracksExpanded = true;
+                syncDesktopSidebarIconMode();
+                saveToLocalStorage();
+                return;
+            }
+            if (isIconOnly && isSidebarInlineMode()) {
+                appState.sidebarTracksExpanded = true;
+                if (!isSidebarAutoCollapsedByTopMenu()) {
+                    appState.sidebarManualCollapsed = false;
+                }
+                syncDesktopSidebarIconMode();
+                saveToLocalStorage();
+                return;
+            }
+
+            appState.sidebarTracksExpanded = !appState.sidebarTracksExpanded;
+            syncDesktopSidebarIconMode();
+            saveToLocalStorage();
+        });
     }
 
     document.querySelectorAll('[data-route-link]').forEach((link) => {
@@ -9515,6 +9586,7 @@ function buildSerializableAppState() {
         language: appState.language,
         sidebarManualCollapsed: appState.sidebarManualCollapsed,
         sidebarMobileExpanded: appState.sidebarMobileExpanded,
+        sidebarTracksExpanded: appState.sidebarTracksExpanded,
         collapsedSections: normalizeCollapsedSections(appState.collapsedSections)
     };
 }
@@ -9706,6 +9778,7 @@ function loadFromLocalStorage() {
             appState.language = ['en', 'es'].includes(state.language) ? state.language : 'en';
             appState.sidebarManualCollapsed = Boolean(state.sidebarManualCollapsed);
             appState.sidebarMobileExpanded = Boolean(state.sidebarMobileExpanded);
+            appState.sidebarTracksExpanded = Boolean(state.sidebarTracksExpanded);
             appState.collapsedSections = normalizeCollapsedSections(state.collapsedSections);
 
             // Keep assembly modules defaulting to Assembly unless explicitly set to Assembly.
@@ -9778,6 +9851,9 @@ function applyRemoteUserStateSnapshot(snapshot, options = {}) {
         appState.sidebarMobileExpanded = state.sidebarMobileExpanded !== undefined
             ? Boolean(state.sidebarMobileExpanded)
             : Boolean(appState.sidebarMobileExpanded);
+        appState.sidebarTracksExpanded = state.sidebarTracksExpanded !== undefined
+            ? Boolean(state.sidebarTracksExpanded)
+            : Boolean(appState.sidebarTracksExpanded);
         appState.collapsedSections = normalizeCollapsedSections(state.collapsedSections || appState.collapsedSections);
 
         enforceAssemblyModuleLanguageDefaults();
@@ -17774,6 +17850,7 @@ function resetProgress() {
         appState.studyTipId = null;
         appState.sidebarManualCollapsed = false;
         appState.sidebarMobileExpanded = false;
+        appState.sidebarTracksExpanded = false;
         appState.collapsedSections = { ...DEFAULT_COLLAPSED_SECTIONS };
 
         // Reset UI
