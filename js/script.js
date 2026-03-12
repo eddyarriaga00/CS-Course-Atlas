@@ -727,6 +727,7 @@ const TRANSLATIONS = {
         'glossary.sort.az': 'A to Z',
         'glossary.sort.za': 'Z to A',
         'glossary.sort.category': 'Category',
+        'glossary.filters': 'Filters',
         'glossary.clearFilters': 'Clear filters',
         'glossary.letter.all': 'All',
         'glossary.category.all': 'All Terms',
@@ -1105,6 +1106,7 @@ const TRANSLATIONS = {
         'glossary.sort.az': 'A a Z',
         'glossary.sort.za': 'Z a A',
         'glossary.sort.category': 'Categoria',
+        'glossary.filters': 'Filtros',
         'glossary.clearFilters': 'Limpiar filtros',
         'glossary.letter.all': 'Todas',
         'glossary.category.all': 'Todos los terminos',
@@ -1638,11 +1640,15 @@ function getRouteForCategoryFilter(category) {
 }
 
 function isSidebarDrawerMode() {
-    return window.matchMedia('(max-width: 1023px)').matches;
+    return window.matchMedia('(min-width: 641px) and (max-width: 1023px)').matches;
 }
 
 function isSidebarInlineMode() {
     return window.matchMedia('(min-width: 1024px)').matches;
+}
+
+function isSidebarMobileRailMode() {
+    return window.matchMedia('(max-width: 640px)').matches;
 }
 
 function syncDesktopSidebarIconMode() {
@@ -1656,7 +1662,8 @@ function syncDesktopSidebarIconMode() {
         link.setAttribute('aria-label', label);
     });
 
-    const shouldCollapseToIcons = isSidebarInlineMode() && document.body.classList.contains('modal-open');
+    const shouldCollapseToIcons = isSidebarMobileRailMode()
+        || (isSidebarInlineMode() && document.body.classList.contains('modal-open'));
     document.body.classList.toggle('sidebar-icon-only', shouldCollapseToIcons);
 }
 function setSidebarExpandedState(expanded) {
@@ -11671,6 +11678,9 @@ let userStateSyncTimer = null;
 let userStateSyncInFlight = false;
 let applyingRemoteUserState = false;
 let neonCsrfToken = '';
+const glossaryUiState = {
+    filtersOpen: false
+};
 const LOCAL_EXAMPLE_AUTH = {
     username: 'example',
     password: 'example',
@@ -16674,6 +16684,44 @@ function getGlossarySortOptions() {
     ];
 }
 
+function isGlossaryCompactViewport() {
+    return window.matchMedia('(max-width: 640px)').matches;
+}
+
+function hasActiveGlossaryFilters() {
+    return appState.glossarySort !== 'smart'
+        || appState.glossaryCategory !== 'all'
+        || appState.glossaryLetter !== 'all';
+}
+
+function syncGlossaryFilterToggleState() {
+    const toggleButton = document.getElementById('glossary-filter-toggle');
+    const panel = document.getElementById('glossary-filter-panel');
+    if (!toggleButton) return;
+    const isOpen = Boolean(glossaryUiState.filtersOpen && panel && !panel.hidden);
+    toggleButton.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    toggleButton.classList.toggle('is-open', isOpen);
+    toggleButton.classList.toggle('has-active-filters', hasActiveGlossaryFilters());
+}
+
+function setGlossaryFiltersOpen(open, options = {}) {
+    const { focusToggle = false } = options;
+    const panel = document.getElementById('glossary-filter-panel');
+    glossaryUiState.filtersOpen = Boolean(open);
+    if (panel) {
+        panel.hidden = !glossaryUiState.filtersOpen;
+    }
+    syncGlossaryFilterToggleState();
+    if (focusToggle) {
+        const toggleButton = document.getElementById('glossary-filter-toggle');
+        if (toggleButton) toggleButton.focus();
+    }
+}
+
+function toggleGlossaryFiltersOpen() {
+    setGlossaryFiltersOpen(!glossaryUiState.filtersOpen);
+}
+
 function renderGlossarySortControl() {
     const select = document.getElementById('glossary-sort');
     if (!select) return;
@@ -16770,6 +16818,9 @@ function renderGlossaryLetterFilters(letters = []) {
             if (appState.glossaryLetter === selectedLetter) return;
             appState.glossaryLetter = selectedLetter;
             renderGlossary();
+            if (isGlossaryCompactViewport()) {
+                setGlossaryFiltersOpen(false);
+            }
             saveToLocalStorage();
         });
     });
@@ -16818,6 +16869,9 @@ function renderGlossaryFilters(localizedTerms = getLocalizedGlossaryTerms()) {
             appState.glossaryCategory = selectedCategory;
             appState.glossaryLetter = 'all';
             renderGlossary();
+            if (isGlossaryCompactViewport()) {
+                setGlossaryFiltersOpen(false);
+            }
             saveToLocalStorage();
         });
     });
@@ -16825,6 +16879,7 @@ function renderGlossaryFilters(localizedTerms = getLocalizedGlossaryTerms()) {
 
 function renderGlossary() {
     renderGlossarySortControl();
+    syncGlossaryFilterToggleState();
 
     const searchTerm = appState.glossarySearch.trim().toLowerCase();
     const localizedTerms = getLocalizedGlossaryTerms();
@@ -16917,6 +16972,7 @@ function renderGlossary() {
             copyGlossaryEntry(term, definition);
         });
     });
+    syncGlossaryFilterToggleState();
 }
 
 function formatFlashcardText(text = '') {
@@ -17268,6 +17324,7 @@ function closeSettings() {
 
 function openGlossary() {
     renderGlossary();
+    setGlossaryFiltersOpen(false);
     const searchInput = document.getElementById('glossary-search');
     if (searchInput) {
         searchInput.value = appState.glossarySearch || '';
@@ -17276,6 +17333,7 @@ function openGlossary() {
 }
 
 function closeGlossary() {
+    setGlossaryFiltersOpen(false);
     closeModal('glossary-modal');
 }
 
@@ -17836,12 +17894,22 @@ function init() {
         saveToLocalStorage();
     });
 
+    const glossaryFilterToggle = document.getElementById('glossary-filter-toggle');
+    if (glossaryFilterToggle) {
+        glossaryFilterToggle.addEventListener('click', () => {
+            toggleGlossaryFiltersOpen();
+        });
+    }
+
     const glossarySortSelect = document.getElementById('glossary-sort');
     if (glossarySortSelect) {
         glossarySortSelect.addEventListener('change', (e) => {
             const selectedSort = String(e.target.value || 'smart');
             appState.glossarySort = VALID_GLOSSARY_SORTS.has(selectedSort) ? selectedSort : 'smart';
             renderGlossary();
+            if (isGlossaryCompactViewport()) {
+                setGlossaryFiltersOpen(false);
+            }
             saveToLocalStorage();
         });
     }
@@ -17856,9 +17924,11 @@ function init() {
             const searchInput = document.getElementById('glossary-search');
             if (searchInput) searchInput.value = '';
             renderGlossary();
+            setGlossaryFiltersOpen(false);
             saveToLocalStorage();
         });
     }
+    setGlossaryFiltersOpen(false);
 
     // Flashcard event listeners
     document.getElementById('prev-flashcard').addEventListener('click', prevFlashcard);

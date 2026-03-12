@@ -1013,19 +1013,27 @@
             </div>
             <div class="glossary-modal-body p-5 sm:p-6 pb-4 space-y-4">
                 <input type="text" id="glossary-search" data-i18n-placeholder="glossary.searchPlaceholder" placeholder="Search glossary terms..." class="w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-white border-slate-300 text-slate-900 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-400">
-                <div class="glossary-controls">
-                    <div class="glossary-sort-control">
-                        <label for="glossary-sort" class="glossary-control-label" data-i18n="glossary.sortLabel">Sort</label>
-                        <select id="glossary-sort" class="glossary-sort-select"></select>
+                <div class="glossary-toolbar">
+                    <div id="glossary-stats" class="glossary-stats text-xs sm:text-sm text-slate-500 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-slate-300">
+                        <span>Browse curated Computer Science terminology.</span>
+                        <span>Filter by category to focus your study.</span>
                     </div>
-                    <button id="glossary-reset-filters" type="button" class="glossary-reset-btn" data-i18n="glossary.clearFilters">Clear filters</button>
+                    <button id="glossary-filter-toggle" type="button" class="glossary-filter-toggle" aria-controls="glossary-filter-panel" aria-expanded="false">
+                        <span data-i18n="glossary.filters">Filters</span>
+                        <span class="glossary-filter-toggle-icon" aria-hidden="true">▾</span>
+                    </button>
                 </div>
-                <div id="glossary-stats" class="glossary-stats text-xs sm:text-sm text-slate-500 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-slate-300">
-                    <span>Browse curated Computer Science terminology.</span>
-                    <span>Filter by category to focus your study.</span>
+                <div id="glossary-filter-panel" class="glossary-filter-panel" hidden>
+                    <div class="glossary-controls">
+                        <div class="glossary-sort-control">
+                            <label for="glossary-sort" class="glossary-control-label" data-i18n="glossary.sortLabel">Sort</label>
+                            <select id="glossary-sort" class="glossary-sort-select"></select>
+                        </div>
+                        <button id="glossary-reset-filters" type="button" class="glossary-reset-btn" data-i18n="glossary.clearFilters">Clear filters</button>
+                    </div>
+                    <div id="glossary-categories" class="glossary-chip-row flex flex-wrap gap-2"></div>
+                    <div id="glossary-letters" class="glossary-letter-row flex flex-wrap gap-2"></div>
                 </div>
-                <div id="glossary-categories" class="glossary-chip-row flex flex-wrap gap-2"></div>
-                <div id="glossary-letters" class="glossary-letter-row flex flex-wrap gap-2"></div>
             </div>
             <div class="flex-1 overflow-y-auto px-5 sm:px-6 pb-5 sm:pb-6">
                 <div id="glossary-content" class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4"></div>

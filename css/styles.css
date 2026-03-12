@@ -107,6 +107,17 @@ html.font-scale-spacious {
     #glossary-modal .modal-panel > .flex {
         padding: 0.75rem 0.5rem !important;
     }
+    #glossary-modal .glossary-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    #glossary-modal .glossary-filter-toggle {
+        width: 100%;
+        justify-content: space-between;
+    }
+    #glossary-modal .glossary-filter-panel {
+        max-height: min(38vh, 280px);
+    }
     #glossary-modal .glossary-controls {
         grid-template-columns: 1fr;
     }
@@ -3127,6 +3138,72 @@ body.dark .prompt-modal-panel .text-slate-600 {
     border-bottom: 1px solid rgba(148, 163, 184, 0.22);
 }
 
+.glossary-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.glossary-toolbar .glossary-stats {
+    flex: 1 1 auto;
+}
+
+.glossary-filter-toggle {
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    border-radius: 0.72rem;
+    border: 1px solid rgba(148, 163, 184, 0.56);
+    background: #ffffff;
+    color: #334155;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.55rem 0.75rem;
+    line-height: 1;
+    transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glossary-filter-toggle:hover {
+    border-color: rgba(79, 70, 229, 0.55);
+    background: rgba(79, 70, 229, 0.06);
+    color: #312e81;
+}
+
+.glossary-filter-toggle.has-active-filters {
+    border-color: rgba(79, 70, 229, 0.62);
+    box-shadow: 0 10px 20px rgba(79, 70, 229, 0.14);
+}
+
+.glossary-filter-toggle-icon {
+    font-size: 0.72rem;
+    transition: transform 0.2s ease;
+}
+
+.glossary-filter-toggle.is-open .glossary-filter-toggle-icon {
+    transform: rotate(180deg);
+}
+
+.glossary-filter-panel {
+    border-radius: 0.85rem;
+    border: 1px solid rgba(148, 163, 184, 0.32);
+    background: rgba(255, 255, 255, 0.92);
+    padding: 0.72rem;
+    display: grid;
+    gap: 0.6rem;
+    max-height: min(42vh, 340px);
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.glossary-filter-panel .glossary-chip-row,
+.glossary-filter-panel .glossary-letter-row {
+    max-height: 7.2rem;
+    overflow-y: auto;
+    padding-right: 0.15rem;
+}
+
 .glossary-letter-row {
     display: flex;
     flex-wrap: wrap;
@@ -3362,6 +3439,23 @@ body.dark .glossary-stat-pill {
 body.dark .glossary-modal-body {
     background: linear-gradient(180deg, rgba(15, 23, 42, 0.88), rgba(15, 23, 42, 0.95));
     border-bottom-color: rgba(100, 116, 139, 0.45);
+}
+
+body.dark .glossary-filter-toggle {
+    background: rgba(15, 23, 42, 0.86);
+    border-color: rgba(100, 116, 139, 0.7);
+    color: #cbd5e1;
+}
+
+body.dark .glossary-filter-toggle:hover {
+    border-color: rgba(129, 140, 248, 0.72);
+    background: rgba(79, 70, 229, 0.16);
+    color: #e0e7ff;
+}
+
+body.dark .glossary-filter-panel {
+    background: rgba(15, 23, 42, 0.84);
+    border-color: rgba(100, 116, 139, 0.5);
 }
 
 body.dark .glossary-control-label {
@@ -7016,8 +7110,142 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
         font-size: 0.8rem;
     }
 
+    #quiz-modal #quiz-title,
+    #interactive-quiz-modal #interactive-quiz-title {
+        max-width: calc(100% - 2.4rem);
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    #interactive-quiz-modal .modal-panel > .flex > div,
+    #flashcards-modal .flashcards-modal-panel > .flex > div {
+        min-width: 0;
+    }
+
     #flashcards-modal .flashcards-shell {
         padding: 0.9rem !important;
+    }
+}
+
+/* Mobile navigation parity: compact laptop-style top controls + persistent left icon rail. */
+@media (max-width: 640px) {
+    #sidebar-toggle {
+        display: none !important;
+    }
+
+    #sidebar-backdrop {
+        display: none !important;
+    }
+
+    #app-shell {
+        display: grid;
+        grid-template-columns: 56px minmax(0, 1fr);
+        gap: 0.6rem;
+        padding: 0 0.45rem;
+    }
+
+    #app-sidebar {
+        position: sticky;
+        top: calc(4.25rem + env(safe-area-inset-top));
+        left: auto;
+        bottom: auto;
+        width: 100%;
+        padding: 0;
+        transform: none !important;
+        z-index: 45;
+        align-self: start;
+        max-height: calc(100dvh - 4.8rem - env(safe-area-inset-top));
+        overflow-y: auto;
+    }
+
+    #main-header.header-collapsed ~ #app-shell #app-sidebar {
+        top: calc(2.7rem + env(safe-area-inset-top));
+        max-height: calc(100dvh - 3.2rem - env(safe-area-inset-top));
+    }
+
+    body.sidebar-open #app-sidebar {
+        transform: none !important;
+    }
+
+    #app-sidebar .app-sidebar-inner {
+        padding: 0.55rem 0.35rem;
+        border-radius: 0.95rem;
+    }
+
+    #app-sidebar .app-sidebar-head,
+    .app-sidebar-close {
+        display: none !important;
+    }
+
+    #app-sidebar .sidebar-nav {
+        gap: 0.4rem;
+        justify-items: center;
+    }
+
+    #app-sidebar .sidebar-link {
+        width: 2.2rem;
+        min-height: 2.2rem;
+        padding: 0.3rem;
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0;
+        line-height: 0;
+        border-radius: 0.72rem;
+    }
+
+    #app-sidebar .sidebar-link::before {
+        content: attr(data-sidebar-icon);
+        font-size: 0.96rem;
+        line-height: 1;
+    }
+
+    #app-shell #main-content {
+        min-width: 0;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+    #header-buttons {
+        display: flex !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        width: 100% !important;
+        gap: 0.45rem !important;
+        justify-content: flex-start !important;
+        padding-bottom: 2px;
+        scrollbar-width: thin;
+    }
+
+    #header-buttons .header-control {
+        flex: 0 0 auto;
+        min-width: max-content;
+        min-height: 38px;
+        padding: 0.42rem 0.66rem !important;
+        font-size: 0.75rem !important;
+        line-height: 1.1;
+    }
+
+    #header-buttons .header-control span {
+        white-space: nowrap;
+        overflow: visible;
+        text-overflow: clip;
+        max-width: none;
+        line-height: 1.1;
+    }
+
+    #header-buttons::-webkit-scrollbar {
+        height: 5px;
+    }
+
+    #interactive-quiz-btn .xs\:inline {
+        display: none !important;
+    }
+
+    #interactive-quiz-btn .xs\:hidden {
+        display: inline !important;
     }
 }
 
