@@ -187,8 +187,24 @@ app.use('/api/profile', noStore);
 app.use('/api/user-state', noStore);
 app.use('/api/support', supportRateLimit);
 
-function getCookieOptions() {
-    const secureCookie = SESSION_COOKIE_SECURE;
+function shouldUseSecureSessionCookie(req) {
+    if (!SESSION_COOKIE_SECURE) {
+        return false;
+    }
+    if (isProduction) {
+        return true;
+    }
+    const forwardedProtoRaw = safeString(req?.headers?.['x-forwarded-proto']).toLowerCase();
+    const forwardedProtoValues = forwardedProtoRaw
+        .split(',')
+        .map((entry) => entry.trim())
+        .filter(Boolean);
+    const forwardedSecure = forwardedProtoValues.includes('https');
+    return Boolean(req?.secure) || forwardedSecure;
+}
+
+function getCookieOptions(req) {
+    const secureCookie = shouldUseSecureSessionCookie(req);
     const sameSitePolicy = secureCookie && SESSION_COOKIE_SAME_SITE === 'none'
         ? 'none'
         : SESSION_COOKIE_SAME_SITE === 'none'
@@ -269,6 +285,40 @@ function normalizeOriginHeader(value) {
     }
 }
 
+function normalizeHostHeaderToHostname(value) {
+    const raw = safeString(value).toLowerCase();
+    if (!raw) return '';
+    try {
+        return safeString(new URL(`http://${raw}`).hostname).toLowerCase();
+    } catch (_error) {
+        return safeString(raw.split(':')[0]).toLowerCase();
+    }
+}
+
+function isLoopbackHostname(value) {
+    const hostname = safeString(value).toLowerCase();
+    return hostname === 'localhost'
+        || hostname === '127.0.0.1'
+        || hostname === '::1'
+        || hostname === '[::1]'
+        || hostname === '0.0.0.0';
+}
+
+function isTrustedLocalDevOrigin(normalizedOrigin, hostHeader) {
+    if (isProduction || !normalizedOrigin || !hostHeader) return false;
+    try {
+        const parsedOrigin = new URL(normalizedOrigin);
+        if (!['http:', 'https:'].includes(parsedOrigin.protocol)) {
+            return false;
+        }
+        const originHostname = safeString(parsedOrigin.hostname).toLowerCase();
+        const hostHostname = normalizeHostHeaderToHostname(hostHeader);
+        return isLoopbackHostname(originHostname) && isLoopbackHostname(hostHostname);
+    } catch (_error) {
+        return false;
+    }
+}
+
 function parseOriginAllowlist(value) {
     const raw = String(value || '').trim();
     if (!raw) return new Set();
@@ -296,13 +346,15 @@ function evaluateOriginTrust(req) {
     const normalizedOrigin = normalizeOriginHeader(originHeader);
     const sameOrigin = originHostMatches(normalizedOrigin, hostHeader);
     const allowlisted = Boolean(normalizedOrigin && ALLOWED_ORIGINS.has(normalizedOrigin));
-    const trusted = !originHeader || sameOrigin || allowlisted;
+    const localDevTrusted = isTrustedLocalDevOrigin(normalizedOrigin, hostHeader);
+    const trusted = !originHeader || sameOrigin || allowlisted || localDevTrusted;
     return {
         originHeader,
         hostHeader,
         normalizedOrigin,
         sameOrigin,
         allowlisted,
+        localDevTrusted,
         trusted
     };
 }
@@ -1678,7 +1730,7 @@ async function createSession(res, req, userId) {
         `,
         [userId, MAX_ACTIVE_SESSIONS_PER_USER]
     );
-    res.cookie(SESSION_COOKIE_NAME, token, getCookieOptions());
+    res.cookie(SESSION_COOKIE_NAME, token, getCookieOptions(req));
     return csrfToken;
 }
 
@@ -1688,7 +1740,7 @@ async function clearSession(req, res) {
         await query('DELETE FROM user_sessions WHERE token_hash = $1', [hashSessionToken(token)]);
     }
     res.clearCookie(SESSION_COOKIE_NAME, {
-        ...getCookieOptions(),
+        ...getCookieOptions(req),
         maxAge: undefined,
         expires: new Date(0)
     });

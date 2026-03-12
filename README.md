@@ -41,6 +41,9 @@ Required in `.env`:
 
 Open: `http://127.0.0.1:3000`
 
+Note for local development:
+- If you run the frontend from another localhost port (for example `http://localhost:5500`), auth/API calls will automatically target `http://localhost:3000`.
+
 ### 2.5) Public auth with GitHub Pages + Neon API
 GitHub Pages is static-only, so auth/session + SQL must run on a separate Node host.
 

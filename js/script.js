@@ -14214,7 +14214,27 @@ function getConfiguredApiBaseUrl() {
         || (typeof window !== 'undefined' && window.APP_CONFIG?.neonApiBaseUrl)
         || (typeof window !== 'undefined' && window.NEON_API_BASE_URL)
         || '';
-    return normalizeApiBaseUrl(PROFILE_SYNC_CONFIG.baseUrl || appConfigBase || metaTagBase || '');
+    const explicitBase = normalizeApiBaseUrl(PROFILE_SYNC_CONFIG.baseUrl || appConfigBase || metaTagBase || '');
+    if (explicitBase) {
+        return explicitBase;
+    }
+    if (typeof window === 'undefined') {
+        return '';
+    }
+    const protocol = String(window.location.protocol || '').toLowerCase();
+    const hostname = String(window.location.hostname || '').toLowerCase();
+    const port = String(window.location.port || '');
+    const localHostnames = new Set(['localhost', '127.0.0.1']);
+    if (!localHostnames.has(hostname)) {
+        return '';
+    }
+    if (protocol !== 'http:' && protocol !== 'https:') {
+        return '';
+    }
+    if (port === '3000') {
+        return '';
+    }
+    return normalizeApiBaseUrl(`${protocol}//${hostname}:3000`);
 }
 
 function isApiRuntimeAvailable() {

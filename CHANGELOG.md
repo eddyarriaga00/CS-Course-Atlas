@@ -172,3 +172,13 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Added matching secure URL validation to `scripts/neon-doctor.js`.
 - Updated `.env.example`, root `README.md`, and `server/README.md` to document secure Neon URL requirements (`sslmode=require&channel_binding=require`).
 
+### Auth and SQL Reliability
+- Fixed local frontend-to-backend auth blocking when frontend runs on a different localhost port (for example `localhost:5500` -> `localhost:3000`) by allowing loopback-only dev origins in non-production.
+- Kept hostile non-local origins blocked for mutating auth routes.
+- Improved session cookie behavior in development:
+  - secure cookies now remain enabled only when the incoming request is actually HTTPS
+  - HTTP localhost development no longer receives unusable secure-only cookies
+  - automatic SameSite fallback remains in place when `SESSION_COOKIE_SAME_SITE=none` is used without secure transport
+- Added local API base auto-detection in frontend runtime:
+  - when no API base is configured and app runs on localhost (non-3000 port), API calls now target `http://localhost:3000` (or `https://localhost:3000` when applicable).
+
