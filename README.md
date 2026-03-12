@@ -40,6 +40,21 @@ Required in `.env`:
 
 Open: `http://127.0.0.1:3000`
 
+### 2.5) Public auth with GitHub Pages + Neon API
+GitHub Pages is static-only, so auth/session + SQL must run on a separate Node host.
+
+1. Deploy this repo backend (`server/index.js`) to a Node host (Render/Railway/Fly/etc).
+2. Set backend env:
+   - `DATABASE_URL` (Neon production branch connection string)
+   - `NODE_ENV=production`
+   - `ALLOWED_ORIGINS=https://eddyarriaga00.github.io` (and your custom domain when added)
+   - `SESSION_COOKIE_SAME_SITE=none`
+   - `SESSION_COOKIE_SECURE=true`
+3. Run migrations on the deployed backend: `npm run db:migrate`
+4. Set frontend API base in `js/app-config.js`:
+   - `window.__APP_CONFIG.apiBaseUrl = "https://<your-api-domain>"`
+5. Push to `main` so GitHub Pages serves frontend updates.
+
 ### 3) Common issues
 - `DATABASE_URL is required for Neon SQL connection`:
 Set `DATABASE_URL` in `.env` before `npm start`.

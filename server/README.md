@@ -33,6 +33,11 @@ cp .env.example .env
 # Fill DATABASE_URL with your Neon connection string
 ```
 
+Important for public cross-origin frontend (for example GitHub Pages -> API host):
+- Set `ALLOWED_ORIGINS` to trusted frontend origins (comma-separated, include scheme).
+- Set `SESSION_COOKIE_SAME_SITE=none`.
+- Set `SESSION_COOKIE_SECURE=true`.
+
 3. Run migration:
 
 ```bash
@@ -46,6 +51,9 @@ npm run start
 ```
 
 The frontend and API are served from the same origin by this server.
+
+If frontend and API are on different domains, point frontend runtime config to this API:
+- Update `js/app-config.js` -> `window.__APP_CONFIG.apiBaseUrl = "https://<your-api-domain>"`.
 
 ## Security defaults
 

@@ -14107,13 +14107,16 @@ function isSecureApiBaseUrl(rawUrl) {
 }
 
 function getConfiguredApiBaseUrl() {
+    const metaTagBase = typeof document !== 'undefined'
+        ? String(document.querySelector('meta[name="csatlas-api-base-url"]')?.getAttribute('content') || '').trim()
+        : '';
     const appConfigBase = (typeof window !== 'undefined' && window.__APP_CONFIG?.apiBaseUrl)
         || (typeof window !== 'undefined' && window.__APP_CONFIG?.neonApiBaseUrl)
         || (typeof window !== 'undefined' && window.APP_CONFIG?.apiBaseUrl)
         || (typeof window !== 'undefined' && window.APP_CONFIG?.neonApiBaseUrl)
         || (typeof window !== 'undefined' && window.NEON_API_BASE_URL)
         || '';
-    return normalizeApiBaseUrl(PROFILE_SYNC_CONFIG.baseUrl || appConfigBase || '');
+    return normalizeApiBaseUrl(PROFILE_SYNC_CONFIG.baseUrl || appConfigBase || metaTagBase || '');
 }
 
 function isApiRuntimeAvailable() {

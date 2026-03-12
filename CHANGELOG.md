@@ -123,3 +123,20 @@ All notable changes to **CS Course Atlas** are documented in this file.
   - `node scripts/verify_module_outputs.js`
   - `node scripts/verify_spanish_code_examples.js`
 
+### Neon Public Access Hardening
+- Added secure cross-origin API support for public frontend + separate API hosting:
+  - explicit `ALLOWED_ORIGINS` allowlist
+  - credentialed CORS headers with preflight handling on `/api/*`
+  - origin trust evaluation shared across CORS and same-origin protections
+  - fetch-metadata cross-site block now permits configured trusted origins
+- Updated origin checks so authenticated mutating routes still enforce strict origin trust while allowing configured public frontend domains.
+- Added production warnings for cross-origin cookie misconfiguration:
+  - warns if `ALLOWED_ORIGINS` is set without `SESSION_COOKIE_SAME_SITE=none`
+  - warns if `ALLOWED_ORIGINS` is set while `SESSION_COOKIE_SECURE=false`
+- Added public runtime API config file: `js/app-config.js`.
+- Added `csatlas-api-base-url` meta config fallback and loaded `js/app-config.js` before app boot.
+- Updated docs and env template for Neon public deployment flow:
+  - `.env.example` includes `ALLOWED_ORIGINS` guidance
+  - `README.md` includes GitHub Pages + external Node API release path
+  - `server/README.md` includes required cross-origin cookie/env settings
+

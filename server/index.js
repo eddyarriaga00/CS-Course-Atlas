@@ -55,6 +55,7 @@ const SESSION_COOKIE_SECURE = parseCookieSecureMode(process.env.SESSION_COOKIE_S
 const REQUIRE_JSON_MUTATIONS = parseBooleanEnv(process.env.REQUIRE_JSON_MUTATIONS, true);
 const ENFORCE_FETCH_METADATA = parseBooleanEnv(process.env.ENFORCE_FETCH_METADATA, true);
 const ALLOWED_HOSTS = parseAllowlist(process.env.ALLOWED_HOSTS);
+const ALLOWED_ORIGINS = parseOriginAllowlist(process.env.ALLOWED_ORIGINS);
 const EMAIL_PIN_EXPIRY_MINUTES = readPositiveInteger(process.env.EMAIL_PIN_EXPIRY_MINUTES, 10);
 const EMAIL_PIN_MAX_ATTEMPTS = readPositiveInteger(process.env.EMAIL_PIN_MAX_ATTEMPTS, 5);
 const EMAIL_PIN_PEPPER = String(process.env.EMAIL_PIN_PEPPER || '');
@@ -82,6 +83,8 @@ const BLOCKED_STATIC_FILES = Object.freeze(new Set([
     '/package-lock.json',
     '/tailwind.config.cjs'
 ]));
+const CORS_ALLOWED_METHODS = Object.freeze(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']);
+const CORS_ALLOWED_HEADERS = Object.freeze(['Content-Type', 'X-CSRF-Token', 'X-Requested-With']);
 const BOOK_LIBRARY = [
     {
         id: 'liang-java-9e',
@@ -108,6 +111,7 @@ app.use(cookieParser());
 app.use(attachRequestId);
 app.use(setAdditionalSecurityHeaders);
 app.use(enforceHostAllowlist);
+app.use('/api', applyCorsForApi);
 app.use('/api', enforceFetchMetadata);
 app.use('/api', enforceJsonMutationContentType);
 app.use('/api', enforceSafePayloadShape);
@@ -208,6 +212,117 @@ function parseAllowlist(value) {
     );
 }
 
+function normalizeOriginHeader(value) {
+    const raw = safeString(value);
+    if (!raw) return '';
+    try {
+        const parsed = new URL(raw);
+        if (!['http:', 'https:'].includes(parsed.protocol)) {
+            return '';
+        }
+        return `${parsed.protocol}//${parsed.host}`.toLowerCase();
+    } catch (_error) {
+        return '';
+    }
+}
+
+function parseOriginAllowlist(value) {
+    const raw = String(value || '').trim();
+    if (!raw) return new Set();
+    return new Set(
+        raw
+            .split(',')
+            .map((entry) => normalizeOriginHeader(entry))
+            .filter(Boolean)
+    );
+}
+
+function originHostMatches(normalizedOrigin, hostHeader) {
+    if (!normalizedOrigin || !hostHeader) return false;
+    try {
+        const parsed = new URL(normalizedOrigin);
+        return safeString(parsed.host).toLowerCase() === safeString(hostHeader).toLowerCase();
+    } catch (_error) {
+        return false;
+    }
+}
+
+function evaluateOriginTrust(req) {
+    const originHeader = safeString(req.headers.origin);
+    const hostHeader = safeString(req.headers.host).toLowerCase();
+    const normalizedOrigin = normalizeOriginHeader(originHeader);
+    const sameOrigin = originHostMatches(normalizedOrigin, hostHeader);
+    const allowlisted = Boolean(normalizedOrigin && ALLOWED_ORIGINS.has(normalizedOrigin));
+    const trusted = !originHeader || sameOrigin || allowlisted;
+    return {
+        originHeader,
+        hostHeader,
+        normalizedOrigin,
+        sameOrigin,
+        allowlisted,
+        trusted
+    };
+}
+
+function appendVaryHeader(res, value) {
+    const current = safeString(res.getHeader('Vary') || '');
+    if (!current) {
+        res.setHeader('Vary', value);
+        return;
+    }
+    const existing = new Set(
+        current
+            .split(',')
+            .map((entry) => entry.trim())
+            .filter(Boolean)
+            .map((entry) => entry.toLowerCase())
+    );
+    if (!existing.has(String(value).toLowerCase())) {
+        res.setHeader('Vary', `${current}, ${value}`);
+    }
+}
+
+function applyCorsForApi(req, res, next) {
+    const originInfo = evaluateOriginTrust(req);
+    if (!originInfo.originHeader) {
+        return next();
+    }
+
+    if (!originInfo.normalizedOrigin) {
+        logSecurityEvent('blocked_invalid_origin_header', {
+            origin: originInfo.originHeader,
+            host: originInfo.hostHeader || 'missing',
+            path: req.path,
+            requestId: req.requestId || ''
+        });
+        return res.status(403).json({ error: 'Invalid origin header.' });
+    }
+
+    if (!originInfo.trusted) {
+        logSecurityEvent('blocked_cors_origin', {
+            origin: originInfo.normalizedOrigin,
+            host: originInfo.hostHeader || 'missing',
+            path: req.path,
+            requestId: req.requestId || ''
+        });
+        return res.status(403).json({ error: 'Origin is not allowed.' });
+    }
+
+    appendVaryHeader(res, 'Origin');
+    res.setHeader('Access-Control-Allow-Origin', originInfo.normalizedOrigin);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+    if (safeString(req.method).toUpperCase() === 'OPTIONS') {
+        appendVaryHeader(res, 'Access-Control-Request-Headers');
+        res.setHeader('Access-Control-Allow-Methods', CORS_ALLOWED_METHODS.join(', '));
+        res.setHeader('Access-Control-Allow-Headers', CORS_ALLOWED_HEADERS.join(', '));
+        res.setHeader('Access-Control-Max-Age', '600');
+        return res.status(204).end();
+    }
+
+    return next();
+}
+
 function parseSameSitePolicy(value, fallback = 'lax') {
     const normalized = String(value || '').trim().toLowerCase();
     if (['strict', 'lax', 'none'].includes(normalized)) {
@@ -282,6 +397,10 @@ function enforceFetchMetadata(req, res, next) {
         return next();
     }
     if (fetchSite === 'cross-site') {
+        const originInfo = evaluateOriginTrust(req);
+        if (originInfo.allowlisted) {
+            return next();
+        }
         logSecurityEvent('blocked_fetch_metadata', {
             fetchSite,
             method,
@@ -488,30 +607,27 @@ function toBookClientModel(book) {
 }
 
 function assertSameOrigin(req, res, next) {
-    const origin = safeString(req.headers.origin);
-    const host = safeString(req.headers.host);
-    if (!origin || !host) {
+    const originInfo = evaluateOriginTrust(req);
+    if (!originInfo.originHeader || !originInfo.hostHeader) {
         return next();
     }
-    try {
-        const parsed = new URL(origin);
-        if (parsed.host !== host) {
-            logSecurityEvent('blocked_origin_mismatch', {
-                origin: parsed.host,
-                host,
-                path: req.path,
-                requestId: req.requestId || ''
-            });
-            return res.status(403).json({ error: 'Cross-origin requests are not allowed.' });
-        }
-    } catch (error) {
+    if (!originInfo.normalizedOrigin) {
         logSecurityEvent('blocked_invalid_origin_header', {
-            origin,
-            host,
+            origin: originInfo.originHeader,
+            host: originInfo.hostHeader,
             path: req.path,
             requestId: req.requestId || ''
         });
         return res.status(403).json({ error: 'Invalid origin header.' });
+    }
+    if (!originInfo.trusted) {
+        logSecurityEvent('blocked_origin_mismatch', {
+            origin: originInfo.normalizedOrigin,
+            host: originInfo.hostHeader,
+            path: req.path,
+            requestId: req.requestId || ''
+        });
+        return res.status(403).json({ error: 'Cross-origin requests are not allowed.' });
     }
     return next();
 }
@@ -735,6 +851,18 @@ function logSecurityConfigurationWarnings() {
     if (ALLOWED_HOSTS.size === 0) {
         logSecurityEvent('host_allowlist_not_set', {
             reason: 'ALLOWED_HOSTS is empty in production; enable it to block hostile Host headers.'
+        });
+    }
+
+    if (ALLOWED_ORIGINS.size > 0 && SESSION_COOKIE_SAME_SITE !== 'none') {
+        logSecurityEvent('cross_origin_cookie_policy_mismatch', {
+            reason: 'ALLOWED_ORIGINS is configured but SESSION_COOKIE_SAME_SITE is not "none"; browsers will block cross-site auth cookies.'
+        });
+    }
+
+    if (ALLOWED_ORIGINS.size > 0 && !SESSION_COOKIE_SECURE) {
+        logSecurityEvent('cross_origin_cookie_secure_required', {
+            reason: 'ALLOWED_ORIGINS is configured but SESSION_COOKIE_SECURE=false; cross-site cookies require secure transport.'
         });
     }
 
