@@ -428,6 +428,7 @@ const NEON_API_PATHS = {
     oauthProviders: '/api/auth/oauth/providers',
     profile: '/api/profile',
     password: '/api/profile/password',
+    deleteAccount: '/api/profile/delete-account',
     emailPinRequest: '/api/profile/email/request-pin',
     emailPinVerify: '/api/profile/email/verify-pin',
     userState: '/api/user-state',
@@ -14262,6 +14263,10 @@ function getNeonPasswordEndpoint() {
     return buildApiEndpoint(NEON_API_PATHS.password);
 }
 
+function getNeonDeleteAccountEndpoint() {
+    return buildApiEndpoint(NEON_API_PATHS.deleteAccount);
+}
+
 function getNeonEmailPinRequestEndpoint() {
     return buildApiEndpoint(NEON_API_PATHS.emailPinRequest);
 }
@@ -14468,6 +14473,10 @@ function setAccountPasswordStatus(message, tone = 'neutral') {
     setAccountInlineStatus('account-password-status', message, tone);
 }
 
+function setAccountDeleteStatus(message, tone = 'neutral') {
+    setAccountInlineStatus('account-delete-status', message, tone);
+}
+
 function setAccountProfileSectionExpanded(expanded, options = {}) {
     const { focusSelector = '' } = options;
     const content = document.getElementById('account-profile-content');
@@ -14507,6 +14516,8 @@ function resetAccountSecureInputs(options = {}) {
     const currentPassword = document.getElementById('account-current-password');
     const nextPassword = document.getElementById('account-new-password');
     const confirmPassword = document.getElementById('account-confirm-new-password');
+    const deletePassword = document.getElementById('account-delete-password');
+    const deleteConfirm = document.getElementById('account-delete-confirm');
 
     if (clearPendingEmail) {
         accountProfileUiState.pendingEmail = '';
@@ -14519,7 +14530,7 @@ function resetAccountSecureInputs(options = {}) {
     if (emailPinWrap) {
         emailPinWrap.classList.add('hidden');
     }
-    [currentPassword, nextPassword, confirmPassword].forEach((input) => {
+    [currentPassword, nextPassword, confirmPassword, deletePassword, deleteConfirm].forEach((input) => {
         if (!input) return;
         input.value = '';
         input.classList.remove('is-invalid-field');
@@ -14527,6 +14538,7 @@ function resetAccountSecureInputs(options = {}) {
     });
     setAccountEmailPinStatus('Request a PIN to verify your new email.', 'neutral');
     setAccountPasswordStatus('Password updates require an active session.', 'neutral');
+    setAccountDeleteStatus('Type DELETE and confirm your password to permanently delete your account.', 'neutral');
 }
 
 function setButtonBusyState(button, isBusy, idleLabel, busyLabel) {
@@ -14717,6 +14729,91 @@ async function updateAccountPassword() {
         showToast(`Password update failed: ${reason}`, 'error');
     } finally {
         setButtonBusyState(updateButton, false, 'Update Password', 'Updating...');
+    }
+}
+
+async function deleteAccountPermanently() {
+    const deletePasswordInput = document.getElementById('account-delete-password');
+    const deleteConfirmInput = document.getElementById('account-delete-confirm');
+    const deleteButton = document.getElementById('account-delete-account');
+    const currentPassword = String(deletePasswordInput ? deletePasswordInput.value : '');
+    const confirmation = String(deleteConfirmInput ? deleteConfirmInput.value.trim() : '');
+
+    if (!(await ensureAuthenticatedAccountSession())) {
+        setAccountDeleteStatus('Log in before deleting your account.', 'error');
+        return;
+    }
+
+    [deletePasswordInput, deleteConfirmInput].forEach((input) => {
+        if (!input) return;
+        input.classList.remove('is-invalid-field');
+        input.removeAttribute('aria-invalid');
+    });
+
+    if (!currentPassword) {
+        markAccountFieldInvalid('account-delete-password');
+        setAccountDeleteStatus('Enter your current password.', 'error');
+        return;
+    }
+    if (currentPassword.length > 128) {
+        markAccountFieldInvalid('account-delete-password');
+        setAccountDeleteStatus('Current password is invalid.', 'error');
+        return;
+    }
+    if (confirmation.toUpperCase() !== 'DELETE') {
+        markAccountFieldInvalid('account-delete-confirm');
+        setAccountDeleteStatus('Type DELETE to confirm permanent account deletion.', 'error');
+        return;
+    }
+
+    const confirmed = window.confirm('Delete your account permanently? This cannot be undone.');
+    if (!confirmed) {
+        setAccountDeleteStatus('Account deletion cancelled.', 'neutral');
+        return;
+    }
+
+    setButtonBusyState(deleteButton, true, 'Delete Account Permanently', 'Deleting...');
+    setAccountDeleteStatus('Deleting account permanently...', 'info');
+    try {
+        await neonFetch(getNeonDeleteAccountEndpoint(), {
+            method: 'POST',
+            body: JSON.stringify({
+                currentPassword,
+                confirmation: 'DELETE'
+            })
+        });
+
+        if (userStateSyncTimer) {
+            clearTimeout(userStateSyncTimer);
+            userStateSyncTimer = null;
+        }
+        userStateSyncInFlight = false;
+        applyingRemoteUserState = false;
+
+        setCsrfToken('');
+        accountAuthState.isAuthenticated = false;
+        accountAuthState.sessionLabel = '';
+        accountAuthState.rememberMe = false;
+        accountProfile = {
+            ...getDefaultAccountProfile()
+        };
+        saveAccountProfile();
+        applyAccountProfileToForm();
+        clearAuthPasswordFields();
+        updateAccountChip();
+        resetAccountSecureInputs({ clearPendingEmail: true });
+        setAccountAuthMode('login');
+        setAccountAuthStatus('Account deleted permanently.', 'success');
+        refreshAccountPrimaryAuthButton();
+        handleInsightsAccessStateChange();
+        setAccountDeleteStatus('Account deleted permanently.', 'success');
+        showToast('Your account has been permanently deleted.', 'success');
+    } catch (error) {
+        const reason = error instanceof Error ? error.message : String(error);
+        setAccountDeleteStatus(`Account deletion failed: ${reason}`, 'error');
+        showToast(`Account deletion failed: ${reason}`, 'error');
+    } finally {
+        setButtonBusyState(deleteButton, false, 'Delete Account Permanently', 'Deleting...');
     }
 }
 
@@ -15149,6 +15246,7 @@ function initAccount() {
     const emailRequestPinBtn = document.getElementById('account-email-request-pin');
     const emailVerifyPinBtn = document.getElementById('account-email-verify-pin');
     const passwordUpdateBtn = document.getElementById('account-password-update');
+    const deleteAccountBtn = document.getElementById('account-delete-account');
     const authLoginTab = document.getElementById('account-auth-login-tab');
     const authSignupTab = document.getElementById('account-auth-signup-tab');
     const authSubmitBtn = document.getElementById('account-auth-submit');
@@ -15168,6 +15266,8 @@ function initAccount() {
     const profileCurrentPasswordInput = document.getElementById('account-current-password');
     const profileNewPasswordInput = document.getElementById('account-new-password');
     const profileConfirmPasswordInput = document.getElementById('account-confirm-new-password');
+    const profileDeletePasswordInput = document.getElementById('account-delete-password');
+    const profileDeleteConfirmInput = document.getElementById('account-delete-confirm');
     const authInputs = [authEmailInput, authUsernameInput, authPasswordInput, authConfirmInput].filter(Boolean);
     const profileInputs = [
         profileUsernameInput,
@@ -15176,7 +15276,9 @@ function initAccount() {
         profileEmailPinInput,
         profileCurrentPasswordInput,
         profileNewPasswordInput,
-        profileConfirmPasswordInput
+        profileConfirmPasswordInput,
+        profileDeletePasswordInput,
+        profileDeleteConfirmInput
     ].filter(Boolean);
 
     authInputs.forEach((input) => {
@@ -15304,6 +15406,18 @@ function initAccount() {
     if (profileCurrentPasswordInput) profileCurrentPasswordInput.addEventListener('keydown', enterToUpdatePassword);
     if (profileNewPasswordInput) profileNewPasswordInput.addEventListener('keydown', enterToUpdatePassword);
     if (profileConfirmPasswordInput) profileConfirmPasswordInput.addEventListener('keydown', enterToUpdatePassword);
+    if (deleteAccountBtn) {
+        deleteAccountBtn.addEventListener('click', async () => {
+            await deleteAccountPermanently();
+        });
+    }
+    const enterToDeleteAccount = async (event) => {
+        if (event.key !== 'Enter') return;
+        event.preventDefault();
+        await deleteAccountPermanently();
+    };
+    if (profileDeletePasswordInput) profileDeletePasswordInput.addEventListener('keydown', enterToDeleteAccount);
+    if (profileDeleteConfirmInput) profileDeleteConfirmInput.addEventListener('keydown', enterToDeleteAccount);
 
     setAccountProfileSectionExpanded(false);
     resetAccountSecureInputs({ clearPendingEmail: true });

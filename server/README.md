@@ -12,6 +12,7 @@ This backend enables Neon SQL persistence for auth, profile, support requests, a
 - `GET /api/profile`
 - `POST /api/profile`
 - `POST /api/profile/password`
+- `POST /api/profile/delete-account`
 - `POST /api/profile/email/request-pin`
 - `POST /api/profile/email/verify-pin`
 - `GET /api/user-state`

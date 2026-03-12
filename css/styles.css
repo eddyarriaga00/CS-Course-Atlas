@@ -4497,6 +4497,15 @@ body.dark .settings-modal-footer {
     transform: translateY(-1px);
 }
 
+#account-modal .account-danger-btn {
+    border: 1px solid rgba(251, 113, 133, 0.64);
+    box-shadow: 0 10px 24px rgba(190, 24, 93, 0.35);
+}
+
+#account-modal .account-danger-btn:hover {
+    transform: translateY(-1px);
+}
+
 #account-modal .account-profile-header {
     display: flex;
     align-items: flex-start;
@@ -4563,6 +4572,11 @@ body.dark .settings-modal-footer {
 #account-modal .account-profile-security-section {
     border-color: rgba(129, 140, 248, 0.28);
     background: rgba(15, 23, 42, 0.5);
+}
+
+#account-modal .account-profile-danger-section {
+    border-color: rgba(251, 113, 133, 0.52);
+    background: rgba(127, 29, 29, 0.28);
 }
 
 #account-modal .account-email-pin-verify-wrap {

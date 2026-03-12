@@ -181,6 +181,7 @@ app.use('/api/auth/signup', authRateLimit, noStore);
 app.use('/api/auth/logout', noStore);
 app.use('/api/auth/oauth/providers', noStore);
 app.use('/api/profile/password', authRateLimit, noStore);
+app.use('/api/profile/delete-account', authRateLimit, noStore);
 app.use('/api/profile/email/request-pin', authRateLimit, noStore);
 app.use('/api/profile/email/verify-pin', authRateLimit, noStore);
 app.use('/api/profile', noStore);
@@ -2287,6 +2288,45 @@ app.post('/api/profile/password', assertSameOrigin, requireAuth, requireCsrf, as
             return res.status(error.statusCode).json({ error: error.message });
         }
         return res.status(500).json({ error: 'Failed to update password.' });
+    }
+});
+
+app.post('/api/profile/delete-account', assertSameOrigin, requireAuth, requireCsrf, async (req, res) => {
+    const currentPassword = String(req.body?.currentPassword || '');
+    const confirmation = safeString(req.body?.confirmation).toUpperCase();
+
+    if (!currentPassword) {
+        return res.status(400).json({ error: 'Current password is required.' });
+    }
+    if (currentPassword.length > PASSWORD_MAX_LENGTH) {
+        return res.status(400).json({ error: 'Current password is invalid.' });
+    }
+    if (confirmation !== 'DELETE') {
+        return res.status(400).json({ error: 'Type DELETE to confirm account deletion.' });
+    }
+
+    try {
+        await withTransaction(async (client) => {
+            const found = await client.query(
+                'SELECT password_hash FROM users WHERE id = $1 LIMIT 1 FOR UPDATE',
+                [req.auth.userId]
+            );
+            const row = found.rows[0];
+            const isPasswordValid = row ? await verifyPassword(currentPassword, row.password_hash) : false;
+            if (!row || !isPasswordValid) {
+                throw createHttpError(401, 'Current password is incorrect.');
+            }
+
+            await client.query('DELETE FROM users WHERE id = $1', [req.auth.userId]);
+        });
+
+        await clearSession(req, res);
+        return res.json({ ok: true, message: 'Account deleted permanently.' });
+    } catch (error) {
+        if (error?.statusCode) {
+            return res.status(error.statusCode).json({ error: error.message });
+        }
+        return res.status(500).json({ error: 'Failed to delete account.' });
     }
 });
 

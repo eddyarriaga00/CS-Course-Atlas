@@ -195,3 +195,9 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Removed local demo-session bootstrap logic so auth state now comes only from real backend session checks.
 - Connected the `Forgot password` action to a real support request flow by auto-opening/prefilling the Support form instead of showing a “coming soon” placeholder message.
 
+
+### Account Deletion
+- Added a secure account deletion endpoint: `POST /api/profile/delete-account`.
+- Enforced authenticated same-origin + CSRF protection and current-password verification before deletion.
+- Added permanent account deletion controls in Profile Settings with a required `DELETE` confirmation phrase and clear danger-state messaging.
+- Wired frontend cleanup after deletion to clear local profile/auth/session state and return the modal to logged-out mode.
