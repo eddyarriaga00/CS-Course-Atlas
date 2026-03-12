@@ -26,7 +26,12 @@ window.SPANISH_LOCALIZATION = {
           "Documentacion oficial de Python",
           "Documentacion oficial de Java",
           "MDN Web Docs",
-          "Documentacion oficial de Git"
+          "Documentacion oficial de Git",
+          "VS Code Docs - Primeros pasos",
+          "GitHub Skills - Cursos interactivos",
+          "The Missing Semester (MIT)",
+          "freeCodeCamp - Aprende a programar",
+          "Exercism - Practica de programacion"
         ]
       },
       "arrays-strings": {

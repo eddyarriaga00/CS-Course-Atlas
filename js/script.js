@@ -4006,7 +4006,12 @@ Finally, this module gives you practical setup and workflow basics: editor, runt
             { text: 'Python Documentation', url: 'https://docs.python.org/3/' },
             { text: 'Java Documentation', url: 'https://docs.oracle.com/en/java/' },
             { text: 'MDN Web Docs (HTML/CSS/JavaScript)', url: 'https://developer.mozilla.org/' },
-            { text: 'Git Documentation', url: 'https://git-scm.com/doc' }
+            { text: 'Git Documentation', url: 'https://git-scm.com/doc' },
+            { text: 'VS Code Docs - Getting Started', url: 'https://code.visualstudio.com/docs/getstarted/getting-started' },
+            { text: 'GitHub Skills - Interactive Courses', url: 'https://skills.github.com/' },
+            { text: 'The Missing Semester (MIT)', url: 'https://missing.csail.mit.edu/' },
+            { text: 'freeCodeCamp - Learn to Code', url: 'https://www.freecodecamp.org/learn/' },
+            { text: 'Exercism - Programming Practice', url: 'https://exercism.org/' }
         ]
     },
     {
@@ -18176,11 +18181,22 @@ function renderModules() {
                 <div class="mb-3 sm:mb-4">
                     <h4 class="font-semibold mb-2 text-slate-800 text-sm">${t('module.learningResources')}</h4>
                     <div class="space-y-1">
-                        ${(localizedModule.resources || []).map(resource => `
-                            <div class="text-indigo-600 hover:text-indigo-800 text-xs transition-colors duration-200 cursor-pointer">
-                                \u2022 ${resource}
+                        ${(localizedModule.resources || []).map((resource) => {
+            const normalizedResource = normalizeModuleResource(resource);
+            if (!normalizedResource.label) return '';
+            if (normalizedResource.url) {
+                return `
+                            <div class="text-xs transition-colors duration-200">
+                                \u2022 <a href="${escapeHtml(normalizedResource.url)}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 underline decoration-indigo-400/60 underline-offset-2">${escapeHtml(normalizedResource.label)}</a>
                             </div>
-                        `).join('')}
+                        `;
+            }
+            return `
+                            <div class="text-indigo-600 hover:text-indigo-800 text-xs transition-colors duration-200">
+                                \u2022 ${escapeHtml(normalizedResource.label)}
+                            </div>
+                        `;
+        }).join('')}
                     </div>
                 </div>
 
@@ -18294,6 +18310,56 @@ function escapeHtml(text = '') {
 
 function escapeRegExp(string = '') {
     return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function sanitizeResourceUrl(rawUrl) {
+    const value = String(rawUrl || '').trim();
+    if (!value) return '';
+    const candidate = /^[a-zA-Z][a-zA-Z\d+\-.]*:/.test(value)
+        ? value
+        : `https://${value}`;
+    try {
+        const parsed = new URL(candidate);
+        if (!['http:', 'https:'].includes(parsed.protocol)) {
+            return '';
+        }
+        return parsed.toString();
+    } catch (error) {
+        return '';
+    }
+}
+
+function normalizeModuleResource(resource) {
+    if (typeof resource === 'string') {
+        return {
+            label: resource.trim(),
+            url: ''
+        };
+    }
+    if (!resource || typeof resource !== 'object') {
+        return {
+            label: '',
+            url: ''
+        };
+    }
+
+    const label = String(
+        resource.text
+        || resource.label
+        || resource.title
+        || ''
+    ).trim();
+    const url = sanitizeResourceUrl(resource.url || resource.href || '');
+    if (!label && !url) {
+        return {
+            label: '',
+            url: ''
+        };
+    }
+    return {
+        label: label || url,
+        url
+    };
 }
 
 function highlightGlossaryText(text, searchTerm) {
@@ -20521,7 +20587,14 @@ function printStudyGuide() {
                     <div class="resources">
                         <strong>Resources:</strong>
                         <ul>
-                            ${module.resources.map(resource => `<li>${resource}</li>`).join('')}
+                            ${(module.resources || []).map((resource) => {
+            const normalizedResource = normalizeModuleResource(resource);
+            if (!normalizedResource.label) return '';
+            if (normalizedResource.url) {
+                return `<li><a href="${escapeHtml(normalizedResource.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(normalizedResource.label)}</a></li>`;
+            }
+            return `<li>${escapeHtml(normalizedResource.label)}</li>`;
+        }).join('')}
                         </ul>
                     </div>
                 </div>
