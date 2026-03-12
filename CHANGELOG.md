@@ -38,6 +38,10 @@ All notable changes to **CS Course Atlas** are documented in this file.
   - playground topics route to playground and load the selected topic/snippet
 - Added dedicated global-search styling for desktop/mobile and preserved existing module-only filter search below it.
 
+### Public Roadmap
+- Added a visible roadmap section on the interactive home view with three clear statuses: live now, in progress, and planned next.
+- Added the same roadmap framing to the standalone crawlable home.html page so public visitors see intentional progress before logging in.
+- Added roadmap localization keys for both English and Spanish.
 ### Navigation and UX Fixes
 - Fixed the pseudocode mode badge/icon in module controls (`📝`).
 - Removed the injected `"Program finished."` line from Java wrapper execution output.
@@ -64,3 +68,4 @@ All notable changes to **CS Course Atlas** are documented in this file.
 ### Validation
 - Frontend syntax check: `node --check js/script.js` (pass).
 - Backend syntax checks: `node --check server/index.js`, `server/security.js`, `server/db.js` (pass).
+
