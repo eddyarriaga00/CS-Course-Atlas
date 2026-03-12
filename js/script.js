@@ -14294,14 +14294,12 @@ function getNeonOAuthProvidersEndpoint() {
 function getAuthProviderKeyFromButton(button) {
     const buttonId = String(button?.id || '').toLowerCase();
     if (buttonId.includes('google')) return 'google';
-    if (buttonId.includes('apple')) return 'apple';
     if (buttonId.includes('github')) return 'github';
     return '';
 }
 
 function getAuthProviderLabel(providerKey) {
     if (providerKey === 'google') return 'Google';
-    if (providerKey === 'apple') return 'Apple';
     if (providerKey === 'github') return 'GitHub';
     return 'Social';
 }

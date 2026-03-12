@@ -4323,10 +4323,6 @@ body.dark .settings-modal-footer {
     background: rgba(30, 41, 59, 0.74);
 }
 
-#account-modal .account-auth-provider-github {
-    grid-column: 1 / -1;
-}
-
 #account-modal .account-auth-divider {
     position: relative;
     display: flex;

@@ -28,10 +28,6 @@ services:
         value: __disabled__
       - key: GOOGLE_OAUTH_CLIENT_SECRET
         value: __disabled__
-      - key: APPLE_OAUTH_CLIENT_ID
-        value: __disabled__
-      - key: APPLE_OAUTH_CLIENT_SECRET
-        value: __disabled__
       - key: GITHUB_OAUTH_CLIENT_ID
         value: __disabled__
       - key: GITHUB_OAUTH_CLIENT_SECRET

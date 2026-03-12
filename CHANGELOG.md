@@ -222,3 +222,11 @@ All notable changes to **CS Course Atlas** are documented in this file.
 
 ### Runtime Cleanup
 - Removed deprecated `expires` usage from `res.clearCookie(...)` calls for session and OAuth-state cookie clearing.
+
+### OAuth Provider Scope
+- Removed Apple sign-in from the public auth UX for now:
+  - removed Apple provider button from `index.html`
+  - removed Apple provider mapping from frontend auth provider helpers
+  - changed backend `SUPPORTED_OAUTH_PROVIDERS` to only `google` and `github` so `/api/auth/oauth/providers` no longer advertises Apple
+- Removed Apple OAuth env entries from `render.yaml` and `.env.example`.
+- Updated deployment docs (`README.md`, `server/README.md`) to document Google/GitHub-only OAuth setup.

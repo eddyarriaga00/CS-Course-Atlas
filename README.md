@@ -56,12 +56,10 @@ GitHub Pages is static-only, so auth/session + SQL must run on a separate Node h
    - `DATABASE_URL` (Neon production connection string with `sslmode=require&channel_binding=require`)
 4. Optional OAuth provider env vars:
    - `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`
-   - `APPLE_OAUTH_CLIENT_ID`, `APPLE_OAUTH_CLIENT_SECRET`
    - `GITHUB_OAUTH_CLIENT_ID`, `GITHUB_OAUTH_CLIENT_SECRET`
    - Blueprint defaults OAuth vars to `__disabled__` so initial deploy is not blocked.
 5. OAuth callback URLs to register in provider dashboards:
    - Google: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/google/callback`
-   - Apple: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/apple/callback`
    - GitHub: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/github/callback`
 6. After deployment, verify:
    - `https://cs-course-atlas-api.onrender.com/api/health`

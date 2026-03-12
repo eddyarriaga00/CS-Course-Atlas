@@ -87,17 +87,13 @@ const OPTIONAL_OAUTH_ENV_PLACEHOLDERS = new Set([
 const GOOGLE_OAUTH_CLIENT_ID = readOptionalOAuthEnv(process.env.GOOGLE_OAUTH_CLIENT_ID);
 const GOOGLE_OAUTH_CLIENT_SECRET = readOptionalOAuthEnv(process.env.GOOGLE_OAUTH_CLIENT_SECRET);
 const GOOGLE_OAUTH_REDIRECT_URI = readOptionalOAuthEnv(process.env.GOOGLE_OAUTH_REDIRECT_URI);
-const APPLE_OAUTH_CLIENT_ID = readOptionalOAuthEnv(process.env.APPLE_OAUTH_CLIENT_ID);
-const APPLE_OAUTH_CLIENT_SECRET = readOptionalOAuthEnv(process.env.APPLE_OAUTH_CLIENT_SECRET);
-const APPLE_OAUTH_REDIRECT_URI = readOptionalOAuthEnv(process.env.APPLE_OAUTH_REDIRECT_URI);
 const GITHUB_OAUTH_CLIENT_ID = readOptionalOAuthEnv(process.env.GITHUB_OAUTH_CLIENT_ID);
 const GITHUB_OAUTH_CLIENT_SECRET = readOptionalOAuthEnv(process.env.GITHUB_OAUTH_CLIENT_SECRET);
 const GITHUB_OAUTH_REDIRECT_URI = readOptionalOAuthEnv(process.env.GITHUB_OAUTH_REDIRECT_URI);
-const SUPPORTED_OAUTH_PROVIDERS = Object.freeze(['google', 'apple', 'github']);
+const SUPPORTED_OAUTH_PROVIDERS = Object.freeze(['google', 'github']);
 const OAUTH_PROVIDER_SET = new Set(SUPPORTED_OAUTH_PROVIDERS);
 const OAUTH_IDENTITY_PROVIDER_LABELS = Object.freeze({
     google: 'Google',
-    apple: 'Apple',
     github: 'GitHub'
 });
 const MUTATING_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
@@ -133,15 +129,6 @@ const BOOK_LIBRARY = [
 
 const googleJwksClient = jwksClient({
     jwksUri: 'https://www.googleapis.com/oauth2/v3/certs',
-    cache: true,
-    cacheMaxEntries: 5,
-    cacheMaxAge: OAUTH_JWKS_CACHE_MAX_AGE_MS,
-    rateLimit: true,
-    jwksRequestsPerMinute: 10
-});
-
-const appleJwksClient = jwksClient({
-    jwksUri: 'https://appleid.apple.com/auth/keys',
     cache: true,
     cacheMaxEntries: 5,
     cacheMaxAge: OAUTH_JWKS_CACHE_MAX_AGE_MS,
@@ -682,12 +669,6 @@ function getOAuthProviderCredentials(provider) {
                 clientSecret: GOOGLE_OAUTH_CLIENT_SECRET,
                 configuredRedirectUri: GOOGLE_OAUTH_REDIRECT_URI
             };
-        case 'apple':
-            return {
-                clientId: APPLE_OAUTH_CLIENT_ID,
-                clientSecret: APPLE_OAUTH_CLIENT_SECRET,
-                configuredRedirectUri: APPLE_OAUTH_REDIRECT_URI
-            };
         case 'github':
             return {
                 clientId: GITHUB_OAUTH_CLIENT_ID,
@@ -748,17 +729,6 @@ function buildOAuthAuthorizationUrl(provider, config, stateToken) {
             state: stateToken
         });
         return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
-    }
-    if (provider === 'apple') {
-        const params = new URLSearchParams({
-            client_id: clientId,
-            redirect_uri: redirectUri,
-            response_type: 'code',
-            response_mode: 'query',
-            scope: 'name email',
-            state: stateToken
-        });
-        return `https://appleid.apple.com/auth/authorize?${params.toString()}`;
     }
     if (provider === 'github') {
         const params = new URLSearchParams({
@@ -878,7 +848,7 @@ async function verifyJwtWithProviderJwks(provider, idToken, options = {}) {
     if (!token) {
         throw new Error('Missing provider token.');
     }
-    const jwks = provider === 'apple' ? appleJwksClient : googleJwksClient;
+    const jwks = googleJwksClient;
     return new Promise((resolve, reject) => {
         jwt.verify(
             token,
@@ -1024,38 +994,6 @@ async function exchangeGoogleCodeForProfile(code, redirectUri) {
     };
 }
 
-async function exchangeAppleCodeForProfile(code, redirectUri) {
-    const tokenPayload = await fetchJsonWithTimeout(
-        'https://appleid.apple.com/auth/token',
-        {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: new URLSearchParams({
-                code,
-                client_id: APPLE_OAUTH_CLIENT_ID,
-                client_secret: APPLE_OAUTH_CLIENT_SECRET,
-                redirect_uri: redirectUri,
-                grant_type: 'authorization_code'
-            }).toString()
-        }
-    );
-    const decoded = await verifyJwtWithProviderJwks('apple', tokenPayload?.id_token, {
-        audience: APPLE_OAUTH_CLIENT_ID,
-        issuer: 'https://appleid.apple.com'
-    });
-    const email = normalizeEmail(decoded?.email || '');
-    const emailVerified = decoded?.email_verified === true || String(decoded?.email_verified).toLowerCase() === 'true';
-    return {
-        provider: 'apple',
-        subject: safeString(decoded?.sub),
-        email,
-        emailVerified,
-        name: safeString(decoded?.name),
-        usernameHint: safeString(email.split('@')[0] || 'apple-student'),
-        avatar: ''
-    };
-}
-
 async function exchangeGitHubCodeForProfile(code, redirectUri) {
     const tokenPayload = await fetchJsonWithTimeout(
         'https://github.com/login/oauth/access_token',
@@ -1102,9 +1040,6 @@ async function exchangeGitHubCodeForProfile(code, redirectUri) {
 async function exchangeOAuthCodeForProfile(provider, code, redirectUri) {
     if (provider === 'google') {
         return exchangeGoogleCodeForProfile(code, redirectUri);
-    }
-    if (provider === 'apple') {
-        return exchangeAppleCodeForProfile(code, redirectUri);
     }
     if (provider === 'github') {
         return exchangeGitHubCodeForProfile(code, redirectUri);

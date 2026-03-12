@@ -75,14 +75,11 @@ This repo includes a production `render.yaml` for API hosting as `cs-course-atla
 4. Optional OAuth env vars (set when enabling provider login):
    - `GOOGLE_OAUTH_CLIENT_ID`
    - `GOOGLE_OAUTH_CLIENT_SECRET`
-   - `APPLE_OAUTH_CLIENT_ID`
-   - `APPLE_OAUTH_CLIENT_SECRET`
    - `GITHUB_OAUTH_CLIENT_ID`
    - `GITHUB_OAUTH_CLIENT_SECRET`
    - Blueprint defaults OAuth vars to `__disabled__` so initial deploy is not blocked.
 5. Register provider callback URLs:
    - Google: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/google/callback`
-   - Apple: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/apple/callback`
    - GitHub: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/github/callback`
 
 ## Security defaults
