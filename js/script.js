@@ -18662,7 +18662,7 @@ function toggleManualStudySession() {
 // Generate PayPal donation URL
 function generatePayPalUrl(amount, description) {
     const params = new URLSearchParams({
-        business: 'your.email@paypal.com',
+        business: 'eddyarriaga123@gmail.com',
         amount: amount,
         currency_code: 'USD',
         item_name: description

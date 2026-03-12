@@ -1,7 +1,7 @@
 # ☕ Java DSA Learning Hub
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge)](https://eddyarriaga00.github.io/Java-DSA-Helper/)
-[![GitHub Stars](https://img.shields.io/github/stars/your-username/java-dsa-learning-hub?style=for-the-badge)](https://github.com/eddyarriaga00/Java-DSA-Helper/stargazers)
+[![GitHub Stars](https://img.shields.io/github/stars/eddyarriaga00/Java-DSA-Helper?style=for-the-badge)](https://github.com/eddyarriaga00/Java-DSA-Helper/stargazers)
 [![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
 
 > **Master Data Structures & Algorithms with interactive Java-first learning.**
@@ -69,8 +69,8 @@ Runner (optional): set `CODE_RUNNER_ENDPOINT` and adjust `CODE_RUNNER_CONFIG` (l
 ## 💝 Support
 - ⭐ Star the repo
 - 🐛 Open issues/PRs for bugs or content fixes
-- ☕ Donate: [PayPal](https://www.paypal.com/paypalme/delamainn)
-- ❤️ Sponsor: [GitHub Sponsors](https://github.com/sponsors/eddyarriaga00/)
+- ☕ Donate: [PayPal](https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=5.00&currency_code=USD&item_name=Java%20DSA%20Learning%20Hub%20-%20Coffee%20Support)
+- ❤️ Sponsor: [PayPal Sponsor ($25)](https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=25.00&currency_code=USD&item_name=Java%20DSA%20Learning%20Hub%20-%20Sponsor%20Support)
 
 ## 📞 Contact
 - **Creator**: Eddy Arriaga-Barrientos  
