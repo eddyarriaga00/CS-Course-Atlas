@@ -16,6 +16,11 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Added rate-limiter key-cap safeguards to reduce memory-pressure risk during high-cardinality IP abuse bursts.
 - Added user-agent truncation when storing session metadata to prevent oversized header persistence abuse.
 
+### Module Topics UX
+- Updated module cards so `Topics Covered` shows the first 3 topics by default.
+- Added per-module `Show all topics` / `Show fewer topics` toggle controls.
+- Persisted topic expansion state in local storage, synced user-state snapshots, and progress export/import metadata.
+
 ### Accessibility
 - Added a skip link for keyboard users and a persistent screen-reader announcer.
 - Converted the primary content wrapper to a semantic `<main>` landmark.
