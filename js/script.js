@@ -179,8 +179,24 @@ const ROUTE_KEY_BY_PATH = {
     '/support': 'route.support',
     '/about': 'route.about'
 };
+const HOME_SECTION_ORDER = [
+    'hero-section',
+    'home-beginner-onboarding-section',
+    'topic-focus-section',
+    'home-advanced-tools-section',
+    'search-section',
+    'modules-pagination-top',
+    'modules-grid',
+    'modules-pagination',
+    'progress-section',
+    'achievements-card',
+    'daily-study-grid',
+    'insights-section',
+    'support-section',
+    'main-footer'
+];
 const ROUTE_SECTION_VISIBILITY = {
-    '/home': ['hero-section', 'progress-section', 'achievements-card', 'daily-study-grid', 'insights-section', 'route-overview-section', 'topic-focus-section', 'search-section', 'modules-pagination-top', 'modules-grid', 'modules-pagination', 'support-section', 'main-footer'],
+    '/home': HOME_SECTION_ORDER,
     '/tracks': ['route-overview-section', 'topic-focus-section', 'search-section', 'modules-pagination-top', 'modules-grid', 'modules-pagination', 'main-footer'],
     '/dsa': ['route-overview-section', 'topic-focus-section', 'search-section', 'modules-pagination-top', 'modules-grid', 'modules-pagination', 'main-footer'],
     '/java': ['route-overview-section', 'topic-focus-section', 'search-section', 'modules-pagination-top', 'modules-grid', 'modules-pagination', 'main-footer'],
@@ -622,9 +638,9 @@ const TRANSLATIONS = {
         'progress.heading': '\u{1F4CA} Your Learning Progress',
         'progress.kicker': 'Current journey',
         // Topic focus
-        'topic.focus.heading': 'Topic Focus',
-        'topic.focus.subtitle': 'Choose your primary track. This controls which major module family is shown.',
-        'topic.focus.badge': 'Primary Filter',
+        'topic.focus.heading': 'Featured Learning Tracks',
+        'topic.focus.subtitle': 'Start with a core CS track. We recommend picking one track and completing modules in order.',
+        'topic.focus.badge': 'Featured Tracks',
         'topic.all.title': 'All Topics',
         'topic.all.subtitle': 'Everything in one view',
         'topic.dsa.title': 'Data Structures & Algorithms',
@@ -1008,9 +1024,9 @@ const TRANSLATIONS = {
         'progress.heading': '\u{1F4CA} Tu Progreso de Aprendizaje',
         'progress.kicker': 'Recorrido actual',
         // Topic focus
-        'topic.focus.heading': 'Enfoque de Temas',
-        'topic.focus.subtitle': 'Elige tu ruta principal. Esto controla qué familia de módulos se muestra.',
-        'topic.focus.badge': 'Filtro Principal',
+        'topic.focus.heading': 'Rutas Destacadas de Aprendizaje',
+        'topic.focus.subtitle': 'Comienza con una ruta central de CS. Recomendamos elegir una ruta y completar los módulos en orden.',
+        'topic.focus.badge': 'Rutas Destacadas',
         'topic.all.title': 'Todos los Temas',
         'topic.all.subtitle': 'Todo en una sola vista',
         'topic.dsa.title': 'Estructuras de Datos y Algoritmos',
@@ -1938,6 +1954,22 @@ function applyRouteSectionVisibility(route) {
     });
 }
 
+function applyHomeLayoutOrder(route) {
+    if (route !== '/home') return;
+    const mainContent = document.getElementById('main-content');
+    if (!mainContent) return;
+
+    const reorderFragment = document.createDocumentFragment();
+    HOME_SECTION_ORDER.forEach((sectionId) => {
+        const section = document.getElementById(sectionId);
+        if (section && section.parentElement === mainContent) {
+            reorderFragment.appendChild(section);
+        }
+    });
+
+    mainContent.appendChild(reorderFragment);
+}
+
 function renderRouteOverview(route) {
     const overviewSection = document.getElementById('route-overview-section');
     const titleElement = document.getElementById('route-overview-title');
@@ -2087,6 +2119,7 @@ function renderRoute(route, options = {}) {
     }
 
     applyRouteSectionVisibility(normalizedRoute);
+    applyHomeLayoutOrder(normalizedRoute);
     renderRouteOverview(normalizedRoute);
     renderRouteLaunchpad(normalizedRoute);
     syncSidebarActiveLink(normalizedRoute);
@@ -2135,6 +2168,11 @@ function navigateToRoute(route, options = {}) {
     }
 
     renderRoute(normalizedRoute, { preserveScroll, focusMain, skipModuleRender });
+}
+
+function startLearningJourney() {
+    const targetRoute = '/tracks';
+    navigateToRoute(targetRoute, { focusMain: true });
 }
 
 function initRouteNavigation() {
@@ -21195,5 +21233,3 @@ function trapFocusInActiveModal(event) {
     }
     return false;
 }
-
-
