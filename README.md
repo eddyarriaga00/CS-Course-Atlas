@@ -1,10 +1,52 @@
 # CS Course Atlas
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge)](https://eddyarriaga00.github.io/Java-DSA-Helper/)
-[![GitHub Stars](https://img.shields.io/github/stars/eddyarriaga00/Java-DSA-Helper?style=for-the-badge)](https://github.com/eddyarriaga00/Java-DSA-Helper/stargazers)
-[![Website](https://img.shields.io/badge/Website-Public--Ready-green?style=for-the-badge)](https://eddyarriaga00.github.io/Java-DSA-Helper/)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge)](https://eddyarriaga00.github.io/CS-Course-Atlas/)
+[![GitHub Stars](https://img.shields.io/github/stars/eddyarriaga00/CS-Course-Atlas?style=for-the-badge)](https://github.com/eddyarriaga00/CS-Course-Atlas/stargazers)
+[![Website](https://img.shields.io/badge/Website-Public--Ready-green?style=for-the-badge)](https://eddyarriaga00.github.io/CS-Course-Atlas/)
 
 A public CS learning website for students studying core computer science tracks.
+
+## Mission
+CS Course Atlas is built for computer science students who need one place to learn across multiple classes. It combines structured course tracks, guided explanations, code examples, quizzes, flashcards, and progress tools into one consistent learning experience.
+
+## Quick Guide
+Use one of these paths depending on what you need.
+
+### 1) Preview the public website (recommended)
+This runs the static site exactly like GitHub Pages behavior.
+
+```bash
+git clone https://github.com/eddyarriaga00/CS-Course-Atlas.git
+cd CS-Course-Atlas
+npm install
+npm run build:css
+py -m http.server 4173
+```
+
+Open: `http://127.0.0.1:4173/index.html`
+
+### 2) Run full stack (API + auth/session features)
+Use this if you are testing login/profile/state persistence.
+
+```bash
+npm install
+copy .env.example .env
+npm run db:migrate
+npm start
+```
+
+Required in `.env`:
+- `DATABASE_URL` must point to your Postgres/Neon database.
+
+Open: `http://127.0.0.1:3000`
+
+### 3) Common issues
+- `DATABASE_URL is required for Neon SQL connection`:
+Set `DATABASE_URL` in `.env` before `npm start`.
+- Styling looks outdated:
+Run `npm run build:css` after CSS/Tailwind changes.
+- Auth not working on static preview:
+Use full-stack mode (`npm start`), not `py -m http.server`.
 
 ## Overview
 CS Course Atlas helps learners study through structured modules, code examples, quizzes, flashcards, glossary tools, and notes in one place.
@@ -19,31 +61,12 @@ CS Course Atlas helps learners study through structured modules, code examples, 
 - Theme and appearance controls.
 
 ## Live Website
-- Main site: [https://eddyarriaga00.github.io/Java-DSA-Helper/](https://eddyarriaga00.github.io/Java-DSA-Helper/)
+- Main site: [https://eddyarriaga00.github.io/CS-Course-Atlas/](https://eddyarriaga00.github.io/CS-Course-Atlas/)
 
-## Local Preview (Public Site Behavior)
-This is the recommended way to preview what users will see on the public site.
-
-```bash
-git clone https://github.com/eddyarriaga00/Java-DSA-Helper.git
-cd Java-DSA-Helper
-npm install
-npm run build:css
-py -m http.server 4173
-```
-
-Then open: `http://127.0.0.1:4173/index.html`
-
-## Optional Full-Stack Development
-Use this only if you are working on auth/session sync and API-backed features.
-
-```bash
-npm install
-npm run db:migrate
-npm start
-```
-
-Requires a `.env` with backend settings (for example `DATABASE_URL`).
+## Local Development Notes
+- Public-site checks: use static preview mode from the Quick Guide.
+- API/auth checks: use full-stack mode from the Quick Guide.
+- Build CSS after visual changes: `npm run build:css`.
 
 ## Tech Stack
 - HTML
@@ -53,9 +76,9 @@ Requires a `.env` with backend settings (for example `DATABASE_URL`).
 - Node.js + Express (optional backend features)
 
 ## Support
-- GitHub: [https://github.com/eddyarriaga00/Java-DSA-Helper](https://github.com/eddyarriaga00/Java-DSA-Helper)
-- Donate: [PayPal Support](https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=5.00&currency_code=USD&item_name=Java%20DSA%20Learning%20Hub%20-%20Coffee%20Support)
-- Sponsor ($25): [PayPal Sponsor](https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=25.00&currency_code=USD&item_name=Java%20DSA%20Learning%20Hub%20-%20Sponsor%20Support)
+- GitHub: [https://github.com/eddyarriaga00/CS-Course-Atlas](https://github.com/eddyarriaga00/CS-Course-Atlas)
+- Donate: [PayPal Support](https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=5.00&currency_code=USD&item_name=CS%20Course%20Atlas%20-%20Coffee%20Support)
+- Sponsor ($25): [PayPal Sponsor](https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=25.00&currency_code=USD&item_name=CS%20Course%20Atlas%20-%20Sponsor%20Support)
 
 ## Contact
 - Creator: Eddy Arriaga-Barrientos

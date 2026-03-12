@@ -31,7 +31,7 @@ const pool = new Pool({
     statement_timeout: DB_STATEMENT_TIMEOUT_MS,
     query_timeout: DB_QUERY_TIMEOUT_MS,
     idle_in_transaction_session_timeout: DB_IDLE_IN_TX_TIMEOUT_MS,
-    application_name: 'java-dsa-helper-server'
+    application_name: 'cs-course-atlas-server'
 });
 
 async function query(text, params = []) {
@@ -63,3 +63,4 @@ module.exports = {
     withTransaction,
     closeDb
 };
+

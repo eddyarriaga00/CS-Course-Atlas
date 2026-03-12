@@ -20,7 +20,7 @@
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-3 gap-2.5">
                 <div class="w-full sm:w-auto transition-all duration-300 header-brand space-y-1">
                     <h1 id="main-title" class="font-bold leading-tight transition-all duration-300 text-xl sm:text-2xl lg:text-3xl tracking-tight" data-i18n="main.title">
-                        🧭 CS Course Atlas
+                        &#x1F9ED; CS Course Atlas
                     </h1>
                     <p id="main-subtitle" class="text-blue-100 text-xs sm:text-sm lg:text-base mt-0.5 transition-all duration-300 subtitle-collapsible text-[0.9rem]" data-i18n="main.subtitle">
                         Multi-class learning for Computer Science students
@@ -28,25 +28,25 @@
                 </div>
                 <div id="header-buttons" class="flex flex-wrap gap-2 w-full sm:w-auto justify-end sm:justify-end transition-all duration-300 order-3 sm:order-2">
                     <button id="sidebar-toggle" type="button" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm" aria-controls="app-sidebar" aria-expanded="false" data-i18n-aria-label="sidebar.toggleAria">
-                        ☰ <span data-i18n="sidebar.toggle">Pages</span>
+                        &#x2630; <span data-i18n="sidebar.toggle">Pages</span>
                     </button>
                     <button id="flashcards-btn" type="button" onclick="openFlashcards()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
-                        🎯 <span class="hidden xs:inline" data-i18n="btn.flashcards">Flashcards</span><span class="xs:hidden" data-i18n="btn.flashcardsShort">Cards</span>
+                        &#x1F3AF; <span class="hidden xs:inline" data-i18n="btn.flashcards">Flashcards</span><span class="xs:hidden" data-i18n="btn.flashcardsShort">Cards</span>
                     </button>
                     <button id="glossary-btn" type="button" onclick="openGlossary()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
-                        📚 <span class="hidden xs:inline" data-i18n="btn.glossary">Glossary</span><span class="xs:hidden" data-i18n="btn.glossaryShort">Terms</span>
+                        &#x1F4DA; <span class="hidden xs:inline" data-i18n="btn.glossary">Glossary</span><span class="xs:hidden" data-i18n="btn.glossaryShort">Terms</span>
                     </button>
                     <button id="interactive-quiz-btn" type="button" onclick="openInteractiveQuizLibrary()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
-                        🧠 <span class="hidden xs:inline" data-i18n="btn.quizzes">Interactive Quizzes</span><span class="xs:hidden" data-i18n="btn.quizzesShort">Quizzes</span>
+                        &#x1F9E0; <span class="hidden xs:inline" data-i18n="btn.quizzes">Interactive Quizzes</span><span class="xs:hidden" data-i18n="btn.quizzesShort">Quizzes</span>
                     </button>
                     <button id="settings-btn" type="button" onclick="openSettings()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
-                        ⚙️ <span class="hidden xs:inline" data-i18n="btn.settings">Settings</span><span class="xs:hidden" data-i18n="btn.settingsShort">Settings</span>
+                        &#9881;&#65039; <span class="hidden xs:inline" data-i18n="btn.settings">Settings</span><span class="xs:hidden" data-i18n="btn.settingsShort">Settings</span>
                     </button>
                     <button id="reset-btn" type="button" onclick="resetProgress()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
-                        🔄 <span class="hidden xs:inline" data-i18n="btn.reset">Reset</span><span class="xs:hidden" data-i18n="btn.resetShort">Reset</span>
+                        &#x1F504; <span class="hidden xs:inline" data-i18n="btn.reset">Reset</span><span class="xs:hidden" data-i18n="btn.resetShort">Reset</span>
                     </button>
                     <button id="account-btn" type="button" onclick="openAccountModal()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
-                        👤 <span class="hidden xs:inline" data-i18n="btn.account">Account</span><span class="xs:hidden" data-i18n="btn.accountShort">Account</span>
+                        &#x1F464; <span class="hidden xs:inline" data-i18n="btn.account">Account</span><span class="xs:hidden" data-i18n="btn.accountShort">Account</span>
                     </button>
                 </div>
                 <div id="account-chip" class="account-chip hidden sm:flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold order-2 sm:order-3 bg-slate-800 text-slate-100 border border-white/10"></div>
@@ -261,13 +261,13 @@
             <h3 class="text-lg sm:text-xl font-semibold mb-2 sm:mb-3 section-heading text-[1.05rem] text-slate-100" data-i18n="support.heading">❤️ Do you enjoy this website?</h3>
             <p class="mb-3 sm:mb-4 opacity-90 text-sm sm:text-base text-slate-200" data-i18n="support.subtitle">Help keep this resource free and updated with new content weekly!</p>
             <div class="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3">
-                <a href="https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=5.00&currency_code=USD&item_name=Java%20DSA%20Learning%20Hub%20-%20Coffee%20Support" target="_blank" rel="noopener noreferrer" class="px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-xs sm:text-sm bg-slate-800 border border-white/10 text-slate-100">
+                <a href="https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=5.00&currency_code=USD&item_name=CS%20Course%20Atlas%20-%20Coffee%20Support" target="_blank" rel="noopener noreferrer" class="px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-xs sm:text-sm bg-slate-800 border border-white/10 text-slate-100">
                     ☕ Buy me a coffee ($5)
                 </a>
-                <a href="https://github.com/eddyarriaga00/Java-DSA-Helper" target="_blank" rel="noopener noreferrer" class="px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-xs sm:text-sm bg-slate-800 border border-white/10 text-slate-100">
+                <a href="https://github.com/eddyarriaga00/CS-Course-Atlas" target="_blank" rel="noopener noreferrer" class="px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-xs sm:text-sm bg-slate-800 border border-white/10 text-slate-100">
                     ⭐ GitHub Star
                 </a>
-                <a href="https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=25.00&currency_code=USD&item_name=Java%20DSA%20Learning%20Hub%20-%20Sponsor%20Support" target="_blank" rel="noopener noreferrer" class="px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-xs sm:text-sm bg-slate-800 border border-white/10 text-slate-100">
+                <a href="https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=25.00&currency_code=USD&item_name=CS%20Course%20Atlas%20-%20Sponsor%20Support" target="_blank" rel="noopener noreferrer" class="px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-xs sm:text-sm bg-slate-800 border border-white/10 text-slate-100">
                     💝 Sponsor Me! ($25)
                 </a>
             </div>
@@ -1171,56 +1171,156 @@
 
             <div class="account-modal-body p-6">
                 <div class="account-auth-card rounded-2xl border border-indigo-300/30 bg-gradient-to-br from-indigo-500/10 to-slate-900 p-5 space-y-4">
+                    <div class="account-auth-intro space-y-1">
+                        <p class="account-auth-kicker text-xs uppercase tracking-wide font-semibold text-indigo-200">Secure Sign-In</p>
+                        <h4 id="account-auth-flow-title" class="text-lg font-semibold text-slate-100">Log In to Your Account</h4>
+                        <p id="account-auth-flow-subtitle" class="text-xs text-slate-300">Use a provider or continue with your email/username and password.</p>
+                    </div>
+
                     <div class="account-auth-tabs grid grid-cols-2 gap-2 p-1 rounded-xl bg-slate-800/80 border border-white/10">
                         <button id="account-auth-login-tab" type="button" class="account-auth-tab px-4 py-2 rounded-lg text-sm font-semibold bg-violet-500 text-white transition-colors duration-200">Log In</button>
                         <button id="account-auth-signup-tab" type="button" class="account-auth-tab px-4 py-2 rounded-lg text-sm font-semibold bg-transparent text-slate-300 hover:text-white transition-colors duration-200">Sign Up</button>
                     </div>
+
+                    <div class="account-auth-social-grid">
+                        <button id="account-auth-provider-google" type="button" class="account-auth-provider-btn account-auth-provider-google" aria-label="Continue with Google">G Continue with Google</button>
+                        <button id="account-auth-provider-apple" type="button" class="account-auth-provider-btn account-auth-provider-apple" aria-label="Continue with Apple">A Continue with Apple</button>
+                        <button id="account-auth-provider-github" type="button" class="account-auth-provider-btn account-auth-provider-github" aria-label="Continue with GitHub">GH Continue with GitHub</button>
+                    </div>
+
+                    <div class="account-auth-divider" role="separator" aria-label="Continue with email">
+                        <span>or continue with email</span>
+                    </div>
+
                     <div>
-                        <label for="account-auth-email" class="font-semibold text-sm mb-1 block text-slate-200">Email</label>
-                        <input type="text" id="account-auth-email" autocomplete="username" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="example@email.com">
+                        <label for="account-auth-email" class="font-semibold text-sm mb-1 block text-slate-200">Email or Username</label>
+                        <input type="text" id="account-auth-email" autocomplete="username" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="you@email.com or username">
                     </div>
                     <div id="account-auth-username-group" class="hidden">
                         <label for="account-auth-username" class="font-semibold text-sm mb-1 block text-slate-200">Username</label>
-                        <input type="text" id="account-auth-username" autocomplete="nickname" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="exampleuser">
+                        <input type="text" id="account-auth-username" autocomplete="nickname" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="choose-a-username">
                     </div>
                     <div>
                         <label for="account-auth-password" class="font-semibold text-sm mb-1 block text-slate-200">Password</label>
-                        <input type="password" id="account-auth-password" autocomplete="current-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="••••••••">
+                        <div class="account-auth-password-wrap">
+                            <input type="password" id="account-auth-password" autocomplete="current-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="••••••••">
+                            <button id="account-auth-password-toggle" type="button" class="account-auth-password-toggle" data-target-input="account-auth-password" aria-controls="account-auth-password" aria-pressed="false">Show</button>
+                        </div>
                     </div>
                     <div id="account-auth-confirm-group" class="hidden">
                         <label for="account-auth-confirm" class="font-semibold text-sm mb-1 block text-slate-200">Confirm Password</label>
-                        <input type="password" id="account-auth-confirm" autocomplete="new-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="••••••••">
+                        <div class="account-auth-password-wrap">
+                            <input type="password" id="account-auth-confirm" autocomplete="new-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="••••••••">
+                            <button id="account-auth-confirm-toggle" type="button" class="account-auth-password-toggle" data-target-input="account-auth-confirm" aria-controls="account-auth-confirm" aria-pressed="false">Show</button>
+                        </div>
                     </div>
+
+                    <div id="account-auth-password-meter" class="account-auth-password-meter hidden" aria-live="polite">
+                        <div class="account-auth-password-meter-track">
+                            <span id="account-auth-password-meter-fill" class="account-auth-password-meter-fill" data-strength="weak"></span>
+                        </div>
+                        <p id="account-auth-password-meter-text" class="account-auth-password-meter-text">Password strength: Weak</p>
+                    </div>
+
+                    <div id="account-auth-aux-row" class="account-auth-aux-row">
+                        <label for="account-auth-remember" class="account-auth-remember-label">
+                            <input id="account-auth-remember" type="checkbox" class="account-auth-remember-checkbox">
+                            <span>Remember me</span>
+                        </label>
+                        <button id="account-auth-forgot" type="button" class="account-auth-forgot-btn">Forgot password?</button>
+                    </div>
+
                     <button id="account-auth-submit" type="button" class="account-primary-btn w-full bg-violet-500 hover:bg-violet-600 text-white py-2.5 rounded-xl font-medium">Log In</button>
+
+                    <p id="account-auth-legal" class="account-auth-legal hidden">By creating an account, you agree to the Terms and Privacy Policy.</p>
+                    <p class="account-auth-switch text-xs text-slate-300">
+                        <span id="account-auth-switch-copy">Need an account?</span>
+                        <button id="account-auth-switch-mode" type="button" class="account-auth-switch-btn">Sign Up</button>
+                    </p>
+                    <p class="account-auth-demo text-[11px] text-slate-400">Offline demo fallback: use <span class="font-semibold">example / example</span> when backend auth is unavailable.</p>
+
                     <p id="account-auth-status" class="text-xs text-slate-300" role="status" aria-live="polite" data-i18n="auth.status.guest">Guest mode active. Create a free account to sync progress across devices.</p>
                 </div>
 
                 <div class="account-profile-card rounded-2xl border border-white/10 bg-slate-900/70 p-5 space-y-4 mt-4">
-                    <div class="flex items-center justify-between gap-2">
-                        <h4 class="text-base font-semibold text-indigo-300">Profile Settings</h4>
-                        <span id="account-sync-status" class="text-xs font-semibold px-2.5 py-1 rounded-full border bg-slate-800 border-white/10 text-slate-200">idle</span>
-                    </div>
-                    <div>
-                        <label for="account-username" class="font-semibold text-sm mb-1 block text-slate-200">Username</label>
-                        <input type="text" id="account-username" autocomplete="nickname" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Set your public username">
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label for="account-email" class="font-semibold text-sm mb-1 block text-slate-200">Email</label>
-                            <input type="email" id="account-email" autocomplete="email" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="you@domain.com">
+                    <div class="account-profile-header">
+                        <div class="account-profile-header-main">
+                            <h4 class="text-base font-semibold text-indigo-300">Profile Settings</h4>
+                            <p class="account-profile-header-subtitle text-xs text-slate-300">Update username, password, and verified email securely.</p>
                         </div>
-                        <div>
-                            <label for="account-goal" class="font-semibold text-sm mb-1 block text-slate-200">Learning Goal</label>
-                            <select id="account-goal" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100">
-                                <option value="exploring">Exploring</option>
-                                <option value="internship">Internship Prep</option>
-                                <option value="interview">Interview Prep</option>
-                                <option value="coursework">Coursework Support</option>
-                            </select>
+                        <div class="account-profile-header-actions">
+                            <span id="account-sync-status" class="text-xs font-semibold px-2.5 py-1 rounded-full border bg-slate-800 border-white/10 text-slate-200">idle</span>
+                            <button id="account-profile-toggle" type="button" class="account-profile-toggle-btn" aria-expanded="false" aria-controls="account-profile-content">
+                                <span id="account-profile-toggle-label">Expand</span>
+                            </button>
                         </div>
                     </div>
-                    <button id="save-account" type="button" class="account-primary-btn w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2.5 rounded-xl font-medium">Save Profile Settings</button>
-                    <p id="account-sync-meta" class="text-xs text-slate-300">Profile sync status will appear here.</p>
+
+                    <div id="account-profile-content" class="account-profile-content hidden">
+                        <div class="account-profile-section space-y-3">
+                            <div>
+                                <label for="account-username" class="font-semibold text-sm mb-1 block text-slate-200">Username</label>
+                                <input type="text" id="account-username" autocomplete="nickname" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Set your public username">
+                            </div>
+                            <div>
+                                <label for="account-goal" class="font-semibold text-sm mb-1 block text-slate-200">Learning Goal</label>
+                                <select id="account-goal" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100">
+                                    <option value="exploring">Exploring</option>
+                                    <option value="internship">Internship Prep</option>
+                                    <option value="interview">Interview Prep</option>
+                                    <option value="coursework">Coursework Support</option>
+                                </select>
+                            </div>
+                            <button id="save-account" type="button" class="account-primary-btn w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2.5 rounded-xl font-medium">Save Username &amp; Goal</button>
+                        </div>
+
+                        <div class="account-profile-section account-profile-security-section space-y-3">
+                            <div>
+                                <h5 class="text-sm font-semibold text-indigo-200">Secure Email Update</h5>
+                                <p class="text-xs text-slate-300 mt-1">Email changes require a 6-digit PIN sent to your new email.</p>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] gap-2 items-end">
+                                <div>
+                                    <label for="account-email" class="font-semibold text-sm mb-1 block text-slate-200">New Email</label>
+                                    <input type="email" id="account-email" autocomplete="email" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="you@domain.com">
+                                </div>
+                                <button id="account-email-request-pin" type="button" class="account-primary-btn bg-sky-500 hover:bg-sky-600 text-white px-4 py-2.5 rounded-xl font-medium">Send PIN</button>
+                            </div>
+                            <div id="account-email-pin-verify-wrap" class="account-email-pin-verify-wrap hidden">
+                                <label for="account-email-pin" class="font-semibold text-sm mb-1 block text-slate-200">Verification PIN</label>
+                                <div class="account-email-pin-actions">
+                                    <input type="text" id="account-email-pin" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="6-digit PIN">
+                                    <button id="account-email-verify-pin" type="button" class="account-primary-btn bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-xl font-medium">Verify &amp; Update Email</button>
+                                </div>
+                            </div>
+                            <p id="account-email-pin-status" class="text-xs text-slate-300">Request a PIN to verify your new email.</p>
+                        </div>
+
+                        <div class="account-profile-section account-profile-security-section space-y-3">
+                            <div>
+                                <h5 class="text-sm font-semibold text-indigo-200">Change Password</h5>
+                                <p class="text-xs text-slate-300 mt-1">Use your current password to set a new one.</p>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                <div>
+                                    <label for="account-current-password" class="font-semibold text-sm mb-1 block text-slate-200">Current</label>
+                                    <input type="password" id="account-current-password" autocomplete="current-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Current password">
+                                </div>
+                                <div>
+                                    <label for="account-new-password" class="font-semibold text-sm mb-1 block text-slate-200">New</label>
+                                    <input type="password" id="account-new-password" autocomplete="new-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="New password">
+                                </div>
+                                <div>
+                                    <label for="account-confirm-new-password" class="font-semibold text-sm mb-1 block text-slate-200">Confirm</label>
+                                    <input type="password" id="account-confirm-new-password" autocomplete="new-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Confirm password">
+                                </div>
+                            </div>
+                            <button id="account-password-update" type="button" class="account-primary-btn w-full bg-violet-500 hover:bg-violet-600 text-white py-2.5 rounded-xl font-medium">Update Password</button>
+                            <p id="account-password-status" class="text-xs text-slate-300">Password updates require an active session.</p>
+                        </div>
+
+                        <p id="account-sync-meta" class="text-xs text-slate-300">Profile sync status will appear here.</p>
+                    </div>
                 </div>
             </div>
 

@@ -1,6 +1,34 @@
 window.SPANISH_LOCALIZATION = {
   "content": {
     "modules": {
+      "intro-to-coding": {
+        "title": "Introduccion a la Programacion",
+        "description": "Comienza aqui si eres principiante total. Este modulo explica que es programar, de donde viene, que carreras existen, como elegir ruta y lenguaje inicial, como configurar tu entorno y que habitos te ayudaran a avanzar.",
+        "topics": [
+          "Que es Programar",
+          "Breve Historia de la Programacion",
+          "Como el Codigo se Convierte en Software",
+          "Rutas Profesionales en Tecnologia",
+          "Elegir tu Ruta de Aprendizaje",
+          "Elegir tu Primer Lenguaje",
+          "Configurar tu Entorno de Desarrollo",
+          "Tu Primer Programa",
+          "Bloques Fundamentales",
+          "Depuracion y Resolucion de Problemas",
+          "Flujo de Aprendizaje y Portafolio",
+          "Plan Inicial de 30 Dias"
+        ],
+        "explanation": "Programar es convertir ideas en instrucciones precisas que una computadora puede ejecutar. Este modulo crea una base completa: cubre historia, campos profesionales, decision de ruta, eleccion de lenguaje, configuracion del entorno, primer programa y habitos de estudio sostenibles.",
+        "resources": [
+          "CS50x - Introduccion a Computer Science",
+          "roadmap.sh - Rutas de desarrollo",
+          "The Odin Project",
+          "Documentacion oficial de Python",
+          "Documentacion oficial de Java",
+          "MDN Web Docs",
+          "Documentacion oficial de Git"
+        ]
+      },
       "arrays-strings": {
         "title": "Matrices y cadenas",
         "description": "Este tutorial analiza los ayudantes `findMax`, `reverseString` e `isPalindrome` para que pueda observar cómo los bucles, las protecciones de límites y los intercambios de dos punteros se combinan en utilidades reales de matriz/cadena.",
@@ -4844,7 +4872,7 @@ window.SPANISH_LOCALIZATION = {
     "☕ Coffee": "☕ Café",
     "💝 Sponsor": "💝 Patrocinador",
     "Created for CS students by Eddy Arriaga-B": "Creado para estudiantes de informática por Eddy Arriaga-B",
-    "Java DSA Learning Hub © 2024 | Open Source ❤️": "Centro de aprendizaje Java DSA © 2024 | Código abierto ❤️",
+    "CS Course Atlas © 2024 | Open Source ❤️": "Centro de Aprendizaje CS Course Atlas © 2024 | Código abierto ❤️",
     "⚙️ Settings": "⚙️ Configuración",
     "Customize your learning experience": "Personaliza tu experiencia de aprendizaje",
     "Appearance": "Apariencia",
@@ -4897,8 +4925,8 @@ window.SPANISH_LOCALIZATION = {
     "EN": "ES",
     "ES": "ES",
     "✓ Save &amp; Close": "✓ Guardar y cerrar",
-    "📚 Java DSA Glossary": "📚 Glosario Java DSA",
-    "Browse curated Java DSA terminology.": "Explore la terminología Java DSA seleccionada.",
+    "📚 CS Course Atlas Glossary": "📚 Glosario de CS Course Atlas",
+    "Browse curated CS Course Atlas terminology.": "Explore la terminología de CS Course Atlas seleccionada.",
     "Filter by category to focus your study.": "Filtra por categoría para centrar tu estudio.",
     "🎯 DSA Flashcards": "🎯 Tarjetas didácticas DSA",
     "Choose a module deck": "Elija una plataforma de módulos",
@@ -5096,3 +5124,5 @@ window.SPANISH_LOCALIZATION = {
     "Exit (Linux syscall exit)": "Salir (syscall de salida de Linux)"
   }
 };
+
+
