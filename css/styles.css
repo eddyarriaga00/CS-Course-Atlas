@@ -6799,7 +6799,7 @@ body.dark:not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-min
 
     #app-sidebar {
         position: sticky;
-        margin-top: 0.85rem;
+        margin-top: 2rem;
         top: 6.1rem;
         align-self: start;
         max-height: calc(100dvh - 7.65rem);
@@ -6808,7 +6808,7 @@ body.dark:not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-min
 
     /* When the header compacts on scroll, pull the sidebar up to keep density. */
     #main-header.header-collapsed ~ #app-shell #app-sidebar {
-        margin-top: 0.2rem;
+        margin-top: 1.35rem;
         top: 3rem;
         max-height: calc(100dvh - 3.75rem);
     }
