@@ -37,7 +37,7 @@ npm start
 ```
 
 Required in `.env`:
-- `DATABASE_URL` must point to your Postgres/Neon database.
+- `DATABASE_URL` must point to your Postgres/Neon database and include `sslmode=require` (plus `channel_binding=require` for Neon).
 
 Open: `http://127.0.0.1:3000`
 
@@ -46,11 +46,24 @@ GitHub Pages is static-only, so auth/session + SQL must run on a separate Node h
 
 1. Deploy this repo backend (`server/index.js`) to a Node host (Render/Railway/Fly/etc).
 2. Set backend env:
-   - `DATABASE_URL` (Neon production branch connection string)
+   - `DATABASE_URL` (Neon production branch connection string with `sslmode=require&channel_binding=require`)
    - `NODE_ENV=production`
    - `ALLOWED_ORIGINS=https://eddyarriaga00.github.io` (and your custom domain when added)
    - `SESSION_COOKIE_SAME_SITE=none`
    - `SESSION_COOKIE_SECURE=true`
+   - `OAUTH_STATE_SECRET=<long-random-secret>`
+   - Google:
+     - `GOOGLE_OAUTH_CLIENT_ID`
+     - `GOOGLE_OAUTH_CLIENT_SECRET`
+     - `GOOGLE_OAUTH_REDIRECT_URI=https://<your-api-domain>/api/auth/oauth/google/callback`
+   - Apple:
+     - `APPLE_OAUTH_CLIENT_ID`
+     - `APPLE_OAUTH_CLIENT_SECRET`
+     - `APPLE_OAUTH_REDIRECT_URI=https://<your-api-domain>/api/auth/oauth/apple/callback`
+   - GitHub:
+     - `GITHUB_OAUTH_CLIENT_ID`
+     - `GITHUB_OAUTH_CLIENT_SECRET`
+     - `GITHUB_OAUTH_REDIRECT_URI=https://<your-api-domain>/api/auth/oauth/github/callback`
 3. Run migrations on the deployed backend: `npm run db:migrate`
 4. Verify deployment DB wiring: `npm run db:doctor`
 5. Set frontend API base in `js/app-config.js`:

@@ -154,3 +154,21 @@ All notable changes to **CS Course Atlas** are documented in this file.
   - basic user table query health
 - Updated setup docs to include `db:doctor` immediately after migrations for faster production validation.
 
+### Homepage Content Flow
+- Repositioned the `Public Roadmap` section lower in the interactive home layout so onboarding and track discovery content stays first.
+- Kept roadmap IDs/classes and localization hooks unchanged while moving its rendered placement.
+
+### Auth Provider UI
+- Replaced placeholder social login prefixes (`G`, `A`, `GH`) with proper provider icons for Google, Apple, and GitHub.
+- Updated auth provider button markup and styling for consistent icon + label alignment across desktop/mobile.
+
+### DB Connection Hardening
+- Added strict `DATABASE_URL` validation in backend DB bootstrap:
+  - protocol/host/database checks
+  - placeholder URL rejection
+  - `sslmode` and Neon `channel_binding` enforcement (strict in production)
+- Added DB error-message sanitization to avoid leaking credentials in logs.
+- Added safer transaction rollback error handling and idle pool error logging.
+- Added matching secure URL validation to `scripts/neon-doctor.js`.
+- Updated `.env.example`, root `README.md`, and `server/README.md` to document secure Neon URL requirements (`sslmode=require&channel_binding=require`).
+

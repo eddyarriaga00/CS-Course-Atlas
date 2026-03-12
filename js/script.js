@@ -223,6 +223,7 @@ const HOME_SECTION_ORDER = [
     'achievements-card',
     'daily-study-grid',
     'insights-section',
+    'public-roadmap-section',
     'support-section',
     'main-footer'
 ];
@@ -424,6 +425,7 @@ const JUDGE0_LANGUAGE_IDS = {
 };
 const NEON_API_PATHS = {
     session: '/api/auth/session',
+    oauthProviders: '/api/auth/oauth/providers',
     profile: '/api/profile',
     password: '/api/profile/password',
     emailPinRequest: '/api/profile/email/request-pin',
@@ -13547,7 +13549,8 @@ const accountAuthState = {
     inFlight: false,
     isAuthenticated: false,
     sessionLabel: '',
-    rememberMe: false
+    rememberMe: false,
+    oauthProviders: {}
 };
 const accountProfileUiState = {
     expanded: false,
@@ -13849,10 +13852,45 @@ function syncAccountSignupToggleState() {
     }
 }
 
-function handleAuthProviderClick(providerLabel) {
-    const message = `${providerLabel} sign-in will be enabled soon. Use email or username for now.`;
-    setAccountAuthStatus(message, 'info');
-    showToast(message, 'info');
+async function handleAuthProviderClick(providerKey, providerLabel) {
+    if (!providerKey) {
+        const message = 'Unsupported social auth provider.';
+        setAccountAuthStatus(message, 'error');
+        showToast(message, 'warning');
+        return;
+    }
+    if (!hasNeonSyncConfig()) {
+        const message = `${providerLabel} sign-in requires the backend auth server.`;
+        setAccountAuthStatus(message, 'error');
+        showToast(message, 'warning');
+        return;
+    }
+
+    let providersSnapshot = accountAuthState.oauthProviders;
+    if (!providersSnapshot || !Object.keys(providersSnapshot).length) {
+        providersSnapshot = await loadAuthProviderAvailability({ silent: true });
+    }
+    const providerState = accountAuthState.oauthProviders?.[providerKey];
+    if (!providerState && (!providersSnapshot || !Object.keys(providersSnapshot).length)) {
+        const message = 'Unable to verify social sign-in availability right now. Try again shortly.';
+        setAccountAuthStatus(message, 'error');
+        showToast(message, 'warning');
+        return;
+    }
+    if (providerState && !providerState.enabled) {
+        const reason = Array.isArray(providerState.reasons) && providerState.reasons.length
+            ? providerState.reasons[0]
+            : `${providerLabel} sign-in is not configured yet.`;
+        setAccountAuthStatus(reason, 'error');
+        showToast(reason, 'warning');
+        return;
+    }
+
+    const returnTo = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+    const startEndpoint = buildNeonOAuthStartEndpoint(providerKey);
+    const redirectUrl = `${startEndpoint}?returnTo=${encodeURIComponent(returnTo)}`;
+    setAccountAuthStatus(`Redirecting to ${providerLabel}...`, 'info');
+    window.location.assign(redirectUrl);
 }
 
 function handleForgotPassword() {
@@ -13866,6 +13904,66 @@ function handleForgotPassword() {
     const message = `Password reset flow is coming soon. We saved "${identifier}" as your recovery identifier.`;
     setAccountAuthStatus(message, 'info');
     showToast('Password reset flow coming soon.', 'info');
+}
+
+function consumeOAuthResultFromUrl() {
+    if (typeof window === 'undefined') return null;
+    const currentUrl = new URL(window.location.href);
+    const status = String(currentUrl.searchParams.get('oauth') || '').trim().toLowerCase();
+    if (!status) return null;
+
+    const provider = String(currentUrl.searchParams.get('oauth_provider') || '').trim().toLowerCase();
+    const errorCode = String(currentUrl.searchParams.get('oauth_error') || '').trim().toLowerCase();
+
+    currentUrl.searchParams.delete('oauth');
+    currentUrl.searchParams.delete('oauth_provider');
+    currentUrl.searchParams.delete('oauth_error');
+    const cleanedUrl = `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`;
+    window.history.replaceState({}, document.title, cleanedUrl);
+
+    return { status, provider, errorCode };
+}
+
+function describeOAuthError(errorCode, providerLabel) {
+    if (errorCode === 'provider_not_configured') {
+        return `${providerLabel} sign-in is not configured yet.`;
+    }
+    if (errorCode === 'provider_rejected') {
+        return `${providerLabel} sign-in was canceled or denied.`;
+    }
+    if (errorCode === 'invalid_state' || errorCode === 'state_expired' || errorCode === 'provider_mismatch') {
+        return 'Social sign-in session expired. Please try again.';
+    }
+    if (errorCode === 'missing_code' || errorCode === 'authentication_failed') {
+        return `${providerLabel} sign-in failed. Try again.`;
+    }
+    return 'Social sign-in failed. Please try again.';
+}
+
+async function handleOAuthResultFromUrl() {
+    const oauthResult = consumeOAuthResultFromUrl();
+    if (!oauthResult) return;
+
+    const providerLabel = getAuthProviderLabel(oauthResult.provider);
+    if (oauthResult.status === 'success') {
+        const message = `${providerLabel} sign-in successful.`;
+        setAccountAuthStatus(message, 'success');
+        showToast(message, 'success');
+        if (hasNeonSyncConfig()) {
+            const session = await checkNeonSession({ silent: true });
+            if (session?.userId) {
+                await pullProfileFromNeon({ silent: true });
+                if (PROFILE_SYNC_CONFIG.autoPullUserStateOnSession) {
+                    await pullUserStateFromNeon({ silent: true });
+                }
+            }
+        }
+        return;
+    }
+
+    const failureMessage = describeOAuthError(oauthResult.errorCode, providerLabel);
+    setAccountAuthStatus(failureMessage, 'error');
+    showToast(failureMessage, 'warning');
 }
 
 function getAccountPrimaryAuthLabel() {
@@ -14181,6 +14279,94 @@ function getNeonSupportEndpoint() {
 
 function getNeonSessionEndpoint() {
     return buildApiEndpoint(NEON_API_PATHS.session);
+}
+
+function getNeonOAuthProvidersEndpoint() {
+    return buildApiEndpoint(NEON_API_PATHS.oauthProviders);
+}
+
+function getAuthProviderKeyFromButton(button) {
+    const buttonId = String(button?.id || '').toLowerCase();
+    if (buttonId.includes('google')) return 'google';
+    if (buttonId.includes('apple')) return 'apple';
+    if (buttonId.includes('github')) return 'github';
+    return '';
+}
+
+function getAuthProviderLabel(providerKey) {
+    if (providerKey === 'google') return 'Google';
+    if (providerKey === 'apple') return 'Apple';
+    if (providerKey === 'github') return 'GitHub';
+    return 'Social';
+}
+
+function setAuthProviderButtonEnabled(button, enabled, reason = '') {
+    if (!button) return;
+    const shouldEnable = Boolean(enabled);
+    button.disabled = !shouldEnable;
+    button.setAttribute('aria-disabled', shouldEnable ? 'false' : 'true');
+    button.classList.toggle('opacity-60', !shouldEnable);
+    button.classList.toggle('cursor-not-allowed', !shouldEnable);
+    if (!shouldEnable && reason) {
+        button.setAttribute('title', reason);
+    } else {
+        button.removeAttribute('title');
+    }
+}
+
+function applyAuthProviderAvailability() {
+    const authProviderButtons = Array.from(document.querySelectorAll('.account-auth-provider-btn'));
+    const hasConfig = hasNeonSyncConfig();
+    authProviderButtons.forEach((button) => {
+        const providerKey = getAuthProviderKeyFromButton(button);
+        const providerState = accountAuthState.oauthProviders?.[providerKey];
+        if (!providerKey) {
+            setAuthProviderButtonEnabled(button, false, 'Unsupported auth provider.');
+            return;
+        }
+        if (!hasConfig) {
+            setAuthProviderButtonEnabled(button, false, 'Auth server is not configured.');
+            return;
+        }
+        if (!providerState) {
+            setAuthProviderButtonEnabled(button, true);
+            return;
+        }
+        const reason = Array.isArray(providerState.reasons) && providerState.reasons.length
+            ? providerState.reasons[0]
+            : `${getAuthProviderLabel(providerKey)} sign-in is not configured.`;
+        setAuthProviderButtonEnabled(button, Boolean(providerState.enabled), reason);
+    });
+}
+
+async function loadAuthProviderAvailability(options = {}) {
+    const { silent = true } = options;
+    if (!hasNeonSyncConfig()) {
+        accountAuthState.oauthProviders = {};
+        applyAuthProviderAvailability();
+        return null;
+    }
+    try {
+        const payload = await neonFetch(getNeonOAuthProvidersEndpoint(), { method: 'GET' });
+        const providers = payload?.providers && typeof payload.providers === 'object'
+            ? payload.providers
+            : {};
+        accountAuthState.oauthProviders = providers;
+        applyAuthProviderAvailability();
+        return providers;
+    } catch (error) {
+        accountAuthState.oauthProviders = {};
+        applyAuthProviderAvailability();
+        if (!silent) {
+            const reason = error instanceof Error ? error.message : String(error);
+            showToast(`Unable to load social sign-in options: ${reason}`, 'warning');
+        }
+        return null;
+    }
+}
+
+function buildNeonOAuthStartEndpoint(providerKey) {
+    return buildApiEndpoint(`/api/auth/oauth/${encodeURIComponent(providerKey)}/start`);
 }
 
 function hasNeonSyncConfig() {
@@ -14945,6 +15131,7 @@ async function pushUserStateToNeon(options = {}) {
 function openAccountModal() {
     const modal = document.getElementById('account-modal');
     if (!modal) return;
+    loadAuthProviderAvailability({ silent: true });
     applyAccountProfileToForm();
     setAccountProfileSectionExpanded(false);
     resetAccountSecureInputs({ clearPendingEmail: true });
@@ -15092,15 +15279,10 @@ function initAccount() {
         });
     });
     authProviderButtons.forEach((button) => {
-        button.addEventListener('click', () => {
-            const providerLabel = button.id.includes('google')
-                ? 'Google'
-                : button.id.includes('apple')
-                    ? 'Apple'
-                    : button.id.includes('github')
-                        ? 'GitHub'
-                        : 'Social';
-            handleAuthProviderClick(providerLabel);
+        button.addEventListener('click', async () => {
+            const providerKey = getAuthProviderKeyFromButton(button);
+            const providerLabel = getAuthProviderLabel(providerKey);
+            await handleAuthProviderClick(providerKey, providerLabel);
         });
     });
 
@@ -15157,6 +15339,7 @@ function initAccount() {
     handleInsightsAccessStateChange();
 
     if (hasNeonSyncConfig()) {
+        loadAuthProviderAvailability({ silent: true });
         checkNeonSession({ silent: true }).then((session) => {
             if (!session?.userId) return;
             pullProfileFromNeon({ silent: true });
@@ -15164,6 +15347,8 @@ function initAccount() {
                 pullUserStateFromNeon({ silent: true });
             }
         });
+    } else {
+        applyAuthProviderAvailability();
     }
 }
 
@@ -21421,6 +21606,7 @@ function init() {
     renderStudyTip();
     initStudyPlan();
     initAccount();
+    void handleOAuthResultFromUrl();
     initNotes();
     initNotesLibrary();
     initBooksLibrary();

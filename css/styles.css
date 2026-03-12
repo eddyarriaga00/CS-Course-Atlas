@@ -4277,6 +4277,10 @@ body.dark .settings-modal-footer {
 }
 
 #account-modal .account-auth-provider-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.52rem;
     min-height: 2.45rem;
     border-radius: 0.8rem;
     border: 1px solid rgba(148, 163, 184, 0.3);
@@ -4286,6 +4290,30 @@ body.dark .settings-modal-footer {
     font-weight: 700;
     letter-spacing: 0.01em;
     transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+
+#account-modal .account-auth-provider-icon {
+    width: 1rem;
+    height: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+#account-modal .account-auth-provider-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+#account-modal .account-auth-provider-label {
+    line-height: 1;
+}
+
+#account-modal .account-auth-provider-google .account-auth-provider-icon {
+    width: 1.08rem;
+    height: 1.08rem;
 }
 
 #account-modal .account-auth-provider-btn:hover {

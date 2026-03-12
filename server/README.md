@@ -31,6 +31,7 @@ npm install
 ```bash
 cp .env.example .env
 # Fill DATABASE_URL with your Neon connection string
+# Recommended: include sslmode=require&channel_binding=require
 ```
 
 Important for public cross-origin frontend (for example GitHub Pages -> API host):

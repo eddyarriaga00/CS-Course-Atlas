@@ -9,22 +9,59 @@ const REQUIRED_TABLES = [
     'user_states',
     'support_requests',
     'email_change_verifications',
-    'auth_throttles'
+    'auth_throttles',
+    'oauth_identities'
 ];
+const SECURE_SSL_MODES = new Set(['require', 'verify-ca', 'verify-full']);
 
 function fail(message) {
     console.error(`\n[neon-doctor] ${message}`);
     process.exit(1);
 }
 
-async function run() {
-    const databaseUrl = String(process.env.DATABASE_URL || '').trim();
+function validateDatabaseUrl(databaseUrl) {
     if (!databaseUrl) {
         fail('DATABASE_URL is not set. Copy .env.example to .env and paste your Neon connection string.');
     }
     if (/postgres(?:ql)?:\/\/user:password@host\/dbname/i.test(databaseUrl)) {
         fail('DATABASE_URL is still the example placeholder. Paste your real Neon connection string from the Neon dashboard.');
     }
+
+    let parsed;
+    try {
+        parsed = new URL(databaseUrl);
+    } catch (_error) {
+        fail('DATABASE_URL is not a valid URL.');
+    }
+
+    const protocol = String(parsed.protocol || '').toLowerCase();
+    if (protocol !== 'postgres:' && protocol !== 'postgresql:') {
+        fail('DATABASE_URL must start with postgres:// or postgresql://.');
+    }
+    if (!parsed.hostname) {
+        fail('DATABASE_URL must include a hostname.');
+    }
+    if (!parsed.pathname || parsed.pathname === '/') {
+        fail('DATABASE_URL must include a database name in the path.');
+    }
+
+    const sslMode = String(parsed.searchParams.get('sslmode') || '').toLowerCase();
+    if (!SECURE_SSL_MODES.has(sslMode)) {
+        fail('DATABASE_URL must include sslmode=require (or stronger).');
+    }
+
+    const isNeonHost = String(parsed.hostname || '').toLowerCase().endsWith('.neon.tech');
+    if (isNeonHost) {
+        const channelBinding = String(parsed.searchParams.get('channel_binding') || '').toLowerCase();
+        if (channelBinding !== 'require') {
+            fail('Neon DATABASE_URL should include channel_binding=require.');
+        }
+    }
+}
+
+async function run() {
+    const databaseUrl = String(process.env.DATABASE_URL || '').trim();
+    validateDatabaseUrl(databaseUrl);
 
     let db;
     try {

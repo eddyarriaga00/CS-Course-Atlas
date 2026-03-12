@@ -17,54 +17,92 @@
         <meta property="twitter:card" content="summary_large_image">
         <meta property="twitter:title" content="Interactive Quizzes | CS Course Atlas">
         <meta property="twitter:description" content="Practice with interactive quizzes and interview-style question sets in CS Course Atlas.">
+        <link rel="icon" href="data:,">
+        <link rel="stylesheet" href="css/tailwind.css">
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Pixelify+Sans:wght@400&family=Silkscreen:wght@400&display=swap" rel="stylesheet">
         <style>
         :root {
             color-scheme: dark;
-            --bg: #080d1b;
-            --panel: #11172a;
-            --muted: #a5b4fc;
-            --text: #e2e8f0;
-            --accent: #60a5fa;
-            --accent-soft: rgba(96, 165, 250, 0.16);
-            --line: rgba(148, 163, 184, 0.22);
+            --seo-bg-top: #05070f;
+            --seo-bg-base: #0f172a;
+            --seo-panel: rgba(15, 23, 42, 0.72);
+            --seo-panel-soft: rgba(30, 41, 59, 0.66);
+            --seo-border: rgba(255, 255, 255, 0.16);
+            --seo-border-strong: rgba(165, 180, 252, 0.5);
+            --seo-text: #e2e8f0;
+            --seo-muted: #cbd5e1;
+            --seo-link: #93c5fd;
+            --seo-link-hover: #dbeafe;
+            --seo-btn-grad-a: rgba(59, 130, 246, 0.22);
+            --seo-btn-grad-b: rgba(124, 58, 237, 0.22);
         }
         * { box-sizing: border-box; }
-        body {
+        body.seo-page {
             margin: 0;
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            background: radial-gradient(circle at top, #172554 0%, var(--bg) 45%);
-            color: var(--text);
+            min-height: 100vh;
+            font-family: "Pixelify Sans", "Silkscreen", "DotGothic16", monospace;
+            background:
+                radial-gradient(circle at 6% -8%, rgba(124, 58, 237, 0.34), transparent 46%),
+                radial-gradient(circle at 94% -14%, rgba(56, 189, 248, 0.24), transparent 48%),
+                linear-gradient(180deg, var(--seo-bg-top) 0%, var(--seo-bg-base) 58%, #111827 100%);
+            color: var(--seo-text);
             line-height: 1.6;
         }
         .shell {
-            max-width: 980px;
+            max-width: 1120px;
             margin: 0 auto;
-            padding: 1rem 1rem 2rem;
+            padding: 1rem 1rem 2.4rem;
         }
         .top-nav {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 0.55rem;
             margin-bottom: 1rem;
         }
-        .top-nav a {
+        .top-nav a,
+        .top-nav button {
+            -webkit-appearance: none;
+            appearance: none;
             text-decoration: none;
-            color: var(--text);
-            border: 1px solid var(--line);
-            padding: 0.4rem 0.65rem;
-            border-radius: 0.6rem;
-            background: rgba(15, 23, 42, 0.55);
+            color: #f8fafc;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.45rem 0.75rem;
+            border-radius: 0.75rem;
+            background: rgba(15, 23, 42, 0.62);
             font-size: 0.82rem;
+            font-weight: 700;
+            line-height: 1.15;
+            cursor: pointer;
+            transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease;
+        }
+        .top-nav a:hover,
+        .top-nav button:hover {
+            background: rgba(79, 70, 229, 0.32);
+            border-color: var(--seo-border-strong);
+            transform: translateY(-1px);
+        }
+        .top-nav a:focus-visible,
+        .top-nav button:focus-visible {
+            outline: 2px solid #93c5fd;
+            outline-offset: 2px;
+        }
+        .top-nav .back-control {
+            background: linear-gradient(120deg, var(--seo-btn-grad-a), var(--seo-btn-grad-b));
+            border-color: rgba(125, 211, 252, 0.42);
         }
         .hero {
-            border: 1px solid var(--line);
-            background: linear-gradient(145deg, rgba(17, 24, 39, 0.9), rgba(30, 41, 59, 0.7));
+            border: 1px solid var(--seo-border);
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.88), rgba(30, 27, 75, 0.73));
             border-radius: 1rem;
-            padding: 1rem 1.1rem;
+            padding: 1.05rem 1.15rem;
+            box-shadow: 0 18px 40px rgba(2, 6, 23, 0.34);
         }
-        h1 { margin: 0; font-size: clamp(1.5rem, 2.8vw, 2rem); color: #c7d2fe; }
+        h1 { margin: 0; font-size: clamp(1.5rem, 2.8vw, 2rem); color: #e0e7ff; }
         h2 { margin: 1.2rem 0 0.5rem; font-size: 1.08rem; color: #bfdbfe; }
-        p { margin: 0.45rem 0; }
+        p { margin: 0.45rem 0; color: var(--seo-muted); }
         .cta-row {
             margin-top: 0.8rem;
             display: flex;
@@ -77,37 +115,46 @@
             gap: 0.35rem;
             text-decoration: none;
             color: #f8fafc;
-            background: var(--accent-soft);
-            border: 1px solid rgba(147, 197, 253, 0.45);
+            background: linear-gradient(120deg, rgba(59, 130, 246, 0.28), rgba(124, 58, 237, 0.3));
+            border: 1px solid rgba(129, 140, 248, 0.52);
             border-radius: 0.65rem;
             padding: 0.46rem 0.75rem;
             font-size: 0.84rem;
-            font-weight: 600;
+            font-weight: 700;
+            transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease;
+        }
+        .cta:hover {
+            background: linear-gradient(120deg, rgba(37, 99, 235, 0.45), rgba(109, 40, 217, 0.4));
+            border-color: rgba(165, 180, 252, 0.66);
+            transform: translateY(-1px);
         }
         ul {
-            margin: 0.35rem 0 0;
-            padding-left: 1.05rem;
+            margin: 0.45rem 0 0;
+            padding-left: 1.2rem;
+            list-style: disc;
         }
         li { margin: 0.26rem 0; }
-        a { color: #bae6fd; }
+        a { color: var(--seo-link); }
+        a:hover { color: var(--seo-link-hover); }
         .panel {
             margin-top: 1rem;
-            border: 1px solid var(--line);
+            border: 1px solid var(--seo-border);
             border-radius: 0.95rem;
             padding: 0.95rem 1rem;
-            background: var(--panel);
+            background: linear-gradient(160deg, var(--seo-panel), var(--seo-panel-soft));
+            box-shadow: 0 14px 32px rgba(2, 6, 23, 0.22);
         }
-        .meta { color: #cbd5e1; font-size: 0.9rem; }
+        .meta { color: var(--seo-muted); font-size: 0.9rem; }
         .module-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 0.75rem;
         }
         .module-card {
-            border: 1px solid var(--line);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 0.8rem;
             padding: 0.65rem 0.75rem;
-            background: rgba(15, 23, 42, 0.55);
+            background: rgba(15, 23, 42, 0.6);
         }
         .module-card h3 {
             margin: 0;
@@ -122,13 +169,21 @@
         .footer {
             margin-top: 1.2rem;
             font-size: 0.83rem;
-            color: #cbd5e1;
+            color: var(--seo-muted);
+        }
+        @media (max-width: 640px) {
+            .shell { padding: 0.85rem 0.7rem 1.5rem; }
+            .top-nav { gap: 0.45rem; }
+            .top-nav a,
+            .top-nav button { font-size: 0.78rem; padding: 0.42rem 0.62rem; }
+            .hero { padding: 0.9rem 0.92rem; }
         }
     </style>
     </head>
-<body>
+<body class="seo-page">
     <div class="shell">
         <nav class="top-nav" aria-label="Primary route pages">
+            <button type="button" class="back-control" data-back-fallback="index.html?route=%2Fquizzes">&#8592; Back</button>
             <a href="index.html">Interactive App</a>
             <a href="home.html">Home</a>
             <a href="tracks.html">Tracks</a>
@@ -161,8 +216,16 @@
             <p>`JavaBasics` wires up fields via a constructor, exposes `getInfo`, and creates an instance in `main`, breaking down...</p>
         </article>
         <article class="module-card">
+            <h3><a href="modules/java-memory-jvm.html">Java Memory and JVM Fundamentals</a></h3>
+            <p>Understand stack vs heap, object lifetime, garbage collection basics, and why memory-aware coding decisions improve...</p>
+        </article>
+        <article class="module-card">
             <h3><a href="modules/git-basics-workflow.html">Git Basics and Collaboration Workflow</a></h3>
             <p>This starter module walks through repo setup, staging, commits, branching, pull/merge flow, conflict resolution bas...</p>
+        </article>
+        <article class="module-card">
+            <h3><a href="modules/git-branching-merging.html">Git Branching, Merging, and Pull Requests</a></h3>
+            <p>Learn a repeatable team workflow: create feature branches, keep them updated, resolve merge conflicts safely, and o...</p>
         </article>
         <article class="module-card">
             <h3><a href="modules/control-flow.html">Control Flow Statements</a></h3>
@@ -192,19 +255,35 @@
             <h3><a href="modules/stacks-queues.html">Stacks and Queues</a></h3>
             <p>The `ArrayStack` and `ArrayQueue` wrappers expose each push/pop/peek and enqueue/dequeue call so you can see how Ar...</p>
         </article>
-        <article class="module-card">
-            <h3><a href="modules/linked-lists.html">Linked Lists</a></h3>
-            <p>We narrate every pointer move in `reverseList`, `hasCycle`, and `mergeTwoLists`, showing how temp nodes, tortoise -...</p>
-        </article>
-        <article class="module-card">
-            <h3><a href="modules/sets-relations-functions.html">Sets, Relations, and Functions</a></h3>
-            <p>Set union/intersection, Cartesian products, and injective checks run in one compact sample so you can connect forma...</p>
-        </article>
             </div>
         </section>
         <footer class="footer">
             <p>CS Course Atlas route landing page. For full interaction, open the app link above.</p>
         </footer>
     </div>
+    <script>
+    (() => {
+        const controls = document.querySelectorAll('[data-back-fallback]');
+        controls.forEach((control) => {
+            control.addEventListener('click', (event) => {
+                event.preventDefault();
+                const fallback = control.getAttribute('data-back-fallback') || 'index.html';
+                let hasSameOriginReferrer = false;
+                try {
+                    hasSameOriginReferrer =
+                        Boolean(document.referrer) &&
+                        new URL(document.referrer).origin === window.location.origin;
+                } catch (error) {
+                    hasSameOriginReferrer = false;
+                }
+                if (hasSameOriginReferrer && window.history.length > 1) {
+                    window.history.back();
+                    return;
+                }
+                window.location.href = fallback;
+            });
+        });
+    })();
+    </script>
 </body>
 </html>
