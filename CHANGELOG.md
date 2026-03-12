@@ -201,3 +201,8 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Enforced authenticated same-origin + CSRF protection and current-password verification before deletion.
 - Added permanent account deletion controls in Profile Settings with a required `DELETE` confirmation phrase and clear danger-state messaging.
 - Wired frontend cleanup after deletion to clear local profile/auth/session state and return the modal to logged-out mode.
+### Backend Hosting and Public Auth Wiring
+- Added a Render Blueprint (`render.yaml`) for production API hosting as `cs-course-atlas-api` with Node runtime, health checks, and secure auth/session env defaults.
+- Added OAuth secret placeholders in Blueprint (`GOOGLE_*`, `APPLE_*`, `GITHUB_*`) and generated `OAUTH_STATE_SECRET` support.
+- Updated frontend runtime config (`js/app-config.js`) to target `https://cs-course-atlas-api.onrender.com` on public hosts (`eddyarriaga00.github.io`, `cscourseatlas.com`, `www.cscourseatlas.com`).
+- Updated deployment docs (`README.md`, `server/README.md`) with direct Render Blueprint import URL and exact OAuth callback URLs.

@@ -47,31 +47,24 @@ Note for local development:
 ### 2.5) Public auth with GitHub Pages + Neon API
 GitHub Pages is static-only, so auth/session + SQL must run on a separate Node host.
 
-1. Deploy this repo backend (`server/index.js`) to a Node host (Render/Railway/Fly/etc).
-2. Set backend env:
-   - `DATABASE_URL` (Neon production branch connection string with `sslmode=require&channel_binding=require`)
-   - `NODE_ENV=production`
-   - `ALLOWED_ORIGINS=https://eddyarriaga00.github.io` (and your custom domain when added)
-   - `SESSION_COOKIE_SAME_SITE=none`
-   - `SESSION_COOKIE_SECURE=true`
-   - `OAUTH_STATE_SECRET=<long-random-secret>`
-   - Google:
-     - `GOOGLE_OAUTH_CLIENT_ID`
-     - `GOOGLE_OAUTH_CLIENT_SECRET`
-     - `GOOGLE_OAUTH_REDIRECT_URI=https://<your-api-domain>/api/auth/oauth/google/callback`
-   - Apple:
-     - `APPLE_OAUTH_CLIENT_ID`
-     - `APPLE_OAUTH_CLIENT_SECRET`
-     - `APPLE_OAUTH_REDIRECT_URI=https://<your-api-domain>/api/auth/oauth/apple/callback`
-   - GitHub:
-     - `GITHUB_OAUTH_CLIENT_ID`
-     - `GITHUB_OAUTH_CLIENT_SECRET`
-     - `GITHUB_OAUTH_REDIRECT_URI=https://<your-api-domain>/api/auth/oauth/github/callback`
-3. Run migrations on the deployed backend: `npm run db:migrate`
-4. Verify deployment DB wiring: `npm run db:doctor`
-5. Set frontend API base in `js/app-config.js`:
-   - `window.__APP_CONFIG.apiBaseUrl = "https://<your-api-domain>"`
-6. Push to `main` so GitHub Pages serves frontend updates.
+1. Deploy backend using the included Render Blueprint:
+   - `render.yaml` is already included in this repo.
+   - One-click import URL:
+   - `https://render.com/deploy?repo=https://github.com/eddyarriaga00/CS-Course-Atlas`
+2. Keep Render web service name as `cs-course-atlas-api` (frontend is prewired to `https://cs-course-atlas-api.onrender.com` in `js/app-config.js`).
+3. Fill required Render env vars marked `sync: false`:
+   - `DATABASE_URL` (Neon production connection string with `sslmode=require&channel_binding=require`)
+   - `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`
+   - `APPLE_OAUTH_CLIENT_ID`, `APPLE_OAUTH_CLIENT_SECRET`
+   - `GITHUB_OAUTH_CLIENT_ID`, `GITHUB_OAUTH_CLIENT_SECRET`
+4. OAuth callback URLs to register in provider dashboards:
+   - Google: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/google/callback`
+   - Apple: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/apple/callback`
+   - GitHub: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/github/callback`
+5. After deployment, verify:
+   - `https://cs-course-atlas-api.onrender.com/api/health`
+   - `https://cs-course-atlas-api.onrender.com/api/auth/oauth/providers`
+6. Push to `main` (GitHub Pages auto-deploy will pick up frontend runtime config updates).
 
 ### 3) Common issues
 - `DATABASE_URL is required for Neon SQL connection`:

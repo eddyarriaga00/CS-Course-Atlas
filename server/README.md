@@ -63,6 +63,26 @@ The frontend and API are served from the same origin by this server.
 If frontend and API are on different domains, point frontend runtime config to this API:
 - Update `js/app-config.js` -> `window.__APP_CONFIG.apiBaseUrl = "https://<your-api-domain>"`.
 
+## Render Hosting (Blueprint Included)
+
+This repo includes a production `render.yaml` for API hosting as `cs-course-atlas-api`.
+
+1. Open:
+   - `https://render.com/deploy?repo=https://github.com/eddyarriaga00/CS-Course-Atlas`
+2. Keep service name `cs-course-atlas-api` so frontend default runtime config works.
+3. Fill secret env vars in Render:
+   - `DATABASE_URL`
+   - `GOOGLE_OAUTH_CLIENT_ID`
+   - `GOOGLE_OAUTH_CLIENT_SECRET`
+   - `APPLE_OAUTH_CLIENT_ID`
+   - `APPLE_OAUTH_CLIENT_SECRET`
+   - `GITHUB_OAUTH_CLIENT_ID`
+   - `GITHUB_OAUTH_CLIENT_SECRET`
+4. Register provider callback URLs:
+   - Google: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/google/callback`
+   - Apple: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/apple/callback`
+   - GitHub: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/github/callback`
+
 ## Security defaults
 
 - Passwords are hashed using async Node `scrypt` with per-user random salt (prevents event-loop blocking under auth load).
