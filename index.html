@@ -992,8 +992,29 @@
         <div id="search-section" class="panel-surface rounded-xl p-4 sm:p-5 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
             <h3 class="text-lg sm:text-xl font-semibold mb-3 text-indigo-600 section-heading text-indigo-300">Find Your Learning Path</h3>
             <div class="flex flex-col gap-3">
+                <div id="global-search-shell" class="global-search-shell">
+                    <label id="global-search-label" for="global-search-input" class="global-search-label text-xs font-semibold uppercase tracking-wide text-slate-300">Search all content</label>
+                    <div class="global-search-input-row">
+                        <input
+                            type="text"
+                            id="global-search-input"
+                            placeholder="Search terms, modules, quizzes, flashcards, notes, and playground topics..."
+                            class="w-full px-3 py-2 sm:py-2.5 rounded-lg border transition-all duration-200 text-sm sm:text-base bg-slate-900/60 border-white/10 text-slate-100 placeholder-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                            aria-label="Search all content"
+                            role="combobox"
+                            aria-autocomplete="list"
+                            aria-expanded="false"
+                            aria-controls="global-search-results"
+                            aria-haspopup="listbox"
+                        >
+                        <button id="global-search-clear" type="button" class="global-search-clear-btn text-xs sm:text-sm" aria-label="Clear global search">Clear</button>
+                    </div>
+                    <div id="global-search-status" class="sr-only" aria-live="polite"></div>
+                    <div id="global-search-results" class="global-search-results" role="listbox" hidden></div>
+                </div>
         <div class="w-full flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2 gap-3">
                     <div class="flex-1">
+                        <label for="search-input" class="global-search-label text-xs font-semibold uppercase tracking-wide text-slate-300">Module filters</label>
                         <input type="text" id="search-input" placeholder="Search modules by title, description, or topics..." class="w-full px-3 py-2 sm:py-2.5 rounded-lg border transition-all duration-200 text-sm sm:text-base bg-white border-slate-300 text-slate-900 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-900/60 border-white/10 text-slate-100 placeholder-slate-400" aria-label="Search modules">
                     </div>
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">

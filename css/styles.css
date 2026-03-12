@@ -1878,6 +1878,177 @@ body.dark .pagination-button:not(.active) {
     box-shadow: var(--shadow-card);
 }
 
+.global-search-shell {
+    position: relative;
+}
+
+.global-search-label {
+    display: block;
+    margin-bottom: 0.35rem;
+}
+
+.global-search-input-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.global-search-clear-btn {
+    border: 1px solid rgba(148, 163, 184, 0.4);
+    background: rgba(30, 41, 59, 0.9);
+    color: #e2e8f0;
+    border-radius: 0.7rem;
+    font-weight: 700;
+    padding: 0.55rem 0.85rem;
+    white-space: nowrap;
+}
+
+.global-search-results {
+    margin-top: 0.55rem;
+    max-height: min(28rem, 62vh);
+    overflow: auto;
+    border-radius: 0.95rem;
+    border: 1px solid rgba(148, 163, 184, 0.32);
+    background: rgba(15, 23, 42, 0.96);
+    box-shadow: 0 20px 45px rgba(2, 6, 23, 0.45);
+    padding: 0.65rem;
+}
+
+.global-search-group + .global-search-group {
+    margin-top: 0.65rem;
+}
+
+.global-search-group-title {
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #a5b4fc;
+    margin: 0.1rem 0.25rem 0.35rem;
+}
+
+.global-search-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    border-radius: 0.75rem;
+    border: 1px solid transparent;
+    background: rgba(30, 41, 59, 0.72);
+    color: #e2e8f0;
+    padding: 0.6rem 0.72rem;
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+}
+
+.global-search-item + .global-search-item {
+    margin-top: 0.35rem;
+}
+
+.global-search-item:hover,
+.global-search-item:focus-visible,
+.global-search-item.is-active {
+    border-color: rgba(129, 140, 248, 0.6);
+    background: rgba(55, 65, 106, 0.85);
+    transform: translateY(-1px);
+    outline: none;
+}
+
+.global-search-item-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.6rem;
+}
+
+.global-search-item-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #f8fafc;
+    line-height: 1.25;
+}
+
+.global-search-item-type {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    color: #93c5fd;
+    border: 1px solid rgba(125, 211, 252, 0.35);
+    border-radius: 999px;
+    padding: 0.14rem 0.42rem;
+    flex-shrink: 0;
+}
+
+.global-search-item-subtitle {
+    font-size: 0.74rem;
+    color: #cbd5f5;
+    margin-top: 0.22rem;
+}
+
+.global-search-item-preview {
+    font-size: 0.76rem;
+    color: #c7d2fe;
+    margin-top: 0.28rem;
+    line-height: 1.4;
+}
+
+.global-search-empty {
+    border-radius: 0.75rem;
+    border: 1px dashed rgba(148, 163, 184, 0.35);
+    background: rgba(30, 41, 59, 0.62);
+    color: #cbd5e1;
+    font-size: 0.82rem;
+    text-align: center;
+    padding: 0.95rem 0.75rem;
+}
+
+.global-search-highlight {
+    box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.45), 0 12px 30px rgba(15, 23, 42, 0.4) !important;
+    transition: box-shadow 0.25s ease;
+}
+
+body:not(.dark) .global-search-results {
+    background: rgba(248, 250, 252, 0.98);
+    border-color: rgba(148, 163, 184, 0.4);
+    box-shadow: 0 18px 38px rgba(15, 23, 42, 0.18);
+}
+
+body:not(.dark) .global-search-item {
+    background: #ffffff;
+    color: #0f172a;
+    border-color: rgba(203, 213, 225, 0.7);
+}
+
+body:not(.dark) .global-search-item:hover,
+body:not(.dark) .global-search-item:focus-visible,
+body:not(.dark) .global-search-item.is-active {
+    background: #eef2ff;
+    border-color: rgba(99, 102, 241, 0.6);
+}
+
+body:not(.dark) .global-search-item-title {
+    color: #0f172a;
+}
+
+body:not(.dark) .global-search-item-subtitle {
+    color: #334155;
+}
+
+body:not(.dark) .global-search-item-preview {
+    color: #475569;
+}
+
+body:not(.dark) .global-search-empty {
+    background: #ffffff;
+    color: #475569;
+    border-color: rgba(148, 163, 184, 0.4);
+}
+
+@media (max-width: 640px) {
+    .global-search-clear-btn {
+        padding: 0.55rem 0.7rem;
+    }
+}
+
 input[type="text"], select {
     backdrop-filter: blur(8px);
     background: var(--surface-primary);
@@ -6656,6 +6827,7 @@ body.dark:not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-min
         padding: 0.5rem 0.72rem;
     }
 
+    #search-section #global-search-input,
     #search-section #search-input,
     #search-section #difficulty-filter {
         min-height: 42px;

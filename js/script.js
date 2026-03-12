@@ -366,6 +366,9 @@ const ACCENT_OPTIONS = ['indigo', 'emerald', 'amber', 'rose'];
 const ACCENT_CLASSES = ACCENT_OPTIONS.map(option => `accent-${option}`);
 const CARD_DEPTH_OPTIONS = ['standard', 'flat', 'lifted'];
 const CARD_DEPTH_CLASSES = CARD_DEPTH_OPTIONS.map(option => `card-depth-${option}`);
+const GLOBAL_SEARCH_MAX_RESULTS = 24;
+const GLOBAL_SEARCH_MAX_PER_TYPE = 5;
+const GLOBAL_SEARCH_TYPE_ORDER = ['module', 'term', 'quiz', 'flashcard', 'note', 'playground'];
 const ACCESSIBLE_MODAL_IDS = [
     'settings-modal',
     'glossary-modal',
@@ -1923,6 +1926,7 @@ function setLanguage(lang) {
     applyLanguage(lang);
     if (typeof updateProgress === 'function') updateProgress();
     refreshLocalizedSections();
+    refreshGlobalSearchUi({ invalidate: true });
     if (typeof window.refreshPlaygroundSnippetCatalog === 'function') {
         window.refreshPlaygroundSnippetCatalog();
     }
@@ -2612,6 +2616,16 @@ let studyTrackerInterval = null;
 let accountProfile = loadAccountProfile();
 let studyPlanState = loadStudyPlan();
 let notesDraft = loadNotesDraft();
+let globalSearchCache = {
+    lang: null,
+    ready: false,
+    entries: []
+};
+const globalSearchUiState = {
+    query: '',
+    results: [],
+    activeIndex: -1
+};
 
 // =================================
 // DATA
@@ -18288,6 +18302,875 @@ function filterModules() {
     });
 }
 
+function normalizeGlobalSearchText(value = '') {
+    return String(value || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]+/g, ' ')
+        .trim();
+}
+
+function truncateGlobalSearchPreview(value = '', maxLength = 120) {
+    const text = String(value || '').replace(/\s+/g, ' ').trim();
+    if (text.length <= maxLength) return text;
+    return `${text.slice(0, maxLength - 3).trimEnd()}...`;
+}
+
+function getGlobalSearchTypeLabel(type) {
+    const labels = {
+        module: translateLiteral('Modules', appState.language),
+        term: translateLiteral('Terms', appState.language),
+        quiz: translateLiteral('Quizzes', appState.language),
+        flashcard: translateLiteral('Flashcards', appState.language),
+        note: translateLiteral('Notes', appState.language),
+        playground: translateLiteral('Playground', appState.language)
+    };
+    return labels[type] || translateLiteral('Result', appState.language);
+}
+
+function buildGlobalSearchEntry({
+    type,
+    key,
+    title,
+    subtitle = '',
+    preview = '',
+    keywords = '',
+    payload = {}
+}) {
+    const safeTitle = String(title || '').trim();
+    if (!safeTitle) return null;
+    const safeSubtitle = String(subtitle || '').trim();
+    const safePreview = String(preview || '').replace(/\s+/g, ' ').trim();
+    const searchIndex = normalizeGlobalSearchText(
+        [safeTitle, safeSubtitle, safePreview, keywords].filter(Boolean).join(' ')
+    );
+    if (!searchIndex) return null;
+    return {
+        id: `${type}:${String(key || safeTitle).trim()}`,
+        type,
+        title: safeTitle,
+        subtitle: safeSubtitle,
+        preview: safePreview,
+        payload,
+        searchIndex,
+        normalizedTitle: normalizeGlobalSearchText(safeTitle),
+        normalizedSubtitle: normalizeGlobalSearchText(safeSubtitle),
+        normalizedPreview: normalizeGlobalSearchText(safePreview)
+    };
+}
+
+function invalidateGlobalSearchIndex() {
+    globalSearchCache = {
+        lang: null,
+        ready: false,
+        entries: []
+    };
+}
+
+function buildGlobalSearchIndex() {
+    const lang = appState.language === 'es' ? 'es' : 'en';
+    const entries = [];
+    const localizedModules = getLocalizedModules();
+    const localizedModuleMap = new Map(localizedModules.map((module) => [module.id, module]));
+    const orderedModules = getOrderedModules();
+
+    orderedModules.forEach((module) => {
+        const localizedModule = localizedModuleMap.get(module.id) || module;
+        const categoryKey = getModuleCategoryKey(module.id);
+        const categoryLabel = getGlossaryTrackCategoryLabel(categoryKey, lang);
+        const definitionText = Array.isArray(localizedModule?.definitions)
+            ? localizedModule.definitions.map((item) => `${item?.term || ''} ${item?.definition || ''}`.trim()).join(' ')
+            : '';
+        const moduleEntry = buildGlobalSearchEntry({
+            type: 'module',
+            key: module.id,
+            title: localizedModule.title,
+            subtitle: `${categoryLabel} | ${translateLiteral(module.difficulty, lang)}`,
+            preview: localizedModule.description,
+            keywords: [
+                localizedModule.title,
+                localizedModule.description,
+                Array.isArray(localizedModule?.topics) ? localizedModule.topics.join(' ') : '',
+                definitionText,
+                module.id
+            ].join(' '),
+            payload: {
+                moduleId: module.id,
+                categoryKey
+            }
+        });
+        if (moduleEntry) entries.push(moduleEntry);
+    });
+
+    getLocalizedGlossaryTerms().forEach((term, index) => {
+        const glossaryEntry = buildGlobalSearchEntry({
+            type: 'term',
+            key: `${term.term}-${index}`,
+            title: term.term,
+            subtitle: String(term.categoryLabel || term.category || '').trim(),
+            preview: term.definition,
+            keywords: [term.term, term.definition, term.categoryLabel || term.category || ''].join(' '),
+            payload: {
+                term: term.term
+            }
+        });
+        if (glossaryEntry) entries.push(glossaryEntry);
+    });
+
+    Object.entries(quizData).forEach(([moduleId, quiz]) => {
+        const localizedQuiz = getLocalizedQuizData(moduleId) || quiz;
+        const questions = localizedQuiz?.parts?.[0]?.questions || [];
+        if (!questions.length) return;
+        const localizedModule = localizedModuleMap.get(moduleId) || getLocalizedModule(getModuleById(moduleId));
+        const moduleTitle = localizedModule?.title || localizedQuiz?.title || moduleId;
+        const quizEntry = buildGlobalSearchEntry({
+            type: 'quiz',
+            key: moduleId,
+            title: `${translateLiteral('Quiz', lang)}: ${moduleTitle}`,
+            subtitle: `${questions.length} ${translateLiteral('questions', lang)}`,
+            preview: questions[0]?.question || '',
+            keywords: [
+                moduleTitle,
+                questions.slice(0, 6).map((question) => `${question?.question || ''} ${(question?.options || []).join(' ')}`).join(' ')
+            ].join(' '),
+            payload: {
+                moduleId
+            }
+        });
+        if (quizEntry) entries.push(quizEntry);
+    });
+
+    const flashcardDecks = getFlashcardDeckCollection(lang);
+    const allDeck = flashcardDecks?.all || [];
+    if (allDeck.length) {
+        const allDeckEntry = buildGlobalSearchEntry({
+            type: 'flashcard',
+            key: 'all',
+            title: `${translateLiteral('Flashcards', lang)}: ${t('flashcards.deck.all', {}, lang)}`,
+            subtitle: `${allDeck.length} ${translateLiteral('cards', lang)}`,
+            preview: allDeck[0]?.question || '',
+            keywords: allDeck.slice(0, 10).map((card) => `${card?.question || ''} ${card?.answer || ''}`.trim()).join(' '),
+            payload: {
+                deckId: 'all'
+            }
+        });
+        if (allDeckEntry) entries.push(allDeckEntry);
+    }
+
+    const generalDeck = flashcardDecks?.general || [];
+    if (generalDeck.length) {
+        const generalDeckEntry = buildGlobalSearchEntry({
+            type: 'flashcard',
+            key: 'general',
+            title: `${translateLiteral('Flashcards', lang)}: ${translateLiteral('General Concepts', lang)}`,
+            subtitle: `${generalDeck.length} ${translateLiteral('cards', lang)}`,
+            preview: generalDeck[0]?.question || '',
+            keywords: generalDeck.slice(0, 8).map((card) => `${card?.question || ''} ${card?.answer || ''}`.trim()).join(' '),
+            payload: {
+                deckId: 'general'
+            }
+        });
+        if (generalDeckEntry) entries.push(generalDeckEntry);
+    }
+
+    FLASHCARD_TOPIC_DECKS.forEach((deckConfig) => {
+        const deckModules = getAccessibleTopicDeckModules(deckConfig.id);
+        const cards = deckModules.flatMap((module) => flashcardDecks[module.id] || []);
+        if (!cards.length) return;
+        const deckLabel = getFlashcardTopicDeckLabel(deckConfig.id, lang);
+        const deckEntry = buildGlobalSearchEntry({
+            type: 'flashcard',
+            key: deckConfig.id,
+            title: `${translateLiteral('Flashcards', lang)}: ${deckLabel}`,
+            subtitle: `${cards.length} ${translateLiteral('cards', lang)}`,
+            preview: cards[0]?.question || '',
+            keywords: [
+                deckLabel,
+                deckModules
+                    .map((module) => localizedModuleMap.get(module.id)?.title || module.title || module.id)
+                    .join(' '),
+                cards.slice(0, 8).map((card) => `${card?.question || ''} ${card?.answer || ''}`.trim()).join(' ')
+            ].join(' '),
+            payload: {
+                deckId: deckConfig.id
+            }
+        });
+        if (deckEntry) entries.push(deckEntry);
+    });
+
+    orderedModules.forEach((module) => {
+        const cards = flashcardDecks[module.id] || [];
+        if (!cards.length) return;
+        const localizedModule = localizedModuleMap.get(module.id) || module;
+        const moduleDeckEntry = buildGlobalSearchEntry({
+            type: 'flashcard',
+            key: module.id,
+            title: `${translateLiteral('Flashcards', lang)}: ${localizedModule.title}`,
+            subtitle: `${cards.length} ${translateLiteral('cards', lang)}`,
+            preview: cards[0]?.question || '',
+            keywords: cards.slice(0, 8).map((card) => `${card?.question || ''} ${card?.answer || ''}`.trim()).join(' '),
+            payload: {
+                deckId: module.id
+            }
+        });
+        if (moduleDeckEntry) entries.push(moduleDeckEntry);
+    });
+
+    getLocalizedNotesLibrary().forEach((note) => {
+        const noteEntry = buildGlobalSearchEntry({
+            type: 'note',
+            key: note.id,
+            title: note.title,
+            subtitle: `${note.categoryLabel || note.category} | ${note.level}`,
+            preview: note.description,
+            keywords: [
+                note.title,
+                note.description,
+                note.categoryLabel || note.category || '',
+                note.level || ''
+            ].join(' '),
+            payload: {
+                noteId: note.id
+            }
+        });
+        if (noteEntry) entries.push(noteEntry);
+    });
+
+    Object.entries(DS_PLAYGROUND_CONFIG).forEach(([topicId, config]) => {
+        const topicTitle = resolveLocalizedValue(config.label, lang) || config.label || topicId;
+        const hint = resolveLocalizedValue(config.hint, lang) || '';
+        const definitions = Array.isArray(config.definitions)
+            ? config.definitions.map((entry) => `${entry?.term || ''} ${entry?.description || ''}`.trim()).join(' ')
+            : '';
+        const operations = Object.keys(config.operations || {}).join(' ');
+        const dsEntry = buildGlobalSearchEntry({
+            type: 'playground',
+            key: `ds-${topicId}`,
+            title: topicTitle,
+            subtitle: translateLiteral('Data Structure Playground', lang),
+            preview: hint,
+            keywords: [topicTitle, hint, definitions, operations, topicId].join(' '),
+            payload: {
+                kind: 'ds',
+                topicId
+            }
+        });
+        if (dsEntry) entries.push(dsEntry);
+    });
+
+    orderedModules.forEach((module) => {
+        const localizedModule = localizedModuleMap.get(module.id) || module;
+        const categoryLabel = getGlossaryTrackCategoryLabel(getModuleCategoryKey(module.id), lang);
+        const snippetEntry = buildGlobalSearchEntry({
+            type: 'playground',
+            key: `snippet-${module.id}`,
+            title: localizedModule.title,
+            subtitle: `${translateLiteral('Code Playground sample', lang)} | ${categoryLabel}`,
+            preview: localizedModule.description,
+            keywords: [
+                localizedModule.title,
+                localizedModule.description,
+                Array.isArray(localizedModule?.topics) ? localizedModule.topics.join(' ') : ''
+            ].join(' '),
+            payload: {
+                kind: 'snippet',
+                moduleId: module.id
+            }
+        });
+        if (snippetEntry) entries.push(snippetEntry);
+    });
+
+    return entries;
+}
+
+function getDynamicGlobalSearchEntries() {
+    const currentNotesInput = document.getElementById('notes-input');
+    const rawDraft = String(currentNotesInput?.value ?? notesDraft ?? '').trim();
+    if (!rawDraft) return [];
+    const previewLine = rawDraft.split(/\r?\n/).find((line) => String(line || '').trim()) || rawDraft;
+    const lineCount = rawDraft.split(/\r?\n/).filter((line) => String(line || '').trim()).length;
+    const draftEntry = buildGlobalSearchEntry({
+        type: 'note',
+        key: 'personal-draft',
+        title: translateLiteral('My Notes Draft', appState.language),
+        subtitle: `${lineCount} ${translateLiteral('lines', appState.language)}`,
+        preview: previewLine,
+        keywords: rawDraft,
+        payload: {
+            noteId: 'personal-draft'
+        }
+    });
+    return draftEntry ? [draftEntry] : [];
+}
+
+function getGlobalSearchIndex() {
+    const lang = appState.language === 'es' ? 'es' : 'en';
+    if (globalSearchCache.ready && globalSearchCache.lang === lang) {
+        return globalSearchCache.entries;
+    }
+    const entries = buildGlobalSearchIndex();
+    globalSearchCache = {
+        lang,
+        ready: true,
+        entries
+    };
+    return entries;
+}
+
+function computeGlobalSearchScore(entry, normalizedQuery, queryTokens = []) {
+    const haystack = entry.searchIndex || '';
+    if (!haystack) return Number.POSITIVE_INFINITY;
+    if (!queryTokens.every((token) => haystack.includes(token))) {
+        return Number.POSITIVE_INFINITY;
+    }
+
+    let score = 6;
+    if (entry.normalizedTitle === normalizedQuery) {
+        score = 0;
+    } else if (entry.normalizedTitle.startsWith(normalizedQuery)) {
+        score = 1;
+    } else if (queryTokens.every((token) => entry.normalizedTitle.includes(token))) {
+        score = 2;
+    } else if (entry.normalizedSubtitle.includes(normalizedQuery)) {
+        score = 3;
+    } else if (entry.normalizedPreview.includes(normalizedQuery)) {
+        score = 4;
+    }
+
+    const typeWeights = {
+        module: 0,
+        quiz: 0.1,
+        term: 0.2,
+        flashcard: 0.3,
+        note: 0.4,
+        playground: 0.5
+    };
+    score += typeWeights[entry.type] || 0.65;
+    score += Math.min(entry.title.length / 160, 0.85);
+    return score;
+}
+
+function searchAllContent(query = '') {
+    const normalizedQuery = normalizeGlobalSearchText(query);
+    if (!normalizedQuery) return [];
+    const queryTokens = normalizedQuery.split(' ').filter(Boolean);
+    if (!queryTokens.length) return [];
+
+    const staticEntries = getGlobalSearchIndex();
+    const dynamicEntries = getDynamicGlobalSearchEntries();
+    const ranked = [...staticEntries, ...dynamicEntries]
+        .map((entry) => ({
+            entry,
+            score: computeGlobalSearchScore(entry, normalizedQuery, queryTokens)
+        }))
+        .filter((item) => Number.isFinite(item.score))
+        .sort((a, b) => {
+            if (a.score !== b.score) return a.score - b.score;
+            return a.entry.title.localeCompare(b.entry.title, undefined, { sensitivity: 'base' });
+        });
+
+    const perTypeCounts = new Map();
+    const results = [];
+    for (const item of ranked) {
+        const type = item.entry.type;
+        const currentCount = perTypeCounts.get(type) || 0;
+        if (currentCount >= GLOBAL_SEARCH_MAX_PER_TYPE) continue;
+        perTypeCounts.set(type, currentCount + 1);
+        results.push(item.entry);
+        if (results.length >= GLOBAL_SEARCH_MAX_RESULTS) break;
+    }
+
+    const grouped = new Map(GLOBAL_SEARCH_TYPE_ORDER.map((type) => [type, []]));
+    results.forEach((entry) => {
+        if (!grouped.has(entry.type)) grouped.set(entry.type, []);
+        grouped.get(entry.type).push(entry);
+    });
+
+    return GLOBAL_SEARCH_TYPE_ORDER.flatMap((type) => grouped.get(type) || []);
+}
+
+function setGlobalSearchStatusMessage(message = '') {
+    const status = document.getElementById('global-search-status');
+    if (!status) return;
+    status.textContent = String(message || '');
+}
+
+function clearGlobalSearchResults({ resetState = true } = {}) {
+    const resultsPanel = document.getElementById('global-search-results');
+    const input = document.getElementById('global-search-input');
+    if (resultsPanel) {
+        resultsPanel.innerHTML = '';
+        resultsPanel.hidden = true;
+    }
+    if (input) {
+        input.setAttribute('aria-expanded', 'false');
+        input.removeAttribute('aria-activedescendant');
+    }
+    if (resetState) {
+        globalSearchUiState.results = [];
+        globalSearchUiState.activeIndex = -1;
+    }
+    setGlobalSearchStatusMessage('');
+}
+
+function syncGlobalSearchCopy() {
+    const label = document.getElementById('global-search-label');
+    const input = document.getElementById('global-search-input');
+    const clearButton = document.getElementById('global-search-clear');
+    if (label) {
+        label.textContent = translateLiteral('Search all content', appState.language);
+    }
+    if (input) {
+        input.placeholder = translateLiteral(
+            'Search terms, modules, quizzes, flashcards, notes, and playground topics...',
+            appState.language
+        );
+        input.setAttribute('aria-label', translateLiteral('Search all content', appState.language));
+    }
+    if (clearButton) {
+        clearButton.textContent = translateLiteral('Clear', appState.language);
+        clearButton.setAttribute('aria-label', translateLiteral('Clear global search', appState.language));
+    }
+}
+
+function updateGlobalSearchActiveOption() {
+    const input = document.getElementById('global-search-input');
+    const resultsPanel = document.getElementById('global-search-results');
+    if (!input || !resultsPanel || resultsPanel.hidden) return;
+
+    let activeOptionId = '';
+    Array.from(resultsPanel.querySelectorAll('[data-result-index]')).forEach((element) => {
+        const index = Number(element.getAttribute('data-result-index'));
+        const isActive = index === globalSearchUiState.activeIndex;
+        element.classList.toggle('is-active', isActive);
+        element.setAttribute('aria-selected', isActive ? 'true' : 'false');
+        if (isActive) {
+            activeOptionId = element.id;
+        }
+    });
+
+    if (activeOptionId) {
+        input.setAttribute('aria-activedescendant', activeOptionId);
+        const activeElement = document.getElementById(activeOptionId);
+        if (activeElement) {
+            activeElement.scrollIntoView({ block: 'nearest' });
+        }
+    } else {
+        input.removeAttribute('aria-activedescendant');
+    }
+}
+
+function renderGlobalSearchResults(query, { preserveActive = false } = {}) {
+    const input = document.getElementById('global-search-input');
+    const resultsPanel = document.getElementById('global-search-results');
+    if (!input || !resultsPanel) return;
+
+    const trimmedQuery = String(query || '').trim();
+    globalSearchUiState.query = trimmedQuery;
+    if (!trimmedQuery) {
+        clearGlobalSearchResults();
+        return;
+    }
+
+    const previousActiveResultId = preserveActive
+        ? globalSearchUiState.results[globalSearchUiState.activeIndex]?.id
+        : null;
+    const results = searchAllContent(trimmedQuery);
+    globalSearchUiState.results = results;
+    if (!results.length) {
+        globalSearchUiState.activeIndex = -1;
+        resultsPanel.innerHTML = `
+            <div class="global-search-empty">${escapeHtml(translateLiteral('No matches found. Try another keyword.', appState.language))}</div>
+        `;
+        resultsPanel.hidden = false;
+        input.setAttribute('aria-expanded', 'true');
+        input.removeAttribute('aria-activedescendant');
+        setGlobalSearchStatusMessage(
+            translateLiteral(`No results for "${trimmedQuery}"`, appState.language)
+        );
+        return;
+    }
+
+    const groups = new Map(GLOBAL_SEARCH_TYPE_ORDER.map((type) => [type, []]));
+    results.forEach((entry, index) => {
+        if (!groups.has(entry.type)) groups.set(entry.type, []);
+        groups.get(entry.type).push({ entry, index });
+    });
+
+    const sectionMarkup = [];
+    GLOBAL_SEARCH_TYPE_ORDER.forEach((type) => {
+        const groupedEntries = groups.get(type) || [];
+        if (!groupedEntries.length) return;
+        const itemsMarkup = groupedEntries.map(({ entry, index }) => `
+            <button
+                type="button"
+                id="global-search-option-${index}"
+                class="global-search-item"
+                role="option"
+                aria-selected="false"
+                data-result-index="${index}"
+            >
+                <div class="global-search-item-top">
+                    <span class="global-search-item-title">${escapeHtml(entry.title)}</span>
+                    <span class="global-search-item-type">${escapeHtml(getGlobalSearchTypeLabel(entry.type))}</span>
+                </div>
+                ${entry.subtitle ? `<div class="global-search-item-subtitle">${escapeHtml(entry.subtitle)}</div>` : ''}
+                ${entry.preview ? `<div class="global-search-item-preview">${escapeHtml(truncateGlobalSearchPreview(entry.preview))}</div>` : ''}
+            </button>
+        `).join('');
+        sectionMarkup.push(`
+            <section class="global-search-group" aria-label="${escapeHtml(getGlobalSearchTypeLabel(type))}">
+                <h4 class="global-search-group-title">${escapeHtml(getGlobalSearchTypeLabel(type))}</h4>
+                ${itemsMarkup}
+            </section>
+        `);
+    });
+
+    resultsPanel.innerHTML = sectionMarkup.join('');
+    resultsPanel.hidden = false;
+    input.setAttribute('aria-expanded', 'true');
+
+    if (previousActiveResultId) {
+        const previousIndex = results.findIndex((entry) => entry.id === previousActiveResultId);
+        globalSearchUiState.activeIndex = previousIndex >= 0 ? previousIndex : 0;
+    } else {
+        globalSearchUiState.activeIndex = 0;
+    }
+    updateGlobalSearchActiveOption();
+
+    setGlobalSearchStatusMessage(
+        translateLiteral(`${results.length} results for "${trimmedQuery}"`, appState.language)
+    );
+}
+
+function moveGlobalSearchActiveOption(delta) {
+    const total = globalSearchUiState.results.length;
+    if (!total) return;
+    const normalizedDelta = Number(delta) || 0;
+    const nextIndex = ((globalSearchUiState.activeIndex + normalizedDelta) % total + total) % total;
+    globalSearchUiState.activeIndex = nextIndex;
+    updateGlobalSearchActiveOption();
+}
+
+function temporarilyHighlightElement(element, className = 'global-search-highlight') {
+    if (!(element instanceof HTMLElement)) return;
+    element.classList.add(className);
+    window.setTimeout(() => element.classList.remove(className), 1600);
+}
+
+function openModuleFromGlobalSearch(moduleId) {
+    const module = getModuleById(moduleId);
+    if (!module) return;
+    const categoryKey = getModuleCategoryKey(moduleId);
+    appState.categoryFilter = VALID_CATEGORY_FILTERS.has(categoryKey) ? categoryKey : 'all';
+    appState.searchTerm = '';
+    appState.difficultyFilter = 'all';
+    appState.hideCompletedModules = false;
+    appState.modulesPage = 1;
+
+    const searchInput = document.getElementById('search-input');
+    const difficultySelect = document.getElementById('difficulty-filter');
+    if (searchInput) searchInput.value = '';
+    if (difficultySelect) difficultySelect.value = 'all';
+
+    updateHideCompletedToggle();
+    updateTopicFocusButtons();
+    renderModules();
+    saveToLocalStorage();
+
+    const targetRoute = getRouteForCategoryFilter(categoryKey);
+    if (targetRoute !== appState.currentRoute) {
+        navigateToRoute(targetRoute, {
+            preserveScroll: true,
+            focusMain: false,
+            skipModuleRender: true
+        });
+    }
+
+    const delay = appState.reduceMotion ? 40 : 220;
+    window.setTimeout(() => {
+        const modulesGrid = document.getElementById('modules-grid');
+        if (modulesGrid) {
+            modulesGrid.scrollIntoView({ behavior: appState.reduceMotion ? 'auto' : 'smooth', block: 'start' });
+        }
+        focusModule(moduleId);
+    }, delay);
+}
+
+function openGlossaryTermFromGlobalSearch(term) {
+    appState.glossarySearch = String(term || '').trim();
+    appState.glossaryCategory = 'all';
+    appState.glossaryLetter = 'all';
+    const glossarySearch = document.getElementById('glossary-search');
+    if (glossarySearch) {
+        glossarySearch.value = appState.glossarySearch;
+    }
+    renderGlossary();
+    openGlossary();
+    saveToLocalStorage();
+}
+
+function openQuizFromGlobalSearch(moduleId) {
+    if (!moduleId) return;
+    navigateToRoute('/quizzes', {
+        preserveScroll: true,
+        focusMain: false,
+        skipModuleRender: true
+    });
+    const quiz = getLocalizedQuizData(moduleId);
+    if (quiz?.parts?.[0]?.questions?.length) {
+        openQuiz(moduleId);
+        return;
+    }
+    openInteractiveQuizLibrary();
+    loadInteractiveQuizModule(moduleId);
+}
+
+function openFlashcardsFromGlobalSearch(deckId = 'all') {
+    appState.selectedFlashcardModule = deckId;
+    openFlashcards();
+    populateFlashcardModuleSelect();
+    const select = document.getElementById('flashcard-module-select');
+    if (select) {
+        const enabledValues = new Set(
+            Array.from(select.options)
+                .filter((option) => !option.disabled)
+                .map((option) => option.value)
+        );
+        if (!enabledValues.has(appState.selectedFlashcardModule)) {
+            appState.selectedFlashcardModule = 'all';
+        }
+        select.value = appState.selectedFlashcardModule;
+    }
+    refreshFlashcardSession(appState.selectedFlashcardModule, { persist: false });
+    saveToLocalStorage();
+}
+
+function openNoteFromGlobalSearch(noteId) {
+    navigateToRoute('/notes', {
+        preserveScroll: true,
+        focusMain: false,
+        skipModuleRender: true
+    });
+
+    const delay = appState.reduceMotion ? 40 : 220;
+    window.setTimeout(() => {
+        if (noteId === 'personal-draft') {
+            const notesInput = document.getElementById('notes-input');
+            if (notesInput instanceof HTMLElement) {
+                notesInput.scrollIntoView({ behavior: appState.reduceMotion ? 'auto' : 'smooth', block: 'start' });
+                notesInput.focus();
+                temporarilyHighlightElement(notesInput);
+            }
+            return;
+        }
+
+        notesLibraryFilter = 'all';
+        renderNotesLibrary();
+        const noteButton = document.querySelector(`#notes-library-list [data-note-id="${noteId}"]`);
+        const noteCard = noteButton ? noteButton.closest('.notes-card') : null;
+        if (noteCard instanceof HTMLElement) {
+            noteCard.scrollIntoView({ behavior: appState.reduceMotion ? 'auto' : 'smooth', block: 'start' });
+            temporarilyHighlightElement(noteCard);
+        }
+    }, delay);
+}
+
+function openPlaygroundFromGlobalSearch(payload = {}) {
+    navigateToRoute('/playground', {
+        preserveScroll: true,
+        focusMain: false,
+        skipModuleRender: true
+    });
+
+    const delay = appState.reduceMotion ? 40 : 220;
+    window.setTimeout(() => {
+        if (payload.kind === 'ds' && payload.topicId && DS_PLAYGROUND_CONFIG[payload.topicId]) {
+            dsActive = payload.topicId;
+            renderDSTabs();
+            renderDSControls();
+            updateDSView();
+            saveDSPlaygroundState();
+            const tab = document.querySelector(`#ds-tabs [data-ds="${payload.topicId}"]`);
+            if (tab instanceof HTMLElement) {
+                temporarilyHighlightElement(tab);
+            }
+            const dsSection = document.getElementById('ds-playground');
+            if (dsSection) {
+                dsSection.scrollIntoView({ behavior: appState.reduceMotion ? 'auto' : 'smooth', block: 'start' });
+            }
+            return;
+        }
+
+        if (payload.kind === 'snippet' && payload.moduleId) {
+            const snippetSelect = document.getElementById('playground-snippets');
+            if (snippetSelect instanceof HTMLSelectElement) {
+                const hasOption = Array.from(snippetSelect.options).some((option) => option.value === payload.moduleId);
+                if (hasOption) {
+                    snippetSelect.value = payload.moduleId;
+                    snippetSelect.dispatchEvent(new Event('change', { bubbles: true }));
+                    temporarilyHighlightElement(snippetSelect);
+                }
+            }
+            const section = document.getElementById('playground-section');
+            if (section) {
+                section.scrollIntoView({ behavior: appState.reduceMotion ? 'auto' : 'smooth', block: 'start' });
+            }
+        }
+    }, delay);
+}
+
+function runGlobalSearchResult(result) {
+    if (!result || !result.type) return;
+    switch (result.type) {
+        case 'module':
+            openModuleFromGlobalSearch(result.payload?.moduleId);
+            break;
+        case 'term':
+            openGlossaryTermFromGlobalSearch(result.payload?.term || result.title);
+            break;
+        case 'quiz':
+            openQuizFromGlobalSearch(result.payload?.moduleId);
+            break;
+        case 'flashcard':
+            openFlashcardsFromGlobalSearch(result.payload?.deckId || 'all');
+            break;
+        case 'note':
+            openNoteFromGlobalSearch(result.payload?.noteId || 'personal-draft');
+            break;
+        case 'playground':
+            openPlaygroundFromGlobalSearch(result.payload || {});
+            break;
+        default:
+            break;
+    }
+}
+
+function selectGlobalSearchResultByIndex(index) {
+    const resolvedIndex = Number(index);
+    if (!Number.isInteger(resolvedIndex)) return;
+    if (resolvedIndex < 0 || resolvedIndex >= globalSearchUiState.results.length) return;
+    const result = globalSearchUiState.results[resolvedIndex];
+    runGlobalSearchResult(result);
+
+    const input = document.getElementById('global-search-input');
+    if (input) {
+        input.value = '';
+        input.blur();
+    }
+    globalSearchUiState.query = '';
+    clearGlobalSearchResults();
+}
+
+function refreshGlobalSearchUi({ invalidate = false } = {}) {
+    if (invalidate) {
+        invalidateGlobalSearchIndex();
+    }
+    syncGlobalSearchCopy();
+    const input = document.getElementById('global-search-input');
+    if (!(input instanceof HTMLInputElement)) return;
+    if (!input.value.trim()) {
+        clearGlobalSearchResults();
+        return;
+    }
+    renderGlobalSearchResults(input.value, { preserveActive: true });
+}
+
+function initGlobalSearch() {
+    const shell = document.getElementById('global-search-shell');
+    const input = document.getElementById('global-search-input');
+    const clearButton = document.getElementById('global-search-clear');
+    const resultsPanel = document.getElementById('global-search-results');
+    if (!(shell instanceof HTMLElement) || !(input instanceof HTMLInputElement) || !(resultsPanel instanceof HTMLElement)) {
+        return;
+    }
+
+    syncGlobalSearchCopy();
+
+    if (input.dataset.boundGlobalSearch === 'true') {
+        return;
+    }
+    input.dataset.boundGlobalSearch = 'true';
+
+    input.addEventListener('input', () => {
+        renderGlobalSearchResults(input.value);
+    });
+
+    input.addEventListener('focus', () => {
+        if (!input.value.trim()) return;
+        renderGlobalSearchResults(input.value, { preserveActive: true });
+    });
+
+    input.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowDown') {
+            if (!globalSearchUiState.results.length) return;
+            event.preventDefault();
+            moveGlobalSearchActiveOption(1);
+            return;
+        }
+        if (event.key === 'ArrowUp') {
+            if (!globalSearchUiState.results.length) return;
+            event.preventDefault();
+            moveGlobalSearchActiveOption(-1);
+            return;
+        }
+        if (event.key === 'Enter') {
+            if (!globalSearchUiState.results.length) return;
+            event.preventDefault();
+            const fallbackIndex = globalSearchUiState.activeIndex >= 0 ? globalSearchUiState.activeIndex : 0;
+            selectGlobalSearchResultByIndex(fallbackIndex);
+            return;
+        }
+        if (event.key === 'Escape') {
+            if (!globalSearchUiState.results.length && resultsPanel.hidden) return;
+            event.preventDefault();
+            clearGlobalSearchResults();
+        }
+    });
+
+    if (clearButton && clearButton.dataset.boundGlobalSearchClear !== 'true') {
+        clearButton.dataset.boundGlobalSearchClear = 'true';
+        clearButton.addEventListener('click', () => {
+            input.value = '';
+            globalSearchUiState.query = '';
+            clearGlobalSearchResults();
+            input.focus();
+        });
+    }
+
+    if (resultsPanel.dataset.boundGlobalSearchPanel !== 'true') {
+        resultsPanel.dataset.boundGlobalSearchPanel = 'true';
+        resultsPanel.addEventListener('click', (event) => {
+            const targetButton = event.target.closest('[data-result-index]');
+            if (!(targetButton instanceof HTMLElement)) return;
+            const index = Number(targetButton.getAttribute('data-result-index'));
+            selectGlobalSearchResultByIndex(index);
+        });
+
+        resultsPanel.addEventListener('mousemove', (event) => {
+            const targetButton = event.target.closest('[data-result-index]');
+            if (!(targetButton instanceof HTMLElement)) return;
+            const index = Number(targetButton.getAttribute('data-result-index'));
+            if (!Number.isInteger(index) || index === globalSearchUiState.activeIndex) return;
+            globalSearchUiState.activeIndex = index;
+            updateGlobalSearchActiveOption();
+        });
+    }
+
+    if (document.body.dataset.boundGlobalSearchOutside !== 'true') {
+        document.body.dataset.boundGlobalSearchOutside = 'true';
+        document.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof Node)) return;
+            const activeShell = document.getElementById('global-search-shell');
+            if (!(activeShell instanceof HTMLElement)) return;
+            if (activeShell.contains(target)) return;
+            clearGlobalSearchResults();
+        });
+    }
+}
+
 function getModulesPageSize() {
     const viewportWidth = typeof window !== 'undefined' ? window.innerWidth : 1280;
     if (viewportWidth >= 640) return 4;
@@ -19854,6 +20737,9 @@ function resetProgress() {
         // Reset UI
         document.getElementById('search-input').value = '';
         document.getElementById('difficulty-filter').value = 'all';
+        const globalSearchInput = document.getElementById('global-search-input');
+        if (globalSearchInput) globalSearchInput.value = '';
+        clearGlobalSearchResults();
         document.getElementById('glossary-search').value = '';
         const glossarySortSelect = document.getElementById('glossary-sort');
         if (glossarySortSelect) glossarySortSelect.value = 'smart';
@@ -19920,6 +20806,7 @@ function init() {
     updateTopicFocusButtons();
     appState.scrollY = window.scrollY || 0;
     updateHeaderShrink();
+    initGlobalSearch();
 
     // Add event listeners
     document.getElementById('settings-btn').addEventListener('click', openSettings);

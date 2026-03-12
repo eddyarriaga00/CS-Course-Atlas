@@ -19,3 +19,21 @@ All notable changes to **CS Course Atlas** are documented in this file.
 ### Validation
 - Ran frontend syntax check: `npm run check:frontend` (pass).
 - Ran Lighthouse accessibility audit and reached score **100** with zero failing audits.
+
+### Search
+- Added a new global search input in the learning-path panel with grouped results across:
+  - terms
+  - modules
+  - quizzes
+  - flashcards
+  - notes (including personal draft)
+  - playground topics (DS topics + code snippet samples)
+- Implemented keyboard navigation for global search results (up/down, enter, escape) with combobox/listbox ARIA wiring.
+- Wired each result type to the right destination action:
+  - modules focus the target card in its track
+  - terms open glossary with the searched term
+  - quizzes open module quiz flows
+  - flashcards open and select the matched deck
+  - notes route to notes and highlight the target
+  - playground topics route to playground and load the selected topic/snippet
+- Added dedicated global-search styling for desktop/mobile and preserved existing module-only filter search below it.
