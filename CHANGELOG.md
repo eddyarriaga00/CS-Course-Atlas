@@ -4,6 +4,11 @@ All notable changes to **CS Course Atlas** are documented in this file.
 
 ## 2026-03-12
 
+### Mobile Auth Reliability
+- Hardened auth fetch behavior by defaulting Neon API requests to `cache: no-store` (unless explicitly overridden) to reduce stale session reads on mobile browsers.
+- Added race-safe session state updates so older in-flight session checks cannot overwrite newer auth state.
+- Added session recheck retry logic for login/OAuth/modal-open initialization paths to stabilize cross-site cookie/session propagation timing on mobile.
+
 ### Accessibility
 - Added a skip link for keyboard users and a persistent screen-reader announcer.
 - Converted the primary content wrapper to a semantic `<main>` landmark.
