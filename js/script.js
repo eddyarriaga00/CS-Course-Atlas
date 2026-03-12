@@ -99,6 +99,33 @@ const CONSTANTS = {
     CODE_PREVIEW_LINES: 12
 };
 
+const MOTION_ENHANCEMENT_SELECTORS = Object.freeze([
+    '#route-overview-section',
+    '#route-launchpad-section',
+    '#topic-focus-section',
+    '#progress-section',
+    '#achievements-card',
+    '#daily-challenge-card',
+    '#study-tip-card',
+    '#insights-section',
+    '#interview-section',
+    '#notes-section',
+    '#books-section',
+    '#playground-section',
+    '#search-section',
+    '#roadmap-section',
+    '#main-footer',
+    '#modules-grid .module-card',
+    '.route-launchpad-btn',
+    '.insight-card',
+    '.insight-highlight-card',
+    '.topic-focus-card',
+    '.footer-link'
+]);
+
+let motionEnhancementObserver = null;
+let motionEnhancementRafId = 0;
+
 const DEFAULT_COLLAPSED_SECTIONS = {
     progress: true,
     achievements: true,
@@ -2447,6 +2474,113 @@ function collapseAllModulePanels() {
     return changed;
 }
 
+function shouldReduceMotionForEnhancements() {
+    const prefersReduced = typeof window !== 'undefined'
+        && typeof window.matchMedia === 'function'
+        && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    return Boolean(appState.reduceMotion || prefersReduced);
+}
+
+function isElementVisuallyHiddenForEnhancement(element) {
+    if (!(element instanceof HTMLElement)) return true;
+    if (element.hidden) return true;
+    const hiddenAncestor = element.closest('[hidden]');
+    if (hiddenAncestor && hiddenAncestor !== element) return true;
+    const style = window.getComputedStyle(element);
+    return style.display === 'none' || style.visibility === 'hidden';
+}
+
+function collectMotionEnhancementTargets() {
+    const seen = new Set();
+    const targets = [];
+    MOTION_ENHANCEMENT_SELECTORS.forEach((selector) => {
+        document.querySelectorAll(selector).forEach((element) => {
+            if (!(element instanceof HTMLElement)) return;
+            if (seen.has(element)) return;
+            if (isElementVisuallyHiddenForEnhancement(element)) return;
+            if (element.closest('.modal-backdrop')) return;
+            seen.add(element);
+            targets.push(element);
+        });
+    });
+    return targets;
+}
+
+function revealMotionTarget(element) {
+    if (!(element instanceof HTMLElement)) return;
+    element.classList.add('atlas-motion-visible');
+}
+
+function applyMotionEnhancements(options = {}) {
+    const { reset = false } = options;
+    const targets = collectMotionEnhancementTargets();
+    const shouldReduce = shouldReduceMotionForEnhancements();
+
+    if (motionEnhancementObserver) {
+        motionEnhancementObserver.disconnect();
+        motionEnhancementObserver = null;
+    }
+
+    if (shouldReduce) {
+        document.body.classList.remove('motion-enhanced');
+        targets.forEach((element) => {
+            element.classList.remove('atlas-motion-target');
+            element.classList.add('atlas-motion-visible');
+            element.style.removeProperty('--atlas-motion-delay');
+        });
+        return;
+    }
+
+    document.body.classList.add('motion-enhanced');
+
+    targets.forEach((element, index) => {
+        element.classList.add('atlas-motion-target');
+        element.style.setProperty('--atlas-motion-delay', `${(index % 8) * 55}ms`);
+        if (reset) {
+            element.classList.remove('atlas-motion-visible');
+        }
+    });
+
+    if (typeof IntersectionObserver !== 'function') {
+        targets.forEach(revealMotionTarget);
+        return;
+    }
+
+    motionEnhancementObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            const target = entry.target;
+            if (!(target instanceof HTMLElement)) return;
+            revealMotionTarget(target);
+            observer.unobserve(target);
+        });
+    }, {
+        threshold: 0.14,
+        rootMargin: '0px 0px -8% 0px'
+    });
+
+    targets.forEach((element) => {
+        if (element.classList.contains('atlas-motion-visible')) return;
+        motionEnhancementObserver.observe(element);
+        const bounds = element.getBoundingClientRect();
+        if (bounds.top <= window.innerHeight * 0.9) {
+            revealMotionTarget(element);
+            motionEnhancementObserver.unobserve(element);
+        }
+    });
+}
+
+function queueMotionEnhancements(options = {}) {
+    if (motionEnhancementRafId) {
+        cancelAnimationFrame(motionEnhancementRafId);
+    }
+    const { reset = false } = options;
+    motionEnhancementRafId = requestAnimationFrame(() => {
+        motionEnhancementRafId = 0;
+        applyMotionEnhancements({ reset });
+    });
+}
+
 function renderRoute(route, options = {}) {
     const normalizedRoute = normalizeRoutePath(route);
     const {
@@ -2509,6 +2643,7 @@ function renderRoute(route, options = {}) {
 
     requestAnimationFrame(() => {
         updatePageJumpButton();
+        queueMotionEnhancements({ reset: true });
     });
 }
 
@@ -15637,6 +15772,7 @@ function initStudyPlan() {
 
     renderInsights();
     updatePageJumpButton();
+    queueMotionEnhancements();
 }
 
 function initNotesLibrary() {
@@ -18910,6 +19046,7 @@ function applyCardDepth() {
 
 function applyReduceMotion() {
     document.body.classList.toggle('reduce-motion', !!appState.reduceMotion);
+    queueMotionEnhancements({ reset: true });
 }
 
 function applyHighContrast() {
@@ -20456,6 +20593,7 @@ function renderModules() {
 
     renderInsights();
     updatePageJumpButton();
+    queueMotionEnhancements();
 }
 
 function getAchievementState(completed = appState.completedModules.size) {
@@ -22074,6 +22212,8 @@ function init() {
     const langEsBtn = document.getElementById('lang-es-btn');
     if (langEnBtn) langEnBtn.addEventListener('click', () => setLanguage('en'));
     if (langEsBtn) langEsBtn.addEventListener('click', () => setLanguage('es'));
+
+    queueMotionEnhancements({ reset: true });
 
     console.log('CS Course Atlas initialized successfully!');
 }

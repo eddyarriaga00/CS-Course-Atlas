@@ -235,3 +235,9 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Replaced `Guest mode active` account-status copy with a signed-out message that directs users to log in or create an account.
 - Updated unauthenticated session-check status text from `Guest mode active.` to `Not signed in.`
 - Updated insights lock status label from `Guest mode active` to `Preview mode active` (EN/ES).
+
+### Motion Enhancements
+- Added a progressive scroll-reveal animation system for key route sections, cards, launchpad actions, and module cards.
+- Added route-aware animation refresh hooks so new route/module renders animate smoothly without removing existing UI.
+- Added subtle ambient panel drift and CTA glow animations for core home/insights surfaces.
+- Integrated reduced-motion safeguards so all new effects automatically disable when motion reduction is enabled.

@@ -8289,3 +8289,63 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
 }
 
 
+/* Progressive motion layer for smoother cross-platform feel. */
+body.motion-enhanced .atlas-motion-target {
+    opacity: 0;
+    transform: translate3d(0, 18px, 0) scale(0.99);
+    filter: saturate(0.94);
+    transition-property: opacity, transform, filter;
+    transition-duration: 520ms, 620ms, 620ms;
+    transition-timing-function: cubic-bezier(0.2, 0.72, 0.2, 1), cubic-bezier(0.2, 0.72, 0.2, 1), ease;
+    transition-delay: var(--atlas-motion-delay, 0ms);
+    will-change: opacity, transform;
+    backface-visibility: hidden;
+}
+
+body.motion-enhanced .atlas-motion-target.atlas-motion-visible {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: none;
+    will-change: auto;
+}
+
+body:not(.reduce-motion) :where(#route-overview-section, #route-launchpad-section, #daily-challenge-card, #study-tip-card, #insights-section) {
+    background-size: 170% 170%;
+    animation: atlasPanelDrift 24s ease-in-out infinite;
+}
+
+@keyframes atlasPanelDrift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+body:not(.reduce-motion) :where(#start-learning-btn, #insight-plan-cta, #study-session-toggle, .start-path-button) {
+    animation: atlasActionGlow 6.5s ease-in-out infinite;
+}
+
+@keyframes atlasActionGlow {
+    0%,
+    100% {
+        box-shadow: 0 14px 26px rgba(79, 70, 229, 0.18);
+    }
+    50% {
+        box-shadow: 0 20px 34px rgba(16, 185, 129, 0.26);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body.motion-enhanced .atlas-motion-target {
+        opacity: 1 !important;
+        transform: none !important;
+        filter: none !important;
+        transition: none !important;
+        animation: none !important;
+    }
+}
