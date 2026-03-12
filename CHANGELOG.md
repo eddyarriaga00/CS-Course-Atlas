@@ -15,6 +15,12 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Added route-launch safeguards so direct quiz-open flows (global search and guest sample quiz) can still open module-specific quizzes without interference.
 - Updated EN/ES route copy to clarify that sidebar pages open these tools automatically.
 
+### Introduction Module Stability
+- Fixed the `Introduction to Coding` module normalization path so detailed topic example sets are generated/merged consistently instead of running intro-only restricted overrides.
+- Restored full language/output parity for intro detailed examples (Java/C++/Python/JavaScript + expected outputs) so module cards and checks render reliably.
+- Fixed a broken quoted Java command inside the intro setup lecture snippet (`git commit -m "Initial learning baseline"`), preventing malformed sample output behavior.
+- Re-ran integrity checks: `check:frontend`, `verify_module_examples`, `verify_module_outputs`, and `verify_spanish_code_examples` (all pass).
+
 ### API Security Hardening
 - Added API request-surface guards to block risky HTTP methods (`TRACE`/`TRACK`/`CONNECT`), overlong request URIs, and oversized header values.
 - Added null-byte payload rejection for mutating JSON requests.

@@ -8500,7 +8500,7 @@ public class EnvironmentAndGitBootstrap {
         List<String> firstRepoCommands = List.of(
             "git init",
             "git add .",
-            "git commit -m "Initial learning baseline"",
+            "git commit -m \"Initial learning baseline\"",
             "git branch -M main"
         );
         System.out.println("--- First Git baseline commands ---");
@@ -10525,12 +10525,7 @@ function getModuleExampleDeepExplanation(moduleId, exampleId, setItem = null) {
 function normalizeModuleCodeExampleSets(module) {
     const overrideSets = MODULE_CODE_EXAMPLE_SET_OVERRIDES[module.id];
     const generatedSets = buildGeneratedCodeExampleSets(module);
-    const useOverridesOnly = module.id === 'intro-to-coding'
-        && Array.isArray(overrideSets)
-        && overrideSets.length > 0;
-    const sourceSets = useOverridesOnly
-        ? overrideSets
-        : Array.isArray(overrideSets) && overrideSets.length
+    const sourceSets = Array.isArray(overrideSets) && overrideSets.length
         ? (() => {
             const generatedIds = new Set(
                 generatedSets
@@ -10621,20 +10616,12 @@ function normalizeModuleCodeExampleSets(module) {
 
         const enhancedJava = ensureJavaSnippetHasVisibleOutput(module, addComprehensiveHeaderComments(module, javaSource));
         const normalizedCodeExamples = { java: enhancedJava };
-        const shouldAutoMirrorLanguages = module.id !== 'intro-to-coding';
-        if (shouldAutoMirrorLanguages) {
-            ['cpp', 'python', 'javascript'].forEach((language) => {
-                const existing = typeof sourceCodeExamples[language] === 'string' ? sourceCodeExamples[language].trim() : '';
-                normalizedCodeExamples[language] = hasVisibleOutputForLanguage(language, existing)
-                    ? existing
-                    : buildMirrorSnippetByLanguage({ ...module, title: `${module.title} \u2022 ${setTitleText}` }, enhancedJava, language);
-            });
-        } else {
-            ['cpp', 'python', 'javascript'].forEach((language) => {
-                const existing = typeof sourceCodeExamples[language] === 'string' ? sourceCodeExamples[language].trim() : '';
-                if (existing) normalizedCodeExamples[language] = existing;
-            });
-        }
+        ['cpp', 'python', 'javascript'].forEach((language) => {
+            const existing = typeof sourceCodeExamples[language] === 'string' ? sourceCodeExamples[language].trim() : '';
+            normalizedCodeExamples[language] = hasVisibleOutputForLanguage(language, existing)
+                ? existing
+                : buildMirrorSnippetByLanguage({ ...module, title: `${module.title} \u2022 ${setTitleText}` }, enhancedJava, language);
+        });
 
         if (isAssembly) {
             const assemblySource = typeof sourceCodeExamples.assembly === 'string' && sourceCodeExamples.assembly.trim()
@@ -10683,21 +10670,13 @@ function normalizeModuleCatalog(moduleList) {
 
         const enhancedJava = ensureJavaSnippetHasVisibleOutput(module, addComprehensiveHeaderComments(module, javaSource));
         const normalizedCodeExamples = { java: enhancedJava };
-        const shouldAutoMirrorLanguages = module.id !== 'intro-to-coding';
-        if (shouldAutoMirrorLanguages) {
-            ['cpp', 'python', 'javascript'].forEach((language) => {
-                const existing = typeof existingCodeExamples[language] === 'string' ? existingCodeExamples[language].trim() : '';
-                const resolved = hasVisibleOutputForLanguage(language, existing)
-                    ? existing
-                    : buildMirrorSnippetByLanguage(module, enhancedJava, language);
-                normalizedCodeExamples[language] = resolved;
-            });
-        } else {
-            ['cpp', 'python', 'javascript'].forEach((language) => {
-                const existing = typeof existingCodeExamples[language] === 'string' ? existingCodeExamples[language].trim() : '';
-                if (existing) normalizedCodeExamples[language] = existing;
-            });
-        }
+        ['cpp', 'python', 'javascript'].forEach((language) => {
+            const existing = typeof existingCodeExamples[language] === 'string' ? existingCodeExamples[language].trim() : '';
+            const resolved = hasVisibleOutputForLanguage(language, existing)
+                ? existing
+                : buildMirrorSnippetByLanguage(module, enhancedJava, language);
+            normalizedCodeExamples[language] = resolved;
+        });
 
         if (isAssembly) {
             const assemblySource = typeof existingCodeExamples.assembly === 'string' && existingCodeExamples.assembly.trim()
