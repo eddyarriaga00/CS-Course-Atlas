@@ -3959,8 +3959,12 @@ body.dark .settings-modal-footer {
 #account-modal .account-modal-panel {
     max-width: 34rem;
     width: 100%;
+    max-height: min(92vh, 52rem);
+    min-height: 0;
     border-radius: 1.75rem !important;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
     box-shadow: 0 26px 60px rgba(15, 23, 42, 0.45);
 }
 
@@ -4008,11 +4012,39 @@ body.dark .settings-modal-footer {
 
 #account-modal .account-modal-body {
     display: grid;
+    flex: 1 1 auto;
+    min-height: 0;
     gap: 1rem;
-    max-height: calc(90vh - 165px);
     overflow-y: auto;
     overscroll-behavior: contain;
     scrollbar-gutter: stable both-edges;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(129, 140, 248, 0.78) rgba(30, 41, 59, 0.58);
+}
+
+#account-modal .account-modal-body::-webkit-scrollbar {
+    width: 0.55rem;
+}
+
+#account-modal .account-modal-body::-webkit-scrollbar-track {
+    background: rgba(30, 41, 59, 0.58);
+    border-radius: 999px;
+}
+
+#account-modal .account-modal-body::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(99, 102, 241, 0.9), rgba(129, 140, 248, 0.9));
+    border-radius: 999px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
+}
+
+#account-modal .account-modal-body::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(79, 70, 229, 0.95), rgba(99, 102, 241, 0.95));
+    background-clip: padding-box;
+}
+
+#account-modal .hidden {
+    display: none !important;
 }
 
 #account-modal .account-auth-card,
@@ -4030,6 +4062,204 @@ body.dark .settings-modal-footer {
     min-height: 2.2rem;
 }
 
+#account-modal .account-auth-intro {
+    margin-bottom: 0.15rem;
+}
+
+#account-modal .account-auth-social-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+}
+
+#account-modal .account-auth-provider-btn {
+    min-height: 2.45rem;
+    border-radius: 0.8rem;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    background: rgba(15, 23, 42, 0.58);
+    color: #e2e8f0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease, background-color 0.18s ease;
+}
+
+#account-modal .account-auth-provider-btn:hover {
+    transform: translateY(-1px);
+    border-color: rgba(129, 140, 248, 0.58);
+    box-shadow: 0 12px 24px rgba(79, 70, 229, 0.2);
+    background: rgba(30, 41, 59, 0.74);
+}
+
+#account-modal .account-auth-provider-github {
+    grid-column: 1 / -1;
+}
+
+#account-modal .account-auth-divider {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0.1rem 0;
+    color: #94a3b8;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+#account-modal .account-auth-divider::before,
+#account-modal .account-auth-divider::after {
+    content: '';
+    flex: 1 1 auto;
+    height: 1px;
+    background: rgba(148, 163, 184, 0.28);
+}
+
+#account-modal .account-auth-divider span {
+    padding: 0 0.5rem;
+}
+
+#account-modal .account-auth-password-wrap {
+    position: relative;
+}
+
+#account-modal .account-auth-password-wrap input {
+    padding-right: 4.2rem !important;
+}
+
+#account-modal .account-auth-password-toggle {
+    position: absolute;
+    right: 0.35rem;
+    top: 50%;
+    transform: translateY(-50%);
+    border: 1px solid rgba(148, 163, 184, 0.34);
+    border-radius: 999px;
+    background: rgba(30, 41, 59, 0.95);
+    color: #e2e8f0;
+    font-size: 0.68rem;
+    font-weight: 700;
+    min-width: 3rem;
+    height: 1.75rem;
+    padding: 0 0.65rem;
+    line-height: 1;
+}
+
+#account-modal .account-auth-password-toggle:hover {
+    background: rgba(79, 70, 229, 0.42);
+    border-color: rgba(129, 140, 248, 0.62);
+}
+
+#account-modal .account-auth-password-meter {
+    display: grid;
+    gap: 0.35rem;
+}
+
+#account-modal .account-auth-password-meter-track {
+    width: 100%;
+    height: 0.42rem;
+    border-radius: 999px;
+    background: rgba(30, 41, 59, 0.8);
+    border: 1px solid rgba(148, 163, 184, 0.26);
+    overflow: hidden;
+}
+
+#account-modal .account-auth-password-meter-fill {
+    display: block;
+    height: 100%;
+    width: 8%;
+    border-radius: 999px;
+    transition: width 0.2s ease, background-color 0.2s ease;
+}
+
+#account-modal .account-auth-password-meter-fill[data-strength="weak"] {
+    background: #fb7185;
+}
+
+#account-modal .account-auth-password-meter-fill[data-strength="fair"] {
+    background: #f59e0b;
+}
+
+#account-modal .account-auth-password-meter-fill[data-strength="good"] {
+    background: #22d3ee;
+}
+
+#account-modal .account-auth-password-meter-fill[data-strength="strong"] {
+    background: #34d399;
+}
+
+#account-modal .account-auth-password-meter-fill[data-strength="very-strong"] {
+    background: #10b981;
+}
+
+#account-modal .account-auth-password-meter-text {
+    margin: 0;
+    font-size: 0.72rem;
+    color: #cbd5e1;
+}
+
+#account-modal .account-auth-aux-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+}
+
+#account-modal .account-auth-remember-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    color: #cbd5e1;
+}
+
+#account-modal .account-auth-remember-checkbox {
+    width: 0.9rem;
+    height: 0.9rem;
+    accent-color: #6366f1;
+}
+
+#account-modal .account-auth-forgot-btn {
+    border: none;
+    background: transparent;
+    color: #93c5fd;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+}
+
+#account-modal .account-auth-legal {
+    margin: 0;
+    font-size: 0.71rem;
+    color: #94a3b8;
+}
+
+#account-modal .account-auth-switch {
+    margin: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+#account-modal .account-auth-switch-btn {
+    border: none;
+    background: transparent;
+    color: #c4b5fd;
+    font-size: inherit;
+    font-weight: 700;
+    padding: 0;
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+}
+
+#account-modal .account-auth-demo {
+    margin: -0.15rem 0 0;
+}
+
 #account-modal .account-primary-btn {
     border: 1px solid rgba(129, 140, 248, 0.35);
     box-shadow: 0 10px 24px rgba(79, 70, 229, 0.24);
@@ -4037,6 +4267,86 @@ body.dark .settings-modal-footer {
 
 #account-modal .account-primary-btn:hover {
     transform: translateY(-1px);
+}
+
+#account-modal .account-profile-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+#account-modal .account-profile-header-main {
+    min-width: 0;
+    display: grid;
+    gap: 0.2rem;
+}
+
+#account-modal .account-profile-header-subtitle {
+    margin: 0;
+}
+
+#account-modal .account-profile-header-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-shrink: 0;
+}
+
+#account-modal .account-profile-toggle-btn {
+    min-height: 1.85rem;
+    min-width: 4.2rem;
+    border-radius: 0.7rem;
+    border: 1px solid rgba(129, 140, 248, 0.4);
+    background: rgba(79, 70, 229, 0.16);
+    color: #e0e7ff;
+    font-size: 0.74rem;
+    font-weight: 700;
+    padding: 0.35rem 0.65rem;
+    transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+#account-modal .account-profile-toggle-btn:hover {
+    background: rgba(79, 70, 229, 0.28);
+    border-color: rgba(129, 140, 248, 0.62);
+    transform: translateY(-1px);
+}
+
+#account-modal .account-profile-toggle-btn[aria-expanded="true"] {
+    background: rgba(16, 185, 129, 0.2);
+    border-color: rgba(52, 211, 153, 0.5);
+    color: #d1fae5;
+}
+
+#account-modal .account-profile-content {
+    display: grid;
+    gap: 0.8rem;
+    border-top: 1px solid rgba(148, 163, 184, 0.22);
+    padding-top: 0.85rem;
+}
+
+#account-modal .account-profile-section {
+    border: 1px solid rgba(129, 140, 248, 0.2);
+    background: rgba(30, 41, 59, 0.44);
+    border-radius: 0.9rem;
+    padding: 0.8rem;
+}
+
+#account-modal .account-profile-security-section {
+    border-color: rgba(129, 140, 248, 0.28);
+    background: rgba(15, 23, 42, 0.5);
+}
+
+#account-modal .account-email-pin-verify-wrap {
+    display: grid;
+    gap: 0.45rem;
+}
+
+#account-modal .account-email-pin-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.5rem;
+    align-items: end;
 }
 
 /* Settings Sections */
@@ -6320,13 +6630,54 @@ body.dark:not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-min
 
     #account-modal .account-modal-body {
         padding: 0.85rem !important;
-        max-height: calc(100dvh - 150px);
+        max-height: none;
     }
 
     #account-modal .account-auth-card,
     #account-modal .account-profile-card {
         padding: 0.9rem !important;
         border-radius: 0.9rem !important;
+    }
+
+    #account-modal .account-auth-social-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #account-modal .account-auth-provider-github {
+        grid-column: auto;
+    }
+
+    #account-modal .account-auth-aux-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.38rem;
+    }
+
+    #account-modal .account-auth-password-wrap input {
+        padding-right: 4rem !important;
+    }
+
+    #account-modal .account-auth-password-toggle {
+        min-width: 2.85rem;
+        font-size: 0.66rem;
+    }
+
+    #account-modal .account-profile-header {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    #account-modal .account-profile-header-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    #account-modal .account-profile-toggle-btn {
+        min-width: 4.9rem;
+    }
+
+    #account-modal .account-email-pin-actions {
+        grid-template-columns: 1fr;
     }
 }
 
@@ -7321,6 +7672,7 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
     }
 
     #app-shell {
+        --mobile-sidebar-align-gap: 1.5rem;
         display: grid;
         grid-template-columns: 56px minmax(0, 1fr);
         gap: 0.6rem;
@@ -7334,7 +7686,8 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
         left: auto;
         bottom: auto;
         width: 100%;
-        padding: 0;
+        box-sizing: border-box;
+        padding: var(--mobile-sidebar-align-gap) 0 0;
         transform: none !important;
         z-index: 45;
         align-self: start;

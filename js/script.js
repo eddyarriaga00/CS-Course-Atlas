@@ -50,6 +50,28 @@ const appState = {
     sidebarManualCollapsed: false,
     sidebarMobileExpanded: false,
     sidebarTracksExpanded: false,
+    routeCollapsedSections: {
+        home: {
+            progress: true,
+            achievements: true,
+            dailyChallenge: true,
+            studyTip: true,
+            insights: true,
+            interviewExamples: true,
+            studyNotes: true,
+            dsPlayground: true
+        },
+        nonHome: {
+            progress: false,
+            achievements: false,
+            dailyChallenge: false,
+            studyTip: false,
+            insights: false,
+            interviewExamples: false,
+            studyNotes: false,
+            dsPlayground: false
+        }
+    },
     collapsedSections: {
         progress: true,
         achievements: true,
@@ -86,6 +108,14 @@ const DEFAULT_COLLAPSED_SECTIONS = {
     interviewExamples: true,
     studyNotes: true,
     dsPlayground: true
+};
+const DEFAULT_EXPANDED_SECTIONS = Object.keys(DEFAULT_COLLAPSED_SECTIONS).reduce((acc, key) => {
+    acc[key] = false;
+    return acc;
+}, {});
+const COLLAPSED_SECTION_CONTEXTS = {
+    HOME: 'home',
+    NON_HOME: 'nonHome'
 };
 
 const ASSEMBLY_MODULE_IDS = [
@@ -341,6 +371,9 @@ const JUDGE0_LANGUAGE_IDS = {
 const NEON_API_PATHS = {
     session: '/api/auth/session',
     profile: '/api/profile',
+    password: '/api/profile/password',
+    emailPinRequest: '/api/profile/email/request-pin',
+    emailPinVerify: '/api/profile/email/verify-pin',
     userState: '/api/user-state',
     support: '/api/support',
     login: '/api/auth/login',
@@ -381,6 +414,7 @@ const MODULE_CATEGORY_BY_ID = {
     'assembly-registers-memory': 'assembly',
     'assembly-control-flow-procedures': 'assembly',
     'assembly-arrays-strings-io': 'assembly',
+    'intro-to-coding': 'dsa',
     'arrays-strings': 'dsa',
     'linked-lists': 'dsa',
     'stacks-queues': 'dsa',
@@ -402,6 +436,7 @@ const MODULE_CATEGORY_BY_ID = {
     'bit-manipulation': 'dsa'
 };
 const MODULE_LEARNING_SEQUENCE = [
+    'intro-to-coding',
     'java-basics',
     'git-basics-workflow',
     'control-flow',
@@ -443,7 +478,7 @@ const MODULE_LEARNING_SEQUENCE = [
 ];
 
 const GUEST_STARTER_MODULE_IDS = {
-    dsa: 'arrays-strings',
+    dsa: 'intro-to-coding',
     java: 'java-basics',
     git: 'git-basics-workflow'
 };
@@ -1456,8 +1491,8 @@ function refreshLocalizedSections() {
     renderSectionCollapsibles();
 }
 
-function normalizeCollapsedSections(input) {
-    const normalized = { ...DEFAULT_COLLAPSED_SECTIONS };
+function normalizeCollapsedSections(input, defaults = DEFAULT_COLLAPSED_SECTIONS) {
+    const normalized = { ...defaults };
     if (!input || typeof input !== 'object') return normalized;
     Object.keys(DEFAULT_COLLAPSED_SECTIONS).forEach((key) => {
         if (typeof input[key] === 'boolean') {
@@ -1467,11 +1502,72 @@ function normalizeCollapsedSections(input) {
     return normalized;
 }
 
+function getSectionCollapseContextKey(route) {
+    const normalizedRoute = normalizeRoutePath(route || appState.currentRoute || DEFAULT_ROUTE);
+    return normalizedRoute === '/home'
+        ? COLLAPSED_SECTION_CONTEXTS.HOME
+        : COLLAPSED_SECTION_CONTEXTS.NON_HOME;
+}
+
+function getCollapsedSectionDefaultsForContext(contextKey) {
+    return contextKey === COLLAPSED_SECTION_CONTEXTS.NON_HOME
+        ? DEFAULT_EXPANDED_SECTIONS
+        : DEFAULT_COLLAPSED_SECTIONS;
+}
+
+function normalizeRouteCollapsedSections(input, legacyCollapsedSections = null) {
+    const normalized = {
+        [COLLAPSED_SECTION_CONTEXTS.HOME]: normalizeCollapsedSections(legacyCollapsedSections, DEFAULT_COLLAPSED_SECTIONS),
+        [COLLAPSED_SECTION_CONTEXTS.NON_HOME]: normalizeCollapsedSections(null, DEFAULT_EXPANDED_SECTIONS)
+    };
+    if (!input || typeof input !== 'object') return normalized;
+
+    if (input[COLLAPSED_SECTION_CONTEXTS.HOME] && typeof input[COLLAPSED_SECTION_CONTEXTS.HOME] === 'object') {
+        normalized[COLLAPSED_SECTION_CONTEXTS.HOME] = normalizeCollapsedSections(
+            input[COLLAPSED_SECTION_CONTEXTS.HOME],
+            DEFAULT_COLLAPSED_SECTIONS
+        );
+    }
+    if (input[COLLAPSED_SECTION_CONTEXTS.NON_HOME] && typeof input[COLLAPSED_SECTION_CONTEXTS.NON_HOME] === 'object') {
+        normalized[COLLAPSED_SECTION_CONTEXTS.NON_HOME] = normalizeCollapsedSections(
+            input[COLLAPSED_SECTION_CONTEXTS.NON_HOME],
+            DEFAULT_EXPANDED_SECTIONS
+        );
+    }
+
+    return normalized;
+}
+
+function getCollapsedSectionsForRoute(route, routeCollapsedSections = appState.routeCollapsedSections) {
+    const contextKey = getSectionCollapseContextKey(route);
+    const contextDefaults = getCollapsedSectionDefaultsForContext(contextKey);
+    return normalizeCollapsedSections(routeCollapsedSections?.[contextKey], contextDefaults);
+}
+
+function syncCollapsedSectionsForRoute(route) {
+    appState.routeCollapsedSections = normalizeRouteCollapsedSections(
+        appState.routeCollapsedSections,
+        appState.collapsedSections
+    );
+    appState.collapsedSections = getCollapsedSectionsForRoute(route, appState.routeCollapsedSections);
+}
+
+function persistCollapsedSectionsForRoute(route = appState.currentRoute) {
+    appState.routeCollapsedSections = normalizeRouteCollapsedSections(
+        appState.routeCollapsedSections,
+        appState.collapsedSections
+    );
+    const contextKey = getSectionCollapseContextKey(route);
+    const contextDefaults = getCollapsedSectionDefaultsForContext(contextKey);
+    appState.routeCollapsedSections[contextKey] = normalizeCollapsedSections(appState.collapsedSections, contextDefaults);
+}
+
 function getCollapsedSectionState(sectionKey) {
     if (!Object.prototype.hasOwnProperty.call(DEFAULT_COLLAPSED_SECTIONS, sectionKey)) {
         return false;
     }
-    return appState.collapsedSections?.[sectionKey] ?? DEFAULT_COLLAPSED_SECTIONS[sectionKey];
+    const contextDefaults = getCollapsedSectionDefaultsForContext(getSectionCollapseContextKey());
+    return appState.collapsedSections?.[sectionKey] ?? contextDefaults[sectionKey];
 }
 
 function getCollapsibleSectionBodyElements(sectionKey) {
@@ -1535,15 +1631,21 @@ function renderSectionCollapsibles() {
 function toggleSectionCollapse(sectionKey) {
     if (!Object.prototype.hasOwnProperty.call(DEFAULT_COLLAPSED_SECTIONS, sectionKey)) return;
     if (!appState.collapsedSections || typeof appState.collapsedSections !== 'object') {
-        appState.collapsedSections = { ...DEFAULT_COLLAPSED_SECTIONS };
+        const contextDefaults = getCollapsedSectionDefaultsForContext(getSectionCollapseContextKey());
+        appState.collapsedSections = { ...contextDefaults };
     }
     appState.collapsedSections[sectionKey] = !getCollapsedSectionState(sectionKey);
+    persistCollapsedSectionsForRoute();
     applySectionCollapsedState(sectionKey);
     saveToLocalStorage();
 }
 
 function initSectionCollapsibles() {
-    appState.collapsedSections = normalizeCollapsedSections(appState.collapsedSections);
+    appState.routeCollapsedSections = normalizeRouteCollapsedSections(
+        appState.routeCollapsedSections,
+        appState.collapsedSections
+    );
+    appState.collapsedSections = getCollapsedSectionsForRoute(appState.currentRoute, appState.routeCollapsedSections);
     document.querySelectorAll('.section-collapse-toggle[data-section-key]').forEach((button) => {
         if (button.dataset.boundCollapse === 'true') return;
         button.dataset.boundCollapse = 'true';
@@ -1923,6 +2025,35 @@ function applyTrackRoute(route) {
     return categoryChanged || pageChanged;
 }
 
+function collapseAllModulePanels() {
+    let changed = false;
+    if (appState.expandedCode.size > 0) {
+        appState.expandedCode.clear();
+        changed = true;
+    }
+    if (appState.expandedCodeExamples.size > 0) {
+        appState.expandedCodeExamples.clear();
+        changed = true;
+    }
+    if (appState.expandedExampleExplanations.size > 0) {
+        appState.expandedExampleExplanations.clear();
+        changed = true;
+    }
+    if (appState.expandedOutputs.size > 0) {
+        appState.expandedOutputs.clear();
+        changed = true;
+    }
+    if (moduleOutputState.size > 0) {
+        moduleOutputState.clear();
+        changed = true;
+    }
+    if (moduleOutputInFlight.size > 0) {
+        moduleOutputInFlight.clear();
+        changed = true;
+    }
+    return changed;
+}
+
 function renderRoute(route, options = {}) {
     const normalizedRoute = normalizeRoutePath(route);
     const {
@@ -1931,7 +2062,16 @@ function renderRoute(route, options = {}) {
         skipModuleRender = false
     } = options;
 
+    const previousRoute = normalizeRoutePath(appState.currentRoute || DEFAULT_ROUTE);
+    const routeChanged = previousRoute !== normalizedRoute;
     appState.currentRoute = normalizedRoute;
+    syncCollapsedSectionsForRoute(normalizedRoute);
+
+    const isModuleCatalogRoute = Object.prototype.hasOwnProperty.call(TRACK_ROUTE_CATEGORY_MAP, normalizedRoute);
+    const modulesCollapsedByDefault = routeChanged
+        && isModuleCatalogRoute
+        && collapseAllModulePanels();
+
     const isTrackRoute = isTrackRoutePath(normalizedRoute);
     let sidebarTracksChanged = false;
     if (isTrackRoute && !appState.sidebarTracksExpanded) {
@@ -1939,8 +2079,7 @@ function renderRoute(route, options = {}) {
         sidebarTracksChanged = true;
     }
     const trackRouteChanged = applyTrackRoute(normalizedRoute);
-    const isModulesRoute = Object.prototype.hasOwnProperty.call(TRACK_ROUTE_CATEGORY_MAP, normalizedRoute);
-    if (isModulesRoute && !skipModuleRender) {
+    if (isModuleCatalogRoute && (!skipModuleRender || modulesCollapsedByDefault)) {
         renderModules();
     }
     if (trackRouteChanged || sidebarTracksChanged) {
@@ -1951,6 +2090,7 @@ function renderRoute(route, options = {}) {
     renderRouteOverview(normalizedRoute);
     renderRouteLaunchpad(normalizedRoute);
     syncSidebarActiveLink(normalizedRoute);
+    renderSectionCollapsibles();
 
     const routeTitleKey = ROUTE_KEY_BY_PATH[normalizedRoute] || ROUTE_KEY_BY_PATH[DEFAULT_ROUTE];
     document.title = `${t(`${routeTitleKey}.title`)} | CS Course Atlas`;
@@ -2631,6 +2771,68 @@ const glossaryCategories = [
 
 // Quiz Data
 const quizData = {
+    'intro-to-coding': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Which statement best describes coding?",
+                    options: ["Typing random symbols until software works", "Designing precise instructions for a computer to execute", "Only building mobile apps", "Configuring hardware only"],
+                    correct: 1,
+                    explanation: "Coding is structured problem-solving: you express logic in a language that a computer can execute reliably."
+                },
+                {
+                    id: 2,
+                    question: "Why are early milestones like Ada Lovelace and Turing important?",
+                    options: ["They invented JavaScript", "They established core ideas of programmable computation", "They built the first smartphone", "They replaced all assembly languages"],
+                    correct: 1,
+                    explanation: "Modern software engineering rests on foundational ideas from early computing theory and programmable machines."
+                },
+                {
+                    id: 3,
+                    question: "What is the usual high-level flow from source code to execution?",
+                    options: ["Compile/interpret -> run -> output", "Output -> run -> source code", "Install browser -> print code", "Database first -> compiler later"],
+                    correct: 0,
+                    explanation: "You write source code, then a compiler/interpreter processes it, and the program executes to produce output."
+                },
+                {
+                    id: 4,
+                    question: "If you enjoy visuals, UI behavior, and user interaction most, which path is usually the best starting fit?",
+                    options: ["Frontend development", "Kernel driver development", "Compiler research only", "Network forensics only"],
+                    correct: 0,
+                    explanation: "Frontend work centers on interfaces and user experience, making it a natural fit for visual and interaction-focused learners."
+                },
+                {
+                    id: 5,
+                    question: "For most true beginners, which first language choice is often recommended for fast readability and learning momentum?",
+                    options: ["C++", "Python", "Assembly", "Haskell-only"],
+                    correct: 1,
+                    explanation: "Python is commonly recommended for beginners because syntax is readable and setup is straightforward."
+                },
+                {
+                    id: 6,
+                    question: "Which setup item is essential before meaningful coding practice?",
+                    options: ["A 4K monitor", "An editor/IDE and a working language runtime", "A paid cloud account", "A gaming mouse"],
+                    correct: 1,
+                    explanation: "You need at least a code editor and a runtime/compiler so your code can be written, run, and debugged."
+                },
+                {
+                    id: 7,
+                    question: "What is debugging fundamentally about?",
+                    options: ["Memorizing syntax only", "Systematically finding root causes and verifying fixes", "Deleting code until errors disappear", "Switching languages whenever a bug appears"],
+                    correct: 1,
+                    explanation: "Debugging is disciplined investigation: reproduce, isolate, inspect assumptions, and confirm the fix."
+                },
+                {
+                    id: 8,
+                    question: "What makes a beginner learning plan sustainable long-term?",
+                    options: ["Only watching tutorials", "Consistent small projects, practice, and reflection", "Skipping fundamentals", "Changing goals every day"],
+                    correct: 1,
+                    explanation: "Steady reps, project-based practice, and review loops build durable skills better than passive consumption."
+                }
+            ]
+        }]
+    },
     'arrays-strings': {
         parts: [{
             questions: [
@@ -3660,6 +3862,111 @@ const quizData = {
 };
 // Modules Data (Complete with ALL LANGUAGES)
 const modules = [
+    {
+        id: 'intro-to-coding',
+        title: 'Introduction to Coding',
+        description: 'Start here if you are brand new. This module explains what coding is, where it came from, what careers exist, how to choose your path and first language, how to set up your environment, and the core habits that make beginners successful.',
+        difficulty: 'beginner',
+        topics: [
+            'What Coding Is',
+            'A Short History of Programming',
+            'How Code Becomes Running Software',
+            'Career Paths in Technology',
+            'Choosing Your Learning Path',
+            'Choosing Your First Programming Language',
+            'Setting Up Your Development Environment',
+            'Your First Program',
+            'Core Building Blocks',
+            'Debugging and Problem Solving',
+            'Learning Workflow and Portfolio Basics',
+            '30-Day Starter Plan'
+        ],
+        codeExamples: {
+            java: `import java.util.List;
+
+public class IntroToCodingOverview {
+    public static void main(String[] args) {
+        List<String> sections = List.of(
+            "1) What coding is",
+            "2) History and evolution",
+            "3) Career paths and specialization",
+            "4) Language and tooling decisions",
+            "5) Beginner workflow and project plan"
+        );
+
+        System.out.println("=== Introduction to Coding ===");
+        for (String section : sections) {
+            System.out.println(section);
+        }
+        System.out.println("Goal: move from confusion to a clear, executable plan.");
+    }
+}`,
+            cpp: `#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+int main() {
+    vector<string> sections = {
+        "1) What coding is",
+        "2) History and evolution",
+        "3) Career paths and specialization",
+        "4) Language and tooling decisions",
+        "5) Beginner workflow and project plan"
+    };
+
+    cout << "=== Introduction to Coding ===\\n";
+    for (const auto& section : sections) {
+        cout << section << "\\n";
+    }
+    cout << "Goal: move from confusion to a clear, executable plan.\\n";
+    return 0;
+}`,
+            python: `def intro_to_coding_overview():
+    sections = [
+        "1) What coding is",
+        "2) History and evolution",
+        "3) Career paths and specialization",
+        "4) Language and tooling decisions",
+        "5) Beginner workflow and project plan",
+    ]
+
+    print("=== Introduction to Coding ===")
+    for section in sections:
+        print(section)
+    print("Goal: move from confusion to a clear, executable plan.")
+
+intro_to_coding_overview()
+`,
+            javascript: `(function introToCodingOverview() {
+    const sections = [
+        "1) What coding is",
+        "2) History and evolution",
+        "3) Career paths and specialization",
+        "4) Language and tooling decisions",
+        "5) Beginner workflow and project plan"
+    ];
+
+    console.log("=== Introduction to Coding ===");
+    sections.forEach((section) => console.log(section));
+    console.log("Goal: move from confusion to a clear, executable plan.");
+})();`
+        },
+        explanation: `Coding is the practice of turning ideas into exact instructions a computer can execute. If you are new, this module is your foundation: we cover why programming exists, how the field evolved, and how modern software teams work.
+
+You will map major career tracks (frontend, backend, mobile, data, security, cloud, embedded, game, and QA/automation), then choose a realistic beginner path instead of trying to learn everything at once. You will also learn how to choose your first language based on goals, not hype.
+
+Finally, this module gives you practical setup and workflow basics: editor, runtime/compiler, terminal, version control, first program, debugging mindset, and a 30-day plan you can immediately execute. By the end, you should have direction, tools, and repeatable study habits.`,
+        resources: [
+            { text: 'CS50x (Harvard) - Intro to Computer Science', url: 'https://cs50.harvard.edu/x/' },
+            { text: 'Roadmap.sh - Developer Role Roadmaps', url: 'https://roadmap.sh/' },
+            { text: 'The Odin Project (Web Development Path)', url: 'https://www.theodinproject.com/' },
+            { text: 'Python Documentation', url: 'https://docs.python.org/3/' },
+            { text: 'Java Documentation', url: 'https://docs.oracle.com/en/java/' },
+            { text: 'MDN Web Docs (HTML/CSS/JavaScript)', url: 'https://developer.mozilla.org/' },
+            { text: 'Git Documentation', url: 'https://git-scm.com/doc' }
+        ]
+    },
     {
         id: 'arrays-strings',
         title: 'Arrays and Strings',
@@ -6781,6 +7088,415 @@ function ensureExpectedOutputsForCodeExamples(module, codeExamples = {}, existin
 }
 
 const MODULE_CODE_EXAMPLE_SET_OVERRIDES = {
+    'intro-to-coding': [
+        {
+            id: 'history-timeline',
+            title: { en: 'From Early Computing to Modern Development', es: 'De la Computacion Temprana al Desarrollo Moderno' },
+            description: { en: 'Walk the major milestones that shaped modern programming.', es: 'Recorre los hitos principales que formaron la programacion moderna.' },
+            deepExplanation: {
+                en: `Conceptual breakdown:
+- Programming did not start with web apps; it evolved through math, logic, and hardware constraints.
+- Knowing the timeline helps beginners understand why today’s tools look the way they do.
+
+Code walkthrough:
+1) Define a typed milestone structure (year + event).
+2) Build a sequence from early ideas to modern ecosystems.
+3) Print timeline entries in order to reinforce historical progression.
+
+Why this matters:
+- It reduces confusion when you see old and new paradigms mixed in modern codebases.
+- It shows that languages and frameworks are design responses to real limitations and needs.`,
+                es: `Desglose conceptual:
+- La programacion no comenzo con apps web; evoluciono desde matematicas, logica y limites de hardware.
+- Entender la linea de tiempo explica por que las herramientas actuales son asi.
+
+Recorrido del codigo:
+1) Define una estructura tipada de hitos (ano + evento).
+2) Construye una secuencia desde ideas tempranas hasta ecosistemas modernos.
+3) Imprime los hitos en orden para reforzar la progresion historica.`
+            },
+            codeExamples: {
+                java: `import java.util.List;
+
+public class IntroHistoryTimeline {
+    static class Milestone {
+        int year;
+        String event;
+        Milestone(int year, String event) {
+            this.year = year;
+            this.event = event;
+        }
+    }
+
+    public static void main(String[] args) {
+        List<Milestone> timeline = List.of(
+            new Milestone(1843, "Ada Lovelace publishes notes for a mechanical algorithm."),
+            new Milestone(1936, "Alan Turing formalizes computation models."),
+            new Milestone(1957, "FORTRAN becomes one of the first major high-level languages."),
+            new Milestone(1970, "C language helps shape systems programming."),
+            new Milestone(1995, "Java and JavaScript accelerate internet-era software."),
+            new Milestone(2010, "Cloud-native and mobile-first development become mainstream.")
+        );
+
+        System.out.println("=== Programming Timeline ===");
+        for (Milestone m : timeline) {
+            System.out.println(m.year + " -> " + m.event);
+        }
+    }
+}`
+            }
+        },
+        {
+            id: 'what-is-coding',
+            title: { en: 'What Coding Actually Is', es: 'Que Es Realmente Programar' },
+            description: { en: 'Model coding as Input -> Process -> Output with concrete examples.', es: 'Modela programar como Entrada -> Proceso -> Salida con ejemplos concretos.' },
+            deepExplanation: {
+                en: `Conceptual breakdown:
+- Coding is structured problem solving, not memorizing syntax.
+- Most programs can be explained as Input -> Process -> Output.
+
+Code walkthrough:
+1) Receive input data.
+2) Apply deterministic transformation rules.
+3) Return output and verify expectations.
+
+Beginner checkpoint:
+- If you can explain these three phases for a problem, you are already thinking like a developer.`,
+                es: `Desglose conceptual:
+- Programar es resolver problemas de forma estructurada, no memorizar sintaxis.
+- La mayoria de programas siguen Entrada -> Proceso -> Salida.
+
+Recorrido del codigo:
+1) Recibir datos de entrada.
+2) Aplicar reglas de transformacion.
+3) Devolver salida y verificar resultados.`
+            },
+            codeExamples: {
+                java: `import java.util.Arrays;
+
+public class InputProcessOutputDemo {
+    static int[] transform(int[] input) {
+        int[] output = new int[input.length];
+        for (int i = 0; i < input.length; i++) {
+            output[i] = input[i] * 2 + 1;
+        }
+        return output;
+    }
+
+    public static void main(String[] args) {
+        int[] input = {2, 4, 6};
+        int[] output = transform(input);
+
+        System.out.println("Input:  " + Arrays.toString(input));
+        System.out.println("Output: " + Arrays.toString(output));
+        System.out.println("Pattern: multiply by 2, then add 1.");
+    }
+}`
+            }
+        },
+        {
+            id: 'career-paths',
+            title: { en: 'Career Paths and Fields', es: 'Rutas Profesionales y Campos' },
+            description: { en: 'Compare major software paths and the core skills each one emphasizes.', es: 'Compara rutas principales de software y las habilidades clave de cada una.' },
+            deepExplanation: {
+                en: `Conceptual breakdown:
+- “Software engineer” is an umbrella term; day-to-day work differs by specialization.
+- Picking a first path narrows your learning queue and increases momentum.
+
+Code walkthrough:
+1) Represent paths as categories.
+2) Attach skill focus areas to each path.
+3) Print recommendations to make tradeoffs explicit.`,
+                es: `Desglose conceptual:
+- "Ingenieria de software" cubre especializaciones con trabajo diario distinto.
+- Elegir una ruta inicial reduce ruido y acelera el progreso.
+
+Recorrido del codigo:
+1) Representar rutas como categorias.
+2) Asociar habilidades clave a cada ruta.
+3) Imprimir recomendaciones para comparar opciones.`
+            },
+            codeExamples: {
+                java: `import java.util.List;
+import java.util.Map;
+
+public class CareerPathMapper {
+    public static void main(String[] args) {
+        Map<String, List<String>> tracks = Map.of(
+            "Frontend", List.of("HTML/CSS/JavaScript", "UI state management", "Accessibility"),
+            "Backend", List.of("APIs", "Databases", "Authentication and security"),
+            "Data/AI", List.of("Python", "Statistics", "Model evaluation"),
+            "Cloud/DevOps", List.of("Linux", "CI/CD", "Infrastructure automation"),
+            "Security", List.of("Threat modeling", "Hardening", "Incident response")
+        );
+
+        System.out.println("=== Career Track Snapshots ===");
+        tracks.forEach((track, skills) ->
+            System.out.println(track + " -> " + String.join(", ", skills))
+        );
+    }
+}`
+            }
+        },
+        {
+            id: 'choose-first-language',
+            title: { en: 'Choosing Your First Language', es: 'Elegir Tu Primer Lenguaje' },
+            description: { en: 'Use goal-based heuristics to pick a beginner language with confidence.', es: 'Usa heuristicas por objetivo para elegir lenguaje inicial con confianza.' },
+            deepExplanation: {
+                en: `Conceptual breakdown:
+- There is no universally “best” first language.
+- Good choices depend on your target domain, feedback speed, and motivation.
+
+Code walkthrough:
+1) Capture simple preferences (goal + comfort + desired speed).
+2) Apply decision rules transparently.
+3) Print recommendation with rationale.`,
+                es: `Desglose conceptual:
+- No existe un "mejor lenguaje" universal para comenzar.
+- La mejor opcion depende de tu objetivo, comodidad y velocidad de aprendizaje.
+
+Recorrido del codigo:
+1) Capturar preferencias simples.
+2) Aplicar reglas de decision.
+3) Mostrar recomendacion con razon.`
+            },
+            codeExamples: {
+                java: `public class FirstLanguageChooser {
+    static String recommend(String goal, boolean likesMath, boolean wantsFastFeedback) {
+        String g = goal.trim().toLowerCase();
+        if (g.contains("web")) return "JavaScript";
+        if (g.contains("data") || g.contains("ai")) return "Python";
+        if (g.contains("android")) return "Kotlin/Java";
+        if (g.contains("systems")) return likesMath ? "C++/Rust" : "Java";
+        return wantsFastFeedback ? "Python" : "Java";
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Web app goal -> " + recommend("web", false, true));
+        System.out.println("Data goal -> " + recommend("data", true, true));
+        System.out.println("General software goal -> " + recommend("general", false, false));
+    }
+}`
+            }
+        },
+        {
+            id: 'setup-environment',
+            title: { en: 'Environment Setup Essentials', es: 'Fundamentos de Configuracion del Entorno' },
+            description: { en: 'Build a practical checklist for editor, runtime, terminal, and Git.', es: 'Construye una lista practica para editor, runtime, terminal y Git.' },
+            deepExplanation: {
+                en: `Conceptual breakdown:
+- Beginners stall when environment setup is vague.
+- A checklist creates repeatability and removes “hidden blockers.”
+
+Code walkthrough:
+1) Define setup steps.
+2) Mark each step complete/incomplete.
+3) Compute readiness and print actionable next tasks.`,
+                es: `Desglose conceptual:
+- Muchos principiantes se traban por configuraciones incompletas.
+- Una lista de verificacion vuelve el proceso repetible.
+
+Recorrido del codigo:
+1) Definir pasos de configuracion.
+2) Marcar cada paso como completo o pendiente.
+3) Calcular nivel de preparacion y siguientes acciones.`
+            },
+            codeExamples: {
+                java: `import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class SetupChecklist {
+    public static void main(String[] args) {
+        Map<String, Boolean> checklist = new LinkedHashMap<>();
+        checklist.put("Editor installed (VS Code / IntelliJ)", true);
+        checklist.put("Language runtime/compiler installed", true);
+        checklist.put("Terminal command works", false);
+        checklist.put("Git installed and configured", true);
+        checklist.put("Can run a hello-world file", false);
+
+        int done = 0;
+        for (Map.Entry<String, Boolean> step : checklist.entrySet()) {
+            System.out.println((step.getValue() ? "[x] " : "[ ] ") + step.getKey());
+            if (step.getValue()) done++;
+        }
+
+        System.out.println("Progress: " + done + "/" + checklist.size());
+        System.out.println(done == checklist.size() ? "Environment ready." : "Finish remaining steps before deep study.");
+    }
+}`
+            }
+        },
+        {
+            id: 'first-program',
+            title: { en: 'Your First Program', es: 'Tu Primer Programa' },
+            description: { en: 'Write, run, and understand a first complete program end-to-end.', es: 'Escribe, ejecuta y comprende un programa completo de inicio a fin.' },
+            deepExplanation: {
+                en: `Conceptual breakdown:
+- Your first program should prove the entire pipeline works: write -> run -> verify output.
+- Keep it small, readable, and testable.
+
+Code walkthrough:
+1) Print a greeting.
+2) Compute a tiny result.
+3) Confirm expected output lines are visible.`,
+                es: `Desglose conceptual:
+- Tu primer programa debe validar todo el flujo: escribir -> ejecutar -> verificar.
+- Debe ser pequeno, legible y facil de comprobar.
+
+Recorrido del codigo:
+1) Imprimir saludo.
+2) Calcular un resultado simple.
+3) Confirmar salida esperada.`
+            },
+            codeExamples: {
+                java: `public class FirstProgramDemo {
+    static int add(int a, int b) {
+        return a + b;
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Hello, developer. Your toolchain works.");
+        int result = add(7, 11);
+        System.out.println("7 + 11 = " + result);
+        System.out.println("Next step: change values and rerun.");
+    }
+}`
+            }
+        },
+        {
+            id: 'core-building-blocks',
+            title: { en: 'Core Building Blocks', es: 'Bloques Fundamentales' },
+            description: { en: 'Practice variables, conditions, loops, and functions in one compact sample.', es: 'Practica variables, condiciones, bucles y funciones en una muestra compacta.' },
+            deepExplanation: {
+                en: `Conceptual breakdown:
+- Almost every beginner project uses four primitives: variables, conditionals, loops, and functions.
+- Mastering these gives you transfer power across languages.
+
+Code walkthrough:
+1) Store state in variables.
+2) Branch with if/else.
+3) Iterate with a loop.
+4) Extract reusable logic into a function.`,
+                es: `Desglose conceptual:
+- Casi todo proyecto inicial usa cuatro piezas: variables, condicionales, bucles y funciones.
+- Dominar estas piezas se transfiere a cualquier lenguaje.
+
+Recorrido del codigo:
+1) Guardar estado en variables.
+2) Ramificar con if/else.
+3) Iterar con bucle.
+4) Extraer logica reutilizable en funcion.`
+            },
+            codeExamples: {
+                java: `public class CoreBlocksDemo {
+    static int square(int x) {
+        return x * x;
+    }
+
+    public static void main(String[] args) {
+        int threshold = 4;
+        for (int i = 1; i <= 6; i++) {
+            int value = square(i);
+            if (value >= threshold * threshold) {
+                System.out.println("keep -> i=" + i + ", square=" + value);
+            } else {
+                System.out.println("skip -> i=" + i + ", square=" + value);
+            }
+        }
+    }
+}`
+            }
+        },
+        {
+            id: 'debugging-basics',
+            title: { en: 'Debugging Basics', es: 'Bases de Depuracion' },
+            description: { en: 'Learn a practical reproduce-isolate-fix-verify debugging loop.', es: 'Aprende un ciclo practico de reproducir-aislar-arreglar-verificar.' },
+            deepExplanation: {
+                en: `Conceptual breakdown:
+- Debugging is not guesswork; it is evidence-driven iteration.
+- Good developers minimize assumptions and verify each step.
+
+Code walkthrough:
+1) Demonstrate unsafe parsing that can fail.
+2) Add defensive checks and fallback behavior.
+3) Print outcomes to confirm fixes and edge-case handling.`,
+                es: `Desglose conceptual:
+- Depurar no es adivinar; es iterar con evidencia.
+- Los buenos desarrolladores verifican cada paso.
+
+Recorrido del codigo:
+1) Mostrar un parseo inseguro que puede fallar.
+2) Agregar validaciones y comportamiento de respaldo.
+3) Confirmar salidas para casos normales y extremos.`
+            },
+            codeExamples: {
+                java: `public class DebuggingLoopDemo {
+    static int safeParseInt(String raw, int fallback) {
+        try {
+            return Integer.parseInt(raw.trim());
+        } catch (Exception ignored) {
+            return fallback;
+        }
+    }
+
+    public static void main(String[] args) {
+        String[] inputs = {"42", " 17 ", "oops", ""};
+        for (String input : inputs) {
+            int parsed = safeParseInt(input, -1);
+            System.out.println("Input='" + input + "' -> parsed=" + parsed);
+        }
+        System.out.println("Rule: reproduce, isolate, fix, verify.");
+    }
+}`
+            }
+        },
+        {
+            id: 'starter-30-day-plan',
+            title: { en: '30-Day Starter Plan', es: 'Plan Inicial de 30 Dias' },
+            description: { en: 'Generate a simple four-week roadmap with balanced practice blocks.', es: 'Genera una hoja de ruta de cuatro semanas con practica equilibrada.' },
+            deepExplanation: {
+                en: `Conceptual breakdown:
+- Consistency beats intensity for new learners.
+- A written plan reduces decision fatigue and improves completion rates.
+
+Code walkthrough:
+1) Split 30 days into weekly focus themes.
+2) Assign concrete task types to each week.
+3) Print a readable plan you can actually follow.`,
+                es: `Desglose conceptual:
+- La constancia supera la intensidad para quien empieza.
+- Un plan escrito reduce friccion y mejora la finalizacion.
+
+Recorrido del codigo:
+1) Dividir 30 dias en temas semanales.
+2) Asignar tareas concretas por semana.
+3) Imprimir un plan claro y accionable.`
+            },
+            codeExamples: {
+                java: `import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+public class StarterPlan30Days {
+    public static void main(String[] args) {
+        Map<String, List<String>> plan = new LinkedHashMap<>();
+        plan.put("Week 1", List.of("Setup tools", "Write first programs", "Practice variables + if/else"));
+        plan.put("Week 2", List.of("Loops + functions", "Build 2 mini exercises", "Start Git basics"));
+        plan.put("Week 3", List.of("Debugging reps", "Create a tiny project", "Read code from others"));
+        plan.put("Week 4", List.of("Refactor project", "Add tests/checks", "Publish project notes/README"));
+
+        System.out.println("=== 30-Day Coding Starter Plan ===");
+        plan.forEach((week, tasks) -> {
+            System.out.println(week + ":");
+            for (String task : tasks) {
+                System.out.println(" - " + task);
+            }
+        });
+    }
+}`
+            }
+        }
+    ],
     'java-basics': [
         {
             id: 'variables',
@@ -8648,10 +9364,11 @@ Practice checks:
 
 function getModuleExampleDeepExplanation(moduleId, exampleId, setItem = null) {
     const fromSet = resolveLocalizedValue(setItem?.deepExplanation, appState.language);
-    if (fromSet) return fromSet;
+    if (fromSet) return translateLongformText(fromSet, appState.language);
     const moduleEntries = MODULE_DEEP_EXPLANATION_OVERRIDES[moduleId] || {};
     const fromMap = resolveLocalizedValue(moduleEntries[exampleId], appState.language);
-    return fromMap || '';
+    if (!fromMap) return '';
+    return translateLongformText(fromMap, appState.language);
 }
 
 function normalizeModuleCodeExampleSets(module) {
@@ -8706,6 +9423,7 @@ function normalizeModuleCodeExampleSets(module) {
             id: setId,
             title: setTitle,
             description: setDescription,
+            deepExplanation: exampleSet.deepExplanation || '',
             codeExamples: normalizedCodeExamples,
             expectedOutputs: normalizedExpectedOutputs
         };
@@ -9062,6 +9780,29 @@ function translateTextByLanguage(text, lang = 'en') {
         .split('\n')
         .map((line) => translateLiteral(line, 'es'))
         .join('\n');
+}
+
+const LONGFORM_FALLBACK_PHRASES_ES = [
+    ['Conceptual breakdown:', 'Desglose conceptual:'],
+    ['Code walkthrough:', 'Recorrido del codigo:'],
+    ['Code walkthrough lens:', 'Enfoque del recorrido del codigo:'],
+    ['Workflow breakdown:', 'Desglose del flujo de trabajo:'],
+    ['Common mistakes to avoid:', 'Errores comunes que debes evitar:'],
+    ['Common mistakes:', 'Errores comunes:'],
+    ['What to practice next:', 'Que practicar despues:'],
+    ['Practice checks:', 'Comprobaciones de practica:']
+];
+
+function translateLongformText(text, lang = 'en') {
+    const source = String(text || '');
+    if (!source.trim() || lang !== 'es') return source;
+
+    let translated = translateTextByLanguage(source, 'es');
+    LONGFORM_FALLBACK_PHRASES_ES.forEach(([sourcePhrase, targetPhrase]) => {
+        translated = translated.replace(new RegExp(escapeRegExp(sourcePhrase), 'gi'), targetPhrase);
+    });
+
+    return translated || source;
 }
 
 function normalizeLocalizedCodeExamples(baseCodeExamples = {}, localizedCodeExamples = {}, lang = 'en') {
@@ -9561,6 +10302,15 @@ function safeSetItem(key, value) {
 }
 
 function buildSerializableAppState() {
+    const normalizedRouteCollapsedSections = normalizeRouteCollapsedSections(
+        appState.routeCollapsedSections,
+        appState.collapsedSections
+    );
+    const collapsedSectionsForRoute = getCollapsedSectionsForRoute(
+        appState.currentRoute,
+        normalizedRouteCollapsedSections
+    );
+
     return {
         darkMode: appState.darkMode,
         showComments: appState.showComments,
@@ -9599,7 +10349,8 @@ function buildSerializableAppState() {
         sidebarManualCollapsed: appState.sidebarManualCollapsed,
         sidebarMobileExpanded: appState.sidebarMobileExpanded,
         sidebarTracksExpanded: appState.sidebarTracksExpanded,
-        collapsedSections: normalizeCollapsedSections(appState.collapsedSections)
+        routeCollapsedSections: normalizedRouteCollapsedSections,
+        collapsedSections: collapsedSectionsForRoute
     };
 }
 
@@ -9791,7 +10542,11 @@ function loadFromLocalStorage() {
             appState.sidebarManualCollapsed = Boolean(state.sidebarManualCollapsed);
             appState.sidebarMobileExpanded = Boolean(state.sidebarMobileExpanded);
             appState.sidebarTracksExpanded = Boolean(state.sidebarTracksExpanded);
-            appState.collapsedSections = normalizeCollapsedSections(state.collapsedSections);
+            appState.routeCollapsedSections = normalizeRouteCollapsedSections(
+                state.routeCollapsedSections,
+                state.collapsedSections
+            );
+            appState.collapsedSections = getCollapsedSectionsForRoute(appState.currentRoute, appState.routeCollapsedSections);
 
             // Keep assembly modules defaulting to Assembly unless explicitly set to Assembly.
             enforceAssemblyModuleLanguageDefaults();
@@ -9800,7 +10555,11 @@ function loadFromLocalStorage() {
         }
     } else {
         appState.reduceMotion = prefersReduced;
-        appState.collapsedSections = normalizeCollapsedSections(appState.collapsedSections);
+        appState.routeCollapsedSections = normalizeRouteCollapsedSections(
+            appState.routeCollapsedSections,
+            appState.collapsedSections
+        );
+        appState.collapsedSections = getCollapsedSectionsForRoute(appState.currentRoute, appState.routeCollapsedSections);
     }
 }
 
@@ -9866,7 +10625,11 @@ function applyRemoteUserStateSnapshot(snapshot, options = {}) {
         appState.sidebarTracksExpanded = state.sidebarTracksExpanded !== undefined
             ? Boolean(state.sidebarTracksExpanded)
             : Boolean(appState.sidebarTracksExpanded);
-        appState.collapsedSections = normalizeCollapsedSections(state.collapsedSections || appState.collapsedSections);
+        appState.routeCollapsedSections = normalizeRouteCollapsedSections(
+            state.routeCollapsedSections || appState.routeCollapsedSections,
+            state.collapsedSections || appState.collapsedSections
+        );
+        appState.collapsedSections = getCollapsedSectionsForRoute(appState.currentRoute, appState.routeCollapsedSections);
 
         enforceAssemblyModuleLanguageDefaults();
 
@@ -11847,7 +12610,12 @@ const accountAuthState = {
     mode: 'login',
     inFlight: false,
     isAuthenticated: false,
-    sessionLabel: ''
+    sessionLabel: '',
+    rememberMe: false
+};
+const accountProfileUiState = {
+    expanded: false,
+    pendingEmail: ''
 };
 let userStateSyncTimer = null;
 let userStateSyncInFlight = false;
@@ -12015,17 +12783,166 @@ function setAccountAuthStatus(message, tone = 'neutral') {
     statusEl.textContent = message;
 }
 
+function getPasswordStrengthDetails(rawPassword) {
+    const password = String(rawPassword || '');
+    if (!password) {
+        return { label: 'Weak', level: 'weak', width: 8 };
+    }
+
+    let score = 0;
+    if (password.length >= 8) score += 1;
+    if (password.length >= 12) score += 1;
+    if (/[a-z]/.test(password) && /[A-Z]/.test(password)) score += 1;
+    if (/\d/.test(password)) score += 1;
+    if (/[^A-Za-z0-9]/.test(password)) score += 1;
+
+    if (score <= 1) return { label: 'Weak', level: 'weak', width: 22 };
+    if (score === 2) return { label: 'Fair', level: 'fair', width: 45 };
+    if (score === 3) return { label: 'Good', level: 'good', width: 68 };
+    if (score === 4) return { label: 'Strong', level: 'strong', width: 86 };
+    return { label: 'Very strong', level: 'very-strong', width: 100 };
+}
+
+function updateAccountPasswordStrengthMeter() {
+    const meter = document.getElementById('account-auth-password-meter');
+    const fill = document.getElementById('account-auth-password-meter-fill');
+    const text = document.getElementById('account-auth-password-meter-text');
+    const passwordInput = document.getElementById('account-auth-password');
+    if (!meter || !fill || !text || !passwordInput) return;
+
+    const isSignup = accountAuthState.mode === 'signup';
+    meter.classList.toggle('hidden', !isSignup);
+    if (!isSignup) return;
+
+    const details = getPasswordStrengthDetails(passwordInput.value || '');
+    fill.style.width = `${details.width}%`;
+    fill.setAttribute('data-strength', details.level);
+    text.textContent = `Password strength: ${details.label}`;
+}
+
+function updateAuthPasswordToggleState(button, input) {
+    if (!button || !input) return;
+    const isHidden = input.type === 'password';
+    button.textContent = isHidden ? 'Show' : 'Hide';
+    button.setAttribute('aria-pressed', isHidden ? 'false' : 'true');
+}
+
+function toggleAuthPasswordVisibility(targetInputId) {
+    const input = document.getElementById(targetInputId);
+    if (!input) return;
+    input.type = input.type === 'password' ? 'text' : 'password';
+    document.querySelectorAll(`.account-auth-password-toggle[data-target-input="${targetInputId}"]`).forEach((button) => {
+        updateAuthPasswordToggleState(button, input);
+    });
+}
+
+function setAccountAuthModeCopy(isSignup) {
+    const flowTitle = document.getElementById('account-auth-flow-title');
+    const flowSubtitle = document.getElementById('account-auth-flow-subtitle');
+    const switchCopy = document.getElementById('account-auth-switch-copy');
+    const switchButton = document.getElementById('account-auth-switch-mode');
+    const legal = document.getElementById('account-auth-legal');
+    const auxRow = document.getElementById('account-auth-aux-row');
+    const isAuthenticated = Boolean(accountAuthState.isAuthenticated);
+
+    if (flowTitle) {
+        flowTitle.textContent = isSignup ? 'Create Your Account' : 'Log In to Your Account';
+    }
+    if (flowSubtitle) {
+        flowSubtitle.textContent = isAuthenticated
+            ? 'You are signed in. Log out first if you want to create another account.'
+            : isSignup
+            ? 'Create a profile to sync progress and settings across devices.'
+            : 'Use a provider or continue with your email/username and password.';
+    }
+    if (switchCopy) {
+        switchCopy.textContent = isAuthenticated
+            ? 'Need another account?'
+            : isSignup
+                ? 'Already have an account?'
+                : 'Need an account?';
+    }
+    if (switchButton) {
+        switchButton.textContent = isAuthenticated
+            ? 'Log Out First'
+            : isSignup
+                ? 'Log In'
+                : 'Sign Up';
+    }
+    if (legal) {
+        legal.classList.toggle('hidden', !isSignup);
+    }
+    if (auxRow) {
+        auxRow.classList.toggle('hidden', isSignup);
+    }
+}
+
+function syncAccountSignupToggleState() {
+    const signupTab = document.getElementById('account-auth-signup-tab');
+    const switchButton = document.getElementById('account-auth-switch-mode');
+    const isLocked = Boolean(accountAuthState.isAuthenticated);
+
+    if (signupTab) {
+        signupTab.disabled = isLocked;
+        signupTab.setAttribute('aria-disabled', isLocked ? 'true' : 'false');
+        signupTab.style.opacity = isLocked ? '0.56' : '';
+        signupTab.style.cursor = isLocked ? 'not-allowed' : '';
+        signupTab.style.filter = isLocked ? 'saturate(0.45)' : '';
+        if (isLocked) {
+            signupTab.setAttribute('title', 'Log out to use Sign Up.');
+        } else {
+            signupTab.removeAttribute('title');
+        }
+    }
+
+    if (switchButton) {
+        switchButton.disabled = isLocked;
+        switchButton.setAttribute('aria-disabled', isLocked ? 'true' : 'false');
+        switchButton.style.opacity = isLocked ? '0.56' : '';
+        switchButton.style.cursor = isLocked ? 'not-allowed' : '';
+        if (isLocked) {
+            switchButton.setAttribute('title', 'Log out to switch to Sign Up.');
+        } else {
+            switchButton.removeAttribute('title');
+        }
+    }
+}
+
+function handleAuthProviderClick(providerLabel) {
+    const message = `${providerLabel} sign-in will be enabled soon. Use email or username for now.`;
+    setAccountAuthStatus(message, 'info');
+    showToast(message, 'info');
+}
+
+function handleForgotPassword() {
+    const emailInput = document.getElementById('account-auth-email');
+    const identifier = String(emailInput ? emailInput.value.trim() : '');
+    if (!identifier) {
+        setAccountAuthFieldError('account-auth-email', 'Enter your email or username first.');
+        showToast('Enter your email or username first.', 'warning');
+        return;
+    }
+    const message = `Password reset flow is coming soon. We saved "${identifier}" as your recovery identifier.`;
+    setAccountAuthStatus(message, 'info');
+    showToast('Password reset flow coming soon.', 'info');
+}
+
 function getAccountPrimaryAuthLabel() {
+    if (accountAuthState.isAuthenticated) {
+        return 'Log Out';
+    }
     if (accountAuthState.mode === 'signup') {
         return 'Create Account';
     }
-    return accountAuthState.isAuthenticated ? 'Log Out' : 'Log In';
+    return 'Log In';
 }
 
 function refreshAccountPrimaryAuthButton() {
     const submitBtn = document.getElementById('account-auth-submit');
     if (!submitBtn) return;
     submitBtn.textContent = getAccountPrimaryAuthLabel();
+    setAccountAuthModeCopy(accountAuthState.mode === 'signup');
+    syncAccountSignupToggleState();
 }
 
 function isLocalExampleCredentials(email, password) {
@@ -12064,7 +12981,10 @@ function applyLocalExampleAuth() {
 }
 
 function setAccountAuthMode(mode) {
-    const nextMode = mode === 'signup' ? 'signup' : 'login';
+    const requestedMode = mode === 'signup' ? 'signup' : 'login';
+    const nextMode = accountAuthState.isAuthenticated && requestedMode === 'signup'
+        ? 'login'
+        : requestedMode;
     accountAuthState.mode = nextMode;
 
     const loginTab = document.getElementById('account-auth-login-tab');
@@ -12075,14 +12995,15 @@ function setAccountAuthMode(mode) {
     const passwordInput = document.getElementById('account-auth-password');
     const confirmInput = document.getElementById('account-auth-confirm');
     const signupUsernameInput = document.getElementById('account-auth-username');
+    const rememberCheckbox = document.getElementById('account-auth-remember');
 
     const isSignup = nextMode === 'signup';
 
     if (loginTab) {
-        loginTab.className = `px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 ${isSignup ? 'bg-transparent text-slate-300 hover:text-white' : 'bg-violet-500 text-white'}`;
+        loginTab.className = `account-auth-tab px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 ${isSignup ? 'bg-transparent text-slate-300 hover:text-white' : 'bg-violet-500 text-white'}`;
     }
     if (signupTab) {
-        signupTab.className = `px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 ${isSignup ? 'bg-violet-500 text-white' : 'bg-transparent text-slate-300 hover:text-white'}`;
+        signupTab.className = `account-auth-tab px-4 py-2 rounded-lg text-sm font-semibold transition-colors duration-200 ${isSignup ? 'bg-violet-500 text-white' : 'bg-transparent text-slate-300 hover:text-white'}`;
     }
 
     if (confirmGroup) {
@@ -12094,6 +13015,8 @@ function setAccountAuthMode(mode) {
     if (submitBtn) refreshAccountPrimaryAuthButton();
     if (passwordInput) {
         passwordInput.setAttribute('autocomplete', isSignup ? 'new-password' : 'current-password');
+        const toggle = document.getElementById('account-auth-password-toggle');
+        updateAuthPasswordToggleState(toggle, passwordInput);
     }
     if (signupUsernameInput) {
         signupUsernameInput.required = isSignup;
@@ -12104,14 +13027,35 @@ function setAccountAuthMode(mode) {
     if (confirmInput && !isSignup) {
         confirmInput.value = '';
     }
+    if (confirmInput) {
+        const toggle = document.getElementById('account-auth-confirm-toggle');
+        updateAuthPasswordToggleState(toggle, confirmInput);
+    }
+    if (rememberCheckbox && isSignup) {
+        rememberCheckbox.checked = false;
+    }
+    setAccountAuthModeCopy(isSignup);
+    syncAccountSignupToggleState();
+    updateAccountPasswordStrengthMeter();
     clearAccountAuthValidationState();
 }
 
 function clearAuthPasswordFields() {
     const passwordInput = document.getElementById('account-auth-password');
     const confirmInput = document.getElementById('account-auth-confirm');
-    if (passwordInput) passwordInput.value = '';
-    if (confirmInput) confirmInput.value = '';
+    if (passwordInput) {
+        passwordInput.value = '';
+        passwordInput.type = 'password';
+    }
+    if (confirmInput) {
+        confirmInput.value = '';
+        confirmInput.type = 'password';
+    }
+    const passwordToggle = document.getElementById('account-auth-password-toggle');
+    const confirmToggle = document.getElementById('account-auth-confirm-toggle');
+    updateAuthPasswordToggleState(passwordToggle, passwordInput);
+    updateAuthPasswordToggleState(confirmToggle, confirmInput);
+    updateAccountPasswordStrengthMeter();
 }
 
 function clearAccountAuthValidationState() {
@@ -12271,6 +13215,18 @@ function getNeonProfileEndpoint() {
     return buildApiEndpoint(NEON_API_PATHS.profile);
 }
 
+function getNeonPasswordEndpoint() {
+    return buildApiEndpoint(NEON_API_PATHS.password);
+}
+
+function getNeonEmailPinRequestEndpoint() {
+    return buildApiEndpoint(NEON_API_PATHS.emailPinRequest);
+}
+
+function getNeonEmailPinVerifyEndpoint() {
+    return buildApiEndpoint(NEON_API_PATHS.emailPinVerify);
+}
+
 function getNeonUserStateEndpoint() {
     return buildApiEndpoint(NEON_API_PATHS.userState);
 }
@@ -12340,7 +13296,6 @@ function applyAccountProfileToForm() {
 
 function readAccountProfileFromForm() {
     const usernameInput = document.getElementById('account-username');
-    const emailInput = document.getElementById('account-email');
     const goalInput = document.getElementById('account-goal');
     const resolvedUsername = usernameInput
         ? usernameInput.value.trim()
@@ -12349,9 +13304,303 @@ function readAccountProfileFromForm() {
         ...accountProfile,
         username: resolvedUsername,
         name: resolvedUsername,
-        email: emailInput ? emailInput.value.trim() : accountProfile.email || '',
+        email: accountProfile.email || '',
         goal: goalInput ? goalInput.value : accountProfile.goal || 'exploring'
     };
+}
+
+function setAccountInlineStatus(elementId, message, tone = 'neutral') {
+    const element = document.getElementById(elementId);
+    if (!element) return;
+    element.className = 'text-xs';
+    const toneClassMap = {
+        success: 'text-emerald-300',
+        error: 'text-rose-300',
+        info: 'text-sky-300',
+        neutral: 'text-slate-300'
+    };
+    element.classList.add(...(toneClassMap[tone] || toneClassMap.neutral).split(' '));
+    element.textContent = message;
+}
+
+function setAccountEmailPinStatus(message, tone = 'neutral') {
+    setAccountInlineStatus('account-email-pin-status', message, tone);
+}
+
+function setAccountPasswordStatus(message, tone = 'neutral') {
+    setAccountInlineStatus('account-password-status', message, tone);
+}
+
+function setAccountProfileSectionExpanded(expanded, options = {}) {
+    const { focusSelector = '' } = options;
+    const content = document.getElementById('account-profile-content');
+    const toggleButton = document.getElementById('account-profile-toggle');
+    const toggleLabel = document.getElementById('account-profile-toggle-label');
+    const shouldExpand = Boolean(expanded);
+    accountProfileUiState.expanded = shouldExpand;
+    if (content) {
+        content.classList.toggle('hidden', !shouldExpand);
+    }
+    if (toggleButton) {
+        toggleButton.setAttribute('aria-expanded', shouldExpand ? 'true' : 'false');
+    }
+    if (toggleLabel) {
+        toggleLabel.textContent = shouldExpand ? 'Collapse' : 'Expand';
+    }
+    if (shouldExpand && focusSelector) {
+        const focusEl = document.querySelector(focusSelector);
+        if (focusEl && typeof focusEl.focus === 'function') {
+            focusEl.focus();
+        }
+    }
+}
+
+function markAccountFieldInvalid(fieldId) {
+    const input = document.getElementById(fieldId);
+    if (!input) return;
+    input.classList.add('is-invalid-field');
+    input.setAttribute('aria-invalid', 'true');
+    input.focus();
+}
+
+function resetAccountSecureInputs(options = {}) {
+    const { clearPendingEmail = false } = options;
+    const emailPinInput = document.getElementById('account-email-pin');
+    const emailPinWrap = document.getElementById('account-email-pin-verify-wrap');
+    const currentPassword = document.getElementById('account-current-password');
+    const nextPassword = document.getElementById('account-new-password');
+    const confirmPassword = document.getElementById('account-confirm-new-password');
+
+    if (clearPendingEmail) {
+        accountProfileUiState.pendingEmail = '';
+    }
+    if (emailPinInput) {
+        emailPinInput.value = '';
+        emailPinInput.classList.remove('is-invalid-field');
+        emailPinInput.removeAttribute('aria-invalid');
+    }
+    if (emailPinWrap) {
+        emailPinWrap.classList.add('hidden');
+    }
+    [currentPassword, nextPassword, confirmPassword].forEach((input) => {
+        if (!input) return;
+        input.value = '';
+        input.classList.remove('is-invalid-field');
+        input.removeAttribute('aria-invalid');
+    });
+    setAccountEmailPinStatus('Request a PIN to verify your new email.', 'neutral');
+    setAccountPasswordStatus('Password updates require an active session.', 'neutral');
+}
+
+function setButtonBusyState(button, isBusy, idleLabel, busyLabel) {
+    if (!button) return;
+    const nextBusy = Boolean(isBusy);
+    button.disabled = nextBusy;
+    button.classList.toggle('opacity-70', nextBusy);
+    button.classList.toggle('cursor-not-allowed', nextBusy);
+    button.textContent = nextBusy ? busyLabel : idleLabel;
+}
+
+async function ensureAuthenticatedAccountSession() {
+    if (!hasNeonSyncConfig()) {
+        showToast('Secure account actions require the backend auth server.', 'warning');
+        return false;
+    }
+    const session = await checkNeonSession({ silent: true });
+    if (!session?.userId || !accountAuthState.isAuthenticated) {
+        showToast('Please log in before making secure account changes.', 'warning');
+        return false;
+    }
+    return true;
+}
+
+async function requestEmailChangePin() {
+    const emailInput = document.getElementById('account-email');
+    const requestButton = document.getElementById('account-email-request-pin');
+    const verifyWrap = document.getElementById('account-email-pin-verify-wrap');
+    const pinInput = document.getElementById('account-email-pin');
+    const nextEmail = String(emailInput ? emailInput.value.trim().toLowerCase() : '');
+    const currentEmail = String(accountProfile.email || '').trim().toLowerCase();
+
+    if (!(await ensureAuthenticatedAccountSession())) {
+        setAccountEmailPinStatus('Log in before requesting an email verification PIN.', 'error');
+        return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(nextEmail)) {
+        markAccountFieldInvalid('account-email');
+        setAccountEmailPinStatus('Enter a valid new email address first.', 'error');
+        showToast('Enter a valid new email address.', 'warning');
+        return;
+    }
+    if (nextEmail === currentEmail) {
+        markAccountFieldInvalid('account-email');
+        setAccountEmailPinStatus('Use a different email than your current one.', 'error');
+        showToast('Use a different email than your current one.', 'warning');
+        return;
+    }
+
+    setButtonBusyState(requestButton, true, 'Send PIN', 'Sending...');
+    setAccountEmailPinStatus('Sending verification PIN...', 'info');
+    try {
+        const payload = await neonFetch(getNeonEmailPinRequestEndpoint(), {
+            method: 'POST',
+            body: JSON.stringify({ newEmail: nextEmail })
+        });
+        accountProfileUiState.pendingEmail = nextEmail;
+        if (emailInput) emailInput.value = nextEmail;
+        if (verifyWrap) verifyWrap.classList.remove('hidden');
+        if (pinInput) {
+            pinInput.value = String(payload?.devPin || '');
+            pinInput.focus();
+        }
+        const devPinNote = payload?.devPin ? ` (dev PIN: ${payload.devPin})` : '';
+        setAccountEmailPinStatus(`PIN sent to ${nextEmail}.${devPinNote}`, 'success');
+        showToast(`Verification PIN sent to ${nextEmail}.`, 'success');
+    } catch (error) {
+        const reason = error instanceof Error ? error.message : String(error);
+        setAccountEmailPinStatus(`Failed to send PIN: ${reason}`, 'error');
+        showToast(`Failed to send verification PIN: ${reason}`, 'error');
+    } finally {
+        setButtonBusyState(requestButton, false, 'Send PIN', 'Sending...');
+    }
+}
+
+async function verifyEmailChangePin() {
+    const emailInput = document.getElementById('account-email');
+    const pinInput = document.getElementById('account-email-pin');
+    const verifyButton = document.getElementById('account-email-verify-pin');
+    const verifyWrap = document.getElementById('account-email-pin-verify-wrap');
+    const newEmail = String(
+        accountProfileUiState.pendingEmail
+        || (emailInput ? emailInput.value.trim().toLowerCase() : '')
+    );
+    const pin = String(pinInput ? pinInput.value.trim() : '');
+
+    if (!(await ensureAuthenticatedAccountSession())) {
+        setAccountEmailPinStatus('Log in before verifying an email PIN.', 'error');
+        return;
+    }
+    if (!newEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(newEmail)) {
+        markAccountFieldInvalid('account-email');
+        setAccountEmailPinStatus('Enter a valid email before verification.', 'error');
+        return;
+    }
+    if (!/^\d{6}$/.test(pin)) {
+        markAccountFieldInvalid('account-email-pin');
+        setAccountEmailPinStatus('Enter the 6-digit PIN from your email.', 'error');
+        return;
+    }
+
+    setButtonBusyState(verifyButton, true, 'Verify & Update Email', 'Verifying...');
+    setAccountEmailPinStatus('Verifying PIN and updating email...', 'info');
+    try {
+        const payload = await neonFetch(getNeonEmailPinVerifyEndpoint(), {
+            method: 'POST',
+            body: JSON.stringify({ newEmail, pin })
+        });
+        const updatedEmail = String(payload?.profile?.email || newEmail).trim();
+        accountProfile.email = updatedEmail;
+        saveAccountProfile();
+        applyAccountProfileToForm();
+        updateAccountChip();
+        accountProfileUiState.pendingEmail = '';
+        if (pinInput) pinInput.value = '';
+        if (verifyWrap) verifyWrap.classList.add('hidden');
+        setAccountEmailPinStatus(`Email updated to ${updatedEmail}.`, 'success');
+        showToast('Email updated successfully.', 'success');
+        queueUserStateSync();
+    } catch (error) {
+        const reason = error instanceof Error ? error.message : String(error);
+        setAccountEmailPinStatus(`PIN verification failed: ${reason}`, 'error');
+        showToast(`Email verification failed: ${reason}`, 'error');
+    } finally {
+        setButtonBusyState(verifyButton, false, 'Verify & Update Email', 'Verifying...');
+    }
+}
+
+async function updateAccountPassword() {
+    const currentInput = document.getElementById('account-current-password');
+    const newInput = document.getElementById('account-new-password');
+    const confirmInput = document.getElementById('account-confirm-new-password');
+    const updateButton = document.getElementById('account-password-update');
+    const currentPassword = String(currentInput ? currentInput.value : '');
+    const newPassword = String(newInput ? newInput.value : '');
+    const confirmPassword = String(confirmInput ? confirmInput.value : '');
+
+    if (!(await ensureAuthenticatedAccountSession())) {
+        setAccountPasswordStatus('Log in before updating your password.', 'error');
+        return;
+    }
+    [currentInput, newInput, confirmInput].forEach((input) => {
+        if (!input) return;
+        input.classList.remove('is-invalid-field');
+        input.removeAttribute('aria-invalid');
+    });
+
+    if (!currentPassword) {
+        markAccountFieldInvalid('account-current-password');
+        setAccountPasswordStatus('Enter your current password.', 'error');
+        return;
+    }
+    if (newPassword.length < 8) {
+        markAccountFieldInvalid('account-new-password');
+        setAccountPasswordStatus('New password must be at least 8 characters.', 'error');
+        return;
+    }
+    if (newPassword !== confirmPassword) {
+        markAccountFieldInvalid('account-confirm-new-password');
+        setAccountPasswordStatus('New password and confirm password must match.', 'error');
+        return;
+    }
+    if (currentPassword === newPassword) {
+        markAccountFieldInvalid('account-new-password');
+        setAccountPasswordStatus('Use a different password than the current one.', 'error');
+        return;
+    }
+
+    setButtonBusyState(updateButton, true, 'Update Password', 'Updating...');
+    setAccountPasswordStatus('Updating password...', 'info');
+    try {
+        await neonFetch(getNeonPasswordEndpoint(), {
+            method: 'POST',
+            body: JSON.stringify({
+                currentPassword,
+                newPassword,
+                confirmPassword
+            })
+        });
+        if (currentInput) currentInput.value = '';
+        if (newInput) newInput.value = '';
+        if (confirmInput) confirmInput.value = '';
+        setAccountPasswordStatus('Password updated successfully.', 'success');
+        showToast('Password updated successfully.', 'success');
+    } catch (error) {
+        const reason = error instanceof Error ? error.message : String(error);
+        setAccountPasswordStatus(`Password update failed: ${reason}`, 'error');
+        showToast(`Password update failed: ${reason}`, 'error');
+    } finally {
+        setButtonBusyState(updateButton, false, 'Update Password', 'Updating...');
+    }
+}
+
+async function saveAccountProfileSettings() {
+    accountProfile = readAccountProfileFromForm();
+    saveAccountProfile();
+    applyAccountProfileToForm();
+    updateAccountChip();
+
+    let synced = false;
+    if (PROFILE_SYNC_CONFIG.enabled && PROFILE_SYNC_CONFIG.autoPushOnSave && accountAuthState.isAuthenticated) {
+        synced = await pushProfileToNeon({ silent: true });
+    }
+    if (synced) {
+        showToast('Profile saved and synced successfully.', 'success');
+    } else if (accountAuthState.isAuthenticated) {
+        showToast('Profile saved successfully.', 'success');
+    } else {
+        showToast('Profile saved locally. Log in to sync securely.', 'info');
+    }
+    queueUserStateSync();
 }
 
 async function checkNeonSession(options = {}) {
@@ -12446,8 +13695,11 @@ async function signOutAccountFlow(options = {}) {
     setCsrfToken('');
     accountAuthState.isAuthenticated = false;
     accountAuthState.sessionLabel = '';
+    accountAuthState.rememberMe = false;
     setAccountAuthStatus('Signed out.', 'neutral');
     clearAuthPasswordFields();
+    const rememberCheckbox = document.getElementById('account-auth-remember');
+    if (rememberCheckbox) rememberCheckbox.checked = false;
     accountProfile = {
         ...getDefaultAccountProfile()
     };
@@ -12475,11 +13727,19 @@ async function submitAccountAuth() {
     }
 
     const { email, username, password, confirm } = readAccountAuthForm();
+    const rememberCheckbox = document.getElementById('account-auth-remember');
+    accountAuthState.rememberMe = Boolean(rememberCheckbox && rememberCheckbox.checked);
     clearAccountAuthValidationState();
-    const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || /^[a-zA-Z0-9._-]{3,}$/.test(email);
-    if (!emailValid) {
+    const emailOnlyValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const emailOrUsernameValid = emailOnlyValid || /^[a-zA-Z0-9._-]{3,}$/.test(email);
+    if (!emailOrUsernameValid) {
         setAccountAuthFieldError('account-auth-email', 'Enter a valid email or username.');
         showToast('Enter a valid email or username.', 'warning');
+        return;
+    }
+    if (isSignup && !emailOnlyValid) {
+        setAccountAuthFieldError('account-auth-email', 'Use a valid email address for sign up.');
+        showToast('Use a valid email address for sign up.', 'warning');
         return;
     }
     if (!password) {
@@ -12518,7 +13778,7 @@ async function submitAccountAuth() {
     }
 
     const endpoint = buildApiEndpoint(isSignup ? NEON_API_PATHS.signup : NEON_API_PATHS.login);
-    const payload = { email, password };
+    const payload = { email, password, rememberMe: accountAuthState.rememberMe };
     if (isSignup) {
         payload.username = username;
         payload.confirmPassword = confirm;
@@ -12736,9 +13996,13 @@ function openAccountModal() {
     const modal = document.getElementById('account-modal');
     if (!modal) return;
     applyAccountProfileToForm();
+    setAccountProfileSectionExpanded(false);
+    resetAccountSecureInputs({ clearPendingEmail: true });
     setAccountAuthMode(accountAuthState.mode);
     clearAuthPasswordFields();
     clearAccountAuthValidationState();
+    const rememberCheckbox = document.getElementById('account-auth-remember');
+    if (rememberCheckbox) rememberCheckbox.checked = Boolean(accountAuthState.rememberMe);
     setAccountAuthStatus('Checking session...', 'info');
     openModal('account-modal', { initialFocus: '#account-auth-email' });
     if (PROFILE_SYNC_CONFIG.enabled) {
@@ -12762,6 +14026,10 @@ function initAccount() {
     updateAccountChip();
     const closeBtn = document.getElementById('close-account');
     const saveBtn = document.getElementById('save-account');
+    const profileToggleBtn = document.getElementById('account-profile-toggle');
+    const emailRequestPinBtn = document.getElementById('account-email-request-pin');
+    const emailVerifyPinBtn = document.getElementById('account-email-verify-pin');
+    const passwordUpdateBtn = document.getElementById('account-password-update');
     const authLoginTab = document.getElementById('account-auth-login-tab');
     const authSignupTab = document.getElementById('account-auth-signup-tab');
     const authSubmitBtn = document.getElementById('account-auth-submit');
@@ -12769,7 +14037,28 @@ function initAccount() {
     const authUsernameInput = document.getElementById('account-auth-username');
     const authPasswordInput = document.getElementById('account-auth-password');
     const authConfirmInput = document.getElementById('account-auth-confirm');
+    const authForgotBtn = document.getElementById('account-auth-forgot');
+    const authSwitchModeBtn = document.getElementById('account-auth-switch-mode');
+    const authRememberCheckbox = document.getElementById('account-auth-remember');
+    const authProviderButtons = Array.from(document.querySelectorAll('.account-auth-provider-btn'));
+    const passwordToggleButtons = Array.from(document.querySelectorAll('.account-auth-password-toggle[data-target-input]'));
+    const profileUsernameInput = document.getElementById('account-username');
+    const profileGoalInput = document.getElementById('account-goal');
+    const profileEmailInput = document.getElementById('account-email');
+    const profileEmailPinInput = document.getElementById('account-email-pin');
+    const profileCurrentPasswordInput = document.getElementById('account-current-password');
+    const profileNewPasswordInput = document.getElementById('account-new-password');
+    const profileConfirmPasswordInput = document.getElementById('account-confirm-new-password');
     const authInputs = [authEmailInput, authUsernameInput, authPasswordInput, authConfirmInput].filter(Boolean);
+    const profileInputs = [
+        profileUsernameInput,
+        profileGoalInput,
+        profileEmailInput,
+        profileEmailPinInput,
+        profileCurrentPasswordInput,
+        profileNewPasswordInput,
+        profileConfirmPasswordInput
+    ].filter(Boolean);
 
     authInputs.forEach((input) => {
         input.setAttribute('aria-describedby', 'account-auth-status');
@@ -12778,13 +14067,30 @@ function initAccount() {
             input.removeAttribute('aria-invalid');
         });
     });
+    profileInputs.forEach((input) => {
+        input.addEventListener('input', () => {
+            input.classList.remove('is-invalid-field');
+            input.removeAttribute('aria-invalid');
+        });
+    });
 
     if (closeBtn) closeBtn.addEventListener('click', closeAccountModal);
+    if (profileToggleBtn) {
+        profileToggleBtn.addEventListener('click', () => {
+            setAccountProfileSectionExpanded(!accountProfileUiState.expanded);
+        });
+    }
     if (authLoginTab) {
         authLoginTab.addEventListener('click', () => setAccountAuthMode('login'));
     }
     if (authSignupTab) {
-        authSignupTab.addEventListener('click', () => setAccountAuthMode('signup'));
+        authSignupTab.addEventListener('click', () => {
+            if (accountAuthState.isAuthenticated) {
+                showToast('Log out first to open Sign Up.', 'info');
+                return;
+            }
+            setAccountAuthMode('signup');
+        });
     }
     if (authSubmitBtn) {
         authSubmitBtn.addEventListener('click', async () => {
@@ -12806,24 +14112,87 @@ function initAccount() {
     if (authUsernameInput) authUsernameInput.addEventListener('keydown', enterToSubmit);
     if (authPasswordInput) authPasswordInput.addEventListener('keydown', enterToSubmit);
     if (authConfirmInput) authConfirmInput.addEventListener('keydown', enterToSubmit);
+    if (authPasswordInput) authPasswordInput.addEventListener('input', updateAccountPasswordStrengthMeter);
+    if (authConfirmInput) authConfirmInput.addEventListener('input', updateAccountPasswordStrengthMeter);
+    if (authRememberCheckbox) {
+        authRememberCheckbox.addEventListener('change', () => {
+            accountAuthState.rememberMe = Boolean(authRememberCheckbox.checked);
+        });
+    }
+    if (authForgotBtn) {
+        authForgotBtn.addEventListener('click', handleForgotPassword);
+    }
+    if (authSwitchModeBtn) {
+        authSwitchModeBtn.addEventListener('click', () => {
+            const targetMode = accountAuthState.mode === 'signup' ? 'login' : 'signup';
+            if (accountAuthState.isAuthenticated && targetMode === 'signup') {
+                showToast('Log out first to open Sign Up.', 'info');
+                return;
+            }
+            setAccountAuthMode(targetMode);
+        });
+    }
+    passwordToggleButtons.forEach((button) => {
+        const targetInputId = button.getAttribute('data-target-input');
+        if (!targetInputId) return;
+        const targetInput = document.getElementById(targetInputId);
+        updateAuthPasswordToggleState(button, targetInput);
+        button.addEventListener('click', () => {
+            toggleAuthPasswordVisibility(targetInputId);
+        });
+    });
+    authProviderButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+            const providerLabel = button.id.includes('google')
+                ? 'Google'
+                : button.id.includes('apple')
+                    ? 'Apple'
+                    : button.id.includes('github')
+                        ? 'GitHub'
+                        : 'Social';
+            handleAuthProviderClick(providerLabel);
+        });
+    });
 
     if (saveBtn) {
         saveBtn.addEventListener('click', async () => {
-            accountProfile = readAccountProfileFromForm();
-            saveAccountProfile();
-            updateAccountChip();
-            let synced = false;
-            if (PROFILE_SYNC_CONFIG.enabled && PROFILE_SYNC_CONFIG.autoPushOnSave) {
-                synced = await pushProfileToNeon({ silent: true });
-            }
-            if (synced) {
-                showToast('Profile saved and synced successfully.', 'success');
-            } else {
-                showToast('Profile saved successfully.', 'success');
-            }
-            queueUserStateSync();
+            await saveAccountProfileSettings();
         });
     }
+    if (emailRequestPinBtn) {
+        emailRequestPinBtn.addEventListener('click', async () => {
+            await requestEmailChangePin();
+        });
+    }
+    if (emailVerifyPinBtn) {
+        emailVerifyPinBtn.addEventListener('click', async () => {
+            await verifyEmailChangePin();
+        });
+    }
+    const enterToVerifyEmailPin = async (event) => {
+        if (event.key !== 'Enter') return;
+        event.preventDefault();
+        await verifyEmailChangePin();
+    };
+    if (profileEmailPinInput) {
+        profileEmailPinInput.addEventListener('keydown', enterToVerifyEmailPin);
+    }
+    if (passwordUpdateBtn) {
+        passwordUpdateBtn.addEventListener('click', async () => {
+            await updateAccountPassword();
+        });
+    }
+    const enterToUpdatePassword = async (event) => {
+        if (event.key !== 'Enter') return;
+        event.preventDefault();
+        await updateAccountPassword();
+    };
+    if (profileCurrentPasswordInput) profileCurrentPasswordInput.addEventListener('keydown', enterToUpdatePassword);
+    if (profileNewPasswordInput) profileNewPasswordInput.addEventListener('keydown', enterToUpdatePassword);
+    if (profileConfirmPasswordInput) profileConfirmPasswordInput.addEventListener('keydown', enterToUpdatePassword);
+
+    setAccountProfileSectionExpanded(false);
+    resetAccountSecureInputs({ clearPendingEmail: true });
     setAccountAuthMode('login');
     if (isLocalExampleSession()) {
         accountAuthState.isAuthenticated = true;
@@ -15170,7 +16539,7 @@ function renderDSCodeAndExplanation() {
     const lang = PLAYGROUND_RUNNABLE_LANGUAGES.includes(dsCodeLanguage) ? dsCodeLanguage : 'java';
     const codeSource = config.codeExamples?.[lang] || config.codeExamples?.java || '';
     const explanationSource = config.codeExplanations?.[lang];
-    const explanation = explanationSource?.[appState.language] || explanationSource?.en || '';
+    const explanation = translateLongformText(resolveLocalizedValue(explanationSource, appState.language), appState.language);
 
     codeEl.textContent = appState.language === 'es' ? translateCodeHumanText(codeSource) : codeSource;
     explanationEl.textContent = explanation || translateLiteral('Explanation unavailable for this language.', appState.language);
@@ -17863,7 +19232,8 @@ function resetProgress() {
         appState.sidebarManualCollapsed = false;
         appState.sidebarMobileExpanded = false;
         appState.sidebarTracksExpanded = false;
-        appState.collapsedSections = { ...DEFAULT_COLLAPSED_SECTIONS };
+        appState.routeCollapsedSections = normalizeRouteCollapsedSections();
+        appState.collapsedSections = getCollapsedSectionsForRoute(appState.currentRoute, appState.routeCollapsedSections);
 
         // Reset UI
         document.getElementById('search-input').value = '';
