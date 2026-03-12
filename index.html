@@ -84,7 +84,20 @@
             <div class="app-sidebar-inner">
                 <div class="app-sidebar-head">
                     <h2 class="app-sidebar-title" data-i18n="sidebar.title">Pages</h2>
-                    <button id="sidebar-close" type="button" class="app-sidebar-close" data-i18n-aria-label="sidebar.closeAria">×</button>
+                    <div class="app-sidebar-head-actions">
+                        <button
+                            id="sidebar-collapse-toggle"
+                            type="button"
+                            class="app-sidebar-collapse-toggle"
+                            aria-label="Collapse pages menu"
+                            data-i18n-aria-label="sidebar.collapseAria"
+                            title="Collapse pages menu to icons"
+                            data-i18n-title="sidebar.collapseHint"
+                            aria-pressed="false">
+                            <span class="sidebar-collapse-glyph" aria-hidden="true">&#128193;&#11013;&#65039;</span>
+                        </button>
+                        <button id="sidebar-close" type="button" class="app-sidebar-close" data-i18n-aria-label="sidebar.closeAria">×</button>
+                    </div>
                 </div>
                 <nav id="sidebar-nav" class="sidebar-nav" aria-label="Main pages" data-i18n-aria-label="sidebar.ariaLabel">
                     <a href="/home" class="sidebar-link" data-route-link data-route-key="/home" data-sidebar-icon="&#127968;" data-i18n="sidebar.home">Home</a>

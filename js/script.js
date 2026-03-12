@@ -47,6 +47,7 @@ const appState = {
     language: 'en',
     currentRoute: '/home',
     sidebarOpen: false,
+    sidebarManualCollapsed: false,
     collapsedSections: {
         progress: true,
         achievements: true,
@@ -516,6 +517,11 @@ const TRANSLATIONS = {
         'sidebar.toggle': 'Pages',
         'sidebar.toggleAria': 'Toggle page navigation',
         'sidebar.title': 'Pages',
+        'sidebar.collapseAria': 'Collapse pages menu',
+        'sidebar.expandAria': 'Expand pages menu',
+        'sidebar.collapseHint': 'Collapse pages menu to icons',
+        'sidebar.expandHint': 'Expand pages menu',
+        'sidebar.autoLockedHint': 'Pages menu auto-collapses while a top panel is open',
         'sidebar.closeAria': 'Close page navigation',
         'sidebar.ariaLabel': 'Main pages',
         'sidebar.home': 'Home',
@@ -895,6 +901,11 @@ const TRANSLATIONS = {
         'sidebar.toggle': 'Paginas',
         'sidebar.toggleAria': 'Alternar navegacion de paginas',
         'sidebar.title': 'Paginas',
+        'sidebar.collapseAria': 'Contraer menu de paginas',
+        'sidebar.expandAria': 'Expandir menu de paginas',
+        'sidebar.collapseHint': 'Contraer menu de paginas a iconos',
+        'sidebar.expandHint': 'Expandir menu de paginas',
+        'sidebar.autoLockedHint': 'El menu de paginas se contrae automaticamente cuando un panel superior esta abierto',
         'sidebar.closeAria': 'Cerrar navegacion de paginas',
         'sidebar.ariaLabel': 'Paginas principales',
         'sidebar.home': 'Inicio',
@@ -1651,6 +1662,38 @@ function isSidebarMobileRailMode() {
     return window.matchMedia('(max-width: 640px)').matches;
 }
 
+function isSidebarAutoCollapsedByTopMenu() {
+    return isSidebarInlineMode() && document.body.classList.contains('modal-open');
+}
+
+function updateSidebarCollapseToggleButton() {
+    const collapseButton = document.getElementById('sidebar-collapse-toggle');
+    if (!collapseButton) return;
+
+    const inlineMode = isSidebarInlineMode();
+    collapseButton.hidden = !inlineMode;
+    collapseButton.setAttribute('aria-hidden', inlineMode ? 'false' : 'true');
+    if (!inlineMode) return;
+
+    const isCollapsed = document.body.classList.contains('sidebar-icon-only');
+    const isAutoLocked = isSidebarAutoCollapsedByTopMenu();
+    const glyph = collapseButton.querySelector('.sidebar-collapse-glyph');
+    if (glyph) {
+        glyph.textContent = isCollapsed
+            ? '\u{1F4C1}\u27A1\uFE0F'
+            : '\u{1F4C1}\u2B05\uFE0F';
+    }
+
+    const ariaLabel = isCollapsed ? t('sidebar.expandAria') : t('sidebar.collapseAria');
+    const title = isAutoLocked
+        ? t('sidebar.autoLockedHint')
+        : (isCollapsed ? t('sidebar.expandHint') : t('sidebar.collapseHint'));
+    collapseButton.setAttribute('aria-label', ariaLabel);
+    collapseButton.setAttribute('title', title);
+    collapseButton.setAttribute('aria-pressed', isCollapsed ? 'true' : 'false');
+    collapseButton.disabled = isAutoLocked;
+}
+
 function syncDesktopSidebarIconMode() {
     if (!document.body) return;
 
@@ -1663,8 +1706,9 @@ function syncDesktopSidebarIconMode() {
     });
 
     const shouldCollapseToIcons = isSidebarMobileRailMode()
-        || (isSidebarInlineMode() && document.body.classList.contains('modal-open'));
+        || (isSidebarInlineMode() && (appState.sidebarManualCollapsed || isSidebarAutoCollapsedByTopMenu()));
     document.body.classList.toggle('sidebar-icon-only', shouldCollapseToIcons);
+    updateSidebarCollapseToggleButton();
 }
 function setSidebarExpandedState(expanded) {
     const toggleButton = document.getElementById('sidebar-toggle');
@@ -1889,6 +1933,7 @@ function navigateToRoute(route, options = {}) {
 function initRouteNavigation() {
     const toggleButton = document.getElementById('sidebar-toggle');
     const closeButton = document.getElementById('sidebar-close');
+    const collapseButton = document.getElementById('sidebar-collapse-toggle');
     const backdrop = document.getElementById('sidebar-backdrop');
     closeSidebar();
     syncDesktopSidebarIconMode();
@@ -1907,6 +1952,16 @@ function initRouteNavigation() {
     if (closeButton && closeButton.dataset.boundSidebarClose !== 'true') {
         closeButton.dataset.boundSidebarClose = 'true';
         closeButton.addEventListener('click', () => closeSidebar({ focusToggle: true }));
+    }
+    if (collapseButton && collapseButton.dataset.boundSidebarCollapse !== 'true') {
+        collapseButton.dataset.boundSidebarCollapse = 'true';
+        collapseButton.addEventListener('click', () => {
+            if (!isSidebarInlineMode()) return;
+            if (isSidebarAutoCollapsedByTopMenu()) return;
+            appState.sidebarManualCollapsed = !appState.sidebarManualCollapsed;
+            syncDesktopSidebarIconMode();
+            saveToLocalStorage();
+        });
     }
     if (backdrop && backdrop.dataset.boundSidebarBackdrop !== 'true') {
         backdrop.dataset.boundSidebarBackdrop = 'true';
@@ -9436,6 +9491,7 @@ function buildSerializableAppState() {
         highContrast: appState.highContrast,
         cardDepth: appState.cardDepth,
         language: appState.language,
+        sidebarManualCollapsed: appState.sidebarManualCollapsed,
         collapsedSections: normalizeCollapsedSections(appState.collapsedSections)
     };
 }
@@ -9625,6 +9681,7 @@ function loadFromLocalStorage() {
             appState.accent = ACCENT_OPTIONS.includes(state.accent) ? state.accent : 'indigo';
             appState.cardDepth = CARD_DEPTH_OPTIONS.includes(state.cardDepth) ? state.cardDepth : 'standard';
             appState.language = ['en', 'es'].includes(state.language) ? state.language : 'en';
+            appState.sidebarManualCollapsed = Boolean(state.sidebarManualCollapsed);
             appState.collapsedSections = normalizeCollapsedSections(state.collapsedSections);
 
             // Keep assembly modules defaulting to Assembly unless explicitly set to Assembly.
@@ -9691,6 +9748,9 @@ function applyRemoteUserStateSnapshot(snapshot, options = {}) {
         appState.accent = ACCENT_OPTIONS.includes(state.accent) ? state.accent : (appState.accent || 'indigo');
         appState.cardDepth = CARD_DEPTH_OPTIONS.includes(state.cardDepth) ? state.cardDepth : (appState.cardDepth || 'standard');
         appState.language = ['en', 'es'].includes(state.language) ? state.language : (appState.language || 'en');
+        appState.sidebarManualCollapsed = state.sidebarManualCollapsed !== undefined
+            ? Boolean(state.sidebarManualCollapsed)
+            : Boolean(appState.sidebarManualCollapsed);
         appState.collapsedSections = normalizeCollapsedSections(state.collapsedSections || appState.collapsedSections);
 
         enforceAssemblyModuleLanguageDefaults();
