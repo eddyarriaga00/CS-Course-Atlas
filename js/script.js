@@ -1710,10 +1710,17 @@ function syncDesktopSidebarIconMode() {
 
     const mobileMode = isSidebarMobileRailMode();
     const inlineMode = isSidebarInlineMode();
+    const mobileExpanded = mobileMode && appState.sidebarMobileExpanded;
     const shouldCollapseToIcons = mobileMode
         ? !appState.sidebarMobileExpanded
         : (inlineMode && (appState.sidebarManualCollapsed || isSidebarAutoCollapsedByTopMenu()));
     document.body.classList.toggle('sidebar-icon-only', shouldCollapseToIcons);
+    document.body.classList.toggle('sidebar-mobile-expanded', mobileExpanded);
+
+    const backdrop = document.getElementById('sidebar-backdrop');
+    if (backdrop) {
+        backdrop.hidden = !mobileExpanded;
+    }
     updateSidebarCollapseToggleButton();
 }
 function setSidebarExpandedState(expanded) {
@@ -1736,6 +1743,9 @@ function setSidebarExpandedState(expanded) {
 function closeSidebar(options = {}) {
     const { focusToggle = false } = options;
     appState.sidebarOpen = false;
+    if (isSidebarMobileRailMode()) {
+        appState.sidebarMobileExpanded = false;
+    }
     document.body.classList.remove('sidebar-open');
     setSidebarExpandedState(false);
     if (focusToggle) {

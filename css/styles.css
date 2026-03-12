@@ -7197,17 +7197,21 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
         display: none !important;
     }
 
+    body.sidebar-mobile-expanded #sidebar-backdrop {
+        display: block !important;
+        position: fixed;
+        inset: 0;
+        z-index: 80;
+        background: rgba(2, 6, 23, 0.46);
+        backdrop-filter: blur(2px);
+    }
+
     #app-shell {
         display: grid;
         grid-template-columns: 56px minmax(0, 1fr);
         gap: 0.6rem;
         padding: 0 0.45rem;
         transition: grid-template-columns 180ms ease, gap 180ms ease;
-    }
-
-    body:not(.sidebar-icon-only) #app-shell {
-        grid-template-columns: minmax(190px, 240px) minmax(0, 1fr);
-        gap: 0.5rem;
     }
 
     #app-sidebar {
@@ -7224,7 +7228,22 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
         overflow-y: auto;
     }
 
+    body.sidebar-mobile-expanded #app-sidebar {
+        position: fixed;
+        top: calc(4.25rem + env(safe-area-inset-top));
+        left: 0.55rem;
+        width: min(84vw, 306px);
+        z-index: 86;
+        max-height: calc(100dvh - 5rem - env(safe-area-inset-top));
+        overflow: visible;
+    }
+
     #main-header.header-collapsed ~ #app-shell #app-sidebar {
+        top: calc(2.7rem + env(safe-area-inset-top));
+        max-height: calc(100dvh - 3.2rem - env(safe-area-inset-top));
+    }
+
+    body.sidebar-mobile-expanded #main-header.header-collapsed ~ #app-shell #app-sidebar {
         top: calc(2.7rem + env(safe-area-inset-top));
         max-height: calc(100dvh - 3.2rem - env(safe-area-inset-top));
     }
@@ -7236,6 +7255,10 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
     #app-sidebar .app-sidebar-inner {
         padding: 0.55rem 0.35rem;
         border-radius: 0.95rem;
+    }
+
+    body.sidebar-mobile-expanded #app-sidebar .app-sidebar-inner {
+        box-shadow: 0 16px 34px rgba(15, 23, 42, 0.46);
     }
 
     #app-sidebar .app-sidebar-head {
