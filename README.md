@@ -1,88 +1,96 @@
-# ☕ Java DSA Learning Hub
+# CS Course Atlas (Java-DSA-Helper)
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge)](https://eddyarriaga00.github.io/Java-DSA-Helper/)
-[![GitHub Stars](https://img.shields.io/github/stars/eddyarriaga00/Java-DSA-Helper?style=for-the-badge)](https://github.com/eddyarriaga00/Java-DSA-Helper/stargazers)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+Live site: [https://eddyarriaga00.github.io/Java-DSA-Helper/](https://eddyarriaga00.github.io/Java-DSA-Helper/)
 
-> **Master Data Structures & Algorithms with interactive Java-first learning.**
+CS Course Atlas is a multi-track CS learning platform with modules, quizzes, flashcards, glossary tools, notes, and coding playgrounds.
 
-Comprehensive modules with runnable code, per-module flashcards, quizzes, glossary links, and a sandbox powered by the Piston API. Built for CS students who want clean explanations, pseudocode, and multi-language examples without leaving the browser.
+## What Is Included
+- Multi-route learning tracks: Home, Course Tracks, DSA, Java, Git, Assembly, Discrete Math, Flashcards, Quizzes, Playground, Notes, Support, About.
+- Module system with explanations, code examples, mode/language switching, and progress tracking.
+- Interactive quizzes and flashcard practice.
+- Glossary, notes library, and books library UI.
+- Account and progress sync support through backend APIs when the Node server is running.
+- Responsive navigation across laptop, tablet, and mobile.
 
-## 🧭 Table of Contents
-- [Features](#-features)
-- [Live Demo & Quick Start](#-live-demo--quick-start)
-- [How the Platform Works](#-how-the-platform-works)
-- [Customization](#-customization)
-- [Tech Stack](#-tech-stack)
-- [Roadmap](#-roadmap)
-- [Support](#-support)
-- [Contact](#-contact)
+## Recent Navigation Updates
+- Left pages sidebar now has a collapsible `Course Tracks` group that expands to show classes.
+- Sidebar behavior is synchronized across devices:
+  - Desktop/laptop: inline sidebar with icon-collapse mode.
+  - Tablet/iPad: drawer behavior with proper open/close state.
+  - Mobile: left rail plus overlay expansion, with auto-close after page selection.
+- Laptop sidebar width was increased so empty space is reduced and page labels fit better.
 
-## ✨ Features
-- **Interactive modules (20+)** with expanded explanations, step-by-step code breakdowns, and runnable samples.
-- **Multi-language code** (Java, Python, C++, JavaScript) with comments + pseudocode mode and comment toggles.
-- **Quiz engine**: 15-question banks per module, 4 random per attempt, 100% required to complete.
-- **Flashcards & glossary**: Module-tied flashcards plus a searchable glossary with highlighted matches.
-- **Progression tools**: Achievements, focus timer, streaks, study plan prompts, daily challenges, and insights.
-- **Code playground (Java/Python/C++/JS)**: Language dropdown with preloaded module snippets (auto-stubs `main` when missing), Piston API ready; reset/copy/run buttons included.
-- **Pagination**: Module grid paginates (5 per page) to keep the page compact on all devices.
-- **Accessibility & UX**: Dark/light themes, accent options, font scaling, compact layout, keyboard/Esc/backdrop closing for modals.
-- **Responsive**: Optimized for laptops, tablets, and phones.
+## Project Structure
+- `index.html` - app shell and routed page containers.
+- `css/styles.css` - full styling, responsive layout, sidebar/menu behavior, themes.
+- `js/script.js` - app state, routing, rendering, modules, quizzes, glossary, account/session UI.
+- `server/` - Express backend for auth/profile/user-state/support/books APIs.
 
-## 🚀 Live Demo & Quick Start
-Live site: **https://eddyarriaga00.github.io/Java-DSA-Helper/**
+## Run Locally
 
-Local run:
+### Option 1: Frontend-only (GitHub Pages style)
+Use this when you only need static site behavior.
+
 ```bash
 git clone https://github.com/eddyarriaga00/Java-DSA-Helper.git
 cd Java-DSA-Helper
-open index.html   # or python -m http.server 8000
+py -m http.server 4173
 ```
 
-Runner (optional): set `CODE_RUNNER_ENDPOINT` and adjust `CODE_RUNNER_CONFIG` (language/version/filenames) in `js/script.js` to point to your Piston or local runner if you want playground execution offline.
+Open `http://127.0.0.1:4173/index.html`
 
-## 🎯 How the Platform Works
-- **Modules**: Organized beginner → advanced, paginated 5 per page. Each module has multi-language code, a detailed breakdown, resources, and runnable Java samples.
-- **Playground**: Load any module sample from the dropdown, edit, run, copy output, or reset. Samples include a `main` method stub if one was missing.
-- **Quizzes**: Generated from module descriptions, topics, code breakdowns, resources, glossary terms, and flashcards. Four random questions per attempt; perfect score marks completion.
-- **Flashcards/Glossary**: Per-module decks and a global glossary keep definitions aligned with quizzes and modules.
-- **Progress & Insights**: Tracks completion, streaks, focus time, daily challenges, study plans, and achievements. Settings persist locally (theme, comments, pseudocode, density, etc.).
+### Option 2: Full stack (frontend + backend APIs)
+Use this for auth/session sync, support API, and books streaming endpoints.
 
-## 🔧 Customization
-- **Add modules**: Extend the `modules` array in `js/script.js` (title, description, topics, codeExamples, explanation, resources, codeBreakdown). Java samples auto-stub `main` if absent.
-- **Adjust themes**: Tweak CSS variables in `css/styles.css` for surfaces, accents, and typography. Accent themes are selectable in-app.
-- **Runner**: Point `CODE_RUNNER_ENDPOINT` to your own Piston-compatible runner to execute playground code offline.
+1. Install dependencies:
 
-## 🛠 Tech Stack
-- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **Styling**: Custom CSS with Tailwind-inspired utilities
-- **Fonts**: Inter (Google Fonts)
-- **Icons**: Emoji-based
-- **Hosting**: GitHub Pages–ready, zero build step
+```bash
+npm install
+```
 
-## 🗺 Roadmap (snapshot)
-- More language snippets for advanced modules
-- Additional runnable samples and challenges
-- Optional timed quizzes and coding prompts
-- Offline/PWA enhancements
+2. Create `.env` in repo root:
 
-## 💝 Support
-- ⭐ Star the repo
-- 🐛 Open issues/PRs for bugs or content fixes
-- ☕ Donate: [PayPal](https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=5.00&currency_code=USD&item_name=Java%20DSA%20Learning%20Hub%20-%20Coffee%20Support)
-- ❤️ Sponsor: [PayPal Sponsor ($25)](https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=25.00&currency_code=USD&item_name=Java%20DSA%20Learning%20Hub%20-%20Sponsor%20Support)
+```env
+DATABASE_URL=your_neon_connection_string
+PORT=3000
+NODE_ENV=development
+SESSION_COOKIE_NAME=csatlas_session
+SESSION_TTL_DAYS=30
+LIANG_JAVA_BOOK_PATH=C:\absolute\path\to\book.pdf
+```
 
-## 📞 Contact
-- **Creator**: Eddy Arriaga-Barrientos  
-- **GitHub**: [eddyarriaga00](https://github.com/eddyarriaga00/)  
-- **Email**: eddyarriaga123@gmail.com  
-- **LinkedIn**: [Eddy Arriaga](https://linkedin.com/in/eddy-arriaga/)
+3. Run migrations:
 
----
-<div align="center">
+```bash
+npm run db:migrate
+```
 
-**Made with ❤️ for CS students worldwide**
+4. Start server:
 
-[⬆ Back to Top](#-java-dsa-learning-hub)
+```bash
+npm start
+```
 
-</div>
+Open `http://localhost:3000`
+
+## NPM Scripts
+- `npm start` - run Express server.
+- `npm run dev` - run server in watch mode.
+- `npm run db:migrate` - apply SQL migrations in `server/sql`.
+- `npm run check:frontend` - syntax check `js/script.js`.
+
+## Deployment Notes
+- GitHub Pages is good for free static hosting with minimal maintenance.
+- Full backend features require deploying the Node server and Neon database separately.
+- If deploying full stack, set environment variables on the host and run migrations before first launch.
+
+## Support
+- GitHub repo: [https://github.com/eddyarriaga00/Java-DSA-Helper](https://github.com/eddyarriaga00/Java-DSA-Helper)
+- Donate (PayPal): [Support this project](https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=5.00&currency_code=USD&item_name=Java%20DSA%20Learning%20Hub%20-%20Coffee%20Support)
+- Sponsor ($25 preset): [Sponsor this project](https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=25.00&currency_code=USD&item_name=Java%20DSA%20Learning%20Hub%20-%20Sponsor%20Support)
+
+## Contact
+- Creator: Eddy Arriaga-Barrientos
+- GitHub: [https://github.com/eddyarriaga00](https://github.com/eddyarriaga00)
+- Email: eddyarriaga123@gmail.com
+- LinkedIn: [https://linkedin.com/in/eddy-arriaga/](https://linkedin.com/in/eddy-arriaga/)
