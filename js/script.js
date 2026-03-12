@@ -182,6 +182,7 @@ const ROUTE_KEY_BY_PATH = {
 const HOME_SECTION_ORDER = [
     'hero-section',
     'home-beginner-onboarding-section',
+    'home-guided-start-section',
     'topic-focus-section',
     'home-advanced-tools-section',
     'search-section',
@@ -665,6 +666,22 @@ const TRANSLATIONS = {
         'topic.comingSoon.cpp.subtitle': 'C++ fundamentals, STL, memory model, and performance-oriented problem solving',
         'topic.comingSoon.stats.title': 'Statistics for CS',
         'topic.comingSoon.stats.subtitle': 'Probability, distributions, inference, and data-driven decision making',
+        'start.paths.kicker': 'Where to Start',
+        'start.paths.heading': 'Not sure what to click first?',
+        'start.paths.subtitle': 'Pick one goal and we will send you to the best first step.',
+        'start.paths.foundations.title': 'New to CS',
+        'start.paths.foundations.description': 'Start with foundations and open the first beginner module.',
+        'start.paths.foundations.cta': 'Start Foundations',
+        'start.paths.coursework.title': 'Studying for class',
+        'start.paths.coursework.description': 'Open course tracks and choose the class you are taking now.',
+        'start.paths.coursework.cta': 'Pick a course track',
+        'start.paths.interview.title': 'Interview prep',
+        'start.paths.interview.description': 'Jump into DSA modules and interview-focused practice.',
+        'start.paths.interview.cta': 'Go to DSA practice',
+        'start.paths.review.title': 'Quick review',
+        'start.paths.review.description': 'Run fast recall with flashcards, then verify terms in the glossary.',
+        'start.paths.review.cta': 'Start quick review',
+        'start.paths.review.toast': 'Flashcards opened. Next: use Glossary for definition refresh.',
         // Sections
         'section.dailyChallenge': '\u{1F3AF} Daily Challenge',
         'section.studyTip': '\u{1F4A1} Study Tip',
@@ -1051,6 +1068,22 @@ const TRANSLATIONS = {
         'topic.comingSoon.cpp.subtitle': 'Fundamentos de C++, STL, modelo de memoria y resolución de problemas orientada al rendimiento',
         'topic.comingSoon.stats.title': 'Estadística para CS',
         'topic.comingSoon.stats.subtitle': 'Probabilidad, distribuciones, inferencia y toma de decisiones basada en datos',
+        'start.paths.kicker': 'Donde Empezar',
+        'start.paths.heading': 'No sabes que abrir primero?',
+        'start.paths.subtitle': 'Elige un objetivo y te llevamos al mejor primer paso.',
+        'start.paths.foundations.title': 'Nuevo en CS',
+        'start.paths.foundations.description': 'Comienza con fundamentos y abre el primer modulo para principiantes.',
+        'start.paths.foundations.cta': 'Iniciar Fundamentos',
+        'start.paths.coursework.title': 'Estudiando para clase',
+        'start.paths.coursework.description': 'Abre rutas de curso y elige la clase que estas llevando.',
+        'start.paths.coursework.cta': 'Elegir ruta de curso',
+        'start.paths.interview.title': 'Preparacion de entrevista',
+        'start.paths.interview.description': 'Ve a modulos de DSA y practica enfocada en entrevistas.',
+        'start.paths.interview.cta': 'Ir a practica DSA',
+        'start.paths.review.title': 'Repaso rapido',
+        'start.paths.review.description': 'Haz repaso rapido con tarjetas y luego confirma terminos en el glosario.',
+        'start.paths.review.cta': 'Iniciar repaso rapido',
+        'start.paths.review.toast': 'Tarjetas abiertas. Siguiente paso: usa el Glosario para repasar definiciones.',
         // Sections
         'section.dailyChallenge': '\u{1F3AF} Desaf\u00edo del D\u00eda',
         'section.studyTip': '\u{1F4A1} Consejo de Estudio',
@@ -2177,6 +2210,28 @@ function navigateToRoute(route, options = {}) {
 function startLearningJourney() {
     const targetRoute = '/tracks';
     navigateToRoute(targetRoute, { focusMain: true });
+}
+
+function startGuidedPath(pathKey) {
+    const key = String(pathKey || '').toLowerCase();
+    if (key === 'foundations') {
+        startGuestTrack('dsa');
+        return;
+    }
+    if (key === 'coursework') {
+        navigateToRoute('/tracks', { focusMain: true });
+        return;
+    }
+    if (key === 'interview') {
+        navigateToRoute('/dsa', { focusMain: true });
+        return;
+    }
+    if (key === 'review') {
+        openFlashcards();
+        showToast(t('start.paths.review.toast'), 'info');
+        return;
+    }
+    navigateToRoute('/home', { focusMain: true });
 }
 
 function initRouteNavigation() {

@@ -192,6 +192,38 @@
             </div>
         </section>
 
+        <section id="home-guided-start-section" class="panel-surface rounded-xl p-5 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
+            <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3">
+                <div>
+                    <p class="text-[11px] uppercase tracking-wide font-semibold text-indigo-200" data-i18n="start.paths.kicker">Where to Start</p>
+                    <h3 class="text-xl sm:text-2xl font-semibold text-indigo-300 mt-1" data-i18n="start.paths.heading">Not sure what to click first?</h3>
+                    <p class="text-sm sm:text-base text-slate-200 mt-1" data-i18n="start.paths.subtitle">Pick one goal and we will send you to the best first step.</p>
+                </div>
+            </div>
+            <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+                <button type="button" onclick="startGuidedPath('foundations')" class="text-left rounded-xl border border-white/10 bg-slate-900/70 p-4 hover:bg-slate-800/80 transition-all duration-200">
+                    <p class="text-sm font-semibold text-slate-100" data-i18n="start.paths.foundations.title">New to CS</p>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1" data-i18n="start.paths.foundations.description">Start with foundations and open the first beginner module.</p>
+                    <span class="inline-flex mt-3 text-xs font-semibold px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-100 border border-indigo-300/30" data-i18n="start.paths.foundations.cta">Start Foundations</span>
+                </button>
+                <button type="button" onclick="startGuidedPath('coursework')" class="text-left rounded-xl border border-white/10 bg-slate-900/70 p-4 hover:bg-slate-800/80 transition-all duration-200">
+                    <p class="text-sm font-semibold text-slate-100" data-i18n="start.paths.coursework.title">Studying for class</p>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1" data-i18n="start.paths.coursework.description">Open course tracks and choose the class you are taking now.</p>
+                    <span class="inline-flex mt-3 text-xs font-semibold px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-100 border border-emerald-300/30" data-i18n="start.paths.coursework.cta">Pick a course track</span>
+                </button>
+                <button type="button" onclick="startGuidedPath('interview')" class="text-left rounded-xl border border-white/10 bg-slate-900/70 p-4 hover:bg-slate-800/80 transition-all duration-200">
+                    <p class="text-sm font-semibold text-slate-100" data-i18n="start.paths.interview.title">Interview prep</p>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1" data-i18n="start.paths.interview.description">Jump into DSA modules and interview-focused practice.</p>
+                    <span class="inline-flex mt-3 text-xs font-semibold px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-100 border border-amber-300/30" data-i18n="start.paths.interview.cta">Go to DSA practice</span>
+                </button>
+                <button type="button" onclick="startGuidedPath('review')" class="text-left rounded-xl border border-white/10 bg-slate-900/70 p-4 hover:bg-slate-800/80 transition-all duration-200">
+                    <p class="text-sm font-semibold text-slate-100" data-i18n="start.paths.review.title">Quick review</p>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1" data-i18n="start.paths.review.description">Run fast recall with flashcards, then verify terms in the glossary.</p>
+                    <span class="inline-flex mt-3 text-xs font-semibold px-2.5 py-1 rounded-lg bg-sky-500/20 text-sky-100 border border-sky-300/30" data-i18n="start.paths.review.cta">Start quick review</span>
+                </button>
+            </div>
+        </section>
+
         <section id="topic-focus-section" class="panel-surface rounded-xl p-5 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/65 border border-white/10 text-slate-100">
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-4">
                 <div>
