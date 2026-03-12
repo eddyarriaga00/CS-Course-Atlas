@@ -4639,87 +4639,225 @@ const modules = [
             '30-Day Starter Plan'
         ],
         codeExamples: {
-            java: `import java.util.List;
+            java: `import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-public class IntroToCodingOverview {
+public class IntroToCodingLecture {
+    // Lecture helper: Input -> Process -> Output
+    static int solveMiniProblem(int input) {
+        int processStep = input * 2;      // Process rule 1
+        return processStep + 1;           // Process rule 2 -> Output
+    }
+
+    static String recommendFirstLanguage(String goal) {
+        String normalized = goal.trim().toLowerCase();
+        if (normalized.contains("web")) return "JavaScript";
+        if (normalized.contains("data") || normalized.contains("ai")) return "Python";
+        if (normalized.contains("android")) return "Kotlin or Java";
+        if (normalized.contains("systems")) return "C++ or Rust";
+        return "Python";
+    }
+
     public static void main(String[] args) {
-        List<String> sections = List.of(
-            "1) What coding is",
-            "2) History and evolution",
-            "3) Career paths and specialization",
-            "4) Language and tooling decisions",
-            "5) Beginner workflow and project plan"
+        System.out.println("=== Introduction to Coding: Lecture Mode ===");
+        System.out.println("Part 1) Mental model: Input -> Process -> Output");
+        int input = 6;
+        int output = solveMiniProblem(input);
+        System.out.println("Input: " + input + ", Output: " + output);
+
+        System.out.println("\\nPart 2) Build loop: read task -> write -> run -> debug -> refactor");
+        List<String> workflow = List.of(
+            "Read problem carefully",
+            "Write the smallest working version",
+            "Run and verify expected output",
+            "Debug one assumption at a time",
+            "Refactor names/structure for clarity"
+        );
+        for (int i = 0; i < workflow.size(); i++) {
+            System.out.println((i + 1) + ". " + workflow.get(i));
+        }
+
+        System.out.println("\\nPart 3) Career direction and language choice");
+        Map<String, String> sampleGoals = new LinkedHashMap<>();
+        sampleGoals.put("Build websites", recommendFirstLanguage("web"));
+        sampleGoals.put("Work with data", recommendFirstLanguage("data"));
+        sampleGoals.put("General CS foundations", recommendFirstLanguage("general"));
+        sampleGoals.forEach((goal, language) ->
+            System.out.println("- " + goal + " -> Start with " + language)
         );
 
-        System.out.println("=== Introduction to Coding ===");
-        for (String section : sections) {
-            System.out.println(section);
-        }
-        System.out.println("Goal: move from confusion to a clear, executable plan.");
+        System.out.println("\\nPart 4) 30-day execution focus");
+        System.out.println("Week 1: setup + first programs");
+        System.out.println("Week 2: variables, conditions, loops, functions");
+        System.out.println("Week 3: debugging reps + small project");
+        System.out.println("Week 4: polish, document, publish");
     }
 }`,
             cpp: `#include <iostream>
 #include <vector>
 #include <string>
+#include <map>
 using namespace std;
 
-int main() {
-    vector<string> sections = {
-        "1) What coding is",
-        "2) History and evolution",
-        "3) Career paths and specialization",
-        "4) Language and tooling decisions",
-        "5) Beginner workflow and project plan"
-    };
+int solveMiniProblem(int input) {
+    int processStep = input * 2;
+    return processStep + 1;
+}
 
-    cout << "=== Introduction to Coding ===\\n";
-    for (const auto& section : sections) {
-        cout << section << "\\n";
+string recommendFirstLanguage(const string& goalRaw) {
+    string goal = goalRaw;
+    for (char& c : goal) c = (char)tolower(c);
+    if (goal.find("web") != string::npos) return "JavaScript";
+    if (goal.find("data") != string::npos || goal.find("ai") != string::npos) return "Python";
+    if (goal.find("android") != string::npos) return "Kotlin or Java";
+    if (goal.find("systems") != string::npos) return "C++ or Rust";
+    return "Python";
+}
+
+int main() {
+    cout << "=== Introduction to Coding: Lecture Mode ===\\n";
+    cout << "Part 1) Input -> Process -> Output\\n";
+    int input = 6;
+    int output = solveMiniProblem(input);
+    cout << "Input: " << input << ", Output: " << output << "\\n\\n";
+
+    vector<string> workflow = {
+        "Read problem carefully",
+        "Write the smallest working version",
+        "Run and verify expected output",
+        "Debug one assumption at a time",
+        "Refactor names/structure for clarity"
+    };
+    cout << "Part 2) Build loop\\n";
+    for (int i = 0; i < (int)workflow.size(); i++) {
+        cout << (i + 1) << ". " << workflow[i] << "\\n";
     }
-    cout << "Goal: move from confusion to a clear, executable plan.\\n";
+
+    cout << "\\nPart 3) Language choice by goal\\n";
+    map<string, string> goals = {
+        {"Build websites", recommendFirstLanguage("web")},
+        {"Work with data", recommendFirstLanguage("data")},
+        {"General CS foundations", recommendFirstLanguage("general")}
+    };
+    for (const auto& entry : goals) {
+        cout << "- " << entry.first << " -> Start with " << entry.second << "\\n";
+    }
+
+    cout << "\\nPart 4) 30-day focus: setup, fundamentals, debugging, publish\\n";
     return 0;
 }`,
-            python: `def intro_to_coding_overview():
-    sections = [
-        "1) What coding is",
-        "2) History and evolution",
-        "3) Career paths and specialization",
-        "4) Language and tooling decisions",
-        "5) Beginner workflow and project plan",
+            python: `def solve_mini_problem(user_input: int) -> int:
+    """Input -> Process -> Output demonstration."""
+    process_step = user_input * 2
+    return process_step + 1
+
+
+def recommend_first_language(goal: str) -> str:
+    normalized = goal.strip().lower()
+    if "web" in normalized:
+        return "JavaScript"
+    if "data" in normalized or "ai" in normalized:
+        return "Python"
+    if "android" in normalized:
+        return "Kotlin or Java"
+    if "systems" in normalized:
+        return "C++ or Rust"
+    return "Python"
+
+
+def intro_to_coding_lecture() -> None:
+    print("=== Introduction to Coding: Lecture Mode ===")
+    print("Part 1) Input -> Process -> Output")
+    user_input = 6
+    print(f"Input: {user_input}, Output: {solve_mini_problem(user_input)}")
+
+    print("\\nPart 2) Build loop")
+    workflow = [
+        "Read problem carefully",
+        "Write the smallest working version",
+        "Run and verify expected output",
+        "Debug one assumption at a time",
+        "Refactor names/structure for clarity",
     ]
+    for index, step in enumerate(workflow, start=1):
+        print(f"{index}. {step}")
 
-    print("=== Introduction to Coding ===")
-    for section in sections:
-        print(section)
-    print("Goal: move from confusion to a clear, executable plan.")
+    print("\\nPart 3) Language choice by goal")
+    for goal in ["web", "data", "general"]:
+        print(f"- Goal '{goal}' -> {recommend_first_language(goal)}")
 
-intro_to_coding_overview()
+    print("\\nPart 4) 30-day focus: setup, fundamentals, debugging, publish")
+
+
+intro_to_coding_lecture()
 `,
-            javascript: `(function introToCodingOverview() {
-    const sections = [
-        "1) What coding is",
-        "2) History and evolution",
-        "3) Career paths and specialization",
-        "4) Language and tooling decisions",
-        "5) Beginner workflow and project plan"
-    ];
+            javascript: `(function introToCodingLecture() {
+    function solveMiniProblem(input) {
+        const processStep = input * 2;
+        return processStep + 1;
+    }
 
-    console.log("=== Introduction to Coding ===");
-    sections.forEach((section) => console.log(section));
-    console.log("Goal: move from confusion to a clear, executable plan.");
+    function recommendFirstLanguage(goalRaw) {
+        const goal = String(goalRaw || "").toLowerCase();
+        if (goal.includes("web")) return "JavaScript";
+        if (goal.includes("data") || goal.includes("ai")) return "Python";
+        if (goal.includes("android")) return "Kotlin or Java";
+        if (goal.includes("systems")) return "C++ or Rust";
+        return "Python";
+    }
+
+    console.log("=== Introduction to Coding: Lecture Mode ===");
+    console.log("Part 1) Input -> Process -> Output");
+    const input = 6;
+    console.log("Input: " + input + ", Output: " + solveMiniProblem(input));
+
+    console.log("\\nPart 2) Build loop");
+    const workflow = [
+        "Read problem carefully",
+        "Write the smallest working version",
+        "Run and verify expected output",
+        "Debug one assumption at a time",
+        "Refactor names/structure for clarity"
+    ];
+    workflow.forEach((step, index) => console.log((index + 1) + ". " + step));
+
+    console.log("\\nPart 3) Language choice by goal");
+    ["web", "data", "general"].forEach((goal) => {
+        console.log("- Goal '" + goal + "' -> " + recommendFirstLanguage(goal));
+    });
+
+    console.log("\\nPart 4) 30-day focus: setup, fundamentals, debugging, publish");
 })();`
         },
-        explanation: `Coding is the practice of turning ideas into exact instructions a computer can execute. If you are new, this module is your foundation: we cover why programming exists, how the field evolved, and how modern software teams ship and maintain software.
+        explanation: `This module is built as a full beginner lecture, not just a syntax tour. The goal is to move you from "I do not know where to start" to "I have a concrete weekly system and know exactly what to practice next."
 
-You will map major career tracks (frontend, backend, mobile, data, security, cloud, embedded, game, and QA/automation), then choose a realistic path instead of trying to learn everything at once. We compare language choices by use case, beginner ergonomics, job relevance, and tooling maturity so your first pick is intentional.
+Lecture frame:
+1) Mental model first: every program is Input -> Process -> Output.
+2) Workflow second: read task -> write smallest version -> run -> debug -> refactor.
+3) Direction third: choose a realistic path and language based on goals, not hype.
+4) Execution fourth: build repeatable study habits and small projects that prove progress.
 
-You will also learn the real startup workflow beginners need:
-1) Install editor + runtime/compiler and verify with a tiny program.
-2) Understand the loop: read task -> write code -> run -> inspect output -> debug -> refactor.
-3) Use Git from day one so progress is tracked and reversible.
-4) Build small projects with increasing scope and clear reflection notes.
+What you should be able to do after this module:
+- Explain in plain English what your code is supposed to do before writing it.
+- Break a problem into steps that can be tested one-by-one.
+- Set up your environment and run code without guessing.
+- Use Git basics to keep your progress safe and reversible.
+- Build and ship tiny projects with clear README notes.
 
-Finally, we cover execution habits that make long-term progress reliable: active recall, spaced repetition, deliberate practice, documentation reading, and asking high-quality questions when blocked. By the end, you should have direction, tools, and a repeatable system for continued growth.`,
+Common beginner mistakes this module prevents:
+- Jumping into advanced topics before mastering loops/functions/debugging.
+- Copy-pasting code without understanding the data flow.
+- Changing too many things at once while debugging.
+- Consuming tutorials passively without producing code every session.
+
+Use this module like a workshop:
+- Run the examples.
+- Modify one part at a time and predict output before execution.
+- Write reflection notes after each practice block.
+- Convert one concept into your own words as if teaching a classmate.
+
+If you complete this module seriously, you will have a stable foundation for DSA, Java, discrete math, and interview prep instead of starting each new topic from scratch.`,
         resources: [
             { text: 'CS50x (Harvard) - Intro to Computer Science', url: 'https://cs50.harvard.edu/x/' },
             { text: 'Roadmap.sh - Developer Role Roadmaps', url: 'https://roadmap.sh/' },
@@ -8050,404 +8188,402 @@ function ensureExpectedOutputsForCodeExamples(module, codeExamples = {}, existin
 const MODULE_CODE_EXAMPLE_SET_OVERRIDES = {
     'intro-to-coding': [
         {
-            id: 'history-timeline',
-            title: { en: 'From Early Computing to Modern Development', es: 'De la Computacion Temprana al Desarrollo Moderno' },
-            description: { en: 'Walk the major milestones that shaped modern programming.', es: 'Recorre los hitos principales que formaron la programacion moderna.' },
+            id: 'input-process-output-lecture',
+            title: { en: 'Input -> Process -> Output Lecture', es: 'Entrada -> Proceso -> Salida' },
+            description: { en: 'Learn the core mental model all programs follow.', es: 'Aprende el modelo mental que siguen todos los programas.' },
             deepExplanation: {
-                en: `Conceptual breakdown:
-- Programming did not start with web apps; it evolved through math, logic, and hardware constraints.
-- Knowing the timeline helps beginners understand why today’s tools look the way they do.
+                en: `Lecture context:
+- Beginners often treat coding as random syntax. That is the wrong model.
+- Real coding starts with clear data flow: Input -> Process -> Output.
+- If you can narrate those three steps, you can debug and design far better.
 
 Code walkthrough:
-1) Define a typed milestone structure (year + event).
-2) Build a sequence from early ideas to modern ecosystems.
-3) Print timeline entries in order to reinforce historical progression.
+1) sanitizeInput removes noisy values so later logic is stable.
+2) computeScore applies deterministic rules that can be tested.
+3) main prints both raw and processed values so behavior is visible.
+
+Common mistakes to avoid:
+- Skipping input validation and blaming downstream logic later.
+- Hiding logic in one long method instead of named steps.
+- Not printing checkpoints while learning.
+
+Practice checks:
+- Change the input list and predict output before running.
+- Add one failing case and handle it without breaking current behavior.
+- Explain each method in one sentence without reading code.`,
+                es: `Contexto de clase:
+- Muchos principiantes ven codigo como sintaxis aleatoria; ese modelo falla.
+- El modelo correcto es flujo de datos: Entrada -> Proceso -> Salida.
+- Si puedes narrar esos tres pasos, puedes depurar y disenar mejor.
+
+Recorrido del codigo:
+1) sanitizeInput limpia datos ruidosos.
+2) computeScore aplica reglas deterministas.
+3) main imprime datos crudos y procesados para verificar comportamiento.
+
+Errores comunes:
+- Saltar validacion de entrada.
+- Juntar toda la logica en un solo metodo.
+- No imprimir checkpoints durante practica.`
+            },
+            codeExamples: {
+                java: `import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public class InputProcessOutputLecture {
+    static List<Integer> sanitizeInput(List<Integer> raw) {
+        List<Integer> cleaned = new ArrayList<>();
+        for (int value : raw) {
+            if (value >= 0) cleaned.add(value); // Ignore invalid negative samples
+        }
+        return cleaned;
+    }
+
+    static List<Integer> computeScore(List<Integer> cleaned) {
+        List<Integer> result = new ArrayList<>();
+        for (int value : cleaned) {
+            int transformed = (value * 2) + 1;
+            result.add(transformed);
+        }
+        return result;
+    }
+
+    public static void main(String[] args) {
+        List<Integer> rawInput = Arrays.asList(2, 4, -1, 6, 8);
+        List<Integer> cleaned = sanitizeInput(rawInput);
+        List<Integer> output = computeScore(cleaned);
+
+        System.out.println("Input  : " + rawInput);
+        System.out.println("Cleaned: " + cleaned);
+        System.out.println("Output : " + output);
+        System.out.println("Pattern used: output = (input * 2) + 1");
+    }
+}`
+            }
+        },
+        {
+            id: 'source-to-runtime-pipeline',
+            title: { en: 'From Source Code to Running Program', es: 'Del Codigo Fuente al Programa en Ejecucion' },
+            description: { en: 'Understand what happens between writing code and seeing output.', es: 'Entiende que pasa entre escribir codigo y ver salida.' },
+            deepExplanation: {
+                en: `Lecture context:
+- Many students run commands without understanding pipeline stages.
+- You should know exactly where failures happen: write, compile, run, test.
+
+Code walkthrough:
+1) We model pipeline stages as explicit steps.
+2) Each stage emits status output to make flow visible.
+3) Final summary confirms whether the build loop is healthy.
 
 Why this matters:
-- It reduces confusion when you see old and new paradigms mixed in modern codebases.
-- It shows that languages and frameworks are design responses to real limitations and needs.`,
-                es: `Desglose conceptual:
-- La programacion no comenzo con apps web; evoluciono desde matematicas, logica y limites de hardware.
-- Entender la linea de tiempo explica por que las herramientas actuales son asi.
+- Better bug reports: you can say "compile failed" vs "it does not work".
+- Faster fixes: you inspect the right stage first.
+
+Practice checks:
+- Simulate one stage failure and print a useful error message.
+- Add a "tests" stage and mark pass/fail in summary.`,
+                es: `Contexto de clase:
+- Muchos estudiantes ejecutan comandos sin entender etapas del pipeline.
+- Debes identificar donde falla: escribir, compilar, ejecutar, probar.
 
 Recorrido del codigo:
-1) Define una estructura tipada de hitos (ano + evento).
-2) Construye una secuencia desde ideas tempranas hasta ecosistemas modernos.
-3) Imprime los hitos en orden para reforzar la progresion historica.`
-            },
-            codeExamples: {
-                java: `import java.util.List;
-
-public class IntroHistoryTimeline {
-    static class Milestone {
-        int year;
-        String event;
-        Milestone(int year, String event) {
-            this.year = year;
-            this.event = event;
-        }
-    }
-
-    public static void main(String[] args) {
-        List<Milestone> timeline = List.of(
-            new Milestone(1843, "Ada Lovelace publishes notes for a mechanical algorithm."),
-            new Milestone(1936, "Alan Turing formalizes computation models."),
-            new Milestone(1957, "FORTRAN becomes one of the first major high-level languages."),
-            new Milestone(1970, "C language helps shape systems programming."),
-            new Milestone(1995, "Java and JavaScript accelerate internet-era software."),
-            new Milestone(2010, "Cloud-native and mobile-first development become mainstream.")
-        );
-
-        System.out.println("=== Programming Timeline ===");
-        for (Milestone m : timeline) {
-            System.out.println(m.year + " -> " + m.event);
-        }
-    }
-}`
-            }
-        },
-        {
-            id: 'what-is-coding',
-            title: { en: 'What Coding Actually Is', es: 'Que Es Realmente Programar' },
-            description: { en: 'Model coding as Input -> Process -> Output with concrete examples.', es: 'Modela programar como Entrada -> Proceso -> Salida con ejemplos concretos.' },
-            deepExplanation: {
-                en: `Conceptual breakdown:
-- Coding is structured problem solving, not memorizing syntax.
-- Most programs can be explained as Input -> Process -> Output.
-
-Code walkthrough:
-1) Receive input data.
-2) Apply deterministic transformation rules.
-3) Return output and verify expectations.
-
-Beginner checkpoint:
-- If you can explain these three phases for a problem, you are already thinking like a developer.`,
-                es: `Desglose conceptual:
-- Programar es resolver problemas de forma estructurada, no memorizar sintaxis.
-- La mayoria de programas siguen Entrada -> Proceso -> Salida.
-
-Recorrido del codigo:
-1) Recibir datos de entrada.
-2) Aplicar reglas de transformacion.
-3) Devolver salida y verificar resultados.`
-            },
-            codeExamples: {
-                java: `import java.util.Arrays;
-
-public class InputProcessOutputDemo {
-    static int[] transform(int[] input) {
-        int[] output = new int[input.length];
-        for (int i = 0; i < input.length; i++) {
-            output[i] = input[i] * 2 + 1;
-        }
-        return output;
-    }
-
-    public static void main(String[] args) {
-        int[] input = {2, 4, 6};
-        int[] output = transform(input);
-
-        System.out.println("Input:  " + Arrays.toString(input));
-        System.out.println("Output: " + Arrays.toString(output));
-        System.out.println("Pattern: multiply by 2, then add 1.");
-    }
-}`
-            }
-        },
-        {
-            id: 'career-paths',
-            title: { en: 'Career Paths and Fields', es: 'Rutas Profesionales y Campos' },
-            description: { en: 'Compare major software paths and the core skills each one emphasizes.', es: 'Compara rutas principales de software y las habilidades clave de cada una.' },
-            deepExplanation: {
-                en: `Conceptual breakdown:
-- “Software engineer” is an umbrella term; day-to-day work differs by specialization.
-- Picking a first path narrows your learning queue and increases momentum.
-
-Code walkthrough:
-1) Represent paths as categories.
-2) Attach skill focus areas to each path.
-3) Print recommendations to make tradeoffs explicit.`,
-                es: `Desglose conceptual:
-- "Ingenieria de software" cubre especializaciones con trabajo diario distinto.
-- Elegir una ruta inicial reduce ruido y acelera el progreso.
-
-Recorrido del codigo:
-1) Representar rutas como categorias.
-2) Asociar habilidades clave a cada ruta.
-3) Imprimir recomendaciones para comparar opciones.`
-            },
-            codeExamples: {
-                java: `import java.util.List;
-import java.util.Map;
-
-public class CareerPathMapper {
-    public static void main(String[] args) {
-        Map<String, List<String>> tracks = Map.of(
-            "Frontend", List.of("HTML/CSS/JavaScript", "UI state management", "Accessibility"),
-            "Backend", List.of("APIs", "Databases", "Authentication and security"),
-            "Data/AI", List.of("Python", "Statistics", "Model evaluation"),
-            "Cloud/DevOps", List.of("Linux", "CI/CD", "Infrastructure automation"),
-            "Security", List.of("Threat modeling", "Hardening", "Incident response")
-        );
-
-        System.out.println("=== Career Track Snapshots ===");
-        tracks.forEach((track, skills) ->
-            System.out.println(track + " -> " + String.join(", ", skills))
-        );
-    }
-}`
-            }
-        },
-        {
-            id: 'choose-first-language',
-            title: { en: 'Choosing Your First Language', es: 'Elegir Tu Primer Lenguaje' },
-            description: { en: 'Use goal-based heuristics to pick a beginner language with confidence.', es: 'Usa heuristicas por objetivo para elegir lenguaje inicial con confianza.' },
-            deepExplanation: {
-                en: `Conceptual breakdown:
-- There is no universally “best” first language.
-- Good choices depend on your target domain, feedback speed, and motivation.
-
-Code walkthrough:
-1) Capture simple preferences (goal + comfort + desired speed).
-2) Apply decision rules transparently.
-3) Print recommendation with rationale.`,
-                es: `Desglose conceptual:
-- No existe un "mejor lenguaje" universal para comenzar.
-- La mejor opcion depende de tu objetivo, comodidad y velocidad de aprendizaje.
-
-Recorrido del codigo:
-1) Capturar preferencias simples.
-2) Aplicar reglas de decision.
-3) Mostrar recomendacion con razon.`
-            },
-            codeExamples: {
-                java: `public class FirstLanguageChooser {
-    static String recommend(String goal, boolean likesMath, boolean wantsFastFeedback) {
-        String g = goal.trim().toLowerCase();
-        if (g.contains("web")) return "JavaScript";
-        if (g.contains("data") || g.contains("ai")) return "Python";
-        if (g.contains("android")) return "Kotlin/Java";
-        if (g.contains("systems")) return likesMath ? "C++/Rust" : "Java";
-        return wantsFastFeedback ? "Python" : "Java";
-    }
-
-    public static void main(String[] args) {
-        System.out.println("Web app goal -> " + recommend("web", false, true));
-        System.out.println("Data goal -> " + recommend("data", true, true));
-        System.out.println("General software goal -> " + recommend("general", false, false));
-    }
-}`
-            }
-        },
-        {
-            id: 'setup-environment',
-            title: { en: 'Environment Setup Essentials', es: 'Fundamentos de Configuracion del Entorno' },
-            description: { en: 'Build a practical checklist for editor, runtime, terminal, and Git.', es: 'Construye una lista practica para editor, runtime, terminal y Git.' },
-            deepExplanation: {
-                en: `Conceptual breakdown:
-- Beginners stall when environment setup is vague.
-- A checklist creates repeatability and removes “hidden blockers.”
-
-Code walkthrough:
-1) Define setup steps.
-2) Mark each step complete/incomplete.
-3) Compute readiness and print actionable next tasks.`,
-                es: `Desglose conceptual:
-- Muchos principiantes se traban por configuraciones incompletas.
-- Una lista de verificacion vuelve el proceso repetible.
-
-Recorrido del codigo:
-1) Definir pasos de configuracion.
-2) Marcar cada paso como completo o pendiente.
-3) Calcular nivel de preparacion y siguientes acciones.`
+1) Modelamos etapas como pasos explicitos.
+2) Cada etapa imprime estado.
+3) Un resumen final valida salud del flujo.`
             },
             codeExamples: {
                 java: `import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class SetupChecklist {
+public class SourceToRuntimePipeline {
     public static void main(String[] args) {
-        Map<String, Boolean> checklist = new LinkedHashMap<>();
-        checklist.put("Editor installed (VS Code / IntelliJ)", true);
-        checklist.put("Language runtime/compiler installed", true);
-        checklist.put("Terminal command works", false);
-        checklist.put("Git installed and configured", true);
-        checklist.put("Can run a hello-world file", false);
+        Map<String, Boolean> pipeline = new LinkedHashMap<>();
+        pipeline.put("1) Write source code", true);
+        pipeline.put("2) Compile source", true);
+        pipeline.put("3) Run program", true);
+        pipeline.put("4) Verify output", false);
+        pipeline.put("5) Refactor + rerun", false);
 
-        int done = 0;
-        for (Map.Entry<String, Boolean> step : checklist.entrySet()) {
-            System.out.println((step.getValue() ? "[x] " : "[ ] ") + step.getKey());
-            if (step.getValue()) done++;
+        System.out.println("=== Build Pipeline Lecture ===");
+        int passed = 0;
+        for (Map.Entry<String, Boolean> stage : pipeline.entrySet()) {
+            boolean ok = stage.getValue();
+            System.out.println((ok ? "[PASS] " : "[TODO] ") + stage.getKey());
+            if (ok) passed++;
         }
 
-        System.out.println("Progress: " + done + "/" + checklist.size());
-        System.out.println(done == checklist.size() ? "Environment ready." : "Finish remaining steps before deep study.");
+        System.out.println("Stages complete: " + passed + "/" + pipeline.size());
+        if (passed < pipeline.size()) {
+            System.out.println("Action: fix the first TODO stage before adding new complexity.");
+        }
     }
 }`
             }
         },
         {
-            id: 'first-program',
-            title: { en: 'Your First Program', es: 'Tu Primer Programa' },
-            description: { en: 'Write, run, and understand a first complete program end-to-end.', es: 'Escribe, ejecuta y comprende un programa completo de inicio a fin.' },
+            id: 'career-path-and-language-strategy',
+            title: { en: 'Career Path and First Language Strategy', es: 'Ruta Profesional y Lenguaje Inicial' },
+            description: { en: 'Pick a realistic path and language based on goals, not hype.', es: 'Elige ruta y lenguaje por objetivos, no por moda.' },
             deepExplanation: {
-                en: `Conceptual breakdown:
-- Your first program should prove the entire pipeline works: write -> run -> verify output.
-- Keep it small, readable, and testable.
+                en: `Lecture context:
+- "Learn everything" is a trap. Direction creates momentum.
+- Path selection should minimize confusion and maximize practice consistency.
 
 Code walkthrough:
-1) Print a greeting.
-2) Compute a tiny result.
-3) Confirm expected output lines are visible.`,
-                es: `Desglose conceptual:
-- Tu primer programa debe validar todo el flujo: escribir -> ejecutar -> verificar.
-- Debe ser pequeno, legible y facil de comprobar.
+1) Define learner profiles with goal and preferred work style.
+2) Map each profile to a recommended starter language.
+3) Print a short rationale so decisions stay explainable.
+
+Common mistakes:
+- Choosing tools by social media trend.
+- Switching stacks weekly and never compounding fundamentals.
+- Ignoring job-role differences (frontend vs backend vs data).
+
+Practice checks:
+- Add your own profile and adjust recommendation logic.
+- Write one paragraph defending your selected path.`,
+                es: `Contexto de clase:
+- "Aprender todo" es una trampa; la direccion crea avance.
+- La eleccion de ruta debe reducir confusion y aumentar practica consistente.
 
 Recorrido del codigo:
-1) Imprimir saludo.
-2) Calcular un resultado simple.
-3) Confirmar salida esperada.`
+1) Definir perfiles con objetivo y estilo.
+2) Mapear perfil a lenguaje inicial.
+3) Imprimir razon breve para justificar decision.`
             },
             codeExamples: {
-                java: `public class FirstProgramDemo {
-    static int add(int a, int b) {
-        return a + b;
+                java: `import java.util.List;
+
+public class CareerPathStrategyLecture {
+    static class LearnerProfile {
+        String name;
+        String goal;
+        boolean likesVisualWork;
+        LearnerProfile(String name, String goal, boolean likesVisualWork) {
+            this.name = name;
+            this.goal = goal;
+            this.likesVisualWork = likesVisualWork;
+        }
+    }
+
+    static String recommendLanguage(LearnerProfile profile) {
+        String goal = profile.goal.toLowerCase();
+        if (goal.contains("web") && profile.likesVisualWork) return "JavaScript";
+        if (goal.contains("data") || goal.contains("ai")) return "Python";
+        if (goal.contains("backend")) return "Java";
+        return "Python";
     }
 
     public static void main(String[] args) {
-        System.out.println("Hello, developer. Your toolchain works.");
-        int result = add(7, 11);
-        System.out.println("7 + 11 = " + result);
-        System.out.println("Next step: change values and rerun.");
-    }
-}`
-            }
-        },
-        {
-            id: 'core-building-blocks',
-            title: { en: 'Core Building Blocks', es: 'Bloques Fundamentales' },
-            description: { en: 'Practice variables, conditions, loops, and functions in one compact sample.', es: 'Practica variables, condiciones, bucles y funciones en una muestra compacta.' },
-            deepExplanation: {
-                en: `Conceptual breakdown:
-- Almost every beginner project uses four primitives: variables, conditionals, loops, and functions.
-- Mastering these gives you transfer power across languages.
+        List<LearnerProfile> learners = List.of(
+            new LearnerProfile("Alex", "web frontend", true),
+            new LearnerProfile("Sam", "data analytics", false),
+            new LearnerProfile("Jordan", "backend services", false)
+        );
 
-Code walkthrough:
-1) Store state in variables.
-2) Branch with if/else.
-3) Iterate with a loop.
-4) Extract reusable logic into a function.`,
-                es: `Desglose conceptual:
-- Casi todo proyecto inicial usa cuatro piezas: variables, condicionales, bucles y funciones.
-- Dominar estas piezas se transfiere a cualquier lenguaje.
-
-Recorrido del codigo:
-1) Guardar estado en variables.
-2) Ramificar con if/else.
-3) Iterar con bucle.
-4) Extraer logica reutilizable en funcion.`
-            },
-            codeExamples: {
-                java: `public class CoreBlocksDemo {
-    static int square(int x) {
-        return x * x;
-    }
-
-    public static void main(String[] args) {
-        int threshold = 4;
-        for (int i = 1; i <= 6; i++) {
-            int value = square(i);
-            if (value >= threshold * threshold) {
-                System.out.println("keep -> i=" + i + ", square=" + value);
-            } else {
-                System.out.println("skip -> i=" + i + ", square=" + value);
-            }
+        System.out.println("=== Path and Language Strategy ===");
+        for (LearnerProfile learner : learners) {
+            String recommendation = recommendLanguage(learner);
+            System.out.println(learner.name + " -> " + recommendation + " (" + learner.goal + ")");
         }
     }
 }`
             }
         },
         {
-            id: 'debugging-basics',
-            title: { en: 'Debugging Basics', es: 'Bases de Depuracion' },
-            description: { en: 'Learn a practical reproduce-isolate-fix-verify debugging loop.', es: 'Aprende un ciclo practico de reproducir-aislar-arreglar-verificar.' },
+            id: 'environment-and-git-bootstrap',
+            title: { en: 'Environment Setup + Git Bootstrap', es: 'Configuracion Inicial + Git' },
+            description: { en: 'Use a concrete setup checklist and first-commit workflow.', es: 'Usa checklist concreto de setup y primer commit.' },
             deepExplanation: {
-                en: `Conceptual breakdown:
-- Debugging is not guesswork; it is evidence-driven iteration.
-- Good developers minimize assumptions and verify each step.
+                en: `Lecture context:
+- Setup friction kills consistency. Remove friction first.
+- Git from day one protects your progress and enables safe experimentation.
 
 Code walkthrough:
-1) Demonstrate unsafe parsing that can fail.
-2) Add defensive checks and fallback behavior.
-3) Print outcomes to confirm fixes and edge-case handling.`,
-                es: `Desglose conceptual:
-- Depurar no es adivinar; es iterar con evidencia.
-- Los buenos desarrolladores verifican cada paso.
+1) Build an ordered setup checklist.
+2) Print completion ratio to expose blockers.
+3) Print first-repo command sequence for immediate execution.
+
+Common mistakes:
+- Delaying Git until project becomes messy.
+- Assuming setup is complete without running a tiny program.
+- Skipping terminal familiarity.
+
+What to practice next:
+- Run these commands in your real project folder.
+- Create one commit per meaningful change.`,
+                es: `Contexto de clase:
+- La friccion de setup rompe la constancia; eliminarla es prioridad.
+- Git desde el dia uno protege progreso y permite experimentar con seguridad.
 
 Recorrido del codigo:
-1) Mostrar un parseo inseguro que puede fallar.
-2) Agregar validaciones y comportamiento de respaldo.
-3) Confirmar salidas para casos normales y extremos.`
-            },
-            codeExamples: {
-                java: `public class DebuggingLoopDemo {
-    static int safeParseInt(String raw, int fallback) {
-        try {
-            return Integer.parseInt(raw.trim());
-        } catch (Exception ignored) {
-            return fallback;
-        }
-    }
-
-    public static void main(String[] args) {
-        String[] inputs = {"42", " 17 ", "oops", ""};
-        for (String input : inputs) {
-            int parsed = safeParseInt(input, -1);
-            System.out.println("Input='" + input + "' -> parsed=" + parsed);
-        }
-        System.out.println("Rule: reproduce, isolate, fix, verify.");
-    }
-}`
-            }
-        },
-        {
-            id: 'starter-30-day-plan',
-            title: { en: '30-Day Starter Plan', es: 'Plan Inicial de 30 Dias' },
-            description: { en: 'Generate a simple four-week roadmap with balanced practice blocks.', es: 'Genera una hoja de ruta de cuatro semanas con practica equilibrada.' },
-            deepExplanation: {
-                en: `Conceptual breakdown:
-- Consistency beats intensity for new learners.
-- A written plan reduces decision fatigue and improves completion rates.
-
-Code walkthrough:
-1) Split 30 days into weekly focus themes.
-2) Assign concrete task types to each week.
-3) Print a readable plan you can actually follow.`,
-                es: `Desglose conceptual:
-- La constancia supera la intensidad para quien empieza.
-- Un plan escrito reduce friccion y mejora la finalizacion.
-
-Recorrido del codigo:
-1) Dividir 30 dias en temas semanales.
-2) Asignar tareas concretas por semana.
-3) Imprimir un plan claro y accionable.`
+1) Crear checklist ordenado.
+2) Mostrar ratio de completado.
+3) Imprimir comandos del primer repositorio.`
             },
             codeExamples: {
                 java: `import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class StarterPlan30Days {
+public class EnvironmentAndGitBootstrap {
+    public static void main(String[] args) {
+        Map<String, Boolean> checklist = new LinkedHashMap<>();
+        checklist.put("Install IDE/editor", true);
+        checklist.put("Install runtime/compiler", true);
+        checklist.put("Run Hello World", true);
+        checklist.put("Install Git + configure user", false);
+        checklist.put("Create first repository", false);
+
+        int done = 0;
+        for (Map.Entry<String, Boolean> step : checklist.entrySet()) {
+            if (step.getValue()) done++;
+            System.out.println((step.getValue() ? "[x] " : "[ ] ") + step.getKey());
+        }
+        System.out.println("Setup progress: " + done + "/" + checklist.size());
+
+        List<String> firstRepoCommands = List.of(
+            "git init",
+            "git add .",
+            "git commit -m "Initial learning baseline"",
+            "git branch -M main"
+        );
+        System.out.println("--- First Git baseline commands ---");
+        for (String command : firstRepoCommands) {
+            System.out.println(command);
+        }
+    }
+}`
+            }
+        },
+        {
+            id: 'debugging-loop-practicum',
+            title: { en: 'Debugging Loop Practicum', es: 'Practica del Ciclo de Depuracion' },
+            description: { en: 'Practice a reproduce -> isolate -> fix -> verify workflow.', es: 'Practica reproducir -> aislar -> arreglar -> verificar.' },
+            deepExplanation: {
+                en: `Lecture context:
+- Debugging quality predicts engineering quality.
+- Strong beginners debug with evidence, not guesses.
+
+Code walkthrough:
+1) Parse potentially invalid values.
+2) Log failures with exact raw input.
+3) Apply fallback behavior and continue execution safely.
+4) Print summary so verification is objective.
+
+Common mistakes:
+- Editing many lines before re-running tests.
+- Ignoring the first failing input and only checking happy paths.
+- Failing silently without logs.
+
+Practice checks:
+- Add a second fallback strategy.
+- Add counters for valid vs invalid inputs.
+- Write one reflection note: what bug pattern repeated today?`,
+                es: `Contexto de clase:
+- La calidad de depuracion predice calidad de ingenieria.
+- Buenos principiantes depuran con evidencia y no con adivinanzas.
+
+Recorrido del codigo:
+1) Parsear entradas potencialmente invalidas.
+2) Registrar fallo con valor original.
+3) Aplicar fallback sin romper flujo.
+4) Imprimir resumen verificable.`
+            },
+            codeExamples: {
+                java: `public class DebuggingLoopPracticum {
+    static int parseOrFallback(String raw, int fallback) {
+        try {
+            return Integer.parseInt(raw.trim());
+        } catch (Exception error) {
+            System.out.println("[debug] parse failed for input='" + raw + "'");
+            return fallback;
+        }
+    }
+
+    public static void main(String[] args) {
+        String[] rawInputs = {"12", "7", "oops", " 15 ", "", "3"};
+        int validCount = 0;
+        int total = 0;
+
+        for (String raw : rawInputs) {
+            int parsed = parseOrFallback(raw, -1);
+            boolean valid = parsed >= 0;
+            if (valid) validCount++;
+            total++;
+            System.out.println("raw='" + raw + "' -> parsed=" + parsed + ", valid=" + valid);
+        }
+
+        System.out.println("Verification summary: valid=" + validCount + ", total=" + total);
+        System.out.println("Rule: reproduce -> isolate -> fix -> verify");
+    }
+}`
+            }
+        },
+        {
+            id: 'thirty-day-execution-plan',
+            title: { en: '30-Day Execution Plan', es: 'Plan de Ejecucion de 30 Dias' },
+            description: { en: 'Use a practical month plan that compounds fundamentals.', es: 'Usa un plan mensual practico que acumula fundamentos.' },
+            deepExplanation: {
+                en: `Lecture context:
+- Progress is not motivational magic. It is scheduled reps.
+- You need a plan with weekly themes and measurable outputs.
+
+Code walkthrough:
+1) Define week-by-week focus areas.
+2) Attach concrete tasks that produce artifacts.
+3) Print plan in a format you can follow daily.
+
+Common mistakes:
+- Overloading week 1 with advanced topics.
+- Not publishing or documenting completed work.
+- Studying without retrieval practice.
+
+Practice checks:
+- Replace one task per week with your own project goal.
+- Add a weekly review checklist: what was learned, what is still weak.`,
+                es: `Contexto de clase:
+- El progreso no es magia motivacional; son repeticiones programadas.
+- Necesitas plan semanal con tareas medibles.
+
+Recorrido del codigo:
+1) Definir foco por semana.
+2) Asociar tareas concretas.
+3) Imprimir plan ejecutable dia a dia.`
+            },
+            codeExamples: {
+                java: `import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+public class ThirtyDayExecutionPlan {
     public static void main(String[] args) {
         Map<String, List<String>> plan = new LinkedHashMap<>();
-        plan.put("Week 1", List.of("Setup tools", "Write first programs", "Practice variables + if/else"));
-        plan.put("Week 2", List.of("Loops + functions", "Build 2 mini exercises", "Start Git basics"));
-        plan.put("Week 3", List.of("Debugging reps", "Create a tiny project", "Read code from others"));
-        plan.put("Week 4", List.of("Refactor project", "Add tests/checks", "Publish project notes/README"));
+        plan.put("Week 1 - Setup and orientation", List.of(
+            "Install tools and verify environment",
+            "Run 3 tiny programs end-to-end",
+            "Create first Git repository"
+        ));
+        plan.put("Week 2 - Core control flow", List.of(
+            "Practice variables, if/else, loops, functions",
+            "Solve 8 beginner exercises",
+            "Write short notes for each solved problem"
+        ));
+        plan.put("Week 3 - Debugging and mini project", List.of(
+            "Debug 5 intentionally broken snippets",
+            "Build one mini project with input/output",
+            "Document bug fixes in README"
+        ));
+        plan.put("Week 4 - Polish and publish", List.of(
+            "Refactor naming and structure",
+            "Add simple tests/check scripts",
+            "Publish project + lessons learned"
+        ));
 
-        System.out.println("=== 30-Day Coding Starter Plan ===");
+        System.out.println("=== 30-Day Coding Execution Plan ===");
         plan.forEach((week, tasks) -> {
-            System.out.println(week + ":");
+            System.out.println(week);
             for (String task : tasks) {
                 System.out.println(" - " + task);
             }
@@ -8458,6 +8594,7 @@ public class StarterPlan30Days {
         }
     ],
     'java-basics': [
+
         {
             id: 'variables',
             title: { en: 'Variables', es: 'Variables' },
@@ -10334,7 +10471,12 @@ function getModuleExampleDeepExplanation(moduleId, exampleId, setItem = null) {
 function normalizeModuleCodeExampleSets(module) {
     const overrideSets = MODULE_CODE_EXAMPLE_SET_OVERRIDES[module.id];
     const generatedSets = buildGeneratedCodeExampleSets(module);
-    const sourceSets = Array.isArray(overrideSets) && overrideSets.length
+    const useOverridesOnly = module.id === 'intro-to-coding'
+        && Array.isArray(overrideSets)
+        && overrideSets.length > 0;
+    const sourceSets = useOverridesOnly
+        ? overrideSets
+        : Array.isArray(overrideSets) && overrideSets.length
         ? (() => {
             const generatedIds = new Set(
                 generatedSets
@@ -10425,13 +10567,20 @@ function normalizeModuleCodeExampleSets(module) {
 
         const enhancedJava = ensureJavaSnippetHasVisibleOutput(module, addComprehensiveHeaderComments(module, javaSource));
         const normalizedCodeExamples = { java: enhancedJava };
-
-        ['cpp', 'python', 'javascript'].forEach((language) => {
-            const existing = typeof sourceCodeExamples[language] === 'string' ? sourceCodeExamples[language].trim() : '';
-            normalizedCodeExamples[language] = hasVisibleOutputForLanguage(language, existing)
-                ? existing
-                : buildMirrorSnippetByLanguage({ ...module, title: `${module.title} \u2022 ${setTitleText}` }, enhancedJava, language);
-        });
+        const shouldAutoMirrorLanguages = module.id !== 'intro-to-coding';
+        if (shouldAutoMirrorLanguages) {
+            ['cpp', 'python', 'javascript'].forEach((language) => {
+                const existing = typeof sourceCodeExamples[language] === 'string' ? sourceCodeExamples[language].trim() : '';
+                normalizedCodeExamples[language] = hasVisibleOutputForLanguage(language, existing)
+                    ? existing
+                    : buildMirrorSnippetByLanguage({ ...module, title: `${module.title} \u2022 ${setTitleText}` }, enhancedJava, language);
+            });
+        } else {
+            ['cpp', 'python', 'javascript'].forEach((language) => {
+                const existing = typeof sourceCodeExamples[language] === 'string' ? sourceCodeExamples[language].trim() : '';
+                if (existing) normalizedCodeExamples[language] = existing;
+            });
+        }
 
         if (isAssembly) {
             const assemblySource = typeof sourceCodeExamples.assembly === 'string' && sourceCodeExamples.assembly.trim()
@@ -10480,13 +10629,21 @@ function normalizeModuleCatalog(moduleList) {
 
         const enhancedJava = ensureJavaSnippetHasVisibleOutput(module, addComprehensiveHeaderComments(module, javaSource));
         const normalizedCodeExamples = { java: enhancedJava };
-        ['cpp', 'python', 'javascript'].forEach((language) => {
-            const existing = typeof existingCodeExamples[language] === 'string' ? existingCodeExamples[language].trim() : '';
-            const resolved = hasVisibleOutputForLanguage(language, existing)
-                ? existing
-                : buildMirrorSnippetByLanguage(module, enhancedJava, language);
-            normalizedCodeExamples[language] = resolved;
-        });
+        const shouldAutoMirrorLanguages = module.id !== 'intro-to-coding';
+        if (shouldAutoMirrorLanguages) {
+            ['cpp', 'python', 'javascript'].forEach((language) => {
+                const existing = typeof existingCodeExamples[language] === 'string' ? existingCodeExamples[language].trim() : '';
+                const resolved = hasVisibleOutputForLanguage(language, existing)
+                    ? existing
+                    : buildMirrorSnippetByLanguage(module, enhancedJava, language);
+                normalizedCodeExamples[language] = resolved;
+            });
+        } else {
+            ['cpp', 'python', 'javascript'].forEach((language) => {
+                const existing = typeof existingCodeExamples[language] === 'string' ? existingCodeExamples[language].trim() : '';
+                if (existing) normalizedCodeExamples[language] = existing;
+            });
+        }
 
         if (isAssembly) {
             const assemblySource = typeof existingCodeExamples.assembly === 'string' && existingCodeExamples.assembly.trim()
@@ -23926,4 +24083,3 @@ function trapFocusInActiveModal(event) {
     }
     return false;
 }
-

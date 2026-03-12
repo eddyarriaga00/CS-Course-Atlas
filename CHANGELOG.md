@@ -259,3 +259,20 @@ All notable changes to **CS Course Atlas** are documented in this file.
   - quiz completion/save now runs only when signed in
   - guest users still see scores but get a sign-in prompt toast instead of saved progress
 - Added quiz stats to serialized user-state sync payload so saved signed-in quiz history can sync through Neon user-state endpoints.
+
+### Intro Module Lecture Rewrite
+- Rewrote `Introduction to Coding` base code examples into lecture-style walkthroughs with stronger data-flow framing (`Input -> Process -> Output`), workflow structure, and concrete execution steps.
+- Expanded the module explanation text into a longer instructional format with:
+  - learning outcomes
+  - common beginner mistakes
+  - workshop-style practice guidance
+- Replaced the intro module example-set collection with focused lecture sets that include longer deep explanations and more readable Java teaching snippets:
+  - input/process/output mental model
+  - source-to-runtime pipeline
+  - career-path and first-language strategy
+  - environment setup + Git bootstrap
+  - debugging loop practicum
+  - 30-day execution plan
+- Updated code-example normalization for `intro-to-coding` so:
+  - curated override sets are used directly (instead of generated filler sets)
+  - missing language mirrors are no longer auto-generated for intro sets (prevents low-quality mirrored snippets)
