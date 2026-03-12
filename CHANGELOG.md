@@ -247,3 +247,15 @@ All notable changes to **CS Course Atlas** are documented in this file.
   - frontend now sends an absolute `returnTo` URL during OAuth start
   - backend now safely accepts absolute callback return URLs only when origin is trusted via `ALLOWED_ORIGINS`
   - OAuth callback now redirects users back to the public frontend origin instead of the API host page
+
+### Quiz Submission and Auth-Gated Progress
+- Updated quiz practice last-question behavior to use an explicit `Submit Quiz` action before scoring.
+- Added clearer final results copy showing `Overall percentage` in the completion view.
+- Added full submit/results flow to the Interactive Quiz Library:
+  - final-question `Submit Quiz` button
+  - overall percentage summary on completion
+  - per-question review with retake option
+- Restricted quiz progress persistence to authenticated users only:
+  - quiz completion/save now runs only when signed in
+  - guest users still see scores but get a sign-in prompt toast instead of saved progress
+- Added quiz stats to serialized user-state sync payload so saved signed-in quiz history can sync through Neon user-state endpoints.

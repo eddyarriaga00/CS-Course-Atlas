@@ -89,7 +89,9 @@ const interactiveQuizState = {
     moduleId: null,
     questions: [],
     current: 0,
-    answers: []
+    answers: [],
+    score: 0,
+    isSubmitted: false
 };
 
 // =================================
@@ -11422,6 +11424,7 @@ function buildSerializableAppState() {
 function buildSerializableUserState() {
     return {
         appState: buildSerializableAppState(),
+        quizStats: getQuizStats(),
         notesDraft: notesDraft || '',
         studyPlanState: {
             pace: studyPlanState?.pace || null,
@@ -11729,6 +11732,9 @@ function applyRemoteUserStateSnapshot(snapshot, options = {}) {
                 ...snapshot.studyHabit
             };
             saveStudyHabit();
+        }
+        if (snapshot.quizStats && typeof snapshot.quizStats === 'object') {
+            safeSetItem('dsaHubQuizStats', JSON.stringify(snapshot.quizStats));
         }
         if (Array.isArray(snapshot.notifications) && hasAuthenticatedInsightsAccess()) {
             userNotifications = snapshot.notifications
@@ -21632,7 +21638,7 @@ function renderQuiz() {
 
                 <button onclick="nextQuestion()" ${appState.currentQuiz.answers[appState.currentQuiz.currentQuestion] === null ? 'disabled' : ''} class="w-full sm:w-auto px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl font-medium transition-all duration-200 quiz-nav-button primary">
                     ${appState.currentQuiz.currentQuestion === appState.currentQuiz.questions.length - 1
-                        ? translateLiteral('Finish', appState.language)
+                        ? translateLiteral('Submit Quiz', appState.language)
                         : translateLiteral('Next', appState.language)}
                 </button>
             </div>
@@ -21651,6 +21657,9 @@ function renderQuiz() {
                     </p>
                     <p class="text-base sm:text-lg text-slate-600">
                         (${Math.round((appState.currentQuiz.score / appState.currentQuiz.questions.length) * 100)}%)
+                    </p>
+                    <p class="text-sm sm:text-base text-slate-500 mt-1">
+                        ${translateLiteral(`Overall percentage: ${Math.round((appState.currentQuiz.score / appState.currentQuiz.questions.length) * 100)}%`, appState.language)}
                     </p>
                 </div>
 
@@ -21716,7 +21725,12 @@ function nextQuestion() {
 
         appState.currentQuiz.showResults = true;
         appState.currentQuiz.score = score;
-        markQuizCompleted(appState.currentQuiz.moduleId);
+        if (hasAuthenticatedInsightsAccess()) {
+            markQuizCompleted(appState.currentQuiz.moduleId);
+            saveQuizResult(appState.currentQuiz.moduleId, score, appState.currentQuiz.questions.length);
+        } else {
+            showToast('Quiz submitted. Sign in to save progress.', 'info');
+        }
         renderQuiz();
     }
 }
@@ -23334,6 +23348,12 @@ function getQuizStats() {
 }
 
 function saveQuizResult(moduleId, score, totalQuestions) {
+    if (!hasAuthenticatedInsightsAccess()) {
+        return false;
+    }
+    if (!moduleId || !Number.isFinite(score) || !Number.isFinite(totalQuestions) || totalQuestions <= 0) {
+        return false;
+    }
     const stats = getQuizStats();
     const today = new Date().toISOString().split('T')[0];
 
@@ -23349,7 +23369,9 @@ function saveQuizResult(moduleId, score, totalQuestions) {
     });
 
     safeSetItem('dsaHubQuizStats', JSON.stringify(stats));
+    queueUserStateSync();
     trackUsage('quiz_completed', 'Assessment');
+    return true;
 }
 
 // Learning path suggestions
@@ -23513,6 +23535,8 @@ function loadInteractiveQuizModule(moduleId) {
     interactiveQuizState.questions = questions;
     interactiveQuizState.current = 0;
     interactiveQuizState.answers = new Array(questions.length).fill(null);
+    interactiveQuizState.score = 0;
+    interactiveQuizState.isSubmitted = false;
     renderInteractiveQuizQuestion();
 }
 
@@ -23530,15 +23554,58 @@ function renderInteractiveQuizQuestion() {
         return;
     }
 
+    if (interactiveQuizState.isSubmitted) {
+        const score = Number(interactiveQuizState.score || 0);
+        const percentage = Math.round((score / total) * 100);
+        body.innerHTML = `
+            <div class="p-4 sm:p-6 rounded-xl border border-slate-200 bg-white shadow-sm">
+                <h4 class="text-lg sm:text-xl font-semibold text-slate-800 mb-2">${translateLiteral('Quiz submitted!', appState.language)}</h4>
+                <p class="text-slate-700">${translateLiteral(`You scored ${score} out of ${total}.`, appState.language)}</p>
+                <p class="text-xl sm:text-2xl font-bold text-indigo-600 mt-2">${translateLiteral(`Overall percentage: ${percentage}%`, appState.language)}</p>
+                <div class="mt-4 space-y-2">
+                    ${interactiveQuizState.questions.map((question, index) => {
+            const selectedAnswer = interactiveQuizState.answers[index];
+            const isCorrect = selectedAnswer === question.correct;
+            const selectedText = selectedAnswer === null || selectedAnswer === undefined
+                ? translateLiteral('No answer selected', appState.language)
+                : question.options[selectedAnswer];
+            return `
+                            <div class="p-3 rounded-lg border ${isCorrect ? 'border-emerald-200 bg-emerald-50' : 'border-rose-200 bg-rose-50'}">
+                                <p class="text-sm font-semibold text-slate-800">${question.question}</p>
+                                <p class="text-xs text-slate-700 mt-1">${translateLiteral('Your answer:', appState.language)} ${selectedText}</p>
+                                ${isCorrect ? '' : `<p class="text-xs text-slate-700">${translateLiteral('Correct answer:', appState.language)} ${question.options[question.correct]}</p>`}
+                            </div>
+                        `;
+        }).join('')}
+                </div>
+                <div class="flex flex-col-reverse sm:flex-row sm:justify-between sm:items-center mt-4 gap-2 sm:gap-3">
+                    <button class="w-full sm:w-auto px-4 py-2 rounded-lg border border-slate-200 text-slate-700 bg-white hover:border-indigo-300 hover:bg-indigo-50 transition"
+                        onclick="restartInteractiveQuiz()">
+                        ${translateLiteral('Retake Quiz', appState.language)}
+                    </button>
+                    <button class="w-full sm:w-auto px-4 py-2 rounded-lg bg-indigo-500 text-white font-semibold hover:bg-indigo-600 shadow-sm transition"
+                        onclick="closeInteractiveQuizLibrary()">
+                        ${translateLiteral('Close', appState.language)}
+                    </button>
+                </div>
+            </div>
+        `;
+        if (progress) {
+            progress.textContent = translateLiteral(`Completed - ${percentage}%`, appState.language);
+        }
+        return;
+    }
+
     const current = interactiveQuizState.current;
     const question = questions[current];
     const selected = interactiveQuizState.answers[current];
+    const isLastQuestion = current >= total - 1;
 
     const feedback = selected === null
         ? ''
         : selected === question.correct
-            ? `<p class="text-sm text-emerald-600 font-semibold mt-2">? ${translateLiteral('Correct!', appState.language)} ${question.explanation || ''}</p>`
-            : `<p class="text-sm text-rose-600 font-semibold mt-2">? ${translateLiteral('Try again.', appState.language)} ${question.explanation || ''}</p>`;
+            ? `<p class="text-sm text-emerald-600 font-semibold mt-2">${translateLiteral('Correct!', appState.language)} ${question.explanation || ''}</p>`
+            : `<p class="text-sm text-rose-600 font-semibold mt-2">${translateLiteral('Try again.', appState.language)} ${question.explanation || ''}</p>`;
 
     body.innerHTML = `
         <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between text-xs sm:text-sm text-slate-600 mb-2">
@@ -23569,17 +23636,22 @@ function renderInteractiveQuizQuestion() {
                     ${current === 0 ? 'disabled' : ''} onclick="prevInteractiveQuizQuestion()">
                     ${translateLiteral('Previous', appState.language)}
                 </button>
-                <button class="w-full sm:w-auto px-4 py-2 rounded-lg bg-indigo-500 text-white font-semibold hover:bg-indigo-600 shadow-sm transition"
-                    ${current >= total - 1 ? 'disabled' : ''} onclick="nextInteractiveQuizQuestion()">
-                    ${translateLiteral('Next', appState.language)}
-                </button>
+                ${isLastQuestion
+        ? `<button class="w-full sm:w-auto px-4 py-2 rounded-lg bg-emerald-500 text-white font-semibold hover:bg-emerald-600 shadow-sm transition"
+                        ${selected === null ? 'disabled' : ''} onclick="submitInteractiveQuiz()">
+                        ${translateLiteral('Submit Quiz', appState.language)}
+                    </button>`
+        : `<button class="w-full sm:w-auto px-4 py-2 rounded-lg bg-indigo-500 text-white font-semibold hover:bg-indigo-600 shadow-sm transition"
+                        ${selected === null ? 'disabled' : ''} onclick="nextInteractiveQuizQuestion()">
+                        ${translateLiteral('Next', appState.language)}
+                    </button>`}
             </div>
         </div>
     `;
 
     if (progress) {
-        const answered = interactiveQuizState.answers.filter(a => a !== null).length;
-        progress.textContent = translateLiteral(`${answered} answered ? ${total} total`, appState.language);
+        const answered = interactiveQuizState.answers.filter(a => a !== null && a !== undefined).length;
+        progress.textContent = translateLiteral(`${answered} answered / ${total} total`, appState.language);
     }
 }
 
@@ -23600,6 +23672,47 @@ function prevInteractiveQuizQuestion() {
         interactiveQuizState.current--;
         renderInteractiveQuizQuestion();
     }
+}
+
+function submitInteractiveQuiz() {
+    const questions = interactiveQuizState.questions || [];
+    if (!questions.length) return;
+
+    const unansweredIndex = interactiveQuizState.answers.findIndex((answer) => answer === null || answer === undefined);
+    if (unansweredIndex !== -1) {
+        interactiveQuizState.current = unansweredIndex;
+        renderInteractiveQuizQuestion();
+        showToast('Answer all questions before submitting.', 'warning');
+        return;
+    }
+
+    const score = interactiveQuizState.answers.reduce((acc, answer, index) => (
+        acc + (answer === questions[index].correct ? 1 : 0)
+    ), 0);
+    const total = questions.length;
+    const percentage = Math.round((score / total) * 100);
+
+    interactiveQuizState.score = score;
+    interactiveQuizState.isSubmitted = true;
+
+    if (hasAuthenticatedInsightsAccess()) {
+        markQuizCompleted(interactiveQuizState.moduleId);
+        saveQuizResult(interactiveQuizState.moduleId, score, total);
+        showToast(`Quiz submitted. Score saved: ${percentage}%.`, 'success');
+    } else {
+        showToast('Quiz submitted. Sign in to save progress.', 'info');
+    }
+
+    renderInteractiveQuizQuestion();
+}
+
+function restartInteractiveQuiz() {
+    const total = interactiveQuizState.questions.length;
+    interactiveQuizState.current = 0;
+    interactiveQuizState.answers = new Array(total).fill(null);
+    interactiveQuizState.score = 0;
+    interactiveQuizState.isSubmitted = false;
+    renderInteractiveQuizQuestion();
 }
 
 // Generic modal helpers (accessible focus, keyboard, and scroll management)
