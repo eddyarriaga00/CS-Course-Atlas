@@ -492,6 +492,10 @@ const MODULE_LEARNING_SEQUENCE = [
     'design-patterns',
     'lambda-streams'
 ];
+const GUEST_PREVIEW_METRICS = {
+    completedModules: 4,
+    totalModules: Math.max(MODULE_LEARNING_SEQUENCE.length, 12)
+};
 
 const GUEST_STARTER_MODULE_IDS = {
     dsa: 'intro-to-coding',
@@ -13310,9 +13314,15 @@ async function neonFetch(url, options = {}) {
         payload = rawText;
     }
     if (!response.ok) {
-        const detail = typeof payload === 'string'
+        const rawDetail = typeof payload === 'string'
             ? payload
             : payload?.error || payload?.message || `HTTP ${response.status}`;
+        const normalizedDetail = String(rawDetail || '').toLowerCase();
+        const detail = normalizedDetail.includes('not authenticated')
+            || normalizedDetail.includes('unauthorized')
+            || response.status === 401
+            ? t('auth.status.guest')
+            : rawDetail;
         throw new Error(detail);
     }
     return payload;
@@ -17334,8 +17344,23 @@ function getTotalModuleCount() {
     return Array.isArray(modules) ? modules.length : 0;
 }
 
+function getDisplayModuleTotal() {
+    const moduleTotal = getTotalModuleCount();
+    if (moduleTotal > 0) {
+        return moduleTotal;
+    }
+    return Math.max(GUEST_PREVIEW_METRICS.totalModules || 1, 1);
+}
+
+function getGuestPreviewProgressState() {
+    const total = getDisplayModuleTotal();
+    const completed = Math.max(0, Math.min(GUEST_PREVIEW_METRICS.completedModules || 0, total));
+    const percentage = Math.round((completed / Math.max(total, 1)) * 100);
+    return { completed, total, percentage };
+}
+
 function getDynamicAchievementLevels() {
-    const totalModules = getTotalModuleCount();
+    const totalModules = getDisplayModuleTotal();
     return ACHIEVEMENT_LEVELS.map(level => (
         level.id === 'luminary'
             ? { ...level, threshold: totalModules }
@@ -17596,17 +17621,27 @@ function applyCompactLayout() {
 }
 
 function updateProgress() {
-    const totalModules = Math.max(getTotalModuleCount(), 1);
+    const totalModules = Math.max(getDisplayModuleTotal(), 1);
     const completed = appState.completedModules.size;
-    const progressPercentage = Math.round((completed / totalModules) * 100);
+    const shouldUseGuestPreview = !hasAuthenticatedInsightsAccess() && completed === 0;
+    const guestPreview = shouldUseGuestPreview ? getGuestPreviewProgressState() : null;
+    const displayCompleted = shouldUseGuestPreview ? guestPreview.completed : completed;
+    const displayTotal = shouldUseGuestPreview ? guestPreview.total : totalModules;
+    const progressPercentage = shouldUseGuestPreview
+        ? guestPreview.percentage
+        : Math.round((displayCompleted / Math.max(displayTotal, 1)) * 100);
 
-    const progressStr = completed === 0
+    const progressStr = shouldUseGuestPreview
         ? (appState.language === 'es'
-            ? `Elige tu primera ruta para cargar modulos. 0 de ${totalModules} modulos completados`
-            : `Choose your first track to load modules. 0 of ${totalModules} modules completed`)
-        : (appState.language === 'es'
-            ? `${completed} de ${totalModules} módulos completados`
-            : `${completed} of ${totalModules} modules completed`);
+            ? `Ruta de ejemplo: ${displayCompleted} de ${displayTotal} modulos completados`
+            : `Sample learner journey: ${displayCompleted} of ${displayTotal} modules completed`)
+        : displayCompleted === 0
+            ? (appState.language === 'es'
+                ? `Elige tu primera ruta para comenzar. ${displayTotal} modulos listos.`
+                : `Choose your first track to begin. ${displayTotal} modules ready.`)
+            : (appState.language === 'es'
+                ? `${displayCompleted} de ${displayTotal} modulos completados`
+                : `${displayCompleted} of ${displayTotal} modules completed`);
     document.getElementById('progress-text').textContent = progressStr;
     document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
     document.getElementById('progress-percentage').textContent = `${progressPercentage}%`;
@@ -18166,8 +18201,7 @@ function renderModules() {
     renderInsights();
 }
 
-function getAchievementState() {
-    const completed = appState.completedModules.size;
+function getAchievementState(completed = appState.completedModules.size) {
     const sortedLevels = getDynamicAchievementLevels().sort((a, b) => a.threshold - b.threshold);
     let current = sortedLevels[0];
     let next = null;
@@ -18189,12 +18223,16 @@ function getAchievementState() {
 function renderAchievements() {
     const card = document.getElementById('achievements-card');
     if (!card) return;
+    const shouldUseGuestPreview = !hasAuthenticatedInsightsAccess() && appState.completedModules.size === 0;
+    const guestPreview = shouldUseGuestPreview ? getGuestPreviewProgressState() : null;
+    const displayCompleted = shouldUseGuestPreview ? guestPreview.completed : appState.completedModules.size;
+    const displayTotal = shouldUseGuestPreview ? guestPreview.total : getDisplayModuleTotal();
 
     const {
         completed,
         current,
         next
-    } = getAchievementState();
+    } = getAchievementState(displayCompleted);
 
     const badgeLabel = document.getElementById('achievement-badge-label');
     const badgeName = document.getElementById('achievement-badge-name');
@@ -18209,8 +18247,16 @@ function renderAchievements() {
     if (badgeName) badgeName.textContent = translateLiteral(current.label, appState.language);
     if (badgeIcon) badgeIcon.textContent = current.icon;
     if (descriptionEl) descriptionEl.textContent = translateLiteral(current.description, appState.language);
-    const totalModules = getTotalModuleCount();
-    if (totalLabel) totalLabel.textContent = translateLiteral(`${totalModules} total modules`, appState.language);
+    const totalModules = Math.max(displayTotal, 1);
+    if (totalLabel) {
+        totalLabel.textContent = shouldUseGuestPreview
+            ? (appState.language === 'es'
+                ? `${totalModules} modulos en ruta de ejemplo`
+                : `${totalModules} modules in sample roadmap`)
+            : (appState.language === 'es'
+                ? `${totalModules} modulos totales`
+                : `${totalModules} total modules`);
+    }
 
     const previousThreshold = current.threshold;
     const nextThreshold = next ? next.threshold : totalModules;
@@ -19888,27 +19934,30 @@ function renderInsights() {
 
     const hasAccess = updateInsightsAccessGate();
     if (!hasAccess) {
+        const guestPreview = getGuestPreviewProgressState();
         if (insightUpdates) {
             insightUpdates.textContent = t('insights.lock.updates');
         }
         if (progressEl) {
-            progressEl.textContent = '--';
+            progressEl.textContent = `${guestPreview.percentage}%`;
         }
         if (progressBar) {
-            progressBar.style.width = '0%';
+            progressBar.style.width = `${guestPreview.percentage}%`;
         }
         if (completedEl) {
             completedEl.textContent = appState.language === 'es'
-                ? 'Modo invitado activo'
-                : 'Guest mode active';
+                ? `${guestPreview.completed} modulos de ejemplo completados`
+                : `${guestPreview.completed} sample modules completed`;
         }
         if (totalEl) {
-            totalEl.textContent = t('insights.lock.totalHint');
+            totalEl.textContent = appState.language === 'es'
+                ? `${guestPreview.total} modulos en ruta de ejemplo`
+                : `${guestPreview.total} modules in sample roadmap`;
         }
         if (learningPathProgress) {
             learningPathProgress.textContent = appState.language === 'es'
-                ? 'Empieza aqui'
-                : 'Start here';
+                ? `${guestPreview.percentage}% ejemplo completado`
+                : `${guestPreview.percentage}% sample complete`;
         }
         if (learningPathNext) {
             learningPathNext.textContent = t('insights.lock.learningPathHint');
@@ -20318,14 +20367,15 @@ function highlightSearchTerm(text, searchTerm) {
 
 // Module statistics
 function getModuleStats() {
-    const total = modules.length;
-    const completed = appState.completedModules.size;
-    const byDifficulty = modules.reduce((acc, module) => {
+    const moduleList = Array.isArray(modules) ? modules : [];
+    const total = getDisplayModuleTotal();
+    const completed = Math.max(0, Math.min(appState.completedModules.size, total));
+    const byDifficulty = moduleList.reduce((acc, module) => {
         acc[module.difficulty] = (acc[module.difficulty] || 0) + 1;
         return acc;
     }, {});
 
-    const completedByDifficulty = modules.reduce((acc, module) => {
+    const completedByDifficulty = moduleList.reduce((acc, module) => {
         if (appState.completedModules.has(module.id)) {
             acc[module.difficulty] = (acc[module.difficulty] || 0) + 1;
         }
@@ -20778,13 +20828,15 @@ function saveQuizResult(moduleId, score, totalQuestions) {
 function generateLearningPath() {
     const completed = Array.from(appState.completedModules);
     const recommended = getRecommendedModules();
+    const totalModules = getDisplayModuleTotal();
+    const boundedCompleted = Math.max(0, Math.min(completed.length, totalModules));
 
     const path = {
         next: recommended[0],
         upcoming: recommended.slice(1),
-        completed: completed.length,
-        total: modules.length,
-        progress: Math.round((completed.length / modules.length) * 100)
+        completed: boundedCompleted,
+        total: totalModules,
+        progress: Math.round((boundedCompleted / Math.max(totalModules, 1)) * 100)
     };
 
     return path;
