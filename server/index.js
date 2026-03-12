@@ -58,13 +58,30 @@ const ALLOWED_HOSTS = parseAllowlist(process.env.ALLOWED_HOSTS);
 const EMAIL_PIN_EXPIRY_MINUTES = readPositiveInteger(process.env.EMAIL_PIN_EXPIRY_MINUTES, 10);
 const EMAIL_PIN_MAX_ATTEMPTS = readPositiveInteger(process.env.EMAIL_PIN_MAX_ATTEMPTS, 5);
 const EMAIL_PIN_PEPPER = String(process.env.EMAIL_PIN_PEPPER || '');
-const EMAIL_PIN_DELIVERY_MODE = String(
+const EMAIL_PIN_DELIVERY_MODE_RAW = String(
     process.env.EMAIL_PIN_DELIVERY_MODE || (isProduction ? 'disabled' : 'log')
 ).trim().toLowerCase();
+const EMAIL_PIN_DELIVERY_MODE = isProduction && EMAIL_PIN_DELIVERY_MODE_RAW === 'log'
+    ? 'disabled'
+    : EMAIL_PIN_DELIVERY_MODE_RAW;
 const EMAIL_PIN_DEBUG_RESPONSE = !isProduction
-    || String(process.env.EMAIL_PIN_DEBUG_RESPONSE || '').trim().toLowerCase() === 'true';
+    && String(process.env.EMAIL_PIN_DEBUG_RESPONSE || '').trim().toLowerCase() === 'true';
 const MUTATING_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 const FORBIDDEN_JSON_KEYS = new Set(['__proto__', 'prototype', 'constructor']);
+const BLOCKED_STATIC_PREFIXES = Object.freeze([
+    '/server',
+    '/scripts',
+    '/node_modules',
+    '/.git',
+    '/.github',
+    '/output',
+    '/.playwright-cli'
+]);
+const BLOCKED_STATIC_FILES = Object.freeze(new Set([
+    '/package.json',
+    '/package-lock.json',
+    '/tailwind.config.cjs'
+]));
 const BOOK_LIBRARY = [
     {
         id: 'liang-java-9e',
@@ -367,6 +384,30 @@ function noStore(_req, res, next) {
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
     return next();
+}
+
+function normalizeRequestPathForSecurity(rawPath) {
+    const fallback = '/';
+    const source = typeof rawPath === 'string' && rawPath.trim() ? rawPath : fallback;
+    let decoded = source;
+    try {
+        decoded = decodeURIComponent(source);
+    } catch (_error) {
+        decoded = source;
+    }
+    const normalized = decoded.replace(/\\/g, '/').toLowerCase();
+    return normalized.startsWith('/') ? normalized : `/${normalized}`;
+}
+
+function isBlockedStaticPath(rawPath) {
+    const normalizedPath = normalizeRequestPathForSecurity(rawPath);
+    if (BLOCKED_STATIC_FILES.has(normalizedPath)) {
+        return true;
+    }
+    return BLOCKED_STATIC_PREFIXES.some((prefix) => (
+        normalizedPath === prefix
+        || normalizedPath.startsWith(`${prefix}/`)
+    ));
 }
 
 function createRateLimiter({ windowMs, maxRequests, keyPrefix }) {
@@ -696,6 +737,12 @@ function logSecurityConfigurationWarnings() {
             reason: 'ALLOWED_HOSTS is empty in production; enable it to block hostile Host headers.'
         });
     }
+
+    if (EMAIL_PIN_DELIVERY_MODE_RAW === 'log') {
+        logSecurityEvent('email_pin_log_mode_blocked', {
+            reason: 'EMAIL_PIN_DELIVERY_MODE=log was requested in production and was forced to disabled.'
+        });
+    }
 }
 
 async function deliverEmailVerificationPin({ toEmail, pin, userId }) {
@@ -874,9 +921,9 @@ function sessionResponsePayload(session) {
 app.get('/api/health', async (_req, res) => {
     try {
         await query('SELECT 1');
-        return res.json({ ok: true, db: 'connected' });
+        return res.json({ ok: true });
     } catch (error) {
-        return res.status(500).json({ ok: false, error: 'Database unavailable.' });
+        return res.status(503).json({ ok: false, error: 'Service unavailable.' });
     }
 });
 
@@ -1584,6 +1631,17 @@ app.get('/api/books/:bookId/download', (req, res) => {
 
 app.use('/api', (_req, res) => {
     return res.status(404).json({ error: 'API endpoint not found.' });
+});
+
+app.use((req, res, next) => {
+    if (isBlockedStaticPath(req.path)) {
+        logSecurityEvent('blocked_static_internal_path', {
+            path: req.path,
+            requestId: req.requestId || ''
+        });
+        return res.status(404).send('Not found.');
+    }
+    return next();
 });
 
 app.use(express.static(siteRoot));

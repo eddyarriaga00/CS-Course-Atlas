@@ -54,6 +54,20 @@ All notable changes to **CS Course Atlas** are documented in this file.
   - Cybersecurity
 - Added EN/ES localization keys and subtitles for all new upcoming tracks.
 - Updated homepage metadata summary to reflect the expanded upcoming-track lineup.
+
+### Security Hardening
+- Fixed static file exposure of internal project paths by blocking direct public access to:
+  - `/server`
+  - `/scripts`
+  - `/node_modules`
+  - repository/meta file targets such as `package.json`
+- Added path normalization checks before static serving to reduce encoded-path bypass attempts.
+- Hardened email PIN behavior for production:
+  - forced `EMAIL_PIN_DELIVERY_MODE=log` to `disabled` in production
+  - blocked debug PIN response behavior in production
+  - added a production warning event if log mode was requested
+- Reduced health endpoint metadata leakage (`/api/health` now returns generic service status).
+- Added a full audit report at `security_best_practices_report.md`.
 ### Navigation and UX Fixes
 - Fixed the pseudocode mode badge/icon in module controls (`📝`).
 - Removed the injected `"Program finished."` line from Java wrapper execution output.
