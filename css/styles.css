@@ -4488,10 +4488,6 @@ body.dark .settings-modal-footer {
     text-underline-offset: 2px;
 }
 
-#account-modal .account-auth-demo {
-    margin: -0.15rem 0 0;
-}
-
 #account-modal .account-primary-btn {
     border: 1px solid rgba(129, 140, 248, 0.35);
     box-shadow: 0 10px 24px rgba(79, 70, 229, 0.24);

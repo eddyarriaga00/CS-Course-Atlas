@@ -189,3 +189,9 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Added XML sitemap styling via `sitemap.xsl` and connected it using the `<?xml-stylesheet ...?>` directive in `sitemap.xml`.
 - Extended sitemap generation with `changefreq` and `priority` metadata and kept `robots.txt` pointed at the XML sitemap.
 
+### Production Auth Cleanup
+- Removed the offline demo/sample auth fallback (`example / example`) from the account flow.
+- Removed the corresponding demo hint text from the account modal.
+- Removed local demo-session bootstrap logic so auth state now comes only from real backend session checks.
+- Connected the `Forgot password` action to a real support request flow by auto-opening/prefilling the Support form instead of showing a “coming soon” placeholder message.
+

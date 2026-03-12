@@ -13563,11 +13563,6 @@ let neonCsrfToken = '';
 const glossaryUiState = {
     filtersOpen: false
 };
-const LOCAL_EXAMPLE_AUTH = {
-    username: 'example',
-    password: 'example',
-    userId: 'example-local'
-};
 
 function getDefaultAccountProfile() {
     return {
@@ -13901,9 +13896,30 @@ function handleForgotPassword() {
         showToast('Enter your email or username first.', 'warning');
         return;
     }
-    const message = `Password reset flow is coming soon. We saved "${identifier}" as your recovery identifier.`;
-    setAccountAuthStatus(message, 'info');
-    showToast('Password reset flow coming soon.', 'info');
+    openSupportModal();
+
+    const topicInput = document.getElementById('support-topic');
+    const messageInput = document.getElementById('support-message');
+    const moduleSelect = document.getElementById('support-module');
+    const normalizedIdentifier = identifier.toLowerCase();
+    const timestamp = new Date().toISOString();
+
+    if (topicInput && !topicInput.value.trim()) {
+        topicInput.value = 'Password reset request';
+    }
+    if (moduleSelect && !moduleSelect.value) {
+        moduleSelect.value = 'intro-to-coding';
+    }
+    if (messageInput && !messageInput.value.trim()) {
+        messageInput.value = [
+            'Please help reset my account password.',
+            `Identifier: ${normalizedIdentifier}`,
+            `Submitted from auth modal at: ${timestamp}`
+        ].join('\n');
+    }
+
+    setAccountAuthStatus('Password reset is handled through Support. Your request form has been prefilled.', 'info');
+    showToast('Support form prefilled for password reset.', 'info');
 }
 
 function consumeOAuthResultFromUrl() {
@@ -13982,41 +13998,6 @@ function refreshAccountPrimaryAuthButton() {
     submitBtn.textContent = getAccountPrimaryAuthLabel();
     setAccountAuthModeCopy(accountAuthState.mode === 'signup');
     syncAccountSignupToggleState();
-}
-
-function isLocalExampleCredentials(email, password) {
-    return String(email || '').trim().toLowerCase() === LOCAL_EXAMPLE_AUTH.username
-        && String(password || '') === LOCAL_EXAMPLE_AUTH.password;
-}
-
-function isLocalExampleSession() {
-    return String(accountProfile.serverUserId || '').trim() === LOCAL_EXAMPLE_AUTH.userId
-        && String(accountProfile.email || '').trim().toLowerCase() === LOCAL_EXAMPLE_AUTH.username;
-}
-
-function isNetworkAuthFailure(error) {
-    const message = String(error instanceof Error ? error.message : error || '').toLowerCase();
-    return message.includes('failed to fetch')
-        || message.includes('load failed')
-        || message.includes('networkerror')
-        || message.includes('network request failed');
-}
-
-function applyLocalExampleAuth() {
-    setCsrfToken('');
-    accountAuthState.isAuthenticated = true;
-    accountAuthState.sessionLabel = LOCAL_EXAMPLE_AUTH.username;
-    accountProfile.email = LOCAL_EXAMPLE_AUTH.username;
-    accountProfile.username = LOCAL_EXAMPLE_AUTH.username;
-    accountProfile.name = LOCAL_EXAMPLE_AUTH.username;
-    accountProfile.serverUserId = LOCAL_EXAMPLE_AUTH.userId;
-    saveAccountProfile();
-    applyAccountProfileToForm();
-    updateAccountChip();
-    clearAuthPasswordFields();
-    setAccountAuthStatus(`Authenticated as ${LOCAL_EXAMPLE_AUTH.username}`, 'success');
-    refreshAccountPrimaryAuthButton();
-    handleInsightsAccessStateChange();
 }
 
 function setAccountAuthMode(mode) {
@@ -14761,15 +14742,6 @@ async function saveAccountProfileSettings() {
 
 async function checkNeonSession(options = {}) {
     const { silent = false } = options;
-    if (isLocalExampleSession()) {
-        setCsrfToken('');
-        accountAuthState.isAuthenticated = true;
-        accountAuthState.sessionLabel = LOCAL_EXAMPLE_AUTH.username;
-        setAccountAuthStatus(`Authenticated as ${LOCAL_EXAMPLE_AUTH.username}`, 'success');
-        refreshAccountPrimaryAuthButton();
-        handleInsightsAccessStateChange();
-        return { userId: LOCAL_EXAMPLE_AUTH.userId, userLabel: LOCAL_EXAMPLE_AUTH.username };
-    }
     if (!hasNeonSyncConfig()) {
         setCsrfToken('');
         accountAuthState.isAuthenticated = false;
@@ -14923,11 +14895,6 @@ async function submitAccountAuth() {
     }
 
     if (!hasNeonSyncConfig()) {
-        if (!isSignup && isLocalExampleCredentials(email, password)) {
-            applyLocalExampleAuth();
-            showToast('Signed in successfully.', 'success');
-            return;
-        }
         setAccountAuthStatus('Auth server is not available.', 'error');
         showToast('Auth server is not available.', 'warning');
         return;
@@ -14975,11 +14942,6 @@ async function submitAccountAuth() {
             setAccountAuthMode('login');
         }
     } catch (error) {
-        if (!isSignup && isLocalExampleCredentials(email, password) && isNetworkAuthFailure(error)) {
-            applyLocalExampleAuth();
-            showToast('Signed in successfully.', 'success');
-            return;
-        }
         const reason = error instanceof Error ? error.message : String(error);
         setAccountAuthStatus(`Auth failed: ${reason}`, 'error');
         showToast(`Authentication failed: ${reason}`, 'error');
@@ -15346,15 +15308,9 @@ function initAccount() {
     setAccountProfileSectionExpanded(false);
     resetAccountSecureInputs({ clearPendingEmail: true });
     setAccountAuthMode('login');
-    if (isLocalExampleSession()) {
-        accountAuthState.isAuthenticated = true;
-        accountAuthState.sessionLabel = LOCAL_EXAMPLE_AUTH.username;
-        setAccountAuthStatus(`Authenticated as ${LOCAL_EXAMPLE_AUTH.username}`, 'success');
-    } else {
-        accountAuthState.isAuthenticated = false;
-        accountAuthState.sessionLabel = '';
-        setAccountAuthStatus(t('auth.status.guest'), 'neutral');
-    }
+    accountAuthState.isAuthenticated = false;
+    accountAuthState.sessionLabel = '';
+    setAccountAuthStatus(t('auth.status.guest'), 'neutral');
     refreshAccountPrimaryAuthButton();
     handleInsightsAccessStateChange();
 
