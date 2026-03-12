@@ -6889,10 +6889,6 @@ body.dark:not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-min
         justify-content: center;
     }
 
-    body.sidebar-icon-only #app-sidebar #sidebar-tracks-toggle::before {
-        content: '\01F9ED';
-    }
-
     body.sidebar-icon-only #app-sidebar .sidebar-submenu {
         display: none !important;
     }
@@ -7409,10 +7405,6 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
 
     body.sidebar-icon-only #app-sidebar .sidebar-group-toggle {
         justify-content: center;
-    }
-
-    body.sidebar-icon-only #app-sidebar #sidebar-tracks-toggle::before {
-        content: '\01F9ED';
     }
 
     body.sidebar-icon-only #app-sidebar .sidebar-submenu {
