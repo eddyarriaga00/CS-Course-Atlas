@@ -37,3 +37,30 @@ All notable changes to **CS Course Atlas** are documented in this file.
   - notes route to notes and highlight the target
   - playground topics route to playground and load the selected topic/snippet
 - Added dedicated global-search styling for desktop/mobile and preserved existing module-only filter search below it.
+
+### Navigation and UX Fixes
+- Fixed the pseudocode mode badge/icon in module controls (`📝`).
+- Removed the injected `"Program finished."` line from Java wrapper execution output.
+- Added a bottom-left page jump button that flips between down/up behavior based on scroll position and jumps to bottom/top.
+- Added safe visibility handling for the page jump button during modal overlays.
+- Fixed mobile sidebar alignment so it no longer jumps upward when the header compacts.
+
+### Guest Insights and Account Gating
+- Enabled guest study-plan personalization in preview mode (without forced login prompt).
+- Updated guest insights CTA copy to clarify preview behavior.
+- Added authenticated-only notification persistence for module completion + achievement unlock events.
+- Added explicit privacy/support messaging: personalized profile and achievement-notification persistence is account-only.
+
+### Learning Content Expansion
+- Expanded the `Introduction to Coding` module with deeper topics, richer explanation flow, and additional beginner resources.
+- Added new modules for current tracks:
+  - `git-branching-merging`
+  - `java-memory-jvm`
+  - `discrete-graph-theory`
+  - `assembly-addressing-modes`
+  - `backtracking-patterns`
+- Updated module sequencing/category maps (including discrete/assembly defaults) so new modules route and render correctly.
+
+### Validation
+- Frontend syntax check: `node --check js/script.js` (pass).
+- Backend syntax checks: `node --check server/index.js`, `server/security.js`, `server/db.js` (pass).

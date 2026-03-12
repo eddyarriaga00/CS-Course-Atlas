@@ -121,6 +121,7 @@ const COLLAPSED_SECTION_CONTEXTS = {
 const ASSEMBLY_MODULE_IDS = [
     'assembly-registers-memory',
     'assembly-control-flow-procedures',
+    'assembly-addressing-modes',
     'assembly-arrays-strings-io'
 ];
 
@@ -319,7 +320,8 @@ const STORAGE_KEYS = {
     ACCOUNT: 'javaDSAAccountProfile',
     NOTES: 'javaDSANotes',
     STUDY_PLAN: 'javaDSAStudyPlan',
-    DS_PLAYGROUND: 'javaDSADataStructurePlayground'
+    DS_PLAYGROUND: 'javaDSADataStructurePlayground',
+    NOTIFICATIONS: 'javaDSANotifications'
 };
 
 const moduleOutputCache = new Map();
@@ -328,6 +330,7 @@ const moduleOutputInFlight = new Map();
 const interviewRunState = new Map();
 const interviewRunInFlight = new Set();
 const interviewWorkspaceSelection = new Map();
+let userNotifications = [];
 
 const SUPPORTED_LANGUAGES = {
     java: { name: 'Java', icon: '\u2615' },
@@ -340,7 +343,7 @@ const PLAYGROUND_RUNNABLE_LANGUAGES = ['java', 'cpp', 'python', 'javascript'];
 
 const CODE_MODES = {
     code: { name: 'Code', icon: '</>' },
-    pseudocode: { name: 'Pseudocode', icon: 'PS' },
+    pseudocode: { name: 'Pseudocode', icon: '\u{1F4DD}' },
     discreteTheory: { name: 'Discrete Mathematics', icon: 'DM' }
 };
 
@@ -447,7 +450,9 @@ const LEGACY_MODULE_ID_MAP = {
 };
 const MODULE_CATEGORY_BY_ID = {
     'git-basics-workflow': 'git',
+    'git-branching-merging': 'git',
     'java-basics': 'java',
+    'java-memory-jvm': 'java',
     'control-flow': 'java',
     'oop-basics': 'java',
     'exception-handling': 'java',
@@ -462,9 +467,11 @@ const MODULE_CATEGORY_BY_ID = {
     'propositional-logic-proofs': 'discrete',
     'sets-relations-functions': 'discrete',
     'combinatorics-discrete-probability': 'discrete',
+    'discrete-graph-theory': 'discrete',
     'assembly-registers-memory': 'assembly',
     'assembly-control-flow-procedures': 'assembly',
     'assembly-arrays-strings-io': 'assembly',
+    'assembly-addressing-modes': 'assembly',
     'intro-to-coding': 'dsa',
     'arrays-strings': 'dsa',
     'linked-lists': 'dsa',
@@ -475,6 +482,7 @@ const MODULE_CATEGORY_BY_ID = {
     'sorting-algorithms': 'dsa',
     'searching-algorithms': 'dsa',
     'recursion': 'dsa',
+    'backtracking-patterns': 'dsa',
     'dynamic-programming': 'dsa',
     'greedy-algorithms': 'dsa',
     'graph-algorithms': 'dsa',
@@ -489,7 +497,9 @@ const MODULE_CATEGORY_BY_ID = {
 const MODULE_LEARNING_SEQUENCE = [
     'intro-to-coding',
     'java-basics',
+    'java-memory-jvm',
     'git-basics-workflow',
+    'git-branching-merging',
     'control-flow',
     'assembly-registers-memory',
     'oop-basics',
@@ -501,9 +511,11 @@ const MODULE_LEARNING_SEQUENCE = [
     'sets-relations-functions',
     'propositional-logic-proofs',
     'combinatorics-discrete-probability',
+    'discrete-graph-theory',
     'collections-framework',
     'file-io',
     'assembly-control-flow-procedures',
+    'assembly-addressing-modes',
     'assembly-arrays-strings-io',
     'generics',
     'jdbc-basics',
@@ -513,6 +525,7 @@ const MODULE_LEARNING_SEQUENCE = [
     'heaps',
     'sorting-algorithms',
     'recursion',
+    'backtracking-patterns',
     'tries',
     'union-find',
     'bit-manipulation',
@@ -541,7 +554,8 @@ const GUEST_STARTER_MODULE_IDS = {
 const DISCRETE_MODULE_IDS = new Set([
     'propositional-logic-proofs',
     'sets-relations-functions',
-    'combinatorics-discrete-probability'
+    'combinatorics-discrete-probability',
+    'discrete-graph-theory'
 ]);
 
 const ACHIEVEMENT_LEVELS = [
@@ -805,6 +819,7 @@ const TRANSLATIONS = {
         'insights.lock.guestFlashcards': 'Practice flashcards',
         'insights.lock.guestNote': 'Save one local note',
         'insights.lock.guestHint': 'Create a free account to sync progress across devices once you are ready.',
+        'insights.lock.planPreviewCta': 'Personalize (Preview)',
         'auth.status.guest': 'Guest mode active. Create a free account to sync progress across devices.',
         'interview.heading': '\u{1F4C2} Interview Examples',
         'interview.subtitle': 'LeetCode-style walk-throughs. Two at a time with quick copy.',
@@ -854,6 +869,10 @@ const TRANSLATIONS = {
         // Floating helper
         'helper.badge': 'Quick Guide',
         'helper.ariaLabel': 'Quick Guide',
+        'scroll.jumpTop': 'Back to Top',
+        'scroll.jumpBottom': 'Jump to Bottom',
+        'scroll.jumpTopAria': 'Scroll to the top of this page',
+        'scroll.jumpBottomAria': 'Scroll to the bottom of this page',
         'helper.title': 'Website Quick Guide',
         'helper.subtitle': 'A short tour of what each section does.',
         'helper.closeAria': 'Close quick website guide',
@@ -1266,6 +1285,7 @@ const TRANSLATIONS = {
         'insights.lock.guestFlashcards': 'Practica con tarjetas',
         'insights.lock.guestNote': 'Guarda una nota local',
         'insights.lock.guestHint': 'Crea una cuenta gratis para sincronizar tu progreso entre dispositivos cuando quieras.',
+        'insights.lock.planPreviewCta': 'Personalizar (Vista previa)',
         'auth.status.guest': 'Modo invitado activo. Crea una cuenta gratis para sincronizar tu progreso entre dispositivos.',
         'interview.heading': '\u{1F4C2} Ejemplos de Entrevista',
         'interview.subtitle': 'Recorridos estilo LeetCode. Dos por página con copia rápida.',
@@ -1415,6 +1435,10 @@ const TRANSLATIONS = {
         'footer.support.copy': 'Hecho con dedicación para estudiantes de CS. Ayuda a mantener la plataforma gratuita y en mejora continua.',
         'footer.support.coffee': '\u2615 Caf\u00e9',
         'footer.support.sponsor': 'Patrocinar',
+        'scroll.jumpTop': 'Volver arriba',
+        'scroll.jumpBottom': 'Ir al final',
+        'scroll.jumpTopAria': 'Desplazarse al inicio de esta pagina',
+        'scroll.jumpBottomAria': 'Desplazarse al final de esta pagina',
         'footer.trust.title': 'Confianza y Legal',
         'footer.trust.privacy': 'Política de Privacidad',
         'footer.trust.terms': 'Términos de Uso',
@@ -2415,6 +2439,10 @@ function renderRoute(route, options = {}) {
     if (!isSidebarDrawerMode()) {
         closeSidebar();
     }
+
+    requestAnimationFrame(() => {
+        updatePageJumpButton();
+    });
 }
 
 function navigateToRoute(route, options = {}) {
@@ -4253,6 +4281,7 @@ const modules = [
             'What Coding Is',
             'A Short History of Programming',
             'How Code Becomes Running Software',
+            'How the Software Stack Fits Together',
             'Career Paths in Technology',
             'Choosing Your Learning Path',
             'Choosing Your First Programming Language',
@@ -4260,6 +4289,13 @@ const modules = [
             'Your First Program',
             'Core Building Blocks',
             'Debugging and Problem Solving',
+            'Version Control and Collaboration Basics',
+            'How to Read Documentation and Error Messages',
+            'How to Ask Good Technical Questions',
+            'Beginner Pitfalls and How to Avoid Them',
+            'Project Selection and Portfolio Foundations',
+            'Study Systems and Habit Design',
+            'Preparing for CS Coursework and Internships',
             'Learning Workflow and Portfolio Basics',
             '30-Day Starter Plan'
         ],
@@ -4334,11 +4370,17 @@ intro_to_coding_overview()
     console.log("Goal: move from confusion to a clear, executable plan.");
 })();`
         },
-        explanation: `Coding is the practice of turning ideas into exact instructions a computer can execute. If you are new, this module is your foundation: we cover why programming exists, how the field evolved, and how modern software teams work.
+        explanation: `Coding is the practice of turning ideas into exact instructions a computer can execute. If you are new, this module is your foundation: we cover why programming exists, how the field evolved, and how modern software teams ship and maintain software.
 
-You will map major career tracks (frontend, backend, mobile, data, security, cloud, embedded, game, and QA/automation), then choose a realistic beginner path instead of trying to learn everything at once. You will also learn how to choose your first language based on goals, not hype.
+You will map major career tracks (frontend, backend, mobile, data, security, cloud, embedded, game, and QA/automation), then choose a realistic path instead of trying to learn everything at once. We compare language choices by use case, beginner ergonomics, job relevance, and tooling maturity so your first pick is intentional.
 
-Finally, this module gives you practical setup and workflow basics: editor, runtime/compiler, terminal, version control, first program, debugging mindset, and a 30-day plan you can immediately execute. By the end, you should have direction, tools, and repeatable study habits.`,
+You will also learn the real startup workflow beginners need:
+1) Install editor + runtime/compiler and verify with a tiny program.
+2) Understand the loop: read task -> write code -> run -> inspect output -> debug -> refactor.
+3) Use Git from day one so progress is tracked and reversible.
+4) Build small projects with increasing scope and clear reflection notes.
+
+Finally, we cover execution habits that make long-term progress reliable: active recall, spaced repetition, deliberate practice, documentation reading, and asking high-quality questions when blocked. By the end, you should have direction, tools, and a repeatable system for continued growth.`,
         resources: [
             { text: 'CS50x (Harvard) - Intro to Computer Science', url: 'https://cs50.harvard.edu/x/' },
             { text: 'Roadmap.sh - Developer Role Roadmaps', url: 'https://roadmap.sh/' },
@@ -4351,7 +4393,11 @@ Finally, this module gives you practical setup and workflow basics: editor, runt
             { text: 'GitHub Skills - Interactive Courses', url: 'https://skills.github.com/' },
             { text: 'The Missing Semester (MIT)', url: 'https://missing.csail.mit.edu/' },
             { text: 'freeCodeCamp - Learn to Code', url: 'https://www.freecodecamp.org/learn/' },
-            { text: 'Exercism - Programming Practice', url: 'https://exercism.org/' }
+            { text: 'Exercism - Programming Practice', url: 'https://exercism.org/' },
+            { text: 'Teach Yourself CS', url: 'https://teachyourselfcs.com/' },
+            { text: 'OSSU Computer Science', url: 'https://github.com/ossu/computer-science' },
+            { text: 'Nand2Tetris', url: 'https://www.nand2tetris.org/' },
+            { text: 'LeetCode Explore (Foundations)', url: 'https://leetcode.com/explore/' }
         ]
     },
     {
@@ -6988,9 +7034,197 @@ public class JDBCExample {
             System.out.println("Error inserting student: " + e.getMessage());
         }
     }
-}`,
+        }`,
         explanation: `JDBC coverage includes driver setup, connection pooling, prepared statements, and transaction management. You'll practice defensive coding against SQL injection, map result sets to objects, and compare raw JDBC with higher-level ORM approaches.`,
         resources: ['JDBC Tutorial', 'SQL Basics', 'Database Best Practices']
+    },
+    {
+        id: 'git-branching-merging',
+        title: 'Git Branching, Merging, and Pull Requests',
+        description: 'Learn a repeatable team workflow: create feature branches, keep them updated, resolve merge conflicts safely, and open clean pull requests with review-ready commits.',
+        difficulty: 'intermediate',
+        topics: ['Feature Branches', 'Rebase vs Merge', 'Conflict Resolution', 'Pull Request Hygiene', 'Commit Strategy'],
+        codeExample: `import java.util.List;
+
+public class GitWorkflowPlan {
+    public static void main(String[] args) {
+        List<String> commands = List.of(
+            "git checkout -b feature/login-flow",
+            "git add . && git commit -m \\\"feat: add login form validation\\\"",
+            "git fetch origin",
+            "git rebase origin/main",
+            "git push -u origin feature/login-flow",
+            "Open pull request, request review, squash merge"
+        );
+
+        System.out.println("Safe collaboration workflow:");
+        commands.forEach(System.out::println);
+    }
+}`,
+        explanation: `This module focuses on collaboration habits that prevent accidental breakage in shared repos. You will practice writing focused commits, rebasing before review, handling conflicts deliberately, and documenting changes clearly in pull requests.`,
+        resources: ['Git Branching Guide', 'Atlassian Merge Conflict Guide', 'Conventional Commits']
+    },
+    {
+        id: 'java-memory-jvm',
+        title: 'Java Memory and JVM Fundamentals',
+        description: 'Understand stack vs heap, object lifetime, garbage collection basics, and why memory-aware coding decisions improve reliability and performance.',
+        difficulty: 'intermediate',
+        topics: ['Stack vs Heap', 'Object Lifecycle', 'Garbage Collection', 'References', 'Memory Leaks in Practice'],
+        codeExample: `import java.util.ArrayList;
+import java.util.List;
+
+class StudentSession {
+    private final String name;
+    private final int score;
+
+    StudentSession(String name, int score) {
+        this.name = name;
+        this.score = score;
+    }
+
+    int getScore() {
+        return score;
+    }
+
+    @Override
+    public String toString() {
+        return name + ":" + score;
+    }
+}
+
+public class JvmMemoryDemo {
+    public static void main(String[] args) {
+        List<StudentSession> sessions = new ArrayList<>();
+        for (int i = 1; i <= 3; i++) {
+            sessions.add(new StudentSession("student-" + i, i * 10));
+        }
+
+        int total = 0;
+        for (StudentSession session : sessions) {
+            System.out.println(session);
+            total += session.getScore();
+        }
+        System.out.println("Average score: " + (total / sessions.size()));
+    }
+}`,
+        explanation: `You will connect JVM concepts to real code behavior: local variables live on call stacks, objects typically live on the heap, and unreachable objects become GC candidates. We also cover common retention mistakes that cause memory growth over time.`,
+        resources: ['JVM Memory Model Basics', 'Java GC Tuning Overview', 'VisualVM Intro']
+    },
+    {
+        id: 'discrete-graph-theory',
+        title: 'Discrete Graph Theory Foundations',
+        description: 'Bridge discrete math and practical CS by modeling vertices/edges, traversing graphs, and reasoning about paths, cycles, and connectivity.',
+        difficulty: 'intermediate',
+        topics: ['Graph Models', 'Paths and Cycles', 'Connectivity', 'BFS/DFS Intuition', 'Tree vs General Graph'],
+        codeExample: `import java.util.*;
+
+public class GraphTheoryIntro {
+    public static void main(String[] args) {
+        Map<Integer, List<Integer>> graph = new HashMap<>();
+        graph.put(1, Arrays.asList(2, 3));
+        graph.put(2, Arrays.asList(1, 4));
+        graph.put(3, Arrays.asList(1, 4));
+        graph.put(4, Arrays.asList(2, 3));
+
+        Queue<Integer> queue = new ArrayDeque<>();
+        Set<Integer> visited = new HashSet<>();
+        queue.offer(1);
+        visited.add(1);
+
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            System.out.println("Visit: " + node);
+            for (int neighbor : graph.getOrDefault(node, Collections.emptyList())) {
+                if (visited.add(neighbor)) queue.offer(neighbor);
+            }
+        }
+    }
+}`,
+        explanation: `This module introduces graph language used throughout algorithms, networking, and systems design. In theory mode, you will reason about definitions and proof-style arguments. In code mode, you will see these ideas represented with adjacency lists and traversals.`,
+        resources: ['Graph Theory Intro Notes', 'BFS vs DFS Comparison', 'Connectivity and Components']
+    },
+    {
+        id: 'assembly-addressing-modes',
+        title: 'Assembly Addressing Modes and Stack Frames',
+        description: 'Read and write memory using immediate, register, and base+offset addressing while understanding how stack frames support function calls.',
+        difficulty: 'intermediate',
+        topics: ['Immediate/Register/Memory Modes', 'Base + Offset Addressing', 'Stack Frames', 'Call Conventions', 'Local Variable Access'],
+        codeExamples: {
+            assembly: `; x86-64 Linux (Intel syntax)
+; Demonstrates addressing modes and stack frame setup.
+section .data
+nums    dd 10, 20, 30, 40
+fmt     db "sum=", 0
+
+section .text
+global _start
+
+_start:
+    push rbp
+    mov rbp, rsp
+    sub rsp, 16              ; local stack space
+
+    mov eax, [nums]          ; memory direct
+    mov ebx, [nums + 4]      ; base + offset
+    add eax, ebx             ; register arithmetic
+    mov [rbp - 4], eax       ; local variable store
+
+    ; (I/O omitted in this module card sample)
+    mov rsp, rbp
+    pop rbp
+    mov rax, 60
+    xor rdi, rdi
+    syscall`,
+            java: `public class AddressingModesModel {
+    public static void main(String[] args) {
+        int[] nums = {10, 20, 30, 40};
+        int sum = nums[0] + nums[1];
+        System.out.println("sum=" + sum);
+    }
+}`
+        },
+        expectedOutputs: {
+            assembly: 'Assembly sample (view-only).\nsum=30',
+            java: 'sum=30'
+        },
+        explanation: `Addressing modes are the core grammar of low-level code. You will practice mapping high-level indexing and local variables to concrete memory addresses, then relate that to function prologue/epilogue patterns in stack frames.`,
+        resources: ['x86-64 Addressing Modes', 'System V ABI Overview', 'Stack Frames Visualized']
+    },
+    {
+        id: 'backtracking-patterns',
+        title: 'Backtracking Patterns',
+        description: 'Master the decision-tree template used in subsets, combinations, permutations, and constraint problems by tracking state, choices, and undo steps.',
+        difficulty: 'intermediate',
+        topics: ['Decision Trees', 'Choose-Explore-Unchoose', 'Pruning', 'State Backtracking', 'Constraint Search'],
+        codeExample: `import java.util.*;
+
+public class BacktrackingSubsets {
+    static void build(int[] nums, int index, List<Integer> path, List<List<Integer>> answer) {
+        if (index == nums.length) {
+            answer.add(new ArrayList<>(path));
+            return;
+        }
+
+        // Skip current number
+        build(nums, index + 1, path, answer);
+
+        // Take current number
+        path.add(nums[index]);
+        build(nums, index + 1, path, answer);
+
+        // Undo
+        path.remove(path.size() - 1);
+    }
+
+    public static void main(String[] args) {
+        int[] nums = {1, 2, 3};
+        List<List<Integer>> answer = new ArrayList<>();
+        build(nums, 0, new ArrayList<>(), answer);
+        System.out.println(answer);
+    }
+}`,
+        explanation: `Backtracking is systematic search with reversible state. This module builds strong template discipline so you can adapt one structure to many problem families while keeping complexity and pruning decisions explicit.`,
+        resources: ['Backtracking Template Guide', 'Pruning Heuristics', 'Constraint Satisfaction Basics']
     }
 ];
 
@@ -10688,6 +10922,46 @@ function safeSetItem(key, value) {
     } catch (error) {}
 }
 
+function loadUserNotifications() {
+    if (!hasAuthenticatedInsightsAccess()) {
+        userNotifications = [];
+        return userNotifications;
+    }
+    const stored = safeGetItem(STORAGE_KEYS.NOTIFICATIONS);
+    if (!stored) {
+        userNotifications = [];
+        return userNotifications;
+    }
+    try {
+        const parsed = JSON.parse(stored);
+        userNotifications = Array.isArray(parsed) ? parsed.slice(0, 80) : [];
+    } catch (error) {
+        userNotifications = [];
+    }
+    return userNotifications;
+}
+
+function saveUserNotifications() {
+    if (!hasAuthenticatedInsightsAccess()) return;
+    safeSetItem(STORAGE_KEYS.NOTIFICATIONS, JSON.stringify(userNotifications.slice(0, 80)));
+    queueUserStateSync();
+}
+
+function addUserNotification(message, type = 'info') {
+    const text = String(message || '').trim();
+    if (!text || !hasAuthenticatedInsightsAccess()) return;
+    userNotifications.unshift({
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        type,
+        message: text,
+        timestamp: new Date().toISOString()
+    });
+    if (userNotifications.length > 80) {
+        userNotifications = userNotifications.slice(0, 80);
+    }
+    saveUserNotifications();
+}
+
 function buildSerializableAppState() {
     const normalizedRouteCollapsedSections = normalizeRouteCollapsedSections(
         appState.routeCollapsedSections,
@@ -10760,7 +11034,10 @@ function buildSerializableUserState() {
             streak: Number(studyHabit?.streak || 0),
             longestStreak: Number(studyHabit?.longestStreak || 0),
             lastDate: studyHabit?.lastDate || null
-        }
+        },
+        notifications: hasAuthenticatedInsightsAccess()
+            ? userNotifications.slice(0, 80)
+            : []
     };
 }
 
@@ -11048,6 +11325,12 @@ function applyRemoteUserStateSnapshot(snapshot, options = {}) {
                 ...snapshot.studyHabit
             };
             saveStudyHabit();
+        }
+        if (Array.isArray(snapshot.notifications) && hasAuthenticatedInsightsAccess()) {
+            userNotifications = snapshot.notifications
+                .filter((entry) => entry && typeof entry === 'object')
+                .slice(0, 80);
+            saveUserNotifications();
         }
 
         applyFontScale();
@@ -13091,6 +13374,11 @@ function updateInsightsAccessGate() {
 
 function handleInsightsAccessStateChange() {
     const unlocked = updateInsightsAccessGate();
+    if (unlocked) {
+        loadUserNotifications();
+    } else {
+        userNotifications = [];
+    }
     if (!unlocked && studyTimer?.isActive) {
         endStudySession({ notify: false });
     }
@@ -14740,9 +15028,7 @@ function applyStudyPlanSelection(plan) {
 
 function openStudyPlanModal() {
     if (!hasAuthenticatedInsightsAccess()) {
-        showToast('Sign in to unlock personalized study insights.', 'info');
-        openAccountModal();
-        return;
+        showToast('Guest preview mode: you can personalize this session. Sign in to sync it.', 'info');
     }
     studyPlanDraft = { ...studyPlanState };
     applyStudyPlanSelection(studyPlanDraft);
@@ -14785,21 +15071,30 @@ function initStudyPlan() {
             if (!studyPlanDraft) studyPlanDraft = { ...studyPlanState };
             studyPlanDraft.notes = notesInput ? notesInput.value.trim() : '';
             studyPlanState = { ...studyPlanDraft };
-            saveStudyPlan();
+            if (hasAuthenticatedInsightsAccess()) {
+                saveStudyPlan();
+            }
 
             const paceGoalMap = { light: 3, balanced: 5, intense: 8 };
             if (studyPlanState.pace && paceGoalMap[studyPlanState.pace]) {
                 appState.weeklyGoal = paceGoalMap[studyPlanState.pace];
-                saveToLocalStorage();
+                if (hasAuthenticatedInsightsAccess()) {
+                    saveToLocalStorage();
+                }
             }
 
             renderInsights();
             closeStudyPlanModal();
-            showToast('Study plan saved!', 'success');
+            if (hasAuthenticatedInsightsAccess()) {
+                showToast('Study plan saved!', 'success');
+            } else {
+                showToast('Guest preview saved for this session. Sign in to sync across devices.', 'info');
+            }
         });
     }
 
     renderInsights();
+    updatePageJumpButton();
 }
 
 function initNotesLibrary() {
@@ -16085,7 +16380,7 @@ function prepareJavaSourceForRunner(code) {
         if (hasMainType) {
             return injectMainIntoClass(source, 'Main', `${mainClass.name}.main(args);`);
         }
-        source += `\n\nclass Main {\n    public static void main(String[] args) {\n        ${mainClass.name}.main(args);\n        System.out.println("Program finished.");\n    }\n}\n`;
+        source += `\n\nclass Main {\n    public static void main(String[] args) {\n        ${mainClass.name}.main(args);\n    }\n}\n`;
         return source;
     }
 
@@ -18254,6 +18549,60 @@ function updateHeaderShrink() {
     }
 }
 
+function getDocumentScrollRange() {
+    const docEl = document.documentElement;
+    const body = document.body;
+    const scrollHeight = Math.max(
+        Number(docEl?.scrollHeight) || 0,
+        Number(body?.scrollHeight) || 0
+    );
+    return Math.max(scrollHeight - window.innerHeight, 0);
+}
+
+function updatePageJumpButton() {
+    const button = document.getElementById('page-jump-btn');
+    if (!button) return;
+
+    const scrollRange = getDocumentScrollRange();
+    if (scrollRange < 140) {
+        button.classList.add('is-hidden');
+        button.setAttribute('aria-hidden', 'true');
+        button.setAttribute('tabindex', '-1');
+        return;
+    }
+
+    button.classList.remove('is-hidden');
+    button.removeAttribute('aria-hidden');
+    button.removeAttribute('tabindex');
+
+    const currentY = Number(window.scrollY) || 0;
+    const shouldPointDown = currentY < (scrollRange / 2);
+    button.classList.toggle('points-down', shouldPointDown);
+    button.classList.toggle('points-up', !shouldPointDown);
+    button.dataset.direction = shouldPointDown ? 'down' : 'up';
+
+    const titleKey = shouldPointDown ? 'scroll.jumpBottom' : 'scroll.jumpTop';
+    const ariaKey = shouldPointDown ? 'scroll.jumpBottomAria' : 'scroll.jumpTopAria';
+    button.title = t(titleKey);
+    button.setAttribute('aria-label', t(ariaKey));
+
+    const glyph = button.querySelector('[data-page-jump-glyph]');
+    if (glyph) {
+        glyph.textContent = shouldPointDown ? '\u2193' : '\u2191';
+    }
+}
+
+function handlePageJumpButtonClick() {
+    const button = document.getElementById('page-jump-btn');
+    if (!button) return;
+    const direction = button.dataset.direction === 'up' ? 'up' : 'down';
+    const targetTop = direction === 'up' ? 0 : getDocumentScrollRange();
+    window.scrollTo({
+        top: targetTop,
+        behavior: appState.reduceMotion ? 'auto' : 'smooth'
+    });
+}
+
 function getModuleCategoryKey(moduleId) {
     return MODULE_CATEGORY_BY_ID[moduleId] || 'dsa';
 }
@@ -19564,6 +19913,7 @@ function renderModules() {
     }).join('');
 
     renderInsights();
+    updatePageJumpButton();
 }
 
 function getAchievementState(completed = appState.completedModules.size) {
@@ -20346,11 +20696,25 @@ function setModuleMode(moduleId, mode) {
 }
 
 function toggleCompletion(moduleId) {
-    if (appState.completedModules.has(moduleId)) {
+    const wasCompleted = appState.completedModules.has(moduleId);
+    const previousAchievement = getAchievementState(appState.completedModules.size).current;
+    if (wasCompleted) {
         appState.completedModules.delete(moduleId);
     } else {
         appState.completedModules.add(moduleId);
     }
+
+    if (!wasCompleted && hasAuthenticatedInsightsAccess()) {
+        const module = getModuleById(moduleId);
+        const localizedModule = module ? getLocalizedModule(module) : null;
+        addUserNotification(`Module completed: ${localizedModule?.title || moduleId}`, 'progress');
+
+        const nextAchievement = getAchievementState(appState.completedModules.size).current;
+        if (nextAchievement?.id && nextAchievement.id !== previousAchievement?.id && appState.completedModules.size > 0) {
+            addUserNotification(`Achievement unlocked: ${nextAchievement.label}`, 'achievement');
+        }
+    }
+
     updateProgress();
     renderModules();
     saveToLocalStorage();
@@ -20824,6 +21188,7 @@ function init() {
     document.getElementById('reset-btn').addEventListener('click', resetProgress);
 
     const siteGuideButton = document.getElementById('site-guide-helper-btn');
+    const pageJumpButton = document.getElementById('page-jump-btn');
     const closeSiteGuideButton = document.getElementById('close-site-guide');
     const closeSiteGuideFooterButton = document.getElementById('close-site-guide-footer');
     const insightAuthOpenButton = document.getElementById('insights-auth-open-account');
@@ -20834,6 +21199,7 @@ function init() {
     const guestStartFlashcardsButton = document.getElementById('guest-start-flashcards');
     const guestSaveNoteButton = document.getElementById('guest-save-note');
     if (siteGuideButton) siteGuideButton.addEventListener('click', openSiteGuideModal);
+    if (pageJumpButton) pageJumpButton.addEventListener('click', handlePageJumpButtonClick);
     if (closeSiteGuideButton) closeSiteGuideButton.addEventListener('click', closeSiteGuideModal);
     if (closeSiteGuideFooterButton) closeSiteGuideFooterButton.addEventListener('click', closeSiteGuideModal);
     if (insightAuthOpenButton) insightAuthOpenButton.addEventListener('click', openAccountModal);
@@ -21018,6 +21384,7 @@ function init() {
     window.addEventListener('scroll', () => {
         appState.scrollY = window.scrollY;
         updateHeaderShrink();
+        updatePageJumpButton();
     });
 
     window.addEventListener('resize', () => {
@@ -21033,6 +21400,7 @@ function init() {
             if (nextPageSize === lastRenderedModulesPageSize) return;
             renderModules();
         }, 120);
+        updatePageJumpButton();
     });
 
     // Modal backdrop clicks
@@ -21083,6 +21451,7 @@ function init() {
     if (!studyTimer.isActive) {
         startStudySession();
     }
+    updatePageJumpButton();
 
     const themeSelect = document.getElementById('theme-select');
     if (themeSelect) {
@@ -21435,7 +21804,7 @@ function renderInsights() {
                 : 'Sign in to personalize your pace and goals.';
         }
         if (planCtaEl) {
-            planCtaEl.textContent = t('insights.lock.cta');
+            planCtaEl.textContent = t('insights.lock.planPreviewCta');
         }
         if (momentumStreakEl) {
             momentumStreakEl.textContent = appState.language === 'es'
