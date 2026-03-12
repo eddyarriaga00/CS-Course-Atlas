@@ -75,15 +75,24 @@ const OAUTH_POST_LOGIN_FALLBACK_PATH = String(process.env.OAUTH_POST_LOGIN_FALLB
 const OAUTH_STATE_SECRET = String(process.env.OAUTH_STATE_SECRET || '').trim();
 const OAUTH_STATE_SECRET_RUNTIME = OAUTH_STATE_SECRET || randomToken(48);
 const OAUTH_JWKS_CACHE_MAX_AGE_MS = readPositiveInteger(process.env.OAUTH_JWKS_CACHE_MAX_AGE_MS, 30 * 60 * 1000);
-const GOOGLE_OAUTH_CLIENT_ID = String(process.env.GOOGLE_OAUTH_CLIENT_ID || '').trim();
-const GOOGLE_OAUTH_CLIENT_SECRET = String(process.env.GOOGLE_OAUTH_CLIENT_SECRET || '').trim();
-const GOOGLE_OAUTH_REDIRECT_URI = String(process.env.GOOGLE_OAUTH_REDIRECT_URI || '').trim();
-const APPLE_OAUTH_CLIENT_ID = String(process.env.APPLE_OAUTH_CLIENT_ID || '').trim();
-const APPLE_OAUTH_CLIENT_SECRET = String(process.env.APPLE_OAUTH_CLIENT_SECRET || '').trim();
-const APPLE_OAUTH_REDIRECT_URI = String(process.env.APPLE_OAUTH_REDIRECT_URI || '').trim();
-const GITHUB_OAUTH_CLIENT_ID = String(process.env.GITHUB_OAUTH_CLIENT_ID || '').trim();
-const GITHUB_OAUTH_CLIENT_SECRET = String(process.env.GITHUB_OAUTH_CLIENT_SECRET || '').trim();
-const GITHUB_OAUTH_REDIRECT_URI = String(process.env.GITHUB_OAUTH_REDIRECT_URI || '').trim();
+const OPTIONAL_OAUTH_ENV_PLACEHOLDERS = new Set([
+    '__disabled__',
+    '__unset__',
+    'disabled',
+    'unset',
+    'placeholder',
+    'replace_me',
+    'replace-me'
+]);
+const GOOGLE_OAUTH_CLIENT_ID = readOptionalOAuthEnv(process.env.GOOGLE_OAUTH_CLIENT_ID);
+const GOOGLE_OAUTH_CLIENT_SECRET = readOptionalOAuthEnv(process.env.GOOGLE_OAUTH_CLIENT_SECRET);
+const GOOGLE_OAUTH_REDIRECT_URI = readOptionalOAuthEnv(process.env.GOOGLE_OAUTH_REDIRECT_URI);
+const APPLE_OAUTH_CLIENT_ID = readOptionalOAuthEnv(process.env.APPLE_OAUTH_CLIENT_ID);
+const APPLE_OAUTH_CLIENT_SECRET = readOptionalOAuthEnv(process.env.APPLE_OAUTH_CLIENT_SECRET);
+const APPLE_OAUTH_REDIRECT_URI = readOptionalOAuthEnv(process.env.APPLE_OAUTH_REDIRECT_URI);
+const GITHUB_OAUTH_CLIENT_ID = readOptionalOAuthEnv(process.env.GITHUB_OAUTH_CLIENT_ID);
+const GITHUB_OAUTH_CLIENT_SECRET = readOptionalOAuthEnv(process.env.GITHUB_OAUTH_CLIENT_SECRET);
+const GITHUB_OAUTH_REDIRECT_URI = readOptionalOAuthEnv(process.env.GITHUB_OAUTH_REDIRECT_URI);
 const SUPPORTED_OAUTH_PROVIDERS = Object.freeze(['google', 'apple', 'github']);
 const OAUTH_PROVIDER_SET = new Set(SUPPORTED_OAUTH_PROVIDERS);
 const OAUTH_IDENTITY_PROVIDER_LABELS = Object.freeze({
@@ -231,6 +240,19 @@ function resolveClientIp(req) {
 
 function safeString(value, fallback = '') {
     return typeof value === 'string' ? value.trim() : fallback;
+}
+
+function readOptionalOAuthEnv(value) {
+    const raw = safeString(value);
+    if (!raw) return '';
+    const normalized = raw.toLowerCase();
+    if (OPTIONAL_OAUTH_ENV_PLACEHOLDERS.has(normalized)) {
+        return '';
+    }
+    if (/^<[^>]+>$/.test(raw)) {
+        return '';
+    }
+    return raw;
 }
 
 function readPositiveInteger(value, fallbackValue) {
@@ -639,8 +661,7 @@ function getOAuthStateCookieOptions() {
 function clearOAuthStateCookie(res) {
     res.clearCookie(OAUTH_STATE_COOKIE_NAME, {
         ...getOAuthStateCookieOptions(),
-        maxAge: undefined,
-        expires: new Date(0)
+        maxAge: undefined
     });
 }
 
@@ -1742,8 +1763,7 @@ async function clearSession(req, res) {
     }
     res.clearCookie(SESSION_COOKIE_NAME, {
         ...getCookieOptions(req),
-        maxAge: undefined,
-        expires: new Date(0)
+        maxAge: undefined
     });
 }
 

@@ -52,19 +52,21 @@ GitHub Pages is static-only, so auth/session + SQL must run on a separate Node h
    - One-click import URL:
    - `https://render.com/deploy?repo=https://github.com/eddyarriaga00/CS-Course-Atlas`
 2. Keep Render web service name as `cs-course-atlas-api` (frontend is prewired to `https://cs-course-atlas-api.onrender.com` in `js/app-config.js`).
-3. Fill required Render env vars marked `sync: false`:
+3. Fill required Render env vars:
    - `DATABASE_URL` (Neon production connection string with `sslmode=require&channel_binding=require`)
+4. Optional OAuth provider env vars:
    - `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`
    - `APPLE_OAUTH_CLIENT_ID`, `APPLE_OAUTH_CLIENT_SECRET`
    - `GITHUB_OAUTH_CLIENT_ID`, `GITHUB_OAUTH_CLIENT_SECRET`
-4. OAuth callback URLs to register in provider dashboards:
+   - Blueprint defaults OAuth vars to `__disabled__` so initial deploy is not blocked.
+5. OAuth callback URLs to register in provider dashboards:
    - Google: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/google/callback`
    - Apple: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/apple/callback`
    - GitHub: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/github/callback`
-5. After deployment, verify:
+6. After deployment, verify:
    - `https://cs-course-atlas-api.onrender.com/api/health`
    - `https://cs-course-atlas-api.onrender.com/api/auth/oauth/providers`
-6. Push to `main` (GitHub Pages auto-deploy will pick up frontend runtime config updates).
+7. Push to `main` (GitHub Pages auto-deploy will pick up frontend runtime config updates).
 
 ### 3) Common issues
 - `DATABASE_URL is required for Neon SQL connection`:

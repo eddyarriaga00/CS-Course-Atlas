@@ -25,14 +25,14 @@ services:
       - key: OAUTH_STATE_SECRET
         generateValue: true
       - key: GOOGLE_OAUTH_CLIENT_ID
-        sync: false
+        value: __disabled__
       - key: GOOGLE_OAUTH_CLIENT_SECRET
-        sync: false
+        value: __disabled__
       - key: APPLE_OAUTH_CLIENT_ID
-        sync: false
+        value: __disabled__
       - key: APPLE_OAUTH_CLIENT_SECRET
-        sync: false
+        value: __disabled__
       - key: GITHUB_OAUTH_CLIENT_ID
-        sync: false
+        value: __disabled__
       - key: GITHUB_OAUTH_CLIENT_SECRET
-        sync: false
+        value: __disabled__

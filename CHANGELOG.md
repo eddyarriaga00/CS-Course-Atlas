@@ -214,3 +214,11 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Moved archived script snapshot into `backups/js/script.js.bak_interview_patch`.
 - Added `docs/README.md` and a new `Project Layout` section in `README.md`.
 - Updated GitHub Pages deploy workflow to exclude `docs/` and `backups/` from published site artifacts.
+
+### Render Deploy Reliability
+- Updated `render.yaml` so OAuth provider env vars default to `__disabled__`, allowing first deploy with only `DATABASE_URL`.
+- Added OAuth placeholder normalization in backend env parsing so placeholder values are treated as not configured (provider remains disabled).
+- Updated deployment docs (`README.md`, `server/README.md`) to separate required (`DATABASE_URL`) vs optional OAuth setup.
+
+### Runtime Cleanup
+- Removed deprecated `expires` usage from `res.clearCookie(...)` calls for session and OAuth-state cookie clearing.

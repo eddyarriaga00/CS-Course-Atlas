@@ -70,15 +70,17 @@ This repo includes a production `render.yaml` for API hosting as `cs-course-atla
 1. Open:
    - `https://render.com/deploy?repo=https://github.com/eddyarriaga00/CS-Course-Atlas`
 2. Keep service name `cs-course-atlas-api` so frontend default runtime config works.
-3. Fill secret env vars in Render:
+3. Fill required env vars in Render:
    - `DATABASE_URL`
+4. Optional OAuth env vars (set when enabling provider login):
    - `GOOGLE_OAUTH_CLIENT_ID`
    - `GOOGLE_OAUTH_CLIENT_SECRET`
    - `APPLE_OAUTH_CLIENT_ID`
    - `APPLE_OAUTH_CLIENT_SECRET`
    - `GITHUB_OAUTH_CLIENT_ID`
    - `GITHUB_OAUTH_CLIENT_SECRET`
-4. Register provider callback URLs:
+   - Blueprint defaults OAuth vars to `__disabled__` so initial deploy is not blocked.
+5. Register provider callback URLs:
    - Google: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/google/callback`
    - Apple: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/apple/callback`
    - GitHub: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/github/callback`
