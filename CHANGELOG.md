@@ -315,3 +315,16 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Updated code-example normalization for `intro-to-coding` so:
   - curated override sets are used directly (instead of generated filler sets)
   - missing language mirrors are no longer auto-generated for intro sets (prevents low-quality mirrored snippets)
+
+### Mobile Performance and Auth UI Stability
+- Improved mobile scroll responsiveness by moving header/page-jump updates into a single `requestAnimationFrame` scheduler and enabling passive scroll handling.
+- Reduced mobile home rendering overhead with targeted CSS performance trims:
+  - disabled high-cost ambient/background animations on compact screens
+  - removed expensive mobile `backdrop-filter` usage on key home surfaces
+  - kept visual styling intact while lowering GPU/scroll pressure
+- Hardened OAuth return handling (especially mobile browsers) with stronger post-login session reconciliation retries and delayed follow-up refresh logic.
+- Added foreground auth refresh hooks (`visibilitychange`, `focus`, `pageshow`) with cooldown guarding to keep login/logout state synchronized across devices.
+- Fixed quiz and account icon rendering regressions:
+  - normalized account chip icon rendering
+  - restored clear quiz result correctness icons
+  - standardized quiz title/retake icon labels through shared UI icon constants

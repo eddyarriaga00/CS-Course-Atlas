@@ -129,6 +129,22 @@ const MOTION_ENHANCEMENT_SELECTORS = Object.freeze([
 
 let motionEnhancementObserver = null;
 let motionEnhancementRafId = 0;
+let scrollUpdateRafId = 0;
+let pendingScrollY = 0;
+
+const MOBILE_COMPACT_MEDIA_QUERY = '(max-width: 640px)';
+const AUTH_SESSION_REFRESH_COOLDOWN_MS = 1600;
+const UI_ICONS = Object.freeze({
+    profile: String.fromCodePoint(0x1F464),
+    brain: String.fromCodePoint(0x1F9E0),
+    retake: String.fromCodePoint(0x1F501),
+    correct: String.fromCodePoint(0x2705),
+    incorrect: String.fromCodePoint(0x274C),
+    rocket: String.fromCodePoint(0x1F680)
+});
+
+let authRefreshInFlight = false;
+let lastAuthRefreshAt = 0;
 
 const DEFAULT_COLLAPSED_SECTIONS = {
     progress: true,
@@ -2526,7 +2542,14 @@ function shouldReduceMotionForEnhancements() {
     const prefersReduced = typeof window !== 'undefined'
         && typeof window.matchMedia === 'function'
         && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    return Boolean(appState.reduceMotion || prefersReduced);
+    const mobileHomeRoute = isCompactMobileViewport() && appState.currentRoute === '/home';
+    return Boolean(appState.reduceMotion || prefersReduced || mobileHomeRoute);
+}
+
+function isCompactMobileViewport() {
+    return typeof window !== 'undefined'
+        && typeof window.matchMedia === 'function'
+        && window.matchMedia(MOBILE_COMPACT_MEDIA_QUERY).matches;
 }
 
 function isElementVisuallyHiddenForEnhancement(element) {
@@ -13951,7 +13974,7 @@ function updateAccountChip() {
     if (!chip) return;
     const label = accountProfile.username || accountProfile.name || accountProfile.email;
     if (label) {
-        chip.textContent = `👤 ${label}`;
+        chip.textContent = `${UI_ICONS.profile} ${label}`;
         chip.classList.remove('hidden');
     } else {
         chip.textContent = '';
@@ -14305,12 +14328,22 @@ async function handleOAuthResultFromUrl() {
         setAccountAuthStatus(message, 'success');
         showToast(message, 'success');
         if (hasNeonSyncConfig()) {
-            const session = await checkNeonSessionWithRetry({ silent: true, retries: 1, retryDelayMs: 400 });
-            if (session?.userId || accountAuthState.isAuthenticated) {
-                await pullProfileFromNeon({ silent: true });
-                if (PROFILE_SYNC_CONFIG.autoPullUserStateOnSession) {
-                    await pullUserStateFromNeon({ silent: true });
-                }
+            const session = await refreshAuthSessionState({
+                silent: true,
+                retries: 4,
+                retryDelayMs: 650,
+                force: true
+            });
+            if (!session?.userId && !accountAuthState.isAuthenticated) {
+                // Mobile browsers can delay cross-site cookie availability briefly after OAuth return.
+                window.setTimeout(() => {
+                    void refreshAuthSessionState({
+                        silent: true,
+                        retries: 2,
+                        retryDelayMs: 700,
+                        force: true
+                    });
+                }, 900);
             }
         }
         return;
@@ -15277,6 +15310,41 @@ async function checkNeonSessionWithRetry(options = {}) {
     return latestSession;
 }
 
+function shouldRefreshAuthSession(force = false) {
+    if (!hasNeonSyncConfig()) return false;
+    if (force) return true;
+    if (authRefreshInFlight) return false;
+    return (Date.now() - lastAuthRefreshAt) >= AUTH_SESSION_REFRESH_COOLDOWN_MS;
+}
+
+async function refreshAuthSessionState(options = {}) {
+    const {
+        silent = true,
+        retries = 1,
+        retryDelayMs = 350,
+        force = false
+    } = options;
+    if (!shouldRefreshAuthSession(force)) {
+        return null;
+    }
+
+    authRefreshInFlight = true;
+    lastAuthRefreshAt = Date.now();
+    try {
+        const session = await checkNeonSessionWithRetry({ silent, retries, retryDelayMs });
+        if ((session?.userId || accountAuthState.isAuthenticated) && PROFILE_SYNC_CONFIG.enabled) {
+            await pullProfileFromNeon({ silent: true });
+            if (PROFILE_SYNC_CONFIG.autoPullUserStateOnSession) {
+                await pullUserStateFromNeon({ silent: true });
+            }
+        }
+        return session;
+    } finally {
+        authRefreshInFlight = false;
+        lastAuthRefreshAt = Date.now();
+    }
+}
+
 async function signOutAccountFlow(options = {}) {
     const { silent = false } = options;
     if (userStateSyncTimer) {
@@ -15391,13 +15459,7 @@ async function submitAccountAuth() {
         }
         saveAccountProfile();
         applyAccountProfileToForm();
-        const session = await checkNeonSessionWithRetry({ silent: true, retries: 1, retryDelayMs: 400 });
-        if ((session?.userId || accountAuthState.isAuthenticated) && PROFILE_SYNC_CONFIG.enabled) {
-            await pullProfileFromNeon({ silent: true });
-            if (PROFILE_SYNC_CONFIG.autoPullUserStateOnSession) {
-                await pullUserStateFromNeon({ silent: true });
-            }
-        }
+        await refreshAuthSessionState({ silent: true, retries: 2, retryDelayMs: 450, force: true });
         const successText = isSignup ? 'Account created and signed in successfully.' : 'Signed in successfully.';
         setAccountAuthStatus(successText, 'success');
         showToast(successText, 'success');
@@ -15590,14 +15652,11 @@ function openAccountModal() {
     setAccountAuthStatus('Checking session...', 'info');
     openModal('account-modal', { initialFocus: '#account-auth-email' });
     if (PROFILE_SYNC_CONFIG.enabled) {
-        checkNeonSessionWithRetry({ silent: true, retries: 1, retryDelayMs: 400 }).then((session) => {
-            if (!session?.userId && !accountAuthState.isAuthenticated) return;
-            if (PROFILE_SYNC_CONFIG.autoPullOnOpen) {
-                pullProfileFromNeon({ silent: true });
-            }
-            if (PROFILE_SYNC_CONFIG.autoPullUserStateOnSession) {
-                pullUserStateFromNeon({ silent: true });
-            }
+        void refreshAuthSessionState({
+            silent: true,
+            retries: 2,
+            retryDelayMs: 450,
+            force: true
         });
     }
 }
@@ -15798,13 +15857,7 @@ function initAccount() {
 
     if (hasNeonSyncConfig()) {
         loadAuthProviderAvailability({ silent: true });
-        checkNeonSessionWithRetry({ silent: true, retries: 1, retryDelayMs: 400 }).then((session) => {
-            if (!session?.userId && !accountAuthState.isAuthenticated) return;
-            pullProfileFromNeon({ silent: true });
-            if (PROFILE_SYNC_CONFIG.autoPullUserStateOnSession) {
-                pullUserStateFromNeon({ silent: true });
-            }
-        });
+        void refreshAuthSessionState({ silent: true, retries: 2, retryDelayMs: 500, force: true });
     } else {
         applyAuthProviderAvailability();
     }
@@ -19391,6 +19444,18 @@ function updateHighContrastToggle() {
     syncToggleState('high-contrast-toggle', 'high-contrast-slider', appState.highContrast);
 }
 
+function scheduleScrollDrivenUiUpdate(nextScrollY = 0) {
+    const parsedScrollY = Number(nextScrollY);
+    pendingScrollY = Number.isFinite(parsedScrollY) ? Math.max(parsedScrollY, 0) : 0;
+    if (scrollUpdateRafId) return;
+    scrollUpdateRafId = requestAnimationFrame(() => {
+        scrollUpdateRafId = 0;
+        appState.scrollY = pendingScrollY;
+        updateHeaderShrink();
+        updatePageJumpButton();
+    });
+}
+
 function updateHeaderShrink() {
     const header = document.getElementById('main-header');
     const title = document.getElementById('main-title');
@@ -21891,7 +21956,7 @@ function renderQuiz() {
     const title = document.getElementById('quiz-title');
     const content = document.getElementById('quiz-content');
 
-    title.textContent = translateLiteral(`🧠 Quiz: ${localizedModule?.title || 'Quiz'}`, appState.language);
+    title.textContent = `${UI_ICONS.brain} ${translateLiteral(`Quiz: ${localizedModule?.title || 'Quiz'}`, appState.language)}`;
 
     if (!appState.currentQuiz.showResults) {
         const answeredCount = appState.currentQuiz.answers.filter(a => a !== null && a !== undefined).length;
@@ -21902,7 +21967,7 @@ function renderQuiz() {
             <div class="mb-6">
                 <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
                     <span class="text-xs sm:text-sm quiz-progress-label break-words">
-                        ${translateLiteral(`Question ${appState.currentQuiz.currentQuestion + 1} of ${totalCount} ? ${answeredCount}/${totalCount} answered`, appState.language)}
+                        ${translateLiteral(`Question ${appState.currentQuiz.currentQuestion + 1} of ${totalCount} - ${answeredCount}/${totalCount} answered`, appState.language)}
                     </span>
                     <div class="h-2 bg-slate-800 rounded-full w-full sm:flex-1 sm:ml-4 overflow-hidden border border-white/10">
                         <div class="h-full bg-indigo-500 transition-all duration-300" style="width: ${((appState.currentQuiz.currentQuestion + 1) / totalCount) * 100}%"></div>
@@ -21966,7 +22031,7 @@ function renderQuiz() {
                         <div class="text-left p-4 rounded-xl border ${appState.currentQuiz.answers[index] === question.correct ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'}">
                             <div class="flex items-start gap-3">
                                 <span class="text-xl">
-                                    ${appState.currentQuiz.answers[index] === question.correct ? '?' : '?'}
+                                    ${appState.currentQuiz.answers[index] === question.correct ? UI_ICONS.correct : UI_ICONS.incorrect}
                                 </span>
                                 <div class="flex-1">
                                     <p class="font-medium mb-2 text-slate-800 break-words">${question.question}</p>
@@ -21989,7 +22054,7 @@ function renderQuiz() {
 
                 <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                     <button onclick="restartQuiz()" class="w-full sm:w-auto bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
-                        ${translateLiteral('🔁 Retake Quiz', appState.language)}
+                        ${translateLiteral(`${UI_ICONS.retake} Retake Quiz`, appState.language)}
                     </button>
                     <button onclick="closeQuiz()" class="w-full sm:w-auto bg-gray-500 hover:bg-gray-600 text-white px-6 py-3 rounded-xl font-medium transition-all duration-200 shadow-lg hover:shadow-xl hover:-translate-y-0.5">
                         ${translateLiteral('Close', appState.language)}
@@ -22164,7 +22229,7 @@ function init() {
     document.getElementById('glossary-search').value = appState.glossarySearch || '';
     updateTopicFocusButtons();
     appState.scrollY = window.scrollY || 0;
-    updateHeaderShrink();
+    scheduleScrollDrivenUiUpdate(appState.scrollY);
     initGlobalSearch();
 
     // Add event listeners
@@ -22377,12 +22442,10 @@ function init() {
         });
     }
 
-    // Scroll event for header shrinking
+    // Scroll event for header shrinking and page-jump updates.
     window.addEventListener('scroll', () => {
-        appState.scrollY = window.scrollY;
-        updateHeaderShrink();
-        updatePageJumpButton();
-    });
+        scheduleScrollDrivenUiUpdate(window.scrollY || 0);
+    }, { passive: true });
 
     window.addEventListener('resize', () => {
         if (!isSidebarDrawerMode() && appState.sidebarOpen) {
@@ -23774,13 +23837,31 @@ window.addEventListener('unhandledrejection', (event) => {
     handleError(event.reason, 'Promise');
 });
 
+function refreshAuthSessionOnForeground() {
+    if (!hasNeonSyncConfig()) return;
+    void refreshAuthSessionState({
+        silent: true,
+        retries: 1,
+        retryDelayMs: 450
+    });
+}
+
 // Visibility change handler for study sessions
 document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
         endStudySession();
     } else {
         startStudySession();
+        refreshAuthSessionOnForeground();
     }
+});
+
+window.addEventListener('focus', () => {
+    refreshAuthSessionOnForeground();
+});
+
+window.addEventListener('pageshow', () => {
+    refreshAuthSessionOnForeground();
 });
 
 // Start the application when DOM is loaded
@@ -23800,11 +23881,10 @@ document.addEventListener('DOMContentLoaded', () => {
 // Add window resize handler for responsive adjustments
 window.addEventListener('resize', () => {
     optimizeForMobile();
-    updateHeaderShrink(); // Recalculate header shrinking on resize
-    syncDesktopSidebarIconMode();
+    scheduleScrollDrivenUiUpdate(window.scrollY || 0);
 });
 
-console.log('CS Course Atlas - All systems loaded successfully! 🚀');
+console.log(`CS Course Atlas - All systems loaded successfully! ${UI_ICONS.rocket}`);
 
 // Interactive Quiz Library (restored)
 function openInteractiveQuizLibrary() {

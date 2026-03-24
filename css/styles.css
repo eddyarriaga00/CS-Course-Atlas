@@ -8349,3 +8349,39 @@ body:not(.reduce-motion) :where(#start-learning-btn, #insight-plan-cta, #study-s
         animation: none !important;
     }
 }
+
+/* Mobile-first performance trim for home-heavy surfaces and long-scroll sessions. */
+@media (max-width: 640px) {
+    body:not(.reduce-motion):not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-minimal):not(.theme-space) {
+        animation: none !important;
+        background-size: 100% 100% !important;
+    }
+
+    body:not(.reduce-motion):not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-minimal):not(.theme-space)::before,
+    body:not(.reduce-motion):not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-minimal):not(.theme-space)::after,
+    body:not(.reduce-motion) :where(#route-overview-section, #route-launchpad-section, #daily-challenge-card, #study-tip-card, #insights-section),
+    body:not(.reduce-motion) :where(#start-learning-btn, #insight-plan-cta, #study-session-toggle, .start-path-button) {
+        animation: none !important;
+    }
+
+    .hero-section::before,
+    #topic-focus-section::before {
+        animation: none !important;
+        filter: blur(6px);
+        opacity: 0.7;
+    }
+
+    #main-header {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+
+    #main-content .panel-surface,
+    #route-overview-section,
+    #route-launchpad-section,
+    #insights-section {
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.24);
+    }
+}
