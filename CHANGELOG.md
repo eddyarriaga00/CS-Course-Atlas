@@ -17,6 +17,9 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Added on-demand data-visualization asset loading in the DS playground (`js/script.js`) so graph/array/tree libraries only load when those views are opened.
 - Kept DS playground functional while assets load by preserving existing fallback render paths.
 
+### Module Code Example Quality
+- Fixed Spanish localized code example placeholders that were translated into invalid identifiers (`{tema}`, `{línea}`) and restored runnable placeholder names (`{topic}`, `{line}`) in `js/spanish-localization.js`.
+
 ## 2026-03-12
 
 ### Mobile Auth Reliability
