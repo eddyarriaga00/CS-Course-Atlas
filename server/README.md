@@ -73,6 +73,7 @@ This repo includes a production `render.yaml` for API hosting as `cs-course-atla
 2. Keep service name `cs-course-atlas-api` so frontend default runtime config works.
 3. Fill required env vars in Render:
    - `DATABASE_URL`
+   - `OAUTH_POST_LOGIN_FALLBACK_PATH=https://eddyarriaga00.github.io/CS-Course-Atlas/index.html`
 4. Optional OAuth env vars (set when enabling provider login):
    - `GOOGLE_OAUTH_CLIENT_ID`
    - `GOOGLE_OAUTH_CLIENT_SECRET`

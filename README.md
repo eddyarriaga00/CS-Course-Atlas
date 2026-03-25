@@ -54,6 +54,7 @@ GitHub Pages is static-only, so auth/session + SQL must run on a separate Node h
 2. Keep Render web service name as `cs-course-atlas-api` (frontend is prewired to `https://cs-course-atlas-api.onrender.com` in `js/app-config.js`).
 3. Fill required Render env vars:
    - `DATABASE_URL` (Neon production connection string with `sslmode=require&channel_binding=require`)
+   - `OAUTH_POST_LOGIN_FALLBACK_PATH=https://eddyarriaga00.github.io/CS-Course-Atlas/index.html`
 4. Optional OAuth provider env vars:
    - `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`
    - `GITHUB_OAUTH_CLIENT_ID`, `GITHUB_OAUTH_CLIENT_SECRET`

@@ -24,6 +24,8 @@ services:
         value: "1"
       - key: OAUTH_STATE_SECRET
         generateValue: true
+      - key: OAUTH_POST_LOGIN_FALLBACK_PATH
+        value: https://eddyarriaga00.github.io/CS-Course-Atlas/index.html
       - key: GOOGLE_OAUTH_CLIENT_ID
         value: __disabled__
       - key: GOOGLE_OAUTH_CLIENT_SECRET

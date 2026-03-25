@@ -8,6 +8,7 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Removed hardcoded Search Console placeholder meta tag from `index.html` so placeholder text no longer ships in the public app shell.
 - Updated SEO page generator to emit `google-site-verification` only when `GOOGLE_SITE_VERIFICATION_TOKEN` is provided.
 - Updated launch docs (`README.md`, `docs/SEARCH_CONSOLE_SETUP.md`, `.env.example`) with explicit token-based build instructions.
+- Added `OAUTH_POST_LOGIN_FALLBACK_PATH` to Render Blueprint/docs so OAuth fallback redirects land on the public frontend instead of the API domain.
 
 ## 2026-03-12
 
