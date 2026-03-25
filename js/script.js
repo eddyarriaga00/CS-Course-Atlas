@@ -1690,19 +1690,90 @@ const TRANSLATIONS = {
     }
 };
 
-const SPANISH_LOCALIZATION = (typeof window !== 'undefined' && window.SPANISH_LOCALIZATION)
+const INITIAL_SPANISH_LOCALIZATION = (typeof window !== 'undefined' && window.SPANISH_LOCALIZATION)
     ? window.SPANISH_LOCALIZATION
     : { content: {}, literals: {} };
 
+let spanishLocalizationLoadPromise = null;
+let spanishLocalizationReady = false;
+
 const CONTENT_I18N = {
-    es: SPANISH_LOCALIZATION.content || {}
+    es: INITIAL_SPANISH_LOCALIZATION.content || {}
 };
 
 const LITERAL_TRANSLATIONS = {
-    es: SPANISH_LOCALIZATION.literals || {}
+    es: INITIAL_SPANISH_LOCALIZATION.literals || {}
 };
 
 let domLocalizationObserver = null;
+
+function hasSpanishLocalizationPayload(payload) {
+    if (!payload || typeof payload !== 'object') return false;
+    const content = payload.content;
+    const literals = payload.literals;
+    const hasContent = Boolean(content && typeof content === 'object' && Object.keys(content).length > 0);
+    const hasLiterals = Boolean(literals && typeof literals === 'object' && Object.keys(literals).length > 0);
+    return hasContent || hasLiterals;
+}
+
+function applySpanishLocalizationPayload(payload) {
+    if (!payload || typeof payload !== 'object') return false;
+    const nextContent = payload.content && typeof payload.content === 'object' ? payload.content : {};
+    const nextLiterals = payload.literals && typeof payload.literals === 'object' ? payload.literals : {};
+    CONTENT_I18N.es = nextContent;
+    LITERAL_TRANSLATIONS.es = nextLiterals;
+    spanishLocalizationReady = hasSpanishLocalizationPayload(payload);
+    return spanishLocalizationReady;
+}
+
+function ensureSpanishLocalizationLoaded() {
+    if (spanishLocalizationReady) {
+        return Promise.resolve(true);
+    }
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+        return Promise.resolve(false);
+    }
+
+    if (window.SPANISH_LOCALIZATION && applySpanishLocalizationPayload(window.SPANISH_LOCALIZATION)) {
+        return Promise.resolve(true);
+    }
+
+    if (spanishLocalizationLoadPromise) {
+        return spanishLocalizationLoadPromise;
+    }
+
+    spanishLocalizationLoadPromise = new Promise((resolve) => {
+        const scriptId = 'spanish-localization-script';
+        let script = document.getElementById(scriptId);
+        const handleSuccess = () => {
+            const loaded = applySpanishLocalizationPayload(window.SPANISH_LOCALIZATION || {});
+            resolve(loaded);
+        };
+        const handleFailure = () => {
+            resolve(false);
+        };
+
+        if (!script) {
+            script = document.createElement('script');
+            script.id = scriptId;
+            script.src = 'js/spanish-localization.js';
+            script.defer = true;
+            script.addEventListener('load', handleSuccess, { once: true });
+            script.addEventListener('error', handleFailure, { once: true });
+            document.head.appendChild(script);
+            return;
+        }
+
+        script.addEventListener('load', handleSuccess, { once: true });
+        script.addEventListener('error', handleFailure, { once: true });
+    }).finally(() => {
+        spanishLocalizationLoadPromise = null;
+    });
+
+    return spanishLocalizationLoadPromise;
+}
+
+applySpanishLocalizationPayload(INITIAL_SPANISH_LOCALIZATION);
 
 function interpolate(template, params = {}) {
     if (typeof template !== 'string') return template;
@@ -2120,6 +2191,29 @@ function setLanguage(lang) {
         });
     }
     saveToLocalStorage();
+
+    if (lang === 'es' && !spanishLocalizationReady) {
+        void ensureSpanishLocalizationLoaded().then((loaded) => {
+            if (!loaded || appState.language !== 'es') return;
+            applyLanguage('es');
+            refreshLocalizedSections();
+            refreshGlobalSearchUi({ invalidate: true });
+            if (typeof window.refreshPlaygroundSnippetCatalog === 'function') {
+                window.refreshPlaygroundSnippetCatalog();
+            }
+            if (typeof refreshFlashcardSession === 'function' && appState.selectedFlashcardModule) {
+                refreshFlashcardSession(appState.selectedFlashcardModule, { persist: false });
+            }
+            if (typeof renderRoute === 'function') {
+                renderRoute(appState.currentRoute || normalizeRoutePath(window.location.pathname || '/'), {
+                    preserveScroll: true,
+                    focusMain: false,
+                    skipModuleRender: true
+                });
+            }
+            saveToLocalStorage();
+        });
+    }
 }
 
 function normalizeRoutePath(pathname) {
@@ -13922,6 +14016,19 @@ let dsCodeLanguage = 'java';
 let dsControlsBound = false;
 let dsGraphCyInstance = null;
 let dsVisNetworkInstance = null;
+const DS_VIS_ASSET_IDS = Object.freeze({
+    d3: 'ds-lib-d3',
+    cytoscape: 'ds-lib-cytoscape',
+    visScript: 'ds-lib-vis-network',
+    visStylesheet: 'ds-lib-vis-network-css'
+});
+const DS_VIS_ASSET_URLS = Object.freeze({
+    d3: 'https://d3js.org/d3.v7.min.js',
+    cytoscape: 'https://unpkg.com/cytoscape@3.30.2/dist/cytoscape.min.js',
+    visScript: 'https://unpkg.com/vis-network@9.1.9/dist/vis-network.min.js',
+    visStylesheet: 'https://unpkg.com/vis-network@9.1.9/styles/vis-network.min.css'
+});
+const dsExternalAssetPromises = new Map();
 let playgroundState = {
     language: 'java',
     snippetId: '',
@@ -17907,6 +18014,130 @@ function destroyDSVisualizationInstances() {
     }
 }
 
+function loadExternalScriptOnce(id, src, readyCheck) {
+    if (typeof window === 'undefined' || typeof document === 'undefined') {
+        return Promise.resolve(false);
+    }
+    if (typeof readyCheck === 'function' && readyCheck()) {
+        return Promise.resolve(true);
+    }
+    const existingPromise = dsExternalAssetPromises.get(id);
+    if (existingPromise) return existingPromise;
+
+    const promise = new Promise((resolve) => {
+        let script = document.getElementById(id);
+
+        const onLoad = () => {
+            if (script) script.dataset.loaded = 'true';
+            resolve(typeof readyCheck === 'function' ? readyCheck() : true);
+        };
+        const onError = () => {
+            resolve(false);
+        };
+
+        if (!script) {
+            script = document.createElement('script');
+            script.id = id;
+            script.src = src;
+            script.defer = true;
+            script.addEventListener('load', onLoad, { once: true });
+            script.addEventListener('error', onError, { once: true });
+            document.head.appendChild(script);
+            return;
+        }
+
+        if (script.dataset.loaded === 'true') {
+            resolve(typeof readyCheck === 'function' ? readyCheck() : true);
+            return;
+        }
+
+        script.addEventListener('load', onLoad, { once: true });
+        script.addEventListener('error', onError, { once: true });
+    }).then((ok) => {
+        if (!ok) {
+            dsExternalAssetPromises.delete(id);
+        }
+        return ok;
+    });
+
+    dsExternalAssetPromises.set(id, promise);
+    return promise;
+}
+
+function loadExternalStylesheetOnce(id, href) {
+    if (typeof document === 'undefined') {
+        return Promise.resolve(false);
+    }
+    const existingPromise = dsExternalAssetPromises.get(id);
+    if (existingPromise) return existingPromise;
+
+    const promise = new Promise((resolve) => {
+        const existing = document.getElementById(id);
+        if (existing) {
+            resolve(true);
+            return;
+        }
+
+        const link = document.createElement('link');
+        link.id = id;
+        link.rel = 'stylesheet';
+        link.href = href;
+        link.addEventListener('load', () => resolve(true), { once: true });
+        link.addEventListener('error', () => resolve(false), { once: true });
+        document.head.appendChild(link);
+    }).then((ok) => {
+        if (!ok) {
+            dsExternalAssetPromises.delete(id);
+        }
+        return ok;
+    });
+
+    dsExternalAssetPromises.set(id, promise);
+    return promise;
+}
+
+function queueDSVisualizationAssets(activeStructure) {
+    const active = activeStructure || dsActive;
+    const pending = [];
+    if (active === 'array' && (!window.d3 || typeof window.d3.select !== 'function')) {
+        pending.push(loadExternalScriptOnce(
+            DS_VIS_ASSET_IDS.d3,
+            DS_VIS_ASSET_URLS.d3,
+            () => Boolean(window.d3 && typeof window.d3.select === 'function')
+        ));
+    }
+    if (active === 'graph' && (!window.cytoscape || typeof window.cytoscape !== 'function')) {
+        pending.push(loadExternalScriptOnce(
+            DS_VIS_ASSET_IDS.cytoscape,
+            DS_VIS_ASSET_URLS.cytoscape,
+            () => Boolean(window.cytoscape && typeof window.cytoscape === 'function')
+        ));
+    }
+    if ((active === 'heap' || active === 'trie')) {
+        if (!window.vis || typeof window.vis.Network !== 'function') {
+            pending.push(loadExternalScriptOnce(
+                DS_VIS_ASSET_IDS.visScript,
+                DS_VIS_ASSET_URLS.visScript,
+                () => Boolean(window.vis && typeof window.vis.Network === 'function')
+            ));
+        }
+        if (!document.getElementById(DS_VIS_ASSET_IDS.visStylesheet)) {
+            pending.push(loadExternalStylesheetOnce(
+                DS_VIS_ASSET_IDS.visStylesheet,
+                DS_VIS_ASSET_URLS.visStylesheet
+            ));
+        }
+    }
+    if (!pending.length) return;
+
+    const activeSnapshot = active;
+    void Promise.all(pending).then((results) => {
+        if (dsActive !== activeSnapshot) return;
+        if (!Array.isArray(results) || results.every((value) => !value)) return;
+        renderDSLibraryVisuals();
+    });
+}
+
 function renderD3ArrayVisual(container) {
     if (!container) return;
     if (!window.d3 || typeof window.d3.select !== 'function') {
@@ -18157,6 +18388,7 @@ function renderDSLibraryVisuals() {
     destroyDSVisualizationInstances();
     const structureEl = document.getElementById('ds-structure-view');
     if (!structureEl) return;
+    queueDSVisualizationAssets(dsActive);
 
     if (dsActive === 'array') {
         renderD3ArrayVisual(document.getElementById('ds-d3-array-chart'));

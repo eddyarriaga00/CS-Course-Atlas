@@ -10,6 +10,13 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Updated launch docs (`README.md`, `docs/SEARCH_CONSOLE_SETUP.md`, `.env.example`) with explicit token-based build instructions.
 - Added `OAUTH_POST_LOGIN_FALLBACK_PATH` to Render Blueprint/docs so OAuth fallback redirects land on the public frontend instead of the API domain.
 
+### Performance and Runtime Refactor
+- Removed eager loading of `js/spanish-localization.js` from `index.html`; Spanish localization is now loaded on demand when users switch to Spanish.
+- Added resilient lazy-loader logic for Spanish localization in `js/script.js` with post-load rerender so language switching remains correct without first-load bloat.
+- Removed eager loading of D3/Cytoscape/vis-network assets from `index.html`.
+- Added on-demand data-visualization asset loading in the DS playground (`js/script.js`) so graph/array/tree libraries only load when those views are opened.
+- Kept DS playground functional while assets load by preserving existing fallback render paths.
+
 ## 2026-03-12
 
 ### Mobile Auth Reliability
