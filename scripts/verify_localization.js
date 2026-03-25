@@ -15,11 +15,25 @@ function extract(src, start, end) {
   return src.slice(s, e);
 }
 
+function extractWithAnyEnd(src, start, endCandidates) {
+  for (const end of endCandidates) {
+    const s = src.indexOf(start);
+    const e = src.indexOf(end, s);
+    if (s >= 0 && e >= 0) {
+      return src.slice(s, e);
+    }
+  }
+  throw new Error(`Unable to extract block with candidates: ${start}`);
+}
+
 function loadBaseData() {
   const src = fs.readFileSync(SCRIPT_PATH, 'utf8');
   const block = [
     extract(src, 'const MODULE_CATEGORY_BY_ID = {', '\nconst MODULE_LEARNING_SEQUENCE = ['),
-    extract(src, 'const TRANSLATIONS = {', '\nconst SPANISH_LOCALIZATION ='),
+    extractWithAnyEnd(src, 'const TRANSLATIONS = {', [
+      '\nconst INITIAL_SPANISH_LOCALIZATION =',
+      '\nconst SPANISH_LOCALIZATION ='
+    ]),
     extract(src, 'const baseFlashcards = [', '// Glossary Data'),
     extract(src, 'const glossaryTerms = [', 'const glossaryCategories = ['),
     extract(src, 'const quizData = {', 'const modules = ['),
@@ -61,6 +75,12 @@ function main() {
   const spanish = loadSpanishLocalization();
   const content = spanish.content || {};
   const source = fs.readFileSync(SCRIPT_PATH, 'utf8');
+  const rawSpanishLocalization = fs.readFileSync(SPANISH_PATH, 'utf8');
+
+  const mojibakeMatches = rawSpanishLocalization.match(/[\u00C3\u00C2\uFFFD]/g) || [];
+  if (mojibakeMatches.length) {
+    errors.push(`Detected likely mojibake/corrupted encoding in spanish-localization.js (${mojibakeMatches.length} suspicious characters).`);
+  }
 
   const keyCoverage = verifyTranslationKeyCoverage(base.TRANSLATIONS);
   if (keyCoverage.missingEn.length) errors.push(`Missing EN translation keys: ${keyCoverage.missingEn.join(', ')}`);

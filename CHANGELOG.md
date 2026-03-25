@@ -41,6 +41,14 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Hardened module resource rendering by normalizing once per module and showing a translated fallback message when no resources are available.
 - Hardened quiz button logic by using safe optional checks for quiz question arrays (prevents runtime edge cases when quiz payloads are missing or partial).
 
+### Spanish Localization Encoding + Coverage Fix
+- Repaired `js/spanish-localization.js` from mojibake/corrupted text encoding so accented characters, punctuation, and translated copy render correctly after switching to Spanish.
+- Eliminated corrupted literal-map text artifacts (garbled symbols and malformed punctuation) affecting dynamic UI labels, toasts, prompts, and module content.
+- Normalized translated placeholder tokens back to canonical runtime placeholders (for example `{line}`, `{score}`, `${context}`) to prevent broken interpolation and Python f-string/runtime issues.
+- Updated `scripts/verify_localization.js` to support the current translation block layout in `js/script.js` (`INITIAL_SPANISH_LOCALIZATION` marker).
+- Added encoding-corruption detection in localization verification to fail fast if mojibake (`Ã`, `Â`, replacement chars) reappears in Spanish payloads.
+- Expanded `scripts/verify_spanish_code_examples.js` to fail on mojibake markers and invalid/non-canonical placeholder tokens inside Spanish code snippets.
+
 ## 2026-03-12
 
 ### Mobile Auth Reliability
