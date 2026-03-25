@@ -1786,6 +1786,7 @@ function ensureSpanishLocalizationLoaded() {
 
     spanishLocalizationLoadPromise = new Promise((resolve) => {
         const scriptId = 'spanish-localization-script';
+        const localizationSrc = withAppBasePath('/js/spanish-localization.js');
         let script = document.getElementById(scriptId);
         const handleSuccess = () => {
             const loaded = applySpanishLocalizationPayload(window.SPANISH_LOCALIZATION || {});
@@ -1795,19 +1796,52 @@ function ensureSpanishLocalizationLoaded() {
             resolve(false);
         };
 
+        if (script && script.dataset.localizationState === 'loaded') {
+            handleSuccess();
+            return;
+        }
+
+        if (script && script.dataset.localizationState === 'failed') {
+            script.remove();
+            script = null;
+        }
+
         if (!script) {
             script = document.createElement('script');
             script.id = scriptId;
-            script.src = 'js/spanish-localization.js';
+            script.src = localizationSrc;
             script.defer = true;
-            script.addEventListener('load', handleSuccess, { once: true });
-            script.addEventListener('error', handleFailure, { once: true });
+            script.dataset.localizationState = 'loading';
+            script.addEventListener('load', () => {
+                script.dataset.localizationState = 'loaded';
+                handleSuccess();
+            }, { once: true });
+            script.addEventListener('error', () => {
+                script.dataset.localizationState = 'failed';
+                handleFailure();
+            }, { once: true });
             document.head.appendChild(script);
             return;
         }
 
-        script.addEventListener('load', handleSuccess, { once: true });
-        script.addEventListener('error', handleFailure, { once: true });
+        const currentSrc = script.getAttribute('src') || '';
+        if (currentSrc !== localizationSrc) {
+            script.dataset.localizationState = 'loading';
+            script.setAttribute('src', localizationSrc);
+        }
+
+        script.addEventListener('load', () => {
+            script.dataset.localizationState = 'loaded';
+            handleSuccess();
+        }, { once: true });
+        script.addEventListener('error', () => {
+            script.dataset.localizationState = 'failed';
+            handleFailure();
+        }, { once: true });
+
+        if (script.dataset.localizationState !== 'loading' && window.SPANISH_LOCALIZATION) {
+            handleSuccess();
+        }
     }).finally(() => {
         spanishLocalizationLoadPromise = null;
     });

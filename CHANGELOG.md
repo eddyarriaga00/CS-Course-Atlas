@@ -12,6 +12,11 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Prioritized canonical module code sources over localized wrapper variants to keep displayed examples consistent and runnable.
 - Hardened playground run control setup by ensuring localized `Run Code ▶`/`Run DS Code ▶` labels are always applied and a fallback run button is injected if missing in the code playground DOM.
 
+### Spanish Module Topic Loading Reliability
+- Fixed lazy Spanish localization script loading to resolve from `APP_BASE_PATH` so module content translations (including `topics`) work correctly on client-side routes like `/home`, `/flashcards`, and `/quizzes`.
+- Added resilience for failed localization loads by tracking script load state (`loading/loaded/failed`) and recreating the script tag when prior attempts fail.
+- Added immediate success handling when the localization payload is already present to avoid stale English fallback after route transitions.
+
 ### Launch Placeholder Cleanup
 - Removed hardcoded Search Console placeholder meta tag from `index.html` so placeholder text no longer ships in the public app shell.
 - Updated SEO page generator to emit `google-site-verification` only when `GOOGLE_SITE_VERIFICATION_TOKEN` is provided.
