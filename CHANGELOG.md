@@ -20,6 +20,17 @@ All notable changes to **CS Course Atlas** are documented in this file.
 ### Module Code Example Quality
 - Fixed Spanish localized code example placeholders that were translated into invalid identifiers (`{tema}`, `{línea}`) and restored runnable placeholder names (`{topic}`, `{line}`) in `js/spanish-localization.js`.
 
+### Crawlable Pages Mobile + Theme Refresh
+- Reworked SEO/crawlable page generator styling to better match the primary site visual language (gradient brand header, stronger card styling, branded chips, and denser information layout).
+- Improved mobile formatting across generated route pages, module directory pages, module detail pages, and sitemap pages:
+  - horizontal-scroll-safe nav chips on narrow screens
+  - larger touch targets
+  - single-column CTA stacking
+  - tighter spacing and typography for readability
+- Upgraded crawlable module cards with track/difficulty chips and explicit action links.
+- Added richer module detail snapshot cards and improved continue-learning navigation on module pages.
+- Refreshed `sitemap.html` and `sitemap.xsl` for consistent branded appearance and mobile-friendly table scrolling.
+
 ## 2026-03-12
 
 ### Mobile Auth Reliability

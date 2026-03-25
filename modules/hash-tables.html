@@ -26,22 +26,22 @@
         <style>
         :root {
             color-scheme: dark;
-            --seo-bg-top: #020617;
+            --seo-bg-top: #030712;
             --seo-bg-base: #0f172a;
             --seo-bg-bottom: #111827;
-            --seo-panel: rgba(15, 23, 42, 0.72);
-            --seo-panel-soft: rgba(30, 41, 59, 0.7);
-            --seo-border: rgba(255, 255, 255, 0.12);
-            --seo-border-strong: rgba(165, 180, 252, 0.45);
+            --seo-panel: rgba(15, 23, 42, 0.8);
+            --seo-panel-soft: rgba(30, 41, 59, 0.78);
+            --seo-border: rgba(148, 163, 184, 0.28);
+            --seo-border-strong: rgba(129, 140, 248, 0.66);
             --seo-text: #e2e8f0;
             --seo-muted: #cbd5e1;
-            --seo-link: #93c5fd;
-            --seo-link-hover: #dbeafe;
-            --seo-brand-a: rgba(37, 99, 235, 0.9);
-            --seo-brand-b: rgba(79, 70, 229, 0.9);
-            --seo-brand-c: rgba(124, 58, 237, 0.9);
-            --seo-btn-grad-a: rgba(59, 130, 246, 0.22);
-            --seo-btn-grad-b: rgba(124, 58, 237, 0.22);
+            --seo-link: #bfdbfe;
+            --seo-link-hover: #e0e7ff;
+            --seo-brand-a: #2563eb;
+            --seo-brand-b: #4f46e5;
+            --seo-brand-c: #7c3aed;
+            --seo-btn-grad-a: rgba(59, 130, 246, 0.28);
+            --seo-btn-grad-b: rgba(124, 58, 237, 0.26);
         }
         * { box-sizing: border-box; }
         body.seo-page {
@@ -49,56 +49,94 @@
             min-height: 100vh;
             font-family: "Pixelify Sans", "Silkscreen", "DotGothic16", monospace;
             background:
-                radial-gradient(circle at 8% -6%, rgba(59, 130, 246, 0.26), transparent 42%),
-                radial-gradient(circle at 92% -8%, rgba(124, 58, 237, 0.28), transparent 44%),
+                radial-gradient(circle at 6% -10%, rgba(37, 99, 235, 0.3), transparent 45%),
+                radial-gradient(circle at 98% -10%, rgba(124, 58, 237, 0.28), transparent 48%),
                 linear-gradient(180deg, var(--seo-bg-top) 0%, var(--seo-bg-base) 56%, var(--seo-bg-bottom) 100%);
             color: var(--seo-text);
             line-height: 1.6;
         }
+        body.seo-page::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.1), transparent 28%),
+                radial-gradient(circle at 80% 10%, rgba(99, 102, 241, 0.08), transparent 30%);
+            z-index: -1;
+        }
         .shell {
-            max-width: 1280px;
+            max-width: 1240px;
             margin: 0 auto;
-            padding: 1rem 1rem 2.2rem;
+            padding: 1rem 1rem max(2.2rem, env(safe-area-inset-bottom));
         }
         .top-nav {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            padding: 0.7rem 0.8rem;
-            border: 1px solid var(--seo-border);
-            border-radius: 0.95rem;
-            background: linear-gradient(90deg, var(--seo-brand-a), var(--seo-brand-b), var(--seo-brand-c));
-            box-shadow: 0 16px 34px rgba(2, 6, 23, 0.32);
+            margin-bottom: 0.95rem;
+            border: 1px solid rgba(165, 180, 252, 0.45);
+            border-radius: 1rem;
+            background: linear-gradient(95deg, var(--seo-brand-a), var(--seo-brand-b), var(--seo-brand-c));
+            box-shadow: 0 18px 36px rgba(2, 6, 23, 0.34);
+            padding: 0.72rem 0.8rem;
         }
-        .top-nav a,
-        .top-nav button {
+        .top-nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.7rem;
+        }
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.38rem 0.62rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            background: rgba(15, 23, 42, 0.46);
+            color: #f8fafc;
+            font-size: 0.77rem;
+            white-space: nowrap;
+        }
+        .brand-badge .brand-icon {
+            font-size: 0.95rem;
+            line-height: 1;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.48rem;
+            flex-wrap: wrap;
+        }
+        .nav-links a,
+        .nav-links button {
             -webkit-appearance: none;
             appearance: none;
             text-decoration: none;
             color: #f8fafc;
             border: 1px solid rgba(255, 255, 255, 0.24);
-            padding: 0.45rem 0.75rem;
+            padding: 0.46rem 0.76rem;
             border-radius: 999px;
             background: rgba(15, 23, 42, 0.45);
-            font-size: 0.82rem;
+            font-size: 0.79rem;
             font-weight: 700;
             line-height: 1.15;
             cursor: pointer;
             transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease;
+            min-height: 2.3rem;
+            white-space: nowrap;
         }
-        .top-nav a:hover,
-        .top-nav button:hover {
+        .nav-links a:hover,
+        .nav-links button:hover {
             background: rgba(15, 23, 42, 0.68);
             border-color: var(--seo-border-strong);
             transform: translateY(-1px);
         }
-        .top-nav a:focus-visible,
-        .top-nav button:focus-visible {
+        .nav-links a:focus-visible,
+        .nav-links button:focus-visible {
             outline: 2px solid #93c5fd;
             outline-offset: 2px;
         }
-        .top-nav .back-control {
+        .nav-links .back-control {
             background: linear-gradient(120deg, rgba(15, 23, 42, 0.76), rgba(30, 41, 59, 0.72));
             border-color: rgba(191, 219, 254, 0.68);
         }
@@ -106,31 +144,60 @@
             border: 1px solid var(--seo-border);
             background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.76));
             border-radius: 1rem;
-            padding: 1.15rem 1.15rem;
+            padding: 1rem 1.05rem;
             box-shadow: 0 20px 44px rgba(2, 6, 23, 0.38);
         }
-        h1 { margin: 0; font-size: clamp(1.55rem, 2.9vw, 2.1rem); color: #e0e7ff; line-height: 1.2; }
-        h2 { margin: 1.2rem 0 0.5rem; font-size: 1.06rem; color: #c7d2fe; }
+        .hero-kicker {
+            margin: 0;
+            font-size: 0.74rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: #bfdbfe;
+            opacity: 0.96;
+        }
+        h1 { margin: 0.3rem 0 0; font-size: clamp(1.45rem, 3.3vw, 2.08rem); color: #e0e7ff; line-height: 1.16; }
+        h2 { margin: 1rem 0 0.5rem; font-size: 1.03rem; color: #c7d2fe; line-height: 1.3; }
         p { margin: 0.45rem 0; color: var(--seo-muted); }
-        .cta-row {
-            margin-top: 0.8rem;
+        .hero-meta-row {
+            margin-top: 0.55rem;
             display: flex;
             flex-wrap: wrap;
+            gap: 0.45rem;
+        }
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            background: rgba(15, 23, 42, 0.55);
+            color: #dbeafe;
+            font-size: 0.74rem;
+            line-height: 1;
+            padding: 0.34rem 0.58rem;
+            white-space: nowrap;
+        }
+        .cta-row {
+            margin-top: 0.8rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
             gap: 0.55rem;
         }
         .cta {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 0.35rem;
             text-decoration: none;
             color: #f8fafc;
             background: linear-gradient(120deg, rgba(59, 130, 246, 0.36), rgba(124, 58, 237, 0.35));
             border: 1px solid rgba(129, 140, 248, 0.52);
-            border-radius: 999px;
-            padding: 0.46rem 0.75rem;
-            font-size: 0.84rem;
+            border-radius: 0.75rem;
+            padding: 0.58rem 0.75rem;
+            font-size: 0.8rem;
             font-weight: 700;
             transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease;
+            min-height: 2.6rem;
+            text-align: center;
         }
         .cta:hover {
             background: linear-gradient(120deg, rgba(37, 99, 235, 0.45), rgba(109, 40, 217, 0.4));
@@ -149,59 +216,189 @@
             margin-top: 1rem;
             border: 1px solid var(--seo-border);
             border-radius: 0.95rem;
-            padding: 0.95rem 1rem;
+            padding: 0.88rem 0.92rem;
             background: linear-gradient(160deg, var(--seo-panel), var(--seo-panel-soft));
             box-shadow: 0 14px 32px rgba(2, 6, 23, 0.22);
         }
         .meta { color: var(--seo-muted); font-size: 0.9rem; }
         .module-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 0.75rem;
         }
         .module-card {
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 0.8rem;
-            padding: 0.65rem 0.75rem;
+            padding: 0.66rem 0.72rem 0.72rem;
             background: rgba(15, 23, 42, 0.58);
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
         }
         .module-card h3 {
             margin: 0;
             font-size: 0.95rem;
             color: #dbeafe;
+            line-height: 1.3;
         }
         .module-card p {
-            margin-top: 0.28rem;
+            margin: 0;
             font-size: 0.83rem;
             color: #cbd5e1;
+            flex: 1 1 auto;
+        }
+        .module-meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.34rem;
+        }
+        .module-link {
+            align-self: flex-start;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-top: 0.12rem;
+            text-decoration: none;
+            color: #e2e8f0;
+            border: 1px solid rgba(148, 163, 184, 0.34);
+            background: rgba(30, 41, 59, 0.62);
+            border-radius: 0.58rem;
+            padding: 0.35rem 0.52rem;
+            font-size: 0.74rem;
+            font-weight: 700;
+            min-height: 2rem;
+        }
+        .module-link:hover {
+            border-color: rgba(191, 219, 254, 0.7);
+            background: rgba(51, 65, 85, 0.7);
+        }
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 0.62rem;
+        }
+        .detail-card {
+            border: 1px solid rgba(148, 163, 184, 0.32);
+            border-radius: 0.76rem;
+            padding: 0.6rem 0.65rem;
+            background: rgba(15, 23, 42, 0.5);
+        }
+        .detail-card strong {
+            display: block;
+            color: #c7d2fe;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .detail-card span {
+            display: block;
+            margin-top: 0.22rem;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+        }
+        .link-list {
+            margin: 0;
+            padding-left: 1.05rem;
+        }
+        .link-list li {
+            margin: 0.35rem 0;
         }
         .footer {
             margin-top: 1.2rem;
-            font-size: 0.83rem;
+            font-size: 0.8rem;
             color: var(--seo-muted);
         }
         @media (max-width: 640px) {
-            .shell { padding: 0.85rem 0.7rem 1.5rem; }
-            .top-nav { gap: 0.45rem; }
-            .top-nav a,
-            .top-nav button { font-size: 0.76rem; padding: 0.42rem 0.62rem; }
-            .hero { padding: 0.9rem 0.92rem; }
+            .shell { padding: 0.72rem 0.66rem max(1.4rem, env(safe-area-inset-bottom)); }
+            .top-nav {
+                padding: 0.58rem 0.58rem 0.56rem;
+                border-radius: 0.88rem;
+                margin-bottom: 0.72rem;
+            }
+            .top-nav-inner {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.52rem;
+            }
+            .brand-badge {
+                justify-content: center;
+                width: 100%;
+            }
+            .nav-links {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: 0.16rem;
+                justify-content: flex-start;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: thin;
+            }
+            .nav-links a,
+            .nav-links button {
+                font-size: 0.74rem;
+                padding: 0.46rem 0.68rem;
+                min-height: 2.18rem;
+            }
+            .hero {
+                padding: 0.86rem 0.86rem 0.9rem;
+                border-radius: 0.92rem;
+            }
+            .hero-kicker {
+                font-size: 0.69rem;
+            }
+            h1 {
+                font-size: clamp(1.22rem, 6.2vw, 1.56rem);
+            }
+            .cta-row {
+                grid-template-columns: 1fr;
+                gap: 0.46rem;
+            }
+            .cta {
+                width: 100%;
+                min-height: 2.48rem;
+                font-size: 0.76rem;
+            }
+            .panel {
+                margin-top: 0.76rem;
+                padding: 0.78rem 0.78rem 0.82rem;
+                border-radius: 0.88rem;
+            }
+            .module-grid,
+            .detail-grid {
+                grid-template-columns: 1fr;
+                gap: 0.58rem;
+            }
+            .module-card {
+                padding: 0.62rem 0.62rem 0.66rem;
+            }
         }
     </style>
     </head>
 <body class="seo-page">
     <div class="shell">
         <nav class="top-nav" aria-label="Module page navigation">
-            <button type="button" class="back-control" data-back-fallback="../dsa.html">&#8592; Back</button>
-            <a href="../index.html">Interactive App</a>
-            <a href="../dsa.html">Data Structures and Algorithms Track Page</a>
-            <a href="index.html">Module Directory</a>
-            <a href="../sitemap.html">Sitemap</a>
-            <a href="../sitemap.xml">XML</a>
+            <div class="top-nav-inner">
+                <div class="brand-badge">
+                    <span class="brand-icon">&#x1F9ED;</span>
+                    <span>CS Course Atlas</span>
+                </div>
+                <div class="nav-links">
+                    <button type="button" class="back-control" data-back-fallback="../dsa.html">&#8592; Back</button>
+                    <a href="../index.html">Interactive App</a>
+                    <a href="../dsa.html">Data Structures and Algorithms Track Page</a>
+                    <a href="index.html">Module Directory</a>
+                    <a href="../sitemap.html">Sitemap</a>
+                    <a href="../sitemap.xml">XML</a>
+                </div>
+            </div>
         </nav>
         <header class="hero">
+            <p class="hero-kicker">Crawlable Module Page</p>
             <h1>Hash Tables and Maps</h1>
             <p class="meta">We count characters with `HashMap.merge` and then peel back a custom `SimpleHashTable` that hashes keys, stores chained entries, and resolves collisions bucket by bucket.</p>
+            <div class="hero-meta-row">
+                <span class="chip">Track: Data Structures and Algorithms</span>
+                <span class="chip">Difficulty: intermediate</span>
+            </div>
             <div class="cta-row">
                 <a class="cta" href="../index.html?route=%2Fdsa&module=hash-tables">Open This Module in Interactive App</a>
                 <a class="cta" href="../dsa.html">View Data Structures and Algorithms Track Landing Page</a>
@@ -209,23 +406,95 @@
             </div>
         </header>
         <section class="panel">
-            <h2>Module Details</h2>
-            <p><strong>Track:</strong> Data Structures and Algorithms</p>
-            <p><strong>Difficulty:</strong> intermediate</p>
+            <h2>Module Snapshot</h2>
+            <div class="detail-grid">
+                <div class="detail-card">
+                    <strong>Track</strong>
+                    <span>Data Structures and Algorithms</span>
+                </div>
+                <div class="detail-card">
+                    <strong>Difficulty</strong>
+                    <span>intermediate</span>
+                </div>
+                <div class="detail-card">
+                    <strong>Global Position</strong>
+                    <span>27 of 44</span>
+                </div>
+                <div class="detail-card">
+                    <strong>Track Size</strong>
+                    <span>21 modules</span>
+                </div>
+            </div>
         </section>
         <section class="panel">
             <h2>Continue Learning</h2>
-            <ul>
+            <ul class="link-list">
                 <li><a href="trees-basics.html">Previous: Binary Trees</a></li>
                 <li><a href="heaps.html">Next: Heaps and Priority Queues</a></li>
+                <li><a href="index.html">Open full module directory</a></li>
+                <li><a href="../dsa.html">Return to Data Structures and Algorithms track landing page</a></li>
             </ul>
         </section>
         <section class="panel">
             <h2>Related Data Structures and Algorithms Modules</h2>
-            <ul><li><a href="intro-to-coding.html">Introduction to Coding</a></li><li><a href="arrays-strings.html">Arrays and Strings</a></li><li><a href="searching-algorithms.html">Searching Algorithms</a></li><li><a href="stacks-queues.html">Stacks and Queues</a></li><li><a href="linked-lists.html">Linked Lists</a></li><li><a href="trees-basics.html">Binary Trees</a></li></ul>
+            <div class="module-grid">
+        <article class="module-card">
+            <div class="module-meta-row">
+                <span class="chip">Data Structures and Algorithms</span>
+                <span class="chip">beginner</span>
+            </div>
+            <h3><a href="intro-to-coding.html">Introduction to Coding</a></h3>
+            <p>Start here if you are brand new. This module explains what coding is, where it came from, what careers exist,...</p>
+            <a class="module-link" href="intro-to-coding.html">Open Related Module</a>
+        </article>
+        <article class="module-card">
+            <div class="module-meta-row">
+                <span class="chip">Data Structures and Algorithms</span>
+                <span class="chip">beginner</span>
+            </div>
+            <h3><a href="arrays-strings.html">Arrays and Strings</a></h3>
+            <p>This walkthrough dissects the `findMax`, `reverseString`, and `isPalindrome` helpers so you can watch loops,...</p>
+            <a class="module-link" href="arrays-strings.html">Open Related Module</a>
+        </article>
+        <article class="module-card">
+            <div class="module-meta-row">
+                <span class="chip">Data Structures and Algorithms</span>
+                <span class="chip">beginner</span>
+            </div>
+            <h3><a href="searching-algorithms.html">Searching Algorithms</a></h3>
+            <p>Linear, binary, and exponential search are implemented side by side, so we break down pointer shifts, boundar...</p>
+            <a class="module-link" href="searching-algorithms.html">Open Related Module</a>
+        </article>
+        <article class="module-card">
+            <div class="module-meta-row">
+                <span class="chip">Data Structures and Algorithms</span>
+                <span class="chip">beginner</span>
+            </div>
+            <h3><a href="stacks-queues.html">Stacks and Queues</a></h3>
+            <p>The `ArrayStack` and `ArrayQueue` wrappers expose each push/pop/peek and enqueue/dequeue call so you can see...</p>
+            <a class="module-link" href="stacks-queues.html">Open Related Module</a>
+        </article>
+        <article class="module-card">
+            <div class="module-meta-row">
+                <span class="chip">Data Structures and Algorithms</span>
+                <span class="chip">intermediate</span>
+            </div>
+            <h3><a href="linked-lists.html">Linked Lists</a></h3>
+            <p>We narrate every pointer move in `reverseList`, `hasCycle`, and `mergeTwoLists`, showing how temp nodes, tort...</p>
+            <a class="module-link" href="linked-lists.html">Open Related Module</a>
+        </article>
+        <article class="module-card">
+            <div class="module-meta-row">
+                <span class="chip">Data Structures and Algorithms</span>
+                <span class="chip">intermediate</span>
+            </div>
+            <h3><a href="trees-basics.html">Binary Trees</a></h3>
+            <p>Follow `insertRecursive`, `inorder`, and `levelOrderTraversal` to see how the BST is built, how DFS prints so...</p>
+            <a class="module-link" href="trees-basics.html">Open Related Module</a>
+        </article></div>
         </section>
         <footer class="footer">
-            <p>This crawlable module page is paired with an interactive in-app version.</p>
+            <p>This crawlable module page is paired with an interactive in-app version for quizzes, flashcards, and progress sync.</p>
         </footer>
     </div>
     <script>

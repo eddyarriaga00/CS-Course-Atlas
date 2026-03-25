@@ -26,22 +26,22 @@
         <style>
         :root {
             color-scheme: dark;
-            --seo-bg-top: #020617;
+            --seo-bg-top: #030712;
             --seo-bg-base: #0f172a;
             --seo-bg-bottom: #111827;
-            --seo-panel: rgba(15, 23, 42, 0.72);
-            --seo-panel-soft: rgba(30, 41, 59, 0.7);
-            --seo-border: rgba(255, 255, 255, 0.12);
-            --seo-border-strong: rgba(165, 180, 252, 0.45);
+            --seo-panel: rgba(15, 23, 42, 0.8);
+            --seo-panel-soft: rgba(30, 41, 59, 0.78);
+            --seo-border: rgba(148, 163, 184, 0.28);
+            --seo-border-strong: rgba(129, 140, 248, 0.66);
             --seo-text: #e2e8f0;
             --seo-muted: #cbd5e1;
-            --seo-link: #93c5fd;
-            --seo-link-hover: #dbeafe;
-            --seo-brand-a: rgba(37, 99, 235, 0.9);
-            --seo-brand-b: rgba(79, 70, 229, 0.9);
-            --seo-brand-c: rgba(124, 58, 237, 0.9);
-            --seo-btn-grad-a: rgba(59, 130, 246, 0.22);
-            --seo-btn-grad-b: rgba(124, 58, 237, 0.22);
+            --seo-link: #bfdbfe;
+            --seo-link-hover: #e0e7ff;
+            --seo-brand-a: #2563eb;
+            --seo-brand-b: #4f46e5;
+            --seo-brand-c: #7c3aed;
+            --seo-btn-grad-a: rgba(59, 130, 246, 0.28);
+            --seo-btn-grad-b: rgba(124, 58, 237, 0.26);
         }
         * { box-sizing: border-box; }
         body.seo-page {
@@ -49,56 +49,94 @@
             min-height: 100vh;
             font-family: "Pixelify Sans", "Silkscreen", "DotGothic16", monospace;
             background:
-                radial-gradient(circle at 8% -6%, rgba(59, 130, 246, 0.26), transparent 42%),
-                radial-gradient(circle at 92% -8%, rgba(124, 58, 237, 0.28), transparent 44%),
+                radial-gradient(circle at 6% -10%, rgba(37, 99, 235, 0.3), transparent 45%),
+                radial-gradient(circle at 98% -10%, rgba(124, 58, 237, 0.28), transparent 48%),
                 linear-gradient(180deg, var(--seo-bg-top) 0%, var(--seo-bg-base) 56%, var(--seo-bg-bottom) 100%);
             color: var(--seo-text);
             line-height: 1.6;
         }
+        body.seo-page::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.1), transparent 28%),
+                radial-gradient(circle at 80% 10%, rgba(99, 102, 241, 0.08), transparent 30%);
+            z-index: -1;
+        }
         .shell {
-            max-width: 1280px;
+            max-width: 1240px;
             margin: 0 auto;
-            padding: 1rem 1rem 2.2rem;
+            padding: 1rem 1rem max(2.2rem, env(safe-area-inset-bottom));
         }
         .top-nav {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-            padding: 0.7rem 0.8rem;
-            border: 1px solid var(--seo-border);
-            border-radius: 0.95rem;
-            background: linear-gradient(90deg, var(--seo-brand-a), var(--seo-brand-b), var(--seo-brand-c));
-            box-shadow: 0 16px 34px rgba(2, 6, 23, 0.32);
+            margin-bottom: 0.95rem;
+            border: 1px solid rgba(165, 180, 252, 0.45);
+            border-radius: 1rem;
+            background: linear-gradient(95deg, var(--seo-brand-a), var(--seo-brand-b), var(--seo-brand-c));
+            box-shadow: 0 18px 36px rgba(2, 6, 23, 0.34);
+            padding: 0.72rem 0.8rem;
         }
-        .top-nav a,
-        .top-nav button {
+        .top-nav-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.7rem;
+        }
+        .brand-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.38rem 0.62rem;
+            border-radius: 999px;
+            border: 1px solid rgba(255, 255, 255, 0.24);
+            background: rgba(15, 23, 42, 0.46);
+            color: #f8fafc;
+            font-size: 0.77rem;
+            white-space: nowrap;
+        }
+        .brand-badge .brand-icon {
+            font-size: 0.95rem;
+            line-height: 1;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 0.48rem;
+            flex-wrap: wrap;
+        }
+        .nav-links a,
+        .nav-links button {
             -webkit-appearance: none;
             appearance: none;
             text-decoration: none;
             color: #f8fafc;
             border: 1px solid rgba(255, 255, 255, 0.24);
-            padding: 0.45rem 0.75rem;
+            padding: 0.46rem 0.76rem;
             border-radius: 999px;
             background: rgba(15, 23, 42, 0.45);
-            font-size: 0.82rem;
+            font-size: 0.79rem;
             font-weight: 700;
             line-height: 1.15;
             cursor: pointer;
             transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease;
+            min-height: 2.3rem;
+            white-space: nowrap;
         }
-        .top-nav a:hover,
-        .top-nav button:hover {
+        .nav-links a:hover,
+        .nav-links button:hover {
             background: rgba(15, 23, 42, 0.68);
             border-color: var(--seo-border-strong);
             transform: translateY(-1px);
         }
-        .top-nav a:focus-visible,
-        .top-nav button:focus-visible {
+        .nav-links a:focus-visible,
+        .nav-links button:focus-visible {
             outline: 2px solid #93c5fd;
             outline-offset: 2px;
         }
-        .top-nav .back-control {
+        .nav-links .back-control {
             background: linear-gradient(120deg, rgba(15, 23, 42, 0.76), rgba(30, 41, 59, 0.72));
             border-color: rgba(191, 219, 254, 0.68);
         }
@@ -106,31 +144,60 @@
             border: 1px solid var(--seo-border);
             background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.76));
             border-radius: 1rem;
-            padding: 1.15rem 1.15rem;
+            padding: 1rem 1.05rem;
             box-shadow: 0 20px 44px rgba(2, 6, 23, 0.38);
         }
-        h1 { margin: 0; font-size: clamp(1.55rem, 2.9vw, 2.1rem); color: #e0e7ff; line-height: 1.2; }
-        h2 { margin: 1.2rem 0 0.5rem; font-size: 1.06rem; color: #c7d2fe; }
+        .hero-kicker {
+            margin: 0;
+            font-size: 0.74rem;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: #bfdbfe;
+            opacity: 0.96;
+        }
+        h1 { margin: 0.3rem 0 0; font-size: clamp(1.45rem, 3.3vw, 2.08rem); color: #e0e7ff; line-height: 1.16; }
+        h2 { margin: 1rem 0 0.5rem; font-size: 1.03rem; color: #c7d2fe; line-height: 1.3; }
         p { margin: 0.45rem 0; color: var(--seo-muted); }
-        .cta-row {
-            margin-top: 0.8rem;
+        .hero-meta-row {
+            margin-top: 0.55rem;
             display: flex;
             flex-wrap: wrap;
+            gap: 0.45rem;
+        }
+        .chip {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            border: 1px solid rgba(148, 163, 184, 0.35);
+            background: rgba(15, 23, 42, 0.55);
+            color: #dbeafe;
+            font-size: 0.74rem;
+            line-height: 1;
+            padding: 0.34rem 0.58rem;
+            white-space: nowrap;
+        }
+        .cta-row {
+            margin-top: 0.8rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
             gap: 0.55rem;
         }
         .cta {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 0.35rem;
             text-decoration: none;
             color: #f8fafc;
             background: linear-gradient(120deg, rgba(59, 130, 246, 0.36), rgba(124, 58, 237, 0.35));
             border: 1px solid rgba(129, 140, 248, 0.52);
-            border-radius: 999px;
-            padding: 0.46rem 0.75rem;
-            font-size: 0.84rem;
+            border-radius: 0.75rem;
+            padding: 0.58rem 0.75rem;
+            font-size: 0.8rem;
             font-weight: 700;
             transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease;
+            min-height: 2.6rem;
+            text-align: center;
         }
         .cta:hover {
             background: linear-gradient(120deg, rgba(37, 99, 235, 0.45), rgba(109, 40, 217, 0.4));
@@ -149,58 +216,188 @@
             margin-top: 1rem;
             border: 1px solid var(--seo-border);
             border-radius: 0.95rem;
-            padding: 0.95rem 1rem;
+            padding: 0.88rem 0.92rem;
             background: linear-gradient(160deg, var(--seo-panel), var(--seo-panel-soft));
             box-shadow: 0 14px 32px rgba(2, 6, 23, 0.22);
         }
         .meta { color: var(--seo-muted); font-size: 0.9rem; }
         .module-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
             gap: 0.75rem;
         }
         .module-card {
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 0.8rem;
-            padding: 0.65rem 0.75rem;
+            padding: 0.66rem 0.72rem 0.72rem;
             background: rgba(15, 23, 42, 0.58);
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
         }
         .module-card h3 {
             margin: 0;
             font-size: 0.95rem;
             color: #dbeafe;
+            line-height: 1.3;
         }
         .module-card p {
-            margin-top: 0.28rem;
+            margin: 0;
             font-size: 0.83rem;
             color: #cbd5e1;
+            flex: 1 1 auto;
+        }
+        .module-meta-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.34rem;
+        }
+        .module-link {
+            align-self: flex-start;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-top: 0.12rem;
+            text-decoration: none;
+            color: #e2e8f0;
+            border: 1px solid rgba(148, 163, 184, 0.34);
+            background: rgba(30, 41, 59, 0.62);
+            border-radius: 0.58rem;
+            padding: 0.35rem 0.52rem;
+            font-size: 0.74rem;
+            font-weight: 700;
+            min-height: 2rem;
+        }
+        .module-link:hover {
+            border-color: rgba(191, 219, 254, 0.7);
+            background: rgba(51, 65, 85, 0.7);
+        }
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 0.62rem;
+        }
+        .detail-card {
+            border: 1px solid rgba(148, 163, 184, 0.32);
+            border-radius: 0.76rem;
+            padding: 0.6rem 0.65rem;
+            background: rgba(15, 23, 42, 0.5);
+        }
+        .detail-card strong {
+            display: block;
+            color: #c7d2fe;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .detail-card span {
+            display: block;
+            margin-top: 0.22rem;
+            color: #e2e8f0;
+            font-size: 0.9rem;
+        }
+        .link-list {
+            margin: 0;
+            padding-left: 1.05rem;
+        }
+        .link-list li {
+            margin: 0.35rem 0;
         }
         .footer {
             margin-top: 1.2rem;
-            font-size: 0.83rem;
+            font-size: 0.8rem;
             color: var(--seo-muted);
         }
         @media (max-width: 640px) {
-            .shell { padding: 0.85rem 0.7rem 1.5rem; }
-            .top-nav { gap: 0.45rem; }
-            .top-nav a,
-            .top-nav button { font-size: 0.76rem; padding: 0.42rem 0.62rem; }
-            .hero { padding: 0.9rem 0.92rem; }
+            .shell { padding: 0.72rem 0.66rem max(1.4rem, env(safe-area-inset-bottom)); }
+            .top-nav {
+                padding: 0.58rem 0.58rem 0.56rem;
+                border-radius: 0.88rem;
+                margin-bottom: 0.72rem;
+            }
+            .top-nav-inner {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.52rem;
+            }
+            .brand-badge {
+                justify-content: center;
+                width: 100%;
+            }
+            .nav-links {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: 0.16rem;
+                justify-content: flex-start;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: thin;
+            }
+            .nav-links a,
+            .nav-links button {
+                font-size: 0.74rem;
+                padding: 0.46rem 0.68rem;
+                min-height: 2.18rem;
+            }
+            .hero {
+                padding: 0.86rem 0.86rem 0.9rem;
+                border-radius: 0.92rem;
+            }
+            .hero-kicker {
+                font-size: 0.69rem;
+            }
+            h1 {
+                font-size: clamp(1.22rem, 6.2vw, 1.56rem);
+            }
+            .cta-row {
+                grid-template-columns: 1fr;
+                gap: 0.46rem;
+            }
+            .cta {
+                width: 100%;
+                min-height: 2.48rem;
+                font-size: 0.76rem;
+            }
+            .panel {
+                margin-top: 0.76rem;
+                padding: 0.78rem 0.78rem 0.82rem;
+                border-radius: 0.88rem;
+            }
+            .module-grid,
+            .detail-grid {
+                grid-template-columns: 1fr;
+                gap: 0.58rem;
+            }
+            .module-card {
+                padding: 0.62rem 0.62rem 0.66rem;
+            }
         }
     </style>
     </head>
 <body class="seo-page">
     <div class="shell">
         <nav class="top-nav" aria-label="Sitemap navigation">
-            <button type="button" class="back-control" data-back-fallback="tracks.html">&#8592; Back</button>
-            <a href="index.html">Interactive App</a>
-            <a href="tracks.html">Track Pages</a>
-            <a href="modules/index.html">Module Directory</a>
-            <a href="sitemap.xml">XML Sitemap</a>
+            <div class="top-nav-inner">
+                <div class="brand-badge">
+                    <span class="brand-icon">&#x1F9ED;</span>
+                    <span>CS Course Atlas</span>
+                </div>
+                <div class="nav-links">
+                    <button type="button" class="back-control" data-back-fallback="tracks.html">&#8592; Back</button>
+                    <a href="index.html">Interactive App</a>
+                    <a href="tracks.html">Track Pages</a>
+                    <a href="modules/index.html">Module Directory</a>
+                    <a href="sitemap.xml">XML Sitemap</a>
+                </div>
+            </div>
         </nav>
         <header class="hero">
+            <p class="hero-kicker">Crawlable Site Index</p>
             <h1>CS Course Atlas Sitemap</h1>
             <p class="meta">Human-readable page index for route pages, modules, and trust content.</p>
+            <div class="hero-meta-row">
+                <span class="chip">66 URLs Indexed</span>
+                <span class="chip">Auto-generated from module + route maps</span>
+            </div>
             <div class="cta-row">
                 <a class="cta" href="sitemap.xml">Open XML Sitemap</a>
                 <a class="cta" href="tracks.html">Open Track Pages</a>
@@ -209,283 +406,613 @@
         </header>
         <section class="panel">
             <h2>Core Pages</h2>
-            <ul>
-            <li>
-                <a href="index.html">Root</a>
-                <span class="meta">(/)</span>
-            </li>
-            <li>
-                <a href="index.html">Interactive App</a>
-                <span class="meta">(/index.html)</span>
-            </li>
-            <li>
-                <a href="sitemap.html">Sitemap</a>
-                <span class="meta">(/sitemap.html)</span>
-            </li>
-            <li>
-                <a href="sitemap.xml">XML Sitemap</a>
-                <span class="meta">(/sitemap.xml)</span>
-            </li></ul>
+            <div class="module-grid">
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 1.0</span>
+                </div>
+                <h3><a href="index.html">Root</a></h3>
+                <p>/</p>
+                <a class="module-link" href="index.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">daily</span>
+                    <span class="chip">Priority 1.0</span>
+                </div>
+                <h3><a href="index.html">Interactive App</a></h3>
+                <p>/index.html</p>
+                <a class="module-link" href="index.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.6</span>
+                </div>
+                <h3><a href="sitemap.html">Sitemap</a></h3>
+                <p>/sitemap.html</p>
+                <a class="module-link" href="sitemap.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.6</span>
+                </div>
+                <h3><a href="sitemap.xml">XML Sitemap</a></h3>
+                <p>/sitemap.xml</p>
+                <a class="module-link" href="sitemap.xml">Open Page</a>
+            </article></div>
         </section><section class="panel">
             <h2>Routes Pages</h2>
-            <ul>
-            <li>
-                <a href="about.html">About CS Course Atlas</a>
-                <span class="meta">(/about.html)</span>
-            </li>
-            <li>
-                <a href="assembly.html">Assembly Track</a>
-                <span class="meta">(/assembly.html)</span>
-            </li>
-            <li>
-                <a href="discrete-math.html">Discrete Math Track</a>
-                <span class="meta">(/discrete-math.html)</span>
-            </li>
-            <li>
-                <a href="dsa.html">Data Structures and Algorithms Track</a>
-                <span class="meta">(/dsa.html)</span>
-            </li>
-            <li>
-                <a href="flashcards.html">Flashcards</a>
-                <span class="meta">(/flashcards.html)</span>
-            </li>
-            <li>
-                <a href="git.html">Git Track</a>
-                <span class="meta">(/git.html)</span>
-            </li>
-            <li>
-                <a href="home.html">CS Course Atlas Home</a>
-                <span class="meta">(/home.html)</span>
-            </li>
-            <li>
-                <a href="java.html">Java Track</a>
-                <span class="meta">(/java.html)</span>
-            </li>
-            <li>
-                <a href="notes.html">Notes and Library</a>
-                <span class="meta">(/notes.html)</span>
-            </li>
-            <li>
-                <a href="playground.html">Code Playground</a>
-                <span class="meta">(/playground.html)</span>
-            </li>
-            <li>
-                <a href="quizzes.html">Interactive Quizzes</a>
-                <span class="meta">(/quizzes.html)</span>
-            </li>
-            <li>
-                <a href="support.html">Support and Contact</a>
-                <span class="meta">(/support.html)</span>
-            </li>
-            <li>
-                <a href="tracks.html">Course Tracks</a>
-                <span class="meta">(/tracks.html)</span>
-            </li></ul>
+            <div class="module-grid">
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.8</span>
+                </div>
+                <h3><a href="about.html">About CS Course Atlas</a></h3>
+                <p>/about.html</p>
+                <a class="module-link" href="about.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.8</span>
+                </div>
+                <h3><a href="assembly.html">Assembly Track</a></h3>
+                <p>/assembly.html</p>
+                <a class="module-link" href="assembly.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.8</span>
+                </div>
+                <h3><a href="discrete-math.html">Discrete Math Track</a></h3>
+                <p>/discrete-math.html</p>
+                <a class="module-link" href="discrete-math.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.8</span>
+                </div>
+                <h3><a href="dsa.html">Data Structures and Algorithms Track</a></h3>
+                <p>/dsa.html</p>
+                <a class="module-link" href="dsa.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.8</span>
+                </div>
+                <h3><a href="flashcards.html">Flashcards</a></h3>
+                <p>/flashcards.html</p>
+                <a class="module-link" href="flashcards.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.8</span>
+                </div>
+                <h3><a href="git.html">Git Track</a></h3>
+                <p>/git.html</p>
+                <a class="module-link" href="git.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.9</span>
+                </div>
+                <h3><a href="home.html">CS Course Atlas Home</a></h3>
+                <p>/home.html</p>
+                <a class="module-link" href="home.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.8</span>
+                </div>
+                <h3><a href="java.html">Java Track</a></h3>
+                <p>/java.html</p>
+                <a class="module-link" href="java.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.8</span>
+                </div>
+                <h3><a href="notes.html">Notes and Library</a></h3>
+                <p>/notes.html</p>
+                <a class="module-link" href="notes.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.8</span>
+                </div>
+                <h3><a href="playground.html">Code Playground</a></h3>
+                <p>/playground.html</p>
+                <a class="module-link" href="playground.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.8</span>
+                </div>
+                <h3><a href="quizzes.html">Interactive Quizzes</a></h3>
+                <p>/quizzes.html</p>
+                <a class="module-link" href="quizzes.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.8</span>
+                </div>
+                <h3><a href="support.html">Support and Contact</a></h3>
+                <p>/support.html</p>
+                <a class="module-link" href="support.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.9</span>
+                </div>
+                <h3><a href="tracks.html">Course Tracks</a></h3>
+                <p>/tracks.html</p>
+                <a class="module-link" href="tracks.html">Open Page</a>
+            </article></div>
         </section><section class="panel">
             <h2>Modules Pages</h2>
-            <ul>
-            <li>
-                <a href="modules/advanced-trees.html">Advanced Tree Structures</a>
-                <span class="meta">(/modules/advanced-trees.html)</span>
-            </li>
-            <li>
-                <a href="modules/arrays-strings.html">Arrays and Strings</a>
-                <span class="meta">(/modules/arrays-strings.html)</span>
-            </li>
-            <li>
-                <a href="modules/assembly-addressing-modes.html">Assembly Addressing Modes and Stack Frames</a>
-                <span class="meta">(/modules/assembly-addressing-modes.html)</span>
-            </li>
-            <li>
-                <a href="modules/assembly-arrays-strings-io.html">Assembly Arrays, Strings, and Basic I/O</a>
-                <span class="meta">(/modules/assembly-arrays-strings-io.html)</span>
-            </li>
-            <li>
-                <a href="modules/assembly-control-flow-procedures.html">Assembly Control Flow and Procedures</a>
-                <span class="meta">(/modules/assembly-control-flow-procedures.html)</span>
-            </li>
-            <li>
-                <a href="modules/assembly-registers-memory.html">Assembly Registers and Memory Basics</a>
-                <span class="meta">(/modules/assembly-registers-memory.html)</span>
-            </li>
-            <li>
-                <a href="modules/backtracking-patterns.html">Backtracking Patterns</a>
-                <span class="meta">(/modules/backtracking-patterns.html)</span>
-            </li>
-            <li>
-                <a href="modules/binary-indexed-trees.html">Binary Indexed Trees (Fenwick Trees)</a>
-                <span class="meta">(/modules/binary-indexed-trees.html)</span>
-            </li>
-            <li>
-                <a href="modules/bit-manipulation.html">Bit Manipulation</a>
-                <span class="meta">(/modules/bit-manipulation.html)</span>
-            </li>
-            <li>
-                <a href="modules/collections-framework.html">Java Collections Framework</a>
-                <span class="meta">(/modules/collections-framework.html)</span>
-            </li>
-            <li>
-                <a href="modules/combinatorics-discrete-probability.html">Combinatorics and Discrete Probability</a>
-                <span class="meta">(/modules/combinatorics-discrete-probability.html)</span>
-            </li>
-            <li>
-                <a href="modules/control-flow.html">Control Flow Statements</a>
-                <span class="meta">(/modules/control-flow.html)</span>
-            </li>
-            <li>
-                <a href="modules/design-patterns.html">Design Patterns</a>
-                <span class="meta">(/modules/design-patterns.html)</span>
-            </li>
-            <li>
-                <a href="modules/discrete-graph-theory.html">Discrete Graph Theory Foundations</a>
-                <span class="meta">(/modules/discrete-graph-theory.html)</span>
-            </li>
-            <li>
-                <a href="modules/dynamic-programming.html">Dynamic Programming</a>
-                <span class="meta">(/modules/dynamic-programming.html)</span>
-            </li>
-            <li>
-                <a href="modules/exception-handling.html">Exception Handling</a>
-                <span class="meta">(/modules/exception-handling.html)</span>
-            </li>
-            <li>
-                <a href="modules/file-io.html">File Input/Output</a>
-                <span class="meta">(/modules/file-io.html)</span>
-            </li>
-            <li>
-                <a href="modules/generics.html">Java Generics</a>
-                <span class="meta">(/modules/generics.html)</span>
-            </li>
-            <li>
-                <a href="modules/git-basics-workflow.html">Git Basics and Collaboration Workflow</a>
-                <span class="meta">(/modules/git-basics-workflow.html)</span>
-            </li>
-            <li>
-                <a href="modules/git-branching-merging.html">Git Branching, Merging, and Pull Requests</a>
-                <span class="meta">(/modules/git-branching-merging.html)</span>
-            </li>
-            <li>
-                <a href="modules/graph-algorithms.html">Graph Algorithms</a>
-                <span class="meta">(/modules/graph-algorithms.html)</span>
-            </li>
-            <li>
-                <a href="modules/greedy-algorithms.html">Greedy Algorithms</a>
-                <span class="meta">(/modules/greedy-algorithms.html)</span>
-            </li>
-            <li>
-                <a href="modules/hash-tables.html">Hash Tables and Maps</a>
-                <span class="meta">(/modules/hash-tables.html)</span>
-            </li>
-            <li>
-                <a href="modules/heaps.html">Heaps and Priority Queues</a>
-                <span class="meta">(/modules/heaps.html)</span>
-            </li>
-            <li>
-                <a href="modules/index.html">Module Directory</a>
-                <span class="meta">(/modules/index.html)</span>
-            </li>
-            <li>
-                <a href="modules/intro-to-coding.html">Introduction to Coding</a>
-                <span class="meta">(/modules/intro-to-coding.html)</span>
-            </li>
-            <li>
-                <a href="modules/java-basics.html">Java Fundamentals</a>
-                <span class="meta">(/modules/java-basics.html)</span>
-            </li>
-            <li>
-                <a href="modules/java-memory-jvm.html">Java Memory and JVM Fundamentals</a>
-                <span class="meta">(/modules/java-memory-jvm.html)</span>
-            </li>
-            <li>
-                <a href="modules/jdbc-basics.html">Database Connectivity (JDBC)</a>
-                <span class="meta">(/modules/jdbc-basics.html)</span>
-            </li>
-            <li>
-                <a href="modules/lambda-streams.html">Lambda Expressions &amp; Streams</a>
-                <span class="meta">(/modules/lambda-streams.html)</span>
-            </li>
-            <li>
-                <a href="modules/linked-lists.html">Linked Lists</a>
-                <span class="meta">(/modules/linked-lists.html)</span>
-            </li>
-            <li>
-                <a href="modules/multithreading.html">Multithreading Basics</a>
-                <span class="meta">(/modules/multithreading.html)</span>
-            </li>
-            <li>
-                <a href="modules/oop-basics.html">Object-Oriented Programming</a>
-                <span class="meta">(/modules/oop-basics.html)</span>
-            </li>
-            <li>
-                <a href="modules/propositional-logic-proofs.html">Propositional Logic and Proof Basics</a>
-                <span class="meta">(/modules/propositional-logic-proofs.html)</span>
-            </li>
-            <li>
-                <a href="modules/recursion.html">Recursion and Backtracking</a>
-                <span class="meta">(/modules/recursion.html)</span>
-            </li>
-            <li>
-                <a href="modules/searching-algorithms.html">Searching Algorithms</a>
-                <span class="meta">(/modules/searching-algorithms.html)</span>
-            </li>
-            <li>
-                <a href="modules/segment-trees.html">Segment Trees</a>
-                <span class="meta">(/modules/segment-trees.html)</span>
-            </li>
-            <li>
-                <a href="modules/sets-relations-functions.html">Sets, Relations, and Functions</a>
-                <span class="meta">(/modules/sets-relations-functions.html)</span>
-            </li>
-            <li>
-                <a href="modules/sorting-algorithms.html">Sorting Algorithms</a>
-                <span class="meta">(/modules/sorting-algorithms.html)</span>
-            </li>
-            <li>
-                <a href="modules/stacks-queues.html">Stacks and Queues</a>
-                <span class="meta">(/modules/stacks-queues.html)</span>
-            </li>
-            <li>
-                <a href="modules/string-algorithms.html">Advanced String Algorithms</a>
-                <span class="meta">(/modules/string-algorithms.html)</span>
-            </li>
-            <li>
-                <a href="modules/testing-junit.html">Unit Testing with JUnit</a>
-                <span class="meta">(/modules/testing-junit.html)</span>
-            </li>
-            <li>
-                <a href="modules/trees-basics.html">Binary Trees</a>
-                <span class="meta">(/modules/trees-basics.html)</span>
-            </li>
-            <li>
-                <a href="modules/tries.html">Tries (Prefix Trees)</a>
-                <span class="meta">(/modules/tries.html)</span>
-            </li>
-            <li>
-                <a href="modules/union-find.html">Union-Find (Disjoint Set)</a>
-                <span class="meta">(/modules/union-find.html)</span>
-            </li></ul>
+            <div class="module-grid">
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/advanced-trees.html">Advanced Tree Structures</a></h3>
+                <p>/modules/advanced-trees.html</p>
+                <a class="module-link" href="modules/advanced-trees.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/arrays-strings.html">Arrays and Strings</a></h3>
+                <p>/modules/arrays-strings.html</p>
+                <a class="module-link" href="modules/arrays-strings.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/assembly-addressing-modes.html">Assembly Addressing Modes and Stack Frames</a></h3>
+                <p>/modules/assembly-addressing-modes.html</p>
+                <a class="module-link" href="modules/assembly-addressing-modes.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/assembly-arrays-strings-io.html">Assembly Arrays, Strings, and Basic I/O</a></h3>
+                <p>/modules/assembly-arrays-strings-io.html</p>
+                <a class="module-link" href="modules/assembly-arrays-strings-io.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/assembly-control-flow-procedures.html">Assembly Control Flow and Procedures</a></h3>
+                <p>/modules/assembly-control-flow-procedures.html</p>
+                <a class="module-link" href="modules/assembly-control-flow-procedures.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/assembly-registers-memory.html">Assembly Registers and Memory Basics</a></h3>
+                <p>/modules/assembly-registers-memory.html</p>
+                <a class="module-link" href="modules/assembly-registers-memory.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/backtracking-patterns.html">Backtracking Patterns</a></h3>
+                <p>/modules/backtracking-patterns.html</p>
+                <a class="module-link" href="modules/backtracking-patterns.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/binary-indexed-trees.html">Binary Indexed Trees (Fenwick Trees)</a></h3>
+                <p>/modules/binary-indexed-trees.html</p>
+                <a class="module-link" href="modules/binary-indexed-trees.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/bit-manipulation.html">Bit Manipulation</a></h3>
+                <p>/modules/bit-manipulation.html</p>
+                <a class="module-link" href="modules/bit-manipulation.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/collections-framework.html">Java Collections Framework</a></h3>
+                <p>/modules/collections-framework.html</p>
+                <a class="module-link" href="modules/collections-framework.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/combinatorics-discrete-probability.html">Combinatorics and Discrete Probability</a></h3>
+                <p>/modules/combinatorics-discrete-probability.html</p>
+                <a class="module-link" href="modules/combinatorics-discrete-probability.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/control-flow.html">Control Flow Statements</a></h3>
+                <p>/modules/control-flow.html</p>
+                <a class="module-link" href="modules/control-flow.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/design-patterns.html">Design Patterns</a></h3>
+                <p>/modules/design-patterns.html</p>
+                <a class="module-link" href="modules/design-patterns.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/discrete-graph-theory.html">Discrete Graph Theory Foundations</a></h3>
+                <p>/modules/discrete-graph-theory.html</p>
+                <a class="module-link" href="modules/discrete-graph-theory.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/dynamic-programming.html">Dynamic Programming</a></h3>
+                <p>/modules/dynamic-programming.html</p>
+                <a class="module-link" href="modules/dynamic-programming.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/exception-handling.html">Exception Handling</a></h3>
+                <p>/modules/exception-handling.html</p>
+                <a class="module-link" href="modules/exception-handling.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/file-io.html">File Input/Output</a></h3>
+                <p>/modules/file-io.html</p>
+                <a class="module-link" href="modules/file-io.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/generics.html">Java Generics</a></h3>
+                <p>/modules/generics.html</p>
+                <a class="module-link" href="modules/generics.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/git-basics-workflow.html">Git Basics and Collaboration Workflow</a></h3>
+                <p>/modules/git-basics-workflow.html</p>
+                <a class="module-link" href="modules/git-basics-workflow.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/git-branching-merging.html">Git Branching, Merging, and Pull Requests</a></h3>
+                <p>/modules/git-branching-merging.html</p>
+                <a class="module-link" href="modules/git-branching-merging.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/graph-algorithms.html">Graph Algorithms</a></h3>
+                <p>/modules/graph-algorithms.html</p>
+                <a class="module-link" href="modules/graph-algorithms.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/greedy-algorithms.html">Greedy Algorithms</a></h3>
+                <p>/modules/greedy-algorithms.html</p>
+                <a class="module-link" href="modules/greedy-algorithms.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/hash-tables.html">Hash Tables and Maps</a></h3>
+                <p>/modules/hash-tables.html</p>
+                <a class="module-link" href="modules/hash-tables.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/heaps.html">Heaps and Priority Queues</a></h3>
+                <p>/modules/heaps.html</p>
+                <a class="module-link" href="modules/heaps.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.9</span>
+                </div>
+                <h3><a href="modules/index.html">Module Directory</a></h3>
+                <p>/modules/index.html</p>
+                <a class="module-link" href="modules/index.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/intro-to-coding.html">Introduction to Coding</a></h3>
+                <p>/modules/intro-to-coding.html</p>
+                <a class="module-link" href="modules/intro-to-coding.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/java-basics.html">Java Fundamentals</a></h3>
+                <p>/modules/java-basics.html</p>
+                <a class="module-link" href="modules/java-basics.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/java-memory-jvm.html">Java Memory and JVM Fundamentals</a></h3>
+                <p>/modules/java-memory-jvm.html</p>
+                <a class="module-link" href="modules/java-memory-jvm.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/jdbc-basics.html">Database Connectivity (JDBC)</a></h3>
+                <p>/modules/jdbc-basics.html</p>
+                <a class="module-link" href="modules/jdbc-basics.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/lambda-streams.html">Lambda Expressions &amp; Streams</a></h3>
+                <p>/modules/lambda-streams.html</p>
+                <a class="module-link" href="modules/lambda-streams.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/linked-lists.html">Linked Lists</a></h3>
+                <p>/modules/linked-lists.html</p>
+                <a class="module-link" href="modules/linked-lists.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/multithreading.html">Multithreading Basics</a></h3>
+                <p>/modules/multithreading.html</p>
+                <a class="module-link" href="modules/multithreading.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/oop-basics.html">Object-Oriented Programming</a></h3>
+                <p>/modules/oop-basics.html</p>
+                <a class="module-link" href="modules/oop-basics.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/propositional-logic-proofs.html">Propositional Logic and Proof Basics</a></h3>
+                <p>/modules/propositional-logic-proofs.html</p>
+                <a class="module-link" href="modules/propositional-logic-proofs.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/recursion.html">Recursion and Backtracking</a></h3>
+                <p>/modules/recursion.html</p>
+                <a class="module-link" href="modules/recursion.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/searching-algorithms.html">Searching Algorithms</a></h3>
+                <p>/modules/searching-algorithms.html</p>
+                <a class="module-link" href="modules/searching-algorithms.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/segment-trees.html">Segment Trees</a></h3>
+                <p>/modules/segment-trees.html</p>
+                <a class="module-link" href="modules/segment-trees.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/sets-relations-functions.html">Sets, Relations, and Functions</a></h3>
+                <p>/modules/sets-relations-functions.html</p>
+                <a class="module-link" href="modules/sets-relations-functions.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/sorting-algorithms.html">Sorting Algorithms</a></h3>
+                <p>/modules/sorting-algorithms.html</p>
+                <a class="module-link" href="modules/sorting-algorithms.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/stacks-queues.html">Stacks and Queues</a></h3>
+                <p>/modules/stacks-queues.html</p>
+                <a class="module-link" href="modules/stacks-queues.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/string-algorithms.html">Advanced String Algorithms</a></h3>
+                <p>/modules/string-algorithms.html</p>
+                <a class="module-link" href="modules/string-algorithms.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/testing-junit.html">Unit Testing with JUnit</a></h3>
+                <p>/modules/testing-junit.html</p>
+                <a class="module-link" href="modules/testing-junit.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/trees-basics.html">Binary Trees</a></h3>
+                <p>/modules/trees-basics.html</p>
+                <a class="module-link" href="modules/trees-basics.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/tries.html">Tries (Prefix Trees)</a></h3>
+                <p>/modules/tries.html</p>
+                <a class="module-link" href="modules/tries.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">weekly</span>
+                    <span class="chip">Priority 0.7</span>
+                </div>
+                <h3><a href="modules/union-find.html">Union-Find (Disjoint Set)</a></h3>
+                <p>/modules/union-find.html</p>
+                <a class="module-link" href="modules/union-find.html">Open Page</a>
+            </article></div>
         </section><section class="panel">
             <h2>Trust Pages</h2>
-            <ul>
-            <li>
-                <a href="contact-support.html">Contact / Support</a>
-                <span class="meta">(/contact-support.html)</span>
-            </li>
-            <li>
-                <a href="donations-refunds.html">Donations &amp; Refunds</a>
-                <span class="meta">(/donations-refunds.html)</span>
-            </li>
-            <li>
-                <a href="privacy-policy.html">Privacy Policy</a>
-                <span class="meta">(/privacy-policy.html)</span>
-            </li>
-            <li>
-                <a href="terms-of-use.html">Terms of Use</a>
-                <span class="meta">(/terms-of-use.html)</span>
-            </li></ul>
+            <div class="module-grid">
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">monthly</span>
+                    <span class="chip">Priority 0.5</span>
+                </div>
+                <h3><a href="contact-support.html">Contact / Support</a></h3>
+                <p>/contact-support.html</p>
+                <a class="module-link" href="contact-support.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">monthly</span>
+                    <span class="chip">Priority 0.5</span>
+                </div>
+                <h3><a href="donations-refunds.html">Donations &amp; Refunds</a></h3>
+                <p>/donations-refunds.html</p>
+                <a class="module-link" href="donations-refunds.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">monthly</span>
+                    <span class="chip">Priority 0.5</span>
+                </div>
+                <h3><a href="privacy-policy.html">Privacy Policy</a></h3>
+                <p>/privacy-policy.html</p>
+                <a class="module-link" href="privacy-policy.html">Open Page</a>
+            </article>
+            <article class="module-card">
+                <div class="module-meta-row">
+                    <span class="chip">monthly</span>
+                    <span class="chip">Priority 0.5</span>
+                </div>
+                <h3><a href="terms-of-use.html">Terms of Use</a></h3>
+                <p>/terms-of-use.html</p>
+                <a class="module-link" href="terms-of-use.html">Open Page</a>
+            </article></div>
         </section>
         <footer class="footer">
-            <p>66 indexed URLs generated automatically.</p>
+            <p>66 indexed URLs generated automatically with mobile-friendly crawlable links.</p>
         </footer>
     </div>
     <script>
