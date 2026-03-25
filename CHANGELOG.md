@@ -31,6 +31,16 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Added richer module detail snapshot cards and improved continue-learning navigation on module pages.
 - Refreshed `sitemap.html` and `sitemap.xsl` for consistent branded appearance and mobile-friendly table scrolling.
 
+### Module Learning Plan + Reliability Pass
+- Added an auto-generated `Learning Plan` section to each module card with:
+  - estimated focused study time
+  - track position (current module index in-track)
+  - prerequisite module and next recommended module
+  - 3 tailored learning goals and a targeted practice prompt
+- Derived learning-plan metadata directly from module difficulty, topic depth, resources, and the canonical module learning sequence so cards stay consistent as content evolves.
+- Hardened module resource rendering by normalizing once per module and showing a translated fallback message when no resources are available.
+- Hardened quiz button logic by using safe optional checks for quiz question arrays (prevents runtime edge cases when quiz payloads are missing or partial).
+
 ## 2026-03-12
 
 ### Mobile Auth Reliability

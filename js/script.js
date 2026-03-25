@@ -1158,6 +1158,26 @@ const TRANSLATIONS = {
         'module.theoryMode': 'Theory Mode',
         'module.learningResources': '\u{1F4DA} Learning Resources:',
         'module.definitionsHeading': '\u{1F4D6} Need-to-Know Definitions',
+        'module.learningPlan': '\u{1F9ED} Learning Plan',
+        'module.estimatedTime': 'Estimated Time',
+        'module.trackPosition': 'Track Position',
+        'module.prerequisite': 'Prerequisite',
+        'module.nextModule': 'Next Module',
+        'module.learningGoals': 'Learning Goals',
+        'module.practicePrompt': 'Practice Prompt',
+        'module.prerequisiteNone': 'None (start here)',
+        'module.nextModuleNone': 'You are at the end of this track.',
+        'module.estimatedTimeValue': '{minutes} min focused study',
+        'module.trackPositionValue': '{current} of {total} in {track}',
+        'module.goalTemplate1': 'Explain {topic} in your own words.',
+        'module.goalTemplate2': 'Implement a working example of {topic}.',
+        'module.goalTemplate3': 'Validate {topic} with a test case and expected output.',
+        'module.goalFallback1': 'Summarize the core idea and when to use it.',
+        'module.goalFallback2': 'Code a clean baseline solution from scratch.',
+        'module.goalFallback3': 'Compare runtime/space tradeoffs for at least two approaches.',
+        'module.practiceTemplate': 'Implement {topic} from scratch, test two edge cases, then explain complexity and one real-world use case.',
+        'module.practiceFallback': 'Build a small practice solution from scratch, test edge cases, and explain complexity before moving on.',
+        'module.noResources': 'No resources listed yet for this module.',
         'module.tooltipHideComments': 'Hide Comments',
         'module.tooltipShowComments': 'Show Comments',
         'module.tooltipSelectLanguage': 'Select Programming Language',
@@ -1660,6 +1680,26 @@ const TRANSLATIONS = {
         'module.theoryMode': 'Modo Teoría',
         'module.learningResources': '\u{1F4DA} Recursos de aprendizaje:',
         'module.definitionsHeading': '\u{1F4D6} Definiciones Clave',
+        'module.learningPlan': '\u{1F9ED} Plan de Aprendizaje',
+        'module.estimatedTime': 'Tiempo Estimado',
+        'module.trackPosition': 'Posicion en la Ruta',
+        'module.prerequisite': 'Prerequisito',
+        'module.nextModule': 'Siguiente Modulo',
+        'module.learningGoals': 'Objetivos de Aprendizaje',
+        'module.practicePrompt': 'Reto de Practica',
+        'module.prerequisiteNone': 'Ninguno (empieza aqui)',
+        'module.nextModuleNone': 'Estas al final de esta ruta.',
+        'module.estimatedTimeValue': '{minutes} min de estudio enfocado',
+        'module.trackPositionValue': '{current} de {total} en {track}',
+        'module.goalTemplate1': 'Explica {topic} con tus propias palabras.',
+        'module.goalTemplate2': 'Implementa un ejemplo funcional de {topic}.',
+        'module.goalTemplate3': 'Valida {topic} con un caso de prueba y salida esperada.',
+        'module.goalFallback1': 'Resume la idea central y cuando usarla.',
+        'module.goalFallback2': 'Programa una solucion base limpia desde cero.',
+        'module.goalFallback3': 'Compara costos de tiempo/espacio en al menos dos enfoques.',
+        'module.practiceTemplate': 'Implementa {topic} desde cero, prueba dos casos limite y luego explica complejidad y un caso real de uso.',
+        'module.practiceFallback': 'Construye una solucion pequena desde cero, prueba casos limite y explica complejidad antes de avanzar.',
+        'module.noResources': 'Aun no hay recursos listados para este modulo.',
         'module.tooltipHideComments': 'Ocultar comentarios',
         'module.tooltipShowComments': 'Mostrar comentarios',
         'module.tooltipSelectLanguage': 'Seleccionar lenguaje de programación',
@@ -19851,6 +19891,93 @@ function getOrderedModules() {
     });
 }
 
+const TRACK_TITLE_KEY_BY_CATEGORY = {
+    dsa: 'topic.dsa.title',
+    discrete: 'topic.discrete.title',
+    java: 'topic.java.title',
+    git: 'topic.git.title',
+    assembly: 'topic.assembly.title'
+};
+
+function getModuleTrackTitle(categoryKey) {
+    const normalizedCategory = String(categoryKey || '').toLowerCase();
+    const titleKey = TRACK_TITLE_KEY_BY_CATEGORY[normalizedCategory];
+    if (!titleKey) {
+        return t('topic.all.title');
+    }
+    return t(titleKey);
+}
+
+function estimateModuleStudyMinutes(module, localizedModule) {
+    const difficulty = String(module?.difficulty || 'beginner').toLowerCase();
+    const difficultyBaseMinutes = {
+        beginner: 35,
+        intermediate: 50,
+        advanced: 65
+    };
+    const base = difficultyBaseMinutes[difficulty] || difficultyBaseMinutes.beginner;
+    const topicCount = Array.isArray(localizedModule?.topics)
+        ? localizedModule.topics.filter((topic) => String(topic || '').trim()).length
+        : 0;
+    const hasCodeExampleSets = Array.isArray(localizedModule?.codeExampleSets) && localizedModule.codeExampleSets.length > 0;
+    const languageVariants = localizedModule?.codeExamples && typeof localizedModule.codeExamples === 'object'
+        ? Object.keys(localizedModule.codeExamples).length
+        : 0;
+    const resourcesCount = Array.isArray(localizedModule?.resources)
+        ? localizedModule.resources.length
+        : 0;
+    const topicContribution = Math.min(28, topicCount * 2.5);
+    const resourceContribution = Math.min(12, resourcesCount * 1.25);
+    const codeContribution = hasCodeExampleSets ? 12 : Math.min(8, languageVariants * 2);
+    const rawEstimate = base + topicContribution + resourceContribution + codeContribution;
+    const roundedEstimate = Math.round(rawEstimate / 5) * 5;
+    return Math.max(25, Math.min(150, roundedEstimate));
+}
+
+function buildModuleLearningPlan(module, localizedModule, modulesByCategory, localizedModuleMap) {
+    const categoryKey = getModuleCategoryKey(module.id);
+    const trackModules = modulesByCategory.get(categoryKey) || [module];
+    const positionIndex = trackModules.findIndex((candidate) => candidate.id === module.id);
+    const totalInTrack = Math.max(trackModules.length, 1);
+    const currentPosition = positionIndex >= 0 ? positionIndex + 1 : 1;
+    const previousModule = positionIndex > 0 ? trackModules[positionIndex - 1] : null;
+    const nextModule = positionIndex >= 0 && positionIndex < totalInTrack - 1
+        ? trackModules[positionIndex + 1]
+        : null;
+    const previousLocalized = previousModule
+        ? (localizedModuleMap.get(previousModule.id) || previousModule)
+        : null;
+    const nextLocalized = nextModule
+        ? (localizedModuleMap.get(nextModule.id) || nextModule)
+        : null;
+    const topicPool = Array.isArray(localizedModule?.topics)
+        ? localizedModule.topics
+            .map((topic) => String(topic || '').trim())
+            .filter(Boolean)
+        : [];
+    const goals = [0, 1, 2].map((index) => {
+        const topic = topicPool[index];
+        if (topic) {
+            return t(`module.goalTemplate${index + 1}`, { topic });
+        }
+        return t(`module.goalFallback${index + 1}`);
+    });
+    const practiceTopic = topicPool[0] || '';
+    return {
+        categoryKey,
+        trackTitle: getModuleTrackTitle(categoryKey),
+        estimatedMinutes: estimateModuleStudyMinutes(module, localizedModule),
+        currentPosition,
+        totalInTrack,
+        prerequisiteTitle: previousLocalized?.title || '',
+        nextModuleTitle: nextLocalized?.title || '',
+        goals,
+        practicePrompt: practiceTopic
+            ? t('module.practiceTemplate', { topic: practiceTopic })
+            : t('module.practiceFallback')
+    };
+}
+
 function updateTopicFocusButtons() {
     const active = appState.categoryFilter || 'all';
     const buttons = document.querySelectorAll('[data-topic-filter]');
@@ -20869,6 +20996,14 @@ function renderModules() {
     const grid = document.getElementById('modules-grid');
     const searchResultsCount = document.getElementById('search-results-count');
     const totalOrderedModules = getOrderedModules();
+    const modulesByCategory = new Map();
+    totalOrderedModules.forEach((orderedModule) => {
+        const categoryKey = getModuleCategoryKey(orderedModule.id);
+        if (!modulesByCategory.has(categoryKey)) {
+            modulesByCategory.set(categoryKey, []);
+        }
+        modulesByCategory.get(categoryKey).push(orderedModule);
+    });
     const accentModuleIds = new Set(['stacks-queues', 'searching-algorithms']);
     const localizedModuleMap = new Map(getLocalizedModules().map((module) => [module.id, module]));
     const modulesPerPage = getModulesPageSize();
@@ -20921,6 +21056,15 @@ function renderModules() {
             : moduleTopics.slice(0, topicsVisibleByDefault);
         const hasHiddenTopics = moduleTopics.length > topicsVisibleByDefault;
         const hiddenTopicCount = Math.max(0, moduleTopics.length - visibleTopics.length);
+        const normalizedResources = Array.isArray(localizedModule.resources)
+            ? localizedModule.resources
+                .map((resource) => normalizeModuleResource(resource))
+                .filter((resource) => resource.label)
+            : [];
+        const localizedQuiz = getLocalizedQuizData(module.id);
+        const quizQuestions = localizedQuiz?.parts?.[0]?.questions;
+        const hasQuizQuestions = Array.isArray(quizQuestions) && quizQuestions.length > 0;
+        const moduleLearningPlan = buildModuleLearningPlan(module, localizedModule, modulesByCategory, localizedModuleMap);
 
         const codeToDisplay = isDiscreteTheoryMode
             ? getDiscreteTheoryContent(localizedModule)
@@ -20986,6 +21130,47 @@ function renderModules() {
             : t('module.showAllTopics', { count: hiddenTopicCount })}
                         </button>
                     ` : ''}
+                </div>
+
+                <div class="bg-white border border-indigo-200 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4 shadow-sm">
+                    <h4 class="font-semibold mb-3 text-slate-800 text-sm">${t('module.learningPlan')}</h4>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
+                        <div class="rounded-md border border-indigo-100 bg-indigo-50 px-2.5 py-2">
+                            <p class="text-[11px] uppercase tracking-wide font-semibold text-indigo-700">${t('module.estimatedTime')}</p>
+                            <p class="text-xs sm:text-sm text-slate-800">${escapeHtml(t('module.estimatedTimeValue', { minutes: moduleLearningPlan.estimatedMinutes }))}</p>
+                        </div>
+                        <div class="rounded-md border border-indigo-100 bg-indigo-50 px-2.5 py-2">
+                            <p class="text-[11px] uppercase tracking-wide font-semibold text-indigo-700">${t('module.trackPosition')}</p>
+                            <p class="text-xs sm:text-sm text-slate-800">${escapeHtml(t('module.trackPositionValue', {
+            current: moduleLearningPlan.currentPosition,
+            total: moduleLearningPlan.totalInTrack,
+            track: moduleLearningPlan.trackTitle
+        }))}</p>
+                        </div>
+                        <div class="rounded-md border border-slate-200 bg-slate-50 px-2.5 py-2">
+                            <p class="text-[11px] uppercase tracking-wide font-semibold text-slate-600">${t('module.prerequisite')}</p>
+                            <p class="text-xs sm:text-sm text-slate-800">${escapeHtml(moduleLearningPlan.prerequisiteTitle || t('module.prerequisiteNone'))}</p>
+                        </div>
+                        <div class="rounded-md border border-slate-200 bg-slate-50 px-2.5 py-2">
+                            <p class="text-[11px] uppercase tracking-wide font-semibold text-slate-600">${t('module.nextModule')}</p>
+                            <p class="text-xs sm:text-sm text-slate-800">${escapeHtml(moduleLearningPlan.nextModuleTitle || t('module.nextModuleNone'))}</p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <p class="text-[11px] uppercase tracking-wide font-semibold text-slate-600 mb-1">${t('module.learningGoals')}</p>
+                        <ul class="space-y-1.5">
+                            ${moduleLearningPlan.goals.map((goal) => `
+                                <li class="text-xs sm:text-sm text-slate-700 leading-relaxed flex items-start gap-1.5">
+                                    <span class="text-indigo-500 mt-[1px]">\u2022</span>
+                                    <span>${escapeHtml(goal)}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                    <div class="rounded-md border border-indigo-100 bg-indigo-50 px-2.5 py-2.5">
+                        <p class="text-[11px] uppercase tracking-wide font-semibold text-indigo-700 mb-1">${t('module.practicePrompt')}</p>
+                        <p class="text-xs sm:text-sm text-slate-800 leading-relaxed">${escapeHtml(moduleLearningPlan.practicePrompt)}</p>
+                    </div>
                 </div>
 
                 <!-- Code Example -->
@@ -21158,9 +21343,7 @@ function renderModules() {
                 <div class="mb-3 sm:mb-4">
                     <h4 class="font-semibold mb-2 text-slate-800 text-sm">${t('module.learningResources')}</h4>
                     <div class="space-y-1">
-                        ${(localizedModule.resources || []).map((resource) => {
-            const normalizedResource = normalizeModuleResource(resource);
-            if (!normalizedResource.label) return '';
+                        ${normalizedResources.length ? normalizedResources.map((normalizedResource) => {
             if (normalizedResource.url) {
                 return `
                             <div class="text-xs transition-colors duration-200">
@@ -21173,17 +21356,21 @@ function renderModules() {
                                 \u2022 ${escapeHtml(normalizedResource.label)}
                             </div>
                         `;
-        }).join('')}
+        }).join('') : `
+                            <div class="text-xs text-slate-500">
+                                \u2022 ${escapeHtml(t('module.noResources'))}
+                            </div>
+                        `}
                     </div>
                 </div>
 
                 <!-- Buttons -->
                 <div class="space-y-2">
-                    <button onclick="openQuiz('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm ${getLocalizedQuizData(module.id) && getLocalizedQuizData(module.id).parts[0].questions.length > 0 ? 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white hover:-translate-y-0.5' : 'bg-gradient-to-r from-slate-400 to-slate-500 text-white cursor-not-allowed'}" ${!getLocalizedQuizData(module.id) || getLocalizedQuizData(module.id).parts[0].questions.length === 0 ? 'disabled' : ''}>
-                        ${getLocalizedQuizData(module.id) && getLocalizedQuizData(module.id).parts[0].questions.length > 0 ? translateLiteral('Take Quiz', appState.language) : translateLiteral('Quiz Coming Soon', appState.language)}
+                    <button type="button" onclick="openQuiz('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm ${hasQuizQuestions ? 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white hover:-translate-y-0.5' : 'bg-gradient-to-r from-slate-400 to-slate-500 text-white cursor-not-allowed'}" ${hasQuizQuestions ? '' : 'disabled aria-disabled=\"true\"'}>
+                        ${hasQuizQuestions ? translateLiteral('Take Quiz', appState.language) : translateLiteral('Quiz Coming Soon', appState.language)}
                     </button>
                     
-                    <button onclick="toggleCompletion('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm ${isCompleted ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white hover:-translate-y-0.5' : 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white hover:-translate-y-0.5'}">
+                    <button type="button" onclick="toggleCompletion('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm ${isCompleted ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white hover:-translate-y-0.5' : 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white hover:-translate-y-0.5'}">
                         ${isCompleted ? translateLiteral('\u2705 Completed!', appState.language) : translateLiteral('\u{1F3AF} Mark as Complete', appState.language)}
                     </button>
                 </div>
