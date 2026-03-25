@@ -347,3 +347,7 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Improved quiz-view formatting for long content by adding reliable wrapping classes to interactive quiz review text.
 - Hardened quiz runtime guards with safer question/options parsing and score calculation fallbacks to prevent edge-case rendering breaks.
 - Added defensive checks in `renderQuiz()` so missing modal content nodes fail gracefully instead of throwing runtime errors.
+- Added a CSS readability consistency pass:
+  - improved long-text wrapping across panels/cards
+  - standardized quiz/result line-height for cleaner paragraph spacing
+  - narrowed `.quiz-option` transition scope to relevant properties for smoother, more consistent rendering

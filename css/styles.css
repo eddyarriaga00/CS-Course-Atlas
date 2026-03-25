@@ -3238,11 +3238,27 @@ input:focus, select:focus {
 }
 
 .quiz-option {
-    transition: all 0.2s ease;
+    transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .quiz-option:hover {
     transform: translateX(4px);
+}
+
+/* Formatting consistency pass for long text content and quiz/result readability. */
+#main-content :where(.panel-surface, .content-backdrop, .module-card, .insight-card, .insight-highlight-card) :where(p, li, h3, h4, h5, span, a, button, label) {
+    overflow-wrap: anywhere;
+}
+
+#quiz-content :where(p, li, h4, span),
+#interactive-quiz-body :where(p, li, h4, span) {
+    line-height: 1.55;
+}
+
+#quiz-content .break-words,
+#interactive-quiz-body .break-words {
+    overflow-wrap: anywhere;
+    word-break: break-word;
 }
 
 .badge {
