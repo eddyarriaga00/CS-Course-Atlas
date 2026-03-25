@@ -5,6 +5,7 @@ const ROOT = process.cwd();
 const SITE_URL = 'https://eddyarriaga00.github.io/CS-Course-Atlas';
 const SOURCE_JS = path.join(ROOT, 'js', 'script.js');
 const MODULES_DIR = path.join(ROOT, 'modules');
+const GOOGLE_SITE_VERIFICATION_TOKEN = String(process.env.GOOGLE_SITE_VERIFICATION_TOKEN || '').trim();
 
 const CATEGORY_ROUTE_MAP = {
     dsa: '/dsa',
@@ -392,6 +393,9 @@ function headTemplate({ title, description, canonicalPath, assetPrefix = '' }) {
     const canonical = toAbsolute(canonicalPath);
     const safeTitle = escapeHtml(title);
     const safeDescription = escapeHtml(truncateDescription(description));
+    const verificationMetaTag = GOOGLE_SITE_VERIFICATION_TOKEN
+        ? `\n        <meta name="google-site-verification" content="${escapeHtml(GOOGLE_SITE_VERIFICATION_TOKEN)}">`
+        : '';
     return `
     <head>
         <meta charset="UTF-8">
@@ -399,7 +403,7 @@ function headTemplate({ title, description, canonicalPath, assetPrefix = '' }) {
         <title>${safeTitle}</title>
         <meta name="description" content="${safeDescription}">
         <meta name="robots" content="index,follow,max-image-preview:large">
-        <meta name="google-site-verification" content="REPLACE_WITH_GOOGLE_SEARCH_CONSOLE_TOKEN">
+        ${verificationMetaTag}
         <link rel="canonical" href="${canonical}">
         <meta property="og:type" content="website">
         <meta property="og:site_name" content="CS Course Atlas">

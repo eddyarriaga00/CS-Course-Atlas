@@ -105,11 +105,13 @@ CS Course Atlas helps learners study through structured modules, code examples, 
 - Main site: [https://eddyarriaga00.github.io/CS-Course-Atlas/](https://eddyarriaga00.github.io/CS-Course-Atlas/)
 
 ## Launch SEO Checklist
-- Run `npm run build:seo` to refresh crawlable landing pages and sitemap.
+- Set `GOOGLE_SITE_VERIFICATION_TOKEN` (optional) before building SEO pages:
+  - PowerShell: `$env:GOOGLE_SITE_VERIFICATION_TOKEN='your-token'; npm run build:seo`
+  - If omitted, verification meta tags are not emitted.
 - Confirm `sitemap.xml` is reachable on production.
 - In Google Search Console:
   - Add property for `https://eddyarriaga00.github.io/CS-Course-Atlas/`
-  - Replace the `google-site-verification` meta token in page `<head>` tags
+  - Verify meta tag exists on the deployed page after build (if token is set)
   - Submit sitemap URL: `https://eddyarriaga00.github.io/CS-Course-Atlas/sitemap.xml`
 - Verify mobile page rendering for `home.html`, `tracks.html`, and `modules/index.html`.
 
