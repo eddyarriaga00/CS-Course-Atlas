@@ -4,6 +4,14 @@ All notable changes to **CS Course Atlas** are documented in this file.
 
 ## 2026-03-25
 
+### Module Code Translation + Playground UX
+- Updated module code comment toggle label to `Comment (Emoji) 💬` (with Spanish equivalent `Comentario (Emoji) 💬`) for clearer emoji affordance.
+- Improved Spanish translation coverage for code string literals by adding targeted fallback phrase translation in module code examples.
+- Removed scaffold/layout-style preambles from generated module code examples and replaced them with direct, runnable teaching samples.
+- Added scaffold-snippet detection so legacy verbose layouts are regenerated into cleaner examples across module/example-set normalization.
+- Prioritized canonical module code sources over localized wrapper variants to keep displayed examples consistent and runnable.
+- Hardened playground run control setup by ensuring localized `Run Code ▶`/`Run DS Code ▶` labels are always applied and a fallback run button is injected if missing in the code playground DOM.
+
 ### Launch Placeholder Cleanup
 - Removed hardcoded Search Console placeholder meta tag from `index.html` so placeholder text no longer ships in the public app shell.
 - Updated SEO page generator to emit `google-site-verification` only when `GOOGLE_SITE_VERIFICATION_TOKEN` is provided.

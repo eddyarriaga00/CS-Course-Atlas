@@ -1182,6 +1182,7 @@ const TRANSLATIONS = {
         'module.tooltipShowComments': 'Show Comments',
         'module.tooltipSelectLanguage': 'Select Programming Language',
         'module.tooltipSelectMode': 'Select Code Display Mode',
+        'module.commentToggleLabel': 'Comment (Emoji)',
         'module.modeCode': 'Code',
         'module.modePseudocode': 'Pseudocode',
         'module.commentsOn': 'ON',
@@ -1704,6 +1705,7 @@ const TRANSLATIONS = {
         'module.tooltipShowComments': 'Mostrar comentarios',
         'module.tooltipSelectLanguage': 'Seleccionar lenguaje de programación',
         'module.tooltipSelectMode': 'Seleccionar modo de código',
+        'module.commentToggleLabel': 'Comentario (Emoji)',
         'module.modeCode': 'Código',
         'module.modePseudocode': 'Pseudocódigo',
         'module.commentsOn': 'ACT',
@@ -7967,13 +7969,47 @@ function isLikelyJavaSnippet(source) {
         || /\bimport\s+java\./.test(code);
 }
 
+const CODE_LAYOUT_SCAFFOLD_MARKERS = [
+    'Comprehensive guided sample',
+    'Coverage goals:',
+    'Reading strategy:',
+    'Running module:',
+    'Topic checklist:',
+    'Parity checkpoints from Java sample',
+    'mirror of the updated Java module sample',
+    'Module context first so the learner sees where this snippet fits',
+    'Topic sample completed:'
+];
+
+function isLayoutScaffoldSnippet(source = '') {
+    const text = String(source || '');
+    if (!text.trim()) return false;
+    return CODE_LAYOUT_SCAFFOLD_MARKERS.some((marker) => text.includes(marker));
+}
+
 function buildFallbackJavaSnippet(module) {
     const className = toModuleClassName(module?.id);
-    const title = escapeForJavaString(module?.title || 'Module');
-    const description = escapeForJavaString(module?.description || '');
-    const topics = Array.isArray(module?.topics) ? module.topics : [];
-    const topicPrintLines = topics.map((topic) => `        System.out.println("- ${escapeForJavaString(topic)}");`).join('\n');
-    return `import java.util.*;\n\npublic class ${className} {\n    public static void main(String[] args) {\n        // High-level module walkthrough marker\n        System.out.println("Running module: ${title}");\n        System.out.println("${description}");\n        System.out.println("Topic checklist:");\n${topicPrintLines || '        System.out.println("- No topics listed.");'}\n        System.out.println("Sample completed.");\n    }\n}`;
+    const focusTopic = escapeForJavaString(
+        Array.isArray(module?.topics) && module.topics.length
+            ? module.topics[0]
+            : 'Core Concept'
+    );
+    const seed = Math.max(2, String(module?.id || '').length % 9 + 2);
+    return `public class ${className} {
+    static int solve(int seed) {
+        int runningTotal = 0;
+        for (int step = 1; step <= 4; step++) {
+            runningTotal += seed * step;
+        }
+        return runningTotal;
+    }
+
+    public static void main(String[] args) {
+        int result = solve(${seed});
+        System.out.println("Focus topic: ${focusTopic}");
+        System.out.println("Computed result: " + result);
+    }
+}`;
 }
 
 function buildGitJavaSnippet() {
@@ -7981,19 +8017,7 @@ function buildGitJavaSnippet() {
 }
 
 function addComprehensiveHeaderComments(module, javaCode) {
-    const topics = Array.isArray(module?.topics) ? module.topics : [];
-    const header = [
-        '/*',
-        ` * ${module?.title || 'Module'} - Comprehensive guided sample`,
-        ' * Coverage goals:',
-        ...topics.map((topic, index) => ` * ${index + 1}) ${topic}`),
-        ' * Reading strategy:',
-        ' * - Follow inline comments from top to bottom.',
-        ' * - Run once, then edit one concept at a time and rerun.',
-        ' * - Verify output after each logical step.',
-        ' */'
-    ].join('\n');
-    return `${header}\n${String(javaCode || '').trim()}`;
+    return String(javaCode || '').trim();
 }
 
 function ensureJavaSnippetHasVisibleOutput(module, javaCode) {
@@ -8043,27 +8067,81 @@ function hasVisibleOutputForLanguage(language, source) {
 }
 
 function buildCppMirrorSnippet(module, javaSource) {
-    const title = escapeForQuotedString(module?.title || 'Module');
-    const description = escapeForQuotedString(module?.description || '');
-    const topics = (module?.topics || []).slice(0, 6).map((topic) => escapeForQuotedString(topic));
+    const topics = (module?.topics || []).slice(0, 4).map((topic) => escapeForQuotedString(topic));
     const signals = extractJavaSignalLines(javaSource).map((line) => escapeForQuotedString(line));
-    return `#include <iostream>\n#include <vector>\n#include <string>\nusing namespace std;\n\nint main() {\n    // C++ mirror of the updated Java module sample.\n    string moduleTitle = "${title}";\n    string moduleDescription = "${description}";\n    vector<string> topics = {${topics.map((t) => `"${t}"`).join(', ') || '"No topics listed"'}};\n    vector<string> javaSignals = {${signals.map((s) => `"${s}"`).join(', ') || '"Java sample executed"'}};\n\n    // 1) High-level module context\n    cout << "Running module: " << moduleTitle << "\\n";\n    cout << moduleDescription << "\\n";\n\n    // 2) Topic checklist to ensure full conceptual coverage\n    cout << "Topic checklist:\\n";\n    for (size_t i = 0; i < topics.size(); i++) {\n        cout << "- " << topics[i] << "\\n";\n    }\n\n    // 3) Java parity markers (mirrors important Java output checkpoints)\n    cout << "Parity checkpoints from Java sample:\\n";\n    for (const auto& line : javaSignals) {\n        cout << "* " << line << "\\n";\n    }\n\n    cout << "C++ parity sample completed.\\n";\n    return 0;\n}`;
+    return `#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+int computeRunningTotal(const vector<int>& values) {
+    int total = 0;
+    for (int value : values) {
+        total += value;
+    }
+    return total;
+}
+
+int main() {
+    vector<int> sample = {3, 6, 9, 12};
+    vector<string> focusTopics = {${topics.map((t) => `"${t}"`).join(', ') || '"Core Concept"'}};
+    vector<string> checkpoints = {${signals.map((s) => `"${s}"`).join(', ') || '"Execution complete."'}};
+
+    cout << "Running total: " << computeRunningTotal(sample) << "\\n";
+    for (const auto& topic : focusTopics) {
+        cout << "Topic: " << topic << "\\n";
+    }
+    for (const auto& line : checkpoints) {
+        cout << line << "\\n";
+    }
+    return 0;
+}`;
 }
 
 function buildPythonMirrorSnippet(module, javaSource) {
-    const title = String(module?.title || 'Module');
-    const description = String(module?.description || '');
-    const topics = (module?.topics || []).slice(0, 6);
+    const topics = (module?.topics || []).slice(0, 4);
     const signals = extractJavaSignalLines(javaSource);
-    return `# Python mirror of the updated Java module sample.\n# This script keeps the same conceptual checkpoints and prints them clearly.\n\ndef run_module_demo():\n    module_title = "${escapeForQuotedString(title)}"\n    module_description = "${escapeForQuotedString(description)}"\n    topics = [${topics.map((t) => `"${escapeForQuotedString(t)}"`).join(', ') || '"No topics listed"'}]\n    java_signals = [${signals.map((s) => `"${escapeForQuotedString(s)}"`).join(', ') || '"Java sample executed"'}]\n\n    # 1) High-level module context\n    print(f"Running module: {module_title}")\n    print(module_description)\n\n    # 2) Topic checklist for complete coverage\n    print("Topic checklist:")\n    for topic in topics:\n        print(f"- {topic}")\n\n    # 3) Java parity markers to confirm aligned intent\n    print("Parity checkpoints from Java sample:")\n    for line in java_signals:\n        print(f"* {line}")\n\n    print("Python parity sample completed.")\n\nif __name__ == \"__main__\":\n    run_module_demo()\n`;
+    return `def compute_running_total(values):
+    total = 0
+    for value in values:
+        total += value
+    return total
+
+
+def run_module_demo():
+    sample = [3, 6, 9, 12]
+    topics = [${topics.map((t) => `"${escapeForQuotedString(t)}"`).join(', ') || '"Core Concept"'}]
+    checkpoints = [${signals.map((s) => `"${escapeForQuotedString(s)}"`).join(', ') || '"Execution complete."'}]
+
+    print(f"Running total: {compute_running_total(sample)}")
+    for topic in topics:
+        print(f"Topic: {topic}")
+    for line in checkpoints:
+        print(line)
+
+
+if __name__ == "__main__":
+    run_module_demo()
+`;
 }
 
 function buildJavascriptMirrorSnippet(module, javaSource) {
-    const title = escapeForQuotedString(module?.title || 'Module');
-    const description = escapeForQuotedString(module?.description || '');
-    const topics = (module?.topics || []).slice(0, 6).map((topic) => escapeForQuotedString(topic));
+    const topics = (module?.topics || []).slice(0, 4).map((topic) => escapeForQuotedString(topic));
     const signals = extractJavaSignalLines(javaSource).map((line) => escapeForQuotedString(line));
-    return `// JavaScript mirror of the updated Java module sample.\n// This preserves the same instructional checkpoints and visible output.\n(function runModuleDemo() {\n    const moduleTitle = "${title}";\n    const moduleDescription = "${description}";\n    const topics = [${topics.map((t) => `"${t}"`).join(', ') || '"No topics listed"'}];\n    const javaSignals = [${signals.map((s) => `"${s}"`).join(', ') || '"Java sample executed"'}];\n\n    // 1) High-level module context\n    console.log("Running module: " + moduleTitle);\n    console.log(moduleDescription);\n\n    // 2) Topic checklist for complete conceptual coverage\n    console.log("Topic checklist:");\n    topics.forEach((topic) => console.log("- " + topic));\n\n    // 3) Java parity markers to align with the canonical Java sample\n    console.log("Parity checkpoints from Java sample:");\n    javaSignals.forEach((line) => console.log("* " + line));\n\n    console.log("JavaScript parity sample completed.");\n})();\n`;
+    return `(function runModuleDemo() {
+    function computeRunningTotal(values) {
+        return values.reduce((sum, value) => sum + value, 0);
+    }
+
+    const sample = [3, 6, 9, 12];
+    const topics = [${topics.map((t) => `"${t}"`).join(', ') || '"Core Concept"'}];
+    const checkpoints = [${signals.map((s) => `"${s}"`).join(', ') || '"Execution complete."'}];
+
+    console.log("Running total: " + computeRunningTotal(sample));
+    topics.forEach((topic) => console.log("Topic: " + topic));
+    checkpoints.forEach((line) => console.log(line));
+})();
+`;
 }
 
 function buildMirrorSnippetByLanguage(module, javaSource, language) {
@@ -8213,14 +8291,27 @@ function buildTopicFocusedJavaSnippet(module, topic, topicIndex, totalTopics) {
         return buildGitTopicJavaSnippet(module, topic, topicIndex, totalTopics);
     }
     const className = `${toModuleClassName(module?.id)}Topic${topicIndex + 1}Set`;
-    const moduleTitle = escapeForJavaString(module?.title || 'Module');
-    const moduleDescription = escapeForJavaString(module?.description || '');
     const focusTopic = escapeForJavaString(topic || `Topic ${topicIndex + 1}`);
-    const topics = Array.isArray(module?.topics) ? module.topics : [];
-    const topicLines = topics.map((item, idx) => `        System.out.println("${idx + 1}. ${escapeForJavaString(item)}");`).join('\n');
     const complexitySeed = Math.max(1, (topicIndex + 1) * 3);
 
-    return `import java.util.*;\n\npublic class ${className} {\n    // Deterministic helper so learners can verify output after each edit.\n    static int guidedComputation(int seed) {\n        int total = 0;\n        for (int step = 1; step <= 5; step++) {\n            total += seed * step;\n            System.out.println("Step " + step + " -> running total: " + total);\n        }\n        return total;\n    }\n\n    static void printTopicChecklist(List<String> topics) {\n        System.out.println("Topic checklist:");\n        for (int i = 0; i < topics.size(); i++) {\n            System.out.println((i + 1) + ". " + topics.get(i));\n        }\n    }\n\n    public static void main(String[] args) {\n        // Module context first so the learner sees where this snippet fits.\n        String moduleTitle = "${moduleTitle}";\n        String moduleDescription = "${moduleDescription}";\n        String focusTopic = "${focusTopic}";\n        List<String> topics = Arrays.asList(${topics.map((item) => `"${escapeForJavaString(item)}"`).join(', ') || `"${focusTopic}"`});\n\n        System.out.println("Module: " + moduleTitle);\n        System.out.println("Focus topic (${topicIndex + 1}/${totalTopics}): " + focusTopic);\n        System.out.println(moduleDescription);\n\n        // Print all module topics so this split example stays connected to the full module.\n${topicLines || '        System.out.println("1. No topics listed.");'}\n\n        // Guided computation with explicit checkpoints and visible output.\n        int baseline = ${complexitySeed};\n        System.out.println("Baseline value: " + baseline);\n        int result = guidedComputation(baseline);\n        System.out.println("Final computed result: " + result);\n\n        // Reflection prompts are printed so output is always meaningful.\n        System.out.println("Reflection: explain how " + focusTopic + " influences implementation choices.");\n        System.out.println("Practice: modify baseline, rerun, and compare output transitions.");\n\n        // Summary line makes expected output deterministic for fallbacks.\n        System.out.println("Topic sample completed: " + focusTopic);\n    }\n}`;
+    return `public class ${className} {
+    static int applyTopicComputation(int seed) {
+        int total = 0;
+        for (int step = 1; step <= 5; step++) {
+            total += seed * step;
+        }
+        return total;
+    }
+
+    public static void main(String[] args) {
+        String focusTopic = "${focusTopic}";
+        int baseline = ${complexitySeed};
+        int result = applyTopicComputation(baseline);
+        System.out.println("Focus topic (${topicIndex + 1}/${totalTopics}): " + focusTopic);
+        System.out.println("Baseline value: " + baseline);
+        System.out.println("Computed result: " + result);
+    }
+}`;
 }
 
 function buildTopicFocusedAssemblySnippet(module, topic, topicIndex, totalTopics) {
@@ -10790,15 +10881,19 @@ function normalizeModuleCodeExampleSets(module) {
         const sourceExpectedOutputs = exampleSet.expectedOutputs && typeof exampleSet.expectedOutputs === 'object'
             ? { ...exampleSet.expectedOutputs }
             : {};
-        const javaSource = typeof sourceCodeExamples.java === 'string' && sourceCodeExamples.java.trim()
+        let javaSource = typeof sourceCodeExamples.java === 'string' && sourceCodeExamples.java.trim()
             ? sourceCodeExamples.java
             : buildFallbackJavaSnippet({ ...module, title: `${module.title} \u2022 ${setTitleText}` });
+        if (isLayoutScaffoldSnippet(javaSource)) {
+            javaSource = buildTopicFocusedJavaSnippet(module, setTitleText, index, sourceSets.length);
+        }
 
         const enhancedJava = ensureJavaSnippetHasVisibleOutput(module, addComprehensiveHeaderComments(module, javaSource));
         const normalizedCodeExamples = { java: enhancedJava };
         ['cpp', 'python', 'javascript'].forEach((language) => {
             const existing = typeof sourceCodeExamples[language] === 'string' ? sourceCodeExamples[language].trim() : '';
-            normalizedCodeExamples[language] = hasVisibleOutputForLanguage(language, existing)
+            const canReuseExisting = hasVisibleOutputForLanguage(language, existing) && !isLayoutScaffoldSnippet(existing);
+            normalizedCodeExamples[language] = canReuseExisting
                 ? existing
                 : buildMirrorSnippetByLanguage({ ...module, title: `${module.title} \u2022 ${setTitleText}` }, enhancedJava, language);
         });
@@ -10847,12 +10942,18 @@ function normalizeModuleCatalog(moduleList) {
         } else {
             javaSource = buildFallbackJavaSnippet(module);
         }
+        if (module.id !== 'git-basics-workflow' && isLayoutScaffoldSnippet(javaSource)) {
+            javaSource = typeof module.codeExample === 'string' && isLikelyJavaSnippet(module.codeExample)
+                ? module.codeExample
+                : buildFallbackJavaSnippet(module);
+        }
 
         const enhancedJava = ensureJavaSnippetHasVisibleOutput(module, addComprehensiveHeaderComments(module, javaSource));
         const normalizedCodeExamples = { java: enhancedJava };
         ['cpp', 'python', 'javascript'].forEach((language) => {
             const existing = typeof existingCodeExamples[language] === 'string' ? existingCodeExamples[language].trim() : '';
-            const resolved = hasVisibleOutputForLanguage(language, existing)
+            const canReuseExisting = hasVisibleOutputForLanguage(language, existing) && !isLayoutScaffoldSnippet(existing);
+            const resolved = canReuseExisting
                 ? existing
                 : buildMirrorSnippetByLanguage(module, enhancedJava, language);
             normalizedCodeExamples[language] = resolved;
@@ -11283,6 +11384,21 @@ const CODE_COMMENT_FALLBACK_PHRASES_ES = [
     ['Coverage goals:', 'Objetivos de cobertura:']
 ];
 
+const CODE_LITERAL_FALLBACK_PHRASES_ES = [
+    ['Focus topic', 'Tema clave'],
+    ['Computed result', 'Resultado calculado'],
+    ['Running total', 'Total acumulado'],
+    ['Execution complete.', 'Ejecucion completa.'],
+    ['Execution complete', 'Ejecucion completa'],
+    ['Topic:', 'Tema:'],
+    ['Baseline value', 'Valor base'],
+    ['Result', 'Resultado'],
+    ['Topic checklist:', 'Lista de temas:'],
+    ['Parity checkpoints from Java sample:', 'Puntos de paridad del ejemplo de Java:'],
+    ['Sample completed.', 'Muestra completada.'],
+    ['Output', 'Salida']
+];
+
 function translateCodeCommentBody(commentBody, targetLanguage = appState.language) {
     if (targetLanguage !== 'es') return commentBody;
     const original = String(commentBody ?? '');
@@ -11302,6 +11418,24 @@ function translateCodeCommentBody(commentBody, targetLanguage = appState.languag
 
     if (translated === trimmed) return original;
     return original.replace(trimmed, translated);
+}
+
+function translateCodeLiteralBody(literalBody, targetLanguage = appState.language) {
+    if (targetLanguage !== 'es') return literalBody;
+    const source = String(literalBody ?? '');
+    const trimmed = source.trim();
+    if (!trimmed) return source;
+    const direct = translateLiteral(trimmed, 'es');
+    if (direct !== trimmed) {
+        return source.replace(trimmed, direct);
+    }
+    let translated = trimmed;
+    CODE_LITERAL_FALLBACK_PHRASES_ES.forEach(([sourcePhrase, targetPhrase]) => {
+        const pattern = new RegExp(escapeRegExp(sourcePhrase), 'gi');
+        translated = translated.replace(pattern, targetPhrase);
+    });
+    if (translated === trimmed) return source;
+    return source.replace(trimmed, translated);
 }
 
 function translateBlockComment(blockComment, targetLanguage = appState.language) {
@@ -11364,7 +11498,7 @@ function translateCodeHumanText(code, targetLanguage = appState.language) {
             if (!source || /^https?:\/\//i.test(source)) return match;
             if (!/[A-Za-z]/.test(source)) return match;
             if (!/\s/.test(source) && source.length <= 2) return match;
-            const translated = translateLiteral(source, 'es');
+            const translated = translateCodeLiteralBody(source, targetLanguage).trim();
             if (!translated || translated === source) return match;
             const quote = match[0];
             return `${quote}${translated}${quote}`;
@@ -17335,6 +17469,7 @@ function initDSPlayground() {
         undoBtn.addEventListener('click', undoDSAction);
     }
     if (runBtn) {
+        runBtn.textContent = `${translateLiteral('Run DS Code', appState.language)} \u25B6`;
         runBtn.addEventListener('click', runDSExampleInSection);
     }
 
@@ -17615,7 +17750,7 @@ function initPlayground() {
     const languageSelect = document.getElementById('playground-language');
     const snippetSelect = document.getElementById('playground-snippets');
     const editor = document.getElementById('playground-editor');
-    const runButton = document.getElementById('playground-run');
+    let runButton = document.getElementById('playground-run');
     const resetButton = document.getElementById('playground-reset');
     const clearOutputButton = document.getElementById('playground-clear-output');
     const copyButton = document.getElementById('playground-copy');
@@ -17624,6 +17759,21 @@ function initPlayground() {
     const status = document.getElementById('playground-status');
 
     if (!languageSelect || !snippetSelect || !editor || !output) return;
+
+    if (!runButton && resetButton?.parentElement) {
+        const fallbackRunButton = document.createElement('button');
+        fallbackRunButton.id = 'playground-run';
+        fallbackRunButton.type = 'button';
+        fallbackRunButton.className = 'purple-glow-button px-4 py-2 w-full sm:w-auto text-sm font-semibold flex items-center justify-center gap-1 bg-indigo-600 text-white';
+        fallbackRunButton.textContent = `${translateLiteral('Run Code', appState.language)} \u25B6`;
+        resetButton.parentElement.insertBefore(fallbackRunButton, resetButton);
+        runButton = fallbackRunButton;
+    }
+
+    if (runButton) {
+        runButton.textContent = `${translateLiteral('Run Code', appState.language)} \u25B6`;
+        runButton.setAttribute('aria-label', translateLiteral('Run Code', appState.language));
+    }
 
     const availableLanguages = PLAYGROUND_RUNNABLE_LANGUAGES
         .map((key) => ({ key, label: `${SUPPORTED_LANGUAGES[key].icon} ${SUPPORTED_LANGUAGES[key].name}` }));
@@ -17671,7 +17821,7 @@ function initPlayground() {
         output.classList.remove('success', 'error', 'fallback');
         output.classList.add(tone);
         if (outputMeta) {
-            const suffix = languageLabel ? ` ? ${languageLabel}` : '';
+            const suffix = languageLabel ? ` \u2022 ${languageLabel}` : '';
             outputMeta.textContent = `Source: ${source}${suffix}`;
         }
     };
@@ -18533,6 +18683,10 @@ function updateDSView(statusMessage) {
     if (statusEl) {
         statusEl.textContent = statusMessage || `${translateLiteral(config.label, appState.language)} ${translateLiteral('ready.', appState.language)}`;
     }
+    const runBtn = document.getElementById('ds-run-example');
+    if (runBtn) {
+        runBtn.textContent = `${translateLiteral('Run DS Code', appState.language)} \u25B6`;
+    }
     renderDSLibraryVisuals();
     renderDSCodeAndExplanation();
     renderDSRunOutput();
@@ -19221,14 +19375,23 @@ function getActiveModuleExampleSet(moduleId, localizedModule = null) {
 function getCodeExamplesForModuleContext(moduleId, localizedModule = null) {
     const module = getModuleById(moduleId);
     if (!module) return {};
-    const selectedSet = getActiveModuleExampleSet(moduleId, localizedModule);
-    if (selectedSet?.codeExamples && typeof selectedSet.codeExamples === 'object') {
-        return selectedSet.codeExamples;
+    const selectedExampleId = getActiveModuleExampleId(moduleId, localizedModule);
+    const moduleSets = Array.isArray(module.codeExampleSets) ? module.codeExampleSets : [];
+    const moduleSelectedSet = moduleSets.find((set) => set.id === selectedExampleId);
+    if (moduleSelectedSet?.codeExamples && typeof moduleSelectedSet.codeExamples === 'object') {
+        return moduleSelectedSet.codeExamples;
+    }
+    const localizedSelectedSet = getActiveModuleExampleSet(moduleId, localizedModule);
+    if (localizedSelectedSet?.codeExamples && typeof localizedSelectedSet.codeExamples === 'object') {
+        return localizedSelectedSet.codeExamples;
+    }
+    if (module.codeExamples && typeof module.codeExamples === 'object') {
+        return module.codeExamples;
     }
     if (localizedModule?.codeExamples && typeof localizedModule.codeExamples === 'object') {
         return localizedModule.codeExamples;
     }
-    return module.codeExamples || {};
+    return {};
 }
 
 function getExpectedOutputsForModuleContext(moduleId, localizedModule = null) {
@@ -19412,10 +19575,10 @@ function getCanonicalModuleCode(moduleId, preferredLanguage, preferredExampleId 
     const localizedSelectedSet = localizedSets.find((set) => set.id === selectedExampleId);
     const moduleSelectedSet = moduleSets.find((set) => set.id === selectedExampleId);
 
-    if (localizedSelectedSet?.codeExamples) exampleSources.push(localizedSelectedSet.codeExamples);
     if (moduleSelectedSet?.codeExamples) exampleSources.push(moduleSelectedSet.codeExamples);
-    if (localizedModule?.codeExamples) exampleSources.push(localizedModule.codeExamples);
+    if (localizedSelectedSet?.codeExamples) exampleSources.push(localizedSelectedSet.codeExamples);
     if (module?.codeExamples) exampleSources.push(module.codeExamples);
+    if (localizedModule?.codeExamples) exampleSources.push(localizedModule.codeExamples);
 
     for (const sourceCodeExamples of exampleSources) {
         if (sourceCodeExamples?.[requested]) {
@@ -21199,7 +21362,7 @@ function renderModules() {
                         <div class="flex flex-wrap gap-1 w-full sm:w-auto">
                             <!-- Comments Toggle -->
                             <button onclick="toggleModuleComments('${module.id}')" class="text-xs px-2 py-1 rounded transition-all duration-200 font-medium shadow-sm hover:shadow-md flex-shrink-0 ${shouldShowComments(module.id) ? 'bg-green-500 hover:bg-green-600 text-white' : 'bg-gray-500 hover:bg-gray-600 text-white'}" title="${shouldShowComments(module.id) ? t('module.tooltipHideComments') : t('module.tooltipShowComments')}">
-                                \u{1F4AC} ${shouldShowComments(module.id) ? t('module.commentsOn') : t('module.commentsOff')}
+                                ${t('module.commentToggleLabel')} \u{1F4AC} ${shouldShowComments(module.id) ? t('module.commentsOn') : t('module.commentsOff')}
                             </button>
 
                             <!-- Language Selector -->
