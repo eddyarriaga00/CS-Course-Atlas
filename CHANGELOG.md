@@ -342,3 +342,8 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Hardened both quiz renderers (standard quiz + interactive quiz library) by escaping question text, options, selected answers, correct answers, and explanations before injecting into HTML.
 - Added safer fallback handling for missing/undefined quiz options and unselected-answer states so result views remain stable instead of rendering `undefined`.
 - Preserved existing scoring/submission behavior while improving runtime resilience and injection safety.
+
+### Formatting Consistency Refinements
+- Improved quiz-view formatting for long content by adding reliable wrapping classes to interactive quiz review text.
+- Hardened quiz runtime guards with safer question/options parsing and score calculation fallbacks to prevent edge-case rendering breaks.
+- Added defensive checks in `renderQuiz()` so missing modal content nodes fail gracefully instead of throwing runtime errors.

@@ -21951,13 +21951,14 @@ function populateFlashcardModuleSelect() {
 // Quiz Functions
 function openQuiz(moduleId) {
     const quiz = getLocalizedQuizData(moduleId);
-    if (!quiz || !quiz.parts[0].questions.length) return;
+    const questions = Array.isArray(quiz?.parts?.[0]?.questions) ? quiz.parts[0].questions : [];
+    if (!questions.length) return;
 
     appState.currentQuiz = {
         moduleId,
-        questions: quiz.parts[0].questions,
+        questions,
         currentQuestion: 0,
-        answers: new Array(quiz.parts[0].questions.length).fill(null),
+        answers: new Array(questions.length).fill(null),
         showResults: false,
         score: 0
     };
@@ -21978,6 +21979,7 @@ function renderQuiz() {
     const localizedModule = getLocalizedModule(module);
     const title = document.getElementById('quiz-title');
     const content = document.getElementById('quiz-content');
+    if (!title || !content) return;
 
     title.textContent = `${UI_ICONS.brain} ${translateLiteral(`Quiz: ${localizedModule?.title || 'Quiz'}`, appState.language)}`;
 
@@ -22053,20 +22055,21 @@ function renderQuiz() {
                 </div>
 
                 <div class="space-y-4 mb-8">
-                    ${appState.currentQuiz.questions.map((question, index) => {
+                    ${appState.currentQuiz.questions.map((rawQuestion, index) => {
+            const question = rawQuestion && typeof rawQuestion === 'object' ? rawQuestion : {};
             const answerIndex = appState.currentQuiz.answers[index];
-            const options = Array.isArray(question?.options) ? question.options : [];
+            const options = Array.isArray(question.options) ? question.options : [];
             const selectedText = (answerIndex === null || answerIndex === undefined)
                 ? translateLiteral('No answer selected', appState.language)
                 : options[answerIndex];
-            const correctText = options[question?.correct];
-            const safeQuestion = escapeHtml(String(question?.question || ''));
+            const correctText = options[question.correct];
+            const safeQuestion = escapeHtml(String(question.question || ''));
             const safeSelected = escapeHtml(String(selectedText ?? ''));
             const safeCorrect = escapeHtml(String(correctText ?? ''));
-            const safeExplanation = escapeHtml(String(question?.explanation || ''));
-            const isCorrect = answerIndex === question?.correct;
+            const safeExplanation = escapeHtml(String(question.explanation || ''));
+            const isCorrect = answerIndex === question.correct;
             return `
-                        <div class="text-left p-4 rounded-xl border ${appState.currentQuiz.answers[index] === question.correct ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'}">
+                        <div class="text-left p-4 rounded-xl border ${isCorrect ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'}">
                             <div class="flex items-start gap-3">
                                 <span class="text-xl">
                                     ${isCorrect ? UI_ICONS.correct : UI_ICONS.incorrect}
@@ -22122,7 +22125,9 @@ function nextQuestion() {
         if (!allAnswered) return;
 
         const score = appState.currentQuiz.answers.reduce((acc, answer, index) => {
-            return acc + (answer === appState.currentQuiz.questions[index].correct ? 1 : 0);
+            const question = appState.currentQuiz.questions[index];
+            const correct = question && typeof question === 'object' ? question.correct : undefined;
+            return acc + (answer === correct ? 1 : 0);
         }, 0);
 
         appState.currentQuiz.showResults = true;
@@ -24016,9 +24021,9 @@ function renderInteractiveQuizQuestion() {
             const safeCorrect = escapeHtml(String(correctText ?? ''));
             return `
                             <div class="p-3 rounded-lg border ${isCorrect ? 'border-emerald-200 bg-emerald-50' : 'border-rose-200 bg-rose-50'}">
-                                <p class="text-sm font-semibold text-slate-800">${safeQuestion}</p>
-                                <p class="text-xs text-slate-700 mt-1">${translateLiteral('Your answer:', appState.language)} ${safeSelected}</p>
-                                ${isCorrect ? '' : `<p class="text-xs text-slate-700">${translateLiteral('Correct answer:', appState.language)} ${safeCorrect}</p>`}
+                                <p class="text-sm font-semibold text-slate-800 break-words">${safeQuestion}</p>
+                                <p class="text-xs text-slate-700 mt-1 break-words">${translateLiteral('Your answer:', appState.language)} ${safeSelected}</p>
+                                ${isCorrect ? '' : `<p class="text-xs text-slate-700 break-words">${translateLiteral('Correct answer:', appState.language)} ${safeCorrect}</p>`}
                             </div>
                         `;
         }).join('')}
@@ -24134,9 +24139,11 @@ function submitInteractiveQuiz() {
         return;
     }
 
-    const score = interactiveQuizState.answers.reduce((acc, answer, index) => (
-        acc + (answer === questions[index].correct ? 1 : 0)
-    ), 0);
+    const score = interactiveQuizState.answers.reduce((acc, answer, index) => {
+        const question = questions[index];
+        const correct = question && typeof question === 'object' ? question.correct : undefined;
+        return acc + (answer === correct ? 1 : 0);
+    }, 0);
     const total = questions.length;
     const percentage = Math.round((score / total) * 100);
 
