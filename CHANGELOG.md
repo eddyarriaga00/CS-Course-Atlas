@@ -328,3 +328,12 @@ All notable changes to **CS Course Atlas** are documented in this file.
   - normalized account chip icon rendering
   - restored clear quiz result correctness icons
   - standardized quiz title/retake icon labels through shared UI icon constants
+
+### Runtime Hardening and UX Polish
+- Added a core app-shell guard during startup so the interactive app boot is skipped safely when required DOM nodes are missing (prevents hard runtime crashes on non-app pages).
+- Corrected motion enhancement selector targets to match real section IDs:
+  - `#interview-examples`
+  - `#books-library-section`
+  - `#ds-playground`
+  - `#public-roadmap-section`
+- Kept existing route behavior intact while improving polish consistency and startup reliability.

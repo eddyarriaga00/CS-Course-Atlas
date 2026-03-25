@@ -103,6 +103,28 @@ const CONSTANTS = {
     CODE_PREVIEW_LINES: 12
 };
 
+const REQUIRED_APP_SHELL_IDS = Object.freeze([
+    'search-input',
+    'difficulty-filter',
+    'glossary-search',
+    'settings-btn',
+    'close-settings',
+    'save-settings',
+    'glossary-btn',
+    'close-glossary',
+    'flashcards-btn',
+    'close-flashcards',
+    'close-quiz',
+    'reset-btn',
+    'dark-mode-toggle',
+    'comments-toggle',
+    'prev-flashcard',
+    'next-flashcard',
+    'random-flashcard',
+    'toggle-flashcard-answer',
+    'flashcard-content'
+]);
+
 const MOTION_ENHANCEMENT_SELECTORS = Object.freeze([
     '#route-overview-section',
     '#route-launchpad-section',
@@ -112,12 +134,13 @@ const MOTION_ENHANCEMENT_SELECTORS = Object.freeze([
     '#daily-challenge-card',
     '#study-tip-card',
     '#insights-section',
-    '#interview-section',
+    '#interview-examples',
     '#notes-section',
-    '#books-section',
+    '#books-library-section',
+    '#ds-playground',
     '#playground-section',
     '#search-section',
-    '#roadmap-section',
+    '#public-roadmap-section',
     '#main-footer',
     '#modules-grid .module-card',
     '.route-launchpad-btn',
@@ -22190,6 +22213,14 @@ function init() {
     accountProfile = loadAccountProfile();
     studyPlanState = loadStudyPlan();
     notesDraft = loadNotesDraft();
+
+    const missingCoreAppElements = REQUIRED_APP_SHELL_IDS.filter((id) => !document.getElementById(id));
+    if (missingCoreAppElements.length) {
+        console.warn(
+            `Core app shell elements missing (${missingCoreAppElements.join(', ')}). Skipping interactive app boot on this page.`
+        );
+        return;
+    }
 
     // Apply loaded state to UI
     applyFontScale();
