@@ -337,3 +337,8 @@ All notable changes to **CS Course Atlas** are documented in this file.
   - `#ds-playground`
   - `#public-roadmap-section`
 - Kept existing route behavior intact while improving polish consistency and startup reliability.
+
+### Quiz Rendering Hardening
+- Hardened both quiz renderers (standard quiz + interactive quiz library) by escaping question text, options, selected answers, correct answers, and explanations before injecting into HTML.
+- Added safer fallback handling for missing/undefined quiz options and unselected-answer states so result views remain stable instead of rendering `undefined`.
+- Preserved existing scoring/submission behavior while improving runtime resilience and injection safety.

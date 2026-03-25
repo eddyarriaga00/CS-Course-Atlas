@@ -21985,6 +21985,9 @@ function renderQuiz() {
         const answeredCount = appState.currentQuiz.answers.filter(a => a !== null && a !== undefined).length;
         const totalCount = appState.currentQuiz.questions.length;
         const selected = appState.currentQuiz.answers[appState.currentQuiz.currentQuestion];
+        const currentQuestion = appState.currentQuiz.questions[appState.currentQuiz.currentQuestion] || {};
+        const currentQuestionText = escapeHtml(String(currentQuestion.question || ''));
+        const currentQuestionOptions = Array.isArray(currentQuestion.options) ? currentQuestion.options : [];
 
         content.innerHTML = `
             <div class="mb-6">
@@ -21997,15 +22000,15 @@ function renderQuiz() {
                     </div>
                 </div>
                 <h4 class="text-lg sm:text-xl font-semibold mb-5 sm:mb-6 text-white leading-relaxed break-words">
-                    ${appState.currentQuiz.questions[appState.currentQuiz.currentQuestion].question}
+                    ${currentQuestionText}
                 </h4>
             </div>
 
             <div class="space-y-3 mb-6 sm:mb-8">
-                ${appState.currentQuiz.questions[appState.currentQuiz.currentQuestion].options.map((option, index) => `
+                ${currentQuestionOptions.map((option, index) => `
                     <button onclick="answerQuestion(${index})" class="w-full p-3 sm:p-4 text-left rounded-xl border-2 transition-all duration-200 quiz-option text-white ${appState.currentQuiz.answers[appState.currentQuiz.currentQuestion] === index ? 'border-indigo-400 bg-slate-800/80' : 'border-white/15 bg-slate-900/80 hover:border-indigo-300'}">
                         <span class="font-medium text-white break-words">
-                            ${String.fromCharCode(65 + index)}. ${option}
+                            ${String.fromCharCode(65 + index)}. ${escapeHtml(String(option ?? ''))}
                         </span>
                     </button>
                 `).join('')}
@@ -22050,29 +22053,42 @@ function renderQuiz() {
                 </div>
 
                 <div class="space-y-4 mb-8">
-                    ${appState.currentQuiz.questions.map((question, index) => `
+                    ${appState.currentQuiz.questions.map((question, index) => {
+            const answerIndex = appState.currentQuiz.answers[index];
+            const options = Array.isArray(question?.options) ? question.options : [];
+            const selectedText = (answerIndex === null || answerIndex === undefined)
+                ? translateLiteral('No answer selected', appState.language)
+                : options[answerIndex];
+            const correctText = options[question?.correct];
+            const safeQuestion = escapeHtml(String(question?.question || ''));
+            const safeSelected = escapeHtml(String(selectedText ?? ''));
+            const safeCorrect = escapeHtml(String(correctText ?? ''));
+            const safeExplanation = escapeHtml(String(question?.explanation || ''));
+            const isCorrect = answerIndex === question?.correct;
+            return `
                         <div class="text-left p-4 rounded-xl border ${appState.currentQuiz.answers[index] === question.correct ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'}">
                             <div class="flex items-start gap-3">
                                 <span class="text-xl">
-                                    ${appState.currentQuiz.answers[index] === question.correct ? UI_ICONS.correct : UI_ICONS.incorrect}
+                                    ${isCorrect ? UI_ICONS.correct : UI_ICONS.incorrect}
                                 </span>
                                 <div class="flex-1">
-                                    <p class="font-medium mb-2 text-slate-800 break-words">${question.question}</p>
+                                    <p class="font-medium mb-2 text-slate-800 break-words">${safeQuestion}</p>
                                     <p class="text-sm text-slate-600 break-words">
-                                        <strong>${translateLiteral('Your answer:', appState.language)}</strong> ${question.options[appState.currentQuiz.answers[index]]}
+                                        <strong>${translateLiteral('Your answer:', appState.language)}</strong> ${safeSelected}
                                     </p>
-                                    ${appState.currentQuiz.answers[index] !== question.correct ? `
+                                    ${!isCorrect ? `
                                         <p class="text-sm text-slate-600 break-words">
-                                            <strong>${translateLiteral('Correct answer:', appState.language)}</strong> ${question.options[question.correct]}
+                                            <strong>${translateLiteral('Correct answer:', appState.language)}</strong> ${safeCorrect}
                                         </p>
                                     ` : ''}
                                     <p class="text-sm mt-2 text-slate-800 break-words">
-                                        <strong>${translateLiteral('Explanation:', appState.language)}</strong> ${question.explanation}
+                                        <strong>${translateLiteral('Explanation:', appState.language)}</strong> ${safeExplanation}
                                     </p>
                                 </div>
                             </div>
                         </div>
-                    `).join('')}
+                    `;
+        }).join('')}
                 </div>
 
                 <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
@@ -23990,14 +24006,19 @@ function renderInteractiveQuizQuestion() {
                     ${interactiveQuizState.questions.map((question, index) => {
             const selectedAnswer = interactiveQuizState.answers[index];
             const isCorrect = selectedAnswer === question.correct;
+            const options = Array.isArray(question?.options) ? question.options : [];
             const selectedText = selectedAnswer === null || selectedAnswer === undefined
                 ? translateLiteral('No answer selected', appState.language)
-                : question.options[selectedAnswer];
+                : options[selectedAnswer];
+            const correctText = options[question?.correct];
+            const safeQuestion = escapeHtml(String(question?.question || ''));
+            const safeSelected = escapeHtml(String(selectedText ?? ''));
+            const safeCorrect = escapeHtml(String(correctText ?? ''));
             return `
                             <div class="p-3 rounded-lg border ${isCorrect ? 'border-emerald-200 bg-emerald-50' : 'border-rose-200 bg-rose-50'}">
-                                <p class="text-sm font-semibold text-slate-800">${question.question}</p>
-                                <p class="text-xs text-slate-700 mt-1">${translateLiteral('Your answer:', appState.language)} ${selectedText}</p>
-                                ${isCorrect ? '' : `<p class="text-xs text-slate-700">${translateLiteral('Correct answer:', appState.language)} ${question.options[question.correct]}</p>`}
+                                <p class="text-sm font-semibold text-slate-800">${safeQuestion}</p>
+                                <p class="text-xs text-slate-700 mt-1">${translateLiteral('Your answer:', appState.language)} ${safeSelected}</p>
+                                ${isCorrect ? '' : `<p class="text-xs text-slate-700">${translateLiteral('Correct answer:', appState.language)} ${safeCorrect}</p>`}
                             </div>
                         `;
         }).join('')}
@@ -24024,12 +24045,15 @@ function renderInteractiveQuizQuestion() {
     const question = questions[current];
     const selected = interactiveQuizState.answers[current];
     const isLastQuestion = current >= total - 1;
+    const questionOptions = Array.isArray(question?.options) ? question.options : [];
+    const safeQuestionText = escapeHtml(String(question?.question || ''));
+    const safeQuestionExplanation = escapeHtml(String(question?.explanation || ''));
 
     const feedback = selected === null
         ? ''
-        : selected === question.correct
-            ? `<p class="text-sm text-emerald-600 font-semibold mt-2">${translateLiteral('Correct!', appState.language)} ${question.explanation || ''}</p>`
-            : `<p class="text-sm text-rose-600 font-semibold mt-2">${translateLiteral('Try again.', appState.language)} ${question.explanation || ''}</p>`;
+        : selected === question?.correct
+            ? `<p class="text-sm text-emerald-600 font-semibold mt-2">${translateLiteral('Correct!', appState.language)} ${safeQuestionExplanation}</p>`
+            : `<p class="text-sm text-rose-600 font-semibold mt-2">${translateLiteral('Try again.', appState.language)} ${safeQuestionExplanation}</p>`;
 
     body.innerHTML = `
         <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between text-xs sm:text-sm text-slate-600 mb-2">
@@ -24037,11 +24061,11 @@ function renderInteractiveQuizQuestion() {
             <span class="break-words">${Math.round(((current + 1) / total) * 100)}% ${translateLiteral('through', appState.language)}</span>
         </div>
         <div class="p-3 sm:p-5 rounded-xl border border-slate-200 bg-white shadow-sm">
-            <h4 class="text-base sm:text-lg font-semibold text-slate-800 mb-4 leading-relaxed break-words">${question.question}</h4>
+            <h4 class="text-base sm:text-lg font-semibold text-slate-800 mb-4 leading-relaxed break-words">${safeQuestionText}</h4>
             <div class="space-y-2">
-                ${question.options.map((option, idx) => {
+                ${questionOptions.map((option, idx) => {
                     const isSelected = selected === idx;
-                    const isCorrect = idx === question.correct;
+                    const isCorrect = idx === question?.correct;
                     let stateClass = 'border-slate-200 bg-white hover:border-indigo-300 hover:bg-indigo-50';
                     if (selected !== null) {
                         if (isCorrect) stateClass = 'border-emerald-500 bg-emerald-50';
@@ -24050,7 +24074,7 @@ function renderInteractiveQuizQuestion() {
                     return `
                         <button class="w-full text-left p-2.5 sm:p-3 rounded-lg border transition-all duration-200 ${stateClass}"
                             onclick="answerInteractiveQuiz(${idx})">
-                            <span class="font-medium text-slate-800 break-words">${String.fromCharCode(65 + idx)}. ${option}</span>
+                            <span class="font-medium text-slate-800 break-words">${String.fromCharCode(65 + idx)}. ${escapeHtml(String(option ?? ''))}</span>
                         </button>`;
                 }).join('')}
             </div>
