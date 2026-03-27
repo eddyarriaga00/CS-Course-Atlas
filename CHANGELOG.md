@@ -2,6 +2,26 @@
 
 All notable changes to **CS Course Atlas** are documented in this file.
 
+## 2026-03-27
+
+### First Five Modules Learning Quality Upgrade
+- Upgraded the first 5 modules in learning order (`intro-to-coding`, `java-basics`, `java-memory-jvm`, `git-basics-workflow`, `git-branching-merging`) with stronger lecture-style explanations, clearer outcomes, and more practice guidance.
+- Replaced weaker module-level samples with more realistic, instruction-focused code for Java and Git workflows.
+- Added textbook-quality free learning resource links (for example Think Java, Pro Git, Software Carpentry, Oracle/OpenJDK references, VisualVM) to improve depth and self-study quality.
+- Added curated topic-level code example sets with deep explanations for:
+  - `git-branching-merging`
+  - `java-memory-jvm`
+  to replace generic generated snippets with concrete, teachable scenarios.
+- Refreshed crawlable pages and sitemap assets so the improved module content is reflected in public/static pages.
+- Validation pass (all green):
+  - `npm run check:frontend`
+  - `node scripts/verify_localization.js`
+  - `node scripts/verify_catalog_integrity.js`
+  - `node scripts/verify_module_examples.js`
+  - `node scripts/verify_module_outputs.js`
+  - `node scripts/verify_spanish_code_examples.js`
+  - `node scripts/verify_css_integrity.js`
+
 ## 2026-03-26
 
 ### New DSA Class: Matrix and Grid Problem Solving

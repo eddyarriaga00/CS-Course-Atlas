@@ -5129,37 +5129,37 @@ intro_to_coding_lecture()
     console.log("\\nPart 4) 30-day focus: setup, fundamentals, debugging, publish");
 })();`
         },
-        explanation: `This module is built as a full beginner lecture, not just a syntax tour. The goal is to move you from "I do not know where to start" to "I have a concrete weekly system and know exactly what to practice next."
+        explanation: `This module is designed as a full onboarding lecture for absolute beginners.
 
-Lecture frame:
-1) Mental model first: every program is Input -> Process -> Output.
-2) Workflow second: read task -> write smallest version -> run -> debug -> refactor.
-3) Direction third: choose a realistic path and language based on goals, not hype.
-4) Execution fourth: build repeatable study habits and small projects that prove progress.
+Learning arc:
+1) Mental model first: all software is Input -> Process -> Output.
+2) Problem decomposition: convert plain-English requirements into ordered steps.
+3) Execution loop: write small code, run quickly, debug with evidence, refactor safely.
+4) Career alignment: choose language and path based on outcomes, not hype.
+5) Habit system: schedule repeatable weekly reps with measurable artifacts.
 
-What you should be able to do after this module:
-- Explain in plain English what your code is supposed to do before writing it.
-- Break a problem into steps that can be tested one-by-one.
-- Set up your environment and run code without guessing.
-- Use Git basics to keep your progress safe and reversible.
-- Build and ship tiny projects with clear README notes.
+By the end of this module, you should be able to:
+- Explain program behavior before coding.
+- Write pseudocode and map it to working syntax.
+- Set up tools and execute a complete code->run->debug cycle.
+- Track progress with Git from the first week.
+- Build small projects that show clear growth over time.
 
-Common beginner mistakes this module prevents:
-- Jumping into advanced topics before mastering loops/functions/debugging.
-- Copy-pasting code without understanding the data flow.
-- Changing too many things at once while debugging.
-- Consuming tutorials passively without producing code every session.
+Common failures this module prevents:
+- Tutorial bingeing without implementation.
+- Memorizing syntax without understanding data flow.
+- Skipping debugging discipline and changing many variables at once.
+- Randomly switching languages before fundamentals are stable.
 
-Use this module like a workshop:
-- Run the examples.
-- Modify one part at a time and predict output before execution.
-- Write reflection notes after each practice block.
-- Convert one concept into your own words as if teaching a classmate.
-
-If you complete this module seriously, you will have a stable foundation for DSA, Java, discrete math, and interview prep instead of starting each new topic from scratch.`,
+Use this module as a workshop:
+- Predict output before you run code.
+- Keep changes small and test each change.
+- Write short learning notes after each session.
+- Teach one concept out loud to validate understanding.`,
         resources: [
             { text: 'CS50x (Harvard) - Intro to Computer Science', url: 'https://cs50.harvard.edu/x/' },
-            { text: 'Roadmap.sh - Developer Role Roadmaps', url: 'https://roadmap.sh/' },
+            { text: 'How to Think Like a Computer Scientist (free textbook)', url: 'https://openbookproject.net/thinkcs/python/english3e/' },
+            { text: 'Think Java, 2nd Edition (free textbook)', url: 'https://greenteapress.com/wp/think-java-2e/' },
             { text: 'The Odin Project (Web Development Path)', url: 'https://www.theodinproject.com/' },
             { text: 'Python Documentation', url: 'https://docs.python.org/3/' },
             { text: 'Java Documentation', url: 'https://docs.oracle.com/en/java/' },
@@ -5171,9 +5171,8 @@ If you complete this module seriously, you will have a stable foundation for DSA
             { text: 'freeCodeCamp - Learn to Code', url: 'https://www.freecodecamp.org/learn/' },
             { text: 'Exercism - Programming Practice', url: 'https://exercism.org/' },
             { text: 'Teach Yourself CS', url: 'https://teachyourselfcs.com/' },
-            { text: 'OSSU Computer Science', url: 'https://github.com/ossu/computer-science' },
             { text: 'Nand2Tetris', url: 'https://www.nand2tetris.org/' },
-            { text: 'LeetCode Explore (Foundations)', url: 'https://leetcode.com/explore/' }
+            { text: 'Pro Git (free online book)', url: 'https://git-scm.com/book/en/v2' }
         ]
     },
     {
@@ -7301,40 +7300,84 @@ public class BitManipulation {
     {
         id: 'java-basics',
         title: 'Java Fundamentals',
-        description: '`JavaBasics` wires up fields via a constructor, exposes `getInfo`, and creates an instance in `main`, breaking down how objects store state and expose behavior.',
+        description: 'Learn Java as a full programming system: variables and types feed methods, methods power classes, and classes create objects with real state transitions.',
         difficulty: 'beginner',
         topics: ['Variables', 'Data Types', 'Methods', 'Classes', 'Objects'],
-        codeExample: `// Java Basics - Variables and Methods
-public class JavaBasics {
-    // Instance variables
-    private String name;
-    private int age;
-    
-    // Constructor
-    public JavaBasics(String name, int age) {
+        codeExample: `import java.util.Arrays;
+
+class StudentProfile {
+    private final String name;
+    private final int[] quizScores;
+
+    StudentProfile(String name, int[] quizScores) {
         this.name = name;
-        this.age = age;
+        this.quizScores = quizScores;
     }
-    
-    // Method with return value
-    public String getInfo() {
-        return "Name: " + name + ", Age: " + age;
+
+    double averageScore() {
+        int sum = 0;
+        for (int score : quizScores) {
+            sum += score;
+        }
+        return quizScores.length == 0 ? 0.0 : sum / (double) quizScores.length;
     }
-    
-    // Static method
+
+    String summary() {
+        return name
+            + " -> quizzes=" + Arrays.toString(quizScores)
+            + ", avg=" + String.format("%.2f", averageScore());
+    }
+}
+
+public class JavaFundamentalsLecture {
+    static boolean isPassing(double average) {
+        return average >= 70.0;
+    }
+
     public static void main(String[] args) {
-        JavaBasics person = new JavaBasics("Alice", 25);
-        System.out.println(person.getInfo());
+        int cohortYear = 2026;                   // primitive variable
+        String courseName = "Java Fundamentals"; // reference type
+
+        StudentProfile alex = new StudentProfile("Alex", new int[]{88, 91, 84});
+        StudentProfile sam = new StudentProfile("Sam", new int[]{72, 67, 75});
+
+        System.out.println("Course: " + courseName + " (" + cohortYear + ")");
+        for (StudentProfile profile : new StudentProfile[]{alex, sam}) {
+            double avg = profile.averageScore();
+            System.out.println(profile.summary());
+            System.out.println("Status: " + (isPassing(avg) ? "PASS" : "REVIEW BASICS"));
+        }
     }
 }`,
-        explanation: `This primer explains the JVM model, primitive vs reference types, memory layout, and how to structure small programs with packages and build tools. Each topic is paired with short exercises so you can move from syntax memorization to writing idiomatic Java.`,
-        resources: ['Java Documentation', 'Oracle Java Tutorials', 'Java Syntax Guide']
+        explanation: `This module is structured like a lecture sequence, not a syntax checklist:
+1) Variables and types: represent data correctly before writing logic.
+2) Methods: isolate one task per method and return deterministic outputs.
+3) Classes: group related state and behavior under one design boundary.
+4) Objects: instantiate and observe independent runtime state.
+
+In the code walkthrough, you build student profiles, compute averages, and evaluate pass/fail logic so each concept is connected to realistic behavior.
+
+After this module, you should be able to:
+- Explain primitive vs reference data in plain language.
+- Design methods with clean parameters and clear return contracts.
+- Model a small domain with a class and test it through object instances.
+- Read Java code by tracing data flow instead of line-by-line guessing.
+
+Practice focus:
+- Add input validation for invalid scores.
+- Extract grading thresholds into constants.
+- Write tests for averageScore and isPassing using edge cases.`,
+        resources: [
+            { text: 'Think Java, 2nd Edition (free textbook)', url: 'https://greenteapress.com/wp/think-java-2e/' },
+            { text: 'Oracle Java Tutorials (official)', url: 'https://docs.oracle.com/javase/tutorial/' },
+            { text: 'University of Helsinki Java Programming MOOC', url: 'https://java-programming.mooc.fi/' }
+        ]
     },
 
     {
         id: 'git-basics-workflow',
         title: 'Git Basics and Collaboration Workflow',
-        description: 'This starter module walks through repo setup, staging, commits, branching, pull/merge flow, conflict resolution basics, and safe undo commands you can use in real team projects.',
+        description: 'Build a production-safe Git workflow from day one: initialize repos correctly, stage intentionally, branch for isolation, sync safely, and undo without damaging shared history.',
         difficulty: 'beginner',
         topics: ['Repository Setup', 'Staging and Commits', 'Branching and Merging', 'Pull/Rebase Basics', 'Merge Conflict Basics', 'Remote Collaboration', 'Safe Undo with Restore/Revert'],
         codeExample: `# 1) Initialize a new repository and connect remote
@@ -7383,8 +7426,25 @@ git commit -m "fix: resolve merge conflict in <resolved-file>"
 git restore --staged auth-notes.txt     # unstage file
 git restore auth-notes.txt              # discard local uncommitted change
 git revert <commit-hash>                # create new commit that undoes old one`,
-        explanation: `Git is not just commands; it is a safety model for collaboration. You will learn the three-state model (working tree, staging area, repository), why commits should be small and reversible, and how branch-based development protects the main branch. We also cover safe undo strategies for team projects: when to use restore for local cleanup and when to use revert for shared history. By the end, you should be able to ship features through branch -> review -> merge with minimal risk.`,
-        resources: ['Official Git Book', 'GitHub Flow Guide', 'Atlassian Git Tutorials', 'Conventional Commit Messages']
+        explanation: `This module treats Git as an engineering safety system:
+- Working tree: where edits happen.
+- Staging area: where you choose exactly what enters history.
+- Commit graph: immutable snapshots that support review and rollback.
+
+Core outcomes:
+1) Build small, reviewable commits with strong messages.
+2) Use feature branches to isolate risk before merging.
+3) Rebase/fetch intentionally so your branch stays integration-ready.
+4) Resolve conflicts methodically and verify behavior after each fix.
+5) Use restore/revert based on whether changes are local or already shared.
+
+By the end, you should be able to execute branch -> review -> merge workflows confidently in team repos.`,
+        resources: [
+            { text: 'Pro Git (free online book)', url: 'https://git-scm.com/book/en/v2' },
+            { text: 'GitHub Skills: Introduction to Git', url: 'https://skills.github.com/' },
+            { text: 'Atlassian Git Tutorials', url: 'https://www.atlassian.com/git/tutorials' },
+            { text: 'Software Carpentry: Version Control with Git', url: 'https://swcarpentry.github.io/git-novice/' }
+        ]
     },
 
     {
@@ -7817,36 +7877,79 @@ public class JDBCExample {
     {
         id: 'git-branching-merging',
         title: 'Git Branching, Merging, and Pull Requests',
-        description: 'Learn a repeatable team workflow: create feature branches, keep them updated, resolve merge conflicts safely, and open clean pull requests with review-ready commits.',
+        description: 'Master the team-grade branch lifecycle: branch design, rebase vs merge choices, conflict resolution, pull-request hygiene, and commit strategy that scales with collaborators.',
         difficulty: 'intermediate',
         topics: ['Feature Branches', 'Rebase vs Merge', 'Conflict Resolution', 'Pull Request Hygiene', 'Commit Strategy'],
         codeExample: `import java.util.List;
 
-public class GitWorkflowPlan {
-    public static void main(String[] args) {
-        List<String> commands = List.of(
-            "git checkout -b feature/login-flow",
-            "git add . && git commit -m \\\"feat: add login form validation\\\"",
-            "git fetch origin",
-            "git rebase origin/main",
-            "git push -u origin feature/login-flow",
-            "Open pull request, request review, squash merge"
-        );
+public class GitBranchingLecture {
+    static void section(String title) {
+        System.out.println("\\n=== " + title + " ===");
+    }
 
-        System.out.println("Safe collaboration workflow:");
-        commands.forEach(System.out::println);
+    static void command(String cmd, String... output) {
+        System.out.println("$ " + cmd);
+        for (String line : output) {
+            System.out.println("  " + line);
+        }
+    }
+
+    public static void main(String[] args) {
+        section("Feature Branches");
+        command("git checkout -b feature/module-progress-api", "Switched to feature branch");
+        command("git add src/api/progress.js", "Staged API changes only");
+        command("git commit -m \\"feat(progress): add module completion endpoint\\"", "[feature/module-progress-api 2ac41ab] feat(progress): add module completion endpoint");
+
+        section("Rebase vs Merge");
+        command("git fetch origin", "Updated refs for origin/main");
+        command("git rebase origin/main", "Replayed feature commits on top of latest main");
+        command("git log --oneline -n 4", "Linear history preview confirms clean review path");
+
+        section("Conflict Resolution");
+        command("git status", "rebase in progress; both modified: src/auth/session.js");
+        command("git add src/auth/session.js", "Conflict markers removed and final behavior verified");
+        command("git rebase --continue", "Rebase completed successfully");
+
+        section("Pull Request Hygiene");
+        List<String> prChecklist = List.of(
+            "Include problem statement + solution summary",
+            "Link issue/ticket and attach test evidence",
+            "Request focused reviewer feedback",
+            "Address review comments with follow-up commits"
+        );
+        for (String item : prChecklist) {
+            System.out.println(" - " + item);
+        }
+
+        section("Commit Strategy");
+        command("git commit -m \\"fix(progress): guard against duplicate completion writes\\"", "One logical fix per commit keeps rollback precise");
+        command("git commit -m \\"test(progress): add regression for duplicate completion\\"", "Behavior and verification history remain aligned");
+        command("git push -u origin feature/module-progress-api", "PR ready for review and CI");
     }
 }`,
-        explanation: `This module focuses on collaboration habits that prevent accidental breakage in shared repos. You will practice writing focused commits, rebasing before review, handling conflicts deliberately, and documenting changes clearly in pull requests.`,
-        resources: ['Git Branching Guide', 'Atlassian Merge Conflict Guide', 'Conventional Commits']
+        explanation: `This module trains branch discipline for real team repositories:
+1) Feature branches isolate incomplete work from main.
+2) Rebase and merge are both useful; choose based on history clarity and team policy.
+3) Conflict resolution is a verification task, not just marker removal.
+4) Pull requests should communicate intent, risk, and test evidence.
+5) Commit strategy should keep each commit logically atomic and reviewable.
+
+When you finish this module, you should be able to recover from branch drift, resolve conflicts safely, and submit PRs that are fast to review and easy to maintain.`,
+        resources: [
+            { text: 'Pro Git: Branching and Merging Chapters', url: 'https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell' },
+            { text: 'Atlassian Merge Conflict Guide', url: 'https://www.atlassian.com/git/tutorials/using-branches/merge-conflicts' },
+            { text: 'GitHub Docs: About Pull Requests', url: 'https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests' }
+        ]
     },
     {
         id: 'java-memory-jvm',
         title: 'Java Memory and JVM Fundamentals',
-        description: 'Understand stack vs heap, object lifetime, garbage collection basics, and why memory-aware coding decisions improve reliability and performance.',
+        description: 'Build a practical JVM memory model: stack vs heap behavior, object lifecycle, garbage-collection triggers, reference strength, and leak patterns that appear in real apps.',
         difficulty: 'intermediate',
         topics: ['Stack vs Heap', 'Object Lifecycle', 'Garbage Collection', 'References', 'Memory Leaks in Practice'],
-        codeExample: `import java.util.ArrayList;
+        codeExample: `import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 class StudentSession {
@@ -7868,23 +7971,72 @@ class StudentSession {
     }
 }
 
-public class JvmMemoryDemo {
-    public static void main(String[] args) {
+public class JvmMemoryLecture {
+    // Stack frame variables live per method call; object instances live on the heap.
+    static int computeScaledScore(int baseScore, int multiplier) {
+        int scaled = baseScore * multiplier;
+        return Math.min(scaled, 100);
+    }
+
+    static List<StudentSession> buildSessions() {
         List<StudentSession> sessions = new ArrayList<>();
-        for (int i = 1; i <= 3; i++) {
-            sessions.add(new StudentSession("student-" + i, i * 10));
-        }
+        sessions.add(new StudentSession("student-1", computeScaledScore(30, 2)));
+        sessions.add(new StudentSession("student-2", computeScaledScore(35, 2)));
+        sessions.add(new StudentSession("student-3", computeScaledScore(42, 2)));
+        return sessions;
+    }
+
+    static void demonstrateReferenceStrength() {
+        StudentSession temporary = new StudentSession("ephemeral", 55);
+        WeakReference<StudentSession> weak = new WeakReference<>(temporary);
+        System.out.println("Before clearing strong reference -> weak.get() != null: " + (weak.get() != null));
+        temporary = null; // eligible for collection once no strong refs remain
+        System.gc();      // GC is only a hint, used here for teaching
+        System.out.println("After gc hint -> weak.get() may be null: " + (weak.get() == null));
+    }
+
+    static List<byte[]> leakLikePattern(List<byte[]> holder) {
+        holder.add(new byte[1024 * 256]); // 256 KB chunk retained in long-lived list
+        return holder;
+    }
+
+    public static void main(String[] args) {
+        List<StudentSession> sessions = buildSessions();
+        System.out.println("Sessions on heap: " + sessions);
 
         int total = 0;
         for (StudentSession session : sessions) {
-            System.out.println(session);
             total += session.getScore();
         }
         System.out.println("Average score: " + (total / sessions.size()));
+
+        demonstrateReferenceStrength();
+
+        List<byte[]> retained = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            leakLikePattern(retained);
+        }
+        System.out.println("Retained chunk count (simulated leak source): " + retained.size());
+        System.out.println("Retained chunk sizes: " + Arrays.toString(new int[]{256, 256, 256}) + " KB");
     }
 }`,
-        explanation: `You will connect JVM concepts to real code behavior: local variables live on call stacks, objects typically live on the heap, and unreachable objects become GC candidates. We also cover common retention mistakes that cause memory growth over time.`,
-        resources: ['JVM Memory Model Basics', 'Java GC Tuning Overview', 'VisualVM Intro']
+        explanation: `This module ties JVM theory directly to observable behavior:
+- Stack vs heap: method-local variables are frame-scoped, while objects persist on the heap while references stay reachable.
+- Object lifecycle: allocation, active use, eligibility for GC, and eventual reclamation.
+- Garbage collection: the collector reclaims unreachable objects, but GC timing is nondeterministic.
+- Reference types: strong references retain objects; weak references support cache-like patterns.
+- Leak patterns: Java can still leak memory when long-lived collections keep unnecessary references.
+
+Learner outcomes:
+1) Trace where data is stored and why.
+2) Diagnose growth caused by retained references.
+3) Design safer caches and lifecycle boundaries.
+4) Use profiling tools to validate memory assumptions.`,
+        resources: [
+            { text: 'Oracle HotSpot GC Tuning Guide', url: 'https://docs.oracle.com/en/java/javase/21/gctuning/' },
+            { text: 'Java Language Specification: Memory Model (JLS 17)', url: 'https://docs.oracle.com/javase/specs/jls/se21/html/jls-17.html' },
+            { text: 'VisualVM Project (profiling and monitoring)', url: 'https://visualvm.github.io/' }
+        ]
     },
     {
         id: 'discrete-graph-theory',
@@ -8128,7 +8280,64 @@ function buildFallbackJavaSnippet(module) {
 }
 
 function buildGitJavaSnippet() {
-    return `import java.util.*;\n\npublic class GitBasicsWorkflowDemo {\n    static void section(String label) {\n        System.out.println("\\n=== " + label + " ===");\n    }\n\n    static void command(String cmd, String... output) {\n        System.out.println("$ " + cmd);\n        if (output.length == 0) {\n            System.out.println("  (no stdout)");\n            return;\n        }\n        for (String line : output) {\n            System.out.println("  " + line);\n        }\n    }\n\n    public static void main(String[] args) {\n        section("Git Basics Terminal Walkthrough");\n        System.out.println("Goal: show a safe branch-based workflow from init -> commit -> review -> merge -> undo.");\n        System.out.println("Model: working tree -> staging area -> commit history.");\n\n        section("Repository Setup");\n        command("git init", "Initialized empty Git repository in ./cs-atlas-demo/.git/");\n        command("git branch -M main", "Current branch renamed to main.");\n        command("git remote add origin https://github.com/your-org/cs-atlas-demo.git", "Remote 'origin' added.");\n\n        section("Staging and Commits");\n        command("git add README.md", "README.md moved to staging area.");\n        command("git commit -m \\"docs: add project overview\\"", "[main abc1234] docs: add project overview", " 1 file changed, 8 insertions(+)");\n        command("git status", "On branch main", "nothing to commit, working tree clean");\n\n        section("Branching and Merging");\n        command("git checkout -b feature/auth-flow", "Switched to a new branch 'feature/auth-flow'");\n        command("git push -u origin feature/auth-flow", "Branch pushed and tracking set.");\n        command("git checkout main && git merge --no-ff feature/auth-flow", "Merge made by the 'ort' strategy.");\n\n        section("Safe Undo");\n        command("git restore --staged README.md", "README.md unstaged (changes kept locally).");\n        command("git revert abc1234", "Created revert commit to safely undo shared history.");\n\n        section("Summary");\n        System.out.println("Use small commits, feature branches, pull/rebase before pushing, and revert for shared undo.");\n        System.out.println("Workflow complete.");\n    }\n}`;
+    return `import java.util.*;
+
+public class GitBasicsWorkflowLecture {
+    static void section(String label) {
+        System.out.println("\\n=== " + label + " ===");
+    }
+
+    static void command(String cmd, String... output) {
+        System.out.println("$ " + cmd);
+        if (output.length == 0) {
+            System.out.println("  (no stdout)");
+            return;
+        }
+        for (String line : output) {
+            System.out.println("  " + line);
+        }
+    }
+
+    public static void main(String[] args) {
+        section("Mental Model");
+        System.out.println("Git tracks snapshots, not mutable files.");
+        System.out.println("Flow: working tree -> staging area -> commit graph -> reviewed merge.");
+
+        section("Repository Initialization");
+        command("git init", "Initialized empty Git repository in ./cs-atlas-demo/.git/");
+        command("git branch -M main", "Branch renamed to main");
+        command("git remote add origin https://github.com/your-org/cs-atlas-demo.git", "Remote 'origin' set");
+        command("git status", "On branch main", "No commits yet");
+
+        section("Intentional Commits");
+        command("git add -p", "Interactively staged only relevant hunks");
+        command("git commit -m \\"feat: add login form validation\\"", "[main 93ab31c] feat: add login form validation", " 2 files changed, 34 insertions(+)");
+        command("git commit -m \\"test: add login form edge-case tests\\"", "[main 5f2ac10] test: add login form edge-case tests");
+        command("git log --oneline -n 3", "5f2ac10 test: add login form edge-case tests", "93ab31c feat: add login form validation");
+
+        section("Branch and Sync Workflow");
+        command("git checkout -b feature/oauth-mobile-state", "Switched to a new branch 'feature/oauth-mobile-state'");
+        command("git fetch origin", "Fetched latest origin/main");
+        command("git rebase origin/main", "Successfully rebased and updated refs/heads/feature/oauth-mobile-state");
+        command("git push -u origin feature/oauth-mobile-state", "Branch published and upstream configured");
+
+        section("Conflict and Recovery Discipline");
+        command("git status", "rebase in progress; fix conflicts and run 'git rebase --continue'");
+        command("git add src/auth/mobile-sync.js", "Conflict resolved and staged");
+        command("git rebase --continue", "Rebase completed");
+        command("git reflog -n 2", "HEAD@{0}: rebase --continue", "HEAD@{1}: rebase started");
+
+        section("Merge and Safe Undo");
+        command("Open pull request", "Review approved", "CI checks: PASS");
+        command("git checkout main && git pull origin main", "main updated");
+        command("git merge --no-ff feature/oauth-mobile-state -m \\"merge: stabilize mobile oauth state sync\\"", "Merge made by the 'ort' strategy.");
+        command("git revert 93ab31c", "Created revert commit (safe for shared history)");
+
+        section("Summary");
+        System.out.println("Use small commits, short-lived branches, rebase awareness, and non-destructive undo.");
+        System.out.println("Lecture complete.");
+    }
+}`;
 }
 
 function addComprehensiveHeaderComments(module, javaCode) {
@@ -9202,6 +9411,434 @@ public class ObjectsDemo {
 
         System.out.println(a.progress());
         System.out.println(b.progress());
+    }
+}`
+            }
+        }
+    ],
+    'git-branching-merging': [
+        {
+            id: 'feature-branches',
+            title: { en: 'Feature Branches', es: 'Ramas de Funcionalidad' },
+            description: { en: 'Create isolated branches with clear naming and ownership.', es: 'Crea ramas aisladas con nombres y responsabilidad claros.' },
+            deepExplanation: `Conceptual breakdown:
+- Feature branches isolate in-progress work so main stays releasable.
+- Branch names should communicate scope (feature/fix/chore + concise target).
+
+Code walkthrough:
+1) Build a branch-plan list that ties branch name to user-facing outcome.
+2) Print create/publish commands for each plan item.
+3) Emphasize short branch lifetimes to reduce merge risk.
+
+Practice checks:
+- Rename one branch to include ticket ID and compare readability.
+- Add a branch policy rule: max branch age before re-sync.`,
+            codeExamples: {
+                java: `import java.util.List;
+
+public class FeatureBranchesLectureSet {
+    static record BranchPlan(String branch, String outcome) {}
+
+    public static void main(String[] args) {
+        List<BranchPlan> plan = List.of(
+            new BranchPlan("feature/oauth-mobile-sync", "Fix mobile auth state refresh"),
+            new BranchPlan("feature/module-progress-card", "Expose completion metrics in module cards"),
+            new BranchPlan("fix/quiz-submit-score", "Submit final score on last quiz question")
+        );
+
+        System.out.println("=== Feature Branch Planning ===");
+        for (BranchPlan item : plan) {
+            System.out.println("Outcome: " + item.outcome());
+            System.out.println("$ git checkout -b " + item.branch());
+            System.out.println("$ git push -u origin " + item.branch());
+            System.out.println("---");
+        }
+        System.out.println("Rule: one branch = one reviewable unit of change.");
+    }
+}`
+            }
+        },
+        {
+            id: 'rebase-vs-merge',
+            title: { en: 'Rebase vs Merge', es: 'Rebase vs Merge' },
+            description: { en: 'Choose integration strategy based on history clarity and collaboration constraints.', es: 'Elige estrategia segun claridad de historial y colaboracion.' },
+            deepExplanation: `Conceptual breakdown:
+- merge preserves branch topology and context.
+- rebase rewrites local commits onto a newer base for linear history.
+- Rebase is ideal before opening PRs on private feature branches.
+
+Code walkthrough:
+1) Show two commit-history shapes.
+2) Explain tradeoffs: traceability vs readability.
+3) Add policy guardrails for shared branches.
+
+Practice checks:
+- Compare git log --graph output before/after rebase.
+- Document your team rule: when merge is required over rebase.`,
+            codeExamples: {
+                java: `import java.util.List;
+
+public class RebaseVsMergeLectureSet {
+    static void printHistory(String label, List<String> commits) {
+        System.out.println(label);
+        for (String commit : commits) {
+            System.out.println("  " + commit);
+        }
+    }
+
+    public static void main(String[] args) {
+        List<String> mergeHistory = List.of(
+            "M merge feature/module-progress",
+            "|\\",
+            "| F2 feature: add progress API tests",
+            "| F1 feature: add progress endpoint",
+            "A main: auth middleware hardening"
+        );
+
+        List<String> rebaseHistory = List.of(
+            "F2' feature: add progress API tests",
+            "F1' feature: add progress endpoint",
+            "A main: auth middleware hardening"
+        );
+
+        printHistory("Merge history keeps branch topology:", mergeHistory);
+        printHistory("\\nRebase history is linear for review:", rebaseHistory);
+        System.out.println("\\nRule: avoid rebasing commits already shared with teammates.");
+    }
+}`
+            }
+        },
+        {
+            id: 'conflict-resolution',
+            title: { en: 'Conflict Resolution', es: 'Resolucion de Conflictos' },
+            description: { en: 'Resolve conflicts intentionally and verify behavior before continuing.', es: 'Resuelve conflictos con intencion y valida antes de continuar.' },
+            deepExplanation: `Conceptual breakdown:
+- Conflict markers are integration signals, not errors to panic about.
+- Correct conflict resolution is behavioral: keep intended logic, then test.
+
+Code walkthrough:
+1) Print an example conflict hunk.
+2) Show selected final code line.
+3) Complete rebase flow with add + continue.
+
+Practice checks:
+- Reproduce a conflict in a throwaway branch.
+- Resolve and run tests before finishing merge/rebase.`,
+            codeExamples: {
+                java: `public class ConflictResolutionLectureSet {
+    public static void main(String[] args) {
+        String[] conflictHunk = {
+            "<<<<<<< HEAD",
+            "if (isLoggedIn) showDashboard();",
+            "=======",
+            "if (session.isActive()) openDashboard();",
+            ">>>>>>> feature/session-refactor"
+        };
+
+        System.out.println("=== Conflict Hunk ===");
+        for (String line : conflictHunk) {
+            System.out.println(line);
+        }
+
+        String resolvedLine = "if (isLoggedIn && session.isActive()) openDashboard();";
+        System.out.println("\\nResolved line:");
+        System.out.println(resolvedLine);
+
+        System.out.println("\\nNext commands:");
+        System.out.println("$ git add src/auth/session.js");
+        System.out.println("$ git rebase --continue");
+        System.out.println("$ npm test   # or your project test command");
+    }
+}`
+            }
+        },
+        {
+            id: 'pull-request-hygiene',
+            title: { en: 'Pull Request Hygiene', es: 'Higiene de Pull Request' },
+            description: { en: 'Submit PRs that are review-ready, test-backed, and easy to merge.', es: 'Envia PRs listos para revision y faciles de integrar.' },
+            deepExplanation: `Conceptual breakdown:
+- A good PR is a communication artifact, not just code.
+- Reviewer speed depends on scope clarity and test evidence quality.
+
+Code walkthrough:
+1) Build a checklist for PR readiness.
+2) Track unresolved checklist items.
+3) Block merge until all critical items pass.
+
+Practice checks:
+- Keep PR under a manageable file/line budget.
+- Add before/after behavior notes for user-facing changes.`,
+            codeExamples: {
+                java: `import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class PullRequestHygieneLectureSet {
+    public static void main(String[] args) {
+        Map<String, Boolean> checklist = new LinkedHashMap<>();
+        checklist.put("Problem statement is explicit", true);
+        checklist.put("Scope is focused (single concern)", true);
+        checklist.put("Tests added or updated", true);
+        checklist.put("Screenshots/logs for UI/API changes", false);
+        checklist.put("Risk + rollback notes included", false);
+
+        int passed = 0;
+        System.out.println("=== PR Readiness Checklist ===");
+        for (Map.Entry<String, Boolean> item : checklist.entrySet()) {
+            if (item.getValue()) passed++;
+            System.out.println((item.getValue() ? "[PASS] " : "[TODO] ") + item.getKey());
+        }
+
+        System.out.println("Completion: " + passed + "/" + checklist.size());
+        if (passed < checklist.size()) {
+            System.out.println("Action: complete TODO items before requesting final review.");
+        }
+    }
+}`
+            }
+        },
+        {
+            id: 'commit-strategy',
+            title: { en: 'Commit Strategy', es: 'Estrategia de Commits' },
+            description: { en: 'Design commits that are atomic, understandable, and reversible.', es: 'Disena commits atomicos, claros y reversibles.' },
+            deepExplanation: `Conceptual breakdown:
+- Atomic commits reduce rollback blast radius.
+- Commit messages should expose intent, not just file changes.
+
+Code walkthrough:
+1) Evaluate commit messages against quality rules.
+2) Separate mixed concerns into multiple commits.
+3) Print recommended improvement when quality is weak.
+
+Practice checks:
+- Split one large commit into 2-3 coherent commits.
+- Use type scopes (feat/fix/test/docs) consistently.`,
+            codeExamples: {
+                java: `import java.util.List;
+
+public class CommitStrategyLectureSet {
+    static boolean looksAtomic(String message) {
+        return message.startsWith("feat:")
+            || message.startsWith("fix:")
+            || message.startsWith("test:")
+            || message.startsWith("docs:");
+    }
+
+    public static void main(String[] args) {
+        List<String> commitMessages = List.of(
+            "feat: add module completion endpoint",
+            "fix: guard duplicate quiz submissions",
+            "update stuff"
+        );
+
+        System.out.println("=== Commit Strategy Audit ===");
+        for (String message : commitMessages) {
+            boolean good = looksAtomic(message);
+            System.out.println(message + " -> " + (good ? "GOOD" : "IMPROVE MESSAGE"));
+        }
+
+        System.out.println("Recommendation: keep one logical concern per commit.");
+    }
+}`
+            }
+        }
+    ],
+    'java-memory-jvm': [
+        {
+            id: 'stack-vs-heap',
+            title: { en: 'Stack vs Heap', es: 'Stack vs Heap' },
+            description: { en: 'Trace local variables (stack) and objects (heap) in one runnable sample.', es: 'Traza variables locales y objetos en un ejemplo ejecutable.' },
+            deepExplanation: `Conceptual breakdown:
+- Local primitives and references are stack-frame scoped.
+- Object instances are heap allocated and can outlive the method that created them.
+
+Code walkthrough:
+1) createLabel builds heap string data.
+2) stackComputation uses frame-local primitives.
+3) main links both perspectives with visible output.
+
+Practice checks:
+- Add nested method calls and log call depth.
+- Track which values remain after method returns.`,
+            codeExamples: {
+                java: `public class StackVsHeapLectureSet {
+    static String createLabel(int id) {
+        return "session-" + id; // String object on heap
+    }
+
+    static int stackComputation(int base) {
+        int multiplier = 3;     // stack local
+        int bonus = 4;          // stack local
+        return (base * multiplier) + bonus;
+    }
+
+    public static void main(String[] args) {
+        int localScore = 12; // stack local
+        String label = createLabel(1);
+        int computed = stackComputation(localScore);
+
+        System.out.println("Label (heap object): " + label);
+        System.out.println("Computed from stack locals: " + computed);
+        System.out.println("Model: references on stack can point to heap objects.");
+    }
+}`
+            }
+        },
+        {
+            id: 'object-lifecycle',
+            title: { en: 'Object Lifecycle', es: 'Ciclo de Vida de Objetos' },
+            description: { en: 'Follow object creation, usage, dereference, and GC eligibility.', es: 'Sigue creacion, uso, desreferencia y elegibilidad de GC.' },
+            deepExplanation: `Conceptual breakdown:
+- Lifecycle phases: allocate -> use -> unreachable -> reclaim.
+- Java has GC, but lifecycle discipline still matters for correctness and memory pressure.
+
+Code walkthrough:
+1) Build a list of objects and consume them.
+2) Null references intentionally to mark objects unreachable.
+3) Explain why reclamation timing is not deterministic.
+
+Practice checks:
+- Add a long-lived cache and monitor growth.
+- Remove stale references and compare memory behavior.`,
+            codeExamples: {
+                java: `import java.util.ArrayList;
+import java.util.List;
+
+public class ObjectLifecycleLectureSet {
+    static class Event {
+        final String name;
+        Event(String name) { this.name = name; }
+        @Override
+        public String toString() { return name; }
+    }
+
+    public static void main(String[] args) {
+        List<Event> events = new ArrayList<>();
+        events.add(new Event("start"));
+        events.add(new Event("checkpoint"));
+        events.add(new Event("finish"));
+
+        System.out.println("Active events: " + events);
+        events.remove(0);      // one object now has no list reference
+        events = null;         // remaining list+elements become eligible for GC
+        System.out.println("References cleared; objects become GC candidates.");
+    }
+}`
+            }
+        },
+        {
+            id: 'garbage-collection',
+            title: { en: 'Garbage Collection', es: 'Recoleccion de Basura' },
+            description: { en: 'Demonstrate GC eligibility and nondeterministic collection behavior.', es: 'Demuestra elegibilidad de GC y comportamiento no determinista.' },
+            deepExplanation: `Conceptual breakdown:
+- GC finds unreachable objects; it does not collect "all unused memory instantly."
+- System.gc() is a hint, not a guarantee.
+
+Code walkthrough:
+1) Create temporary objects repeatedly.
+2) Drop references to make them collectible.
+3) Print progress and explain expected nondeterminism.
+
+Practice checks:
+- Profile allocation rate under loops.
+- Compare behavior with and without retained references.`,
+            codeExamples: {
+                java: `public class GarbageCollectionLectureSet {
+    static class TempBuffer {
+        byte[] block = new byte[128 * 1024]; // 128 KB
+    }
+
+    public static void main(String[] args) {
+        for (int i = 1; i <= 5; i++) {
+            TempBuffer buffer = new TempBuffer();
+            System.out.println("Allocated temp buffer #" + i + " size=" + buffer.block.length);
+            buffer = null; // eligible for GC after this point
+        }
+
+        System.gc(); // hint only
+        System.out.println("Requested GC hint; actual collection timing is JVM-managed.");
+    }
+}`
+            }
+        },
+        {
+            id: 'references',
+            title: { en: 'References', es: 'Referencias' },
+            description: { en: 'Compare strong and weak references for lifecycle-aware design.', es: 'Compara referencias fuertes y debiles para diseno consciente del ciclo de vida.' },
+            deepExplanation: `Conceptual breakdown:
+- Strong references prevent collection while reachable.
+- Weak references allow collection when no strong path remains.
+- Choosing reference strength changes memory retention behavior.
+
+Code walkthrough:
+1) Hold one object with strong + weak reference.
+2) Drop strong reference and observe weak behavior.
+3) Discuss cache design implications.
+
+Practice checks:
+- Implement small WeakHashMap cache for derived values.
+- Validate cache hit/miss behavior under memory pressure.`,
+            codeExamples: {
+                java: `import java.lang.ref.WeakReference;
+
+public class ReferencesLectureSet {
+    static class Payload {
+        final String value;
+        Payload(String value) { this.value = value; }
+    }
+
+    public static void main(String[] args) {
+        Payload strong = new Payload("cached-user-profile");
+        WeakReference<Payload> weak = new WeakReference<>(strong);
+
+        System.out.println("Before clearing strong ref -> weak available: " + (weak.get() != null));
+        strong = null;
+        System.gc();
+        System.out.println("After clearing strong ref -> weak may be cleared: " + (weak.get() == null));
+    }
+}`
+            }
+        },
+        {
+            id: 'memory-leaks-in-practice',
+            title: { en: 'Memory Leaks in Practice', es: 'Fugas de Memoria en Practica' },
+            description: { en: 'Identify and fix retention leaks from long-lived collections.', es: 'Identifica y corrige fugas por colecciones de larga vida.' },
+            deepExplanation: `Conceptual breakdown:
+- In Java, leaks usually mean "unneeded objects still strongly referenced."
+- Static collections and unbounded caches are common leak sources.
+
+Code walkthrough:
+1) Simulate leak by storing request payloads in static list.
+2) Show growth over repeated requests.
+3) Apply cleanup policy and verify bounded retention.
+
+Practice checks:
+- Add max-size eviction rule.
+- Add telemetry for cache size and allocation rates.`,
+            codeExamples: {
+                java: `import java.util.ArrayList;
+import java.util.List;
+
+public class MemoryLeakPracticeLectureSet {
+    private static final List<String> requestAuditLog = new ArrayList<>();
+
+    static void handleRequest(String requestId) {
+        requestAuditLog.add("processed:" + requestId); // unbounded growth risk
+    }
+
+    static void boundedCleanup(int maxEntries) {
+        while (requestAuditLog.size() > maxEntries) {
+            requestAuditLog.remove(0);
+        }
+    }
+
+    public static void main(String[] args) {
+        for (int i = 1; i <= 8; i++) {
+            handleRequest("req-" + i);
+        }
+        System.out.println("Before cleanup size: " + requestAuditLog.size());
+        boundedCleanup(3);
+        System.out.println("After cleanup size: " + requestAuditLog.size());
+        System.out.println("Remaining entries: " + requestAuditLog);
     }
 }`
             }
