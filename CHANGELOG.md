@@ -4,6 +4,26 @@ All notable changes to **CS Course Atlas** are documented in this file.
 
 ## 2026-03-27
 
+### Mobile Navigation and Auth Boot Stability
+- Restored the left Pages menu to a proper mobile drawer on phones:
+  - sidebar toggle (`Pages`) is visible again on mobile
+  - sidebar now stays off-canvas by default and opens/closes as an overlay drawer
+  - removed the persistent icon-rail behavior on mobile that caused broken layout/spacing
+  - restored normal wrapped header controls on mobile so top actions no longer collapse into a broken grid.
+- Fixed an initialization-order runtime bug that could throw during startup:
+  - guarded auth-scoped storage checks so `safeGetItem(...)` no longer crashes when auth state is not initialized yet
+  - hardened `hasAuthenticatedInsightsAccess()` to safely return `false` during early boot instead of throwing.
+- Updated cache-busting query versions for `css/styles.css` (route pages) and `js/script.js` (`index.html`) so clients pick up the mobile/menu/runtime hotfix immediately.
+- Validation and smoke checks completed:
+  - `npm run check:frontend`
+  - `node scripts/verify_localization.js`
+  - `node scripts/verify_catalog_integrity.js`
+  - `node scripts/verify_module_examples.js`
+  - `node scripts/verify_module_outputs.js`
+  - `node scripts/verify_spanish_code_examples.js`
+  - `node scripts/verify_css_integrity.js`
+  - mobile/desktop Playwright smoke pass on key pages with viewport screenshots.
+
 ### First Five Modules Learning Quality Upgrade
 - Upgraded the first 5 modules in learning order (`intro-to-coding`, `java-basics`, `java-memory-jvm`, `git-basics-workflow`, `git-branching-merging`) with stronger lecture-style explanations, clearer outcomes, and more practice guidance.
 - Replaced weaker module-level samples with more realistic, instruction-focused code for Java and Git workflows.

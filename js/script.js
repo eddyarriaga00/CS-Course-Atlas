@@ -2402,7 +2402,7 @@ function getRouteForCategoryFilter(category) {
 }
 
 function isSidebarDrawerMode() {
-    return window.matchMedia('(min-width: 641px) and (max-width: 1023px)').matches;
+    return window.matchMedia('(max-width: 1023px)').matches;
 }
 
 function isSidebarInlineMode() {
@@ -2410,7 +2410,7 @@ function isSidebarInlineMode() {
 }
 
 function isSidebarMobileRailMode() {
-    return window.matchMedia('(max-width: 640px)').matches;
+    return false;
 }
 
 function isSidebarAutoCollapsedByTopMenu() {
@@ -12719,7 +12719,11 @@ function isAuthScopedStorageKey(key) {
 
 function shouldAllowLocalStorageAccess(key) {
     if (!isAuthScopedStorageKey(key)) return true;
-    return hasAuthenticatedInsightsAccess();
+    try {
+        return hasAuthenticatedInsightsAccess();
+    } catch (error) {
+        return false;
+    }
 }
 
 function clearAuthScopedLocalStorage() {
@@ -15217,7 +15221,11 @@ function updateAccountChip() {
 }
 
 function hasAuthenticatedInsightsAccess() {
-    return Boolean(accountAuthState.isAuthenticated);
+    try {
+        return Boolean(accountAuthState && accountAuthState.isAuthenticated);
+    } catch (error) {
+        return false;
+    }
 }
 
 function updateInsightsAccessGate() {
