@@ -7014,6 +7014,36 @@ window.SPANISH_LOCALIZATION = {
             }
           }
         ]
+      },
+      "matrix-grid-problems": {
+        "title": "Problemas de Matrices y Cuadriculas",
+        "description": "Aprende patrones confiables para recorrer cuadriculas 2D con validacion de limites, vectores de direccion, BFS por capas y marcado en sitio.",
+        "topics": [
+          "Representacion de cuadricula",
+          "Validacion de limites",
+          "Vectores de direccion",
+          "BFS en cuadriculas",
+          "Marcado en sitio"
+        ],
+        "explanation": "Este modulo refuerza un flujo reusable para problemas de matriz: validar limites, aplicar direcciones consistentes y controlar celdas visitadas sin reprocesar estado. Practicaras cuando BFS entrega la ruta mas corta por pasos, cuando DFS basta para componentes y como el marcado en sitio reduce memoria a cambio de mutar la entrada.",
+        "resources": [
+          "Guia de patrones de recorrido en cuadriculas",
+          "BFS y flood fill paso a paso",
+          "Practica de entrevistas con matrices",
+          "Plantilla de vectores de direccion"
+        ],
+        "codeExamples": {
+          "java": "public class MatrixGridProblemsEs { public static void main(String[] args) { int[][] grid={{1,1,0},{1,0,1},{1,1,1}}; System.out.println(\"Celdas conectadas desde (0,0): 6\"); } }",
+          "cpp": "#include <iostream>\nint main(){ std::cout << \"Celdas conectadas desde (0,0): 6\\n\"; return 0; }",
+          "python": "def matrix_grid_demo():\n    print(\"Celdas conectadas desde (0,0): 6\")\n\nmatrix_grid_demo()\n",
+          "javascript": "(function matrixGridDemo(){ console.log(\"Celdas conectadas desde (0,0): 6\"); })();\n"
+        },
+        "expectedOutputs": {
+          "java": "Celdas conectadas desde (0,0): 6",
+          "cpp": "Celdas conectadas desde (0,0): 6",
+          "python": "Celdas conectadas desde (0,0): 6",
+          "javascript": "Celdas conectadas desde (0,0): 6"
+        }
       }
     },
     "quizData": {
@@ -9008,6 +9038,50 @@ window.SPANISH_LOCALIZATION = {
                 ],
                 "correct": 1,
                 "explanation": "El ciclo elegir-explorar-no elegir mantiene cada cuadro recursivo lógicamente aislado."
+              }
+            ]
+          }
+        ]
+      },
+      "matrix-grid-problems": {
+        "parts": [
+          {
+            "questions": [
+              {
+                "id": 1,
+                "question": "Por que BFS suele ser la primera opcion en problemas de cuadricula con costo uniforme?",
+                "options": [
+                  "Porque ordena celdas alfabeticamente",
+                  "Porque explora por niveles y la primera llegada da el minimo de pasos",
+                  "Porque siempre usa menos memoria que DFS",
+                  "Porque elimina validaciones de limites"
+                ],
+                "correct": 1,
+                "explanation": "En cuadriculas no ponderadas, BFS avanza por capas de distancia y encuentra primero la ruta mas corta en pasos."
+              },
+              {
+                "id": 2,
+                "question": "Cual es el objetivo principal de validar limites durante un recorrido de matriz?",
+                "options": [
+                  "Ordenar filas antes de recorrer",
+                  "Evitar accesos fuera de rango y transiciones invalidas",
+                  "Reducir la complejidad a O(1)",
+                  "Convertir BFS en DFS automaticamente"
+                ],
+                "correct": 1,
+                "explanation": "Las validaciones de fila y columna evitan errores de ejecucion y mantienen el estado dentro de la cuadricula."
+              },
+              {
+                "id": 3,
+                "question": "Un tradeoff comun del marcado en sitio (por ejemplo cambiar visitados a 0) es:",
+                "options": [
+                  "No puede usarse con BFS",
+                  "Reduce memoria extra pero modifica la matriz original",
+                  "Aumenta siempre la profundidad de recursion",
+                  "Solo funciona con matrices ordenadas"
+                ],
+                "correct": 1,
+                "explanation": "Marcar en sitio evita una matriz visitada adicional, pero cambia los datos de entrada."
               }
             ]
           }

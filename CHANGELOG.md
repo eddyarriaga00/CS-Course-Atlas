@@ -4,6 +4,14 @@ All notable changes to **CS Course Atlas** are documented in this file.
 
 ## 2026-03-26
 
+### New DSA Class: Matrix and Grid Problem Solving
+- Added a new class/module `matrix-grid-problems` to the DSA catalog with:
+  - category + learning sequence integration
+  - module content (topics, explanation, resources, runnable Java sample)
+  - quiz coverage in `quizData`
+  - Spanish localization for module + quiz data
+- Regenerated crawlable route/module pages and sitemap assets so the new class is discoverable and consistent across public pages.
+
 ### Startup Environment Validation (Backend)
 - Added a fail-fast server environment validator in `server/env-validation.js` to catch unsafe or malformed runtime configuration before serving traffic.
 - Validation now enforces critical production rules (cookie security, OAuth state secret, host allowlist, cross-origin cookie policy compatibility) and validates OAuth provider env pairing/redirect URL formats.

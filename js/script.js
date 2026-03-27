@@ -564,6 +564,7 @@ const MODULE_CATEGORY_BY_ID = {
     'heaps': 'dsa',
     'sorting-algorithms': 'dsa',
     'searching-algorithms': 'dsa',
+    'matrix-grid-problems': 'dsa',
     'recursion': 'dsa',
     'backtracking-patterns': 'dsa',
     'dynamic-programming': 'dsa',
@@ -588,6 +589,7 @@ const MODULE_LEARNING_SEQUENCE = [
     'oop-basics',
     'exception-handling',
     'arrays-strings',
+    'matrix-grid-problems',
     'searching-algorithms',
     'stacks-queues',
     'linked-lists',
@@ -4877,6 +4879,33 @@ const quizData = {
                 }
             ]
         }]
+    },
+    'matrix-grid-problems': {
+        parts: [{
+            questions: [
+                {
+                    id: 1,
+                    question: "Why is BFS often used first for shortest-path style grid problems with uniform edge costs?",
+                    options: ["It guarantees lexicographic order", "It explores cells level by level, so first reach gives minimum steps", "It always uses less memory than DFS", "It avoids boundary checks"],
+                    correct: 1,
+                    explanation: "In unweighted grids, BFS expands by distance layers, so the first time a target is reached is the shortest path length."
+                },
+                {
+                    id: 2,
+                    question: "What is the main purpose of boundary validation in grid traversal code?",
+                    options: ["To sort rows before traversal", "To prevent out-of-bounds access and invalid state transitions", "To reduce algorithm complexity to O(1)", "To convert BFS into DFS"],
+                    correct: 1,
+                    explanation: "Boundary checks ensure row/column indices stay inside the grid and avoid runtime errors."
+                },
+                {
+                    id: 3,
+                    question: "A common tradeoff of in-place marking (for example setting visited cells to 0) is:",
+                    options: ["It cannot be used with BFS", "It reduces extra memory but mutates the input grid", "It forces recursion depth to increase", "It only works on sorted matrices"],
+                    correct: 1,
+                    explanation: "In-place marking avoids a separate visited matrix, but changes original data which may need preservation."
+                }
+            ]
+        }]
     }
 };
 // Modules Data (Complete with ALL LANGUAGES)
@@ -7972,6 +8001,58 @@ public class BacktrackingSubsets {
 }`,
         explanation: `Backtracking is systematic search with reversible state. This module builds strong template discipline so you can adapt one structure to many problem families while keeping complexity and pruning decisions explicit.`,
         resources: ['Backtracking Template Guide', 'Pruning Heuristics', 'Constraint Satisfaction Basics']
+    },
+    {
+        id: 'matrix-grid-problems',
+        title: 'Matrix and Grid Problem Solving',
+        description: 'Learn reliable patterns for traversing 2D grids using boundary checks, direction vectors, BFS waves, and in-place marking strategies.',
+        difficulty: 'intermediate',
+        topics: ['Grid Representation', 'Boundary Validation', 'Direction Vectors', 'BFS on Grids', 'In-Place Marking'],
+        codeExample: `import java.util.ArrayDeque;
+import java.util.Queue;
+
+public class MatrixGridProblems {
+    static final int[][] DIRS = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+    static int reachableCells(int[][] grid, int startRow, int startCol) {
+        if (grid[startRow][startCol] == 0) return 0;
+        int rows = grid.length;
+        int cols = grid[0].length;
+        Queue<int[]> queue = new ArrayDeque<>();
+        queue.offer(new int[] {startRow, startCol});
+        grid[startRow][startCol] = 0; // in-place visited mark
+
+        int visited = 0;
+        while (!queue.isEmpty()) {
+            int[] cell = queue.poll();
+            visited++;
+            int row = cell[0];
+            int col = cell[1];
+
+            for (int[] direction : DIRS) {
+                int nextRow = row + direction[0];
+                int nextCol = col + direction[1];
+                boolean inBounds = nextRow >= 0 && nextRow < rows && nextCol >= 0 && nextCol < cols;
+                if (!inBounds || grid[nextRow][nextCol] == 0) continue;
+                grid[nextRow][nextCol] = 0;
+                queue.offer(new int[] {nextRow, nextCol});
+            }
+        }
+        return visited;
+    }
+
+    public static void main(String[] args) {
+        int[][] grid = {
+            {1, 1, 0, 1},
+            {1, 1, 0, 0},
+            {0, 1, 1, 1}
+        };
+        int visited = reachableCells(grid, 0, 0);
+        System.out.println("Reachable cells from (0,0): " + visited);
+    }
+}`,
+        explanation: `This class teaches matrix/grid confidence with one reusable workflow: validate boundaries, move through consistent direction vectors, and track visited state without accidental reprocessing. You will learn when BFS gives shortest-step guarantees, when DFS is enough for component counting, and how in-place marking changes memory use and side effects. The goal is to make your grid code predictable, testable, and easy to adapt for islands, flood fill, shortest path, and region counting problems.`,
+        resources: ['Grid Traversal Pattern Sheet', 'BFS Flood Fill Walkthrough', 'Matrix Interview Practice Set', 'Direction Vector Template']
     }
 ];
 
