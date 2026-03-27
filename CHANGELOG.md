@@ -4,6 +4,20 @@ All notable changes to **CS Course Atlas** are documented in this file.
 
 ## 2026-03-27
 
+### Mobile Left Menu Restored (Phone, 30-40 Commits Baseline)
+- Restored the phone left-menu/sidebar behavior to match the proven implementation from commit `83286fe` (`Auto-open sidebar flashcards and quizzes routes`), which was in the requested 30-40 commit range.
+- Reverted mobile sidebar shell/sidebar layout rules back to the compact rail + expandable overlay pattern that previously felt stable on mobile.
+- Reverted mobile sidebar JS state handling to the same baseline logic used in that commit for drawer/backdrop behavior and route-link interaction.
+- Kept all newer module content, localization, and backend/auth improvements untouched.
+- Validation completed:
+  - `npm run check:frontend`
+  - `node scripts/verify_css_integrity.js`
+  - `node scripts/verify_localization.js`
+  - `node scripts/verify_catalog_integrity.js`
+  - `node scripts/verify_module_examples.js`
+  - `node scripts/verify_module_outputs.js`
+  - `node scripts/verify_spanish_code_examples.js`
+
 ### Mobile Menu Overlay + Pages Button Removal (Phone)
 - Updated phone navigation so the left menu overlays content instead of occupying layout width, preventing module/content squeeze.
 - Kept backdrop blur behavior during menu expansion for clear focus.

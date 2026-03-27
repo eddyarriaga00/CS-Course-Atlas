@@ -2517,22 +2517,14 @@ function setSidebarExpandedState(expanded) {
     const sidebar = document.getElementById('app-sidebar');
     const backdrop = document.getElementById('sidebar-backdrop');
     const drawerMode = isSidebarDrawerMode();
-    const mobileRailMode = isSidebarMobileRailMode();
     if (toggleButton) {
         toggleButton.setAttribute('aria-expanded', expanded ? 'true' : 'false');
     }
     if (sidebar) {
-        if (drawerMode || mobileRailMode) {
-            sidebar.setAttribute('aria-hidden', expanded ? 'false' : 'true');
-        } else {
-            sidebar.setAttribute('aria-hidden', 'false');
-        }
+        sidebar.setAttribute('aria-hidden', drawerMode ? (expanded ? 'false' : 'true') : 'false');
     }
     if (backdrop) {
-        const showBackdrop = drawerMode
-            ? expanded
-            : (mobileRailMode && appState.sidebarMobileExpanded);
-        backdrop.hidden = !showBackdrop;
+        backdrop.hidden = !drawerMode || !expanded;
     }
     syncDesktopSidebarIconMode();
 }
@@ -3043,12 +3035,6 @@ function initRouteNavigation() {
     if (toggleButton && toggleButton.dataset.boundSidebarToggle !== 'true') {
         toggleButton.dataset.boundSidebarToggle = 'true';
         toggleButton.addEventListener('click', () => {
-            if (isSidebarMobileRailMode()) {
-                appState.sidebarMobileExpanded = !appState.sidebarMobileExpanded;
-                setSidebarExpandedState(appState.sidebarMobileExpanded);
-                saveToLocalStorage();
-                return;
-            }
             if (!isSidebarDrawerMode()) return;
             if (appState.sidebarOpen) {
                 closeSidebar({ focusToggle: false });
@@ -3120,9 +3106,6 @@ function initRouteNavigation() {
             // Prevent sticky touch focus styles from lingering in the mobile rail.
             if (isSidebarMobileRailMode() && link instanceof HTMLElement) {
                 link.blur();
-                if (appState.sidebarMobileExpanded) {
-                    closeSidebar({ focusToggle: false });
-                }
             }
 
             navigateToRoute(targetRoute, { preserveScroll: false, focusMain: true });
