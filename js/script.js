@@ -3120,6 +3120,9 @@ function initRouteNavigation() {
             // Prevent sticky touch focus styles from lingering in the mobile rail.
             if (isSidebarMobileRailMode() && link instanceof HTMLElement) {
                 link.blur();
+                if (appState.sidebarMobileExpanded) {
+                    closeSidebar({ focusToggle: false });
+                }
             }
 
             navigateToRoute(targetRoute, { preserveScroll: false, focusMain: true });

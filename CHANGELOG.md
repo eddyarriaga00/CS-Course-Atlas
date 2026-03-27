@@ -4,6 +4,13 @@ All notable changes to **CS Course Atlas** are documented in this file.
 
 ## 2026-03-27
 
+### Mobile Menu Overlay + Pages Button Removal (Phone)
+- Updated phone navigation so the left menu overlays content instead of occupying layout width, preventing module/content squeeze.
+- Kept backdrop blur behavior during menu expansion for clear focus.
+- Removed the top `Pages` header button on phones (`max-width: 640px`); menu control remains in the left rail toggle.
+- Added automatic close of expanded mobile rail after selecting a route link for cleaner navigation flow.
+- Smoothed sidebar position/height transitions while header compacts on scroll to reduce visual jump.
+
 ### Mobile Pages Menu Reverted + Smoother Scroll Transition
 - Restored the previous mobile Pages-menu behavior/style (compact icon-rail pattern) while keeping the `Pages` button available on phones.
 - Updated sidebar toggle logic so `Pages` now opens/closes the mobile rail expansion state directly on small screens.
