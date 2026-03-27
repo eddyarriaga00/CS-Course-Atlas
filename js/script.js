@@ -11889,6 +11889,30 @@ const studyTips = [
     'Once per week, do a cumulative review across old modules to prevent forgetting.'
 ];
 
+function localizeModuleResources(resources = [], lang = appState.language || 'en') {
+    const source = Array.isArray(resources) ? resources : [];
+    if (lang !== 'es') return source;
+    return source.map((resource) => {
+        if (typeof resource === 'string') {
+            return translateLiteral(resource, 'es');
+        }
+        if (!resource || typeof resource !== 'object') {
+            return resource;
+        }
+        const localizedResource = { ...resource };
+        if (typeof localizedResource.text === 'string') {
+            localizedResource.text = translateLiteral(localizedResource.text, 'es');
+        }
+        if (typeof localizedResource.label === 'string') {
+            localizedResource.label = translateLiteral(localizedResource.label, 'es');
+        }
+        if (typeof localizedResource.title === 'string') {
+            localizedResource.title = translateLiteral(localizedResource.title, 'es');
+        }
+        return localizedResource;
+    });
+}
+
 function getLocalizedModule(module) {
     if (!module) return module;
     const localized = localizeEntity('modules', module.id, null);
@@ -11904,9 +11928,23 @@ function getLocalizedModule(module) {
         language
     );
     const localizedCodeExampleSets = normalizeLocalizedCodeExampleSets(module, localized || {}, language);
+    const fallbackTitle = language === 'es'
+        ? (translateLiteral(module.title, 'es') || module.title)
+        : module.title;
+    const fallbackDescription = language === 'es'
+        ? (translateLongformText(module.description, 'es') || module.description)
+        : module.description;
+    const fallbackExplanation = language === 'es'
+        ? (translateLongformText(module.explanation, 'es') || module.explanation)
+        : module.explanation;
+
     if (!localized) {
         return {
             ...module,
+            title: fallbackTitle,
+            description: fallbackDescription,
+            explanation: fallbackExplanation,
+            resources: localizeModuleResources(module.resources || [], language),
             codeExamples: localizedCodeExamples,
             expectedOutputs: localizedExpectedOutputs,
             codeExampleSets: localizedCodeExampleSets.length ? localizedCodeExampleSets : module.codeExampleSets,
@@ -11925,8 +11963,11 @@ function getLocalizedModule(module) {
     return {
         ...module,
         ...localized,
+        title: localized.title || fallbackTitle,
+        description: localized.description || fallbackDescription,
+        explanation: localized.explanation || fallbackExplanation,
         topics: localized.topics || module.topics,
-        resources: localized.resources || module.resources,
+        resources: localizeModuleResources(localized.resources || module.resources, language),
         codeExamples: localizedCodeExamples,
         expectedOutputs: localizedExpectedOutputs,
         codeExampleSets: localizedCodeExampleSets.length
@@ -12100,10 +12141,13 @@ function normalizeLocalizedCodeExampleSets(module, localizedModuleEntity = {}, l
     if (!baseSets.length) return [];
     const localizedSets = Array.isArray(localizedModuleEntity?.codeExampleSets) ? localizedModuleEntity.codeExampleSets : [];
     const localizedById = new Map(localizedSets.map((setItem) => [String(setItem.id), setItem]));
+    const localizedTopics = Array.isArray(localizedModuleEntity?.topics) ? localizedModuleEntity.topics : [];
 
     return baseSets.map((baseSet, index) => {
         const setId = String(baseSet.id || `example-${index + 1}`);
         const overlay = localizedById.get(setId) || {};
+        const localizedTopic = String(localizedTopics[index] || '').trim();
+
         const baseTitleEn = resolveLocalizedValue(baseSet.title, 'en') || `Example ${index + 1}`;
         const baseTitleEs = resolveLocalizedValue(baseSet.title, 'es');
         const overlayTitleEsRaw = resolveLocalizedValue(overlay.title, 'es');
@@ -12111,9 +12155,10 @@ function normalizeLocalizedCodeExampleSets(module, localizedModuleEntity = {}, l
         const shouldUseOverlayTitleEs = Boolean(
             overlayTitleEs && overlayTitleEs.toLowerCase() !== String(baseTitleEn).trim().toLowerCase()
         );
+        const generatedTitleEs = localizedTopic || '';
         const resolvedTitleEs = shouldUseOverlayTitleEs
             ? overlayTitleEs
-            : (baseTitleEs || overlayTitleEs || translateLiteral(baseTitleEn, 'es') || baseTitleEn);
+            : (baseTitleEs || generatedTitleEs || overlayTitleEs || translateLiteral(baseTitleEn, 'es') || baseTitleEn);
         const titleValue = lang === 'es'
             ? { en: baseTitleEn, es: resolvedTitleEs }
             : (overlay.title || baseSet.title);
@@ -12125,12 +12170,31 @@ function normalizeLocalizedCodeExampleSets(module, localizedModuleEntity = {}, l
         const shouldUseOverlayDescEs = Boolean(
             overlayDescEs && overlayDescEs.toLowerCase() !== String(baseDescEn).trim().toLowerCase()
         );
+        const generatedDescEs = localizedTopic
+            ? `Tema ${index + 1} de ${baseSets.length}: ${localizedTopic}.`
+            : '';
         const resolvedDescEs = shouldUseOverlayDescEs
             ? overlayDescEs
-            : (baseDescEs || overlayDescEs || translateLiteral(baseDescEn, 'es') || baseDescEn);
+            : (baseDescEs || generatedDescEs || overlayDescEs || translateLongformText(baseDescEn, 'es') || baseDescEn);
         const descriptionValue = lang === 'es'
             ? { en: baseDescEn, es: resolvedDescEs }
             : (overlay.description || baseSet.description);
+
+        const baseDeepEn = resolveLocalizedValue(baseSet.deepExplanation, 'en');
+        const baseDeepEs = resolveLocalizedValue(baseSet.deepExplanation, 'es');
+        const overlayDeepEsRaw = resolveLocalizedValue(overlay.deepExplanation, 'es');
+        const overlayDeepEs = String(overlayDeepEsRaw || '').trim();
+        const shouldUseOverlayDeepEs = Boolean(
+            overlayDeepEs && overlayDeepEs.toLowerCase() !== String(baseDeepEn || '').trim().toLowerCase()
+        );
+        const deepExplanationValue = lang === 'es'
+            ? {
+                en: baseDeepEn || '',
+                es: shouldUseOverlayDeepEs
+                    ? overlayDeepEs
+                    : (baseDeepEs || overlayDeepEs || translateLongformText(baseDeepEn || '', 'es') || baseDeepEn || '')
+            }
+            : (overlay.deepExplanation || baseSet.deepExplanation || '');
 
         const codeExamples = normalizeLocalizedCodeExamples(baseSet.codeExamples || {}, overlay.codeExamples || {}, lang);
         const expectedOutputs = normalizeLocalizedExpectedOutputs(baseSet.expectedOutputs || {}, overlay.expectedOutputs || {}, lang);
@@ -12141,6 +12205,7 @@ function normalizeLocalizedCodeExampleSets(module, localizedModuleEntity = {}, l
             id: setId,
             title: titleValue,
             description: descriptionValue,
+            deepExplanation: deepExplanationValue,
             codeExamples,
             expectedOutputs
         };
@@ -22156,8 +22221,8 @@ function renderModules() {
             <div id="module-${module.id}" data-module-card="${module.id}" class="module-card ${cardThemeClasses} ${starterCardClass} rounded-xl p-4 sm:p-6 shadow-xl border hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
                 <!-- Module Header -->
                 <div class="flex flex-col sm:flex-row justify-between items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
-                    <h3 class="${starterTitleClass} font-semibold text-indigo-600 leading-tight ${isAccentModule ? 'module-accent-text' : ''}">
-                        ${localizedModule.title}
+                    <h3 class="${starterTitleClass} font-semibold text-indigo-600 leading-tight break-words ${isAccentModule ? 'module-accent-text' : ''}">
+                        ${escapeHtml(localizedModule.title)}
                     </h3>
                     <span class="px-2 sm:px-2.5 py-1 rounded-lg text-xs sm:text-sm font-medium ${getDifficultyColor(module.difficulty)} whitespace-nowrap self-start sm:self-auto difficulty-badge">
                         ${translateLiteral(module.difficulty, appState.language)}
@@ -22170,7 +22235,7 @@ function renderModules() {
                     </div>
                 ` : ''}
 
-                <p class="text-slate-600 mb-3 sm:mb-4 text-sm sm:text-base leading-relaxed ${isAccentModule ? 'module-accent-text' : ''}">${localizedModule.description}</p>
+                <p class="text-slate-600 mb-3 sm:mb-4 text-sm sm:text-base leading-relaxed break-words ${isAccentModule ? 'module-accent-text' : ''}">${escapeHtml(localizedModule.description)}</p>
 
                 <!-- Topics -->
                 <div class="mb-3 sm:mb-4">
@@ -22401,7 +22466,7 @@ function renderModules() {
 
                 <!-- Explanation -->
                 <div class="bg-indigo-50 border-indigo-200 border-l-4 border-l-indigo-500 p-3 sm:p-4 mb-3 sm:mb-4 rounded-r-lg">
-                    <div class="whitespace-pre-line text-xs sm:text-sm text-slate-800">${localizedModule.explanation}</div>
+                    <div class="whitespace-pre-line text-xs sm:text-sm text-slate-800 break-words">${escapeHtml(localizedModule.explanation)}</div>
                 </div>
 
                 <!-- Resources -->

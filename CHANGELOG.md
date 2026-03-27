@@ -30,6 +30,13 @@ All notable changes to **CS Course Atlas** are documented in this file.
   - guest sessions no longer persist settings/progress/notes across reloads
   - auth-scoped local keys are cleared on sign-out/session-expired paths
   - guest writes to auth-scoped local storage are dropped
+- Improved Spanish module rendering fallback for release polish:
+  - localized module resources now translate label text in ES mode when only EN labels exist
+  - example-set fallback now uses localized module topics to generate Spanish titles/descriptions when overlay localization is incomplete
+  - deep explanation fallback now prefers Spanish longform content and avoids stale EN overrides
+- Visual/security hardening for module cards:
+  - escaped module title/description/explanation rendering to avoid unsafe HTML injection
+  - added word-break handling for long localized content to prevent mobile overflow in module cards
 - Re-ran validation checks after fixes:
   - `npm run check:frontend`
   - `node scripts/verify_localization.js`
