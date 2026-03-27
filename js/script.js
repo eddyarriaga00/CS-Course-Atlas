@@ -14236,7 +14236,10 @@ const DS_VIS_ASSET_URLS = Object.freeze({
     visScript: 'https://unpkg.com/vis-network@9.1.9/dist/vis-network.min.js',
     visStylesheet: 'https://unpkg.com/vis-network@9.1.9/styles/vis-network.min.css'
 });
-const dsExternalAssetPromises = new Map();
+const dsExternalAssetPromises = (typeof window !== 'undefined'
+    && window.CSAtlasRuntime?.assetLoader?.sharedPromises instanceof Map)
+    ? window.CSAtlasRuntime.assetLoader.sharedPromises
+    : new Map();
 let playgroundState = {
     language: 'java',
     snippetId: '',
@@ -14844,6 +14847,15 @@ function readAccountAuthForm() {
 }
 
 function getScriptDerivedBasePath() {
+    const runtimeResolver = typeof window !== 'undefined'
+        ? window.CSAtlasRuntime?.getScriptDerivedBasePath
+        : null;
+    if (typeof runtimeResolver === 'function') {
+        const runtimeBasePath = runtimeResolver('js/script.js');
+        if (typeof runtimeBasePath === 'string') {
+            return runtimeBasePath.trim();
+        }
+    }
     if (typeof document === 'undefined' || typeof window === 'undefined') return '';
     const scriptEl = document.querySelector('script[src*="js/script.js"]');
     const scriptSrc = scriptEl?.getAttribute('src');
@@ -14862,9 +14874,34 @@ const APP_BASE_PATH = getScriptDerivedBasePath();
 
 function withAppBasePath(path) {
     const normalizedPath = String(path || '').trim();
+    if (!normalizedPath) return normalizedPath;
+    const runtimeWithAppBasePath = typeof window !== 'undefined'
+        ? window.CSAtlasRuntime?.withAppBasePath
+        : null;
+    if (typeof runtimeWithAppBasePath === 'function') {
+        return runtimeWithAppBasePath(normalizedPath, APP_BASE_PATH);
+    }
     if (!normalizedPath.startsWith('/')) return normalizedPath;
     if (!APP_BASE_PATH) return normalizedPath;
     return `${APP_BASE_PATH}${normalizedPath}`;
+}
+
+function resolveAssetUrlWithBase(value) {
+    const normalizedValue = String(value || '').trim();
+    if (!normalizedValue) return normalizedValue;
+    const runtimeResolveAssetUrl = typeof window !== 'undefined'
+        ? window.CSAtlasRuntime?.resolveAssetUrl
+        : null;
+    if (typeof runtimeResolveAssetUrl === 'function') {
+        return runtimeResolveAssetUrl(normalizedValue, APP_BASE_PATH);
+    }
+    if (normalizedValue.startsWith('/')) {
+        return withAppBasePath(normalizedValue);
+    }
+    if (/^(?:[a-zA-Z][a-zA-Z\d+\-.]*:)?\/\//.test(normalizedValue)) {
+        return normalizedValue;
+    }
+    return withAppBasePath(`/${normalizedValue.replace(/^\/+/, '')}`);
 }
 
 function isLocalhostRuntime() {
@@ -18242,6 +18279,17 @@ function loadExternalScriptOnce(id, src, readyCheck) {
     if (typeof window === 'undefined' || typeof document === 'undefined') {
         return Promise.resolve(false);
     }
+    const runtimeAssetLoader = window.CSAtlasRuntime?.assetLoader;
+    if (runtimeAssetLoader && typeof runtimeAssetLoader.loadScriptOnce === 'function') {
+        return runtimeAssetLoader.loadScriptOnce({
+            id,
+            src,
+            readyCheck,
+            defer: true,
+            cacheMap: dsExternalAssetPromises,
+            basePath: APP_BASE_PATH
+        });
+    }
     if (typeof readyCheck === 'function' && readyCheck()) {
         return Promise.resolve(true);
     }
@@ -18250,6 +18298,7 @@ function loadExternalScriptOnce(id, src, readyCheck) {
 
     const promise = new Promise((resolve) => {
         let script = document.getElementById(id);
+        const resolvedSrc = resolveAssetUrlWithBase(src);
 
         const onLoad = () => {
             if (script) script.dataset.loaded = 'true';
@@ -18262,12 +18311,18 @@ function loadExternalScriptOnce(id, src, readyCheck) {
         if (!script) {
             script = document.createElement('script');
             script.id = id;
-            script.src = src;
+            script.src = resolvedSrc;
             script.defer = true;
             script.addEventListener('load', onLoad, { once: true });
             script.addEventListener('error', onError, { once: true });
             document.head.appendChild(script);
             return;
+        }
+
+        const existingSrc = String(script.getAttribute('src') || '').trim();
+        if (existingSrc !== resolvedSrc) {
+            script.dataset.loaded = 'false';
+            script.setAttribute('src', resolvedSrc);
         }
 
         if (script.dataset.loaded === 'true') {
@@ -18292,6 +18347,15 @@ function loadExternalStylesheetOnce(id, href) {
     if (typeof document === 'undefined') {
         return Promise.resolve(false);
     }
+    const runtimeAssetLoader = typeof window !== 'undefined' ? window.CSAtlasRuntime?.assetLoader : null;
+    if (runtimeAssetLoader && typeof runtimeAssetLoader.loadStylesheetOnce === 'function') {
+        return runtimeAssetLoader.loadStylesheetOnce({
+            id,
+            href,
+            cacheMap: dsExternalAssetPromises,
+            basePath: APP_BASE_PATH
+        });
+    }
     const existingPromise = dsExternalAssetPromises.get(id);
     if (existingPromise) return existingPromise;
 
@@ -18305,7 +18369,7 @@ function loadExternalStylesheetOnce(id, href) {
         const link = document.createElement('link');
         link.id = id;
         link.rel = 'stylesheet';
-        link.href = href;
+        link.href = resolveAssetUrlWithBase(href);
         link.addEventListener('load', () => resolve(true), { once: true });
         link.addEventListener('error', () => resolve(false), { once: true });
         document.head.appendChild(link);

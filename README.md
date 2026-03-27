@@ -43,6 +43,7 @@ Open: `http://127.0.0.1:3000`
 
 Note for local development:
 - If you run the frontend from another localhost port (for example `http://localhost:5500`), auth/API calls will automatically target `http://localhost:3000`.
+- The backend now performs strict startup environment validation and will fail fast with actionable errors if critical variables are malformed.
 
 ### 2.5) Public auth with GitHub Pages + Neon API
 GitHub Pages is static-only, so auth/session + SQL must run on a separate Node host.
@@ -130,6 +131,7 @@ CS Course Atlas helps learners study through structured modules, code examples, 
 
 ## Project Layout
 - `index.html` stays at project root as the primary app entrypoint.
+- `js/runtime/` contains shared frontend runtime helpers (base-path resolution and lazy asset loading).
 - `modules/` contains crawlable per-module pages.
 - `server/` contains backend API/auth/SQL code.
 - `scripts/` contains build/verification/diagnostic scripts.

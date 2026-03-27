@@ -2,6 +2,24 @@
 
 All notable changes to **CS Course Atlas** are documented in this file.
 
+## 2026-03-26
+
+### Startup Environment Validation (Backend)
+- Added a fail-fast server environment validator in `server/env-validation.js` to catch unsafe or malformed runtime configuration before serving traffic.
+- Validation now enforces critical production rules (cookie security, OAuth state secret, host allowlist, cross-origin cookie policy compatibility) and validates OAuth provider env pairing/redirect URL formats.
+- `server/index.js` now blocks startup on invalid configuration and prints structured environment warnings for non-fatal misconfigurations.
+
+### Frontend Runtime Modularization (Phase 1)
+- Split shared runtime utilities out of `js/script.js` into dedicated modules:
+  - `js/runtime/path-utils.js` for app base-path and route-safe URL resolution
+  - `js/runtime/asset-loader.js` for reusable lazy script/stylesheet loading
+- Updated `index.html` to load runtime modules before `js/script.js`.
+
+### Route-Safe Lazy Asset Loading
+- Updated lazy loader paths to resolve through app base-path utilities so assets load correctly across routed pages and subpaths.
+- Wired DS external asset loading to the shared runtime loader with path-safe URL resolution and shared promise caching.
+- Kept existing fallback logic in `js/script.js` for runtime safety if external helpers are unavailable.
+
 ## 2026-03-25
 
 ### Module Code Translation + Playground UX

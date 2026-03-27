@@ -10,6 +10,7 @@ const jwt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
 
 const { query, withTransaction, closeDb } = require('./db');
+const { validateServerEnvironment } = require('./env-validation');
 const {
     randomToken,
     hashSessionToken,
@@ -142,6 +143,28 @@ const BOOK_LIBRARY = [
         filePaths: DEFAULT_LIANG_BOOK_PATHS
     }
 ];
+
+const environmentValidation = validateServerEnvironment({
+    env: process.env,
+    isProduction,
+    derived: {
+        sessionCookieSecure: SESSION_COOKIE_SECURE,
+        sessionCookieSameSite: SESSION_COOKIE_SAME_SITE,
+        allowedHostsCount: ALLOWED_HOSTS.size,
+        allowedOriginsCount: ALLOWED_ORIGINS.size,
+        oauthStateSecretConfigured: Boolean(OAUTH_STATE_SECRET),
+        oauthPostLoginFallbackPath: OAUTH_POST_LOGIN_FALLBACK_PATH
+    }
+});
+
+if (!environmentValidation.ok) {
+    const details = environmentValidation.errors.map((issue) => `- ${issue}`).join('\n');
+    throw new Error(`Invalid server environment configuration:\n${details}`);
+}
+
+environmentValidation.warnings.forEach((warning) => {
+    console.warn(`[env] ${warning}`);
+});
 
 const googleJwksClient = jwksClient({
     jwksUri: 'https://www.googleapis.com/oauth2/v3/certs',
