@@ -4,14 +4,6 @@ All notable changes to **CS Course Atlas** are documented in this file.
 
 ## 2026-03-27
 
-### Mobile Menu Revert + Stability Fix
-- Reverted mobile sidebar behavior from icon-rail mode back to standard drawer navigation for small screens.
-- Updated route/menu mode detection so mobile (`<=1023px`) uses the same drawer open/close flow and backdrop behavior as the stable tablet experience.
-- Disabled the mobile rail-mode code path that was forcing icon-only navigation and causing broken/awkward mobile menu behavior.
-- Validation pass:
-  - `npm run check:frontend`
-  - `node scripts/verify_css_integrity.js`
-
 ### Home Control Center + Module Flow Polish
 - Added a new home-page `Control Center` section directly after guided-start with three launch cards:
   - Resume Learning (next recommended module)

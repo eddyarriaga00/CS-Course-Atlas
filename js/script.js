@@ -2467,7 +2467,7 @@ function getRouteForCategoryFilter(category) {
 }
 
 function isSidebarDrawerMode() {
-    return window.matchMedia('(max-width: 1023px)').matches;
+    return window.matchMedia('(min-width: 641px) and (max-width: 1023px)').matches;
 }
 
 function isSidebarInlineMode() {
@@ -2475,7 +2475,7 @@ function isSidebarInlineMode() {
 }
 
 function isSidebarMobileRailMode() {
-    return false;
+    return window.matchMedia('(max-width: 640px)').matches;
 }
 
 function isSidebarAutoCollapsedByTopMenu() {
