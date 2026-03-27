@@ -12,19 +12,6 @@ All notable changes to **CS Course Atlas** are documented in this file.
   - `npm run check:frontend`
   - `node scripts/verify_css_integrity.js`
 
-### Mobile CSS Override Cleanup (Drawer + Header Controls)
-- Replaced the large `@media (max-width: 640px)` parity block that forced a persistent icon rail on phones.
-- Restored standard mobile drawer behavior in CSS:
-  - sidebar hidden off-canvas by default and slides in only when `body.sidebar-open` is active
-  - mobile hamburger remains visible
-  - sidebar close button/title visible again
-  - sidebar collapse icon-rail control hidden on phones
-- Restored compact normal header controls on mobile by removing forced 3-column button grid behavior.
-- Added mobile-safe overrides so `sidebar-icon-only` no longer collapses sidebar links into icon-only pills on phones.
-- Validation pass:
-  - `npm run check:frontend`
-  - `node scripts/verify_css_integrity.js`
-
 ### Home Control Center + Module Flow Polish
 - Added a new home-page `Control Center` section directly after guided-start with three launch cards:
   - Resume Learning (next recommended module)
