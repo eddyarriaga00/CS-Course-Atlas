@@ -4,6 +4,12 @@ All notable changes to **CS Course Atlas** are documented in this file.
 
 ## 2026-03-27
 
+### Mobile Pages Menu Reverted + Smoother Scroll Transition
+- Restored the previous mobile Pages-menu behavior/style (compact icon-rail pattern) while keeping the `Pages` button available on phones.
+- Updated sidebar toggle logic so `Pages` now opens/closes the mobile rail expansion state directly on small screens.
+- Improved mobile sidebar motion while scrolling by smoothing top/max-height transitions tied to header compacting, plus smoother shell/menu transition timing.
+- Kept existing desktop/tablet sidebar behavior unchanged.
+
 ### Module Topic Explanations Coverage
 - Added guaranteed deep code-explanation fallback generation for module topic example sets.
 - Every normalized `codeExampleSets` entry now receives a non-empty `deepExplanation` value, even when no manual override is present.

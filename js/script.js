@@ -2402,7 +2402,7 @@ function getRouteForCategoryFilter(category) {
 }
 
 function isSidebarDrawerMode() {
-    return window.matchMedia('(max-width: 1023px)').matches;
+    return window.matchMedia('(min-width: 641px) and (max-width: 1023px)').matches;
 }
 
 function isSidebarInlineMode() {
@@ -2410,7 +2410,7 @@ function isSidebarInlineMode() {
 }
 
 function isSidebarMobileRailMode() {
-    return false;
+    return window.matchMedia('(max-width: 640px)').matches;
 }
 
 function isSidebarAutoCollapsedByTopMenu() {
@@ -2517,14 +2517,22 @@ function setSidebarExpandedState(expanded) {
     const sidebar = document.getElementById('app-sidebar');
     const backdrop = document.getElementById('sidebar-backdrop');
     const drawerMode = isSidebarDrawerMode();
+    const mobileRailMode = isSidebarMobileRailMode();
     if (toggleButton) {
         toggleButton.setAttribute('aria-expanded', expanded ? 'true' : 'false');
     }
     if (sidebar) {
-        sidebar.setAttribute('aria-hidden', drawerMode ? (expanded ? 'false' : 'true') : 'false');
+        if (drawerMode || mobileRailMode) {
+            sidebar.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+        } else {
+            sidebar.setAttribute('aria-hidden', 'false');
+        }
     }
     if (backdrop) {
-        backdrop.hidden = !drawerMode || !expanded;
+        const showBackdrop = drawerMode
+            ? expanded
+            : (mobileRailMode && appState.sidebarMobileExpanded);
+        backdrop.hidden = !showBackdrop;
     }
     syncDesktopSidebarIconMode();
 }
@@ -3035,6 +3043,12 @@ function initRouteNavigation() {
     if (toggleButton && toggleButton.dataset.boundSidebarToggle !== 'true') {
         toggleButton.dataset.boundSidebarToggle = 'true';
         toggleButton.addEventListener('click', () => {
+            if (isSidebarMobileRailMode()) {
+                appState.sidebarMobileExpanded = !appState.sidebarMobileExpanded;
+                setSidebarExpandedState(appState.sidebarMobileExpanded);
+                saveToLocalStorage();
+                return;
+            }
             if (!isSidebarDrawerMode()) return;
             if (appState.sidebarOpen) {
                 closeSidebar({ focusToggle: false });
