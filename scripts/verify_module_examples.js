@@ -120,6 +120,21 @@ function main() {
                 errors.push(`Module "${module.id}" set "${setId || setIndex}" is missing description.`);
             }
 
+            const deepExplanationValue = setItem?.deepExplanation;
+            const hasDeepExplanation = typeof deepExplanationValue === 'string'
+                ? !!deepExplanationValue.trim()
+                : !!(
+                    deepExplanationValue
+                    && typeof deepExplanationValue === 'object'
+                    && (
+                        String(deepExplanationValue.en || '').trim()
+                        || String(deepExplanationValue.es || '').trim()
+                    )
+                );
+            if (!hasDeepExplanation) {
+                errors.push(`Module "${module.id}" set "${setId || setIndex}" is missing deepExplanation.`);
+            }
+
             const setCodeExamples = setItem?.codeExamples || {};
             requiredSetLanguages.forEach((lang) => {
                 if (!String(setCodeExamples[lang] || '').trim()) {
@@ -204,6 +219,7 @@ function main() {
     console.log('- java/cpp/python/javascript parity: OK');
     console.log('- assembly + runnable parity: OK');
     console.log('- full codeExampleSets coverage: OK');
+    console.log('- topic-level deep explanations: OK');
     console.log('- definitions (5 each): OK');
     console.log('- topic filter/category split (java+git): OK');
     console.log('- no coaching output prompts: OK');

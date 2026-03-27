@@ -4,6 +4,12 @@ All notable changes to **CS Course Atlas** are documented in this file.
 
 ## 2026-03-27
 
+### Module Topic Explanations Coverage
+- Added guaranteed deep code-explanation fallback generation for module topic example sets.
+- Every normalized `codeExampleSets` entry now receives a non-empty `deepExplanation` value, even when no manual override is present.
+- Added normalization support for object-form explanations (`{ en, es }`) so partial localized entries still keep complete explanation coverage.
+- Updated verification (`scripts/verify_module_examples.js`) to fail if any topic-level example set is missing a deep explanation.
+
 ### Mobile Navigation and Auth Boot Stability
 - Restored the left Pages menu to a proper mobile drawer on phones:
   - sidebar toggle (`Pages`) is visible again on mobile

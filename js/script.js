@@ -8714,6 +8714,65 @@ function buildGeneratedCodeExampleSets(module) {
     }));
 }
 
+function buildGeneratedSetDeepExplanation(module, topicTitle, topicDescription, topicIndex, totalTopics) {
+    const moduleTitle = String(module?.title || 'Module').trim() || 'Module';
+    const focusTopic = String(topicTitle || `Topic ${topicIndex + 1}`).trim() || `Topic ${topicIndex + 1}`;
+    const total = Math.max(1, Number(totalTopics) || 1);
+    const sequenceLabel = `${topicIndex + 1}/${total}`;
+    const descriptionText = String(topicDescription || '').trim();
+    const objectiveLine = descriptionText
+        ? `Focus objective: ${descriptionText}`
+        : `Focus objective: Implement and explain ${focusTopic} with visible output and clear reasoning.`;
+
+    return `Conceptual breakdown:
+- This topic anchors ${moduleTitle} through ${focusTopic}.
+- Read the sample top-to-bottom and map each block to the topic goal.
+- Verify how setup, control flow, and output connect for this exact idea.
+
+Code walkthrough:
+1) Identify the setup values and why they model ${focusTopic}.
+2) Trace each decision/loop step and write down intermediate state.
+3) Confirm final output and explain why the result is correct.
+
+Common mistakes:
+- Copying code without explaining each line's purpose.
+- Ignoring boundary cases and only testing happy paths.
+- Editing many lines at once, which hides root-cause bugs.
+
+Practice checks:
+- Run at least two custom inputs and compare output behavior.
+- Add one short comment per logical block.
+- Summarize time/space tradeoffs for this implementation.
+
+${objectiveLine}
+Topic sequence: ${sequenceLabel}.`;
+}
+
+function normalizeSetDeepExplanationValue(rawValue, fallbackText) {
+    const fallback = String(fallbackText || '').trim();
+    if (typeof rawValue === 'string') {
+        const trimmed = rawValue.trim();
+        return trimmed || fallback;
+    }
+    if (rawValue && typeof rawValue === 'object') {
+        const normalized = { ...rawValue };
+        const en = String(rawValue.en || '').trim();
+        const es = String(rawValue.es || '').trim();
+        if (en) {
+            normalized.en = en;
+        } else if (fallback) {
+            normalized.en = fallback;
+        }
+        if (es) {
+            normalized.es = es;
+        }
+        if (String(normalized.en || '').trim() || String(normalized.es || '').trim()) {
+            return normalized;
+        }
+    }
+    return fallback;
+}
+
 function buildModuleDefinitions(module, language = 'en') {
     const lang = language === 'es' ? 'es' : 'en';
     const title = String(module?.title || (lang === 'es' ? 'este modulo' : 'this module'));
@@ -11645,6 +11704,9 @@ function normalizeModuleCodeExampleSets(module) {
         const setTitleText = typeof setTitle === 'string'
             ? setTitle
             : String(setTitle?.en || setTitle?.es || Object.values(setTitle || {})[0] || `Example ${index + 1}`);
+        const setDescriptionText = typeof setDescription === 'string'
+            ? setDescription
+            : String(setDescription?.en || setDescription?.es || Object.values(setDescription || {})[0] || '');
         const sourceCodeExamples = exampleSet.codeExamples && typeof exampleSet.codeExamples === 'object'
             ? { ...exampleSet.codeExamples }
             : {};
@@ -11680,12 +11742,23 @@ function normalizeModuleCodeExampleSets(module) {
             normalizedCodeExamples,
             sourceExpectedOutputs
         );
+        const generatedDeepExplanation = buildGeneratedSetDeepExplanation(
+            module,
+            setTitleText,
+            setDescriptionText,
+            index,
+            sourceSets.length
+        );
+        const normalizedDeepExplanation = normalizeSetDeepExplanationValue(
+            exampleSet.deepExplanation,
+            generatedDeepExplanation
+        );
 
         return {
             id: setId,
             title: setTitle,
             description: setDescription,
-            deepExplanation: exampleSet.deepExplanation || '',
+            deepExplanation: normalizedDeepExplanation,
             codeExamples: normalizedCodeExamples,
             expectedOutputs: normalizedExpectedOutputs
         };
