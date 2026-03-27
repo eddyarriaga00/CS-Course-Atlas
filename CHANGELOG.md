@@ -25,6 +25,11 @@ All notable changes to **CS Course Atlas** are documented in this file.
 ### Bug Fixes and UX Improvements
 - Added known-resource URL resolution in frontend resource normalization so legacy string-only module resources (for example `Official Git Book`, `Java Documentation`, `Atlassian Git Tutorials`) now render as clickable links instead of plain text.
 - Expanded repository ignore rules for translation cache artifacts (`scripts/translation-cache-es.cache*`) to prevent accidental commit noise from duplicate/generated cache filenames.
+- Fixed Spanish module example-set fallback so detailed example titles/descriptions now prefer real Spanish base content when localized overlay entries are stale or still English.
+- Updated local persistence policy to be account-only:
+  - guest sessions no longer persist settings/progress/notes across reloads
+  - auth-scoped local keys are cleared on sign-out/session-expired paths
+  - guest writes to auth-scoped local storage are dropped
 - Re-ran validation checks after fixes:
   - `npm run check:frontend`
   - `node scripts/verify_localization.js`

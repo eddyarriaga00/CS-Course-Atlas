@@ -404,6 +404,20 @@ const STORAGE_KEYS = {
     DS_PLAYGROUND: 'javaDSADataStructurePlayground',
     NOTIFICATIONS: 'javaDSANotifications'
 };
+const AUTH_SCOPED_STORAGE_PREFIXES = ['javaDSA', 'dsaHub', 'cs_course_atlas_'];
+const AUTH_SCOPED_STORAGE_KEYS = new Set([
+    'javaDSAHub',
+    'dsaHubQuizStats',
+    'dsaHubUsage',
+    'cs_course_atlas_about_feedback_local',
+    STORAGE_KEYS.STUDY_METRICS,
+    STORAGE_KEYS.STUDY_HABIT,
+    STORAGE_KEYS.ACCOUNT,
+    STORAGE_KEYS.NOTES,
+    STORAGE_KEYS.STUDY_PLAN,
+    STORAGE_KEYS.DS_PLAYGROUND,
+    STORAGE_KEYS.NOTIFICATIONS
+]);
 
 const moduleOutputCache = new Map();
 const moduleOutputState = new Map();
@@ -12091,15 +12105,31 @@ function normalizeLocalizedCodeExampleSets(module, localizedModuleEntity = {}, l
         const setId = String(baseSet.id || `example-${index + 1}`);
         const overlay = localizedById.get(setId) || {};
         const baseTitleEn = resolveLocalizedValue(baseSet.title, 'en') || `Example ${index + 1}`;
-        const overlayTitleEs = resolveLocalizedValue(overlay.title, 'es');
+        const baseTitleEs = resolveLocalizedValue(baseSet.title, 'es');
+        const overlayTitleEsRaw = resolveLocalizedValue(overlay.title, 'es');
+        const overlayTitleEs = String(overlayTitleEsRaw || '').trim();
+        const shouldUseOverlayTitleEs = Boolean(
+            overlayTitleEs && overlayTitleEs.toLowerCase() !== String(baseTitleEn).trim().toLowerCase()
+        );
+        const resolvedTitleEs = shouldUseOverlayTitleEs
+            ? overlayTitleEs
+            : (baseTitleEs || overlayTitleEs || translateLiteral(baseTitleEn, 'es') || baseTitleEn);
         const titleValue = lang === 'es'
-            ? { en: baseTitleEn, es: overlayTitleEs || translateLiteral(baseTitleEn, 'es') || baseTitleEn }
+            ? { en: baseTitleEn, es: resolvedTitleEs }
             : (overlay.title || baseSet.title);
 
         const baseDescEn = resolveLocalizedValue(baseSet.description, 'en') || '';
-        const overlayDescEs = resolveLocalizedValue(overlay.description, 'es');
+        const baseDescEs = resolveLocalizedValue(baseSet.description, 'es');
+        const overlayDescEsRaw = resolveLocalizedValue(overlay.description, 'es');
+        const overlayDescEs = String(overlayDescEsRaw || '').trim();
+        const shouldUseOverlayDescEs = Boolean(
+            overlayDescEs && overlayDescEs.toLowerCase() !== String(baseDescEn).trim().toLowerCase()
+        );
+        const resolvedDescEs = shouldUseOverlayDescEs
+            ? overlayDescEs
+            : (baseDescEs || overlayDescEs || translateLiteral(baseDescEn, 'es') || baseDescEn);
         const descriptionValue = lang === 'es'
-            ? { en: baseDescEn, es: overlayDescEs || translateLiteral(baseDescEn, 'es') || baseDescEn }
+            ? { en: baseDescEn, es: resolvedDescEs }
             : (overlay.description || baseSet.description);
 
         const codeExamples = normalizeLocalizedCodeExamples(baseSet.codeExamples || {}, overlay.codeExamples || {}, lang);
@@ -12569,6 +12599,7 @@ function renderStudyTip(force = false) {
 // =================================
 
 function safeGetItem(key) {
+    if (!shouldAllowLocalStorageAccess(key)) return null;
     try {
         return window.localStorage ? window.localStorage.getItem(key) : null;
     } catch (error) {
@@ -12577,10 +12608,50 @@ function safeGetItem(key) {
 }
 
 function safeSetItem(key, value) {
+    if (!shouldAllowLocalStorageAccess(key)) {
+        safeRemoveItem(key);
+        return;
+    }
     try {
         if (window.localStorage) {
             window.localStorage.setItem(key, value);
         }
+    } catch (error) {}
+}
+
+function safeRemoveItem(key) {
+    try {
+        if (window.localStorage) {
+            window.localStorage.removeItem(key);
+        }
+    } catch (error) {}
+}
+
+function isAuthScopedStorageKey(key) {
+    const normalized = String(key || '').trim();
+    if (!normalized) return false;
+    if (AUTH_SCOPED_STORAGE_KEYS.has(normalized)) return true;
+    return AUTH_SCOPED_STORAGE_PREFIXES.some((prefix) => normalized.startsWith(prefix));
+}
+
+function shouldAllowLocalStorageAccess(key) {
+    if (!isAuthScopedStorageKey(key)) return true;
+    return hasAuthenticatedInsightsAccess();
+}
+
+function clearAuthScopedLocalStorage() {
+    try {
+        if (!window.localStorage) return;
+        const keysToRemove = [];
+        for (let index = 0; index < window.localStorage.length; index += 1) {
+            const key = window.localStorage.key(index);
+            if (isAuthScopedStorageKey(key)) {
+                keysToRemove.push(String(key));
+            }
+        }
+        keysToRemove.forEach((key) => {
+            window.localStorage.removeItem(key);
+        });
     } catch (error) {}
 }
 
@@ -12720,6 +12791,10 @@ function queueUserStateSync() {
 
 // Local Storage Management
 function saveToLocalStorage() {
+    if (!hasAuthenticatedInsightsAccess()) {
+        safeRemoveItem('javaDSAHub');
+        return;
+    }
     const stateToSave = buildSerializableAppState();
     safeSetItem('javaDSAHub', JSON.stringify(stateToSave));
     queueUserStateSync();
@@ -16260,6 +16335,7 @@ async function deleteAccountPermanently() {
         accountAuthState.isAuthenticated = false;
         accountAuthState.sessionLabel = '';
         accountAuthState.rememberMe = false;
+        clearAuthScopedLocalStorage();
         accountProfile = {
             ...getDefaultAccountProfile()
         };
@@ -16311,6 +16387,7 @@ async function checkNeonSession(options = {}) {
         setCsrfToken('');
         accountAuthState.isAuthenticated = false;
         accountAuthState.sessionLabel = '';
+        clearAuthScopedLocalStorage();
         setAccountAuthStatus('Auth server not configured.', 'neutral');
         refreshAccountPrimaryAuthButton();
         handleInsightsAccessStateChange();
@@ -16333,6 +16410,8 @@ async function checkNeonSession(options = {}) {
             : 'Session endpoint reachable.';
         const isAuthenticated = Boolean(userId || userEmail);
         if (isLatestSessionCheck()) {
+            accountAuthState.isAuthenticated = isAuthenticated;
+            accountAuthState.sessionLabel = userLabel;
             if (sessionCsrfToken) {
                 setCsrfToken(sessionCsrfToken);
             }
@@ -16346,11 +16425,12 @@ async function checkNeonSession(options = {}) {
             if (userEmail) {
                 accountProfile.email = userEmail;
             }
+            if (!isAuthenticated) {
+                clearAuthScopedLocalStorage();
+            }
             saveAccountProfile();
             applyAccountProfileToForm();
             updateAccountChip();
-            accountAuthState.isAuthenticated = isAuthenticated;
-            accountAuthState.sessionLabel = userLabel;
             setAccountAuthStatus(
                 isAuthenticated ? `Authenticated as ${userLabel}` : 'Session detected. Sign in to continue.',
                 isAuthenticated ? 'success' : 'info'
@@ -16368,6 +16448,7 @@ async function checkNeonSession(options = {}) {
             setCsrfToken('');
             accountAuthState.isAuthenticated = false;
             accountAuthState.sessionLabel = '';
+            clearAuthScopedLocalStorage();
             setAccountAuthStatus(t('auth.status.guest'), 'neutral');
             refreshAccountPrimaryAuthButton();
             setAccountSyncState(
@@ -16450,6 +16531,7 @@ async function signOutAccountFlow(options = {}) {
     accountAuthState.isAuthenticated = false;
     accountAuthState.sessionLabel = '';
     accountAuthState.rememberMe = false;
+    clearAuthScopedLocalStorage();
     setAccountAuthStatus('Signed out.', 'neutral');
     clearAuthPasswordFields();
     const rememberCheckbox = document.getElementById('account-auth-remember');
@@ -20021,7 +20103,7 @@ function initAboutFeedbackForm() {
             const localFeedbackKey = 'cs_course_atlas_about_feedback_local';
             let pending = [];
             try {
-                const parsed = JSON.parse(localStorage.getItem(localFeedbackKey) || '[]');
+                const parsed = JSON.parse(safeGetItem(localFeedbackKey) || '[]');
                 if (Array.isArray(parsed)) pending = parsed;
             } catch (error) {
                 pending = [];
@@ -20034,8 +20116,12 @@ function initAboutFeedbackForm() {
                 language: appState.language || 'en',
                 submittedAt: new Date().toISOString()
             });
-            localStorage.setItem(localFeedbackKey, JSON.stringify(pending.slice(-25)));
-            showToast(t('about.feedback.success.local'), 'info');
+            safeSetItem(localFeedbackKey, JSON.stringify(pending.slice(-25)));
+            if (hasAuthenticatedInsightsAccess()) {
+                showToast(t('about.feedback.success.local'), 'info');
+            } else {
+                showToast('Feedback captured for this session. Sign in to persist it.', 'info');
+            }
         }
 
         form.reset();
