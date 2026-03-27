@@ -5,3 +5,4 @@ node_modules/
 output/
 .translation-cache-es.json
 scripts/translation-cache-es.cache*.json
+scripts/translation-cache-es.cache*

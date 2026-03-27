@@ -22474,11 +22474,42 @@ function sanitizeResourceUrl(rawUrl) {
     }
 }
 
+const KNOWN_RESOURCE_URLS = {
+    'java documentation': 'https://docs.oracle.com/en/java/',
+    'oracle java tutorials': 'https://docs.oracle.com/javase/tutorial/',
+    'official git book': 'https://git-scm.com/book/en/v2',
+    'pro git (free online book)': 'https://git-scm.com/book/en/v2',
+    'github flow guide': 'https://docs.github.com/en/get-started/using-github/github-flow',
+    'github docs: about pull requests': 'https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/about-pull-requests',
+    'atlassian git tutorials': 'https://www.atlassian.com/git/tutorials',
+    'atlassian merge conflict guide': 'https://www.atlassian.com/git/tutorials/using-branches/merge-conflicts',
+    'conventional commit messages': 'https://www.conventionalcommits.org/en/v1.0.0/',
+    'git branching guide': 'https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell',
+    'jvm memory model basics': 'https://docs.oracle.com/javase/specs/jls/se21/html/jls-17.html',
+    'java gc tuning overview': 'https://docs.oracle.com/en/java/javase/21/gctuning/',
+    'visualvm intro': 'https://visualvm.github.io/',
+    'jdbc tutorial': 'https://docs.oracle.com/javase/tutorial/jdbc/',
+    'sql basics': 'https://www.w3schools.com/sql/',
+    'database best practices': 'https://12factor.net/backing-services',
+    'software carpentry: version control with git': 'https://swcarpentry.github.io/git-novice/',
+    'think java, 2nd edition (free textbook)': 'https://greenteapress.com/wp/think-java-2e/'
+};
+
+function resolveKnownResourceUrl(label) {
+    const normalized = String(label || '').trim().toLowerCase();
+    if (!normalized) return '';
+    if (KNOWN_RESOURCE_URLS[normalized]) {
+        return KNOWN_RESOURCE_URLS[normalized];
+    }
+    return '';
+}
+
 function normalizeModuleResource(resource) {
     if (typeof resource === 'string') {
+        const label = resource.trim();
         return {
-            label: resource.trim(),
-            url: ''
+            label,
+            url: resolveKnownResourceUrl(label)
         };
     }
     if (!resource || typeof resource !== 'object') {

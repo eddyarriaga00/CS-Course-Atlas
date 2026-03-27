@@ -22,6 +22,18 @@ All notable changes to **CS Course Atlas** are documented in this file.
   - `node scripts/verify_spanish_code_examples.js`
   - `node scripts/verify_css_integrity.js`
 
+### Bug Fixes and UX Improvements
+- Added known-resource URL resolution in frontend resource normalization so legacy string-only module resources (for example `Official Git Book`, `Java Documentation`, `Atlassian Git Tutorials`) now render as clickable links instead of plain text.
+- Expanded repository ignore rules for translation cache artifacts (`scripts/translation-cache-es.cache*`) to prevent accidental commit noise from duplicate/generated cache filenames.
+- Re-ran validation checks after fixes:
+  - `npm run check:frontend`
+  - `node scripts/verify_localization.js`
+  - `node scripts/verify_catalog_integrity.js`
+  - `node scripts/verify_module_examples.js`
+  - `node scripts/verify_module_outputs.js`
+  - `node scripts/verify_spanish_code_examples.js`
+  - `node scripts/verify_css_integrity.js`
+
 ## 2026-03-26
 
 ### New DSA Class: Matrix and Grid Problem Solving
