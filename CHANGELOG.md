@@ -25,6 +25,13 @@ All notable changes to **CS Course Atlas** are documented in this file.
   - `npm run check:frontend`
   - `node scripts/verify_css_integrity.js`
 
+### Cache-Bust Rollout for Mobile
+- Added query-version cache busting for `css/styles.css` across main route HTML files so mobile browsers fetch the latest style payload immediately.
+- Added query-version cache busting for `js/script.js` in `index.html` to avoid stale mobile navigation/runtime behavior after deploy.
+- Validation pass:
+  - `npm run check:frontend`
+  - `node scripts/verify_css_integrity.js`
+
 ### Home Control Center + Module Flow Polish
 - Added a new home-page `Control Center` section directly after guided-start with three launch cards:
   - Resume Learning (next recommended module)
