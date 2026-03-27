@@ -7739,41 +7739,41 @@ body:not(.sidebar-icon-only) #app-sidebar .sidebar-group-toggle {
     --accent-tertiary: #8a7cff;
     --accent-surface: rgba(111, 86, 255, 0.2);
     --accent-shadow: rgba(99, 182, 255, 0.28);
-    --surface-primary: #171236;
-    --surface-secondary: #21194a;
-    --surface-accent: #2a2360;
-    --surface-muted: #322b72;
-    --surface-border: rgba(125, 145, 255, 0.26);
-    --text-primary-color: #e9eeff;
-    --text-secondary-color: #b8c7f3;
+    --surface-primary: #130f2f;
+    --surface-secondary: #1d1644;
+    --surface-accent: #241d53;
+    --surface-muted: #2b2362;
+    --surface-border: rgba(117, 138, 248, 0.24);
+    --text-primary-color: #e7edff;
+    --text-secondary-color: #b1c1ef;
 }
 
 body,
 body.dark {
-    background: linear-gradient(150deg, #0f0a26, #171236, #1f1845, #102342) !important;
+    background: linear-gradient(150deg, #0d081f, #140f30, #1b153f, #0d1f38) !important;
     background-size: 260% 260% !important;
     color: var(--text-primary-color) !important;
 }
 
 body::after {
-    background: radial-gradient(circle at 12% 12%, rgba(111, 86, 255, 0.28), transparent 42%),
-                radial-gradient(circle at 82% 10%, rgba(99, 182, 255, 0.2), transparent 40%),
-                radial-gradient(circle at 54% 88%, rgba(111, 86, 255, 0.18), transparent 38%) !important;
+    background: radial-gradient(circle at 12% 12%, rgba(111, 86, 255, 0.24), transparent 42%),
+                radial-gradient(circle at 82% 10%, rgba(99, 182, 255, 0.17), transparent 40%),
+                radial-gradient(circle at 54% 88%, rgba(111, 86, 255, 0.14), transparent 38%) !important;
 }
 
 #main-header {
-    background: linear-gradient(120deg, #1c1542, #2f2570, #3a2f86, #365ca8, #4ea9f4) !important;
+    background: linear-gradient(120deg, #17123a, #28205f, #342b79, #2f4f91, #4297dc) !important;
     border-bottom-color: rgba(148, 163, 255, 0.28) !important;
 }
 
 #main-header .header-control {
-    background: rgba(20, 28, 62, 0.56) !important;
+    background: rgba(16, 22, 52, 0.62) !important;
     border-color: rgba(148, 181, 255, 0.34) !important;
     color: #e8eeff !important;
 }
 
 #main-header .header-control:hover {
-    background: rgba(28, 40, 88, 0.72) !important;
+    background: rgba(24, 34, 76, 0.76) !important;
     border-color: rgba(148, 197, 255, 0.52) !important;
 }
 
@@ -7788,7 +7788,7 @@ body::after {
 #search-section,
 #progress-section,
 #achievements-card {
-    background: linear-gradient(145deg, rgba(25, 19, 58, 0.95), rgba(35, 28, 78, 0.92)) !important;
+    background: linear-gradient(145deg, rgba(21, 16, 50, 0.96), rgba(30, 23, 68, 0.93)) !important;
     border-color: rgba(126, 147, 255, 0.26) !important;
     color: var(--text-primary-color) !important;
 }
@@ -7805,7 +7805,7 @@ body:not(.dark) .modal-panel,
 body:not(.dark) .modal-panel.bg-slate-900,
 body:not(.dark) .modal-panel.bg-slate-900\/60,
 body:not(.dark) .modal-panel.bg-slate-900\/70 {
-    background-color: rgba(24, 19, 56, 0.95) !important;
+    background-color: rgba(20, 15, 48, 0.95) !important;
     color: #e9eeff !important;
     border-color: rgba(126, 147, 255, 0.28) !important;
 }
@@ -7842,7 +7842,7 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
 .modal-panel input,
 .modal-panel select,
 .modal-panel textarea {
-    background-color: rgba(16, 21, 50, 0.74) !important;
+    background-color: rgba(14, 18, 44, 0.78) !important;
     border-color: rgba(120, 143, 255, 0.32) !important;
     color: #e9eeff !important;
 }

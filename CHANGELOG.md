@@ -46,6 +46,16 @@ All notable changes to **CS Course Atlas** are documented in this file.
   - `node scripts/verify_spanish_code_examples.js`
   - `node scripts/verify_css_integrity.js`
 
+### Language-Only Guest Persistence + Slightly Darker Palette
+- Added a dedicated non-auth localStorage key (`atlasLanguagePreference`) and language normalization helpers so EN/ES preference persists consistently even when signed out.
+- Updated `setLanguage(...)` to persist language immediately through that dedicated key.
+- Updated `loadFromLocalStorage()` precedence so:
+  - dedicated language preference is applied first,
+  - legacy `javaDSAHub.language` is migrated into the dedicated key when needed,
+  - guests continue to reset all other saved state while keeping only language across reloads.
+- Synced remote user-state apply flow to also refresh the dedicated language preference key after profile pulls.
+- Slightly darkened the unified site palette (`css/styles.css`) by tuning base surface tokens, global background gradients, header gradients, card/modal surfaces, and form control tones while preserving existing layout and theme structure.
+
 ## 2026-03-26
 
 ### New DSA Class: Matrix and Grid Problem Solving

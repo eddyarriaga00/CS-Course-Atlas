@@ -404,6 +404,8 @@ const STORAGE_KEYS = {
     DS_PLAYGROUND: 'javaDSADataStructurePlayground',
     NOTIFICATIONS: 'javaDSANotifications'
 };
+const LANGUAGE_PREFERENCE_STORAGE_KEY = 'atlasLanguagePreference';
+const LANGUAGE_PREFERENCE_VALUES = new Set(['en', 'es']);
 const AUTH_SCOPED_STORAGE_PREFIXES = ['javaDSA', 'dsaHub', 'cs_course_atlas_'];
 const AUTH_SCOPED_STORAGE_KEYS = new Set([
     'javaDSAHub',
@@ -2260,12 +2262,14 @@ function applyLanguage(lang) {
  * Set language, persist, and apply.
  */
 function setLanguage(lang) {
-    appState.language = lang;
+    const normalizedLanguage = normalizeLanguagePreference(lang);
+    appState.language = normalizedLanguage;
+    persistLanguagePreference(normalizedLanguage);
     appState.expandedOutputs.clear();
     moduleOutputCache.clear();
     moduleOutputState.clear();
     moduleOutputInFlight.clear();
-    applyLanguage(lang);
+    applyLanguage(normalizedLanguage);
     if (typeof updateProgress === 'function') updateProgress();
     refreshLocalizedSections();
     refreshGlobalSearchUi({ invalidate: true });
@@ -2284,7 +2288,7 @@ function setLanguage(lang) {
     }
     saveToLocalStorage();
 
-    if (lang === 'es' && !spanishLocalizationReady) {
+    if (normalizedLanguage === 'es' && !spanishLocalizationReady) {
         void ensureSpanishLocalizationLoaded().then((loaded) => {
             if (!loaded || appState.language !== 'es') return;
             applyLanguage('es');
@@ -12692,6 +12696,20 @@ function safeRemoveItem(key) {
     } catch (error) {}
 }
 
+function normalizeLanguagePreference(lang) {
+    return String(lang || '').toLowerCase() === 'es' ? 'es' : 'en';
+}
+
+function readStoredLanguagePreference() {
+    const stored = safeGetItem(LANGUAGE_PREFERENCE_STORAGE_KEY);
+    if (!stored) return null;
+    return LANGUAGE_PREFERENCE_VALUES.has(stored) ? stored : null;
+}
+
+function persistLanguagePreference(lang) {
+    safeSetItem(LANGUAGE_PREFERENCE_STORAGE_KEY, normalizeLanguagePreference(lang));
+}
+
 function isAuthScopedStorageKey(key) {
     const normalized = String(key || '').trim();
     if (!normalized) return false;
@@ -12960,6 +12978,10 @@ function enforceAssemblyModuleLanguageDefaults() {
 }
 
 function loadFromLocalStorage() {
+    const savedLanguagePreference = readStoredLanguagePreference();
+    if (savedLanguagePreference) {
+        appState.language = savedLanguagePreference;
+    }
     const saved = safeGetItem('javaDSAHub');
     const prefersReduced = typeof window !== 'undefined'
         && window.matchMedia
@@ -13009,7 +13031,16 @@ function loadFromLocalStorage() {
             appState.highContrast = Boolean(state.highContrast);
             appState.accent = ACCENT_OPTIONS.includes(state.accent) ? state.accent : 'indigo';
             appState.cardDepth = CARD_DEPTH_OPTIONS.includes(state.cardDepth) ? state.cardDepth : 'standard';
-            appState.language = ['en', 'es'].includes(state.language) ? state.language : 'en';
+            const stateLanguage = LANGUAGE_PREFERENCE_VALUES.has(state.language) ? state.language : null;
+            if (savedLanguagePreference) {
+                appState.language = savedLanguagePreference;
+            } else if (stateLanguage) {
+                appState.language = stateLanguage;
+                persistLanguagePreference(stateLanguage);
+            } else {
+                appState.language = normalizeLanguagePreference(appState.language);
+                persistLanguagePreference(appState.language);
+            }
             appState.sidebarManualCollapsed = Boolean(state.sidebarManualCollapsed);
             appState.sidebarMobileExpanded = Boolean(state.sidebarMobileExpanded);
             appState.sidebarTracksExpanded = Boolean(state.sidebarTracksExpanded);
@@ -13031,6 +13062,9 @@ function loadFromLocalStorage() {
             appState.collapsedSections
         );
         appState.collapsedSections = getCollapsedSectionsForRoute(appState.currentRoute, appState.routeCollapsedSections);
+        if (!savedLanguagePreference) {
+            persistLanguagePreference(appState.language);
+        }
     }
 }
 
@@ -13089,6 +13123,7 @@ function applyRemoteUserStateSnapshot(snapshot, options = {}) {
         appState.accent = ACCENT_OPTIONS.includes(state.accent) ? state.accent : (appState.accent || 'indigo');
         appState.cardDepth = CARD_DEPTH_OPTIONS.includes(state.cardDepth) ? state.cardDepth : (appState.cardDepth || 'standard');
         appState.language = ['en', 'es'].includes(state.language) ? state.language : (appState.language || 'en');
+        persistLanguagePreference(appState.language);
         appState.sidebarManualCollapsed = state.sidebarManualCollapsed !== undefined
             ? Boolean(state.sidebarManualCollapsed)
             : Boolean(appState.sidebarManualCollapsed);
