@@ -4,6 +4,39 @@ All notable changes to **CS Course Atlas** are documented in this file.
 
 ## 2026-03-27
 
+### Home Control Center + Module Flow Polish
+- Added a new home-page `Control Center` section directly after guided-start with three launch cards:
+  - Resume Learning (next recommended module)
+  - Practice Loop (quiz + flashcard quick launch)
+  - Account and Sync (session/sync status with account modal shortcut)
+- Added full EN/ES localization keys for the new control-center content and dynamic card text.
+- Added dynamic rendering for the control center:
+  - chooses the next module from ordered sequence + completion state
+  - summarizes quiz attempt activity from stored quiz stats
+  - reflects auth/sync state and account identity
+- Added direct action handlers for home quick-launch controls:
+  - `startReleaseResume()`
+  - `startReleaseQuizPractice()`
+  - `startReleaseFlashcardsPractice()`
+- Refactored repeated module-focus navigation logic into a shared helper (`focusModuleInCatalog`) and reused it in:
+  - global search module open
+  - guest track start flows
+  - home resume-learning action
+- Added lightweight module-grid skeleton rendering for smoother UX during route/filter transitions:
+  - new skeleton renderer + delayed handoff to real module render
+  - enabled for module catalog route switches and key module filters (search, difficulty, topic)
+- Added matching visual styles in `css/styles.css` for:
+  - control-center card system/buttons/status chip
+  - skeleton loading states for module grid
+- Validation pass (all green):
+  - `npm run check:frontend`
+  - `node scripts/verify_localization.js`
+  - `node scripts/verify_catalog_integrity.js`
+  - `node scripts/verify_module_examples.js`
+  - `node scripts/verify_module_outputs.js`
+  - `node scripts/verify_spanish_code_examples.js`
+  - `node scripts/verify_css_integrity.js`
+
 ### First Five Modules Learning Quality Upgrade
 - Upgraded the first 5 modules in learning order (`intro-to-coding`, `java-basics`, `java-memory-jvm`, `git-basics-workflow`, `git-branching-merging`) with stronger lecture-style explanations, clearer outcomes, and more practice guidance.
 - Replaced weaker module-level samples with more realistic, instruction-focused code for Java and Git workflows.

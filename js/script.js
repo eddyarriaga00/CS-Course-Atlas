@@ -128,6 +128,7 @@ const REQUIRED_APP_SHELL_IDS = Object.freeze([
 const MOTION_ENHANCEMENT_SELECTORS = Object.freeze([
     '#route-overview-section',
     '#route-launchpad-section',
+    '#home-release-control-section',
     '#topic-focus-section',
     '#progress-section',
     '#achievements-card',
@@ -154,6 +155,8 @@ let motionEnhancementObserver = null;
 let motionEnhancementRafId = 0;
 let scrollUpdateRafId = 0;
 let pendingScrollY = 0;
+let moduleRenderSkeletonTimerId = 0;
+let moduleRenderCycleId = 0;
 
 const MOBILE_COMPACT_MEDIA_QUERY = '(max-width: 640px)';
 const AUTH_SESSION_REFRESH_COOLDOWN_MS = 1600;
@@ -282,6 +285,7 @@ const HOME_SECTION_ORDER = [
     'hero-section',
     'home-beginner-onboarding-section',
     'home-guided-start-section',
+    'home-release-control-section',
     'home-seo-links-section',
     'topic-focus-section',
     'home-advanced-tools-section',
@@ -921,6 +925,36 @@ const TRANSLATIONS = {
         'start.paths.review.description': 'Run fast recall with flashcards, then verify terms in the glossary.',
         'start.paths.review.cta': 'Start quick review',
         'start.paths.review.toast': 'Flashcards opened. Next: use Glossary for definition refresh.',
+        'home.control.kicker': 'Control Center',
+        'home.control.heading': 'Ready for your next move?',
+        'home.control.subtitle': 'Resume your module flow, run practice, or manage account sync in one place.',
+        'home.control.status.guest': 'Guest session',
+        'home.control.status.signedIn': 'Signed in session',
+        'home.control.resume.kicker': 'Resume Learning',
+        'home.control.resume.description': 'Jump back into your next module with one click.',
+        'home.control.resume.emptyTitle': 'No modules available',
+        'home.control.resume.emptyMeta': 'Load tracks to see recommendations.',
+        'home.control.resume.meta': '{track} track \u2022 {difficulty}',
+        'home.control.resume.btnContinue': 'Continue Module',
+        'home.control.resume.btnReview': 'Review Module',
+        'home.control.resume.noModuleToast': 'No recommended module found yet. Opening track catalog.',
+        'home.control.practice.kicker': 'Practice Loop',
+        'home.control.practice.description': 'Run a quiz, then reinforce with flashcards for retention.',
+        'home.control.practice.title': 'Quiz + Flashcard Routine',
+        'home.control.practice.titleWithModule': 'Latest quiz: {module}',
+        'home.control.practice.metaEmpty': 'No quiz attempts yet \u2022 Start your first checkpoint.',
+        'home.control.practice.metaTracked': '{attempts} attempts tracked \u2022 Latest score {percent}%',
+        'home.control.practice.quizBtn': 'Open Quizzes',
+        'home.control.practice.flashcardsBtn': 'Open Flashcards',
+        'home.control.account.kicker': 'Account and Sync',
+        'home.control.account.description': 'Sign in to sync progress and settings securely across devices.',
+        'home.control.account.guestTitle': 'Session status: guest',
+        'home.control.account.guestMeta': 'Progress sync is available after login.',
+        'home.control.account.signedInTitle': 'Signed in as {user}',
+        'home.control.account.noSync': 'Sync pending',
+        'home.control.account.lastSync': 'Last sync: {time}',
+        'home.control.account.btnGuest': 'Log In / Sign Up',
+        'home.control.account.btnSignedIn': 'Manage Account',
         // Sections
         'section.dailyChallenge': '\u{1F3AF} Daily Challenge',
         'section.studyTip': '\u{1F4A1} Study Tip',
@@ -1444,6 +1478,36 @@ const TRANSLATIONS = {
         'start.paths.review.description': 'Haz repaso rapido con tarjetas y luego confirma terminos en el glosario.',
         'start.paths.review.cta': 'Iniciar repaso rapido',
         'start.paths.review.toast': 'Tarjetas abiertas. Siguiente paso: usa el Glosario para repasar definiciones.',
+        'home.control.kicker': 'Centro de Control',
+        'home.control.heading': 'Listo para tu siguiente paso?',
+        'home.control.subtitle': 'Retoma tu flujo de modulos, practica rapido y gestiona la sincronizacion de cuenta en un solo lugar.',
+        'home.control.status.guest': 'Sesion invitado',
+        'home.control.status.signedIn': 'Sesion iniciada',
+        'home.control.resume.kicker': 'Retomar Aprendizaje',
+        'home.control.resume.description': 'Vuelve a tu siguiente modulo con un solo clic.',
+        'home.control.resume.emptyTitle': 'No hay modulos disponibles',
+        'home.control.resume.emptyMeta': 'Abre rutas para recibir recomendaciones.',
+        'home.control.resume.meta': 'Ruta {track} \u2022 {difficulty}',
+        'home.control.resume.btnContinue': 'Continuar Modulo',
+        'home.control.resume.btnReview': 'Repasar Modulo',
+        'home.control.resume.noModuleToast': 'Aun no hay modulo recomendado. Abriendo catalogo de rutas.',
+        'home.control.practice.kicker': 'Bucle de Practica',
+        'home.control.practice.description': 'Haz un quiz y luego refuerza con tarjetas para retencion.',
+        'home.control.practice.title': 'Rutina Quiz + Tarjetas',
+        'home.control.practice.titleWithModule': 'Ultimo quiz: {module}',
+        'home.control.practice.metaEmpty': 'Aun no hay intentos \u2022 Inicia tu primer checkpoint.',
+        'home.control.practice.metaTracked': '{attempts} intentos guardados \u2022 Ultimo puntaje {percent}%',
+        'home.control.practice.quizBtn': 'Abrir Quizzes',
+        'home.control.practice.flashcardsBtn': 'Abrir Tarjetas',
+        'home.control.account.kicker': 'Cuenta y Sync',
+        'home.control.account.description': 'Inicia sesion para sincronizar progreso y configuraciones de forma segura entre dispositivos.',
+        'home.control.account.guestTitle': 'Estado de sesion: invitado',
+        'home.control.account.guestMeta': 'La sincronizacion se habilita cuando inicias sesion.',
+        'home.control.account.signedInTitle': 'Sesion iniciada como {user}',
+        'home.control.account.noSync': 'Sync pendiente',
+        'home.control.account.lastSync': 'Ultima sync: {time}',
+        'home.control.account.btnGuest': 'Iniciar Sesion / Registro',
+        'home.control.account.btnSignedIn': 'Gestionar Cuenta',
         // Sections
         'section.dailyChallenge': '\u{1F3AF} Desaf\u00edo del D\u00eda',
         'section.studyTip': '\u{1F4A1} Consejo de Estudio',
@@ -2020,6 +2084,7 @@ function setDomLocalizationObserver(lang) {
 
 function refreshLocalizedSections() {
     if (typeof renderModules === 'function') renderModules();
+    if (typeof renderHomeReleaseControlCenter === 'function') renderHomeReleaseControlCenter();
     if (typeof renderDailyChallenge === 'function') renderDailyChallenge();
     if (typeof renderStudyTip === 'function') renderStudyTip();
     if (typeof renderInsights === 'function') renderInsights();
@@ -2892,7 +2957,11 @@ function renderRoute(route, options = {}) {
     }
     const trackRouteChanged = applyTrackRoute(normalizedRoute);
     if (isModuleCatalogRoute && (!skipModuleRender || modulesCollapsedByDefault)) {
-        renderModules();
+        if (!skipModuleRender && routeChanged) {
+            renderModulesWithSkeleton({ minDelayMs: 130 });
+        } else {
+            renderModules();
+        }
     }
     if (trackRouteChanged || sidebarTracksChanged) {
         saveToLocalStorage();
@@ -2986,6 +3055,190 @@ function startGuidedPath(pathKey) {
         return;
     }
     navigateToRoute('/home', { focusMain: true });
+}
+
+function getHomeControlPreferredModule() {
+    const orderedModules = getOrderedModules();
+    if (!orderedModules.length) return null;
+    return orderedModules.find((module) => !appState.completedModules.has(module.id)) || orderedModules[0];
+}
+
+function getTotalQuizAttemptCount(quizStats = {}) {
+    return Object.values(quizStats || {}).reduce((total, moduleAttempts) => {
+        if (!Array.isArray(moduleAttempts)) return total;
+        return total + moduleAttempts.length;
+    }, 0);
+}
+
+function getLatestQuizAttemptSnapshot(quizStats = {}) {
+    let latest = null;
+    Object.entries(quizStats || {}).forEach(([moduleId, moduleAttempts]) => {
+        if (!Array.isArray(moduleAttempts) || !moduleAttempts.length) return;
+        moduleAttempts.forEach((attempt, index) => {
+            if (!attempt || typeof attempt !== 'object') return;
+            const normalizedPercent = Number.isFinite(Number(attempt.percentage))
+                ? Number(attempt.percentage)
+                : Math.round((Number(attempt.score || 0) / Math.max(Number(attempt.totalQuestions || 1), 1)) * 100);
+            const stampValue = Date.parse(`${String(attempt.date || '').trim()}T00:00:00Z`) || 0;
+            const candidate = {
+                moduleId,
+                percentage: Math.max(0, Math.min(100, normalizedPercent)),
+                stampValue,
+                sequence: index
+            };
+            if (!latest) {
+                latest = candidate;
+                return;
+            }
+            if (candidate.stampValue > latest.stampValue) {
+                latest = candidate;
+                return;
+            }
+            if (candidate.stampValue === latest.stampValue && candidate.sequence > latest.sequence) {
+                latest = candidate;
+            }
+        });
+    });
+    return latest;
+}
+
+function renderHomeReleaseControlCenter() {
+    const section = document.getElementById('home-release-control-section');
+    if (!section) return;
+
+    const statusEl = document.getElementById('release-control-status');
+    const resumeTitleEl = document.getElementById('release-resume-title');
+    const resumeMetaEl = document.getElementById('release-resume-meta');
+    const resumeButton = document.getElementById('release-resume-btn');
+    const practiceTitleEl = document.getElementById('release-practice-title');
+    const practiceMetaEl = document.getElementById('release-practice-meta');
+    const practiceQuizButton = document.getElementById('release-practice-quiz-btn');
+    const practiceFlashcardsButton = document.getElementById('release-practice-flashcards-btn');
+    const accountTitleEl = document.getElementById('release-account-title');
+    const accountMetaEl = document.getElementById('release-account-meta');
+    const accountButton = document.getElementById('release-account-btn');
+
+    const preferredModule = getHomeControlPreferredModule();
+    const preferredLocalized = preferredModule ? getLocalizedModule(preferredModule) : null;
+    const preferredCategory = preferredModule ? getModuleCategoryKey(preferredModule.id) : 'all';
+
+    if (resumeTitleEl) {
+        resumeTitleEl.textContent = preferredLocalized?.title || t('home.control.resume.emptyTitle');
+    }
+    if (resumeMetaEl) {
+        resumeMetaEl.textContent = preferredModule
+            ? t('home.control.resume.meta', {
+                track: getModuleTrackTitle(preferredCategory),
+                difficulty: translateLiteral(preferredModule.difficulty, appState.language)
+            })
+            : t('home.control.resume.emptyMeta');
+    }
+    if (resumeButton) {
+        const moduleId = preferredModule ? preferredModule.id : '';
+        const isReviewMode = Boolean(moduleId && appState.completedModules.has(moduleId));
+        resumeButton.dataset.moduleId = moduleId;
+        resumeButton.textContent = isReviewMode
+            ? t('home.control.resume.btnReview')
+            : t('home.control.resume.btnContinue');
+        resumeButton.disabled = !moduleId;
+        resumeButton.classList.toggle('opacity-60', !moduleId);
+        resumeButton.classList.toggle('cursor-not-allowed', !moduleId);
+    }
+
+    const quizStats = getQuizStats();
+    const attemptCount = getTotalQuizAttemptCount(quizStats);
+    const latestQuiz = getLatestQuizAttemptSnapshot(quizStats);
+    let latestModuleTitle = '';
+    if (latestQuiz?.moduleId) {
+        const latestModule = getModuleById(latestQuiz.moduleId);
+        if (latestModule) {
+            latestModuleTitle = getLocalizedModule(latestModule).title || latestModule.title;
+        }
+    }
+
+    if (practiceTitleEl) {
+        practiceTitleEl.textContent = latestModuleTitle
+            ? t('home.control.practice.titleWithModule', { module: latestModuleTitle })
+            : t('home.control.practice.title');
+    }
+    if (practiceMetaEl) {
+        practiceMetaEl.textContent = attemptCount > 0
+            ? t('home.control.practice.metaTracked', {
+                attempts: attemptCount,
+                percent: Number.isFinite(latestQuiz?.percentage) ? latestQuiz.percentage : 0
+            })
+            : t('home.control.practice.metaEmpty');
+    }
+    if (practiceQuizButton) {
+        practiceQuizButton.textContent = t('home.control.practice.quizBtn');
+    }
+    if (practiceFlashcardsButton) {
+        practiceFlashcardsButton.textContent = t('home.control.practice.flashcardsBtn');
+    }
+
+    const isSignedIn = hasAuthenticatedInsightsAccess();
+    const userLabel = accountProfile.username || accountProfile.name || accountProfile.email || accountAuthState.sessionLabel || 'Learner';
+    const normalizedSyncAt = String(accountProfile.lastSyncAt || '').trim();
+    const parsedSyncAt = normalizedSyncAt ? Date.parse(normalizedSyncAt) : Number.NaN;
+    const hasValidSyncTime = Number.isFinite(parsedSyncAt);
+    const syncTimeLabel = hasValidSyncTime
+        ? new Date(parsedSyncAt).toLocaleString(appState.language === 'es' ? 'es-ES' : 'en-US')
+        : '';
+
+    if (statusEl) {
+        statusEl.textContent = isSignedIn ? t('home.control.status.signedIn') : t('home.control.status.guest');
+        statusEl.dataset.tone = isSignedIn ? 'success' : 'neutral';
+    }
+    if (accountTitleEl) {
+        accountTitleEl.textContent = isSignedIn
+            ? t('home.control.account.signedInTitle', { user: userLabel })
+            : t('home.control.account.guestTitle');
+    }
+    if (accountMetaEl) {
+        accountMetaEl.textContent = isSignedIn
+            ? (hasValidSyncTime
+                ? t('home.control.account.lastSync', { time: syncTimeLabel })
+                : t('home.control.account.noSync'))
+            : t('home.control.account.guestMeta');
+    }
+    if (accountButton) {
+        accountButton.textContent = isSignedIn
+            ? t('home.control.account.btnSignedIn')
+            : t('home.control.account.btnGuest');
+    }
+}
+
+function startReleaseResume() {
+    const resumeButton = document.getElementById('release-resume-btn');
+    const moduleId = String(resumeButton?.dataset?.moduleId || '').trim();
+    if (!moduleId) {
+        showToast(t('home.control.resume.noModuleToast'), 'info');
+        navigateToRoute('/tracks', { focusMain: true });
+        return;
+    }
+    focusModuleInCatalog(moduleId, {
+        preserveScroll: true,
+        focusMain: false,
+        renderWithSkeleton: true
+    });
+}
+
+function startReleaseQuizPractice() {
+    navigateToRoute('/quizzes', {
+        preserveScroll: false,
+        focusMain: true,
+        skipModuleRender: true,
+        triggerRouteToolLaunch: true
+    });
+}
+
+function startReleaseFlashcardsPractice() {
+    navigateToRoute('/flashcards', {
+        preserveScroll: false,
+        focusMain: true,
+        skipModuleRender: true,
+        triggerRouteToolLaunch: true
+    });
 }
 
 function applyInitialModuleDeepLink(moduleId) {
@@ -15247,6 +15500,9 @@ function handleInsightsAccessStateChange() {
     } else if (typeof updateStudyTrackerUI === 'function') {
         updateStudyTrackerUI();
     }
+    if (typeof renderHomeReleaseControlCenter === 'function') {
+        renderHomeReleaseControlCenter();
+    }
 }
 
 function setAccountSyncUI(statusText, metaText, tone = 'neutral') {
@@ -20840,6 +21096,7 @@ function updateProgress() {
     document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
     document.getElementById('progress-percentage').textContent = `${progressPercentage}%`;
 
+    renderHomeReleaseControlCenter();
     renderAchievements();
 }
 function updateDarkMode() {
@@ -21735,42 +21992,11 @@ function temporarilyHighlightElement(element, className = 'global-search-highlig
 }
 
 function openModuleFromGlobalSearch(moduleId) {
-    const module = getModuleById(moduleId);
-    if (!module) return;
-    const categoryKey = getModuleCategoryKey(moduleId);
-    appState.categoryFilter = VALID_CATEGORY_FILTERS.has(categoryKey) ? categoryKey : 'all';
-    appState.searchTerm = '';
-    appState.difficultyFilter = 'all';
-    appState.hideCompletedModules = false;
-    appState.modulesPage = 1;
-
-    const searchInput = document.getElementById('search-input');
-    const difficultySelect = document.getElementById('difficulty-filter');
-    if (searchInput) searchInput.value = '';
-    if (difficultySelect) difficultySelect.value = 'all';
-
-    updateHideCompletedToggle();
-    updateTopicFocusButtons();
-    renderModules();
-    saveToLocalStorage();
-
-    const targetRoute = getRouteForCategoryFilter(categoryKey);
-    if (targetRoute !== appState.currentRoute) {
-        navigateToRoute(targetRoute, {
-            preserveScroll: true,
-            focusMain: false,
-            skipModuleRender: true
-        });
-    }
-
-    const delay = appState.reduceMotion ? 40 : 220;
-    window.setTimeout(() => {
-        const modulesGrid = document.getElementById('modules-grid');
-        if (modulesGrid) {
-            modulesGrid.scrollIntoView({ behavior: appState.reduceMotion ? 'auto' : 'smooth', block: 'start' });
-        }
-        focusModule(moduleId);
-    }, delay);
+    focusModuleInCatalog(moduleId, {
+        preserveScroll: true,
+        focusMain: false,
+        renderWithSkeleton: true
+    });
 }
 
 function openGlossaryTermFromGlobalSearch(term) {
@@ -22053,6 +22279,71 @@ function getModulesPageSize() {
     return 2;
 }
 
+function clearModulesSkeletonTimer() {
+    if (!moduleRenderSkeletonTimerId) return;
+    window.clearTimeout(moduleRenderSkeletonTimerId);
+    moduleRenderSkeletonTimerId = 0;
+}
+
+function renderModulesSkeleton(cardCount = getModulesPageSize()) {
+    const grid = document.getElementById('modules-grid');
+    if (!grid) return;
+
+    const skeletonCount = Math.max(2, Math.min(6, Number(cardCount) || getModulesPageSize()));
+    grid.classList.add('modules-grid-skeleton');
+    grid.setAttribute('aria-busy', 'true');
+    grid.innerHTML = Array.from({ length: skeletonCount }, () => `
+        <article class="module-card-skeleton" aria-hidden="true">
+            <div class="module-skeleton-line long"></div>
+            <div class="module-skeleton-line mid"></div>
+            <div class="module-skeleton-line short"></div>
+            <div class="module-skeleton-line long"></div>
+            <div class="module-skeleton-line mid"></div>
+            <div class="module-skeleton-line long"></div>
+            <div class="module-skeleton-line short"></div>
+        </article>
+    `).join('');
+
+    const searchResultsCount = document.getElementById('search-results-count');
+    if (searchResultsCount) {
+        searchResultsCount.style.display = 'none';
+    }
+
+    const topPagination = document.getElementById('modules-pagination-top');
+    const bottomPagination = document.getElementById('modules-pagination');
+    if (topPagination) {
+        topPagination.innerHTML = '';
+        topPagination.style.display = 'none';
+    }
+    if (bottomPagination) {
+        bottomPagination.innerHTML = '';
+        bottomPagination.style.display = 'none';
+    }
+}
+
+function renderModulesWithSkeleton(options = {}) {
+    const {
+        minDelayMs = 110
+    } = options;
+
+    const grid = document.getElementById('modules-grid');
+    if (!grid || appState.reduceMotion) {
+        renderModules();
+        return;
+    }
+
+    const delayMs = Math.max(60, Number(minDelayMs) || 110);
+    const cycleId = ++moduleRenderCycleId;
+    clearModulesSkeletonTimer();
+    renderModulesSkeleton(getModulesPageSize());
+
+    moduleRenderSkeletonTimerId = window.setTimeout(() => {
+        if (cycleId !== moduleRenderCycleId) return;
+        moduleRenderSkeletonTimerId = 0;
+        renderModules();
+    }, delayMs);
+}
+
 function getModulesPaginationModel(currentPage, totalPages) {
     const pages = new Set([1, totalPages, currentPage, currentPage - 1, currentPage + 1]);
     const normalized = Array.from(pages)
@@ -22157,8 +22448,13 @@ function renderModuleOutputSection(moduleId, exampleId = 'single') {
 }
 
 function renderModules() {
-    const filteredModules = filterModules();
     const grid = document.getElementById('modules-grid');
+    if (!grid) return;
+    clearModulesSkeletonTimer();
+    grid.classList.remove('modules-grid-skeleton');
+    grid.setAttribute('aria-busy', 'false');
+
+    const filteredModules = filterModules();
     const searchResultsCount = document.getElementById('search-results-count');
     const totalOrderedModules = getOrderedModules();
     const modulesByCategory = new Map();
@@ -24004,14 +24300,14 @@ function init() {
     document.getElementById('search-input').addEventListener('input', (e) => {
         appState.searchTerm = e.target.value;
         appState.modulesPage = 1;
-        renderModules();
+        renderModulesWithSkeleton({ minDelayMs: 120 });
         saveToLocalStorage();
     });
 
     document.getElementById('difficulty-filter').addEventListener('change', (e) => {
         appState.difficultyFilter = e.target.value;
         appState.modulesPage = 1;
-        renderModules();
+        renderModulesWithSkeleton({ minDelayMs: 120 });
         saveToLocalStorage();
     });
 
@@ -24021,7 +24317,7 @@ function init() {
             appState.categoryFilter = selectedCategory;
             appState.modulesPage = 1;
             updateTopicFocusButtons();
-            renderModules();
+            renderModulesWithSkeleton({ minDelayMs: 120 });
             saveToLocalStorage();
             const targetRoute = getRouteForCategoryFilter(selectedCategory);
             if (targetRoute !== appState.currentRoute) {
@@ -24749,15 +25045,26 @@ function focusModule(moduleId) {
     setTimeout(() => target.classList.remove('module-highlight'), 1600);
 }
 
-function startGuestTrack(trackKey) {
-    const normalized = String(trackKey || '').toLowerCase();
-    const moduleId = GUEST_STARTER_MODULE_IDS[normalized];
-    if (!moduleId) return;
+function focusModuleInCatalog(moduleId, options = {}) {
+    const normalizedModuleId = String(moduleId || '').trim().toLowerCase();
+    if (!normalizedModuleId) return false;
 
-    appState.categoryFilter = normalized;
+    const module = getModuleById(normalizedModuleId);
+    if (!module) return false;
+
+    const {
+        preferredCategory = '',
+        preserveScroll = true,
+        focusMain = false,
+        renderWithSkeleton = true
+    } = options;
+
+    const moduleCategory = getModuleCategoryKey(normalizedModuleId);
+    const nextCategory = VALID_CATEGORY_FILTERS.has(preferredCategory) ? preferredCategory : moduleCategory;
+    appState.categoryFilter = VALID_CATEGORY_FILTERS.has(nextCategory) ? nextCategory : 'all';
+    appState.searchTerm = '';
     appState.difficultyFilter = 'all';
     appState.hideCompletedModules = false;
-    appState.searchTerm = '';
     appState.modulesPage = 1;
 
     const searchInput = document.getElementById('search-input');
@@ -24767,22 +25074,46 @@ function startGuestTrack(trackKey) {
 
     updateHideCompletedToggle();
     updateTopicFocusButtons();
-    renderModules();
-    saveToLocalStorage();
-    const targetRoute = getRouteForCategoryFilter(normalized);
+
+    const targetRoute = getRouteForCategoryFilter(appState.categoryFilter);
     if (targetRoute !== appState.currentRoute) {
         navigateToRoute(targetRoute, {
-            preserveScroll: true,
-            focusMain: false,
+            preserveScroll,
+            focusMain,
             skipModuleRender: true
         });
     }
 
-    const modulesGrid = document.getElementById('modules-grid');
-    if (modulesGrid) {
-        modulesGrid.scrollIntoView({ behavior: appState.reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    if (renderWithSkeleton) {
+        renderModulesWithSkeleton({ minDelayMs: 120 });
+    } else {
+        renderModules();
     }
-    setTimeout(() => focusModule(moduleId), appState.reduceMotion ? 30 : 220);
+
+    saveToLocalStorage();
+
+    const delay = appState.reduceMotion ? 30 : 220;
+    window.setTimeout(() => {
+        const modulesGrid = document.getElementById('modules-grid');
+        if (modulesGrid) {
+            modulesGrid.scrollIntoView({ behavior: appState.reduceMotion ? 'auto' : 'smooth', block: 'start' });
+        }
+        focusModule(normalizedModuleId);
+    }, delay);
+
+    return true;
+}
+
+function startGuestTrack(trackKey) {
+    const normalized = String(trackKey || '').toLowerCase();
+    const moduleId = GUEST_STARTER_MODULE_IDS[normalized];
+    if (!moduleId) return;
+    focusModuleInCatalog(moduleId, {
+        preferredCategory: normalized,
+        preserveScroll: true,
+        focusMain: false,
+        renderWithSkeleton: true
+    });
 }
 
 function openGuestSampleQuiz() {
@@ -25412,6 +25743,9 @@ function saveQuizResult(moduleId, score, totalQuestions) {
     });
 
     safeSetItem('dsaHubQuizStats', JSON.stringify(stats));
+    if (typeof renderHomeReleaseControlCenter === 'function') {
+        renderHomeReleaseControlCenter();
+    }
     queueUserStateSync();
     trackUsage('quiz_completed', 'Assessment');
     return true;
