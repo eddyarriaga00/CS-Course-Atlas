@@ -54,14 +54,14 @@ const appState = {
     sidebarTracksExpanded: false,
     routeCollapsedSections: {
         home: {
-            progress: true,
-            achievements: true,
-            dailyChallenge: true,
-            studyTip: true,
-            insights: true,
-            interviewExamples: true,
-            studyNotes: true,
-            dsPlayground: true
+            progress: false,
+            achievements: false,
+            dailyChallenge: false,
+            studyTip: false,
+            insights: false,
+            interviewExamples: false,
+            studyNotes: false,
+            dsPlayground: false
         },
         nonHome: {
             progress: false,
@@ -75,14 +75,14 @@ const appState = {
         }
     },
     collapsedSections: {
-        progress: true,
-        achievements: true,
-        dailyChallenge: true,
-        studyTip: true,
-        insights: true,
-        interviewExamples: true,
-        studyNotes: true,
-        dsPlayground: true
+        progress: false,
+        achievements: false,
+        dailyChallenge: false,
+        studyTip: false,
+        insights: false,
+        interviewExamples: false,
+        studyNotes: false,
+        dsPlayground: false
     }
 };
 
@@ -170,14 +170,14 @@ let authRefreshInFlight = false;
 let lastAuthRefreshAt = 0;
 
 const DEFAULT_COLLAPSED_SECTIONS = {
-    progress: true,
-    achievements: true,
-    dailyChallenge: true,
-    studyTip: true,
-    insights: true,
-    interviewExamples: true,
-    studyNotes: true,
-    dsPlayground: true
+    progress: false,
+    achievements: false,
+    dailyChallenge: false,
+    studyTip: false,
+    insights: false,
+    interviewExamples: false,
+    studyNotes: false,
+    dsPlayground: false
 };
 const DEFAULT_EXPANDED_SECTIONS = Object.keys(DEFAULT_COLLAPSED_SECTIONS).reduce((acc, key) => {
     acc[key] = false;
@@ -699,25 +699,46 @@ const ACHIEVEMENT_LEVELS = [
         description: 'You have the map and motivation - complete your first module to leave the trailhead.',
     },
     {
-        id: 'scholar',
-        threshold: 3,
+        id: 'starter',
+        threshold: 2,
         label: 'Sprouting Scholar',
         icon: '\u{1F33F}',
-        description: 'Patterns are clicking. Keep finishing fundamentals to unlock tougher structures.',
+        description: 'You are building consistency. Keep stacking fundamental wins.',
+    },
+    {
+        id: 'navigator',
+        threshold: 5,
+        label: 'Pattern Navigator',
+        icon: '\u{1F9ED}',
+        description: 'Core problem patterns are becoming familiar and repeatable.',
     },
     {
         id: 'adventurer',
-        threshold: 10,
+        threshold: 9,
         label: 'Algorithm Adventurer',
-        icon: '\u{1F9ED}',
-        description: 'You navigate recursion, sorting, and graphs with confidence. Time to optimize.',
+        icon: '\u{1F6F0}',
+        description: 'You can switch between approaches and explain your tradeoffs clearly.',
+    },
+    {
+        id: 'strategist',
+        threshold: 14,
+        label: 'Complexity Strategist',
+        icon: '\u{1F4C8}',
+        description: 'You are optimizing with intent, not guesswork.',
     },
     {
         id: 'dynamo',
         threshold: 20,
         label: 'Data Structure Dynamo',
         icon: '\u26A1',
-        description: 'You can dissect any implementation and rebuild it from memory. Keep the momentum.',
+        description: 'You can dissect implementations and rebuild them from memory.',
+    },
+    {
+        id: 'architect',
+        threshold: 27,
+        label: 'Systems Architect',
+        icon: '\u{1F3D7}',
+        description: 'You connect modules into larger systems and reason across boundaries.',
     },
     {
         id: 'luminary',
@@ -2138,6 +2159,9 @@ function syncCollapsedSectionsForRoute(route) {
 }
 
 function persistCollapsedSectionsForRoute(route = appState.currentRoute) {
+    if (!hasAuthenticatedInsightsAccess()) {
+        return;
+    }
     appState.routeCollapsedSections = normalizeRouteCollapsedSections(
         appState.routeCollapsedSections,
         appState.collapsedSections
@@ -2145,6 +2169,14 @@ function persistCollapsedSectionsForRoute(route = appState.currentRoute) {
     const contextKey = getSectionCollapseContextKey(route);
     const contextDefaults = getCollapsedSectionDefaultsForContext(contextKey);
     appState.routeCollapsedSections[contextKey] = normalizeCollapsedSections(appState.collapsedSections, contextDefaults);
+}
+
+function resetCollapsedSectionsToGuestDefaults() {
+    appState.routeCollapsedSections = {
+        [COLLAPSED_SECTION_CONTEXTS.HOME]: normalizeCollapsedSections(null, DEFAULT_COLLAPSED_SECTIONS),
+        [COLLAPSED_SECTION_CONTEXTS.NON_HOME]: normalizeCollapsedSections(null, DEFAULT_EXPANDED_SECTIONS)
+    };
+    appState.collapsedSections = getCollapsedSectionsForRoute(appState.currentRoute, appState.routeCollapsedSections);
 }
 
 function getCollapsedSectionState(sectionKey) {
@@ -12120,7 +12152,37 @@ const studyTips = [
     'If attention drops, lower text size or contrast strain in Settings before forcing more time.',
     'Convert one solved problem into pseudocode and then back into code to improve transfer skills.',
     'End every session by choosing tomorrow\'s first task so startup friction is near zero.',
-    'Once per week, do a cumulative review across old modules to prevent forgetting.'
+    'Once per week, do a cumulative review across old modules to prevent forgetting.',
+    'Before opening a module, write one question you want answered so your reading stays goal-driven.',
+    'After solving a problem, write the time and space complexity from memory before checking your notes.',
+    'When reviewing code, read variable names as a sentence to catch logic gaps quickly.',
+    'Use one notebook section only for edge cases so you build an instant pre-test checklist.',
+    'If you miss a quiz question, recreate a smaller version of that problem and solve it again the same day.',
+    'Keep one \'minimum viable solution\' template for each pattern (two pointers, BFS, DP, etc.).',
+    'Practice dry runs with paper first, then verify with code to strengthen reasoning and implementation speed.',
+    'Set a 2-minute timer before coding to outline input, output, and constraints.',
+    'When stuck, explain the problem with a tiny example of 3 to 5 elements before scaling up.',
+    'Use consistent naming across problems (left/right, slow/fast, i/j) to reduce mental overhead.',
+    'Track your first compile/run attempt success rate; this is a great signal of understanding.',
+    'Batch similar problems in sets of three so pattern recognition improves faster.',
+    'Replace one passive reading block with an active challenge: predict output before running code.',
+    'Record one \'aha moment\' per day; these notes become your best pre-exam review sheet.',
+    'Review yesterday\'s mistakes before starting new content to avoid repeating the same bug.',
+    'When you finish a module, summarize it in 60 seconds without looking at the page.',
+    'For every recursion problem, write the base case and return type first.',
+    'For graph problems, define what \'visited\' means in one sentence before implementation.',
+    'For dynamic programming, state the meaning of dp[i] or dp[r][c] before writing loops.',
+    'Use micro-goals like \'one concept + one code rep\' instead of vague long sessions.',
+    'If progress feels slow, shrink scope: solve a simpler variant and then add constraints back.',
+    'Schedule one no-keyboard review each week where you only reason through algorithms aloud.',
+    'At the end of each week, pick one old module and do a timed re-implementation challenge.',
+    'Build a personal complexity table of common operations so estimates become automatic.',
+    'Use flashcards in both directions: term to definition and definition to term.',
+    'When writing tests, include one normal case, one edge case, and one invalid case every time.',
+    'Rotate study contexts (desk, whiteboard, verbal explanation) to improve retention transfer.',
+    'Turn frequent mistakes into checklists and run the checklist before every submission.',
+    'When a concept finally clicks, teach it to someone else within 24 hours.',
+    'End sessions with one confidence rating (1-5) and one next action to keep momentum.'
 ];
 
 function localizeModuleResources(resources = [], lang = appState.language || 'en') {
@@ -15476,6 +15538,8 @@ function handleInsightsAccessStateChange() {
         loadUserNotifications();
     } else {
         userNotifications = [];
+        resetCollapsedSectionsToGuestDefaults();
+        renderSectionCollapsibles();
     }
     if (!unlocked && studyTimer?.isActive) {
         endStudySession({ notify: false });
@@ -15519,6 +15583,10 @@ function setAccountSyncState(status, message) {
                 ? 'info'
                 : 'neutral';
     setAccountSyncUI(status, message, tone);
+    const insightUpdates = document.getElementById('insight-updates');
+    if (insightUpdates) {
+        insightUpdates.textContent = getInsightsAutoSaveStatusText();
+    }
 }
 
 function setCsrfToken(token) {
@@ -17105,13 +17173,18 @@ async function pullUserStateFromNeon(options = {}) {
             return false;
         }
         const applied = applyRemoteUserStateSnapshot(remoteState, { persistLocal: true });
+        if (applied) {
+            setAccountSyncState('synced', `Learning state pulled at ${new Date().toLocaleString()}`);
+        }
         if (applied && !silent) {
             showToast('Learning state pulled from backend.', 'success');
         }
         return applied;
     } catch (error) {
+        const reason = error instanceof Error ? error.message : String(error);
+        setAccountSyncState('error', `Learning state pull failed: ${reason}`);
         if (!silent) {
-            showToast(`Failed to pull learning state: ${error.message}`, 'warning');
+            showToast(`Failed to pull learning state: ${reason}`, 'warning');
         }
         return false;
     }
@@ -17139,10 +17212,13 @@ async function pushUserStateToNeon(options = {}) {
                 state: buildSerializableUserState()
             })
         });
+        setAccountSyncState('synced', `Learning state synced at ${new Date().toLocaleString()}`);
         return true;
     } catch (error) {
+        const reason = error instanceof Error ? error.message : String(error);
+        setAccountSyncState('error', `Learning state sync failed: ${reason}`);
         if (!silent) {
-            showToast(`Failed to sync learning state: ${error.message}`, 'warning');
+            showToast(`Failed to sync learning state: ${reason}`, 'warning');
         }
         return false;
     } finally {
@@ -20792,12 +20868,36 @@ function getGuestPreviewProgressState() {
 }
 
 function getDynamicAchievementLevels() {
-    const totalModules = getDisplayModuleTotal();
-    return ACHIEVEMENT_LEVELS.map(level => (
-        level.id === 'luminary'
-            ? { ...level, threshold: totalModules }
-            : level
-    ));
+    const totalModules = Math.max(getDisplayModuleTotal(), 1);
+    const preFinalCap = Math.max(totalModules - 1, 0);
+    const normalizedLevels = ACHIEVEMENT_LEVELS.map((level, index) => {
+        const isFinalLevel = level.id === 'luminary' || index === ACHIEVEMENT_LEVELS.length - 1;
+        const threshold = isFinalLevel
+            ? totalModules
+            : Math.min(level.threshold, preFinalCap);
+        return {
+            ...level,
+            threshold
+        };
+    });
+
+    const deduped = [];
+    normalizedLevels.forEach((level) => {
+        if (!deduped.length) {
+            deduped.push(level);
+            return;
+        }
+        const previous = deduped[deduped.length - 1];
+        if (level.threshold <= previous.threshold) {
+            deduped[deduped.length - 1] = { ...level, threshold: previous.threshold };
+            return;
+        }
+        deduped.push(level);
+    });
+    if (deduped[0].threshold !== 0) {
+        deduped[0] = { ...deduped[0], threshold: 0 };
+    }
+    return deduped;
 }
 
 function getCanonicalModuleCode(moduleId, preferredLanguage, preferredExampleId = '') {
@@ -21053,6 +21153,71 @@ function applyCompactLayout() {
     document.body.classList.toggle('compact-modules', !!appState.compactLayout);
 }
 
+function getNextProgressMilestone(progressPercentage = 0) {
+    const checkpoints = [10, 25, 40, 50, 60, 75, 90, 100];
+    return checkpoints.find((value) => value > progressPercentage) || 100;
+}
+
+function updateProgressInsightsUI({
+    displayCompleted = 0,
+    displayTotal = 1,
+    progressPercentage = 0,
+    shouldUseGuestPreview = false
+} = {}) {
+    const progressGoalEl = document.getElementById('progress-goal');
+    const progressPills = Array.from(document.querySelectorAll('#progress-section .progress-pill'));
+    const total = Math.max(Number(displayTotal) || 1, 1);
+    const completed = Math.max(0, Math.min(Number(displayCompleted) || 0, total));
+    const percentage = Math.max(0, Math.min(100, Number(progressPercentage) || 0));
+    const remaining = Math.max(0, total - completed);
+    const weeklyGoal = Math.max(1, Number(appState.weeklyGoal) || 5);
+    const finishWeeks = remaining === 0 ? 0 : Math.max(1, Math.ceil(remaining / weeklyGoal));
+    const nextMilestone = getNextProgressMilestone(percentage);
+
+    if (progressGoalEl) {
+        if (shouldUseGuestPreview) {
+            progressGoalEl.textContent = appState.language === 'es'
+                ? 'Vista previa de progreso. Inicia sesion para sincronizar metas.'
+                : 'Preview progress only. Sign in to sync your goal pacing.';
+        } else if (remaining === 0) {
+            progressGoalEl.textContent = appState.language === 'es'
+                ? 'Meta lograda: modulos completos. Mantelo con repasos semanales.'
+                : 'Goal reached: all modules complete. Keep momentum with weekly review.';
+        } else {
+            progressGoalEl.textContent = appState.language === 'es'
+                ? `Meta: ${weeklyGoal}/semana - ${remaining} restantes (~${finishWeeks} semana${finishWeeks === 1 ? '' : 's'})`
+                : `Goal: ${weeklyGoal}/week - ${remaining} left (~${finishWeeks} week${finishWeeks === 1 ? '' : 's'})`;
+        }
+    }
+
+    if (progressPills.length) {
+        const milestoneCopy = remaining === 0
+            ? (appState.language === 'es' ? 'Meta final completada' : 'Final milestone complete')
+            : (appState.language === 'es'
+                ? `Siguiente hito en ${nextMilestone}%`
+                : `Next milestone at ${nextMilestone}%`);
+        const paceCopy = remaining === 0
+            ? (appState.language === 'es'
+                ? 'Refuerza con quizzes y flashcards'
+                : 'Reinforce with quizzes and flashcards')
+            : (appState.language === 'es'
+                ? `${remaining} modulos restantes en tu ruta`
+                : `${remaining} modules left in your path`);
+        const actionCopy = shouldUseGuestPreview
+            ? (appState.language === 'es'
+                ? 'Inicia sesion para guardar progreso automaticamente'
+                : 'Sign in to auto-save progress across devices')
+            : (appState.language === 'es'
+                ? `Pace sugerido: ${weeklyGoal}/semana para mantener ritmo`
+                : `Suggested pace: ${weeklyGoal}/week to stay on track`);
+        const messages = [milestoneCopy, paceCopy, actionCopy];
+        progressPills.forEach((pill, index) => {
+            if (!(pill instanceof HTMLElement)) return;
+            pill.textContent = messages[index] || '';
+        });
+    }
+}
+
 function updateProgress() {
     const totalModules = Math.max(getDisplayModuleTotal(), 1);
     const completed = appState.completedModules.size;
@@ -21078,6 +21243,12 @@ function updateProgress() {
     document.getElementById('progress-text').textContent = progressStr;
     document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
     document.getElementById('progress-percentage').textContent = `${progressPercentage}%`;
+    updateProgressInsightsUI({
+        displayCompleted,
+        displayTotal,
+        progressPercentage,
+        shouldUseGuestPreview
+    });
 
     renderAchievements();
 }
@@ -23796,25 +23967,34 @@ function renderAchievements() {
     const totalLabel = document.getElementById('achievement-total-label');
     const nextHint = document.getElementById('achievement-next-hint');
 
-    if (badgeLabel) badgeLabel.textContent = translateLiteral(current.label, appState.language);
-    if (badgeName) badgeName.textContent = translateLiteral(current.label, appState.language);
-    if (badgeIcon) badgeIcon.textContent = current.icon;
-    if (descriptionEl) descriptionEl.textContent = translateLiteral(current.description, appState.language);
+    const localizedCurrentLabel = translateLiteral(current.label, appState.language);
+    const localizedCurrentDescription = translateLiteral(current.description, appState.language);
     const totalModules = Math.max(displayTotal, 1);
+    const completionPercent = Math.round((completed / totalModules) * 100);
+    if (badgeLabel) badgeLabel.textContent = localizedCurrentLabel;
+    if (badgeName) badgeName.textContent = localizedCurrentLabel;
+    if (badgeIcon) badgeIcon.textContent = current.icon;
+    if (descriptionEl) {
+        const completionCopy = appState.language === 'es'
+            ? `${completionPercent}% completado en total.`
+            : `${completionPercent}% overall complete.`;
+        descriptionEl.textContent = `${localizedCurrentDescription} ${completionCopy}`;
+    }
     if (totalLabel) {
         totalLabel.textContent = shouldUseGuestPreview
             ? (appState.language === 'es'
-                ? `${totalModules} modulos en ruta de ejemplo`
-                : `${totalModules} modules in sample roadmap`)
+                ? `${totalModules} modulos en ruta de ejemplo (${completionPercent}% completado)`
+                : `${totalModules} modules in sample roadmap (${completionPercent}% complete)`)
             : (appState.language === 'es'
-                ? `${totalModules} modulos totales`
-                : `${totalModules} total modules`);
+                ? `${completed}/${totalModules} modulos completados (${completionPercent}%)`
+                : `${completed}/${totalModules} modules complete (${completionPercent}%)`);
     }
 
     const previousThreshold = current.threshold;
     const nextThreshold = next ? next.threshold : totalModules;
     const span = Math.max(nextThreshold - previousThreshold, 1);
     const modulesTowardNext = next ? Math.max(0, completed - previousThreshold) : span;
+    const modulesLeftToNext = next ? Math.max(0, next.threshold - completed) : 0;
     const progressPercent = next ? Math.min((modulesTowardNext / span) * 100, 100) : 100;
 
     if (progressBar) {
@@ -23823,15 +24003,20 @@ function renderAchievements() {
 
     if (progressLabel) {
         if (next) {
-            progressLabel.textContent = translateLiteral(`${modulesTowardNext} / ${span} modules toward next badge`, appState.language);
+            progressLabel.textContent = appState.language === 'es'
+                ? `${modulesTowardNext} / ${span} hacia la siguiente insignia (${modulesLeftToNext} restantes)`
+                : `${modulesTowardNext} / ${span} toward next badge (${modulesLeftToNext} left)`;
         } else {
             progressLabel.textContent = translateLiteral(`All achievements unlocked  -  ${completed} modules completed!`, appState.language);
         }
     }
 
     if (nextHint) {
+        const localizedNextLabel = next ? translateLiteral(next.label, appState.language) : '';
         nextHint.textContent = next
-            ? translateLiteral(`Next: ${next.label} at ${next.threshold} modules`, appState.language)
+            ? (appState.language === 'es'
+                ? `Siguiente: ${localizedNextLabel} en ${next.threshold} modulos`
+                : `Next: ${localizedNextLabel} at ${next.threshold} modules`)
             : translateLiteral('Legend achieved! Keep challenging yourself.', appState.language);
     }
 }
@@ -25570,6 +25755,52 @@ function getBreakReminder() {
     return translateLiteral(`? Break in ${25 - minutesElapsed} min`, appState.language);
 }
 
+function formatRelativeSyncTime(timestampIso) {
+    if (!timestampIso) return '';
+    const timestamp = new Date(timestampIso);
+    if (Number.isNaN(timestamp.getTime())) return '';
+    const elapsedMs = Math.max(0, Date.now() - timestamp.getTime());
+    const minutes = Math.floor(elapsedMs / 60000);
+    if (minutes < 1) {
+        return appState.language === 'es' ? 'justo ahora' : 'just now';
+    }
+    if (minutes < 60) {
+        return appState.language === 'es' ? `hace ${minutes} min` : `${minutes}m ago`;
+    }
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) {
+        return appState.language === 'es' ? `hace ${hours} h` : `${hours}h ago`;
+    }
+    const days = Math.floor(hours / 24);
+    return appState.language === 'es' ? `hace ${days} dia${days === 1 ? '' : 's'}` : `${days}d ago`;
+}
+
+function getInsightsAutoSaveStatusText() {
+    if (!hasAuthenticatedInsightsAccess()) {
+        return t('insights.lock.updates');
+    }
+    const syncState = String(accountProfile?.lastSyncStatus || '').toLowerCase();
+    const relative = formatRelativeSyncTime(accountProfile?.lastSyncAt);
+    if (syncState === 'error') {
+        return appState.language === 'es'
+            ? 'Auto-guardado activo - ultimo intento con error'
+            : 'Auto-save active - last sync attempt had an error';
+    }
+    if (syncState === 'connected' || syncState === 'connecting') {
+        return appState.language === 'es'
+            ? 'Auto-guardado activo - sesion conectada, esperando cambios'
+            : 'Auto-save active - session connected, waiting for changes';
+    }
+    if (relative && syncState === 'synced') {
+        return appState.language === 'es'
+            ? `Auto-guardado activo - ultimo sync ${relative}`
+            : `Auto-save active - last sync ${relative}`;
+    }
+    return appState.language === 'es'
+        ? 'Auto-guardado activo - esperando primer sync'
+        : 'Auto-save active - waiting for first sync';
+}
+
 function updateStudyTrackerUI() {
     const statusEl = document.getElementById('study-session-status');
     const todayEl = document.getElementById('study-time-today');
@@ -25663,7 +25894,7 @@ function renderInsights() {
     if (!hasAccess) {
         const guestPreview = getGuestPreviewProgressState();
         if (insightUpdates) {
-            insightUpdates.textContent = t('insights.lock.updates');
+            insightUpdates.textContent = getInsightsAutoSaveStatusText();
         }
         if (progressEl) {
             progressEl.textContent = `${guestPreview.percentage}%`;
@@ -25841,9 +26072,14 @@ function renderInsights() {
     }
 
     if (recommendedList) {
-        const recommendations = learningPath.upcoming && learningPath.upcoming.length > 0
-            ? learningPath.upcoming
-            : getRecommendedModules();
+        const recommendationResult = learningPath.upcoming && learningPath.upcoming.length > 0
+            ? {
+                modules: learningPath.upcoming,
+                context: buildRecommendationContext()
+            }
+            : getRecommendedModulesWithContext(3);
+        const recommendations = recommendationResult.modules || [];
+        const recommendationContext = recommendationResult.context || buildRecommendationContext();
 
         if (recommendations.length === 0) {
             recommendedList.innerHTML = `
@@ -25853,11 +26089,13 @@ function renderInsights() {
             recommendedList.innerHTML = recommendations.map(module => {
                 const localizedModule = getLocalizedModule(module);
                 const topics = (localizedModule.topics || []).slice(0, 3).join(', ') || translateLiteral('Practice set', appState.language);
+                const reason = getRecommendationReason(module, recommendationContext);
                 return `
                 <li>
                     <button class="recommended-link" onclick="focusModule('${module.id}')">
                         <div class="font-semibold text-slate-800 dark:text-slate-100">${localizedModule.title}</div>
                         <div class="text-xs text-slate-500">${topics}</div>
+                        <div class="text-[11px] text-indigo-600 mt-1">${escapeHtml(reason)}</div>
                     </button>
                 </li>
             `;
@@ -25883,9 +26121,8 @@ function renderInsights() {
             }).join('');
     }
 
-        if (insightUpdates) {
-        const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-        insightUpdates.textContent = translateLiteral(`Synced ${timestamp}`, appState.language);
+    if (insightUpdates) {
+        insightUpdates.textContent = getInsightsAutoSaveStatusText();
     }
 
     if (highlightGoalEl) {
@@ -26556,32 +26793,184 @@ function trackUsage(action, category = 'General') {
     safeSetItem('dsaHubUsage', JSON.stringify(usage));
 }
 
-// Module recommendation system
-function getRecommendedModules() {
-    const completed = Array.from(appState.completedModules);
-    const orderedModules = getOrderedModules();
-    const incomplete = orderedModules.filter(m => !completed.includes(m.id));
+function getTargetDifficultyForProgress(progressRatio = 0) {
+    if (progressRatio < 0.34) return 'beginner';
+    if (progressRatio < 0.72) return 'intermediate';
+    return 'advanced';
+}
 
-    if (completed.length === 0) {
-        // Recommend beginner modules
-        return incomplete.filter(m => m.difficulty === 'beginner').slice(0, 3);
+function getPreferredFocusCategories() {
+    const focus = String(studyPlanState?.focus || '').toLowerCase();
+    if (focus === 'interview') {
+        return ['dsa', 'discrete'];
+    }
+    if (focus === 'projects') {
+        return ['java', 'git', 'assembly'];
+    }
+    if (focus === 'foundations') {
+        return ['dsa', 'java'];
+    }
+    return [];
+}
+
+function buildQuizPerformanceByModule() {
+    const rawStats = getQuizStats();
+    const performanceByModule = new Map();
+    Object.entries(rawStats || {}).forEach(([moduleId, attempts]) => {
+        if (!Array.isArray(attempts) || !attempts.length) return;
+        const validPercentages = attempts
+            .map((attempt) => Number(attempt?.percentage))
+            .filter((value) => Number.isFinite(value));
+        if (!validPercentages.length) return;
+        const average = validPercentages.reduce((sum, value) => sum + value, 0) / validPercentages.length;
+        performanceByModule.set(moduleId, {
+            average,
+            attempts: validPercentages.length
+        });
+    });
+    return performanceByModule;
+}
+
+function buildWeaknessByCategory(quizPerformanceByModule = new Map()) {
+    const byCategory = new Map();
+    quizPerformanceByModule.forEach((performance, moduleId) => {
+        const categoryKey = getModuleCategoryKey(moduleId);
+        const weakness = Math.max(0, 80 - (performance?.average || 0));
+        if (!byCategory.has(categoryKey)) {
+            byCategory.set(categoryKey, { totalWeakness: 0, count: 0 });
+        }
+        const entry = byCategory.get(categoryKey);
+        entry.totalWeakness += weakness;
+        entry.count += 1;
+    });
+    const normalized = new Map();
+    byCategory.forEach((entry, categoryKey) => {
+        normalized.set(categoryKey, entry.count ? (entry.totalWeakness / entry.count) : 0);
+    });
+    return normalized;
+}
+
+function buildRecommendationContext() {
+    const totalModules = Math.max(getDisplayModuleTotal(), 1);
+    const completedCount = Math.max(0, Math.min(appState.completedModules.size, totalModules));
+    const progressRatio = completedCount / totalModules;
+    const targetDifficulty = getTargetDifficultyForProgress(progressRatio);
+    const preferredCategories = getPreferredFocusCategories();
+    const focusCategories = new Set(preferredCategories);
+    if (appState.categoryFilter && appState.categoryFilter !== 'all') {
+        focusCategories.add(appState.categoryFilter);
+    }
+    const quizPerformanceByModule = hasAuthenticatedInsightsAccess()
+        ? buildQuizPerformanceByModule()
+        : new Map();
+    const weaknessByCategory = buildWeaknessByCategory(quizPerformanceByModule);
+    return {
+        targetDifficulty,
+        focusCategories,
+        quizPerformanceByModule,
+        weaknessByCategory
+    };
+}
+
+function getRecommendedModulesWithContext(limit = 3) {
+    const normalizedLimit = Math.max(1, Number(limit) || 3);
+    const orderedModules = getOrderedModules();
+    const completedSet = new Set(appState.completedModules);
+    const incomplete = orderedModules.filter((module) => !completedSet.has(module.id));
+    const context = buildRecommendationContext();
+    if (!incomplete.length) {
+        return {
+            modules: [],
+            context
+        };
     }
 
-    // Simple recommendation based on completed modules
-    const completedDifficulties = completed.map(id =>
-        orderedModules.find(m => m.id === id)?.difficulty
-    ).filter(Boolean);
+    const sequenceIndexById = new Map(orderedModules.map((module, index) => [module.id, index]));
+    const firstIncompleteIndex = orderedModules.findIndex((module) => !completedSet.has(module.id));
+    const safeSearchTerm = String(appState.searchTerm || '').trim().toLowerCase();
 
-    const mostCommonDifficulty = completedDifficulties
-        .reduce((acc, diff) => {
-            acc[diff] = (acc[diff] || 0) + 1;
-            return acc;
-        }, {});
+    const scored = incomplete.map((module) => {
+        const sequenceIndex = sequenceIndexById.get(module.id) ?? Number.MAX_SAFE_INTEGER;
+        const sequenceDelta = firstIncompleteIndex >= 0 ? Math.abs(sequenceIndex - firstIncompleteIndex) : 0;
+        const categoryKey = getModuleCategoryKey(module.id);
+        const modulePerformance = context.quizPerformanceByModule.get(module.id);
+        let score = 0;
 
-    const recommended = Object.keys(mostCommonDifficulty)
-        .sort((a, b) => mostCommonDifficulty[b] - mostCommonDifficulty[a])[0];
+        score += Math.max(0, 42 - (sequenceDelta * 4));
+        if (module.difficulty === context.targetDifficulty) {
+            score += 24;
+        } else if (context.targetDifficulty === 'advanced' && module.difficulty === 'intermediate') {
+            score += 11;
+        } else if (context.targetDifficulty === 'intermediate' && module.difficulty === 'beginner') {
+            score += 9;
+        }
 
-    return incomplete.filter(m => m.difficulty === recommended).slice(0, 3);
+        if (context.focusCategories.has(categoryKey)) {
+            score += 20;
+        }
+
+        if (modulePerformance) {
+            if (modulePerformance.average < 70) {
+                score += 36 + ((70 - modulePerformance.average) * 0.55);
+            } else if (modulePerformance.average < 85) {
+                score += 12 + ((85 - modulePerformance.average) * 0.2);
+            }
+            if (modulePerformance.attempts >= 3) {
+                score += 5;
+            }
+        } else {
+            score += (context.weaknessByCategory.get(categoryKey) || 0) * 0.4;
+        }
+
+        if (safeSearchTerm && String(module.title || '').toLowerCase().includes(safeSearchTerm)) {
+            score += 4;
+        }
+
+        return {
+            module,
+            score,
+            sequenceIndex
+        };
+    });
+
+    scored.sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        return a.sequenceIndex - b.sequenceIndex;
+    });
+
+    return {
+        modules: scored.slice(0, normalizedLimit).map((entry) => entry.module),
+        context
+    };
+}
+
+function getRecommendedModules() {
+    return getRecommendedModulesWithContext(3).modules;
+}
+
+function getRecommendationReason(module, recommendationContext = null) {
+    if (!module) return '';
+    const context = recommendationContext || buildRecommendationContext();
+    const categoryKey = getModuleCategoryKey(module.id);
+    const performance = context.quizPerformanceByModule.get(module.id);
+    if (performance && performance.average < 75) {
+        return appState.language === 'es'
+            ? `Refuerzo sugerido: promedio reciente ${Math.round(performance.average)}%`
+            : `Reinforcement suggested: recent average ${Math.round(performance.average)}%`;
+    }
+    if (context.focusCategories.has(categoryKey)) {
+        return appState.language === 'es'
+            ? 'Coincide con tu enfoque del plan de estudio.'
+            : 'Matches your study-plan focus.';
+    }
+    if (module.difficulty === context.targetDifficulty) {
+        return appState.language === 'es'
+            ? 'Alineado con tu nivel actual de progreso.'
+            : 'Aligned with your current progress level.';
+    }
+    return appState.language === 'es'
+        ? 'Siguiente paso recomendado en tu secuencia de aprendizaje.'
+        : 'Recommended next step in your learning sequence.';
 }
 
 // Study session timer
