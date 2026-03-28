@@ -16226,12 +16226,21 @@ async function handleOAuthResultFromUrl() {
             if (!session?.isAuthenticated && !accountAuthState.isAuthenticated) {
                 // Mobile browsers can delay cross-site cookie availability briefly after OAuth return.
                 window.setTimeout(() => {
-                    void refreshAuthSessionState({
-                        silent: true,
-                        retries: 2,
-                        retryDelayMs: 700,
-                        force: true
-                    });
+                    void (async () => {
+                        const recoverySession = await refreshAuthSessionState({
+                            silent: true,
+                            retries: 2,
+                            retryDelayMs: 700,
+                            force: true
+                        });
+                        if (!recoverySession?.isAuthenticated && !accountAuthState.isAuthenticated) {
+                            const syncFailureMessage = isCrossOriginApiRuntime()
+                                ? `${providerLabel} sign-in succeeded, but session cookies were blocked. Set SESSION_COOKIE_SAME_SITE=none and SESSION_COOKIE_SECURE=true.`
+                                : `${providerLabel} sign-in succeeded, but session sync did not finish. Open Account and try again.`;
+                            setAccountAuthStatus(syncFailureMessage, 'error');
+                            showToast(syncFailureMessage, 'warning');
+                        }
+                    })();
                 }, 900);
             }
         }
@@ -16523,6 +16532,18 @@ function getConfiguredApiBaseUrl() {
         return '';
     }
     return normalizeApiBaseUrl(`${protocol}//${hostname}:3000`);
+}
+
+function isCrossOriginApiRuntime() {
+    if (typeof window === 'undefined') return false;
+    const configuredBase = getConfiguredApiBaseUrl();
+    if (!configuredBase) return false;
+    try {
+        const apiOrigin = new URL(configuredBase).origin;
+        return apiOrigin.toLowerCase() !== String(window.location.origin || '').toLowerCase();
+    } catch (error) {
+        return false;
+    }
 }
 
 function isApiRuntimeAvailable() {

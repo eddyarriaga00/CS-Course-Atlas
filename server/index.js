@@ -242,13 +242,22 @@ function shouldUseSecureSessionCookie(req) {
     return Boolean(req?.secure) || forwardedSecure;
 }
 
-function getCookieOptions(req) {
+function getCookieOptions(req, options = {}) {
+    const { forceCrossSite = false } = options;
     const secureCookie = shouldUseSecureSessionCookie(req);
-    const sameSitePolicy = secureCookie && SESSION_COOKIE_SAME_SITE === 'none'
+    const originInfo = evaluateOriginTrust(req);
+    const crossSiteRequest = Boolean(
+        forceCrossSite
+        || (originInfo.originHeader && originInfo.trusted && !originInfo.sameOrigin)
+    );
+    let sameSitePolicy = secureCookie && SESSION_COOKIE_SAME_SITE === 'none'
         ? 'none'
         : SESSION_COOKIE_SAME_SITE === 'none'
             ? 'lax'
             : SESSION_COOKIE_SAME_SITE;
+    if (secureCookie && crossSiteRequest) {
+        sameSitePolicy = 'none';
+    }
     return {
         httpOnly: true,
         sameSite: sameSitePolicy,
@@ -920,6 +929,22 @@ function appendOAuthResultToPath(basePath, entries) {
         return `${parsed.origin}${parsed.pathname}${parsed.search}${parsed.hash}`;
     }
     return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+}
+
+function shouldForceCrossSiteSessionCookieForReturnTo(req, returnTo) {
+    const normalizedReturnTo = safeString(returnTo);
+    if (!normalizedReturnTo) return false;
+    const host = safeString(req.get('host')).toLowerCase();
+    if (!host) return false;
+    const requestOrigin = `${req.protocol}://${host}`.toLowerCase();
+    try {
+        const resolved = /^https?:\/\//i.test(normalizedReturnTo)
+            ? new URL(normalizedReturnTo)
+            : new URL(normalizedReturnTo, requestOrigin);
+        return resolved.origin.toLowerCase() !== requestOrigin;
+    } catch (_error) {
+        return false;
+    }
 }
 
 function isAllowedOAuthReturnOrigin(origin) {
@@ -1886,7 +1911,8 @@ async function requireAuth(req, res, next) {
     }
 }
 
-async function createSession(res, req, userId) {
+async function createSession(res, req, userId, options = {}) {
+    const { forceCrossSiteCookie = false } = options;
     const token = randomToken(48);
     const tokenHash = hashSessionToken(token);
     const csrfToken = randomToken(24);
@@ -1920,7 +1946,7 @@ async function createSession(res, req, userId) {
         `,
         [userId, MAX_ACTIVE_SESSIONS_PER_USER]
     );
-    res.cookie(SESSION_COOKIE_NAME, token, getCookieOptions(req));
+    res.cookie(SESSION_COOKIE_NAME, token, getCookieOptions(req, { forceCrossSite: forceCrossSiteCookie }));
     return csrfToken;
 }
 
@@ -2126,7 +2152,9 @@ app.get('/api/auth/oauth/:provider/callback', noStore, async (req, res) => {
     try {
         const profile = await exchangeOAuthCodeForProfile(provider, providerCode, providerStatus.redirectUri);
         const user = await resolveOAuthUser(profile);
-        await createSession(res, req, user.id);
+        await createSession(res, req, user.id, {
+            forceCrossSiteCookie: shouldForceCrossSiteSessionCookieForReturnTo(req, returnTo)
+        });
         return res.redirect(
             appendOAuthResultToPath(returnTo, [
                 ['oauth', 'success'],
