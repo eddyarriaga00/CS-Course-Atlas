@@ -16235,7 +16235,7 @@ async function handleOAuthResultFromUrl() {
                         });
                         if (!recoverySession?.isAuthenticated && !accountAuthState.isAuthenticated) {
                             const syncFailureMessage = isCrossOriginApiRuntime()
-                                ? `${providerLabel} sign-in succeeded, but session cookies were blocked. Set SESSION_COOKIE_SAME_SITE=none and SESSION_COOKIE_SECURE=true.`
+                                ? `${providerLabel} sign-in succeeded, but session cookies were blocked. Set ALLOWED_ORIGINS to your exact frontend origin(s), SESSION_COOKIE_SAME_SITE=none, and SESSION_COOKIE_SECURE=true.`
                                 : `${providerLabel} sign-in succeeded, but session sync did not finish. Open Account and try again.`;
                             setAccountAuthStatus(syncFailureMessage, 'error');
                             showToast(syncFailureMessage, 'warning');

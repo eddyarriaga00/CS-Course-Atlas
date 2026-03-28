@@ -15,7 +15,7 @@ services:
       - key: DATABASE_URL
         sync: false
       - key: ALLOWED_ORIGINS
-        value: https://eddyarriaga00.github.io
+        value: https://eddyarriaga00.github.io,https://www.cscourseatlas.com,https://cscourseatlas.com
       - key: SESSION_COOKIE_SAME_SITE
         value: none
       - key: SESSION_COOKIE_SECURE

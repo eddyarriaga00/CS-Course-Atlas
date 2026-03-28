@@ -262,6 +262,8 @@ function getCookieOptions(req, options = {}) {
         httpOnly: true,
         sameSite: sameSitePolicy,
         secure: secureCookie,
+        // Helps modern browsers keep cross-site auth cookies available when third-party cookie blocking is enabled.
+        partitioned: secureCookie && crossSiteRequest,
         path: '/',
         maxAge: SESSION_TTL_DAYS * 24 * 60 * 60 * 1000,
         priority: 'high'
