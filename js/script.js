@@ -16193,11 +16193,36 @@ function getSessionUserFromPayload(payload) {
     const userUsername = String(
         user?.username
         || user?.name
+        || user?.displayName
         || payload?.username
+        || payload?.name
         || payload?.data?.username
+        || payload?.data?.name
         || ''
     ).trim();
     return { userId, userEmail, userUsername };
+}
+
+function resolveSessionAuthenticatedFlag(payload, sessionUser = {}) {
+    const explicitAuthFlagCandidates = [
+        payload?.authenticated,
+        payload?.isAuthenticated,
+        payload?.session?.authenticated,
+        payload?.session?.isAuthenticated,
+        payload?.data?.authenticated,
+        payload?.data?.isAuthenticated,
+        payload?.data?.session?.authenticated,
+        payload?.data?.session?.isAuthenticated
+    ];
+    const explicitAuthFlag = explicitAuthFlagCandidates.find((value) => typeof value === 'boolean');
+    if (typeof explicitAuthFlag === 'boolean') {
+        return explicitAuthFlag;
+    }
+    return Boolean(
+        sessionUser?.userId
+        || sessionUser?.userEmail
+        || sessionUser?.userUsername
+    );
 }
 
 function getNeonProfileEndpoint() {
@@ -16808,13 +16833,14 @@ async function checkNeonSession(options = {}) {
             || sessionPayload?.data?.csrfToken
             || ''
         ).trim();
-        const { userId, userEmail, userUsername } = getSessionUserFromPayload(sessionPayload);
+        const sessionUser = getSessionUserFromPayload(sessionPayload);
+        const { userId, userEmail, userUsername } = sessionUser;
         const userLabel = userUsername || userEmail || userId || accountProfile.serverUserId;
         const resolvedUserId = userId || accountProfile.serverUserId;
         const message = userLabel
             ? `Session active for ${userLabel}`
             : 'Session endpoint reachable.';
-        const isAuthenticated = Boolean(userId || userEmail);
+        const isAuthenticated = resolveSessionAuthenticatedFlag(sessionPayload, sessionUser);
         if (isLatestSessionCheck()) {
             accountAuthState.isAuthenticated = isAuthenticated;
             accountAuthState.sessionLabel = userLabel;
@@ -17028,6 +17054,8 @@ async function submitAccountAuth() {
             method: 'POST',
             body: JSON.stringify(payload)
         });
+        const authSessionUser = getSessionUserFromPayload(authPayload);
+        const authHasSession = resolveSessionAuthenticatedFlag(authPayload, authSessionUser);
         const authCsrfToken = String(authPayload?.csrfToken || authPayload?.session?.csrfToken || '').trim();
         if (authCsrfToken) {
             setCsrfToken(authCsrfToken);
@@ -17038,8 +17066,27 @@ async function submitAccountAuth() {
             accountProfile.username = username;
             accountProfile.name = username;
         }
+        if (authSessionUser.userId) {
+            accountProfile.serverUserId = authSessionUser.userId;
+        }
+        if (authSessionUser.userEmail) {
+            accountProfile.email = authSessionUser.userEmail;
+        }
+        if (authSessionUser.userUsername) {
+            accountProfile.username = authSessionUser.userUsername;
+            accountProfile.name = authSessionUser.userUsername;
+        }
         saveAccountProfile();
         applyAccountProfileToForm();
+        if (authHasSession) {
+            accountAuthState.isAuthenticated = true;
+            accountAuthState.sessionLabel = authSessionUser.userUsername
+                || authSessionUser.userEmail
+                || authSessionUser.userId
+                || accountAuthState.sessionLabel;
+            refreshAccountPrimaryAuthButton();
+            handleInsightsAccessStateChange();
+        }
         await refreshAuthSessionState({ silent: true, retries: 2, retryDelayMs: 450, force: true });
         const successText = isSignup ? 'Account created and signed in successfully.' : 'Signed in successfully.';
         setAccountAuthStatus(successText, 'success');
