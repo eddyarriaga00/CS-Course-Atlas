@@ -16232,18 +16232,23 @@ async function handleOAuthResultFromUrl() {
                 // Mobile browsers can delay cross-site cookie availability briefly after OAuth return.
                 window.setTimeout(() => {
                     void (async () => {
-                        const recoverySession = await refreshAuthSessionState({
-                            silent: true,
-                            retries: 2,
-                            retryDelayMs: 700,
-                            force: true
-                        });
-                        if (!recoverySession?.isAuthenticated && !accountAuthState.isAuthenticated) {
-                            const syncFailureMessage = isCrossOriginApiRuntime()
-                                ? `${providerLabel} sign-in succeeded, but session cookies were blocked. Set ALLOWED_ORIGINS to your exact frontend origin(s), SESSION_COOKIE_SAME_SITE=none, and SESSION_COOKIE_SECURE=true.`
-                                : `${providerLabel} sign-in succeeded, but session sync did not finish. Open Account and try again.`;
-                            setAccountAuthStatus(syncFailureMessage, 'error');
-                            showToast(syncFailureMessage, 'warning');
+                        try {
+                            const recoverySession = await refreshAuthSessionState({
+                                silent: true,
+                                retries: 2,
+                                retryDelayMs: 700,
+                                force: true
+                            });
+                            if (!recoverySession?.isAuthenticated && !accountAuthState.isAuthenticated) {
+                                const syncFailureMessage = isCrossOriginApiRuntime()
+                                    ? `${providerLabel} sign-in succeeded, but session cookies were blocked. Set ALLOWED_ORIGINS to your exact frontend origin(s), SESSION_COOKIE_SAME_SITE=none, and SESSION_COOKIE_SECURE=true.`
+                                    : `${providerLabel} sign-in succeeded, but session sync did not finish. Open Account and try again.`;
+                                setAccountAuthStatus(syncFailureMessage, 'error');
+                                showToast(syncFailureMessage, 'warning');
+                            }
+                        } catch (error) {
+                            const reason = error instanceof Error ? error.message : String(error);
+                            setAccountAuthStatus(`${providerLabel} session refresh failed: ${reason}`, 'error');
                         }
                     })();
                 }, 900);
@@ -17350,6 +17355,12 @@ async function refreshAuthSessionState(options = {}) {
             }
         }
         return session;
+    } catch (error) {
+        const reason = error instanceof Error ? error.message : String(error);
+        if (!silent) {
+            showToast(`Session refresh failed: ${reason}`, 'warning');
+        }
+        return null;
     } finally {
         authRefreshInFlight = false;
         lastAuthRefreshAt = Date.now();
