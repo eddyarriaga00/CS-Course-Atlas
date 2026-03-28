@@ -2406,6 +2406,39 @@ function getRouteDocumentPath(route) {
     return ROUTE_DOCUMENT_PATH_MAP[normalizedRoute] || ROUTE_DOCUMENT_PATH_MAP[DEFAULT_ROUTE] || '/index.html';
 }
 
+const STATIC_ROUTE_DOCUMENT_PATTERN = /\/(?:home|tracks|dsa|java|git|assembly|discrete-math|flashcards|quizzes|playground|notes|support|about)\.html$/i;
+
+function shouldUseQueryRouteUrls() {
+    if (typeof window === 'undefined') return false;
+    const pathname = String(window.location.pathname || '').toLowerCase();
+    if (STATIC_ROUTE_DOCUMENT_PATTERN.test(pathname)) {
+        return false;
+    }
+    return true;
+}
+
+function getRouteHistoryPath(route, options = {}) {
+    const normalizedRoute = normalizeRoutePath(route || DEFAULT_ROUTE);
+    const { moduleId = '' } = options;
+    const normalizedModuleId = String(moduleId || '').trim().toLowerCase();
+    const staticDocumentPath = withAppBasePath(getRouteDocumentPath(normalizedRoute));
+
+    if (!shouldUseQueryRouteUrls() && !normalizedModuleId) {
+        return staticDocumentPath;
+    }
+
+    const params = new URLSearchParams();
+    if (normalizedRoute !== DEFAULT_ROUTE) {
+        params.set('route', normalizedRoute);
+    }
+    if (normalizedModuleId) {
+        params.set('module', normalizedModuleId);
+    }
+    const query = params.toString();
+    const indexPath = withAppBasePath('/index.html');
+    return query ? `${indexPath}?${query}` : indexPath;
+}
+
 function getInitialNavigationRequest() {
     if (typeof window === 'undefined') {
         return { route: DEFAULT_ROUTE, moduleId: '' };
@@ -2453,7 +2486,7 @@ function updateRouteSeoMeta(route) {
     setSeoMetaByProperty('twitter:title', title);
     setSeoMetaByProperty('twitter:description', description);
     if (typeof window !== 'undefined') {
-        const canonicalPath = withAppBasePath(getRouteDocumentPath(normalizedRoute));
+        const canonicalPath = getRouteHistoryPath(normalizedRoute);
         const canonicalHref = `${window.location.origin}${canonicalPath}`;
         let canonicalEl = document.querySelector('link[rel="canonical"]');
         if (!(canonicalEl instanceof HTMLLinkElement)) {
@@ -3019,9 +3052,10 @@ function navigateToRoute(route, options = {}) {
         triggerRouteToolLaunch = true
     } = options;
 
-    const currentPath = normalizeRoutePath(window.location.pathname || '/');
-    const shouldReplace = replaceHistory || normalizedRoute === currentPath;
-    const nextHistoryPath = withAppBasePath(getRouteDocumentPath(normalizedRoute));
+    const currentRequest = getInitialNavigationRequest();
+    const currentRoute = normalizeRoutePath(currentRequest.route || window.location.pathname || '/');
+    const shouldReplace = replaceHistory || normalizedRoute === currentRoute;
+    const nextHistoryPath = getRouteHistoryPath(normalizedRoute);
     const historyState = { route: normalizedRoute };
     if (shouldReplace) {
         window.history.replaceState(historyState, '', nextHistoryPath);
@@ -3276,7 +3310,7 @@ function initRouteNavigation() {
         if (link.dataset.boundRouteLink === 'true') return;
         link.dataset.boundRouteLink = 'true';
         const declaredRoute = normalizeRoutePath(link.getAttribute('data-route-key') || link.getAttribute('href') || DEFAULT_ROUTE);
-        link.setAttribute('href', withAppBasePath(getRouteDocumentPath(declaredRoute)));
+        link.setAttribute('href', getRouteHistoryPath(declaredRoute));
         link.addEventListener('click', (event) => {
             if (event.defaultPrevented) return;
             if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
