@@ -428,6 +428,27 @@ const interviewRunState = new Map();
 const interviewRunInFlight = new Set();
 const interviewWorkspaceSelection = new Map();
 let userNotifications = [];
+const enhancedVisualAssetState = {
+    loaded: false,
+    loadPromise: null,
+    mermaidInitialized: false
+};
+const moduleSearchIndexState = {
+    lang: null,
+    fuse: null
+};
+let moduleSearchInsightsState = {
+    query: '',
+    mode: 'keyword',
+    totalMatches: 0,
+    averageScore: null,
+    topTopics: []
+};
+const enhancedVisualCharts = {
+    search: null,
+    insights: null
+};
+let mermaidRenderSerial = 0;
 
 const SUPPORTED_LANGUAGES = {
     java: { name: 'Java', icon: '\u2615' },
@@ -469,6 +490,16 @@ const CARD_DEPTH_CLASSES = CARD_DEPTH_OPTIONS.map(option => `card-depth-${option
 const GLOBAL_SEARCH_MAX_RESULTS = 24;
 const GLOBAL_SEARCH_MAX_PER_TYPE = 5;
 const GLOBAL_SEARCH_TYPE_ORDER = ['module', 'term', 'quiz', 'flashcard', 'note', 'playground'];
+const ENHANCED_VISUAL_ASSET_IDS = Object.freeze({
+    fuse: 'csatlas-lib-fuse',
+    chart: 'csatlas-lib-chartjs',
+    mermaid: 'csatlas-lib-mermaid'
+});
+const ENHANCED_VISUAL_ASSET_URLS = Object.freeze({
+    fuse: 'https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js',
+    chart: 'https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js',
+    mermaid: 'https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js'
+});
 const ACCESSIBLE_MODAL_IDS = [
     'settings-modal',
     'glossary-modal',
@@ -1884,6 +1915,11 @@ function t(key, params = {}, lang = appState.language || 'en') {
     return interpolate(template, params);
 }
 
+if (typeof window !== 'undefined') {
+    window.__atlasTranslateFn = t;
+    window.t = t;
+}
+
 function tc(key, count, params = {}, lang = appState.language || 'en') {
     const suffix = count === 1 ? 'one' : 'other';
     const fullKey = `${key}.${suffix}`;
@@ -2269,6 +2305,8 @@ function setLanguage(lang) {
     moduleOutputCache.clear();
     moduleOutputState.clear();
     moduleOutputInFlight.clear();
+    moduleSearchIndexState.lang = null;
+    moduleSearchIndexState.fuse = null;
     applyLanguage(normalizedLanguage);
     if (typeof updateProgress === 'function') updateProgress();
     refreshLocalizedSections();
@@ -21144,6 +21182,198 @@ const TRACK_TITLE_KEY_BY_CATEGORY = {
     git: 'topic.git.title',
     assembly: 'topic.assembly.title'
 };
+const MODULE_READINESS_TEXT = Object.freeze({
+    title: {
+        en: 'Learning Readiness Kit',
+        es: 'Kit de Preparacion de Aprendizaje'
+    },
+    subtitle: {
+        en: 'Quick plan to study this module with stronger retention.',
+        es: 'Plan rapido para estudiar este modulo con mejor retencion.'
+    },
+    prerequisites: {
+        en: 'Before You Start',
+        es: 'Antes de Empezar'
+    },
+    outcomes: {
+        en: 'Target Outcomes',
+        es: 'Resultados Objetivo'
+    },
+    pitfalls: {
+        en: 'Common Mistakes',
+        es: 'Errores Comunes'
+    },
+    practiceLadder: {
+        en: 'Practice Ladder',
+        es: 'Escalera de Practica'
+    },
+    masteryChecks: {
+        en: 'Mastery Checks',
+        es: 'Verificacion de Dominio'
+    },
+    recommendedTag: {
+        en: 'Recommended',
+        es: 'Recomendado'
+    },
+    prereqStart: {
+        en: 'No strict prerequisite. Start here and move step by step.',
+        es: 'Sin prerequisito estricto. Empieza aqui y avanza paso a paso.'
+    },
+    prereqTrack: {
+        en: 'Review "{module}" first for smoother progress.',
+        es: 'Revisa "{module}" primero para avanzar con mas fluidez.'
+    },
+    outcomeExplain: {
+        en: 'Explain {topic} clearly without notes.',
+        es: 'Explica {topic} con claridad sin notas.'
+    },
+    outcomeBuild: {
+        en: 'Implement one working task that uses {topic}.',
+        es: 'Implementa una tarea funcional que use {topic}.'
+    },
+    outcomeAnalyze: {
+        en: 'Analyze tradeoffs around {topic} with time/space language.',
+        es: 'Analiza tradeoffs de {topic} usando lenguaje de tiempo/espacio.'
+    },
+    outcomeFallback1: {
+        en: 'Summarize the core idea and when to apply it.',
+        es: 'Resume la idea central y cuando aplicarla.'
+    },
+    outcomeFallback2: {
+        en: 'Build a clean baseline solution from scratch.',
+        es: 'Construye una solucion base limpia desde cero.'
+    },
+    outcomeFallback3: {
+        en: 'Validate behavior with edge cases and expected outputs.',
+        es: 'Valida el comportamiento con casos limite y salidas esperadas.'
+    },
+    ladderStep1: {
+        en: 'Run a focused {minutes}-minute first pass: read, annotate, map terms.',
+        es: 'Haz una primera pasada de {minutes} minutos: lee, anota y mapea terminos.'
+    },
+    ladderStep2: {
+        en: 'Rebuild one example from memory, then compare with the reference.',
+        es: 'Reconstruye un ejemplo de memoria y luego comparalo con la referencia.'
+    },
+    ladderStep3: {
+        en: 'Design two edge tests and justify why they matter.',
+        es: 'Disena dos pruebas de borde y justifica por que importan.'
+    },
+    ladderStep4: {
+        en: 'Teach the core flow in under 90 seconds out loud.',
+        es: 'Explica el flujo central en menos de 90 segundos en voz alta.'
+    },
+    masteryExplain: {
+        en: 'Can you explain {topic} with one concrete scenario?',
+        es: 'Puedes explicar {topic} con un escenario concreto?'
+    },
+    masteryImplement: {
+        en: 'Can you implement a baseline solution without copy/paste?',
+        es: 'Puedes implementar una solucion base sin copiar/pegar?'
+    },
+    masteryDebug: {
+        en: 'Can you name one bug risk and one optimization path?',
+        es: 'Puedes nombrar un riesgo de bug y una via de optimizacion?'
+    }
+});
+const TRACK_READINESS_BLUEPRINTS = Object.freeze({
+    dsa: {
+        prerequisites: {
+            en: ['Comfort with loops, conditionals, and arrays.', 'Track variable state after each iteration.'],
+            es: ['Comodidad con ciclos, condicionales y arreglos.', 'Rastrea el estado de variables en cada iteracion.']
+        },
+        pitfalls: {
+            en: ['Skipping edge cases (empty input, one element).', 'Using brute force when sorted/data-structure patterns exist.', 'Ignoring time/space complexity in explanations.'],
+            es: ['Saltar casos limite (entrada vacia, un elemento).', 'Usar fuerza bruta cuando hay patrones de orden o estructura.', 'Ignorar complejidad de tiempo/espacio al explicar.']
+        },
+        resources: [
+            { label: { en: 'VisuAlgo Interactive Visualizations', es: 'Visualizaciones Interactivas VisuAlgo' }, url: 'https://visualgo.net/en' },
+            { label: { en: 'CP-Algorithms Handbook', es: 'Manual CP-Algorithms' }, url: 'https://cp-algorithms.com/' }
+        ]
+    },
+    java: {
+        prerequisites: {
+            en: ['Understand variables, methods, and class structure.', 'Compile and run Java code from terminal or IDE.'],
+            es: ['Entender variables, metodos y estructura de clases.', 'Compilar y ejecutar Java en terminal o IDE.']
+        },
+        pitfalls: {
+            en: ['Mixing primitive and object expectations (null vs default values).', 'Ignoring exception paths and input validation.', 'Not tracing object state changes across methods.'],
+            es: ['Mezclar expectativas de primitivos y objetos (null vs valores por defecto).', 'Ignorar rutas de excepcion y validacion de entrada.', 'No rastrear cambios de estado de objetos entre metodos.']
+        },
+        resources: [
+            { label: { en: 'Oracle Java Documentation', es: 'Documentacion Oficial de Java (Oracle)' }, url: 'https://docs.oracle.com/en/java/' },
+            { label: { en: 'Baeldung Java Guides', es: 'Guias de Java en Baeldung' }, url: 'https://www.baeldung.com/java-tutorial' }
+        ]
+    },
+    git: {
+        prerequisites: {
+            en: ['Know file paths and terminal navigation basics.', 'Understand local repo vs remote repo concept.'],
+            es: ['Conocer rutas de archivos y navegacion basica en terminal.', 'Entender repositorio local vs remoto.']
+        },
+        pitfalls: {
+            en: ['Committing without reviewing diff first.', 'Using reset/rebase commands without understanding impact.', 'Skipping branch naming and pull request hygiene.'],
+            es: ['Hacer commit sin revisar diff primero.', 'Usar reset/rebase sin entender impacto.', 'Saltar buenas practicas de ramas y pull requests.']
+        },
+        resources: [
+            { label: { en: 'Pro Git Book', es: 'Libro Pro Git' }, url: 'https://git-scm.com/book/en/v2' },
+            { label: { en: 'Atlassian Git Tutorials', es: 'Tutoriales de Git en Atlassian' }, url: 'https://www.atlassian.com/git/tutorials' }
+        ]
+    },
+    assembly: {
+        prerequisites: {
+            en: ['Binary/hex number comfort and CPU register basics.', 'Patience for step-by-step state tracing.'],
+            es: ['Comodidad con binario/hexadecimal y bases de registros CPU.', 'Paciencia para rastrear estado paso a paso.']
+        },
+        pitfalls: {
+            en: ['Losing track of register side effects after each instruction.', 'Forgetting calling convention / stack discipline.', 'Reading flags/memory state too late in debugging.'],
+            es: ['Perder rastro de efectos en registros tras cada instruccion.', 'Olvidar convencion de llamada y disciplina de stack.', 'Leer banderas/memoria demasiado tarde al depurar.']
+        },
+        resources: [
+            { label: { en: 'NASM Documentation', es: 'Documentacion NASM' }, url: 'https://www.nasm.us/xdoc/2.16.01/html/nasmdoc0.html' },
+            { label: { en: 'x86 Instruction Reference', es: 'Referencia de Instrucciones x86' }, url: 'https://www.felixcloutier.com/x86/' }
+        ]
+    },
+    discrete: {
+        prerequisites: {
+            en: ['Comfort with symbolic notation and logical statements.', 'Willingness to justify each step in writing.'],
+            es: ['Comodidad con notacion simbolica y enunciados logicos.', 'Disposicion para justificar cada paso por escrito.']
+        },
+        pitfalls: {
+            en: ['Relying on intuition without proof structure.', 'Skipping definitions before solving.', 'Not checking counterexamples or boundary conditions.'],
+            es: ['Confiar en intuicion sin estructura de prueba.', 'Saltar definiciones antes de resolver.', 'No revisar contraejemplos o condiciones limite.']
+        },
+        resources: [
+            { label: { en: 'Discrete Mathematics: An Open Introduction', es: 'Matematica Discreta: Introduccion Abierta' }, url: 'https://discrete.openmathbooks.org/dmoi3.html' },
+            { label: { en: 'MIT Mathematics for Computer Science Notes', es: 'Notas MIT de Matematicas para CS' }, url: 'https://courses.csail.mit.edu/6.042/spring18/mcs.pdf' }
+        ]
+    }
+});
+const MODULE_TOPIC_RESOURCE_HINTS = Object.freeze([
+    {
+        keywords: ['graph', 'bfs', 'dfs', 'dijkstra', 'mst'],
+        resource: { label: { en: 'Graph Algorithms Deep Dive (cp-algorithms)', es: 'Profundizacion en Grafos (cp-algorithms)' }, url: 'https://cp-algorithms.com/graph/' }
+    },
+    {
+        keywords: ['dynamic programming', 'dp'],
+        resource: { label: { en: 'Dynamic Programming Patterns', es: 'Patrones de Programacion Dinamica' }, url: 'https://cp-algorithms.com/dynamic_programming/intro-to-dp.html' }
+    },
+    {
+        keywords: ['binary search', 'search'],
+        resource: { label: { en: 'Binary Search Pattern Guide', es: 'Guia de Patron de Busqueda Binaria' }, url: 'https://cp-algorithms.com/num_methods/binary_search.html' }
+    },
+    {
+        keywords: ['thread', 'concurrency', 'multithreading'],
+        resource: { label: { en: 'Java Concurrency Tutorial', es: 'Tutorial de Concurrencia en Java' }, url: 'https://docs.oracle.com/javase/tutorial/essential/concurrency/' }
+    },
+    {
+        keywords: ['jdbc', 'database', 'sql'],
+        resource: { label: { en: 'JDBC Basics (Oracle)', es: 'Fundamentos de JDBC (Oracle)' }, url: 'https://docs.oracle.com/javase/tutorial/jdbc/basics/index.html' }
+    },
+    {
+        keywords: ['proof', 'logic', 'proposition'],
+        resource: { label: { en: 'Proof Techniques Primer', es: 'Guia de Tecnicas de Prueba' }, url: 'https://discrete.openmathbooks.org/dmoi3/sec_proofs-intro.html' }
+    }
+]);
 
 function getModuleTrackTitle(categoryKey) {
     const normalizedCategory = String(categoryKey || '').toLowerCase();
@@ -21152,6 +21382,49 @@ function getModuleTrackTitle(categoryKey) {
         return t('topic.all.title');
     }
     return t(titleKey);
+}
+
+function getModuleReadinessText(key, params = {}) {
+    const lang = appState.language === 'es' ? 'es' : 'en';
+    const template = MODULE_READINESS_TEXT?.[key]?.[lang]
+        || MODULE_READINESS_TEXT?.[key]?.en
+        || String(key || '');
+    return interpolate(template, params);
+}
+
+function getTrackReadinessBlueprint(categoryKey = 'dsa') {
+    const normalizedCategory = String(categoryKey || '').toLowerCase();
+    return TRACK_READINESS_BLUEPRINTS[normalizedCategory] || TRACK_READINESS_BLUEPRINTS.dsa;
+}
+
+function getLocalizedBlueprintItems(items = null) {
+    if (!items || typeof items !== 'object') return [];
+    const lang = appState.language === 'es' ? 'es' : 'en';
+    const source = Array.isArray(items[lang]) ? items[lang] : (Array.isArray(items.en) ? items.en : []);
+    return source
+        .map((entry) => String(entry || '').trim())
+        .filter(Boolean);
+}
+
+function getTopicSpecificResource(topics = []) {
+    const lang = appState.language === 'es' ? 'es' : 'en';
+    const topicText = topics
+        .map((topic) => String(topic || '').trim().toLowerCase())
+        .filter(Boolean)
+        .join(' ');
+    if (!topicText) return null;
+
+    for (const hint of MODULE_TOPIC_RESOURCE_HINTS) {
+        const keywords = Array.isArray(hint?.keywords) ? hint.keywords : [];
+        if (!keywords.some((keyword) => topicText.includes(String(keyword || '').toLowerCase()))) {
+            continue;
+        }
+        const label = resolveLocalizedValue(hint?.resource?.label, lang);
+        const url = String(hint?.resource?.url || '').trim();
+        if (!label || !url) continue;
+        return { label, url, source: 'recommended' };
+    }
+    return null;
 }
 
 function estimateModuleStudyMinutes(module, localizedModule) {
@@ -21224,6 +21497,103 @@ function buildModuleLearningPlan(module, localizedModule, modulesByCategory, loc
     };
 }
 
+function buildModuleReadinessKit(module, localizedModule, moduleLearningPlan) {
+    const categoryKey = getModuleCategoryKey(module.id);
+    const blueprint = getTrackReadinessBlueprint(categoryKey);
+    const topicPool = Array.isArray(localizedModule?.topics)
+        ? localizedModule.topics.map((topic) => String(topic || '').trim()).filter(Boolean)
+        : [];
+    const primaryTopic = topicPool[0] || getModuleTrackTitle(categoryKey);
+    const secondaryTopic = topicPool[1] || primaryTopic;
+    const recommendedMinutes = Math.max(
+        20,
+        Math.min(
+            60,
+            Math.round(((moduleLearningPlan?.estimatedMinutes || 45) * 0.45) / 5) * 5
+        )
+    );
+
+    const prerequisites = [
+        moduleLearningPlan?.prerequisiteTitle
+            ? getModuleReadinessText('prereqTrack', { module: moduleLearningPlan.prerequisiteTitle })
+            : getModuleReadinessText('prereqStart'),
+        ...getLocalizedBlueprintItems(blueprint?.prerequisites).slice(0, 2)
+    ].filter(Boolean);
+
+    const outcomes = [
+        topicPool[0] ? getModuleReadinessText('outcomeExplain', { topic: topicPool[0] }) : getModuleReadinessText('outcomeFallback1'),
+        topicPool[1] ? getModuleReadinessText('outcomeBuild', { topic: topicPool[1] }) : getModuleReadinessText('outcomeFallback2'),
+        topicPool[2] ? getModuleReadinessText('outcomeAnalyze', { topic: topicPool[2] }) : getModuleReadinessText('outcomeFallback3')
+    ].filter(Boolean);
+
+    const pitfalls = getLocalizedBlueprintItems(blueprint?.pitfalls).slice(0, 3);
+
+    const practiceLadder = [
+        getModuleReadinessText('ladderStep1', { minutes: recommendedMinutes }),
+        getModuleReadinessText('ladderStep2'),
+        getModuleReadinessText('ladderStep3'),
+        getModuleReadinessText('ladderStep4')
+    ];
+
+    const masteryChecks = [
+        getModuleReadinessText('masteryExplain', { topic: primaryTopic }),
+        getModuleReadinessText('masteryImplement', { topic: secondaryTopic }),
+        getModuleReadinessText('masteryDebug')
+    ];
+
+    const lang = appState.language === 'es' ? 'es' : 'en';
+    const curatedResources = (Array.isArray(blueprint?.resources) ? blueprint.resources : [])
+        .map((resource) => {
+            const label = resolveLocalizedValue(resource?.label, lang);
+            const url = String(resource?.url || '').trim();
+            if (!label || !url) return null;
+            return {
+                label,
+                url,
+                source: 'recommended'
+            };
+        })
+        .filter(Boolean);
+
+    const topicSpecificResource = getTopicSpecificResource(topicPool);
+    if (topicSpecificResource) {
+        curatedResources.unshift(topicSpecificResource);
+    }
+
+    return {
+        prerequisites,
+        outcomes,
+        pitfalls,
+        practiceLadder,
+        masteryChecks,
+        curatedResources
+    };
+}
+
+function buildEnhancedModuleResources(baseResources = [], moduleReadinessKit = null) {
+    const normalizedBase = (Array.isArray(baseResources) ? baseResources : [])
+        .map((resource) => ({ ...normalizeModuleResource(resource), source: 'module' }))
+        .filter((resource) => resource.label);
+    const curated = (Array.isArray(moduleReadinessKit?.curatedResources) ? moduleReadinessKit.curatedResources : [])
+        .map((resource) => ({ ...normalizeModuleResource(resource), source: 'recommended' }))
+        .filter((resource) => resource.label);
+    const merged = [...normalizedBase, ...curated];
+    const dedupedMap = new Map();
+    merged.forEach((resource) => {
+        const key = String(resource.url || resource.label || '').trim().toLowerCase();
+        if (!key) return;
+        const existing = dedupedMap.get(key);
+        if (!existing) {
+            dedupedMap.set(key, resource);
+            return;
+        }
+        if (existing.source !== 'recommended' && resource.source === 'recommended') {
+            dedupedMap.set(key, { ...existing, ...resource });
+        }
+    });
+    return Array.from(dedupedMap.values()).slice(0, 8);
+}
+
 function updateTopicFocusButtons() {
     const active = appState.categoryFilter || 'all';
     const buttons = document.querySelectorAll('[data-topic-filter]');
@@ -21235,26 +21605,637 @@ function updateTopicFocusButtons() {
     });
 }
 
+function buildModuleSearchDocuments() {
+    const orderedModules = getOrderedModules();
+    return orderedModules.map((module) => {
+        const localized = getLocalizedModule(module);
+        const topics = Array.isArray(localized?.topics) ? localized.topics : [];
+        const definitions = Array.isArray(localized?.definitions)
+            ? localized.definitions.map((entry) => `${entry?.term || ''} ${entry?.definition || ''}`.trim()).join(' ')
+            : '';
+        return {
+            id: module.id,
+            title: localized?.title || module.title || '',
+            description: localized?.description || module.description || '',
+            topics: topics.join(' '),
+            definitions,
+            category: getModuleCategoryKey(module.id),
+            difficulty: module.difficulty || 'beginner'
+        };
+    });
+}
+
+function getModuleFuseIndex() {
+    if (typeof window === 'undefined' || typeof window.Fuse !== 'function') {
+        return null;
+    }
+    const lang = appState.language === 'es' ? 'es' : 'en';
+    if (moduleSearchIndexState.fuse && moduleSearchIndexState.lang === lang) {
+        return moduleSearchIndexState.fuse;
+    }
+    const documents = buildModuleSearchDocuments();
+    moduleSearchIndexState.fuse = new window.Fuse(documents, {
+        includeScore: true,
+        threshold: 0.36,
+        ignoreLocation: true,
+        minMatchCharLength: 2,
+        keys: [
+            { name: 'title', weight: 0.45 },
+            { name: 'topics', weight: 0.26 },
+            { name: 'description', weight: 0.2 },
+            { name: 'definitions', weight: 0.07 },
+            { name: 'category', weight: 0.01 },
+            { name: 'difficulty', weight: 0.01 }
+        ]
+    });
+    moduleSearchIndexState.lang = lang;
+    return moduleSearchIndexState.fuse;
+}
+
+function getTopTopicsFromModules(moduleList = [], localizedModuleMap = null, limit = 4) {
+    const counts = new Map();
+    moduleList.forEach((module) => {
+        const localized = localizedModuleMap?.get?.(module.id) || getLocalizedModule(module);
+        const topics = Array.isArray(localized?.topics) ? localized.topics : [];
+        topics.forEach((topic) => {
+            const key = String(topic || '').trim();
+            if (!key) return;
+            counts.set(key, (counts.get(key) || 0) + 1);
+        });
+    });
+    return Array.from(counts.entries())
+        .sort((a, b) => {
+            if (b[1] !== a[1]) return b[1] - a[1];
+            return a[0].localeCompare(b[0], undefined, { sensitivity: 'base' });
+        })
+        .slice(0, Math.max(1, limit))
+        .map(([topic, count]) => ({ topic, count }));
+}
+
+function updateModuleSearchInsightsState({ query = '', mode = 'keyword', matches = [], scores = [], localizedModuleMap = null } = {}) {
+    const normalizedScores = Array.isArray(scores)
+        ? scores.filter((value) => Number.isFinite(value) && value >= 0)
+        : [];
+    const averageScore = normalizedScores.length
+        ? Number((normalizedScores.reduce((acc, value) => acc + value, 0) / normalizedScores.length).toFixed(3))
+        : null;
+    moduleSearchInsightsState = {
+        query: String(query || ''),
+        mode: String(mode || 'keyword'),
+        totalMatches: Array.isArray(matches) ? matches.length : 0,
+        averageScore,
+        topTopics: getTopTopicsFromModules(matches, localizedModuleMap, 4)
+    };
+}
+
 function filterModules() {
-    const searchTerm = appState.searchTerm.trim().toLowerCase();
-    const hasSearch = searchTerm.length > 0;
+    const rawSearchTerm = appState.searchTerm.trim();
+    const searchTerm = rawSearchTerm.toLowerCase();
+    const hasSearch = rawSearchTerm.length > 0;
     const difficultyFilter = appState.difficultyFilter;
     const categoryFilter = appState.categoryFilter || 'all';
     const orderedModules = getOrderedModules();
+    const localizedModuleMap = new Map(getLocalizedModules().map((module) => [module.id, module]));
+    let fuseMatches = null;
+    let fuseMatchMap = null;
 
-    return orderedModules.filter(module => {
-        const localized = getLocalizedModule(module);
+    if (hasSearch) {
+        const fuse = getModuleFuseIndex();
+        if (fuse) {
+            fuseMatches = fuse.search(rawSearchTerm, { limit: Math.max(orderedModules.length, 64) });
+            fuseMatchMap = new Map(
+                fuseMatches.map((entry, index) => [
+                    entry.item.id,
+                    {
+                        score: Number.isFinite(entry.score) ? entry.score : 1,
+                        index
+                    }
+                ])
+            );
+        }
+    }
+
+    const filtered = orderedModules.filter((module) => {
+        const localized = localizedModuleMap.get(module.id) || module;
         const localizedTopics = localized.topics || [];
-        const matchesSearch = !hasSearch ||
-            localized.title.toLowerCase().includes(searchTerm) ||
-            localized.description.toLowerCase().includes(searchTerm) ||
-            localizedTopics.some(topic => topic.toLowerCase().includes(searchTerm));
+        const matchesSearch = !hasSearch
+            || (fuseMatchMap
+                ? fuseMatchMap.has(module.id)
+                : (
+                    localized.title.toLowerCase().includes(searchTerm)
+                    || localized.description.toLowerCase().includes(searchTerm)
+                    || localizedTopics.some((topic) => topic.toLowerCase().includes(searchTerm))
+                ));
 
         const matchesDifficulty = difficultyFilter === 'all' || module.difficulty === difficultyFilter;
         const matchesCategory = categoryFilter === 'all' || getModuleCategoryKey(module.id) === categoryFilter;
         const passesCompletionFilter = !appState.hideCompletedModules || !appState.completedModules.has(module.id);
 
         return matchesSearch && matchesDifficulty && matchesCategory && passesCompletionFilter;
+    });
+
+    if (hasSearch && fuseMatchMap) {
+        filtered.sort((left, right) => {
+            const leftMeta = fuseMatchMap.get(left.id);
+            const rightMeta = fuseMatchMap.get(right.id);
+            if (!leftMeta && !rightMeta) return 0;
+            if (!leftMeta) return 1;
+            if (!rightMeta) return -1;
+            if (leftMeta.score !== rightMeta.score) return leftMeta.score - rightMeta.score;
+            return leftMeta.index - rightMeta.index;
+        });
+    }
+
+    if (hasSearch) {
+        updateModuleSearchInsightsState({
+            query: rawSearchTerm,
+            mode: fuseMatchMap ? 'fuse' : 'keyword',
+            matches: filtered,
+            scores: fuseMatchMap
+                ? filtered.map((module) => (fuseMatchMap.get(module.id)?.score ?? null))
+                : [],
+            localizedModuleMap
+        });
+    } else {
+        updateModuleSearchInsightsState({
+            query: '',
+            mode: 'browse',
+            matches: filtered,
+            scores: [],
+            localizedModuleMap
+        });
+    }
+
+    return filtered;
+}
+
+function ensureEnhancedVisualContainers() {
+    const searchSection = document.getElementById('search-section');
+    if (searchSection && !document.getElementById('smart-search-lab')) {
+        const panel = document.createElement('div');
+        panel.id = 'smart-search-lab';
+        panel.className = 'smart-search-lab mt-4';
+        panel.innerHTML = `
+            <div class="smart-search-lab-head">
+                <p class="smart-search-lab-kicker">Smart search diagnostics</p>
+                <p id="smart-search-meta" class="smart-search-lab-meta">Loading search diagnostics...</p>
+            </div>
+            <canvas id="smart-search-chart" height="120" aria-label="Search distribution chart" role="img"></canvas>
+            <div id="smart-search-topics" class="smart-search-topics"></div>
+        `;
+        const searchCount = document.getElementById('search-results-count');
+        if (searchCount && searchCount.parentElement === searchSection) {
+            searchCount.insertAdjacentElement('afterend', panel);
+        } else {
+            searchSection.appendChild(panel);
+        }
+    }
+
+    const insightsGrid = document.querySelector('#insights-section .insight-cards-grid');
+    if (insightsGrid && !document.getElementById('insight-visual-lab')) {
+        const card = document.createElement('article');
+        card.id = 'insight-visual-lab';
+        card.className = 'insight-card insight-visual-lab bg-slate-900/60 border-white/10';
+        card.innerHTML = `
+            <div class="flex items-center justify-between gap-2 mb-3">
+                <p class="text-xs uppercase tracking-wide text-slate-300">Progress Visuals</p>
+                <span id="insight-visual-summary" class="text-xs text-slate-300">Preparing visual analytics...</span>
+            </div>
+            <div class="insight-visual-chart-wrap">
+                <canvas id="insight-progress-chart" height="160" aria-label="Progress chart" role="img"></canvas>
+            </div>
+            <div class="insight-roadmap-head">Learning roadmap (Mermaid)</div>
+            <div id="insight-roadmap-mermaid" class="insight-roadmap-mermaid" aria-live="polite"></div>
+        `;
+        insightsGrid.appendChild(card);
+    }
+}
+
+function fallbackLoadScriptOnce(id, src, readyCheck) {
+    if (typeof readyCheck === 'function' && readyCheck()) {
+        return Promise.resolve(true);
+    }
+    return new Promise((resolve) => {
+        let script = id ? document.getElementById(id) : null;
+        const done = (ok) => resolve(Boolean(ok));
+        if (!script) {
+            script = document.createElement('script');
+            if (id) script.id = id;
+            script.src = src;
+            script.defer = true;
+            script.addEventListener('load', () => done(typeof readyCheck === 'function' ? readyCheck() : true), { once: true });
+            script.addEventListener('error', () => done(false), { once: true });
+            document.head.appendChild(script);
+            return;
+        }
+        if (typeof readyCheck === 'function' && readyCheck()) {
+            done(true);
+            return;
+        }
+        const scriptReadyState = String(script.readyState || '').toLowerCase();
+        if (scriptReadyState === 'complete' || scriptReadyState === 'loaded') {
+            done(typeof readyCheck === 'function' ? readyCheck() : true);
+            return;
+        }
+        script.addEventListener('load', () => done(typeof readyCheck === 'function' ? readyCheck() : true), { once: true });
+        script.addEventListener('error', () => done(false), { once: true });
+    });
+}
+
+function ensureEnhancedVisualAssets() {
+    if (enhancedVisualAssetState.loaded) {
+        return Promise.resolve(true);
+    }
+    if (enhancedVisualAssetState.loadPromise) {
+        return enhancedVisualAssetState.loadPromise;
+    }
+
+    const runtimeLoader = window?.CSAtlasRuntime?.assetLoader;
+    const loadScript = (id, src, readyCheck) => {
+        if (runtimeLoader && typeof runtimeLoader.loadScriptOnce === 'function') {
+            return runtimeLoader.loadScriptOnce({
+                id,
+                src,
+                readyCheck,
+                cacheMap: runtimeLoader.sharedPromises
+            });
+        }
+        return fallbackLoadScriptOnce(id, src, readyCheck);
+    };
+
+    enhancedVisualAssetState.loadPromise = Promise.all([
+        loadScript(ENHANCED_VISUAL_ASSET_IDS.fuse, ENHANCED_VISUAL_ASSET_URLS.fuse, () => typeof window.Fuse === 'function'),
+        loadScript(ENHANCED_VISUAL_ASSET_IDS.chart, ENHANCED_VISUAL_ASSET_URLS.chart, () => typeof window.Chart === 'function'),
+        loadScript(ENHANCED_VISUAL_ASSET_IDS.mermaid, ENHANCED_VISUAL_ASSET_URLS.mermaid, () => typeof window.mermaid?.render === 'function')
+    ]).then((results) => {
+        const loaded = results.every(Boolean);
+        enhancedVisualAssetState.loaded = loaded;
+        if (!loaded) {
+            enhancedVisualAssetState.loadPromise = null;
+            return false;
+        }
+        if (typeof window !== 'undefined' && typeof window.__atlasTranslateFn === 'function') {
+            window.t = window.__atlasTranslateFn;
+        }
+        if (loaded && typeof window.mermaid?.initialize === 'function' && !enhancedVisualAssetState.mermaidInitialized) {
+            const prefersDark = document.body.classList.contains('dark');
+            window.mermaid.initialize({
+                startOnLoad: false,
+                securityLevel: 'loose',
+                theme: prefersDark ? 'dark' : 'default'
+            });
+            enhancedVisualAssetState.mermaidInitialized = true;
+        }
+        return loaded;
+    }).catch((error) => {
+        console.warn('Enhanced visual assets failed to load:', error);
+        enhancedVisualAssetState.loadPromise = null;
+        return false;
+    });
+
+    return enhancedVisualAssetState.loadPromise;
+}
+
+function destroyEnhancedChart(chartKey) {
+    const chart = enhancedVisualCharts[chartKey];
+    if (chart && typeof chart.destroy === 'function') {
+        chart.destroy();
+    }
+    enhancedVisualCharts[chartKey] = null;
+}
+
+function renderSearchDistributionChart(filteredModules = []) {
+    const canvas = document.getElementById('smart-search-chart');
+    if (!canvas) return;
+    if (typeof window.Chart !== 'function') {
+        destroyEnhancedChart('search');
+        return;
+    }
+
+    const difficultyKeys = ['beginner', 'intermediate', 'advanced'];
+    const labels = difficultyKeys.map((level) => translateLiteral(level, appState.language));
+    const values = difficultyKeys.map((level) => filteredModules.filter((module) => module.difficulty === level).length);
+    const borderColor = document.body.classList.contains('dark') ? 'rgba(226,232,240,0.26)' : 'rgba(15,23,42,0.16)';
+    const tickColor = document.body.classList.contains('dark') ? '#cbd5e1' : '#334155';
+
+    destroyEnhancedChart('search');
+    const context = canvas.getContext('2d');
+    if (!context) return;
+    enhancedVisualCharts.search = new window.Chart(context, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [{
+                label: translateLiteral('Filtered modules', appState.language),
+                data: values,
+                borderRadius: 10,
+                borderWidth: 1,
+                backgroundColor: ['rgba(16,185,129,0.65)', 'rgba(245,158,11,0.65)', 'rgba(244,63,94,0.65)'],
+                borderColor: ['rgba(16,185,129,1)', 'rgba(245,158,11,1)', 'rgba(244,63,94,1)']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: { duration: appState.reduceMotion ? 0 : 550 },
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { color: tickColor }
+                },
+                y: {
+                    beginAtZero: true,
+                    precision: 0,
+                    ticks: { color: tickColor, stepSize: 1 },
+                    grid: { color: borderColor }
+                }
+            }
+        }
+    });
+}
+
+function renderEnhancedSearchInsights(filteredModules = []) {
+    ensureEnhancedVisualContainers();
+    const metaEl = document.getElementById('smart-search-meta');
+    const topicsEl = document.getElementById('smart-search-topics');
+    const hasQuery = Boolean(moduleSearchInsightsState.query && moduleSearchInsightsState.query.trim());
+
+    if (metaEl) {
+        if (!hasQuery) {
+            metaEl.textContent = `${filteredModules.length} modules visible. Start typing to activate smart ranking.`;
+        } else if (moduleSearchInsightsState.mode === 'fuse') {
+            const scoreLabel = moduleSearchInsightsState.averageScore === null
+                ? 'n/a'
+                : moduleSearchInsightsState.averageScore.toFixed(3);
+            metaEl.textContent = `Fuse.js active. ${moduleSearchInsightsState.totalMatches} matches, avg score ${scoreLabel}.`;
+        } else {
+            metaEl.textContent = `Keyword fallback active. ${moduleSearchInsightsState.totalMatches} matches.`;
+        }
+    }
+
+    if (topicsEl) {
+        if (!moduleSearchInsightsState.topTopics.length) {
+            topicsEl.innerHTML = '<span class="smart-search-topic-empty">Topic trends appear here as results narrow.</span>';
+        } else {
+            topicsEl.innerHTML = moduleSearchInsightsState.topTopics
+                .map((entry) => `<span class="smart-search-topic-chip">${escapeHtml(entry.topic)} <strong>${entry.count}</strong></span>`)
+                .join('');
+        }
+    }
+
+    renderSearchDistributionChart(filteredModules);
+}
+
+function renderInsightsProgressChart({ hasAccess = false, stats = null, guestPreview = null } = {}) {
+    const canvas = document.getElementById('insight-progress-chart');
+    if (!canvas) return;
+    if (typeof window.Chart !== 'function') {
+        destroyEnhancedChart('insights');
+        return;
+    }
+
+    destroyEnhancedChart('insights');
+    const context = canvas.getContext('2d');
+    if (!context) return;
+
+    const borderColor = document.body.classList.contains('dark') ? 'rgba(226,232,240,0.2)' : 'rgba(15,23,42,0.16)';
+    const tickColor = document.body.classList.contains('dark') ? '#cbd5e1' : '#334155';
+
+    if (!hasAccess || !stats) {
+        const completed = guestPreview?.completed || 0;
+        const total = Math.max(guestPreview?.total || 1, 1);
+        enhancedVisualCharts.insights = new window.Chart(context, {
+            type: 'doughnut',
+            data: {
+                labels: [translateLiteral('Completed', appState.language), translateLiteral('Remaining', appState.language)],
+                datasets: [{
+                    data: [completed, Math.max(total - completed, 0)],
+                    backgroundColor: ['rgba(99,102,241,0.85)', 'rgba(148,163,184,0.45)'],
+                    borderColor: ['rgba(129,140,248,1)', 'rgba(148,163,184,0.8)'],
+                    borderWidth: 1.5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                animation: { duration: appState.reduceMotion ? 0 : 500 },
+                plugins: {
+                    legend: {
+                        labels: { color: tickColor, boxWidth: 12 }
+                    }
+                }
+            }
+        });
+        return;
+    }
+
+    const difficultyKeys = ['beginner', 'intermediate', 'advanced'];
+    const labels = difficultyKeys.map((level) => translateLiteral(level, appState.language));
+    const completedByDifficulty = difficultyKeys.map((level) => stats.completedByDifficulty?.[level] || 0);
+    const remainingByDifficulty = difficultyKeys.map((level) => {
+        const totalByLevel = stats.byDifficulty?.[level] || 0;
+        return Math.max(totalByLevel - (stats.completedByDifficulty?.[level] || 0), 0);
+    });
+
+    enhancedVisualCharts.insights = new window.Chart(context, {
+        type: 'bar',
+        data: {
+            labels,
+            datasets: [
+                {
+                    label: translateLiteral('Completed', appState.language),
+                    data: completedByDifficulty,
+                    backgroundColor: 'rgba(16,185,129,0.75)',
+                    borderColor: 'rgba(16,185,129,1)',
+                    borderWidth: 1,
+                    borderRadius: 8
+                },
+                {
+                    label: translateLiteral('Remaining', appState.language),
+                    data: remainingByDifficulty,
+                    backgroundColor: 'rgba(99,102,241,0.45)',
+                    borderColor: 'rgba(99,102,241,0.9)',
+                    borderWidth: 1,
+                    borderRadius: 8
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: { duration: appState.reduceMotion ? 0 : 550 },
+            plugins: {
+                legend: {
+                    labels: { color: tickColor, boxWidth: 12 }
+                }
+            },
+            scales: {
+                x: {
+                    stacked: true,
+                    ticks: { color: tickColor },
+                    grid: { display: false }
+                },
+                y: {
+                    stacked: true,
+                    beginAtZero: true,
+                    ticks: { color: tickColor, stepSize: 1, precision: 0 },
+                    grid: { color: borderColor }
+                }
+            }
+        }
+    });
+}
+
+function escapeMermaidLabel(value = '') {
+    return String(value || '')
+        .replace(/\n+/g, ' ')
+        .replace(/"/g, '\\"')
+        .trim();
+}
+
+function buildInsightsRoadmapMermaid({ hasAccess = false, learningPath = null } = {}) {
+    const lines = ['flowchart LR'];
+    if (!hasAccess) {
+        lines.push('    start["Start in guest mode"]');
+        lines.push('    pick["Pick a track"]');
+        lines.push('    learn["Complete one module"]');
+        lines.push('    practice["Run quiz + flashcards"]');
+        lines.push('    sync["Create account to sync"]');
+        lines.push('    start --> pick --> learn --> practice --> sync');
+        lines.push('    classDef nextNode fill:#1d4ed8,stroke:#93c5fd,color:#f8fafc');
+        lines.push('    classDef planNode fill:#334155,stroke:#94a3b8,color:#f8fafc');
+        lines.push('    class pick,learn nextNode');
+        lines.push('    class practice,sync planNode');
+        return lines.join('\n');
+    }
+
+    const completedIds = Array.from(appState.completedModules).slice(-2);
+    const upcoming = [];
+    if (learningPath?.next) upcoming.push(learningPath.next);
+    if (Array.isArray(learningPath?.upcoming)) {
+        learningPath.upcoming.forEach((module) => upcoming.push(module));
+    }
+
+    const seenUpcoming = new Set();
+    const normalizedUpcoming = [];
+    upcoming.forEach((module) => {
+        if (!module || !module.id || seenUpcoming.has(module.id)) return;
+        seenUpcoming.add(module.id);
+        normalizedUpcoming.push(module);
+    });
+
+    if (!normalizedUpcoming.length) {
+        const fallbackNext = getRecommendedModules();
+        fallbackNext.forEach((module) => {
+            if (!module || !module.id || seenUpcoming.has(module.id)) return;
+            seenUpcoming.add(module.id);
+            normalizedUpcoming.push(module);
+        });
+    }
+
+    lines.push('    start["Study start"]');
+    let previousNode = 'start';
+
+    completedIds.forEach((moduleId, index) => {
+        const module = getModuleById(moduleId);
+        if (!module) return;
+        const localized = getLocalizedModule(module);
+        const nodeId = `done${index + 1}`;
+        lines.push(`    ${nodeId}["${escapeMermaidLabel(localized?.title || module.title || moduleId)}"]`);
+        lines.push(`    ${previousNode} --> ${nodeId}`);
+        lines.push(`    class ${nodeId} doneNode`);
+        previousNode = nodeId;
+    });
+
+    normalizedUpcoming.slice(0, 3).forEach((module, index) => {
+        const localized = getLocalizedModule(module);
+        const nodeId = `next${index + 1}`;
+        const label = index === 0
+            ? `Next: ${localized?.title || module.title || module.id}`
+            : `Then: ${localized?.title || module.title || module.id}`;
+        lines.push(`    ${nodeId}["${escapeMermaidLabel(label)}"]`);
+        lines.push(`    ${previousNode} --> ${nodeId}`);
+        lines.push(`    class ${nodeId} ${index === 0 ? 'nextNode' : 'planNode'}`);
+        previousNode = nodeId;
+    });
+
+    if (!normalizedUpcoming.length) {
+        lines.push('    mastery["All modules explored. Reinforce with quizzes."]');
+        lines.push(`    ${previousNode} --> mastery`);
+        lines.push('    class mastery planNode');
+    }
+
+    lines.push('    classDef doneNode fill:#0f766e,stroke:#5eead4,color:#ecfeff');
+    lines.push('    classDef nextNode fill:#1d4ed8,stroke:#93c5fd,color:#f8fafc');
+    lines.push('    classDef planNode fill:#334155,stroke:#94a3b8,color:#f8fafc');
+    return lines.join('\n');
+}
+
+async function renderInsightsRoadmapMermaid(definition = '') {
+    const container = document.getElementById('insight-roadmap-mermaid');
+    if (!container) return;
+    if (typeof window.mermaid?.render !== 'function') {
+        container.textContent = 'Mermaid renderer unavailable.';
+        return;
+    }
+
+    const serial = ++mermaidRenderSerial;
+    try {
+        if (typeof window.mermaid?.initialize === 'function') {
+            window.mermaid.initialize({
+                startOnLoad: false,
+                securityLevel: 'loose',
+                theme: document.body.classList.contains('dark') ? 'dark' : 'default'
+            });
+        }
+        const renderId = `insight-roadmap-${Date.now()}-${serial}`;
+        const renderResult = await window.mermaid.render(renderId, definition);
+        if (serial !== mermaidRenderSerial) return;
+        container.innerHTML = renderResult?.svg || '';
+        if (typeof renderResult?.bindFunctions === 'function') {
+            renderResult.bindFunctions(container);
+        }
+    } catch (error) {
+        if (serial !== mermaidRenderSerial) return;
+        container.textContent = 'Unable to render roadmap diagram.';
+        console.warn('Mermaid render failed:', error);
+    }
+}
+
+function renderEnhancedInsightsVisuals({ hasAccess = false, stats = null, guestPreview = null, learningPath = null } = {}) {
+    ensureEnhancedVisualContainers();
+    const summaryEl = document.getElementById('insight-visual-summary');
+    const chartReady = typeof window.Chart === 'function';
+    const mermaidReady = typeof window.mermaid?.render === 'function';
+
+    if (summaryEl) {
+        if (!chartReady || !mermaidReady) {
+            summaryEl.textContent = 'Loading Fuse/Chart/Mermaid enhancements...';
+        } else if (!hasAccess && guestPreview) {
+            summaryEl.textContent = `Guest preview: ${guestPreview.percentage}% sample completion`;
+        } else if (stats) {
+            summaryEl.textContent = `Live: ${stats.completed}/${stats.total} modules completed`;
+        } else {
+            summaryEl.textContent = 'Visual analytics ready';
+        }
+    }
+
+    renderInsightsProgressChart({ hasAccess, stats, guestPreview });
+
+    const mermaidDefinition = buildInsightsRoadmapMermaid({ hasAccess, learningPath });
+    void renderInsightsRoadmapMermaid(mermaidDefinition);
+}
+
+function initEnhancedLearningExperience() {
+    ensureEnhancedVisualContainers();
+    void ensureEnhancedVisualAssets().then((loaded) => {
+        if (!loaded) return;
+        moduleSearchIndexState.lang = null;
+        moduleSearchIndexState.fuse = null;
+        renderModules();
     });
 }
 
@@ -22302,15 +23283,12 @@ function renderModules() {
             : moduleTopics.slice(0, topicsVisibleByDefault);
         const hasHiddenTopics = moduleTopics.length > topicsVisibleByDefault;
         const hiddenTopicCount = Math.max(0, moduleTopics.length - visibleTopics.length);
-        const normalizedResources = Array.isArray(localizedModule.resources)
-            ? localizedModule.resources
-                .map((resource) => normalizeModuleResource(resource))
-                .filter((resource) => resource.label)
-            : [];
         const localizedQuiz = getLocalizedQuizData(module.id);
         const quizQuestions = localizedQuiz?.parts?.[0]?.questions;
         const hasQuizQuestions = Array.isArray(quizQuestions) && quizQuestions.length > 0;
         const moduleLearningPlan = buildModuleLearningPlan(module, localizedModule, modulesByCategory, localizedModuleMap);
+        const moduleReadinessKit = buildModuleReadinessKit(module, localizedModule, moduleLearningPlan);
+        const normalizedResources = buildEnhancedModuleResources(localizedModule.resources, moduleReadinessKit);
 
         const codeToDisplay = isDiscreteTheoryMode
             ? getDiscreteTheoryContent(localizedModule)
@@ -22416,6 +23394,47 @@ function renderModules() {
                     <div class="rounded-md border border-indigo-100 bg-indigo-50 px-2.5 py-2.5">
                         <p class="text-[11px] uppercase tracking-wide font-semibold text-indigo-700 mb-1">${t('module.practicePrompt')}</p>
                         <p class="text-xs sm:text-sm text-slate-800 leading-relaxed">${escapeHtml(moduleLearningPlan.practicePrompt)}</p>
+                    </div>
+                </div>
+
+                <div class="module-readiness-card mb-3 sm:mb-4">
+                    <div class="module-readiness-header">
+                        <h4 class="module-readiness-title">${escapeHtml(getModuleReadinessText('title'))}</h4>
+                        <p class="module-readiness-subtitle">${escapeHtml(getModuleReadinessText('subtitle'))}</p>
+                    </div>
+                    <div class="module-readiness-grid">
+                        <article class="module-readiness-block">
+                            <p class="module-readiness-label">${escapeHtml(getModuleReadinessText('prerequisites'))}</p>
+                            <ul class="module-readiness-list">
+                                ${moduleReadinessKit.prerequisites.map((entry) => `<li>${escapeHtml(entry)}</li>`).join('')}
+                            </ul>
+                        </article>
+                        <article class="module-readiness-block">
+                            <p class="module-readiness-label">${escapeHtml(getModuleReadinessText('outcomes'))}</p>
+                            <ul class="module-readiness-list">
+                                ${moduleReadinessKit.outcomes.map((entry) => `<li>${escapeHtml(entry)}</li>`).join('')}
+                            </ul>
+                        </article>
+                        <article class="module-readiness-block">
+                            <p class="module-readiness-label">${escapeHtml(getModuleReadinessText('pitfalls'))}</p>
+                            <ul class="module-readiness-list">
+                                ${moduleReadinessKit.pitfalls.map((entry) => `<li>${escapeHtml(entry)}</li>`).join('')}
+                            </ul>
+                        </article>
+                    </div>
+                    <div class="module-readiness-grid module-readiness-grid-tight">
+                        <article class="module-readiness-block">
+                            <p class="module-readiness-label">${escapeHtml(getModuleReadinessText('practiceLadder'))}</p>
+                            <ol class="module-readiness-list module-readiness-list-ordered">
+                                ${moduleReadinessKit.practiceLadder.map((entry) => `<li>${escapeHtml(entry)}</li>`).join('')}
+                            </ol>
+                        </article>
+                        <article class="module-readiness-block">
+                            <p class="module-readiness-label">${escapeHtml(getModuleReadinessText('masteryChecks'))}</p>
+                            <ul class="module-readiness-list">
+                                ${moduleReadinessKit.masteryChecks.map((entry) => `<li>${escapeHtml(entry)}</li>`).join('')}
+                            </ul>
+                        </article>
                     </div>
                 </div>
 
@@ -22590,16 +23609,21 @@ function renderModules() {
                     <h4 class="font-semibold mb-2 text-slate-800 text-sm">${t('module.learningResources')}</h4>
                     <div class="space-y-1">
                         ${normalizedResources.length ? normalizedResources.map((normalizedResource) => {
+            const resourceTag = normalizedResource.source === 'recommended'
+                ? `<span class="module-resource-tag">${escapeHtml(getModuleReadinessText('recommendedTag'))}</span>`
+                : '';
             if (normalizedResource.url) {
                 return `
                             <div class="text-xs transition-colors duration-200">
                                 \u2022 <a href="${escapeHtml(normalizedResource.url)}" target="_blank" rel="noopener noreferrer" class="text-indigo-600 hover:text-indigo-800 underline decoration-indigo-400/60 underline-offset-2">${escapeHtml(normalizedResource.label)}</a>
+                                ${resourceTag}
                             </div>
                         `;
             }
             return `
                             <div class="text-indigo-600 hover:text-indigo-800 text-xs transition-colors duration-200">
                                 \u2022 ${escapeHtml(normalizedResource.label)}
+                                ${resourceTag}
                             </div>
                         `;
         }).join('') : `
@@ -22624,6 +23648,7 @@ function renderModules() {
         `;
     }).join('');
 
+    renderEnhancedSearchInsights(filteredModules);
     renderInsights();
     updatePageJumpButton();
     queueMotionEnhancements();
@@ -22712,7 +23737,8 @@ function renderAchievements() {
 }
 
 function escapeHtml(text = '') {
-    return text
+    const safeText = String(text ?? '');
+    return safeText
         .replace(/&/g, '&amp;')
         .replace(/</g, '&lt;')
         .replace(/>/g, '&gt;')
@@ -23979,6 +25005,7 @@ function init() {
     appState.scrollY = window.scrollY || 0;
     scheduleScrollDrivenUiUpdate(appState.scrollY);
     initGlobalSearch();
+    initEnhancedLearningExperience();
 
     // Add event listeners
     document.getElementById('settings-btn').addEventListener('click', openSettings);
@@ -24668,6 +25695,10 @@ function renderInsights() {
         if (momentumTipEl) {
             momentumTipEl.textContent = t('insights.lock.sessionLog');
         }
+        renderEnhancedInsightsVisuals({
+            hasAccess: false,
+            guestPreview
+        });
         updateStudyTrackerUI();
         return;
     }
@@ -24816,6 +25847,11 @@ function renderInsights() {
         momentumTipEl.textContent = tip;
     }
 
+    renderEnhancedInsightsVisuals({
+        hasAccess: true,
+        stats,
+        learningPath
+    });
     updateStudyTrackerUI();
 }
 
