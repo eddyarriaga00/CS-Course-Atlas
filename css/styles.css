@@ -26,6 +26,10 @@
     --text-primary-color: #0f172a;
     --text-secondary-color: #475569;
     --shadow-card: 0 20px 45px rgba(15, 23, 42, 0.12);
+    --atlas-safe-top: env(safe-area-inset-top, 0px);
+    --atlas-safe-right: env(safe-area-inset-right, 0px);
+    --atlas-safe-bottom: env(safe-area-inset-bottom, 0px);
+    --atlas-safe-left: env(safe-area-inset-left, 0px);
 }
 
 body.accent-indigo {
@@ -768,6 +772,11 @@ body.reduce-motion {
 
 body.modal-open {
     overflow: hidden;
+}
+
+html.modal-open,
+body.modal-open {
+    overscroll-behavior: none;
 }
 
 .sr-only {
@@ -8599,5 +8608,118 @@ body:not(.reduce-motion) :where(#start-learning-btn, #insight-plan-cta, #study-s
         backdrop-filter: none !important;
         -webkit-backdrop-filter: none !important;
         box-shadow: 0 10px 24px rgba(15, 23, 42, 0.24);
+    }
+}
+
+/* Mobile UX polish pass: safe areas, scroll containment, sticky modal controls. */
+@media (max-width: 640px) {
+    #main-content {
+        scroll-padding-top: calc(4.6rem + var(--atlas-safe-top));
+        scroll-padding-bottom: calc(0.8rem + var(--atlas-safe-bottom));
+    }
+
+    .modal-backdrop {
+        padding-top: calc(0.55rem + var(--atlas-safe-top)) !important;
+        padding-right: max(0.6rem, calc(0.45rem + var(--atlas-safe-right))) !important;
+        padding-bottom: calc(0.55rem + var(--atlas-safe-bottom)) !important;
+        padding-left: max(0.6rem, calc(0.45rem + var(--atlas-safe-left))) !important;
+        align-items: flex-start !important;
+        justify-content: center !important;
+        overscroll-behavior: contain;
+        touch-action: pan-y;
+    }
+
+    .prompt-modal {
+        overscroll-behavior: contain;
+        touch-action: pan-y;
+    }
+
+    #glossary-modal .modal-panel,
+    #flashcards-modal .flashcards-modal-panel,
+    #quiz-modal > div:first-child,
+    #interactive-quiz-modal .modal-panel,
+    #account-modal .account-modal-panel,
+    #settings-modal .modal-panel,
+    #study-plan-modal .modal-panel,
+    #support-modal .modal-panel {
+        width: min(100%, 31rem);
+        max-width: calc(100vw - 1.2rem - var(--atlas-safe-left) - var(--atlas-safe-right));
+        max-height: calc(100dvh - var(--atlas-safe-top) - var(--atlas-safe-bottom) - 1.1rem) !important;
+        min-height: 0;
+        margin: 0 auto;
+        border-radius: 1.15rem !important;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    #notes-download-modal .prompt-modal-panel,
+    #book-reader-modal .prompt-modal-panel {
+        max-height: calc(100dvh - var(--atlas-safe-top) - var(--atlas-safe-bottom) - 1.1rem) !important;
+    }
+
+    #glossary-modal .modal-panel > .flex:first-child,
+    #flashcards-modal .flashcards-modal-panel > .flex:first-child,
+    #quiz-modal > div:first-child > .flex:first-child,
+    #study-plan-modal .modal-panel > .flex:first-child,
+    #support-modal .modal-panel > .flex:first-child,
+    #interactive-quiz-modal .modal-panel > .flex:first-child,
+    #account-modal .account-modal-header,
+    #settings-modal .settings-modal-header,
+    #site-guide-modal .site-guide-modal-header,
+    #prompt-workspace-modal .prompt-modal-panel > .flex:first-child,
+    #notes-download-modal .prompt-modal-panel > .flex:first-child,
+    #book-reader-modal .prompt-modal-panel > .flex:first-child {
+        position: sticky;
+        top: 0;
+        z-index: 3;
+    }
+
+    #glossary-modal .flex-1.overflow-y-auto,
+    #flashcards-modal .flashcards-shell,
+    #quiz-modal #quiz-content,
+    #study-plan-modal .modal-panel > .p-6.space-y-5,
+    #support-modal #support-form,
+    #interactive-quiz-modal .modal-panel > .p-6,
+    #account-modal .account-modal-body,
+    #settings-modal .settings-modal-body,
+    #site-guide-modal .site-guide-modal-body,
+    #prompt-workspace-modal .prompt-modal-panel,
+    #book-reader-modal .book-reader-frame-shell {
+        min-height: 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+        touch-action: pan-y;
+    }
+
+    #support-modal #support-form {
+        display: flex;
+        flex: 1 1 auto;
+        flex-direction: column;
+    }
+
+    #study-plan-modal .modal-panel > .p-6.border-t,
+    #support-modal #support-form > .space-y-2 {
+        position: sticky;
+        bottom: 0;
+        z-index: 3;
+        padding-bottom: calc(0.85rem + var(--atlas-safe-bottom));
+        background: rgba(15, 23, 42, 0.94);
+        backdrop-filter: blur(8px);
+    }
+
+    body:not(.dark) #study-plan-modal .modal-panel > .p-6.border-t,
+    body:not(.dark) #support-modal #support-form > .space-y-2 {
+        background: rgba(248, 250, 252, 0.96);
+    }
+
+    #study-plan-modal #save-study-plan,
+    #support-modal #support-form > .space-y-2 button[type="submit"] {
+        min-height: 44px;
+    }
+
+    #main-footer.site-footer {
+        padding-bottom: calc(0.75rem + var(--atlas-safe-bottom));
     }
 }

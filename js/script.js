@@ -25095,6 +25095,7 @@ function init() {
     initAboutFeedbackForm();
     initPlayground();
     initIOSOverscrollLock();
+    initModalScrollContainmentLock();
     initializeAccessibilityInfrastructure();
 
     // Set initial form values
@@ -26439,7 +26440,21 @@ function canAnyScrollableAncestorHandleScroll(startNode, deltaY) {
     return canScrollElementInDirection(rootScroller, deltaY);
 }
 
+function canModalScrollableAncestorHandleScroll(modal, startNode, deltaY) {
+    if (!(modal instanceof Element)) return false;
+    let current = startNode instanceof Element ? startNode : modal;
+    while (current) {
+        if (isVerticallyScrollable(current) && canScrollElementInDirection(current, deltaY)) {
+            return true;
+        }
+        if (current === modal) break;
+        current = current.parentElement;
+    }
+    return false;
+}
+
 let iosOverscrollLockInitialized = false;
+let modalScrollContainmentLockInitialized = false;
 let iosTouchStartY = 0;
 let iosTouchStartX = 0;
 let iosActiveScroller = null;
@@ -26467,6 +26482,29 @@ function initIOSOverscrollLock() {
         const canScroll = canScrollElementInDirection(scroller, deltaY) ||
             (target ? canAnyScrollableAncestorHandleScroll(target, deltaY) : false);
         if (!canScroll) {
+            event.preventDefault();
+        }
+    }, { passive: false });
+}
+
+function initModalScrollContainmentLock() {
+    if (modalScrollContainmentLockInitialized) return;
+    modalScrollContainmentLockInitialized = true;
+
+    document.addEventListener('wheel', (event) => {
+        if (!event.cancelable || event.ctrlKey) return;
+        const activeModalId = getActiveModalId();
+        if (!activeModalId) return;
+        const modal = document.getElementById(activeModalId);
+        if (!(modal instanceof HTMLElement)) return;
+        const target = event.target instanceof Element ? event.target : null;
+        if (!target || !modal.contains(target)) {
+            event.preventDefault();
+            return;
+        }
+        if (Math.abs(event.deltaY) <= Math.abs(event.deltaX)) return;
+        const touchLikeDeltaY = -event.deltaY;
+        if (!canModalScrollableAncestorHandleScroll(modal, target, touchLikeDeltaY)) {
             event.preventDefault();
         }
     }, { passive: false });
@@ -27051,6 +27089,7 @@ function resolveModalFocusTarget(modal, preferredTarget = null) {
 function syncModalBodyState() {
     const hasOpenModal = Boolean(getActiveModalId());
     document.body.classList.toggle('modal-open', hasOpenModal);
+    document.documentElement.classList.toggle('modal-open', hasOpenModal);
     syncDesktopSidebarIconMode();
 }
 

@@ -16,6 +16,10 @@
     --trust-error-bg: rgba(239, 68, 68, 0.14);
     --trust-error-border: rgba(239, 68, 68, 0.42);
     --trust-error-text: #fca5a5;
+    --trust-safe-top: env(safe-area-inset-top, 0px);
+    --trust-safe-right: env(safe-area-inset-right, 0px);
+    --trust-safe-bottom: env(safe-area-inset-bottom, 0px);
+    --trust-safe-left: env(safe-area-inset-left, 0px);
 }
 
 * {
@@ -24,13 +28,14 @@
 
 body {
     margin: 0;
-    min-height: 100vh;
+    min-height: 100dvh;
     font-family: 'Pixelify Sans', 'Silkscreen', 'DotGothic16', monospace;
     color: var(--trust-text);
     background: radial-gradient(circle at 16% 20%, rgba(129, 140, 248, 0.28), transparent 42%),
         radial-gradient(circle at 84% 8%, rgba(56, 189, 248, 0.22), transparent 38%),
         linear-gradient(130deg, var(--trust-bg-1), var(--trust-bg-2), var(--trust-bg-3));
     background-attachment: fixed;
+    padding-bottom: var(--trust-safe-bottom);
 }
 
 a {
@@ -48,12 +53,16 @@ a:hover {
     backdrop-filter: blur(12px);
     background: rgba(2, 6, 23, 0.7);
     border-bottom: 1px solid var(--trust-border);
+    padding-top: var(--trust-safe-top);
 }
 
 .trust-shell {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: max(1rem, calc(0.8rem + var(--trust-safe-left)));
+    padding-right: max(1rem, calc(0.8rem + var(--trust-safe-right)));
 }
 
 .trust-header-inner {
@@ -109,7 +118,10 @@ a:hover {
 .trust-main {
     max-width: 1100px;
     margin: 0 auto;
-    padding: 1.25rem 1rem 2.5rem;
+    padding-top: 1.25rem;
+    padding-right: max(1rem, calc(0.8rem + var(--trust-safe-right)));
+    padding-bottom: calc(2.5rem + var(--trust-safe-bottom));
+    padding-left: max(1rem, calc(0.8rem + var(--trust-safe-left)));
 }
 
 .trust-card {
@@ -285,26 +297,60 @@ a:hover {
 }
 
 @media (max-width: 720px) {
-    .trust-header {
-        position: static;
-    }
-
     .trust-shell,
     .trust-main {
-        padding-left: 0.8rem;
-        padding-right: 0.8rem;
+        padding-left: max(0.8rem, calc(0.65rem + var(--trust-safe-left)));
+        padding-right: max(0.8rem, calc(0.65rem + var(--trust-safe-right)));
+    }
+
+    .trust-header {
+        top: 0;
+    }
+
+    .trust-header-inner {
+        align-items: flex-start;
+    }
+
+    .trust-home-link {
+        min-height: 2.5rem;
+        display: inline-flex;
+        align-items: center;
     }
 
     .trust-nav {
         width: 100%;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 0.2rem;
+        scrollbar-width: thin;
     }
 
     .trust-nav-link {
-        flex: 1 1 160px;
+        flex: 0 0 auto;
         text-align: center;
+        white-space: nowrap;
+        min-height: 2.3rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .trust-card {
         padding: 0.95rem 0.82rem 1.05rem;
+    }
+
+    .support-actions {
+        position: sticky;
+        bottom: 0;
+        padding-top: 0.72rem;
+        padding-bottom: calc(0.55rem + var(--trust-safe-bottom));
+        background: linear-gradient(180deg, rgba(15, 23, 42, 0), rgba(15, 23, 42, 0.95) 42%);
+        z-index: 2;
+    }
+
+    .support-submit {
+        min-height: 44px;
     }
 }
