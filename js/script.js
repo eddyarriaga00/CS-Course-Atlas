@@ -16104,6 +16104,9 @@ function syncAccountSignupToggleState() {
 }
 
 async function handleAuthProviderClick(providerKey, providerLabel) {
+    if (maybeRedirectToCanonicalFrontendForAuth()) {
+        return;
+    }
     if (!providerKey) {
         const message = 'Unsupported social auth provider.';
         setAccountAuthStatus(message, 'error');
@@ -16560,6 +16563,29 @@ function isCrossOriginApiRuntime() {
     } catch (error) {
         return false;
     }
+}
+
+function shouldRedirectToCanonicalFrontendForAuth() {
+    if (typeof window === 'undefined') return false;
+    if (!isCrossOriginApiRuntime()) return false;
+    const host = String(window.location.hostname || '').toLowerCase();
+    return host === 'cscourseatlas.com' || host === 'www.cscourseatlas.com';
+}
+
+function getCanonicalFrontendAuthUrl() {
+    if (typeof window === 'undefined') return 'https://eddyarriaga00.github.io/CS-Course-Atlas/index.html';
+    const search = String(window.location.search || '');
+    const hash = String(window.location.hash || '');
+    return `https://eddyarriaga00.github.io/CS-Course-Atlas/index.html${search}${hash}`;
+}
+
+function maybeRedirectToCanonicalFrontendForAuth() {
+    if (!shouldRedirectToCanonicalFrontendForAuth()) return false;
+    const targetUrl = getCanonicalFrontendAuthUrl();
+    setAccountAuthStatus('Redirecting to secure sign-in host...', 'info');
+    showToast('Redirecting to secure sign-in host for account access.', 'info');
+    window.location.assign(targetUrl);
+    return true;
 }
 
 function isApiRuntimeAvailable() {
@@ -17398,6 +17424,9 @@ async function signOutAccountFlow(options = {}) {
 }
 
 async function submitAccountAuth() {
+    if (maybeRedirectToCanonicalFrontendForAuth()) {
+        return;
+    }
     if (accountAuthState.inFlight) return;
     const isSignup = accountAuthState.mode === 'signup';
     if (!isSignup && accountAuthState.isAuthenticated) {
@@ -17690,6 +17719,9 @@ async function pushUserStateToNeon(options = {}) {
 }
 
 function openAccountModal() {
+    if (maybeRedirectToCanonicalFrontendForAuth()) {
+        return;
+    }
     const modal = document.getElementById('account-modal');
     if (!modal) return;
     loadAuthProviderAvailability({ silent: true });
