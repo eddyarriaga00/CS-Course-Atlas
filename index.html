@@ -1233,6 +1233,13 @@
 
             <!-- Scrollable Body -->
             <div class="settings-modal-body">
+                <div id="settings-auth-lock" class="settings-auth-lock hidden" role="status" aria-live="polite">
+                    <div class="settings-auth-lock-copy-wrap">
+                        <p id="settings-auth-lock-title" class="settings-auth-lock-title" data-i18n="settings.authLockTitle">Sign in for advanced customization</p>
+                        <p id="settings-auth-lock-copy" class="settings-auth-lock-copy" data-i18n="settings.authLockCopy">Most personalization controls are available only when your account is signed in and syncing.</p>
+                    </div>
+                    <button id="settings-auth-open-account" type="button" class="settings-auth-lock-btn" data-i18n="settings.authLockCta">Log In / Sign Up</button>
+                </div>
 
                 <!-- 🎨 Appearance -->
                 <div class="settings-section appearance">
@@ -1250,9 +1257,9 @@
                         </button>
                     </div>
 
-                    <div style="margin-top:0.85rem;">
+                    <div style="margin-top:0.85rem;" data-auth-required-row="true">
                         <label class="settings-label-main" for="theme-select" data-i18n="settings.bgTheme">Background Theme</label>
-                        <select id="theme-select" class="settings-select">
+                        <select id="theme-select" class="settings-select" data-auth-required-setting="true">
                             <option value="default" data-i18n="settings.themeDefault">Default Gradient</option>
                             <option value="ocean" data-i18n="settings.themeOcean">Ocean Breeze</option>
                             <option value="sunset" data-i18n="settings.themeSunset">Sunset Glow</option>
@@ -1262,9 +1269,9 @@
                         </select>
                     </div>
 
-                    <div style="margin-top:0.85rem;">
+                    <div style="margin-top:0.85rem;" data-auth-required-row="true">
                         <label class="settings-label-main" for="accent-select" data-i18n="settings.accentColor">Accent Color</label>
-                        <select id="accent-select" class="settings-select">
+                        <select id="accent-select" class="settings-select" data-auth-required-setting="true">
                             <option value="indigo" data-i18n="settings.accentIndigo">Indigo Aurora</option>
                             <option value="emerald" data-i18n="settings.accentEmerald">Emerald Focus</option>
                             <option value="amber" data-i18n="settings.accentAmber">Amber Sunrise</option>
@@ -1273,9 +1280,9 @@
                         <p class="settings-label-sub" style="margin-top:0.3rem;" data-i18n="settings.accentHint">Updates buttons, highlights, and callouts instantly.</p>
                     </div>
 
-                    <div style="margin-top:0.85rem;">
+                    <div style="margin-top:0.85rem;" data-auth-required-row="true">
                         <label class="settings-label-main" for="card-depth-select" data-i18n="settings.cardElevation">Card Elevation</label>
-                        <select id="card-depth-select" class="settings-select">
+                        <select id="card-depth-select" class="settings-select" data-auth-required-setting="true">
                             <option value="flat" data-i18n="settings.elevationFlat">Minimal (low shadow)</option>
                             <option value="standard" data-i18n="settings.elevationStandard">Balanced</option>
                             <option value="lifted" data-i18n="settings.elevationLifted">Lifted Glow</option>
@@ -1290,19 +1297,19 @@
                         <span data-i18n="settings.layout">Layout</span>
                     </div>
 
-                    <div class="settings-row">
+                    <div class="settings-row" data-auth-required-row="true">
                         <div class="settings-label">
                             <span class="settings-label-main" data-i18n="settings.compactLayout">Compact Module Layout</span>
                             <span class="settings-label-sub" data-i18n="settings.compactLayoutHint">Denser cards for widescreen or multi-tasking.</span>
                         </div>
-                        <button id="compact-layout-toggle" type="button" role="switch" aria-checked="false" data-i18n-aria-label="settings.compactLayout" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                        <button id="compact-layout-toggle" type="button" role="switch" aria-checked="false" data-i18n-aria-label="settings.compactLayout" data-auth-required-setting="true" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
                             <div id="compact-layout-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
                         </button>
                     </div>
 
-                    <div style="margin-top:0.85rem;">
+                    <div style="margin-top:0.85rem;" data-auth-required-row="true">
                         <label class="settings-label-main" for="font-scale-select" data-i18n="settings.textSize">Text Size</label>
-                        <select id="font-scale-select" class="settings-select">
+                        <select id="font-scale-select" class="settings-select" data-auth-required-setting="true">
                             <option value="compact" data-i18n="settings.textCompact">Compact</option>
                             <option value="base" data-i18n="settings.textStandard">Standard</option>
                             <option value="comfortable" data-i18n="settings.textComfortable">Comfortable</option>
@@ -1319,23 +1326,33 @@
                         <span data-i18n="settings.accessibility">Accessibility</span>
                     </div>
 
-                    <div class="settings-row">
+                    <div class="settings-row" data-auth-required-row="true">
                         <div class="settings-label">
                             <span class="settings-label-main" data-i18n="settings.reduceMotion">Reduce Motion</span>
                             <span class="settings-label-sub" data-i18n="settings.reduceMotionHint">Limit animations for focus and accessibility.</span>
                         </div>
-                        <button id="reduce-motion-toggle" type="button" role="switch" aria-checked="false" data-i18n-aria-label="settings.reduceMotion" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                        <button id="reduce-motion-toggle" type="button" role="switch" aria-checked="false" data-i18n-aria-label="settings.reduceMotion" data-auth-required-setting="true" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
                             <div id="reduce-motion-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
                         </button>
                     </div>
 
-                    <div class="settings-row" style="margin-top:0.65rem;">
+                    <div class="settings-row" style="margin-top:0.65rem;" data-auth-required-row="true">
                         <div class="settings-label">
                             <span class="settings-label-main" data-i18n="settings.highContrast">High Contrast Text</span>
                             <span class="settings-label-sub" data-i18n="settings.highContrastHint">Boost text contrast for readability.</span>
                         </div>
-                        <button id="high-contrast-toggle" type="button" role="switch" aria-checked="false" data-i18n-aria-label="settings.highContrast" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                        <button id="high-contrast-toggle" type="button" role="switch" aria-checked="false" data-i18n-aria-label="settings.highContrast" data-auth-required-setting="true" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
                             <div id="high-contrast-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
+                        </button>
+                    </div>
+
+                    <div class="settings-row" style="margin-top:0.65rem;" data-auth-required-row="true">
+                        <div class="settings-label">
+                            <span class="settings-label-main" data-i18n="settings.buttonAnimations">Button Animations</span>
+                            <span class="settings-label-sub" data-i18n="settings.buttonAnimationsHint">Toggle social-style ripple and tap animations.</span>
+                        </div>
+                        <button id="button-animations-toggle" type="button" role="switch" aria-checked="true" data-i18n-aria-label="settings.buttonAnimations" data-auth-required-setting="true" class="w-14 h-7 rounded-full transition-colors duration-200 bg-indigo-600" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                            <div id="button-animations-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-7" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
                         </button>
                     </div>
                 </div>
@@ -1347,35 +1364,58 @@
                         <span data-i18n="settings.learning">Learning</span>
                     </div>
 
-                    <div class="settings-row">
+                    <div class="settings-row" data-auth-required-row="true">
                         <div class="settings-label">
                             <span class="settings-label-main" data-i18n="settings.showComments">Show Code Comments</span>
                             <span class="settings-label-sub" data-i18n="settings.showCommentsHint">Each module can override this setting.</span>
                         </div>
-                        <button id="comments-toggle" type="button" role="switch" aria-checked="true" data-i18n-aria-label="settings.showComments" class="w-14 h-7 rounded-full transition-colors duration-200 bg-indigo-600" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                        <button id="comments-toggle" type="button" role="switch" aria-checked="true" data-i18n-aria-label="settings.showComments" data-auth-required-setting="true" class="w-14 h-7 rounded-full transition-colors duration-200 bg-indigo-600" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
                             <div id="comments-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-7" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
                         </button>
                     </div>
 
-                    <div class="settings-row" style="margin-top:0.65rem;">
+                    <div class="settings-row" style="margin-top:0.65rem;" data-auth-required-row="true">
                         <div class="settings-label">
                             <span class="settings-label-main" data-i18n="settings.hideCompleted">Hide Completed Modules</span>
                             <span class="settings-label-sub" data-i18n="settings.hideCompletedHint">Keep your grid focused on what’s left.</span>
                         </div>
-                        <button id="hide-completed-toggle" type="button" role="switch" aria-checked="false" data-i18n-aria-label="settings.hideCompleted" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                        <button id="hide-completed-toggle" type="button" role="switch" aria-checked="false" data-i18n-aria-label="settings.hideCompleted" data-auth-required-setting="true" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
                             <div id="hide-completed-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
                         </button>
                     </div>
 
-                    <div style="margin-top:0.85rem;">
+                    <div style="margin-top:0.85rem;" data-auth-required-row="true">
                         <label class="settings-label-main" for="weekly-goal-select" data-i18n="settings.weeklyGoal">Weekly Module Goal</label>
-                        <select id="weekly-goal-select" class="settings-select">
+                        <select id="weekly-goal-select" class="settings-select" data-auth-required-setting="true">
                             <option value="3" data-i18n="settings.goal3">3 / week · Steady pace</option>
                             <option value="5" data-i18n="settings.goal5">5 / week · Balanced</option>
                             <option value="8" data-i18n="settings.goal8">8 / week · Accelerated</option>
                             <option value="12" data-i18n="settings.goal12">12 / week · Sprint</option>
                         </select>
                         <p class="settings-label-sub" style="margin-top:0.3rem;" data-i18n="settings.weeklyGoalHint">Personalizes your study insights and pacing tips.</p>
+                    </div>
+
+                    <div style="margin-top:0.85rem;" data-auth-required-row="true">
+                        <label class="settings-label-main" for="flashcard-session-select" data-i18n="settings.flashcardsPerSession">Flashcards Per Session</label>
+                        <select id="flashcard-session-select" class="settings-select" data-auth-required-setting="true">
+                            <option value="10">10 cards</option>
+                            <option value="20">20 cards</option>
+                            <option value="30">30 cards</option>
+                            <option value="40">40 cards</option>
+                        </select>
+                        <p class="settings-label-sub" style="margin-top:0.3rem;" data-i18n="settings.flashcardsPerSessionHint">Set how many cards are generated each time you start a deck.</p>
+                    </div>
+
+                    <div style="margin-top:0.85rem;" data-auth-required-row="true">
+                        <label class="settings-label-main" for="code-preview-lines-select" data-i18n="settings.codePreviewLines">Code Preview Length</label>
+                        <select id="code-preview-lines-select" class="settings-select" data-auth-required-setting="true">
+                            <option value="8">8 lines</option>
+                            <option value="12">12 lines</option>
+                            <option value="16">16 lines</option>
+                            <option value="20">20 lines</option>
+                            <option value="24">24 lines</option>
+                        </select>
+                        <p class="settings-label-sub" style="margin-top:0.3rem;" data-i18n="settings.codePreviewLinesHint">Choose how much code is visible before tapping expand.</p>
                     </div>
                 </div>
 

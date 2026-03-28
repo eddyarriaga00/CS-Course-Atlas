@@ -34,6 +34,7 @@ const appState = {
     selectedFlashcardModule: 'all',
     flashcardSession: [],
     flashcardSessionLength: 20,
+    moduleCodePreviewLines: 12,
     theme: 'default',
     fontScale: 'base',
     dailyChallengeId: null,
@@ -43,6 +44,7 @@ const appState = {
     hideCompletedModules: false,
     compactLayout: false,
     accent: 'indigo',
+    buttonAnimations: true,
     reduceMotion: false,
     highContrast: false,
     cardDepth: 'standard',
@@ -486,6 +488,9 @@ const DIFFICULTY_COLORS = {
 };
 
 const FLASHCARD_SESSION_SIZE = 20;
+const FLASHCARD_SESSION_LENGTH_OPTIONS = Object.freeze([10, 20, 30, 40]);
+const MODULE_CODE_PREVIEW_LINE_OPTIONS = Object.freeze([8, 12, 16, 20, 24]);
+const DEFAULT_MODULE_CODE_PREVIEW_LINES = CONSTANTS.CODE_PREVIEW_LINES;
 const FREE_FLASHCARD_MODULES = 10;
 const FLASHCARD_TOPIC_DECKS = [
     { id: 'topic:dsa', category: 'dsa', titleKey: 'flashcards.deck.topic.dsa' },
@@ -548,6 +553,22 @@ const FONT_SCALE_CLASS_MAP = {
     spacious: 'font-scale-spacious'
 };
 const FONT_SCALE_CLASSES = Object.values(FONT_SCALE_CLASS_MAP);
+
+function getValidatedFlashcardSessionLength(value) {
+    const parsed = Number(value);
+    if (FLASHCARD_SESSION_LENGTH_OPTIONS.includes(parsed)) {
+        return parsed;
+    }
+    return FLASHCARD_SESSION_SIZE;
+}
+
+function getValidatedModuleCodePreviewLines(value) {
+    const parsed = Number(value);
+    if (MODULE_CODE_PREVIEW_LINE_OPTIONS.includes(parsed)) {
+        return parsed;
+    }
+    return DEFAULT_MODULE_CODE_PREVIEW_LINES;
+}
 
 const CODE_RUNNER_ENDPOINT = '';
 const JUDGE0_ENDPOINT = 'https://ce.judge0.com/submissions?base64_encoded=false&wait=true';
@@ -1225,6 +1246,16 @@ const TRANSLATIONS = {
         'settings.goal8': '8 / week · Accelerated',
         'settings.goal12': '12 / week · Sprint',
         'settings.weeklyGoalHint': 'Personalizes your study insights and pacing tips.',
+        'settings.authLockTitle': 'Sign in for advanced customization',
+        'settings.authLockCopy': 'Most personalization controls are available only when your account is signed in and syncing.',
+        'settings.authLockCta': 'Log In / Sign Up',
+        'settings.authLockToast': 'Sign in to unlock advanced settings customizations.',
+        'settings.buttonAnimations': 'Button Animations',
+        'settings.buttonAnimationsHint': 'Toggle social-style ripple and tap animations.',
+        'settings.flashcardsPerSession': 'Flashcards Per Session',
+        'settings.flashcardsPerSessionHint': 'Set how many cards are generated each time you start a deck.',
+        'settings.codePreviewLines': 'Code Preview Length',
+        'settings.codePreviewLinesHint': 'Choose how much code is visible before tapping expand.',
         'settings.language': 'Language / Idioma',
         'settings.languageLabel': 'Interface Language',
         'settings.languageHint': 'Switch between English and Spanish / Cambia entre inglés y español.',
@@ -1748,6 +1779,16 @@ const TRANSLATIONS = {
         'settings.goal8': '8 / semana · Acelerado',
         'settings.goal12': '12 / semana · Sprint',
         'settings.weeklyGoalHint': 'Personaliza tus perspectivas de estudio y consejos de ritmo.',
+        'settings.authLockTitle': 'Inicia sesion para personalizacion avanzada',
+        'settings.authLockCopy': 'La mayoria de controles de personalizacion solo estan disponibles cuando tu cuenta esta autenticada y sincronizando.',
+        'settings.authLockCta': 'Iniciar Sesion / Crear Cuenta',
+        'settings.authLockToast': 'Inicia sesion para desbloquear personalizaciones avanzadas.',
+        'settings.buttonAnimations': 'Animaciones de Botones',
+        'settings.buttonAnimationsHint': 'Activa o desactiva el efecto de toque y ondas estilo social.',
+        'settings.flashcardsPerSession': 'Tarjetas por Sesion',
+        'settings.flashcardsPerSessionHint': 'Define cuantas tarjetas se generan cada vez que inicias un mazo.',
+        'settings.codePreviewLines': 'Longitud de Vista de Codigo',
+        'settings.codePreviewLinesHint': 'Elige cuantas lineas de codigo se ven antes de expandir.',
         'settings.language': 'Idioma / Language',
         'settings.languageLabel': 'Idioma de la Interfaz',
         'settings.languageHint': 'Cambia entre español e inglés / Switch between Spanish and English.',
@@ -3282,6 +3323,7 @@ function updateSocialButtonRippleOrigin(target, clientX, clientY) {
 
 function triggerSocialButtonTapAnimation(target, sourceEvent = null) {
     if (!(target instanceof HTMLElement)) return;
+    if (appState.buttonAnimations === false) return;
     if (document.body.classList.contains('reduce-motion')) return;
     if (
         typeof window.matchMedia === 'function'
@@ -13245,8 +13287,10 @@ function buildSerializableAppState() {
         glossaryLetter: appState.glossaryLetter,
         currentFlashcard: appState.currentFlashcard,
         selectedFlashcardModule: appState.selectedFlashcardModule,
+        flashcardSessionLength: appState.flashcardSessionLength,
         theme: appState.theme,
         fontScale: appState.fontScale,
+        moduleCodePreviewLines: appState.moduleCodePreviewLines,
         dailyChallengeId: appState.dailyChallengeId,
         dailyChallengeDate: appState.dailyChallengeDate,
         studyTipId: appState.studyTipId,
@@ -13254,6 +13298,7 @@ function buildSerializableAppState() {
         hideCompletedModules: appState.hideCompletedModules,
         compactLayout: appState.compactLayout,
         accent: appState.accent,
+        buttonAnimations: appState.buttonAnimations,
         reduceMotion: appState.reduceMotion,
         highContrast: appState.highContrast,
         cardDepth: appState.cardDepth,
@@ -13451,8 +13496,10 @@ function loadFromLocalStorage() {
             }
             appState.currentFlashcard = state.currentFlashcard || 0;
             appState.selectedFlashcardModule = state.selectedFlashcardModule || 'all';
+            appState.flashcardSessionLength = getValidatedFlashcardSessionLength(state.flashcardSessionLength);
             appState.theme = state.theme || 'default';
             appState.fontScale = state.fontScale || 'base';
+            appState.moduleCodePreviewLines = getValidatedModuleCodePreviewLines(state.moduleCodePreviewLines);
             appState.completedQuizzes = new Set(remapStoredModuleIds(state.completedQuizzes || []));
             appState.dailyChallengeId = state.dailyChallengeId || null;
             appState.dailyChallengeDate = state.dailyChallengeDate || null;
@@ -13460,6 +13507,7 @@ function loadFromLocalStorage() {
             appState.weeklyGoal = Number(state.weeklyGoal) || 5;
             appState.hideCompletedModules = Boolean(state.hideCompletedModules);
             appState.compactLayout = Boolean(state.compactLayout);
+            appState.buttonAnimations = state.buttonAnimations !== undefined ? Boolean(state.buttonAnimations) : true;
             appState.reduceMotion = state.reduceMotion !== undefined ? Boolean(state.reduceMotion) : prefersReduced;
             appState.highContrast = Boolean(state.highContrast);
             appState.accent = ACCENT_OPTIONS.includes(state.accent) ? state.accent : 'indigo';
@@ -13542,8 +13590,10 @@ function applyRemoteUserStateSnapshot(snapshot, options = {}) {
         }
         appState.currentFlashcard = Number(state.currentFlashcard || 0);
         appState.selectedFlashcardModule = state.selectedFlashcardModule || 'all';
+        appState.flashcardSessionLength = getValidatedFlashcardSessionLength(state.flashcardSessionLength);
         appState.theme = state.theme || appState.theme || 'default';
         appState.fontScale = state.fontScale || appState.fontScale || 'base';
+        appState.moduleCodePreviewLines = getValidatedModuleCodePreviewLines(state.moduleCodePreviewLines);
         appState.completedQuizzes = new Set(remapStoredModuleIds(state.completedQuizzes || []));
         appState.dailyChallengeId = state.dailyChallengeId || null;
         appState.dailyChallengeDate = state.dailyChallengeDate || null;
@@ -13551,6 +13601,9 @@ function applyRemoteUserStateSnapshot(snapshot, options = {}) {
         appState.weeklyGoal = Number(state.weeklyGoal) || appState.weeklyGoal || 5;
         appState.hideCompletedModules = Boolean(state.hideCompletedModules);
         appState.compactLayout = Boolean(state.compactLayout);
+        appState.buttonAnimations = state.buttonAnimations !== undefined
+            ? Boolean(state.buttonAnimations)
+            : (appState.buttonAnimations !== false);
         appState.reduceMotion = state.reduceMotion !== undefined ? Boolean(state.reduceMotion) : (appState.reduceMotion || prefersReduced);
         appState.highContrast = Boolean(state.highContrast);
         appState.accent = ACCENT_OPTIONS.includes(state.accent) ? state.accent : (appState.accent || 'indigo');
@@ -13618,12 +13671,14 @@ function applyRemoteUserStateSnapshot(snapshot, options = {}) {
         applyAccent();
         applyCardDepth();
         applyCompactLayout();
+        applyButtonAnimationsSetting();
         applyReduceMotion();
         applyHighContrast();
         updateDarkMode();
         updateCommentsToggle();
         updateHideCompletedToggle();
         updateCompactLayoutToggle();
+        updateButtonAnimationsToggle();
         updateReduceMotionToggle();
         updateHighContrastToggle();
         updateProgress();
@@ -15833,6 +15888,7 @@ function handleInsightsAccessStateChange() {
     if (!unlocked && studyTimer?.isActive) {
         endStudySession({ notify: false });
     }
+    updateSettingsCustomizationAccessState();
     if (typeof renderInsights === 'function') {
         renderInsights();
     } else if (typeof updateStudyTrackerUI === 'function') {
@@ -21026,6 +21082,14 @@ function truncateCode(code, lines = CONSTANTS.CODE_PREVIEW_LINES) {
     return `${codeLines.slice(0, lines).join('\n')}\n\n${t('module.truncateHint')}`;
 }
 
+function getModuleCodePreviewLines(moduleId) {
+    const baseLines = getValidatedModuleCodePreviewLines(appState.moduleCodePreviewLines);
+    if (isAssemblyModule(moduleId)) {
+        return Math.max(6, baseLines - 4);
+    }
+    return baseLines;
+}
+
 // Module Helper Functions
 function shouldShowComments(moduleId) {
     const individualSetting = appState.moduleComments.get(moduleId);
@@ -21542,6 +21606,10 @@ function applyCompactLayout() {
     document.body.classList.toggle('compact-modules', !!appState.compactLayout);
 }
 
+function applyButtonAnimationsSetting() {
+    document.body.classList.toggle('disable-button-animations', appState.buttonAnimations === false);
+}
+
 function getNextProgressMilestone(progressPercentage = 0) {
     const checkpoints = [10, 25, 40, 50, 60, 75, 90, 100];
     return checkpoints.find((value) => value > progressPercentage) || 100;
@@ -21693,6 +21761,10 @@ function updateHideCompletedToggle() {
 
 function updateCompactLayoutToggle() {
     syncToggleState('compact-layout-toggle', 'compact-layout-slider', appState.compactLayout);
+}
+
+function updateButtonAnimationsToggle() {
+    syncToggleState('button-animations-toggle', 'button-animations-slider', appState.buttonAnimations !== false);
 }
 
 function updateReduceMotionToggle() {
@@ -23952,7 +24024,7 @@ function renderModules() {
         const codeToDisplay = isDiscreteTheoryMode
             ? getDiscreteTheoryContent(localizedModule)
             : getCodeExample(module);
-        const previewLines = isAssemblyModule(module.id) ? 8 : CONSTANTS.CODE_PREVIEW_LINES;
+        const previewLines = getModuleCodePreviewLines(module.id);
         const displayCode = isCodeExpanded ? codeToDisplay : truncateCode(codeToDisplay, previewLines);
         const showExpandButton = !hasCodeExampleSets && codeToDisplay.split('\n').length > previewLines;
         const canShowOutput = currentMode === 'code';
@@ -24830,7 +24902,7 @@ function renderFlashcard() {
     const progressPill = document.getElementById('flashcard-progress-pill');
     const modePill = document.getElementById('flashcard-mode-pill');
     const sessionProgress = document.getElementById('flashcard-session-progress');
-    const desiredLength = appState.flashcardSessionLength || FLASHCARD_SESSION_SIZE;
+    const desiredLength = getValidatedFlashcardSessionLength(appState.flashcardSessionLength);
     const deckSize = deck.length;
     const flashcardsModal = document.getElementById('flashcards-modal');
     if (flashcardsModal) {
@@ -25188,8 +25260,40 @@ function toggleCompletion(moduleId) {
     saveToLocalStorage();
 }
 
+function hasAdvancedSettingsAccess() {
+    return hasAuthenticatedInsightsAccess();
+}
+
+function updateSettingsCustomizationAccessState() {
+    const hasAccess = hasAdvancedSettingsAccess();
+    const lockCard = document.getElementById('settings-auth-lock');
+    if (lockCard) {
+        lockCard.classList.toggle('hidden', hasAccess);
+    }
+
+    document.querySelectorAll('[data-auth-required-row]').forEach((row) => {
+        row.classList.toggle('settings-row-locked', !hasAccess);
+    });
+
+    document.querySelectorAll('[data-auth-required-setting="true"]').forEach((control) => {
+        if (!(control instanceof HTMLElement)) return;
+        if ('disabled' in control) {
+            control.disabled = !hasAccess;
+        }
+        control.setAttribute('aria-disabled', hasAccess ? 'false' : 'true');
+    });
+}
+
+function requireAdvancedSettingsAccess() {
+    if (hasAdvancedSettingsAccess()) return true;
+    showToast(t('settings.authLockToast'), 'info');
+    updateSettingsCustomizationAccessState();
+    return false;
+}
+
 // Modal Functions
 function openSettings() {
+    updateSettingsCustomizationAccessState();
     openModal('settings-modal', { initialFocus: '#close-settings' });
 }
 
@@ -25294,7 +25398,7 @@ function refreshFlashcardSession(moduleId = appState.selectedFlashcardModule, { 
         return;
     }
 
-    const desiredLength = appState.flashcardSessionLength || FLASHCARD_SESSION_SIZE;
+    const desiredLength = getValidatedFlashcardSessionLength(appState.flashcardSessionLength);
     const session = [];
     let pool = shuffleArray(deck);
 
@@ -25645,12 +25749,14 @@ function init() {
     applyAccent();
     applyCardDepth();
     applyCompactLayout();
+    applyButtonAnimationsSetting();
     applyReduceMotion();
     applyHighContrast();
     updateDarkMode();
     updateCommentsToggle();
     updateHideCompletedToggle();
     updateCompactLayoutToggle();
+    updateButtonAnimationsToggle();
     updateReduceMotionToggle();
     updateHighContrastToggle();
     updateProgress();
@@ -25701,6 +25807,7 @@ function init() {
     const pageJumpButton = document.getElementById('page-jump-btn');
     const closeSiteGuideButton = document.getElementById('close-site-guide');
     const closeSiteGuideFooterButton = document.getElementById('close-site-guide-footer');
+    const settingsAuthOpenButton = document.getElementById('settings-auth-open-account');
     const insightAuthOpenButton = document.getElementById('insights-auth-open-account');
     const insightGuestPlanOpenButton = document.getElementById('insights-guest-plan-open');
     const guestStartDsaButton = document.getElementById('guest-start-dsa');
@@ -25713,6 +25820,7 @@ function init() {
     if (pageJumpButton) pageJumpButton.addEventListener('click', handlePageJumpButtonClick);
     if (closeSiteGuideButton) closeSiteGuideButton.addEventListener('click', closeSiteGuideModal);
     if (closeSiteGuideFooterButton) closeSiteGuideFooterButton.addEventListener('click', closeSiteGuideModal);
+    if (settingsAuthOpenButton) settingsAuthOpenButton.addEventListener('click', openAccountModal);
     if (insightAuthOpenButton) insightAuthOpenButton.addEventListener('click', openAccountModal);
     if (insightGuestPlanOpenButton) insightGuestPlanOpenButton.addEventListener('click', openStudyPlanModal);
     if (guestStartDsaButton) guestStartDsaButton.addEventListener('click', () => startGuestTrack('dsa'));
@@ -25736,6 +25844,7 @@ function init() {
 
     // Comments toggle
     document.getElementById('comments-toggle').addEventListener('click', () => {
+        if (!requireAdvancedSettingsAccess()) return;
         appState.showComments = !appState.showComments;
         updateCommentsToggle();
         renderModules();
@@ -25745,6 +25854,7 @@ function init() {
     const hideCompletedToggle = document.getElementById('hide-completed-toggle');
     if (hideCompletedToggle) {
         hideCompletedToggle.addEventListener('click', () => {
+            if (!requireAdvancedSettingsAccess()) return;
             appState.hideCompletedModules = !appState.hideCompletedModules;
             appState.modulesPage = 1;
             updateHideCompletedToggle();
@@ -25756,6 +25866,7 @@ function init() {
     const compactLayoutToggle = document.getElementById('compact-layout-toggle');
     if (compactLayoutToggle) {
         compactLayoutToggle.addEventListener('click', () => {
+            if (!requireAdvancedSettingsAccess()) return;
             appState.compactLayout = !appState.compactLayout;
             updateCompactLayoutToggle();
             applyCompactLayout();
@@ -25766,6 +25877,7 @@ function init() {
     const reduceMotionToggle = document.getElementById('reduce-motion-toggle');
     if (reduceMotionToggle) {
         reduceMotionToggle.addEventListener('click', () => {
+            if (!requireAdvancedSettingsAccess()) return;
             appState.reduceMotion = !appState.reduceMotion;
             updateReduceMotionToggle();
             applyReduceMotion();
@@ -25776,9 +25888,21 @@ function init() {
     const highContrastToggle = document.getElementById('high-contrast-toggle');
     if (highContrastToggle) {
         highContrastToggle.addEventListener('click', () => {
+            if (!requireAdvancedSettingsAccess()) return;
             appState.highContrast = !appState.highContrast;
             updateHighContrastToggle();
             applyHighContrast();
+            saveToLocalStorage();
+        });
+    }
+
+    const buttonAnimationsToggle = document.getElementById('button-animations-toggle');
+    if (buttonAnimationsToggle) {
+        buttonAnimationsToggle.addEventListener('click', () => {
+            if (!requireAdvancedSettingsAccess()) return;
+            appState.buttonAnimations = !appState.buttonAnimations;
+            updateButtonAnimationsToggle();
+            applyButtonAnimationsSetting();
             saveToLocalStorage();
         });
     }
@@ -25967,6 +26091,10 @@ function init() {
     if (themeSelect) {
         themeSelect.value = appState.theme;
         themeSelect.addEventListener('change', (e) => {
+            if (!requireAdvancedSettingsAccess()) {
+                themeSelect.value = appState.theme;
+                return;
+            }
             appState.theme = e.target.value;
             applyTheme();
             saveToLocalStorage();
@@ -25977,6 +26105,10 @@ function init() {
     if (accentSelect) {
         accentSelect.value = appState.accent;
         accentSelect.addEventListener('change', (e) => {
+            if (!requireAdvancedSettingsAccess()) {
+                accentSelect.value = appState.accent;
+                return;
+            }
             const nextAccent = e.target.value;
             appState.accent = ACCENT_OPTIONS.includes(nextAccent) ? nextAccent : 'indigo';
             applyAccent();
@@ -25988,8 +26120,42 @@ function init() {
     if (weeklyGoalSelect) {
         weeklyGoalSelect.value = String(appState.weeklyGoal || 5);
         weeklyGoalSelect.addEventListener('change', (e) => {
+            if (!requireAdvancedSettingsAccess()) {
+                weeklyGoalSelect.value = String(appState.weeklyGoal || 5);
+                return;
+            }
             appState.weeklyGoal = Number(e.target.value) || 5;
             renderInsights();
+            saveToLocalStorage();
+        });
+    }
+
+    const flashcardSessionSelect = document.getElementById('flashcard-session-select');
+    if (flashcardSessionSelect) {
+        flashcardSessionSelect.value = String(getValidatedFlashcardSessionLength(appState.flashcardSessionLength));
+        flashcardSessionSelect.addEventListener('change', (e) => {
+            if (!requireAdvancedSettingsAccess()) {
+                flashcardSessionSelect.value = String(getValidatedFlashcardSessionLength(appState.flashcardSessionLength));
+                return;
+            }
+            appState.flashcardSessionLength = getValidatedFlashcardSessionLength(e.target.value);
+            flashcardSessionSelect.value = String(appState.flashcardSessionLength);
+            refreshFlashcardSession(appState.selectedFlashcardModule, { persist: false });
+            saveToLocalStorage();
+        });
+    }
+
+    const codePreviewLinesSelect = document.getElementById('code-preview-lines-select');
+    if (codePreviewLinesSelect) {
+        codePreviewLinesSelect.value = String(getValidatedModuleCodePreviewLines(appState.moduleCodePreviewLines));
+        codePreviewLinesSelect.addEventListener('change', (e) => {
+            if (!requireAdvancedSettingsAccess()) {
+                codePreviewLinesSelect.value = String(getValidatedModuleCodePreviewLines(appState.moduleCodePreviewLines));
+                return;
+            }
+            appState.moduleCodePreviewLines = getValidatedModuleCodePreviewLines(e.target.value);
+            codePreviewLinesSelect.value = String(appState.moduleCodePreviewLines);
+            renderModules();
             saveToLocalStorage();
         });
     }
@@ -26012,6 +26178,10 @@ function init() {
     if (fontScaleSelect) {
         fontScaleSelect.value = appState.fontScale;
         fontScaleSelect.addEventListener('change', (e) => {
+            if (!requireAdvancedSettingsAccess()) {
+                fontScaleSelect.value = appState.fontScale;
+                return;
+            }
             appState.fontScale = e.target.value;
             applyFontScale();
             saveToLocalStorage();
@@ -26022,6 +26192,10 @@ function init() {
     if (cardDepthSelect) {
         cardDepthSelect.value = appState.cardDepth;
         cardDepthSelect.addEventListener('change', (e) => {
+            if (!requireAdvancedSettingsAccess()) {
+                cardDepthSelect.value = appState.cardDepth;
+                return;
+            }
             const nextDepth = e.target.value;
             appState.cardDepth = CARD_DEPTH_OPTIONS.includes(nextDepth) ? nextDepth : 'standard';
             applyCardDepth();
@@ -26034,6 +26208,7 @@ function init() {
     initSectionCollapsibles();
     initRouteNavigation();
     initSocialButtonAnimations();
+    updateSettingsCustomizationAccessState();
 
     // Language toggle buttons
     const langEnBtn = document.getElementById('lang-en-btn');
