@@ -289,15 +289,33 @@
                     <div>
                         <p class="text-[11px] uppercase tracking-wide font-semibold text-indigo-200">Main CTA</p>
                         <h3 class="mt-1 text-lg sm:text-xl font-semibold text-indigo-100">Ready to begin your path?</h3>
+                        <p id="home-plan-summary" class="mt-1 text-xs sm:text-sm text-slate-300">Answer 3 quick questions to personalize pacing.</p>
                     </div>
-                    <button
-                        id="start-learning-btn"
-                        type="button"
-                        onclick="startLearningJourney()"
-                        class="px-5 py-2.5 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200">
-                        Start Learning
-                    </button>
+                    <div class="route-launchpad-actions">
+                        <button
+                            id="start-learning-btn"
+                            type="button"
+                            onclick="startLearningJourney()"
+                            class="route-launchpad-btn">
+                            Start Learning
+                        </button>
+                        <button
+                            id="continue-learning-btn"
+                            type="button"
+                            onclick="continueLearningJourney()"
+                            class="route-launchpad-btn">
+                            Continue Learning
+                        </button>
+                        <button
+                            id="personalize-plan-btn"
+                            type="button"
+                            onclick="openStudyPlanModal()"
+                            class="route-launchpad-btn">
+                            Personalize Plan
+                        </button>
+                    </div>
                 </div>
+                <p id="continue-learning-hint" class="mt-3 text-xs sm:text-sm text-slate-300">Next up suggestions appear here as you complete modules.</p>
             </div>
 
             <div class="mt-4">

@@ -2940,6 +2940,7 @@ function renderRoute(route, options = {}) {
     applyHomeLayoutOrder(normalizedRoute);
     renderRouteOverview(normalizedRoute);
     renderRouteLaunchpad(normalizedRoute);
+    updateHomeLearningActions();
     syncSidebarActiveLink(normalizedRoute);
     renderSectionCollapsibles();
 
@@ -3000,8 +3001,126 @@ function navigateToRoute(route, options = {}) {
 }
 
 function startLearningJourney() {
-    const targetRoute = '/tracks';
-    navigateToRoute(targetRoute, { focusMain: true });
+    const planSummary = getStudyPlanSummary();
+    if (planSummary.status !== 'active') {
+        openStudyPlanModal();
+        showToast(translateLiteral('Set up your study plan first so we can guide your start.', appState.language), 'info');
+        return;
+    }
+    continueLearningJourney();
+}
+
+function getNextRecommendedModule() {
+    const orderedModules = getOrderedModules();
+    if (!orderedModules.length) {
+        return { module: null, allCompleted: false };
+    }
+
+    const nextUncompleted = orderedModules.find((module) => !appState.completedModules.has(module.id));
+    if (nextUncompleted) {
+        return { module: nextUncompleted, allCompleted: false };
+    }
+
+    return {
+        module: orderedModules[orderedModules.length - 1],
+        allCompleted: true
+    };
+}
+
+function continueLearningJourney() {
+    const recommendation = getNextRecommendedModule();
+    const targetModule = recommendation.module;
+    if (!targetModule) {
+        navigateToRoute('/tracks', { focusMain: true });
+        return;
+    }
+
+    const moduleCategory = getModuleCategoryKey(targetModule.id);
+    if (VALID_CATEGORY_FILTERS.has(moduleCategory)) {
+        appState.categoryFilter = moduleCategory;
+    }
+    appState.difficultyFilter = 'all';
+    appState.hideCompletedModules = false;
+    appState.searchTerm = '';
+    appState.modulesPage = 1;
+
+    const searchInput = document.getElementById('search-input');
+    const difficultySelect = document.getElementById('difficulty-filter');
+    if (searchInput) searchInput.value = '';
+    if (difficultySelect) difficultySelect.value = 'all';
+
+    updateHideCompletedToggle();
+    updateTopicFocusButtons();
+    renderModules();
+    saveToLocalStorage();
+
+    const targetRoute = getRouteForCategoryFilter(moduleCategory);
+    if (targetRoute !== appState.currentRoute) {
+        navigateToRoute(targetRoute, {
+            preserveScroll: true,
+            focusMain: false,
+            skipModuleRender: true
+        });
+    }
+
+    const modulesGrid = document.getElementById('modules-grid');
+    if (modulesGrid) {
+        modulesGrid.scrollIntoView({ behavior: appState.reduceMotion ? 'auto' : 'smooth', block: 'start' });
+    }
+
+    setTimeout(() => focusModule(targetModule.id), appState.reduceMotion ? 30 : 220);
+
+    if (recommendation.allCompleted) {
+        showToast(translateLiteral('All modules complete. Reviewing your latest module.', appState.language), 'success');
+        return;
+    }
+    showToast(translateLiteral(`Continuing with ${targetModule.title}`, appState.language), 'info');
+}
+
+function updateHomeLearningActions() {
+    const continueButton = document.getElementById('continue-learning-btn');
+    const hintElement = document.getElementById('continue-learning-hint');
+    const planSummaryElement = document.getElementById('home-plan-summary');
+    const startButton = document.getElementById('start-learning-btn');
+    if (!continueButton && !hintElement && !planSummaryElement && !startButton) return;
+
+    const planSummary = getStudyPlanSummary();
+    if (planSummaryElement) {
+        planSummaryElement.textContent = planSummary.status === 'active'
+            ? `${planSummary.label}  -  ${planSummary.note}`
+            : planSummary.note;
+    }
+
+    const recommendation = getNextRecommendedModule();
+    const targetModule = recommendation.module;
+    if (!targetModule) {
+        if (hintElement) {
+            hintElement.textContent = translateLiteral('No modules found yet. Start with Course Tracks.', appState.language);
+        }
+        if (continueButton) {
+            continueButton.disabled = true;
+            continueButton.textContent = translateLiteral('Continue Learning', appState.language);
+        }
+        return;
+    }
+
+    const trackTitle = getModuleTrackTitle(getModuleCategoryKey(targetModule.id));
+    if (hintElement) {
+        hintElement.textContent = recommendation.allCompleted
+            ? translateLiteral(`All modules complete. Review: ${targetModule.title} (${trackTitle}).`, appState.language)
+            : translateLiteral(`Next up: ${targetModule.title} (${trackTitle}).`, appState.language);
+    }
+    if (continueButton) {
+        continueButton.disabled = false;
+        continueButton.textContent = recommendation.allCompleted
+            ? translateLiteral('Review Last Module', appState.language)
+            : translateLiteral('Continue Learning', appState.language);
+    }
+    if (startButton) {
+        startButton.textContent = planSummary.status === 'active'
+            ? translateLiteral('Resume Path', appState.language)
+            : translateLiteral('Start Learning', appState.language);
+    }
 }
 
 function startGuidedPath(pathKey) {
@@ -17443,6 +17562,7 @@ function initStudyPlan() {
             }
 
             renderInsights();
+            updateHomeLearningActions();
             closeStudyPlanModal();
             if (hasAuthenticatedInsightsAccess()) {
                 showToast('Study plan saved!', 'success');
@@ -23629,6 +23749,7 @@ function renderModules() {
 
     renderEnhancedSearchInsights(filteredModules);
     renderInsights();
+    updateHomeLearningActions();
     updatePageJumpButton();
     queueMotionEnhancements();
 }
