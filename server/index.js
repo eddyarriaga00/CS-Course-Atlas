@@ -65,7 +65,19 @@ const SESSION_COOKIE_SECURE = parseCookieSecureMode(process.env.SESSION_COOKIE_S
 const REQUIRE_JSON_MUTATIONS = parseBooleanEnv(process.env.REQUIRE_JSON_MUTATIONS, true);
 const ENFORCE_FETCH_METADATA = parseBooleanEnv(process.env.ENFORCE_FETCH_METADATA, true);
 const ALLOWED_HOSTS = parseAllowlist(process.env.ALLOWED_HOSTS);
-const ALLOWED_ORIGINS = parseOriginAllowlist(process.env.ALLOWED_ORIGINS);
+const ALLOWED_ORIGINS = (() => {
+    const configuredOrigins = parseOriginAllowlist(process.env.ALLOWED_ORIGINS);
+    // Keep first-party public frontends trusted even if dashboard env drift occurs.
+    [
+        'https://eddyarriaga00.github.io',
+        'https://cscourseatlas.com',
+        'https://www.cscourseatlas.com'
+    ]
+        .map((origin) => normalizeOriginHeader(origin))
+        .filter(Boolean)
+        .forEach((origin) => configuredOrigins.add(origin));
+    return configuredOrigins;
+})();
 const EMAIL_PIN_EXPIRY_MINUTES = readPositiveInteger(process.env.EMAIL_PIN_EXPIRY_MINUTES, 10);
 const EMAIL_PIN_MAX_ATTEMPTS = readPositiveInteger(process.env.EMAIL_PIN_MAX_ATTEMPTS, 5);
 const EMAIL_PIN_PEPPER = String(process.env.EMAIL_PIN_PEPPER || '');
