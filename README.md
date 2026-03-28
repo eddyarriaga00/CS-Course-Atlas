@@ -19,8 +19,8 @@ This runs the static site exactly like GitHub Pages behavior.
 git clone https://github.com/eddyarriaga00/CS-Course-Atlas.git
 cd CS-Course-Atlas
 npm install
-npm run build:css
-py -m http.server 4173
+npm run build:site
+py -m http.server --directory dist 4173
 ```
 
 Open: `http://127.0.0.1:4173/index.html`
@@ -74,22 +74,22 @@ Set `DATABASE_URL` in `.env` before `npm start`.
 - `db:doctor` reports missing tables:
 Run `npm run db:migrate` on the same environment/branch, then re-run `npm run db:doctor`.
 - Styling looks outdated:
-Run `npm run build:css` after CSS/Tailwind changes.
+Run `npm run build:site` after CSS/Tailwind changes so `dist/` is refreshed.
 - Auth not working on static preview:
 Use full-stack mode (`npm start`), not `py -m http.server`.
 
 ### 4) Build SEO pages (recommended before launch)
-This generates crawlable route pages, module pages, `sitemap.xml`, and `robots.txt`.
+This generates a complete static artifact under `dist/`, including crawlable route pages, module pages, `sitemap.xml`, and `robots.txt`.
 
 ```bash
-npm run build:seo
+npm run build:site
 ```
 
 Generated outputs:
-- `home.html`, `tracks.html`, `dsa.html`, `java.html`, `git.html`, `assembly.html`, `discrete-math.html`, `flashcards.html`, `quizzes.html`, `playground.html`, `notes.html`, `support.html`, `about.html`
-- `modules/index.html` and one page per module under `modules/`
-- `sitemap.xml`
-- `robots.txt`
+- `dist/home.html`, `dist/tracks.html`, `dist/dsa.html`, `dist/java.html`, `dist/git.html`, `dist/assembly.html`, `dist/discrete-math.html`, `dist/flashcards.html`, `dist/quizzes.html`, `dist/playground.html`, `dist/notes.html`, `dist/support.html`, `dist/about.html`
+- `dist/modules/index.html` and one page per module under `dist/modules/`
+- `dist/sitemap.xml`
+- `dist/robots.txt`
 
 ## Overview
 CS Course Atlas helps learners study through structured modules, code examples, quizzes, flashcards, glossary tools, and notes in one place.
@@ -108,7 +108,7 @@ CS Course Atlas helps learners study through structured modules, code examples, 
 
 ## Launch SEO Checklist
 - Set `GOOGLE_SITE_VERIFICATION_TOKEN` (optional) before building SEO pages:
-  - PowerShell: `$env:GOOGLE_SITE_VERIFICATION_TOKEN='your-token'; npm run build:seo`
+  - PowerShell: `$env:GOOGLE_SITE_VERIFICATION_TOKEN='your-token'; npm run build:site`
   - If omitted, verification meta tags are not emitted.
 - Confirm `sitemap.xml` is reachable on production.
 - In Google Search Console:
@@ -120,7 +120,7 @@ CS Course Atlas helps learners study through structured modules, code examples, 
 ## Local Development Notes
 - Public-site checks: use static preview mode from the Quick Guide.
 - API/auth checks: use full-stack mode from the Quick Guide.
-- Build CSS after visual changes: `npm run build:css`.
+- Build the deployable static artifact: `npm run build:site`.
 
 ## Tech Stack
 - HTML
@@ -132,7 +132,8 @@ CS Course Atlas helps learners study through structured modules, code examples, 
 ## Project Layout
 - `index.html` stays at project root as the primary app entrypoint.
 - `js/runtime/` contains shared frontend runtime helpers (base-path resolution and lazy asset loading).
-- `modules/` contains crawlable per-module pages.
+- `dist/` is the generated static artifact used for local static preview and GitHub Pages deploy.
+- `dist/modules/` contains generated crawlable per-module pages after running `npm run build:site`.
 - `server/` contains backend API/auth/SQL code.
 - `scripts/` contains build/verification/diagnostic scripts.
 - `docs/` contains project documentation and reports:

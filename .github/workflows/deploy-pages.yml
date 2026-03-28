@@ -25,34 +25,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
 
       - name: Build static artifact
         run: |
-          rm -rf _site
-          mkdir -p _site
-          rsync -av --delete \
-            --exclude '.git' \
-            --exclude '.github' \
-            --exclude 'node_modules' \
-            --exclude '.playwright-cli' \
-            --exclude 'output' \
-            --exclude 'backups' \
-            --exclude 'docs' \
-            --exclude 'server' \
-            --exclude 'scripts' \
-            --exclude 'package.json' \
-            --exclude 'package-lock.json' \
-            --exclude '.env' \
-            ./ _site/
-          cp _site/index.html _site/404.html
-          touch _site/.nojekyll
+          npm run build:site
+          cp dist/index.html dist/404.html
+          touch dist/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: _site
+          path: dist
 
       - name: Deploy
         id: deployment

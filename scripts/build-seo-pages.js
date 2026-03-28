@@ -2,10 +2,31 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = process.cwd();
+const DEFAULT_OUTPUT_DIR = 'dist';
+const OUTPUT_DIR = path.resolve(ROOT, process.env.BUILD_OUT_DIR || DEFAULT_OUTPUT_DIR);
 const SITE_URL = 'https://eddyarriaga00.github.io/CS-Course-Atlas';
 const SOURCE_JS = path.join(ROOT, 'js', 'script.js');
-const MODULES_DIR = path.join(ROOT, 'modules');
+const MODULES_DIR = path.join(OUTPUT_DIR, 'modules');
 const GOOGLE_SITE_VERIFICATION_TOKEN = String(process.env.GOOGLE_SITE_VERIFICATION_TOKEN || '').trim();
+const STATIC_COPY_EXCLUDES = new Set([
+    '.git',
+    '.github',
+    '.gitignore',
+    '.playwright-cli',
+    'backups',
+    'CHANGELOG.md',
+    'dist',
+    'docs',
+    'node_modules',
+    'output',
+    'package-lock.json',
+    'package.json',
+    'README.md',
+    'render.yaml',
+    'scripts',
+    'server',
+    'tailwind.config.cjs'
+]);
 
 const CATEGORY_ROUTE_MAP = {
     dsa: '/dsa',
@@ -142,6 +163,49 @@ const ROUTE_PAGES = [
         moduleCategory: 'all'
     }
 ];
+
+const GENERATED_ROOT_FILENAMES = new Set([
+    ...ROUTE_PAGES.map((page) => page.filename),
+    'robots.txt',
+    'sitemap.html',
+    'sitemap.xml',
+    'sitemap.xsl'
+]);
+
+function isSamePath(left, right) {
+    return path.resolve(left) === path.resolve(right);
+}
+
+function prepareOutputDirectory() {
+    if (isSamePath(OUTPUT_DIR, ROOT)) return;
+    fs.rmSync(OUTPUT_DIR, { recursive: true, force: true });
+    fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+}
+
+function copyStaticSourceFiles() {
+    if (isSamePath(OUTPUT_DIR, ROOT)) return;
+    const entries = fs.readdirSync(ROOT, { withFileTypes: true });
+    entries.forEach((entry) => {
+        const name = entry.name;
+        if (STATIC_COPY_EXCLUDES.has(name)) return;
+        if (name === 'modules') return;
+        if (entry.isFile() && GENERATED_ROOT_FILENAMES.has(name)) return;
+
+        const sourcePath = path.join(ROOT, name);
+        if (isSamePath(sourcePath, OUTPUT_DIR)) return;
+        const destinationPath = path.join(OUTPUT_DIR, name);
+
+        if (entry.isDirectory()) {
+            fs.cpSync(sourcePath, destinationPath, { recursive: true });
+            return;
+        }
+
+        if (entry.isFile()) {
+            fs.mkdirSync(path.dirname(destinationPath), { recursive: true });
+            fs.copyFileSync(sourcePath, destinationPath);
+        }
+    });
+}
 
 function escapeHtml(value) {
     return String(value || '')
@@ -1142,6 +1206,9 @@ Sitemap: ${toAbsolute('/sitemap.xml')}
 }
 
 function main() {
+    prepareOutputDirectory();
+    copyStaticSourceFiles();
+
     const source = fs.readFileSync(SOURCE_JS, 'utf8');
     const categoryMap = parseModuleCategoryMap(source);
     const sequence = parseModuleSequence(source);
@@ -1175,7 +1242,7 @@ function main() {
 
     ROUTE_PAGES.forEach((routeConfig) => {
         const html = routePageHtml(routeConfig, modules);
-        writeFile(path.join(ROOT, routeConfig.filename), html);
+        writeFile(path.join(OUTPUT_DIR, routeConfig.filename), html);
     });
 
     writeFile(path.join(MODULES_DIR, 'index.html'), moduleIndexHtml(grouped));
@@ -1185,12 +1252,14 @@ function main() {
     });
 
     const sitemapEntries = buildSitemapEntries(ROUTE_PAGES, modules);
-    writeFile(path.join(ROOT, 'sitemap.html'), sitemapPageHtml(sitemapEntries));
-    writeFile(path.join(ROOT, 'sitemap.xml'), generateSitemap(sitemapEntries));
-    writeFile(path.join(ROOT, 'sitemap.xsl'), generateSitemapXsl());
-    writeFile(path.join(ROOT, 'robots.txt'), generateRobots());
+    writeFile(path.join(OUTPUT_DIR, 'sitemap.html'), sitemapPageHtml(sitemapEntries));
+    writeFile(path.join(OUTPUT_DIR, 'sitemap.xml'), generateSitemap(sitemapEntries));
+    writeFile(path.join(OUTPUT_DIR, 'sitemap.xsl'), generateSitemapXsl());
+    writeFile(path.join(OUTPUT_DIR, 'robots.txt'), generateRobots());
 
-    console.log(`Generated ${ROUTE_PAGES.length} route pages, ${modules.length} module pages, and sitemap assets.`);
+    console.log(
+        `Generated ${ROUTE_PAGES.length} route pages, ${modules.length} module pages, and sitemap assets in ${OUTPUT_DIR}.`
+    );
 }
 
 main();
