@@ -1567,6 +1567,13 @@
                         <p id="account-auth-flow-subtitle" class="text-xs text-slate-300">Use a provider or continue with your email/username and password.</p>
                     </div>
 
+                    <div id="account-auth-signed-in-note" class="account-auth-signed-in-note hidden" role="status" aria-live="polite">
+                        <p class="account-auth-signed-in-kicker">Signed In</p>
+                        <p id="account-auth-signed-in-user" class="account-auth-signed-in-user">Session active</p>
+                        <p class="account-auth-signed-in-copy">Use the profile card below for edits and secure account actions.</p>
+                    </div>
+
+                    <div id="account-auth-interactive-fields" class="space-y-4">
                     <div class="account-auth-tabs grid grid-cols-2 gap-2 p-1 rounded-xl bg-slate-800/80 border border-white/10">
                         <button id="account-auth-login-tab" type="button" class="account-auth-tab px-4 py-2 rounded-lg text-sm font-semibold bg-violet-500 text-white transition-colors duration-200">Log In</button>
                         <button id="account-auth-signup-tab" type="button" class="account-auth-tab px-4 py-2 rounded-lg text-sm font-semibold bg-transparent text-slate-300 hover:text-white transition-colors duration-200">Sign Up</button>
@@ -1635,11 +1642,12 @@
                         </label>
                         <button id="account-auth-forgot" type="button" class="account-auth-forgot-btn">Forgot password?</button>
                     </div>
+                    </div>
 
                     <button id="account-auth-submit" type="button" class="account-primary-btn w-full bg-violet-500 hover:bg-violet-600 text-white py-2.5 rounded-xl font-medium">Log In</button>
 
                     <p id="account-auth-legal" class="account-auth-legal hidden">By creating an account, you agree to the Terms and Privacy Policy.</p>
-                    <p class="account-auth-switch text-xs text-slate-300">
+                    <p id="account-auth-switch-row" class="account-auth-switch text-xs text-slate-300">
                         <span id="account-auth-switch-copy">Need an account?</span>
                         <button id="account-auth-switch-mode" type="button" class="account-auth-switch-btn">Sign Up</button>
                     </p>
@@ -1651,18 +1659,48 @@
                     <div class="account-profile-header">
                         <div class="account-profile-header-main">
                             <h4 class="text-base font-semibold text-indigo-300">Profile Settings</h4>
-                            <p class="account-profile-header-subtitle text-xs text-slate-300">Update username, password, and verified email securely.</p>
+                            <p class="account-profile-header-subtitle text-xs text-slate-300">Profile summary first, secure edits only when needed.</p>
                         </div>
                         <div class="account-profile-header-actions">
                             <span id="account-sync-status" class="text-xs font-semibold px-2.5 py-1 rounded-full border bg-slate-800 border-white/10 text-slate-200">idle</span>
                             <button id="account-profile-toggle" type="button" class="account-profile-toggle-btn" aria-expanded="false" aria-controls="account-profile-content">
-                                <span id="account-profile-toggle-label">Expand</span>
+                                <span id="account-profile-toggle-label">Manage</span>
                             </button>
                         </div>
                     </div>
 
+                    <div id="account-profile-summary" class="account-profile-summary">
+                        <div class="account-profile-summary-head">
+                            <span id="account-profile-avatar" class="account-profile-avatar" aria-hidden="true">GL</span>
+                            <div class="account-profile-identity">
+                                <p id="account-profile-display-name" class="account-profile-display-name">Guest Learner</p>
+                                <p id="account-profile-display-email" class="account-profile-display-email">Sign in to sync profile and progress.</p>
+                            </div>
+                        </div>
+                        <div class="account-profile-summary-grid">
+                            <div class="account-profile-summary-item">
+                                <span class="account-profile-summary-label">Goal</span>
+                                <strong id="account-profile-goal-display" class="account-profile-summary-value">Exploring</strong>
+                            </div>
+                            <div class="account-profile-summary-item">
+                                <span class="account-profile-summary-label">Session</span>
+                                <strong id="account-profile-session-display" class="account-profile-summary-value">Guest</strong>
+                            </div>
+                            <div class="account-profile-summary-item account-profile-summary-item-wide">
+                                <span class="account-profile-summary-label">Sync</span>
+                                <strong id="account-profile-sync-display" class="account-profile-summary-value">Sync idle.</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="account-profile-actions" role="group" aria-label="Profile panels">
+                        <button id="account-profile-open-profile" type="button" class="account-profile-action-btn is-active" data-account-panel-target="profile" aria-pressed="true">Edit Profile</button>
+                        <button id="account-profile-open-security" type="button" class="account-profile-action-btn" data-account-panel-target="security" aria-pressed="false">Security</button>
+                        <button id="account-profile-open-danger" type="button" class="account-profile-action-btn account-profile-action-btn-danger" data-account-panel-target="danger" aria-pressed="false">Danger Zone</button>
+                    </div>
+
                     <div id="account-profile-content" class="account-profile-content hidden">
-                        <div class="account-profile-section space-y-3">
+                        <div class="account-profile-section space-y-3" data-account-panel="profile">
                             <div>
                                 <label for="account-username" class="font-semibold text-sm mb-1 block text-slate-200">Username</label>
                                 <input type="text" id="account-username" autocomplete="nickname" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Set your public username">
@@ -1679,7 +1717,7 @@
                             <button id="save-account" type="button" class="account-primary-btn w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2.5 rounded-xl font-medium">Save Username &amp; Goal</button>
                         </div>
 
-                        <div class="account-profile-section account-profile-security-section space-y-3">
+                        <div class="account-profile-section account-profile-security-section space-y-3" data-account-panel="security">
                             <div>
                                 <h5 class="text-sm font-semibold text-indigo-200">Secure Email Update</h5>
                                 <p class="text-xs text-slate-300 mt-1">Email changes require a 6-digit PIN sent to your new email.</p>
@@ -1701,7 +1739,7 @@
                             <p id="account-email-pin-status" class="text-xs text-slate-300">Request a PIN to verify your new email.</p>
                         </div>
 
-                        <div class="account-profile-section account-profile-security-section space-y-3">
+                        <div class="account-profile-section account-profile-security-section space-y-3" data-account-panel="security">
                             <div>
                                 <h5 class="text-sm font-semibold text-indigo-200">Change Password</h5>
                                 <p class="text-xs text-slate-300 mt-1">Use your current password to set a new one.</p>
@@ -1724,7 +1762,7 @@
                             <p id="account-password-status" class="text-xs text-slate-300">Password updates require an active session.</p>
                         </div>
 
-                        <div class="account-profile-section account-profile-danger-section space-y-3">
+                        <div class="account-profile-section account-profile-danger-section space-y-3" data-account-panel="danger">
                             <div>
                                 <h5 class="text-sm font-semibold text-rose-200">Delete Account</h5>
                                 <p class="text-xs text-slate-300 mt-1">This permanently removes your profile, sessions, and saved progress. This cannot be undone.</p>

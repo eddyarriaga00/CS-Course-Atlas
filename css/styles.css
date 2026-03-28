@@ -4295,6 +4295,42 @@ body.dark .settings-modal-footer {
     margin-bottom: 0.15rem;
 }
 
+#account-modal.account-user-authenticated .account-auth-card {
+    border-color: rgba(16, 185, 129, 0.35);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 12px 26px rgba(5, 150, 105, 0.2);
+}
+
+#account-modal .account-auth-signed-in-note {
+    border: 1px solid rgba(16, 185, 129, 0.38);
+    border-radius: 0.9rem;
+    padding: 0.72rem 0.8rem;
+    background: linear-gradient(135deg, rgba(6, 95, 70, 0.26), rgba(15, 23, 42, 0.82));
+    display: grid;
+    gap: 0.24rem;
+}
+
+#account-modal .account-auth-signed-in-kicker {
+    margin: 0;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #6ee7b7;
+    font-weight: 700;
+}
+
+#account-modal .account-auth-signed-in-user {
+    margin: 0;
+    font-size: 0.92rem;
+    color: #f8fafc;
+    font-weight: 700;
+}
+
+#account-modal .account-auth-signed-in-copy {
+    margin: 0;
+    font-size: 0.74rem;
+    color: #cbd5e1;
+}
+
 #account-modal .account-auth-social-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -4549,6 +4585,138 @@ body.dark .settings-modal-footer {
     align-items: center;
     gap: 0.45rem;
     flex-shrink: 0;
+}
+
+#account-modal .account-profile-summary {
+    border: 1px solid rgba(129, 140, 248, 0.22);
+    border-radius: 0.95rem;
+    background: linear-gradient(140deg, rgba(79, 70, 229, 0.18), rgba(15, 23, 42, 0.9));
+    padding: 0.8rem;
+    display: grid;
+    gap: 0.7rem;
+}
+
+#account-modal .account-profile-summary-head {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+#account-modal .account-profile-avatar {
+    width: 2.45rem;
+    height: 2.45rem;
+    border-radius: 999px;
+    border: 1px solid rgba(196, 181, 253, 0.58);
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.62), rgba(14, 116, 144, 0.58));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #eef2ff;
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+}
+
+#account-modal .account-profile-identity {
+    min-width: 0;
+    display: grid;
+    gap: 0.14rem;
+}
+
+#account-modal .account-profile-display-name {
+    margin: 0;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #f8fafc;
+    overflow-wrap: anywhere;
+}
+
+#account-modal .account-profile-display-email {
+    margin: 0;
+    font-size: 0.74rem;
+    color: #cbd5e1;
+    overflow-wrap: anywhere;
+}
+
+#account-modal .account-profile-summary-grid {
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+#account-modal .account-profile-summary-item {
+    border: 1px solid rgba(148, 163, 184, 0.26);
+    background: rgba(15, 23, 42, 0.58);
+    border-radius: 0.75rem;
+    padding: 0.48rem 0.55rem;
+    display: grid;
+    gap: 0.14rem;
+}
+
+#account-modal .account-profile-summary-item-wide {
+    grid-column: 1 / -1;
+}
+
+#account-modal .account-profile-summary-label {
+    font-size: 0.65rem;
+    color: #93c5fd;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    font-weight: 700;
+}
+
+#account-modal .account-profile-summary-value {
+    font-size: 0.77rem;
+    color: #f8fafc;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+#account-modal .account-profile-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.46rem;
+}
+
+#account-modal .account-profile-action-btn {
+    min-height: 2rem;
+    border: 1px solid rgba(129, 140, 248, 0.34);
+    border-radius: 0.7rem;
+    background: rgba(30, 41, 59, 0.68);
+    color: #e2e8f0;
+    font-size: 0.71rem;
+    font-weight: 700;
+    padding: 0.34rem 0.5rem;
+    transition: transform 0.18s ease, border-color 0.18s ease, background-color 0.18s ease, opacity 0.18s ease;
+}
+
+#account-modal .account-profile-action-btn:hover {
+    transform: translateY(-1px);
+    border-color: rgba(129, 140, 248, 0.6);
+    background: rgba(79, 70, 229, 0.26);
+}
+
+#account-modal .account-profile-action-btn.is-active {
+    border-color: rgba(52, 211, 153, 0.62);
+    background: rgba(16, 185, 129, 0.24);
+    color: #d1fae5;
+}
+
+#account-modal .account-profile-action-btn.account-profile-action-btn-danger {
+    border-color: rgba(251, 113, 133, 0.52);
+}
+
+#account-modal .account-profile-action-btn.account-profile-action-btn-danger.is-active {
+    border-color: rgba(251, 113, 133, 0.72);
+    background: rgba(190, 24, 93, 0.3);
+    color: #ffe4e6;
+}
+
+#account-modal .account-profile-action-btn.is-disabled {
+    opacity: 0.52;
+    cursor: not-allowed;
+    transform: none;
 }
 
 #account-modal .account-profile-toggle-btn {
@@ -7069,6 +7237,14 @@ body.dark:not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-min
     #account-modal .account-profile-header-actions {
         width: 100%;
         justify-content: space-between;
+    }
+
+    #account-modal .account-profile-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    #account-modal .account-profile-actions {
+        grid-template-columns: 1fr;
     }
 
     #account-modal .account-profile-toggle-btn {
