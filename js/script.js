@@ -21770,27 +21770,6 @@ function filterModules() {
 }
 
 function ensureEnhancedVisualContainers() {
-    const searchSection = document.getElementById('search-section');
-    if (searchSection && !document.getElementById('smart-search-lab')) {
-        const panel = document.createElement('div');
-        panel.id = 'smart-search-lab';
-        panel.className = 'smart-search-lab mt-4';
-        panel.innerHTML = `
-            <div class="smart-search-lab-head">
-                <p class="smart-search-lab-kicker">Smart search diagnostics</p>
-                <p id="smart-search-meta" class="smart-search-lab-meta">Loading search diagnostics...</p>
-            </div>
-            <canvas id="smart-search-chart" height="120" aria-label="Search distribution chart" role="img"></canvas>
-            <div id="smart-search-topics" class="smart-search-topics"></div>
-        `;
-        const searchCount = document.getElementById('search-results-count');
-        if (searchCount && searchCount.parentElement === searchSection) {
-            searchCount.insertAdjacentElement('afterend', panel);
-        } else {
-            searchSection.appendChild(panel);
-        }
-    }
-
     const insightsGrid = document.querySelector('#insights-section .insight-cards-grid');
     if (insightsGrid && !document.getElementById('insight-visual-lab')) {
         const card = document.createElement('article');
