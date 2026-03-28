@@ -150,10 +150,23 @@ const MOTION_ENHANCEMENT_SELECTORS = Object.freeze([
     '.footer-link'
 ]);
 
+const SOCIAL_BUTTON_ANIMATION_SELECTOR = [
+    '.prompt-submit',
+    '#account-modal .account-auth-provider-btn',
+    '.route-launchpad-btn',
+    '.route-launchpad-link',
+    '.site-footer-quick-action',
+    '#main-footer.site-footer .footer-link',
+    '.site-footer-donate-btn',
+    '.mobile-footer-pages-link',
+    '#sidebar-toggle'
+].join(', ');
+
 let motionEnhancementObserver = null;
 let motionEnhancementRafId = 0;
 let scrollUpdateRafId = 0;
 let pendingScrollY = 0;
+const socialTapAnimationTimers = new WeakMap();
 
 const MOBILE_COMPACT_MEDIA_QUERY = '(max-width: 640px)';
 const AUTH_SESSION_REFRESH_COOLDOWN_MS = 1600;
@@ -3244,6 +3257,80 @@ function applyInitialModuleDeepLink(moduleId) {
         focusModule(normalizedId);
     }, appState.reduceMotion ? 20 : 180);
     return true;
+}
+
+function getSocialAnimationButtonTarget(eventTarget) {
+    if (!(eventTarget instanceof Element)) return null;
+    const candidate = eventTarget.closest(SOCIAL_BUTTON_ANIMATION_SELECTOR);
+    if (!(candidate instanceof HTMLElement)) return null;
+    if (candidate.matches(':disabled, [aria-disabled="true"]')) return null;
+    return candidate;
+}
+
+function updateSocialButtonRippleOrigin(target, clientX, clientY) {
+    if (!(target instanceof HTMLElement)) return;
+    const rect = target.getBoundingClientRect();
+    const fallbackX = rect.width / 2;
+    const fallbackY = rect.height / 2;
+    const hasClientX = Number.isFinite(clientX);
+    const hasClientY = Number.isFinite(clientY);
+    const nextX = hasClientX ? Math.min(Math.max(clientX - rect.left, 0), rect.width) : fallbackX;
+    const nextY = hasClientY ? Math.min(Math.max(clientY - rect.top, 0), rect.height) : fallbackY;
+    target.style.setProperty('--social-ripple-x', `${Math.round(nextX)}px`);
+    target.style.setProperty('--social-ripple-y', `${Math.round(nextY)}px`);
+}
+
+function triggerSocialButtonTapAnimation(target, sourceEvent = null) {
+    if (!(target instanceof HTMLElement)) return;
+    if (document.body.classList.contains('reduce-motion')) return;
+    if (
+        typeof window.matchMedia === 'function'
+        && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+        return;
+    }
+
+    const hasCoordinates = sourceEvent
+        && Number.isFinite(sourceEvent.clientX)
+        && Number.isFinite(sourceEvent.clientY);
+    updateSocialButtonRippleOrigin(
+        target,
+        hasCoordinates ? sourceEvent.clientX : null,
+        hasCoordinates ? sourceEvent.clientY : null
+    );
+
+    target.classList.remove('is-social-tapping');
+    void target.offsetWidth;
+    target.classList.add('is-social-tapping');
+
+    const existingTimer = socialTapAnimationTimers.get(target);
+    if (existingTimer) {
+        window.clearTimeout(existingTimer);
+    }
+    const timerId = window.setTimeout(() => {
+        target.classList.remove('is-social-tapping');
+        socialTapAnimationTimers.delete(target);
+    }, 620);
+    socialTapAnimationTimers.set(target, timerId);
+}
+
+function initSocialButtonAnimations() {
+    if (document.body.dataset.boundSocialButtonAnimations === 'true') return;
+    document.body.dataset.boundSocialButtonAnimations = 'true';
+
+    document.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0) return;
+        const buttonTarget = getSocialAnimationButtonTarget(event.target);
+        if (!buttonTarget) return;
+        triggerSocialButtonTapAnimation(buttonTarget, event);
+    }, { passive: true });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key !== 'Enter' && event.key !== ' ') return;
+        const buttonTarget = getSocialAnimationButtonTarget(event.target);
+        if (!buttonTarget) return;
+        triggerSocialButtonTapAnimation(buttonTarget);
+    });
 }
 
 function initRouteNavigation() {
@@ -25911,6 +25998,7 @@ function init() {
     applyLanguage(appState.language);
     initSectionCollapsibles();
     initRouteNavigation();
+    initSocialButtonAnimations();
 
     // Language toggle buttons
     const langEnBtn = document.getElementById('lang-en-btn');

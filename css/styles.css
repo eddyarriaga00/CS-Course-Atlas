@@ -8500,6 +8500,191 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
     }
 }
 
+/* Social-style button micro-interactions (shine + ripple + tap-pop). */
+:where(
+    .prompt-submit,
+    #account-modal .account-auth-provider-btn,
+    .route-launchpad-btn,
+    .route-launchpad-link,
+    .site-footer-quick-action,
+    #main-footer.site-footer .footer-link,
+    .site-footer-donate-btn,
+    .mobile-footer-pages-link,
+    #sidebar-toggle
+) {
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    transform-origin: center center;
+    backface-visibility: hidden;
+    -webkit-tap-highlight-color: transparent;
+}
+
+:where(
+    .prompt-submit,
+    #account-modal .account-auth-provider-btn,
+    .route-launchpad-btn,
+    .route-launchpad-link,
+    .site-footer-quick-action,
+    #main-footer.site-footer .footer-link,
+    .site-footer-donate-btn,
+    .mobile-footer-pages-link,
+    #sidebar-toggle
+)::before {
+    content: '';
+    position: absolute;
+    inset: -145% auto -145% -78%;
+    width: 54%;
+    background: linear-gradient(
+        120deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.42) 48%,
+        rgba(255, 255, 255, 0) 100%
+    );
+    transform: translate3d(-150%, 0, 0) rotate(15deg);
+    opacity: 0;
+    pointer-events: none;
+}
+
+:where(
+    .prompt-submit,
+    #account-modal .account-auth-provider-btn,
+    .route-launchpad-btn,
+    .route-launchpad-link,
+    .site-footer-quick-action,
+    #main-footer.site-footer .footer-link,
+    .site-footer-donate-btn,
+    .mobile-footer-pages-link,
+    #sidebar-toggle
+)::after {
+    content: '';
+    position: absolute;
+    left: var(--social-ripple-x, 50%);
+    top: var(--social-ripple-y, 50%);
+    width: 164px;
+    height: 164px;
+    border-radius: 999px;
+    transform: translate(-50%, -50%) scale(0.2);
+    background: radial-gradient(
+        circle,
+        rgba(255, 255, 255, 0.42) 0%,
+        rgba(255, 255, 255, 0.18) 42%,
+        rgba(255, 255, 255, 0) 78%
+    );
+    opacity: 0;
+    pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    :where(
+        .prompt-submit,
+        #account-modal .account-auth-provider-btn,
+        .route-launchpad-btn,
+        .route-launchpad-link,
+        .site-footer-quick-action,
+        #main-footer.site-footer .footer-link,
+        .site-footer-donate-btn,
+        .mobile-footer-pages-link,
+        #sidebar-toggle
+    ):hover::before,
+    :where(
+        .prompt-submit,
+        #account-modal .account-auth-provider-btn,
+        .route-launchpad-btn,
+        .route-launchpad-link,
+        .site-footer-quick-action,
+        #main-footer.site-footer .footer-link,
+        .site-footer-donate-btn,
+        .mobile-footer-pages-link,
+        #sidebar-toggle
+    ):focus-visible::before {
+        opacity: 0.42;
+        transform: translate3d(230%, 0, 0) rotate(15deg);
+        transition: transform 540ms cubic-bezier(0.22, 0.61, 0.36, 1), opacity 160ms ease;
+    }
+}
+
+:where(
+    .prompt-submit,
+    #account-modal .account-auth-provider-btn,
+    .route-launchpad-btn,
+    .route-launchpad-link,
+    .site-footer-quick-action,
+    #main-footer.site-footer .footer-link,
+    .site-footer-donate-btn,
+    .mobile-footer-pages-link,
+    #sidebar-toggle
+).is-social-tapping {
+    animation: socialTapPop 360ms cubic-bezier(0.2, 0.72, 0.36, 1);
+}
+
+:where(
+    .prompt-submit,
+    #account-modal .account-auth-provider-btn,
+    .route-launchpad-btn,
+    .route-launchpad-link,
+    .site-footer-quick-action,
+    #main-footer.site-footer .footer-link,
+    .site-footer-donate-btn,
+    .mobile-footer-pages-link,
+    #sidebar-toggle
+).is-social-tapping::after {
+    animation: socialTapRipple 560ms cubic-bezier(0.2, 0.72, 0.36, 1);
+}
+
+@keyframes socialTapPop {
+    0% {
+        scale: 1;
+    }
+    26% {
+        scale: 0.95;
+    }
+    60% {
+        scale: 1.035;
+    }
+    100% {
+        scale: 1;
+    }
+}
+
+@keyframes socialTapRipple {
+    0% {
+        opacity: 0.62;
+        transform: translate(-50%, -50%) scale(0.22);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(1.45);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :where(
+        .prompt-submit,
+        #account-modal .account-auth-provider-btn,
+        .route-launchpad-btn,
+        .route-launchpad-link,
+        .site-footer-quick-action,
+        #main-footer.site-footer .footer-link,
+        .site-footer-donate-btn,
+        .mobile-footer-pages-link,
+        #sidebar-toggle
+    )::before,
+    :where(
+        .prompt-submit,
+        #account-modal .account-auth-provider-btn,
+        .route-launchpad-btn,
+        .route-launchpad-link,
+        .site-footer-quick-action,
+        #main-footer.site-footer .footer-link,
+        .site-footer-donate-btn,
+        .mobile-footer-pages-link,
+        #sidebar-toggle
+    )::after {
+        display: none;
+    }
+}
+
 .insight-visual-lab {
     overflow: hidden;
 }
