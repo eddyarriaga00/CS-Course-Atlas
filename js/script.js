@@ -16223,7 +16223,7 @@ async function handleOAuthResultFromUrl() {
                 retryDelayMs: 650,
                 force: true
             });
-            if (!session?.userId && !accountAuthState.isAuthenticated) {
+            if (!session?.isAuthenticated && !accountAuthState.isAuthenticated) {
                 // Mobile browsers can delay cross-site cookie availability briefly after OAuth return.
                 window.setTimeout(() => {
                     void refreshAuthSessionState({
@@ -16565,6 +16565,11 @@ function getSessionUserFromPayload(payload) {
 }
 
 function resolveSessionAuthenticatedFlag(payload, sessionUser = {}) {
+    const inferredFromSessionUser = Boolean(
+        sessionUser?.userId
+        || sessionUser?.userEmail
+        || sessionUser?.userUsername
+    );
     const explicitAuthFlagCandidates = [
         payload?.authenticated,
         payload?.isAuthenticated,
@@ -16577,13 +16582,9 @@ function resolveSessionAuthenticatedFlag(payload, sessionUser = {}) {
     ];
     const explicitAuthFlag = explicitAuthFlagCandidates.find((value) => typeof value === 'boolean');
     if (typeof explicitAuthFlag === 'boolean') {
-        return explicitAuthFlag;
+        return explicitAuthFlag || inferredFromSessionUser;
     }
-    return Boolean(
-        sessionUser?.userId
-        || sessionUser?.userEmail
-        || sessionUser?.userUsername
-    );
+    return inferredFromSessionUser;
 }
 
 function getNeonProfileEndpoint() {
@@ -16892,7 +16893,7 @@ async function ensureAuthenticatedAccountSession() {
         return false;
     }
     const session = await checkNeonSession({ silent: true });
-    if (!session?.userId || !accountAuthState.isAuthenticated) {
+    if (!session?.isAuthenticated || !accountAuthState.isAuthenticated) {
         showToast('Please log in before making secure account changes.', 'warning');
         return false;
     }
@@ -17199,12 +17200,13 @@ async function checkNeonSession(options = {}) {
         ).trim();
         const sessionUser = getSessionUserFromPayload(sessionPayload);
         const { userId, userEmail, userUsername } = sessionUser;
-        const userLabel = userUsername || userEmail || userId || accountProfile.serverUserId;
-        const resolvedUserId = userId || accountProfile.serverUserId;
+        const storedUserId = String(accountProfile.serverUserId || '').trim();
+        const userLabel = userUsername || userEmail || userId || storedUserId;
         const message = userLabel
             ? `Session active for ${userLabel}`
             : 'Session endpoint reachable.';
         const isAuthenticated = resolveSessionAuthenticatedFlag(sessionPayload, sessionUser);
+        const resolvedUserId = String(isAuthenticated ? (userId || storedUserId) : '').trim();
         if (isLatestSessionCheck()) {
             accountAuthState.isAuthenticated = isAuthenticated;
             accountAuthState.sessionLabel = userLabel;
@@ -17222,6 +17224,7 @@ async function checkNeonSession(options = {}) {
                 accountProfile.email = userEmail;
             }
             if (!isAuthenticated) {
+                accountProfile.serverUserId = '';
                 clearAuthScopedLocalStorage();
             }
             saveAccountProfile();
@@ -17235,7 +17238,7 @@ async function checkNeonSession(options = {}) {
             setAccountSyncState('connected', message);
             handleInsightsAccessStateChange();
         }
-        return { userId: resolvedUserId, userLabel };
+        return { userId: resolvedUserId, userLabel, isAuthenticated };
     } catch (error) {
         const reason = error instanceof Error ? error.message : String(error);
         const normalizedReason = reason.toLowerCase();
@@ -17245,6 +17248,12 @@ async function checkNeonSession(options = {}) {
             accountAuthState.isAuthenticated = false;
             accountAuthState.sessionLabel = '';
             clearAuthScopedLocalStorage();
+            if (isUnauthenticated) {
+                accountProfile.serverUserId = '';
+                saveAccountProfile();
+                applyAccountProfileToForm();
+                updateAccountChip();
+            }
             setAccountAuthStatus(t('auth.status.guest'), 'neutral');
             refreshAccountPrimaryAuthButton();
             setAccountSyncState(
@@ -17270,7 +17279,7 @@ async function checkNeonSessionWithRetry(options = {}) {
     let latestSession = null;
     for (let attempt = 0; attempt <= retries; attempt += 1) {
         latestSession = await checkNeonSession({ silent });
-        if (latestSession?.userId || accountAuthState.isAuthenticated) {
+        if (latestSession?.isAuthenticated || accountAuthState.isAuthenticated) {
             return latestSession;
         }
         if (attempt < retries) {
@@ -17302,7 +17311,7 @@ async function refreshAuthSessionState(options = {}) {
     lastAuthRefreshAt = Date.now();
     try {
         const session = await checkNeonSessionWithRetry({ silent, retries, retryDelayMs });
-        if ((session?.userId || accountAuthState.isAuthenticated) && PROFILE_SYNC_CONFIG.enabled) {
+        if ((session?.isAuthenticated || accountAuthState.isAuthenticated) && PROFILE_SYNC_CONFIG.enabled) {
             await pullProfileFromNeon({ silent: true });
             if (PROFILE_SYNC_CONFIG.autoPullUserStateOnSession) {
                 await pullUserStateFromNeon({ silent: true });
