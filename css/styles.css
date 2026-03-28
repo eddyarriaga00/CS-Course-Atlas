@@ -4301,7 +4301,7 @@ body.dark .settings-modal-footer {
 }
 
 #account-modal.account-user-authenticated #account-auth-card {
-    display: none;
+    display: block;
 }
 
 #account-modal.account-user-authenticated .account-profile-card {

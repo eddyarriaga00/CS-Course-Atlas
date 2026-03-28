@@ -15756,7 +15756,7 @@ function updateAccountAuthCardLayout() {
     const isAuthenticated = Boolean(accountAuthState.isAuthenticated);
 
     if (authCard) {
-        authCard.classList.toggle('hidden', isAuthenticated);
+        authCard.classList.remove('hidden');
     }
     if (interactiveFields) {
         interactiveFields.classList.toggle('hidden', isAuthenticated);
@@ -15775,6 +15775,7 @@ function updateAccountAuthCardLayout() {
     }
     if (quickLogoutButton) {
         quickLogoutButton.classList.toggle('hidden', !isAuthenticated);
+        quickLogoutButton.textContent = accountAuthState.inFlight ? 'Signing Out...' : 'Sign Out';
     }
 }
 
@@ -15818,7 +15819,7 @@ function updateAccountProfileSummaryUI() {
     }
     if (quickLogoutButton) {
         quickLogoutButton.classList.toggle('hidden', !isAuthenticated);
-        quickLogoutButton.textContent = accountAuthState.inFlight ? 'Logging Out...' : 'Log Out';
+        quickLogoutButton.textContent = accountAuthState.inFlight ? 'Signing Out...' : 'Sign Out';
     }
 
     panelButtons.forEach((button) => {
@@ -16036,11 +16037,15 @@ function setAccountAuthModeCopy(isSignup) {
     const isAuthenticated = Boolean(accountAuthState.isAuthenticated);
 
     if (flowTitle) {
-        flowTitle.textContent = isSignup ? 'Create Your Account' : 'Log In to Your Account';
+        flowTitle.textContent = isAuthenticated
+            ? 'Logged In'
+            : isSignup
+                ? 'Create Your Account'
+                : 'Log In to Your Account';
     }
     if (flowSubtitle) {
         flowSubtitle.textContent = isAuthenticated
-            ? 'You are signed in. Log out first if you want to create another account.'
+            ? 'Your session is active. Use Sign Out to switch accounts.'
             : isSignup
             ? 'Create a profile to sync progress and settings across devices.'
             : 'Use a provider or continue with your email/username and password.';
@@ -16254,7 +16259,7 @@ async function handleOAuthResultFromUrl() {
 
 function getAccountPrimaryAuthLabel() {
     if (accountAuthState.isAuthenticated) {
-        return 'Log Out';
+        return 'Logged In';
     }
     if (accountAuthState.mode === 'signup') {
         return 'Create Account';
@@ -16266,6 +16271,11 @@ function refreshAccountPrimaryAuthButton() {
     const submitBtn = document.getElementById('account-auth-submit');
     if (!submitBtn) return;
     submitBtn.textContent = getAccountPrimaryAuthLabel();
+    const shouldDisable = accountAuthState.inFlight || accountAuthState.isAuthenticated;
+    submitBtn.disabled = shouldDisable;
+    submitBtn.setAttribute('aria-disabled', shouldDisable ? 'true' : 'false');
+    submitBtn.classList.toggle('opacity-70', shouldDisable);
+    submitBtn.classList.toggle('cursor-not-allowed', shouldDisable);
     setAccountAuthModeCopy(accountAuthState.mode === 'signup');
     syncAccountSignupToggleState();
     updateAccountAuthCardLayout();
@@ -16379,21 +16389,22 @@ function setAuthSubmitBusy(isBusy) {
     const submitBtn = document.getElementById('account-auth-submit');
     const quickLogoutBtn = document.getElementById('account-quick-logout');
     if (submitBtn) {
-        submitBtn.disabled = accountAuthState.inFlight;
-        submitBtn.classList.toggle('opacity-70', accountAuthState.inFlight);
-        submitBtn.classList.toggle('cursor-not-allowed', accountAuthState.inFlight);
+        const shouldDisableSubmit = accountAuthState.inFlight || accountAuthState.isAuthenticated;
+        submitBtn.disabled = shouldDisableSubmit;
+        submitBtn.classList.toggle('opacity-70', shouldDisableSubmit);
+        submitBtn.classList.toggle('cursor-not-allowed', shouldDisableSubmit);
         if (accountAuthState.inFlight) {
             if (accountAuthState.mode === 'signup') {
                 submitBtn.textContent = 'Creating Account...';
             } else {
-                submitBtn.textContent = accountAuthState.isAuthenticated ? 'Logging Out...' : 'Logging In...';
+                submitBtn.textContent = accountAuthState.isAuthenticated ? 'Signing Out...' : 'Logging In...';
             }
         }
     }
     if (quickLogoutBtn) {
         quickLogoutBtn.disabled = accountAuthState.inFlight;
         quickLogoutBtn.setAttribute('aria-disabled', accountAuthState.inFlight ? 'true' : 'false');
-        quickLogoutBtn.textContent = accountAuthState.inFlight ? 'Logging Out...' : 'Log Out';
+        quickLogoutBtn.textContent = accountAuthState.inFlight ? 'Signing Out...' : 'Sign Out';
         quickLogoutBtn.classList.toggle('opacity-70', accountAuthState.inFlight);
         quickLogoutBtn.classList.toggle('cursor-not-allowed', accountAuthState.inFlight);
     }
