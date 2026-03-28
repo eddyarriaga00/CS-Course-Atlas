@@ -8057,42 +8057,33 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
         position: fixed;
         inset: 0;
         z-index: 80;
-        background: rgba(2, 6, 23, 0.46);
+        background: rgba(2, 6, 23, 0.18);
         backdrop-filter: blur(2px);
     }
 
     #app-shell {
-        --mobile-sidebar-align-gap: 1.5rem;
-        display: grid;
-        grid-template-columns: 56px minmax(0, 1fr);
-        gap: 0.6rem;
+        display: block;
         padding: 0 0.45rem;
-        transition: grid-template-columns 180ms ease, gap 180ms ease;
     }
 
     #app-sidebar {
-        position: sticky;
-        top: calc(4.25rem + env(safe-area-inset-top));
-        left: auto;
-        bottom: auto;
-        width: 100%;
-        box-sizing: border-box;
-        padding: var(--mobile-sidebar-align-gap) 0 0;
-        transform: none !important;
-        z-index: 45;
-        align-self: start;
-        max-height: calc(100dvh - 4.8rem - env(safe-area-inset-top));
-        overflow-y: auto;
-    }
-
-    body.sidebar-mobile-expanded #app-sidebar {
         position: fixed;
         top: calc(4.25rem + env(safe-area-inset-top));
         left: 0.55rem;
-        width: min(84vw, 306px);
+        bottom: unset;
+        width: 3.05rem;
+        box-sizing: border-box;
+        padding: 0;
+        transform: none !important;
         z-index: 86;
+        align-self: auto;
         max-height: calc(100dvh - 5rem - env(safe-area-inset-top));
         overflow: visible;
+        transition: width 180ms ease;
+    }
+
+    body.sidebar-mobile-expanded #app-sidebar {
+        width: min(84vw, 306px);
     }
 
     #main-header.header-collapsed ~ #app-shell #app-sidebar {
@@ -8112,6 +8103,8 @@ body:not(.dark) .modal-panel.bg-slate-900\/70 {
     #app-sidebar .app-sidebar-inner {
         padding: 0.55rem 0.35rem;
         border-radius: 0.95rem;
+        max-height: calc(100dvh - 5rem - env(safe-area-inset-top));
+        overflow-y: auto;
     }
 
     body.sidebar-mobile-expanded #app-sidebar .app-sidebar-inner {
