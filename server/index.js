@@ -30,6 +30,8 @@ const SESSION_TTL_DAYS = Number(process.env.SESSION_TTL_DAYS || 30);
 const MAX_ACTIVE_SESSIONS_PER_USER = readPositiveInteger(process.env.MAX_ACTIVE_SESSIONS_PER_USER, 6);
 const isProduction = process.env.NODE_ENV === 'production';
 const siteRoot = path.resolve(__dirname, '..');
+const seoStaticRoot = path.join(siteRoot, 'dist');
+const hasSeoStaticBuild = fs.existsSync(path.join(seoStaticRoot, 'index.html'));
 const TRUST_PROXY_SETTING = parseTrustProxySetting(process.env.TRUST_PROXY, 0);
 const GLOBAL_API_WINDOW_MS = readPositiveInteger(process.env.GLOBAL_API_WINDOW_MS, 60_000);
 const GLOBAL_API_MAX_REQUESTS = readPositiveInteger(process.env.GLOBAL_API_MAX_REQUESTS, 240);
@@ -2897,6 +2899,9 @@ app.use((req, res, next) => {
 });
 
 app.use(express.static(siteRoot));
+if (hasSeoStaticBuild) {
+    app.use(express.static(seoStaticRoot));
+}
 
 app.get('*', (req, res) => {
     if (req.path.startsWith('/api/')) {

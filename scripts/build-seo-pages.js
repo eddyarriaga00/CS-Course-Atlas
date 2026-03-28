@@ -1158,10 +1158,10 @@ function generateSitemapXsl() {
             <body>
                 <div class="shell">
                     <nav class="top">
-                        <a href="/CS-Course-Atlas/index.html">Interactive App</a>
-                        <a href="/CS-Course-Atlas/tracks.html">Track Pages</a>
-                        <a href="/CS-Course-Atlas/modules/index.html">Module Directory</a>
-                        <a href="/CS-Course-Atlas/sitemap.html">HTML Sitemap</a>
+                        <a href="index.html">Interactive App</a>
+                        <a href="tracks.html">Track Pages</a>
+                        <a href="modules/index.html">Module Directory</a>
+                        <a href="sitemap.html">HTML Sitemap</a>
                     </nav>
                     <section class="hero">
                         <h1>CS Course Atlas XML Sitemap</h1>
