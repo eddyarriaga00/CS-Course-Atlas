@@ -15691,13 +15691,18 @@ function getAccountGoalLabel(goalValue) {
 }
 
 function updateAccountAuthCardLayout() {
+    const authCard = document.getElementById('account-auth-card');
     const interactiveFields = document.getElementById('account-auth-interactive-fields');
     const signedInNote = document.getElementById('account-auth-signed-in-note');
     const signedInUser = document.getElementById('account-auth-signed-in-user');
     const legal = document.getElementById('account-auth-legal');
     const switchRow = document.getElementById('account-auth-switch-row');
+    const quickLogoutButton = document.getElementById('account-quick-logout');
     const isAuthenticated = Boolean(accountAuthState.isAuthenticated);
 
+    if (authCard) {
+        authCard.classList.toggle('hidden', isAuthenticated);
+    }
     if (interactiveFields) {
         interactiveFields.classList.toggle('hidden', isAuthenticated);
     }
@@ -15713,6 +15718,9 @@ function updateAccountAuthCardLayout() {
     if (switchRow) {
         switchRow.classList.toggle('hidden', isAuthenticated);
     }
+    if (quickLogoutButton) {
+        quickLogoutButton.classList.toggle('hidden', !isAuthenticated);
+    }
 }
 
 function updateAccountProfileSummaryUI() {
@@ -15723,6 +15731,7 @@ function updateAccountProfileSummaryUI() {
     const goalEl = document.getElementById('account-profile-goal-display');
     const sessionEl = document.getElementById('account-profile-session-display');
     const syncEl = document.getElementById('account-profile-sync-display');
+    const quickLogoutButton = document.getElementById('account-quick-logout');
     const panelButtons = Array.from(document.querySelectorAll('[data-account-panel-target]'));
     const isAuthenticated = Boolean(accountAuthState.isAuthenticated);
     const displayLabel = getAccountDisplayLabel();
@@ -15751,6 +15760,10 @@ function updateAccountProfileSummaryUI() {
     }
     if (syncEl) {
         syncEl.textContent = String(accountProfile.lastSyncMessage || 'Sync idle.');
+    }
+    if (quickLogoutButton) {
+        quickLogoutButton.classList.toggle('hidden', !isAuthenticated);
+        quickLogoutButton.textContent = accountAuthState.inFlight ? 'Logging Out...' : 'Log Out';
     }
 
     panelButtons.forEach((button) => {
@@ -16299,17 +16312,27 @@ function setAccountAuthFieldError(fieldId, message) {
 function setAuthSubmitBusy(isBusy) {
     accountAuthState.inFlight = Boolean(isBusy);
     const submitBtn = document.getElementById('account-auth-submit');
-    if (!submitBtn) return;
-    submitBtn.disabled = accountAuthState.inFlight;
-    submitBtn.classList.toggle('opacity-70', accountAuthState.inFlight);
-    submitBtn.classList.toggle('cursor-not-allowed', accountAuthState.inFlight);
-    if (accountAuthState.inFlight) {
-        if (accountAuthState.mode === 'signup') {
-            submitBtn.textContent = 'Creating Account...';
-        } else {
-            submitBtn.textContent = accountAuthState.isAuthenticated ? 'Logging Out...' : 'Logging In...';
+    const quickLogoutBtn = document.getElementById('account-quick-logout');
+    if (submitBtn) {
+        submitBtn.disabled = accountAuthState.inFlight;
+        submitBtn.classList.toggle('opacity-70', accountAuthState.inFlight);
+        submitBtn.classList.toggle('cursor-not-allowed', accountAuthState.inFlight);
+        if (accountAuthState.inFlight) {
+            if (accountAuthState.mode === 'signup') {
+                submitBtn.textContent = 'Creating Account...';
+            } else {
+                submitBtn.textContent = accountAuthState.isAuthenticated ? 'Logging Out...' : 'Logging In...';
+            }
         }
-    } else {
+    }
+    if (quickLogoutBtn) {
+        quickLogoutBtn.disabled = accountAuthState.inFlight;
+        quickLogoutBtn.setAttribute('aria-disabled', accountAuthState.inFlight ? 'true' : 'false');
+        quickLogoutBtn.textContent = accountAuthState.inFlight ? 'Logging Out...' : 'Log Out';
+        quickLogoutBtn.classList.toggle('opacity-70', accountAuthState.inFlight);
+        quickLogoutBtn.classList.toggle('cursor-not-allowed', accountAuthState.inFlight);
+    }
+    if (!accountAuthState.inFlight) {
         refreshAccountPrimaryAuthButton();
     }
 }
@@ -17573,7 +17596,7 @@ function openAccountModal() {
     const rememberCheckbox = document.getElementById('account-auth-remember');
     if (rememberCheckbox) rememberCheckbox.checked = Boolean(accountAuthState.rememberMe);
     setAccountAuthStatus('Checking session...', 'info');
-    const initialFocusSelector = accountAuthState.isAuthenticated ? '#account-profile-toggle' : '#account-auth-email';
+    const initialFocusSelector = accountAuthState.isAuthenticated ? '#account-quick-logout' : '#account-auth-email';
     openModal('account-modal', { initialFocus: initialFocusSelector });
     if (PROFILE_SYNC_CONFIG.enabled) {
         void refreshAuthSessionState({
@@ -17594,6 +17617,7 @@ function initAccount() {
     const closeBtn = document.getElementById('close-account');
     const saveBtn = document.getElementById('save-account');
     const profileToggleBtn = document.getElementById('account-profile-toggle');
+    const quickLogoutBtn = document.getElementById('account-quick-logout');
     const emailRequestPinBtn = document.getElementById('account-email-request-pin');
     const emailVerifyPinBtn = document.getElementById('account-email-verify-pin');
     const passwordUpdateBtn = document.getElementById('account-password-update');
@@ -17653,6 +17677,17 @@ function initAccount() {
             setAccountProfileSectionExpanded(!accountProfileUiState.expanded, {
                 panel: accountProfileUiState.activePanel
             });
+        });
+    }
+    if (quickLogoutBtn) {
+        quickLogoutBtn.addEventListener('click', async () => {
+            if (accountAuthState.inFlight || !accountAuthState.isAuthenticated) return;
+            setAuthSubmitBusy(true);
+            try {
+                await signOutAccountFlow();
+            } finally {
+                setAuthSubmitBusy(false);
+            }
         });
     }
     profilePanelButtons.forEach((button) => {

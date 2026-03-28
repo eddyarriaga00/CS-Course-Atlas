@@ -4300,6 +4300,14 @@ body.dark .settings-modal-footer {
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 12px 26px rgba(5, 150, 105, 0.2);
 }
 
+#account-modal.account-user-authenticated #account-auth-card {
+    display: none;
+}
+
+#account-modal.account-user-authenticated .account-profile-card {
+    margin-top: 0 !important;
+}
+
 #account-modal .account-auth-signed-in-note {
     border: 1px solid rgba(16, 185, 129, 0.38);
     border-radius: 0.9rem;
@@ -4730,6 +4738,30 @@ body.dark .settings-modal-footer {
     font-weight: 700;
     padding: 0.35rem 0.65rem;
     transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+#account-modal .account-profile-logout-btn {
+    min-height: 1.85rem;
+    border-radius: 0.7rem;
+    border: 1px solid rgba(251, 113, 133, 0.56);
+    background: rgba(190, 24, 93, 0.22);
+    color: #ffe4e6;
+    font-size: 0.74rem;
+    font-weight: 700;
+    padding: 0.35rem 0.62rem;
+    transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease, opacity 0.18s ease;
+}
+
+#account-modal .account-profile-logout-btn:hover {
+    background: rgba(190, 24, 93, 0.32);
+    border-color: rgba(251, 113, 133, 0.74);
+    transform: translateY(-1px);
+}
+
+#account-modal .account-profile-logout-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
 }
 
 #account-modal .account-profile-toggle-btn:hover {

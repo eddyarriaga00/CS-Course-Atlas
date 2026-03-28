@@ -1560,7 +1560,7 @@
             </div>
 
             <div class="account-modal-body p-6">
-                <div class="account-auth-card rounded-2xl border border-indigo-300/30 bg-gradient-to-br from-indigo-500/10 to-slate-900 p-5 space-y-4">
+                <div id="account-auth-card" class="account-auth-card rounded-2xl border border-indigo-300/30 bg-gradient-to-br from-indigo-500/10 to-slate-900 p-5 space-y-4">
                     <div class="account-auth-intro space-y-1">
                         <p class="account-auth-kicker text-xs uppercase tracking-wide font-semibold text-indigo-200">Secure Sign-In</p>
                         <h4 id="account-auth-flow-title" class="text-lg font-semibold text-slate-100">Log In to Your Account</h4>
@@ -1663,6 +1663,7 @@
                         </div>
                         <div class="account-profile-header-actions">
                             <span id="account-sync-status" class="text-xs font-semibold px-2.5 py-1 rounded-full border bg-slate-800 border-white/10 text-slate-200">idle</span>
+                            <button id="account-quick-logout" type="button" class="account-profile-logout-btn hidden" aria-label="Log out of your account">Log Out</button>
                             <button id="account-profile-toggle" type="button" class="account-profile-toggle-btn" aria-expanded="false" aria-controls="account-profile-content">
                                 <span id="account-profile-toggle-label">Manage</span>
                             </button>
