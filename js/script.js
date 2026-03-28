@@ -7584,68 +7584,80 @@ Practice focus:
     {
         id: 'git-basics-workflow',
         title: 'Git Basics and Collaboration Workflow',
-        description: 'Build a production-safe Git workflow from day one: initialize repos correctly, stage intentionally, branch for isolation, sync safely, and undo without damaging shared history.',
+        description: 'Learn the complete day-one Git workflow with a realistic terminal sequence: initialize, commit with intent, branch safely, sync with remote, handle conflicts, and undo mistakes without rewriting shared history.',
         difficulty: 'beginner',
         topics: ['Repository Setup', 'Staging and Commits', 'Branching and Merging', 'Pull/Rebase Basics', 'Merge Conflict Basics', 'Remote Collaboration', 'Safe Undo with Restore/Revert'],
-        codeExample: `# 1) Initialize a new repository and connect remote
+        codeExample: `# Scenario: start a repo, ship a feature branch, and cleanly sync with teammates
 mkdir cs-atlas-demo
 cd cs-atlas-demo
 git init
 git branch -M main
 git remote add origin https://github.com/your-org/cs-atlas-demo.git
-git status
-# Expected: On branch main, no commits yet
 
-# 2) Stage and commit intentionally (small logical commit)
+# 1) Bootstrap project with a focused first commit
+printf "node_modules/\\n.env\\n" > .gitignore
 echo "# CS Atlas Demo" > README.md
-git add README.md
-git commit -m "docs: add initial project README"
-git log --oneline -n 3
-# Expected: one commit shown with your message
+git add .gitignore README.md
+git commit -m "chore: bootstrap repository with README and gitignore"
+git status
+# Expected: working tree clean
 
-# 3) Create feature branch for isolated work
-git checkout -b feature/auth-modal
-echo "Auth modal revamp notes" > auth-notes.txt
-git add auth-notes.txt
-git commit -m "feat: add auth modal planning notes"
-git branch
-# Expected: * feature/auth-modal
+# 2) Build work on an isolated feature branch
+git switch -c feature/study-insights-card
+mkdir -p src/ui
+cat > src/ui/insights-card.js << 'EOF'
+export function renderInsightsCard(username) {
+  return 'Welcome back, ' + username + '!';
+}
+EOF
+git add src/ui/insights-card.js
+git commit -m "feat(ui): add study insights welcome card"
 
-# 4) Sync with remote safely before opening PR
+# 3) Publish feature branch and open collaboration flow
+git push -u origin feature/study-insights-card
+
+# 4) Keep branch current before merge or PR updates
 git fetch origin
-git pull --rebase origin main
-git push -u origin feature/auth-modal
-# Expected: branch now tracks origin/feature/auth-modal
+git rebase origin/main
+git log --oneline --decorate -n 5
+# Expected: your feature commits replayed on top of latest origin/main
 
-# 5) Merge workflow after review (done on main branch)
-git checkout main
-git pull origin main
-git merge --no-ff feature/auth-modal -m "merge: feature/auth-modal"
+# 5) If rebase reports conflicts
+git status
+# Fix conflicted files, remove conflict markers, run tests, then continue
+git add src/ui/insights-card.js
+git rebase --continue
+
+# 6) Safe undo patterns (choose by scope)
+git restore --staged src/ui/insights-card.js  # unstage only
+git restore src/ui/insights-card.js           # discard local unstaged change
+git revert <commit-hash>                      # undo a shared commit with a new commit
+
+# 7) Merge completion (after review)
+git switch main
+git pull --ff-only origin main
+git merge --no-ff feature/study-insights-card -m "merge: feature/study-insights-card"
 git push origin main
+`,
+        explanation: `This module teaches Git as a safety-first workflow, not just a command list.
 
-# 6) Resolve simple conflict (core idea)
-# - Open conflicted file and choose final content
-# - Remove conflict markers <<<<<<< ======= >>>>>>>
-git add <resolved-file>
-git commit -m "fix: resolve merge conflict in <resolved-file>"
+Mental model:
+1) Working tree = local edits.
+2) Staging area = intentional snapshot boundary.
+3) Commit history = review and rollback record.
+4) Remote tracking branches = team coordination state.
 
-# 7) Safe undo patterns (shared history safe)
-git restore --staged auth-notes.txt     # unstage file
-git restore auth-notes.txt              # discard local uncommitted change
-git revert <commit-hash>                # create new commit that undoes old one`,
-        explanation: `This module treats Git as an engineering safety system:
-- Working tree: where edits happen.
-- Staging area: where you choose exactly what enters history.
-- Commit graph: immutable snapshots that support review and rollback.
+What you should practice until automatic:
+1) Stage only the files related to one logical change.
+2) Keep feature branches short-lived and scoped.
+3) Rebase your branch onto current main before review.
+4) Resolve conflicts by validating behavior, not only removing markers.
+5) Use restore for local changes, revert for already-shared commits.
 
-Core outcomes:
-1) Build small, reviewable commits with strong messages.
-2) Use feature branches to isolate risk before merging.
-3) Rebase/fetch intentionally so your branch stays integration-ready.
-4) Resolve conflicts methodically and verify behavior after each fix.
-5) Use restore/revert based on whether changes are local or already shared.
-
-By the end, you should be able to execute branch -> review -> merge workflows confidently in team repos.`,
+Exit criteria:
+- You can explain exactly what each command changes (working tree, index, history, or remote).
+- You can recover from common mistakes without deleting teammate history.
+- You can deliver a clean branch ready for review and merge.`,
         resources: [
             { text: 'Pro Git (free online book)', url: 'https://git-scm.com/book/en/v2' },
             { text: 'GitHub Skills: Introduction to Git', url: 'https://skills.github.com/' },
@@ -8084,64 +8096,68 @@ public class JDBCExample {
     {
         id: 'git-branching-merging',
         title: 'Git Branching, Merging, and Pull Requests',
-        description: 'Master the team-grade branch lifecycle: branch design, rebase vs merge choices, conflict resolution, pull-request hygiene, and commit strategy that scales with collaborators.',
+        description: 'Practice an intermediate team workflow with branch strategy, commit slicing, rebase conflict handling, PR-ready history cleanup, and production-safe merge patterns.',
         difficulty: 'intermediate',
         topics: ['Feature Branches', 'Rebase vs Merge', 'Conflict Resolution', 'Pull Request Hygiene', 'Commit Strategy'],
-        codeExample: `import java.util.List;
+        codeExample: `# Team workflow: branch planning, clean history, and PR-ready integration
 
-public class GitBranchingLecture {
-    static void section(String title) {
-        System.out.println("\\n=== " + title + " ===");
-    }
+# 1) Start from current main and create focused feature branch
+git switch main
+git pull --ff-only origin main
+git switch -c feature/progress-sync-api
 
-    static void command(String cmd, String... output) {
-        System.out.println("$ " + cmd);
-        for (String line : output) {
-            System.out.println("  " + line);
-        }
-    }
+# 2) Commit in logical slices (behavior + tests separately)
+git add server/routes/progress.js
+git commit -m "feat(progress): add sync endpoint with validation"
+git add server/tests/progress.spec.js
+git commit -m "test(progress): add coverage for sync endpoint"
 
-    public static void main(String[] args) {
-        section("Feature Branches");
-        command("git checkout -b feature/module-progress-api", "Switched to feature branch");
-        command("git add src/api/progress.js", "Staged API changes only");
-        command("git commit -m \\"feat(progress): add module completion endpoint\\"", "[feature/module-progress-api 2ac41ab] feat(progress): add module completion endpoint");
+# 3) Rebase feature branch onto latest main before PR
+git fetch origin
+git rebase origin/main
+git log --oneline --decorate -n 8
 
-        section("Rebase vs Merge");
-        command("git fetch origin", "Updated refs for origin/main");
-        command("git rebase origin/main", "Replayed feature commits on top of latest main");
-        command("git log --oneline -n 4", "Linear history preview confirms clean review path");
+# 4) If conflicts occur during rebase
+git status
+# both modified: server/routes/progress.js
+# Resolve file carefully, run tests, then continue:
+git add server/routes/progress.js
+git rebase --continue
 
-        section("Conflict Resolution");
-        command("git status", "rebase in progress; both modified: src/auth/session.js");
-        command("git add src/auth/session.js", "Conflict markers removed and final behavior verified");
-        command("git rebase --continue", "Rebase completed successfully");
+# 5) Prepare cleaner history for review (optional but common)
+git commit --fixup <sha-of-feat-commit>
+git rebase -i --autosquash origin/main
 
-        section("Pull Request Hygiene");
-        List<String> prChecklist = List.of(
-            "Include problem statement + solution summary",
-            "Link issue/ticket and attach test evidence",
-            "Request focused reviewer feedback",
-            "Address review comments with follow-up commits"
-        );
-        for (String item : prChecklist) {
-            System.out.println(" - " + item);
-        }
+# 6) Publish branch and open review
+git push -u origin feature/progress-sync-api
+# (Create PR in GitHub UI or CLI)
 
-        section("Commit Strategy");
-        command("git commit -m \\"fix(progress): guard against duplicate completion writes\\"", "One logical fix per commit keeps rollback precise");
-        command("git commit -m \\"test(progress): add regression for duplicate completion\\"", "Behavior and verification history remain aligned");
-        command("git push -u origin feature/module-progress-api", "PR ready for review and CI");
-    }
-}`,
-        explanation: `This module trains branch discipline for real team repositories:
-1) Feature branches isolate incomplete work from main.
-2) Rebase and merge are both useful; choose based on history clarity and team policy.
-3) Conflict resolution is a verification task, not just marker removal.
-4) Pull requests should communicate intent, risk, and test evidence.
-5) Commit strategy should keep each commit logically atomic and reviewable.
+# 7) Merge strategy examples after approval
+# Squash merge: clean single commit on main
+# Rebase merge: linear history preserving each commit
+# Merge commit: explicit branch topology preserved
 
-When you finish this module, you should be able to recover from branch drift, resolve conflicts safely, and submit PRs that are fast to review and easy to maintain.`,
+# 8) Hotfix flow for production issues
+git switch main
+git pull --ff-only origin main
+git switch -c hotfix/session-timeout
+git add server/auth/session.js
+git commit -m "fix(auth): handle expired-session edge case"
+git push -u origin hotfix/session-timeout`,
+        explanation: `This module trains branch discipline for multi-developer repositories.
+
+Intermediate skills you build:
+1) Branch design: one branch per deliverable to limit review scope.
+2) Commit slicing: separate functional changes from tests/docs/refactors.
+3) Rebase literacy: keep history linear while understanding when merge commits are preferable.
+4) Conflict workflow: inspect intent, resolve safely, validate, then continue.
+5) PR hygiene: small diff, clear description, evidence of testing, predictable merge result.
+
+Decision rule you should internalize:
+- Use rebase to keep in-progress feature branches current and readable.
+- Use merge strategy based on team policy and audit needs, not personal preference.
+
+When finished, you should be able to move a branch from local WIP to production-ready merge with minimal reviewer friction and low integration risk.`,
         resources: [
             { text: 'Pro Git: Branching and Merging Chapters', url: 'https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell' },
             { text: 'Atlassian Merge Conflict Guide', url: 'https://www.atlassian.com/git/tutorials/using-branches/merge-conflicts' },
