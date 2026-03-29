@@ -172,6 +172,8 @@ const socialTapAnimationTimers = new WeakMap();
 
 const MOBILE_COMPACT_MEDIA_QUERY = '(max-width: 640px)';
 const AUTH_SESSION_REFRESH_COOLDOWN_MS = 1600;
+const OAUTH_RECOVERY_STORAGE_KEY = 'atlasOauthRecoveryPending';
+const OAUTH_RECOVERY_MAX_AGE_MS = 15 * 60 * 1000;
 const UI_ICONS = Object.freeze({
     profile: String.fromCodePoint(0x1F464),
     brain: String.fromCodePoint(0x1F9E0),
@@ -15837,7 +15839,7 @@ function updateAccountAuthCardLayout() {
         authCard.classList.toggle('account-auth-card-authenticated', isAuthenticated);
     }
     if (statePill) {
-        statePill.textContent = isAuthenticated ? 'Session Active' : 'Guest Mode';
+        statePill.textContent = isAuthenticated ? 'Session Active' : 'Not Signed In';
         statePill.setAttribute('data-auth-state', isAuthenticated ? 'authenticated' : 'guest');
     }
     if (providerPill) {
@@ -15923,7 +15925,7 @@ function updateAccountProfileSummaryUI() {
     if (sessionEl) {
         sessionEl.textContent = isAuthenticated
             ? (providerLabel ? `${providerLabel} Session` : (sessionLabel || 'Signed In'))
-            : 'Guest';
+            : 'Not Signed In';
     }
     if (syncEl) {
         syncEl.textContent = String(accountProfile.lastSyncMessage || 'Sync idle.');
@@ -16365,6 +16367,7 @@ async function handleOAuthResultFromUrl() {
             });
             if (verifiedSession?.isAuthenticated || accountAuthState.isAuthenticated) {
                 setAccountProviderState(providerKey, providerLabel);
+                clearPendingAuthRecoveryState();
                 updateAccountChip();
                 refreshAccountPrimaryAuthButton();
                 const successMessage = `${providerLabel} account connected.`;
@@ -16377,11 +16380,12 @@ async function handleOAuthResultFromUrl() {
                 : `${providerLabel} sign-in completed, but session verification has not finished yet. Keeping a background retry running now.`;
             setAccountAuthStatus(syncFailureMessage, 'error');
             showToast(syncFailureMessage, 'warning');
+            setPendingAuthRecoveryState(providerKey, providerLabel);
             void runAuthSessionRecoveryProbe({
                 providerKey,
                 providerLabel,
-                maxAttempts: 24,
-                attemptDelayMs: 1300
+                maxAttempts: 90,
+                attemptDelayMs: 2000
             });
         }
         if (!hasNeonSyncConfig()) {
@@ -17383,6 +17387,7 @@ async function deleteAccountPermanently() {
         accountAuthState.isAuthenticated = false;
         accountAuthState.sessionLabel = '';
         setAccountProviderState('', '');
+        clearPendingAuthRecoveryState();
         accountAuthState.rememberMe = false;
         clearAuthScopedLocalStorage();
         accountProfile = {
@@ -17472,6 +17477,7 @@ async function checkNeonSession(options = {}) {
             accountAuthState.sessionLabel = userLabel;
             if (isAuthenticated) {
                 setAccountProviderState(sessionProvider || accountAuthState.providerKey || accountAuthState.providerLabel);
+                clearPendingAuthRecoveryState();
             } else {
                 setAccountProviderState('', '');
             }
@@ -17622,6 +17628,44 @@ async function waitForVerifiedAuthSession(options = {}) {
     return latestSession;
 }
 
+function readPendingAuthRecoveryState() {
+    const stored = safeGetItem(OAUTH_RECOVERY_STORAGE_KEY);
+    if (!stored) return null;
+    try {
+        const parsed = JSON.parse(stored);
+        const createdAt = Number(parsed?.createdAt || 0);
+        if (!createdAt || (Date.now() - createdAt) > OAUTH_RECOVERY_MAX_AGE_MS) {
+            safeRemoveItem(OAUTH_RECOVERY_STORAGE_KEY);
+            return null;
+        }
+        const providerKey = normalizeAuthProviderKey(parsed?.providerKey || parsed?.providerLabel || '');
+        const providerLabel = String(parsed?.providerLabel || '').trim()
+            || (providerKey ? getAuthProviderLabel(providerKey) : '');
+        return { providerKey, providerLabel, createdAt };
+    } catch (error) {
+        safeRemoveItem(OAUTH_RECOVERY_STORAGE_KEY);
+        return null;
+    }
+}
+
+function setPendingAuthRecoveryState(providerKey = '', providerLabel = '') {
+    const normalizedProviderKey = normalizeAuthProviderKey(providerKey || providerLabel);
+    const normalizedProviderLabel = String(providerLabel || '').trim()
+        || (normalizedProviderKey ? getAuthProviderLabel(normalizedProviderKey) : '');
+    safeSetItem(
+        OAUTH_RECOVERY_STORAGE_KEY,
+        JSON.stringify({
+            providerKey: normalizedProviderKey,
+            providerLabel: normalizedProviderLabel,
+            createdAt: Date.now()
+        })
+    );
+}
+
+function clearPendingAuthRecoveryState() {
+    safeRemoveItem(OAUTH_RECOVERY_STORAGE_KEY);
+}
+
 async function runAuthSessionRecoveryProbe(options = {}) {
     if (authSessionRecoveryProbeInFlight) {
         return false;
@@ -17643,6 +17687,7 @@ async function runAuthSessionRecoveryProbe(options = {}) {
             if (providerKey || providerLabel) {
                 setAccountProviderState(providerKey, providerLabel);
             }
+            clearPendingAuthRecoveryState();
             updateAccountChip();
             refreshAccountPrimaryAuthButton();
             const recoveredLabel = providerLabel || getAuthProviderLabel(normalizeAuthProviderKey(providerKey));
@@ -17659,6 +17704,27 @@ async function runAuthSessionRecoveryProbe(options = {}) {
     }
 }
 
+async function resumePendingAuthRecoveryProbe(options = {}) {
+    if (accountAuthState.isAuthenticated) {
+        clearPendingAuthRecoveryState();
+        return false;
+    }
+    const pendingRecovery = readPendingAuthRecoveryState();
+    if (!pendingRecovery) {
+        return false;
+    }
+    const {
+        maxAttempts = 30,
+        attemptDelayMs = 1000
+    } = options;
+    return runAuthSessionRecoveryProbe({
+        providerKey: pendingRecovery.providerKey,
+        providerLabel: pendingRecovery.providerLabel,
+        maxAttempts,
+        attemptDelayMs
+    });
+}
+
 async function signOutAccountFlow(options = {}) {
     const { silent = false } = options;
     if (userStateSyncTimer) {
@@ -17671,6 +17737,7 @@ async function signOutAccountFlow(options = {}) {
     accountAuthState.isAuthenticated = false;
     accountAuthState.sessionLabel = '';
     setAccountProviderState('', '');
+    clearPendingAuthRecoveryState();
     accountAuthState.rememberMe = false;
     clearAuthScopedLocalStorage();
     setAccountAuthStatus('Signed out.', 'neutral');
@@ -17803,16 +17870,18 @@ async function submitAccountAuth() {
                 : 'Sign-in completed, but session verification is still in progress. Background retry started now.';
             setAccountAuthStatus(sessionSyncMessage, 'error');
             showToast(sessionSyncMessage, 'warning');
+            setPendingAuthRecoveryState('password', 'Email + Password');
             void runAuthSessionRecoveryProbe({
                 providerKey: 'password',
                 providerLabel: 'Email + Password',
-                maxAttempts: 20,
-                attemptDelayMs: 1100
+                maxAttempts: 60,
+                attemptDelayMs: 1200
             });
             return;
         }
         const resolvedProviderKey = normalizeAuthProviderKey(authProviderFromPayload || 'password') || 'password';
         setAccountProviderState(resolvedProviderKey, getAuthProviderLabel(resolvedProviderKey));
+        clearPendingAuthRecoveryState();
         accountAuthState.isAuthenticated = true;
         accountAuthState.sessionLabel = authSessionUser.userUsername
             || authSessionUser.userEmail
@@ -18280,9 +18349,20 @@ function initAccount() {
     if (hasNeonSyncConfig()) {
         loadAuthProviderAvailability({ silent: true });
         void refreshAuthSessionState({ silent: true, retries: 2, retryDelayMs: 500, force: true });
+        void resumePendingAuthRecoveryProbe({ maxAttempts: 45, attemptDelayMs: 1500 });
     } else {
         applyAuthProviderAvailability();
     }
+
+    window.addEventListener('focus', () => {
+        if (!hasNeonSyncConfig() || accountAuthState.isAuthenticated) return;
+        void resumePendingAuthRecoveryProbe({ maxAttempts: 14, attemptDelayMs: 1000 });
+    });
+    document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState !== 'visible') return;
+        if (!hasNeonSyncConfig() || accountAuthState.isAuthenticated) return;
+        void resumePendingAuthRecoveryProbe({ maxAttempts: 12, attemptDelayMs: 1000 });
+    });
 }
 
 function loadNotesDraft() {
