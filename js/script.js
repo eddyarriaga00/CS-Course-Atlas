@@ -15658,6 +15658,7 @@ let userStateSyncInFlight = false;
 let applyingRemoteUserState = false;
 let neonCsrfToken = '';
 let neonSessionCheckCounter = 0;
+let authSessionRecoveryProbeInFlight = false;
 const glossaryUiState = {
     filtersOpen: false
 };
@@ -16357,13 +16358,12 @@ async function handleOAuthResultFromUrl() {
     if (oauthResult.status === 'success') {
         setAccountAuthStatus(`${providerLabel} sign-in completed. Finalizing secure session...`, 'info');
         if (hasNeonSyncConfig()) {
-            const session = await refreshAuthSessionState({
-                silent: true,
-                retries: 4,
-                retryDelayMs: 650,
-                force: true
+            const verifiedSession = await waitForVerifiedAuthSession({
+                maxAttempts: 14,
+                attemptDelayMs: 850,
+                silent: true
             });
-            if (session?.isAuthenticated || accountAuthState.isAuthenticated) {
+            if (verifiedSession?.isAuthenticated || accountAuthState.isAuthenticated) {
                 setAccountProviderState(providerKey, providerLabel);
                 updateAccountChip();
                 refreshAccountPrimaryAuthButton();
@@ -16372,40 +16372,17 @@ async function handleOAuthResultFromUrl() {
                 showToast(successMessage, 'success');
                 return;
             }
-            if (!session?.isAuthenticated && !accountAuthState.isAuthenticated) {
-                // Mobile browsers can delay cross-site cookie availability briefly after OAuth return.
-                window.setTimeout(() => {
-                    void (async () => {
-                        try {
-                            const recoverySession = await refreshAuthSessionState({
-                                silent: true,
-                                retries: 2,
-                                retryDelayMs: 700,
-                                force: true
-                            });
-                            if (recoverySession?.isAuthenticated || accountAuthState.isAuthenticated) {
-                                setAccountProviderState(providerKey, providerLabel);
-                                updateAccountChip();
-                                refreshAccountPrimaryAuthButton();
-                                const recoveredMessage = `${providerLabel} account connected.`;
-                                setAccountAuthStatus(recoveredMessage, 'success');
-                                showToast(recoveredMessage, 'success');
-                                return;
-                            }
-                            if (!recoverySession?.isAuthenticated && !accountAuthState.isAuthenticated) {
-                                const syncFailureMessage = isCrossOriginApiRuntime()
-                                    ? `${providerLabel} sign-in succeeded, but session cookies were blocked. Set ALLOWED_ORIGINS to your exact frontend origin(s), SESSION_COOKIE_SAME_SITE=none, and SESSION_COOKIE_SECURE=true.`
-                                    : `${providerLabel} sign-in succeeded, but session sync did not finish. Open Account and try again.`;
-                                setAccountAuthStatus(syncFailureMessage, 'error');
-                                showToast(syncFailureMessage, 'warning');
-                            }
-                        } catch (error) {
-                            const reason = error instanceof Error ? error.message : String(error);
-                            setAccountAuthStatus(`${providerLabel} session refresh failed: ${reason}`, 'error');
-                        }
-                    })();
-                }, 900);
-            }
+            const syncFailureMessage = isCrossOriginApiRuntime()
+                ? `${providerLabel} sign-in completed, but session verification is delayed or blocked. Keeping a background retry running now.`
+                : `${providerLabel} sign-in completed, but session verification has not finished yet. Keeping a background retry running now.`;
+            setAccountAuthStatus(syncFailureMessage, 'error');
+            showToast(syncFailureMessage, 'warning');
+            void runAuthSessionRecoveryProbe({
+                providerKey,
+                providerLabel,
+                maxAttempts: 24,
+                attemptDelayMs: 1300
+            });
         }
         if (!hasNeonSyncConfig()) {
             const unavailableMessage = `${providerLabel} sign-in requires the auth server configuration.`;
@@ -17619,6 +17596,69 @@ async function refreshAuthSessionState(options = {}) {
     }
 }
 
+async function waitForVerifiedAuthSession(options = {}) {
+    const {
+        maxAttempts = 10,
+        attemptDelayMs = 800,
+        silent = true
+    } = options;
+    let latestSession = null;
+    const safeAttempts = Math.max(1, Math.min(40, Number(maxAttempts) || 1));
+    const safeDelay = Math.max(250, Math.min(4000, Number(attemptDelayMs) || 800));
+    for (let attempt = 0; attempt < safeAttempts; attempt += 1) {
+        latestSession = await refreshAuthSessionState({
+            silent,
+            retries: 2,
+            retryDelayMs: 450,
+            force: true
+        });
+        if (latestSession?.isAuthenticated || accountAuthState.isAuthenticated) {
+            return latestSession;
+        }
+        if (attempt < safeAttempts - 1) {
+            await new Promise((resolve) => setTimeout(resolve, safeDelay));
+        }
+    }
+    return latestSession;
+}
+
+async function runAuthSessionRecoveryProbe(options = {}) {
+    if (authSessionRecoveryProbeInFlight) {
+        return false;
+    }
+    const {
+        providerKey = '',
+        providerLabel = '',
+        maxAttempts = 18,
+        attemptDelayMs = 1200
+    } = options;
+    authSessionRecoveryProbeInFlight = true;
+    try {
+        const recoveredSession = await waitForVerifiedAuthSession({
+            maxAttempts,
+            attemptDelayMs,
+            silent: true
+        });
+        if (recoveredSession?.isAuthenticated || accountAuthState.isAuthenticated) {
+            if (providerKey || providerLabel) {
+                setAccountProviderState(providerKey, providerLabel);
+            }
+            updateAccountChip();
+            refreshAccountPrimaryAuthButton();
+            const recoveredLabel = providerLabel || getAuthProviderLabel(normalizeAuthProviderKey(providerKey));
+            const recoveredMessage = recoveredLabel
+                ? `${recoveredLabel} sign-in verified.`
+                : 'Sign-in verified.';
+            setAccountAuthStatus(recoveredMessage, 'success');
+            showToast(recoveredMessage, 'success');
+            return true;
+        }
+        return false;
+    } finally {
+        authSessionRecoveryProbeInFlight = false;
+    }
+}
+
 async function signOutAccountFlow(options = {}) {
     const { silent = false } = options;
     if (userStateSyncTimer) {
@@ -17751,13 +17791,25 @@ async function submitAccountAuth() {
         }
         saveAccountProfile();
         applyAccountProfileToForm();
-        const refreshedSession = await refreshAuthSessionState({ silent: true, retries: 2, retryDelayMs: 450, force: true });
+        const refreshedSession = await waitForVerifiedAuthSession({
+            maxAttempts: 10,
+            attemptDelayMs: 700,
+            silent: true
+        });
         const hasVerifiedSession = Boolean(refreshedSession?.isAuthenticated || accountAuthState.isAuthenticated);
         if (!hasVerifiedSession) {
             const sessionSyncMessage = isCrossOriginApiRuntime()
-                ? 'Sign-in completed, but session cookies were blocked by browser policy. Confirm ALLOWED_ORIGINS, SESSION_COOKIE_SAME_SITE=none, and SESSION_COOKIE_SECURE=true.'
-                : 'Sign-in completed, but secure session verification failed. Please try again.';
-            throw new Error(sessionSyncMessage);
+                ? 'Sign-in completed, but session verification is delayed or blocked. Background retry started now.'
+                : 'Sign-in completed, but session verification is still in progress. Background retry started now.';
+            setAccountAuthStatus(sessionSyncMessage, 'error');
+            showToast(sessionSyncMessage, 'warning');
+            void runAuthSessionRecoveryProbe({
+                providerKey: 'password',
+                providerLabel: 'Email + Password',
+                maxAttempts: 20,
+                attemptDelayMs: 1100
+            });
+            return;
         }
         const resolvedProviderKey = normalizeAuthProviderKey(authProviderFromPayload || 'password') || 'password';
         setAccountProviderState(resolvedProviderKey, getAuthProviderLabel(resolvedProviderKey));
