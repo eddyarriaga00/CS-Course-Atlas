@@ -4812,6 +4812,223 @@ body.dark .settings-modal-footer {
     align-items: end;
 }
 
+/* Account modal refresh: strong visual split for guest vs authenticated state. */
+#account-modal .account-modal-panel {
+    max-width: 38rem;
+    border: 1px solid rgba(148, 163, 184, 0.22);
+    background:
+        radial-gradient(circle at 12% 14%, rgba(129, 140, 248, 0.18), transparent 38%),
+        radial-gradient(circle at 84% 6%, rgba(56, 189, 248, 0.14), transparent 34%),
+        linear-gradient(168deg, rgba(8, 11, 30, 0.98), rgba(15, 23, 42, 0.96));
+}
+
+#account-modal .account-modal-header {
+    padding-top: 1.2rem !important;
+    padding-bottom: 1rem !important;
+}
+
+#account-modal .account-modal-header h3 {
+    font-size: clamp(1.2rem, 2.2vw, 1.55rem);
+    letter-spacing: 0.01em;
+}
+
+#account-modal .account-modal-body {
+    padding: 1rem 1.05rem 1.15rem !important;
+    gap: 0.85rem;
+    background:
+        linear-gradient(180deg, rgba(8, 11, 27, 0.56), rgba(15, 23, 42, 0.18)),
+        transparent;
+}
+
+#account-modal .account-auth-card {
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.72), rgba(15, 23, 42, 0.84));
+    border: 1px solid rgba(129, 140, 248, 0.34);
+    box-shadow: 0 22px 42px rgba(2, 6, 23, 0.34);
+}
+
+#account-modal .account-auth-state-hero {
+    border: 1px solid rgba(148, 163, 184, 0.24);
+    border-radius: 0.95rem;
+    background: linear-gradient(135deg, rgba(79, 70, 229, 0.18), rgba(15, 23, 42, 0.82));
+    padding: 0.75rem 0.8rem;
+    display: grid;
+    gap: 0.45rem;
+}
+
+#account-modal .account-auth-state-kicker-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.42rem;
+    flex-wrap: wrap;
+}
+
+#account-modal .account-auth-state-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.55rem;
+    padding: 0.18rem 0.58rem;
+    border-radius: 999px;
+    border: 1px solid rgba(148, 163, 184, 0.34);
+    background: rgba(15, 23, 42, 0.58);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 800;
+    color: #e2e8f0;
+}
+
+#account-modal .account-auth-state-pill[data-auth-state="authenticated"] {
+    border-color: rgba(52, 211, 153, 0.54);
+    background: rgba(6, 78, 59, 0.62);
+    color: #6ee7b7;
+}
+
+#account-modal .account-auth-provider-pill {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.55rem;
+    padding: 0.18rem 0.55rem;
+    border-radius: 999px;
+    border: 1px solid rgba(125, 211, 252, 0.52);
+    background: rgba(12, 74, 110, 0.52);
+    color: #bae6fd;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+}
+
+#account-modal .account-auth-state-hero #account-auth-flow-title {
+    margin: 0;
+    font-size: 1.02rem;
+}
+
+#account-modal .account-auth-state-hero #account-auth-flow-subtitle {
+    margin: 0;
+    font-size: 0.77rem;
+    line-height: 1.36;
+    color: #cbd5e1 !important;
+}
+
+#account-modal .account-auth-signed-in-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.52rem;
+    flex-wrap: wrap;
+}
+
+#account-modal #account-auth-hero-manage {
+    flex: 1 1 auto;
+    min-height: 2.1rem;
+    font-size: 0.76rem;
+}
+
+#account-modal #account-auth-hero-logout {
+    min-height: 2.1rem;
+    font-size: 0.75rem;
+    padding-inline: 0.86rem;
+}
+
+#account-modal.account-user-authenticated #account-auth-interactive-fields,
+#account-modal.account-user-authenticated #account-auth-submit,
+#account-modal.account-user-authenticated #account-auth-switch-row,
+#account-modal.account-user-authenticated #account-auth-legal {
+    display: none !important;
+}
+
+#account-modal.account-user-authenticated #account-auth-status {
+    margin-top: 0.1rem;
+    border: 1px solid rgba(52, 211, 153, 0.34);
+    border-radius: 0.8rem;
+    padding: 0.52rem 0.58rem;
+    background: linear-gradient(135deg, rgba(6, 78, 59, 0.28), rgba(15, 23, 42, 0.56));
+}
+
+#account-modal .account-profile-card {
+    border: 1px solid rgba(148, 163, 184, 0.28);
+    background: linear-gradient(150deg, rgba(15, 23, 42, 0.88), rgba(8, 47, 73, 0.38));
+}
+
+#account-modal .account-profile-summary {
+    border-color: rgba(96, 165, 250, 0.32);
+    background: linear-gradient(140deg, rgba(37, 99, 235, 0.22), rgba(15, 23, 42, 0.9));
+}
+
+#account-modal .account-profile-actions {
+    margin-top: 0.05rem;
+}
+
+#account-modal .account-profile-content {
+    margin-top: -0.1rem;
+}
+
+#account-modal .account-profile-auth-required-note {
+    margin: 0;
+    border: 1px dashed rgba(148, 163, 184, 0.42);
+    border-radius: 0.82rem;
+    padding: 0.58rem 0.62rem;
+    background: rgba(30, 41, 59, 0.52);
+    color: #cbd5e1;
+    font-size: 0.73rem;
+    line-height: 1.38;
+}
+
+#account-modal.account-user-authenticated .account-profile-auth-required-note {
+    display: none !important;
+}
+
+#account-modal.account-user-guest #account-profile-content,
+#account-modal.account-user-guest .account-profile-actions,
+#account-modal.account-user-guest #account-profile-toggle {
+    display: none !important;
+}
+
+#main-header #account-btn.account-btn-authenticated {
+    background: linear-gradient(120deg, rgba(22, 163, 74, 0.45), rgba(37, 99, 235, 0.46)) !important;
+    border-color: rgba(96, 165, 250, 0.64) !important;
+    color: #ecfeff !important;
+    box-shadow: 0 14px 26px rgba(30, 64, 175, 0.32);
+}
+
+#main-header #account-btn.account-btn-authenticated:hover {
+    background: linear-gradient(120deg, rgba(22, 163, 74, 0.54), rgba(37, 99, 235, 0.54)) !important;
+    border-color: rgba(125, 211, 252, 0.78) !important;
+}
+
+.account-chip.account-chip-authenticated {
+    border-color: rgba(56, 189, 248, 0.56);
+    background: linear-gradient(115deg, rgba(30, 64, 175, 0.32), rgba(14, 116, 144, 0.34));
+    color: #e0f2fe;
+}
+
+#settings-auth-open-account.is-authenticated-entry,
+#insights-auth-open-account.is-authenticated-entry {
+    background: linear-gradient(115deg, rgba(30, 64, 175, 0.92), rgba(16, 185, 129, 0.82));
+    border-color: rgba(125, 211, 252, 0.62);
+    color: #f8fafc;
+}
+
+@media (max-width: 640px) {
+    #account-modal .account-auth-signed-in-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    #account-modal #account-auth-hero-manage,
+    #account-modal #account-auth-hero-logout {
+        width: 100%;
+    }
+
+    #account-modal .account-auth-state-hero #account-auth-flow-title {
+        font-size: 0.95rem;
+    }
+
+    #account-modal .account-auth-state-hero #account-auth-flow-subtitle {
+        font-size: 0.72rem;
+    }
+}
+
 /* Settings Sections */
 .settings-section {
     border-radius: 1.25rem !important;

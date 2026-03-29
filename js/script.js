@@ -15632,6 +15632,8 @@ const accountAuthState = {
     inFlight: false,
     isAuthenticated: false,
     sessionLabel: '',
+    providerKey: '',
+    providerLabel: '',
     rememberMe: false,
     oauthProviders: {}
 };
@@ -15704,16 +15706,37 @@ function saveAccountProfile() {
 }
 
 function updateAccountChip() {
+    const accountButton = document.getElementById('account-btn');
+    const accountDesktopLabel = document.getElementById('account-btn-label-desktop');
+    const accountMobileLabel = document.getElementById('account-btn-label-mobile');
     const chip = document.getElementById('account-chip');
-    if (!chip) return;
-    const label = accountProfile.username || accountProfile.name || accountProfile.email;
-    if (label) {
-        chip.textContent = `${UI_ICONS.profile} ${label}`;
-        chip.classList.remove('hidden');
-    } else {
-        chip.textContent = '';
-        chip.classList.add('hidden');
+    const isAuthenticated = Boolean(accountAuthState.isAuthenticated);
+    const displayLabel = getAccountDisplayLabel();
+    const providerLabel = getAccountSessionProviderLabel();
+
+    if (accountButton) {
+        accountButton.classList.toggle('account-btn-authenticated', isAuthenticated);
     }
+    if (accountDesktopLabel) {
+        accountDesktopLabel.textContent = isAuthenticated ? 'Logged In' : 'Account';
+    }
+    if (accountMobileLabel) {
+        accountMobileLabel.textContent = isAuthenticated ? 'Signed' : 'Account';
+    }
+
+    if (chip) {
+        if (isAuthenticated) {
+            const providerSuffix = providerLabel ? ` · ${providerLabel}` : '';
+            chip.textContent = `${UI_ICONS.profile} ${displayLabel}${providerSuffix}`;
+            chip.classList.remove('hidden');
+            chip.classList.add('account-chip-authenticated');
+        } else {
+            chip.textContent = '';
+            chip.classList.add('hidden');
+            chip.classList.remove('account-chip-authenticated');
+        }
+    }
+    updateAccountAccessEntryButtons();
     updateAccountProfileSummaryUI();
 }
 
@@ -15725,6 +15748,52 @@ function getAccountDisplayLabel() {
         || '';
     const label = String(rawLabel || '').trim();
     return label || 'Guest Learner';
+}
+
+function normalizeAuthProviderKey(rawProvider = '') {
+    const normalized = String(rawProvider || '').trim().toLowerCase();
+    if (!normalized) return '';
+    if (normalized.includes('google')) return 'google';
+    if (normalized.includes('github')) return 'github';
+    if (
+        normalized.includes('password')
+        || normalized.includes('local')
+        || normalized.includes('email')
+        || normalized.includes('manual')
+        || normalized.includes('credentials')
+    ) {
+        return 'password';
+    }
+    return normalized;
+}
+
+function getAccountSessionProviderLabel() {
+    const normalizedProviderKey = normalizeAuthProviderKey(accountAuthState.providerKey || accountAuthState.providerLabel);
+    if (normalizedProviderKey === 'google') return 'Google';
+    if (normalizedProviderKey === 'github') return 'GitHub';
+    if (normalizedProviderKey === 'password') return 'Email + Password';
+    if (normalizedProviderKey) return normalizedProviderKey.charAt(0).toUpperCase() + normalizedProviderKey.slice(1);
+    const fallbackLabel = String(accountAuthState.providerLabel || '').trim();
+    return fallbackLabel;
+}
+
+function setAccountProviderState(providerKey = '', providerLabel = '') {
+    const normalizedProviderKey = normalizeAuthProviderKey(providerKey || providerLabel);
+    const resolvedLabel = String(providerLabel || '').trim()
+        || (normalizedProviderKey ? getAuthProviderLabel(normalizedProviderKey) : '');
+    accountAuthState.providerKey = normalizedProviderKey;
+    accountAuthState.providerLabel = resolvedLabel;
+}
+
+function updateAccountAccessEntryButtons() {
+    const isAuthenticated = Boolean(accountAuthState.isAuthenticated);
+    const settingsLockButton = document.getElementById('settings-auth-open-account');
+    const insightsLockButton = document.getElementById('insights-auth-open-account');
+    [settingsLockButton, insightsLockButton].forEach((button) => {
+        if (!button) return;
+        button.textContent = isAuthenticated ? 'Manage Account' : 'Log In / Sign Up';
+        button.classList.toggle('is-authenticated-entry', isAuthenticated);
+    });
 }
 
 function getAccountProfileInitials(label = '') {
@@ -15749,20 +15818,40 @@ function updateAccountAuthCardLayout() {
     const authCard = document.getElementById('account-auth-card');
     const interactiveFields = document.getElementById('account-auth-interactive-fields');
     const signedInNote = document.getElementById('account-auth-signed-in-note');
+    const signedInActions = document.getElementById('account-auth-signed-in-actions');
     const signedInUser = document.getElementById('account-auth-signed-in-user');
     const legal = document.getElementById('account-auth-legal');
     const switchRow = document.getElementById('account-auth-switch-row');
+    const submitButton = document.getElementById('account-auth-submit');
     const quickLogoutButton = document.getElementById('account-quick-logout');
+    const heroLogoutButton = document.getElementById('account-auth-hero-logout');
+    const heroManageButton = document.getElementById('account-auth-hero-manage');
+    const statePill = document.getElementById('account-auth-state-pill');
+    const providerPill = document.getElementById('account-auth-provider-pill');
     const isAuthenticated = Boolean(accountAuthState.isAuthenticated);
+    const providerLabel = getAccountSessionProviderLabel();
 
     if (authCard) {
         authCard.classList.remove('hidden');
+        authCard.classList.toggle('account-auth-card-authenticated', isAuthenticated);
+    }
+    if (statePill) {
+        statePill.textContent = isAuthenticated ? 'Session Active' : 'Guest Mode';
+        statePill.setAttribute('data-auth-state', isAuthenticated ? 'authenticated' : 'guest');
+    }
+    if (providerPill) {
+        const shouldShowProvider = isAuthenticated && Boolean(providerLabel);
+        providerPill.classList.toggle('hidden', !shouldShowProvider);
+        providerPill.textContent = shouldShowProvider ? providerLabel : 'Direct login';
     }
     if (interactiveFields) {
         interactiveFields.classList.toggle('hidden', isAuthenticated);
     }
     if (signedInNote) {
         signedInNote.classList.toggle('hidden', !isAuthenticated);
+    }
+    if (signedInActions) {
+        signedInActions.classList.toggle('hidden', !isAuthenticated);
     }
     if (signedInUser) {
         signedInUser.textContent = isAuthenticated ? getAccountDisplayLabel() : 'Session active';
@@ -15773,9 +15862,21 @@ function updateAccountAuthCardLayout() {
     if (switchRow) {
         switchRow.classList.toggle('hidden', isAuthenticated);
     }
+    if (submitButton) {
+        submitButton.classList.toggle('hidden', isAuthenticated);
+    }
     if (quickLogoutButton) {
         quickLogoutButton.classList.toggle('hidden', !isAuthenticated);
         quickLogoutButton.textContent = accountAuthState.inFlight ? 'Signing Out...' : 'Sign Out';
+    }
+    if (heroLogoutButton) {
+        heroLogoutButton.classList.toggle('hidden', !isAuthenticated);
+        heroLogoutButton.disabled = accountAuthState.inFlight;
+        heroLogoutButton.setAttribute('aria-disabled', accountAuthState.inFlight ? 'true' : 'false');
+        heroLogoutButton.textContent = accountAuthState.inFlight ? 'Signing Out...' : 'Sign Out';
+    }
+    if (heroManageButton) {
+        heroManageButton.classList.toggle('hidden', !isAuthenticated);
     }
 }
 
@@ -15788,14 +15889,21 @@ function updateAccountProfileSummaryUI() {
     const sessionEl = document.getElementById('account-profile-session-display');
     const syncEl = document.getElementById('account-profile-sync-display');
     const quickLogoutButton = document.getElementById('account-quick-logout');
+    const profileToggleButton = document.getElementById('account-profile-toggle');
+    const profileToggleLabel = document.getElementById('account-profile-toggle-label');
+    const profileActionsWrap = document.querySelector('#account-modal .account-profile-actions');
+    const profileContent = document.getElementById('account-profile-content');
+    const authRequiredNote = document.getElementById('account-profile-auth-required-note');
     const panelButtons = Array.from(document.querySelectorAll('[data-account-panel-target]'));
     const isAuthenticated = Boolean(accountAuthState.isAuthenticated);
     const displayLabel = getAccountDisplayLabel();
     const emailLabel = String(accountProfile.email || '').trim();
     const sessionLabel = String(accountAuthState.sessionLabel || '').trim();
+    const providerLabel = getAccountSessionProviderLabel();
 
     if (modal) {
         modal.classList.toggle('account-user-authenticated', isAuthenticated);
+        modal.classList.toggle('account-user-guest', !isAuthenticated);
     }
     if (avatarEl) {
         avatarEl.textContent = getAccountProfileInitials(displayLabel);
@@ -15812,7 +15920,9 @@ function updateAccountProfileSummaryUI() {
         goalEl.textContent = getAccountGoalLabel(accountProfile.goal);
     }
     if (sessionEl) {
-        sessionEl.textContent = isAuthenticated ? (sessionLabel || 'Signed In') : 'Guest';
+        sessionEl.textContent = isAuthenticated
+            ? (providerLabel ? `${providerLabel} Session` : (sessionLabel || 'Signed In'))
+            : 'Guest';
     }
     if (syncEl) {
         syncEl.textContent = String(accountProfile.lastSyncMessage || 'Sync idle.');
@@ -15821,10 +15931,31 @@ function updateAccountProfileSummaryUI() {
         quickLogoutButton.classList.toggle('hidden', !isAuthenticated);
         quickLogoutButton.textContent = accountAuthState.inFlight ? 'Signing Out...' : 'Sign Out';
     }
+    if (profileToggleButton) {
+        profileToggleButton.classList.toggle('hidden', !isAuthenticated);
+        if (!isAuthenticated) {
+            profileToggleButton.setAttribute('aria-expanded', 'false');
+        }
+    }
+    if (profileToggleLabel && !isAuthenticated) {
+        profileToggleLabel.textContent = 'Manage';
+    }
+    if (profileActionsWrap) {
+        profileActionsWrap.classList.toggle('hidden', !isAuthenticated);
+    }
+    if (authRequiredNote) {
+        authRequiredNote.classList.toggle('hidden', isAuthenticated);
+    }
+    if (!isAuthenticated) {
+        accountProfileUiState.expanded = false;
+        if (profileContent) {
+            profileContent.classList.add('hidden');
+        }
+    }
 
     panelButtons.forEach((button) => {
         const panel = String(button.getAttribute('data-account-panel-target') || '').toLowerCase();
-        const requiresAuth = panel === 'security' || panel === 'danger';
+        const requiresAuth = panel === 'profile' || panel === 'security' || panel === 'danger';
         const disabled = requiresAuth && !isAuthenticated;
         button.disabled = disabled;
         button.setAttribute('aria-disabled', disabled ? 'true' : 'false');
@@ -15890,6 +16021,7 @@ function handleInsightsAccessStateChange() {
         endStudySession({ notify: false });
     }
     updateSettingsCustomizationAccessState();
+    updateAccountAccessEntryButtons();
     if (typeof renderInsights === 'function') {
         renderInsights();
     } else if (typeof updateStudyTrackerUI === 'function') {
@@ -16035,17 +16167,18 @@ function setAccountAuthModeCopy(isSignup) {
     const legal = document.getElementById('account-auth-legal');
     const auxRow = document.getElementById('account-auth-aux-row');
     const isAuthenticated = Boolean(accountAuthState.isAuthenticated);
+    const providerLabel = getAccountSessionProviderLabel();
 
     if (flowTitle) {
         flowTitle.textContent = isAuthenticated
-            ? 'Logged In'
+            ? 'You Are Signed In'
             : isSignup
                 ? 'Create Your Account'
                 : 'Log In to Your Account';
     }
     if (flowSubtitle) {
         flowSubtitle.textContent = isAuthenticated
-            ? 'Your session is active. Use Sign Out to switch accounts.'
+            ? `Authenticated${providerLabel ? ` via ${providerLabel}` : ''}. Use Sign Out to switch accounts.`
             : isSignup
             ? 'Create a profile to sync progress and settings across devices.'
             : 'Use a provider or continue with your email/username and password.';
@@ -16065,10 +16198,10 @@ function setAccountAuthModeCopy(isSignup) {
                 : 'Sign Up';
     }
     if (legal) {
-        legal.classList.toggle('hidden', !isSignup);
+        legal.classList.toggle('hidden', isAuthenticated || !isSignup);
     }
     if (auxRow) {
-        auxRow.classList.toggle('hidden', isSignup);
+        auxRow.classList.toggle('hidden', isSignup || isAuthenticated);
     }
 }
 
@@ -16220,10 +16353,9 @@ async function handleOAuthResultFromUrl() {
     if (!oauthResult) return;
 
     const providerLabel = getAuthProviderLabel(oauthResult.provider);
+    const providerKey = normalizeAuthProviderKey(oauthResult.provider);
     if (oauthResult.status === 'success') {
-        const message = `${providerLabel} sign-in successful.`;
-        setAccountAuthStatus(message, 'success');
-        showToast(message, 'success');
+        setAccountAuthStatus(`${providerLabel} sign-in completed. Finalizing secure session...`, 'info');
         if (hasNeonSyncConfig()) {
             const session = await refreshAuthSessionState({
                 silent: true,
@@ -16231,6 +16363,15 @@ async function handleOAuthResultFromUrl() {
                 retryDelayMs: 650,
                 force: true
             });
+            if (session?.isAuthenticated || accountAuthState.isAuthenticated) {
+                setAccountProviderState(providerKey, providerLabel);
+                updateAccountChip();
+                refreshAccountPrimaryAuthButton();
+                const successMessage = `${providerLabel} account connected.`;
+                setAccountAuthStatus(successMessage, 'success');
+                showToast(successMessage, 'success');
+                return;
+            }
             if (!session?.isAuthenticated && !accountAuthState.isAuthenticated) {
                 // Mobile browsers can delay cross-site cookie availability briefly after OAuth return.
                 window.setTimeout(() => {
@@ -16242,6 +16383,15 @@ async function handleOAuthResultFromUrl() {
                                 retryDelayMs: 700,
                                 force: true
                             });
+                            if (recoverySession?.isAuthenticated || accountAuthState.isAuthenticated) {
+                                setAccountProviderState(providerKey, providerLabel);
+                                updateAccountChip();
+                                refreshAccountPrimaryAuthButton();
+                                const recoveredMessage = `${providerLabel} account connected.`;
+                                setAccountAuthStatus(recoveredMessage, 'success');
+                                showToast(recoveredMessage, 'success');
+                                return;
+                            }
                             if (!recoverySession?.isAuthenticated && !accountAuthState.isAuthenticated) {
                                 const syncFailureMessage = isCrossOriginApiRuntime()
                                     ? `${providerLabel} sign-in succeeded, but session cookies were blocked. Set ALLOWED_ORIGINS to your exact frontend origin(s), SESSION_COOKIE_SAME_SITE=none, and SESSION_COOKIE_SECURE=true.`
@@ -16257,6 +16407,11 @@ async function handleOAuthResultFromUrl() {
                 }, 900);
             }
         }
+        if (!hasNeonSyncConfig()) {
+            const unavailableMessage = `${providerLabel} sign-in requires the auth server configuration.`;
+            setAccountAuthStatus(unavailableMessage, 'error');
+            showToast(unavailableMessage, 'warning');
+        }
         return;
     }
 
@@ -16267,7 +16422,7 @@ async function handleOAuthResultFromUrl() {
 
 function getAccountPrimaryAuthLabel() {
     if (accountAuthState.isAuthenticated) {
-        return 'Logged In';
+        return 'Session Active';
     }
     if (accountAuthState.mode === 'signup') {
         return 'Create Account';
@@ -16396,6 +16551,8 @@ function setAuthSubmitBusy(isBusy) {
     accountAuthState.inFlight = Boolean(isBusy);
     const submitBtn = document.getElementById('account-auth-submit');
     const quickLogoutBtn = document.getElementById('account-quick-logout');
+    const heroLogoutBtn = document.getElementById('account-auth-hero-logout');
+    const heroManageBtn = document.getElementById('account-auth-hero-manage');
     if (submitBtn) {
         const shouldDisableSubmit = accountAuthState.inFlight || accountAuthState.isAuthenticated;
         submitBtn.disabled = shouldDisableSubmit;
@@ -16415,6 +16572,19 @@ function setAuthSubmitBusy(isBusy) {
         quickLogoutBtn.textContent = accountAuthState.inFlight ? 'Signing Out...' : 'Sign Out';
         quickLogoutBtn.classList.toggle('opacity-70', accountAuthState.inFlight);
         quickLogoutBtn.classList.toggle('cursor-not-allowed', accountAuthState.inFlight);
+    }
+    if (heroLogoutBtn) {
+        heroLogoutBtn.disabled = accountAuthState.inFlight;
+        heroLogoutBtn.setAttribute('aria-disabled', accountAuthState.inFlight ? 'true' : 'false');
+        heroLogoutBtn.textContent = accountAuthState.inFlight ? 'Signing Out...' : 'Sign Out';
+        heroLogoutBtn.classList.toggle('opacity-70', accountAuthState.inFlight);
+        heroLogoutBtn.classList.toggle('cursor-not-allowed', accountAuthState.inFlight);
+    }
+    if (heroManageBtn) {
+        heroManageBtn.disabled = accountAuthState.inFlight;
+        heroManageBtn.setAttribute('aria-disabled', accountAuthState.inFlight ? 'true' : 'false');
+        heroManageBtn.classList.toggle('opacity-70', accountAuthState.inFlight);
+        heroManageBtn.classList.toggle('cursor-not-allowed', accountAuthState.inFlight);
     }
     if (!accountAuthState.inFlight) {
         refreshAccountPrimaryAuthButton();
@@ -16627,6 +16797,34 @@ function getSessionUserFromPayload(payload) {
     return { userId, userEmail, userUsername };
 }
 
+function resolveSessionProviderFromPayload(payload) {
+    const user = payload?.user
+        || payload?.data?.user
+        || payload?.session?.user
+        || payload?.data?.session?.user
+        || null;
+    const providerCandidates = [
+        user?.provider,
+        user?.authProvider,
+        user?.loginProvider,
+        user?.oauthProvider,
+        payload?.provider,
+        payload?.authProvider,
+        payload?.oauthProvider,
+        payload?.session?.provider,
+        payload?.session?.authProvider,
+        payload?.data?.provider,
+        payload?.data?.authProvider
+    ];
+    for (const candidate of providerCandidates) {
+        const normalizedProvider = normalizeAuthProviderKey(candidate);
+        if (normalizedProvider) {
+            return normalizedProvider;
+        }
+    }
+    return '';
+}
+
 function resolveSessionAuthenticatedFlag(payload, sessionUser = {}) {
     const inferredFromSessionUser = Boolean(
         sessionUser?.userId
@@ -16696,6 +16894,7 @@ function getAuthProviderKeyFromButton(button) {
 function getAuthProviderLabel(providerKey) {
     if (providerKey === 'google') return 'Google';
     if (providerKey === 'github') return 'GitHub';
+    if (providerKey === 'password') return 'Email + Password';
     return 'Social';
 }
 
@@ -16881,6 +17080,19 @@ function setAccountProfileSectionExpanded(expanded, options = {}) {
     const toggleButton = document.getElementById('account-profile-toggle');
     const toggleLabel = document.getElementById('account-profile-toggle-label');
     const shouldExpand = Boolean(expanded);
+    if (!accountAuthState.isAuthenticated && shouldExpand) {
+        accountProfileUiState.expanded = false;
+        if (content) {
+            content.classList.add('hidden');
+        }
+        if (toggleButton) {
+            toggleButton.setAttribute('aria-expanded', 'false');
+        }
+        if (toggleLabel) {
+            toggleLabel.textContent = 'Manage';
+        }
+        return;
+    }
     const resolvedFocusSelector = focusSelector || resolveAccountPanelFocusSelector(panel);
     setActiveAccountProfilePanel(panel);
     accountProfileUiState.expanded = shouldExpand;
@@ -17193,6 +17405,7 @@ async function deleteAccountPermanently() {
         setCsrfToken('');
         accountAuthState.isAuthenticated = false;
         accountAuthState.sessionLabel = '';
+        setAccountProviderState('', '');
         accountAuthState.rememberMe = false;
         clearAuthScopedLocalStorage();
         accountProfile = {
@@ -17219,6 +17432,11 @@ async function deleteAccountPermanently() {
 }
 
 async function saveAccountProfileSettings() {
+    if (!accountAuthState.isAuthenticated) {
+        setAccountAuthStatus('Sign in to edit profile settings.', 'info');
+        showToast('Sign in to edit profile settings.', 'info');
+        return;
+    }
     accountProfile = readAccountProfileFromForm();
     saveAccountProfile();
     applyAccountProfileToForm();
@@ -17246,6 +17464,7 @@ async function checkNeonSession(options = {}) {
         setCsrfToken('');
         accountAuthState.isAuthenticated = false;
         accountAuthState.sessionLabel = '';
+        setAccountProviderState('', '');
         clearAuthScopedLocalStorage();
         setAccountAuthStatus('Auth server not configured.', 'neutral');
         refreshAccountPrimaryAuthButton();
@@ -17262,6 +17481,7 @@ async function checkNeonSession(options = {}) {
             || ''
         ).trim();
         const sessionUser = getSessionUserFromPayload(sessionPayload);
+        const sessionProvider = resolveSessionProviderFromPayload(sessionPayload);
         const { userId, userEmail, userUsername } = sessionUser;
         const storedUserId = String(accountProfile.serverUserId || '').trim();
         const userLabel = userUsername || userEmail || userId || storedUserId;
@@ -17273,6 +17493,11 @@ async function checkNeonSession(options = {}) {
         if (isLatestSessionCheck()) {
             accountAuthState.isAuthenticated = isAuthenticated;
             accountAuthState.sessionLabel = userLabel;
+            if (isAuthenticated) {
+                setAccountProviderState(sessionProvider || accountAuthState.providerKey || accountAuthState.providerLabel);
+            } else {
+                setAccountProviderState('', '');
+            }
             if (sessionCsrfToken) {
                 setCsrfToken(sessionCsrfToken);
             }
@@ -17310,6 +17535,7 @@ async function checkNeonSession(options = {}) {
             setCsrfToken('');
             accountAuthState.isAuthenticated = false;
             accountAuthState.sessionLabel = '';
+            setAccountProviderState('', '');
             clearAuthScopedLocalStorage();
             if (isUnauthenticated) {
                 accountProfile.serverUserId = '';
@@ -17404,9 +17630,11 @@ async function signOutAccountFlow(options = {}) {
     setCsrfToken('');
     accountAuthState.isAuthenticated = false;
     accountAuthState.sessionLabel = '';
+    setAccountProviderState('', '');
     accountAuthState.rememberMe = false;
     clearAuthScopedLocalStorage();
     setAccountAuthStatus('Signed out.', 'neutral');
+    setAccountSyncState('connected', 'Not signed in.');
     clearAuthPasswordFields();
     const rememberCheckbox = document.getElementById('account-auth-remember');
     if (rememberCheckbox) rememberCheckbox.checked = false;
@@ -17500,7 +17728,7 @@ async function submitAccountAuth() {
             body: JSON.stringify(payload)
         });
         const authSessionUser = getSessionUserFromPayload(authPayload);
-        const authHasSession = resolveSessionAuthenticatedFlag(authPayload, authSessionUser);
+        const authProviderFromPayload = resolveSessionProviderFromPayload(authPayload);
         const authCsrfToken = String(authPayload?.csrfToken || authPayload?.session?.csrfToken || '').trim();
         if (authCsrfToken) {
             setCsrfToken(authCsrfToken);
@@ -17523,16 +17751,23 @@ async function submitAccountAuth() {
         }
         saveAccountProfile();
         applyAccountProfileToForm();
-        if (authHasSession) {
-            accountAuthState.isAuthenticated = true;
-            accountAuthState.sessionLabel = authSessionUser.userUsername
-                || authSessionUser.userEmail
-                || authSessionUser.userId
-                || accountAuthState.sessionLabel;
-            refreshAccountPrimaryAuthButton();
-            handleInsightsAccessStateChange();
+        const refreshedSession = await refreshAuthSessionState({ silent: true, retries: 2, retryDelayMs: 450, force: true });
+        const hasVerifiedSession = Boolean(refreshedSession?.isAuthenticated || accountAuthState.isAuthenticated);
+        if (!hasVerifiedSession) {
+            const sessionSyncMessage = isCrossOriginApiRuntime()
+                ? 'Sign-in completed, but session cookies were blocked by browser policy. Confirm ALLOWED_ORIGINS, SESSION_COOKIE_SAME_SITE=none, and SESSION_COOKIE_SECURE=true.'
+                : 'Sign-in completed, but secure session verification failed. Please try again.';
+            throw new Error(sessionSyncMessage);
         }
-        await refreshAuthSessionState({ silent: true, retries: 2, retryDelayMs: 450, force: true });
+        const resolvedProviderKey = normalizeAuthProviderKey(authProviderFromPayload || 'password') || 'password';
+        setAccountProviderState(resolvedProviderKey, getAuthProviderLabel(resolvedProviderKey));
+        accountAuthState.isAuthenticated = true;
+        accountAuthState.sessionLabel = authSessionUser.userUsername
+            || authSessionUser.userEmail
+            || authSessionUser.userId
+            || accountAuthState.sessionLabel;
+        refreshAccountPrimaryAuthButton();
+        handleInsightsAccessStateChange();
         const successText = isSignup ? 'Account created and signed in successfully.' : 'Signed in successfully.';
         setAccountAuthStatus(successText, 'success');
         showToast(successText, 'success');
@@ -17736,7 +17971,7 @@ function openAccountModal() {
     const rememberCheckbox = document.getElementById('account-auth-remember');
     if (rememberCheckbox) rememberCheckbox.checked = Boolean(accountAuthState.rememberMe);
     setAccountAuthStatus('Checking session...', 'info');
-    const initialFocusSelector = accountAuthState.isAuthenticated ? '#account-quick-logout' : '#account-auth-email';
+    const initialFocusSelector = accountAuthState.isAuthenticated ? '#account-auth-hero-logout' : '#account-auth-email';
     openModal('account-modal', { initialFocus: initialFocusSelector });
     if (PROFILE_SYNC_CONFIG.enabled) {
         void refreshAuthSessionState({
@@ -17758,6 +17993,8 @@ function initAccount() {
     const saveBtn = document.getElementById('save-account');
     const profileToggleBtn = document.getElementById('account-profile-toggle');
     const quickLogoutBtn = document.getElementById('account-quick-logout');
+    const authHeroLogoutBtn = document.getElementById('account-auth-hero-logout');
+    const authHeroManageBtn = document.getElementById('account-auth-hero-manage');
     const emailRequestPinBtn = document.getElementById('account-email-request-pin');
     const emailVerifyPinBtn = document.getElementById('account-email-verify-pin');
     const passwordUpdateBtn = document.getElementById('account-password-update');
@@ -17819,15 +18056,28 @@ function initAccount() {
             });
         });
     }
+    const runSignOutFlowFromUi = async () => {
+        if (accountAuthState.inFlight || !accountAuthState.isAuthenticated) return;
+        setAuthSubmitBusy(true);
+        try {
+            await signOutAccountFlow();
+        } finally {
+            setAuthSubmitBusy(false);
+        }
+    };
     if (quickLogoutBtn) {
-        quickLogoutBtn.addEventListener('click', async () => {
-            if (accountAuthState.inFlight || !accountAuthState.isAuthenticated) return;
-            setAuthSubmitBusy(true);
-            try {
-                await signOutAccountFlow();
-            } finally {
-                setAuthSubmitBusy(false);
-            }
+        quickLogoutBtn.addEventListener('click', runSignOutFlowFromUi);
+    }
+    if (authHeroLogoutBtn) {
+        authHeroLogoutBtn.addEventListener('click', runSignOutFlowFromUi);
+    }
+    if (authHeroManageBtn) {
+        authHeroManageBtn.addEventListener('click', () => {
+            if (!accountAuthState.isAuthenticated) return;
+            setAccountProfileSectionExpanded(true, {
+                panel: 'profile',
+                focusSelector: resolveAccountPanelFocusSelector('profile')
+            });
         });
     }
     profilePanelButtons.forEach((button) => {
@@ -17967,7 +18217,9 @@ function initAccount() {
     setAccountAuthMode('login');
     accountAuthState.isAuthenticated = false;
     accountAuthState.sessionLabel = '';
+    setAccountProviderState('', '');
     setAccountAuthStatus(t('auth.status.guest'), 'neutral');
+    setAccountSyncState('connected', 'Not signed in.');
     refreshAccountPrimaryAuthButton();
     updateAccountAuthCardLayout();
     updateAccountProfileSummaryUI();
@@ -25366,6 +25618,7 @@ function updateSettingsCustomizationAccessState() {
         }
         control.setAttribute('aria-disabled', hasAccess ? 'false' : 'true');
     });
+    updateAccountAccessEntryButtons();
 }
 
 function requireAdvancedSettingsAccess() {

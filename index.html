@@ -58,7 +58,7 @@
                         &#x1F504; <span class="hidden xs:inline" data-i18n="btn.reset">Reset</span><span class="xs:hidden" data-i18n="btn.resetShort">Reset</span>
                     </button>
                     <button id="account-btn" type="button" onclick="openAccountModal()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
-                        &#x1F464; <span class="hidden xs:inline" data-i18n="btn.account">Account</span><span class="xs:hidden" data-i18n="btn.accountShort">Account</span>
+                        &#x1F464; <span id="account-btn-label-desktop" class="hidden xs:inline" data-i18n="btn.account">Account</span><span id="account-btn-label-mobile" class="xs:hidden" data-i18n="btn.accountShort">Account</span>
                     </button>
                 </div>
                 <div id="account-chip" class="account-chip hidden sm:flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold order-2 sm:order-3 bg-slate-800 text-slate-100 border border-white/10"></div>
@@ -1601,16 +1601,24 @@
 
             <div class="account-modal-body p-6">
                 <div id="account-auth-card" class="account-auth-card rounded-2xl border border-indigo-300/30 bg-gradient-to-br from-indigo-500/10 to-slate-900 p-5 space-y-4">
-                    <div class="account-auth-intro space-y-1">
-                        <p class="account-auth-kicker text-xs uppercase tracking-wide font-semibold text-indigo-200">Secure Sign-In</p>
+                    <div id="account-auth-state-hero" class="account-auth-state-hero">
+                        <div class="account-auth-state-kicker-wrap">
+                            <span id="account-auth-state-pill" class="account-auth-state-pill">Guest Mode</span>
+                            <span id="account-auth-provider-pill" class="account-auth-provider-pill hidden">Direct login</span>
+                        </div>
                         <h4 id="account-auth-flow-title" class="text-lg font-semibold text-slate-100">Log In to Your Account</h4>
                         <p id="account-auth-flow-subtitle" class="text-xs text-slate-300">Use a provider or continue with your email/username and password.</p>
-                    </div>
 
-                    <div id="account-auth-signed-in-note" class="account-auth-signed-in-note hidden" role="status" aria-live="polite">
-                        <p class="account-auth-signed-in-kicker">Signed In</p>
-                        <p id="account-auth-signed-in-user" class="account-auth-signed-in-user">Session active</p>
-                        <p class="account-auth-signed-in-copy">Use the profile card below for edits and secure account actions.</p>
+                        <div id="account-auth-signed-in-note" class="account-auth-signed-in-note hidden" role="status" aria-live="polite">
+                            <p class="account-auth-signed-in-kicker">Signed In</p>
+                            <p id="account-auth-signed-in-user" class="account-auth-signed-in-user">Session active</p>
+                            <p class="account-auth-signed-in-copy">Your profile and secure settings are now unlocked.</p>
+                        </div>
+
+                        <div id="account-auth-signed-in-actions" class="account-auth-signed-in-actions hidden">
+                            <button id="account-auth-hero-manage" type="button" class="account-primary-btn bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-2 rounded-xl font-medium">Open Profile Settings</button>
+                            <button id="account-auth-hero-logout" type="button" class="account-profile-logout-btn">Sign Out</button>
+                        </div>
                     </div>
 
                     <div id="account-auth-interactive-fields" class="space-y-4">
@@ -1699,10 +1707,10 @@
                     <div class="account-profile-header">
                         <div class="account-profile-header-main">
                             <h4 class="text-base font-semibold text-indigo-300">Profile Settings</h4>
-                            <p class="account-profile-header-subtitle text-xs text-slate-300">Profile summary first, secure edits only when needed.</p>
+                            <p class="account-profile-header-subtitle text-xs text-slate-300">Live account profile, sync status, and secure access controls.</p>
                         </div>
                         <div class="account-profile-header-actions">
-                            <span id="account-sync-status" class="text-xs font-semibold px-2.5 py-1 rounded-full border bg-slate-800 border-white/10 text-slate-200">idle</span>
+                            <span id="account-sync-status" class="text-xs font-semibold px-2.5 py-1 rounded-full border bg-slate-800 border-white/10 text-slate-200">guest</span>
                             <button id="account-quick-logout" type="button" class="account-profile-logout-btn hidden" aria-label="Sign out of your account">Sign Out</button>
                             <button id="account-profile-toggle" type="button" class="account-profile-toggle-btn" aria-expanded="false" aria-controls="account-profile-content">
                                 <span id="account-profile-toggle-label">Manage</span>
@@ -1733,6 +1741,7 @@
                             </div>
                         </div>
                     </div>
+                    <p id="account-profile-auth-required-note" class="account-profile-auth-required-note">Sign in to unlock editable profile details, security updates, and account management actions.</p>
 
                     <div class="account-profile-actions" role="group" aria-label="Profile panels">
                         <button id="account-profile-open-profile" type="button" class="account-profile-action-btn is-active" data-account-panel-target="profile" aria-pressed="true">Edit Profile</button>
