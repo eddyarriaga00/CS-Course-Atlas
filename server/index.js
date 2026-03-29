@@ -270,12 +270,21 @@ function getCookieOptions(req, options = {}) {
     if (secureCookie && crossSiteRequest) {
         sameSitePolicy = 'none';
     }
+    const shouldUsePartitionedCookie = Boolean(
+        secureCookie
+        && crossSiteRequest
+        && originInfo.originHeader
+        && originInfo.trusted
+        && !originInfo.sameOrigin
+    );
     return {
         httpOnly: true,
         sameSite: sameSitePolicy,
         secure: secureCookie,
-        // Helps modern browsers keep cross-site auth cookies available when third-party cookie blocking is enabled.
-        partitioned: secureCookie && crossSiteRequest,
+        // Only use partitioned cookies when the request originates from a trusted cross-site frontend origin.
+        // OAuth callbacks are top-level navigations (no Origin header); partitioning there creates a cookie
+        // tied to the wrong partition and prevents session visibility from the frontend.
+        partitioned: shouldUsePartitionedCookie,
         path: '/',
         maxAge: SESSION_TTL_DAYS * 24 * 60 * 60 * 1000,
         priority: 'high'
@@ -1969,9 +1978,19 @@ async function clearSession(req, res) {
     if (token) {
         await query('DELETE FROM user_sessions WHERE token_hash = $1', [hashSessionToken(token)]);
     }
-    res.clearCookie(SESSION_COOKIE_NAME, {
+    const clearOptions = {
         ...getCookieOptions(req),
         maxAge: undefined
+    };
+    // Clear both shapes in case the session was created in OAuth callback (unpartitioned)
+    // or via cross-site fetch login/signup (partitioned).
+    res.clearCookie(SESSION_COOKIE_NAME, {
+        ...clearOptions,
+        partitioned: false
+    });
+    res.clearCookie(SESSION_COOKIE_NAME, {
+        ...clearOptions,
+        partitioned: true
     });
 }
 
