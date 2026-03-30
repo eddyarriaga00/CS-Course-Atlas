@@ -23592,7 +23592,7 @@ function ensureEnhancedVisualAssets() {
             const prefersDark = document.body.classList.contains('dark');
             window.mermaid.initialize({
                 startOnLoad: false,
-                securityLevel: 'loose',
+                securityLevel: 'strict',
                 theme: prefersDark ? 'dark' : 'default'
             });
             enhancedVisualAssetState.mermaidInitialized = true;
@@ -23648,6 +23648,8 @@ function renderSearchDistributionChart(filteredModules = []) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            parsing: false,
+            normalized: true,
             animation: { duration: appState.reduceMotion ? 0 : 550 },
             plugins: {
                 legend: { display: false }
@@ -23732,6 +23734,8 @@ function renderInsightsProgressChart({ hasAccess = false, stats = null, guestPre
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                parsing: false,
+                normalized: true,
                 animation: { duration: appState.reduceMotion ? 0 : 500 },
                 plugins: {
                     legend: {
@@ -23777,6 +23781,8 @@ function renderInsightsProgressChart({ hasAccess = false, stats = null, guestPre
         options: {
             responsive: true,
             maintainAspectRatio: false,
+            parsing: false,
+            normalized: true,
             animation: { duration: appState.reduceMotion ? 0 : 550 },
             plugins: {
                 legend: {
@@ -23803,6 +23809,7 @@ function renderInsightsProgressChart({ hasAccess = false, stats = null, guestPre
 function escapeMermaidLabel(value = '') {
     return String(value || '')
         .replace(/\n+/g, ' ')
+        .replace(/[<>]/g, '')
         .replace(/"/g, '\\"')
         .trim();
 }
@@ -23898,7 +23905,7 @@ async function renderInsightsRoadmapMermaid(definition = '') {
         if (typeof window.mermaid?.initialize === 'function') {
             window.mermaid.initialize({
                 startOnLoad: false,
-                securityLevel: 'loose',
+                securityLevel: 'strict',
                 theme: document.body.classList.contains('dark') ? 'dark' : 'default'
             });
         }

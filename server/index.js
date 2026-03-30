@@ -5,6 +5,7 @@ const path = require('path');
 const crypto = require('crypto');
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 const helmet = require('helmet');
 const jwt = require('jsonwebtoken');
 const jwksClient = require('jwks-rsa');
@@ -61,6 +62,7 @@ const AUTH_IDENTIFIER_MAX_LENGTH = readPositiveInteger(process.env.AUTH_IDENTIFI
 const SERVER_REQUEST_TIMEOUT_MS = readPositiveInteger(process.env.SERVER_REQUEST_TIMEOUT_MS, 30_000);
 const SERVER_HEADERS_TIMEOUT_MS = readPositiveInteger(process.env.SERVER_HEADERS_TIMEOUT_MS, 35_000);
 const SERVER_KEEP_ALIVE_TIMEOUT_MS = readPositiveInteger(process.env.SERVER_KEEP_ALIVE_TIMEOUT_MS, 5_000);
+const HTTP_COMPRESSION_THRESHOLD_BYTES = readPositiveInteger(process.env.HTTP_COMPRESSION_THRESHOLD_BYTES, 1_024);
 const SECURITY_CLEANUP_INTERVAL_MS = readPositiveInteger(process.env.SECURITY_CLEANUP_INTERVAL_MS, 15 * 60 * 1000);
 const SECURITY_EVENT_RETENTION_HOURS = readPositiveInteger(process.env.SECURITY_EVENT_RETENTION_HOURS, 48);
 const SESSION_COOKIE_SAME_SITE = parseSameSitePolicy(process.env.SESSION_COOKIE_SAME_SITE, 'lax');
@@ -209,6 +211,10 @@ app.use(helmet({
     contentSecurityPolicy: false,
     referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
     crossOriginResourcePolicy: { policy: 'same-site' }
+}));
+app.use(compression({
+    // Skip tiny responses and focus compression work where it has measurable impact.
+    threshold: HTTP_COMPRESSION_THRESHOLD_BYTES
 }));
 app.use(express.json({ limit: '2mb', strict: true }));
 app.use(cookieParser());
