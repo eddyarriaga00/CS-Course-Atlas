@@ -16240,7 +16240,7 @@ function syncAccountSignupToggleState() {
 }
 
 async function handleAuthProviderClick(providerKey, providerLabel) {
-    if (maybeRedirectToCanonicalFrontendForAuth()) {
+    if (maybeRedirectToPreferredAuthHost()) {
         return;
     }
     if (!providerKey) {
@@ -16358,6 +16358,9 @@ async function handleOAuthResultFromUrl() {
     const providerLabel = getAuthProviderLabel(oauthResult.provider);
     const providerKey = normalizeAuthProviderKey(oauthResult.provider);
     if (oauthResult.status === 'success') {
+        if (maybeRedirectToApiHostedFrontendForAuth()) {
+            return;
+        }
         setAccountAuthStatus(`${providerLabel} sign-in completed. Finalizing secure session...`, 'info');
         if (hasNeonSyncConfig()) {
             const verifiedSession = await waitForVerifiedAuthSession({
@@ -16723,6 +16726,33 @@ function shouldRedirectToCanonicalFrontendForAuth() {
     return host === 'cscourseatlas.com' || host === 'www.cscourseatlas.com';
 }
 
+function shouldRedirectToApiHostedFrontendForAuth() {
+    if (typeof window === 'undefined') return false;
+    if (!isCrossOriginApiRuntime()) return false;
+    const configuredBase = getConfiguredApiBaseUrl();
+    if (!configuredBase) return false;
+    return isIOSTouchDevice() || isMobile();
+}
+
+function getApiHostedFrontendAuthUrl() {
+    if (typeof window === 'undefined') return '';
+    const configuredBase = getConfiguredApiBaseUrl();
+    if (!configuredBase) return '';
+    const search = String(window.location.search || '');
+    const hash = String(window.location.hash || '');
+    return `${configuredBase}/index.html${search}${hash}`;
+}
+
+function maybeRedirectToApiHostedFrontendForAuth() {
+    if (!shouldRedirectToApiHostedFrontendForAuth()) return false;
+    const targetUrl = getApiHostedFrontendAuthUrl();
+    if (!targetUrl) return false;
+    setAccountAuthStatus('Redirecting to mobile secure sign-in host...', 'info');
+    showToast('Opening secure mobile sign-in host...', 'info');
+    window.location.assign(targetUrl);
+    return true;
+}
+
 function getCanonicalFrontendAuthUrl() {
     if (typeof window === 'undefined') return 'https://eddyarriaga00.github.io/CS-Course-Atlas/index.html';
     const search = String(window.location.search || '');
@@ -16737,6 +16767,11 @@ function maybeRedirectToCanonicalFrontendForAuth() {
     showToast('Redirecting to secure sign-in host for account access.', 'info');
     window.location.assign(targetUrl);
     return true;
+}
+
+function maybeRedirectToPreferredAuthHost() {
+    if (maybeRedirectToApiHostedFrontendForAuth()) return true;
+    return maybeRedirectToCanonicalFrontendForAuth();
 }
 
 function isApiRuntimeAvailable() {
@@ -17759,7 +17794,7 @@ async function signOutAccountFlow(options = {}) {
 }
 
 async function submitAccountAuth() {
-    if (maybeRedirectToCanonicalFrontendForAuth()) {
+    if (maybeRedirectToPreferredAuthHost()) {
         return;
     }
     if (accountAuthState.inFlight) return;
@@ -18075,7 +18110,7 @@ async function pushUserStateToNeon(options = {}) {
 }
 
 function openAccountModal() {
-    if (maybeRedirectToCanonicalFrontendForAuth()) {
+    if (maybeRedirectToPreferredAuthHost()) {
         return;
     }
     const modal = document.getElementById('account-modal');

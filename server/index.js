@@ -927,13 +927,13 @@ function verifyAndDecodeOAuthState(token) {
     }
 }
 
-function sanitizeOAuthReturnPath(rawReturnPath) {
-    const fallbackPath = resolveOAuthReturnCandidate(OAUTH_POST_LOGIN_FALLBACK_PATH, '/index.html');
+function sanitizeOAuthReturnPath(rawReturnPath, req = null) {
+    const fallbackPath = resolveOAuthReturnCandidate(OAUTH_POST_LOGIN_FALLBACK_PATH, '/index.html', req);
     const candidate = safeString(rawReturnPath);
     if (!candidate) {
         return fallbackPath;
     }
-    return resolveOAuthReturnCandidate(candidate, fallbackPath);
+    return resolveOAuthReturnCandidate(candidate, fallbackPath, req);
 }
 
 function appendOAuthResultToPath(basePath, entries) {
@@ -970,10 +970,24 @@ function shouldForceCrossSiteSessionCookieForReturnTo(req, returnTo) {
     }
 }
 
-function isAllowedOAuthReturnOrigin(origin) {
+function getRequestOrigin(req) {
+    const host = safeString(req?.get?.('host')).toLowerCase();
+    if (!host) return '';
+    const protocol = safeString(req?.protocol).toLowerCase();
+    if (protocol === 'http' || protocol === 'https') {
+        return `${protocol}://${host}`;
+    }
+    return '';
+}
+
+function isAllowedOAuthReturnOrigin(origin, req = null) {
     const normalizedOrigin = normalizeOriginHeader(origin);
     if (!normalizedOrigin) return false;
     if (ALLOWED_ORIGINS.has(normalizedOrigin)) {
+        return true;
+    }
+    const requestOrigin = getRequestOrigin(req);
+    if (requestOrigin && normalizedOrigin === requestOrigin) {
         return true;
     }
     if (!isProduction) {
@@ -1009,13 +1023,13 @@ function sanitizeRelativeOAuthReturnPath(candidate, fallbackPath) {
     }
 }
 
-function sanitizeAbsoluteOAuthReturnUrl(candidate) {
+function sanitizeAbsoluteOAuthReturnUrl(candidate, req = null) {
     try {
         const parsed = new URL(candidate);
         if (!['http:', 'https:'].includes(parsed.protocol)) {
             return '';
         }
-        if (!isAllowedOAuthReturnOrigin(`${parsed.protocol}//${parsed.host}`)) {
+        if (!isAllowedOAuthReturnOrigin(`${parsed.protocol}//${parsed.host}`, req)) {
             return '';
         }
         if (!parsed.pathname || !parsed.pathname.startsWith('/')) {
@@ -1033,10 +1047,10 @@ function sanitizeAbsoluteOAuthReturnUrl(candidate) {
     }
 }
 
-function resolveOAuthReturnCandidate(candidateValue, fallbackPath) {
+function resolveOAuthReturnCandidate(candidateValue, fallbackPath, req = null) {
     const candidate = safeString(candidateValue);
     if (!candidate) return fallbackPath;
-    const absoluteTarget = sanitizeAbsoluteOAuthReturnUrl(candidate);
+    const absoluteTarget = sanitizeAbsoluteOAuthReturnUrl(candidate, req);
     if (absoluteTarget) return absoluteTarget;
     return sanitizeRelativeOAuthReturnPath(candidate, fallbackPath);
 }
@@ -2063,7 +2077,7 @@ app.get('/api/auth/oauth/:provider/start', authRateLimit, noStore, (req, res) =>
         });
     }
 
-    const returnTo = sanitizeOAuthReturnPath(req.query?.returnTo);
+    const returnTo = sanitizeOAuthReturnPath(req.query?.returnTo, req);
     const statePayload = {
         provider,
         returnTo,
@@ -2092,7 +2106,7 @@ app.get('/api/auth/oauth/:provider/callback', noStore, async (req, res) => {
 
     const providers = getOAuthProviderStatusMap(req);
     const providerStatus = providers[provider];
-    const fallbackReturnTo = sanitizeOAuthReturnPath(OAUTH_POST_LOGIN_FALLBACK_PATH);
+    const fallbackReturnTo = sanitizeOAuthReturnPath(OAUTH_POST_LOGIN_FALLBACK_PATH, req);
 
     if (!providerStatus?.enabled) {
         return res.redirect(
@@ -2111,7 +2125,7 @@ app.get('/api/auth/oauth/:provider/callback', noStore, async (req, res) => {
     clearOAuthStateCookie(res);
 
     const decodedState = verifyAndDecodeOAuthState(cookieState);
-    const returnTo = sanitizeOAuthReturnPath(decodedState?.returnTo || fallbackReturnTo);
+    const returnTo = sanitizeOAuthReturnPath(decodedState?.returnTo || fallbackReturnTo, req);
 
     if (providerError) {
         logSecurityEvent('oauth_provider_rejected', {
