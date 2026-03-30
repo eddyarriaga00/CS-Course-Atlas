@@ -25,7 +25,7 @@ const {
 const app = express();
 
 const PORT = Number(process.env.PORT || 3000);
-const SESSION_COOKIE_NAME = process.env.SESSION_COOKIE_NAME || 'csatlas_session';
+const SESSION_COOKIE_NAME_INPUT = safeString(process.env.SESSION_COOKIE_NAME);
 const SESSION_TTL_DAYS = Number(process.env.SESSION_TTL_DAYS || 30);
 const MAX_ACTIVE_SESSIONS_PER_USER = readPositiveInteger(process.env.MAX_ACTIVE_SESSIONS_PER_USER, 6);
 const isProduction = process.env.NODE_ENV === 'production';
@@ -65,6 +65,10 @@ const SECURITY_CLEANUP_INTERVAL_MS = readPositiveInteger(process.env.SECURITY_CL
 const SECURITY_EVENT_RETENTION_HOURS = readPositiveInteger(process.env.SECURITY_EVENT_RETENTION_HOURS, 48);
 const SESSION_COOKIE_SAME_SITE = parseSameSitePolicy(process.env.SESSION_COOKIE_SAME_SITE, 'lax');
 const SESSION_COOKIE_SECURE = parseCookieSecureMode(process.env.SESSION_COOKIE_SECURE, isProduction);
+const DEFAULT_SESSION_COOKIE_NAME = isProduction && SESSION_COOKIE_SECURE
+    ? '__Host-csatlas_session'
+    : 'csatlas_session';
+const SESSION_COOKIE_NAME = SESSION_COOKIE_NAME_INPUT || DEFAULT_SESSION_COOKIE_NAME;
 const REQUIRE_JSON_MUTATIONS = parseBooleanEnv(process.env.REQUIRE_JSON_MUTATIONS, true);
 const ENFORCE_FETCH_METADATA = parseBooleanEnv(process.env.ENFORCE_FETCH_METADATA, true);
 const ALLOWED_HOSTS = parseAllowlist(process.env.ALLOWED_HOSTS);
@@ -92,7 +96,11 @@ const EMAIL_PIN_DELIVERY_MODE = isProduction && EMAIL_PIN_DELIVERY_MODE_RAW === 
     : EMAIL_PIN_DELIVERY_MODE_RAW;
 const EMAIL_PIN_DEBUG_RESPONSE = !isProduction
     && String(process.env.EMAIL_PIN_DEBUG_RESPONSE || '').trim().toLowerCase() === 'true';
-const OAUTH_STATE_COOKIE_NAME = String(process.env.OAUTH_STATE_COOKIE_NAME || 'csatlas_oauth_state').trim() || 'csatlas_oauth_state';
+const OAUTH_STATE_COOKIE_NAME_INPUT = safeString(process.env.OAUTH_STATE_COOKIE_NAME);
+const DEFAULT_OAUTH_STATE_COOKIE_NAME = isProduction && SESSION_COOKIE_SECURE
+    ? '__Secure-csatlas_oauth_state'
+    : 'csatlas_oauth_state';
+const OAUTH_STATE_COOKIE_NAME = OAUTH_STATE_COOKIE_NAME_INPUT || DEFAULT_OAUTH_STATE_COOKIE_NAME;
 const OAUTH_STATE_TTL_MS = readPositiveInteger(process.env.OAUTH_STATE_TTL_MS, 10 * 60 * 1000);
 const OAUTH_POST_LOGIN_FALLBACK_PATH = String(process.env.OAUTH_POST_LOGIN_FALLBACK_PATH || '/index.html').trim() || '/index.html';
 const OAUTH_STATE_SECRET = String(process.env.OAUTH_STATE_SECRET || '').trim();
@@ -167,6 +175,8 @@ const environmentValidation = validateServerEnvironment({
     derived: {
         sessionCookieSecure: SESSION_COOKIE_SECURE,
         sessionCookieSameSite: SESSION_COOKIE_SAME_SITE,
+        sessionCookieName: SESSION_COOKIE_NAME,
+        oauthStateCookieName: OAUTH_STATE_COOKIE_NAME,
         allowedHostsCount: ALLOWED_HOSTS.size,
         allowedOriginsCount: ALLOWED_ORIGINS.size,
         oauthStateSecretConfigured: Boolean(OAUTH_STATE_SECRET),
@@ -607,7 +617,12 @@ function setAdditionalSecurityHeaders(_req, res, next) {
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('X-Frame-Options', 'DENY');
     res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
+    res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
+    res.setHeader('Origin-Agent-Cluster', '?1');
     res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=()');
+    if (isProduction) {
+        res.setHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains');
+    }
     return next();
 }
 
@@ -2169,7 +2184,7 @@ app.get('/api/auth/oauth/:provider/start', authRateLimit, noStore, (req, res) =>
     return res.redirect(oauthUrl);
 });
 
-app.get('/api/auth/oauth/:provider/callback', noStore, async (req, res) => {
+app.get('/api/auth/oauth/:provider/callback', authRateLimit, noStore, async (req, res) => {
     const provider = normalizeOAuthProvider(req.params.provider);
     if (!provider) {
         return res.status(400).json({ error: 'Unsupported OAuth provider.' });

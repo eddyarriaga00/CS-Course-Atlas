@@ -77,6 +77,10 @@ function parseHttpUrl(rawValue) {
     }
 }
 
+function isValidCookieToken(value) {
+    return /^[!#$%&'*+\-.^_`|~0-9A-Za-z]+$/.test(value);
+}
+
 function validateAllowedOrigins(rawValue) {
     return splitCsv(rawValue)
         .map((entry) => ({ entry, parsed: parseHttpUrl(entry) }))
@@ -160,6 +164,33 @@ function validateServerEnvironment(options = {}) {
         errors.push('SESSION_COOKIE_SECURE must be one of: auto, true, false.');
     }
 
+    const sessionCookieName = safeString(derived.sessionCookieName || env.SESSION_COOKIE_NAME || '');
+    if (!sessionCookieName) {
+        errors.push('SESSION_COOKIE_NAME must not be empty.');
+    } else if (!isValidCookieToken(sessionCookieName)) {
+        errors.push('SESSION_COOKIE_NAME contains invalid cookie token characters.');
+    }
+
+    const oauthStateCookieName = safeString(derived.oauthStateCookieName || env.OAUTH_STATE_COOKIE_NAME || '');
+    if (!oauthStateCookieName) {
+        errors.push('OAUTH_STATE_COOKIE_NAME must not be empty.');
+    } else if (!isValidCookieToken(oauthStateCookieName)) {
+        errors.push('OAUTH_STATE_COOKIE_NAME contains invalid cookie token characters.');
+    }
+
+    if (sessionCookieName.startsWith('__Host-') && derived.sessionCookieSecure !== true) {
+        errors.push('SESSION_COOKIE_NAME with "__Host-" prefix requires SESSION_COOKIE_SECURE=true.');
+    }
+    if (sessionCookieName.startsWith('__Secure-') && derived.sessionCookieSecure !== true) {
+        errors.push('SESSION_COOKIE_NAME with "__Secure-" prefix requires SESSION_COOKIE_SECURE=true.');
+    }
+    if (oauthStateCookieName.startsWith('__Host-')) {
+        errors.push('OAUTH_STATE_COOKIE_NAME cannot use "__Host-" prefix because OAuth state cookie path is scoped.');
+    }
+    if (oauthStateCookieName.startsWith('__Secure-') && derived.sessionCookieSecure !== true) {
+        errors.push('OAUTH_STATE_COOKIE_NAME with "__Secure-" prefix requires SESSION_COOKIE_SECURE=true.');
+    }
+
     const deliveryModeRaw = safeString(env.EMAIL_PIN_DELIVERY_MODE).toLowerCase();
     if (deliveryModeRaw && !['log', 'disabled'].includes(deliveryModeRaw)) {
         errors.push('EMAIL_PIN_DELIVERY_MODE must be "log" or "disabled".');
@@ -198,6 +229,12 @@ function validateServerEnvironment(options = {}) {
         }
         if (derived.allowedOriginsCount > 0 && derived.sessionCookieSameSite !== 'none') {
             errors.push('SESSION_COOKIE_SAME_SITE must resolve to "none" when ALLOWED_ORIGINS is set in production.');
+        }
+        if (derived.sessionCookieSecure === true && !sessionCookieName.startsWith('__Host-')) {
+            warnings.push('Use "__Host-" prefix for SESSION_COOKIE_NAME in production secure mode.');
+        }
+        if (derived.sessionCookieSecure === true && !oauthStateCookieName.startsWith('__Secure-')) {
+            warnings.push('Use "__Secure-" prefix for OAUTH_STATE_COOKIE_NAME in production secure mode.');
         }
     } else if (safeString(env.OAUTH_STATE_SECRET).length > 0 && safeString(env.OAUTH_STATE_SECRET).length < 32) {
         warnings.push('OAUTH_STATE_SECRET is set but shorter than 32 characters.');
