@@ -16333,7 +16333,7 @@ function getCsrfToken() {
     return token;
 }
 
-function setAccountAuthStatus(message, tone = 'neutral') {
+function writeAccountAuthStatus(message, tone = 'neutral') {
     const statusEl = document.getElementById('account-auth-status');
     if (!statusEl) return;
     statusEl.className = 'text-xs';
@@ -16345,6 +16345,11 @@ function setAccountAuthStatus(message, tone = 'neutral') {
     };
     statusEl.classList.add(...(toneClassMap[tone] || toneClassMap.neutral).split(' '));
     statusEl.textContent = message;
+}
+
+function setAccountAuthStatus(message, tone = 'neutral') {
+    writeAccountAuthStatus(message, tone);
+    syncAccountAuthStatusForSessionState();
 }
 
 function getClientErrorReason(error) {
@@ -16386,7 +16391,7 @@ function syncAccountAuthStatusForSessionState() {
         const shouldReplace = !currentMessage
             || /not signed in|log in|checking session|session detected|auth server|guest/.test(normalizedMessage);
         if (shouldReplace) {
-            setAccountAuthStatus(getAccountSignedInStatusMessage(), 'success');
+            writeAccountAuthStatus(getAccountSignedInStatusMessage(), 'success');
         }
         return;
     }
@@ -16395,13 +16400,13 @@ function syncAccountAuthStatusForSessionState() {
         const shouldReplace = !currentMessage
             || /not signed in|session active for|signed in as|authenticated as/.test(normalizedMessage);
         if (shouldReplace) {
-            setAccountAuthStatus('Checking session...', 'info');
+            writeAccountAuthStatus('Checking session...', 'info');
         }
         return;
     }
 
     if (/signed in as|authenticated as|session active for|via google|via github/.test(normalizedMessage)) {
-        setAccountAuthStatus(t('auth.status.guest'), 'neutral');
+        writeAccountAuthStatus(t('auth.status.guest'), 'neutral');
     }
 }
 
@@ -18643,6 +18648,7 @@ function openAccountModal() {
     }
     const modal = document.getElementById('account-modal');
     if (!modal) return;
+    const canCheckRemoteSession = hasNeonSyncConfig();
     loadAuthProviderAvailability({ silent: true });
     applyAccountProfileToForm();
     setAccountProfileSectionExpanded(false, { panel: 'profile' });
@@ -18654,17 +18660,27 @@ function openAccountModal() {
     clearAccountAuthValidationState();
     const rememberCheckbox = document.getElementById('account-auth-remember');
     if (rememberCheckbox) rememberCheckbox.checked = Boolean(accountAuthState.rememberMe);
-    setAccountAuthStatus('Checking session...', 'info');
+    if (accountAuthState.isAuthenticated) {
+        setAccountAuthStatus(getAccountSignedInStatusMessage(), 'success');
+    } else if (canCheckRemoteSession) {
+        setAccountAuthStatus('Checking session...', 'info');
+    } else {
+        setAccountAuthStatus(t('auth.status.guest'), 'neutral');
+    }
     const initialFocusSelector = accountAuthState.isAuthenticated ? '#account-auth-hero-logout' : '#account-auth-email';
     openModal('account-modal', { initialFocus: initialFocusSelector });
-    if (PROFILE_SYNC_CONFIG.enabled) {
-        setAccountSessionHydrating(true);
+    if (canCheckRemoteSession) {
+        if (!accountAuthState.isAuthenticated) {
+            setAccountSessionHydrating(true);
+        }
         void refreshAuthSessionState({
             silent: true,
             retries: 2,
             retryDelayMs: 450,
             force: true
         });
+    } else {
+        setAccountSessionHydrating(false);
     }
 }
 
