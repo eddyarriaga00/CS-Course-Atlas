@@ -1304,6 +1304,8 @@ const TRANSLATIONS = {
         'module.practiceTemplate': 'Implement {topic} from scratch, test two edge cases, then explain complexity and one real-world use case.',
         'module.practiceFallback': 'Build a small practice solution from scratch, test edge cases, and explain complexity before moving on.',
         'module.noResources': 'No resources listed yet for this module.',
+        'module.takeQuizButton': 'Take Quiz',
+        'module.quizLibraryButton': 'Open Quiz Library',
         'module.tooltipHideComments': 'Hide Comments',
         'module.tooltipShowComments': 'Show Comments',
         'module.tooltipSelectLanguage': 'Select Programming Language',
@@ -1837,6 +1839,8 @@ const TRANSLATIONS = {
         'module.practiceTemplate': 'Implementa {topic} desde cero, prueba dos casos limite y luego explica complejidad y un caso real de uso.',
         'module.practiceFallback': 'Construye una solucion pequena desde cero, prueba casos limite y explica complejidad antes de avanzar.',
         'module.noResources': 'Aun no hay recursos listados para este modulo.',
+        'module.takeQuizButton': 'Tomar Quiz',
+        'module.quizLibraryButton': 'Abrir Biblioteca de Quizzes',
         'module.tooltipHideComments': 'Ocultar comentarios',
         'module.tooltipShowComments': 'Mostrar comentarios',
         'module.tooltipSelectLanguage': 'Seleccionar lenguaje de programación',
@@ -9513,13 +9517,13 @@ public class SourceToRuntimePipeline {
         int passed = 0;
         for (Map.Entry<String, Boolean> stage : pipeline.entrySet()) {
             boolean ok = stage.getValue();
-            System.out.println((ok ? "[PASS] " : "[TODO] ") + stage.getKey());
+            System.out.println((ok ? "[PASS] " : "[NEXT] ") + stage.getKey());
             if (ok) passed++;
         }
 
         System.out.println("Stages complete: " + passed + "/" + pipeline.size());
         if (passed < pipeline.size()) {
-            System.out.println("Action: fix the first TODO stage before adding new complexity.");
+            System.out.println("Action: fix the first incomplete stage before adding new complexity.");
         }
     }
 }`
@@ -10140,12 +10144,12 @@ public class PullRequestHygieneLectureSet {
         System.out.println("=== PR Readiness Checklist ===");
         for (Map.Entry<String, Boolean> item : checklist.entrySet()) {
             if (item.getValue()) passed++;
-            System.out.println((item.getValue() ? "[PASS] " : "[TODO] ") + item.getKey());
+            System.out.println((item.getValue() ? "[PASS] " : "[NEXT] ") + item.getKey());
         }
 
         System.out.println("Completion: " + passed + "/" + checklist.size());
         if (passed < checklist.size()) {
-            System.out.println("Action: complete TODO items before requesting final review.");
+            System.out.println("Action: complete pending items before requesting final review.");
         }
     }
 }`
@@ -12579,6 +12583,179 @@ function getLocalizedQuizData(moduleId) {
     const fallback = quizData[moduleId];
     if (!fallback) return fallback;
     return localizeEntity('quizData', moduleId, fallback);
+}
+
+function normalizeQuizQuestions(quizPayload) {
+    const questions = Array.isArray(quizPayload?.parts?.[0]?.questions)
+        ? quizPayload.parts[0].questions
+        : [];
+    return questions.filter((question) => {
+        if (!question || typeof question !== 'object') return false;
+        const questionText = String(question.question || '').trim();
+        const options = Array.isArray(question.options) ? question.options : [];
+        const correct = Number(question.correct);
+        return questionText && options.length >= 2 && Number.isInteger(correct) && correct >= 0 && correct < options.length;
+    });
+}
+
+function buildFallbackModuleQuiz(moduleId) {
+    const module = getModuleById(moduleId);
+    if (!module) return null;
+    const localizedModule = getLocalizedModule(module);
+    const moduleTitle = String(localizedModule?.title || module?.title || moduleId).trim();
+    const topics = Array.isArray(localizedModule?.topics)
+        ? localizedModule.topics.map((topic) => String(topic || '').trim()).filter(Boolean)
+        : [];
+    const topicA = topics[0] || (appState.language === 'es' ? 'el concepto central' : 'the core concept');
+    const topicB = topics[1] || topicA;
+    const topicC = topics[2] || topicA;
+    const isSpanish = appState.language === 'es';
+
+    const questions = isSpanish
+        ? [
+            {
+                question: `¿Cuál es el objetivo principal del módulo "${moduleTitle}"?`,
+                options: [
+                    'Memorizar términos sin practicar',
+                    `Entender ${topicA} y aplicarlo en ejemplos funcionales`,
+                    'Evitar pruebas y casos límite',
+                    'Concentrarse solo en sintaxis'
+                ],
+                correct: 1,
+                explanation: `Este módulo está diseñado para construir dominio práctico sobre ${topicA}.`
+            },
+            {
+                question: `Después de programar tu primera solución de ${topicA}, ¿qué sigue?`,
+                options: [
+                    'Probar casos límite y revisar complejidad',
+                    'Detenerte sin validar resultados',
+                    'Ignorar entradas inválidas',
+                    'Reescribir todo sin medir cambios'
+                ],
+                correct: 0,
+                explanation: 'La validación y el análisis de complejidad consolidan aprendizaje real.'
+            },
+            {
+                question: `¿Qué secuencia de estudio te da mejor progreso en ${moduleTitle}?`,
+                options: [
+                    'Leer teoría, codificar, probar, explicar tradeoffs',
+                    'Saltarte teoría y copiar una solución',
+                    'Practicar sin revisar errores',
+                    'Aprender varias técnicas sin terminar ninguna'
+                ],
+                correct: 0,
+                explanation: 'El ciclo teoría -> implementación -> verificación -> reflexión es el más sólido.'
+            },
+            {
+                question: `Si una solución de ${topicB} falla, ¿qué acción es más efectiva?`,
+                options: [
+                    'Agregar impresiones y verificar estado paso a paso',
+                    'Cambiar todo sin diagnóstico',
+                    'Culpar al compilador',
+                    'Ignorar la entrada que falla'
+                ],
+                correct: 0,
+                explanation: 'Depurar de forma estructurada acelera correcciones y evita regresiones.'
+            },
+            {
+                question: `¿Qué habilidad transferible refuerza practicar ${topicC}?`,
+                options: [
+                    'Razonamiento algorítmico y toma de decisiones con datos',
+                    'Memorización sin comprensión',
+                    'Dependencia de plantillas fijas',
+                    'Evitar comunicación técnica'
+                ],
+                correct: 0,
+                explanation: 'El módulo fortalece pensamiento estructurado útil en cursos y entrevistas.'
+            }
+        ]
+        : [
+            {
+                question: `What is the primary objective of the "${moduleTitle}" module?`,
+                options: [
+                    'Memorize terms without practice',
+                    `Understand ${topicA} and apply it in working examples`,
+                    'Skip testing and edge cases',
+                    'Focus only on syntax details'
+                ],
+                correct: 1,
+                explanation: `This module is built to develop practical mastery of ${topicA}.`
+            },
+            {
+                question: `After coding your first ${topicA} solution, what should happen next?`,
+                options: [
+                    'Run edge cases and review time/space tradeoffs',
+                    'Stop immediately without validation',
+                    'Ignore invalid inputs',
+                    'Rewrite everything without measuring impact'
+                ],
+                correct: 0,
+                explanation: 'Validation plus complexity review turns coding into durable understanding.'
+            },
+            {
+                question: `Which study sequence usually gives the strongest progress for ${moduleTitle}?`,
+                options: [
+                    'Read concept, implement, test, explain tradeoffs',
+                    'Skip concept review and copy a solution',
+                    'Practice without reviewing mistakes',
+                    'Learn many techniques without finishing one'
+                ],
+                correct: 0,
+                explanation: 'Concept -> implementation -> verification -> reflection is the strongest loop.'
+            },
+            {
+                question: `If a ${topicB} solution fails, which action is most effective first?`,
+                options: [
+                    'Add targeted logs and verify state step by step',
+                    'Change everything without diagnosing',
+                    'Assume the compiler is wrong',
+                    'Ignore the failing input'
+                ],
+                correct: 0,
+                explanation: 'Structured debugging catches root causes and prevents repeated regressions.'
+            },
+            {
+                question: `What transferable skill does practicing ${topicC} improve most?`,
+                options: [
+                    'Algorithmic reasoning and evidence-based decisions',
+                    'Memorization without understanding',
+                    'Dependence on rigid templates',
+                    'Avoiding technical communication'
+                ],
+                correct: 0,
+                explanation: 'The module reinforces structured thinking for courses, projects, and interviews.'
+            }
+        ];
+
+    return {
+        title: moduleTitle,
+        parts: [
+            {
+                title: isSpanish ? 'Chequeo de aprendizaje del módulo' : 'Module learning checkpoint',
+                questions
+            }
+        ]
+    };
+}
+
+function getModuleQuizData(moduleId) {
+    const localizedQuiz = getLocalizedQuizData(moduleId);
+    const localizedQuestions = normalizeQuizQuestions(localizedQuiz);
+    if (localizedQuestions.length) {
+        return {
+            quiz: localizedQuiz,
+            questions: localizedQuestions
+        };
+    }
+    const fallbackQuiz = buildFallbackModuleQuiz(moduleId);
+    return {
+        quiz: fallbackQuiz,
+        questions: normalizeQuizQuestions(fallbackQuiz)
+    };
+}
+
+function getModuleQuizQuestions(moduleId) {
+    return getModuleQuizData(moduleId).questions;
 }
 
 function getGlossaryTrackCategoryLabel(categoryKey, lang = appState.language || 'en') {
@@ -22641,10 +22818,129 @@ async function runModuleSnippetForOutput({ moduleId, language, exampleId = '' })
     }
 }
 
+function sanitizeIdentifierPart(raw = '') {
+    return String(raw || '')
+        .replace(/[^a-zA-Z0-9]+/g, ' ')
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join('');
+}
+
+function buildClassNameFromModule(module, fallback = 'ModulePracticeSession') {
+    const idToken = sanitizeIdentifierPart(module?.id || '');
+    if (idToken) return idToken;
+    const titleToken = sanitizeIdentifierPart(module?.title || '');
+    if (titleToken) return titleToken;
+    return fallback;
+}
+
+function escapeCodeLiteral(value = '') {
+    return String(value || '')
+        .replace(/\\/g, '\\\\')
+        .replace(/"/g, '\\"');
+}
+
+function buildModuleCodeFallback(module, preferredLanguage = 'java') {
+    if (!module) return '';
+    const localizedModule = appState.language === 'es' ? getLocalizedModule(module) : module;
+    const moduleTitle = String(localizedModule?.title || module?.title || 'Module').trim();
+    const topics = Array.isArray(localizedModule?.topics)
+        ? localizedModule.topics.map((topic) => String(topic || '').trim()).filter(Boolean)
+        : [];
+    const topTopics = topics.slice(0, 3);
+    const topicA = topTopics[0] || (appState.language === 'es' ? 'concepto central' : 'core concept');
+    const topicB = topTopics[1] || topicA;
+    const className = buildClassNameFromModule(module);
+    const safeTitle = escapeCodeLiteral(moduleTitle);
+    const safeTopicA = escapeCodeLiteral(topicA);
+    const safeTopicB = escapeCodeLiteral(topicB);
+    const language = String(preferredLanguage || getDefaultModuleLanguage(module.id)).toLowerCase();
+
+    if (language === 'python') {
+        return `def summarize_module():
+    module_title = "${safeTitle}"
+    focus_topics = ["${safeTopicA}", "${safeTopicB}"]
+    print(f"Module: {module_title}")
+    for index, topic in enumerate(focus_topics, start=1):
+        print(f"{index}. Practice -> {topic}")
+    print("Checkpoint: implement, test edge cases, explain complexity.")
+
+
+if __name__ == "__main__":
+    summarize_module()`;
+    }
+
+    if (language === 'javascript') {
+        return `function summarizeModule() {
+  const moduleTitle = "${safeTitle}";
+  const focusTopics = ["${safeTopicA}", "${safeTopicB}"];
+  console.log("Module:", moduleTitle);
+  focusTopics.forEach((topic, index) => {
+    console.log(\`\${index + 1}. Practice -> \${topic}\`);
+  });
+  console.log("Checkpoint: implement, test edge cases, explain complexity.");
+}
+
+summarizeModule();`;
+    }
+
+    if (language === 'cpp') {
+        return `#include <iostream>
+#include <vector>
+#include <string>
+
+int main() {
+    const std::string moduleTitle = "${safeTitle}";
+    const std::vector<std::string> focusTopics = {"${safeTopicA}", "${safeTopicB}"};
+
+    std::cout << "Module: " << moduleTitle << "\\n";
+    for (size_t i = 0; i < focusTopics.size(); ++i) {
+        std::cout << (i + 1) << ". Practice -> " << focusTopics[i] << "\\n";
+    }
+    std::cout << "Checkpoint: implement, test edge cases, explain complexity." << std::endl;
+    return 0;
+}`;
+    }
+
+    if (language === 'assembly') {
+        return `; Module summary fallback
+; Title: ${safeTitle}
+; Focus topics:
+; 1) ${safeTopicA}
+; 2) ${safeTopicB}
+; Checkpoint: implement, test edge cases, explain complexity.
+
+section .text
+global _start
+
+_start:
+    mov rax, 60
+    xor rdi, rdi
+    syscall`;
+    }
+
+    return `import java.util.List;
+
+public class ${className} {
+    public static void main(String[] args) {
+        String moduleTitle = "${safeTitle}";
+        List<String> focusTopics = List.of("${safeTopicA}", "${safeTopicB}");
+
+        System.out.println("Module: " + moduleTitle);
+        for (int i = 0; i < focusTopics.size(); i++) {
+            System.out.println((i + 1) + ". Practice -> " + focusTopics.get(i));
+        }
+        System.out.println("Checkpoint: implement, test edge cases, explain complexity.");
+    }
+}`;
+}
+
 function getCodeExample(module) {
     const language = getModuleLanguage(module.id);
     const resolved = getCanonicalModuleCode(module.id, language, getActiveModuleExampleId(module.id));
-    return resolved.code || translateLiteral('Code example coming soon...', appState.language);
+    return resolved.code || buildModuleCodeFallback(module, resolved.language || language);
 }
 
 function getCodeSnapshotCopy() {
@@ -24405,11 +24701,13 @@ function buildGlobalSearchIndex() {
         if (glossaryEntry) entries.push(glossaryEntry);
     });
 
-    Object.entries(quizData).forEach(([moduleId, quiz]) => {
-        const localizedQuiz = getLocalizedQuizData(moduleId) || quiz;
-        const questions = localizedQuiz?.parts?.[0]?.questions || [];
+    localizedModules.forEach((localizedModule) => {
+        const moduleId = localizedModule?.id;
+        if (!moduleId) return;
+        const quizBundle = getModuleQuizData(moduleId);
+        const localizedQuiz = quizBundle?.quiz || {};
+        const questions = quizBundle?.questions || [];
         if (!questions.length) return;
-        const localizedModule = localizedModuleMap.get(moduleId) || getLocalizedModule(getModuleById(moduleId));
         const moduleTitle = localizedModule?.title || localizedQuiz?.title || moduleId;
         const quizEntry = buildGlobalSearchEntry({
             type: 'quiz',
@@ -24906,13 +25204,11 @@ function openQuizFromGlobalSearch(moduleId) {
         skipModuleRender: true,
         triggerRouteToolLaunch: false
     });
-    const quiz = getLocalizedQuizData(moduleId);
-    if (quiz?.parts?.[0]?.questions?.length) {
+    if (getModuleQuizQuestions(moduleId).length) {
         openQuiz(moduleId);
         return;
     }
     openInteractiveQuizLibrary();
-    loadInteractiveQuizModule(moduleId);
 }
 
 function openFlashcardsFromGlobalSearch(deckId = 'all') {
@@ -25326,8 +25622,7 @@ function renderModules() {
             : moduleTopics.slice(0, topicsVisibleByDefault);
         const hasHiddenTopics = moduleTopics.length > topicsVisibleByDefault;
         const hiddenTopicCount = Math.max(0, moduleTopics.length - visibleTopics.length);
-        const localizedQuiz = getLocalizedQuizData(module.id);
-        const quizQuestions = localizedQuiz?.parts?.[0]?.questions;
+        const quizQuestions = getModuleQuizQuestions(module.id);
         const hasQuizQuestions = Array.isArray(quizQuestions) && quizQuestions.length > 0;
         const moduleLearningPlan = buildModuleLearningPlan(module, localizedModule, modulesByCategory, localizedModuleMap);
         const moduleReadinessKit = buildModuleReadinessKit(module, localizedModule, moduleLearningPlan);
@@ -25708,8 +26003,8 @@ function renderModules() {
 
                 <!-- Buttons -->
                 <div class="space-y-2">
-                    <button type="button" onclick="openQuiz('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm ${hasQuizQuestions ? 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white hover:-translate-y-0.5' : 'bg-gradient-to-r from-slate-400 to-slate-500 text-white cursor-not-allowed'}" ${hasQuizQuestions ? '' : 'disabled aria-disabled=\"true\"'}>
-                        ${hasQuizQuestions ? translateLiteral('Take Quiz', appState.language) : translateLiteral('Quiz Coming Soon', appState.language)}
+                    <button type="button" onclick="${hasQuizQuestions ? `openQuiz('${module.id}')` : 'openInteractiveQuizLibrary()'}" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm ${hasQuizQuestions ? 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white hover:-translate-y-0.5' : 'bg-gradient-to-r from-cyan-500 to-sky-500 hover:from-cyan-600 hover:to-sky-600 text-white hover:-translate-y-0.5'}">
+                        ${hasQuizQuestions ? t('module.takeQuizButton') : t('module.quizLibraryButton')}
                     </button>
                     
                     <button type="button" onclick="toggleCompletion('${module.id}')" class="w-full py-2 sm:py-2.5 rounded-lg font-semibold transition-all duration-200 shadow-lg hover:shadow-xl text-xs sm:text-sm ${isCompleted ? 'bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white hover:-translate-y-0.5' : 'bg-gradient-to-r from-indigo-500 to-purple-500 hover:from-indigo-600 hover:to-purple-600 text-white hover:-translate-y-0.5'}">
@@ -26792,8 +27087,7 @@ function populateFlashcardModuleSelect() {
 
 // Quiz Functions
 function openQuiz(moduleId) {
-    const quiz = getLocalizedQuizData(moduleId);
-    const questions = Array.isArray(quiz?.parts?.[0]?.questions) ? quiz.parts[0].questions : [];
+    const questions = getModuleQuizQuestions(moduleId);
     if (!questions.length) return;
 
     appState.currentQuiz = {
@@ -28182,14 +28476,13 @@ function startGuestTrack(trackKey) {
 
 function openGuestSampleQuiz() {
     const sampleModuleId = 'java-basics';
-    const sampleQuiz = getLocalizedQuizData(sampleModuleId);
     navigateToRoute('/quizzes', {
         preserveScroll: true,
         focusMain: false,
         skipModuleRender: true,
         triggerRouteToolLaunch: false
     });
-    if (sampleQuiz?.parts?.[0]?.questions?.length) {
+    if (getModuleQuizQuestions(sampleModuleId).length) {
         openQuiz(sampleModuleId);
         return;
     }
@@ -29168,15 +29461,19 @@ function closeInteractiveQuizLibrary() {
 function populateInteractiveQuizModules() {
     const select = document.getElementById('interactive-quiz-module');
     if (!select) return;
-    const options = Object.entries(quizData)
-        .filter(([id, data]) => data?.parts?.[0]?.questions?.length)
-        .map(([id]) => {
-            const localizedQuiz = getLocalizedQuizData(id) || quizData[id];
-            const module = getLocalizedModule(modules.find(m => m.id === id));
-            const title = module?.title || localizedQuiz?.title || id;
-            const count = localizedQuiz?.parts?.[0]?.questions?.length || 0;
+    const options = modules
+        .map((module) => {
+            const id = module?.id;
+            if (!id) return '';
+            const quizBundle = getModuleQuizData(id);
+            const count = quizBundle?.questions?.length || 0;
+            if (!count) return '';
+            const localizedModule = getLocalizedModule(module);
+            const localizedQuiz = quizBundle?.quiz || {};
+            const title = localizedModule?.title || localizedQuiz?.title || id;
             return `<option value="${id}">${title} (${count} ${translateLiteral('Qs', appState.language)})</option>`;
         })
+        .filter(Boolean)
         .join('');
     select.innerHTML = options || `<option disabled>${translateLiteral('No quizzes available', appState.language)}</option>`;
     select.onchange = (e) => loadInteractiveQuizModule(e.target.value);
@@ -29186,7 +29483,7 @@ function loadInteractiveQuizModule(moduleId) {
     const select = document.getElementById('interactive-quiz-module');
     if (select && moduleId) select.value = moduleId;
     interactiveQuizState.moduleId = moduleId;
-    const questions = getLocalizedQuizData(moduleId)?.parts?.[0]?.questions || [];
+    const questions = getModuleQuizQuestions(moduleId);
     interactiveQuizState.questions = questions;
     interactiveQuizState.current = 0;
     interactiveQuizState.answers = new Array(questions.length).fill(null);
