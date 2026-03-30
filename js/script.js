@@ -15633,6 +15633,7 @@ const accountAuthState = {
     mode: 'login',
     inFlight: false,
     isAuthenticated: false,
+    isSessionHydrating: false,
     sessionLabel: '',
     providerKey: '',
     providerLabel: '',
@@ -15671,6 +15672,10 @@ function getDefaultAccountProfile() {
         name: '',
         email: '',
         goal: 'exploring',
+        avatarUrl: '',
+        socialHandle: '',
+        socialStatus: '',
+        messagingEnabled: false,
         serverUserId: '',
         lastSyncAt: null,
         lastSyncStatus: 'idle',
@@ -15694,6 +15699,10 @@ function loadAccountProfile() {
             name: legacyName || username,
             email: parsed.email || '',
             goal: parsed.goal || 'exploring',
+            avatarUrl: parsed.avatarUrl || parsed.avatar || '',
+            socialHandle: parsed.socialHandle || parsed.social_handle || '',
+            socialStatus: parsed.socialStatus || parsed.statusText || parsed.status_text || '',
+            messagingEnabled: parseBooleanLikeClient(parsed.messagingEnabled, defaults.messagingEnabled),
             serverUserId: parsed.serverUserId || parsed.neonSessionUserId || parsed.neonUserId || '',
             lastSyncAt: parsed.lastSyncAt || null,
             lastSyncStatus: parsed.lastSyncStatus || defaults.lastSyncStatus,
@@ -15714,6 +15723,7 @@ function updateAccountChip() {
     const accountMobileLabel = document.getElementById('account-btn-label-mobile');
     const chip = document.getElementById('account-chip');
     const isAuthenticated = Boolean(accountAuthState.isAuthenticated);
+    const isSessionHydrating = Boolean(accountAuthState.isSessionHydrating && !isAuthenticated);
     const displayLabel = getAccountDisplayLabel();
     const providerLabel = getAccountSessionProviderLabel();
 
@@ -15721,10 +15731,10 @@ function updateAccountChip() {
         accountButton.classList.toggle('account-btn-authenticated', isAuthenticated);
     }
     if (accountDesktopLabel) {
-        accountDesktopLabel.textContent = isAuthenticated ? 'Logged In' : 'Account';
+        accountDesktopLabel.textContent = isAuthenticated ? 'Logged In' : (isSessionHydrating ? 'Checking' : 'Account');
     }
     if (accountMobileLabel) {
-        accountMobileLabel.textContent = isAuthenticated ? 'Signed' : 'Account';
+        accountMobileLabel.textContent = isAuthenticated ? 'Signed' : (isSessionHydrating ? 'Wait' : 'Account');
     }
 
     if (chip) {
@@ -15733,6 +15743,10 @@ function updateAccountChip() {
             chip.textContent = `${UI_ICONS.profile} ${displayLabel}${providerSuffix}`;
             chip.classList.remove('hidden');
             chip.classList.add('account-chip-authenticated');
+        } else if (isSessionHydrating) {
+            chip.textContent = `${UI_ICONS.info} Checking session...`;
+            chip.classList.remove('hidden');
+            chip.classList.remove('account-chip-authenticated');
         } else {
             chip.textContent = '';
             chip.classList.add('hidden');
@@ -15812,6 +15826,91 @@ function getAccountProfileInitials(label = '') {
     return `${words[0][0]}${words[1][0]}`.toUpperCase();
 }
 
+function sanitizeSocialHandleClient(value = '') {
+    return String(value || '')
+        .trim()
+        .replace(/^@+/, '')
+        .replace(/[^a-zA-Z0-9._-]+/g, '')
+        .slice(0, 32)
+        .toLowerCase();
+}
+
+function sanitizeSocialStatusClient(value = '') {
+    return String(value || '').trim().slice(0, 140);
+}
+
+function sanitizeAvatarUrlClient(value = '') {
+    const raw = String(value || '').trim();
+    if (!raw) return '';
+    if (raw.length > 220000) return '';
+    if (/^data:image\/(?:png|jpeg|jpg|webp|gif);base64,[a-z0-9+/=]+$/i.test(raw)) {
+        return raw;
+    }
+    try {
+        const parsed = new URL(raw);
+        const isHttp = parsed.protocol === 'http:';
+        const isHttps = parsed.protocol === 'https:';
+        const isLoopback = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(parsed.hostname.toLowerCase());
+        if (!isHttps && !(isHttp && isLoopback)) return '';
+        return parsed.toString();
+    } catch (error) {
+        return '';
+    }
+}
+
+function parseBooleanLikeClient(value, fallback = false) {
+    if (typeof value === 'boolean') return value;
+    if (typeof value === 'number') return value !== 0;
+    if (typeof value === 'string') {
+        const normalized = value.trim().toLowerCase();
+        if (['true', '1', 'yes', 'on'].includes(normalized)) return true;
+        if (['false', '0', 'no', 'off', ''].includes(normalized)) return false;
+    }
+    return Boolean(fallback);
+}
+
+function setAccountSessionHydrating(isHydrating) {
+    accountAuthState.isSessionHydrating = Boolean(isHydrating);
+    updateAccountChip();
+    updateAccountAuthCardLayout();
+    updateAccountProfileSummaryUI();
+}
+
+function setAccountAvatarStatus(message, tone = 'neutral') {
+    const statusEl = document.getElementById('account-avatar-status');
+    if (!statusEl) return;
+    statusEl.className = 'text-xs';
+    const toneClassMap = {
+        success: 'text-emerald-300',
+        error: 'text-rose-300',
+        info: 'text-sky-300',
+        neutral: 'text-slate-300'
+    };
+    statusEl.classList.add(...(toneClassMap[tone] || toneClassMap.neutral).split(' '));
+    statusEl.textContent = message;
+}
+
+function renderAccountAvatarVisual(container, avatarUrl, fallbackLabel) {
+    if (!container) return;
+    const safeAvatarUrl = sanitizeAvatarUrlClient(avatarUrl);
+    container.textContent = '';
+    container.classList.toggle('has-image', Boolean(safeAvatarUrl));
+    if (!safeAvatarUrl) {
+        container.textContent = getAccountProfileInitials(fallbackLabel);
+        return;
+    }
+    const image = document.createElement('img');
+    image.src = safeAvatarUrl;
+    image.alt = `${fallbackLabel || 'Profile'} avatar`;
+    image.loading = 'lazy';
+    image.decoding = 'async';
+    image.addEventListener('error', () => {
+        container.classList.remove('has-image');
+        container.textContent = getAccountProfileInitials(fallbackLabel);
+    }, { once: true });
+    container.appendChild(image);
+}
+
 function getAccountGoalLabel(goalValue) {
     const key = String(goalValue || '').trim().toLowerCase();
     return ACCOUNT_GOAL_LABELS[key] || ACCOUNT_GOAL_LABELS.exploring;
@@ -15832,6 +15931,7 @@ function updateAccountAuthCardLayout() {
     const statePill = document.getElementById('account-auth-state-pill');
     const providerPill = document.getElementById('account-auth-provider-pill');
     const isAuthenticated = Boolean(accountAuthState.isAuthenticated);
+    const isSessionHydrating = Boolean(accountAuthState.isSessionHydrating && !isAuthenticated);
     const providerLabel = getAccountSessionProviderLabel();
 
     if (authCard) {
@@ -15839,7 +15939,7 @@ function updateAccountAuthCardLayout() {
         authCard.classList.toggle('account-auth-card-authenticated', isAuthenticated);
     }
     if (statePill) {
-        statePill.textContent = isAuthenticated ? 'Session Active' : 'Not Signed In';
+        statePill.textContent = isAuthenticated ? 'Session Active' : (isSessionHydrating ? 'Checking Session...' : 'Not Signed In');
         statePill.setAttribute('data-auth-state', isAuthenticated ? 'authenticated' : 'guest');
     }
     if (providerPill) {
@@ -15849,6 +15949,9 @@ function updateAccountAuthCardLayout() {
     }
     if (interactiveFields) {
         interactiveFields.classList.toggle('hidden', isAuthenticated);
+        interactiveFields.classList.toggle('opacity-70', isSessionHydrating);
+        interactiveFields.style.pointerEvents = isSessionHydrating ? 'none' : '';
+        interactiveFields.setAttribute('aria-busy', isSessionHydrating ? 'true' : 'false');
     }
     if (signedInNote) {
         signedInNote.classList.toggle('hidden', !isAuthenticated);
@@ -15857,16 +15960,25 @@ function updateAccountAuthCardLayout() {
         signedInActions.classList.toggle('hidden', !isAuthenticated);
     }
     if (signedInUser) {
-        signedInUser.textContent = isAuthenticated ? getAccountDisplayLabel() : 'Session active';
+        signedInUser.textContent = isAuthenticated
+            ? getAccountDisplayLabel()
+            : (isSessionHydrating ? 'Validating session...' : 'Session active');
     }
     if (legal) {
         legal.classList.toggle('hidden', isAuthenticated || accountAuthState.mode !== 'signup');
     }
     if (switchRow) {
-        switchRow.classList.toggle('hidden', isAuthenticated);
+        switchRow.classList.toggle('hidden', isAuthenticated || isSessionHydrating);
     }
     if (submitButton) {
         submitButton.classList.toggle('hidden', isAuthenticated);
+        submitButton.disabled = accountAuthState.inFlight || isSessionHydrating;
+        submitButton.setAttribute('aria-disabled', submitButton.disabled ? 'true' : 'false');
+        submitButton.classList.toggle('opacity-70', submitButton.disabled);
+        submitButton.classList.toggle('cursor-not-allowed', submitButton.disabled);
+        if (!isAuthenticated && isSessionHydrating) {
+            submitButton.textContent = 'Checking Session...';
+        }
     }
     if (quickLogoutButton) {
         quickLogoutButton.classList.toggle('hidden', !isAuthenticated);
@@ -15899,8 +16011,11 @@ function updateAccountProfileSummaryUI() {
     const authRequiredNote = document.getElementById('account-profile-auth-required-note');
     const panelButtons = Array.from(document.querySelectorAll('[data-account-panel-target]'));
     const isAuthenticated = Boolean(accountAuthState.isAuthenticated);
+    const isSessionHydrating = Boolean(accountAuthState.isSessionHydrating && !isAuthenticated);
     const displayLabel = getAccountDisplayLabel();
     const emailLabel = String(accountProfile.email || '').trim();
+    const socialHandleLabel = sanitizeSocialHandleClient(accountProfile.socialHandle || '');
+    const socialStatusLabel = sanitizeSocialStatusClient(accountProfile.socialStatus || '');
     const sessionLabel = String(accountAuthState.sessionLabel || '').trim();
     const providerLabel = getAccountSessionProviderLabel();
 
@@ -15909,15 +16024,21 @@ function updateAccountProfileSummaryUI() {
         modal.classList.toggle('account-user-guest', !isAuthenticated);
     }
     if (avatarEl) {
-        avatarEl.textContent = getAccountProfileInitials(displayLabel);
+        renderAccountAvatarVisual(avatarEl, accountProfile.avatarUrl, displayLabel);
     }
     if (nameEl) {
-        nameEl.textContent = displayLabel;
+        nameEl.textContent = socialHandleLabel
+            ? `${displayLabel} (@${socialHandleLabel})`
+            : displayLabel;
     }
     if (emailEl) {
-        emailEl.textContent = emailLabel || (isAuthenticated
-            ? 'Email available from your authenticated session.'
-            : 'Sign in to sync profile and progress.');
+        if (isAuthenticated && socialStatusLabel) {
+            emailEl.textContent = socialStatusLabel;
+        } else {
+            emailEl.textContent = emailLabel || (isAuthenticated
+                ? 'Email available from your authenticated session.'
+                : 'Sign in to sync profile and progress.');
+        }
     }
     if (goalEl) {
         goalEl.textContent = getAccountGoalLabel(accountProfile.goal);
@@ -15925,7 +16046,7 @@ function updateAccountProfileSummaryUI() {
     if (sessionEl) {
         sessionEl.textContent = isAuthenticated
             ? (providerLabel ? `${providerLabel} Session` : (sessionLabel || 'Signed In'))
-            : 'Not Signed In';
+            : (isSessionHydrating ? 'Checking Session...' : 'Not Signed In');
     }
     if (syncEl) {
         syncEl.textContent = String(accountProfile.lastSyncMessage || 'Sync idle.');
@@ -16361,6 +16482,7 @@ async function handleOAuthResultFromUrl() {
         if (maybeRedirectToApiHostedFrontendForAuth()) {
             return;
         }
+        setAccountSessionHydrating(true);
         setAccountAuthStatus(`${providerLabel} sign-in completed. Finalizing secure session...`, 'info');
         if (hasNeonSyncConfig()) {
             const verifiedSession = await waitForVerifiedAuthSession({
@@ -16405,6 +16527,9 @@ async function handleOAuthResultFromUrl() {
 }
 
 function getAccountPrimaryAuthLabel() {
+    if (accountAuthState.isSessionHydrating && !accountAuthState.isAuthenticated) {
+        return 'Checking Session...';
+    }
     if (accountAuthState.isAuthenticated) {
         return 'Session Active';
     }
@@ -16418,7 +16543,7 @@ function refreshAccountPrimaryAuthButton() {
     const submitBtn = document.getElementById('account-auth-submit');
     if (!submitBtn) return;
     submitBtn.textContent = getAccountPrimaryAuthLabel();
-    const shouldDisable = accountAuthState.inFlight || accountAuthState.isAuthenticated;
+    const shouldDisable = accountAuthState.inFlight || accountAuthState.isAuthenticated || accountAuthState.isSessionHydrating;
     submitBtn.disabled = shouldDisable;
     submitBtn.setAttribute('aria-disabled', shouldDisable ? 'true' : 'false');
     submitBtn.classList.toggle('opacity-70', shouldDisable);
@@ -16538,7 +16663,7 @@ function setAuthSubmitBusy(isBusy) {
     const heroLogoutBtn = document.getElementById('account-auth-hero-logout');
     const heroManageBtn = document.getElementById('account-auth-hero-manage');
     if (submitBtn) {
-        const shouldDisableSubmit = accountAuthState.inFlight || accountAuthState.isAuthenticated;
+        const shouldDisableSubmit = accountAuthState.inFlight || accountAuthState.isAuthenticated || accountAuthState.isSessionHydrating;
         submitBtn.disabled = shouldDisableSubmit;
         submitBtn.classList.toggle('opacity-70', shouldDisableSubmit);
         submitBtn.classList.toggle('cursor-not-allowed', shouldDisableSubmit);
@@ -16812,7 +16937,45 @@ function getSessionUserFromPayload(payload) {
         || payload?.data?.name
         || ''
     ).trim();
-    return { userId, userEmail, userUsername };
+    const userAvatarUrl = String(
+        user?.avatarUrl
+        || user?.avatar_url
+        || payload?.avatarUrl
+        || payload?.data?.avatarUrl
+        || ''
+    ).trim();
+    const userSocialHandle = String(
+        user?.socialHandle
+        || user?.social_handle
+        || payload?.socialHandle
+        || payload?.data?.socialHandle
+        || ''
+    ).trim();
+    const userSocialStatus = String(
+        user?.socialStatus
+        || user?.statusText
+        || user?.status_text
+        || payload?.socialStatus
+        || payload?.statusText
+        || payload?.data?.socialStatus
+        || ''
+    ).trim();
+    const userMessagingEnabled = parseBooleanLikeClient(
+        user?.messagingEnabled
+        ?? user?.messaging_enabled
+        ?? payload?.messagingEnabled
+        ?? payload?.data?.messagingEnabled,
+        false
+    );
+    return {
+        userId,
+        userEmail,
+        userUsername,
+        userAvatarUrl,
+        userSocialHandle,
+        userSocialStatus,
+        userMessagingEnabled
+    };
 }
 
 function resolveSessionProviderFromPayload(payload) {
@@ -17040,29 +17203,57 @@ function applyAccountProfileToForm() {
     const usernameInput = document.getElementById('account-username');
     const emailInput = document.getElementById('account-email');
     const goalInput = document.getElementById('account-goal');
+    const avatarUrlInput = document.getElementById('account-avatar-url');
+    const socialHandleInput = document.getElementById('account-social-handle');
+    const socialStatusInput = document.getElementById('account-social-status');
+    const messagingEnabledInput = document.getElementById('account-social-messaging-enabled');
     const authEmailInput = document.getElementById('account-auth-email');
     const authUsernameInput = document.getElementById('account-auth-username');
 
     if (usernameInput) usernameInput.value = accountProfile.username || accountProfile.name || '';
     if (emailInput) emailInput.value = accountProfile.email || '';
     if (goalInput) goalInput.value = accountProfile.goal || 'exploring';
+    if (avatarUrlInput) avatarUrlInput.value = accountProfile.avatarUrl || '';
+    if (socialHandleInput) socialHandleInput.value = accountProfile.socialHandle ? `@${accountProfile.socialHandle}` : '';
+    if (socialStatusInput) socialStatusInput.value = accountProfile.socialStatus || '';
+    if (messagingEnabledInput) messagingEnabledInput.checked = Boolean(accountProfile.messagingEnabled);
     if (authEmailInput) authEmailInput.value = accountProfile.email || '';
     if (authUsernameInput) authUsernameInput.value = accountProfile.username || accountProfile.name || '';
+    if (accountProfile.avatarUrl) {
+        setAccountAvatarStatus('Profile picture loaded. Save Profile to sync any changes.', 'success');
+    } else {
+        setAccountAvatarStatus('Tip: square images look best. Uploaded photos are resized automatically.', 'neutral');
+    }
     updateAccountProfileSummaryUI();
 }
 
 function readAccountProfileFromForm() {
     const usernameInput = document.getElementById('account-username');
     const goalInput = document.getElementById('account-goal');
+    const avatarUrlInput = document.getElementById('account-avatar-url');
+    const socialHandleInput = document.getElementById('account-social-handle');
+    const socialStatusInput = document.getElementById('account-social-status');
+    const messagingEnabledInput = document.getElementById('account-social-messaging-enabled');
     const resolvedUsername = usernameInput
         ? usernameInput.value.trim()
         : (accountProfile.username || accountProfile.name || '');
+    const resolvedAvatarUrl = sanitizeAvatarUrlClient(avatarUrlInput ? avatarUrlInput.value : accountProfile.avatarUrl || '');
+    const resolvedSocialHandle = sanitizeSocialHandleClient(socialHandleInput ? socialHandleInput.value : accountProfile.socialHandle || '');
+    const resolvedSocialStatus = sanitizeSocialStatusClient(socialStatusInput ? socialStatusInput.value : accountProfile.socialStatus || '');
+    const resolvedMessagingEnabled = parseBooleanLikeClient(
+        messagingEnabledInput ? messagingEnabledInput.checked : accountProfile.messagingEnabled,
+        false
+    );
     return {
         ...accountProfile,
         username: resolvedUsername,
         name: resolvedUsername,
         email: accountProfile.email || '',
-        goal: goalInput ? goalInput.value : accountProfile.goal || 'exploring'
+        goal: goalInput ? goalInput.value : accountProfile.goal || 'exploring',
+        avatarUrl: resolvedAvatarUrl,
+        socialHandle: resolvedSocialHandle,
+        socialStatus: resolvedSocialStatus,
+        messagingEnabled: resolvedMessagingEnabled
     };
 }
 
@@ -17178,6 +17369,111 @@ function setButtonBusyState(button, isBusy, idleLabel, busyLabel) {
     button.classList.toggle('opacity-70', nextBusy);
     button.classList.toggle('cursor-not-allowed', nextBusy);
     button.textContent = nextBusy ? busyLabel : idleLabel;
+}
+
+function readFileAsDataUrl(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(String(reader.result || ''));
+        reader.onerror = () => reject(new Error('Unable to read image file.'));
+        reader.readAsDataURL(file);
+    });
+}
+
+function loadImageFromDataUrl(dataUrl) {
+    return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.onerror = () => reject(new Error('Unable to decode selected image.'));
+        image.src = dataUrl;
+    });
+}
+
+async function convertAvatarFileToDataUrl(file) {
+    const rawDataUrl = await readFileAsDataUrl(file);
+    const image = await loadImageFromDataUrl(rawDataUrl);
+    const targetSize = 256;
+    const canvas = document.createElement('canvas');
+    canvas.width = targetSize;
+    canvas.height = targetSize;
+    const context = canvas.getContext('2d');
+    if (!context) {
+        throw new Error('Unable to process image.');
+    }
+    context.clearRect(0, 0, targetSize, targetSize);
+    const cropSize = Math.min(image.width, image.height);
+    const sourceX = (image.width - cropSize) / 2;
+    const sourceY = (image.height - cropSize) / 2;
+    context.drawImage(image, sourceX, sourceY, cropSize, cropSize, 0, 0, targetSize, targetSize);
+    return canvas.toDataURL('image/jpeg', 0.86);
+}
+
+async function handleAccountAvatarFileSelection(file) {
+    if (!file) return;
+    if (!file.type || !file.type.startsWith('image/')) {
+        setAccountAvatarStatus('Please choose an image file.', 'error');
+        showToast('Please choose an image file.', 'warning');
+        return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+        setAccountAvatarStatus('Image is too large. Use an image smaller than 8MB.', 'error');
+        showToast('Image is too large (max 8MB).', 'warning');
+        return;
+    }
+    setAccountAvatarStatus('Processing image...', 'info');
+    try {
+        const dataUrl = await convertAvatarFileToDataUrl(file);
+        const avatarUrlInput = document.getElementById('account-avatar-url');
+        accountProfile.avatarUrl = sanitizeAvatarUrlClient(dataUrl);
+        if (avatarUrlInput) {
+            avatarUrlInput.value = accountProfile.avatarUrl;
+        }
+        saveAccountProfile();
+        updateAccountChip();
+        applyAccountProfileToForm();
+        setAccountAvatarStatus('Profile picture ready. Click Save Profile to sync.', 'success');
+    } catch (error) {
+        const reason = error instanceof Error ? error.message : String(error);
+        setAccountAvatarStatus(`Unable to process image: ${reason}`, 'error');
+        showToast(`Unable to process image: ${reason}`, 'error');
+    }
+}
+
+function applyAvatarUrlInputValue() {
+    const avatarUrlInput = document.getElementById('account-avatar-url');
+    if (!avatarUrlInput) return;
+    const rawValue = String(avatarUrlInput.value || '').trim();
+    if (!rawValue) {
+        accountProfile.avatarUrl = '';
+        saveAccountProfile();
+        updateAccountChip();
+        updateAccountProfileSummaryUI();
+        setAccountAvatarStatus('Profile photo removed locally. Save Profile to sync.', 'info');
+        return;
+    }
+    const sanitized = sanitizeAvatarUrlClient(rawValue);
+    if (!sanitized) {
+        setAccountAvatarStatus('Use a valid HTTPS image URL (or uploaded photo).', 'error');
+        return;
+    }
+    accountProfile.avatarUrl = sanitized;
+    avatarUrlInput.value = sanitized;
+    saveAccountProfile();
+    updateAccountChip();
+    updateAccountProfileSummaryUI();
+    setAccountAvatarStatus('Profile photo updated. Click Save Profile to sync.', 'success');
+}
+
+function clearAccountAvatarSelection() {
+    const avatarUrlInput = document.getElementById('account-avatar-url');
+    const avatarFileInput = document.getElementById('account-avatar-file');
+    if (avatarUrlInput) avatarUrlInput.value = '';
+    if (avatarFileInput) avatarFileInput.value = '';
+    accountProfile.avatarUrl = '';
+    saveAccountProfile();
+    updateAccountChip();
+    updateAccountProfileSummaryUI();
+    setAccountAvatarStatus('Profile photo removed. Click Save Profile to sync.', 'info');
 }
 
 async function ensureAuthenticatedAccountSession() {
@@ -17480,6 +17776,7 @@ async function checkNeonSession(options = {}) {
     const sessionCheckId = ++neonSessionCheckCounter;
     const isLatestSessionCheck = () => sessionCheckId === neonSessionCheckCounter;
     if (!hasNeonSyncConfig()) {
+        accountAuthState.isSessionHydrating = false;
         setCsrfToken('');
         accountAuthState.isAuthenticated = false;
         accountAuthState.sessionLabel = '';
@@ -17501,7 +17798,15 @@ async function checkNeonSession(options = {}) {
         ).trim();
         const sessionUser = getSessionUserFromPayload(sessionPayload);
         const sessionProvider = resolveSessionProviderFromPayload(sessionPayload);
-        const { userId, userEmail, userUsername } = sessionUser;
+        const {
+            userId,
+            userEmail,
+            userUsername,
+            userAvatarUrl,
+            userSocialHandle,
+            userSocialStatus,
+            userMessagingEnabled
+        } = sessionUser;
         const storedUserId = String(accountProfile.serverUserId || '').trim();
         const userLabel = userUsername || userEmail || userId || storedUserId;
         const message = userLabel
@@ -17531,10 +17836,23 @@ async function checkNeonSession(options = {}) {
             if (userEmail) {
                 accountProfile.email = userEmail;
             }
+            if (userAvatarUrl) {
+                accountProfile.avatarUrl = sanitizeAvatarUrlClient(userAvatarUrl);
+            }
+            if (userSocialHandle) {
+                accountProfile.socialHandle = sanitizeSocialHandleClient(userSocialHandle);
+            }
+            if (userSocialStatus) {
+                accountProfile.socialStatus = sanitizeSocialStatusClient(userSocialStatus);
+            }
+            if (typeof userMessagingEnabled === 'boolean') {
+                accountProfile.messagingEnabled = userMessagingEnabled;
+            }
             if (!isAuthenticated) {
                 accountProfile.serverUserId = '';
                 clearAuthScopedLocalStorage();
             }
+            accountAuthState.isSessionHydrating = false;
             saveAccountProfile();
             applyAccountProfileToForm();
             updateAccountChip();
@@ -17552,6 +17870,7 @@ async function checkNeonSession(options = {}) {
         const normalizedReason = reason.toLowerCase();
         const isUnauthenticated = normalizedReason.includes('not authenticated') || normalizedReason.includes('401');
         if (isLatestSessionCheck()) {
+            accountAuthState.isSessionHydrating = false;
             setCsrfToken('');
             accountAuthState.isAuthenticated = false;
             accountAuthState.sessionLabel = '';
@@ -17893,6 +18212,18 @@ async function submitAccountAuth() {
             accountProfile.username = authSessionUser.userUsername;
             accountProfile.name = authSessionUser.userUsername;
         }
+        if (authSessionUser.userAvatarUrl) {
+            accountProfile.avatarUrl = sanitizeAvatarUrlClient(authSessionUser.userAvatarUrl);
+        }
+        if (authSessionUser.userSocialHandle) {
+            accountProfile.socialHandle = sanitizeSocialHandleClient(authSessionUser.userSocialHandle);
+        }
+        if (authSessionUser.userSocialStatus) {
+            accountProfile.socialStatus = sanitizeSocialStatusClient(authSessionUser.userSocialStatus);
+        }
+        if (typeof authSessionUser.userMessagingEnabled === 'boolean') {
+            accountProfile.messagingEnabled = authSessionUser.userMessagingEnabled;
+        }
         saveAccountProfile();
         applyAccountProfileToForm();
         const refreshedSession = await waitForVerifiedAuthSession({
@@ -17978,7 +18309,11 @@ async function pushProfileToNeon(options = {}) {
                     username: accountProfile.username || accountProfile.name,
                     name: accountProfile.username || accountProfile.name,
                     email: accountProfile.email,
-                    goal: accountProfile.goal
+                    goal: accountProfile.goal,
+                    avatarUrl: sanitizeAvatarUrlClient(accountProfile.avatarUrl || ''),
+                    socialHandle: sanitizeSocialHandleClient(accountProfile.socialHandle || ''),
+                    socialStatus: sanitizeSocialStatusClient(accountProfile.socialStatus || ''),
+                    messagingEnabled: Boolean(accountProfile.messagingEnabled)
                 }
             })
         });
@@ -18020,6 +18355,13 @@ async function pullProfileFromNeon(options = {}) {
             accountProfile.name = remoteUsername;
             accountProfile.email = String(remoteProfile.email || accountProfile.email || '');
             accountProfile.goal = String(remoteProfile.goal || accountProfile.goal || 'exploring');
+            accountProfile.avatarUrl = sanitizeAvatarUrlClient(remoteProfile.avatarUrl || remoteProfile.avatar_url || accountProfile.avatarUrl || '');
+            accountProfile.socialHandle = sanitizeSocialHandleClient(remoteProfile.socialHandle || remoteProfile.social_handle || accountProfile.socialHandle || '');
+            accountProfile.socialStatus = sanitizeSocialStatusClient(remoteProfile.socialStatus || remoteProfile.statusText || remoteProfile.status_text || accountProfile.socialStatus || '');
+            accountProfile.messagingEnabled = parseBooleanLikeClient(
+                remoteProfile.messagingEnabled ?? remoteProfile.messaging_enabled ?? accountProfile.messagingEnabled,
+                accountProfile.messagingEnabled
+            );
             saveAccountProfile();
             applyAccountProfileToForm();
             updateAccountChip();
@@ -18132,6 +18474,7 @@ function openAccountModal() {
     const initialFocusSelector = accountAuthState.isAuthenticated ? '#account-auth-hero-logout' : '#account-auth-email';
     openModal('account-modal', { initialFocus: initialFocusSelector });
     if (PROFILE_SYNC_CONFIG.enabled) {
+        setAccountSessionHydrating(true);
         void refreshAuthSessionState({
             silent: true,
             retries: 2,
@@ -18169,8 +18512,14 @@ function initAccount() {
     const authRememberCheckbox = document.getElementById('account-auth-remember');
     const authProviderButtons = Array.from(document.querySelectorAll('.account-auth-provider-btn'));
     const passwordToggleButtons = Array.from(document.querySelectorAll('.account-auth-password-toggle[data-target-input]'));
+    const avatarUrlInput = document.getElementById('account-avatar-url');
+    const avatarFileInput = document.getElementById('account-avatar-file');
+    const avatarRemoveBtn = document.getElementById('account-avatar-remove');
     const profileUsernameInput = document.getElementById('account-username');
     const profileGoalInput = document.getElementById('account-goal');
+    const profileSocialHandleInput = document.getElementById('account-social-handle');
+    const profileSocialStatusInput = document.getElementById('account-social-status');
+    const profileMessagingEnabledInput = document.getElementById('account-social-messaging-enabled');
     const profileEmailInput = document.getElementById('account-email');
     const profileEmailPinInput = document.getElementById('account-email-pin');
     const profileCurrentPasswordInput = document.getElementById('account-current-password');
@@ -18183,13 +18532,17 @@ function initAccount() {
     const profileInputs = [
         profileUsernameInput,
         profileGoalInput,
+        avatarUrlInput,
+        profileSocialHandleInput,
+        profileSocialStatusInput,
         profileEmailInput,
         profileEmailPinInput,
         profileCurrentPasswordInput,
         profileNewPasswordInput,
         profileConfirmPasswordInput,
         profileDeletePasswordInput,
-        profileDeleteConfirmInput
+        profileDeleteConfirmInput,
+        profileMessagingEnabledInput
     ].filter(Boolean);
 
     authInputs.forEach((input) => {
@@ -18374,16 +18727,55 @@ function initAccount() {
     resetAccountSecureInputs({ clearPendingEmail: true });
     setAccountAuthMode('login');
     accountAuthState.isAuthenticated = false;
+    accountAuthState.isSessionHydrating = hasNeonSyncConfig();
     accountAuthState.sessionLabel = '';
     setAccountProviderState('', '');
-    setAccountAuthStatus(t('auth.status.guest'), 'neutral');
-    setAccountSyncState('connected', 'Not signed in.');
+    if (accountAuthState.isSessionHydrating) {
+        setAccountAuthStatus('Checking session...', 'info');
+        setAccountSyncState('connecting', 'Checking account session...');
+        setAccountAvatarStatus('Checking saved profile photo...', 'info');
+    } else {
+        setAccountAuthStatus(t('auth.status.guest'), 'neutral');
+        setAccountSyncState('connected', 'Not signed in.');
+    }
+    if (avatarUrlInput) {
+        avatarUrlInput.addEventListener('blur', applyAvatarUrlInputValue);
+        avatarUrlInput.addEventListener('keydown', (event) => {
+            if (event.key !== 'Enter') return;
+            event.preventDefault();
+            applyAvatarUrlInputValue();
+        });
+    }
+    if (avatarFileInput) {
+        avatarFileInput.addEventListener('change', async () => {
+            const selectedFile = avatarFileInput.files && avatarFileInput.files[0] ? avatarFileInput.files[0] : null;
+            await handleAccountAvatarFileSelection(selectedFile);
+        });
+    }
+    if (avatarRemoveBtn) {
+        avatarRemoveBtn.addEventListener('click', clearAccountAvatarSelection);
+    }
+    if (profileSocialHandleInput) {
+        profileSocialHandleInput.addEventListener('blur', () => {
+            const normalized = sanitizeSocialHandleClient(profileSocialHandleInput.value);
+            profileSocialHandleInput.value = normalized ? `@${normalized}` : '';
+        });
+    }
+    if (profileSocialStatusInput) {
+        profileSocialStatusInput.addEventListener('input', () => {
+            const trimmed = sanitizeSocialStatusClient(profileSocialStatusInput.value);
+            if (trimmed !== profileSocialStatusInput.value) {
+                profileSocialStatusInput.value = trimmed;
+            }
+        });
+    }
     refreshAccountPrimaryAuthButton();
     updateAccountAuthCardLayout();
     updateAccountProfileSummaryUI();
     handleInsightsAccessStateChange();
 
     if (hasNeonSyncConfig()) {
+        setAccountSessionHydrating(true);
         loadAuthProviderAvailability({ silent: true });
         void refreshAuthSessionState({ silent: true, retries: 2, retryDelayMs: 500, force: true });
         void resumePendingAuthRecoveryProbe({ maxAttempts: 45, attemptDelayMs: 1500 });

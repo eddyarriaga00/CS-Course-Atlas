@@ -44,6 +44,9 @@ const SUPPORT_WINDOW_MS = readPositiveInteger(process.env.SUPPORT_WINDOW_MS, 15 
 const SUPPORT_MAX_REQUESTS = readPositiveInteger(process.env.SUPPORT_MAX_REQUESTS, 20);
 const SUPPORT_MAX_MESSAGE_LENGTH = readPositiveInteger(process.env.SUPPORT_MAX_MESSAGE_LENGTH, 5_000);
 const SUPPORT_MAX_FIELD_LENGTH = readPositiveInteger(process.env.SUPPORT_MAX_FIELD_LENGTH, 160);
+const PROFILE_AVATAR_URL_MAX_LENGTH = readPositiveInteger(process.env.PROFILE_AVATAR_URL_MAX_LENGTH, 220_000);
+const PROFILE_SOCIAL_HANDLE_MAX_LENGTH = readPositiveInteger(process.env.PROFILE_SOCIAL_HANDLE_MAX_LENGTH, 32);
+const PROFILE_STATUS_TEXT_MAX_LENGTH = readPositiveInteger(process.env.PROFILE_STATUS_TEXT_MAX_LENGTH, 140);
 const PASSWORD_MIN_LENGTH = readPositiveInteger(process.env.PASSWORD_MIN_LENGTH, 8);
 const PASSWORD_MAX_LENGTH = readPositiveInteger(process.env.PASSWORD_MAX_LENGTH, 128);
 const JSON_MAX_DEPTH = readPositiveInteger(process.env.JSON_MAX_DEPTH, 12);
@@ -373,6 +376,46 @@ function parseAllowlist(value) {
             .map((entry) => entry.trim().toLowerCase())
             .filter(Boolean)
     );
+}
+
+function sanitizeSocialHandle(value) {
+    const raw = safeString(value);
+    if (!raw) return '';
+    const normalized = raw
+        .replace(/^@+/, '')
+        .replace(/[^a-zA-Z0-9._-]+/g, '')
+        .slice(0, PROFILE_SOCIAL_HANDLE_MAX_LENGTH);
+    return normalized.toLowerCase();
+}
+
+function sanitizeStatusText(value) {
+    const raw = safeString(value);
+    if (!raw) return '';
+    return raw.slice(0, PROFILE_STATUS_TEXT_MAX_LENGTH);
+}
+
+function sanitizeProfileAvatarUrl(value) {
+    const raw = safeString(value);
+    if (!raw) return '';
+    if (raw.length > PROFILE_AVATAR_URL_MAX_LENGTH) {
+        return '';
+    }
+    const safeDataUrlPattern = /^data:image\/(?:png|jpeg|jpg|webp|gif);base64,[a-z0-9+/=]+$/i;
+    if (safeDataUrlPattern.test(raw)) {
+        return raw;
+    }
+    try {
+        const parsed = new URL(raw);
+        if (!['https:', 'http:'].includes(parsed.protocol)) {
+            return '';
+        }
+        if (parsed.protocol === 'http:' && isProduction && !isLoopbackHostname(parsed.hostname)) {
+            return '';
+        }
+        return parsed.toString().slice(0, PROFILE_AVATAR_URL_MAX_LENGTH);
+    } catch (_error) {
+        return '';
+    }
 }
 
 function normalizeOriginHeader(value) {
@@ -1294,7 +1337,11 @@ async function loadUserSummary(client, userId) {
             u.username,
             p.username AS profile_username,
             p.name,
-            p.goal
+            p.goal,
+            p.avatar_url,
+            p.social_handle,
+            p.status_text,
+            p.messaging_enabled
         FROM users u
         LEFT JOIN user_profiles p ON p.user_id = u.id
         WHERE u.id = $1
@@ -1311,7 +1358,11 @@ async function loadUserSummary(client, userId) {
         email: row.email,
         username: row.profile_username || row.username || row.name || null,
         name: row.name || row.profile_username || row.username || null,
-        goal: row.goal || 'exploring'
+        goal: row.goal || 'exploring',
+        avatarUrl: safeString(row.avatar_url),
+        socialHandle: safeString(row.social_handle),
+        socialStatus: safeString(row.status_text),
+        messagingEnabled: Boolean(row.messaging_enabled)
     };
 }
 
@@ -1323,6 +1374,7 @@ async function resolveOAuthUser(profile) {
     }
 
     const normalizedEmail = normalizeEmail(profile?.email || '');
+    const sanitizedAvatarUrl = sanitizeProfileAvatarUrl(profile?.avatar || '');
     const providerProfileJson = JSON.stringify({
         name: safeString(profile?.name),
         avatar: safeString(profile?.avatar),
@@ -1372,36 +1424,39 @@ async function resolveOAuthUser(profile) {
             userId = createdUser.rows[0].id;
             await client.query(
                 `
-                INSERT INTO user_profiles (user_id, username, name, email, goal)
-                VALUES ($1, $2, $3, $4, 'exploring')
+                INSERT INTO user_profiles (user_id, username, name, email, goal, avatar_url)
+                VALUES ($1, $2, $3, $4, 'exploring', $5)
                 ON CONFLICT (user_id)
                 DO UPDATE SET
                     username = EXCLUDED.username,
                     name = EXCLUDED.name,
                     email = EXCLUDED.email,
+                    avatar_url = COALESCE(NULLIF(EXCLUDED.avatar_url, ''), user_profiles.avatar_url),
                     updated_at = NOW()
                 `,
-                [userId, username, safeString(profile?.name) || username, normalizedEmail]
+                [userId, username, safeString(profile?.name) || username, normalizedEmail, sanitizedAvatarUrl || null]
             );
         } else {
             await client.query(
                 `
-                INSERT INTO user_profiles (user_id, username, name, email, goal)
+                INSERT INTO user_profiles (user_id, username, name, email, goal, avatar_url)
                 VALUES (
                     $1,
                     COALESCE(NULLIF($2, ''), NULLIF($3, ''), NULL),
                     COALESCE(NULLIF($3, ''), NULLIF($2, ''), NULL),
                     COALESCE(NULLIF($4, ''), NULL),
-                    'exploring'
+                    'exploring',
+                    COALESCE(NULLIF($5, ''), NULL)
                 )
                 ON CONFLICT (user_id)
                 DO UPDATE SET
                     username = COALESCE(NULLIF(EXCLUDED.username, ''), user_profiles.username),
                     name = COALESCE(NULLIF(EXCLUDED.name, ''), user_profiles.name),
                     email = COALESCE(NULLIF(EXCLUDED.email, ''), user_profiles.email),
+                    avatar_url = COALESCE(NULLIF(EXCLUDED.avatar_url, ''), user_profiles.avatar_url),
                     updated_at = NOW()
                 `,
-                [userId, safeString(profile?.usernameHint), safeString(profile?.name), normalizedEmail]
+                [userId, safeString(profile?.usernameHint), safeString(profile?.name), normalizedEmail, sanitizedAvatarUrl || null]
             );
         }
 
@@ -1903,7 +1958,11 @@ async function getSessionFromRequest(req) {
             u.username,
             p.name,
             p.goal,
-            p.username AS profile_username
+            p.username AS profile_username,
+            p.avatar_url,
+            p.social_handle,
+            p.status_text,
+            p.messaging_enabled
         FROM user_sessions s
         JOIN users u ON u.id = s.user_id
         LEFT JOIN user_profiles p ON p.user_id = u.id
@@ -1930,7 +1989,11 @@ async function getSessionFromRequest(req) {
             email: row.email,
             username: row.profile_username || row.username || row.name || null,
             name: row.name || row.profile_username || row.username || null,
-            goal: row.goal || 'exploring'
+            goal: row.goal || 'exploring',
+            avatarUrl: safeString(row.avatar_url),
+            socialHandle: safeString(row.social_handle),
+            socialStatus: safeString(row.status_text),
+            messagingEnabled: Boolean(row.messaging_enabled)
         }
     };
 }
@@ -2017,7 +2080,11 @@ function sessionResponsePayload(session) {
                 email: session.user.email,
                 username: session.user.username,
                 name: session.user.name,
-                goal: session.user.goal
+                goal: session.user.goal,
+                avatarUrl: session.user.avatarUrl,
+                socialHandle: session.user.socialHandle,
+                socialStatus: session.user.socialStatus,
+                messagingEnabled: session.user.messagingEnabled
             }
         },
         user: {
@@ -2025,7 +2092,11 @@ function sessionResponsePayload(session) {
             email: session.user.email,
             username: session.user.username,
             name: session.user.name,
-            goal: session.user.goal
+            goal: session.user.goal,
+            avatarUrl: session.user.avatarUrl,
+            socialHandle: session.user.socialHandle,
+            socialStatus: session.user.socialStatus,
+            messagingEnabled: session.user.messagingEnabled
         },
         csrfToken: session.csrfToken
     };
@@ -2272,8 +2343,8 @@ app.post('/api/auth/signup', assertSameOrigin, async (req, res) => {
             const nextUserId = created.rows[0].id;
             await client.query(
                 `
-                INSERT INTO user_profiles (user_id, username, name, email, goal)
-                VALUES ($1, $2, $2, $3, 'exploring')
+                INSERT INTO user_profiles (user_id, username, name, email, goal, avatar_url, social_handle, status_text, messaging_enabled)
+                VALUES ($1, $2, $2, $3, 'exploring', NULL, NULL, NULL, FALSE)
                 ON CONFLICT (user_id)
                 DO UPDATE SET
                     username = EXCLUDED.username,
@@ -2296,7 +2367,11 @@ app.post('/api/auth/signup', assertSameOrigin, async (req, res) => {
                 email,
                 username,
                 name: username,
-                goal: 'exploring'
+                goal: 'exploring',
+                avatarUrl: '',
+                socialHandle: '',
+                socialStatus: '',
+                messagingEnabled: false
             },
             csrfToken
         });
@@ -2356,7 +2431,11 @@ app.post('/api/auth/login', assertSameOrigin, async (req, res) => {
                 u.username,
                 p.username AS profile_username,
                 p.name,
-                p.goal
+                p.goal,
+                p.avatar_url,
+                p.social_handle,
+                p.status_text,
+                p.messaging_enabled
             FROM users u
             LEFT JOIN user_profiles p ON p.user_id = u.id
             WHERE LOWER(u.email) = $1
@@ -2388,7 +2467,11 @@ app.post('/api/auth/login', assertSameOrigin, async (req, res) => {
                 email: user.email,
                 username: user.profile_username || user.username || user.name || null,
                 name: user.name || user.profile_username || user.username || null,
-                goal: user.goal || 'exploring'
+                goal: user.goal || 'exploring',
+                avatarUrl: safeString(user.avatar_url),
+                socialHandle: safeString(user.social_handle),
+                socialStatus: safeString(user.status_text),
+                messagingEnabled: Boolean(user.messaging_enabled)
             },
             csrfToken
         });
@@ -2410,7 +2493,7 @@ app.get('/api/profile', requireAuth, async (req, res) => {
     try {
         const result = await query(
             `
-            SELECT user_id, username, name, email, goal, created_at, updated_at
+            SELECT user_id, username, name, email, goal, avatar_url, social_handle, status_text, messaging_enabled, created_at, updated_at
             FROM user_profiles
             WHERE user_id = $1
             LIMIT 1
@@ -2422,7 +2505,11 @@ app.get('/api/profile', requireAuth, async (req, res) => {
             username: req.auth.user.username,
             name: req.auth.user.name,
             email: req.auth.user.email,
-            goal: req.auth.user.goal || 'exploring'
+            goal: req.auth.user.goal || 'exploring',
+            avatar_url: req.auth.user.avatarUrl || '',
+            social_handle: req.auth.user.socialHandle || '',
+            status_text: req.auth.user.socialStatus || '',
+            messaging_enabled: Boolean(req.auth.user.messagingEnabled)
         };
         return res.json({ ok: true, profile });
     } catch (error) {
@@ -2436,12 +2523,20 @@ app.post('/api/profile', assertSameOrigin, requireAuth, requireCsrf, async (req,
     const name = safeString(profile.name || username || req.auth.user.name);
     const requestedEmail = normalizeEmail(profile.email || '');
     const goal = safeString(profile.goal || req.auth.user.goal || 'exploring') || 'exploring';
+    const rawAvatarUrl = safeString(profile.avatarUrl || profile.avatar_url || profile.avatar);
+    const avatarUrl = sanitizeProfileAvatarUrl(rawAvatarUrl);
+    const socialHandle = sanitizeSocialHandle(profile.socialHandle || profile.social_handle || '');
+    const socialStatus = sanitizeStatusText(profile.socialStatus || profile.statusText || profile.status_text || '');
+    const messagingEnabled = Boolean(profile.messagingEnabled);
 
     if (username && !isValidUsername(username)) {
         return res.status(400).json({ error: 'Invalid username format.' });
     }
     if (requestedEmail && !isValidEmail(requestedEmail)) {
         return res.status(400).json({ error: 'Invalid email format.' });
+    }
+    if (rawAvatarUrl && !avatarUrl) {
+        return res.status(400).json({ error: 'Invalid profile avatar URL.' });
     }
 
     try {
@@ -2466,18 +2561,32 @@ app.post('/api/profile', assertSameOrigin, requireAuth, requireCsrf, async (req,
             }
             const upserted = await client.query(
                 `
-                INSERT INTO user_profiles (user_id, username, name, email, goal)
-                VALUES ($1, $2, $3, $4, $5)
+                INSERT INTO user_profiles (user_id, username, name, email, goal, avatar_url, social_handle, status_text, messaging_enabled)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
                 ON CONFLICT (user_id)
                 DO UPDATE SET
                     username = EXCLUDED.username,
                     name = EXCLUDED.name,
                     email = EXCLUDED.email,
                     goal = EXCLUDED.goal,
+                    avatar_url = EXCLUDED.avatar_url,
+                    social_handle = EXCLUDED.social_handle,
+                    status_text = EXCLUDED.status_text,
+                    messaging_enabled = EXCLUDED.messaging_enabled,
                     updated_at = NOW()
-                RETURNING username, name, email, goal
+                RETURNING username, name, email, goal, avatar_url, social_handle, status_text, messaging_enabled
                 `,
-                [req.auth.userId, username || null, name || null, currentEmail || null, goal]
+                [
+                    req.auth.userId,
+                    username || null,
+                    name || null,
+                    currentEmail || null,
+                    goal,
+                    avatarUrl || null,
+                    socialHandle || null,
+                    socialStatus || null,
+                    messagingEnabled
+                ]
             );
 
             const stored = upserted.rows[0] || {};
@@ -2487,7 +2596,11 @@ app.post('/api/profile', assertSameOrigin, requireAuth, requireCsrf, async (req,
                 username: resolvedUsername,
                 name: safeString(stored.name || resolvedUsername),
                 email: normalizeEmail(stored.email || currentEmail),
-                goal: safeString(stored.goal || goal) || 'exploring'
+                goal: safeString(stored.goal || goal) || 'exploring',
+                avatarUrl: safeString(stored.avatar_url),
+                socialHandle: safeString(stored.social_handle),
+                socialStatus: safeString(stored.status_text),
+                messagingEnabled: Boolean(stored.messaging_enabled)
             };
         });
 
@@ -2769,7 +2882,7 @@ app.post('/api/profile/email/verify-pin', assertSameOrigin, requireAuth, require
 
             const profileFound = await client.query(
                 `
-                SELECT username, name, goal
+                SELECT username, name, goal, avatar_url, social_handle, status_text, messaging_enabled
                 FROM user_profiles
                 WHERE user_id = $1
                 LIMIT 1
@@ -2789,7 +2902,11 @@ app.post('/api/profile/email/verify-pin', assertSameOrigin, requireAuth, require
                     username: resolvedUsername,
                     name: safeString(row.name || resolvedUsername),
                     email: newEmail,
-                    goal: safeString(row.goal || req.auth.user.goal || 'exploring') || 'exploring'
+                    goal: safeString(row.goal || req.auth.user.goal || 'exploring') || 'exploring',
+                    avatarUrl: safeString(row.avatar_url),
+                    socialHandle: safeString(row.social_handle),
+                    socialStatus: safeString(row.status_text),
+                    messagingEnabled: Boolean(row.messaging_enabled)
                 };
             } else {
                 const fallbackUsername = safeString(req.auth.user.username);
@@ -2797,9 +2914,9 @@ app.post('/api/profile/email/verify-pin', assertSameOrigin, requireAuth, require
                 const fallbackGoal = safeString(req.auth.user.goal || 'exploring') || 'exploring';
                 const inserted = await client.query(
                     `
-                    INSERT INTO user_profiles (user_id, username, name, email, goal)
-                    VALUES ($1, $2, $3, $4, $5)
-                    RETURNING username, name, email, goal
+                    INSERT INTO user_profiles (user_id, username, name, email, goal, avatar_url, social_handle, status_text, messaging_enabled)
+                    VALUES ($1, $2, $3, $4, $5, NULL, NULL, NULL, FALSE)
+                    RETURNING username, name, email, goal, avatar_url, social_handle, status_text, messaging_enabled
                     `,
                     [req.auth.userId, fallbackUsername || null, fallbackName || null, newEmail, fallbackGoal]
                 );
@@ -2810,7 +2927,11 @@ app.post('/api/profile/email/verify-pin', assertSameOrigin, requireAuth, require
                     username: resolvedUsername,
                     name: safeString(row.name || resolvedUsername),
                     email: normalizeEmail(row.email || newEmail),
-                    goal: safeString(row.goal || fallbackGoal) || 'exploring'
+                    goal: safeString(row.goal || fallbackGoal) || 'exploring',
+                    avatarUrl: safeString(row.avatar_url),
+                    socialHandle: safeString(row.social_handle),
+                    socialStatus: safeString(row.status_text),
+                    messagingEnabled: Boolean(row.messaging_enabled)
                 };
             }
 

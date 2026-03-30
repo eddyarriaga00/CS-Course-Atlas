@@ -1751,9 +1751,41 @@
 
                     <div id="account-profile-content" class="account-profile-content hidden">
                         <div class="account-profile-section space-y-3" data-account-panel="profile">
+                            <div class="account-avatar-editor">
+                                <div class="account-avatar-editor-head">
+                                    <h5 class="text-sm font-semibold text-indigo-200">Profile Picture</h5>
+                                    <p class="text-xs text-slate-300">Add a photo for your account chip and profile summary.</p>
+                                </div>
+                                <label for="account-avatar-url" class="font-semibold text-sm mb-1 block text-slate-200">Avatar URL</label>
+                                <input type="url" id="account-avatar-url" autocomplete="url" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="https://example.com/avatar.jpg">
+                                <div class="account-avatar-editor-actions">
+                                    <label for="account-avatar-file" class="account-avatar-upload-btn">Upload Image</label>
+                                    <input type="file" id="account-avatar-file" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+                                    <button id="account-avatar-remove" type="button" class="account-avatar-remove-btn">Remove Photo</button>
+                                </div>
+                                <p id="account-avatar-status" class="text-xs text-slate-300">Tip: square images look best. Uploaded photos are resized automatically.</p>
+                            </div>
                             <div>
                                 <label for="account-username" class="font-semibold text-sm mb-1 block text-slate-200">Username</label>
                                 <input type="text" id="account-username" autocomplete="nickname" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Set your public username">
+                            </div>
+                            <div class="account-social-editor">
+                                <div>
+                                    <h5 class="text-sm font-semibold text-indigo-200">Social Profile (Messaging Soon)</h5>
+                                    <p class="text-xs text-slate-300 mt-1">Set your handle and status now. Messaging will use these when social features launch.</p>
+                                </div>
+                                <div>
+                                    <label for="account-social-handle" class="font-semibold text-sm mb-1 block text-slate-200">Social Handle</label>
+                                    <input type="text" id="account-social-handle" autocomplete="nickname" maxlength="32" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="@yourhandle">
+                                </div>
+                                <div>
+                                    <label for="account-social-status" class="font-semibold text-sm mb-1 block text-slate-200">Status</label>
+                                    <input type="text" id="account-social-status" maxlength="140" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Grinding graph algorithms today">
+                                </div>
+                                <label for="account-social-messaging-enabled" class="account-social-optin">
+                                    <input type="checkbox" id="account-social-messaging-enabled" class="account-auth-remember-checkbox">
+                                    <span>Enable direct messages when released</span>
+                                </label>
                             </div>
                             <div>
                                 <label for="account-goal" class="font-semibold text-sm mb-1 block text-slate-200">Learning Goal</label>
@@ -1764,7 +1796,7 @@
                                     <option value="coursework">Coursework Support</option>
                                 </select>
                             </div>
-                            <button id="save-account" type="button" class="account-primary-btn w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2.5 rounded-xl font-medium">Save Username &amp; Goal</button>
+                            <button id="save-account" type="button" class="account-primary-btn w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2.5 rounded-xl font-medium">Save Profile</button>
                         </div>
 
                         <div class="account-profile-section account-profile-security-section space-y-3" data-account-panel="security">
