@@ -22535,6 +22535,176 @@ function getCodeExample(module) {
     return resolved.code || translateLiteral('Code example coming soon...', appState.language);
 }
 
+function getCodeSnapshotCopy() {
+    if (appState.language === 'es') {
+        return {
+            title: 'Resumen de Codigo',
+            examplesLabel: 'ejemplos guiados',
+            languagesLabel: 'lenguajes',
+            activeLabel: 'modo activo',
+            linesLabel: 'lineas utiles',
+            quizReady: 'quiz listo',
+            quizSoon: 'quiz pendiente',
+            checklistTitle: 'Checklist rapido',
+            complexityPrefix: 'Complejidad estimada:'
+        };
+    }
+    return {
+        title: 'Code Snapshot',
+        examplesLabel: 'guided examples',
+        languagesLabel: 'languages',
+        activeLabel: 'active mode',
+        linesLabel: 'useful lines',
+        quizReady: 'quiz ready',
+        quizSoon: 'quiz pending',
+        checklistTitle: 'Quick checklist',
+        complexityPrefix: 'Estimated complexity:'
+    };
+}
+
+function detectCodeRecursionSignature(code = '') {
+    const source = String(code || '');
+    if (!source.trim()) return false;
+    const signatureRegexes = [
+        /\b(?:public|private|protected|static|final|synchronized|\w+)\s+([A-Za-z_]\w*)\s*\([^)]*\)\s*\{/g,
+        /\bdef\s+([A-Za-z_]\w*)\s*\([^)]*\)\s*:/g,
+        /\bfunction\s+([A-Za-z_]\w*)\s*\([^)]*\)\s*\{/g
+    ];
+    const candidateNames = new Set();
+    signatureRegexes.forEach((regex) => {
+        let match;
+        while ((match = regex.exec(source))) {
+            const name = String(match?.[1] || '').trim();
+            if (name && !['if', 'for', 'while', 'switch'].includes(name)) {
+                candidateNames.add(name);
+            }
+        }
+    });
+    return Array.from(candidateNames).some((name) => {
+        const callPattern = new RegExp(`\\b${escapeRegExp(name)}\\s*\\(`, 'g');
+        const matches = source.match(callPattern);
+        return Array.isArray(matches) && matches.length > 1;
+    });
+}
+
+function countUsefulCodeLines(code = '') {
+    return String(code || '')
+        .split('\n')
+        .map((line) => line.trim())
+        .filter((line) => {
+            if (!line) return false;
+            if (line.startsWith('//')) return false;
+            if (line.startsWith('#')) return false;
+            if (line.startsWith(';')) return false;
+            if (line.startsWith('/*') || line.startsWith('*') || line.startsWith('*/')) return false;
+            return true;
+        }).length;
+}
+
+function buildComplexityInsight(code = '') {
+    const source = String(code || '');
+    const isEs = appState.language === 'es';
+    const loopCount = (source.match(/\b(for|while)\b/g) || []).length;
+    const hasSort = /\b(sort|sorted|Arrays\.sort|Collections\.sort|std::sort)\b/.test(source);
+    const hasHash = /\b(HashMap|HashSet|unordered_map|unordered_set|Map<|Set<|dict\(|\{\})\b/.test(source);
+    const hasRecursion = detectCodeRecursionSignature(source);
+
+    if (hasSort && loopCount <= 1) {
+        return isEs
+            ? 'Probablemente O(n log n) por ordenamiento.'
+            : 'Likely O(n log n) due to sorting.';
+    }
+    if (hasRecursion) {
+        return isEs
+            ? 'Depende de la profundidad de recursion (comunmente O(n) u O(log n)).'
+            : 'Depends on recursion depth (commonly O(n) or O(log n)).';
+    }
+    if (loopCount >= 2) {
+        return isEs
+            ? 'Posible O(n^2) o mas por iteraciones multiples.'
+            : 'Potentially O(n^2) or higher due to multiple iteration passes.';
+    }
+    if (loopCount === 1) {
+        return isEs
+            ? 'Generalmente O(n) por recorrido lineal.'
+            : 'Generally O(n) from a linear traversal.';
+    }
+    if (hasHash) {
+        return isEs
+            ? 'Operacion cercana a O(1) promedio con estructuras hash.'
+            : 'Near O(1) average operations using hash-based structures.';
+    }
+    return isEs
+        ? 'Pasos constantes o dominados por operaciones de libreria.'
+        : 'Constant-time steps or library-dominated operations.';
+}
+
+function buildCodeFocusChecklist(code = '') {
+    const source = String(code || '');
+    const isEs = appState.language === 'es';
+    const hasLoop = /\b(for|while)\b/.test(source);
+    const hasBranch = /\b(if|else|switch|case)\b/.test(source);
+    const hasDataStructure = /\b(array|list|map|set|queue|stack|tree|graph|heap|trie)\b/i.test(source);
+
+    const checklist = [];
+    if (hasLoop) {
+        checklist.push(isEs
+            ? 'Traza manualmente las primeras 3 iteraciones.'
+            : 'Dry-run the first 3 iterations by hand.');
+    }
+    if (hasBranch) {
+        checklist.push(isEs
+            ? 'Prueba al menos un caso por cada rama.'
+            : 'Test at least one case per branch.');
+    }
+    if (hasDataStructure) {
+        checklist.push(isEs
+            ? 'Valida casos borde: vacio, 1 elemento y duplicados.'
+            : 'Validate edge cases: empty, single-item, and duplicate-heavy inputs.');
+    }
+    checklist.push(isEs
+        ? 'Explica en una frase el costo de tiempo y memoria.'
+        : 'Explain the time and space tradeoff in one sentence.');
+    return checklist.slice(0, 4);
+}
+
+function buildModuleCodeInsightSummary({
+    moduleId = '',
+    currentLanguage = 'java',
+    currentMode = 'code',
+    activeExampleId = '',
+    codeExamples = {},
+    codeExampleSets = [],
+    hasQuizQuestions = false
+} = {}) {
+    const copy = getCodeSnapshotCopy();
+    const resolvedCode = currentMode === 'discreteTheory'
+        ? getDiscreteTheoryContent(getModuleById(moduleId))
+        : (getCanonicalModuleCode(moduleId, currentLanguage, activeExampleId).code || '');
+    const usefulLines = countUsefulCodeLines(resolvedCode);
+    const availableLanguages = Object.keys(codeExamples || {}).filter((languageKey) =>
+        typeof codeExamples?.[languageKey] === 'string' && String(codeExamples[languageKey]).trim()
+    );
+    const languageCount = availableLanguages.length || 1;
+    const activeModeLabel = currentMode === 'discreteTheory'
+        ? t('module.theoryMode')
+        : (currentMode === 'pseudocode' ? t('module.modePseudocode') : t('module.modeCode'));
+
+    return {
+        title: copy.title,
+        chips: [
+            `${Math.max(1, codeExampleSets.length)} ${copy.examplesLabel}`,
+            `${languageCount} ${copy.languagesLabel}`,
+            `${usefulLines} ${copy.linesLabel}`,
+            `${copy.activeLabel}: ${activeModeLabel}`,
+            hasQuizQuestions ? copy.quizReady : copy.quizSoon
+        ],
+        complexity: `${copy.complexityPrefix} ${buildComplexityInsight(resolvedCode)}`,
+        checklistTitle: copy.checklistTitle,
+        checklist: buildCodeFocusChecklist(resolvedCode)
+    };
+}
+
 function processCode(code, moduleId) {
     const showCommentsForModule = shouldShowComments(moduleId);
     const language = getModuleLanguage(moduleId);
@@ -25050,6 +25220,15 @@ function renderModules() {
         const moduleLearningPlan = buildModuleLearningPlan(module, localizedModule, modulesByCategory, localizedModuleMap);
         const moduleReadinessKit = buildModuleReadinessKit(module, localizedModule, moduleLearningPlan);
         const normalizedResources = buildEnhancedModuleResources(localizedModule.resources, moduleReadinessKit);
+        const moduleCodeInsight = buildModuleCodeInsightSummary({
+            moduleId: module.id,
+            currentLanguage,
+            currentMode,
+            activeExampleId,
+            codeExamples: moduleCodeExamples,
+            codeExampleSets,
+            hasQuizQuestions
+        });
 
         const codeToDisplay = isDiscreteTheoryMode
             ? getDiscreteTheoryContent(localizedModule)
@@ -25262,6 +25441,26 @@ function renderModules() {
                                     ${isCodeExpanded ? t('module.collapse') : t('module.expand')}
                                 </button>
                             ` : ''}
+                        </div>
+                    </div>
+                    <div class="px-3 py-2 border-b border-slate-200 bg-white/80">
+                        <p class="text-[11px] uppercase tracking-wide font-semibold text-slate-600">${escapeHtml(moduleCodeInsight.title)}</p>
+                        <div class="flex flex-wrap gap-1.5 mt-1.5">
+                            ${moduleCodeInsight.chips.map((chip) => `
+                                <span class="text-[11px] px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 font-medium">${escapeHtml(chip)}</span>
+                            `).join('')}
+                        </div>
+                        <p class="mt-2 text-xs text-slate-700 leading-relaxed">${escapeHtml(moduleCodeInsight.complexity)}</p>
+                        <div class="mt-2">
+                            <p class="text-[11px] uppercase tracking-wide font-semibold text-slate-600 mb-1">${escapeHtml(moduleCodeInsight.checklistTitle)}</p>
+                            <ul class="space-y-1">
+                                ${moduleCodeInsight.checklist.map((entry) => `
+                                    <li class="text-[11px] text-slate-700 leading-relaxed flex items-start gap-1.5">
+                                        <span class="text-indigo-500 mt-[1px]">\u2022</span>
+                                        <span>${escapeHtml(entry)}</span>
+                                    </li>
+                                `).join('')}
+                            </ul>
                         </div>
                     </div>
 
