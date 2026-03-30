@@ -16731,7 +16731,9 @@ function shouldRedirectToApiHostedFrontendForAuth() {
     if (!isCrossOriginApiRuntime()) return false;
     const configuredBase = getConfiguredApiBaseUrl();
     if (!configuredBase) return false;
-    return isIOSTouchDevice() || isMobile();
+    const userAgent = String((typeof navigator !== 'undefined' && navigator.userAgent) || '').toLowerCase();
+    const isMobileUserAgent = /android|iphone|ipod|ipad|mobile|silk|opera mini/.test(userAgent);
+    return isIOSTouchDevice() || isMobileUserAgent;
 }
 
 function getApiHostedFrontendAuthUrl() {
