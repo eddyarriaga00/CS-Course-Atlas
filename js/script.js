@@ -16869,12 +16869,12 @@ async function handleOAuthResultFromUrl() {
                 setAccountAuthStatus(syncFailureMessage, 'error');
                 showToast(syncFailureMessage, 'warning');
                 setPendingAuthRecoveryState(providerKey, providerLabel);
-                void runAuthSessionRecoveryProbe({
+                runSafeBackgroundTask(runAuthSessionRecoveryProbe({
                     providerKey,
                     providerLabel,
                     maxAttempts: 90,
                     attemptDelayMs: 2000
-                });
+                }), 'OAuth session recovery probe');
             }
             if (!hasNeonSyncConfig()) {
                 const unavailableMessage = `${providerLabel} sign-in requires the auth server configuration.`;
@@ -18605,12 +18605,12 @@ async function submitAccountAuth() {
             setAccountAuthStatus(sessionSyncMessage, 'error');
             showToast(sessionSyncMessage, 'warning');
             setPendingAuthRecoveryState('password', 'Email + Password');
-            void runAuthSessionRecoveryProbe({
+            runSafeBackgroundTask(runAuthSessionRecoveryProbe({
                 providerKey: 'password',
                 providerLabel: 'Email + Password',
                 maxAttempts: 60,
                 attemptDelayMs: 1200
-            });
+            }), 'Password session recovery probe');
             return;
         }
         const resolvedProviderKey = normalizeAuthProviderKey(authProviderFromPayload || 'password') || 'password';
@@ -18850,12 +18850,12 @@ function openAccountModal() {
         if (!accountAuthState.isAuthenticated) {
             setAccountSessionHydrating(true);
         }
-        void refreshAuthSessionState({
+        runSafeBackgroundTask(refreshAuthSessionState({
             silent: true,
             retries: 2,
             retryDelayMs: 450,
             force: true
-        });
+        }), 'Account modal auth refresh');
     } else {
         setAccountSessionHydrating(false);
     }
@@ -19164,20 +19164,32 @@ function initAccount() {
     if (hasNeonSyncConfig()) {
         setAccountSessionHydrating(true);
         loadAuthProviderAvailability({ silent: true });
-        void refreshAuthSessionState({ silent: true, retries: 2, retryDelayMs: 500, force: true });
-        void resumePendingAuthRecoveryProbe({ maxAttempts: 45, attemptDelayMs: 1500 });
+        runSafeBackgroundTask(
+            refreshAuthSessionState({ silent: true, retries: 2, retryDelayMs: 500, force: true }),
+            'Initial auth refresh'
+        );
+        runSafeBackgroundTask(
+            resumePendingAuthRecoveryProbe({ maxAttempts: 45, attemptDelayMs: 1500 }),
+            'Initial pending auth recovery probe'
+        );
     } else {
         applyAuthProviderAvailability();
     }
 
     window.addEventListener('focus', () => {
         if (!hasNeonSyncConfig() || accountAuthState.isAuthenticated) return;
-        void resumePendingAuthRecoveryProbe({ maxAttempts: 14, attemptDelayMs: 1000 });
+        runSafeBackgroundTask(
+            resumePendingAuthRecoveryProbe({ maxAttempts: 14, attemptDelayMs: 1000 }),
+            'Window focus auth recovery probe'
+        );
     });
     document.addEventListener('visibilitychange', () => {
         if (document.visibilityState !== 'visible') return;
         if (!hasNeonSyncConfig() || accountAuthState.isAuthenticated) return;
-        void resumePendingAuthRecoveryProbe({ maxAttempts: 12, attemptDelayMs: 1000 });
+        runSafeBackgroundTask(
+            resumePendingAuthRecoveryProbe({ maxAttempts: 12, attemptDelayMs: 1000 }),
+            'Visibility auth recovery probe'
+        );
     });
 }
 
@@ -27442,7 +27454,7 @@ function init() {
     renderStudyTip();
     initStudyPlan();
     initAccount();
-    void handleOAuthResultFromUrl();
+    runSafeBackgroundTask(handleOAuthResultFromUrl(), 'OAuth URL result handling');
     initNotes();
     initIOSOverscrollLock();
     initModalScrollContainmentLock();
@@ -28797,9 +28809,49 @@ function printStudyGuide() {
 }
 
 // Enhanced error handling
+function normalizeRuntimeErrorMessage(error) {
+    const reason = getClientErrorReason(error);
+    return String(reason || '').trim();
+}
+
+function isBenignRuntimeError(error) {
+    const normalized = normalizeRuntimeErrorMessage(error).toLowerCase();
+    if (!normalized) return false;
+    return (
+        normalized.includes('aborterror')
+        || normalized.includes('operation was aborted')
+        || normalized.includes('the user aborted a request')
+        || normalized.includes('resizeobserver loop limit exceeded')
+        || normalized.includes('script error')
+        || normalized.includes('load failed')
+        || normalized.includes('err_blocked_by_client')
+        || normalized.includes('fedcm')
+        || normalized.includes('network request failed')
+        || normalized.includes('failed to fetch')
+    );
+}
+
+function runSafeBackgroundTask(taskPromise, context = 'Background task') {
+    Promise.resolve(taskPromise).catch((error) => {
+        console.warn(`${context} failed:`, error);
+    });
+}
+
 function handleError(error, context = 'Application') {
+    const reason = normalizeRuntimeErrorMessage(error);
+    if ((context === 'Promise' || context === 'Global') && !reason) {
+        console.warn(`${context} warning suppressed: empty runtime error payload`, error);
+        return;
+    }
+    if (isBenignRuntimeError(error)) {
+        console.warn(`${context} warning suppressed:`, error);
+        return;
+    }
+    const message = reason
+        ? `${context} error: ${reason}`
+        : `${context} error occurred. Please try again.`;
     console.error(`${context} Error:`, error);
-    showToast(`${context} error occurred. Please try again.`, 'error');
+    showToast(message, 'error');
 }
 
 // Performance monitoring
@@ -29381,20 +29433,40 @@ window.javaDSAHub = {
 
 // Error boundary
 window.addEventListener('error', (event) => {
-    handleError(event.error, 'Global');
+    if (!event?.error && !event?.message) {
+        event.preventDefault();
+        return;
+    }
+    const error = event.error || new Error(event.message || 'Unknown global runtime error');
+    if (isBenignRuntimeError(error)) {
+        event.preventDefault();
+        console.warn('Global warning suppressed:', error);
+        return;
+    }
+    handleError(error, 'Global');
 });
 
 window.addEventListener('unhandledrejection', (event) => {
+    if (!event?.reason) {
+        event.preventDefault();
+        console.warn('Promise rejection suppressed: empty reason payload');
+        return;
+    }
+    if (isBenignRuntimeError(event.reason)) {
+        event.preventDefault();
+        console.warn('Promise rejection suppressed:', event.reason);
+        return;
+    }
     handleError(event.reason, 'Promise');
 });
 
 function refreshAuthSessionOnForeground() {
     if (!hasNeonSyncConfig()) return;
-    void refreshAuthSessionState({
+    runSafeBackgroundTask(refreshAuthSessionState({
         silent: true,
         retries: 1,
         retryDelayMs: 450
-    });
+    }), 'Foreground auth refresh');
 }
 
 // Visibility change handler for study sessions
