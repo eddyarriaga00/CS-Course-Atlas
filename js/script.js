@@ -15925,7 +15925,6 @@ function updateAccountAuthCardLayout() {
     const legal = document.getElementById('account-auth-legal');
     const switchRow = document.getElementById('account-auth-switch-row');
     const submitButton = document.getElementById('account-auth-submit');
-    const quickLogoutButton = document.getElementById('account-quick-logout');
     const heroLogoutButton = document.getElementById('account-auth-hero-logout');
     const heroManageButton = document.getElementById('account-auth-hero-manage');
     const statePill = document.getElementById('account-auth-state-pill');
@@ -15980,10 +15979,6 @@ function updateAccountAuthCardLayout() {
             submitButton.textContent = 'Checking Session...';
         }
     }
-    if (quickLogoutButton) {
-        quickLogoutButton.classList.toggle('hidden', !isAuthenticated);
-        quickLogoutButton.textContent = accountAuthState.inFlight ? 'Signing Out...' : 'Sign Out';
-    }
     if (heroLogoutButton) {
         heroLogoutButton.classList.toggle('hidden', !isAuthenticated);
         heroLogoutButton.disabled = accountAuthState.inFlight;
@@ -15993,6 +15988,7 @@ function updateAccountAuthCardLayout() {
     if (heroManageButton) {
         heroManageButton.classList.toggle('hidden', !isAuthenticated);
     }
+    syncAccountAuthStatusForSessionState();
 }
 
 function updateAccountProfileSummaryUI() {
@@ -16003,7 +15999,6 @@ function updateAccountProfileSummaryUI() {
     const goalEl = document.getElementById('account-profile-goal-display');
     const sessionEl = document.getElementById('account-profile-session-display');
     const syncEl = document.getElementById('account-profile-sync-display');
-    const quickLogoutButton = document.getElementById('account-quick-logout');
     const profileToggleButton = document.getElementById('account-profile-toggle');
     const profileToggleLabel = document.getElementById('account-profile-toggle-label');
     const profileActionsWrap = document.querySelector('#account-modal .account-profile-actions');
@@ -16051,10 +16046,6 @@ function updateAccountProfileSummaryUI() {
     if (syncEl) {
         syncEl.textContent = String(accountProfile.lastSyncMessage || 'Sync idle.');
     }
-    if (quickLogoutButton) {
-        quickLogoutButton.classList.toggle('hidden', !isAuthenticated);
-        quickLogoutButton.textContent = accountAuthState.inFlight ? 'Signing Out...' : 'Sign Out';
-    }
     if (profileToggleButton) {
         profileToggleButton.classList.toggle('hidden', !isAuthenticated);
         if (!isAuthenticated) {
@@ -16085,6 +16076,7 @@ function updateAccountProfileSummaryUI() {
         button.setAttribute('aria-disabled', disabled ? 'true' : 'false');
         button.classList.toggle('is-disabled', disabled);
     });
+    syncAccountAuthStatusForSessionState();
 }
 
 function setActiveAccountProfilePanel(panel = 'profile') {
@@ -16228,6 +16220,45 @@ function setAccountAuthStatus(message, tone = 'neutral') {
     };
     statusEl.classList.add(...(toneClassMap[tone] || toneClassMap.neutral).split(' '));
     statusEl.textContent = message;
+}
+
+function getAccountSignedInStatusMessage() {
+    const providerLabel = getAccountSessionProviderLabel();
+    const displayLabel = getAccountDisplayLabel();
+    return providerLabel
+        ? `Signed in as ${displayLabel} via ${providerLabel}.`
+        : `Signed in as ${displayLabel}.`;
+}
+
+function syncAccountAuthStatusForSessionState() {
+    const statusEl = document.getElementById('account-auth-status');
+    if (!statusEl) return;
+    const isAuthenticated = Boolean(accountAuthState.isAuthenticated);
+    const isSessionHydrating = Boolean(accountAuthState.isSessionHydrating && !isAuthenticated);
+    const currentMessage = String(statusEl.textContent || '').trim();
+    const normalizedMessage = currentMessage.toLowerCase();
+
+    if (isAuthenticated) {
+        const shouldReplace = !currentMessage
+            || /not signed in|log in|checking session|session detected|auth server|guest/.test(normalizedMessage);
+        if (shouldReplace) {
+            setAccountAuthStatus(getAccountSignedInStatusMessage(), 'success');
+        }
+        return;
+    }
+
+    if (isSessionHydrating) {
+        const shouldReplace = !currentMessage
+            || /not signed in|session active for|signed in as|authenticated as/.test(normalizedMessage);
+        if (shouldReplace) {
+            setAccountAuthStatus('Checking session...', 'info');
+        }
+        return;
+    }
+
+    if (/signed in as|authenticated as|session active for|via google|via github/.test(normalizedMessage)) {
+        setAccountAuthStatus(t('auth.status.guest'), 'neutral');
+    }
 }
 
 function getPasswordStrengthDetails(rawPassword) {
@@ -16659,7 +16690,6 @@ function setAccountAuthFieldError(fieldId, message) {
 function setAuthSubmitBusy(isBusy) {
     accountAuthState.inFlight = Boolean(isBusy);
     const submitBtn = document.getElementById('account-auth-submit');
-    const quickLogoutBtn = document.getElementById('account-quick-logout');
     const heroLogoutBtn = document.getElementById('account-auth-hero-logout');
     const heroManageBtn = document.getElementById('account-auth-hero-manage');
     if (submitBtn) {
@@ -16674,13 +16704,6 @@ function setAuthSubmitBusy(isBusy) {
                 submitBtn.textContent = accountAuthState.isAuthenticated ? 'Signing Out...' : 'Logging In...';
             }
         }
-    }
-    if (quickLogoutBtn) {
-        quickLogoutBtn.disabled = accountAuthState.inFlight;
-        quickLogoutBtn.setAttribute('aria-disabled', accountAuthState.inFlight ? 'true' : 'false');
-        quickLogoutBtn.textContent = accountAuthState.inFlight ? 'Signing Out...' : 'Sign Out';
-        quickLogoutBtn.classList.toggle('opacity-70', accountAuthState.inFlight);
-        quickLogoutBtn.classList.toggle('cursor-not-allowed', accountAuthState.inFlight);
     }
     if (heroLogoutBtn) {
         heroLogoutBtn.disabled = accountAuthState.inFlight;
@@ -18493,7 +18516,6 @@ function initAccount() {
     const closeBtn = document.getElementById('close-account');
     const saveBtn = document.getElementById('save-account');
     const profileToggleBtn = document.getElementById('account-profile-toggle');
-    const quickLogoutBtn = document.getElementById('account-quick-logout');
     const authHeroLogoutBtn = document.getElementById('account-auth-hero-logout');
     const authHeroManageBtn = document.getElementById('account-auth-hero-manage');
     const emailRequestPinBtn = document.getElementById('account-email-request-pin');
@@ -18576,9 +18598,6 @@ function initAccount() {
             setAuthSubmitBusy(false);
         }
     };
-    if (quickLogoutBtn) {
-        quickLogoutBtn.addEventListener('click', runSignOutFlowFromUi);
-    }
     if (authHeroLogoutBtn) {
         authHeroLogoutBtn.addEventListener('click', runSignOutFlowFromUi);
     }

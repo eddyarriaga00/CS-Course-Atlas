@@ -4593,6 +4593,20 @@ body.dark .settings-modal-footer {
     align-items: center;
     gap: 0.45rem;
     flex-shrink: 0;
+    flex-wrap: wrap;
+}
+
+#account-modal.account-user-authenticated .account-profile-header-actions {
+    justify-content: flex-end;
+    gap: 0.55rem;
+}
+
+#account-modal.account-user-authenticated #account-sync-status {
+    border-color: rgba(45, 212, 191, 0.48) !important;
+    background: linear-gradient(120deg, rgba(5, 150, 105, 0.3), rgba(6, 78, 59, 0.22)) !important;
+    color: #d1fae5 !important;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
 }
 
 #account-modal .account-profile-summary {
@@ -4931,6 +4945,13 @@ body.dark .settings-modal-footer {
     flex-wrap: wrap;
 }
 
+#account-modal.account-user-authenticated .account-auth-signed-in-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.52rem;
+}
+
 #account-modal #account-auth-hero-manage {
     flex: 1 1 auto;
     min-height: 2.1rem;
@@ -5082,6 +5103,11 @@ body.dark .settings-modal-footer {
     #account-modal #account-auth-hero-manage,
     #account-modal #account-auth-hero-logout {
         width: 100%;
+    }
+
+    #account-modal.account-user-authenticated .account-profile-header-actions {
+        width: 100%;
+        justify-content: space-between;
     }
 
     #account-modal .account-auth-state-hero #account-auth-flow-title {
