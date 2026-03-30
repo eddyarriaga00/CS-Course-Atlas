@@ -108,6 +108,8 @@ const OAUTH_POST_LOGIN_FALLBACK_PATH = String(process.env.OAUTH_POST_LOGIN_FALLB
 const OAUTH_STATE_SECRET = String(process.env.OAUTH_STATE_SECRET || '').trim();
 const OAUTH_STATE_SECRET_RUNTIME = OAUTH_STATE_SECRET || randomToken(48);
 const OAUTH_JWKS_CACHE_MAX_AGE_MS = readPositiveInteger(process.env.OAUTH_JWKS_CACHE_MAX_AGE_MS, 30 * 60 * 1000);
+const OAUTH_SESSION_TICKET_TTL_MS = readPositiveInteger(process.env.OAUTH_SESSION_TICKET_TTL_MS, 2 * 60 * 1000);
+const OAUTH_SESSION_TICKET_MAX_ENTRIES = readPositiveInteger(process.env.OAUTH_SESSION_TICKET_MAX_ENTRIES, 512);
 const OPTIONAL_OAUTH_ENV_PLACEHOLDERS = new Set([
     '__disabled__',
     '__unset__',
@@ -146,7 +148,7 @@ const BLOCKED_STATIC_FILES = Object.freeze(new Set([
     '/tailwind.config.cjs'
 ]));
 const CORS_ALLOWED_METHODS = Object.freeze(['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS']);
-const CORS_ALLOWED_HEADERS = Object.freeze(['Content-Type', 'X-CSRF-Token', 'X-Requested-With']);
+const CORS_ALLOWED_HEADERS = Object.freeze(['Content-Type', 'X-CSRF-Token', 'X-Requested-With', 'Authorization', 'X-Session-Token']);
 const BLOCKED_API_METHODS = new Set(['TRACE', 'TRACK', 'CONNECT']);
 const DEFAULT_LIANG_BOOK_FILENAME = 'Introduction-to-Java-Programming-9th-Edition-Y-Daniel-Liang.pdf';
 const DEFAULT_LIANG_BOOK_PATHS = Object.freeze(
@@ -203,6 +205,7 @@ const googleJwksClient = jwksClient({
     rateLimit: true,
     jwksRequestsPerMinute: 10
 });
+const oauthSessionTicketStore = new Map();
 
 app.disable('x-powered-by');
 app.set('trust proxy', TRUST_PROXY_SETTING);
@@ -249,6 +252,7 @@ app.use('/api/auth/login', authRateLimit, noStore);
 app.use('/api/auth/signup', authRateLimit, noStore);
 app.use('/api/auth/logout', noStore);
 app.use('/api/auth/oauth/providers', noStore);
+app.use('/api/auth/oauth/exchange-ticket', authRateLimit, noStore);
 app.use('/api/profile/password', authRateLimit, noStore);
 app.use('/api/profile/delete-account', authRateLimit, noStore);
 app.use('/api/profile/email/request-pin', authRateLimit, noStore);
@@ -875,6 +879,57 @@ function getOAuthProviderLabel(provider) {
 function normalizeOAuthProvider(value) {
     const normalized = safeString(value).toLowerCase();
     return OAUTH_PROVIDER_SET.has(normalized) ? normalized : '';
+}
+
+function normalizeSessionAuthProvider(value, fallback = 'password') {
+    const normalized = safeString(value).toLowerCase();
+    if (normalized === 'password' || OAUTH_PROVIDER_SET.has(normalized)) {
+        return normalized;
+    }
+    return fallback;
+}
+
+function pruneOAuthSessionExchangeTickets() {
+    const now = Date.now();
+    for (const [ticket, entry] of oauthSessionTicketStore.entries()) {
+        const expiresAt = Number(entry?.expiresAt || 0);
+        if (!expiresAt || expiresAt <= now) {
+            oauthSessionTicketStore.delete(ticket);
+        }
+    }
+    const overflow = oauthSessionTicketStore.size - OAUTH_SESSION_TICKET_MAX_ENTRIES;
+    if (overflow <= 0) return;
+    let removed = 0;
+    for (const ticket of oauthSessionTicketStore.keys()) {
+        oauthSessionTicketStore.delete(ticket);
+        removed += 1;
+        if (removed >= overflow) break;
+    }
+}
+
+function issueOAuthSessionExchangeTicket(sessionToken) {
+    const normalizedToken = safeString(sessionToken);
+    if (!normalizedToken) return '';
+    pruneOAuthSessionExchangeTickets();
+    const ticket = randomToken(24);
+    oauthSessionTicketStore.set(ticket, {
+        sessionToken: normalizedToken,
+        expiresAt: Date.now() + OAUTH_SESSION_TICKET_TTL_MS
+    });
+    return ticket;
+}
+
+function consumeOAuthSessionExchangeTicket(ticket) {
+    const normalizedTicket = safeString(ticket);
+    if (!normalizedTicket) return '';
+    const entry = oauthSessionTicketStore.get(normalizedTicket);
+    oauthSessionTicketStore.delete(normalizedTicket);
+    if (!entry) return '';
+    const expiresAt = Number(entry.expiresAt || 0);
+    if (!expiresAt || expiresAt < Date.now()) {
+        return '';
+    }
+    return safeString(entry.sessionToken);
 }
 
 function getOAuthProviderCredentials(provider) {
@@ -1963,36 +2018,93 @@ function requireCsrf(req, res, next) {
     return next();
 }
 
-async function getSessionFromRequest(req) {
-    const token = safeString(req.cookies?.[SESSION_COOKIE_NAME]);
-    if (!token) return null;
+function getBearerSessionTokenFromRequest(req) {
+    const authorizationHeader = safeString(req.headers?.authorization);
+    if (authorizationHeader) {
+        const [scheme, rawToken] = authorizationHeader.split(/\s+/, 2);
+        if (String(scheme || '').toLowerCase() === 'bearer') {
+            return safeString(rawToken);
+        }
+    }
+    return safeString(req.headers?.['x-session-token']);
+}
 
-    const tokenHash = hashSessionToken(token);
-    const result = await query(
-        `
-        SELECT
-            s.id AS session_id,
-            s.user_id,
-            s.csrf_token,
-            s.expires_at,
-            u.email,
-            u.username,
-            p.name,
-            p.goal,
-            p.username AS profile_username,
-            p.avatar_url,
-            p.social_handle,
-            p.status_text,
-            p.messaging_enabled
-        FROM user_sessions s
-        JOIN users u ON u.id = s.user_id
-        LEFT JOIN user_profiles p ON p.user_id = u.id
-        WHERE s.token_hash = $1
-          AND s.expires_at > NOW()
-        LIMIT 1
-        `,
-        [tokenHash]
-    );
+function getSessionTokenFromRequest(req) {
+    const cookieToken = safeString(req.cookies?.[SESSION_COOKIE_NAME]);
+    if (cookieToken) {
+        return { token: cookieToken, tokenSource: 'cookie' };
+    }
+    const bearerToken = getBearerSessionTokenFromRequest(req);
+    if (bearerToken) {
+        return { token: bearerToken, tokenSource: 'bearer' };
+    }
+    return { token: '', tokenSource: 'none' };
+}
+
+async function getSessionByToken(token, options = {}) {
+    const normalizedToken = safeString(token);
+    if (!normalizedToken) return null;
+    const tokenHash = hashSessionToken(normalizedToken);
+    const { tokenSource = 'cookie' } = options;
+    let result;
+    try {
+        result = await query(
+            `
+            SELECT
+                s.id AS session_id,
+                s.user_id,
+                s.csrf_token,
+                s.auth_provider,
+                s.expires_at,
+                u.email,
+                u.username,
+                p.name,
+                p.goal,
+                p.username AS profile_username,
+                p.avatar_url,
+                p.social_handle,
+                p.status_text,
+                p.messaging_enabled
+            FROM user_sessions s
+            JOIN users u ON u.id = s.user_id
+            LEFT JOIN user_profiles p ON p.user_id = u.id
+            WHERE s.token_hash = $1
+              AND s.expires_at > NOW()
+            LIMIT 1
+            `,
+            [tokenHash]
+        );
+    } catch (error) {
+        if (String(error?.code || '') !== '42703') {
+            throw error;
+        }
+        result = await query(
+            `
+            SELECT
+                s.id AS session_id,
+                s.user_id,
+                s.csrf_token,
+                'password'::text AS auth_provider,
+                s.expires_at,
+                u.email,
+                u.username,
+                p.name,
+                p.goal,
+                p.username AS profile_username,
+                p.avatar_url,
+                p.social_handle,
+                p.status_text,
+                p.messaging_enabled
+            FROM user_sessions s
+            JOIN users u ON u.id = s.user_id
+            LEFT JOIN user_profiles p ON p.user_id = u.id
+            WHERE s.token_hash = $1
+              AND s.expires_at > NOW()
+            LIMIT 1
+            `,
+            [tokenHash]
+        );
+    }
 
     const row = result.rows[0];
     if (!row) {
@@ -2005,6 +2117,8 @@ async function getSessionFromRequest(req) {
         sessionId: row.session_id,
         userId: row.user_id,
         csrfToken: row.csrf_token,
+        authProvider: normalizeSessionAuthProvider(row.auth_provider),
+        tokenSource: String(tokenSource),
         user: {
             id: row.user_id,
             email: row.email,
@@ -2017,6 +2131,12 @@ async function getSessionFromRequest(req) {
             messagingEnabled: Boolean(row.messaging_enabled)
         }
     };
+}
+
+async function getSessionFromRequest(req) {
+    const resolvedToken = getSessionTokenFromRequest(req);
+    if (!resolvedToken.token) return null;
+    return getSessionByToken(resolvedToken.token, { tokenSource: resolvedToken.tokenSource });
 }
 
 async function requireAuth(req, res, next) {
@@ -2033,21 +2153,23 @@ async function requireAuth(req, res, next) {
 }
 
 async function createSession(res, req, userId, options = {}) {
-    const { forceCrossSiteCookie = false } = options;
+    const { forceCrossSiteCookie = false, authProvider = 'password' } = options;
     const token = randomToken(48);
     const tokenHash = hashSessionToken(token);
     const csrfToken = randomToken(24);
+    const normalizedAuthProvider = normalizeSessionAuthProvider(authProvider);
     const expiresAt = new Date(Date.now() + SESSION_TTL_DAYS * 24 * 60 * 60 * 1000);
     await query('DELETE FROM user_sessions WHERE expires_at <= NOW()');
     await query(
         `
-        INSERT INTO user_sessions (user_id, token_hash, csrf_token, ip_hash, user_agent, expires_at)
-        VALUES ($1, $2, $3, $4, $5, $6)
+        INSERT INTO user_sessions (user_id, token_hash, csrf_token, auth_provider, ip_hash, user_agent, expires_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
         `,
         [
             userId,
             tokenHash,
             csrfToken,
+            normalizedAuthProvider,
             hashIpAddress(resolveClientIp(req)),
             truncateForStorage(req.headers['user-agent'], MAX_USER_AGENT_LENGTH, null),
             expiresAt.toISOString()
@@ -2063,16 +2185,20 @@ async function createSession(res, req, userId, options = {}) {
               WHERE user_id = $1
               ORDER BY created_at DESC
               LIMIT $2
-          )
+            )
         `,
         [userId, MAX_ACTIVE_SESSIONS_PER_USER]
     );
     res.cookie(SESSION_COOKIE_NAME, token, getCookieOptions(req, { forceCrossSite: forceCrossSiteCookie }));
-    return csrfToken;
+    return {
+        csrfToken,
+        sessionToken: token,
+        authProvider: normalizedAuthProvider
+    };
 }
 
 async function clearSession(req, res) {
-    const token = safeString(req.cookies?.[SESSION_COOKIE_NAME]);
+    const { token } = getSessionTokenFromRequest(req);
     if (token) {
         await query('DELETE FROM user_sessions WHERE token_hash = $1', [hashSessionToken(token)]);
     }
@@ -2092,35 +2218,35 @@ async function clearSession(req, res) {
     });
 }
 
-function sessionResponsePayload(session) {
-    return {
+function sessionResponsePayload(session, options = {}) {
+    const { sessionToken = '' } = options;
+    const userPayload = {
+        id: session.user.id,
+        email: session.user.email,
+        username: session.user.username,
+        name: session.user.name,
+        goal: session.user.goal,
+        avatarUrl: session.user.avatarUrl,
+        socialHandle: session.user.socialHandle,
+        socialStatus: session.user.socialStatus,
+        messagingEnabled: session.user.messagingEnabled,
+        authProvider: session.authProvider
+    };
+    const payload = {
         authenticated: true,
         session: {
-            user: {
-                id: session.user.id,
-                email: session.user.email,
-                username: session.user.username,
-                name: session.user.name,
-                goal: session.user.goal,
-                avatarUrl: session.user.avatarUrl,
-                socialHandle: session.user.socialHandle,
-                socialStatus: session.user.socialStatus,
-                messagingEnabled: session.user.messagingEnabled
-            }
+            authenticated: true,
+            authProvider: session.authProvider,
+            user: userPayload
         },
-        user: {
-            id: session.user.id,
-            email: session.user.email,
-            username: session.user.username,
-            name: session.user.name,
-            goal: session.user.goal,
-            avatarUrl: session.user.avatarUrl,
-            socialHandle: session.user.socialHandle,
-            socialStatus: session.user.socialStatus,
-            messagingEnabled: session.user.messagingEnabled
-        },
+        user: userPayload,
+        authProvider: session.authProvider,
         csrfToken: session.csrfToken
     };
+    if (sessionToken) {
+        payload.sessionToken = sessionToken;
+    }
+    return payload;
 }
 
 app.get('/api/health', async (_req, res) => {
@@ -2152,6 +2278,30 @@ app.get('/api/auth/session', async (req, res) => {
 app.get('/api/auth/oauth/providers', (req, res) => {
     const providers = getOAuthProviderStatusMap(req);
     return res.json({ ok: true, providers });
+});
+
+app.post('/api/auth/oauth/exchange-ticket', assertSameOrigin, async (req, res) => {
+    const ticket = safeString(req.body?.ticket);
+    if (!ticket) {
+        return res.status(400).json({ error: 'OAuth exchange ticket is required.' });
+    }
+    try {
+        const sessionToken = consumeOAuthSessionExchangeTicket(ticket);
+        if (!sessionToken) {
+            return res.status(401).json({ error: 'OAuth exchange ticket expired or invalid.' });
+        }
+        const session = await getSessionByToken(sessionToken, { tokenSource: 'oauth_ticket' });
+        if (!session) {
+            return res.status(401).json({ error: 'Session not found for exchange ticket.' });
+        }
+        res.cookie(SESSION_COOKIE_NAME, sessionToken, getCookieOptions(req));
+        return res.json({
+            ok: true,
+            ...sessionResponsePayload(session, { sessionToken })
+        });
+    } catch (error) {
+        return res.status(500).json({ error: 'OAuth exchange failed.' });
+    }
 });
 
 app.get('/api/auth/oauth/:provider/start', authRateLimit, noStore, (req, res) => {
@@ -2291,13 +2441,16 @@ app.get('/api/auth/oauth/:provider/callback', authRateLimit, noStore, async (req
     try {
         const profile = await exchangeOAuthCodeForProfile(provider, providerCode, providerStatus.redirectUri);
         const user = await resolveOAuthUser(profile);
-        await createSession(res, req, user.id, {
+        const createdSession = await createSession(res, req, user.id, {
+            authProvider: provider,
             forceCrossSiteCookie: shouldForceCrossSiteSessionCookieForReturnTo(req, returnTo)
         });
+        const oauthSessionTicket = issueOAuthSessionExchangeTicket(createdSession.sessionToken);
         return res.redirect(
             appendOAuthResultToPath(returnTo, [
                 ['oauth', 'success'],
-                ['oauth_provider', provider]
+                ['oauth_provider', provider],
+                ['oauth_ticket', oauthSessionTicket]
             ])
         );
     } catch (error) {
@@ -2378,23 +2531,35 @@ app.post('/api/auth/signup', assertSameOrigin, async (req, res) => {
             return nextUserId;
         });
 
-        const csrfToken = await createSession(res, req, userId);
+        const createdSession = await createSession(res, req, userId, { authProvider: 'password' });
+        const hydratedSession = await getSessionByToken(createdSession.sessionToken, { tokenSource: 'issue' });
         await clearAuthThrottle(throttleKey);
+
+        if (!hydratedSession) {
+            return res.status(201).json({
+                ok: true,
+                authenticated: true,
+                authProvider: 'password',
+                user: {
+                    id: userId,
+                    email,
+                    username,
+                    name: username,
+                    goal: 'exploring',
+                    avatarUrl: '',
+                    socialHandle: '',
+                    socialStatus: '',
+                    messagingEnabled: false,
+                    authProvider: 'password'
+                },
+                csrfToken: createdSession.csrfToken,
+                sessionToken: createdSession.sessionToken
+            });
+        }
 
         return res.status(201).json({
             ok: true,
-            user: {
-                id: userId,
-                email,
-                username,
-                name: username,
-                goal: 'exploring',
-                avatarUrl: '',
-                socialHandle: '',
-                socialStatus: '',
-                messagingEnabled: false
-            },
-            csrfToken
+            ...sessionResponsePayload(hydratedSession, { sessionToken: createdSession.sessionToken })
         });
     } catch (error) {
         if (error?.code === '23505') {
@@ -2478,23 +2643,35 @@ app.post('/api/auth/login', assertSameOrigin, async (req, res) => {
         }
 
         await query('UPDATE users SET last_login_at = NOW(), updated_at = NOW() WHERE id = $1', [user.id]);
-        const csrfToken = await createSession(res, req, user.id);
+        const createdSession = await createSession(res, req, user.id, { authProvider: 'password' });
+        const hydratedSession = await getSessionByToken(createdSession.sessionToken, { tokenSource: 'issue' });
         await clearAuthThrottle(throttleKey);
+
+        if (!hydratedSession) {
+            return res.json({
+                ok: true,
+                authenticated: true,
+                authProvider: 'password',
+                user: {
+                    id: user.id,
+                    email: user.email,
+                    username: user.profile_username || user.username || user.name || null,
+                    name: user.name || user.profile_username || user.username || null,
+                    goal: user.goal || 'exploring',
+                    avatarUrl: safeString(user.avatar_url),
+                    socialHandle: safeString(user.social_handle),
+                    socialStatus: safeString(user.status_text),
+                    messagingEnabled: Boolean(user.messaging_enabled),
+                    authProvider: 'password'
+                },
+                csrfToken: createdSession.csrfToken,
+                sessionToken: createdSession.sessionToken
+            });
+        }
 
         return res.json({
             ok: true,
-            user: {
-                id: user.id,
-                email: user.email,
-                username: user.profile_username || user.username || user.name || null,
-                name: user.name || user.profile_username || user.username || null,
-                goal: user.goal || 'exploring',
-                avatarUrl: safeString(user.avatar_url),
-                socialHandle: safeString(user.social_handle),
-                socialStatus: safeString(user.status_text),
-                messagingEnabled: Boolean(user.messaging_enabled)
-            },
-            csrfToken
+            ...sessionResponsePayload(hydratedSession, { sessionToken: createdSession.sessionToken })
         });
     } catch (error) {
         return res.status(500).json({ error: 'Login failed.' });

@@ -184,6 +184,8 @@ const MOBILE_COMPACT_MEDIA_QUERY = '(max-width: 640px)';
 const AUTH_SESSION_REFRESH_COOLDOWN_MS = 1600;
 const OAUTH_RECOVERY_STORAGE_KEY = 'atlasOauthRecoveryPending';
 const OAUTH_RECOVERY_MAX_AGE_MS = 15 * 60 * 1000;
+const AUTH_SESSION_TOKEN_STORAGE_KEY = 'atlasSessionToken';
+const AUTH_SESSION_TOKEN_PERSIST_STORAGE_KEY = 'atlasSessionTokenPersist';
 const UI_ICONS = Object.freeze({
     profile: String.fromCodePoint(0x1F464),
     brain: String.fromCodePoint(0x1F9E0),
@@ -599,6 +601,7 @@ const JUDGE0_LANGUAGE_IDS = {
 const NEON_API_PATHS = {
     session: '/api/auth/session',
     oauthProviders: '/api/auth/oauth/providers',
+    oauthExchangeTicket: '/api/auth/oauth/exchange-ticket',
     profile: '/api/profile',
     password: '/api/profile/password',
     deleteAccount: '/api/profile/delete-account',
@@ -15962,6 +15965,7 @@ let userStateSyncTimer = null;
 let userStateSyncInFlight = false;
 let applyingRemoteUserState = false;
 let neonCsrfToken = '';
+let neonSessionToken = '';
 let neonSessionCheckCounter = 0;
 let authSessionRecoveryProbeInFlight = false;
 const glossaryUiState = {
@@ -16510,6 +16514,84 @@ function getCsrfToken() {
     return token;
 }
 
+function readStorageItemRaw(storage, key) {
+    try {
+        return storage ? String(storage.getItem(key) || '') : '';
+    } catch (_error) {
+        return '';
+    }
+}
+
+function writeStorageItemRaw(storage, key, value) {
+    try {
+        if (!storage) return false;
+        storage.setItem(key, value);
+        return true;
+    } catch (_error) {
+        return false;
+    }
+}
+
+function removeStorageItemRaw(storage, key) {
+    try {
+        if (!storage) return;
+        storage.removeItem(key);
+    } catch (_error) {}
+}
+
+function readStoredSessionToken() {
+    if (typeof window === 'undefined') return '';
+    const fromSession = readStorageItemRaw(window.sessionStorage, AUTH_SESSION_TOKEN_STORAGE_KEY).trim();
+    if (fromSession) return fromSession;
+    return readStorageItemRaw(window.localStorage, AUTH_SESSION_TOKEN_STORAGE_KEY).trim();
+}
+
+function clearStoredSessionToken() {
+    if (typeof window === 'undefined') return;
+    removeStorageItemRaw(window.sessionStorage, AUTH_SESSION_TOKEN_STORAGE_KEY);
+    removeStorageItemRaw(window.localStorage, AUTH_SESSION_TOKEN_STORAGE_KEY);
+    removeStorageItemRaw(window.localStorage, AUTH_SESSION_TOKEN_PERSIST_STORAGE_KEY);
+}
+
+function setSessionToken(token, options = {}) {
+    const normalizedToken = String(token || '').trim();
+    neonSessionToken = normalizedToken;
+    if (typeof window === 'undefined') return;
+    if (!normalizedToken) {
+        clearStoredSessionToken();
+        return;
+    }
+
+    const rememberPreference = typeof options.remember === 'boolean'
+        ? options.remember
+        : readStorageItemRaw(window.localStorage, AUTH_SESSION_TOKEN_PERSIST_STORAGE_KEY) === '1';
+    if (rememberPreference) {
+        writeStorageItemRaw(window.localStorage, AUTH_SESSION_TOKEN_STORAGE_KEY, normalizedToken);
+        writeStorageItemRaw(window.localStorage, AUTH_SESSION_TOKEN_PERSIST_STORAGE_KEY, '1');
+        removeStorageItemRaw(window.sessionStorage, AUTH_SESSION_TOKEN_STORAGE_KEY);
+    } else {
+        writeStorageItemRaw(window.sessionStorage, AUTH_SESSION_TOKEN_STORAGE_KEY, normalizedToken);
+        removeStorageItemRaw(window.localStorage, AUTH_SESSION_TOKEN_STORAGE_KEY);
+        writeStorageItemRaw(window.localStorage, AUTH_SESSION_TOKEN_PERSIST_STORAGE_KEY, '0');
+    }
+}
+
+function getSessionToken() {
+    if (neonSessionToken) return neonSessionToken;
+    neonSessionToken = readStoredSessionToken();
+    return neonSessionToken;
+}
+
+function getSessionTokenFromPayload(payload) {
+    return String(
+        payload?.sessionToken
+        || payload?.session?.sessionToken
+        || payload?.data?.sessionToken
+        || payload?.data?.session?.sessionToken
+        || ''
+    ).trim();
+}
+
 function writeAccountAuthStatus(message, tone = 'neutral') {
     const statusEl = document.getElementById('account-auth-status');
     if (!statusEl) return;
@@ -16561,30 +16643,15 @@ function syncAccountAuthStatusForSessionState() {
     if (!statusEl) return;
     const isAuthenticated = Boolean(accountAuthState.isAuthenticated);
     const isSessionHydrating = Boolean(accountAuthState.isSessionHydrating && !isAuthenticated);
-    const currentMessage = String(statusEl.textContent || '').trim();
-    const normalizedMessage = currentMessage.toLowerCase();
-
     if (isAuthenticated) {
-        const shouldReplace = !currentMessage
-            || /not signed in|log in|checking session|session detected|auth server|guest/.test(normalizedMessage);
-        if (shouldReplace) {
-            writeAccountAuthStatus(getAccountSignedInStatusMessage(), 'success');
-        }
+        writeAccountAuthStatus(getAccountSignedInStatusMessage(), 'success');
         return;
     }
-
     if (isSessionHydrating) {
-        const shouldReplace = !currentMessage
-            || /not signed in|session active for|signed in as|authenticated as/.test(normalizedMessage);
-        if (shouldReplace) {
-            writeAccountAuthStatus('Checking session...', 'info');
-        }
+        writeAccountAuthStatus('Checking session...', 'info');
         return;
     }
-
-    if (/signed in as|authenticated as|session active for|via google|via github/.test(normalizedMessage)) {
-        writeAccountAuthStatus(t('auth.status.guest'), 'neutral');
-    }
+    writeAccountAuthStatus(t('auth.status.guest'), 'neutral');
 }
 
 function getPasswordStrengthDetails(rawPassword) {
@@ -16808,14 +16875,16 @@ function consumeOAuthResultFromUrl() {
 
     const provider = String(currentUrl.searchParams.get('oauth_provider') || '').trim().toLowerCase();
     const errorCode = String(currentUrl.searchParams.get('oauth_error') || '').trim().toLowerCase();
+    const ticket = String(currentUrl.searchParams.get('oauth_ticket') || '').trim();
 
     currentUrl.searchParams.delete('oauth');
     currentUrl.searchParams.delete('oauth_provider');
     currentUrl.searchParams.delete('oauth_error');
+    currentUrl.searchParams.delete('oauth_ticket');
     const cleanedUrl = `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`;
     window.history.replaceState({}, document.title, cleanedUrl);
 
-    return { status, provider, errorCode };
+    return { status, provider, errorCode, ticket };
 }
 
 function describeOAuthError(errorCode, providerLabel) {
@@ -16847,44 +16916,74 @@ async function handleOAuthResultFromUrl() {
             }
             setAccountSessionHydrating(true);
             setAccountAuthStatus(`${providerLabel} sign-in completed. Finalizing secure session...`, 'info');
-            if (hasNeonSyncConfig()) {
-                const verifiedSession = await waitForVerifiedAuthSession({
-                    maxAttempts: 14,
-                    attemptDelayMs: 850,
-                    silent: true
-                });
-                if (verifiedSession?.isAuthenticated || accountAuthState.isAuthenticated) {
-                    setAccountProviderState(providerKey, providerLabel);
-                    clearPendingAuthRecoveryState();
-                    updateAccountChip();
-                    refreshAccountPrimaryAuthButton();
-                    const successMessage = `${providerLabel} account connected.`;
-                    setAccountAuthStatus(successMessage, 'success');
-                    showToast(successMessage, 'success');
-                    return;
-                }
-                const syncFailureMessage = isCrossOriginApiRuntime()
-                    ? `${providerLabel} sign-in completed, but session verification is delayed or blocked. Keeping a background retry running now.`
-                    : `${providerLabel} sign-in completed, but session verification has not finished yet. Keeping a background retry running now.`;
-                setAccountAuthStatus(syncFailureMessage, 'error');
-                showToast(syncFailureMessage, 'warning');
-                setPendingAuthRecoveryState(providerKey, providerLabel);
-                runSafeBackgroundTask(runAuthSessionRecoveryProbe({
-                    providerKey,
-                    providerLabel,
-                    maxAttempts: 90,
-                    attemptDelayMs: 2000
-                }), 'OAuth session recovery probe');
-            }
             if (!hasNeonSyncConfig()) {
                 const unavailableMessage = `${providerLabel} sign-in requires the auth server configuration.`;
                 setAccountAuthStatus(unavailableMessage, 'error');
                 showToast(unavailableMessage, 'warning');
+                setAccountSessionHydrating(false);
+                return;
             }
+
+            if (oauthResult.ticket) {
+                try {
+                    const ticketPayload = await neonFetch(getNeonOAuthTicketExchangeEndpoint(), {
+                        method: 'POST',
+                        body: JSON.stringify({ ticket: oauthResult.ticket })
+                    });
+                    const appliedSession = applySessionPayloadToAuthState(ticketPayload, {
+                        source: `${providerLabel} session`,
+                        defaultProvider: providerKey || 'google',
+                        rememberSessionToken: true,
+                        silent: true
+                    });
+                    if (appliedSession?.isAuthenticated) {
+                        setAccountSessionHydrating(false);
+                        const successMessage = `${providerLabel} account connected.`;
+                        setAccountAuthStatus(successMessage, 'success');
+                        showToast(successMessage, 'success');
+                        return;
+                    }
+                } catch (exchangeError) {
+                    const exchangeReason = exchangeError instanceof Error ? exchangeError.message : String(exchangeError);
+                    console.warn('OAuth ticket exchange failed:', exchangeReason);
+                }
+            }
+
+            const verifiedSession = await waitForVerifiedAuthSession({
+                maxAttempts: 14,
+                attemptDelayMs: 850,
+                silent: true
+            });
+            if (verifiedSession?.isAuthenticated || accountAuthState.isAuthenticated) {
+                setAccountProviderState(providerKey, providerLabel);
+                clearPendingAuthRecoveryState();
+                updateAccountChip();
+                refreshAccountPrimaryAuthButton();
+                setAccountSessionHydrating(false);
+                const successMessage = `${providerLabel} account connected.`;
+                setAccountAuthStatus(successMessage, 'success');
+                showToast(successMessage, 'success');
+                return;
+            }
+
+            const syncFailureMessage = isCrossOriginApiRuntime()
+                ? `${providerLabel} sign-in completed, but session verification is delayed or blocked. Keeping a background retry running now.`
+                : `${providerLabel} sign-in completed, but session verification has not finished yet. Keeping a background retry running now.`;
+            setAccountAuthStatus(syncFailureMessage, 'error');
+            showToast(syncFailureMessage, 'warning');
+            setPendingAuthRecoveryState(providerKey, providerLabel);
+            runSafeBackgroundTask(runAuthSessionRecoveryProbe({
+                providerKey,
+                providerLabel,
+                maxAttempts: 90,
+                attemptDelayMs: 2000
+            }), 'OAuth session recovery probe');
+            setAccountSessionHydrating(false);
             return;
         }
 
         const failureMessage = describeOAuthError(oauthResult.errorCode, providerLabel);
+        setAccountSessionHydrating(false);
         setAccountAuthStatus(failureMessage, 'error');
         showToast(failureMessage, 'warning');
     } catch (error) {
@@ -17388,6 +17487,114 @@ function resolveSessionAuthenticatedFlag(payload, sessionUser = {}) {
     return inferredFromSessionUser;
 }
 
+function applySessionPayloadToAuthState(sessionPayload, options = {}) {
+    const {
+        source = 'Session',
+        defaultProvider = '',
+        rememberSessionToken = null,
+        silent = true
+    } = options;
+    const sessionCsrfToken = String(
+        sessionPayload?.csrfToken
+        || sessionPayload?.session?.csrfToken
+        || sessionPayload?.data?.csrfToken
+        || ''
+    ).trim();
+    const sessionToken = getSessionTokenFromPayload(sessionPayload);
+    const sessionUser = getSessionUserFromPayload(sessionPayload);
+    const sessionProvider = resolveSessionProviderFromPayload(sessionPayload) || normalizeAuthProviderKey(defaultProvider);
+    const isAuthenticated = resolveSessionAuthenticatedFlag(sessionPayload, sessionUser);
+    const userLabel = sessionUser.userUsername || sessionUser.userEmail || sessionUser.userId || '';
+
+    if (!isAuthenticated) {
+        accountAuthState.isAuthenticated = false;
+        accountAuthState.sessionLabel = '';
+        setAccountProviderState('', '');
+        setCsrfToken('');
+        setSessionToken('');
+        accountProfile.serverUserId = '';
+        clearAuthScopedLocalStorage();
+        saveAccountProfile();
+        applyAccountProfileToForm();
+        updateAccountChip();
+        refreshAccountPrimaryAuthButton();
+        setAccountAuthStatus(t('auth.status.guest'), 'neutral');
+        setAccountSyncState('connected', 'Not signed in.');
+        handleInsightsAccessStateChange();
+        return {
+            isAuthenticated: false,
+            userId: '',
+            userLabel: ''
+        };
+    }
+
+    accountAuthState.isAuthenticated = true;
+    accountAuthState.sessionLabel = userLabel;
+    setAccountProviderState(sessionProvider || 'password', getAuthProviderLabel(sessionProvider || 'password'));
+    clearPendingAuthRecoveryState();
+
+    if (sessionCsrfToken) {
+        setCsrfToken(sessionCsrfToken);
+    }
+
+    if (sessionToken) {
+        const shouldRemember = typeof rememberSessionToken === 'boolean'
+            ? rememberSessionToken
+            : Boolean(accountAuthState.rememberMe);
+        setSessionToken(sessionToken, { remember: shouldRemember });
+    } else if (!getSessionToken()) {
+        setSessionToken('');
+    }
+
+    if (sessionUser.userId) {
+        accountProfile.serverUserId = sessionUser.userId;
+    }
+    if (sessionUser.userUsername) {
+        accountProfile.username = sessionUser.userUsername;
+        accountProfile.name = sessionUser.userUsername;
+    }
+    if (sessionUser.userEmail) {
+        accountProfile.email = sessionUser.userEmail;
+    }
+    if (sessionUser.userAvatarUrl) {
+        accountProfile.avatarUrl = sanitizeAvatarUrlClient(sessionUser.userAvatarUrl);
+    }
+    if (sessionUser.userSocialHandle) {
+        accountProfile.socialHandle = sanitizeSocialHandleClient(sessionUser.userSocialHandle);
+    }
+    if (sessionUser.userSocialStatus) {
+        accountProfile.socialStatus = sanitizeSocialStatusClient(sessionUser.userSocialStatus);
+    }
+    if (typeof sessionUser.userMessagingEnabled === 'boolean') {
+        accountProfile.messagingEnabled = sessionUser.userMessagingEnabled;
+    }
+    const resolvedGoal = String(
+        sessionPayload?.user?.goal
+        || sessionPayload?.session?.user?.goal
+        || sessionPayload?.data?.user?.goal
+        || ''
+    ).trim();
+    if (resolvedGoal) {
+        accountProfile.goal = resolvedGoal;
+    }
+
+    saveAccountProfile();
+    applyAccountProfileToForm();
+    updateAccountChip();
+    refreshAccountPrimaryAuthButton();
+    setAccountAuthStatus(`Authenticated as ${userLabel || 'account user'}`, 'success');
+    setAccountSyncState('connected', `${source} active${userLabel ? ` for ${userLabel}` : ''}`);
+    handleInsightsAccessStateChange();
+    if (!silent && userLabel) {
+        showToast(`Signed in as ${userLabel}.`, 'success');
+    }
+    return {
+        isAuthenticated: true,
+        userId: String(sessionUser.userId || accountProfile.serverUserId || '').trim(),
+        userLabel
+    };
+}
+
 function getNeonProfileEndpoint() {
     return buildApiEndpoint(NEON_API_PATHS.profile);
 }
@@ -17422,6 +17629,10 @@ function getNeonSessionEndpoint() {
 
 function getNeonOAuthProvidersEndpoint() {
     return buildApiEndpoint(NEON_API_PATHS.oauthProviders);
+}
+
+function getNeonOAuthTicketExchangeEndpoint() {
+    return buildApiEndpoint(NEON_API_PATHS.oauthExchangeTicket);
 }
 
 function getAuthProviderKeyFromButton(button) {
@@ -17517,6 +17728,10 @@ async function neonFetch(url, options = {}) {
         'X-Requested-With': 'XMLHttpRequest',
         ...(options.headers || {})
     };
+    const authSessionToken = getSessionToken();
+    if (authSessionToken && !headers.Authorization && !headers['X-Session-Token']) {
+        headers.Authorization = `Bearer ${authSessionToken}`;
+    }
     if (!headers['Content-Type'] && !(options.body instanceof FormData)) {
         headers['Content-Type'] = 'application/json';
     }
@@ -18076,6 +18291,7 @@ async function deleteAccountPermanently() {
         applyingRemoteUserState = false;
 
         setCsrfToken('');
+        setSessionToken('');
         accountAuthState.isAuthenticated = false;
         accountAuthState.sessionLabel = '';
         setAccountProviderState('', '');
@@ -18137,6 +18353,7 @@ async function checkNeonSession(options = {}) {
     if (!hasNeonSyncConfig()) {
         accountAuthState.isSessionHydrating = false;
         setCsrfToken('');
+        setSessionToken('');
         accountAuthState.isAuthenticated = false;
         accountAuthState.sessionLabel = '';
         setAccountProviderState('', '');
@@ -18149,79 +18366,17 @@ async function checkNeonSession(options = {}) {
     const url = getNeonSessionEndpoint();
     try {
         const sessionPayload = await neonFetch(url, { method: 'GET' });
-        const sessionCsrfToken = String(
-            sessionPayload?.csrfToken
-            || sessionPayload?.session?.csrfToken
-            || sessionPayload?.data?.csrfToken
-            || ''
-        ).trim();
         const sessionUser = getSessionUserFromPayload(sessionPayload);
-        const sessionProvider = resolveSessionProviderFromPayload(sessionPayload);
-        const {
-            userId,
-            userEmail,
-            userUsername,
-            userAvatarUrl,
-            userSocialHandle,
-            userSocialStatus,
-            userMessagingEnabled
-        } = sessionUser;
-        const storedUserId = String(accountProfile.serverUserId || '').trim();
-        const userLabel = userUsername || userEmail || userId || storedUserId;
-        const message = userLabel
-            ? `Session active for ${userLabel}`
-            : 'Session endpoint reachable.';
+        const userLabel = sessionUser.userUsername || sessionUser.userEmail || sessionUser.userId || String(accountProfile.serverUserId || '').trim();
         const isAuthenticated = resolveSessionAuthenticatedFlag(sessionPayload, sessionUser);
-        const resolvedUserId = String(isAuthenticated ? (userId || storedUserId) : '').trim();
+        const resolvedUserId = String(isAuthenticated ? (sessionUser.userId || accountProfile.serverUserId || '') : '').trim();
         if (isLatestSessionCheck()) {
-            accountAuthState.isAuthenticated = isAuthenticated;
-            accountAuthState.sessionLabel = userLabel;
-            if (isAuthenticated) {
-                setAccountProviderState(sessionProvider || accountAuthState.providerKey || accountAuthState.providerLabel);
-                clearPendingAuthRecoveryState();
-            } else {
-                setAccountProviderState('', '');
-            }
-            if (sessionCsrfToken) {
-                setCsrfToken(sessionCsrfToken);
-            }
-            if (userId) {
-                accountProfile.serverUserId = userId;
-            }
-            if (userUsername) {
-                accountProfile.username = userUsername;
-                accountProfile.name = userUsername;
-            }
-            if (userEmail) {
-                accountProfile.email = userEmail;
-            }
-            if (userAvatarUrl) {
-                accountProfile.avatarUrl = sanitizeAvatarUrlClient(userAvatarUrl);
-            }
-            if (userSocialHandle) {
-                accountProfile.socialHandle = sanitizeSocialHandleClient(userSocialHandle);
-            }
-            if (userSocialStatus) {
-                accountProfile.socialStatus = sanitizeSocialStatusClient(userSocialStatus);
-            }
-            if (typeof userMessagingEnabled === 'boolean') {
-                accountProfile.messagingEnabled = userMessagingEnabled;
-            }
-            if (!isAuthenticated) {
-                accountProfile.serverUserId = '';
-                clearAuthScopedLocalStorage();
-            }
+            applySessionPayloadToAuthState(sessionPayload, {
+                source: 'Session',
+                defaultProvider: accountAuthState.providerKey || 'password',
+                silent: true
+            });
             accountAuthState.isSessionHydrating = false;
-            saveAccountProfile();
-            applyAccountProfileToForm();
-            updateAccountChip();
-            setAccountAuthStatus(
-                isAuthenticated ? `Authenticated as ${userLabel}` : 'Session detected. Sign in to continue.',
-                isAuthenticated ? 'success' : 'info'
-            );
-            refreshAccountPrimaryAuthButton();
-            setAccountSyncState('connected', message);
-            handleInsightsAccessStateChange();
         }
         return { userId: resolvedUserId, userLabel, isAuthenticated };
     } catch (error) {
@@ -18230,27 +18385,15 @@ async function checkNeonSession(options = {}) {
         const isUnauthenticated = normalizedReason.includes('not authenticated') || normalizedReason.includes('401');
         if (isLatestSessionCheck()) {
             accountAuthState.isSessionHydrating = false;
-            setCsrfToken('');
-            accountAuthState.isAuthenticated = false;
-            accountAuthState.sessionLabel = '';
-            setAccountProviderState('', '');
-            clearAuthScopedLocalStorage();
             if (isUnauthenticated) {
-                accountProfile.serverUserId = '';
-                saveAccountProfile();
-                applyAccountProfileToForm();
-                updateAccountChip();
+                applySessionPayloadToAuthState({ authenticated: false }, { source: 'Session', silent: true });
+            } else {
+                setAccountAuthStatus(`Session check failed: ${reason}`, 'error');
+                setAccountSyncState('error', `Session check failed: ${reason}`);
             }
-            setAccountAuthStatus(t('auth.status.guest'), 'neutral');
-            refreshAccountPrimaryAuthButton();
-            setAccountSyncState(
-                isUnauthenticated ? 'connected' : 'error',
-                isUnauthenticated ? 'Not signed in.' : `Session check failed: ${reason}`
-            );
-            if (!silent && !isUnauthenticated) {
+            if (!silent && !isUnauthenticated && reason) {
                 showToast(`Session check failed: ${reason}`, 'error');
             }
-            handleInsightsAccessStateChange();
         }
         return null;
     }
@@ -18449,6 +18592,7 @@ async function signOutAccountFlow(options = {}) {
     userStateSyncInFlight = false;
     await logoutAccountSession();
     setCsrfToken('');
+    setSessionToken('');
     accountAuthState.isAuthenticated = false;
     accountAuthState.sessionLabel = '';
     setAccountProviderState('', '');
@@ -18556,48 +18700,23 @@ async function submitAccountAuth() {
             method: 'POST',
             body: JSON.stringify(payload)
         });
-        const authSessionUser = getSessionUserFromPayload(authPayload);
-        const authProviderFromPayload = resolveSessionProviderFromPayload(authPayload);
-        const authCsrfToken = String(authPayload?.csrfToken || authPayload?.session?.csrfToken || '').trim();
-        if (authCsrfToken) {
-            setCsrfToken(authCsrfToken);
-        }
         clearAuthPasswordFields();
-        accountProfile.email = email;
-        if (isSignup) {
-            accountProfile.username = username;
-            accountProfile.name = username;
-        }
-        if (authSessionUser.userId) {
-            accountProfile.serverUserId = authSessionUser.userId;
-        }
-        if (authSessionUser.userEmail) {
-            accountProfile.email = authSessionUser.userEmail;
-        }
-        if (authSessionUser.userUsername) {
-            accountProfile.username = authSessionUser.userUsername;
-            accountProfile.name = authSessionUser.userUsername;
-        }
-        if (authSessionUser.userAvatarUrl) {
-            accountProfile.avatarUrl = sanitizeAvatarUrlClient(authSessionUser.userAvatarUrl);
-        }
-        if (authSessionUser.userSocialHandle) {
-            accountProfile.socialHandle = sanitizeSocialHandleClient(authSessionUser.userSocialHandle);
-        }
-        if (authSessionUser.userSocialStatus) {
-            accountProfile.socialStatus = sanitizeSocialStatusClient(authSessionUser.userSocialStatus);
-        }
-        if (typeof authSessionUser.userMessagingEnabled === 'boolean') {
-            accountProfile.messagingEnabled = authSessionUser.userMessagingEnabled;
-        }
-        saveAccountProfile();
-        applyAccountProfileToForm();
+        const appliedAuthSession = applySessionPayloadToAuthState(authPayload, {
+            source: 'Session',
+            defaultProvider: 'password',
+            rememberSessionToken: accountAuthState.rememberMe,
+            silent: true
+        });
         const refreshedSession = await waitForVerifiedAuthSession({
             maxAttempts: 10,
             attemptDelayMs: 700,
             silent: true
         });
-        const hasVerifiedSession = Boolean(refreshedSession?.isAuthenticated || accountAuthState.isAuthenticated);
+        const hasVerifiedSession = Boolean(
+            appliedAuthSession?.isAuthenticated
+            || refreshedSession?.isAuthenticated
+            || accountAuthState.isAuthenticated
+        );
         if (!hasVerifiedSession) {
             const sessionSyncMessage = isCrossOriginApiRuntime()
                 ? 'Sign-in completed, but session verification is delayed or blocked. Background retry started now.'
@@ -18613,16 +18732,8 @@ async function submitAccountAuth() {
             }), 'Password session recovery probe');
             return;
         }
-        const resolvedProviderKey = normalizeAuthProviderKey(authProviderFromPayload || 'password') || 'password';
-        setAccountProviderState(resolvedProviderKey, getAuthProviderLabel(resolvedProviderKey));
+        setAccountProviderState('password', getAuthProviderLabel('password'));
         clearPendingAuthRecoveryState();
-        accountAuthState.isAuthenticated = true;
-        accountAuthState.sessionLabel = authSessionUser.userUsername
-            || authSessionUser.userEmail
-            || authSessionUser.userId
-            || accountAuthState.sessionLabel;
-        refreshAccountPrimaryAuthButton();
-        handleInsightsAccessStateChange();
         const successText = isSignup ? 'Account created and signed in successfully.' : 'Signed in successfully.';
         setAccountAuthStatus(successText, 'success');
         showToast(successText, 'success');
@@ -19022,8 +19133,16 @@ function initAccount() {
     if (authPasswordInput) authPasswordInput.addEventListener('input', updateAccountPasswordStrengthMeter);
     if (authConfirmInput) authConfirmInput.addEventListener('input', updateAccountPasswordStrengthMeter);
     if (authRememberCheckbox) {
+        authRememberCheckbox.checked = Boolean(accountAuthState.rememberMe);
         authRememberCheckbox.addEventListener('change', () => {
             accountAuthState.rememberMe = Boolean(authRememberCheckbox.checked);
+            if (!getSessionToken()) {
+                writeStorageItemRaw(
+                    typeof window !== 'undefined' ? window.localStorage : null,
+                    AUTH_SESSION_TOKEN_PERSIST_STORAGE_KEY,
+                    accountAuthState.rememberMe ? '1' : '0'
+                );
+            }
         });
     }
     if (authForgotBtn) {
@@ -19113,6 +19232,14 @@ function initAccount() {
     setAccountProfileSectionExpanded(false, { panel: 'profile' });
     resetAccountSecureInputs({ clearPendingEmail: true });
     setAccountAuthMode('login');
+    neonSessionToken = readStoredSessionToken();
+    accountAuthState.rememberMe = readStorageItemRaw(
+        typeof window !== 'undefined' ? window.localStorage : null,
+        AUTH_SESSION_TOKEN_PERSIST_STORAGE_KEY
+    ) === '1';
+    if (authRememberCheckbox) {
+        authRememberCheckbox.checked = Boolean(accountAuthState.rememberMe);
+    }
     accountAuthState.isAuthenticated = false;
     accountAuthState.isSessionHydrating = hasNeonSyncConfig();
     accountAuthState.sessionLabel = '';
