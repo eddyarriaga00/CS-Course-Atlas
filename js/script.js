@@ -169,6 +169,16 @@ let motionEnhancementRafId = 0;
 let scrollUpdateRafId = 0;
 let pendingScrollY = 0;
 const socialTapAnimationTimers = new WeakMap();
+let orderedModulesCache = null;
+let modulesByCategoryCache = null;
+let localizedModulesCache = {
+    lang: null,
+    modules: null
+};
+let deferredInitScheduled = false;
+let lastAppliedMobileAnimationDuration = null;
+let globalResizeRafId = 0;
+let lastSavedAppStateJson = null;
 
 const MOBILE_COMPACT_MEDIA_QUERY = '(max-width: 640px)';
 const AUTH_SESSION_REFRESH_COOLDOWN_MS = 1600;
@@ -2389,6 +2399,7 @@ function setLanguage(lang) {
     const normalizedLanguage = normalizeLanguagePreference(lang);
     appState.language = normalizedLanguage;
     persistLanguagePreference(normalizedLanguage);
+    invalidateDerivedModuleCaches();
     appState.expandedOutputs.clear();
     moduleOutputCache.clear();
     moduleOutputState.clear();
@@ -2417,6 +2428,7 @@ function setLanguage(lang) {
     if (normalizedLanguage === 'es' && !spanishLocalizationReady) {
         void ensureSpanishLocalizationLoaded().then((loaded) => {
             if (!loaded || appState.language !== 'es') return;
+            invalidateDerivedModuleCaches();
             applyLanguage('es');
             refreshLocalizedSections();
             refreshGlobalSearchUi({ invalidate: true });
@@ -12455,7 +12467,16 @@ function getLocalizedModule(module) {
 }
 
 function getLocalizedModules() {
-    return modules.map(getLocalizedModule);
+    const lang = appState.language === 'es' ? 'es' : 'en';
+    if (localizedModulesCache.lang === lang && Array.isArray(localizedModulesCache.modules)) {
+        return localizedModulesCache.modules;
+    }
+    const localized = modules.map(getLocalizedModule);
+    localizedModulesCache = {
+        lang,
+        modules: localized
+    };
+    return localized;
 }
 
 function getLocalizedQuizData(moduleId) {
@@ -13356,10 +13377,15 @@ function queueUserStateSync() {
 function saveToLocalStorage() {
     if (!hasAuthenticatedInsightsAccess()) {
         safeRemoveItem('javaDSAHub');
+        lastSavedAppStateJson = null;
         return;
     }
     const stateToSave = buildSerializableAppState();
-    safeSetItem('javaDSAHub', JSON.stringify(stateToSave));
+    const nextStateJson = JSON.stringify(stateToSave);
+    if (nextStateJson !== lastSavedAppStateJson) {
+        safeSetItem('javaDSAHub', nextStateJson);
+        lastSavedAppStateJson = nextStateJson;
+    }
     queueUserStateSync();
 }
 
@@ -13463,6 +13489,9 @@ function loadFromLocalStorage() {
         appState.language = savedLanguagePreference;
     }
     const saved = safeGetItem('javaDSAHub');
+    lastSavedAppStateJson = typeof saved === 'string' && saved.trim()
+        ? saved
+        : null;
     const prefersReduced = typeof window !== 'undefined'
         && window.matchMedia
         && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -22834,13 +22863,48 @@ function getModuleCategoryKey(moduleId) {
 }
 
 function getOrderedModules() {
+    if (Array.isArray(orderedModulesCache) && orderedModulesCache.length === modules.length) {
+        return orderedModulesCache;
+    }
     const indexMap = new Map(MODULE_LEARNING_SEQUENCE.map((id, index) => [id, index]));
-    return [...modules].sort((a, b) => {
+    orderedModulesCache = [...modules].sort((a, b) => {
         const aIndex = indexMap.has(a.id) ? indexMap.get(a.id) : Number.MAX_SAFE_INTEGER;
         const bIndex = indexMap.has(b.id) ? indexMap.get(b.id) : Number.MAX_SAFE_INTEGER;
         if (aIndex !== bIndex) return aIndex - bIndex;
         return a.title.localeCompare(b.title);
     });
+    return orderedModulesCache;
+}
+
+function invalidateDerivedModuleCaches(options = {}) {
+    const { resetOrdering = false } = options;
+    localizedModulesCache = {
+        lang: null,
+        modules: null
+    };
+    modulesByCategoryCache = null;
+    if (resetOrdering) {
+        orderedModulesCache = null;
+    }
+}
+
+function getModulesByCategoryMap(orderedModules) {
+    if (modulesByCategoryCache && modulesByCategoryCache.orderedModules === orderedModules) {
+        return modulesByCategoryCache.map;
+    }
+    const map = new Map();
+    orderedModules.forEach((orderedModule) => {
+        const categoryKey = getModuleCategoryKey(orderedModule.id);
+        if (!map.has(categoryKey)) {
+            map.set(categoryKey, []);
+        }
+        map.get(categoryKey).push(orderedModule);
+    });
+    modulesByCategoryCache = {
+        orderedModules,
+        map
+    };
+    return map;
 }
 
 const TRACK_TITLE_KEY_BY_CATEGORY = {
@@ -24870,14 +24934,7 @@ function renderModules() {
     const grid = document.getElementById('modules-grid');
     const searchResultsCount = document.getElementById('search-results-count');
     const totalOrderedModules = getOrderedModules();
-    const modulesByCategory = new Map();
-    totalOrderedModules.forEach((orderedModule) => {
-        const categoryKey = getModuleCategoryKey(orderedModule.id);
-        if (!modulesByCategory.has(categoryKey)) {
-            modulesByCategory.set(categoryKey, []);
-        }
-        modulesByCategory.get(categoryKey).push(orderedModule);
-    });
+    const modulesByCategory = getModulesByCategoryMap(totalOrderedModules);
     const accentModuleIds = new Set(['stacks-queues', 'searching-algorithms']);
     const localizedModuleMap = new Map(getLocalizedModules().map((module) => [module.id, module]));
     const modulesPerPage = getModulesPageSize();
@@ -26645,6 +26702,47 @@ function resetProgress() {
 // INITIALIZATION
 // =================================
 
+function runDeferredInitializers() {
+    const deferredTasks = [
+        initNotesLibrary,
+        initBooksLibrary,
+        initInterviewExamples,
+        initDSPlayground,
+        initSupport,
+        initAboutFeedbackForm,
+        initPlayground,
+        initGlobalSearch,
+        initEnhancedLearningExperience
+    ];
+    deferredTasks.forEach((task) => {
+        try {
+            task();
+        } catch (error) {
+            console.warn('Deferred initializer failed:', error);
+        }
+    });
+}
+
+function scheduleDeferredInitializers() {
+    if (deferredInitScheduled) return;
+    deferredInitScheduled = true;
+    const runDeferred = () => {
+        deferredInitScheduled = false;
+        runDeferredInitializers();
+    };
+    if (typeof window !== 'undefined' && typeof window.requestIdleCallback === 'function') {
+        window.requestIdleCallback(runDeferred, { timeout: 1200 });
+        return;
+    }
+    if (typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
+        window.requestAnimationFrame(() => {
+            window.requestAnimationFrame(runDeferred);
+        });
+        return;
+    }
+    setTimeout(runDeferred, 16);
+}
+
 function init() {
     // Load saved state
     loadFromLocalStorage();
@@ -26684,13 +26782,6 @@ function init() {
     initAccount();
     void handleOAuthResultFromUrl();
     initNotes();
-    initNotesLibrary();
-    initBooksLibrary();
-    initInterviewExamples();
-    initDSPlayground();
-    initSupport();
-    initAboutFeedbackForm();
-    initPlayground();
     initIOSOverscrollLock();
     initModalScrollContainmentLock();
     initializeAccessibilityInfrastructure();
@@ -26702,8 +26793,7 @@ function init() {
     updateTopicFocusButtons();
     appState.scrollY = window.scrollY || 0;
     scheduleScrollDrivenUiUpdate(appState.scrollY);
-    initGlobalSearch();
-    initEnhancedLearningExperience();
+    scheduleDeferredInitializers();
 
     // Add event listeners
     document.getElementById('settings-btn').addEventListener('click', openSettings);
@@ -28230,9 +28320,16 @@ function initModalScrollContainmentLock() {
 }
 
 function optimizeForMobile() {
-    if (isMobile()) {
+    const nextDuration = isMobile() ? '0.1s' : '';
+    if (nextDuration === lastAppliedMobileAnimationDuration) {
+        return;
+    }
+    lastAppliedMobileAnimationDuration = nextDuration;
+    if (nextDuration) {
         // Reduce animations on mobile for better performance
-        document.documentElement.style.setProperty('--animation-duration', '0.1s');
+        document.documentElement.style.setProperty('--animation-duration', nextDuration);
+    } else {
+        document.documentElement.style.removeProperty('--animation-duration');
     }
 }
 
@@ -28673,8 +28770,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Add window resize handler for responsive adjustments
 window.addEventListener('resize', () => {
-    optimizeForMobile();
-    scheduleScrollDrivenUiUpdate(window.scrollY || 0);
+    if (globalResizeRafId) return;
+    globalResizeRafId = window.requestAnimationFrame(() => {
+        globalResizeRafId = 0;
+        optimizeForMobile();
+        scheduleScrollDrivenUiUpdate(window.scrollY || 0);
+    });
 });
 
 console.log(`CS Course Atlas - All systems loaded successfully! ${UI_ICONS.rocket}`);
