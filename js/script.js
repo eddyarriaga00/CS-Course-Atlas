@@ -16251,6 +16251,25 @@ function setAccountAuthStatus(message, tone = 'neutral') {
     statusEl.textContent = message;
 }
 
+function getClientErrorReason(error) {
+    if (error instanceof Error && error.message) {
+        return error.message.trim();
+    }
+    const raw = String(error || '').trim();
+    if (!raw || raw === '[object Object]') {
+        return '';
+    }
+    return raw;
+}
+
+function reportAuthUiError(error, fallbackMessage = 'Account action failed. Please try again.') {
+    const reason = getClientErrorReason(error);
+    const message = reason ? `${fallbackMessage} (${reason})` : fallbackMessage;
+    setAccountAuthStatus(message, 'error');
+    showToast(message, 'error');
+    console.error('Auth UI Error:', error);
+}
+
 function getAccountSignedInStatusMessage() {
     const providerLabel = getAccountSessionProviderLabel();
     const displayLabel = getAccountDisplayLabel();
@@ -16421,47 +16440,52 @@ function syncAccountSignupToggleState() {
 }
 
 async function handleAuthProviderClick(providerKey, providerLabel) {
-    if (maybeRedirectToPreferredAuthHost()) {
-        return;
-    }
-    if (!providerKey) {
-        const message = 'Unsupported social auth provider.';
-        setAccountAuthStatus(message, 'error');
-        showToast(message, 'warning');
-        return;
-    }
-    if (!hasNeonSyncConfig()) {
-        const message = `${providerLabel} sign-in requires the backend auth server.`;
-        setAccountAuthStatus(message, 'error');
-        showToast(message, 'warning');
-        return;
-    }
+    try {
+        if (maybeRedirectToPreferredAuthHost()) {
+            return;
+        }
+        if (!providerKey) {
+            const message = 'Unsupported social auth provider.';
+            setAccountAuthStatus(message, 'error');
+            showToast(message, 'warning');
+            return;
+        }
+        if (!hasNeonSyncConfig()) {
+            const message = `${providerLabel} sign-in requires the backend auth server.`;
+            setAccountAuthStatus(message, 'error');
+            showToast(message, 'warning');
+            return;
+        }
 
-    let providersSnapshot = accountAuthState.oauthProviders;
-    if (!providersSnapshot || !Object.keys(providersSnapshot).length) {
-        providersSnapshot = await loadAuthProviderAvailability({ silent: true });
-    }
-    const providerState = accountAuthState.oauthProviders?.[providerKey];
-    if (!providerState && (!providersSnapshot || !Object.keys(providersSnapshot).length)) {
-        const message = 'Unable to verify social sign-in availability right now. Try again shortly.';
-        setAccountAuthStatus(message, 'error');
-        showToast(message, 'warning');
-        return;
-    }
-    if (providerState && !providerState.enabled) {
-        const reason = Array.isArray(providerState.reasons) && providerState.reasons.length
-            ? providerState.reasons[0]
-            : `${providerLabel} sign-in is not configured yet.`;
-        setAccountAuthStatus(reason, 'error');
-        showToast(reason, 'warning');
-        return;
-    }
+        let providersSnapshot = accountAuthState.oauthProviders;
+        if (!providersSnapshot || !Object.keys(providersSnapshot).length) {
+            providersSnapshot = await loadAuthProviderAvailability({ silent: true });
+        }
+        const providerState = accountAuthState.oauthProviders?.[providerKey];
+        if (!providerState && (!providersSnapshot || !Object.keys(providersSnapshot).length)) {
+            const message = 'Unable to verify social sign-in availability right now. Try again shortly.';
+            setAccountAuthStatus(message, 'error');
+            showToast(message, 'warning');
+            return;
+        }
+        if (providerState && !providerState.enabled) {
+            const reason = Array.isArray(providerState.reasons) && providerState.reasons.length
+                ? providerState.reasons[0]
+                : `${providerLabel} sign-in is not configured yet.`;
+            setAccountAuthStatus(reason, 'error');
+            showToast(reason, 'warning');
+            return;
+        }
 
-    const returnTo = window.location.href;
-    const startEndpoint = buildNeonOAuthStartEndpoint(providerKey);
-    const redirectUrl = `${startEndpoint}?returnTo=${encodeURIComponent(returnTo)}`;
-    setAccountAuthStatus(`Redirecting to ${providerLabel}...`, 'info');
-    window.location.assign(redirectUrl);
+        const returnTo = window.location.href;
+        const startEndpoint = buildNeonOAuthStartEndpoint(providerKey);
+        const redirectUrl = `${startEndpoint}?returnTo=${encodeURIComponent(returnTo)}`;
+        setAccountAuthStatus(`Redirecting to ${providerLabel}...`, 'info');
+        window.location.assign(redirectUrl);
+    } catch (error) {
+        const resolvedProviderLabel = String(providerLabel || 'social').trim() || 'social';
+        reportAuthUiError(error, `Unable to start ${resolvedProviderLabel} sign-in. Please try again.`);
+    }
 }
 
 function handleForgotPassword() {
@@ -16533,57 +16557,62 @@ function describeOAuthError(errorCode, providerLabel) {
 }
 
 async function handleOAuthResultFromUrl() {
-    const oauthResult = consumeOAuthResultFromUrl();
-    if (!oauthResult) return;
+    try {
+        const oauthResult = consumeOAuthResultFromUrl();
+        if (!oauthResult) return;
 
-    const providerLabel = getAuthProviderLabel(oauthResult.provider);
-    const providerKey = normalizeAuthProviderKey(oauthResult.provider);
-    if (oauthResult.status === 'success') {
-        if (maybeRedirectToApiHostedFrontendForAuth()) {
-            return;
-        }
-        setAccountSessionHydrating(true);
-        setAccountAuthStatus(`${providerLabel} sign-in completed. Finalizing secure session...`, 'info');
-        if (hasNeonSyncConfig()) {
-            const verifiedSession = await waitForVerifiedAuthSession({
-                maxAttempts: 14,
-                attemptDelayMs: 850,
-                silent: true
-            });
-            if (verifiedSession?.isAuthenticated || accountAuthState.isAuthenticated) {
-                setAccountProviderState(providerKey, providerLabel);
-                clearPendingAuthRecoveryState();
-                updateAccountChip();
-                refreshAccountPrimaryAuthButton();
-                const successMessage = `${providerLabel} account connected.`;
-                setAccountAuthStatus(successMessage, 'success');
-                showToast(successMessage, 'success');
+        const providerLabel = getAuthProviderLabel(oauthResult.provider);
+        const providerKey = normalizeAuthProviderKey(oauthResult.provider);
+        if (oauthResult.status === 'success') {
+            if (maybeRedirectToApiHostedFrontendForAuth()) {
                 return;
             }
-            const syncFailureMessage = isCrossOriginApiRuntime()
-                ? `${providerLabel} sign-in completed, but session verification is delayed or blocked. Keeping a background retry running now.`
-                : `${providerLabel} sign-in completed, but session verification has not finished yet. Keeping a background retry running now.`;
-            setAccountAuthStatus(syncFailureMessage, 'error');
-            showToast(syncFailureMessage, 'warning');
-            setPendingAuthRecoveryState(providerKey, providerLabel);
-            void runAuthSessionRecoveryProbe({
-                providerKey,
-                providerLabel,
-                maxAttempts: 90,
-                attemptDelayMs: 2000
-            });
+            setAccountSessionHydrating(true);
+            setAccountAuthStatus(`${providerLabel} sign-in completed. Finalizing secure session...`, 'info');
+            if (hasNeonSyncConfig()) {
+                const verifiedSession = await waitForVerifiedAuthSession({
+                    maxAttempts: 14,
+                    attemptDelayMs: 850,
+                    silent: true
+                });
+                if (verifiedSession?.isAuthenticated || accountAuthState.isAuthenticated) {
+                    setAccountProviderState(providerKey, providerLabel);
+                    clearPendingAuthRecoveryState();
+                    updateAccountChip();
+                    refreshAccountPrimaryAuthButton();
+                    const successMessage = `${providerLabel} account connected.`;
+                    setAccountAuthStatus(successMessage, 'success');
+                    showToast(successMessage, 'success');
+                    return;
+                }
+                const syncFailureMessage = isCrossOriginApiRuntime()
+                    ? `${providerLabel} sign-in completed, but session verification is delayed or blocked. Keeping a background retry running now.`
+                    : `${providerLabel} sign-in completed, but session verification has not finished yet. Keeping a background retry running now.`;
+                setAccountAuthStatus(syncFailureMessage, 'error');
+                showToast(syncFailureMessage, 'warning');
+                setPendingAuthRecoveryState(providerKey, providerLabel);
+                void runAuthSessionRecoveryProbe({
+                    providerKey,
+                    providerLabel,
+                    maxAttempts: 90,
+                    attemptDelayMs: 2000
+                });
+            }
+            if (!hasNeonSyncConfig()) {
+                const unavailableMessage = `${providerLabel} sign-in requires the auth server configuration.`;
+                setAccountAuthStatus(unavailableMessage, 'error');
+                showToast(unavailableMessage, 'warning');
+            }
+            return;
         }
-        if (!hasNeonSyncConfig()) {
-            const unavailableMessage = `${providerLabel} sign-in requires the auth server configuration.`;
-            setAccountAuthStatus(unavailableMessage, 'error');
-            showToast(unavailableMessage, 'warning');
-        }
-        return;
-    }
 
-    const failureMessage = describeOAuthError(oauthResult.errorCode, providerLabel);
-    setAccountAuthStatus(failureMessage, 'error');
-    showToast(failureMessage, 'warning');
+        const failureMessage = describeOAuthError(oauthResult.errorCode, providerLabel);
+        setAccountAuthStatus(failureMessage, 'error');
+        showToast(failureMessage, 'warning');
+    } catch (error) {
+        setAccountSessionHydrating(false);
+        reportAuthUiError(error, 'Social sign-in completed, but session finalization failed. Please try again.');
+    }
 }
 
 function getAccountPrimaryAuthLabel() {
@@ -18167,7 +18196,14 @@ async function signOutAccountFlow(options = {}) {
 }
 
 async function submitAccountAuth() {
-    if (maybeRedirectToPreferredAuthHost()) {
+    let shouldRedirectToPreferredHost = false;
+    try {
+        shouldRedirectToPreferredHost = maybeRedirectToPreferredAuthHost();
+    } catch (error) {
+        reportAuthUiError(error, 'Unable to prepare secure sign-in. Please try again.');
+        return;
+    }
+    if (shouldRedirectToPreferredHost) {
         return;
     }
     if (accountAuthState.inFlight) return;
@@ -18623,6 +18659,8 @@ function initAccount() {
         setAuthSubmitBusy(true);
         try {
             await signOutAccountFlow();
+        } catch (error) {
+            reportAuthUiError(error, 'Unable to complete sign out. Please try again.');
         } finally {
             setAuthSubmitBusy(false);
         }
@@ -18666,19 +18704,27 @@ function initAccount() {
     }
     if (authSubmitBtn) {
         authSubmitBtn.addEventListener('click', async () => {
-            if (authEmailInput && !authEmailInput.value.trim() && accountProfile.email) {
-                authEmailInput.value = accountProfile.email;
+            try {
+                if (authEmailInput && !authEmailInput.value.trim() && accountProfile.email) {
+                    authEmailInput.value = accountProfile.email;
+                }
+                if (authUsernameInput && !authUsernameInput.value.trim() && (accountProfile.username || accountProfile.name)) {
+                    authUsernameInput.value = accountProfile.username || accountProfile.name;
+                }
+                await submitAccountAuth();
+            } catch (error) {
+                reportAuthUiError(error, 'Unable to submit sign-in request. Please try again.');
             }
-            if (authUsernameInput && !authUsernameInput.value.trim() && (accountProfile.username || accountProfile.name)) {
-                authUsernameInput.value = accountProfile.username || accountProfile.name;
-            }
-            await submitAccountAuth();
         });
     }
     const enterToSubmit = async (event) => {
         if (event.key !== 'Enter') return;
         event.preventDefault();
-        await submitAccountAuth();
+        try {
+            await submitAccountAuth();
+        } catch (error) {
+            reportAuthUiError(error, 'Unable to submit sign-in request. Please try again.');
+        }
     };
     if (authEmailInput) authEmailInput.addEventListener('keydown', enterToSubmit);
     if (authUsernameInput) authUsernameInput.addEventListener('keydown', enterToSubmit);
@@ -18715,9 +18761,13 @@ function initAccount() {
     });
     authProviderButtons.forEach((button) => {
         button.addEventListener('click', async () => {
-            const providerKey = getAuthProviderKeyFromButton(button);
-            const providerLabel = getAuthProviderLabel(providerKey);
-            await handleAuthProviderClick(providerKey, providerLabel);
+            try {
+                const providerKey = getAuthProviderKeyFromButton(button);
+                const providerLabel = getAuthProviderLabel(providerKey);
+                await handleAuthProviderClick(providerKey, providerLabel);
+            } catch (error) {
+                reportAuthUiError(error, 'Unable to start social sign-in. Please try again.');
+            }
         });
     });
 
