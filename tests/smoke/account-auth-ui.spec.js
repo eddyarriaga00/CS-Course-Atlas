@@ -66,4 +66,44 @@ test.describe('Account Modal Auth States', () => {
         await expect(page.locator('#account-auth-state-pill')).toHaveText(/Not Signed In/i, { timeout: 7000 });
         await expect(page.locator('#account-auth-interactive-fields')).toBeVisible();
     });
+
+    test('does not render undefined text while checking session on initial load', async ({ page }) => {
+        await page.route('**/api/**', async (route) => {
+            const { pathname } = new URL(route.request().url());
+            if (pathname.endsWith('/api/auth/session')) {
+                await new Promise((resolve) => setTimeout(resolve, 1200));
+                await route.fulfill({
+                    status: 401,
+                    contentType: 'application/json',
+                    body: JSON.stringify({ error: 'Not authenticated' })
+                });
+                return;
+            }
+            if (pathname.endsWith('/api/auth/oauth/providers')) {
+                await route.fulfill({
+                    status: 200,
+                    contentType: 'application/json',
+                    body: JSON.stringify({
+                        providers: {
+                            google: { enabled: true },
+                            github: { enabled: true }
+                        }
+                    })
+                });
+                return;
+            }
+            await route.fulfill({
+                status: 200,
+                contentType: 'application/json',
+                body: '{}'
+            });
+        });
+
+        await page.goto('/index.html');
+
+        const accountChip = page.locator('#account-chip');
+        await expect(accountChip).toContainText(/Checking session/i);
+        await expect(accountChip).not.toContainText(/undefined/i);
+        await expect(page.locator('#account-btn-label-desktop')).not.toContainText(/undefined/i);
+    });
 });

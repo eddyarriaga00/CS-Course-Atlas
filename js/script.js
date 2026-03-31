@@ -183,13 +183,14 @@ let lastSavedAppStateJson = null;
 const MOBILE_COMPACT_MEDIA_QUERY = '(max-width: 640px)';
 const AUTH_SESSION_REFRESH_COOLDOWN_MS = 1600;
 const NEON_FETCH_TIMEOUT_MS = 12000;
-const AUTH_SESSION_FETCH_TIMEOUT_MS = 5000;
+const AUTH_SESSION_FETCH_TIMEOUT_MS = 3500;
 const OAUTH_RECOVERY_STORAGE_KEY = 'atlasOauthRecoveryPending';
 const OAUTH_RECOVERY_MAX_AGE_MS = 15 * 60 * 1000;
 const AUTH_SESSION_TOKEN_STORAGE_KEY = 'atlasSessionToken';
 const AUTH_SESSION_TOKEN_PERSIST_STORAGE_KEY = 'atlasSessionTokenPersist';
 const UI_ICONS = Object.freeze({
     profile: String.fromCodePoint(0x1F464),
+    info: String.fromCodePoint(0x2139),
     brain: String.fromCodePoint(0x1F9E0),
     retake: String.fromCodePoint(0x1F501),
     correct: String.fromCodePoint(0x2705),
@@ -18436,6 +18437,11 @@ async function checkNeonSession(options = {}) {
             setAccountSessionHydrating(false);
             if (isUnauthenticated) {
                 applySessionPayloadToAuthState({ authenticated: false }, { source: 'Session', silent: true });
+                return {
+                    userId: '',
+                    userLabel: '',
+                    isAuthenticated: false
+                };
             } else {
                 setAccountAuthStatus(`Session check failed: ${reason}`, 'error');
                 setAccountSyncState('error', `Session check failed: ${reason}`);
@@ -18459,6 +18465,9 @@ async function checkNeonSessionWithRetry(options = {}) {
     for (let attempt = 0; attempt <= retries; attempt += 1) {
         latestSession = await checkNeonSession({ silent });
         if (latestSession?.isAuthenticated || accountAuthState.isAuthenticated) {
+            return latestSession;
+        }
+        if (latestSession && latestSession.isAuthenticated === false) {
             return latestSession;
         }
         if (attempt < retries) {
@@ -19012,7 +19021,7 @@ function openAccountModal() {
         }
         runSafeBackgroundTask(refreshAuthSessionState({
             silent: true,
-            retries: 2,
+            retries: 0,
             retryDelayMs: 450,
             force: true
         }), 'Account modal auth refresh');
@@ -19341,7 +19350,7 @@ function initAccount() {
         setAccountSessionHydrating(true);
         loadAuthProviderAvailability({ silent: true });
         runSafeBackgroundTask(
-            refreshAuthSessionState({ silent: true, retries: 2, retryDelayMs: 500, force: true }),
+            refreshAuthSessionState({ silent: true, retries: 0, retryDelayMs: 500, force: true }),
             'Initial auth refresh'
         );
         runSafeBackgroundTask(
@@ -29669,7 +29678,7 @@ function refreshAuthSessionOnForeground() {
     if (!hasNeonSyncConfig()) return;
     runSafeBackgroundTask(refreshAuthSessionState({
         silent: true,
-        retries: 1,
+        retries: 0,
         retryDelayMs: 450
     }), 'Foreground auth refresh');
 }
