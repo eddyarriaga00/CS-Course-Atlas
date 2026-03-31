@@ -343,6 +343,18 @@
             </div>
         </section>
 
+        <section id="home-success-checklist-section" class="panel-surface rounded-xl p-5 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
+            <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3">
+                <div>
+                    <p class="text-[11px] uppercase tracking-wide font-semibold text-emerald-200" data-i18n="success.checklist.kicker">Launch Success Path</p>
+                    <h3 class="text-xl sm:text-2xl font-semibold text-emerald-300 mt-1" data-i18n="success.checklist.heading">Your Quick Success Checklist</h3>
+                    <p class="text-sm sm:text-base text-slate-200 mt-1" data-i18n="success.checklist.subtitle">Complete these steps to get full value from CS Course Atlas fast.</p>
+                </div>
+                <span id="success-checklist-progress-pill" class="text-xs px-3 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-300/30 text-emerald-100 font-semibold">0 / 4 complete</span>
+            </div>
+            <div id="success-checklist-items" class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+        </section>
+
         <section id="home-guided-start-section" class="panel-surface rounded-xl p-5 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
             <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3">
                 <div>
@@ -1614,6 +1626,7 @@
                         </div>
                         <h4 id="account-auth-flow-title" class="text-lg font-semibold text-slate-100">Log In to Your Account</h4>
                         <p id="account-auth-flow-subtitle" class="text-xs text-slate-300">Use a provider or continue with your email/username and password.</p>
+                        <button id="account-auth-retry-session" type="button" class="account-profile-action-btn hidden">Retry Session Check</button>
 
                         <div id="account-auth-signed-in-note" class="account-auth-signed-in-note hidden" role="status" aria-live="polite">
                             <p class="account-auth-signed-in-kicker">Signed In</p>

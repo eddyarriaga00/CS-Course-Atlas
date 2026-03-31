@@ -2,6 +2,15 @@ const { test, expect } = require('@playwright/test');
 const { mockAuthAndProfileApi } = require('./helpers/auth-mocks');
 
 test.describe('Account Modal Auth States', () => {
+    test('renders launch success checklist on home for first-time guest sessions', async ({ page }) => {
+        await mockAuthAndProfileApi(page, { authenticated: false });
+        await page.goto('/index.html');
+
+        await expect(page.locator('#home-success-checklist-section')).toBeVisible();
+        await expect(page.locator('#success-checklist-items article')).toHaveCount(4);
+        await expect(page.locator('#success-checklist-progress-pill')).toContainText(/0\s*\/\s*4/i);
+    });
+
     test('renders signed-out login controls by default', async ({ page }) => {
         await mockAuthAndProfileApi(page, { authenticated: false });
         await page.goto('/index.html');
@@ -13,6 +22,7 @@ test.describe('Account Modal Auth States', () => {
         await expect(page.locator('#account-auth-signed-in-note')).toBeHidden();
         await expect(page.locator('#account-auth-hero-logout')).toBeHidden();
         await expect(page.locator('#account-auth-status')).toContainText(/Not signed in/i);
+        await expect(page.locator('#account-auth-retry-session')).toBeVisible();
     });
 
     test('switches to signed-in UI when session is authenticated', async ({ page }) => {
@@ -27,6 +37,7 @@ test.describe('Account Modal Auth States', () => {
         await expect(page.locator('#account-auth-signed-in-user')).toContainText(/Eddy/i);
         await expect(page.locator('#account-auth-hero-logout')).toBeVisible();
         await expect(page.locator('#account-profile-auth-required-note')).toBeHidden();
+        await expect(page.locator('#account-auth-retry-session')).toBeHidden();
     });
 
     test('profile settings back button navigates smoothly between panels and overview', async ({ page }) => {

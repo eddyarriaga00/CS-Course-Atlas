@@ -131,6 +131,7 @@ const MOTION_ENHANCEMENT_SELECTORS = Object.freeze([
     '#route-overview-section',
     '#route-launchpad-section',
     '#topic-focus-section',
+    '#home-success-checklist-section',
     '#progress-section',
     '#achievements-card',
     '#daily-challenge-card',
@@ -184,6 +185,7 @@ const MOBILE_COMPACT_MEDIA_QUERY = '(max-width: 640px)';
 const AUTH_SESSION_REFRESH_COOLDOWN_MS = 1600;
 const NEON_FETCH_TIMEOUT_MS = 12000;
 const AUTH_SESSION_FETCH_TIMEOUT_MS = 3500;
+const AUTH_SESSION_HYDRATION_FAILSAFE_MS = 8500;
 const OAUTH_RECOVERY_STORAGE_KEY = 'atlasOauthRecoveryPending';
 const OAUTH_RECOVERY_MAX_AGE_MS = 15 * 60 * 1000;
 const AUTH_SESSION_TOKEN_STORAGE_KEY = 'atlasSessionToken';
@@ -200,6 +202,7 @@ const UI_ICONS = Object.freeze({
 
 let authRefreshInFlight = false;
 let lastAuthRefreshAt = 0;
+let authHydrationFailSafeTimer = null;
 
 const DEFAULT_COLLAPSED_SECTIONS = {
     progress: false,
@@ -313,6 +316,7 @@ const ROUTE_KEY_BY_PATH = {
 const HOME_SECTION_ORDER = [
     'hero-section',
     'home-beginner-onboarding-section',
+    'home-success-checklist-section',
     'home-guided-start-section',
     'home-seo-links-section',
     'topic-focus-section',
@@ -463,7 +467,8 @@ let userNotifications = [];
 const enhancedVisualAssetState = {
     loaded: false,
     loadPromise: null,
-    mermaidInitialized: false
+    mermaidInitialized: false,
+    lastInsightsVisualSignature: ''
 };
 const moduleSearchIndexState = {
     lang: null,
@@ -481,6 +486,7 @@ const enhancedVisualCharts = {
     insights: null
 };
 let mermaidRenderSerial = 0;
+let successChecklistLastSignature = '';
 
 const SUPPORTED_LANGUAGES = {
     java: { name: 'Java', icon: '\u2615' },
@@ -1025,6 +1031,26 @@ const TRANSLATIONS = {
         'start.paths.review.description': 'Run fast recall with flashcards, then verify terms in the glossary.',
         'start.paths.review.cta': 'Start quick review',
         'start.paths.review.toast': 'Flashcards opened. Next: use Glossary for definition refresh.',
+        'success.checklist.kicker': 'Launch Success Path',
+        'success.checklist.heading': 'Your Quick Success Checklist',
+        'success.checklist.subtitle': 'Complete these steps to get full value from CS Course Atlas fast.',
+        'success.checklist.progress': '{done} / {total} complete',
+        'success.checklist.done': 'Done',
+        'success.checklist.pending': 'Pending',
+        'success.checklist.step.track.title': 'Pick your main track',
+        'success.checklist.step.track.body': 'Select DSA, Java, Git, Assembly, or Discrete Math to focus your study path.',
+        'success.checklist.step.track.cta': 'Pick Track',
+        'success.checklist.step.module.title': 'Complete your first module',
+        'success.checklist.step.module.body': 'Finish one module to unlock clearer recommendations and pacing.',
+        'success.checklist.step.module.cta': 'Open Next Module',
+        'success.checklist.step.practice.title': 'Run one practice activity',
+        'success.checklist.step.practice.body': 'Do one quiz or flashcard session to reinforce what you learned.',
+        'success.checklist.step.practice.cta': 'Start Practice',
+        'success.checklist.step.sync.title': 'Sign in to sync progress',
+        'success.checklist.step.sync.body': 'Enable account sync so your streaks, notes, and settings follow you across devices.',
+        'success.checklist.step.sync.cta': 'Open Account',
+        'auth.retrySession': 'Retry Session Check',
+        'auth.status.sessionTimeout': 'Session check timed out. Retry when ready.',
         // Sections
         'section.dailyChallenge': '\u{1F3AF} Daily Challenge',
         'section.studyTip': '\u{1F4A1} Study Tip',
@@ -1560,6 +1586,26 @@ const TRANSLATIONS = {
         'start.paths.review.description': 'Haz repaso rapido con tarjetas y luego confirma terminos en el glosario.',
         'start.paths.review.cta': 'Iniciar repaso rapido',
         'start.paths.review.toast': 'Tarjetas abiertas. Siguiente paso: usa el Glosario para repasar definiciones.',
+        'success.checklist.kicker': 'Ruta de Exito',
+        'success.checklist.heading': 'Tu Checklist de Exito Rapido',
+        'success.checklist.subtitle': 'Completa estos pasos para aprovechar CS Course Atlas desde el inicio.',
+        'success.checklist.progress': '{done} / {total} completado',
+        'success.checklist.done': 'Listo',
+        'success.checklist.pending': 'Pendiente',
+        'success.checklist.step.track.title': 'Elige tu ruta principal',
+        'success.checklist.step.track.body': 'Selecciona DSA, Java, Git, Assembly o Matematicas Discretas para enfocar tu estudio.',
+        'success.checklist.step.track.cta': 'Elegir Ruta',
+        'success.checklist.step.module.title': 'Completa tu primer modulo',
+        'success.checklist.step.module.body': 'Termina un modulo para desbloquear mejores recomendaciones y ritmo.',
+        'success.checklist.step.module.cta': 'Abrir Siguiente Modulo',
+        'success.checklist.step.practice.title': 'Haz una actividad de practica',
+        'success.checklist.step.practice.body': 'Realiza un quiz o una sesion de tarjetas para reforzar lo aprendido.',
+        'success.checklist.step.practice.cta': 'Empezar Practica',
+        'success.checklist.step.sync.title': 'Inicia sesion para sincronizar',
+        'success.checklist.step.sync.body': 'Activa la sincronizacion para que rachas, notas y ajustes te sigan en todos tus dispositivos.',
+        'success.checklist.step.sync.cta': 'Abrir Cuenta',
+        'auth.retrySession': 'Reintentar sesion',
+        'auth.status.sessionTimeout': 'La verificacion de sesion se demoro demasiado. Puedes reintentar.',
         // Sections
         'section.dailyChallenge': '\u{1F3AF} Desaf\u00edo del D\u00eda',
         'section.studyTip': '\u{1F4A1} Consejo de Estudio',
@@ -16204,6 +16250,26 @@ function parseBooleanLikeClient(value, fallback = false) {
 
 function setAccountSessionHydrating(isHydrating) {
     accountAuthState.isSessionHydrating = Boolean(isHydrating);
+    if (authHydrationFailSafeTimer) {
+        clearTimeout(authHydrationFailSafeTimer);
+        authHydrationFailSafeTimer = null;
+    }
+    if (accountAuthState.isSessionHydrating && !accountAuthState.isAuthenticated) {
+        authHydrationFailSafeTimer = setTimeout(() => {
+            if (!accountAuthState.isSessionHydrating || accountAuthState.isAuthenticated) return;
+            accountAuthState.isSessionHydrating = false;
+            const timeoutMessage = t('auth.status.sessionTimeout');
+            setAccountAuthStatus(timeoutMessage, 'info');
+            setAccountSyncState('connected', timeoutMessage);
+            if (isModalOpen('account-modal')) {
+                showToast(timeoutMessage, 'warning');
+            }
+            updateAccountChip();
+            updateAccountAuthCardLayout();
+            updateAccountProfileSummaryUI();
+            refreshAccountPrimaryAuthButton();
+        }, AUTH_SESSION_HYDRATION_FAILSAFE_MS);
+    }
     updateAccountChip();
     updateAccountAuthCardLayout();
     updateAccountProfileSummaryUI();
@@ -16260,10 +16326,12 @@ function updateAccountAuthCardLayout() {
     const submitButton = document.getElementById('account-auth-submit');
     const heroLogoutButton = document.getElementById('account-auth-hero-logout');
     const heroManageButton = document.getElementById('account-auth-hero-manage');
+    const retrySessionButton = document.getElementById('account-auth-retry-session');
     const statePill = document.getElementById('account-auth-state-pill');
     const providerPill = document.getElementById('account-auth-provider-pill');
     const isAuthenticated = Boolean(accountAuthState.isAuthenticated);
     const isSessionHydrating = Boolean(accountAuthState.isSessionHydrating && !isAuthenticated);
+    const canCheckSession = hasNeonSyncConfig();
     const providerLabel = getAccountSessionProviderLabel();
 
     if (authCard) {
@@ -16320,6 +16388,16 @@ function updateAccountAuthCardLayout() {
     }
     if (heroManageButton) {
         heroManageButton.classList.toggle('hidden', !isAuthenticated);
+    }
+    if (retrySessionButton) {
+        const showRetry = !isAuthenticated && canCheckSession;
+        retrySessionButton.classList.toggle('hidden', !showRetry);
+        retrySessionButton.textContent = isSessionHydrating ? 'Checking Session...' : t('auth.retrySession');
+        const disableRetry = accountAuthState.inFlight || isSessionHydrating;
+        retrySessionButton.disabled = disableRetry;
+        retrySessionButton.setAttribute('aria-disabled', disableRetry ? 'true' : 'false');
+        retrySessionButton.classList.toggle('opacity-70', disableRetry);
+        retrySessionButton.classList.toggle('cursor-not-allowed', disableRetry);
     }
     syncAccountAuthStatusForSessionState();
 }
@@ -17179,6 +17257,7 @@ function setAuthSubmitBusy(isBusy) {
     const submitBtn = document.getElementById('account-auth-submit');
     const heroLogoutBtn = document.getElementById('account-auth-hero-logout');
     const heroManageBtn = document.getElementById('account-auth-hero-manage');
+    const retrySessionButton = document.getElementById('account-auth-retry-session');
     if (submitBtn) {
         const shouldDisableSubmit = accountAuthState.inFlight || accountAuthState.isAuthenticated || accountAuthState.isSessionHydrating;
         submitBtn.disabled = shouldDisableSubmit;
@@ -17204,6 +17283,16 @@ function setAuthSubmitBusy(isBusy) {
         heroManageBtn.setAttribute('aria-disabled', accountAuthState.inFlight ? 'true' : 'false');
         heroManageBtn.classList.toggle('opacity-70', accountAuthState.inFlight);
         heroManageBtn.classList.toggle('cursor-not-allowed', accountAuthState.inFlight);
+    }
+    if (retrySessionButton) {
+        const disableRetry = accountAuthState.inFlight || (accountAuthState.isSessionHydrating && !accountAuthState.isAuthenticated);
+        retrySessionButton.disabled = disableRetry;
+        retrySessionButton.setAttribute('aria-disabled', disableRetry ? 'true' : 'false');
+        retrySessionButton.classList.toggle('opacity-70', disableRetry);
+        retrySessionButton.classList.toggle('cursor-not-allowed', disableRetry);
+        retrySessionButton.textContent = accountAuthState.isSessionHydrating && !accountAuthState.isAuthenticated
+            ? 'Checking Session...'
+            : t('auth.retrySession');
     }
     if (!accountAuthState.inFlight) {
         refreshAccountPrimaryAuthButton();
@@ -19115,6 +19204,7 @@ function initAccount() {
     const authForgotBtn = document.getElementById('account-auth-forgot');
     const authSwitchModeBtn = document.getElementById('account-auth-switch-mode');
     const authRememberCheckbox = document.getElementById('account-auth-remember');
+    const retrySessionBtn = document.getElementById('account-auth-retry-session');
     const authProviderButtons = Array.from(document.querySelectorAll('.account-auth-provider-btn'));
     const passwordToggleButtons = Array.from(document.querySelectorAll('.account-auth-password-toggle[data-target-input]'));
     const avatarUrlInput = document.getElementById('account-avatar-url');
@@ -19291,6 +19381,25 @@ function initAccount() {
                 return;
             }
             setAccountAuthMode(targetMode);
+        });
+    }
+    if (retrySessionBtn) {
+        retrySessionBtn.addEventListener('click', async () => {
+            if (!hasNeonSyncConfig() || accountAuthState.inFlight) return;
+            setAccountSessionHydrating(true);
+            setAccountAuthStatus('Checking session...', 'info');
+            const refreshed = await refreshAuthSessionState({
+                silent: true,
+                retries: 1,
+                retryDelayMs: 500,
+                force: true
+            });
+            if (refreshed?.isAuthenticated || accountAuthState.isAuthenticated) {
+                showToast('Session restored.', 'success');
+            } else {
+                setAccountAuthStatus(getStableTranslation('auth.status.guest'), 'neutral');
+                showToast('No active session found.', 'info');
+            }
         });
     }
     passwordToggleButtons.forEach((button) => {
@@ -24531,6 +24640,29 @@ function destroyEnhancedChart(chartKey, canvas = null) {
     enhancedVisualCharts[chartKey] = null;
 }
 
+function createEnhancedChartWithRecovery(chartKey, context, config, canvas = null) {
+    try {
+        return new window.Chart(context, config);
+    } catch (error) {
+        const message = String(error?.message || '').toLowerCase();
+        const canRecoverCanvasInUse = canvas
+            && typeof window.Chart?.getChart === 'function'
+            && message.includes('canvas is already in use');
+        if (!canRecoverCanvasInUse) {
+            throw error;
+        }
+        const boundChart = window.Chart.getChart(canvas);
+        if (boundChart && typeof boundChart.destroy === 'function') {
+            try {
+                boundChart.destroy();
+            } catch (destroyError) {
+                console.warn(`Chart recovery destroy failed for ${chartKey}:`, destroyError);
+            }
+        }
+        return new window.Chart(context, config);
+    }
+}
+
 function renderSearchDistributionChart(filteredModules = []) {
     const canvas = document.getElementById('smart-search-chart');
     if (!canvas) return;
@@ -24549,7 +24681,7 @@ function renderSearchDistributionChart(filteredModules = []) {
     const context = canvas.getContext('2d');
     if (!context) return;
     try {
-        enhancedVisualCharts.search = new window.Chart(context, {
+        enhancedVisualCharts.search = createEnhancedChartWithRecovery('search', context, {
             type: 'bar',
             data: {
                 labels,
@@ -24584,7 +24716,7 @@ function renderSearchDistributionChart(filteredModules = []) {
                     }
                 }
             }
-        });
+        }, canvas);
     } catch (error) {
         destroyEnhancedChart('search', canvas);
         console.warn('Search chart render failed:', error);
@@ -24642,7 +24774,7 @@ function renderInsightsProgressChart({ hasAccess = false, stats = null, guestPre
         const completed = guestPreview?.completed || 0;
         const total = Math.max(guestPreview?.total || 1, 1);
         try {
-            enhancedVisualCharts.insights = new window.Chart(context, {
+            enhancedVisualCharts.insights = createEnhancedChartWithRecovery('insights', context, {
                 type: 'doughnut',
                 data: {
                     labels: [translateLiteral('Completed', appState.language), translateLiteral('Remaining', appState.language)],
@@ -24665,7 +24797,7 @@ function renderInsightsProgressChart({ hasAccess = false, stats = null, guestPre
                         }
                     }
                 }
-            });
+            }, canvas);
         } catch (error) {
             destroyEnhancedChart('insights', canvas);
             console.warn('Insights chart render failed:', error);
@@ -24682,7 +24814,7 @@ function renderInsightsProgressChart({ hasAccess = false, stats = null, guestPre
     });
 
     try {
-        enhancedVisualCharts.insights = new window.Chart(context, {
+        enhancedVisualCharts.insights = createEnhancedChartWithRecovery('insights', context, {
             type: 'bar',
             data: {
                 labels,
@@ -24730,7 +24862,7 @@ function renderInsightsProgressChart({ hasAccess = false, stats = null, guestPre
                     }
                 }
             }
-        });
+        }, canvas);
     } catch (error) {
         destroyEnhancedChart('insights', canvas);
         console.warn('Insights bar chart render failed:', error);
@@ -24856,9 +24988,51 @@ async function renderInsightsRoadmapMermaid(definition = '') {
 
 function renderEnhancedInsightsVisuals({ hasAccess = false, stats = null, guestPreview = null, learningPath = null } = {}) {
     ensureEnhancedVisualContainers();
+    const insightsSection = document.getElementById('insights-section');
+    if (insightsSection instanceof HTMLElement && insightsSection.hidden) {
+        return;
+    }
     const summaryEl = document.getElementById('insight-visual-summary');
     const chartReady = typeof window.Chart === 'function';
     const mermaidReady = typeof window.mermaid?.render === 'function';
+    const signature = JSON.stringify({
+        hasAccess: Boolean(hasAccess),
+        language: appState.language,
+        dark: document.body.classList.contains('dark'),
+        reduceMotion: Boolean(appState.reduceMotion),
+        chartReady: Boolean(chartReady),
+        mermaidReady: Boolean(mermaidReady),
+        stats: hasAccess && stats
+            ? {
+                completed: Number(stats.completed || 0),
+                total: Number(stats.total || 0),
+                percentage: Number(stats.percentage || 0),
+                byDifficulty: stats.byDifficulty || {},
+                completedByDifficulty: stats.completedByDifficulty || {}
+            }
+            : null,
+        guestPreview: !hasAccess && guestPreview
+            ? {
+                completed: Number(guestPreview.completed || 0),
+                total: Number(guestPreview.total || 0),
+                percentage: Number(guestPreview.percentage || 0)
+            }
+            : null,
+        learningPath: hasAccess && learningPath
+            ? {
+                progress: Number(learningPath.progress || 0),
+                nextId: String(learningPath.next?.id || ''),
+                upcomingIds: Array.isArray(learningPath.upcoming)
+                    ? learningPath.upcoming.slice(0, 3).map((module) => String(module?.id || ''))
+                    : []
+            }
+            : null
+    });
+
+    if (signature === enhancedVisualAssetState.lastInsightsVisualSignature) {
+        return;
+    }
+    enhancedVisualAssetState.lastInsightsVisualSignature = signature;
 
     if (summaryEl) {
         if (!chartReady || !mermaidReady) {
@@ -28396,6 +28570,131 @@ function updateStudyTrackerUI() {
     }
 }
 
+function hasSelectedPrimaryTrackForChecklist() {
+    const selectedCategory = String(appState.categoryFilter || '').trim().toLowerCase();
+    if (selectedCategory && selectedCategory !== 'all') return true;
+    return ['/dsa', '/java', '/git', '/assembly', '/discrete-math'].includes(appState.currentRoute);
+}
+
+function hasPracticeActivityForChecklist() {
+    const completedQuizCount = appState.completedQuizzes instanceof Set ? appState.completedQuizzes.size : 0;
+    const flashcardItems = Array.isArray(appState.flashcardSession) ? appState.flashcardSession.length : 0;
+    return completedQuizCount > 0 || flashcardItems > 0;
+}
+
+function getSuccessChecklistItems() {
+    return [
+        {
+            id: 'track',
+            done: hasSelectedPrimaryTrackForChecklist(),
+            title: t('success.checklist.step.track.title'),
+            body: t('success.checklist.step.track.body'),
+            cta: t('success.checklist.step.track.cta')
+        },
+        {
+            id: 'module',
+            done: appState.completedModules instanceof Set && appState.completedModules.size > 0,
+            title: t('success.checklist.step.module.title'),
+            body: t('success.checklist.step.module.body'),
+            cta: t('success.checklist.step.module.cta')
+        },
+        {
+            id: 'practice',
+            done: hasPracticeActivityForChecklist(),
+            title: t('success.checklist.step.practice.title'),
+            body: t('success.checklist.step.practice.body'),
+            cta: t('success.checklist.step.practice.cta')
+        },
+        {
+            id: 'sync',
+            done: Boolean(accountAuthState.isAuthenticated),
+            title: t('success.checklist.step.sync.title'),
+            body: t('success.checklist.step.sync.body'),
+            cta: t('success.checklist.step.sync.cta')
+        }
+    ];
+}
+
+function runSuccessChecklistAction(actionId) {
+    const normalizedAction = String(actionId || '').trim().toLowerCase();
+    if (!normalizedAction) return;
+    if (normalizedAction === 'track') {
+        navigateToRoute('/tracks', { focusMain: true });
+        return;
+    }
+    if (normalizedAction === 'module') {
+        const recommended = getRecommendedModules();
+        const firstModule = Array.isArray(recommended) && recommended.length ? recommended[0] : null;
+        if (firstModule?.id) {
+            focusModule(firstModule.id);
+        } else {
+            navigateToRoute('/tracks', { focusMain: true });
+        }
+        return;
+    }
+    if (normalizedAction === 'practice') {
+        openInteractiveQuizLibrary();
+        return;
+    }
+    if (normalizedAction === 'sync') {
+        openAccountModal();
+    }
+}
+
+function renderSuccessChecklist() {
+    const container = document.getElementById('success-checklist-items');
+    const progressPill = document.getElementById('success-checklist-progress-pill');
+    if (!container || !progressPill) return;
+
+    const items = getSuccessChecklistItems();
+    const doneCount = items.reduce((count, item) => count + (item.done ? 1 : 0), 0);
+    const signature = `${appState.language}|${items.map((item) => `${item.id}:${item.done ? 1 : 0}`).join('|')}`;
+    if (signature === successChecklistLastSignature) {
+        return;
+    }
+    successChecklistLastSignature = signature;
+
+    progressPill.textContent = t('success.checklist.progress', { done: doneCount, total: items.length });
+    progressPill.classList.toggle('bg-emerald-500/20', doneCount < items.length);
+    progressPill.classList.toggle('border-emerald-300/30', doneCount < items.length);
+    progressPill.classList.toggle('text-emerald-100', doneCount < items.length);
+    progressPill.classList.toggle('bg-indigo-500/20', doneCount === items.length);
+    progressPill.classList.toggle('border-indigo-300/30', doneCount === items.length);
+    progressPill.classList.toggle('text-indigo-100', doneCount === items.length);
+
+    container.innerHTML = items.map((item) => {
+        const statusLabel = item.done ? t('success.checklist.done') : t('success.checklist.pending');
+        const statusTone = item.done
+            ? 'bg-emerald-500/20 border-emerald-300/30 text-emerald-100'
+            : 'bg-slate-800 border-white/10 text-slate-200';
+        const cardTone = item.done ? 'border-emerald-300/30 bg-emerald-500/5' : 'border-white/10 bg-slate-900/70';
+        const buttonLabel = item.done ? t('success.checklist.done') : item.cta;
+        return `
+            <article class="rounded-xl border ${cardTone} p-4">
+                <div class="flex items-start justify-between gap-2">
+                    <p class="text-sm font-semibold text-slate-100">${escapeHtml(item.title)}</p>
+                    <span class="text-[11px] px-2 py-1 rounded-full border font-semibold ${statusTone}">${escapeHtml(statusLabel)}</span>
+                </div>
+                <p class="text-xs sm:text-sm text-slate-300 mt-1">${escapeHtml(item.body)}</p>
+                <button
+                    type="button"
+                    class="route-launchpad-btn mt-3 ${item.done ? 'opacity-70 cursor-not-allowed' : ''}"
+                    data-success-checklist-action="${escapeHtml(item.id)}"
+                    ${item.done ? 'disabled aria-disabled="true"' : ''}>
+                    ${escapeHtml(buttonLabel)}
+                </button>
+            </article>
+        `;
+    }).join('');
+
+    container.querySelectorAll('[data-success-checklist-action]').forEach((button) => {
+        button.addEventListener('click', () => {
+            const actionId = button.getAttribute('data-success-checklist-action');
+            runSuccessChecklistAction(actionId);
+        });
+    });
+}
+
 function renderInsights() {
     const progressEl = document.getElementById('insights-progress-percent');
     const progressBar = document.getElementById('insights-progress-bar');
@@ -28423,11 +28722,13 @@ function renderInsights() {
     const momentumTipEl = document.getElementById('insight-momentum-tip');
 
     if (!progressEl || !progressBar) {
+        renderSuccessChecklist();
         updateStudyTrackerUI();
         return;
     }
 
     const hasAccess = updateInsightsAccessGate();
+    renderSuccessChecklist();
     if (!hasAccess) {
         const guestPreview = getGuestPreviewProgressState();
         if (insightUpdates) {
