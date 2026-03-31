@@ -3,10 +3,12 @@ const { mockAuthAndProfileApi } = require('./helpers/auth-mocks');
 
 const CRITICAL_PAGES = [
     '/index.html',
+    '/manifest.webmanifest',
     '/privacy-policy.html',
     '/terms-of-use.html',
     '/contact-support.html',
     '/donations-refunds.html',
+    '/.well-known/security.txt',
     '/sitemap.xml'
 ];
 
@@ -27,4 +29,3 @@ test.describe('Critical Navigation Links', () => {
         await expect(page.locator('body')).toContainText('<urlset');
     });
 });
-

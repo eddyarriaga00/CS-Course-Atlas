@@ -651,6 +651,11 @@ function headTemplate({ title, description, canonicalPath, assetPrefix = '' }) {
         <title>${safeTitle}</title>
         <meta name="description" content="${safeDescription}">
         <meta name="robots" content="index,follow,max-image-preview:large">
+        <meta name="theme-color" content="#1d4ed8">
+        <meta name="application-name" content="CS Course Atlas">
+        <meta name="apple-mobile-web-app-title" content="CS Course Atlas">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
         ${verificationMetaTag}
         <link rel="canonical" href="${canonical}">
         <meta property="og:type" content="website">
@@ -662,6 +667,7 @@ function headTemplate({ title, description, canonicalPath, assetPrefix = '' }) {
         <meta property="twitter:title" content="${safeTitle}">
         <meta property="twitter:description" content="${safeDescription}">
         <link rel="icon" href="data:,">
+        <link rel="manifest" href="${cssPrefix}manifest.webmanifest">
         <link rel="stylesheet" href="${cssPrefix}css/tailwind.css">
         <link rel="stylesheet" href="${cssPrefix}css/styles.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">

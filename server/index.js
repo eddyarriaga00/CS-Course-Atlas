@@ -3292,6 +3292,14 @@ app.use((req, res, next) => {
     return next();
 });
 
+app.get('/.well-known/security.txt', (_req, res) => {
+    const securityTxtPath = path.join(siteRoot, '.well-known', 'security.txt');
+    if (!fs.existsSync(securityTxtPath)) {
+        return res.status(404).type('text/plain').send('Not found.');
+    }
+    return res.type('text/plain; charset=utf-8').sendFile(securityTxtPath);
+});
+
 app.use(express.static(siteRoot));
 if (hasSeoStaticBuild) {
     app.use(express.static(seoStaticRoot));
