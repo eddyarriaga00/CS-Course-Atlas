@@ -9610,3 +9610,274 @@ body:not(.reduce-motion) :where(#start-learning-btn, #insight-plan-cta, #study-s
         padding-bottom: calc(0.75rem + var(--atlas-safe-bottom));
     }
 }
+
+/* Discord-inspired visual + motion layer (inspired, not a direct clone). */
+:root {
+    --discord-blurple: #5865f2;
+    --discord-blurple-soft: #7983f5;
+    --discord-bg-0: #111214;
+    --discord-bg-1: #1e1f22;
+    --discord-bg-2: #2b2d31;
+    --discord-bg-3: #313338;
+    --discord-border: rgba(255, 255, 255, 0.08);
+    --discord-text-main: #f2f3f5;
+    --discord-text-muted: #b5bac1;
+    --discord-ease-standard: cubic-bezier(0.2, 0, 0, 1);
+    --discord-ease-emphasized: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+body.dark {
+    --surface-primary: var(--discord-bg-1);
+    --surface-secondary: var(--discord-bg-2);
+    --surface-accent: var(--discord-bg-3);
+    --surface-muted: #3f4147;
+    --surface-border: var(--discord-border);
+    --text-primary-color: var(--discord-text-main);
+    --text-secondary-color: var(--discord-text-muted);
+    --shadow-card: 0 18px 42px rgba(0, 0, 0, 0.36);
+}
+
+body.dark #main-header {
+    background:
+        radial-gradient(circle at 8% 10%, rgba(88, 101, 242, 0.2), transparent 45%),
+        linear-gradient(180deg, rgba(35, 36, 40, 0.96), rgba(30, 31, 34, 0.94));
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+body.dark :where(
+    #main-content .panel-surface,
+    #main-content .content-backdrop,
+    #main-content .module-card,
+    #main-content .insight-card,
+    #main-content .insight-highlight-card,
+    #main-content #search-section,
+    #main-content #playground-section,
+    #app-sidebar,
+    #main-footer.site-footer,
+    .modal-panel
+) {
+    border-color: rgba(255, 255, 255, 0.08);
+    background:
+        linear-gradient(180deg, rgba(49, 51, 56, 0.82), rgba(30, 31, 34, 0.92));
+    box-shadow:
+        0 16px 34px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+body.dark :where(
+    #main-content .panel-surface h2,
+    #main-content .panel-surface h3,
+    #main-content .panel-surface h4,
+    #main-content .content-backdrop h2,
+    #main-content .content-backdrop h3,
+    #main-content .content-backdrop h4,
+    #main-content .module-card h2,
+    #main-content .module-card h3,
+    #main-content .module-card h4
+) {
+    color: var(--discord-text-main);
+}
+
+body.dark :where(
+    #main-content .panel-surface p,
+    #main-content .content-backdrop p,
+    #main-content .module-card p,
+    #main-content .insight-card p,
+    #main-content .insight-highlight-card p,
+    #main-content .panel-surface li,
+    #main-content .content-backdrop li,
+    #main-content .module-card li
+) {
+    color: var(--discord-text-muted);
+}
+
+body:not(.reduce-motion) :where(
+    button,
+    .header-control,
+    .sidebar-link,
+    .site-footer-quick-action,
+    #main-footer.site-footer .footer-link,
+    .mobile-footer-pages-link,
+    .account-profile-action-btn,
+    .account-profile-toggle-btn,
+    .account-profile-back-btn,
+    .account-primary-btn,
+    .account-danger-btn
+) {
+    transition:
+        transform 180ms var(--discord-ease-standard),
+        box-shadow 220ms var(--discord-ease-standard),
+        background-color 220ms var(--discord-ease-standard),
+        border-color 220ms var(--discord-ease-standard),
+        color 220ms var(--discord-ease-standard);
+}
+
+body:not(.reduce-motion) #main-content :where(
+    .panel-surface,
+    .content-backdrop,
+    .module-card,
+    .insight-card,
+    .insight-highlight-card
+) {
+    transition:
+        transform 220ms var(--discord-ease-standard),
+        box-shadow 260ms var(--discord-ease-standard),
+        border-color 240ms var(--discord-ease-standard);
+}
+
+body:not(.reduce-motion) #main-content :where(
+    .panel-surface,
+    .content-backdrop,
+    .module-card,
+    .insight-card,
+    .insight-highlight-card
+):hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 22px 44px rgba(0, 0, 0, 0.34),
+        inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    border-color: rgba(121, 131, 245, 0.42);
+}
+
+body:not(.reduce-motion) :where(
+    .header-control:hover,
+    .sidebar-link:hover,
+    .site-footer-quick-action:hover,
+    #main-footer.site-footer .footer-link:hover,
+    .mobile-footer-pages-link:hover
+) {
+    transform: translateY(-1px);
+}
+
+:where(
+    button,
+    a,
+    input,
+    select,
+    textarea,
+    .header-control,
+    .sidebar-link
+):focus-visible {
+    outline: none;
+    box-shadow:
+        0 0 0 2px rgba(88, 101, 242, 0.54),
+        0 0 0 4px rgba(88, 101, 242, 0.2);
+}
+
+body.dark :where(.sidebar-link.active, #main-header #account-btn.account-btn-authenticated) {
+    border-color: rgba(88, 101, 242, 0.62);
+    box-shadow:
+        0 10px 24px rgba(88, 101, 242, 0.28),
+        inset 0 0 0 1px rgba(88, 101, 242, 0.22);
+}
+
+body:not(.reduce-motion) :where(
+    .sidebar-link.active,
+    #main-header #account-btn.account-btn-authenticated,
+    #account-modal .account-auth-state-pill[data-auth-state="authenticated"]
+) {
+    animation: discordAccentPulse 5.6s ease-in-out infinite;
+}
+
+body:not(.reduce-motion) .modal-backdrop {
+    animation: discordFadeIn 200ms var(--discord-ease-standard);
+}
+
+body:not(.reduce-motion) .modal-panel {
+    animation: discordModalPop 260ms var(--discord-ease-emphasized);
+}
+
+body.dark :where(
+    #main-content,
+    #app-sidebar,
+    .modal-panel,
+    .global-search-results,
+    #account-modal .account-modal-body
+) {
+    scrollbar-color: rgba(121, 131, 245, 0.58) rgba(30, 31, 34, 0.72);
+}
+
+body.dark :where(
+    #main-content,
+    #app-sidebar,
+    .modal-panel,
+    .global-search-results,
+    #account-modal .account-modal-body
+)::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+body.dark :where(
+    #main-content,
+    #app-sidebar,
+    .modal-panel,
+    .global-search-results,
+    #account-modal .account-modal-body
+)::-webkit-scrollbar-track {
+    background: rgba(30, 31, 34, 0.76);
+}
+
+body.dark :where(
+    #main-content,
+    #app-sidebar,
+    .modal-panel,
+    .global-search-results,
+    #account-modal .account-modal-body
+)::-webkit-scrollbar-thumb {
+    border-radius: 999px;
+    border: 2px solid rgba(30, 31, 34, 0.9);
+    background: linear-gradient(180deg, rgba(121, 131, 245, 0.86), rgba(88, 101, 242, 0.66));
+}
+
+body.dark :where(
+    #main-content,
+    #app-sidebar,
+    .modal-panel,
+    .global-search-results,
+    #account-modal .account-modal-body
+)::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, rgba(136, 146, 249, 0.94), rgba(99, 113, 247, 0.76));
+}
+
+@keyframes discordFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes discordModalPop {
+    0% {
+        opacity: 0;
+        transform: translateY(12px) scale(0.985);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes discordAccentPulse {
+    0%, 100% {
+        box-shadow: 0 8px 20px rgba(88, 101, 242, 0.18);
+    }
+    50% {
+        box-shadow: 0 14px 30px rgba(88, 101, 242, 0.3);
+    }
+}
+
+@media (max-width: 640px) {
+    body.dark .mobile-footer-pages-link {
+        border-color: rgba(121, 131, 245, 0.34);
+        background: rgba(43, 45, 49, 0.95);
+    }
+
+    body:not(.reduce-motion) .mobile-footer-pages-link:active {
+        transform: scale(0.98);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body :where(.modal-backdrop, .modal-panel, .sidebar-link.active, #main-header #account-btn.account-btn-authenticated) {
+        animation: none !important;
+    }
+}
