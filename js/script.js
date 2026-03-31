@@ -2017,6 +2017,13 @@ if (typeof window !== 'undefined') {
     window.t = t;
 }
 
+function getStableTranslation(key, params = {}, lang = appState.language || 'en') {
+    const runtimeTranslate = typeof window !== 'undefined' && typeof window.__atlasTranslateFn === 'function'
+        ? window.__atlasTranslateFn
+        : t;
+    return runtimeTranslate(key, params, lang);
+}
+
 function tc(key, count, params = {}, lang = appState.language || 'en') {
     const suffix = count === 1 ? 'one' : 'other';
     const fullKey = `${key}.${suffix}`;
@@ -15964,6 +15971,23 @@ const ACCOUNT_PROFILE_PANEL_FOCUS = Object.freeze({
     security: '#account-email',
     danger: '#account-delete-password'
 });
+const ACCOUNT_PROFILE_PANEL_META = Object.freeze({
+    profile: {
+        title: 'Edit Profile',
+        backLabel: 'Back to Overview',
+        backTarget: 'overview'
+    },
+    security: {
+        title: 'Security Settings',
+        backLabel: 'Back to Profile',
+        backTarget: 'profile'
+    },
+    danger: {
+        title: 'Danger Zone',
+        backLabel: 'Back to Profile',
+        backTarget: 'profile'
+    }
+});
 let userStateSyncTimer = null;
 let userStateSyncInFlight = false;
 let applyingRemoteUserState = false;
@@ -16385,6 +16409,7 @@ function updateAccountProfileSummaryUI() {
         button.setAttribute('aria-disabled', disabled ? 'true' : 'false');
         button.classList.toggle('is-disabled', disabled);
     });
+    updateAccountProfilePanelNavigation();
     syncAccountAuthStatusForSessionState();
 }
 
@@ -16397,7 +16422,9 @@ function setActiveAccountProfilePanel(panel = 'profile') {
 
     document.querySelectorAll('#account-profile-content [data-account-panel]').forEach((section) => {
         const sectionPanel = String(section.getAttribute('data-account-panel') || '').toLowerCase();
-        section.classList.toggle('hidden', sectionPanel !== nextPanel);
+        const isSectionActive = sectionPanel === nextPanel;
+        section.classList.toggle('hidden', !isSectionActive);
+        section.classList.toggle('is-active', isSectionActive);
     });
 
     document.querySelectorAll('[data-account-panel-target]').forEach((button) => {
@@ -16406,6 +16433,28 @@ function setActiveAccountProfilePanel(panel = 'profile') {
         button.classList.toggle('is-active', isActive);
         button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     });
+    updateAccountProfilePanelNavigation();
+}
+
+function updateAccountProfilePanelNavigation() {
+    const navWrap = document.getElementById('account-profile-panel-nav');
+    const titleEl = document.getElementById('account-profile-panel-title');
+    const backButton = document.getElementById('account-profile-back-btn');
+    const backLabelEl = document.getElementById('account-profile-back-label');
+    const profileContent = document.getElementById('account-profile-content');
+    if (!navWrap || !titleEl || !backButton || !backLabelEl) return;
+
+    const isAuthenticated = Boolean(accountAuthState.isAuthenticated);
+    const isExpanded = Boolean(accountProfileUiState.expanded);
+    const activePanel = String(accountProfileUiState.activePanel || 'profile').toLowerCase();
+    const panelMeta = ACCOUNT_PROFILE_PANEL_META[activePanel] || ACCOUNT_PROFILE_PANEL_META.profile;
+    const shouldShowNav = isAuthenticated && isExpanded && profileContent && !profileContent.classList.contains('hidden');
+
+    navWrap.classList.toggle('hidden', !shouldShowNav);
+    titleEl.textContent = panelMeta.title;
+    backLabelEl.textContent = panelMeta.backLabel;
+    backButton.setAttribute('data-account-back-target', panelMeta.backTarget);
+    backButton.setAttribute('aria-label', panelMeta.backLabel);
 }
 
 function resolveAccountPanelFocusSelector(panel = accountProfileUiState.activePanel) {
@@ -16654,7 +16703,7 @@ function syncAccountAuthStatusForSessionState() {
         writeAccountAuthStatus('Checking session...', 'info');
         return;
     }
-    writeAccountAuthStatus(t('auth.status.guest'), 'neutral');
+    writeAccountAuthStatus(getStableTranslation('auth.status.guest'), 'neutral');
 }
 
 function getPasswordStrengthDetails(rawPassword) {
@@ -17521,7 +17570,7 @@ function applySessionPayloadToAuthState(sessionPayload, options = {}) {
         applyAccountProfileToForm();
         updateAccountChip();
         refreshAccountPrimaryAuthButton();
-        setAccountAuthStatus(t('auth.status.guest'), 'neutral');
+        setAccountAuthStatus(getStableTranslation('auth.status.guest'), 'neutral');
         setAccountSyncState('connected', 'Not signed in.');
         handleInsightsAccessStateChange();
         return {
@@ -17813,7 +17862,7 @@ async function neonFetch(url, options = {}) {
         const detail = normalizedDetail.includes('not authenticated')
             || normalizedDetail.includes('unauthorized')
             || response.status === 401
-            ? t('auth.status.guest')
+            ? getStableTranslation('auth.status.guest')
             : rawDetail;
         throw new Error(detail);
     }
@@ -17914,6 +17963,7 @@ function setAccountProfileSectionExpanded(expanded, options = {}) {
         accountProfileUiState.expanded = false;
         if (content) {
             content.classList.add('hidden');
+            content.classList.remove('is-open');
         }
         if (toggleButton) {
             toggleButton.setAttribute('aria-expanded', 'false');
@@ -17921,6 +17971,7 @@ function setAccountProfileSectionExpanded(expanded, options = {}) {
         if (toggleLabel) {
             toggleLabel.textContent = 'Manage';
         }
+        updateAccountProfilePanelNavigation();
         return;
     }
     const resolvedFocusSelector = focusSelector || resolveAccountPanelFocusSelector(panel);
@@ -17928,6 +17979,13 @@ function setAccountProfileSectionExpanded(expanded, options = {}) {
     accountProfileUiState.expanded = shouldExpand;
     if (content) {
         content.classList.toggle('hidden', !shouldExpand);
+        content.classList.toggle('is-open', shouldExpand);
+        if (shouldExpand && typeof content.scrollTo === 'function') {
+            content.scrollTo({
+                top: 0,
+                behavior: appState.reduceMotion ? 'auto' : 'smooth'
+            });
+        }
     }
     if (toggleButton) {
         toggleButton.setAttribute('aria-expanded', shouldExpand ? 'true' : 'false');
@@ -17941,6 +17999,7 @@ function setAccountProfileSectionExpanded(expanded, options = {}) {
             focusEl.focus();
         }
     }
+    updateAccountProfilePanelNavigation();
 }
 
 function markAccountFieldInvalid(fieldId) {
@@ -19011,7 +19070,7 @@ function openAccountModal() {
     } else if (canCheckRemoteSession) {
         setAccountAuthStatus('Checking session...', 'info');
     } else {
-        setAccountAuthStatus(t('auth.status.guest'), 'neutral');
+        setAccountAuthStatus(getStableTranslation('auth.status.guest'), 'neutral');
     }
     const initialFocusSelector = accountAuthState.isAuthenticated ? '#account-auth-hero-logout' : '#account-auth-email';
     openModal('account-modal', { initialFocus: initialFocusSelector });
@@ -19041,6 +19100,7 @@ function initAccount() {
     const profileToggleBtn = document.getElementById('account-profile-toggle');
     const authHeroLogoutBtn = document.getElementById('account-auth-hero-logout');
     const authHeroManageBtn = document.getElementById('account-auth-hero-manage');
+    const profileBackBtn = document.getElementById('account-profile-back-btn');
     const emailRequestPinBtn = document.getElementById('account-email-request-pin');
     const emailVerifyPinBtn = document.getElementById('account-email-verify-pin');
     const passwordUpdateBtn = document.getElementById('account-password-update');
@@ -19133,6 +19193,23 @@ function initAccount() {
                 panel: 'profile',
                 focusSelector: resolveAccountPanelFocusSelector('profile')
             });
+        });
+    }
+    if (profileBackBtn) {
+        profileBackBtn.addEventListener('click', () => {
+            if (!accountAuthState.isAuthenticated) return;
+            const backTarget = String(profileBackBtn.getAttribute('data-account-back-target') || '').toLowerCase();
+            if (backTarget === 'profile') {
+                setAccountProfileSectionExpanded(true, {
+                    panel: 'profile',
+                    focusSelector: resolveAccountPanelFocusSelector('profile')
+                });
+                return;
+            }
+            setAccountProfileSectionExpanded(false, { panel: accountProfileUiState.activePanel });
+            if (profileToggleBtn && typeof profileToggleBtn.focus === 'function') {
+                profileToggleBtn.focus();
+            }
         });
     }
     profilePanelButtons.forEach((button) => {
@@ -19307,7 +19384,7 @@ function initAccount() {
         setAccountSyncState('connecting', 'Checking account session...');
         setAccountAvatarStatus('Checking saved profile photo...', 'info');
     } else {
-        setAccountAuthStatus(t('auth.status.guest'), 'neutral');
+        setAccountAuthStatus(getStableTranslation('auth.status.guest'), 'neutral');
         setAccountSyncState('connected', 'Not signed in.');
     }
     if (avatarUrlInput) {

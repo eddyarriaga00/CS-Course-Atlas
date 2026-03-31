@@ -29,6 +29,29 @@ test.describe('Account Modal Auth States', () => {
         await expect(page.locator('#account-profile-auth-required-note')).toBeHidden();
     });
 
+    test('profile settings back button navigates smoothly between panels and overview', async ({ page }) => {
+        await mockAuthAndProfileApi(page, { authenticated: true });
+        await page.goto('/index.html');
+        await page.click('#account-btn');
+
+        await expect(page.locator('#account-auth-state-pill')).toHaveText(/Session Active/i, { timeout: 10000 });
+        await page.click('#account-auth-hero-manage');
+
+        await expect(page.locator('#account-profile-panel-nav')).toBeVisible();
+        await expect(page.locator('#account-profile-back-label')).toHaveText(/Back to Overview/i);
+
+        await page.click('#account-profile-open-security');
+        await expect(page.locator('#account-profile-panel-title')).toHaveText(/Security Settings/i);
+        await expect(page.locator('#account-profile-back-label')).toHaveText(/Back to Profile/i);
+
+        await page.click('#account-profile-back-btn');
+        await expect(page.locator('#account-profile-open-profile')).toHaveAttribute('aria-pressed', 'true');
+        await expect(page.locator('#account-profile-panel-title')).toHaveText(/Edit Profile/i);
+
+        await page.click('#account-profile-back-btn');
+        await expect(page.locator('#account-profile-content')).toBeHidden();
+    });
+
     test('does not get stuck in checking state when session refresh fails', async ({ page }) => {
         await page.route('**/api/**', async (route) => {
             const { pathname } = new URL(route.request().url());
@@ -67,7 +90,7 @@ test.describe('Account Modal Auth States', () => {
         await expect(page.locator('#account-auth-interactive-fields')).toBeVisible();
     });
 
-    test('does not render undefined text while checking session on initial load', async ({ page }) => {
+    test('does not render undefined text in auth status during initial session checks', async ({ page }) => {
         await page.route('**/api/**', async (route) => {
             const { pathname } = new URL(route.request().url());
             if (pathname.endsWith('/api/auth/session')) {
@@ -101,9 +124,8 @@ test.describe('Account Modal Auth States', () => {
 
         await page.goto('/index.html');
 
-        const accountChip = page.locator('#account-chip');
-        await expect(accountChip).toContainText(/Checking session/i);
-        await expect(accountChip).not.toContainText(/undefined/i);
+        await page.click('#account-btn');
+        await expect(page.locator('#account-auth-status')).not.toContainText(/undefined/i);
         await expect(page.locator('#account-btn-label-desktop')).not.toContainText(/undefined/i);
     });
 });

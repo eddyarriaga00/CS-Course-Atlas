@@ -4808,6 +4808,52 @@ body.dark .settings-modal-footer {
     gap: 0.8rem;
     border-top: 1px solid rgba(148, 163, 184, 0.22);
     padding-top: 0.85rem;
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#account-modal .account-profile-content.is-open {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#account-modal .account-profile-panel-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    border: 1px solid rgba(148, 163, 184, 0.26);
+    border-radius: 0.78rem;
+    background: rgba(15, 23, 42, 0.62);
+    padding: 0.45rem 0.52rem;
+}
+
+#account-modal .account-profile-back-btn {
+    border: 1px solid rgba(129, 140, 248, 0.48);
+    border-radius: 0.62rem;
+    background: rgba(79, 70, 229, 0.2);
+    color: #e2e8f0;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.34rem 0.58rem;
+    transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+}
+
+#account-modal .account-profile-back-btn:hover {
+    background: rgba(79, 70, 229, 0.34);
+    border-color: rgba(129, 140, 248, 0.7);
+    transform: translateY(-1px);
+}
+
+#account-modal .account-profile-panel-title {
+    margin: 0;
+    font-size: 0.74rem;
+    font-weight: 700;
+    color: #bfdbfe;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    text-align: right;
 }
 
 #account-modal .account-profile-section {
@@ -4815,6 +4861,14 @@ body.dark .settings-modal-footer {
     background: rgba(30, 41, 59, 0.44);
     border-radius: 0.9rem;
     padding: 0.8rem;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+#account-modal .account-profile-section.is-active {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 #account-modal .account-profile-security-section {
@@ -7661,6 +7715,12 @@ body.dark:not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-min
 
     #account-modal .account-profile-actions {
         grid-template-columns: 1fr;
+    }
+
+    #account-modal .account-profile-panel-nav {
+        position: sticky;
+        top: 0;
+        z-index: 2;
     }
 
     #account-modal .account-profile-toggle-btn {
