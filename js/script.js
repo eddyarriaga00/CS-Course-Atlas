@@ -182,6 +182,8 @@ let lastSavedAppStateJson = null;
 
 const MOBILE_COMPACT_MEDIA_QUERY = '(max-width: 640px)';
 const AUTH_SESSION_REFRESH_COOLDOWN_MS = 1600;
+const NEON_FETCH_TIMEOUT_MS = 12000;
+const AUTH_SESSION_FETCH_TIMEOUT_MS = 5000;
 const OAUTH_RECOVERY_STORAGE_KEY = 'atlasOauthRecoveryPending';
 const OAUTH_RECOVERY_MAX_AGE_MS = 15 * 60 * 1000;
 const AUTH_SESSION_TOKEN_STORAGE_KEY = 'atlasSessionToken';
@@ -17696,7 +17698,7 @@ async function loadAuthProviderAvailability(options = {}) {
         return null;
     }
     try {
-        const payload = await neonFetch(getNeonOAuthProvidersEndpoint(), { method: 'GET' });
+        const payload = await neonFetch(getNeonOAuthProvidersEndpoint(), { method: 'GET', timeoutMs: AUTH_SESSION_FETCH_TIMEOUT_MS });
         const providers = payload?.providers && typeof payload.providers === 'object'
             ? payload.providers
             : {};
@@ -17724,15 +17726,20 @@ function hasNeonSyncConfig() {
 
 async function neonFetch(url, options = {}) {
     const method = String(options.method || 'GET').toUpperCase();
+    const requestedTimeoutMs = Number(options.timeoutMs);
+    const timeoutMs = Number.isFinite(requestedTimeoutMs) && requestedTimeoutMs > 0
+        ? requestedTimeoutMs
+        : NEON_FETCH_TIMEOUT_MS;
+    const { timeoutMs: _timeoutOverride, ...requestOptions } = options;
     const headers = {
         'X-Requested-With': 'XMLHttpRequest',
-        ...(options.headers || {})
+        ...(requestOptions.headers || {})
     };
     const authSessionToken = getSessionToken();
     if (authSessionToken && !headers.Authorization && !headers['X-Session-Token']) {
         headers.Authorization = `Bearer ${authSessionToken}`;
     }
-    if (!headers['Content-Type'] && !(options.body instanceof FormData)) {
+    if (!headers['Content-Type'] && !(requestOptions.body instanceof FormData)) {
         headers['Content-Type'] = 'application/json';
     }
     if (!['GET', 'HEAD', 'OPTIONS'].includes(method)) {
@@ -17742,15 +17749,54 @@ async function neonFetch(url, options = {}) {
         }
     }
     const fetchOptions = {
-        ...options,
+        ...requestOptions,
         method,
         credentials: 'include',
         headers
     };
-    if (!Object.prototype.hasOwnProperty.call(options, 'cache')) {
+    if (!Object.prototype.hasOwnProperty.call(requestOptions, 'cache')) {
         fetchOptions.cache = 'no-store';
     }
-    const response = await fetch(url, fetchOptions);
+    const externalSignal = requestOptions.signal;
+    let timeoutTimer = null;
+    let timeoutTriggered = false;
+    let externalAbortListener = null;
+
+    if (typeof AbortController !== 'undefined' && timeoutMs > 0) {
+        const controller = new AbortController();
+        fetchOptions.signal = controller.signal;
+        if (externalSignal) {
+            if (externalSignal.aborted) {
+                controller.abort(externalSignal.reason);
+            } else if (typeof externalSignal.addEventListener === 'function') {
+                externalAbortListener = () => controller.abort(externalSignal.reason);
+                externalSignal.addEventListener('abort', externalAbortListener, { once: true });
+            }
+        }
+        timeoutTimer = setTimeout(() => {
+            timeoutTriggered = true;
+            controller.abort();
+        }, timeoutMs);
+    } else if (externalSignal) {
+        fetchOptions.signal = externalSignal;
+    }
+
+    let response;
+    try {
+        response = await fetch(url, fetchOptions);
+    } catch (error) {
+        if (timeoutTriggered) {
+            throw new Error('Request timed out. Please try again.');
+        }
+        throw error;
+    } finally {
+        if (timeoutTimer) {
+            clearTimeout(timeoutTimer);
+        }
+        if (externalSignal && externalAbortListener && typeof externalSignal.removeEventListener === 'function') {
+            externalSignal.removeEventListener('abort', externalAbortListener);
+        }
+    }
     const rawText = await response.text();
     let payload = null;
     try {
@@ -18351,7 +18397,7 @@ async function checkNeonSession(options = {}) {
     const sessionCheckId = ++neonSessionCheckCounter;
     const isLatestSessionCheck = () => sessionCheckId === neonSessionCheckCounter;
     if (!hasNeonSyncConfig()) {
-        accountAuthState.isSessionHydrating = false;
+        setAccountSessionHydrating(false);
         setCsrfToken('');
         setSessionToken('');
         accountAuthState.isAuthenticated = false;
@@ -18365,7 +18411,10 @@ async function checkNeonSession(options = {}) {
     }
     const url = getNeonSessionEndpoint();
     try {
-        const sessionPayload = await neonFetch(url, { method: 'GET' });
+        const sessionPayload = await neonFetch(url, {
+            method: 'GET',
+            timeoutMs: AUTH_SESSION_FETCH_TIMEOUT_MS
+        });
         const sessionUser = getSessionUserFromPayload(sessionPayload);
         const userLabel = sessionUser.userUsername || sessionUser.userEmail || sessionUser.userId || String(accountProfile.serverUserId || '').trim();
         const isAuthenticated = resolveSessionAuthenticatedFlag(sessionPayload, sessionUser);
@@ -18376,7 +18425,7 @@ async function checkNeonSession(options = {}) {
                 defaultProvider: accountAuthState.providerKey || 'password',
                 silent: true
             });
-            accountAuthState.isSessionHydrating = false;
+            setAccountSessionHydrating(false);
         }
         return { userId: resolvedUserId, userLabel, isAuthenticated };
     } catch (error) {
@@ -18384,7 +18433,7 @@ async function checkNeonSession(options = {}) {
         const normalizedReason = reason.toLowerCase();
         const isUnauthenticated = normalizedReason.includes('not authenticated') || normalizedReason.includes('401');
         if (isLatestSessionCheck()) {
-            accountAuthState.isSessionHydrating = false;
+            setAccountSessionHydrating(false);
             if (isUnauthenticated) {
                 applySessionPayloadToAuthState({ authenticated: false }, { source: 'Session', silent: true });
             } else {
@@ -24374,10 +24423,24 @@ function ensureEnhancedVisualAssets() {
     return enhancedVisualAssetState.loadPromise;
 }
 
-function destroyEnhancedChart(chartKey) {
+function destroyEnhancedChart(chartKey, canvas = null) {
     const chart = enhancedVisualCharts[chartKey];
     if (chart && typeof chart.destroy === 'function') {
-        chart.destroy();
+        try {
+            chart.destroy();
+        } catch (error) {
+            console.warn(`Chart destroy failed for ${chartKey}:`, error);
+        }
+    }
+    if (canvas && typeof window.Chart?.getChart === 'function') {
+        const boundChart = window.Chart.getChart(canvas);
+        if (boundChart && boundChart !== chart && typeof boundChart.destroy === 'function') {
+            try {
+                boundChart.destroy();
+            } catch (error) {
+                console.warn(`Canvas chart destroy failed for ${chartKey}:`, error);
+            }
+        }
     }
     enhancedVisualCharts[chartKey] = null;
 }
@@ -24386,7 +24449,7 @@ function renderSearchDistributionChart(filteredModules = []) {
     const canvas = document.getElementById('smart-search-chart');
     if (!canvas) return;
     if (typeof window.Chart !== 'function') {
-        destroyEnhancedChart('search');
+        destroyEnhancedChart('search', canvas);
         return;
     }
 
@@ -24396,45 +24459,50 @@ function renderSearchDistributionChart(filteredModules = []) {
     const borderColor = document.body.classList.contains('dark') ? 'rgba(226,232,240,0.26)' : 'rgba(15,23,42,0.16)';
     const tickColor = document.body.classList.contains('dark') ? '#cbd5e1' : '#334155';
 
-    destroyEnhancedChart('search');
+    destroyEnhancedChart('search', canvas);
     const context = canvas.getContext('2d');
     if (!context) return;
-    enhancedVisualCharts.search = new window.Chart(context, {
-        type: 'bar',
-        data: {
-            labels,
-            datasets: [{
-                label: translateLiteral('Filtered modules', appState.language),
-                data: values,
-                borderRadius: 10,
-                borderWidth: 1,
-                backgroundColor: ['rgba(16,185,129,0.65)', 'rgba(245,158,11,0.65)', 'rgba(244,63,94,0.65)'],
-                borderColor: ['rgba(16,185,129,1)', 'rgba(245,158,11,1)', 'rgba(244,63,94,1)']
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            parsing: false,
-            normalized: true,
-            animation: { duration: appState.reduceMotion ? 0 : 550 },
-            plugins: {
-                legend: { display: false }
+    try {
+        enhancedVisualCharts.search = new window.Chart(context, {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [{
+                    label: translateLiteral('Filtered modules', appState.language),
+                    data: values,
+                    borderRadius: 10,
+                    borderWidth: 1,
+                    backgroundColor: ['rgba(16,185,129,0.65)', 'rgba(245,158,11,0.65)', 'rgba(244,63,94,0.65)'],
+                    borderColor: ['rgba(16,185,129,1)', 'rgba(245,158,11,1)', 'rgba(244,63,94,1)']
+                }]
             },
-            scales: {
-                x: {
-                    grid: { display: false },
-                    ticks: { color: tickColor }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                parsing: false,
+                normalized: true,
+                animation: { duration: appState.reduceMotion ? 0 : 550 },
+                plugins: {
+                    legend: { display: false }
                 },
-                y: {
-                    beginAtZero: true,
-                    precision: 0,
-                    ticks: { color: tickColor, stepSize: 1 },
-                    grid: { color: borderColor }
+                scales: {
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: tickColor }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        precision: 0,
+                        ticks: { color: tickColor, stepSize: 1 },
+                        grid: { color: borderColor }
+                    }
                 }
             }
-        }
-    });
+        });
+    } catch (error) {
+        destroyEnhancedChart('search', canvas);
+        console.warn('Search chart render failed:', error);
+    }
 }
 
 function renderEnhancedSearchInsights(filteredModules = []) {
@@ -24473,11 +24541,11 @@ function renderInsightsProgressChart({ hasAccess = false, stats = null, guestPre
     const canvas = document.getElementById('insight-progress-chart');
     if (!canvas) return;
     if (typeof window.Chart !== 'function') {
-        destroyEnhancedChart('insights');
+        destroyEnhancedChart('insights', canvas);
         return;
     }
 
-    destroyEnhancedChart('insights');
+    destroyEnhancedChart('insights', canvas);
     const context = canvas.getContext('2d');
     if (!context) return;
 
@@ -24487,30 +24555,35 @@ function renderInsightsProgressChart({ hasAccess = false, stats = null, guestPre
     if (!hasAccess || !stats) {
         const completed = guestPreview?.completed || 0;
         const total = Math.max(guestPreview?.total || 1, 1);
-        enhancedVisualCharts.insights = new window.Chart(context, {
-            type: 'doughnut',
-            data: {
-                labels: [translateLiteral('Completed', appState.language), translateLiteral('Remaining', appState.language)],
-                datasets: [{
-                    data: [completed, Math.max(total - completed, 0)],
-                    backgroundColor: ['rgba(99,102,241,0.85)', 'rgba(148,163,184,0.45)'],
-                    borderColor: ['rgba(129,140,248,1)', 'rgba(148,163,184,0.8)'],
-                    borderWidth: 1.5
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                parsing: false,
-                normalized: true,
-                animation: { duration: appState.reduceMotion ? 0 : 500 },
-                plugins: {
-                    legend: {
-                        labels: { color: tickColor, boxWidth: 12 }
+        try {
+            enhancedVisualCharts.insights = new window.Chart(context, {
+                type: 'doughnut',
+                data: {
+                    labels: [translateLiteral('Completed', appState.language), translateLiteral('Remaining', appState.language)],
+                    datasets: [{
+                        data: [completed, Math.max(total - completed, 0)],
+                        backgroundColor: ['rgba(99,102,241,0.85)', 'rgba(148,163,184,0.45)'],
+                        borderColor: ['rgba(129,140,248,1)', 'rgba(148,163,184,0.8)'],
+                        borderWidth: 1.5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    parsing: false,
+                    normalized: true,
+                    animation: { duration: appState.reduceMotion ? 0 : 500 },
+                    plugins: {
+                        legend: {
+                            labels: { color: tickColor, boxWidth: 12 }
+                        }
                     }
                 }
-            }
-        });
+            });
+        } catch (error) {
+            destroyEnhancedChart('insights', canvas);
+            console.warn('Insights chart render failed:', error);
+        }
         return;
     }
 
@@ -24522,55 +24595,60 @@ function renderInsightsProgressChart({ hasAccess = false, stats = null, guestPre
         return Math.max(totalByLevel - (stats.completedByDifficulty?.[level] || 0), 0);
     });
 
-    enhancedVisualCharts.insights = new window.Chart(context, {
-        type: 'bar',
-        data: {
-            labels,
-            datasets: [
-                {
-                    label: translateLiteral('Completed', appState.language),
-                    data: completedByDifficulty,
-                    backgroundColor: 'rgba(16,185,129,0.75)',
-                    borderColor: 'rgba(16,185,129,1)',
-                    borderWidth: 1,
-                    borderRadius: 8
-                },
-                {
-                    label: translateLiteral('Remaining', appState.language),
-                    data: remainingByDifficulty,
-                    backgroundColor: 'rgba(99,102,241,0.45)',
-                    borderColor: 'rgba(99,102,241,0.9)',
-                    borderWidth: 1,
-                    borderRadius: 8
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            parsing: false,
-            normalized: true,
-            animation: { duration: appState.reduceMotion ? 0 : 550 },
-            plugins: {
-                legend: {
-                    labels: { color: tickColor, boxWidth: 12 }
-                }
+    try {
+        enhancedVisualCharts.insights = new window.Chart(context, {
+            type: 'bar',
+            data: {
+                labels,
+                datasets: [
+                    {
+                        label: translateLiteral('Completed', appState.language),
+                        data: completedByDifficulty,
+                        backgroundColor: 'rgba(16,185,129,0.75)',
+                        borderColor: 'rgba(16,185,129,1)',
+                        borderWidth: 1,
+                        borderRadius: 8
+                    },
+                    {
+                        label: translateLiteral('Remaining', appState.language),
+                        data: remainingByDifficulty,
+                        backgroundColor: 'rgba(99,102,241,0.45)',
+                        borderColor: 'rgba(99,102,241,0.9)',
+                        borderWidth: 1,
+                        borderRadius: 8
+                    }
+                ]
             },
-            scales: {
-                x: {
-                    stacked: true,
-                    ticks: { color: tickColor },
-                    grid: { display: false }
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                parsing: false,
+                normalized: true,
+                animation: { duration: appState.reduceMotion ? 0 : 550 },
+                plugins: {
+                    legend: {
+                        labels: { color: tickColor, boxWidth: 12 }
+                    }
                 },
-                y: {
-                    stacked: true,
-                    beginAtZero: true,
-                    ticks: { color: tickColor, stepSize: 1, precision: 0 },
-                    grid: { color: borderColor }
+                scales: {
+                    x: {
+                        stacked: true,
+                        ticks: { color: tickColor },
+                        grid: { display: false }
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true,
+                        ticks: { color: tickColor, stepSize: 1, precision: 0 },
+                        grid: { color: borderColor }
+                    }
                 }
             }
-        }
-    });
+        });
+    } catch (error) {
+        destroyEnhancedChart('insights', canvas);
+        console.warn('Insights bar chart render failed:', error);
+    }
 }
 
 function escapeMermaidLabel(value = '') {
