@@ -110,6 +110,10 @@ const OAUTH_STATE_SECRET_RUNTIME = OAUTH_STATE_SECRET || randomToken(48);
 const OAUTH_JWKS_CACHE_MAX_AGE_MS = readPositiveInteger(process.env.OAUTH_JWKS_CACHE_MAX_AGE_MS, 30 * 60 * 1000);
 const OAUTH_SESSION_TICKET_TTL_MS = readPositiveInteger(process.env.OAUTH_SESSION_TICKET_TTL_MS, 2 * 60 * 1000);
 const OAUTH_SESSION_TICKET_MAX_ENTRIES = readPositiveInteger(process.env.OAUTH_SESSION_TICKET_MAX_ENTRIES, 512);
+const OAUTH_SESSION_TICKET_MAX_EXCHANGES = Math.max(
+    1,
+    readPositiveInteger(process.env.OAUTH_SESSION_TICKET_MAX_EXCHANGES, 3)
+);
 const OPTIONAL_OAUTH_ENV_PLACEHOLDERS = new Set([
     '__disabled__',
     '__unset__',
@@ -914,7 +918,8 @@ function issueOAuthSessionExchangeTicket(sessionToken) {
     const ticket = randomToken(24);
     oauthSessionTicketStore.set(ticket, {
         sessionToken: normalizedToken,
-        expiresAt: Date.now() + OAUTH_SESSION_TICKET_TTL_MS
+        expiresAt: Date.now() + OAUTH_SESSION_TICKET_TTL_MS,
+        remainingExchanges: OAUTH_SESSION_TICKET_MAX_EXCHANGES
     });
     return ticket;
 }
@@ -923,13 +928,27 @@ function consumeOAuthSessionExchangeTicket(ticket) {
     const normalizedTicket = safeString(ticket);
     if (!normalizedTicket) return '';
     const entry = oauthSessionTicketStore.get(normalizedTicket);
-    oauthSessionTicketStore.delete(normalizedTicket);
     if (!entry) return '';
     const expiresAt = Number(entry.expiresAt || 0);
     if (!expiresAt || expiresAt < Date.now()) {
+        oauthSessionTicketStore.delete(normalizedTicket);
         return '';
     }
-    return safeString(entry.sessionToken);
+    const sessionToken = safeString(entry.sessionToken);
+    if (!sessionToken) {
+        oauthSessionTicketStore.delete(normalizedTicket);
+        return '';
+    }
+    const remainingExchanges = Number(entry.remainingExchanges || 1);
+    if (!Number.isFinite(remainingExchanges) || remainingExchanges <= 1) {
+        oauthSessionTicketStore.delete(normalizedTicket);
+    } else {
+        oauthSessionTicketStore.set(normalizedTicket, {
+            ...entry,
+            remainingExchanges: remainingExchanges - 1
+        });
+    }
+    return sessionToken;
 }
 
 function getOAuthProviderCredentials(provider) {

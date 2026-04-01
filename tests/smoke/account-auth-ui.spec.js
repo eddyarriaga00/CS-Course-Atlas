@@ -217,4 +217,80 @@ test.describe('Account Modal Auth States', () => {
         await expect(page.locator('#account-auth-submit')).toBeEnabled();
         await expect(page.locator('#account-btn')).not.toHaveClass(/account-btn-authenticated/);
     });
+
+    test('recovers from transient OAuth ticket exchange failure and signs in', async ({ page }) => {
+        let exchangeAttempts = 0;
+
+        await page.route('**/api/**', async (route) => {
+            const { pathname } = new URL(route.request().url());
+            if (pathname.endsWith('/api/auth/session')) {
+                await route.fulfill({
+                    status: 200,
+                    contentType: 'application/json',
+                    body: JSON.stringify({
+                        authenticated: false,
+                        user: null
+                    })
+                });
+                return;
+            }
+            if (pathname.endsWith('/api/auth/oauth/providers')) {
+                await route.fulfill({
+                    status: 200,
+                    contentType: 'application/json',
+                    body: JSON.stringify({
+                        providers: {
+                            google: { enabled: true },
+                            github: { enabled: true }
+                        }
+                    })
+                });
+                return;
+            }
+            if (pathname.endsWith('/api/auth/oauth/exchange-ticket')) {
+                exchangeAttempts += 1;
+                if (exchangeAttempts === 1) {
+                    await route.fulfill({
+                        status: 503,
+                        contentType: 'application/json',
+                        body: JSON.stringify({ error: 'Temporary exchange failure' })
+                    });
+                    return;
+                }
+                await route.fulfill({
+                    status: 200,
+                    contentType: 'application/json',
+                    body: JSON.stringify({
+                        authenticated: true,
+                        csrfToken: 'oauth-csrf-token',
+                        sessionToken: 'oauth-session-token',
+                        authProvider: 'google',
+                        user: {
+                            id: 'oauth-user-001',
+                            username: 'Eddy',
+                            email: 'eddy@example.com',
+                            goal: 'interview',
+                            socialHandle: 'eddydev',
+                            socialStatus: 'Recovered after retry',
+                            messagingEnabled: true
+                        }
+                    })
+                });
+                return;
+            }
+            await route.fulfill({
+                status: 200,
+                contentType: 'application/json',
+                body: '{}'
+            });
+        });
+
+        await page.goto('/index.html?oauth=success&oauth_provider=google&oauth_ticket=retry-ticket');
+        await page.click('#account-btn');
+
+        await expect.poll(() => exchangeAttempts, { timeout: 10000 }).toBeGreaterThan(1);
+        await expect(page.locator('#account-auth-state-pill')).toHaveText(/Session Active/i, { timeout: 10000 });
+        await expect(page.locator('#account-auth-hero-logout')).toBeVisible();
+        await expect(page.locator('#account-btn')).toHaveClass(/account-btn-authenticated/);
+    });
 });

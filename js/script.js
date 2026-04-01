@@ -188,6 +188,9 @@ const AUTH_SESSION_FETCH_TIMEOUT_MS = 3500;
 const AUTH_SESSION_HYDRATION_FAILSAFE_MS = 8500;
 const OAUTH_RECOVERY_STORAGE_KEY = 'atlasOauthRecoveryPending';
 const OAUTH_RECOVERY_MAX_AGE_MS = 15 * 60 * 1000;
+const OAUTH_TICKET_EXCHANGE_MAX_ATTEMPTS = 4;
+const OAUTH_TICKET_EXCHANGE_RETRY_DELAY_MS = 700;
+const OAUTH_TICKET_RECOVERY_EXCHANGE_ATTEMPTS = 2;
 const AUTH_SESSION_TOKEN_STORAGE_KEY = 'atlasSessionToken';
 const AUTH_SESSION_TOKEN_PERSIST_STORAGE_KEY = 'atlasSessionTokenPersist';
 const UI_ICONS = Object.freeze({
@@ -17362,6 +17365,90 @@ function describeOAuthError(errorCode, providerLabel) {
     return 'Social sign-in failed. Please try again.';
 }
 
+function createDelayPromise(delayMs) {
+    const waitMs = Math.max(0, Number(delayMs) || 0);
+    return new Promise((resolve) => setTimeout(resolve, waitMs));
+}
+
+async function exchangeOAuthTicketForSession(ticket, options = {}) {
+    const {
+        providerKey = '',
+        providerLabel = 'Google',
+        silent = true
+    } = options;
+    const normalizedTicket = String(ticket || '').trim();
+    if (!normalizedTicket) {
+        return {
+            isAuthenticated: false,
+            invalidTicket: true,
+            error: new Error('Missing OAuth exchange ticket.')
+        };
+    }
+    try {
+        const ticketPayload = await neonFetch(getNeonOAuthTicketExchangeEndpoint(), {
+            method: 'POST',
+            body: JSON.stringify({ ticket: normalizedTicket })
+        });
+        const appliedSession = applySessionPayloadToAuthState(ticketPayload, {
+            source: `${providerLabel} session`,
+            defaultProvider: providerKey || 'google',
+            rememberSessionToken: true,
+            silent
+        });
+        return {
+            isAuthenticated: Boolean(appliedSession?.isAuthenticated),
+            invalidTicket: false,
+            error: null
+        };
+    } catch (error) {
+        const reason = error instanceof Error ? error.message : String(error);
+        const normalizedReason = String(reason || '').toLowerCase();
+        const invalidTicket = normalizedReason.includes('ticket expired')
+            || normalizedReason.includes('ticket is required')
+            || normalizedReason.includes('ticket expired or invalid')
+            || (normalizedReason.includes('ticket') && normalizedReason.includes('invalid'));
+        return {
+            isAuthenticated: false,
+            invalidTicket,
+            error: error instanceof Error ? error : new Error(String(reason || 'OAuth exchange failed.'))
+        };
+    }
+}
+
+async function exchangeOAuthTicketForSessionWithRetry(ticket, options = {}) {
+    const {
+        providerKey = '',
+        providerLabel = 'Google',
+        maxAttempts = OAUTH_TICKET_EXCHANGE_MAX_ATTEMPTS,
+        attemptDelayMs = OAUTH_TICKET_EXCHANGE_RETRY_DELAY_MS,
+        silent = true
+    } = options;
+    const totalAttempts = Math.max(1, Number(maxAttempts) || 1);
+    let latestResult = {
+        isAuthenticated: false,
+        invalidTicket: false,
+        error: null
+    };
+
+    for (let attempt = 0; attempt < totalAttempts; attempt += 1) {
+        latestResult = await exchangeOAuthTicketForSession(ticket, {
+            providerKey,
+            providerLabel,
+            silent
+        });
+        if (latestResult.isAuthenticated) {
+            return latestResult;
+        }
+        if (latestResult.invalidTicket) {
+            return latestResult;
+        }
+        if (attempt < totalAttempts - 1) {
+            await createDelayPromise(attemptDelayMs);
+        }
+    }
+    return latestResult;
+}
+
 async function handleOAuthResultFromUrl() {
     try {
         const oauthResult = consumeOAuthResultFromUrl();
@@ -17384,26 +17471,24 @@ async function handleOAuthResultFromUrl() {
             }
 
             if (oauthResult.ticket) {
-                try {
-                    const ticketPayload = await neonFetch(getNeonOAuthTicketExchangeEndpoint(), {
-                        method: 'POST',
-                        body: JSON.stringify({ ticket: oauthResult.ticket })
-                    });
-                    const appliedSession = applySessionPayloadToAuthState(ticketPayload, {
-                        source: `${providerLabel} session`,
-                        defaultProvider: providerKey || 'google',
-                        rememberSessionToken: true,
-                        silent: true
-                    });
-                    if (appliedSession?.isAuthenticated) {
-                        setAccountSessionHydrating(false);
-                        const successMessage = `${providerLabel} account connected.`;
-                        setAccountAuthStatus(successMessage, 'success');
-                        showToast(successMessage, 'success');
-                        return;
-                    }
-                } catch (exchangeError) {
-                    const exchangeReason = exchangeError instanceof Error ? exchangeError.message : String(exchangeError);
+                const exchangeResult = await exchangeOAuthTicketForSessionWithRetry(oauthResult.ticket, {
+                    providerKey,
+                    providerLabel,
+                    maxAttempts: OAUTH_TICKET_EXCHANGE_MAX_ATTEMPTS,
+                    attemptDelayMs: OAUTH_TICKET_EXCHANGE_RETRY_DELAY_MS,
+                    silent: true
+                });
+                if (exchangeResult.isAuthenticated || accountAuthState.isAuthenticated) {
+                    setAccountSessionHydrating(false);
+                    const successMessage = `${providerLabel} account connected.`;
+                    setAccountAuthStatus(successMessage, 'success');
+                    showToast(successMessage, 'success');
+                    return;
+                }
+                if (exchangeResult.error) {
+                    const exchangeReason = exchangeResult.error instanceof Error
+                        ? exchangeResult.error.message
+                        : String(exchangeResult.error);
                     console.warn('OAuth ticket exchange failed:', exchangeReason);
                 }
             }
@@ -17430,10 +17515,11 @@ async function handleOAuthResultFromUrl() {
                 : `${providerLabel} sign-in completed, but session verification has not finished yet. Keeping a background retry running now.`;
             setAccountAuthStatus(syncFailureMessage, 'error');
             showToast(syncFailureMessage, 'warning');
-            setPendingAuthRecoveryState(providerKey, providerLabel);
+            setPendingAuthRecoveryState(providerKey, providerLabel, oauthResult.ticket || '');
             runSafeBackgroundTask(runAuthSessionRecoveryProbe({
                 providerKey,
                 providerLabel,
+                ticket: oauthResult.ticket || '',
                 maxAttempts: 90,
                 attemptDelayMs: 2000
             }), 'OAuth session recovery probe');
@@ -17777,10 +17863,8 @@ function isCrossOriginApiRuntime() {
 }
 
 function shouldRedirectToCanonicalFrontendForAuth() {
-    if (typeof window === 'undefined') return false;
-    if (!isCrossOriginApiRuntime()) return false;
-    const host = String(window.location.hostname || '').toLowerCase();
-    return host === 'cscourseatlas.com' || host === 'www.cscourseatlas.com';
+    // Keep auth on the current frontend host.
+    return false;
 }
 
 function shouldRedirectToApiHostedFrontendForAuth() {
@@ -19045,22 +19129,25 @@ function readPendingAuthRecoveryState() {
         const providerKey = normalizeAuthProviderKey(parsed?.providerKey || parsed?.providerLabel || '');
         const providerLabel = String(parsed?.providerLabel || '').trim()
             || (providerKey ? getAuthProviderLabel(providerKey) : '');
-        return { providerKey, providerLabel, createdAt };
+        const ticket = String(parsed?.ticket || '').trim();
+        return { providerKey, providerLabel, ticket, createdAt };
     } catch (error) {
         safeRemoveItem(OAUTH_RECOVERY_STORAGE_KEY);
         return null;
     }
 }
 
-function setPendingAuthRecoveryState(providerKey = '', providerLabel = '') {
+function setPendingAuthRecoveryState(providerKey = '', providerLabel = '', ticket = '') {
     const normalizedProviderKey = normalizeAuthProviderKey(providerKey || providerLabel);
     const normalizedProviderLabel = String(providerLabel || '').trim()
         || (normalizedProviderKey ? getAuthProviderLabel(normalizedProviderKey) : '');
+    const normalizedTicket = String(ticket || '').trim();
     safeSetItem(
         OAUTH_RECOVERY_STORAGE_KEY,
         JSON.stringify({
             providerKey: normalizedProviderKey,
             providerLabel: normalizedProviderLabel,
+            ticket: normalizedTicket,
             createdAt: Date.now()
         })
     );
@@ -19077,11 +19164,38 @@ async function runAuthSessionRecoveryProbe(options = {}) {
     const {
         providerKey = '',
         providerLabel = '',
+        ticket = '',
         maxAttempts = 18,
         attemptDelayMs = 1200
     } = options;
     authSessionRecoveryProbeInFlight = true;
     try {
+        const normalizedTicket = String(ticket || '').trim();
+        if (!accountAuthState.isAuthenticated && normalizedTicket) {
+            const exchangeResult = await exchangeOAuthTicketForSessionWithRetry(normalizedTicket, {
+                providerKey,
+                providerLabel,
+                maxAttempts: OAUTH_TICKET_RECOVERY_EXCHANGE_ATTEMPTS,
+                attemptDelayMs: OAUTH_TICKET_EXCHANGE_RETRY_DELAY_MS,
+                silent: true
+            });
+            if (exchangeResult.isAuthenticated || accountAuthState.isAuthenticated) {
+                if (providerKey || providerLabel) {
+                    setAccountProviderState(providerKey, providerLabel);
+                }
+                clearPendingAuthRecoveryState();
+                updateAccountChip();
+                refreshAccountPrimaryAuthButton();
+                const recoveredLabel = providerLabel || getAuthProviderLabel(normalizeAuthProviderKey(providerKey));
+                const recoveredMessage = recoveredLabel
+                    ? `${recoveredLabel} sign-in verified.`
+                    : 'Sign-in verified.';
+                setAccountAuthStatus(recoveredMessage, 'success');
+                showToast(recoveredMessage, 'success');
+                return true;
+            }
+        }
+
         const recoveredSession = await waitForVerifiedAuthSession({
             maxAttempts,
             attemptDelayMs,
@@ -19124,6 +19238,7 @@ async function resumePendingAuthRecoveryProbe(options = {}) {
     return runAuthSessionRecoveryProbe({
         providerKey: pendingRecovery.providerKey,
         providerLabel: pendingRecovery.providerLabel,
+        ticket: pendingRecovery.ticket,
         maxAttempts,
         attemptDelayMs
     });
