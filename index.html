@@ -518,9 +518,9 @@
                     <p class="text-xs sm:text-sm text-slate-300 mt-1">Check retention and exam readiness.</p>
                 </button>
                 <button type="button" onclick="openAccountModal()" class="text-left rounded-xl border border-white/10 bg-slate-900/70 p-4 hover:bg-slate-800/80 transition-all duration-200">
-                    <p class="text-sm font-semibold text-slate-100">Account Sync</p>
-                    <p class="text-xs sm:text-sm text-slate-300 mt-1">Save and sync your progress and profile settings.</p>
-                </button>
+                        <p class="text-sm font-semibold text-slate-100" data-i18n="account.card.title">Account Sync</p>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-1" data-i18n="account.card.subtitle">Save and sync your progress and profile settings.</p>
+                    </button>
             </div>
         </section>
 
@@ -1611,10 +1611,10 @@
         <div class="modal-panel account-modal-panel rounded-2xl w-full max-w-xl shadow-2xl bg-white text-slate-900 border border-slate-200 bg-slate-900 text-slate-100 border-white/10">
             <div class="account-modal-header flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
                 <div>
-                    <h3 id="account-modal-title" class="text-2xl font-semibold text-indigo-300">Account &amp; Secure Access</h3>
-                    <p class="text-sm text-slate-300 mt-1">Clean auth flow with secure session-based access.</p>
+                    <h3 id="account-modal-title" class="text-2xl font-semibold text-indigo-300" data-i18n="account.modal.title">Account &amp; Secure Access</h3>
+                    <p class="text-sm text-slate-300 mt-1" data-i18n="account.modal.subtitle">Clean auth flow with secure session-based access.</p>
                 </div>
-                <button id="close-account" type="button" class="account-modal-header-close text-2xl transition-colors duration-200 text-slate-200 hover:text-white" aria-label="Close account dialog">&times;</button>
+                <button id="close-account" type="button" class="account-modal-header-close text-2xl transition-colors duration-200 text-slate-200 hover:text-white" aria-label="Close account dialog" data-i18n-aria-label="account.modal.closeAria">&times;</button>
             </div>
 
             <div class="account-modal-body p-6">
@@ -1626,28 +1626,28 @@
                         </div>
                         <h4 id="account-auth-flow-title" class="text-lg font-semibold text-slate-100">Log In to Your Account</h4>
                         <p id="account-auth-flow-subtitle" class="text-xs text-slate-300">Use a provider or continue with your email/username and password.</p>
-                        <button id="account-auth-retry-session" type="button" class="account-profile-action-btn hidden">Retry Session Check</button>
+                        <button id="account-auth-retry-session" type="button" class="account-profile-action-btn hidden" data-i18n="auth.retrySession">Retry Session Check</button>
 
                         <div id="account-auth-signed-in-note" class="account-auth-signed-in-note hidden" role="status" aria-live="polite">
-                            <p class="account-auth-signed-in-kicker">Signed In</p>
+                            <p class="account-auth-signed-in-kicker" data-i18n="account.signedIn.kicker">Signed In</p>
                             <p id="account-auth-signed-in-user" class="account-auth-signed-in-user">Session active</p>
-                            <p class="account-auth-signed-in-copy">Your profile and secure settings are now unlocked.</p>
+                            <p class="account-auth-signed-in-copy" data-i18n="account.signedIn.copy">Your profile and secure settings are now unlocked.</p>
                         </div>
 
                         <div id="account-auth-signed-in-actions" class="account-auth-signed-in-actions hidden">
-                            <button id="account-auth-hero-manage" type="button" class="account-primary-btn bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-2 rounded-xl font-medium">Open Profile Settings</button>
-                            <button id="account-auth-hero-logout" type="button" class="account-profile-logout-btn">Sign Out</button>
+                            <button id="account-auth-hero-manage" type="button" class="account-primary-btn bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-2 rounded-xl font-medium" data-i18n="account.actions.openProfileSettings">Open Profile Settings</button>
+                            <button id="account-auth-hero-logout" type="button" class="account-profile-logout-btn" data-i18n="account.actions.signOut">Sign Out</button>
                         </div>
                     </div>
 
                     <div id="account-auth-interactive-fields" class="space-y-4">
                     <div class="account-auth-tabs grid grid-cols-2 gap-2 p-1 rounded-xl bg-slate-800/80 border border-white/10">
-                        <button id="account-auth-login-tab" type="button" class="account-auth-tab px-4 py-2 rounded-lg text-sm font-semibold bg-violet-500 text-white transition-colors duration-200">Log In</button>
-                        <button id="account-auth-signup-tab" type="button" class="account-auth-tab px-4 py-2 rounded-lg text-sm font-semibold bg-transparent text-slate-300 hover:text-white transition-colors duration-200">Sign Up</button>
+                        <button id="account-auth-login-tab" type="button" class="account-auth-tab px-4 py-2 rounded-lg text-sm font-semibold bg-violet-500 text-white transition-colors duration-200" data-i18n="account.tab.login">Log In</button>
+                        <button id="account-auth-signup-tab" type="button" class="account-auth-tab px-4 py-2 rounded-lg text-sm font-semibold bg-transparent text-slate-300 hover:text-white transition-colors duration-200" data-i18n="account.tab.signup">Sign Up</button>
                     </div>
 
                     <div class="account-auth-social-grid">
-                        <button id="account-auth-provider-google" type="button" class="account-auth-provider-btn account-auth-provider-google" aria-label="Continue with Google">
+                        <button id="account-auth-provider-google" type="button" class="account-auth-provider-btn account-auth-provider-google" aria-label="Continue with Google" data-i18n-aria-label="account.provider.google">
                             <span class="account-auth-provider-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
                                     <path fill="#EA4335" d="M12 5c1.56 0 2.95.54 4.05 1.6l3.02-3.02C17.24 1.8 14.83.75 12 .75 7.4.75 3.43 3.38 1.44 7.22l3.53 2.74C5.84 7.04 8.68 5 12 5z"></path>
@@ -1656,42 +1656,42 @@
                                     <path fill="#FBBC05" d="M12 22.75c2.83 0 5.2-.94 6.94-2.56l-3.55-2.76c-.99.66-2.26 1.06-3.39 1.06-3.32 0-6.16-2.04-7.03-4.96l-3.53 2.74C3.43 20.12 7.4 22.75 12 22.75z"></path>
                                 </svg>
                             </span>
-                            <span class="account-auth-provider-label">Continue with Google</span>
+                            <span class="account-auth-provider-label" data-i18n="account.provider.google">Continue with Google</span>
                         </button>
-                        <button id="account-auth-provider-github" type="button" class="account-auth-provider-btn account-auth-provider-github" aria-label="Continue with GitHub">
+                        <button id="account-auth-provider-github" type="button" class="account-auth-provider-btn account-auth-provider-github" aria-label="Continue with GitHub" data-i18n-aria-label="account.provider.github">
                             <span class="account-auth-provider-icon" aria-hidden="true">
                                 <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
                                     <path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.92c.58.11.79-.25.79-.56 0-.27-.01-1.01-.02-1.98-3.2.7-3.88-1.54-3.88-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.71.08-.71 1.16.08 1.76 1.19 1.76 1.19 1.03 1.76 2.7 1.25 3.36.95.11-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.08-.12-.29-.52-1.45.11-3.03 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.78 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.58.23 2.74.11 3.03.74.8 1.19 1.82 1.19 3.08 0 4.42-2.69 5.39-5.25 5.67.41.36.78 1.09.78 2.2 0 1.59-.02 2.87-.02 3.26 0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"></path>
                                 </svg>
                             </span>
-                            <span class="account-auth-provider-label">Continue with GitHub</span>
+                            <span class="account-auth-provider-label" data-i18n="account.provider.github">Continue with GitHub</span>
                         </button>
                     </div>
 
-                    <div class="account-auth-divider" role="separator" aria-label="Continue with email">
-                        <span>or continue with email</span>
+                    <div class="account-auth-divider" role="separator" aria-label="Continue with email" data-i18n-aria-label="account.divider.continueEmail">
+                        <span data-i18n="account.divider.orContinueEmail">or continue with email</span>
                     </div>
 
                     <div>
-                        <label for="account-auth-email" class="font-semibold text-sm mb-1 block text-slate-200">Email or Username</label>
-                        <input type="text" id="account-auth-email" autocomplete="username" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="you@email.com or username">
+                        <label for="account-auth-email" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.field.emailOrUsername">Email or Username</label>
+                        <input type="text" id="account-auth-email" autocomplete="username" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="you@email.com or username" data-i18n-placeholder="account.field.emailOrUsernamePlaceholder">
                     </div>
                     <div id="account-auth-username-group" class="hidden">
-                        <label for="account-auth-username" class="font-semibold text-sm mb-1 block text-slate-200">Username</label>
-                        <input type="text" id="account-auth-username" autocomplete="nickname" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="choose-a-username">
+                        <label for="account-auth-username" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.field.username">Username</label>
+                        <input type="text" id="account-auth-username" autocomplete="nickname" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="choose-a-username" data-i18n-placeholder="account.field.usernamePlaceholder">
                     </div>
                     <div>
-                        <label for="account-auth-password" class="font-semibold text-sm mb-1 block text-slate-200">Password</label>
+                        <label for="account-auth-password" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.field.password">Password</label>
                         <div class="account-auth-password-wrap">
-                            <input type="password" id="account-auth-password" autocomplete="current-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="••••••••">
-                            <button id="account-auth-password-toggle" type="button" class="account-auth-password-toggle" data-target-input="account-auth-password" aria-controls="account-auth-password" aria-pressed="false">Show</button>
+                            <input type="password" id="account-auth-password" autocomplete="current-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="********" data-i18n-placeholder="account.field.passwordPlaceholder">
+                            <button id="account-auth-password-toggle" type="button" class="account-auth-password-toggle" data-target-input="account-auth-password" aria-controls="account-auth-password" aria-pressed="false" data-i18n="account.password.toggleShow">Show</button>
                         </div>
                     </div>
                     <div id="account-auth-confirm-group" class="hidden">
-                        <label for="account-auth-confirm" class="font-semibold text-sm mb-1 block text-slate-200">Confirm Password</label>
+                        <label for="account-auth-confirm" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.field.confirmPassword">Confirm Password</label>
                         <div class="account-auth-password-wrap">
-                            <input type="password" id="account-auth-confirm" autocomplete="new-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="••••••••">
-                            <button id="account-auth-confirm-toggle" type="button" class="account-auth-password-toggle" data-target-input="account-auth-confirm" aria-controls="account-auth-confirm" aria-pressed="false">Show</button>
+                            <input type="password" id="account-auth-confirm" autocomplete="new-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="********" data-i18n-placeholder="account.field.confirmPasswordPlaceholder">
+                            <button id="account-auth-confirm-toggle" type="button" class="account-auth-password-toggle" data-target-input="account-auth-confirm" aria-controls="account-auth-confirm" aria-pressed="false" data-i18n="account.password.toggleShow">Show</button>
                         </div>
                     </div>
 
@@ -1705,15 +1705,15 @@
                     <div id="account-auth-aux-row" class="account-auth-aux-row">
                         <label for="account-auth-remember" class="account-auth-remember-label">
                             <input id="account-auth-remember" type="checkbox" class="account-auth-remember-checkbox">
-                            <span>Remember me</span>
+                            <span data-i18n="account.auth.rememberMe">Remember me</span>
                         </label>
-                        <button id="account-auth-forgot" type="button" class="account-auth-forgot-btn">Forgot password?</button>
+                        <button id="account-auth-forgot" type="button" class="account-auth-forgot-btn" data-i18n="account.auth.forgotPassword">Forgot password?</button>
                     </div>
                     </div>
 
                     <button id="account-auth-submit" type="button" class="account-primary-btn w-full bg-violet-500 hover:bg-violet-600 text-white py-2.5 rounded-xl font-medium">Log In</button>
 
-                    <p id="account-auth-legal" class="account-auth-legal hidden">By creating an account, you agree to the Terms and Privacy Policy.</p>
+                    <p id="account-auth-legal" class="account-auth-legal hidden" data-i18n="account.auth.legal">By creating an account, you agree to the Terms and Privacy Policy.</p>
                     <p id="account-auth-switch-row" class="account-auth-switch text-xs text-slate-300">
                         <span id="account-auth-switch-copy">Need an account?</span>
                         <button id="account-auth-switch-mode" type="button" class="account-auth-switch-btn">Sign Up</button>
@@ -1725,8 +1725,8 @@
                 <div class="account-profile-card rounded-2xl border border-white/10 bg-slate-900/70 p-5 space-y-4 mt-4">
                     <div class="account-profile-header">
                         <div class="account-profile-header-main">
-                            <h4 class="text-base font-semibold text-indigo-300">Profile Settings</h4>
-                            <p class="account-profile-header-subtitle text-xs text-slate-300">Live account profile, sync status, and secure access controls.</p>
+                            <h4 class="text-base font-semibold text-indigo-300" data-i18n="account.profile.title">Profile Settings</h4>
+                            <p class="account-profile-header-subtitle text-xs text-slate-300" data-i18n="account.profile.subtitle">Live account profile, sync status, and secure access controls.</p>
                         </div>
                         <div class="account-profile-header-actions">
                             <span id="account-sync-status" class="text-xs font-semibold px-2.5 py-1 rounded-full border bg-slate-800 border-white/10 text-slate-200">not signed in</span>
@@ -1746,25 +1746,25 @@
                         </div>
                         <div class="account-profile-summary-grid">
                             <div class="account-profile-summary-item">
-                                <span class="account-profile-summary-label">Goal</span>
+                                <span class="account-profile-summary-label" data-i18n="account.summary.goal">Goal</span>
                                 <strong id="account-profile-goal-display" class="account-profile-summary-value">Exploring</strong>
                             </div>
                             <div class="account-profile-summary-item">
-                                <span class="account-profile-summary-label">Session</span>
+                                <span class="account-profile-summary-label" data-i18n="account.summary.session">Session</span>
                                 <strong id="account-profile-session-display" class="account-profile-summary-value">Guest</strong>
                             </div>
                             <div class="account-profile-summary-item account-profile-summary-item-wide">
-                                <span class="account-profile-summary-label">Sync</span>
+                                <span class="account-profile-summary-label" data-i18n="account.summary.sync">Sync</span>
                                 <strong id="account-profile-sync-display" class="account-profile-summary-value">Sync idle.</strong>
                             </div>
                         </div>
                     </div>
-                    <p id="account-profile-auth-required-note" class="account-profile-auth-required-note">Sign in to unlock editable profile details, security updates, and account management actions.</p>
+                    <p id="account-profile-auth-required-note" class="account-profile-auth-required-note" data-i18n="account.profile.authRequired">Sign in to unlock editable profile details, security updates, and account management actions.</p>
 
-                    <div class="account-profile-actions" role="group" aria-label="Profile panels">
-                        <button id="account-profile-open-profile" type="button" class="account-profile-action-btn is-active" data-account-panel-target="profile" aria-pressed="true">Edit Profile</button>
-                        <button id="account-profile-open-security" type="button" class="account-profile-action-btn" data-account-panel-target="security" aria-pressed="false">Security</button>
-                        <button id="account-profile-open-danger" type="button" class="account-profile-action-btn account-profile-action-btn-danger" data-account-panel-target="danger" aria-pressed="false">Danger Zone</button>
+                    <div class="account-profile-actions" role="group" aria-label="Profile panels" data-i18n-aria-label="account.profile.panelsAria">
+                        <button id="account-profile-open-profile" type="button" class="account-profile-action-btn is-active" data-account-panel-target="profile" aria-pressed="true" data-i18n="account.panel.profile">Edit Profile</button>
+                        <button id="account-profile-open-security" type="button" class="account-profile-action-btn" data-account-panel-target="security" aria-pressed="false" data-i18n="account.panel.security">Security</button>
+                        <button id="account-profile-open-danger" type="button" class="account-profile-action-btn account-profile-action-btn-danger" data-account-panel-target="danger" aria-pressed="false" data-i18n="account.panel.danger">Danger Zone</button>
                     </div>
 
                     <div id="account-profile-content" class="account-profile-content hidden">
@@ -1777,117 +1777,117 @@
                         <div class="account-profile-section space-y-3" data-account-panel="profile">
                             <div class="account-avatar-editor">
                                 <div class="account-avatar-editor-head">
-                                    <h5 class="text-sm font-semibold text-indigo-200">Profile Picture</h5>
-                                    <p class="text-xs text-slate-300">Add a photo for your account chip and profile summary.</p>
+                                    <h5 class="text-sm font-semibold text-indigo-200" data-i18n="account.avatar.title">Profile Picture</h5>
+                                    <p class="text-xs text-slate-300" data-i18n="account.avatar.subtitle">Add a photo for your account chip and profile summary.</p>
                                 </div>
-                                <label for="account-avatar-url" class="font-semibold text-sm mb-1 block text-slate-200">Avatar URL</label>
-                                <input type="url" id="account-avatar-url" autocomplete="url" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="https://example.com/avatar.jpg">
+                                <label for="account-avatar-url" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.avatar.urlLabel">Avatar URL</label>
+                                <input type="url" id="account-avatar-url" autocomplete="url" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="https://example.com/avatar.jpg" data-i18n-placeholder="account.avatar.urlPlaceholder">
                                 <div class="account-avatar-editor-actions">
-                                    <label for="account-avatar-file" class="account-avatar-upload-btn">Upload Image</label>
+                                    <label for="account-avatar-file" class="account-avatar-upload-btn" data-i18n="account.avatar.upload">Upload Image</label>
                                     <input type="file" id="account-avatar-file" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
-                                    <button id="account-avatar-remove" type="button" class="account-avatar-remove-btn">Remove Photo</button>
+                                    <button id="account-avatar-remove" type="button" class="account-avatar-remove-btn" data-i18n="account.avatar.remove">Remove Photo</button>
                                 </div>
-                                <p id="account-avatar-status" class="text-xs text-slate-300">Tip: square images look best. Uploaded photos are resized automatically.</p>
+                                <p id="account-avatar-status" class="text-xs text-slate-300" data-i18n="account.avatar.tip">Tip: square images look best. Uploaded photos are resized automatically.</p>
                             </div>
                             <div>
-                                <label for="account-username" class="font-semibold text-sm mb-1 block text-slate-200">Username</label>
-                                <input type="text" id="account-username" autocomplete="nickname" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Set your public username">
+                                <label for="account-username" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.field.username">Username</label>
+                                <input type="text" id="account-username" autocomplete="nickname" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Set your public username" data-i18n-placeholder="account.profile.usernamePlaceholder">
                             </div>
                             <div class="account-social-editor">
                                 <div>
-                                    <h5 class="text-sm font-semibold text-indigo-200">Social Profile (Messaging Soon)</h5>
-                                    <p class="text-xs text-slate-300 mt-1">Set your handle and status now. Messaging will use these when social features launch.</p>
+                                    <h5 class="text-sm font-semibold text-indigo-200" data-i18n="account.social.title">Social Profile (Messaging Soon)</h5>
+                                    <p class="text-xs text-slate-300 mt-1" data-i18n="account.social.subtitle">Set your handle and status now. Messaging will use these when social features launch.</p>
                                 </div>
                                 <div>
-                                    <label for="account-social-handle" class="font-semibold text-sm mb-1 block text-slate-200">Social Handle</label>
-                                    <input type="text" id="account-social-handle" autocomplete="nickname" maxlength="32" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="@yourhandle">
+                                    <label for="account-social-handle" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.social.handleLabel">Social Handle</label>
+                                    <input type="text" id="account-social-handle" autocomplete="nickname" maxlength="32" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="@yourhandle" data-i18n-placeholder="account.social.handlePlaceholder">
                                 </div>
                                 <div>
-                                    <label for="account-social-status" class="font-semibold text-sm mb-1 block text-slate-200">Status</label>
-                                    <input type="text" id="account-social-status" maxlength="140" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Grinding graph algorithms today">
+                                    <label for="account-social-status" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.social.statusLabel">Status</label>
+                                    <input type="text" id="account-social-status" maxlength="140" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Grinding graph algorithms today" data-i18n-placeholder="account.social.statusPlaceholder">
                                 </div>
                                 <label for="account-social-messaging-enabled" class="account-social-optin">
                                     <input type="checkbox" id="account-social-messaging-enabled" class="account-auth-remember-checkbox">
-                                    <span>Enable direct messages when released</span>
+                                    <span data-i18n="account.social.messagingOptIn">Enable direct messages when released</span>
                                 </label>
                             </div>
                             <div>
-                                <label for="account-goal" class="font-semibold text-sm mb-1 block text-slate-200">Learning Goal</label>
+                                <label for="account-goal" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.goal.label">Learning Goal</label>
                                 <select id="account-goal" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100">
-                                    <option value="exploring">Exploring</option>
-                                    <option value="internship">Internship Prep</option>
-                                    <option value="interview">Interview Prep</option>
-                                    <option value="coursework">Coursework Support</option>
+                                    <option value="exploring" data-i18n="account.goal.exploring">Exploring</option>
+                                    <option value="internship" data-i18n="account.goal.internship">Internship Prep</option>
+                                    <option value="interview" data-i18n="account.goal.interview">Interview Prep</option>
+                                    <option value="coursework" data-i18n="account.goal.coursework">Coursework Support</option>
                                 </select>
                             </div>
-                            <button id="save-account" type="button" class="account-primary-btn w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2.5 rounded-xl font-medium">Save Profile</button>
+                            <button id="save-account" type="button" class="account-primary-btn w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2.5 rounded-xl font-medium" data-i18n="account.profile.save">Save Profile</button>
                         </div>
 
                         <div class="account-profile-section account-profile-security-section space-y-3" data-account-panel="security">
                             <div>
-                                <h5 class="text-sm font-semibold text-indigo-200">Secure Email Update</h5>
-                                <p class="text-xs text-slate-300 mt-1">Email changes require a 6-digit PIN sent to your new email.</p>
+                                <h5 class="text-sm font-semibold text-indigo-200" data-i18n="account.security.emailUpdateTitle">Secure Email Update</h5>
+                                <p class="text-xs text-slate-300 mt-1" data-i18n="account.security.emailUpdateSubtitle">Email changes require a 6-digit PIN sent to your new email.</p>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] gap-2 items-end">
                                 <div>
-                                    <label for="account-email" class="font-semibold text-sm mb-1 block text-slate-200">New Email</label>
-                                    <input type="email" id="account-email" autocomplete="email" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="you@domain.com">
+                                    <label for="account-email" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.security.newEmailLabel">New Email</label>
+                                    <input type="email" id="account-email" autocomplete="email" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="you@domain.com" data-i18n-placeholder="account.security.newEmailPlaceholder">
                                 </div>
-                                <button id="account-email-request-pin" type="button" class="account-primary-btn bg-sky-500 hover:bg-sky-600 text-white px-4 py-2.5 rounded-xl font-medium">Send PIN</button>
+                                <button id="account-email-request-pin" type="button" class="account-primary-btn bg-sky-500 hover:bg-sky-600 text-white px-4 py-2.5 rounded-xl font-medium" data-i18n="account.security.sendPin">Send PIN</button>
                             </div>
                             <div id="account-email-pin-verify-wrap" class="account-email-pin-verify-wrap hidden">
-                                <label for="account-email-pin" class="font-semibold text-sm mb-1 block text-slate-200">Verification PIN</label>
+                                <label for="account-email-pin" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.security.pinLabel">Verification PIN</label>
                                 <div class="account-email-pin-actions">
-                                    <input type="text" id="account-email-pin" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="6-digit PIN">
-                                    <button id="account-email-verify-pin" type="button" class="account-primary-btn bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-xl font-medium">Verify &amp; Update Email</button>
+                                    <input type="text" id="account-email-pin" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="6-digit PIN" data-i18n-placeholder="account.security.pinPlaceholder">
+                                    <button id="account-email-verify-pin" type="button" class="account-primary-btn bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-xl font-medium" data-i18n="account.security.verifyPin">Verify &amp; Update Email</button>
                                 </div>
                             </div>
-                            <p id="account-email-pin-status" class="text-xs text-slate-300">Request a PIN to verify your new email.</p>
+                            <p id="account-email-pin-status" class="text-xs text-slate-300" data-i18n="account.security.pinStatusDefault">Request a PIN to verify your new email.</p>
                         </div>
 
                         <div class="account-profile-section account-profile-security-section space-y-3" data-account-panel="security">
                             <div>
-                                <h5 class="text-sm font-semibold text-indigo-200">Change Password</h5>
-                                <p class="text-xs text-slate-300 mt-1">Use your current password to set a new one.</p>
+                                <h5 class="text-sm font-semibold text-indigo-200" data-i18n="account.security.changePasswordTitle">Change Password</h5>
+                                <p class="text-xs text-slate-300 mt-1" data-i18n="account.security.changePasswordSubtitle">Use your current password to set a new one.</p>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
                                 <div>
-                                    <label for="account-current-password" class="font-semibold text-sm mb-1 block text-slate-200">Current</label>
-                                    <input type="password" id="account-current-password" autocomplete="current-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Current password">
+                                    <label for="account-current-password" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.security.currentPasswordLabel">Current</label>
+                                    <input type="password" id="account-current-password" autocomplete="current-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Current password" data-i18n-placeholder="account.security.currentPasswordPlaceholder">
                                 </div>
                                 <div>
-                                    <label for="account-new-password" class="font-semibold text-sm mb-1 block text-slate-200">New</label>
-                                    <input type="password" id="account-new-password" autocomplete="new-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="New password">
+                                    <label for="account-new-password" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.security.newPasswordLabel">New</label>
+                                    <input type="password" id="account-new-password" autocomplete="new-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="New password" data-i18n-placeholder="account.security.newPasswordPlaceholder">
                                 </div>
                                 <div>
-                                    <label for="account-confirm-new-password" class="font-semibold text-sm mb-1 block text-slate-200">Confirm</label>
-                                    <input type="password" id="account-confirm-new-password" autocomplete="new-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Confirm password">
+                                    <label for="account-confirm-new-password" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.security.confirmNewPasswordLabel">Confirm</label>
+                                    <input type="password" id="account-confirm-new-password" autocomplete="new-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Confirm password" data-i18n-placeholder="account.security.confirmNewPasswordPlaceholder">
                                 </div>
                             </div>
-                            <button id="account-password-update" type="button" class="account-primary-btn w-full bg-violet-500 hover:bg-violet-600 text-white py-2.5 rounded-xl font-medium">Update Password</button>
-                            <p id="account-password-status" class="text-xs text-slate-300">Password updates require an active session.</p>
+                            <button id="account-password-update" type="button" class="account-primary-btn w-full bg-violet-500 hover:bg-violet-600 text-white py-2.5 rounded-xl font-medium" data-i18n="account.security.updatePassword">Update Password</button>
+                            <p id="account-password-status" class="text-xs text-slate-300" data-i18n="account.security.passwordStatusDefault">Password updates require an active session.</p>
                         </div>
 
                         <div class="account-profile-section account-profile-danger-section space-y-3" data-account-panel="danger">
                             <div>
-                                <h5 class="text-sm font-semibold text-rose-200">Delete Account</h5>
-                                <p class="text-xs text-slate-300 mt-1">This permanently removes your profile, sessions, and saved progress. This cannot be undone.</p>
+                                <h5 class="text-sm font-semibold text-rose-200" data-i18n="account.danger.title">Delete Account</h5>
+                                <p class="text-xs text-slate-300 mt-1" data-i18n="account.danger.subtitle">This permanently removes your profile, sessions, and saved progress. This cannot be undone.</p>
                             </div>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                 <div>
-                                    <label for="account-delete-password" class="font-semibold text-sm mb-1 block text-slate-200">Current Password</label>
-                                    <input type="password" id="account-delete-password" autocomplete="current-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/40 text-slate-100" placeholder="Current password">
+                                    <label for="account-delete-password" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.danger.currentPasswordLabel">Current Password</label>
+                                    <input type="password" id="account-delete-password" autocomplete="current-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/40 text-slate-100" placeholder="Current password" data-i18n-placeholder="account.danger.currentPasswordPlaceholder">
                                 </div>
                                 <div>
-                                    <label for="account-delete-confirm" class="font-semibold text-sm mb-1 block text-slate-200">Type DELETE</label>
-                                    <input type="text" id="account-delete-confirm" autocomplete="off" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/40 text-slate-100" placeholder="DELETE">
+                                    <label for="account-delete-confirm" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.danger.confirmLabel">Type DELETE</label>
+                                    <input type="text" id="account-delete-confirm" autocomplete="off" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/40 text-slate-100" placeholder="DELETE" data-i18n-placeholder="account.danger.confirmPlaceholder">
                                 </div>
                             </div>
-                            <button id="account-delete-account" type="button" class="account-danger-btn w-full bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl font-medium">Delete Account Permanently</button>
-                            <p id="account-delete-status" class="text-xs text-slate-300">Type DELETE and confirm your password to permanently delete your account.</p>
+                            <button id="account-delete-account" type="button" class="account-danger-btn w-full bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl font-medium" data-i18n="account.danger.deleteButton">Delete Account Permanently</button>
+                            <p id="account-delete-status" class="text-xs text-slate-300" data-i18n="account.danger.statusDefault">Type DELETE and confirm your password to permanently delete your account.</p>
                         </div>
 
-                        <p id="account-sync-meta" class="text-xs text-slate-300">Profile sync status will appear here.</p>
+                        <p id="account-sync-meta" class="text-xs text-slate-300" data-i18n="account.sync.metaDefault">Profile sync status will appear here.</p>
                     </div>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-// CS Course Atlas - Main JavaScript File
+﻿// CS Course Atlas - Main JavaScript File
 
 // =================================
 // GLOBAL STATE
@@ -1051,6 +1051,157 @@ const TRANSLATIONS = {
         'success.checklist.step.sync.cta': 'Open Account',
         'auth.retrySession': 'Retry Session Check',
         'auth.status.sessionTimeout': 'Session check timed out. Retry when ready.',
+        'account.card.title': 'Account Sync',
+        'account.card.subtitle': 'Save and sync your progress and profile settings.',
+        'account.modal.title': 'Account & Secure Access',
+        'account.modal.subtitle': 'Clean auth flow with secure session-based access.',
+        'account.modal.closeAria': 'Close account dialog',
+        'account.state.notSignedIn': 'Not Signed In',
+        'account.state.directLogin': 'Direct login',
+        'account.state.sessionActive': 'Session active',
+        'account.state.guest': 'Guest',
+        'account.flow.loginTitle': 'Log In to Your Account',
+        'account.flow.loginSubtitle': 'Use a provider or continue with your email/username and password.',
+        'account.flow.signupSubtitle': 'Create a profile to sync progress and settings across devices.',
+        'account.flow.authenticatedSubtitle': 'Authenticated{provider}. Use Sign Out to switch accounts.',
+        'account.signedIn.kicker': 'Signed In',
+        'account.signedIn.copy': 'Your profile and secure settings are now unlocked.',
+        'account.actions.openProfileSettings': 'Open Profile Settings',
+        'account.actions.signOut': 'Sign Out',
+        'account.tab.login': 'Log In',
+        'account.tab.signup': 'Sign Up',
+        'account.provider.google': 'Continue with Google',
+        'account.provider.github': 'Continue with GitHub',
+        'account.provider.password': 'Email + Password',
+        'account.provider.social': 'Social',
+        'account.divider.continueEmail': 'Continue with email',
+        'account.divider.orContinueEmail': 'or continue with email',
+        'account.field.emailOrUsername': 'Email or Username',
+        'account.field.emailOrUsernamePlaceholder': 'you@email.com or username',
+        'account.field.username': 'Username',
+        'account.field.usernamePlaceholder': 'choose-a-username',
+        'account.field.password': 'Password',
+        'account.field.passwordPlaceholder': '********',
+        'account.field.confirmPassword': 'Confirm Password',
+        'account.field.confirmPasswordPlaceholder': '********',
+        'account.password.toggleShow': 'Show',
+        'account.password.toggleHide': 'Hide',
+        'account.password.strength.weak': 'Weak',
+        'account.password.strength.fair': 'Fair',
+        'account.password.strength.good': 'Good',
+        'account.password.strength.strong': 'Strong',
+        'account.password.strength.veryStrong': 'Very strong',
+        'account.password.strength.label': 'Password strength: {label}',
+        'account.password.strength.weakText': 'Password strength: Weak',
+        'account.auth.rememberMe': 'Remember me',
+        'account.auth.forgotPassword': 'Forgot password?',
+        'account.auth.submitLogin': 'Log In',
+        'account.auth.submitCreate': 'Create Account',
+        'account.auth.submitChecking': 'Checking Session...',
+        'account.auth.submitSigningOut': 'Signing Out...',
+        'account.auth.submitLoggingIn': 'Logging In...',
+        'account.auth.submitCreating': 'Creating Account...',
+        'account.auth.legal': 'By creating an account, you agree to the Terms and Privacy Policy.',
+        'account.auth.switch.needAccount': 'Need an account?',
+        'account.auth.switch.haveAccount': 'Already have an account?',
+        'account.auth.switch.needAnother': 'Need another account?',
+        'account.auth.switch.signup': 'Sign Up',
+        'account.auth.switch.login': 'Log In',
+        'account.auth.switch.logoutFirst': 'Log Out First',
+        'account.auth.signupLockedTitle': 'Log out to use Sign Up.',
+        'account.auth.signupSwitchLockedTitle': 'Log out to switch to Sign Up.',
+        'account.profile.title': 'Profile Settings',
+        'account.profile.subtitle': 'Live account profile, sync status, and secure access controls.',
+        'account.profile.toggle.manage': 'Manage',
+        'account.profile.toggle.hide': 'Hide',
+        'account.profile.displayName.guest': 'Guest Learner',
+        'account.profile.displayEmail.guest': 'Sign in to sync profile and progress.',
+        'account.profile.displayEmail.authFallback': 'Email available from your authenticated session.',
+        'account.profile.authRequired': 'Sign in to unlock editable profile details, security updates, and account management actions.',
+        'account.profile.panelsAria': 'Profile panels',
+        'account.profile.usernamePlaceholder': 'Set your public username',
+        'account.profile.save': 'Save Profile',
+        'account.summary.goal': 'Goal',
+        'account.summary.session': 'Session',
+        'account.summary.sync': 'Sync',
+        'account.panel.profile': 'Edit Profile',
+        'account.panel.security': 'Security',
+        'account.panel.securityTitle': 'Security Settings',
+        'account.panel.danger': 'Danger Zone',
+        'account.panel.backOverview': 'Back to Overview',
+        'account.panel.backProfile': 'Back to Profile',
+        'account.avatar.title': 'Profile Picture',
+        'account.avatar.subtitle': 'Add a photo for your account chip and profile summary.',
+        'account.avatar.urlLabel': 'Avatar URL',
+        'account.avatar.urlPlaceholder': 'https://example.com/avatar.jpg',
+        'account.avatar.upload': 'Upload Image',
+        'account.avatar.remove': 'Remove Photo',
+        'account.avatar.tip': 'Tip: square images look best. Uploaded photos are resized automatically.',
+        'account.avatar.alt': '{label} avatar',
+        'account.social.title': 'Social Profile (Messaging Soon)',
+        'account.social.subtitle': 'Set your handle and status now. Messaging will use these when social features launch.',
+        'account.social.handleLabel': 'Social Handle',
+        'account.social.handlePlaceholder': '@yourhandle',
+        'account.social.statusLabel': 'Status',
+        'account.social.statusPlaceholder': 'Grinding graph algorithms today',
+        'account.social.messagingOptIn': 'Enable direct messages when released',
+        'account.goal.label': 'Learning Goal',
+        'account.goal.exploring': 'Exploring',
+        'account.goal.internship': 'Internship Prep',
+        'account.goal.interview': 'Interview Prep',
+        'account.goal.coursework': 'Coursework Support',
+        'account.security.emailUpdateTitle': 'Secure Email Update',
+        'account.security.emailUpdateSubtitle': 'Email changes require a 6-digit PIN sent to your new email.',
+        'account.security.newEmailLabel': 'New Email',
+        'account.security.newEmailPlaceholder': 'you@domain.com',
+        'account.security.sendPin': 'Send PIN',
+        'account.security.pinLabel': 'Verification PIN',
+        'account.security.pinPlaceholder': '6-digit PIN',
+        'account.security.verifyPin': 'Verify & Update Email',
+        'account.security.pinStatusDefault': 'Request a PIN to verify your new email.',
+        'account.security.changePasswordTitle': 'Change Password',
+        'account.security.changePasswordSubtitle': 'Use your current password to set a new one.',
+        'account.security.currentPasswordLabel': 'Current',
+        'account.security.currentPasswordPlaceholder': 'Current password',
+        'account.security.newPasswordLabel': 'New',
+        'account.security.newPasswordPlaceholder': 'New password',
+        'account.security.confirmNewPasswordLabel': 'Confirm',
+        'account.security.confirmNewPasswordPlaceholder': 'Confirm password',
+        'account.security.updatePassword': 'Update Password',
+        'account.security.passwordStatusDefault': 'Password updates require an active session.',
+        'account.danger.title': 'Delete Account',
+        'account.danger.subtitle': 'This permanently removes your profile, sessions, and saved progress. This cannot be undone.',
+        'account.danger.currentPasswordLabel': 'Current Password',
+        'account.danger.currentPasswordPlaceholder': 'Current password',
+        'account.danger.confirmLabel': 'Type DELETE',
+        'account.danger.confirmPlaceholder': 'DELETE',
+        'account.danger.deleteButton': 'Delete Account Permanently',
+        'account.danger.statusDefault': 'Type DELETE and confirm your password to permanently delete your account.',
+        'account.sync.status.notSignedIn': 'Not signed in',
+        'account.sync.metaDefault': 'Profile sync status will appear here.',
+        'account.sync.idle': 'Sync idle.',
+        'account.auth.state.sessionActive': 'Session Active',
+        'account.auth.state.checking': 'Checking Session...',
+        'account.auth.state.validating': 'Validating session...',
+        'account.auth.state.guest': 'Not Signed In',
+        'account.auth.redirectingMobile': 'Redirecting to mobile secure sign-in host...',
+        'account.auth.redirectingMobileToast': 'Opening secure mobile sign-in host...',
+        'account.auth.redirectingCanonical': 'Redirecting to secure sign-in host...',
+        'account.auth.redirectingCanonicalToast': 'Redirecting to secure sign-in host for account access.',
+        'account.auth.sessionStatusSignedInProvider': 'Signed in as {name} via {provider}.',
+        'account.auth.sessionStatusSignedIn': 'Signed in as {name}.',
+        'account.auth.sessionStatusAuthenticatedAs': 'Authenticated as {name}',
+        'account.auth.sessionStatusChecking': 'Checking session...',
+        'account.auth.sessionStatusSignedOut': 'Signed out.',
+        'account.auth.sessionStatusSignInToEdit': 'Sign in to edit profile settings.',
+        'account.auth.entry.manage': 'Manage Account',
+        'account.auth.entry.login': 'Log In / Sign Up',
+        'account.auth.serverNotConfigured': 'Auth server not configured.',
+        'account.auth.serverUnavailable': 'Auth server is not available.',
+        'account.auth.signedOutSuccessToast': 'Signed out successfully.',
+        'account.auth.sessionRestored': 'Session restored.',
+        'account.auth.noActiveSession': 'No active session found.',
+        'account.sync.notSignedIn': 'Not signed in.',
         // Sections
         'section.dailyChallenge': '\u{1F3AF} Daily Challenge',
         'section.studyTip': '\u{1F4A1} Study Tip',
@@ -1285,10 +1436,10 @@ const TRANSLATIONS = {
         'settings.hideCompleted': 'Hide Completed Modules',
         'settings.hideCompletedHint': "Keep your grid focused on what's left.",
         'settings.weeklyGoal': 'Weekly Module Goal',
-        'settings.goal3': '3 / week · Steady pace',
-        'settings.goal5': '5 / week · Balanced',
-        'settings.goal8': '8 / week · Accelerated',
-        'settings.goal12': '12 / week · Sprint',
+        'settings.goal3': '3 / week Â· Steady pace',
+        'settings.goal5': '5 / week Â· Balanced',
+        'settings.goal8': '8 / week Â· Accelerated',
+        'settings.goal12': '12 / week Â· Sprint',
         'settings.weeklyGoalHint': 'Personalizes your study insights and pacing tips.',
         'settings.authLockTitle': 'Sign in for advanced customization',
         'settings.authLockCopy': 'Most personalization controls are available only when your account is signed in and syncing.',
@@ -1302,7 +1453,7 @@ const TRANSLATIONS = {
         'settings.codePreviewLinesHint': 'Choose how much code is visible before tapping expand.',
         'settings.language': 'Language / Idioma',
         'settings.languageLabel': 'Interface Language',
-        'settings.languageHint': 'Switch between English and Spanish / Cambia entre inglés y español.',
+        'settings.languageHint': 'Switch between English and Spanish / Cambia entre inglÃ©s y espaÃ±ol.',
         'settings.save': '\u2705 Save & Close',
         // Module card labels/tooltips
         'module.starterBanner': '\u2B50 Starter Module: recommended first step for most learners',
@@ -1370,16 +1521,16 @@ const TRANSLATIONS = {
     es: {
         // Main header
         'main.title': '\u{1F9ED} CS Course Atlas',
-        'main.subtitle': 'Aprendizaje multi-curso para estudiantes de Ciencias de la Computación',
+        'main.subtitle': 'Aprendizaje multi-curso para estudiantes de Ciencias de la ComputaciÃ³n',
         'a11y.skipToContent': 'Saltar al contenido principal',
         // Hero
         'hero.title': 'CS Course Atlas: Aprende en Cursos Clave de CS',
-        'hero.subtitle': 'Un recorrido completo y amigable para principiantes a través de Estructuras de Datos y Algoritmos, Ensamblador, Java, Python, JavaScript y Matemáticas Discretas por Eddy Arriaga-B. Cada módulo incluye explicaciones detalladas, amplios ejemplos de código y ejercicios prácticos.',
+        'hero.subtitle': 'Un recorrido completo y amigable para principiantes a travÃ©s de Estructuras de Datos y Algoritmos, Ensamblador, Java, Python, JavaScript y MatemÃ¡ticas Discretas por Eddy Arriaga-B. Cada mÃ³dulo incluye explicaciones detalladas, amplios ejemplos de cÃ³digo y ejercicios prÃ¡cticos.',
         // Header buttons
         'btn.flashcards': 'Tarjetas',
         'btn.flashcardsShort': 'Tarjetas',
         'btn.glossary': 'Glosario',
-        'btn.glossaryShort': 'Términos',
+        'btn.glossaryShort': 'TÃ©rminos',
         'btn.quizzes': 'Cuestionarios',
         'btn.quizzesShort': 'Quiz',
         'btn.settings': 'Ajustes',
@@ -1516,27 +1667,27 @@ const TRANSLATIONS = {
         'progress.kicker': 'Recorrido actual',
         // Topic focus
         'topic.focus.heading': 'Rutas Destacadas de Aprendizaje',
-        'topic.focus.subtitle': 'Comienza con una ruta central de CS. Recomendamos elegir una ruta y completar los módulos en orden.',
+        'topic.focus.subtitle': 'Comienza con una ruta central de CS. Recomendamos elegir una ruta y completar los mÃ³dulos en orden.',
         'topic.focus.badge': 'Rutas Destacadas',
         'topic.all.title': 'Todos los Temas',
         'topic.all.subtitle': 'Todo en una sola vista',
         'topic.dsa.title': 'Estructuras de Datos y Algoritmos',
-        'topic.dsa.subtitle': 'Ruta central para entrevistas técnicas',
-        'topic.discrete.title': 'Matemáticas Discretas',
-        'topic.discrete.subtitle': 'Pruebas, conteo y lógica matemática',
+        'topic.dsa.subtitle': 'Ruta central para entrevistas tÃ©cnicas',
+        'topic.discrete.title': 'MatemÃ¡ticas Discretas',
+        'topic.discrete.subtitle': 'Pruebas, conteo y lÃ³gica matemÃ¡tica',
         'topic.java.title': 'Aprendizaje de Java',
         'topic.java.subtitle': 'Sintaxis base de Java, POO, herramientas y flujos practicos de software',
         'topic.git.title': 'Aprendizaje de Git',
-        'topic.git.subtitle': 'Control de versiones, ramas, colaboración y flujos seguros',
+        'topic.git.subtitle': 'Control de versiones, ramas, colaboraciÃ³n y flujos seguros',
         'topic.assembly.title': 'Fundamentos de Ensamblador',
         'topic.assembly.subtitle': 'Registros, memoria y flujo de programa de bajo nivel',
-        'topic.comingSoon.heading': 'Rutas Próximamente',
-        'topic.comingSoon.label': 'Próximamente',
-        'topic.comingSoon.toc.title': 'Teoría de la Computación',
-        'topic.comingSoon.toc.subtitle': 'Autómatas, lenguajes formales, computabilidad y bases de complejidad',
+        'topic.comingSoon.heading': 'Rutas PrÃ³ximamente',
+        'topic.comingSoon.label': 'PrÃ³ximamente',
+        'topic.comingSoon.toc.title': 'TeorÃ­a de la ComputaciÃ³n',
+        'topic.comingSoon.toc.subtitle': 'AutÃ³matas, lenguajes formales, computabilidad y bases de complejidad',
         'topic.comingSoon.cpp.title': 'Ruta Dedicada de C++',
-        'topic.comingSoon.cpp.subtitle': 'Fundamentos de C++, STL, modelo de memoria y resolución de problemas orientada al rendimiento',
-        'topic.comingSoon.stats.title': 'Estadística para CS',
+        'topic.comingSoon.cpp.subtitle': 'Fundamentos de C++, STL, modelo de memoria y resoluciÃ³n de problemas orientada al rendimiento',
+        'topic.comingSoon.stats.title': 'EstadÃ­stica para CS',
         'topic.comingSoon.stats.subtitle': 'Probabilidad, distribuciones, inferencia y toma de decisiones basada en datos',
         'topic.comingSoon.os.title': 'Sistemas Operativos',
         'topic.comingSoon.os.subtitle': 'Procesos, planificacion, gestion de memoria y sistemas de archivos desde fundamentos',
@@ -1606,22 +1757,173 @@ const TRANSLATIONS = {
         'success.checklist.step.sync.cta': 'Abrir Cuenta',
         'auth.retrySession': 'Reintentar sesion',
         'auth.status.sessionTimeout': 'La verificacion de sesion se demoro demasiado. Puedes reintentar.',
+        'account.card.title': 'Sincronizacion de Cuenta',
+        'account.card.subtitle': 'Guarda y sincroniza tu progreso y ajustes de perfil.',
+        'account.modal.title': 'Cuenta y Acceso Seguro',
+        'account.modal.subtitle': 'Flujo limpio de autenticacion con acceso por sesion segura.',
+        'account.modal.closeAria': 'Cerrar dialogo de cuenta',
+        'account.state.notSignedIn': 'No has iniciado sesion',
+        'account.state.directLogin': 'Inicio directo',
+        'account.state.sessionActive': 'Sesion activa',
+        'account.state.guest': 'Invitado',
+        'account.flow.loginTitle': 'Inicia Sesion en tu Cuenta',
+        'account.flow.loginSubtitle': 'Usa un proveedor o continua con tu correo/usuario y contrasena.',
+        'account.flow.signupSubtitle': 'Crea un perfil para sincronizar progreso y ajustes entre dispositivos.',
+        'account.flow.authenticatedSubtitle': 'Autenticado{provider}. Usa Cerrar Sesion para cambiar de cuenta.',
+        'account.signedIn.kicker': 'Sesion Iniciada',
+        'account.signedIn.copy': 'Tu perfil y ajustes seguros ahora estan desbloqueados.',
+        'account.actions.openProfileSettings': 'Abrir Ajustes de Perfil',
+        'account.actions.signOut': 'Cerrar Sesion',
+        'account.tab.login': 'Iniciar Sesion',
+        'account.tab.signup': 'Registrarse',
+        'account.provider.google': 'Continuar con Google',
+        'account.provider.github': 'Continuar con GitHub',
+        'account.provider.password': 'Correo + Contrasena',
+        'account.provider.social': 'Social',
+        'account.divider.continueEmail': 'Continuar con correo',
+        'account.divider.orContinueEmail': 'o continuar con correo',
+        'account.field.emailOrUsername': 'Correo o Usuario',
+        'account.field.emailOrUsernamePlaceholder': 'tu@correo.com o usuario',
+        'account.field.username': 'Usuario',
+        'account.field.usernamePlaceholder': 'elige-un-usuario',
+        'account.field.password': 'Contrasena',
+        'account.field.passwordPlaceholder': '********',
+        'account.field.confirmPassword': 'Confirmar Contrasena',
+        'account.field.confirmPasswordPlaceholder': '********',
+        'account.password.toggleShow': 'Mostrar',
+        'account.password.toggleHide': 'Ocultar',
+        'account.password.strength.weak': 'Debil',
+        'account.password.strength.fair': 'Regular',
+        'account.password.strength.good': 'Buena',
+        'account.password.strength.strong': 'Fuerte',
+        'account.password.strength.veryStrong': 'Muy fuerte',
+        'account.password.strength.label': 'Fuerza de contrasena: {label}',
+        'account.password.strength.weakText': 'Fuerza de contrasena: Debil',
+        'account.auth.rememberMe': 'Recordarme',
+        'account.auth.forgotPassword': 'Olvidaste tu contrasena?',
+        'account.auth.submitLogin': 'Iniciar Sesion',
+        'account.auth.submitCreate': 'Crear Cuenta',
+        'account.auth.submitChecking': 'Verificando sesion...',
+        'account.auth.submitSigningOut': 'Cerrando sesion...',
+        'account.auth.submitLoggingIn': 'Iniciando sesion...',
+        'account.auth.submitCreating': 'Creando cuenta...',
+        'account.auth.legal': 'Al crear una cuenta, aceptas los Terminos y la Politica de Privacidad.',
+        'account.auth.switch.needAccount': 'Necesitas una cuenta?',
+        'account.auth.switch.haveAccount': 'Ya tienes una cuenta?',
+        'account.auth.switch.needAnother': 'Necesitas otra cuenta?',
+        'account.auth.switch.signup': 'Registrarse',
+        'account.auth.switch.login': 'Iniciar Sesion',
+        'account.auth.switch.logoutFirst': 'Cierra Sesion Primero',
+        'account.auth.signupLockedTitle': 'Cierra sesion para usar Registrarse.',
+        'account.auth.signupSwitchLockedTitle': 'Cierra sesion para cambiar a Registrarse.',
+        'account.profile.title': 'Ajustes de Perfil',
+        'account.profile.subtitle': 'Perfil de cuenta en vivo, estado de sincronizacion y controles de acceso seguro.',
+        'account.profile.toggle.manage': 'Administrar',
+        'account.profile.toggle.hide': 'Ocultar',
+        'account.profile.displayName.guest': 'Aprendiz Invitado',
+        'account.profile.displayEmail.guest': 'Inicia sesion para sincronizar perfil y progreso.',
+        'account.profile.displayEmail.authFallback': 'Correo disponible desde tu sesion autenticada.',
+        'account.profile.authRequired': 'Inicia sesion para desbloquear detalles editables de perfil, actualizaciones de seguridad y acciones de cuenta.',
+        'account.profile.panelsAria': 'Paneles de perfil',
+        'account.profile.usernamePlaceholder': 'Configura tu nombre de usuario publico',
+        'account.profile.save': 'Guardar Perfil',
+        'account.summary.goal': 'Meta',
+        'account.summary.session': 'Sesion',
+        'account.summary.sync': 'Sincronizacion',
+        'account.panel.profile': 'Editar Perfil',
+        'account.panel.security': 'Seguridad',
+        'account.panel.securityTitle': 'Ajustes de Seguridad',
+        'account.panel.danger': 'Zona de Riesgo',
+        'account.panel.backOverview': 'Volver al Resumen',
+        'account.panel.backProfile': 'Volver al Perfil',
+        'account.avatar.title': 'Foto de Perfil',
+        'account.avatar.subtitle': 'Agrega una foto para tu chip de cuenta y resumen de perfil.',
+        'account.avatar.urlLabel': 'URL del Avatar',
+        'account.avatar.urlPlaceholder': 'https://example.com/avatar.jpg',
+        'account.avatar.upload': 'Subir Imagen',
+        'account.avatar.remove': 'Quitar Foto',
+        'account.avatar.tip': 'Tip: las imagenes cuadradas se ven mejor. Las fotos subidas se redimensionan automaticamente.',
+        'account.avatar.alt': 'Avatar de {label}',
+        'account.social.title': 'Perfil Social (Mensajeria Pronto)',
+        'account.social.subtitle': 'Configura tu handle y estado ahora. La mensajeria usara esto cuando lancen las funciones sociales.',
+        'account.social.handleLabel': 'Handle Social',
+        'account.social.handlePlaceholder': '@tuhandle',
+        'account.social.statusLabel': 'Estado',
+        'account.social.statusPlaceholder': 'Hoy estoy practicando algoritmos de grafos',
+        'account.social.messagingOptIn': 'Activar mensajes directos cuando se lancen',
+        'account.goal.label': 'Meta de Aprendizaje',
+        'account.goal.exploring': 'Explorando',
+        'account.goal.internship': 'Preparacion para Practicas',
+        'account.goal.interview': 'Preparacion para Entrevistas',
+        'account.goal.coursework': 'Apoyo para Cursos',
+        'account.security.emailUpdateTitle': 'Actualizacion Segura de Correo',
+        'account.security.emailUpdateSubtitle': 'Los cambios de correo requieren un PIN de 6 digitos enviado a tu nuevo correo.',
+        'account.security.newEmailLabel': 'Nuevo Correo',
+        'account.security.newEmailPlaceholder': 'tu@dominio.com',
+        'account.security.sendPin': 'Enviar PIN',
+        'account.security.pinLabel': 'PIN de Verificacion',
+        'account.security.pinPlaceholder': 'PIN de 6 digitos',
+        'account.security.verifyPin': 'Verificar y Actualizar Correo',
+        'account.security.pinStatusDefault': 'Solicita un PIN para verificar tu nuevo correo.',
+        'account.security.changePasswordTitle': 'Cambiar Contrasena',
+        'account.security.changePasswordSubtitle': 'Usa tu contrasena actual para establecer una nueva.',
+        'account.security.currentPasswordLabel': 'Actual',
+        'account.security.currentPasswordPlaceholder': 'Contrasena actual',
+        'account.security.newPasswordLabel': 'Nueva',
+        'account.security.newPasswordPlaceholder': 'Nueva contrasena',
+        'account.security.confirmNewPasswordLabel': 'Confirmar',
+        'account.security.confirmNewPasswordPlaceholder': 'Confirmar contrasena',
+        'account.security.updatePassword': 'Actualizar Contrasena',
+        'account.security.passwordStatusDefault': 'Las actualizaciones de contrasena requieren una sesion activa.',
+        'account.danger.title': 'Eliminar Cuenta',
+        'account.danger.subtitle': 'Esto elimina permanentemente tu perfil, sesiones y progreso guardado. No se puede deshacer.',
+        'account.danger.currentPasswordLabel': 'Contrasena Actual',
+        'account.danger.currentPasswordPlaceholder': 'Contrasena actual',
+        'account.danger.confirmLabel': 'Escribe DELETE',
+        'account.danger.confirmPlaceholder': 'DELETE',
+        'account.danger.deleteButton': 'Eliminar Cuenta Permanentemente',
+        'account.danger.statusDefault': 'Escribe DELETE y confirma tu contrasena para eliminar tu cuenta permanentemente.',
+        'account.sync.status.notSignedIn': 'sin sesion',
+        'account.sync.metaDefault': 'El estado de sincronizacion del perfil aparecera aqui.',
+        'account.sync.idle': 'Sincronizacion inactiva.',
+        'account.auth.state.sessionActive': 'Sesion Activa',
+        'account.auth.state.checking': 'Verificando sesion...',
+        'account.auth.state.validating': 'Validando sesion...',
+        'account.auth.state.guest': 'No has iniciado sesion',
+        'account.auth.redirectingMobile': 'Redirigiendo al host seguro movil de inicio de sesion...',
+        'account.auth.redirectingMobileToast': 'Abriendo host seguro movil de inicio de sesion...',
+        'account.auth.redirectingCanonical': 'Redirigiendo al host seguro de inicio de sesion...',
+        'account.auth.redirectingCanonicalToast': 'Redirigiendo al host seguro para acceso de cuenta.',
+        'account.auth.sessionStatusSignedInProvider': 'Sesion iniciada como {name} via {provider}.',
+        'account.auth.sessionStatusSignedIn': 'Sesion iniciada como {name}.',
+        'account.auth.sessionStatusAuthenticatedAs': 'Autenticado como {name}',
+        'account.auth.sessionStatusChecking': 'Verificando sesion...',
+        'account.auth.sessionStatusSignedOut': 'Sesion cerrada.',
+        'account.auth.sessionStatusSignInToEdit': 'Inicia sesion para editar ajustes de perfil.',
+        'account.auth.entry.manage': 'Administrar Cuenta',
+        'account.auth.entry.login': 'Iniciar Sesion / Registrarse',
+        'account.auth.serverNotConfigured': 'Servidor de autenticacion no configurado.',
+        'account.auth.serverUnavailable': 'El servidor de autenticacion no esta disponible.',
+        'account.auth.signedOutSuccessToast': 'Sesion cerrada correctamente.',
+        'account.auth.sessionRestored': 'Sesion restaurada.',
+        'account.auth.noActiveSession': 'No se encontro una sesion activa.',
+        'account.sync.notSignedIn': 'No has iniciado sesion.',
         // Sections
         'section.dailyChallenge': '\u{1F3AF} Desaf\u00edo del D\u00eda',
         'section.studyTip': '\u{1F4A1} Consejo de Estudio',
         'section.insights': 'Perspectivas de Estudio Personalizadas',
-        'section.insightsSubtitle': 'Mantente al día con estadísticas en vivo, sugerencias de módulos y un compañero de enfoque integrado.',
+        'section.insightsSubtitle': 'Mantente al dÃ­a con estadÃ­sticas en vivo, sugerencias de mÃ³dulos y un compaÃ±ero de enfoque integrado.',
         'section.expand': 'Expandir',
         'section.collapse': 'Colapsar',
         'modules.pagination.prev': 'Anterior',
         'modules.pagination.next': 'Siguiente',
-        'modules.pagination.summary': 'Página {current} de {total}',
+        'modules.pagination.summary': 'PÃ¡gina {current} de {total}',
         'progress.emptyStart': 'Elige tu primera ruta para cargar modulos.',
         'achievements.emptyTotal': 'Elige una ruta para ver el total de modulos',
         'insights.lock.badge': 'Modo Invitado',
-        'insights.lock.title': 'Inicia sesión para desbloquear insights personalizados',
+        'insights.lock.title': 'Inicia sesiÃ³n para desbloquear insights personalizados',
         'insights.lock.copy': 'Tus analisis personalizados, impulso de enfoque y recomendaciones se desbloquean al iniciar sesion para sincronizar el progreso de forma segura.',
-        'insights.lock.cta': 'Iniciar Sesión / Registrarse',
+        'insights.lock.cta': 'Iniciar SesiÃ³n / Registrarse',
     'insights.lock.updates': 'Modo de vista previa activo',
         'insights.lock.status': 'Invitado',
         'insights.lock.sessionBtn': 'Crea cuenta gratis para sincronizar',
@@ -1640,16 +1942,16 @@ const TRANSLATIONS = {
         'insights.lock.planPreviewCta': 'Personalizar (Vista previa)',
     'auth.status.guest': 'No has iniciado sesion. Inicia sesion o crea una cuenta gratis para sincronizar tu progreso entre dispositivos.',
         'interview.heading': '\u{1F4C2} Ejemplos de Entrevista',
-        'interview.subtitle': 'Recorridos estilo LeetCode. Dos por página con copia rápida.',
-        'interview.pages': 'Páginas',
-        'interview.runSolution': 'Ejecutar solución',
+        'interview.subtitle': 'Recorridos estilo LeetCode. Dos por pÃ¡gina con copia rÃ¡pida.',
+        'interview.pages': 'PÃ¡ginas',
+        'interview.runSolution': 'Ejecutar soluciÃ³n',
         'interview.running': 'Ejecutando...',
         'interview.outputLabel': 'Salida',
         'interview.outputReady': 'Listo',
-        'interview.outputLive': 'Ejecución en vivo',
+        'interview.outputLive': 'EjecuciÃ³n en vivo',
         'interview.outputFallback': 'Salida de respaldo',
-        'interview.outputError': 'Error de ejecución',
-        'interview.outputPlaceholder': 'Ejecuta la solución de ejemplo para ver la salida.',
+        'interview.outputError': 'Error de ejecuciÃ³n',
+        'interview.outputPlaceholder': 'Ejecuta la soluciÃ³n de ejemplo para ver la salida.',
         'interview.runInWorkspace': 'Ejecutar en Workspace',
         'interview.approach': 'Enfoque',
         'interview.language': 'Lenguaje',
@@ -1674,7 +1976,7 @@ const TRANSLATIONS = {
         'interview.solutionCopyError': 'No se pudo copiar la solucion.',
         'interview.noRunnable': 'Aun no hay muestra ejecutable para este enfoque/lenguaje.',
         'ds.heading': '\u{1F6E0}\uFE0F Playground de C\u00f3digo de Estructuras de Datos',
-        'ds.subtitle': 'Interactúa con arreglos, pilas, colas, montículos, grafos y tries. Sigue estructura, punteros, línea de tiempo y complejidad en un solo lugar.',
+        'ds.subtitle': 'InteractÃºa con arreglos, pilas, colas, montÃ­culos, grafos y tries. Sigue estructura, punteros, lÃ­nea de tiempo y complejidad en un solo lugar.',
         'ds.reset': 'Reiniciar playground',
         // Progress chip
         'progress.nowAt': 'Ahora en',
@@ -1683,51 +1985,51 @@ const TRANSLATIONS = {
         'achievements.currentBadge': 'Insignia actual',
         // Support
         'support.heading': '\u2764\uFE0F \u00bfDisfrutas este sitio web?',
-        'support.subtitle': '¡Ayuda a mantener este recurso gratuito y actualizado con contenido nuevo cada semana!',
+        'support.subtitle': 'Â¡Ayuda a mantener este recurso gratuito y actualizado con contenido nuevo cada semana!',
         // Asistente flotante
         'helper.badge': 'Guia Rapida',
         'helper.ariaLabel': 'Guia Rapida',
-        'helper.title': 'Guía Rápida del Sitio',
-        'helper.subtitle': 'Un recorrido corto de lo que hace cada sección.',
-        'helper.closeAria': 'Cerrar guía rápida del sitio web',
+        'helper.title': 'GuÃ­a RÃ¡pida del Sitio',
+        'helper.subtitle': 'Un recorrido corto de lo que hace cada secciÃ³n.',
+        'helper.closeAria': 'Cerrar guÃ­a rÃ¡pida del sitio web',
         'helper.goalTitle': 'Objetivo de CS Course Atlas',
-        'helper.goalText': 'Ayudar a estudiantes de Ciencias de la Computación a aprender más rápido en múltiples clases con explicaciones claras, ejemplos ejecutables y herramientas guiadas de práctica.',
-        'helper.startTitle': 'Empieza Aquí (3 pasos)',
-        'helper.startChip': 'Inicio rápido',
-        'helper.startStep1': 'Elige un Enfoque de Tema y abre el primer módulo de esa ruta.',
-        'helper.startStep2': 'Usa el Playground de Código o de Estructuras para practicar de inmediato.',
+        'helper.goalText': 'Ayudar a estudiantes de Ciencias de la ComputaciÃ³n a aprender mÃ¡s rÃ¡pido en mÃºltiples clases con explicaciones claras, ejemplos ejecutables y herramientas guiadas de prÃ¡ctica.',
+        'helper.startTitle': 'Empieza AquÃ­ (3 pasos)',
+        'helper.startChip': 'Inicio rÃ¡pido',
+        'helper.startStep1': 'Elige un Enfoque de Tema y abre el primer mÃ³dulo de esa ruta.',
+        'helper.startStep2': 'Usa el Playground de CÃ³digo o de Estructuras para practicar de inmediato.',
         'helper.startStep3': 'Cierra con quiz + flashcards y marca el progreso como completado.',
-        'helper.sectionModulesTitle': 'Módulos',
-        'helper.sectionModulesText': 'Rutas de aprendizaje estructuradas con ejemplos de código, modo teoría (para discreta), definiciones y recursos.',
-        'helper.sectionPlaygroundTitle': 'Playground de Código',
-        'helper.sectionPlaygroundText': 'Ejecuta snippets de Java, C++, Python y JavaScript, prueba cambios e inspecciona la salida rápidamente.',
-        'helper.sectionDataTitle': 'Playground de Código de Estructuras',
-        'helper.sectionDataText': 'Visuales interactivos para arreglos, pilas, colas, montículos, grafos y tries con línea de tiempo de operaciones y vista de complejidad.',
-        'helper.sectionPracticeTitle': 'Herramientas de Práctica',
+        'helper.sectionModulesTitle': 'MÃ³dulos',
+        'helper.sectionModulesText': 'Rutas de aprendizaje estructuradas con ejemplos de cÃ³digo, modo teorÃ­a (para discreta), definiciones y recursos.',
+        'helper.sectionPlaygroundTitle': 'Playground de CÃ³digo',
+        'helper.sectionPlaygroundText': 'Ejecuta snippets de Java, C++, Python y JavaScript, prueba cambios e inspecciona la salida rÃ¡pidamente.',
+        'helper.sectionDataTitle': 'Playground de CÃ³digo de Estructuras',
+        'helper.sectionDataText': 'Visuales interactivos para arreglos, pilas, colas, montÃ­culos, grafos y tries con lÃ­nea de tiempo de operaciones y vista de complejidad.',
+        'helper.sectionPracticeTitle': 'Herramientas de PrÃ¡ctica',
         'helper.sectionPracticeText': 'Usa flashcards, cuestionarios interactivos, glosario y ejemplos de entrevista para reforzar conceptos.',
         'helper.sectionResourcesTitle': 'Biblioteca de Notas + Libros',
-        'helper.sectionResourcesText': 'Usa la Biblioteca de Notas para guías rápidas y el área de Libros para referencias más largas que puedes leer o descargar.',
+        'helper.sectionResourcesText': 'Usa la Biblioteca de Notas para guÃ­as rÃ¡pidas y el Ã¡rea de Libros para referencias mÃ¡s largas que puedes leer o descargar.',
         'playground.gitReadOnly': 'Modo Git guiado (solo lectura)',
-        'playground.gitReadOnlyHint': 'Las muestras de Git están bloqueadas para edición para que te enfoques en comandos de terminal y salida.',
+        'playground.gitReadOnlyHint': 'Las muestras de Git estÃ¡n bloqueadas para ediciÃ³n para que te enfoques en comandos de terminal y salida.',
         'helper.sectionProgressTitle': 'Progreso + Ajustes',
         'helper.sectionProgressText': 'Monitorea avance, personaliza ajustes de la interfaz y administra preferencias de cuenta/perfil.',
         'helper.workflowTitle': 'Flujo de Estudio Recomendado',
-        'helper.workflowStep1': 'Aprende el concepto en un módulo y revisa las definiciones clave.',
-        'helper.workflowStep2': 'Ejecuta/modifica código y verifica la salida.',
+        'helper.workflowStep1': 'Aprende el concepto en un mÃ³dulo y revisa las definiciones clave.',
+        'helper.workflowStep2': 'Ejecuta/modifica cÃ³digo y verifica la salida.',
         'helper.workflowStep3': 'Fija el aprendizaje con quiz + flashcards.',
         'helper.workflowStep4': 'Guarda notas y marca progreso para mantener insights precisos.',
         'helper.closeBtn': 'Entendido',
         'books.heading': '\u{1F4DA} Biblioteca de Libros',
-        'books.subtitle': 'Lee libros de referencia completos dentro del sitio o descárgalos para estudiar sin conexión.',
+        'books.subtitle': 'Lee libros de referencia completos dentro del sitio o descÃ¡rgalos para estudiar sin conexiÃ³n.',
         'books.badge': 'Biblioteca de Referencia',
         'books.readerLabel': 'Lector de Libros',
         'books.closeReader': 'Cerrar Lector',
         'books.read': 'Leer en Sitio',
         'books.download': 'Descargar',
         'books.available': 'Disponible',
-        'books.missing': 'No disponible en esta máquina',
-        'books.empty': 'Aún no hay libros configurados.',
-        'books.unavailable': 'El archivo del libro no está disponible en esta máquina.',
+        'books.missing': 'No disponible en esta mÃ¡quina',
+        'books.empty': 'AÃºn no hay libros configurados.',
+        'books.unavailable': 'El archivo del libro no estÃ¡ disponible en esta mÃ¡quina.',
         'glossary.title': 'Glosario de CS Course Atlas',
         'glossary.searchPlaceholder': 'Buscar terminos del glosario...',
         'glossary.searchAria': 'Buscar terminos del glosario',
@@ -1752,11 +2054,11 @@ const TRANSLATIONS = {
         'flashcards.nav.prev': 'Anterior',
         'flashcards.nav.next': 'Siguiente',
         // Footer
-        'footer.kicker': 'Creado para estudiantes de Ciencias de la Computación',
+        'footer.kicker': 'Creado para estudiantes de Ciencias de la ComputaciÃ³n',
         'footer.title': 'Centro de Aprendizaje CS Course Atlas',
-        'footer.subtitle': 'Una plataforma de estudio multi-curso para DSA, Matemáticas Discretas, Java, Git, Ensamblador y flujos de práctica de código.',
+        'footer.subtitle': 'Una plataforma de estudio multi-curso para DSA, MatemÃ¡ticas Discretas, Java, Git, Ensamblador y flujos de prÃ¡ctica de cÃ³digo.',
         'footer.tag.multiCourse': 'Multi-curso',
-        'footer.tag.handsOn': 'Práctica Activa',
+        'footer.tag.handsOn': 'PrÃ¡ctica Activa',
         'footer.tag.bilingual': 'Amigable EN / ES',
         'footer.quick.flashcards': '\u{1F3AF} Abrir Tarjetas',
         'footer.quick.quizzes': '\u{1F9E0} Iniciar Quiz',
@@ -1765,16 +2067,16 @@ const TRANSLATIONS = {
         'footer.tools.flashcards': '\u{1F3AF} Practicar Tarjetas',
         'footer.tools.glossary': '\u{1F4DA} Glosario de CS',
         'footer.tools.quizzes': '\u{1F9E0} Cuestionarios Interactivos',
-        'flashcards.deck.all': 'Todos los módulos (mezcla)',
+        'flashcards.deck.all': 'Todos los mÃ³dulos (mezcla)',
         'flashcards.deck.topicGroup': 'Mazos por tema',
-        'flashcards.deck.moduleGroup': 'Mazos por módulo',
+        'flashcards.deck.moduleGroup': 'Mazos por mÃ³dulo',
         'flashcards.deck.topic.dsa': 'Ruta de DSA',
-        'flashcards.deck.topic.discrete': 'Ruta de Matemática Discreta',
+        'flashcards.deck.topic.discrete': 'Ruta de MatemÃ¡tica Discreta',
         'flashcards.deck.topic.java': 'Ruta de Java',
         'flashcards.deck.topic.git': 'Ruta de Git',
         'flashcards.deck.topic.assembly': 'Ruta de Ensamblador',
         'flashcards.deck.topic.locked': 'Completa quizzes de esta ruta para desbloquear',
-        'flashcards.deck.topic.empty': 'Aún no hay tarjetas desbloqueadas en esta ruta. Completa quizzes de esta ruta para desbloquear más tarjetas.',
+        'flashcards.deck.topic.empty': 'AÃºn no hay tarjetas desbloqueadas en esta ruta. Completa quizzes de esta ruta para desbloquear mÃ¡s tarjetas.',
         'flashcards.deck.module.locked': 'Completa el quiz para desbloquear',
         'flashcards.deck.startPrompt': 'Elige un mazo para comenzar.',
         'footer.features.title': '\u{1F680} Funciones Clave',
@@ -1784,7 +2086,7 @@ const TRANSLATIONS = {
         'footer.features.four': '\u{1F4F1} Dise\u00f1o Optimizado para M\u00f3vil',
         'footer.features.five': '\u{1F319} Soporte de Modo Oscuro',
         'footer.support.title': 'Apoya el Proyecto',
-        'footer.support.copy': 'Hecho con dedicación para estudiantes de CS. Ayuda a mantener la plataforma gratuita y en mejora continua.',
+        'footer.support.copy': 'Hecho con dedicaciÃ³n para estudiantes de CS. Ayuda a mantener la plataforma gratuita y en mejora continua.',
         'footer.support.coffee': '\u2615 Caf\u00e9',
         'footer.support.sponsor': 'Patrocinar',
         'scroll.jumpTop': 'Volver arriba',
@@ -1792,8 +2094,8 @@ const TRANSLATIONS = {
         'scroll.jumpTopAria': 'Desplazarse al inicio de esta pagina',
         'scroll.jumpBottomAria': 'Desplazarse al final de esta pagina',
         'footer.trust.title': 'Confianza y Legal',
-        'footer.trust.privacy': 'Política de Privacidad',
-        'footer.trust.terms': 'Términos de Uso',
+        'footer.trust.privacy': 'PolÃ­tica de Privacidad',
+        'footer.trust.terms': 'TÃ©rminos de Uso',
         'footer.trust.contact': 'Contacto / Soporte',
         'footer.trust.refunds': 'Donaciones y Reembolsos',
         'footer.bottom.author': 'Creado para estudiantes de CS por Eddy Arriaga-B',
@@ -1805,45 +2107,45 @@ const TRANSLATIONS = {
         'settings.darkMode': 'Modo Oscuro',
         'settings.bgTheme': 'Tema de Fondo',
         'settings.themeDefault': 'Degradado Predeterminado',
-        'settings.themeOcean': 'Brisa del Océano',
+        'settings.themeOcean': 'Brisa del OcÃ©ano',
         'settings.themeSunset': 'Resplandor del Atardecer',
         'settings.themeForest': 'Sendero del Bosque',
-        'settings.themeMinimal': 'Luz Mínima',
+        'settings.themeMinimal': 'Luz MÃ­nima',
         'settings.themeSpace': 'Noche Espacial',
         'settings.accentColor': 'Color de Acento',
-        'settings.accentIndigo': 'Aurora Índigo',
+        'settings.accentIndigo': 'Aurora Ãndigo',
         'settings.accentEmerald': 'Enfoque Esmeralda',
-        'settings.accentAmber': 'Amanecer Ámbar',
+        'settings.accentAmber': 'Amanecer Ãmbar',
         'settings.accentRose': 'Nebulosa Rosa',
-        'settings.accentHint': 'Actualiza botones, resaltados y llamadas de atención al instante.',
-        'settings.cardElevation': 'Elevación de Tarjetas',
-        'settings.elevationFlat': 'Mínima (sombra baja)',
+        'settings.accentHint': 'Actualiza botones, resaltados y llamadas de atenciÃ³n al instante.',
+        'settings.cardElevation': 'ElevaciÃ³n de Tarjetas',
+        'settings.elevationFlat': 'MÃ­nima (sombra baja)',
         'settings.elevationStandard': 'Equilibrada',
         'settings.elevationLifted': 'Elevada con Brillo',
-        'settings.layout': 'Diseño',
-        'settings.compactLayout': 'Diseño Compacto de Módulos',
-        'settings.compactLayoutHint': 'Tarjetas más densas para pantallas anchas o multitarea.',
-        'settings.textSize': 'Tamaño de Texto',
+        'settings.layout': 'DiseÃ±o',
+        'settings.compactLayout': 'DiseÃ±o Compacto de MÃ³dulos',
+        'settings.compactLayoutHint': 'Tarjetas mÃ¡s densas para pantallas anchas o multitarea.',
+        'settings.textSize': 'TamaÃ±o de Texto',
         'settings.textCompact': 'Compacto',
-        'settings.textStandard': 'Estándar',
-        'settings.textComfortable': 'Cómodo',
+        'settings.textStandard': 'EstÃ¡ndar',
+        'settings.textComfortable': 'CÃ³modo',
         'settings.textSpacious': 'Espacioso',
-        'settings.textSizeHint': 'Se aplica globalmente para una lectura más fácil.',
+        'settings.textSizeHint': 'Se aplica globalmente para una lectura mÃ¡s fÃ¡cil.',
         'settings.accessibility': 'Accesibilidad',
         'settings.reduceMotion': 'Reducir Movimiento',
         'settings.reduceMotionHint': 'Limita las animaciones para mayor enfoque y accesibilidad.',
         'settings.highContrast': 'Texto de Alto Contraste',
         'settings.highContrastHint': 'Aumenta el contraste del texto para mejor legibilidad.',
         'settings.learning': 'Aprendizaje',
-        'settings.showComments': 'Mostrar Comentarios de Código',
-        'settings.showCommentsHint': 'Cada módulo puede anular esta configuración.',
-        'settings.hideCompleted': 'Ocultar Módulos Completados',
-        'settings.hideCompletedHint': 'Mantén tu cuadrícula enfocada en lo que falta.',
-        'settings.weeklyGoal': 'Meta Semanal de Módulos',
-        'settings.goal3': '3 / semana · Ritmo constante',
-        'settings.goal5': '5 / semana · Equilibrado',
-        'settings.goal8': '8 / semana · Acelerado',
-        'settings.goal12': '12 / semana · Sprint',
+        'settings.showComments': 'Mostrar Comentarios de CÃ³digo',
+        'settings.showCommentsHint': 'Cada mÃ³dulo puede anular esta configuraciÃ³n.',
+        'settings.hideCompleted': 'Ocultar MÃ³dulos Completados',
+        'settings.hideCompletedHint': 'MantÃ©n tu cuadrÃ­cula enfocada en lo que falta.',
+        'settings.weeklyGoal': 'Meta Semanal de MÃ³dulos',
+        'settings.goal3': '3 / semana Â· Ritmo constante',
+        'settings.goal5': '5 / semana Â· Equilibrado',
+        'settings.goal8': '8 / semana Â· Acelerado',
+        'settings.goal12': '12 / semana Â· Sprint',
         'settings.weeklyGoalHint': 'Personaliza tus perspectivas de estudio y consejos de ritmo.',
         'settings.authLockTitle': 'Inicia sesion para personalizacion avanzada',
         'settings.authLockCopy': 'La mayoria de controles de personalizacion solo estan disponibles cuando tu cuenta esta autenticada y sincronizando.',
@@ -1857,7 +2159,7 @@ const TRANSLATIONS = {
         'settings.codePreviewLinesHint': 'Elige cuantas lineas de codigo se ven antes de expandir.',
         'settings.language': 'Idioma / Language',
         'settings.languageLabel': 'Idioma de la Interfaz',
-        'settings.languageHint': 'Cambia entre español e inglés / Switch between Spanish and English.',
+        'settings.languageHint': 'Cambia entre espaÃ±ol e inglÃ©s / Switch between Spanish and English.',
         'settings.save': '\u2705 Guardar y Cerrar',
         // Module card labels/tooltips
         'module.starterBanner': '\u2B50 M\u00f3dulo inicial: primer paso recomendado para la mayor\u00eda',
@@ -1868,7 +2170,7 @@ const TRANSLATIONS = {
         'module.collapseDetailedExamples': 'Contraer ejemplos detallados',
         'module.codeExample': '\u{1F4BB} Ejemplo de codigo',
         'module.discreteTheory': '\u{1F4D8} Teor\u00eda de Matem\u00e1ticas Discretas',
-        'module.theoryMode': 'Modo Teoría',
+        'module.theoryMode': 'Modo TeorÃ­a',
         'module.learningResources': '\u{1F4DA} Recursos de aprendizaje:',
         'module.definitionsHeading': '\u{1F4D6} Definiciones Clave',
         'module.learningPlan': '\u{1F9ED} Plan de Aprendizaje',
@@ -1895,29 +2197,29 @@ const TRANSLATIONS = {
         'module.quizLibraryButton': 'Abrir Biblioteca de Quizzes',
         'module.tooltipHideComments': 'Ocultar comentarios',
         'module.tooltipShowComments': 'Mostrar comentarios',
-        'module.tooltipSelectLanguage': 'Seleccionar lenguaje de programación',
-        'module.tooltipSelectMode': 'Seleccionar modo de código',
+        'module.tooltipSelectLanguage': 'Seleccionar lenguaje de programaciÃ³n',
+        'module.tooltipSelectMode': 'Seleccionar modo de cÃ³digo',
         'module.commentToggleLabel': 'Comentario (Emoji)',
-        'module.modeCode': 'Código',
-        'module.modePseudocode': 'Pseudocódigo',
+        'module.modeCode': 'CÃ³digo',
+        'module.modePseudocode': 'PseudocÃ³digo',
         'module.commentsOn': 'ACT',
         'module.commentsOff': 'DES',
         'module.collapse': '\u{1F53D} Contraer',
         'module.expand': '\u{1F53C} Expandir',
-        'module.discreteModeLabel': 'Matemáticas Discretas',
-        'module.examplesHeading': 'Ejemplos de Código por Tema',
-        'module.hideExample': 'Ocultar Código',
-        'module.showExample': 'Mostrar Código',
+        'module.discreteModeLabel': 'MatemÃ¡ticas Discretas',
+        'module.examplesHeading': 'Ejemplos de CÃ³digo por Tema',
+        'module.hideExample': 'Ocultar CÃ³digo',
+        'module.showExample': 'Mostrar CÃ³digo',
         'module.examplePreview': 'Vista previa',
-        'module.truncateHint': '// ... (haz clic en Expandir para ver el código completo)',
+        'module.truncateHint': '// ... (haz clic en Expandir para ver el cÃ³digo completo)',
         'module.showOutput': 'Salida',
         'module.hideOutput': 'Ocultar Salida',
         'module.outputHeading': 'Salida',
         'module.outputRunning': 'Ejecutando salida...',
         'module.outputSourceLive': 'En vivo',
         'module.outputSourceFallback': 'Respaldo',
-        'module.outputAssemblyNote': 'Ensamblador es solo visual en las tarjetas del módulo. Mostrando salida esperada.',
-        'module.outputUnavailableForMode': 'La salida solo está disponible en modo Código.',
+        'module.outputAssemblyNote': 'Ensamblador es solo visual en las tarjetas del mÃ³dulo. Mostrando salida esperada.',
+        'module.outputUnavailableForMode': 'La salida solo estÃ¡ disponible en modo CÃ³digo.',
         'module.deepExplanation': 'Explicacion Profunda',
         'module.showDeepExplanation': 'Mostrar Explicacion',
         'module.hideDeepExplanation': 'Ocultar Explicacion'
@@ -2054,7 +2356,11 @@ function interpolate(template, params = {}) {
 function t(key, params = {}, lang = appState.language || 'en') {
     const active = TRANSLATIONS[lang] || TRANSLATIONS.en || {};
     const fallback = TRANSLATIONS.en || {};
-    const template = active[key] ?? fallback[key] ?? key;
+    const activeTemplate = active[key];
+    const fallbackTemplate = fallback[key];
+    const template = typeof activeTemplate === 'string'
+        ? activeTemplate
+        : (typeof fallbackTemplate === 'string' ? fallbackTemplate : key);
     return interpolate(template, params);
 }
 
@@ -2075,7 +2381,8 @@ function tc(key, count, params = {}, lang = appState.language || 'en') {
     const fullKey = `${key}.${suffix}`;
     const active = TRANSLATIONS[lang] || TRANSLATIONS.en || {};
     const fallback = TRANSLATIONS.en || {};
-    const template = active[fullKey] ?? fallback[fullKey] ?? active[key] ?? fallback[key] ?? key;
+    const candidates = [active[fullKey], fallback[fullKey], active[key], fallback[key]];
+    const template = candidates.find((candidate) => typeof candidate === 'string') || key;
     return interpolate(template, { ...params, count });
 }
 
@@ -2413,30 +2720,31 @@ function applyLanguage(lang) {
 
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
-        if (!table[key]) return;
+        const value = table[key] || TRANSLATIONS.en?.[key];
+        if (typeof value !== 'string') return;
         // For inputs / selects only update label-like containers, not the select itself
         if (el.tagName === 'OPTION') {
-            el.textContent = table[key];
+            el.textContent = value;
         } else if (el.tagName === 'SELECT') {
             // handled via option elements
         } else {
-            el.textContent = table[key];
+            el.textContent = value;
         }
     });
     document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
         const key = el.getAttribute('data-i18n-placeholder');
         const value = table[key] || TRANSLATIONS.en?.[key];
-        if (value) el.setAttribute('placeholder', value);
+        if (typeof value === 'string') el.setAttribute('placeholder', value);
     });
     document.querySelectorAll('[data-i18n-title]').forEach((el) => {
         const key = el.getAttribute('data-i18n-title');
         const value = table[key] || TRANSLATIONS.en?.[key];
-        if (value) el.setAttribute('title', value);
+        if (typeof value === 'string') el.setAttribute('title', value);
     });
     document.querySelectorAll('[data-i18n-aria-label]').forEach((el) => {
         const key = el.getAttribute('data-i18n-aria-label');
         const value = table[key] || TRANSLATIONS.en?.[key];
-        if (value) el.setAttribute('aria-label', value);
+        if (typeof value === 'string') el.setAttribute('aria-label', value);
     });
 
     // Update language toggle button states
@@ -2452,6 +2760,10 @@ function applyLanguage(lang) {
     document.documentElement.lang = lang;
     translateDomLiterals(lang);
     setDomLocalizationObserver(lang);
+    if (typeof updateAccountChip === 'function') updateAccountChip();
+    if (typeof updateAccountAuthCardLayout === 'function') updateAccountAuthCardLayout();
+    if (typeof updateAccountProfileSummaryUI === 'function') updateAccountProfileSummaryUI();
+    if (typeof refreshAccountPrimaryAuthButton === 'function') refreshAccountPrimaryAuthButton();
     syncDesktopSidebarIconMode();
 }
 
@@ -3617,7 +3929,7 @@ const baseFlashcards = [
     {
         id: 7,
         question: "What is Big O notation?",
-        answer: "Big O describes worst-case time/space complexity.\n\nExamples:\nO(1) - array access\nO(log n) - binary search\nO(n²) - nested loops"
+        answer: "Big O describes worst-case time/space complexity.\n\nExamples:\nO(1) - array access\nO(log n) - binary search\nO(nÂ²) - nested loops"
     },
     {
         id: 8,
@@ -3692,7 +4004,7 @@ const baseFlashcards = [
     {
         id: 22,
         question: "How does quicksort work?",
-        answer: "Pick pivot, partition elements\nRecursively sort partitions\n\nTime: Avg O(n log n), Worst O(n²)"
+        answer: "Pick pivot, partition elements\nRecursively sort partitions\n\nTime: Avg O(n log n), Worst O(nÂ²)"
     },
     {
         id: 23,
@@ -3712,7 +4024,7 @@ const baseFlashcards = [
     {
         id: 26,
         question: "What is the best case and worst case for bubble sort?",
-        answer: "Best: O(n) if already sorted\nWorst: O(n²) with many swaps"
+        answer: "Best: O(n) if already sorted\nWorst: O(nÂ²) with many swaps"
     },
     {
         id: 27,
@@ -4172,7 +4484,7 @@ const quizData = {
                 {
                     id: 1,
                     question: "What is the time complexity of accessing an element in an array by its index?",
-                    options: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+                    options: ["O(1)", "O(log n)", "O(n)", "O(nÂ²)"],
                     correct: 0,
                     explanation: "Random access arrays compute the memory address via base + index ? element_size, so lookup cost is constant."
                 },
@@ -4343,7 +4655,7 @@ const quizData = {
                     question: "Why does quick sort degrade on already sorted arrays with naive pivot choice?",
                     options: ["Recursion depth stays constant", "Partitions become unbalanced (n-1 vs 0 elements)", "Randomization fails", "It copies too much"],
                     correct: 1,
-                    explanation: "Picking first or last element as pivot yields worst-case recursion depth n and total work O(n²)."
+                    explanation: "Picking first or last element as pivot yields worst-case recursion depth n and total work O(nÂ²)."
                 },
                 {
                     id: 3,
@@ -9157,7 +9469,7 @@ function buildTopicFocusedJavaSnippet(module, topic, topicIndex, totalTopics) {
         case 'discrete-logic':
             return `public class ${className} {\n    static boolean implies(boolean p, boolean q) { return !p || q; }\n\n    public static void main(String[] args) {\n        boolean[] values = {false, true};\n        System.out.println("p q | p->q");\n        for (boolean p : values) {\n            for (boolean q : values) {\n                System.out.println(p + " " + q + " | " + implies(p, q));\n            }\n        }\n        System.out.println("Focus topic (${topicIndex + 1}/${totalTopics}): ${focusTopic}");\n    }\n}`;
         case 'discrete-sets':
-            return `import java.util.*;\n\npublic class ${className} {\n    public static void main(String[] args) {\n        Set<Integer> a = new LinkedHashSet<>(List.of(1, 2, 3, 4));\n        Set<Integer> b = new LinkedHashSet<>(List.of(3, 4, 5));\n\n        Set<Integer> union = new LinkedHashSet<>(a);\n        union.addAll(b);\n\n        Set<Integer> intersection = new LinkedHashSet<>(a);\n        intersection.retainAll(b);\n\n        System.out.println("A U B = " + union);\n        System.out.println("A ∩ B = " + intersection);\n        System.out.println("Focus topic (${topicIndex + 1}/${totalTopics}): ${focusTopic}");\n    }\n}`;
+            return `import java.util.*;\n\npublic class ${className} {\n    public static void main(String[] args) {\n        Set<Integer> a = new LinkedHashSet<>(List.of(1, 2, 3, 4));\n        Set<Integer> b = new LinkedHashSet<>(List.of(3, 4, 5));\n\n        Set<Integer> union = new LinkedHashSet<>(a);\n        union.addAll(b);\n\n        Set<Integer> intersection = new LinkedHashSet<>(a);\n        intersection.retainAll(b);\n\n        System.out.println("A U B = " + union);\n        System.out.println("A âˆ© B = " + intersection);\n        System.out.println("Focus topic (${topicIndex + 1}/${totalTopics}): ${focusTopic}");\n    }\n}`;
         case 'discrete-combinatorics':
             return `public class ${className} {\n    static long nCr(int n, int r) {\n        if (r < 0 || r > n) return 0;\n        r = Math.min(r, n - r);\n        long result = 1;\n        for (int i = 1; i <= r; i++) {\n            result = result * (n - r + i) / i;\n        }\n        return result;\n    }\n\n    public static void main(String[] args) {\n        int n = 10;\n        int r = 3;\n        System.out.println("C(" + n + ", " + r + ") = " + nCr(n, r));\n        System.out.println("Focus topic (${topicIndex + 1}/${totalTopics}): ${focusTopic}");\n    }\n}`;
         case 'discrete-graph':
@@ -9933,8 +10245,8 @@ public class DataTypesDemo {
         },
         {
             id: 'methods',
-            title: { en: 'Methods', es: 'Métodos' },
-            description: { en: 'Define reusable methods with parameters and return values.', es: 'Define métodos reutilizables con parámetros y valores de retorno.' },
+            title: { en: 'Methods', es: 'MÃ©todos' },
+            description: { en: 'Define reusable methods with parameters and return values.', es: 'Define mÃ©todos reutilizables con parÃ¡metros y valores de retorno.' },
             codeExamples: {
                 java: `// Methods: parameters, return values, and reuse
 public class MethodsDemo {
@@ -9997,7 +10309,7 @@ public class ClassesDemo {
         {
             id: 'objects',
             title: { en: 'Objects', es: 'Objetos' },
-            description: { en: 'Instantiate objects, mutate state, and call instance methods.', es: 'Instancia objetos, modifica estado y llama métodos de instancia.' },
+            description: { en: 'Instantiate objects, mutate state, and call instance methods.', es: 'Instancia objetos, modifica estado y llama mÃ©todos de instancia.' },
             codeExamples: {
                 java: `// Objects: create instances, mutate fields, invoke methods
 class Student {
@@ -10465,8 +10777,8 @@ public class MemoryLeakPracticeLectureSet {
     'control-flow': [
         {
             id: 'if-else',
-            title: { en: 'If / Else Logic', es: 'Lógica If / Else' },
-            description: { en: 'Branch execution by condition checks.', es: 'Ramifica la ejecución según condiciones.' },
+            title: { en: 'If / Else Logic', es: 'LÃ³gica If / Else' },
+            description: { en: 'Branch execution by condition checks.', es: 'Ramifica la ejecuciÃ³n segÃºn condiciones.' },
             codeExamples: {
                 java: `// If/Else logic for score classification
 public class IfElseDemo {
@@ -10507,7 +10819,7 @@ public class ForLoopDemo {
         {
             id: 'while-loops',
             title: { en: 'While Loops', es: 'Bucles While' },
-            description: { en: 'Repeat while a condition remains true.', es: 'Repite mientras una condición sea verdadera.' },
+            description: { en: 'Repeat while a condition remains true.', es: 'Repite mientras una condiciÃ³n sea verdadera.' },
             codeExamples: {
                 java: `// While loop for countdown
 public class WhileLoopDemo {
@@ -10525,7 +10837,7 @@ public class WhileLoopDemo {
         {
             id: 'switch',
             title: { en: 'Switch Statements', es: 'Sentencias Switch' },
-            description: { en: 'Route behavior based on discrete values.', es: 'Enruta el comportamiento según valores discretos.' },
+            description: { en: 'Route behavior based on discrete values.', es: 'Enruta el comportamiento segÃºn valores discretos.' },
             codeExamples: {
                 java: `// Switch statement for menu actions
 public class SwitchDemo {
@@ -10574,8 +10886,8 @@ public class BreakContinueDemo {
     'oop-basics': [
         {
             id: 'encapsulation',
-            title: { en: 'Encapsulation', es: 'Encapsulación' },
-            description: { en: 'Protect internal state with private fields and methods.', es: 'Protege el estado interno con campos y métodos privados.' },
+            title: { en: 'Encapsulation', es: 'EncapsulaciÃ³n' },
+            description: { en: 'Protect internal state with private fields and methods.', es: 'Protege el estado interno con campos y mÃ©todos privados.' },
             codeExamples: {
                 java: `// Encapsulation with getters/setters and validation
 class BankAccount {
@@ -10682,7 +10994,7 @@ public class PolymorphismDemo {
         },
         {
             id: 'abstraction',
-            title: { en: 'Abstraction', es: 'Abstracción' },
+            title: { en: 'Abstraction', es: 'AbstracciÃ³n' },
             description: { en: 'Expose only essential behavior with abstract classes.', es: 'Expone solo el comportamiento esencial con clases abstractas.' },
             codeExamples: {
                 java: `// Abstraction through abstract class
@@ -10747,7 +11059,7 @@ public class InterfaceDemo {
         {
             id: 'array-traversal',
             title: { en: 'Array Traversal', es: 'Recorrido de Arreglos' },
-            description: { en: 'Walk arrays with index-based and enhanced loops.', es: 'Recorre arreglos con bucles por índice y mejorados.' },
+            description: { en: 'Walk arrays with index-based and enhanced loops.', es: 'Recorre arreglos con bucles por Ã­ndice y mejorados.' },
             codeExamples: {
                 java: `import java.util.Arrays;
 
@@ -10775,8 +11087,8 @@ public class ArrayTraversalSet {
         },
         {
             id: 'string-methods',
-            title: { en: 'String Methods', es: 'Métodos de Cadenas' },
-            description: { en: 'Apply useful string operations and validations.', es: 'Aplica operaciones y validaciones útiles de cadenas.' },
+            title: { en: 'String Methods', es: 'MÃ©todos de Cadenas' },
+            description: { en: 'Apply useful string operations and validations.', es: 'Aplica operaciones y validaciones Ãºtiles de cadenas.' },
             codeExamples: {
                 java: `public class StringMethodsSet {
     public static void main(String[] args) {
@@ -10828,7 +11140,7 @@ public class ArrayTraversalSet {
         {
             id: 'sliding-window',
             title: { en: 'Sliding Window', es: 'Ventana Deslizante' },
-            description: { en: 'Compute subarray metrics without restarting scans.', es: 'Calcula métricas de subarreglos sin reiniciar recorridos.' },
+            description: { en: 'Compute subarray metrics without restarting scans.', es: 'Calcula mÃ©tricas de subarreglos sin reiniciar recorridos.' },
             codeExamples: {
                 java: `public class SlidingWindowSet {
     static int maxWindowSum(int[] arr, int k) {
@@ -10855,7 +11167,7 @@ public class ArrayTraversalSet {
         {
             id: 'array-sorting',
             title: { en: 'Array Sorting', es: 'Ordenamiento de Arreglos' },
-            description: { en: 'Sort arrays and verify order-sensitive logic.', es: 'Ordena arreglos y verifica lógica sensible al orden.' },
+            description: { en: 'Sort arrays and verify order-sensitive logic.', es: 'Ordena arreglos y verifica lÃ³gica sensible al orden.' },
             codeExamples: {
                 java: `import java.util.Arrays;
 
@@ -10877,7 +11189,7 @@ public class ArraySortingSet {
         {
             id: 'singly-linked-list',
             title: { en: 'Singly Linked Lists', es: 'Listas Enlazadas Simples' },
-            description: { en: 'Build and traverse nodes linked in one direction.', es: 'Construye y recorre nodos enlazados en una sola dirección.' },
+            description: { en: 'Build and traverse nodes linked in one direction.', es: 'Construye y recorre nodos enlazados en una sola direcciÃ³n.' },
             codeExamples: {
                 java: `class Node {
     int value;
@@ -10932,8 +11244,8 @@ public class DoublyLinkedListSet {
         },
         {
             id: 'cycle-detection',
-            title: { en: 'Cycle Detection', es: 'Detección de Ciclos' },
-            description: { en: 'Use fast/slow pointers to detect loops.', es: 'Usa punteros rápido/lento para detectar bucles.' },
+            title: { en: 'Cycle Detection', es: 'DetecciÃ³n de Ciclos' },
+            description: { en: 'Use fast/slow pointers to detect loops.', es: 'Usa punteros rÃ¡pido/lento para detectar bucles.' },
             codeExamples: {
                 java: `class CycleNode {
     int value;
@@ -10965,7 +11277,7 @@ public class CycleDetectionSet {
         },
         {
             id: 'list-reversal',
-            title: { en: 'List Reversal', es: 'Inversión de Lista' },
+            title: { en: 'List Reversal', es: 'InversiÃ³n de Lista' },
             description: { en: 'Reverse links in-place using three pointers.', es: 'Invierte enlaces en sitio usando tres punteros.' },
             codeExamples: {
                 java: `class RevNode {
@@ -11008,7 +11320,7 @@ public class ListReversalSet {
         },
         {
             id: 'merge-lists',
-            title: { en: 'Merge Operations', es: 'Operaciones de Fusión' },
+            title: { en: 'Merge Operations', es: 'Operaciones de FusiÃ³n' },
             description: { en: 'Merge sorted linked lists with pointer comparisons.', es: 'Fusiona listas ordenadas con comparaciones de punteros.' },
             codeExamples: {
                 java: `class MergeNode {
@@ -11137,7 +11449,7 @@ public class PriorityQueueSet {
         },
         {
             id: 'practical-applications',
-            title: { en: 'Practical Applications', es: 'Aplicaciones Prácticas' },
+            title: { en: 'Practical Applications', es: 'Aplicaciones PrÃ¡cticas' },
             description: { en: 'Apply stack and queue patterns to real tasks.', es: 'Aplica patrones de pila y cola a tareas reales.' },
             codeExamples: {
                 java: `import java.util.ArrayDeque;
@@ -11174,7 +11486,7 @@ public class PracticalApplicationsSet {
     'searching-algorithms': [
         {
             id: 'linear-search',
-            title: { en: 'Linear Search', es: 'Búsqueda Lineal' },
+            title: { en: 'Linear Search', es: 'BÃºsqueda Lineal' },
             description: { en: 'Scan each element until the target appears.', es: 'Recorre cada elemento hasta encontrar el objetivo.' },
             codeExamples: {
                 java: `import java.util.Arrays;
@@ -11200,8 +11512,8 @@ public class LinearSearchSet {
         },
         {
             id: 'binary-search',
-            title: { en: 'Binary Search', es: 'Búsqueda Binaria' },
-            description: { en: 'Use sorted order to cut the search space in half each step.', es: 'Usa el ordenamiento para reducir a la mitad el espacio de búsqueda.' },
+            title: { en: 'Binary Search', es: 'BÃºsqueda Binaria' },
+            description: { en: 'Use sorted order to cut the search space in half each step.', es: 'Usa el ordenamiento para reducir a la mitad el espacio de bÃºsqueda.' },
             codeExamples: {
                 java: `import java.util.Arrays;
 
@@ -11230,7 +11542,7 @@ public class BinarySearchSet {
         {
             id: 'first-last-occurrence',
             title: { en: 'First & Last Occurrence', es: 'Primera y ?ltima Ocurrencia' },
-            description: { en: 'Find range boundaries for duplicate values in sorted data.', es: 'Encuentra los límites de un valor repetido en datos ordenados.' },
+            description: { en: 'Find range boundaries for duplicate values in sorted data.', es: 'Encuentra los lÃ­mites de un valor repetido en datos ordenados.' },
             codeExamples: {
                 java: `import java.util.Arrays;
 
@@ -11265,8 +11577,8 @@ public class FirstLastOccurrenceSet {
         },
         {
             id: 'hash-lookup',
-            title: { en: 'Hash Lookup Search', es: 'Búsqueda con Hash' },
-            description: { en: 'Use a hash map for near O(1) membership and complement lookup.', es: 'Usa un hash map para búsqueda de pertenencia y complementos en casi O(1).' },
+            title: { en: 'Hash Lookup Search', es: 'BÃºsqueda con Hash' },
+            description: { en: 'Use a hash map for near O(1) membership and complement lookup.', es: 'Usa un hash map para bÃºsqueda de pertenencia y complementos en casi O(1).' },
             codeExamples: {
                 java: `import java.util.HashMap;
 import java.util.Map;
@@ -11296,8 +11608,8 @@ public class HashLookupSet {
         },
         {
             id: 'search-comparison',
-            title: { en: 'Search Strategy Comparison', es: 'Comparación de Estrategias' },
-            description: { en: 'Compare linear vs binary operations on the same target.', es: 'Compara operaciones de búsqueda lineal y binaria para el mismo objetivo.' },
+            title: { en: 'Search Strategy Comparison', es: 'ComparaciÃ³n de Estrategias' },
+            description: { en: 'Compare linear vs binary operations on the same target.', es: 'Compara operaciones de bÃºsqueda lineal y binaria para el mismo objetivo.' },
             codeExamples: {
                 java: `import java.util.Arrays;
 
@@ -11370,7 +11682,7 @@ public class BubbleSortSet {
         {
             id: 'merge-sort',
             title: { en: 'Merge Sort', es: 'Merge Sort' },
-            description: { en: 'Divide-and-conquer sorting with stable merging.', es: 'Ordenamiento divide y vencerás con combinación estable.' },
+            description: { en: 'Divide-and-conquer sorting with stable merging.', es: 'Ordenamiento divide y vencerÃ¡s con combinaciÃ³n estable.' },
             codeExamples: {
                 java: `import java.util.Arrays;
 
@@ -11489,7 +11801,7 @@ public class HeapSortSet {
         {
             id: 'stable-vs-unstable',
             title: { en: 'Stable vs Unstable Sorts', es: 'Ordenamientos Estables e Inestables' },
-            description: { en: 'Understand why stable sorting matters for multi-key records.', es: 'Comprende por qué el ordenamiento estable importa en registros con varias claves.' },
+            description: { en: 'Understand why stable sorting matters for multi-key records.', es: 'Comprende por quÃ© el ordenamiento estable importa en registros con varias claves.' },
             codeExamples: {
                 java: `import java.util.ArrayList;
 import java.util.Comparator;
@@ -11522,7 +11834,7 @@ public class StableSortSet {
     recursion: [
         {
             id: 'base-case-pattern',
-            title: { en: 'Base Case Pattern', es: 'Patrón de Caso Base' },
+            title: { en: 'Base Case Pattern', es: 'PatrÃ³n de Caso Base' },
             description: { en: 'Define stopping conditions before recursive calls.', es: 'Define condiciones de parada antes de las llamadas recursivas.' },
             codeExamples: {
                 java: `public class BaseCasePatternSet {
@@ -11544,7 +11856,7 @@ public class StableSortSet {
         {
             id: 'factorial-fibonacci',
             title: { en: 'Factorial & Fibonacci', es: 'Factorial y Fibonacci' },
-            description: { en: 'Practice classic recursive recurrence relations.', es: 'Practica relaciones de recurrencia clásicas con recursión.' },
+            description: { en: 'Practice classic recursive recurrence relations.', es: 'Practica relaciones de recurrencia clÃ¡sicas con recursiÃ³n.' },
             codeExamples: {
                 java: `public class FactorialFibonacciSet {
     static long factorial(int n) {
@@ -11598,8 +11910,8 @@ public class RecursiveBacktrackingSet {
         },
         {
             id: 'memoization',
-            title: { en: 'Memoization', es: 'Memoización' },
-            description: { en: 'Cache overlapping subproblems to avoid repeated recursion.', es: 'Almacena subproblemas traslapados para evitar recursión repetida.' },
+            title: { en: 'Memoization', es: 'MemoizaciÃ³n' },
+            description: { en: 'Cache overlapping subproblems to avoid repeated recursion.', es: 'Almacena subproblemas traslapados para evitar recursiÃ³n repetida.' },
             codeExamples: {
                 java: `import java.util.HashMap;
 import java.util.Map;
@@ -11626,8 +11938,8 @@ public class MemoizationSet {
         },
         {
             id: 'recursion-tree-tracing',
-            title: { en: 'Recursion Tree Tracing', es: 'Trazado del Árbol de Recursión' },
-            description: { en: 'Trace call depth and return flow to debug recursive logic.', es: 'Traza profundidad de llamadas y flujo de retorno para depurar recursión.' },
+            title: { en: 'Recursion Tree Tracing', es: 'Trazado del Ãrbol de RecursiÃ³n' },
+            description: { en: 'Trace call depth and return flow to debug recursive logic.', es: 'Traza profundidad de llamadas y flujo de retorno para depurar recursiÃ³n.' },
             codeExamples: {
                 java: `public class RecursionTreeTracingSet {
     static int traceSum(int n, int depth) {
@@ -12673,43 +12985,43 @@ function buildFallbackModuleQuiz(moduleId) {
     const questions = isSpanish
         ? [
             {
-                question: `¿Cuál es el objetivo principal del módulo "${moduleTitle}"?`,
+                question: `Â¿CuÃ¡l es el objetivo principal del mÃ³dulo "${moduleTitle}"?`,
                 options: [
-                    'Memorizar términos sin practicar',
+                    'Memorizar tÃ©rminos sin practicar',
                     `Entender ${topicA} y aplicarlo en ejemplos funcionales`,
-                    'Evitar pruebas y casos límite',
+                    'Evitar pruebas y casos lÃ­mite',
                     'Concentrarse solo en sintaxis'
                 ],
                 correct: 1,
-                explanation: `Este módulo está diseñado para construir dominio práctico sobre ${topicA}.`
+                explanation: `Este mÃ³dulo estÃ¡ diseÃ±ado para construir dominio prÃ¡ctico sobre ${topicA}.`
             },
             {
-                question: `Después de programar tu primera solución de ${topicA}, ¿qué sigue?`,
+                question: `DespuÃ©s de programar tu primera soluciÃ³n de ${topicA}, Â¿quÃ© sigue?`,
                 options: [
-                    'Probar casos límite y revisar complejidad',
+                    'Probar casos lÃ­mite y revisar complejidad',
                     'Detenerte sin validar resultados',
-                    'Ignorar entradas inválidas',
+                    'Ignorar entradas invÃ¡lidas',
                     'Reescribir todo sin medir cambios'
                 ],
                 correct: 0,
-                explanation: 'La validación y el análisis de complejidad consolidan aprendizaje real.'
+                explanation: 'La validaciÃ³n y el anÃ¡lisis de complejidad consolidan aprendizaje real.'
             },
             {
-                question: `¿Qué secuencia de estudio te da mejor progreso en ${moduleTitle}?`,
+                question: `Â¿QuÃ© secuencia de estudio te da mejor progreso en ${moduleTitle}?`,
                 options: [
-                    'Leer teoría, codificar, probar, explicar tradeoffs',
-                    'Saltarte teoría y copiar una solución',
+                    'Leer teorÃ­a, codificar, probar, explicar tradeoffs',
+                    'Saltarte teorÃ­a y copiar una soluciÃ³n',
                     'Practicar sin revisar errores',
-                    'Aprender varias técnicas sin terminar ninguna'
+                    'Aprender varias tÃ©cnicas sin terminar ninguna'
                 ],
                 correct: 0,
-                explanation: 'El ciclo teoría -> implementación -> verificación -> reflexión es el más sólido.'
+                explanation: 'El ciclo teorÃ­a -> implementaciÃ³n -> verificaciÃ³n -> reflexiÃ³n es el mÃ¡s sÃ³lido.'
             },
             {
-                question: `Si una solución de ${topicB} falla, ¿qué acción es más efectiva?`,
+                question: `Si una soluciÃ³n de ${topicB} falla, Â¿quÃ© acciÃ³n es mÃ¡s efectiva?`,
                 options: [
                     'Agregar impresiones y verificar estado paso a paso',
-                    'Cambiar todo sin diagnóstico',
+                    'Cambiar todo sin diagnÃ³stico',
                     'Culpar al compilador',
                     'Ignorar la entrada que falla'
                 ],
@@ -12717,15 +13029,15 @@ function buildFallbackModuleQuiz(moduleId) {
                 explanation: 'Depurar de forma estructurada acelera correcciones y evita regresiones.'
             },
             {
-                question: `¿Qué habilidad transferible refuerza practicar ${topicC}?`,
+                question: `Â¿QuÃ© habilidad transferible refuerza practicar ${topicC}?`,
                 options: [
-                    'Razonamiento algorítmico y toma de decisiones con datos',
-                    'Memorización sin comprensión',
+                    'Razonamiento algorÃ­tmico y toma de decisiones con datos',
+                    'MemorizaciÃ³n sin comprensiÃ³n',
                     'Dependencia de plantillas fijas',
-                    'Evitar comunicación técnica'
+                    'Evitar comunicaciÃ³n tÃ©cnica'
                 ],
                 correct: 0,
-                explanation: 'El módulo fortalece pensamiento estructurado útil en cursos y entrevistas.'
+                explanation: 'El mÃ³dulo fortalece pensamiento estructurado Ãºtil en cursos y entrevistas.'
             }
         ]
         : [
@@ -12790,7 +13102,7 @@ function buildFallbackModuleQuiz(moduleId) {
         title: moduleTitle,
         parts: [
             {
-                title: isSpanish ? 'Chequeo de aprendizaje del módulo' : 'Module learning checkpoint',
+                title: isSpanish ? 'Chequeo de aprendizaje del mÃ³dulo' : 'Module learning checkpoint',
                 questions
             }
         ]
@@ -12828,7 +13140,7 @@ function getGlossaryTrackCategoryLabel(categoryKey, lang = appState.language || 
         },
         es: {
             dsa: 'DSA',
-            discrete: 'Matemáticas Discretas',
+            discrete: 'MatemÃ¡ticas Discretas',
             java: 'Java',
             git: 'Git',
             assembly: 'Ensamblador'
@@ -13189,14 +13501,14 @@ function getFlashcardPromptTemplates(lang = 'en') {
     if (lang === 'es') {
         return {
             defineTerm: 'Define "{term}" en el contexto de {module}.',
-            termUseCase: '¿Cuándo aplicarías "{term}" en un problema real?',
-            topicConnection: '¿Cómo se conecta "{topic}" con el objetivo principal de {module}?',
-            pitfallQuestion: '¿Qué error común debes evitar al estudiar {topic}?',
-            explanationQuestion: 'Resume la idea central que enseña {module}.',
+            termUseCase: 'Â¿CuÃ¡ndo aplicarÃ­as "{term}" en un problema real?',
+            topicConnection: 'Â¿CÃ³mo se conecta "{topic}" con el objetivo principal de {module}?',
+            pitfallQuestion: 'Â¿QuÃ© error comÃºn debes evitar al estudiar {topic}?',
+            explanationQuestion: 'Resume la idea central que enseÃ±a {module}.',
             explanationAnswerPrefix: 'Idea central:',
             pitfallAnswerPrefix: 'Evita este error:',
-            useCaseAnswerPrefix: 'Caso práctico:',
-            connectionAnswerPrefix: 'Conexión clave:'
+            useCaseAnswerPrefix: 'Caso prÃ¡ctico:',
+            connectionAnswerPrefix: 'ConexiÃ³n clave:'
         };
     }
     return {
@@ -14635,7 +14947,7 @@ console.log(isValid("(]"));`,
             },
             {
                 id: 'replace-pairs',
-                label: { en: 'Repeated Pair Elimination', es: 'Eliminación repetida de pares' },
+                label: { en: 'Repeated Pair Elimination', es: 'EliminaciÃ³n repetida de pares' },
                 applicability: 'Good for conceptual clarity on short strings, not for large inputs.',
                 explanation: 'Repeatedly remove (), [], and {} until no more changes occur.',
                 complexity: 'Time O(n^2), Space O(n)',
@@ -14925,7 +15237,7 @@ console.log(binarySearch(arr, 6));`,
             },
             {
                 id: 'recursive-search',
-                label: { en: 'Recursive Binary Search', es: 'Búsqueda binaria recursiva' },
+                label: { en: 'Recursive Binary Search', es: 'BÃºsqueda binaria recursiva' },
                 applicability: 'Useful when recursion makes divide-and-conquer proofs easier to reason about.',
                 explanation: 'Each call picks one half and recurses on a strictly smaller interval.',
                 complexity: 'Time O(log n), Space O(log n) call stack',
@@ -15155,7 +15467,7 @@ if __name__ == "__main__":
         approaches: [
             {
                 id: 'min-heap',
-                label: { en: 'Min-Heap of Size k', es: 'Min-heap de tamaño k' },
+                label: { en: 'Min-Heap of Size k', es: 'Min-heap de tamaÃ±o k' },
                 applicability: 'Strong default when k is much smaller than unique values.',
                 explanation: 'Keep only k best frequencies in a min-heap to avoid sorting every key.',
                 complexity: 'Time O(n log k), Space O(n)',
@@ -15498,7 +15810,7 @@ const DS_PLAYGROUND_CONFIG = {
         label: 'Array',
         hint: {
             en: 'Indexed contiguous storage for fast reads and linear inserts/deletes.',
-            es: 'Almacenamiento contiguo indexado para lecturas rápidas e inserciones/eliminaciones lineales.'
+            es: 'Almacenamiento contiguo indexado para lecturas rÃ¡pidas e inserciones/eliminaciones lineales.'
         },
         operations: { access: 'O(1)', search: 'O(n)', insert: 'O(n)', remove: 'O(n)' },
         defaultOperation: 'insert',
@@ -15557,7 +15869,7 @@ array_playground_demo()
         codeExplanations: {
             java: {
                 en: 'Shows indexed insert, tail removal, and linear search with explicit output.',
-                es: 'Muestra inserción por índice, eliminación al final y búsqueda lineal con salida explícita.'
+                es: 'Muestra inserciÃ³n por Ã­ndice, eliminaciÃ³n al final y bÃºsqueda lineal con salida explÃ­cita.'
             },
             cpp: {
                 en: 'Uses vector insert/pop_back/find to mirror array operations and complexity tradeoffs.',
@@ -15577,7 +15889,7 @@ array_playground_demo()
         label: 'Stack',
         hint: {
             en: 'LIFO model for undo flows, parsing, recursion simulation, and backtracking.',
-            es: 'Modelo LIFO para deshacer, análisis de expresiones, simulación de recursión y backtracking.'
+            es: 'Modelo LIFO para deshacer, anÃ¡lisis de expresiones, simulaciÃ³n de recursiÃ³n y backtracking.'
         },
         operations: { push: 'O(1)', pop: 'O(1)', peek: 'O(1)' },
         defaultOperation: 'push',
@@ -15633,14 +15945,14 @@ stack_playground_demo()
             java: { en: 'ArrayDeque gives O(1) push/pop at the top.', es: 'ArrayDeque entrega push/pop O(1) en la parte superior.' },
             cpp: { en: 'std::stack models strict LIFO operations.', es: 'std::stack modela operaciones LIFO estrictas.' },
             python: { en: 'Python list append/pop supports stack behavior cleanly.', es: 'La lista de Python con append/pop soporta comportamiento de pila de forma directa.' },
-            javascript: { en: 'JavaScript arrays naturally support stack push/pop semantics.', es: 'Los arreglos en JavaScript soportan naturalmente la semántica push/pop de pila.' }
+            javascript: { en: 'JavaScript arrays naturally support stack push/pop semantics.', es: 'Los arreglos en JavaScript soportan naturalmente la semÃ¡ntica push/pop de pila.' }
         }
     },
     queue: {
         label: 'Queue',
         hint: {
             en: 'FIFO ordering for scheduling, BFS, buffering, and producer-consumer pipelines.',
-            es: 'Orden FIFO para planificación, BFS, buffering y flujos productor-consumidor.'
+            es: 'Orden FIFO para planificaciÃ³n, BFS, buffering y flujos productor-consumidor.'
         },
         operations: { enqueue: 'O(1)', dequeue: 'O(1)', peek: 'O(1)' },
         defaultOperation: 'enqueue',
@@ -15698,14 +16010,14 @@ queue_playground_demo()
             java: { en: 'ArrayDeque supports queue operations through offer/poll/peek.', es: 'ArrayDeque soporta cola mediante offer/poll/peek.' },
             cpp: { en: 'std::queue encapsulates FIFO behavior cleanly.', es: 'std::queue encapsula comportamiento FIFO de forma clara.' },
             python: { en: 'collections.deque gives O(1) pops from the left.', es: 'collections.deque da extracciones O(1) por la izquierda.' },
-            javascript: { en: 'shift models dequeue; use with care for very large arrays.', es: 'shift modela dequeue; úsalo con cuidado en arreglos muy grandes.' }
+            javascript: { en: 'shift models dequeue; use with care for very large arrays.', es: 'shift modela dequeue; Ãºsalo con cuidado en arreglos muy grandes.' }
         }
     },
     heap: {
         label: 'Heap',
         hint: {
             en: 'Priority structure where root keeps min/max depending on heap type.',
-            es: 'Estructura de prioridad donde la raíz mantiene min/máx según el tipo de heap.'
+            es: 'Estructura de prioridad donde la raÃ­z mantiene min/mÃ¡x segÃºn el tipo de heap.'
         },
         operations: { insert: 'O(log n)', extract: 'O(log n)', peek: 'O(1)' },
         defaultOperation: 'insert',
@@ -15763,10 +16075,10 @@ heap_playground_demo()
 })();`
         },
         codeExplanations: {
-            java: { en: 'PriorityQueue is the standard min-heap implementation in Java.', es: 'PriorityQueue es la implementación estándar de min-heap en Java.' },
+            java: { en: 'PriorityQueue is the standard min-heap implementation in Java.', es: 'PriorityQueue es la implementaciÃ³n estÃ¡ndar de min-heap en Java.' },
             cpp: { en: 'priority_queue with greater<int> yields min-heap behavior.', es: 'priority_queue con greater<int> produce comportamiento de min-heap.' },
             python: { en: 'heapq provides heapify/heappop for efficient priorities.', es: 'heapq ofrece heapify/heappop para prioridades eficientes.' },
-            javascript: { en: 'For teaching clarity this mirror uses sorted order to explain root extraction.', es: 'Para claridad didáctica este espejo usa ordenado para explicar extracción de raíz.' }
+            javascript: { en: 'For teaching clarity this mirror uses sorted order to explain root extraction.', es: 'Para claridad didÃ¡ctica este espejo usa ordenado para explicar extracciÃ³n de raÃ­z.' }
         }
     },
     graph: {
@@ -15839,7 +16151,7 @@ graph_playground_demo()
         codeExplanations: {
             java: { en: 'Adjacency list with HashMap keeps graph updates simple and explicit.', es: 'La lista de adyacencia con HashMap mantiene actualizaciones de grafo claras y simples.' },
             cpp: { en: 'unordered_map<string, vector<string>> mirrors directed adjacency lists.', es: 'unordered_map<string, vector<string>> refleja listas de adyacencia dirigidas.' },
-            python: { en: 'Dictionary-of-lists is concise for graph teaching and quick traversal demos.', es: 'Diccionario de listas es conciso para enseñar grafos y recorrerlos rápido.' },
+            python: { en: 'Dictionary-of-lists is concise for graph teaching and quick traversal demos.', es: 'Diccionario de listas es conciso para enseÃ±ar grafos y recorrerlos rÃ¡pido.' },
             javascript: { en: 'Map + arrays gives readable graph state for browser-based demos.', es: 'Map con arreglos da un estado de grafo legible para demos en navegador.' }
         }
     },
@@ -15847,7 +16159,7 @@ graph_playground_demo()
         label: 'Trie',
         hint: {
             en: 'Prefix tree optimized for dictionary lookups and startsWith queries.',
-            es: 'Árbol de prefijos optimizado para búsquedas de diccionario y consultas startsWith.'
+            es: 'Ãrbol de prefijos optimizado para bÃºsquedas de diccionario y consultas startsWith.'
         },
         operations: { insert: 'O(L)', search: 'O(L)', startsWith: 'O(L)' },
         defaultOperation: 'search',
@@ -15906,9 +16218,9 @@ trie_playground_demo()
         },
         codeExplanations: {
             java: { en: 'Uses a simple prefix-check mirror to explain Trie outcomes with printed results.', es: 'Usa un espejo simple de prefijos para explicar resultados de Trie con salida visible.' },
-            cpp: { en: 'Prefix check with rfind(...,0) demonstrates startsWith logic clearly.', es: 'La verificación con rfind(...,0) demuestra claramente la lógica startsWith.' },
-            python: { en: 'any(...startswith) models fast prefix matching behavior in a compact way.', es: 'any(...startswith) modela la búsqueda rápida por prefijo de forma compacta.' },
-            javascript: { en: 'some/startsWith mirrors prefix lookup semantics used by Trie APIs.', es: 'some/startsWith refleja la semántica de búsqueda por prefijo usada por APIs de Trie.' }
+            cpp: { en: 'Prefix check with rfind(...,0) demonstrates startsWith logic clearly.', es: 'La verificaciÃ³n con rfind(...,0) demuestra claramente la lÃ³gica startsWith.' },
+            python: { en: 'any(...startswith) models fast prefix matching behavior in a compact way.', es: 'any(...startswith) modela la bÃºsqueda rÃ¡pida por prefijo de forma compacta.' },
+            javascript: { en: 'some/startsWith mirrors prefix lookup semantics used by Trie APIs.', es: 'some/startsWith refleja la semÃ¡ntica de bÃºsqueda por prefijo usada por APIs de Trie.' }
         }
     }
 };
@@ -16007,10 +16319,10 @@ const accountProfileUiState = {
     pendingEmail: ''
 };
 const ACCOUNT_GOAL_LABELS = Object.freeze({
-    exploring: 'Exploring',
-    internship: 'Internship Prep',
-    interview: 'Interview Prep',
-    coursework: 'Coursework Support'
+    exploring: 'account.goal.exploring',
+    internship: 'account.goal.internship',
+    interview: 'account.goal.interview',
+    coursework: 'account.goal.coursework'
 });
 const ACCOUNT_PROFILE_PANEL_FOCUS = Object.freeze({
     profile: '#account-username',
@@ -16019,18 +16331,18 @@ const ACCOUNT_PROFILE_PANEL_FOCUS = Object.freeze({
 });
 const ACCOUNT_PROFILE_PANEL_META = Object.freeze({
     profile: {
-        title: 'Edit Profile',
-        backLabel: 'Back to Overview',
+        titleKey: 'account.panel.profile',
+        backLabelKey: 'account.panel.backOverview',
         backTarget: 'overview'
     },
     security: {
-        title: 'Security Settings',
-        backLabel: 'Back to Profile',
+        titleKey: 'account.panel.securityTitle',
+        backLabelKey: 'account.panel.backProfile',
         backTarget: 'profile'
     },
     danger: {
-        title: 'Danger Zone',
-        backLabel: 'Back to Profile',
+        titleKey: 'account.panel.danger',
+        backLabelKey: 'account.panel.backProfile',
         backTarget: 'profile'
     }
 });
@@ -16058,7 +16370,7 @@ function getDefaultAccountProfile() {
         serverUserId: '',
         lastSyncAt: null,
         lastSyncStatus: 'idle',
-        lastSyncMessage: 'Sync idle.'
+        lastSyncMessage: getStableTranslation('account.sync.idle')
     };
 }
 
@@ -16110,20 +16422,24 @@ function updateAccountChip() {
         accountButton.classList.toggle('account-btn-authenticated', isAuthenticated);
     }
     if (accountDesktopLabel) {
-        accountDesktopLabel.textContent = isAuthenticated ? 'Logged In' : (isSessionHydrating ? 'Checking' : 'Account');
+        accountDesktopLabel.textContent = isAuthenticated
+            ? getStableTranslation('account.signedIn.kicker')
+            : (isSessionHydrating ? getStableTranslation('account.auth.state.checking') : getStableTranslation('btn.account'));
     }
     if (accountMobileLabel) {
-        accountMobileLabel.textContent = isAuthenticated ? 'Signed' : (isSessionHydrating ? 'Wait' : 'Account');
+        accountMobileLabel.textContent = isAuthenticated
+            ? getStableTranslation('account.signedIn.kicker')
+            : (isSessionHydrating ? getStableTranslation('account.auth.state.checking') : getStableTranslation('btn.accountShort'));
     }
 
     if (chip) {
         if (isAuthenticated) {
-            const providerSuffix = providerLabel ? ` · ${providerLabel}` : '';
+            const providerSuffix = providerLabel ? ` Â· ${providerLabel}` : '';
             chip.textContent = `${UI_ICONS.profile} ${displayLabel}${providerSuffix}`;
             chip.classList.remove('hidden');
             chip.classList.add('account-chip-authenticated');
         } else if (isSessionHydrating) {
-            chip.textContent = `${UI_ICONS.info} Checking session...`;
+            chip.textContent = `${UI_ICONS.info} ${getStableTranslation('account.auth.sessionStatusChecking')}`;
             chip.classList.remove('hidden');
             chip.classList.remove('account-chip-authenticated');
         } else {
@@ -16143,7 +16459,7 @@ function getAccountDisplayLabel() {
         || accountAuthState.sessionLabel
         || '';
     const label = String(rawLabel || '').trim();
-    return label || 'Guest Learner';
+    return label || getStableTranslation('account.profile.displayName.guest');
 }
 
 function normalizeAuthProviderKey(rawProvider = '') {
@@ -16167,7 +16483,7 @@ function getAccountSessionProviderLabel() {
     const normalizedProviderKey = normalizeAuthProviderKey(accountAuthState.providerKey || accountAuthState.providerLabel);
     if (normalizedProviderKey === 'google') return 'Google';
     if (normalizedProviderKey === 'github') return 'GitHub';
-    if (normalizedProviderKey === 'password') return 'Email + Password';
+    if (normalizedProviderKey === 'password') return getStableTranslation('account.provider.password');
     if (normalizedProviderKey) return normalizedProviderKey.charAt(0).toUpperCase() + normalizedProviderKey.slice(1);
     const fallbackLabel = String(accountAuthState.providerLabel || '').trim();
     return fallbackLabel;
@@ -16187,7 +16503,7 @@ function updateAccountAccessEntryButtons() {
     const insightsLockButton = document.getElementById('insights-auth-open-account');
     [settingsLockButton, insightsLockButton].forEach((button) => {
         if (!button) return;
-        button.textContent = isAuthenticated ? 'Manage Account' : 'Log In / Sign Up';
+        button.textContent = isAuthenticated ? getStableTranslation('account.auth.entry.manage') : getStableTranslation('account.auth.entry.login');
         button.classList.toggle('is-authenticated-entry', isAuthenticated);
     });
 }
@@ -16300,7 +16616,7 @@ function renderAccountAvatarVisual(container, avatarUrl, fallbackLabel) {
     }
     const image = document.createElement('img');
     image.src = safeAvatarUrl;
-    image.alt = `${fallbackLabel || 'Profile'} avatar`;
+    image.alt = getStableTranslation('account.avatar.alt', { label: fallbackLabel || getStableTranslation('account.profile.displayName.guest') });
     image.loading = 'lazy';
     image.decoding = 'async';
     image.addEventListener('error', () => {
@@ -16312,7 +16628,8 @@ function renderAccountAvatarVisual(container, avatarUrl, fallbackLabel) {
 
 function getAccountGoalLabel(goalValue) {
     const key = String(goalValue || '').trim().toLowerCase();
-    return ACCOUNT_GOAL_LABELS[key] || ACCOUNT_GOAL_LABELS.exploring;
+    const translationKey = ACCOUNT_GOAL_LABELS[key] || ACCOUNT_GOAL_LABELS.exploring;
+    return t(translationKey);
 }
 
 function updateAccountAuthCardLayout() {
@@ -16339,13 +16656,15 @@ function updateAccountAuthCardLayout() {
         authCard.classList.toggle('account-auth-card-authenticated', isAuthenticated);
     }
     if (statePill) {
-        statePill.textContent = isAuthenticated ? 'Session Active' : (isSessionHydrating ? 'Checking Session...' : 'Not Signed In');
+        statePill.textContent = isAuthenticated
+            ? getStableTranslation('account.auth.state.sessionActive')
+            : (isSessionHydrating ? getStableTranslation('account.auth.state.checking') : getStableTranslation('account.auth.state.guest'));
         statePill.setAttribute('data-auth-state', isAuthenticated ? 'authenticated' : 'guest');
     }
     if (providerPill) {
         const shouldShowProvider = isAuthenticated && Boolean(providerLabel);
         providerPill.classList.toggle('hidden', !shouldShowProvider);
-        providerPill.textContent = shouldShowProvider ? providerLabel : 'Direct login';
+        providerPill.textContent = shouldShowProvider ? providerLabel : getStableTranslation('account.state.directLogin');
     }
     if (interactiveFields) {
         interactiveFields.classList.toggle('hidden', isAuthenticated);
@@ -16362,7 +16681,7 @@ function updateAccountAuthCardLayout() {
     if (signedInUser) {
         signedInUser.textContent = isAuthenticated
             ? getAccountDisplayLabel()
-            : (isSessionHydrating ? 'Validating session...' : 'Session active');
+            : (isSessionHydrating ? getStableTranslation('account.auth.state.validating') : getStableTranslation('account.state.sessionActive'));
     }
     if (legal) {
         legal.classList.toggle('hidden', isAuthenticated || accountAuthState.mode !== 'signup');
@@ -16377,14 +16696,16 @@ function updateAccountAuthCardLayout() {
         submitButton.classList.toggle('opacity-70', submitButton.disabled);
         submitButton.classList.toggle('cursor-not-allowed', submitButton.disabled);
         if (!isAuthenticated && isSessionHydrating) {
-            submitButton.textContent = 'Checking Session...';
+            submitButton.textContent = getStableTranslation('account.auth.submitChecking');
         }
     }
     if (heroLogoutButton) {
         heroLogoutButton.classList.toggle('hidden', !isAuthenticated);
         heroLogoutButton.disabled = accountAuthState.inFlight;
         heroLogoutButton.setAttribute('aria-disabled', accountAuthState.inFlight ? 'true' : 'false');
-        heroLogoutButton.textContent = accountAuthState.inFlight ? 'Signing Out...' : 'Sign Out';
+        heroLogoutButton.textContent = accountAuthState.inFlight
+            ? getStableTranslation('account.auth.submitSigningOut')
+            : getStableTranslation('account.actions.signOut');
     }
     if (heroManageButton) {
         heroManageButton.classList.toggle('hidden', !isAuthenticated);
@@ -16392,7 +16713,7 @@ function updateAccountAuthCardLayout() {
     if (retrySessionButton) {
         const showRetry = !isAuthenticated && canCheckSession;
         retrySessionButton.classList.toggle('hidden', !showRetry);
-        retrySessionButton.textContent = isSessionHydrating ? 'Checking Session...' : t('auth.retrySession');
+        retrySessionButton.textContent = isSessionHydrating ? getStableTranslation('account.auth.submitChecking') : getStableTranslation('auth.retrySession');
         const disableRetry = accountAuthState.inFlight || isSessionHydrating;
         retrySessionButton.disabled = disableRetry;
         retrySessionButton.setAttribute('aria-disabled', disableRetry ? 'true' : 'false');
@@ -16442,8 +16763,8 @@ function updateAccountProfileSummaryUI() {
             emailEl.textContent = socialStatusLabel;
         } else {
             emailEl.textContent = emailLabel || (isAuthenticated
-                ? 'Email available from your authenticated session.'
-                : 'Sign in to sync profile and progress.');
+                ? getStableTranslation('account.profile.displayEmail.authFallback')
+                : getStableTranslation('account.profile.displayEmail.guest'));
         }
     }
     if (goalEl) {
@@ -16451,11 +16772,11 @@ function updateAccountProfileSummaryUI() {
     }
     if (sessionEl) {
         sessionEl.textContent = isAuthenticated
-            ? (providerLabel ? `${providerLabel} Session` : (sessionLabel || 'Signed In'))
-            : (isSessionHydrating ? 'Checking Session...' : 'Not Signed In');
+            ? (providerLabel ? `${providerLabel} ${getStableTranslation('account.summary.session')}` : (sessionLabel || getStableTranslation('account.signedIn.kicker')))
+            : (isSessionHydrating ? getStableTranslation('account.auth.state.checking') : getStableTranslation('account.auth.state.guest'));
     }
     if (syncEl) {
-        syncEl.textContent = String(accountProfile.lastSyncMessage || 'Sync idle.');
+        syncEl.textContent = String(accountProfile.lastSyncMessage || getStableTranslation('account.sync.idle'));
     }
     if (profileToggleButton) {
         profileToggleButton.classList.toggle('hidden', !isAuthenticated);
@@ -16464,7 +16785,7 @@ function updateAccountProfileSummaryUI() {
         }
     }
     if (profileToggleLabel && !isAuthenticated) {
-        profileToggleLabel.textContent = 'Manage';
+        profileToggleLabel.textContent = getStableTranslation('account.profile.toggle.manage');
     }
     if (profileActionsWrap) {
         profileActionsWrap.classList.toggle('hidden', !isAuthenticated);
@@ -16529,10 +16850,10 @@ function updateAccountProfilePanelNavigation() {
     const shouldShowNav = isAuthenticated && isExpanded && profileContent && !profileContent.classList.contains('hidden');
 
     navWrap.classList.toggle('hidden', !shouldShowNav);
-    titleEl.textContent = panelMeta.title;
-    backLabelEl.textContent = panelMeta.backLabel;
+    titleEl.textContent = t(panelMeta.titleKey || 'account.panel.profile');
+    backLabelEl.textContent = t(panelMeta.backLabelKey || 'account.panel.backOverview');
     backButton.setAttribute('data-account-back-target', panelMeta.backTarget);
-    backButton.setAttribute('aria-label', panelMeta.backLabel);
+    backButton.setAttribute('aria-label', t(panelMeta.backLabelKey || 'account.panel.backOverview'));
 }
 
 function resolveAccountPanelFocusSelector(panel = accountProfileUiState.activePanel) {
@@ -16764,8 +17085,8 @@ function getAccountSignedInStatusMessage() {
     const providerLabel = getAccountSessionProviderLabel();
     const displayLabel = getAccountDisplayLabel();
     return providerLabel
-        ? `Signed in as ${displayLabel} via ${providerLabel}.`
-        : `Signed in as ${displayLabel}.`;
+        ? getStableTranslation('account.auth.sessionStatusSignedInProvider', { name: displayLabel, provider: providerLabel })
+        : getStableTranslation('account.auth.sessionStatusSignedIn', { name: displayLabel });
 }
 
 function syncAccountAuthStatusForSessionState() {
@@ -16778,7 +17099,7 @@ function syncAccountAuthStatusForSessionState() {
         return;
     }
     if (isSessionHydrating) {
-        writeAccountAuthStatus('Checking session...', 'info');
+        writeAccountAuthStatus(getStableTranslation('account.auth.sessionStatusChecking'), 'info');
         return;
     }
     writeAccountAuthStatus(getStableTranslation('auth.status.guest'), 'neutral');
@@ -16787,7 +17108,7 @@ function syncAccountAuthStatusForSessionState() {
 function getPasswordStrengthDetails(rawPassword) {
     const password = String(rawPassword || '');
     if (!password) {
-        return { label: 'Weak', level: 'weak', width: 8 };
+        return { labelKey: 'account.password.strength.weak', level: 'weak', width: 8 };
     }
 
     let score = 0;
@@ -16797,11 +17118,11 @@ function getPasswordStrengthDetails(rawPassword) {
     if (/\d/.test(password)) score += 1;
     if (/[^A-Za-z0-9]/.test(password)) score += 1;
 
-    if (score <= 1) return { label: 'Weak', level: 'weak', width: 22 };
-    if (score === 2) return { label: 'Fair', level: 'fair', width: 45 };
-    if (score === 3) return { label: 'Good', level: 'good', width: 68 };
-    if (score === 4) return { label: 'Strong', level: 'strong', width: 86 };
-    return { label: 'Very strong', level: 'very-strong', width: 100 };
+    if (score <= 1) return { labelKey: 'account.password.strength.weak', level: 'weak', width: 22 };
+    if (score === 2) return { labelKey: 'account.password.strength.fair', level: 'fair', width: 45 };
+    if (score === 3) return { labelKey: 'account.password.strength.good', level: 'good', width: 68 };
+    if (score === 4) return { labelKey: 'account.password.strength.strong', level: 'strong', width: 86 };
+    return { labelKey: 'account.password.strength.veryStrong', level: 'very-strong', width: 100 };
 }
 
 function updateAccountPasswordStrengthMeter() {
@@ -16818,13 +17139,13 @@ function updateAccountPasswordStrengthMeter() {
     const details = getPasswordStrengthDetails(passwordInput.value || '');
     fill.style.width = `${details.width}%`;
     fill.setAttribute('data-strength', details.level);
-    text.textContent = `Password strength: ${details.label}`;
+    text.textContent = getStableTranslation('account.password.strength.label', { label: getStableTranslation(details.labelKey) });
 }
 
 function updateAuthPasswordToggleState(button, input) {
     if (!button || !input) return;
     const isHidden = input.type === 'password';
-    button.textContent = isHidden ? 'Show' : 'Hide';
+    button.textContent = isHidden ? getStableTranslation('account.password.toggleShow') : getStableTranslation('account.password.toggleHide');
     button.setAttribute('aria-pressed', isHidden ? 'false' : 'true');
 }
 
@@ -16849,31 +17170,33 @@ function setAccountAuthModeCopy(isSignup) {
 
     if (flowTitle) {
         flowTitle.textContent = isAuthenticated
-            ? 'You Are Signed In'
+            ? getStableTranslation('account.signedIn.kicker')
             : isSignup
-                ? 'Create Your Account'
-                : 'Log In to Your Account';
+                ? getStableTranslation('account.auth.submitCreate')
+                : getStableTranslation('account.flow.loginTitle');
     }
     if (flowSubtitle) {
         flowSubtitle.textContent = isAuthenticated
-            ? `Authenticated${providerLabel ? ` via ${providerLabel}` : ''}. Use Sign Out to switch accounts.`
+            ? getStableTranslation('account.flow.authenticatedSubtitle', {
+                provider: providerLabel ? ` ${providerLabel}` : ''
+            })
             : isSignup
-            ? 'Create a profile to sync progress and settings across devices.'
-            : 'Use a provider or continue with your email/username and password.';
+            ? getStableTranslation('account.flow.signupSubtitle')
+            : getStableTranslation('account.flow.loginSubtitle');
     }
     if (switchCopy) {
         switchCopy.textContent = isAuthenticated
-            ? 'Need another account?'
+            ? getStableTranslation('account.auth.switch.needAnother')
             : isSignup
-                ? 'Already have an account?'
-                : 'Need an account?';
+                ? getStableTranslation('account.auth.switch.haveAccount')
+                : getStableTranslation('account.auth.switch.needAccount');
     }
     if (switchButton) {
         switchButton.textContent = isAuthenticated
-            ? 'Log Out First'
+            ? getStableTranslation('account.auth.switch.logoutFirst')
             : isSignup
-                ? 'Log In'
-                : 'Sign Up';
+                ? getStableTranslation('account.auth.switch.login')
+                : getStableTranslation('account.auth.switch.signup');
     }
     if (legal) {
         legal.classList.toggle('hidden', isAuthenticated || !isSignup);
@@ -16895,7 +17218,7 @@ function syncAccountSignupToggleState() {
         signupTab.style.cursor = isLocked ? 'not-allowed' : '';
         signupTab.style.filter = isLocked ? 'saturate(0.45)' : '';
         if (isLocked) {
-            signupTab.setAttribute('title', 'Log out to use Sign Up.');
+            signupTab.setAttribute('title', getStableTranslation('account.auth.signupLockedTitle'));
         } else {
             signupTab.removeAttribute('title');
         }
@@ -16907,7 +17230,7 @@ function syncAccountSignupToggleState() {
         switchButton.style.opacity = isLocked ? '0.56' : '';
         switchButton.style.cursor = isLocked ? 'not-allowed' : '';
         if (isLocked) {
-            switchButton.setAttribute('title', 'Log out to switch to Sign Up.');
+            switchButton.setAttribute('title', getStableTranslation('account.auth.signupSwitchLockedTitle'));
         } else {
             switchButton.removeAttribute('title');
         }
@@ -17124,15 +17447,15 @@ async function handleOAuthResultFromUrl() {
 
 function getAccountPrimaryAuthLabel() {
     if (accountAuthState.isSessionHydrating && !accountAuthState.isAuthenticated) {
-        return 'Checking Session...';
+        return getStableTranslation('account.auth.submitChecking');
     }
     if (accountAuthState.isAuthenticated) {
-        return 'Session Active';
+        return getStableTranslation('account.auth.state.sessionActive');
     }
     if (accountAuthState.mode === 'signup') {
-        return 'Create Account';
+        return getStableTranslation('account.auth.submitCreate');
     }
-    return 'Log In';
+    return getStableTranslation('account.auth.submitLogin');
 }
 
 function refreshAccountPrimaryAuthButton() {
@@ -17265,16 +17588,20 @@ function setAuthSubmitBusy(isBusy) {
         submitBtn.classList.toggle('cursor-not-allowed', shouldDisableSubmit);
         if (accountAuthState.inFlight) {
             if (accountAuthState.mode === 'signup') {
-                submitBtn.textContent = 'Creating Account...';
+                submitBtn.textContent = getStableTranslation('account.auth.submitCreating');
             } else {
-                submitBtn.textContent = accountAuthState.isAuthenticated ? 'Signing Out...' : 'Logging In...';
+                submitBtn.textContent = accountAuthState.isAuthenticated
+                    ? getStableTranslation('account.auth.submitSigningOut')
+                    : getStableTranslation('account.auth.submitLoggingIn');
             }
         }
     }
     if (heroLogoutBtn) {
         heroLogoutBtn.disabled = accountAuthState.inFlight;
         heroLogoutBtn.setAttribute('aria-disabled', accountAuthState.inFlight ? 'true' : 'false');
-        heroLogoutBtn.textContent = accountAuthState.inFlight ? 'Signing Out...' : 'Sign Out';
+        heroLogoutBtn.textContent = accountAuthState.inFlight
+            ? getStableTranslation('account.auth.submitSigningOut')
+            : getStableTranslation('account.actions.signOut');
         heroLogoutBtn.classList.toggle('opacity-70', accountAuthState.inFlight);
         heroLogoutBtn.classList.toggle('cursor-not-allowed', accountAuthState.inFlight);
     }
@@ -17291,8 +17618,8 @@ function setAuthSubmitBusy(isBusy) {
         retrySessionButton.classList.toggle('opacity-70', disableRetry);
         retrySessionButton.classList.toggle('cursor-not-allowed', disableRetry);
         retrySessionButton.textContent = accountAuthState.isSessionHydrating && !accountAuthState.isAuthenticated
-            ? 'Checking Session...'
-            : t('auth.retrySession');
+            ? getStableTranslation('account.auth.submitChecking')
+            : getStableTranslation('auth.retrySession');
     }
     if (!accountAuthState.inFlight) {
         refreshAccountPrimaryAuthButton();
@@ -17473,8 +17800,8 @@ function maybeRedirectToApiHostedFrontendForAuth() {
     if (!shouldRedirectToApiHostedFrontendForAuth()) return false;
     const targetUrl = getApiHostedFrontendAuthUrl();
     if (!targetUrl) return false;
-    setAccountAuthStatus('Redirecting to mobile secure sign-in host...', 'info');
-    showToast('Opening secure mobile sign-in host...', 'info');
+    setAccountAuthStatus(getStableTranslation('account.auth.redirectingMobile'), 'info');
+    showToast(getStableTranslation('account.auth.redirectingMobileToast'), 'info');
     window.location.assign(targetUrl);
     return true;
 }
@@ -17489,8 +17816,8 @@ function getCanonicalFrontendAuthUrl() {
 function maybeRedirectToCanonicalFrontendForAuth() {
     if (!shouldRedirectToCanonicalFrontendForAuth()) return false;
     const targetUrl = getCanonicalFrontendAuthUrl();
-    setAccountAuthStatus('Redirecting to secure sign-in host...', 'info');
-    showToast('Redirecting to secure sign-in host for account access.', 'info');
+    setAccountAuthStatus(getStableTranslation('account.auth.redirectingCanonical'), 'info');
+    showToast(getStableTranslation('account.auth.redirectingCanonicalToast'), 'info');
     window.location.assign(targetUrl);
     return true;
 }
@@ -17660,7 +17987,7 @@ function applySessionPayloadToAuthState(sessionPayload, options = {}) {
         updateAccountChip();
         refreshAccountPrimaryAuthButton();
         setAccountAuthStatus(getStableTranslation('auth.status.guest'), 'neutral');
-        setAccountSyncState('connected', 'Not signed in.');
+        setAccountSyncState('connected', getStableTranslation('account.sync.notSignedIn'));
         handleInsightsAccessStateChange();
         return {
             isAuthenticated: false,
@@ -17723,11 +18050,14 @@ function applySessionPayloadToAuthState(sessionPayload, options = {}) {
     applyAccountProfileToForm();
     updateAccountChip();
     refreshAccountPrimaryAuthButton();
-    setAccountAuthStatus(`Authenticated as ${userLabel || 'account user'}`, 'success');
+    setAccountAuthStatus(
+        getStableTranslation('account.auth.sessionStatusAuthenticatedAs', { name: userLabel || getStableTranslation('account.profile.displayName.guest') }),
+        'success'
+    );
     setAccountSyncState('connected', `${source} active${userLabel ? ` for ${userLabel}` : ''}`);
     handleInsightsAccessStateChange();
     if (!silent && userLabel) {
-        showToast(`Signed in as ${userLabel}.`, 'success');
+        showToast(getStableTranslation('account.auth.sessionStatusSignedIn', { name: userLabel }), 'success');
     }
     return {
         isAuthenticated: true,
@@ -17786,8 +18116,8 @@ function getAuthProviderKeyFromButton(button) {
 function getAuthProviderLabel(providerKey) {
     if (providerKey === 'google') return 'Google';
     if (providerKey === 'github') return 'GitHub';
-    if (providerKey === 'password') return 'Email + Password';
-    return 'Social';
+    if (providerKey === 'password') return getStableTranslation('account.provider.password');
+    return getStableTranslation('account.provider.social');
 }
 
 function setAuthProviderButtonEnabled(button, enabled, reason = '') {
@@ -18080,7 +18410,7 @@ function setAccountProfileSectionExpanded(expanded, options = {}) {
         toggleButton.setAttribute('aria-expanded', shouldExpand ? 'true' : 'false');
     }
     if (toggleLabel) {
-        toggleLabel.textContent = shouldExpand ? 'Hide' : 'Manage';
+        toggleLabel.textContent = shouldExpand ? getStableTranslation('account.profile.toggle.hide') : getStableTranslation('account.profile.toggle.manage');
     }
     if (shouldExpand && resolvedFocusSelector) {
         const focusEl = document.querySelector(resolvedFocusSelector);
@@ -18518,8 +18848,8 @@ async function deleteAccountPermanently() {
 
 async function saveAccountProfileSettings() {
     if (!accountAuthState.isAuthenticated) {
-        setAccountAuthStatus('Sign in to edit profile settings.', 'info');
-        showToast('Sign in to edit profile settings.', 'info');
+        setAccountAuthStatus(getStableTranslation('account.auth.sessionStatusSignInToEdit'), 'info');
+        showToast(getStableTranslation('account.auth.sessionStatusSignInToEdit'), 'info');
         return;
     }
     accountProfile = readAccountProfileFromForm();
@@ -18553,7 +18883,7 @@ async function checkNeonSession(options = {}) {
         accountAuthState.sessionLabel = '';
         setAccountProviderState('', '');
         clearAuthScopedLocalStorage();
-        setAccountAuthStatus('Auth server not configured.', 'neutral');
+        setAccountAuthStatus(getStableTranslation('account.auth.serverNotConfigured'), 'neutral');
         refreshAccountPrimaryAuthButton();
         handleInsightsAccessStateChange();
         return null;
@@ -18805,8 +19135,8 @@ async function signOutAccountFlow(options = {}) {
     clearPendingAuthRecoveryState();
     accountAuthState.rememberMe = false;
     clearAuthScopedLocalStorage();
-    setAccountAuthStatus('Signed out.', 'neutral');
-    setAccountSyncState('connected', 'Not signed in.');
+    setAccountAuthStatus(getStableTranslation('account.auth.sessionStatusSignedOut'), 'neutral');
+    setAccountSyncState('connected', getStableTranslation('account.sync.notSignedIn'));
     clearAuthPasswordFields();
     const rememberCheckbox = document.getElementById('account-auth-remember');
     if (rememberCheckbox) rememberCheckbox.checked = false;
@@ -18819,7 +19149,7 @@ async function signOutAccountFlow(options = {}) {
     refreshAccountPrimaryAuthButton();
     handleInsightsAccessStateChange();
     if (!silent) {
-        showToast('Signed out successfully.', 'success');
+        showToast(getStableTranslation('account.auth.signedOutSuccessToast'), 'success');
     }
 }
 
@@ -18887,8 +19217,8 @@ async function submitAccountAuth() {
     }
 
     if (!hasNeonSyncConfig()) {
-        setAccountAuthStatus('Auth server is not available.', 'error');
-        showToast('Auth server is not available.', 'warning');
+        setAccountAuthStatus(getStableTranslation('account.auth.serverUnavailable'), 'error');
+        showToast(getStableTranslation('account.auth.serverUnavailable'), 'warning');
         return;
     }
 
@@ -18900,7 +19230,10 @@ async function submitAccountAuth() {
     }
 
     setAuthSubmitBusy(true);
-    setAccountAuthStatus(isSignup ? 'Creating account...' : 'Logging in...', 'info');
+    setAccountAuthStatus(
+        isSignup ? getStableTranslation('account.auth.submitCreating') : getStableTranslation('account.auth.submitLoggingIn'),
+        'info'
+    );
     try {
         const authPayload = await neonFetch(endpoint, {
             method: 'POST',
@@ -19157,7 +19490,7 @@ function openAccountModal() {
     if (accountAuthState.isAuthenticated) {
         setAccountAuthStatus(getAccountSignedInStatusMessage(), 'success');
     } else if (canCheckRemoteSession) {
-        setAccountAuthStatus('Checking session...', 'info');
+    setAccountAuthStatus(getStableTranslation('account.auth.sessionStatusChecking'), 'info');
     } else {
         setAccountAuthStatus(getStableTranslation('auth.status.guest'), 'neutral');
     }
@@ -19387,7 +19720,7 @@ function initAccount() {
         retrySessionBtn.addEventListener('click', async () => {
             if (!hasNeonSyncConfig() || accountAuthState.inFlight) return;
             setAccountSessionHydrating(true);
-            setAccountAuthStatus('Checking session...', 'info');
+    setAccountAuthStatus(getStableTranslation('account.auth.sessionStatusChecking'), 'info');
             const refreshed = await refreshAuthSessionState({
                 silent: true,
                 retries: 1,
@@ -19395,10 +19728,10 @@ function initAccount() {
                 force: true
             });
             if (refreshed?.isAuthenticated || accountAuthState.isAuthenticated) {
-                showToast('Session restored.', 'success');
+        showToast(getStableTranslation('account.auth.sessionRestored'), 'success');
             } else {
                 setAccountAuthStatus(getStableTranslation('auth.status.guest'), 'neutral');
-                showToast('No active session found.', 'info');
+        showToast(getStableTranslation('account.auth.noActiveSession'), 'info');
             }
         });
     }
@@ -19489,12 +19822,12 @@ function initAccount() {
     accountAuthState.sessionLabel = '';
     setAccountProviderState('', '');
     if (accountAuthState.isSessionHydrating) {
-        setAccountAuthStatus('Checking session...', 'info');
-        setAccountSyncState('connecting', 'Checking account session...');
+        setAccountAuthStatus(getStableTranslation('account.auth.sessionStatusChecking'), 'info');
+        setAccountSyncState('connecting', getStableTranslation('account.auth.sessionStatusChecking'));
         setAccountAvatarStatus('Checking saved profile photo...', 'info');
     } else {
         setAccountAuthStatus(getStableTranslation('auth.status.guest'), 'neutral');
-        setAccountSyncState('connected', 'Not signed in.');
+        setAccountSyncState('connected', getStableTranslation('account.sync.notSignedIn'));
     }
     if (avatarUrlInput) {
         avatarUrlInput.addEventListener('blur', applyAvatarUrlInputValue);
@@ -19675,7 +20008,7 @@ function getStudyPlanSummary() {
         status: 'active',
         label: translateLiteral(paceLabel, appState.language),
         pill: translateLiteral('Active', appState.language),
-        note: translateLiteral(`Focus: ${focusLabel} · Style: ${styleLabel}`, appState.language)
+        note: translateLiteral(`Focus: ${focusLabel} Â· Style: ${styleLabel}`, appState.language)
     };
 }
 
@@ -22025,13 +22358,13 @@ function buildDSPointerVisual() {
     if (dsActive === 'stack') {
         return `
             <div class="ds-pointer-row"><span>${translateLiteral('Top index', appState.language)}</span><strong>${dsState.stack.length ? dsState.stack.length - 1 : -1}</strong></div>
-            <div class="ds-pointer-row"><span>${translateLiteral('Top value', appState.language)}</span><strong>${escapeHtml(String(dsState.stack[dsState.stack.length - 1] ?? '∅'))}</strong></div>
+            <div class="ds-pointer-row"><span>${translateLiteral('Top value', appState.language)}</span><strong>${escapeHtml(String(dsState.stack[dsState.stack.length - 1] ?? 'âˆ…'))}</strong></div>
         `;
     }
     if (dsActive === 'queue') {
         return `
-            <div class="ds-pointer-row"><span>${translateLiteral('Front', appState.language)}</span><strong>${escapeHtml(String(dsState.queue[0] ?? '∅'))}</strong></div>
-            <div class="ds-pointer-row"><span>${translateLiteral('Rear', appState.language)}</span><strong>${escapeHtml(String(dsState.queue[dsState.queue.length - 1] ?? '∅'))}</strong></div>
+            <div class="ds-pointer-row"><span>${translateLiteral('Front', appState.language)}</span><strong>${escapeHtml(String(dsState.queue[0] ?? 'âˆ…'))}</strong></div>
+            <div class="ds-pointer-row"><span>${translateLiteral('Rear', appState.language)}</span><strong>${escapeHtml(String(dsState.queue[dsState.queue.length - 1] ?? 'âˆ…'))}</strong></div>
         `;
     }
     if (dsActive === 'heap') {
@@ -22921,25 +23254,25 @@ function getDiscreteTheoryContent(module) {
     const topics = (module?.topics || []).map((topic) => `\u2022 ${topic}`);
     if (appState.language === 'es') {
         return [
-            'Resumen Teórico Profundo',
-            `Módulo: ${module?.title || ''}`,
+            'Resumen TeÃ³rico Profundo',
+            `MÃ³dulo: ${module?.title || ''}`,
             '',
             'Conceptos clave:',
             ...topics,
             '',
             'Marco de razonamiento:',
-            '1) Defina símbolos y supuestos antes de resolver.',
+            '1) Defina sÃ­mbolos y supuestos antes de resolver.',
             '2) Traduzca el enunciado a proposiciones y relaciones formales.',
-            '3) Justifique cada paso de forma lógica (no por intuición).',
+            '3) Justifique cada paso de forma lÃ³gica (no por intuiciÃ³n).',
             '4) Use contraejemplos para validar o refutar afirmaciones.',
             '',
-            'Explicación detallada:',
+            'ExplicaciÃ³n detallada:',
             module?.explanation || '',
             '',
-            'Checklist de práctica:',
+            'Checklist de prÃ¡ctica:',
             '- Escriba definiciones precisas.',
-            '- Identifique hipótesis y conclusión.',
-            '- Verifique equivalencias y casos límite.',
+            '- Identifique hipÃ³tesis y conclusiÃ³n.',
+            '- Verifique equivalencias y casos lÃ­mite.',
             '- Redacte una prueba clara, paso por paso.'
         ].join('\n');
     }
@@ -28461,7 +28794,7 @@ function getBreakReminder() {
     }
     const minutesElapsed = Math.floor((Date.now() - studyTimer.startTime) / 60000);
     if (minutesElapsed >= 25) {
-        return translateLiteral('🧘 Stretch & hydrate now!', appState.language);
+        return translateLiteral('ðŸ§˜ Stretch & hydrate now!', appState.language);
     }
     return translateLiteral(`? Break in ${25 - minutesElapsed} min`, appState.language);
 }
@@ -28787,8 +29120,8 @@ function renderInsights() {
                 const focusText = focusLabelByKey[studyPlanState?.focus] || (appState.language === 'es' ? 'Fundamentos' : 'Foundations');
                 const styleText = styleLabelByKey[studyPlanState?.style] || (appState.language === 'es' ? 'Mixto' : 'Blended');
                 highlightGoalNoteEl.textContent = appState.language === 'es'
-                    ? `Enfoque: ${focusText} • Estilo: ${styleText}`
-                    : `Focus: ${focusText} • Style: ${styleText}`;
+                    ? `Enfoque: ${focusText} â€¢ Estilo: ${styleText}`
+                    : `Focus: ${focusText} â€¢ Style: ${styleText}`;
             } else {
                 highlightGoalNoteEl.textContent = appState.language === 'es'
                     ? 'Empieza por DSA, Git o Java'
@@ -28953,7 +29286,7 @@ function renderInsights() {
                 const percent = total ? Math.round((completed / total) * 100) : 0;
                 return `
                     <span class="insight-pill">
-                        ${translateLiteral(level.charAt(0).toUpperCase() + level.slice(1), appState.language)} · ${completed}/${total} (${percent}%)
+                        ${translateLiteral(level.charAt(0).toUpperCase() + level.slice(1), appState.language)} Â· ${completed}/${total} (${percent}%)
                     </span>
                 `;
             }).join('');
@@ -29014,7 +29347,7 @@ function renderInsights() {
         if (modulesRemaining === 0) {
             tip = translateLiteral('All modules complete - spend time on flashcards or mentor a friend.', appState.language);
         } else if (streak >= 7) {
-            tip = translateLiteral('🔥 Your streak is on fire! Consider revisiting advanced challenge sets.', appState.language);
+            tip = translateLiteral('ðŸ”¥ Your streak is on fire! Consider revisiting advanced challenge sets.', appState.language);
         } else if (todayMinutes < 30) {
             tip = translateLiteral('Try a focused 30-minute sprint to lock in a module today.', appState.language);
         } else {
@@ -30553,3 +30886,4 @@ function trapFocusInActiveModal(event) {
     }
     return false;
 }
+
