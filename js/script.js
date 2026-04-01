@@ -17784,13 +17784,9 @@ function shouldRedirectToCanonicalFrontendForAuth() {
 }
 
 function shouldRedirectToApiHostedFrontendForAuth() {
-    if (typeof window === 'undefined') return false;
-    if (!isCrossOriginApiRuntime()) return false;
-    const configuredBase = getConfiguredApiBaseUrl();
-    if (!configuredBase) return false;
-    const userAgent = String((typeof navigator !== 'undefined' && navigator.userAgent) || '').toLowerCase();
-    const isMobileUserAgent = /android|iphone|ipod|ipad|mobile|silk|opera mini/.test(userAgent);
-    return isIOSTouchDevice() || isMobileUserAgent;
+    // Mobile auth redirects to API-hosted frontend are intentionally disabled.
+    // Keep users on the primary frontend host and complete auth through API endpoints only.
+    return false;
 }
 
 function getApiHostedFrontendAuthUrl() {
