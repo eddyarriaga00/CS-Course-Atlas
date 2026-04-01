@@ -169,4 +169,52 @@ test.describe('Account Modal Auth States', () => {
         await expect(page.locator('#account-auth-status')).not.toContainText(/undefined/i);
         await expect(page.locator('#account-btn-label-desktop')).not.toContainText(/undefined/i);
     });
+
+    test('keeps login available when session payload explicitly reports signed out', async ({ page }) => {
+        await page.route('**/api/**', async (route) => {
+            const { pathname } = new URL(route.request().url());
+            if (pathname.endsWith('/api/auth/session')) {
+                await route.fulfill({
+                    status: 200,
+                    contentType: 'application/json',
+                    body: JSON.stringify({
+                        authenticated: false,
+                        user: {
+                            id: 'stale-user',
+                            email: 'stale@example.com',
+                            username: 'StaleSession'
+                        }
+                    })
+                });
+                return;
+            }
+            if (pathname.endsWith('/api/auth/oauth/providers')) {
+                await route.fulfill({
+                    status: 200,
+                    contentType: 'application/json',
+                    body: JSON.stringify({
+                        providers: {
+                            google: { enabled: true },
+                            github: { enabled: true }
+                        }
+                    })
+                });
+                return;
+            }
+            await route.fulfill({
+                status: 200,
+                contentType: 'application/json',
+                body: '{}'
+            });
+        });
+
+        await page.goto('/index.html');
+        await page.click('#account-btn');
+
+        await expect(page.locator('#account-auth-state-pill')).toHaveText(/Not Signed In/i, { timeout: 10000 });
+        await expect(page.locator('#account-auth-interactive-fields')).toBeVisible();
+        await expect(page.locator('#account-auth-hero-logout')).toBeHidden();
+        await expect(page.locator('#account-auth-submit')).toBeEnabled();
+        await expect(page.locator('#account-btn')).not.toHaveClass(/account-btn-authenticated/);
+    });
 });

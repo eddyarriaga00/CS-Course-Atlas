@@ -17956,7 +17956,7 @@ function resolveSessionAuthenticatedFlag(payload, sessionUser = {}) {
     ];
     const explicitAuthFlag = explicitAuthFlagCandidates.find((value) => typeof value === 'boolean');
     if (typeof explicitAuthFlag === 'boolean') {
-        return explicitAuthFlag || inferredFromSessionUser;
+        return explicitAuthFlag;
     }
     return inferredFromSessionUser;
 }
