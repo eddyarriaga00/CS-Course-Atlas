@@ -4272,6 +4272,7 @@ window.SPANISH_LOCALIZATION = {
         ],
         "explanation": "Este manual explica el modelo JVM, los tipos primitivos frente a los de referencia, el diseño de la memoria y cómo estructurar programas pequeños con paquetes y herramientas de compilación. Cada tema se combina con ejercicios breves para que pueda pasar de la memorización de la sintaxis a la escritura de Java idiomático.",
         "resources": [
+          "Liang: Introduction to Java Programming (book page)",
           "Documentación Java",
           "Tutoriales de Oracle Java",
           "Guía de sintaxis de Java"

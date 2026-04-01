@@ -8067,55 +8067,65 @@ public class BitManipulation {
         topics: ['Variables', 'Data Types', 'Methods', 'Classes', 'Objects'],
         codeExample: `import java.util.Arrays;
 
-class StudentProfile {
+class Student {
     private final String name;
-    private final int[] quizScores;
+    private final int[] scores;
 
-    StudentProfile(String name, int[] quizScores) {
+    Student(String name, int... scores) {
         this.name = name;
-        this.quizScores = quizScores;
+        this.scores = scores;
     }
 
-    double averageScore() {
-        int sum = 0;
-        for (int score : quizScores) {
-            sum += score;
+    double average() {
+        int total = 0;
+        for (int score : scores) {
+            total += score;
         }
-        return quizScores.length == 0 ? 0.0 : sum / (double) quizScores.length;
+        return scores.length == 0 ? 0.0 : total / (double) scores.length;
+    }
+
+    char letterGrade() {
+        double avg = average();
+        if (avg >= 90) return 'A';
+        if (avg >= 80) return 'B';
+        if (avg >= 70) return 'C';
+        if (avg >= 60) return 'D';
+        return 'F';
     }
 
     String summary() {
-        return name
-            + " -> quizzes=" + Arrays.toString(quizScores)
-            + ", avg=" + String.format("%.2f", averageScore());
+        return name + " scores=" + Arrays.toString(scores)
+            + ", avg=" + String.format("%.2f", average())
+            + ", letter=" + letterGrade();
     }
 }
 
-public class JavaFundamentalsLecture {
-    static boolean isPassing(double average) {
-        return average >= 70.0;
+public class JavaFundamentalsLiangFlow {
+    static final int PASSING_THRESHOLD = 70;
+
+    static boolean isPassing(Student student) {
+        return student.average() >= PASSING_THRESHOLD;
     }
 
     public static void main(String[] args) {
-        int cohortYear = 2026;                   // primitive variable
-        String courseName = "Java Fundamentals"; // reference type
+        int year = 2026;                 // primitive variable
+        String section = "CS1-Java-A";   // reference variable
 
-        StudentProfile alex = new StudentProfile("Alex", new int[]{88, 91, 84});
-        StudentProfile sam = new StudentProfile("Sam", new int[]{72, 67, 75});
+        Student alex = new Student("Alex", 88, 91, 84, 90);
+        Student sam = new Student("Sam", 72, 67, 75, 70);
 
-        System.out.println("Course: " + courseName + " (" + cohortYear + ")");
-        for (StudentProfile profile : new StudentProfile[]{alex, sam}) {
-            double avg = profile.averageScore();
-            System.out.println(profile.summary());
-            System.out.println("Status: " + (isPassing(avg) ? "PASS" : "REVIEW BASICS"));
+        System.out.println("Section: " + section + " (" + year + ")");
+        for (Student student : new Student[]{alex, sam}) {
+            System.out.println(student.summary());
+            System.out.println("Status: " + (isPassing(student) ? "PASS" : "REVIEW"));
         }
     }
 }`,
         explanation: `This module is structured like a lecture sequence, not a syntax checklist:
-1) Variables and types: represent data correctly before writing logic.
-2) Methods: isolate one task per method and return deterministic outputs.
-3) Classes: group related state and behavior under one design boundary.
-4) Objects: instantiate and observe independent runtime state.
+1) Variables and types: represent data correctly before writing logic (Liang Ch. 2).
+2) Methods: isolate one task per method and return deterministic outputs (Liang Ch. 5).
+3) Classes: group related state and behavior under one design boundary (Liang Ch. 8).
+4) Objects: instantiate and observe independent runtime state (Liang Ch. 8).
 
 In the code walkthrough, you build student profiles, compute averages, and evaluate pass/fail logic so each concept is connected to realistic behavior.
 
@@ -8130,6 +8140,7 @@ Practice focus:
 - Extract grading thresholds into constants.
 - Write tests for averageScore and isPassing using edge cases.`,
         resources: [
+            { text: 'Liang: Introduction to Java Programming (book landing page)', url: 'https://www.pearsonhighered.com/liang/' },
             { text: 'Think Java, 2nd Edition (free textbook)', url: 'https://greenteapress.com/wp/think-java-2e/' },
             { text: 'Oracle Java Tutorials (official)', url: 'https://docs.oracle.com/javase/tutorial/' },
             { text: 'University of Helsinki Java Programming MOOC', url: 'https://java-programming.mooc.fi/' }
@@ -8227,28 +8238,60 @@ Exit criteria:
         description: '`ControlFlow.main` chains an if/else ladder, classic for loop, and enhanced for loop so you can trace how each branch or counter drives console output.',
         difficulty: 'beginner',
         topics: ['If-Else', 'For Loops', 'While Loops', 'Switch', 'Break/Continue'],
-        codeExample: `// Control Flow Examples
+        codeExample: `// Control-flow progression (Liang Ch. 3 + Ch. 4 style)
 public class ControlFlow {
     public static void main(String[] args) {
-        // If-else example
         int score = 85;
+        int attendancePercent = 92;
+        char letter;
+
+        // 1) Selection logic
         if (score >= 90) {
-            System.out.println("A grade");
+            letter = 'A';
         } else if (score >= 80) {
-            System.out.println("B grade");
+            letter = 'B';
+        } else if (score >= 70) {
+            letter = 'C';
+        } else if (score >= 60) {
+            letter = 'D';
         } else {
-            System.out.println("C grade or below");
+            letter = 'F';
         }
-        
-        // For loop example
+        System.out.println("Letter grade: " + letter);
+
+        // 2) while loop for countdown
+        int retries = 3;
+        while (retries > 0) {
+            System.out.println("Retry checks left: " + retries);
+            retries--;
+        }
+
+        // 3) for loop for accumulation
+        int total = 0;
         for (int i = 1; i <= 5; i++) {
-            System.out.println("Count: " + i);
+            total += i;
         }
-        
-        // Enhanced for loop
-        int[] numbers = {1, 2, 3, 4, 5};
-        for (int num : numbers) {
-            System.out.println("Number: " + num);
+        System.out.println("Sum 1..5 = " + total);
+
+        // 4) switch for outcome message
+        switch (letter) {
+            case 'A':
+            case 'B':
+                System.out.println("Strong performance.");
+                break;
+            case 'C':
+            case 'D':
+                System.out.println("Passing, but improve consistency.");
+                break;
+            default:
+                System.out.println("Needs intervention plan.");
+        }
+
+        // 5) continue/break in loop
+        for (int day = 1; day <= 7; day++) {
+            if (day == 4) continue; // skip maintenance day
+            if (attendancePercent < 80 && day > 5) break;
+            System.out.println("Practice day " + day + " completed.");
         }
     }
 }`,
@@ -8262,30 +8305,47 @@ public class ControlFlow {
         description: 'An abstract `Animal` defines shared state/behavior, `Dog` overrides `makeSound`, and the inherited `sleep` method demonstrates encapsulation and polymorphism in one snippet.',
         difficulty: 'beginner',
         topics: ['Encapsulation', 'Inheritance', 'Polymorphism', 'Abstraction', 'Interfaces'],
-        codeExample: `
-        // OOP Concepts
-abstract class Animal {
-    protected String name;
-    
-    public Animal(String name) {
-        this.name = name;
+        codeExample: `// OOP fundamentals with encapsulation + inheritance
+class Account {
+    private final String owner;
+    private double balance;
+
+    Account(String owner, double openingBalance) {
+        this.owner = owner;
+        this.balance = openingBalance;
     }
-    
-    public abstract void makeSound();
-    
-    public void sleep() {
-        System.out.println(name + " is sleeping");
+
+    void deposit(double amount) {
+        if (amount > 0) balance += amount;
+    }
+
+    boolean withdraw(double amount) {
+        if (amount <= 0 || amount > balance) return false;
+        balance -= amount;
+        return true;
+    }
+
+    String summary() {
+        return owner + " balance=$" + String.format("%.2f", balance);
     }
 }
 
-class Dog extends Animal {
-    public Dog(String name) {
-        super(name);
+class StudentAccount extends Account {
+    StudentAccount(String owner, double openingBalance) {
+        super(owner, openingBalance);
     }
-    
-    @Override
-    public void makeSound() {
-        System.out.println(name + " says Woof!");
+
+    // Polymorphic behavior could be expanded here (fees/limits per account type)
+}
+
+public class OOPBasicsDemo {
+    public static void main(String[] args) {
+        StudentAccount account = new StudentAccount("Riley", 120.00);
+        account.deposit(30.00);
+        boolean ok = account.withdraw(50.00);
+
+        System.out.println(account.summary());
+        System.out.println("Withdraw success: " + ok);
     }
 }`,
         explanation: `Encapsulation, inheritance, and polymorphism are demonstrated with cohesive mini-systems (bank accounts, game entities) so you see how design choices affect flexibility. Interfaces vs abstract classes, composition-over-inheritance, and SOLID principles round out the lesson.`,
@@ -8298,25 +8358,30 @@ class Dog extends Animal {
         description: '`divide` wraps division in try/catch/finally while `validateAge` throws a custom exception, showing exactly how execution moves through error paths and cleanup blocks.',
         difficulty: 'beginner',
         topics: ['Try-Catch', 'Finally Block', 'Custom Exceptions', 'Throws', 'Exception Types'],
-        codeExample: `
-        // Exception Handling
+        codeExample: `// Exception handling flow (Liang Ch. 14 style)
 public class ExceptionExample {
-    public static void divide(int a, int b) {
+    static int quotient(int number1, int number2) {
+        if (number2 == 0) {
+            throw new ArithmeticException("Divisor cannot be zero");
+        }
+        return number1 / number2;
+    }
+
+    static void runCase(int a, int b) {
         try {
-            int result = a / b;
-            System.out.println("Result: " + result);
-        } catch (ArithmeticException e) {
-            System.out.println("Error: Cannot divide by zero!");
+            int result = quotient(a, b);
+            System.out.println(a + " / " + b + " = " + result);
+        } catch (ArithmeticException ex) {
+            System.out.println("Handled exception: " + ex.getMessage());
         } finally {
-            System.out.println("Division operation completed.");
+            System.out.println("Case finished for inputs (" + a + ", " + b + ")");
         }
     }
-    
-    // Custom exception
-    public static void validateAge(int age) throws InvalidAgeException {
-        if (age < 0) {
-            throw new InvalidAgeException("Age cannot be negative");
-        }
+
+    public static void main(String[] args) {
+        runCase(12, 3);
+        runCase(10, 0);
+        System.out.println("Execution continues after catch/finally.");
     }
 }`,
         explanation: `You will categorize checked vs unchecked exceptions, design custom hierarchies, and use try-with-resources for safe cleanup. Realistic scenarios cover logging, wrapping exceptions to add context, and establishing global handlers to keep apps resilient.`,
@@ -8336,23 +8401,19 @@ import java.util.*;
 
 public class CollectionsExample {
     public static void main(String[] args) {
-        // ArrayList example
-        List<String> fruits = new ArrayList<>();
-        fruits.add("Apple");
-        fruits.add("Banana");
-        
-        // HashMap example
-        Map<String, Integer> scores = new HashMap<>();
-        scores.put("Alice", 95);
-        scores.put("Bob", 87);
-        
-        // HashSet example
-        Set<Integer> uniqueNumbers = new HashSet<>();
-        uniqueNumbers.add(1);
-        uniqueNumbers.add(2);
-        uniqueNumbers.add(1); // Duplicate ignored
-        
-        System.out.println("Unique numbers: " + uniqueNumbers.size());
+        List<Integer> scores = new ArrayList<>(Arrays.asList(88, 92, 76, 92, 85));
+        Collections.sort(scores);
+
+        Map<String, Integer> bestScoreByStudent = new HashMap<>();
+        bestScoreByStudent.put("Avery", 92);
+        bestScoreByStudent.put("Jordan", 85);
+        bestScoreByStudent.put("Avery", Math.max(bestScoreByStudent.get("Avery"), 95));
+
+        Set<Integer> uniqueScores = new HashSet<>(scores); // removes duplicates
+
+        System.out.println("Sorted scores: " + scores);
+        System.out.println("Unique scores: " + uniqueScores);
+        System.out.println("Best score by student: " + bestScoreByStudent);
     }
 }`,
         explanation: `We benchmark List/Set/Map variants, discuss ordering and concurrency characteristics, and show how iterators, streams, and collectors interact with collections. Practical labs include implementing caches, frequency tables, and multi-map utilities.`,
@@ -8365,28 +8426,36 @@ public class CollectionsExample {
         description: '`writeToFile` and `readFromFile` pair try-with-resources with FileWriter and Scanner, illustrating how to open, stream, and close files while surfacing friendly error messages.',
         difficulty: 'intermediate',
         topics: ['FileReader', 'FileWriter', 'BufferedReader', 'Scanner', 'Path API'],
-        codeExample: `// File I/O Operations
-import java.io.*;
+        codeExample: `// Text I/O with PrintWriter + Scanner (Liang Ch. 14 style)
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 public class FileIOExample {
-    public static void writeToFile(String filename, String content) {
-        try (FileWriter writer = new FileWriter(filename)) {
-            writer.write(content);
-            System.out.println("File written successfully!");
-        } catch (IOException e) {
-            System.out.println("Error writing file: " + e.getMessage());
+    public static void main(String[] args) throws IOException {
+        File file = new File("scores.txt");
+
+        try (PrintWriter output = new PrintWriter(file)) {
+            output.println("Alex 90");
+            output.println("Sam 85");
+            output.println("Riley 92");
         }
-    }
-    
-    public static void readFromFile(String filename) {
-        try (Scanner scanner = new Scanner(new File(filename))) {
-            while (scanner.hasNextLine()) {
-                System.out.println(scanner.nextLine());
+
+        int count = 0;
+        int total = 0;
+        try (Scanner input = new Scanner(file)) {
+            while (input.hasNext()) {
+                String name = input.next();
+                int score = input.nextInt();
+                System.out.println(name + " -> " + score);
+                total += score;
+                count++;
             }
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found: " + e.getMessage());
         }
+
+        double average = count == 0 ? 0.0 : total / (double) count;
+        System.out.println("Class average: " + String.format("%.2f", average));
     }
 }`,
         explanation: `The I/O unit compares classic streams vs NIO.2, shows buffered vs unbuffered performance, and demonstrates reading JSON/CSV safely. You will practice try-with-resources, directory walking, and serialization basics to build small ETL pipelines.`,
@@ -10182,33 +10251,29 @@ public class ThirtyDayExecutionPlan {
             title: { en: 'Variables', es: 'Variables' },
             description: { en: 'Declare, update, and print variables while tracking scope and naming.', es: 'Declara, actualiza e imprime variables mientras controlas alcance y nombres.' },
             codeExamples: {
-                java: `// Variables in Java: declaration, mutation, and scope
+                java: `// Variables: declaration, assignment, mutation, and scope
 public class VariablesDemo {
     public static void main(String[] args) {
-        // 1) Primitive variable declarations
         int age = 19;
-        double gpa = 3.85;
+        double tuition = 12450.75;
         boolean enrolled = true;
-        char grade = 'A';
-
-        // 2) Reference variable declaration
+        char level = 'A';
         String studentName = "Jordan";
+        final int START_YEAR = 2026; // constant
 
-        // 3) Mutation / reassignment
-        age = age + 1; // birthday update
-        gpa = Math.round(gpa * 100.0) / 100.0;
+        age = age + 1;     // reassignment
+        tuition -= 500.00; // discount applied
 
-        // 4) Local scope example
         {
-            int semesterCredits = 15;
-            System.out.println("Scoped credits: " + semesterCredits);
+            int currentCredits = 15; // block scope
+            System.out.println("Current credits: " + currentCredits);
         }
 
-        // 5) Final output summary
         System.out.println("Student: " + studentName);
-        System.out.println("Age next year: " + age);
-        System.out.println("GPA: " + gpa);
-        System.out.println("Enrolled: " + enrolled + ", grade target: " + grade);
+        System.out.println("Start year: " + START_YEAR);
+        System.out.println("Age: " + age);
+        System.out.println("Tuition after update: " + tuition);
+        System.out.println("Enrolled: " + enrolled + ", level: " + level);
     }
 }`
             }
@@ -10218,30 +10283,28 @@ public class VariablesDemo {
             title: { en: 'Data Types', es: 'Tipos de Datos' },
             description: { en: 'Use primitives and reference types with clear output for each value.', es: 'Usa tipos primitivos y de referencia con salida clara para cada valor.' },
             codeExamples: {
-                java: `// Java data types: primitive and reference side-by-side
+                java: `// Java data types: primitives + reference values
 import java.util.Arrays;
 
 public class DataTypesDemo {
     public static void main(String[] args) {
-        // Primitive types
-        byte small = 120;
-        short medium = 32000;
-        int count = 250000;
-        long population = 8_000_000_000L;
-        float ratio = 0.75f;
-        double pi = 3.1415926535;
-        boolean active = true;
-        char initial = 'J';
+        byte seatsLeft = 12;
+        short weeklyMinutes = 540;
+        int enrolledStudents = 245;
+        long views = 3_200_000L;
+        float passRate = 0.82f;
+        double pi = 3.141592653589793;
+        boolean labOpen = true;
+        char greekAlpha = '\u03B1'; // Unicode character
 
-        // Reference types
-        String course = "Java Fundamentals";
-        int[] scores = {92, 88, 95};
+        String course = "Intro to Java";
+        int[] quizScores = {90, 83, 95, 88};
 
-        System.out.println("byte=" + small + ", short=" + medium + ", int=" + count);
-        System.out.println("long=" + population + ", float=" + ratio + ", double=" + pi);
-        System.out.println("boolean=" + active + ", char=" + initial);
+        System.out.println("byte=" + seatsLeft + ", short=" + weeklyMinutes + ", int=" + enrolledStudents);
+        System.out.println("long=" + views + ", float=" + passRate + ", double=" + pi);
+        System.out.println("boolean=" + labOpen + ", char=" + greekAlpha);
         System.out.println("String=" + course);
-        System.out.println("Array=" + Arrays.toString(scores));
+        System.out.println("Array=" + Arrays.toString(quizScores));
     }
 }`
             }
@@ -10251,27 +10314,33 @@ public class DataTypesDemo {
             title: { en: 'Methods', es: 'MÃ©todos' },
             description: { en: 'Define reusable methods with parameters and return values.', es: 'Define mÃ©todos reutilizables con parÃ¡metros y valores de retorno.' },
             codeExamples: {
-                java: `// Methods: parameters, return values, and reuse
+                java: `// Methods: parameters, return values, and reuse (Liang Ch. 5 style)
 public class MethodsDemo {
-    public static int add(int a, int b) {
-        return a + b;
+    public static int sumRange(int start, int end) {
+        int result = 0;
+        for (int i = start; i <= end; i++) {
+            result += i;
+        }
+        return result;
     }
 
-    public static double average(int x, int y, int z) {
-        return (x + y + z) / 3.0;
+    public static char getGrade(double score) {
+        if (score >= 90) return 'A';
+        if (score >= 80) return 'B';
+        if (score >= 70) return 'C';
+        if (score >= 60) return 'D';
+        return 'F';
     }
 
-    public static void printBanner(String title) {
-        System.out.println("==== " + title + " ====");
+    public static void printGrade(double score) { // void method
+        System.out.println("Score " + score + " -> " + getGrade(score));
     }
 
     public static void main(String[] args) {
-        printBanner("Method Results");
-        int sum = add(7, 5);
-        double avg = average(90, 85, 95);
-
-        System.out.println("add(7, 5) = " + sum);
-        System.out.println("average(90,85,95) = " + avg);
+        int total = sumRange(1, 10);
+        System.out.println("sumRange(1, 10) = " + total);
+        printGrade(88.5);
+        printGrade(59.5);
     }
 }`
             }
@@ -10281,30 +10350,42 @@ public class MethodsDemo {
             title: { en: 'Classes', es: 'Clases' },
             description: { en: 'Create a class blueprint with fields, constructor, and behavior.', es: 'Crea una plantilla de clase con campos, constructor y comportamiento.' },
             codeExamples: {
-                java: `// Classes as blueprints: fields + constructor + behavior
-class Course {
-    String code;
-    String title;
-    int credits;
+                java: `// Classes as blueprints (Liang-style circle model)
+class SimpleCircle {
+    private double radius;
 
-    Course(String code, String title, int credits) {
-        this.code = code;
-        this.title = title;
-        this.credits = credits;
+    SimpleCircle() {
+        this.radius = 1.0;
     }
 
-    String summary() {
-        return code + " - " + title + " (" + credits + " credits)";
+    SimpleCircle(double radius) {
+        this.radius = radius;
+    }
+
+    double getArea() {
+        return radius * radius * Math.PI;
+    }
+
+    double getPerimeter() {
+        return 2 * radius * Math.PI;
+    }
+
+    void setRadius(double radius) {
+        if (radius >= 0) this.radius = radius;
+    }
+
+    double getRadius() {
+        return radius;
     }
 }
 
 public class ClassesDemo {
     public static void main(String[] args) {
-        Course c1 = new Course("CSC-261", "Data Structures", 3);
-        Course c2 = new Course("CSC-350", "Software Engineering", 3);
+        SimpleCircle c1 = new SimpleCircle();
+        SimpleCircle c2 = new SimpleCircle(25);
 
-        System.out.println("Course 1: " + c1.summary());
-        System.out.println("Course 2: " + c2.summary());
+        System.out.println("c1 radius=" + c1.getRadius() + ", area=" + c1.getArea());
+        System.out.println("c2 radius=" + c2.getRadius() + ", perimeter=" + c2.getPerimeter());
     }
 }`
             }
@@ -10314,36 +10395,41 @@ public class ClassesDemo {
             title: { en: 'Objects', es: 'Objetos' },
             description: { en: 'Instantiate objects, mutate state, and call instance methods.', es: 'Instancia objetos, modifica estado y llama mÃ©todos de instancia.' },
             codeExamples: {
-                java: `// Objects: create instances, mutate fields, invoke methods
-class Student {
+                java: `// Objects: references, state change, and method calls
+class StudySession {
     private final String name;
-    private int completedModules;
+    private int completedTopics;
 
-    Student(String name) {
+    StudySession(String name) {
         this.name = name;
-        this.completedModules = 0;
+        this.completedTopics = 0;
     }
 
-    void completeModule() {
-        completedModules++;
+    void completeTopic() {
+        completedTopics++;
     }
 
-    String progress() {
-        return name + " completed " + completedModules + " module(s).";
+    String report() {
+        return name + " completed " + completedTopics + " topic(s).";
     }
 }
 
 public class ObjectsDemo {
+    static void practice(StudySession session, int reps) {
+        for (int i = 0; i < reps; i++) {
+            session.completeTopic();
+        }
+    }
+
     public static void main(String[] args) {
-        Student a = new Student("Avery");
-        Student b = new Student("Morgan");
+        StudySession a = new StudySession("Avery");
+        StudySession b = new StudySession("Morgan");
 
-        a.completeModule();
-        a.completeModule();
-        b.completeModule();
+        practice(a, 2);
+        practice(b, 1);
 
-        System.out.println(a.progress());
-        System.out.println(b.progress());
+        System.out.println(a.report());
+        System.out.println(b.report());
     }
 }`
             }
