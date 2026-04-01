@@ -63,6 +63,36 @@ test.describe('Account Modal Auth States', () => {
         await expect(page.locator('#account-profile-content')).toBeHidden();
     });
 
+    test('keeps mobile profile controls equivalent to desktop panels', async ({ page }) => {
+        await page.setViewportSize({ width: 390, height: 844 });
+        await mockAuthAndProfileApi(page, { authenticated: true });
+        await page.goto('/index.html');
+        await page.click('#account-btn');
+
+        await expect(page.locator('#account-auth-state-pill')).toHaveText(/Session Active/i, { timeout: 10000 });
+        await expect(page.locator('#account-profile-open-profile')).toBeVisible();
+        await expect(page.locator('#account-profile-open-security')).toBeVisible();
+        await expect(page.locator('#account-profile-open-danger')).toBeVisible();
+
+        await page.click('#account-auth-hero-manage');
+        await expect(page.locator('#account-profile-content')).toBeVisible();
+        await expect(page.locator('#account-profile-back-btn')).toBeVisible();
+        await expect(page.locator('#account-username')).toBeVisible();
+        await expect(page.locator('#account-goal')).toBeVisible();
+        await expect(page.locator('#save-account')).toBeVisible();
+
+        await page.click('#account-profile-open-security');
+        await expect(page.locator('#account-email')).toBeVisible();
+        await expect(page.locator('#account-email-request-pin')).toBeVisible();
+        await expect(page.locator('#account-current-password')).toBeVisible();
+        await expect(page.locator('#account-password-update')).toBeVisible();
+
+        await page.click('#account-profile-open-danger');
+        await expect(page.locator('#account-delete-password')).toBeVisible();
+        await expect(page.locator('#account-delete-confirm')).toBeVisible();
+        await expect(page.locator('#account-delete-account')).toBeVisible();
+    });
+
     test('does not get stuck in checking state when session refresh fails', async ({ page }) => {
         await page.route('**/api/**', async (route) => {
             const { pathname } = new URL(route.request().url());

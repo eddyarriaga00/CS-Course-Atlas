@@ -16832,6 +16832,12 @@ function setActiveAccountProfilePanel(panel = 'profile') {
         button.classList.toggle('is-active', isActive);
         button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
     });
+    if (accountProfileUiState.expanded && isCompactMobileViewport()) {
+        const profileContent = document.getElementById('account-profile-content');
+        if (profileContent && typeof profileContent.scrollTo === 'function') {
+            profileContent.scrollTo({ top: 0, behavior: 'auto' });
+        }
+    }
     updateAccountProfilePanelNavigation();
 }
 
@@ -18377,6 +18383,8 @@ function setAccountProfileSectionExpanded(expanded, options = {}) {
     const content = document.getElementById('account-profile-content');
     const toggleButton = document.getElementById('account-profile-toggle');
     const toggleLabel = document.getElementById('account-profile-toggle-label');
+    const backButton = document.getElementById('account-profile-back-btn');
+    const compactMobileViewport = isCompactMobileViewport();
     const shouldExpand = Boolean(expanded);
     if (!accountAuthState.isAuthenticated && shouldExpand) {
         accountProfileUiState.expanded = false;
@@ -18402,7 +18410,7 @@ function setAccountProfileSectionExpanded(expanded, options = {}) {
         if (shouldExpand && typeof content.scrollTo === 'function') {
             content.scrollTo({
                 top: 0,
-                behavior: appState.reduceMotion ? 'auto' : 'smooth'
+                behavior: appState.reduceMotion || compactMobileViewport ? 'auto' : 'smooth'
             });
         }
     }
@@ -18412,10 +18420,16 @@ function setAccountProfileSectionExpanded(expanded, options = {}) {
     if (toggleLabel) {
         toggleLabel.textContent = shouldExpand ? getStableTranslation('account.profile.toggle.hide') : getStableTranslation('account.profile.toggle.manage');
     }
-    if (shouldExpand && resolvedFocusSelector) {
+    if (shouldExpand && !compactMobileViewport && resolvedFocusSelector) {
         const focusEl = document.querySelector(resolvedFocusSelector);
         if (focusEl && typeof focusEl.focus === 'function') {
             focusEl.focus();
+        }
+    } else if (shouldExpand && compactMobileViewport && backButton && typeof backButton.focus === 'function') {
+        try {
+            backButton.focus({ preventScroll: true });
+        } catch (_error) {
+            backButton.focus();
         }
     }
     updateAccountProfilePanelNavigation();

@@ -7707,6 +7707,8 @@ body.dark:not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-min
     #account-modal .account-profile-header-actions {
         width: 100%;
         justify-content: space-between;
+        flex-wrap: wrap;
+        row-gap: 0.35rem;
     }
 
     #account-modal .account-profile-summary-grid {
@@ -7714,13 +7716,18 @@ body.dark:not(.theme-ocean):not(.theme-sunset):not(.theme-forest):not(.theme-min
     }
 
     #account-modal .account-profile-actions {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 0.38rem;
+    }
+
+    #account-modal .account-profile-action-btn {
+        min-height: 1.9rem;
+        font-size: 0.66rem;
+        padding: 0.3rem 0.35rem;
     }
 
     #account-modal .account-profile-panel-nav {
-        position: sticky;
-        top: 0;
-        z-index: 2;
+        position: static;
     }
 
     #account-modal .account-profile-toggle-btn {
