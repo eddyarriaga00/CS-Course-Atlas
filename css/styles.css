@@ -6223,6 +6223,97 @@ body.dark::after {
     line-height: 1.55;
 }
 
+.module-pretext-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0.95rem;
+    border: 1px solid rgba(99, 102, 241, 0.35);
+    background: linear-gradient(145deg, rgba(238, 242, 255, 0.95), rgba(224, 231, 255, 0.8));
+    box-shadow: 0 10px 24px rgba(79, 70, 229, 0.12);
+    padding: 0.85rem 0.9rem;
+}
+
+.module-pretext-card::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 4px;
+    background: linear-gradient(180deg, rgba(99, 102, 241, 0.95), rgba(14, 165, 233, 0.85));
+}
+
+.module-pretext-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.65rem;
+    margin-bottom: 0.35rem;
+}
+
+.module-pretext-title {
+    margin: 0;
+    font-size: 0.88rem;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #312e81;
+}
+
+.module-pretext-chip {
+    font-size: 0.66rem;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 999px;
+    border: 1px solid rgba(99, 102, 241, 0.35);
+    background: rgba(255, 255, 255, 0.75);
+    color: #4338ca;
+    padding: 0.24rem 0.5rem;
+    white-space: nowrap;
+}
+
+.module-pretext-subtitle {
+    margin: 0 0 0.58rem;
+    font-size: 0.72rem;
+    line-height: 1.4;
+    color: #334155;
+}
+
+.module-pretext-grid {
+    display: grid;
+    gap: 0.48rem;
+    grid-template-columns: 1fr;
+}
+
+.module-pretext-item {
+    border-radius: 0.72rem;
+    border: 1px solid rgba(129, 140, 248, 0.24);
+    background: rgba(255, 255, 255, 0.78);
+    padding: 0.5rem 0.55rem;
+}
+
+.module-pretext-label {
+    margin: 0 0 0.18rem;
+    font-size: 0.63rem;
+    line-height: 1.2;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #4f46e5;
+}
+
+.module-pretext-text {
+    margin: 0;
+    font-size: 0.75rem;
+    line-height: 1.45;
+    color: #1f2937;
+}
+
+@media (min-width: 640px) {
+    .module-pretext-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
 body.dark .module-deep-explanation-box {
     background: rgba(120, 53, 15, 0.45);
     border-color: rgba(251, 191, 36, 0.55);
@@ -6234,6 +6325,39 @@ body.dark .module-deep-explanation-label {
 }
 
 body.dark .module-deep-explanation-text {
+    color: #e2e8f0;
+}
+
+body.dark .module-pretext-card {
+    border-color: rgba(129, 140, 248, 0.45);
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.88), rgba(15, 23, 42, 0.92));
+    box-shadow: 0 14px 28px rgba(2, 6, 23, 0.4);
+}
+
+body.dark .module-pretext-chip {
+    border-color: rgba(129, 140, 248, 0.5);
+    background: rgba(30, 41, 59, 0.7);
+    color: #c7d2fe;
+}
+
+body.dark .module-pretext-title {
+    color: #e0e7ff;
+}
+
+body.dark .module-pretext-subtitle {
+    color: #cbd5e1;
+}
+
+body.dark .module-pretext-item {
+    border-color: rgba(99, 102, 241, 0.35);
+    background: rgba(30, 41, 59, 0.7);
+}
+
+body.dark .module-pretext-label {
+    color: #a5b4fc;
+}
+
+body.dark .module-pretext-text {
     color: #e2e8f0;
 }
 

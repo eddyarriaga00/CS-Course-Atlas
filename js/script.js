@@ -1471,6 +1471,16 @@ const TRANSLATIONS = {
         'module.learningResources': '\u{1F4DA} Learning Resources:',
         'module.definitionsHeading': '\u{1F4D6} Need-to-Know Definitions',
         'module.learningPlan': '\u{1F9ED} Learning Plan',
+        'module.pretextHeading': '\u2728 Pretext',
+        'module.pretextSubtitle': 'Fast context before you code so each module has a clear purpose.',
+        'module.pretextChip': 'Context First',
+        'module.pretextNow': 'Where You Are',
+        'module.pretextNowValue': '{difficulty} level in {track} \u00b7 module {current} of {total}.',
+        'module.pretextFocus': 'Focus Now',
+        'module.pretextFocusValueSingle': 'Prioritize {topicOne} first.',
+        'module.pretextFocusValueDual': 'Prioritize {topicOne}, then connect it to {topicTwo}.',
+        'module.pretextAction': 'First Action',
+        'module.pretextActionValue': 'Run one {minutes}-minute sprint: {prompt}',
         'module.estimatedTime': 'Estimated Time',
         'module.trackPosition': 'Track Position',
         'module.prerequisite': 'Prerequisite',
@@ -2177,6 +2187,16 @@ const TRANSLATIONS = {
         'module.learningResources': '\u{1F4DA} Recursos de aprendizaje:',
         'module.definitionsHeading': '\u{1F4D6} Definiciones Clave',
         'module.learningPlan': '\u{1F9ED} Plan de Aprendizaje',
+        'module.pretextHeading': '\u2728 Pretexto',
+        'module.pretextSubtitle': 'Contexto rapido antes de programar para que cada modulo tenga un objetivo claro.',
+        'module.pretextChip': 'Contexto Primero',
+        'module.pretextNow': 'Donde Estas',
+        'module.pretextNowValue': 'Nivel {difficulty} en {track} \u00b7 modulo {current} de {total}.',
+        'module.pretextFocus': 'Enfoque Ahora',
+        'module.pretextFocusValueSingle': 'Prioriza {topicOne} primero.',
+        'module.pretextFocusValueDual': 'Prioriza {topicOne} y luego conectalo con {topicTwo}.',
+        'module.pretextAction': 'Primera Accion',
+        'module.pretextActionValue': 'Haz un sprint de {minutes} minutos: {prompt}',
         'module.estimatedTime': 'Tiempo Estimado',
         'module.trackPosition': 'Posicion en la Ruta',
         'module.prerequisite': 'Prerequisito',
@@ -24817,6 +24837,34 @@ function buildModuleLearningPlan(module, localizedModule, modulesByCategory, loc
     };
 }
 
+function buildModulePretext(module, localizedModule, moduleLearningPlan) {
+    const topicPool = Array.isArray(localizedModule?.topics)
+        ? localizedModule.topics
+            .map((topic) => String(topic || '').trim())
+            .filter(Boolean)
+        : [];
+    const primaryTopic = topicPool[0] || moduleLearningPlan.trackTitle;
+    const secondaryTopic = topicPool[1] || '';
+    const difficultyLabel = translateLiteral(module?.difficulty || 'beginner', appState.language);
+    const focusText = secondaryTopic
+        ? t('module.pretextFocusValueDual', { topicOne: primaryTopic, topicTwo: secondaryTopic })
+        : t('module.pretextFocusValueSingle', { topicOne: primaryTopic });
+
+    return {
+        nowText: t('module.pretextNowValue', {
+            difficulty: difficultyLabel,
+            track: moduleLearningPlan.trackTitle,
+            current: moduleLearningPlan.currentPosition,
+            total: moduleLearningPlan.totalInTrack
+        }),
+        focusText,
+        actionText: t('module.pretextActionValue', {
+            minutes: moduleLearningPlan.estimatedMinutes,
+            prompt: moduleLearningPlan.practicePrompt
+        })
+    };
+}
+
 function buildModuleReadinessKit(module, localizedModule, moduleLearningPlan) {
     const categoryKey = getModuleCategoryKey(module.id);
     const blueprint = getTrackReadinessBlueprint(categoryKey);
@@ -26679,6 +26727,7 @@ function renderModules() {
         const quizQuestions = getModuleQuizQuestions(module.id);
         const hasQuizQuestions = Array.isArray(quizQuestions) && quizQuestions.length > 0;
         const moduleLearningPlan = buildModuleLearningPlan(module, localizedModule, modulesByCategory, localizedModuleMap);
+        const modulePretext = buildModulePretext(module, localizedModule, moduleLearningPlan);
         const moduleReadinessKit = buildModuleReadinessKit(module, localizedModule, moduleLearningPlan);
         const normalizedResources = buildEnhancedModuleResources(localizedModule.resources, moduleReadinessKit);
         const moduleCodeInsight = buildModuleCodeInsightSummary({
@@ -26731,6 +26780,28 @@ function renderModules() {
                 ` : ''}
 
                 <p class="text-slate-600 mb-3 sm:mb-4 text-sm sm:text-base leading-relaxed break-words ${isAccentModule ? 'module-accent-text' : ''}">${escapeHtml(localizedModule.description)}</p>
+
+                <div class="module-pretext-card mb-3 sm:mb-4">
+                    <div class="module-pretext-head">
+                        <h4 class="module-pretext-title">${t('module.pretextHeading')}</h4>
+                        <span class="module-pretext-chip">${t('module.pretextChip')}</span>
+                    </div>
+                    <p class="module-pretext-subtitle">${t('module.pretextSubtitle')}</p>
+                    <div class="module-pretext-grid">
+                        <article class="module-pretext-item">
+                            <p class="module-pretext-label">${t('module.pretextNow')}</p>
+                            <p class="module-pretext-text">${escapeHtml(modulePretext.nowText)}</p>
+                        </article>
+                        <article class="module-pretext-item">
+                            <p class="module-pretext-label">${t('module.pretextFocus')}</p>
+                            <p class="module-pretext-text">${escapeHtml(modulePretext.focusText)}</p>
+                        </article>
+                        <article class="module-pretext-item">
+                            <p class="module-pretext-label">${t('module.pretextAction')}</p>
+                            <p class="module-pretext-text">${escapeHtml(modulePretext.actionText)}</p>
+                        </article>
+                    </div>
+                </div>
 
                 <!-- Topics -->
                 <div class="mb-3 sm:mb-4">
