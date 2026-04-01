@@ -17329,23 +17329,25 @@ function handleForgotPassword() {
     showToast('Support form prefilled for password reset.', 'info');
 }
 
-function consumeOAuthResultFromUrl() {
-    if (typeof window === 'undefined') return null;
+function clearOAuthResultFromUrlParams() {
+    if (typeof window === 'undefined') return;
     const currentUrl = new URL(window.location.href);
-    const status = String(currentUrl.searchParams.get('oauth') || '').trim().toLowerCase();
-    if (!status) return null;
-
-    const provider = String(currentUrl.searchParams.get('oauth_provider') || '').trim().toLowerCase();
-    const errorCode = String(currentUrl.searchParams.get('oauth_error') || '').trim().toLowerCase();
-    const ticket = String(currentUrl.searchParams.get('oauth_ticket') || '').trim();
-
     currentUrl.searchParams.delete('oauth');
     currentUrl.searchParams.delete('oauth_provider');
     currentUrl.searchParams.delete('oauth_error');
     currentUrl.searchParams.delete('oauth_ticket');
     const cleanedUrl = `${currentUrl.pathname}${currentUrl.search}${currentUrl.hash}`;
     window.history.replaceState({}, document.title, cleanedUrl);
+}
 
+function consumeOAuthResultFromUrl() {
+    if (typeof window === 'undefined') return null;
+    const currentUrl = new URL(window.location.href);
+    const status = String(currentUrl.searchParams.get('oauth') || '').trim().toLowerCase();
+    if (!status) return null;
+    const provider = String(currentUrl.searchParams.get('oauth_provider') || '').trim().toLowerCase();
+    const errorCode = String(currentUrl.searchParams.get('oauth_error') || '').trim().toLowerCase();
+    const ticket = String(currentUrl.searchParams.get('oauth_ticket') || '').trim();
     return { status, provider, errorCode, ticket };
 }
 
@@ -17467,11 +17469,13 @@ async function handleOAuthResultFromUrl() {
                 setAccountAuthStatus(unavailableMessage, 'error');
                 showToast(unavailableMessage, 'warning');
                 setAccountSessionHydrating(false);
+                clearOAuthResultFromUrlParams();
                 return;
             }
 
+            let exchangeResult = null;
             if (oauthResult.ticket) {
-                const exchangeResult = await exchangeOAuthTicketForSessionWithRetry(oauthResult.ticket, {
+                exchangeResult = await exchangeOAuthTicketForSessionWithRetry(oauthResult.ticket, {
                     providerKey,
                     providerLabel,
                     maxAttempts: OAUTH_TICKET_EXCHANGE_MAX_ATTEMPTS,
@@ -17483,6 +17487,7 @@ async function handleOAuthResultFromUrl() {
                     const successMessage = `${providerLabel} account connected.`;
                     setAccountAuthStatus(successMessage, 'success');
                     showToast(successMessage, 'success');
+                    clearOAuthResultFromUrlParams();
                     return;
                 }
                 if (exchangeResult.error) {
@@ -17491,6 +17496,31 @@ async function handleOAuthResultFromUrl() {
                         : String(exchangeResult.error);
                     console.warn('OAuth ticket exchange failed:', exchangeReason);
                 }
+                if (exchangeResult.invalidTicket) {
+                    setAccountSessionHydrating(false);
+                    const invalidTicketMessage = `${providerLabel} sign-in session expired. Please try again.`;
+                    setAccountAuthStatus(invalidTicketMessage, 'error');
+                    showToast(invalidTicketMessage, 'warning');
+                    clearPendingAuthRecoveryState();
+                    clearOAuthResultFromUrlParams();
+                    return;
+                }
+                // Ticket exists but exchange has not succeeded yet. Start fast background recovery immediately.
+                const exchangeRetryMessage = isCrossOriginApiRuntime()
+                    ? `${providerLabel} sign-in completed, but final session sync is delayed. Retrying now.`
+                    : `${providerLabel} sign-in completed, but final session sync is still running. Retrying now.`;
+                setAccountAuthStatus(exchangeRetryMessage, 'info');
+                setPendingAuthRecoveryState(providerKey, providerLabel, oauthResult.ticket || '');
+                runSafeBackgroundTask(runAuthSessionRecoveryProbe({
+                    providerKey,
+                    providerLabel,
+                    ticket: oauthResult.ticket || '',
+                    maxAttempts: 120,
+                    attemptDelayMs: 1800
+                }), 'OAuth session recovery probe');
+                setAccountSessionHydrating(false);
+                clearOAuthResultFromUrlParams();
+                return;
             }
 
             const verifiedSession = await waitForVerifiedAuthSession({
@@ -17507,6 +17537,7 @@ async function handleOAuthResultFromUrl() {
                 const successMessage = `${providerLabel} account connected.`;
                 setAccountAuthStatus(successMessage, 'success');
                 showToast(successMessage, 'success');
+                clearOAuthResultFromUrlParams();
                 return;
             }
 
@@ -17524,6 +17555,7 @@ async function handleOAuthResultFromUrl() {
                 attemptDelayMs: 2000
             }), 'OAuth session recovery probe');
             setAccountSessionHydrating(false);
+            clearOAuthResultFromUrlParams();
             return;
         }
 
@@ -17531,6 +17563,7 @@ async function handleOAuthResultFromUrl() {
         setAccountSessionHydrating(false);
         setAccountAuthStatus(failureMessage, 'error');
         showToast(failureMessage, 'warning');
+        clearOAuthResultFromUrlParams();
     } catch (error) {
         setAccountSessionHydrating(false);
         reportAuthUiError(error, 'Social sign-in completed, but session finalization failed. Please try again.');

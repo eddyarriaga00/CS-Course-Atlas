@@ -445,6 +445,9 @@ function sanitizeProfileAvatarUrl(value) {
 function normalizeOriginHeader(value) {
     const raw = safeString(value);
     if (!raw) return '';
+    if (raw.toLowerCase() === 'null') {
+        return 'null';
+    }
     try {
         const parsed = new URL(raw);
         if (!['http:', 'https:'].includes(parsed.protocol)) {
@@ -490,6 +493,12 @@ function isTrustedLocalDevOrigin(normalizedOrigin, hostHeader) {
     }
 }
 
+function isNullOriginAuthExchangePath(pathname) {
+    const normalizedPath = safeString(pathname).toLowerCase();
+    return normalizedPath === '/api/auth/oauth/exchange-ticket'
+        || normalizedPath === '/auth/oauth/exchange-ticket';
+}
+
 function parseOriginAllowlist(value) {
     const raw = String(value || '').trim();
     if (!raw) return new Set();
@@ -515,17 +524,21 @@ function evaluateOriginTrust(req) {
     const originHeader = safeString(req.headers.origin);
     const hostHeader = safeString(req.headers.host).toLowerCase();
     const normalizedOrigin = normalizeOriginHeader(originHeader);
+    const nullOrigin = normalizedOrigin === 'null';
     const sameOrigin = originHostMatches(normalizedOrigin, hostHeader);
     const allowlisted = Boolean(normalizedOrigin && ALLOWED_ORIGINS.has(normalizedOrigin));
     const localDevTrusted = isTrustedLocalDevOrigin(normalizedOrigin, hostHeader);
-    const trusted = !originHeader || sameOrigin || allowlisted || localDevTrusted;
+    const nullOriginTrusted = Boolean(nullOrigin && isNullOriginAuthExchangePath(req.path));
+    const trusted = !originHeader || sameOrigin || allowlisted || localDevTrusted || nullOriginTrusted;
     return {
         originHeader,
         hostHeader,
         normalizedOrigin,
+        nullOrigin,
         sameOrigin,
         allowlisted,
         localDevTrusted,
+        nullOriginTrusted,
         trusted
     };
 }
