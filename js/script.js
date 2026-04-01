@@ -473,6 +473,13 @@ const enhancedVisualAssetState = {
     mermaidInitialized: false,
     lastInsightsVisualSignature: ''
 };
+const heroPretextFlowState = {
+    module: null,
+    loadPromise: null,
+    loadFailed: false,
+    resizeBound: false,
+    rafId: 0
+};
 const moduleSearchIndexState = {
     lang: null,
     fuse: null
@@ -542,7 +549,8 @@ const ENHANCED_VISUAL_ASSET_IDS = Object.freeze({
 const ENHANCED_VISUAL_ASSET_URLS = Object.freeze({
     fuse: 'https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js',
     chart: 'https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js',
-    mermaid: 'https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js'
+    mermaid: 'https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js',
+    pretext: 'https://cdn.jsdelivr.net/npm/@chenglou/pretext@0.0.3/dist/layout.js'
 });
 const ACCESSIBLE_MODAL_IDS = [
     'settings-modal',
@@ -823,6 +831,7 @@ const TRANSLATIONS = {
         // Hero
         'hero.title': 'CS Course Atlas: Learn Across Core CS Courses',
         'hero.subtitle': 'A comprehensive, beginner-friendly journey across Data Structures & Algorithms, Assembly, Java, Python, JavaScript, and Discrete Mathematics by Eddy Arriaga-B. Each module includes detailed explanations, extensive code examples where applicable, and practical exercises.',
+        'hero.pretextCanvasAria': 'Decorative study intro rendered with Pretext text flow.',
         // Header buttons
         'btn.flashcards': 'Flashcards',
         'btn.flashcardsShort': 'Cards',
@@ -1539,6 +1548,7 @@ const TRANSLATIONS = {
         // Hero
         'hero.title': 'CS Course Atlas: Aprende en Cursos Clave de CS',
         'hero.subtitle': 'Un recorrido completo y amigable para principiantes a travÃ©s de Estructuras de Datos y Algoritmos, Ensamblador, Java, Python, JavaScript y MatemÃ¡ticas Discretas por Eddy Arriaga-B. Cada mÃ³dulo incluye explicaciones detalladas, amplios ejemplos de cÃ³digo y ejercicios prÃ¡cticos.',
+        'hero.pretextCanvasAria': 'Introduccion visual de estudio renderizada con flujo de texto de Pretext.',
         // Header buttons
         'btn.flashcards': 'Tarjetas',
         'btn.flashcardsShort': 'Tarjetas',
@@ -2788,6 +2798,7 @@ function applyLanguage(lang) {
     if (typeof updateAccountProfileSummaryUI === 'function') updateAccountProfileSummaryUI();
     if (typeof refreshAccountPrimaryAuthButton === 'function') refreshAccountPrimaryAuthButton();
     syncDesktopSidebarIconMode();
+    scheduleHeroPretextFlowRender();
 }
 
 /**
@@ -3505,6 +3516,7 @@ function renderRoute(route, options = {}) {
     requestAnimationFrame(() => {
         updatePageJumpButton();
         queueMotionEnhancements({ reset: true });
+        scheduleHeroPretextFlowRender();
     });
 }
 
@@ -25158,6 +25170,239 @@ function ensureEnhancedVisualContainers() {
     }
 }
 
+function getHeroPretextFlowElements() {
+    const section = document.getElementById('hero-section');
+    const container = document.getElementById('hero-pretext-flow');
+    const canvas = document.getElementById('hero-pretext-canvas');
+    const subtitle = section instanceof HTMLElement
+        ? section.querySelector('[data-i18n="hero.subtitle"]')
+        : null;
+    if (!(section instanceof HTMLElement)) return null;
+    if (!(container instanceof HTMLElement)) return null;
+    if (!(canvas instanceof HTMLCanvasElement)) return null;
+    if (!(subtitle instanceof HTMLElement)) return null;
+    return { section, container, canvas, subtitle };
+}
+
+function getCssPixelValue(rawValue, fallback) {
+    const value = Number.parseFloat(String(rawValue || '').replace('px', '').trim());
+    return Number.isFinite(value) ? value : fallback;
+}
+
+async function ensurePretextHeroFlowModule() {
+    if (heroPretextFlowState.module) {
+        return heroPretextFlowState.module;
+    }
+    if (heroPretextFlowState.loadFailed) {
+        return null;
+    }
+    if (heroPretextFlowState.loadPromise) {
+        return heroPretextFlowState.loadPromise;
+    }
+    if (typeof window === 'undefined' || typeof window.importScripts === 'function') {
+        return null;
+    }
+    const sourceUrl = String(ENHANCED_VISUAL_ASSET_URLS.pretext || '').trim();
+    if (!sourceUrl) return null;
+
+    heroPretextFlowState.loadPromise = import(sourceUrl)
+        .then((moduleNamespace) => {
+            const candidate = moduleNamespace && typeof moduleNamespace.prepareWithSegments === 'function'
+                ? moduleNamespace
+                : (moduleNamespace?.default || null);
+            if (!candidate || typeof candidate.prepareWithSegments !== 'function' || typeof candidate.layoutNextLine !== 'function') {
+                heroPretextFlowState.loadFailed = true;
+                return null;
+            }
+            heroPretextFlowState.module = candidate;
+            return candidate;
+        })
+        .catch((error) => {
+            heroPretextFlowState.loadFailed = true;
+            console.warn('Pretext module failed to load:', error);
+            return null;
+        })
+        .finally(() => {
+            heroPretextFlowState.loadPromise = null;
+        });
+
+    return heroPretextFlowState.loadPromise;
+}
+
+function hideHeroPretextFlow() {
+    const elements = getHeroPretextFlowElements();
+    if (!elements) return;
+    elements.container.hidden = true;
+    elements.container.classList.remove('is-ready');
+}
+
+async function renderHeroPretextFlow() {
+    const elements = getHeroPretextFlowElements();
+    if (!elements) return;
+
+    const { section, container, canvas, subtitle } = elements;
+    const route = normalizeRoutePath(appState.currentRoute || DEFAULT_ROUTE);
+    if (section.hidden || route !== '/home') {
+        hideHeroPretextFlow();
+        return;
+    }
+
+    const text = String(subtitle.textContent || '').replace(/\s+/g, ' ').trim();
+    const availableWidth = Math.floor(container.clientWidth || section.clientWidth || 0);
+    if (!text || availableWidth < 260) {
+        hideHeroPretextFlow();
+        return;
+    }
+
+    const pretextModule = await ensurePretextHeroFlowModule();
+    if (!pretextModule) {
+        hideHeroPretextFlow();
+        return;
+    }
+
+    const subtitleStyle = window.getComputedStyle(subtitle);
+    const fontSize = Math.max(14, Math.round(getCssPixelValue(subtitleStyle.fontSize, 16)));
+    const lineHeight = Math.max(Math.round(fontSize * 1.45), Math.round(getCssPixelValue(subtitleStyle.lineHeight, fontSize * 1.5)));
+    const fontStyle = subtitleStyle.fontStyle || 'normal';
+    const fontWeight = subtitleStyle.fontWeight || '500';
+    const fontFamily = subtitleStyle.fontFamily || 'Inter, sans-serif';
+    const font = `${fontStyle} ${fontWeight} ${fontSize}px ${fontFamily}`;
+    const textColor = subtitleStyle.color || (document.body.classList.contains('dark') ? '#e2e8f0' : '#1e293b');
+
+    const width = Math.min(900, Math.max(260, availableWidth));
+    const paddingX = Math.max(16, Math.round(width * 0.04));
+    const topPadding = Math.max(14, Math.round(lineHeight * 0.45));
+    const orbRadius = Math.max(28, Math.min(66, Math.round(width * 0.085)));
+    const orbCenterX = width - paddingX - orbRadius;
+    const orbCenterY = topPadding + orbRadius;
+    const orbBottom = orbCenterY + orbRadius;
+    const minLineWidth = Math.max(120, Math.round(width * 0.32));
+
+    let prepared;
+    try {
+        prepared = pretextModule.prepareWithSegments(text, font, { whiteSpace: 'normal' });
+    } catch (error) {
+        console.warn('Pretext prepareWithSegments failed:', error);
+        hideHeroPretextFlow();
+        return;
+    }
+
+    const lines = [];
+    let cursor = { segmentIndex: 0, graphemeIndex: 0 };
+    let baselineY = topPadding + lineHeight;
+    let guard = 0;
+    while (guard < 400) {
+        guard += 1;
+        const lineMidY = baselineY - lineHeight * 0.45;
+        let maxWidth = width - (paddingX * 2);
+        if (lineMidY >= (orbCenterY - orbRadius) && lineMidY <= (orbCenterY + orbRadius)) {
+            const dy = lineMidY - orbCenterY;
+            const horizontalReach = Math.sqrt(Math.max(0, (orbRadius * orbRadius) - (dy * dy)));
+            const textRightEdge = orbCenterX - horizontalReach - 10;
+            maxWidth = Math.max(minLineWidth, Math.floor(textRightEdge - paddingX));
+        }
+
+        const line = pretextModule.layoutNextLine(prepared, cursor, maxWidth);
+        if (!line) break;
+
+        lines.push({
+            text: String(line.text || '').trimEnd(),
+            x: paddingX,
+            y: baselineY
+        });
+        cursor = line.end;
+        baselineY += lineHeight;
+        if (baselineY > 2800) break;
+    }
+
+    if (!lines.length) {
+        hideHeroPretextFlow();
+        return;
+    }
+
+    const height = Math.max(Math.ceil(baselineY + topPadding * 0.5), Math.ceil(orbBottom + topPadding));
+    const dpr = Math.max(1, Math.min(window.devicePixelRatio || 1, 2));
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+
+    const context = canvas.getContext('2d');
+    if (!context) {
+        hideHeroPretextFlow();
+        return;
+    }
+
+    context.setTransform(dpr, 0, 0, dpr, 0, 0);
+    context.clearRect(0, 0, width, height);
+
+    const panelGradient = context.createLinearGradient(0, 0, width, height);
+    panelGradient.addColorStop(0, 'rgba(99, 102, 241, 0.14)');
+    panelGradient.addColorStop(0.62, 'rgba(14, 165, 233, 0.07)');
+    panelGradient.addColorStop(1, 'rgba(15, 23, 42, 0.03)');
+    context.fillStyle = panelGradient;
+    context.fillRect(0, 0, width, height);
+
+    const orbGradient = context.createRadialGradient(
+        orbCenterX - orbRadius * 0.35,
+        orbCenterY - orbRadius * 0.5,
+        orbRadius * 0.25,
+        orbCenterX,
+        orbCenterY,
+        orbRadius
+    );
+    orbGradient.addColorStop(0, 'rgba(165, 180, 252, 0.96)');
+    orbGradient.addColorStop(0.55, 'rgba(99, 102, 241, 0.95)');
+    orbGradient.addColorStop(1, 'rgba(49, 46, 129, 0.92)');
+
+    context.beginPath();
+    context.arc(orbCenterX, orbCenterY, orbRadius, 0, Math.PI * 2);
+    context.fillStyle = orbGradient;
+    context.fill();
+    context.lineWidth = 2;
+    context.strokeStyle = 'rgba(191, 219, 254, 0.86)';
+    context.stroke();
+
+    context.font = `700 ${Math.max(10, Math.floor(fontSize * 0.66))}px ${fontFamily}`;
+    context.fillStyle = '#eef2ff';
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+    context.fillText('PRETEXT', orbCenterX, orbCenterY);
+
+    context.textAlign = 'left';
+    context.textBaseline = 'alphabetic';
+    context.font = font;
+    context.fillStyle = textColor;
+    lines.forEach((line) => {
+        context.fillText(line.text, line.x, line.y);
+    });
+
+    container.hidden = false;
+    container.classList.add('is-ready');
+}
+
+function scheduleHeroPretextFlowRender() {
+    if (typeof window === 'undefined') return;
+    if (heroPretextFlowState.rafId && typeof window.cancelAnimationFrame === 'function') {
+        window.cancelAnimationFrame(heroPretextFlowState.rafId);
+    }
+    if (typeof window.requestAnimationFrame === 'function') {
+        heroPretextFlowState.rafId = window.requestAnimationFrame(() => {
+            heroPretextFlowState.rafId = 0;
+            void renderHeroPretextFlow();
+        });
+        return;
+    }
+    void renderHeroPretextFlow();
+}
+
+function initHeroPretextFlow() {
+    if (heroPretextFlowState.resizeBound || typeof window === 'undefined') return;
+    heroPretextFlowState.resizeBound = true;
+    window.addEventListener('resize', scheduleHeroPretextFlowRender, { passive: true });
+    scheduleHeroPretextFlowRender();
+}
+
 function fallbackLoadScriptOnce(id, src, readyCheck) {
     if (typeof readyCheck === 'function' && readyCheck()) {
         return Promise.resolve(true);
@@ -25678,12 +25923,15 @@ function renderEnhancedInsightsVisuals({ hasAccess = false, stats = null, guestP
 }
 
 function initEnhancedLearningExperience() {
+    initHeroPretextFlow();
     ensureEnhancedVisualContainers();
     void ensureEnhancedVisualAssets().then((loaded) => {
-        if (!loaded) return;
-        moduleSearchIndexState.lang = null;
-        moduleSearchIndexState.fuse = null;
-        renderModules();
+        if (loaded) {
+            moduleSearchIndexState.lang = null;
+            moduleSearchIndexState.fuse = null;
+            renderModules();
+        }
+        scheduleHeroPretextFlowRender();
     });
 }
 

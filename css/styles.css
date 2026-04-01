@@ -1340,6 +1340,27 @@ body.dark .section-heading {
     font-size: clamp(0.95rem, 2vw, 1.05rem);
 }
 
+.hero-pretext-flow {
+    width: min(100%, 900px);
+    margin: 1.05rem auto 0;
+    border-radius: 1rem;
+    border: 1px solid rgba(129, 140, 248, 0.45);
+    background: linear-gradient(140deg, rgba(238, 242, 255, 0.42), rgba(224, 242, 254, 0.32));
+    box-shadow: 0 16px 28px rgba(79, 70, 229, 0.17);
+    padding: 0.45rem;
+}
+
+.hero-pretext-flow[hidden] {
+    display: none !important;
+}
+
+.hero-pretext-canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 0.8rem;
+}
+
 .section-spacing {
     margin-bottom: clamp(2rem, 3vw, 3.5rem);
 }
@@ -1354,6 +1375,12 @@ body.dark .hero-section h2 {
 
 body.dark .hero-section p {
     color: var(--text-secondary-color);
+}
+
+body.dark .hero-pretext-flow {
+    border-color: rgba(129, 140, 248, 0.55);
+    background: linear-gradient(145deg, rgba(30, 41, 59, 0.78), rgba(15, 23, 42, 0.86));
+    box-shadow: 0 18px 32px rgba(2, 6, 23, 0.44);
 }
 
 .hidden {
