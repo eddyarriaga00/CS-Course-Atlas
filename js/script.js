@@ -17515,6 +17515,15 @@ async function exchangeOAuthTicketForSession(ticket, options = {}) {
             rememberSessionToken: true,
             silent
         });
+        if (appliedSession?.isAuthenticated) {
+            // Invalidate any session check that was already in flight: its
+            // pre-exchange "not authenticated" response must not sign the
+            // user back out after this exchange succeeded.
+            neonSessionCheckCounter += 1;
+            // The skipped check would have cleared hydration; the session is
+            // now known, so clear it here instead.
+            setAccountSessionHydrating(false);
+        }
         return {
             isAuthenticated: Boolean(appliedSession?.isAuthenticated),
             invalidTicket: false,
