@@ -4,69 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="csrf-token" content="">
+    <meta name="csatlas-api-base-url" content="">
     <title>CS Course Atlas - Multi-Class Learning for Computer Science Students</title>
-    <meta name="description" content="CS Course Atlas: DSA, Assembly, Java, Python, JavaScript, Discrete Mathematics, and more — with Theory of Computation, C++ track, and Statistics coming soon.">
-    <script>
-        window.tailwind = window.tailwind || {};
-        window.tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#eef2ff',
-                            100: '#e0e7ff',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            900: '#1e1b4b'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Pixelify Sans', 'Silkscreen', 'DotGothic16', 'monospace']
-                    },
-                    screens: {
-                        xs: '480px'
-                    }
-                }
-            }
-        };
-    </script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="https://unpkg.com/vis-network@9.1.9/styles/vis-network.min.css">
+    <link rel="icon" href="data:,">
+    <meta name="description" content="CS Course Atlas: DSA, Assembly, Java, Python, JavaScript, Discrete Mathematics, and more — with Theory of Computation, C++, Statistics, Operating Systems, Computer Networks, Advanced Algorithms, Programming Languages, Software Engineering, Computer Architecture, and Cybersecurity coming soon.">
+    <meta name="robots" content="index,follow,max-image-preview:large">
+    <meta name="theme-color" content="#1d4ed8">
+    <meta name="application-name" content="CS Course Atlas">
+    <meta name="apple-mobile-web-app-title" content="CS Course Atlas">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="canonical" href="https://eddyarriaga00.github.io/CS-Course-Atlas/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="CS Course Atlas">
+    <meta property="og:title" content="CS Course Atlas - Multi-Class Learning for Computer Science Students">
+    <meta property="og:description" content="Beginner-friendly CS learning across DSA, Java, Discrete Math, Git, and Assembly with interactive practice tools.">
+    <meta property="og:url" content="https://eddyarriaga00.github.io/CS-Course-Atlas/">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:title" content="CS Course Atlas - Multi-Class Learning for Computer Science Students">
+    <meta property="twitter:description" content="Beginner-friendly CS learning across DSA, Java, Discrete Math, Git, and Assembly with interactive practice tools.">
+    <link rel="manifest" href="manifest.webmanifest">
+    <link rel="stylesheet" href="css/tailwind.css">
+    <link rel="stylesheet" href="css/styles.css?v=20260327fix3">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Pixelify+Sans:wght@400&family=Silkscreen:wght@400&display=swap" rel="stylesheet">
 </head>
 <body class="min-h-screen transition-all duration-300 bg-slate-50 text-slate-900 accent-indigo card-depth-standard font-sans" id="main-body">
+    <a href="#main-content" class="skip-link" data-i18n="a11y.skipToContent">Skip to main content</a>
+    <div id="sr-announcer" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
     <header id="main-header" class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white sticky top-0 z-50 shadow-xl transition-all duration-300 backdrop-blur-md border-b border-white/10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 header-inner py-2">
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-3 gap-2.5">
                 <div class="w-full sm:w-auto transition-all duration-300 header-brand space-y-1">
                     <h1 id="main-title" class="font-bold leading-tight transition-all duration-300 text-xl sm:text-2xl lg:text-3xl tracking-tight" data-i18n="main.title">
-                        🧭 CS Course Atlas
+                        &#x1F9ED; CS Course Atlas
                     </h1>
                     <p id="main-subtitle" class="text-blue-100 text-xs sm:text-sm lg:text-base mt-0.5 transition-all duration-300 subtitle-collapsible text-[0.9rem]" data-i18n="main.subtitle">
                         Multi-class learning for Computer Science students
                     </p>
                 </div>
                 <div id="header-buttons" class="flex flex-wrap gap-2 w-full sm:w-auto justify-end sm:justify-end transition-all duration-300 order-3 sm:order-2">
+                    <button id="sidebar-toggle" type="button" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm" aria-controls="app-sidebar" aria-expanded="false" data-i18n-aria-label="sidebar.toggleAria">
+                        &#x2630; <span data-i18n="sidebar.toggle">Pages</span>
+                    </button>
                     <button id="flashcards-btn" type="button" onclick="openFlashcards()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
-                        🎯 <span class="hidden xs:inline" data-i18n="btn.flashcards">Flashcards</span><span class="xs:hidden" data-i18n="btn.flashcardsShort">Cards</span>
+                        &#x1F3AF; <span class="hidden xs:inline" data-i18n="btn.flashcards">Flashcards</span><span class="xs:hidden" data-i18n="btn.flashcardsShort">Cards</span>
                     </button>
                     <button id="glossary-btn" type="button" onclick="openGlossary()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
-                        📚 <span class="hidden xs:inline" data-i18n="btn.glossary">Glossary</span><span class="xs:hidden" data-i18n="btn.glossaryShort">Terms</span>
+                        &#x1F4DA; <span class="hidden xs:inline" data-i18n="btn.glossary">Glossary</span><span class="xs:hidden" data-i18n="btn.glossaryShort">Terms</span>
                     </button>
                     <button id="interactive-quiz-btn" type="button" onclick="openInteractiveQuizLibrary()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
-                        🧠 <span class="hidden xs:inline" data-i18n="btn.quizzes">Interactive Quizzes</span><span class="xs:hidden" data-i18n="btn.quizzesShort">Quizzes</span>
+                        &#x1F9E0; <span class="hidden xs:inline" data-i18n="btn.quizzes">Interactive Quizzes</span><span class="xs:hidden" data-i18n="btn.quizzesShort">Quizzes</span>
                     </button>
                     <button id="settings-btn" type="button" onclick="openSettings()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
-                        ⚙️ <span class="hidden xs:inline" data-i18n="btn.settings">Settings</span><span class="xs:hidden" data-i18n="btn.settingsShort">Set</span>
+                        &#9881;&#65039; <span class="hidden xs:inline" data-i18n="btn.settings">Settings</span><span class="xs:hidden" data-i18n="btn.settingsShort">Settings</span>
                     </button>
                     <button id="reset-btn" type="button" onclick="resetProgress()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 sm:gap-1.5 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
-                        🔄 <span class="hidden xs:inline" data-i18n="btn.reset">Reset</span><span class="xs:hidden" data-i18n="btn.resetShort">Reset</span>
+                        &#x1F504; <span class="hidden xs:inline" data-i18n="btn.reset">Reset</span><span class="xs:hidden" data-i18n="btn.resetShort">Reset</span>
                     </button>
                     <button id="account-btn" type="button" onclick="openAccountModal()" class="header-control px-2.5 py-1.5 sm:px-3 sm:py-2 transition-all duration-200 flex items-center gap-1 font-medium shadow hover:shadow-md text-xs sm:text-sm bg-white/15 text-white border border-white/20 hover:-translate-y-0.5 backdrop-blur-sm">
-                        👤 <span class="hidden xs:inline" data-i18n="btn.account">Account</span><span class="xs:hidden" data-i18n="btn.accountShort">Acct</span>
+                        &#x1F464; <span id="account-btn-label-desktop" class="hidden xs:inline" data-i18n="btn.account">Account</span><span id="account-btn-label-mobile" class="xs:hidden" data-i18n="btn.accountShort">Account</span>
                     </button>
                 </div>
                 <div id="account-chip" class="account-chip hidden sm:flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold order-2 sm:order-3 bg-slate-800 text-slate-100 border border-white/10"></div>
@@ -74,8 +72,82 @@
         </div>
     </header>
 
-    <div id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
-        <div class="text-center mb-8 sm:mb-10 hero-section rounded-2xl p-6 sm:p-8 shadow-2xl section-spacing backdrop-blur-md">
+    <div id="sidebar-backdrop" class="sidebar-backdrop" hidden></div>
+    <div id="app-shell" class="app-shell">
+        <aside id="app-sidebar" class="app-sidebar" aria-label="Primary site navigation" data-i18n-aria-label="sidebar.ariaLabel">
+            <div class="app-sidebar-inner">
+                <div class="app-sidebar-head">
+                    <h2 class="app-sidebar-title" data-i18n="sidebar.title">Pages</h2>
+                    <div class="app-sidebar-head-actions">
+                        <button
+                            id="sidebar-collapse-toggle"
+                            type="button"
+                            class="app-sidebar-collapse-toggle"
+                            aria-label="Collapse pages menu"
+                            data-i18n-aria-label="sidebar.collapseAria"
+                            title="Collapse pages menu to icons"
+                            data-i18n-title="sidebar.collapseHint"
+                            aria-pressed="false">
+                            <span class="sidebar-collapse-glyph" aria-hidden="true">&#128193;&#11013;&#65039;</span>
+                        </button>
+                        <button id="sidebar-close" type="button" class="app-sidebar-close" data-i18n-aria-label="sidebar.closeAria">×</button>
+                    </div>
+                </div>
+                <nav id="sidebar-nav" class="sidebar-nav" aria-label="Main pages" data-i18n-aria-label="sidebar.ariaLabel">
+                    <a href="index.html" class="sidebar-link" data-route-link data-route-key="/home" data-sidebar-icon="&#127968;" data-i18n="sidebar.home">Home</a>
+                    <div id="sidebar-tracks-group" class="sidebar-group">
+                        <a
+                            id="sidebar-tracks-icon-link"
+                            href="index.html?route=%2Ftracks"
+                            class="sidebar-link sidebar-tracks-icon-link"
+                            data-route-link
+                            data-route-key="/tracks"
+                            data-sidebar-icon="&#128218;"
+                            data-i18n="sidebar.tracks">Course Tracks</a>
+                        <button
+                            id="sidebar-tracks-toggle"
+                            type="button"
+                            class="sidebar-link sidebar-group-toggle"
+                            data-sidebar-icon="&#128218;"
+                            aria-expanded="false"
+                            aria-controls="sidebar-tracks-submenu"
+                            data-i18n-aria-label="sidebar.tracksToggleAria">
+                            <span class="sidebar-group-toggle-label" data-i18n="sidebar.tracks">Course Tracks</span>
+                            <span class="sidebar-group-toggle-caret" aria-hidden="true">&#9662;</span>
+                        </button>
+                        <div id="sidebar-tracks-submenu" class="sidebar-submenu" hidden>
+                            <a href="index.html?route=%2Ftracks" class="sidebar-link sidebar-submenu-link" data-route-link data-route-key="/tracks" data-sidebar-icon="&#128218;" data-i18n="sidebar.tracksAll">All Tracks</a>
+                            <a href="index.html?route=%2Fdsa" class="sidebar-link sidebar-submenu-link" data-route-link data-route-key="/dsa" data-sidebar-icon="&#129518;" data-i18n="sidebar.dsa">DSA</a>
+                            <a href="index.html?route=%2Fjava" class="sidebar-link sidebar-submenu-link" data-route-link data-route-key="/java" data-sidebar-icon="&#9749;" data-i18n="sidebar.java">Java</a>
+                            <a href="index.html?route=%2Fgit" class="sidebar-link sidebar-submenu-link" data-route-link data-route-key="/git" data-sidebar-icon="&#128736;" data-i18n="sidebar.git">Git</a>
+                            <a href="index.html?route=%2Fassembly" class="sidebar-link sidebar-submenu-link" data-route-link data-route-key="/assembly" data-sidebar-icon="&#9881;" data-i18n="sidebar.assembly">Assembly</a>
+                            <a href="index.html?route=%2Fdiscrete-math" class="sidebar-link sidebar-submenu-link" data-route-link data-route-key="/discrete-math" data-sidebar-icon="&#128200;" data-i18n="sidebar.discreteMath">Discrete Math</a>
+                        </div>
+                    </div>
+                    <a href="index.html?route=%2Fflashcards" class="sidebar-link" data-route-link data-route-key="/flashcards" data-sidebar-icon="&#127919;" data-i18n="sidebar.flashcards">Flashcards</a>
+                    <a href="index.html?route=%2Fplayground" class="sidebar-link" data-route-link data-route-key="/playground" data-sidebar-icon="&#128187;" data-i18n="sidebar.playground">Playground</a>
+                    <a href="index.html?route=%2Fquizzes" class="sidebar-link" data-route-link data-route-key="/quizzes" data-sidebar-icon="&#129504;" data-i18n="sidebar.quizzes">Quizzes</a>
+                    <a href="index.html?route=%2Fnotes" class="sidebar-link" data-route-link data-route-key="/notes" data-sidebar-icon="&#128221;" data-i18n="sidebar.notes">Notes</a>
+                    <a href="index.html?route=%2Fsupport" class="sidebar-link" data-route-link data-route-key="/support" data-sidebar-icon="&#10084;" data-i18n="sidebar.support">Support</a>
+                    <a href="index.html?route=%2Fabout" class="sidebar-link" data-route-link data-route-key="/about" data-sidebar-icon="&#8505;" data-i18n="sidebar.about">About</a>
+                </nav>
+            </div>
+        </aside>
+
+        <main id="main-content" class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+        <section id="route-overview-section" class="route-overview-section panel-surface rounded-xl p-4 sm:p-5 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100" hidden aria-live="polite">
+            <p id="route-overview-kicker" class="text-[11px] uppercase tracking-wider font-semibold text-slate-300" data-i18n="route.kicker">Current page</p>
+            <h2 id="route-overview-title" class="text-xl sm:text-2xl font-semibold text-indigo-300 mt-1"></h2>
+            <p id="route-overview-description" class="text-sm sm:text-base text-slate-200 mt-1"></p>
+        </section>
+
+        <section id="route-launchpad-section" class="route-launchpad-section panel-surface rounded-xl p-4 sm:p-5 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100" hidden>
+            <h3 id="route-launchpad-title" class="text-lg sm:text-xl font-semibold text-indigo-300"></h3>
+            <p id="route-launchpad-description" class="text-sm sm:text-base text-slate-200 mt-1"></p>
+            <div id="route-launchpad-actions" class="route-launchpad-actions mt-3"></div>
+        </section>
+
+        <div id="hero-section" class="text-center mb-8 sm:mb-10 hero-section rounded-2xl p-6 sm:p-8 shadow-2xl section-spacing backdrop-blur-md">
             <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 mb-4 sm:mb-6 leading-tight text-slate-100" data-i18n="hero.title">
                 CS Course Atlas: Learn Across Core CS Courses
             </h2>
@@ -83,15 +155,272 @@
                 A comprehensive, beginner-friendly journey across Data Structures & Algorithms, Assembly, Java, Python, JavaScript, and Discrete Mathematics by Eddy Arriaga-B.
                 Each module includes detailed explanations, extensive code examples where applicable, and practical exercises.
             </p>
+            <div id="hero-pretext-flow" class="hero-pretext-flow" hidden>
+                <canvas
+                    id="hero-pretext-canvas"
+                    class="hero-pretext-canvas"
+                    role="img"
+                    data-i18n-aria-label="hero.pretextCanvasAria"
+                    aria-label="Decorative study intro rendered with Pretext text flow."
+                ></canvas>
+            </div>
         </div>
+
+        <section id="about-credibility-section" class="panel-surface rounded-xl p-5 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100" hidden>
+            <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3">
+                <div>
+                    <p class="text-[11px] uppercase tracking-wide font-semibold text-indigo-200" data-i18n="about.kicker">Project Credibility</p>
+                    <h3 class="text-xl sm:text-2xl font-semibold text-indigo-300 mt-1" data-i18n="about.heading">About CS Course Atlas</h3>
+                    <p class="text-sm sm:text-base text-slate-200 mt-1" data-i18n="about.subtitle">Who built this site, why it exists, what is supported now, and what is next.</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+                <article class="rounded-xl border border-white/10 bg-slate-900/70 p-4 sm:p-5">
+                    <h4 class="text-base sm:text-lg font-semibold text-indigo-200" data-i18n="about.who.title">Who I Am</h4>
+                    <p class="text-sm sm:text-base text-slate-200 mt-2 leading-relaxed" data-i18n="about.who.body">
+                        I am Eddy Arriaga-Barrientos, the creator of CS Course Atlas. I built this as a practical study system for students who need one place to learn across multiple CS classes.
+                    </p>
+
+                    <h4 class="text-base sm:text-lg font-semibold text-emerald-200 mt-4" data-i18n="about.why.title">Why I Built It</h4>
+                    <p class="text-sm sm:text-base text-slate-200 mt-2 leading-relaxed" data-i18n="about.why.body">
+                        Most students have to jump between disconnected tools for notes, examples, quizzes, and review. This platform combines those workflows so learning paths stay clear and consistent.
+                    </p>
+                </article>
+
+                <article class="rounded-xl border border-white/10 bg-slate-900/70 p-4 sm:p-5">
+                    <h4 class="text-base sm:text-lg font-semibold text-indigo-200" data-i18n="about.courses.title">What Courses It Helps With</h4>
+                    <ul class="mt-2 space-y-1 text-sm sm:text-base text-slate-200 list-disc list-inside">
+                        <li data-i18n="about.courses.one">Data Structures and Algorithms (DSA)</li>
+                        <li data-i18n="about.courses.two">Java Programming</li>
+                        <li data-i18n="about.courses.three">Discrete Mathematics</li>
+                        <li data-i18n="about.courses.four">Git and Version Control</li>
+                        <li data-i18n="about.courses.five">Assembly Fundamentals</li>
+                    </ul>
+
+                    <h4 class="text-base sm:text-lg font-semibold text-emerald-200 mt-4" data-i18n="about.supports.title">What The Site Currently Supports</h4>
+                    <ul class="mt-2 space-y-1 text-sm sm:text-base text-slate-200 list-disc list-inside">
+                        <li data-i18n="about.supports.one">Structured modules with explanations and code examples</li>
+                        <li data-i18n="about.supports.two">Practice tools: flashcards, quizzes, glossary, and playgrounds</li>
+                        <li data-i18n="about.supports.three">Progress tracking, notes, and mobile-friendly navigation</li>
+                        <li data-i18n="about.supports.four">Account workflows with secure profile update flows</li>
+                    </ul>
+
+                    <h4 class="text-base sm:text-lg font-semibold text-amber-200 mt-4" data-i18n="about.progress.title">What Is Still In Progress</h4>
+                    <ul class="mt-2 space-y-1 text-sm sm:text-base text-slate-200 list-disc list-inside">
+                        <li data-i18n="about.progress.one">Expanded track depth for additional CS classes</li>
+                        <li data-i18n="about.progress.two">Broader account sync and cloud persistence rollout</li>
+                        <li data-i18n="about.progress.three">More guided learning paths and long-form practice packs</li>
+                    </ul>
+                </article>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-4">
+                <article class="rounded-xl border border-white/10 bg-slate-900/70 p-4 sm:p-5">
+                    <h4 class="text-base sm:text-lg font-semibold text-indigo-200" data-i18n="about.links.title">Project Links</h4>
+                    <div class="route-launchpad-actions mt-3">
+                        <a class="route-launchpad-btn route-launchpad-link" href="https://github.com/eddyarriaga00/CS-Course-Atlas" target="_blank" rel="noopener noreferrer" data-i18n="about.links.repo">GitHub Repository</a>
+                        <a class="route-launchpad-btn route-launchpad-link" href="https://github.com/eddyarriaga00/CS-Course-Atlas/commits/main" target="_blank" rel="noopener noreferrer" data-i18n="about.links.changelog">Changelog / Updates Log</a>
+                        <a class="route-launchpad-btn route-launchpad-link" href="contact-support.html" data-i18n="about.links.contact">Contact / Support Page</a>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-3" data-i18n="about.links.privacyPrompt">If you create an account, review these pages:</p>
+                    <div class="route-launchpad-actions mt-2">
+                        <a class="route-launchpad-btn route-launchpad-link" href="privacy-policy.html" data-i18n="about.links.privacy">Privacy Policy</a>
+                        <a class="route-launchpad-btn route-launchpad-link" href="terms-of-use.html" data-i18n="about.links.terms">Terms of Use</a>
+                    </div>
+                </article>
+
+                <article class="rounded-xl border border-white/10 bg-slate-900/70 p-4 sm:p-5">
+                    <h4 class="text-base sm:text-lg font-semibold text-indigo-200" data-i18n="about.updates.title">Recent Updates</h4>
+                    <ul class="mt-3 space-y-2 text-sm sm:text-base text-slate-200 list-disc list-inside">
+                        <li data-i18n="about.updates.one">Beginner-first homepage flow with guided start paths</li>
+                        <li data-i18n="about.updates.two">Improved responsive navigation for mobile, tablet, and laptops</li>
+                        <li data-i18n="about.updates.three">Expanded introduction-to-coding module and linked resources</li>
+                        <li data-i18n="about.updates.four">Stronger account and profile security flow groundwork</li>
+                    </ul>
+                </article>
+            </div>
+
+            <article class="rounded-xl border border-white/10 bg-slate-900/70 p-4 sm:p-5 mt-4">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div>
+                        <h4 class="text-base sm:text-lg font-semibold text-indigo-200" data-i18n="about.feedback.title">Contact / Feedback Form</h4>
+                        <p class="text-sm sm:text-base text-slate-200 mt-1" data-i18n="about.feedback.subtitle">Share bugs, requests, or feedback directly from this page.</p>
+                    </div>
+                    <button id="about-feedback-open-support" type="button" class="px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold bg-slate-800 border border-white/10 text-slate-100 hover:bg-slate-700 transition-all duration-200" data-i18n="about.feedback.openSupport">Open Full Support Form</button>
+                </div>
+
+                <form id="about-feedback-form" class="grid grid-cols-1 lg:grid-cols-2 gap-3 mt-4">
+                    <div>
+                        <label for="about-feedback-name" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="about.feedback.nameLabel">Name</label>
+                        <input type="text" id="about-feedback-name" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" data-i18n-placeholder="about.feedback.namePlaceholder" placeholder="Your name">
+                    </div>
+                    <div>
+                        <label for="about-feedback-email" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="about.feedback.emailLabel">Email</label>
+                        <input type="email" id="about-feedback-email" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" data-i18n-placeholder="about.feedback.emailPlaceholder" placeholder="you@example.com">
+                    </div>
+                    <div class="lg:col-span-2">
+                        <label for="about-feedback-type" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="about.feedback.typeLabel">Feedback Type</label>
+                        <select id="about-feedback-type" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100">
+                            <option value="general" data-i18n="about.feedback.type.general">General feedback</option>
+                            <option value="bug" data-i18n="about.feedback.type.bug">Bug report</option>
+                            <option value="content" data-i18n="about.feedback.type.content">Content request</option>
+                            <option value="feature" data-i18n="about.feedback.type.feature">Feature request</option>
+                        </select>
+                    </div>
+                    <div class="lg:col-span-2">
+                        <label for="about-feedback-message" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="about.feedback.messageLabel">Message</label>
+                        <textarea id="about-feedback-message" rows="4" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" data-i18n-placeholder="about.feedback.messagePlaceholder" placeholder="What should be improved?" aria-describedby="about-feedback-error"></textarea>
+                        <p id="about-feedback-error" class="form-error-text" role="alert" aria-live="assertive"></p>
+                    </div>
+                    <div class="lg:col-span-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                        <p class="text-xs sm:text-sm text-slate-300" data-i18n="about.feedback.privacyNote">Do not include sensitive personal data. Your message is used to improve CS Course Atlas.</p>
+                        <button type="submit" class="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200" data-i18n="about.feedback.submit">Send Feedback</button>
+                    </div>
+                </form>
+            </article>
+        </section>
+
+        <section id="home-beginner-onboarding-section" class="panel-surface rounded-xl p-5 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <article class="rounded-xl border border-white/10 bg-slate-900/70 p-4 sm:p-5">
+                    <p class="text-[11px] uppercase tracking-wide font-semibold text-indigo-200">What This Site Is</p>
+                    <h3 class="mt-1 text-lg sm:text-xl font-semibold text-indigo-300">One Home for CS Learning</h3>
+                    <p class="mt-2 text-sm sm:text-base text-slate-200 leading-relaxed">
+                        CS Course Atlas combines course tracks, modules, examples, and study tools in one place so you can learn consistently without jumping between many platforms.
+                    </p>
+                </article>
+                <article class="rounded-xl border border-white/10 bg-slate-900/70 p-4 sm:p-5">
+                    <p class="text-[11px] uppercase tracking-wide font-semibold text-emerald-200">Who It Is For</p>
+                    <h3 class="mt-1 text-lg sm:text-xl font-semibold text-emerald-300">Computer Science Students at Any Level</h3>
+                    <p class="mt-2 text-sm sm:text-base text-slate-200 leading-relaxed">
+                        Start as a beginner, review fundamentals for classes, or sharpen core interview skills. Pick one track and progress step-by-step.
+                    </p>
+                </article>
+            </div>
+
+            <div class="mt-4 rounded-xl border border-indigo-300/30 bg-indigo-500/10 p-4 sm:p-5">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                    <div>
+                        <p class="text-[11px] uppercase tracking-wide font-semibold text-indigo-200">Main CTA</p>
+                        <h3 class="mt-1 text-lg sm:text-xl font-semibold text-indigo-100">Ready to begin your path?</h3>
+                        <p id="home-plan-summary" class="mt-1 text-xs sm:text-sm text-slate-300">Answer 3 quick questions to personalize pacing.</p>
+                    </div>
+                    <div class="route-launchpad-actions">
+                        <button
+                            id="start-learning-btn"
+                            type="button"
+                            onclick="startLearningJourney()"
+                            class="route-launchpad-btn">
+                            Start Learning
+                        </button>
+                        <button
+                            id="continue-learning-btn"
+                            type="button"
+                            onclick="continueLearningJourney()"
+                            class="route-launchpad-btn">
+                            Continue Learning
+                        </button>
+                        <button
+                            id="personalize-plan-btn"
+                            type="button"
+                            onclick="openStudyPlanModal()"
+                            class="route-launchpad-btn">
+                            Personalize Plan
+                        </button>
+                    </div>
+                </div>
+                <p id="continue-learning-hint" class="mt-3 text-xs sm:text-sm text-slate-300">Next up suggestions appear here as you complete modules.</p>
+            </div>
+
+            <div class="mt-4">
+                <h3 class="text-lg sm:text-xl font-semibold text-indigo-300">Three Core Values</h3>
+                <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div class="rounded-xl border border-white/10 bg-slate-900/70 p-4">
+                        <p class="text-sm font-semibold text-slate-100">Learn concepts</p>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-1">Clear explanations with practical examples to build strong fundamentals first.</p>
+                    </div>
+                    <div class="rounded-xl border border-white/10 bg-slate-900/70 p-4">
+                        <p class="text-sm font-semibold text-slate-100">Practice interactively</p>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-1">Use code examples, quizzes, and guided exercises to apply what you learn.</p>
+                    </div>
+                    <div class="rounded-xl border border-white/10 bg-slate-900/70 p-4">
+                        <p class="text-sm font-semibold text-slate-100">Track progress</p>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-1">Monitor completion and keep momentum with daily study structure.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="home-success-checklist-section" class="panel-surface rounded-xl p-5 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
+            <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3">
+                <div>
+                    <p class="text-[11px] uppercase tracking-wide font-semibold text-emerald-200" data-i18n="success.checklist.kicker">Launch Success Path</p>
+                    <h3 class="text-xl sm:text-2xl font-semibold text-emerald-300 mt-1" data-i18n="success.checklist.heading">Your Quick Success Checklist</h3>
+                    <p class="text-sm sm:text-base text-slate-200 mt-1" data-i18n="success.checklist.subtitle">Complete these steps to get full value from CS Course Atlas fast.</p>
+                </div>
+                <span id="success-checklist-progress-pill" class="text-xs px-3 py-1.5 rounded-full bg-emerald-500/20 border border-emerald-300/30 text-emerald-100 font-semibold">0 / 4 complete</span>
+            </div>
+            <div id="success-checklist-items" class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3"></div>
+        </section>
+
+        <section id="home-guided-start-section" class="panel-surface rounded-xl p-5 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
+            <div class="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3">
+                <div>
+                    <p class="text-[11px] uppercase tracking-wide font-semibold text-indigo-200" data-i18n="start.paths.kicker">Where to Start</p>
+                    <h3 class="text-xl sm:text-2xl font-semibold text-indigo-300 mt-1" data-i18n="start.paths.heading">Not sure what to click first?</h3>
+                    <p class="text-sm sm:text-base text-slate-200 mt-1" data-i18n="start.paths.subtitle">Pick one goal and we will send you to the best first step.</p>
+                </div>
+            </div>
+            <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+                <button type="button" onclick="startGuidedPath('foundations')" class="text-left rounded-xl border border-white/10 bg-slate-900/70 p-4 hover:bg-slate-800/80 transition-all duration-200">
+                    <p class="text-sm font-semibold text-slate-100" data-i18n="start.paths.foundations.title">New to CS</p>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1" data-i18n="start.paths.foundations.description">Start with foundations and open the first beginner module.</p>
+                    <span class="inline-flex mt-3 text-xs font-semibold px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-100 border border-indigo-300/30" data-i18n="start.paths.foundations.cta">Start Foundations</span>
+                </button>
+                <button type="button" onclick="startGuidedPath('coursework')" class="text-left rounded-xl border border-white/10 bg-slate-900/70 p-4 hover:bg-slate-800/80 transition-all duration-200">
+                    <p class="text-sm font-semibold text-slate-100" data-i18n="start.paths.coursework.title">Studying for class</p>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1" data-i18n="start.paths.coursework.description">Open course tracks and choose the class you are taking now.</p>
+                    <span class="inline-flex mt-3 text-xs font-semibold px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-100 border border-emerald-300/30" data-i18n="start.paths.coursework.cta">Pick a course track</span>
+                </button>
+                <button type="button" onclick="startGuidedPath('interview')" class="text-left rounded-xl border border-white/10 bg-slate-900/70 p-4 hover:bg-slate-800/80 transition-all duration-200">
+                    <p class="text-sm font-semibold text-slate-100" data-i18n="start.paths.interview.title">Interview prep</p>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1" data-i18n="start.paths.interview.description">Jump into DSA modules and interview-focused practice.</p>
+                    <span class="inline-flex mt-3 text-xs font-semibold px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-100 border border-amber-300/30" data-i18n="start.paths.interview.cta">Go to DSA practice</span>
+                </button>
+                <button type="button" onclick="startGuidedPath('review')" class="text-left rounded-xl border border-white/10 bg-slate-900/70 p-4 hover:bg-slate-800/80 transition-all duration-200">
+                    <p class="text-sm font-semibold text-slate-100" data-i18n="start.paths.review.title">Quick review</p>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1" data-i18n="start.paths.review.description">Run fast recall with flashcards, then verify terms in the glossary.</p>
+                    <span class="inline-flex mt-3 text-xs font-semibold px-2.5 py-1 rounded-lg bg-sky-500/20 text-sky-100 border border-sky-300/30" data-i18n="start.paths.review.cta">Start quick review</span>
+                </button>
+            </div>
+        </section>
+
+        <section id="home-seo-links-section" class="panel-surface rounded-xl p-5 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
+            <h3 class="text-xl sm:text-2xl font-semibold text-indigo-300">Explore Crawlable Learning Pages</h3>
+            <p class="text-sm sm:text-base text-slate-200 mt-1">Use these direct pages for track overviews and module-by-module study links.</p>
+            <div class="route-launchpad-actions mt-3">
+                <a class="route-launchpad-btn route-launchpad-link" href="index.html?route=%2Ftracks">Track Pages</a>
+                <a class="route-launchpad-btn route-launchpad-link" href="index.html?route=%2Ftracks">Module Directory</a>
+                <a class="route-launchpad-btn route-launchpad-link" href="sitemap.xml">XML Sitemap</a>
+            </div>
+            <ul class="mt-3 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 text-sm">
+                <li><a class="footer-link" href="index.html?module=intro-to-coding">Introduction to Coding</a></li>
+                <li><a class="footer-link" href="index.html?module=java-basics">Java Basics</a></li>
+                <li><a class="footer-link" href="index.html?module=git-basics-workflow">Git Basics Workflow</a></li>
+                <li><a class="footer-link" href="index.html?module=arrays-strings">Arrays and Strings</a></li>
+                <li><a class="footer-link" href="index.html?module=propositional-logic-proofs">Propositional Logic and Proofs</a></li>
+                <li><a class="footer-link" href="index.html?module=assembly-registers-memory">Assembly Registers and Memory</a></li>
+            </ul>
+        </section>
 
         <section id="topic-focus-section" class="panel-surface rounded-xl p-5 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/65 border border-white/10 text-slate-100">
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-4">
                 <div>
-                    <h3 class="text-xl sm:text-2xl font-semibold text-indigo-300" data-i18n="topic.focus.heading">Topic Focus</h3>
-                    <p class="text-sm sm:text-base text-slate-200" data-i18n="topic.focus.subtitle">Choose your primary track. This controls which major module family is shown.</p>
+                    <h3 class="text-xl sm:text-2xl font-semibold text-indigo-300" data-i18n="topic.focus.heading">Featured Learning Tracks</h3>
+                    <p class="text-sm sm:text-base text-slate-200" data-i18n="topic.focus.subtitle">Start with a core CS track. We recommend picking one track and completing modules in order.</p>
                 </div>
-                <span class="text-xs px-3 py-1.5 rounded-full bg-slate-800 border border-white/10 text-slate-200 font-semibold uppercase tracking-wide" data-i18n="topic.focus.badge">Primary Filter</span>
+                <span class="text-xs px-3 py-1.5 rounded-full bg-slate-800 border border-white/10 text-slate-200 font-semibold uppercase tracking-wide" data-i18n="topic.focus.badge">Featured Tracks</span>
             </div>
             <div id="topic-focus-toggle" class="topic-focus-toggle-grid">
                 <button type="button" class="topic-focus-btn is-active" data-topic-filter="all">
@@ -137,7 +466,70 @@
                         <span class="topic-focus-title" data-i18n="topic.comingSoon.stats.title">Statistics for CS</span>
                         <span class="topic-focus-subtitle" data-i18n="topic.comingSoon.stats.subtitle">Probability, distributions, inference, and data-driven decision making</span>
                     </div>
+                    <div class="topic-coming-soon-card">
+                        <span class="topic-coming-pill" data-i18n="topic.comingSoon.label">Coming Soon</span>
+                        <span class="topic-focus-title" data-i18n="topic.comingSoon.os.title">Operating Systems</span>
+                        <span class="topic-focus-subtitle" data-i18n="topic.comingSoon.os.subtitle">Processes, scheduling, memory management, and file systems from first principles</span>
+                    </div>
+                    <div class="topic-coming-soon-card">
+                        <span class="topic-coming-pill" data-i18n="topic.comingSoon.label">Coming Soon</span>
+                        <span class="topic-focus-title" data-i18n="topic.comingSoon.networks.title">Computer Networks</span>
+                        <span class="topic-focus-subtitle" data-i18n="topic.comingSoon.networks.subtitle">TCP/IP, routing, transport reliability, and practical network debugging workflows</span>
+                    </div>
+                    <div class="topic-coming-soon-card">
+                        <span class="topic-coming-pill" data-i18n="topic.comingSoon.label">Coming Soon</span>
+                        <span class="topic-focus-title" data-i18n="topic.comingSoon.algorithmsPlus.title">Advanced Algorithms</span>
+                        <span class="topic-focus-subtitle" data-i18n="topic.comingSoon.algorithmsPlus.subtitle">Dynamic programming, advanced graph methods, string algorithms, and complexity strategy</span>
+                    </div>
+                    <div class="topic-coming-soon-card">
+                        <span class="topic-coming-pill" data-i18n="topic.comingSoon.label">Coming Soon</span>
+                        <span class="topic-focus-title" data-i18n="topic.comingSoon.pl.title">Programming Languages</span>
+                        <span class="topic-focus-subtitle" data-i18n="topic.comingSoon.pl.subtitle">Language paradigms, type systems, interpreters, compilers, and language design foundations</span>
+                    </div>
+                    <div class="topic-coming-soon-card">
+                        <span class="topic-coming-pill" data-i18n="topic.comingSoon.label">Coming Soon</span>
+                        <span class="topic-focus-title" data-i18n="topic.comingSoon.se.title">Software Engineering</span>
+                        <span class="topic-focus-subtitle" data-i18n="topic.comingSoon.se.subtitle">Architecture, testing, CI/CD, team workflows, and long-term maintainability practices</span>
+                    </div>
+                    <div class="topic-coming-soon-card">
+                        <span class="topic-coming-pill" data-i18n="topic.comingSoon.label">Coming Soon</span>
+                        <span class="topic-focus-title" data-i18n="topic.comingSoon.arch.title">Computer Architecture</span>
+                        <span class="topic-focus-subtitle" data-i18n="topic.comingSoon.arch.subtitle">Instruction sets, CPU pipelines, caches, and performance reasoning from hardware to software</span>
+                    </div>
+                    <div class="topic-coming-soon-card">
+                        <span class="topic-coming-pill" data-i18n="topic.comingSoon.label">Coming Soon</span>
+                        <span class="topic-focus-title" data-i18n="topic.comingSoon.cyber.title">Cybersecurity</span>
+                        <span class="topic-focus-subtitle" data-i18n="topic.comingSoon.cyber.subtitle">Secure coding, authentication, web attack defense, and practical security fundamentals</span>
+                    </div>
                 </div>
+            </div>
+        </section>
+
+        <section id="home-advanced-tools-section" class="panel-surface rounded-xl p-5 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
+                <div>
+                    <p class="text-[11px] uppercase tracking-wide font-semibold text-slate-300">After You Pick a Track</p>
+                    <h3 class="text-xl sm:text-2xl font-semibold text-indigo-300">Advanced Tools</h3>
+                    <p class="text-sm sm:text-base text-slate-200 mt-1">Use these once you are already working through modules.</p>
+                </div>
+            </div>
+            <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3">
+                <button type="button" onclick="openFlashcards()" class="text-left rounded-xl border border-white/10 bg-slate-900/70 p-4 hover:bg-slate-800/80 transition-all duration-200">
+                    <p class="text-sm font-semibold text-slate-100">Flashcards</p>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1">Rapid recall for key terms and concepts.</p>
+                </button>
+                <button type="button" onclick="navigateToRoute('/playground', { focusMain: true })" class="text-left rounded-xl border border-white/10 bg-slate-900/70 p-4 hover:bg-slate-800/80 transition-all duration-200">
+                    <p class="text-sm font-semibold text-slate-100">Playground</p>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1">Run snippets and test ideas quickly.</p>
+                </button>
+                <button type="button" onclick="openInteractiveQuizLibrary()" class="text-left rounded-xl border border-white/10 bg-slate-900/70 p-4 hover:bg-slate-800/80 transition-all duration-200">
+                    <p class="text-sm font-semibold text-slate-100">Quizzes</p>
+                    <p class="text-xs sm:text-sm text-slate-300 mt-1">Check retention and exam readiness.</p>
+                </button>
+                <button type="button" onclick="openAccountModal()" class="text-left rounded-xl border border-white/10 bg-slate-900/70 p-4 hover:bg-slate-800/80 transition-all duration-200">
+                        <p class="text-sm font-semibold text-slate-100" data-i18n="account.card.title">Account Sync</p>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-1" data-i18n="account.card.subtitle">Save and sync your progress and profile settings.</p>
+                    </button>
             </div>
         </section>
 
@@ -149,8 +541,8 @@
             <div class="progress-main-content flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 gap-5">
                 <div class="w-full space-y-2">
                     <p class="progress-kicker text-xs uppercase font-semibold text-[11px]" data-i18n="progress.kicker">Current journey</p>
-                    <span id="progress-text" class="progress-summary block text-base sm:text-lg font-semibold mt-1 text-[1rem] text-slate-100">
-                        0 of 0 modules completed
+                    <span id="progress-text" class="progress-summary block text-base sm:text-lg font-semibold mt-1 text-[1rem] text-slate-100" data-i18n="progress.emptyStart" role="status" aria-live="polite" aria-atomic="true">
+                        Choose your first track to load modules.
                     </span>
                     <div class="progress-meter mt-3">
                         <div id="progress-bar" class="progress-meter-fill transition-all duration-500" style="width: 0%"></div>
@@ -164,7 +556,7 @@
             </div>
             <div class="progress-pills flex flex-wrap gap-2 mt-4 text-xs sm:text-sm text-[12.5px] text-slate-200">
                 <span class="progress-pill bg-slate-800 border border-white/10 text-slate-100">🎯 Next milestone at 25%</span>
-                <span class="progress-pill bg-slate-800 border border-white/10 text-slate-100">⚡ Flashcards unlock at 50%</span>
+                <span class="progress-pill bg-slate-800 border border-white/10 text-slate-100">⚡ Flashcards are open now; more decks unlock as you progress</span>
                 <span class="progress-pill bg-slate-800 border border-white/10 text-slate-100">💡 Tip: Use the Focus Tracker to stay on pace</span>
             </div>
         </div>
@@ -181,7 +573,7 @@
                         <h3 class="text-lg sm:text-xl font-semibold text-slate-900 flex items-center gap-2 section-heading text-[1.05rem] text-slate-100">
                             🏅 <span id="achievement-badge-label">Trailhead Rookie</span>
                         </h3>
-                        <p id="achievement-description" class="text-sm text-slate-600 mt-1 text-slate-200 text-[0.95rem]">Complete your first module to begin earning badges.</p>
+                        <p id="achievement-description" class="text-sm text-slate-600 mt-1 text-slate-200 text-[0.95rem]" role="status" aria-live="polite" aria-atomic="true">Complete your first module to begin earning badges.</p>
                     </div>
                     <div class="text-left md:text-right">
                         <div id="achievement-badge" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-semibold text-sm badge-pill text-[0.9rem] bg-slate-800 border border-white/10">
@@ -197,30 +589,31 @@
                     </div>
                     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-xs text-slate-500 mt-2 gap-1 text-slate-300">
                         <span id="achievement-progress-label">0 / 3 modules toward next badge</span>
-                        <span id="achievement-total-label">0 total modules</span>
+                        <span id="achievement-total-label" data-i18n="achievements.emptyTotal">Choose a track to see module totals</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="support-card rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 text-center shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
+        <div id="support-section" class="support-card rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 text-center shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
             <h3 class="text-lg sm:text-xl font-semibold mb-2 sm:mb-3 section-heading text-[1.05rem] text-slate-100" data-i18n="support.heading">❤️ Do you enjoy this website?</h3>
             <p class="mb-3 sm:mb-4 opacity-90 text-sm sm:text-base text-slate-200" data-i18n="support.subtitle">Help keep this resource free and updated with new content weekly!</p>
             <div class="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3">
-                <a href="https://www.paypal.com/donate?business=your.email@paypal.com&amount=5.00&currency_code=USD&item_name=Java%20DSA%20Learning%20Hub%20-%20Coffee%20Support" target="_blank" rel="noopener noreferrer" class="px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-xs sm:text-sm bg-slate-800 border border-white/10 text-slate-100">
+                <a href="https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=5.00&currency_code=USD&item_name=CS%20Course%20Atlas%20-%20Coffee%20Support" target="_blank" rel="noopener noreferrer" class="px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-xs sm:text-sm bg-slate-800 border border-white/10 text-slate-100">
                     ☕ Buy me a coffee ($5)
                 </a>
-                <a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer" class="px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-xs sm:text-sm bg-slate-800 border border-white/10 text-slate-100">
+                <a href="https://github.com/eddyarriaga00/CS-Course-Atlas" target="_blank" rel="noopener noreferrer" class="px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-xs sm:text-sm bg-slate-800 border border-white/10 text-slate-100">
                     ⭐ GitHub Star
                 </a>
-                <a href="https://www.paypal.com/donate?business=your.email@paypal.com&amount=25.00&currency_code=USD&item_name=Java%20DSA%20Learning%20Hub%20-%20Sponsor%20Support" target="_blank" rel="noopener noreferrer" class="px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-xs sm:text-sm bg-slate-800 border border-white/10 text-slate-100">
+                <a href="https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=25.00&currency_code=USD&item_name=CS%20Course%20Atlas%20-%20Sponsor%20Support" target="_blank" rel="noopener noreferrer" class="px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 font-medium shadow-lg hover:shadow-xl hover:-translate-y-0.5 text-xs sm:text-sm bg-slate-800 border border-white/10 text-slate-100">
                     💝 Sponsor Me! ($25)
                 </a>
             </div>
             <p class="text-xs mt-2 sm:mt-3 opacity-75 text-slate-300">Created for CS students by Eddy Arriaga-Barrientos</p>
+            <p class="text-[11px] mt-1 opacity-75 text-slate-300">Privacy note: achievement notifications and personalized profile data are only persisted when you are logged in to an account.</p>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-5 sm:mb-6 section-spacing gap-5">
+        <div id="daily-study-grid" class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-5 sm:mb-6 section-spacing gap-5">
             <div id="daily-challenge-card" class="panel-surface rounded-xl p-4 sm:p-5 shadow-xl border border-transparent bg-slate-900/60 border-white/10 text-slate-100">
                 <div class="flex items-start justify-between gap-3 mb-3 gap-2.5">
                     <div>
@@ -233,7 +626,7 @@
                             <button id="toggle-auto-rotate" class="text-[11px] font-semibold px-3 py-1.5 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 transition-all duration-200 bg-slate-800 text-slate-100 border border-white/10 hover:bg-slate-700">Pause Auto</button>
                             <button id="refresh-challenge" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-indigo-100 text-indigo-700 hover:bg-indigo-200 transition-all duration-200 bg-indigo-500/20 text-indigo-100 border border-indigo-200/40 hover:bg-indigo-500/30">Shuffle</button>
                         </div>
-                        <div id="rotation-status" class="text-[11px] text-slate-500 text-right text-slate-300">Auto-shuffling every 9s (synced)</div>
+                        <div id="rotation-status" class="text-[11px] text-slate-500 text-right text-slate-300" role="status" aria-live="polite">Auto-shuffling every 9s (synced)</div>
                     </div>
                 </div>
                 <p id="daily-challenge-description" class="text-sm text-slate-600 mb-3 text-slate-200"></p>
@@ -259,16 +652,29 @@
                     <p class="text-sm text-slate-600 text-slate-200" data-i18n="section.insightsSubtitle">Stay on track with live stats, tailored module suggestions, and a built-in focus buddy.</p>
                 </div>
                 <div class="flex items-center gap-2">
-                    <div id="insight-updates" class="text-xs sm:text-sm text-indigo-600 font-medium text-indigo-200"></div>
+                    <div id="insight-updates" class="text-xs sm:text-sm text-indigo-600 font-medium text-indigo-200" role="status" aria-live="polite"></div>
                     <button type="button" class="section-collapse-toggle text-xs font-semibold px-3 py-1.5 rounded-full bg-violet-500/20 text-violet-100 border border-violet-200/40 hover:bg-violet-500/30" data-section-key="insights">Collapse</button>
                 </div>
             </div>
             <div id="insights-auth-lock" class="insights-auth-lock hidden">
                 <div class="insights-auth-lock-header">
-                    <span class="insights-auth-lock-pill" data-i18n="insights.lock.badge">Account Required</span>
+                    <span class="insights-auth-lock-pill" data-i18n="insights.lock.badge">Guest Mode</span>
                 </div>
                 <h4 class="insights-auth-lock-title" data-i18n="insights.lock.title">Sign in to unlock personalized insights</h4>
-                <p class="insights-auth-lock-copy" data-i18n="insights.lock.copy">Your dashboard analytics, focus momentum, and personalized recommendations are available after login so progress can sync safely.</p>
+                <p class="insights-auth-lock-copy" data-i18n="insights.lock.copy">Your personalized analytics, focus momentum, and recommendations unlock after login so progress can sync securely.</p>
+                <div class="insights-guest-starter" aria-label="Guest starter actions">
+                    <p class="insights-guest-starter-title" data-i18n="insights.lock.guestIntro">Start learning right now in guest mode:</p>
+                    <div class="insights-guest-actions">
+                        <button id="guest-start-dsa" type="button" class="insights-guest-action" data-i18n="insights.lock.guestDsa">Start with DSA Foundations</button>
+                        <button id="guest-start-java" type="button" class="insights-guest-action" data-i18n="insights.lock.guestJava">Start with Java Core</button>
+                        <button id="guest-start-git" type="button" class="insights-guest-action" data-i18n="insights.lock.guestGit">Start with Git Basics</button>
+                        <button id="guest-start-quiz" type="button" class="insights-guest-action" data-i18n="insights.lock.guestQuiz">Try a sample quiz</button>
+                        <button id="guest-start-flashcards" type="button" class="insights-guest-action" data-i18n="insights.lock.guestFlashcards">Practice flashcards</button>
+                        <button id="guest-save-note" type="button" class="insights-guest-action" data-i18n="insights.lock.guestNote">Save one local note</button>
+                    </div>
+                    <p class="insights-guest-starter-hint" data-i18n="insights.lock.guestHint">Create a free account to sync progress across devices once you are ready.</p>
+                </div>
+                <button id="insights-guest-plan-open" type="button" class="insights-auth-lock-button insights-auth-lock-preview-button" data-i18n="insights.lock.planPreviewCta">Personalize (Preview)</button>
                 <button id="insights-auth-open-account" type="button" class="insights-auth-lock-button" data-i18n="insights.lock.cta">Log In / Sign Up</button>
             </div>
             <div class="insight-highlight-grid mb-4 gap-3">
@@ -308,7 +714,7 @@
                         </div>
                         <div class="text-right text-xs text-slate-500 text-slate-300">
                             <p id="insights-completed-count">0 completed</p>
-                            <p id="insights-total-count">0 total modules</p>
+                            <p id="insights-total-count" data-i18n="insights.lock.totalHint">Select a track to see module totals</p>
                         </div>
                     </div>
                     <div class="insight-progress mb-3">
@@ -323,8 +729,8 @@
                         <p class="text-xs uppercase tracking-wide text-slate-500 text-slate-300">Recommended Next</p>
                         <span id="learning-path-progress" class="text-xs px-2 py-1 rounded-full bg-indigo-100 text-indigo-700 font-semibold bg-indigo-500/20 text-indigo-200 border border-indigo-300/40">0% complete</span>
                     </div>
-                    <div id="learning-path-next" class="mb-4 text-sm text-slate-700 text-slate-200">
-                        Keep learning to unlock personalized suggestions.
+                    <div id="learning-path-next" class="mb-4 text-sm text-slate-700 text-slate-200" data-i18n="insights.lock.learningPathHint">
+                        Choose your first track to load modules.
                     </div>
                     <div>
                         <p class="text-xs uppercase tracking-wide text-slate-500 mb-2 text-slate-300">Quick Picks</p>
@@ -360,7 +766,7 @@
                             <button id="log-study-session" class="px-3 py-1.5 rounded-lg bg-emerald-500 text-white text-xs font-semibold shadow-sm hover:bg-emerald-600 transition">Log +5 min</button>
                             <button id="study-session-toggle" class="insight-button purple-glow-button w-full text-center text-sm font-semibold">Start Focus Session</button>
                         </div>
-                        <div class="text-xs text-slate-500 mt-1 text-slate-300" id="study-session-log">No sessions yet.</div>
+                        <div class="text-xs text-slate-500 mt-1 text-slate-300" id="study-session-log" role="status" aria-live="polite" data-i18n="insights.lock.sessionLog">Try a sample module, quiz, or flashcards to kick off your first session.</div>
                     </div>
                 </div>
 
@@ -403,36 +809,47 @@
             <div id="interview-examples-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </section>
 
-        <div id="prompt-workspace-modal" class="prompt-modal hidden">
+        <div id="prompt-workspace-modal" class="prompt-modal hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="prompt-workspace-title">
             <div class="prompt-modal-backdrop" onclick="closePromptWorkspace()"></div>
             <div class="prompt-modal-panel bg-slate-900 text-slate-100 border-white/10">
                 <div class="flex items-start justify-between gap-3 mb-3">
                     <div>
-                        <p class="text-[11px] uppercase tracking-wide text-slate-500 font-semibold text-slate-300">Timed Practice</p>
+                        <p class="text-[11px] uppercase tracking-wide text-slate-500 font-semibold text-slate-300" data-i18n="interview.timedPractice">Timed Practice</p>
                         <h3 id="prompt-workspace-title" class="text-lg font-semibold text-indigo-600 text-indigo-300">Interview Prompt</h3>
                         <p id="prompt-workspace-meta" class="text-xs text-slate-500 mt-0.5 text-slate-300"></p>
                     </div>
-                    <button class="prompt-close text-slate-200" onclick="closePromptWorkspace()">✕</button>
+                    <button type="button" class="prompt-close text-slate-200" onclick="closePromptWorkspace()" aria-label="Close prompt workspace">✕</button>
                 </div>
                 <p id="prompt-workspace-prompt" class="text-sm text-slate-700 mb-3 text-slate-200"></p>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-3">
                     <div class="flex flex-col gap-2">
-                        <label class="text-xs font-semibold text-slate-600 text-slate-300">Your solution (write/paste)</label>
-                        <textarea id="prompt-workspace-input" class="prompt-editor bg-slate-900 text-slate-100 border-white/10" rows="12" placeholder="Write your solution here..."></textarea>
-                        <button id="prompt-workspace-submit" class="prompt-submit">Submit & Compare</button>
+                        <label for="prompt-workspace-input" class="text-xs font-semibold text-slate-600 text-slate-300" data-i18n="interview.yourSolution">Your solution (write/paste)</label>
+                        <textarea id="prompt-workspace-input" class="prompt-editor bg-slate-900 text-slate-100 border-white/10" rows="12" placeholder="Write your solution here..." data-i18n-placeholder="interview.inputPlaceholder" aria-label="Interview solution editor"></textarea>
+                        <button id="prompt-workspace-submit" class="prompt-submit" data-i18n="interview.submitCompare">Submit & Compare</button>
                     </div>
                     <div class="flex flex-col gap-2">
-                        <div class="flex items-center justify-between">
-                            <label class="text-xs font-semibold text-slate-600 text-slate-300">Reference solution</label>
-                            <span id="prompt-workspace-language" class="text-[11px] px-2 py-0.5 rounded-full bg-slate-200 text-slate-700 font-semibold bg-slate-800 text-slate-100 border border-white/10"></span>
+                        <div class="flex flex-wrap items-end justify-between gap-2">
+                            <label class="text-xs font-semibold text-slate-600 text-slate-300" data-i18n="interview.referenceSolution">Reference solution</label>
+                            <div class="flex items-end gap-2 flex-wrap">
+                                <div class="interview-workspace-field">
+                                    <label for="prompt-workspace-approach" class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide" data-i18n="interview.approach">Approach</label>
+                                    <select id="prompt-workspace-approach" class="text-xs rounded-md border border-white/10 bg-slate-800 text-slate-100 px-2 py-1" aria-label="Interview solution approach"></select>
+                                </div>
+                                <div class="interview-workspace-field">
+                                    <label for="prompt-workspace-language-select" class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide" data-i18n="interview.language">Language</label>
+                                    <select id="prompt-workspace-language-select" class="text-xs rounded-md border border-white/10 bg-slate-800 text-slate-100 px-2 py-1" aria-label="Interview solution language"></select>
+                                </div>
+                            </div>
                         </div>
+                        <div id="prompt-workspace-approach-summary" class="interview-approach-summary text-xs text-slate-300"></div>
+                        <div id="prompt-workspace-approach-details" class="interview-approach-details"></div>
                         <pre id="prompt-workspace-solution" class="prompt-solution bg-slate-900 text-slate-100 border-white/10"></pre>
-                        <button id="prompt-workspace-run" class="notes-download interview-cta-primary">Run in Workspace</button>
+                        <button id="prompt-workspace-run" class="notes-download interview-cta-primary" data-i18n="interview.runInWorkspace">Run in Workspace</button>
                         <div class="interview-output-shell">
                             <div id="prompt-workspace-output-meta" class="interview-output-meta">Output: Ready</div>
                             <pre id="prompt-workspace-output" class="interview-output-pre">Run the example solution to view output.</pre>
                         </div>
-                        <p id="prompt-workspace-notes" class="text-xs text-slate-600 text-slate-300"></p>
+                        <p id="prompt-workspace-notes" class="text-xs text-slate-600 text-slate-300" data-i18n="interview.analysisReady">Choose an approach to see when and why it applies.</p>
                     </div>
                 </div>
             </div>
@@ -450,14 +867,18 @@
                     <button id="download-notes" class="px-3 py-2 rounded-lg bg-slate-800 text-slate-100 text-sm font-semibold border border-white/10 shadow-sm hover:bg-slate-700 transition">Download TXT</button>
                 </div>
             </div>
-            <textarea id="notes-input" rows="6" class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-800 border-white/10 text-slate-100 placeholder-slate-400" placeholder="Write your notes here..."></textarea>
+            <textarea id="notes-input" rows="6" class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-800 border-white/10 text-slate-100 placeholder-slate-400" placeholder="Write your notes here..." aria-label="Study notes"></textarea>
         </section>
 
         <section id="notes-library-section" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
                 <div>
                     <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading text-indigo-300">📥 Notes Library</h3>
-                    <p class="text-sm text-slate-600 text-slate-200">Browse curated PDF cheat sheets by topic. Download requires a $1 donation to host the files.</p>
+                    <p class="text-sm text-slate-600 text-slate-200">Browse curated PDF cheat sheets by topic with free in-browser previews before download.</p>
+                    <p class="text-xs text-slate-300 mt-1">
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full border border-amber-300/40 bg-amber-500/10 text-amber-200 font-semibold uppercase tracking-wide">Coming Soon</span>
+                        One-click hosted downloads are rolling out.
+                    </p>
                 </div>
                 <span class="text-xs px-3 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold bg-slate-800 text-slate-100 border border-white/10">Beginner-friendly</span>
             </div>
@@ -472,6 +893,18 @@
             </div>
         </section>
 
+        <section id="books-library-section" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+                <div>
+                    <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading text-indigo-300" data-i18n="books.heading">📚 Books Library</h3>
+                    <p class="text-sm text-slate-600 text-slate-200" data-i18n="books.subtitle">Read full-length reference books directly in the website or download them for offline study.</p>
+                </div>
+                <span class="text-xs px-3 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold bg-slate-800 text-slate-100 border border-white/10" data-i18n="books.badge">Reference Shelf</span>
+            </div>
+            <div id="books-library-list" class="notes-scroll bg-slate-900/60 border border-white/10 rounded-xl"></div>
+            <p class="text-xs text-slate-300 mt-3">More textbooks can be added here over time with read/download support.</p>
+        </section>
+
         <section id="ds-playground" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/40 border border-white/10 backdrop-blur-sm">
             <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-3 gap-4">
                 <div class="space-y-1">
@@ -481,6 +914,8 @@
                 <div class="flex flex-wrap gap-2 items-center gap-3">
                     <div class="flex flex-wrap gap-2" id="ds-tabs"></div>
                     <button type="button" class="section-collapse-toggle text-xs px-3 py-1.5 rounded-lg bg-violet-500/20 text-violet-100 border border-violet-200/40 font-semibold hover:bg-violet-500/30" data-section-key="dsPlayground">Collapse</button>
+                    <button id="ds-run-example" type="button" class="text-xs px-3 py-1.5 rounded-lg notes-download font-semibold">Run in Section</button>
+                    <button id="ds-undo-action" type="button" class="text-xs px-3 py-1.5 rounded-lg notes-view font-semibold" disabled>Undo</button>
                     <button id="ds-reset-all" class="text-xs px-3 py-1.5 rounded-lg visual-link font-semibold px-4 py-2" data-i18n="ds.reset">Reset playground</button>
                 </div>
             </div>
@@ -517,7 +952,7 @@
                         <div class="ds-panel-card p-4 rounded-xl border border-white/10 bg-slate-900/70 space-y-2">
                             <div class="text-xs uppercase tracking-wide text-slate-300 font-semibold">State JSON</div>
                             <pre id="ds-state-json" class="text-sm whitespace-pre-wrap text-[0.9rem]"></pre>
-                            <div id="ds-status" class="text-xs text-indigo-200"></div>
+                            <div id="ds-status" class="text-xs text-indigo-200" role="status" aria-live="polite"></div>
                             <div class="pt-2 border-t border-white/10">
                                 <div class="text-xs font-semibold text-slate-200 mb-1">Need-to-Know Terms</div>
                                 <ul id="ds-definitions" class="text-xs space-y-1 text-slate-200"></ul>
@@ -526,17 +961,21 @@
                         <div class="ds-panel-card p-4 rounded-xl border border-white/10 bg-slate-900/70 space-y-2">
                             <div class="flex items-center justify-between gap-2">
                                 <div class="text-xs uppercase tracking-wide text-slate-300 font-semibold">Code + Explanation</div>
-                                <select id="ds-code-language" class="text-xs rounded-md border border-white/10 bg-slate-800 text-slate-100 px-2 py-1"></select>
+                                <select id="ds-code-language" class="text-xs rounded-md border border-white/10 bg-slate-800 text-slate-100 px-2 py-1" aria-label="Data structure code language"></select>
                             </div>
                             <pre id="ds-code-viewer" class="text-xs whitespace-pre-wrap font-mono bg-slate-950/70 border border-white/10 rounded-lg p-3 overflow-auto min-h-[220px]"></pre>
                             <p id="ds-explanation-viewer" class="text-xs text-slate-200 leading-relaxed"></p>
+                            <div class="ds-run-shell">
+                                <div id="ds-run-meta" class="ds-run-meta">Output: Ready</div>
+                                <pre id="ds-run-output" class="ds-run-output">Run the current example to view output here.</pre>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
 
-        <div id="notes-download-modal" class="prompt-modal hidden">
+        <div id="notes-download-modal" class="prompt-modal hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="notes-download-title">
             <div class="prompt-modal-backdrop" onclick="closeNotesDownloadModal()"></div>
             <div class="prompt-modal-panel bg-slate-900 text-slate-100 border-white/10">
                 <div class="flex items-start justify-between gap-3 mb-3">
@@ -545,12 +984,33 @@
                         <h3 id="notes-download-title" class="text-lg font-semibold text-indigo-600 text-indigo-300">Notes PDF</h3>
                         <p id="notes-download-meta" class="text-xs text-slate-500 text-slate-300"></p>
                     </div>
-                    <button class="prompt-close text-slate-200" onclick="closeNotesDownloadModal()">✕</button>
+                    <button type="button" class="prompt-close text-slate-200" onclick="closeNotesDownloadModal()" aria-label="Close notes download dialog">✕</button>
                 </div>
-                <p class="text-sm text-slate-700 mb-3 text-slate-200">To download, please support with a $1 donation. The PDF will open after you click donate.</p>
+                    <p class="text-sm text-slate-700 mb-3 text-slate-200">Free preview comes first. Optional $1 support keeps hosted downloads online; the PDF opens after support.</p>
                 <div class="flex flex-wrap gap-2">
                     <a id="notes-donate-link" href="#" target="_blank" rel="noopener noreferrer" class="prompt-submit">Donate $1 & Download</a>
-                    <button class="px-3 py-2 rounded-lg bg-slate-200 text-slate-700 font-semibold bg-slate-800 text-slate-100 border border-white/10" onclick="closeNotesDownloadModal()">Maybe later</button>
+                    <button type="button" class="px-3 py-2 rounded-lg bg-slate-200 text-slate-700 font-semibold bg-slate-800 text-slate-100 border border-white/10" onclick="closeNotesDownloadModal()">Maybe later</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="book-reader-modal" class="prompt-modal hidden" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="book-reader-title">
+            <div class="prompt-modal-backdrop" onclick="closeBookReaderModal()"></div>
+            <div class="prompt-modal-panel bg-slate-900 text-slate-100 border-white/10 book-reader-panel">
+                <div class="flex items-start justify-between gap-3 mb-3">
+                    <div>
+                        <p class="text-[11px] uppercase tracking-wide text-slate-500 font-semibold text-slate-300" data-i18n="books.readerLabel">Book Reader</p>
+                        <h3 id="book-reader-title" class="text-lg font-semibold text-indigo-300">Book</h3>
+                        <p id="book-reader-meta" class="text-xs text-slate-300"></p>
+                    </div>
+                    <button type="button" class="prompt-close text-slate-200" onclick="closeBookReaderModal()" aria-label="Close book reader">✕</button>
+                </div>
+                <div class="book-reader-frame-shell">
+                    <iframe id="book-reader-frame" class="book-reader-frame" title="Book reader"></iframe>
+                </div>
+                <div class="flex flex-wrap gap-2 mt-3">
+                    <a id="book-reader-download" href="#" target="_blank" rel="noopener noreferrer" class="prompt-submit" data-i18n="books.download">Download</a>
+                    <button type="button" class="px-3 py-2 rounded-lg bg-slate-800 text-slate-100 border border-white/10" onclick="closeBookReaderModal()" data-i18n="books.closeReader">Close Reader</button>
                 </div>
             </div>
         </div>
@@ -561,7 +1021,7 @@
                     <h3 class="text-lg sm:text-xl font-semibold text-indigo-600 section-heading glow-text text-indigo-300">Code Playground</h3>
                     <p class="text-sm text-slate-600 text-slate-200">Run quick Java, Python, C++, or JavaScript snippets through the sandbox API and iterate without leaving the page.</p>
                 </div>
-                <div id="playground-status" class="text-xs px-3 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold uppercase tracking-wider text-center bg-slate-800 text-slate-100 border border-white/10">Idle</div>
+                <div id="playground-status" class="text-xs px-3 py-1 rounded-full bg-slate-100 text-slate-600 font-semibold uppercase tracking-wider text-center bg-slate-800 text-slate-100 border border-white/10" role="status" aria-live="polite">Idle</div>
             </div>
             <div class="playground-grid">
                 <div class="playground-card">
@@ -574,13 +1034,13 @@
                             <div class="flex items-center gap-2">
                                 <label for="playground-language" class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Language</label>
                         <select id="playground-language" class="text-sm rounded-lg border border-slate-300 px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 bg-slate-800 border-white/10 text-slate-100">
-                            <option>Loading...</option>
+                            <option>Select language</option>
                         </select>
                     </div>
                     <div class="flex items-center gap-2">
                         <label for="playground-snippets" class="text-xs font-semibold text-slate-500 uppercase tracking-wide">Load sample</label>
                                 <select id="playground-snippets" class="text-sm rounded-lg border border-slate-300 px-2 py-1 bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500/30 bg-slate-800 border-white/10 text-slate-100">
-                                    <option value="hello-world">Loading samples...</option>
+                                    <option value="hello-world">Choose starter sample</option>
                                 </select>
                     </div>
                 </div>
@@ -588,7 +1048,7 @@
                     <textarea id="playground-editor" spellcheck="false" class="playground-editor bg-slate-900 text-slate-100 border-white/10" aria-label="Playground editor"></textarea>
                     <div class="flex flex-col sm:flex-row items-start sm:items-center gap-2 mt-3 gap-3">
                         <button id="playground-run" class="purple-glow-button px-4 py-2 w-full sm:w-auto text-sm font-semibold flex items-center justify-center gap-1 bg-indigo-600 text-white">
-                            ▶️ Run Code
+                            Run Code
                         </button>
                         <button id="playground-reset" class="px-4 py-2 w-full sm:w-auto text-sm font-semibold rounded-lg border border-slate-200 bg-white text-white shadow-sm hover:-translate-y-0.5 transition bg-slate-800 text-slate-100 border-white/10">
                             🔄 Reset Editor
@@ -613,12 +1073,33 @@
         <div id="search-section" class="panel-surface rounded-xl p-4 sm:p-5 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
             <h3 class="text-lg sm:text-xl font-semibold mb-3 text-indigo-600 section-heading text-indigo-300">Find Your Learning Path</h3>
             <div class="flex flex-col gap-3">
+                <div id="global-search-shell" class="global-search-shell">
+                    <label id="global-search-label" for="global-search-input" class="global-search-label text-xs font-semibold uppercase tracking-wide text-slate-300">Search all content</label>
+                    <div class="global-search-input-row">
+                        <input
+                            type="text"
+                            id="global-search-input"
+                            placeholder="Search terms, modules, quizzes, flashcards, notes, and playground topics..."
+                            class="w-full px-3 py-2 sm:py-2.5 rounded-lg border transition-all duration-200 text-sm sm:text-base bg-slate-900/60 border-white/10 text-slate-100 placeholder-slate-400 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+                            aria-label="Search all content"
+                            role="combobox"
+                            aria-autocomplete="list"
+                            aria-expanded="false"
+                            aria-controls="global-search-results"
+                            aria-haspopup="listbox"
+                        >
+                        <button id="global-search-clear" type="button" class="global-search-clear-btn text-xs sm:text-sm" aria-label="Clear global search">Clear</button>
+                    </div>
+                    <div id="global-search-status" class="sr-only" aria-live="polite"></div>
+                    <div id="global-search-results" class="global-search-results" role="listbox" hidden></div>
+                </div>
         <div class="w-full flex flex-col lg:flex-row lg:items-center lg:justify-between gap-2 gap-3">
                     <div class="flex-1">
-                        <input type="text" id="search-input" placeholder="Search modules by title, description, or topics..." class="w-full px-3 py-2 sm:py-2.5 rounded-lg border transition-all duration-200 text-sm sm:text-base bg-white border-slate-300 text-slate-900 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-900/60 border-white/10 text-slate-100 placeholder-slate-400">
+                        <label for="search-input" class="global-search-label text-xs font-semibold uppercase tracking-wide text-slate-300">Module filters</label>
+                        <input type="text" id="search-input" placeholder="Search modules by title, description, or topics..." class="w-full px-3 py-2 sm:py-2.5 rounded-lg border transition-all duration-200 text-sm sm:text-base bg-white border-slate-300 text-slate-900 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-900/60 border-white/10 text-slate-100 placeholder-slate-400" aria-label="Search modules">
                     </div>
                     <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
-                        <select id="difficulty-filter" class="w-full sm:w-48 px-3 py-2 sm:py-2.5 rounded-lg border transition-all duration-200 text-sm sm:text-base bg-white border-slate-300 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-900/60 border-white/10 text-slate-100">
+                        <select id="difficulty-filter" class="w-full sm:w-48 px-3 py-2 sm:py-2.5 rounded-lg border transition-all duration-200 text-sm sm:text-base bg-white border-slate-300 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-900/60 border-white/10 text-slate-100" aria-label="Filter modules by difficulty">
                             <option value="all">All Levels</option>
                             <option value="beginner">Beginner</option>
                             <option value="intermediate">Intermediate</option>
@@ -634,6 +1115,43 @@
         <div id="modules-grid" class="section-spacing modules-responsive-grid gap-4 text-slate-100">
             </div>
         <div id="modules-pagination" class="flex flex-wrap items-center justify-center gap-2 mb-6 gap-3 text-slate-100"></div>
+
+        <section id="public-roadmap-section" class="panel-surface rounded-xl p-5 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
+            <div class="mb-4">
+                <p class="text-[11px] uppercase tracking-wide font-semibold text-slate-300" data-i18n="roadmap.kicker">Public Roadmap</p>
+                <h3 class="text-xl sm:text-2xl font-semibold text-indigo-300" data-i18n="roadmap.heading">Live Now, In Progress, Planned Next</h3>
+                <p class="text-sm sm:text-base text-slate-200 mt-1" data-i18n="roadmap.subtitle">Track what is already usable today and what is intentionally being built next.</p>
+            </div>
+            <div class="roadmap-grid">
+                <article class="roadmap-card roadmap-live">
+                    <p class="roadmap-status-pill roadmap-status-live" data-i18n="roadmap.live.title">Live now</p>
+                    <ul class="roadmap-list">
+                        <li data-i18n="roadmap.live.one">DSA, Java, Git, Assembly, and Discrete Math learning tracks</li>
+                        <li data-i18n="roadmap.live.two">Modules with code examples, quizzes, flashcards, glossary, and playground tools</li>
+                        <li data-i18n="roadmap.live.three">Beginner-first onboarding paths and quick guide flow</li>
+                        <li data-i18n="roadmap.live.four">Account login, profile controls, and synced progress foundation</li>
+                    </ul>
+                </article>
+                <article class="roadmap-card roadmap-progress">
+                    <p class="roadmap-status-pill roadmap-status-progress" data-i18n="roadmap.progress.title">In progress</p>
+                    <ul class="roadmap-list">
+                        <li data-i18n="roadmap.progress.one">Cross-device polish and responsive formatting refinements</li>
+                        <li data-i18n="roadmap.progress.two">Deeper module expansions and code-quality consistency pass</li>
+                        <li data-i18n="roadmap.progress.three">Personalized insights tuning and account-only persistence improvements</li>
+                        <li data-i18n="roadmap.progress.four">Public launch hardening for SQL-backed auth and security controls</li>
+                    </ul>
+                </article>
+                <article class="roadmap-card roadmap-planned">
+                    <p class="roadmap-status-pill roadmap-status-planned" data-i18n="roadmap.planned.title">Planned next</p>
+                    <ul class="roadmap-list">
+                        <li data-i18n="roadmap.planned.one">Theory of Computation, C++, and Statistics tracks</li>
+                        <li data-i18n="roadmap.planned.two">Operating Systems, Computer Networks, and Software Engineering tracks</li>
+                        <li data-i18n="roadmap.planned.three">Programming Languages, Computer Architecture, and Cybersecurity tracks</li>
+                        <li data-i18n="roadmap.planned.four">Deeper algorithms path and additional interview-focused practice sets</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
 
         <footer id="main-footer" class="site-footer section-spacing mt-6 sm:mt-8 text-slate-100">
             <div class="site-footer-shell">
@@ -680,43 +1198,75 @@
                         <h5 class="site-footer-card-title" data-i18n="footer.support.title">💖 Support the Project</h5>
                         <p class="site-footer-support-copy" data-i18n="footer.support.copy">Made with care for CS students. Help keep the platform free and continuously updated.</p>
                         <div class="site-footer-support-actions">
-                            <a href="https://www.paypal.com/donate?business=your.email@paypal.com&amount=5.00&currency_code=USD&item_name=Coffee%20Support" target="_blank" rel="noopener noreferrer" class="site-footer-donate-btn">
+                            <a href="https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=5.00&currency_code=USD&item_name=Coffee%20Support" target="_blank" rel="noopener noreferrer" class="site-footer-donate-btn">
                                 <span data-i18n="footer.support.coffee">☕ Coffee</span>
                             </a>
-                            <a href="https://www.paypal.com/donate?business=your.email@paypal.com&amount=25.00&currency_code=USD&item_name=Sponsor%20Support" target="_blank" rel="noopener noreferrer" class="site-footer-donate-btn">
+                            <a href="https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=25.00&currency_code=USD&item_name=Sponsor%20Support" target="_blank" rel="noopener noreferrer" class="site-footer-donate-btn">
                                 <span data-i18n="footer.support.sponsor">💝 Sponsor</span>
                             </a>
                         </div>
                     </article>
-                </div>
 
+                    <article class="site-footer-card">
+                        <h5 class="site-footer-card-title" data-i18n="footer.trust.title">Trust &amp; Legal</h5>
+                        <div class="site-footer-card-list">
+                            <a class="footer-link" href="privacy-policy.html" data-i18n="footer.trust.privacy">Privacy Policy</a>
+                            <a class="footer-link" href="terms-of-use.html" data-i18n="footer.trust.terms">Terms of Use</a>
+                            <a class="footer-link" href="contact-support.html" data-i18n="footer.trust.contact">Contact / Support</a>
+                            <a class="footer-link" href="donations-refunds.html" data-i18n="footer.trust.refunds">Donations &amp; Refunds</a>
+                            <a class="footer-link" href="index.html?route=%2Ftracks">Track Pages</a>
+                            <a class="footer-link" href="index.html?route=%2Ftracks">Module Directory</a>
+                            <a class="footer-link" href="sitemap.xml">XML Sitemap</a>
+                        </div>
+                    </article>
+                </div>
+                <nav class="mobile-footer-pages-nav" aria-label="Mobile page navigation">
+                    <a href="index.html" class="mobile-footer-pages-link" data-route-link data-route-key="/home" data-i18n="sidebar.home">Home</a>
+                    <a href="index.html?route=%2Ftracks" class="mobile-footer-pages-link" data-route-link data-route-key="/tracks" data-i18n="sidebar.tracks">Course Tracks</a>
+                    <a href="index.html?route=%2Fflashcards" class="mobile-footer-pages-link" data-route-link data-route-key="/flashcards" data-i18n="sidebar.flashcards">Flashcards</a>
+                    <a href="index.html?route=%2Fquizzes" class="mobile-footer-pages-link" data-route-link data-route-key="/quizzes" data-i18n="sidebar.quizzes">Quizzes</a>
+                    <a href="index.html?route=%2Fnotes" class="mobile-footer-pages-link" data-route-link data-route-key="/notes" data-i18n="sidebar.notes">Notes</a>
+                    <a href="index.html?route=%2Fsupport" class="mobile-footer-pages-link" data-route-link data-route-key="/support" data-i18n="sidebar.support">Support</a>
+                </nav>
                 <div class="site-footer-bottom">
                     <p data-i18n="footer.bottom.author">Created for CS students by Eddy Arriaga-B</p>
                     <p data-i18n="footer.bottom.copyright">CS Course Atlas © 2024 | Open Source ❤️</p>
                 </div>
             </div>
         </footer>
+    </main>
     </div>
 
     <button id="site-guide-helper-btn" type="button" class="site-guide-fab" data-i18n="helper.badge" data-i18n-aria-label="helper.ariaLabel" aria-haspopup="dialog" aria-controls="site-guide-modal" aria-expanded="false">
         💡 Quick Guide
     </button>
 
-    <div id="settings-modal" class="modal-backdrop fixed inset-0 flex items-center justify-center z-50 p-4" style="display: none; background: rgba(5,8,18,0.65); backdrop-filter: blur(6px);">
+    <button id="page-jump-btn" type="button" class="page-jump-fab points-down is-hidden" aria-label="Scroll to the bottom of this page" title="Jump to Bottom">
+        <span data-page-jump-glyph aria-hidden="true">&#8595;</span>
+    </button>
+
+    <div id="settings-modal" class="modal-backdrop fixed inset-0 flex items-center justify-center z-50 p-4" style="display: none; background: rgba(5,8,18,0.65); backdrop-filter: blur(6px);" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="settings-modal-title">
         <div class="modal-panel w-full shadow-2xl" style="max-width: 32rem; background: var(--surface-primary); border: 1px solid var(--surface-border);">
             <!-- Gradient Header -->
             <div class="settings-modal-header">
                 <div style="display:flex; justify-content:space-between; align-items:flex-start; position:relative; z-index:1;">
                     <div>
-                        <h3 data-i18n="settings.title">⚙️ Settings</h3>
+                        <h3 id="settings-modal-title" data-i18n="settings.title">⚙️ Settings</h3>
                         <p data-i18n="settings.subtitle">Customize your learning experience</p>
                     </div>
-                    <button id="close-settings" class="settings-modal-header-close" aria-label="Close settings">×</button>
+                    <button id="close-settings" type="button" class="settings-modal-header-close" aria-label="Close settings">×</button>
                 </div>
             </div>
 
             <!-- Scrollable Body -->
             <div class="settings-modal-body">
+                <div id="settings-auth-lock" class="settings-auth-lock hidden" role="status" aria-live="polite">
+                    <div class="settings-auth-lock-copy-wrap">
+                        <p id="settings-auth-lock-title" class="settings-auth-lock-title" data-i18n="settings.authLockTitle">Sign in for advanced customization</p>
+                        <p id="settings-auth-lock-copy" class="settings-auth-lock-copy" data-i18n="settings.authLockCopy">Most personalization controls are available only when your account is signed in and syncing.</p>
+                    </div>
+                    <button id="settings-auth-open-account" type="button" class="settings-auth-lock-btn" data-i18n="settings.authLockCta">Log In / Sign Up</button>
+                </div>
 
                 <!-- 🎨 Appearance -->
                 <div class="settings-section appearance">
@@ -729,14 +1279,14 @@
                         <div class="settings-label">
                             <span class="settings-label-main" data-i18n="settings.darkMode">Dark Mode</span>
                         </div>
-                        <button id="dark-mode-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                        <button id="dark-mode-toggle" type="button" role="switch" aria-checked="false" data-i18n-aria-label="settings.darkMode" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
                             <div id="dark-mode-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
                         </button>
                     </div>
 
-                    <div style="margin-top:0.85rem;">
+                    <div style="margin-top:0.85rem;" data-auth-required-row="true">
                         <label class="settings-label-main" for="theme-select" data-i18n="settings.bgTheme">Background Theme</label>
-                        <select id="theme-select" class="settings-select">
+                        <select id="theme-select" class="settings-select" data-auth-required-setting="true">
                             <option value="default" data-i18n="settings.themeDefault">Default Gradient</option>
                             <option value="ocean" data-i18n="settings.themeOcean">Ocean Breeze</option>
                             <option value="sunset" data-i18n="settings.themeSunset">Sunset Glow</option>
@@ -746,9 +1296,9 @@
                         </select>
                     </div>
 
-                    <div style="margin-top:0.85rem;">
+                    <div style="margin-top:0.85rem;" data-auth-required-row="true">
                         <label class="settings-label-main" for="accent-select" data-i18n="settings.accentColor">Accent Color</label>
-                        <select id="accent-select" class="settings-select">
+                        <select id="accent-select" class="settings-select" data-auth-required-setting="true">
                             <option value="indigo" data-i18n="settings.accentIndigo">Indigo Aurora</option>
                             <option value="emerald" data-i18n="settings.accentEmerald">Emerald Focus</option>
                             <option value="amber" data-i18n="settings.accentAmber">Amber Sunrise</option>
@@ -757,9 +1307,9 @@
                         <p class="settings-label-sub" style="margin-top:0.3rem;" data-i18n="settings.accentHint">Updates buttons, highlights, and callouts instantly.</p>
                     </div>
 
-                    <div style="margin-top:0.85rem;">
+                    <div style="margin-top:0.85rem;" data-auth-required-row="true">
                         <label class="settings-label-main" for="card-depth-select" data-i18n="settings.cardElevation">Card Elevation</label>
-                        <select id="card-depth-select" class="settings-select">
+                        <select id="card-depth-select" class="settings-select" data-auth-required-setting="true">
                             <option value="flat" data-i18n="settings.elevationFlat">Minimal (low shadow)</option>
                             <option value="standard" data-i18n="settings.elevationStandard">Balanced</option>
                             <option value="lifted" data-i18n="settings.elevationLifted">Lifted Glow</option>
@@ -774,19 +1324,19 @@
                         <span data-i18n="settings.layout">Layout</span>
                     </div>
 
-                    <div class="settings-row">
+                    <div class="settings-row" data-auth-required-row="true">
                         <div class="settings-label">
                             <span class="settings-label-main" data-i18n="settings.compactLayout">Compact Module Layout</span>
                             <span class="settings-label-sub" data-i18n="settings.compactLayoutHint">Denser cards for widescreen or multi-tasking.</span>
                         </div>
-                        <button id="compact-layout-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                        <button id="compact-layout-toggle" type="button" role="switch" aria-checked="false" data-i18n-aria-label="settings.compactLayout" data-auth-required-setting="true" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
                             <div id="compact-layout-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
                         </button>
                     </div>
 
-                    <div style="margin-top:0.85rem;">
+                    <div style="margin-top:0.85rem;" data-auth-required-row="true">
                         <label class="settings-label-main" for="font-scale-select" data-i18n="settings.textSize">Text Size</label>
-                        <select id="font-scale-select" class="settings-select">
+                        <select id="font-scale-select" class="settings-select" data-auth-required-setting="true">
                             <option value="compact" data-i18n="settings.textCompact">Compact</option>
                             <option value="base" data-i18n="settings.textStandard">Standard</option>
                             <option value="comfortable" data-i18n="settings.textComfortable">Comfortable</option>
@@ -803,23 +1353,33 @@
                         <span data-i18n="settings.accessibility">Accessibility</span>
                     </div>
 
-                    <div class="settings-row">
+                    <div class="settings-row" data-auth-required-row="true">
                         <div class="settings-label">
                             <span class="settings-label-main" data-i18n="settings.reduceMotion">Reduce Motion</span>
                             <span class="settings-label-sub" data-i18n="settings.reduceMotionHint">Limit animations for focus and accessibility.</span>
                         </div>
-                        <button id="reduce-motion-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                        <button id="reduce-motion-toggle" type="button" role="switch" aria-checked="false" data-i18n-aria-label="settings.reduceMotion" data-auth-required-setting="true" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
                             <div id="reduce-motion-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
                         </button>
                     </div>
 
-                    <div class="settings-row" style="margin-top:0.65rem;">
+                    <div class="settings-row" style="margin-top:0.65rem;" data-auth-required-row="true">
                         <div class="settings-label">
                             <span class="settings-label-main" data-i18n="settings.highContrast">High Contrast Text</span>
                             <span class="settings-label-sub" data-i18n="settings.highContrastHint">Boost text contrast for readability.</span>
                         </div>
-                        <button id="high-contrast-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                        <button id="high-contrast-toggle" type="button" role="switch" aria-checked="false" data-i18n-aria-label="settings.highContrast" data-auth-required-setting="true" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
                             <div id="high-contrast-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
+                        </button>
+                    </div>
+
+                    <div class="settings-row" style="margin-top:0.65rem;" data-auth-required-row="true">
+                        <div class="settings-label">
+                            <span class="settings-label-main" data-i18n="settings.buttonAnimations">Button Animations</span>
+                            <span class="settings-label-sub" data-i18n="settings.buttonAnimationsHint">Toggle social-style ripple and tap animations.</span>
+                        </div>
+                        <button id="button-animations-toggle" type="button" role="switch" aria-checked="true" data-i18n-aria-label="settings.buttonAnimations" data-auth-required-setting="true" class="w-14 h-7 rounded-full transition-colors duration-200 bg-indigo-600" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                            <div id="button-animations-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-7" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
                         </button>
                     </div>
                 </div>
@@ -831,35 +1391,58 @@
                         <span data-i18n="settings.learning">Learning</span>
                     </div>
 
-                    <div class="settings-row">
+                    <div class="settings-row" data-auth-required-row="true">
                         <div class="settings-label">
                             <span class="settings-label-main" data-i18n="settings.showComments">Show Code Comments</span>
                             <span class="settings-label-sub" data-i18n="settings.showCommentsHint">Each module can override this setting.</span>
                         </div>
-                        <button id="comments-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-indigo-600" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                        <button id="comments-toggle" type="button" role="switch" aria-checked="true" data-i18n-aria-label="settings.showComments" data-auth-required-setting="true" class="w-14 h-7 rounded-full transition-colors duration-200 bg-indigo-600" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
                             <div id="comments-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-7" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
                         </button>
                     </div>
 
-                    <div class="settings-row" style="margin-top:0.65rem;">
+                    <div class="settings-row" style="margin-top:0.65rem;" data-auth-required-row="true">
                         <div class="settings-label">
                             <span class="settings-label-main" data-i18n="settings.hideCompleted">Hide Completed Modules</span>
                             <span class="settings-label-sub" data-i18n="settings.hideCompletedHint">Keep your grid focused on what’s left.</span>
                         </div>
-                        <button id="hide-completed-toggle" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
+                        <button id="hide-completed-toggle" type="button" role="switch" aria-checked="false" data-i18n-aria-label="settings.hideCompleted" data-auth-required-setting="true" class="w-14 h-7 rounded-full transition-colors duration-200 bg-slate-300" style="position:relative; border:none; box-shadow:none; flex-shrink:0; padding:0;">
                             <div id="hide-completed-slider" class="w-6 h-6 bg-white rounded-full transition-transform duration-200 translate-x-0.5" style="position:absolute; top:2px; box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>
                         </button>
                     </div>
 
-                    <div style="margin-top:0.85rem;">
+                    <div style="margin-top:0.85rem;" data-auth-required-row="true">
                         <label class="settings-label-main" for="weekly-goal-select" data-i18n="settings.weeklyGoal">Weekly Module Goal</label>
-                        <select id="weekly-goal-select" class="settings-select">
+                        <select id="weekly-goal-select" class="settings-select" data-auth-required-setting="true">
                             <option value="3" data-i18n="settings.goal3">3 / week · Steady pace</option>
                             <option value="5" data-i18n="settings.goal5">5 / week · Balanced</option>
                             <option value="8" data-i18n="settings.goal8">8 / week · Accelerated</option>
                             <option value="12" data-i18n="settings.goal12">12 / week · Sprint</option>
                         </select>
                         <p class="settings-label-sub" style="margin-top:0.3rem;" data-i18n="settings.weeklyGoalHint">Personalizes your study insights and pacing tips.</p>
+                    </div>
+
+                    <div style="margin-top:0.85rem;" data-auth-required-row="true">
+                        <label class="settings-label-main" for="flashcard-session-select" data-i18n="settings.flashcardsPerSession">Flashcards Per Session</label>
+                        <select id="flashcard-session-select" class="settings-select" data-auth-required-setting="true">
+                            <option value="10">10 cards</option>
+                            <option value="20">20 cards</option>
+                            <option value="30">30 cards</option>
+                            <option value="40">40 cards</option>
+                        </select>
+                        <p class="settings-label-sub" style="margin-top:0.3rem;" data-i18n="settings.flashcardsPerSessionHint">Set how many cards are generated each time you start a deck.</p>
+                    </div>
+
+                    <div style="margin-top:0.85rem;" data-auth-required-row="true">
+                        <label class="settings-label-main" for="code-preview-lines-select" data-i18n="settings.codePreviewLines">Code Preview Length</label>
+                        <select id="code-preview-lines-select" class="settings-select" data-auth-required-setting="true">
+                            <option value="8">8 lines</option>
+                            <option value="12">12 lines</option>
+                            <option value="16">16 lines</option>
+                            <option value="20">20 lines</option>
+                            <option value="24">24 lines</option>
+                        </select>
+                        <p class="settings-label-sub" style="margin-top:0.3rem;" data-i18n="settings.codePreviewLinesHint">Choose how much code is visible before tapping expand.</p>
                     </div>
                 </div>
 
@@ -876,8 +1459,8 @@
                             <span class="settings-label-sub" data-i18n="settings.languageHint">Switch between English and Spanish / Cambia entre inglés y español.</span>
                         </div>
                         <div class="lang-toggle-group">
-                            <button id="lang-en-btn" class="lang-btn active" onclick="setLanguage('en')">EN</button>
-                            <button id="lang-es-btn" class="lang-btn" onclick="setLanguage('es')">ES</button>
+                            <button id="lang-en-btn" type="button" class="lang-btn active" onclick="setLanguage('en')" aria-pressed="true">EN</button>
+                            <button id="lang-es-btn" type="button" class="lang-btn" onclick="setLanguage('es')" aria-pressed="false">ES</button>
                         </div>
                     </div>
                 </div>
@@ -891,35 +1474,49 @@
         </div>
     </div>
 
-    <div id="glossary-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
-            <div class="modal-panel rounded-2xl w-full max-w-5xl shadow-2xl flex flex-col bg-white text-slate-900 border border-slate-200 max-h-[90vh] overflow-hidden bg-slate-900 text-slate-100 border-white/10">
-                <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
-                    <h3 class="text-3xl font-semibold text-indigo-600 text-2xl">📚 CS Course Atlas Glossary</h3>
-                    <button id="close-glossary" class="text-2xl transition-colors duration-200 hover:scale-110 text-slate-500 hover:text-slate-700 text-slate-200">×</button>
-                </div>
-            <div class="p-6 pb-4 space-y-4 space-y-3 p-5">
-                <input type="text" id="glossary-search" placeholder="Search glossary terms..." class="w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-white border-slate-300 text-slate-900 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-400">
-                <div id="glossary-stats" class="glossary-stats text-xs sm:text-sm text-slate-500 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-slate-300">
-                    <span>Browse curated Computer Science terminology.</span>
-                    <span>Filter by category to focus your study.</span>
-                </div>
-                <div id="glossary-categories" class="glossary-chip-row flex flex-wrap gap-2"></div>
+    <div id="glossary-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="glossary-modal-title">
+        <div class="modal-panel rounded-2xl w-full max-w-5xl shadow-2xl flex flex-col bg-white text-slate-900 border border-slate-200 max-h-[90vh] overflow-hidden bg-slate-900 text-slate-100 border-white/10">
+            <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
+                <h3 id="glossary-modal-title" class="text-3xl font-semibold text-indigo-600 text-2xl" data-i18n="glossary.title">CS Course Atlas Glossary</h3>
+                <button id="close-glossary" type="button" class="text-2xl transition-colors duration-200 hover:scale-110 text-slate-500 hover:text-slate-700 text-slate-200" aria-label="Close glossary">×</button>
             </div>
-            <div class="flex-1 overflow-y-auto px-6 pb-6 px-5 pb-5">
-                <div id="glossary-content" class="grid grid-cols-1 md:grid-cols-2 gap-4 gap-3">
+            <div class="glossary-modal-body p-5 sm:p-6 pb-4 space-y-4">
+                <input type="text" id="glossary-search" data-i18n-placeholder="glossary.searchPlaceholder" data-i18n-aria-label="glossary.searchAria" placeholder="Search glossary terms..." class="w-full px-4 py-3 rounded-xl border transition-all duration-200 bg-white border-slate-300 text-slate-900 placeholder-slate-500 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-400">
+                <div class="glossary-toolbar">
+                    <div id="glossary-stats" class="glossary-stats text-xs sm:text-sm text-slate-500 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 text-slate-300">
+                        <span>Browse curated Computer Science terminology.</span>
+                        <span>Filter by category to focus your study.</span>
                     </div>
+                    <button id="glossary-filter-toggle" type="button" class="glossary-filter-toggle" aria-controls="glossary-filter-panel" aria-expanded="false">
+                        <span data-i18n="glossary.filters">Filters</span>
+                        <span class="glossary-filter-toggle-icon" aria-hidden="true">▾</span>
+                    </button>
+                </div>
+                <div id="glossary-filter-panel" class="glossary-filter-panel" hidden>
+                    <div class="glossary-controls">
+                        <div class="glossary-sort-control">
+                            <label for="glossary-sort" class="glossary-control-label" data-i18n="glossary.sortLabel">Sort</label>
+                            <select id="glossary-sort" class="glossary-sort-select"></select>
+                        </div>
+                        <button id="glossary-reset-filters" type="button" class="glossary-reset-btn" data-i18n="glossary.clearFilters">Clear filters</button>
+                    </div>
+                    <div id="glossary-categories" class="glossary-chip-row flex flex-wrap gap-2"></div>
+                    <div id="glossary-letters" class="glossary-letter-row flex flex-wrap gap-2"></div>
+                </div>
+            </div>
+            <div class="flex-1 overflow-y-auto px-5 sm:px-6 pb-5 sm:pb-6">
+                <div id="glossary-content" class="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4"></div>
             </div>
         </div>
     </div>
-
-    <div id="flashcards-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+    <div id="flashcards-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="flashcards-modal-title">
         <div class="flashcards-modal-panel rounded-2xl w-full max-w-5xl shadow-2xl bg-white text-slate-900 border border-slate-200 bg-slate-900 text-slate-100 border-white/10">
             <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
                 <div>
-                    <h3 class="text-3xl font-semibold text-indigo-600 text-indigo-300">🎯 Flashcards Studio</h3>
+                    <h3 id="flashcards-modal-title" class="text-3xl font-semibold text-indigo-600 text-indigo-300">🎯 Flashcards Studio</h3>
                     <p class="text-sm text-slate-300 mt-1">Study by deck, run focused sessions, and flip quickly with clean progress tracking.</p>
                 </div>
-                <button id="close-flashcards" class="text-2xl transition-colors duration-200 hover:scale-110 text-slate-500 hover:text-slate-700 text-slate-200">×</button>
+                <button id="close-flashcards" type="button" class="text-2xl transition-colors duration-200 hover:scale-110 text-slate-500 hover:text-slate-700 text-slate-200" aria-label="Close flashcards">×</button>
             </div>
             <div class="flashcards-shell p-8 text-slate-100">
                 <div class="flashcards-top-grid mb-6">
@@ -949,14 +1546,14 @@
                         <span class="flashcard-pill" id="flashcard-mode-pill">Tap to flip</span>
                     </div>
                     <div class="flex items-center gap-2 flashcard-nav-actions">
-                        <button id="prev-flashcard" class="flashcard-nav-btn bg-slate-500 hover:bg-slate-600 text-white px-4 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5">← Prev</button>
-                        <button id="next-flashcard" class="flashcard-nav-btn bg-slate-500 hover:bg-slate-600 text-white px-4 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5">Next →</button>
+                        <button id="prev-flashcard" class="flashcard-nav-btn bg-slate-500 hover:bg-slate-600 text-white px-4 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5" data-i18n="flashcards.nav.prev">Previous</button>
+                        <button id="next-flashcard" class="flashcard-nav-btn bg-slate-500 hover:bg-slate-600 text-white px-4 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5" data-i18n="flashcards.nav.next">Next</button>
                         <button id="random-flashcard" class="flashcard-nav-btn bg-purple-500 hover:bg-purple-600 text-white px-4 py-2.5 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl hover:-translate-y-0.5">🔀 Random</button>
                     </div>
                 </div>
 
                 <div class="flashcards-grid mb-4 flashcards-stage">
-                    <div class="flashcard-shell cursor-pointer" id="flashcard-content"></div>
+                    <div class="flashcard-shell cursor-pointer" id="flashcard-content" role="button" tabindex="0" aria-label="Flashcard content. Press Enter or Space to flip."></div>
                 </div>
 
                 <div class="flashcard-controls">
@@ -966,22 +1563,22 @@
         </div>
     </div>
 
-    <div id="quiz-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+    <div id="quiz-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="quiz-title">
         <div class="rounded-2xl w-full max-w-4xl shadow-2xl bg-white text-slate-900 border border-slate-200 max-h-90vh overflow-y-auto bg-slate-900 text-slate-100 border-white/10">
             <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
                 <h3 id="quiz-title" class="text-2xl font-semibold text-indigo-600 text-indigo-300">🧠 Quiz</h3>
-                <button id="close-quiz" class="text-2xl transition-colors duration-200 hover:scale-110 text-slate-500 hover:text-slate-700 text-slate-200">×</button>
+                <button id="close-quiz" type="button" class="text-2xl transition-colors duration-200 hover:scale-110 text-slate-500 hover:text-slate-700 text-slate-200" aria-label="Close quiz">×</button>
             </div>
             <div id="quiz-content" class="p-8 text-slate-100">
                 </div>
         </div>
     </div>
 
-    <div id="study-plan-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+    <div id="study-plan-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="study-plan-title">
         <div class="modal-panel rounded-2xl w-full max-w-xl shadow-2xl bg-white text-slate-900 border border-slate-200 bg-slate-900 text-slate-100 border-white/10">
             <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
-                <h3 class="text-2xl font-semibold text-indigo-600 text-indigo-300">Build Your Study Plan</h3>
-                <button id="close-study-plan" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700 text-slate-200">×</button>
+                <h3 id="study-plan-title" class="text-2xl font-semibold text-indigo-600 text-indigo-300">Build Your Study Plan</h3>
+                <button id="close-study-plan" type="button" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700 text-slate-200" aria-label="Close study plan">×</button>
             </div>
             <div class="p-6 space-y-5">
                 <div>
@@ -1019,79 +1616,299 @@
         </div>
     </div>
 
-    <div id="account-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
-        <div class="modal-panel rounded-2xl w-full max-w-xl shadow-2xl bg-white text-slate-900 border border-slate-200 bg-slate-900 text-slate-100 border-white/10">
-            <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
+    <div id="account-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="account-modal-title">
+        <div class="modal-panel account-modal-panel rounded-2xl w-full max-w-xl shadow-2xl bg-white text-slate-900 border border-slate-200 bg-slate-900 text-slate-100 border-white/10">
+            <div class="account-modal-header flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
                 <div>
-                    <h3 class="text-2xl font-semibold text-indigo-300">Account &amp; Secure Access</h3>
-                    <p class="text-sm text-slate-300 mt-1">Clean auth flow with secure session-based access.</p>
+                    <h3 id="account-modal-title" class="text-2xl font-semibold text-indigo-300" data-i18n="account.modal.title">Account &amp; Secure Access</h3>
+                    <p class="text-sm text-slate-300 mt-1" data-i18n="account.modal.subtitle">Clean auth flow with secure session-based access.</p>
                 </div>
-                <button id="close-account" class="text-2xl transition-colors duration-200 text-slate-200 hover:text-white">×</button>
+                <button id="close-account" type="button" class="account-modal-header-close text-2xl transition-colors duration-200 text-slate-200 hover:text-white" aria-label="Close account dialog" data-i18n-aria-label="account.modal.closeAria">&times;</button>
             </div>
 
-            <div class="p-6">
-                <div class="rounded-2xl border border-indigo-300/30 bg-gradient-to-br from-indigo-500/10 to-slate-900 p-5 space-y-4">
-                    <div class="grid grid-cols-2 gap-2 p-1 rounded-xl bg-slate-800/80 border border-white/10">
-                        <button id="account-auth-login-tab" type="button" class="px-4 py-2 rounded-lg text-sm font-semibold bg-violet-500 text-white transition-colors duration-200">Log In</button>
-                        <button id="account-auth-signup-tab" type="button" class="px-4 py-2 rounded-lg text-sm font-semibold bg-transparent text-slate-300 hover:text-white transition-colors duration-200">Sign Up</button>
+            <div class="account-modal-body p-6">
+                <div id="account-auth-card" class="account-auth-card rounded-2xl border border-indigo-300/30 bg-gradient-to-br from-indigo-500/10 to-slate-900 p-5 space-y-4">
+                    <div id="account-auth-state-hero" class="account-auth-state-hero">
+                        <div class="account-auth-state-kicker-wrap">
+                            <span id="account-auth-state-pill" class="account-auth-state-pill">Not Signed In</span>
+                            <span id="account-auth-provider-pill" class="account-auth-provider-pill hidden">Direct login</span>
+                        </div>
+                        <h4 id="account-auth-flow-title" class="text-lg font-semibold text-slate-100">Log In to Your Account</h4>
+                        <p id="account-auth-flow-subtitle" class="text-xs text-slate-300">Use a provider or continue with your email/username and password.</p>
+                        <button id="account-auth-retry-session" type="button" class="account-profile-action-btn hidden" data-i18n="auth.retrySession">Retry Session Check</button>
+
+                        <div id="account-auth-signed-in-note" class="account-auth-signed-in-note hidden" role="status" aria-live="polite">
+                            <p class="account-auth-signed-in-kicker" data-i18n="account.signedIn.kicker">Signed In</p>
+                            <p id="account-auth-signed-in-user" class="account-auth-signed-in-user">Session active</p>
+                            <p class="account-auth-signed-in-copy" data-i18n="account.signedIn.copy">Your profile and secure settings are now unlocked.</p>
+                        </div>
+
+                        <div id="account-auth-signed-in-actions" class="account-auth-signed-in-actions hidden">
+                            <button id="account-auth-hero-manage" type="button" class="account-primary-btn bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-2 rounded-xl font-medium" data-i18n="account.actions.openProfileSettings">Open Profile Settings</button>
+                            <button id="account-auth-hero-logout" type="button" class="account-profile-logout-btn" data-i18n="account.actions.signOut">Sign Out</button>
+                        </div>
                     </div>
+
+                    <div id="account-auth-interactive-fields" class="space-y-4">
+                    <div class="account-auth-tabs grid grid-cols-2 gap-2 p-1 rounded-xl bg-slate-800/80 border border-white/10">
+                        <button id="account-auth-login-tab" type="button" class="account-auth-tab px-4 py-2 rounded-lg text-sm font-semibold bg-violet-500 text-white transition-colors duration-200" data-i18n="account.tab.login">Log In</button>
+                        <button id="account-auth-signup-tab" type="button" class="account-auth-tab px-4 py-2 rounded-lg text-sm font-semibold bg-transparent text-slate-300 hover:text-white transition-colors duration-200" data-i18n="account.tab.signup">Sign Up</button>
+                    </div>
+
+                    <div class="account-auth-social-grid">
+                        <button id="account-auth-provider-google" type="button" class="account-auth-provider-btn account-auth-provider-google" aria-label="Continue with Google" data-i18n-aria-label="account.provider.google">
+                            <span class="account-auth-provider-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                                    <path fill="#EA4335" d="M12 5c1.56 0 2.95.54 4.05 1.6l3.02-3.02C17.24 1.8 14.83.75 12 .75 7.4.75 3.43 3.38 1.44 7.22l3.53 2.74C5.84 7.04 8.68 5 12 5z"></path>
+                                    <path fill="#34A853" d="M23.49 12.27c0-.8-.07-1.57-.2-2.32H12v4.4h6.47c-.28 1.43-1.08 2.64-2.31 3.45l3.55 2.76c2.08-1.92 3.28-4.74 3.28-8.29z"></path>
+                                    <path fill="#4A90E2" d="M4.97 14.04c-.24-.72-.37-1.49-.37-2.29s.13-1.57.37-2.29L1.44 6.72A11.26 11.26 0 0 0 .25 11.75c0 1.8.43 3.5 1.19 5.03l3.53-2.74z"></path>
+                                    <path fill="#FBBC05" d="M12 22.75c2.83 0 5.2-.94 6.94-2.56l-3.55-2.76c-.99.66-2.26 1.06-3.39 1.06-3.32 0-6.16-2.04-7.03-4.96l-3.53 2.74C3.43 20.12 7.4 22.75 12 22.75z"></path>
+                                </svg>
+                            </span>
+                            <span class="account-auth-provider-label" data-i18n="account.provider.google">Continue with Google</span>
+                        </button>
+                        <button id="account-auth-provider-github" type="button" class="account-auth-provider-btn account-auth-provider-github" aria-label="Continue with GitHub" data-i18n-aria-label="account.provider.github">
+                            <span class="account-auth-provider-icon" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+                                    <path fill="currentColor" d="M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.92c.58.11.79-.25.79-.56 0-.27-.01-1.01-.02-1.98-3.2.7-3.88-1.54-3.88-1.54-.53-1.33-1.28-1.69-1.28-1.69-1.05-.72.08-.71.08-.71 1.16.08 1.76 1.19 1.76 1.19 1.03 1.76 2.7 1.25 3.36.95.11-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.08-.12-.29-.52-1.45.11-3.03 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.78 0c2.21-1.49 3.18-1.18 3.18-1.18.63 1.58.23 2.74.11 3.03.74.8 1.19 1.82 1.19 3.08 0 4.42-2.69 5.39-5.25 5.67.41.36.78 1.09.78 2.2 0 1.59-.02 2.87-.02 3.26 0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"></path>
+                                </svg>
+                            </span>
+                            <span class="account-auth-provider-label" data-i18n="account.provider.github">Continue with GitHub</span>
+                        </button>
+                    </div>
+
+                    <div class="account-auth-divider" role="separator" aria-label="Continue with email" data-i18n-aria-label="account.divider.continueEmail">
+                        <span data-i18n="account.divider.orContinueEmail">or continue with email</span>
+                    </div>
+
                     <div>
-                        <label for="account-auth-email" class="font-semibold text-sm mb-1 block text-slate-200">Email</label>
-                        <input type="text" id="account-auth-email" autocomplete="username" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="example@email.com">
+                        <label for="account-auth-email" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.field.emailOrUsername">Email or Username</label>
+                        <input type="text" id="account-auth-email" autocomplete="username" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="you@email.com or username" data-i18n-placeholder="account.field.emailOrUsernamePlaceholder">
                     </div>
                     <div id="account-auth-username-group" class="hidden">
-                        <label for="account-auth-username" class="font-semibold text-sm mb-1 block text-slate-200">Username</label>
-                        <input type="text" id="account-auth-username" autocomplete="nickname" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="exampleuser">
+                        <label for="account-auth-username" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.field.username">Username</label>
+                        <input type="text" id="account-auth-username" autocomplete="nickname" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="choose-a-username" data-i18n-placeholder="account.field.usernamePlaceholder">
                     </div>
                     <div>
-                        <label for="account-auth-password" class="font-semibold text-sm mb-1 block text-slate-200">Password</label>
-                        <input type="password" id="account-auth-password" autocomplete="current-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="••••••••">
+                        <label for="account-auth-password" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.field.password">Password</label>
+                        <div class="account-auth-password-wrap">
+                            <input type="password" id="account-auth-password" autocomplete="current-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="********" data-i18n-placeholder="account.field.passwordPlaceholder">
+                            <button id="account-auth-password-toggle" type="button" class="account-auth-password-toggle" data-target-input="account-auth-password" aria-controls="account-auth-password" aria-pressed="false" data-i18n="account.password.toggleShow">Show</button>
+                        </div>
                     </div>
                     <div id="account-auth-confirm-group" class="hidden">
-                        <label for="account-auth-confirm" class="font-semibold text-sm mb-1 block text-slate-200">Confirm Password</label>
-                        <input type="password" id="account-auth-confirm" autocomplete="new-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="••••••••">
+                        <label for="account-auth-confirm" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.field.confirmPassword">Confirm Password</label>
+                        <div class="account-auth-password-wrap">
+                            <input type="password" id="account-auth-confirm" autocomplete="new-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="********" data-i18n-placeholder="account.field.confirmPasswordPlaceholder">
+                            <button id="account-auth-confirm-toggle" type="button" class="account-auth-password-toggle" data-target-input="account-auth-confirm" aria-controls="account-auth-confirm" aria-pressed="false" data-i18n="account.password.toggleShow">Show</button>
+                        </div>
                     </div>
-                    <button id="account-auth-submit" type="button" class="w-full bg-violet-500 hover:bg-violet-600 text-white py-2.5 rounded-xl font-medium">Log In</button>
-                    <p id="account-auth-status" class="text-xs text-slate-300">Not authenticated.</p>
+
+                    <div id="account-auth-password-meter" class="account-auth-password-meter hidden" aria-live="polite">
+                        <div class="account-auth-password-meter-track">
+                            <span id="account-auth-password-meter-fill" class="account-auth-password-meter-fill" data-strength="weak"></span>
+                        </div>
+                        <p id="account-auth-password-meter-text" class="account-auth-password-meter-text">Password strength: Weak</p>
+                    </div>
+
+                    <div id="account-auth-aux-row" class="account-auth-aux-row">
+                        <label for="account-auth-remember" class="account-auth-remember-label">
+                            <input id="account-auth-remember" type="checkbox" class="account-auth-remember-checkbox">
+                            <span data-i18n="account.auth.rememberMe">Remember me</span>
+                        </label>
+                        <button id="account-auth-forgot" type="button" class="account-auth-forgot-btn" data-i18n="account.auth.forgotPassword">Forgot password?</button>
+                    </div>
+                    </div>
+
+                    <button id="account-auth-submit" type="button" class="account-primary-btn w-full bg-violet-500 hover:bg-violet-600 text-white py-2.5 rounded-xl font-medium">Log In</button>
+
+                    <p id="account-auth-legal" class="account-auth-legal hidden" data-i18n="account.auth.legal">By creating an account, you agree to the Terms and Privacy Policy.</p>
+                    <p id="account-auth-switch-row" class="account-auth-switch text-xs text-slate-300">
+                        <span id="account-auth-switch-copy">Need an account?</span>
+                        <button id="account-auth-switch-mode" type="button" class="account-auth-switch-btn">Sign Up</button>
+                    </p>
+
+                    <p id="account-auth-status" class="text-xs text-slate-300" role="status" aria-live="polite">Not signed in. Log in or create a free account to sync progress across devices.</p>
                 </div>
 
-                <div class="rounded-2xl border border-white/10 bg-slate-900/70 p-5 space-y-4 mt-4">
-                    <div class="flex items-center justify-between gap-2">
-                        <h4 class="text-base font-semibold text-indigo-300">Profile Settings</h4>
-                        <span id="account-sync-status" class="text-xs font-semibold px-2.5 py-1 rounded-full border bg-slate-800 border-white/10 text-slate-200">idle</span>
-                    </div>
-                    <div>
-                        <label for="account-username" class="font-semibold text-sm mb-1 block text-slate-200">Username</label>
-                        <input type="text" id="account-username" autocomplete="nickname" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Set your public username">
-                    </div>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div>
-                            <label for="account-email" class="font-semibold text-sm mb-1 block text-slate-200">Email</label>
-                            <input type="email" id="account-email" autocomplete="email" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="you@domain.com">
+                <div class="account-profile-card rounded-2xl border border-white/10 bg-slate-900/70 p-5 space-y-4 mt-4">
+                    <div class="account-profile-header">
+                        <div class="account-profile-header-main">
+                            <h4 class="text-base font-semibold text-indigo-300" data-i18n="account.profile.title">Profile Settings</h4>
+                            <p class="account-profile-header-subtitle text-xs text-slate-300" data-i18n="account.profile.subtitle">Live account profile, sync status, and secure access controls.</p>
                         </div>
-                        <div>
-                            <label for="account-goal" class="font-semibold text-sm mb-1 block text-slate-200">Learning Goal</label>
-                            <select id="account-goal" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100">
-                                <option value="exploring">Exploring</option>
-                                <option value="internship">Internship Prep</option>
-                                <option value="interview">Interview Prep</option>
-                                <option value="coursework">Coursework Support</option>
-                            </select>
+                        <div class="account-profile-header-actions">
+                            <span id="account-sync-status" class="text-xs font-semibold px-2.5 py-1 rounded-full border bg-slate-800 border-white/10 text-slate-200">not signed in</span>
+                            <button id="account-profile-toggle" type="button" class="account-profile-toggle-btn" aria-expanded="false" aria-controls="account-profile-content">
+                                <span id="account-profile-toggle-label">Manage</span>
+                            </button>
                         </div>
                     </div>
-                    <button id="save-account" type="button" class="w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2.5 rounded-xl font-medium">Save Profile Settings</button>
-                    <p id="account-sync-meta" class="text-xs text-slate-300">Profile sync status will appear here.</p>
+
+                    <div id="account-profile-summary" class="account-profile-summary">
+                        <div class="account-profile-summary-head">
+                            <span id="account-profile-avatar" class="account-profile-avatar" aria-hidden="true">GL</span>
+                            <div class="account-profile-identity">
+                                <p id="account-profile-display-name" class="account-profile-display-name">Guest Learner</p>
+                                <p id="account-profile-display-email" class="account-profile-display-email">Sign in to sync profile and progress.</p>
+                            </div>
+                        </div>
+                        <div class="account-profile-summary-grid">
+                            <div class="account-profile-summary-item">
+                                <span class="account-profile-summary-label" data-i18n="account.summary.goal">Goal</span>
+                                <strong id="account-profile-goal-display" class="account-profile-summary-value">Exploring</strong>
+                            </div>
+                            <div class="account-profile-summary-item">
+                                <span class="account-profile-summary-label" data-i18n="account.summary.session">Session</span>
+                                <strong id="account-profile-session-display" class="account-profile-summary-value">Guest</strong>
+                            </div>
+                            <div class="account-profile-summary-item account-profile-summary-item-wide">
+                                <span class="account-profile-summary-label" data-i18n="account.summary.sync">Sync</span>
+                                <strong id="account-profile-sync-display" class="account-profile-summary-value">Sync idle.</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <p id="account-profile-auth-required-note" class="account-profile-auth-required-note" data-i18n="account.profile.authRequired">Sign in to unlock editable profile details, security updates, and account management actions.</p>
+
+                    <div class="account-profile-actions" role="group" aria-label="Profile panels" data-i18n-aria-label="account.profile.panelsAria">
+                        <button id="account-profile-open-profile" type="button" class="account-profile-action-btn is-active" data-account-panel-target="profile" aria-pressed="true" data-i18n="account.panel.profile">Edit Profile</button>
+                        <button id="account-profile-open-security" type="button" class="account-profile-action-btn" data-account-panel-target="security" aria-pressed="false" data-i18n="account.panel.security">Security</button>
+                        <button id="account-profile-open-danger" type="button" class="account-profile-action-btn account-profile-action-btn-danger" data-account-panel-target="danger" aria-pressed="false" data-i18n="account.panel.danger">Danger Zone</button>
+                    </div>
+
+                    <div id="account-profile-content" class="account-profile-content hidden">
+                        <div id="account-profile-panel-nav" class="account-profile-panel-nav hidden">
+                            <button id="account-profile-back-btn" type="button" class="account-profile-back-btn">
+                                <span id="account-profile-back-label">Back to Overview</span>
+                            </button>
+                            <p id="account-profile-panel-title" class="account-profile-panel-title">Edit Profile</p>
+                        </div>
+                        <div class="account-profile-section space-y-3" data-account-panel="profile">
+                            <div class="account-avatar-editor">
+                                <div class="account-avatar-editor-head">
+                                    <h5 class="text-sm font-semibold text-indigo-200" data-i18n="account.avatar.title">Profile Picture</h5>
+                                    <p class="text-xs text-slate-300" data-i18n="account.avatar.subtitle">Add a photo for your account chip and profile summary.</p>
+                                </div>
+                                <label for="account-avatar-url" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.avatar.urlLabel">Avatar URL</label>
+                                <input type="url" id="account-avatar-url" autocomplete="url" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="https://example.com/avatar.jpg" data-i18n-placeholder="account.avatar.urlPlaceholder">
+                                <div class="account-avatar-editor-actions">
+                                    <label for="account-avatar-file" class="account-avatar-upload-btn" data-i18n="account.avatar.upload">Upload Image</label>
+                                    <input type="file" id="account-avatar-file" accept="image/png,image/jpeg,image/webp,image/gif" hidden>
+                                    <button id="account-avatar-remove" type="button" class="account-avatar-remove-btn" data-i18n="account.avatar.remove">Remove Photo</button>
+                                </div>
+                                <p id="account-avatar-status" class="text-xs text-slate-300" data-i18n="account.avatar.tip">Tip: square images look best. Uploaded photos are resized automatically.</p>
+                            </div>
+                            <div>
+                                <label for="account-username" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.field.username">Username</label>
+                                <input type="text" id="account-username" autocomplete="nickname" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Set your public username" data-i18n-placeholder="account.profile.usernamePlaceholder">
+                            </div>
+                            <div class="account-social-editor">
+                                <div>
+                                    <h5 class="text-sm font-semibold text-indigo-200" data-i18n="account.social.title">Social Profile (Messaging Soon)</h5>
+                                    <p class="text-xs text-slate-300 mt-1" data-i18n="account.social.subtitle">Set your handle and status now. Messaging will use these when social features launch.</p>
+                                </div>
+                                <div>
+                                    <label for="account-social-handle" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.social.handleLabel">Social Handle</label>
+                                    <input type="text" id="account-social-handle" autocomplete="nickname" maxlength="32" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="@yourhandle" data-i18n-placeholder="account.social.handlePlaceholder">
+                                </div>
+                                <div>
+                                    <label for="account-social-status" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.social.statusLabel">Status</label>
+                                    <input type="text" id="account-social-status" maxlength="140" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Grinding graph algorithms today" data-i18n-placeholder="account.social.statusPlaceholder">
+                                </div>
+                                <label for="account-social-messaging-enabled" class="account-social-optin">
+                                    <input type="checkbox" id="account-social-messaging-enabled" class="account-auth-remember-checkbox">
+                                    <span data-i18n="account.social.messagingOptIn">Enable direct messages when released</span>
+                                </label>
+                            </div>
+                            <div>
+                                <label for="account-goal" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.goal.label">Learning Goal</label>
+                                <select id="account-goal" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100">
+                                    <option value="exploring" data-i18n="account.goal.exploring">Exploring</option>
+                                    <option value="internship" data-i18n="account.goal.internship">Internship Prep</option>
+                                    <option value="interview" data-i18n="account.goal.interview">Interview Prep</option>
+                                    <option value="coursework" data-i18n="account.goal.coursework">Coursework Support</option>
+                                </select>
+                            </div>
+                            <button id="save-account" type="button" class="account-primary-btn w-full bg-indigo-500 hover:bg-indigo-600 text-white py-2.5 rounded-xl font-medium" data-i18n="account.profile.save">Save Profile</button>
+                        </div>
+
+                        <div class="account-profile-section account-profile-security-section space-y-3" data-account-panel="security">
+                            <div>
+                                <h5 class="text-sm font-semibold text-indigo-200" data-i18n="account.security.emailUpdateTitle">Secure Email Update</h5>
+                                <p class="text-xs text-slate-300 mt-1" data-i18n="account.security.emailUpdateSubtitle">Email changes require a 6-digit PIN sent to your new email.</p>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] gap-2 items-end">
+                                <div>
+                                    <label for="account-email" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.security.newEmailLabel">New Email</label>
+                                    <input type="email" id="account-email" autocomplete="email" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="you@domain.com" data-i18n-placeholder="account.security.newEmailPlaceholder">
+                                </div>
+                                <button id="account-email-request-pin" type="button" class="account-primary-btn bg-sky-500 hover:bg-sky-600 text-white px-4 py-2.5 rounded-xl font-medium" data-i18n="account.security.sendPin">Send PIN</button>
+                            </div>
+                            <div id="account-email-pin-verify-wrap" class="account-email-pin-verify-wrap hidden">
+                                <label for="account-email-pin" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.security.pinLabel">Verification PIN</label>
+                                <div class="account-email-pin-actions">
+                                    <input type="text" id="account-email-pin" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="6-digit PIN" data-i18n-placeholder="account.security.pinPlaceholder">
+                                    <button id="account-email-verify-pin" type="button" class="account-primary-btn bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2.5 rounded-xl font-medium" data-i18n="account.security.verifyPin">Verify &amp; Update Email</button>
+                                </div>
+                            </div>
+                            <p id="account-email-pin-status" class="text-xs text-slate-300" data-i18n="account.security.pinStatusDefault">Request a PIN to verify your new email.</p>
+                        </div>
+
+                        <div class="account-profile-section account-profile-security-section space-y-3" data-account-panel="security">
+                            <div>
+                                <h5 class="text-sm font-semibold text-indigo-200" data-i18n="account.security.changePasswordTitle">Change Password</h5>
+                                <p class="text-xs text-slate-300 mt-1" data-i18n="account.security.changePasswordSubtitle">Use your current password to set a new one.</p>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                <div>
+                                    <label for="account-current-password" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.security.currentPasswordLabel">Current</label>
+                                    <input type="password" id="account-current-password" autocomplete="current-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Current password" data-i18n-placeholder="account.security.currentPasswordPlaceholder">
+                                </div>
+                                <div>
+                                    <label for="account-new-password" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.security.newPasswordLabel">New</label>
+                                    <input type="password" id="account-new-password" autocomplete="new-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="New password" data-i18n-placeholder="account.security.newPasswordPlaceholder">
+                                </div>
+                                <div>
+                                    <label for="account-confirm-new-password" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.security.confirmNewPasswordLabel">Confirm</label>
+                                    <input type="password" id="account-confirm-new-password" autocomplete="new-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 text-slate-100" placeholder="Confirm password" data-i18n-placeholder="account.security.confirmNewPasswordPlaceholder">
+                                </div>
+                            </div>
+                            <button id="account-password-update" type="button" class="account-primary-btn w-full bg-violet-500 hover:bg-violet-600 text-white py-2.5 rounded-xl font-medium" data-i18n="account.security.updatePassword">Update Password</button>
+                            <p id="account-password-status" class="text-xs text-slate-300" data-i18n="account.security.passwordStatusDefault">Password updates require an active session.</p>
+                        </div>
+
+                        <div class="account-profile-section account-profile-danger-section space-y-3" data-account-panel="danger">
+                            <div>
+                                <h5 class="text-sm font-semibold text-rose-200" data-i18n="account.danger.title">Delete Account</h5>
+                                <p class="text-xs text-slate-300 mt-1" data-i18n="account.danger.subtitle">This permanently removes your profile, sessions, and saved progress. This cannot be undone.</p>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                <div>
+                                    <label for="account-delete-password" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.danger.currentPasswordLabel">Current Password</label>
+                                    <input type="password" id="account-delete-password" autocomplete="current-password" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/40 text-slate-100" placeholder="Current password" data-i18n-placeholder="account.danger.currentPasswordPlaceholder">
+                                </div>
+                                <div>
+                                    <label for="account-delete-confirm" class="font-semibold text-sm mb-1 block text-slate-200" data-i18n="account.danger.confirmLabel">Type DELETE</label>
+                                    <input type="text" id="account-delete-confirm" autocomplete="off" class="w-full px-4 py-2.5 rounded-xl border border-white/10 bg-slate-800 text-sm focus:outline-none focus:ring-2 focus:ring-rose-500/40 text-slate-100" placeholder="DELETE" data-i18n-placeholder="account.danger.confirmPlaceholder">
+                                </div>
+                            </div>
+                            <button id="account-delete-account" type="button" class="account-danger-btn w-full bg-rose-600 hover:bg-rose-700 text-white py-2.5 rounded-xl font-medium" data-i18n="account.danger.deleteButton">Delete Account Permanently</button>
+                            <p id="account-delete-status" class="text-xs text-slate-300" data-i18n="account.danger.statusDefault">Type DELETE and confirm your password to permanently delete your account.</p>
+                        </div>
+
+                        <p id="account-sync-meta" class="text-xs text-slate-300" data-i18n="account.sync.metaDefault">Profile sync status will appear here.</p>
+                    </div>
                 </div>
             </div>
 
         </div>
     </div>
 
-    <div id="support-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+    <div id="support-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="support-modal-title">
         <div class="modal-panel rounded-2xl w-full max-w-lg shadow-2xl bg-white text-slate-900 border border-slate-200 bg-slate-900 text-slate-100 border-white/10">
             <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
-                <h3 class="text-2xl font-semibold text-indigo-600 text-indigo-300">Student Support</h3>
-                <button id="close-support" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700 text-slate-200">×</button>
+                <h3 id="support-modal-title" class="text-2xl font-semibold text-indigo-600 text-indigo-300">Student Support</h3>
+                <button id="close-support" type="button" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700 text-slate-200" aria-label="Close support dialog">×</button>
             </div>
             <form id="support-form" class="p-6 space-y-4">
                 <div>
@@ -1104,25 +1921,30 @@
                 </div>
                 <div>
                     <label for="support-message" class="font-semibold text-slate-800 text-sm mb-1 block text-slate-200">Message</label>
-                    <textarea id="support-message" rows="4" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 bg-slate-800 border-white/10 text-slate-100" placeholder="Provide detail so a mentor can help quickly."></textarea>
+                    <textarea id="support-message" rows="4" class="w-full px-4 py-2.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/40 bg-slate-800 border-white/10 text-slate-100" placeholder="Provide detail so a mentor can help quickly." aria-describedby="support-form-error"></textarea>
                 </div>
+                <p id="support-form-error" class="form-error-text" role="alert" aria-live="assertive"></p>
                 <div class="space-y-2">
-                    <p class="text-xs text-slate-500 text-slate-300">Submitting routes your note to the mentor inbox. Responses arrive via email once live.</p>
+                    <p class="text-xs text-slate-500 text-slate-300">
+                        Submitting routes your note to the mentor inbox.
+                        <span class="inline-flex items-center px-2 py-0.5 rounded-full border border-amber-300/40 bg-amber-500/10 text-amber-200 font-semibold uppercase tracking-wide">Coming Soon</span>
+                        Live email replies are in rollout.
+                    </p>
                     <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl font-medium">Send Support Request</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <div id="interactive-quiz-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;">
+    <div id="interactive-quiz-modal" class="modal-backdrop fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" style="display: none;" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="interactive-quiz-title">
         <div class="modal-panel rounded-2xl w-full max-w-5xl shadow-2xl bg-white text-slate-900 border border-slate-200 bg-slate-900 text-slate-100 border-white/10">
             <div class="flex justify-between items-center p-6 border-b border-slate-200 border-white/10">
                 <div>
                     <p class="text-xs uppercase tracking-wide text-slate-500 font-semibold text-slate-300">Quick Practice</p>
-                    <h3 class="text-2xl font-semibold text-indigo-600 text-indigo-300">Interactive Quizzes</h3>
+                    <h3 id="interactive-quiz-title" class="text-2xl font-semibold text-indigo-600 text-indigo-300">Interactive Quizzes</h3>
                     <p class="text-sm text-slate-600 text-slate-200">Pick any module, answer each question with instant feedback, and revisit explanations.</p>
                 </div>
-                <button id="close-interactive-quiz" onclick="closeInteractiveQuizLibrary()" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700 text-slate-200">×</button>
+                <button id="close-interactive-quiz" type="button" onclick="closeInteractiveQuizLibrary()" class="text-2xl transition-colors duration-200 text-slate-500 hover:text-slate-700 text-slate-200" aria-label="Close interactive quizzes">×</button>
             </div>
             <div class="p-6 space-y-4">
                 <div class="flex flex-col lg:flex-row lg:items-center gap-3">
@@ -1154,27 +1976,51 @@
                     <p class="font-semibold text-indigo-800 text-indigo-200" data-i18n="helper.goalTitle">Goal of CS Course Atlas</p>
                     <p class="text-slate-700 text-slate-100 mt-1" data-i18n="helper.goalText">Help Computer Science students learn faster across multiple classes with clear explanations, runnable examples, and guided practice tools.</p>
                 </div>
+                <div class="site-guide-start p-4 rounded-xl border border-emerald-200/50 bg-emerald-50/80 bg-emerald-500/10 border-emerald-300/30">
+                    <div class="flex items-center justify-between gap-2">
+                        <p class="font-semibold text-emerald-800 text-emerald-200" data-i18n="helper.startTitle">Start Here (3 steps)</p>
+                        <span class="site-guide-chip" data-i18n="helper.startChip">Fast setup</span>
+                    </div>
+                    <ol class="site-guide-checklist mt-2">
+                        <li data-i18n="helper.startStep1">Pick a Topic Focus and open the first module in that track.</li>
+                        <li data-i18n="helper.startStep2">Use Code Playground or Data Structure Playground to practice immediately.</li>
+                        <li data-i18n="helper.startStep3">Finish with a quiz + flashcards and mark progress complete.</li>
+                    </ol>
+                </div>
                 <div class="site-guide-list space-y-3">
                     <div class="site-guide-row">
-                        <p class="font-semibold text-slate-800 text-slate-100" data-i18n="helper.sectionModulesTitle">Modules</p>
+                        <p class="font-semibold text-slate-800 text-slate-100 site-guide-row-title" data-i18n="helper.sectionModulesTitle">Modules</p>
                         <p class="text-slate-600 text-slate-200" data-i18n="helper.sectionModulesText">Structured learning tracks with code examples, theory mode (for discrete), definitions, and resources.</p>
                     </div>
                     <div class="site-guide-row">
-                        <p class="font-semibold text-slate-800 text-slate-100" data-i18n="helper.sectionPlaygroundTitle">Code Playground</p>
+                        <p class="font-semibold text-slate-800 text-slate-100 site-guide-row-title" data-i18n="helper.sectionPlaygroundTitle">Code Playground</p>
                         <p class="text-slate-600 text-slate-200" data-i18n="helper.sectionPlaygroundText">Run Java, C++, Python, and JavaScript snippets, test edits, and inspect output quickly.</p>
                     </div>
                     <div class="site-guide-row">
-                        <p class="font-semibold text-slate-800 text-slate-100" data-i18n="helper.sectionDataTitle">Data Structure Code Playground</p>
+                        <p class="font-semibold text-slate-800 text-slate-100 site-guide-row-title" data-i18n="helper.sectionDataTitle">Data Structure Code Playground</p>
                         <p class="text-slate-600 text-slate-200" data-i18n="helper.sectionDataText">Interactive visuals for arrays, stacks, queues, heaps, graphs, and tries with operation timeline and complexity view.</p>
                     </div>
                     <div class="site-guide-row">
-                        <p class="font-semibold text-slate-800 text-slate-100" data-i18n="helper.sectionPracticeTitle">Practice Tools</p>
+                        <p class="font-semibold text-slate-800 text-slate-100 site-guide-row-title" data-i18n="helper.sectionPracticeTitle">Practice Tools</p>
                         <p class="text-slate-600 text-slate-200" data-i18n="helper.sectionPracticeText">Use flashcards, interactive quizzes, glossary, and interview examples to reinforce concepts.</p>
                     </div>
                     <div class="site-guide-row">
-                        <p class="font-semibold text-slate-800 text-slate-100" data-i18n="helper.sectionProgressTitle">Progress + Settings</p>
+                        <p class="font-semibold text-slate-800 text-slate-100 site-guide-row-title" data-i18n="helper.sectionProgressTitle">Progress + Settings</p>
                         <p class="text-slate-600 text-slate-200" data-i18n="helper.sectionProgressText">Track completion, customize UI settings, and manage account/profile preferences.</p>
                     </div>
+                    <div class="site-guide-row">
+                        <p class="font-semibold text-slate-800 text-slate-100 site-guide-row-title" data-i18n="helper.sectionResourcesTitle">Notes + Books Library</p>
+                        <p class="text-slate-600 text-slate-200" data-i18n="helper.sectionResourcesText">Use Notes Library for cheat sheets and the Books area for longer references you can read or download.</p>
+                    </div>
+                </div>
+                <div class="site-guide-workflow p-4 rounded-xl border border-amber-200/50 bg-amber-50/80 bg-amber-500/10 border-amber-300/30">
+                    <p class="font-semibold text-amber-800 text-amber-200" data-i18n="helper.workflowTitle">Recommended Study Workflow</p>
+                    <ul class="site-guide-checklist mt-2">
+                        <li data-i18n="helper.workflowStep1">Learn concept in a module and read key definitions.</li>
+                        <li data-i18n="helper.workflowStep2">Run/modify code and verify output.</li>
+                        <li data-i18n="helper.workflowStep3">Lock understanding with quiz + flashcards.</li>
+                        <li data-i18n="helper.workflowStep4">Save notes and track completion so insights stay accurate.</li>
+                    </ul>
                 </div>
             </div>
             <div class="site-guide-modal-footer p-6 pt-0">
@@ -1183,10 +2029,10 @@
         </div>
     </div>
 
-    <script src="js/spanish-localization.js"></script>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="https://unpkg.com/cytoscape@3.30.2/dist/cytoscape.min.js"></script>
-    <script src="https://unpkg.com/vis-network@9.1.9/dist/vis-network.min.js"></script>
-    <script src="js/script.js"></script>
+    <script defer src="js/app-config.js"></script>
+    <script defer src="js/runtime/path-utils.js"></script>
+    <script defer src="js/runtime/asset-loader.js"></script>
+    <script defer src="js/script.js?v=20260327fix3"></script>
 </body>
 </html>
+

@@ -1,0 +1,14 @@
+{
+  "name": "CS Course Atlas",
+  "short_name": "CS Atlas",
+  "description": "Multi-class computer science learning platform with tracks, modules, quizzes, flashcards, and progress sync.",
+  "start_url": "/CS-Course-Atlas/index.html",
+  "scope": "/CS-Course-Atlas/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#020617",
+  "theme_color": "#1d4ed8",
+  "lang": "en-US",
+  "categories": ["education", "developer", "productivity"]
+}
+

@@ -8,14 +8,28 @@
     "start": "node server/index.js",
     "dev": "node --watch server/index.js",
     "db:migrate": "node server/migrate.js",
-    "check:frontend": "node --check js/script.js"
+    "db:doctor": "node scripts/neon-doctor.js",
+    "check:frontend": "node --check js/script.js",
+    "test:smoke": "playwright test",
+    "test:smoke:headed": "playwright test --headed",
+    "build:css": "tailwindcss -c tailwind.config.cjs -i ./css/tailwind.input.css -o ./css/tailwind.css --minify",
+    "dev:css": "tailwindcss -c tailwind.config.cjs -i ./css/tailwind.input.css -o ./css/tailwind.css --watch",
+    "build:seo": "node scripts/build-seo-pages.js",
+    "build:site": "npm run build:css && npm run build:seo"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
+    "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.2.0",
     "ws": "^8.18.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.54.2",
+    "tailwindcss": "^3.4.17"
   }
 }

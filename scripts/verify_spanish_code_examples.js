@@ -137,6 +137,21 @@ function collectHumanText(code, language) {
     return collected.filter(Boolean).join('\n');
 }
 
+function collectInvalidPlaceholderTokens(code) {
+    const invalid = new Set();
+    const source = String(code || '');
+    const tokenPattern = /\$\{([A-Za-z\u00C0-\u024F_][A-Za-z\u00C0-\u024F0-9_]*)\}|\{([A-Za-z\u00C0-\u024F_][A-Za-z\u00C0-\u024F0-9_]*)\}/g;
+    let match;
+    while ((match = tokenPattern.exec(source)) !== null) {
+        const token = match[1] || match[2] || '';
+        if (!token) continue;
+        if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(token)) {
+            invalid.add(token);
+        }
+    }
+    return Array.from(invalid);
+}
+
 function main() {
     const errors = [];
     const { modules, categoryMap } = loadBaseModules();
@@ -191,6 +206,15 @@ function main() {
                 errors.push(`Module ${module.id} Spanish ${language} code appears to have no visible output`);
             }
 
+            if (/[\u00C3\u00C2\uFFFD]/.test(snippet)) {
+                errors.push(`Module ${module.id} Spanish ${language} snippet contains likely mojibake/corrupted characters`);
+            }
+
+            const invalidTokens = collectInvalidPlaceholderTokens(snippet);
+            if (invalidTokens.length) {
+                errors.push(`Module ${module.id} Spanish ${language} snippet contains invalid placeholder tokens: ${invalidTokens.join(', ')}`);
+            }
+
             const humanText = collectHumanText(snippet, language);
             staleEnglishDenylist.forEach((phrase) => {
                 if (humanText.includes(phrase)) {
@@ -220,6 +244,15 @@ function main() {
 
                 if (outputRegexByLanguage[language] && !outputRegexByLanguage[language].test(snippet)) {
                     errors.push(`Module ${module.id} set ${setItem.id} Spanish ${language} code appears to have no visible output`);
+                }
+
+                if (/[\u00C3\u00C2\uFFFD]/.test(snippet)) {
+                    errors.push(`Module ${module.id} set ${setItem.id} Spanish ${language} snippet contains likely mojibake/corrupted characters`);
+                }
+
+                const invalidTokens = collectInvalidPlaceholderTokens(snippet);
+                if (invalidTokens.length) {
+                    errors.push(`Module ${module.id} set ${setItem.id} Spanish ${language} snippet contains invalid placeholder tokens: ${invalidTokens.join(', ')}`);
                 }
             });
         });

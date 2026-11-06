@@ -1,3 +1,9 @@
 node_modules/
 .env
 .DS_Store
+.playwright-cli/
+output/
+dist/
+.translation-cache-es.json
+scripts/translation-cache-es.cache*.json
+scripts/translation-cache-es.cache*

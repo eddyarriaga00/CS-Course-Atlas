@@ -7,7 +7,30 @@ import https from 'https';
 const ROOT = process.cwd();
 const SCRIPT_PATH = path.join(ROOT, 'js', 'script.js');
 const OUT_PATH = path.join(ROOT, 'js', 'spanish-localization.js');
-const CACHE_PATH = path.join(ROOT, '.translation-cache-es.json');
+const PRIMARY_CACHE_PATH = path.join(ROOT, '.translation-cache-es.json');
+const FALLBACK_CACHE_PATH = path.join(ROOT, 'scripts', 'translation-cache-es.cache.json');
+
+function resolveCachePath() {
+  const envPath = String(process.env.TRANSLATION_CACHE_PATH || '').trim();
+  if (envPath) {
+    return path.isAbsolute(envPath) ? envPath : path.join(ROOT, envPath);
+  }
+
+  for (const candidate of [PRIMARY_CACHE_PATH, FALLBACK_CACHE_PATH]) {
+    try {
+      fs.mkdirSync(path.dirname(candidate), { recursive: true });
+      const fd = fs.openSync(candidate, 'a');
+      fs.closeSync(fd);
+      return candidate;
+    } catch {
+      // Try next candidate.
+    }
+  }
+
+  return FALLBACK_CACHE_PATH;
+}
+
+let CACHE_PATH = resolveCachePath();
 
 function extract(src, start, end) {
   const s = src.indexOf(start);
@@ -19,6 +42,7 @@ function extract(src, start, end) {
 function loadData() {
   const src = fs.readFileSync(SCRIPT_PATH, 'utf8');
   const script = [
+    extract(src, 'const MODULE_CATEGORY_BY_ID = {', 'const MODULE_LEARNING_SEQUENCE = ['),
     extract(src, 'const baseFlashcards = [', '// Glossary Data'),
     extract(src, 'const glossaryTerms = [', 'const glossaryCategories = ['),
     extract(src, 'const quizData = {', 'const modules = ['),
@@ -146,6 +170,14 @@ function collectCodeTranslatables(modules) {
           codeStrings.add(value);
         }
       }
+
+      for (const match of code.matchAll(/\/\*([\s\S]*?)\*\//g)) {
+        const body = String(match[1] || '');
+        body.split('\n').forEach((commentLine) => {
+          const cleaned = commentLine.replace(/^\s*\*+\s?/, '').trim();
+          if (isLikelyNaturalLanguage(cleaned)) codeStrings.add(cleaned);
+        });
+      }
     }
   }
   return codeStrings;
@@ -167,7 +199,17 @@ function loadCache() {
 }
 
 function saveCache(cache) {
-  fs.writeFileSync(CACHE_PATH, JSON.stringify(cache, null, 2));
+  try {
+    fs.writeFileSync(CACHE_PATH, JSON.stringify(cache, null, 2));
+  } catch (error) {
+    if (CACHE_PATH !== FALLBACK_CACHE_PATH) {
+      CACHE_PATH = FALLBACK_CACHE_PATH;
+      fs.mkdirSync(path.dirname(CACHE_PATH), { recursive: true });
+      fs.writeFileSync(CACHE_PATH, JSON.stringify(cache, null, 2));
+      return;
+    }
+    throw error;
+  }
 }
 
 function translateSingle(text) {
@@ -195,6 +237,14 @@ async function translateAll(uniqueStrings, cache) {
   let done = 0;
   const limit = 8;
   const queue = [...pending];
+  let saveQueue = Promise.resolve();
+
+  const enqueueCacheSave = () => {
+    saveQueue = saveQueue.then(() => {
+      saveCache(cache);
+    });
+    return saveQueue;
+  };
 
   async function worker() {
     while (queue.length) {
@@ -208,24 +258,54 @@ async function translateAll(uniqueStrings, cache) {
       done += 1;
       if (done % 25 === 0 || done === pending.length) {
         process.stdout.write(`\rTranslated ${done}/${pending.length}`);
-        saveCache(cache);
+        await enqueueCacheSave();
       }
     }
   }
 
   await Promise.all(Array.from({ length: Math.min(limit, queue.length || 1) }, worker));
+  await saveQueue;
   process.stdout.write('\n');
   saveCache(cache);
 }
 
 function tr(cache, text) {
-  return cache[text] || text;
+  const source = String(text ?? '');
+  if (Object.prototype.hasOwnProperty.call(cache, source)) {
+    return cache[source];
+  }
+  const trimmed = source.trim();
+  if (!trimmed) return source;
+  if (!Object.prototype.hasOwnProperty.call(cache, trimmed)) {
+    return source;
+  }
+  const translated = cache[trimmed];
+  const leading = source.match(/^\s*/)?.[0] || '';
+  const trailing = source.match(/\s*$/)?.[0] || '';
+  return `${leading}${translated}${trailing}`;
 }
 
 function translateCodePreservingSyntax(code, cache) {
-  const lines = code.split('\n');
+  const blockCommentTranslated = String(code || '').replace(/\/\*([\s\S]*?)\*\//g, (match, body) => {
+    const translatedBody = String(body || '')
+      .split('\n')
+      .map((commentLine) => {
+        const markerMatch = commentLine.match(/^(\s*\*?\s?)(.*)$/);
+        if (!markerMatch) return commentLine;
+        const marker = markerMatch[1] || '';
+        const text = String(markerMatch[2] || '');
+        const translated = tr(cache, text);
+        return `${marker}${translated}`;
+      })
+      .join('\n');
+    return `/*${translatedBody}*/`;
+  });
+
+  const lines = blockCommentTranslated.split('\n');
   return lines.map((line) => {
     let out = line;
+    const trimmed = out.trim();
+    const isCppDirective = /^#\s*(include|define|if|ifdef|ifndef|endif|pragma|import)\b/i.test(trimmed);
 
     const transformComment = (marker) => {
       const idx = out.indexOf(marker);
@@ -239,7 +319,7 @@ function translateCodePreservingSyntax(code, cache) {
     };
 
     transformComment('//');
-    if (!out.includes('//')) {
+    if (!out.includes('//') && !isCppDirective) {
       const hashIdx = out.indexOf('#');
       if (hashIdx >= 0) {
         const head = out.slice(0, hashIdx + 1);
@@ -262,18 +342,57 @@ function translateCodePreservingSyntax(code, cache) {
   }).join('\n');
 }
 
+function translateStructuredValue(value, cache) {
+  if (typeof value === 'string') return tr(cache, value);
+  if (Array.isArray(value)) return value.map((item) => translateStructuredValue(item, cache));
+  if (!value || typeof value !== 'object') return value;
+  const next = {};
+  Object.entries(value).forEach(([key, nested]) => {
+    next[key] = translateStructuredValue(nested, cache);
+  });
+  return next;
+}
+
 function buildContentI18n(data, cache) {
   const modules = {};
   for (const module of data.modules) {
+    const translatedCodeExamples = {};
+    Object.entries(module.codeExamples || {}).forEach(([lang, snippet]) => {
+      if (typeof snippet === 'string') {
+        translatedCodeExamples[lang] = translateCodePreservingSyntax(snippet, cache);
+      }
+    });
+
+    const translatedResources = (module.resources || []).map((resource) => {
+      if (typeof resource === 'string') return tr(cache, resource);
+      if (!resource || typeof resource !== 'object') return resource;
+      return {
+        ...resource,
+        text: tr(cache, resource.text || resource.url || '')
+      };
+    });
+
     const localized = {
       title: tr(cache, module.title),
       description: tr(cache, module.description),
       topics: (module.topics || []).map(topic => tr(cache, topic)),
       explanation: tr(cache, module.explanation),
-      resources: (module.resources || []).map(resource => {
-        const text = typeof resource === 'string' ? resource : (resource?.text || resource?.url || '');
-        return tr(cache, text);
-      })
+      resources: translatedResources,
+      codeExamples: translatedCodeExamples,
+      expectedOutputs: translateStructuredValue(module.expectedOutputs || {}, cache),
+      codeExampleSets: (module.codeExampleSets || []).map((setItem) => ({
+        id: setItem?.id,
+        title: translateStructuredValue(setItem?.title || '', cache),
+        description: translateStructuredValue(setItem?.description || '', cache),
+        deepExplanation: translateStructuredValue(setItem?.deepExplanation || '', cache),
+        codeExamples: Object.entries(setItem?.codeExamples || {}).reduce((acc, [lang, snippet]) => {
+          if (typeof snippet === 'string') {
+            acc[lang] = translateCodePreservingSyntax(snippet, cache);
+          }
+          return acc;
+        }, {}),
+        expectedOutputs: translateStructuredValue(setItem?.expectedOutputs || {}, cache)
+      }))
     };
 
     modules[module.id] = localized;

@@ -1,0 +1,8 @@
+Contact: mailto:eddyarriaga123@gmail.com
+Contact: https://eddyarriaga00.github.io/CS-Course-Atlas/contact-support.html
+Expires: 2027-03-30T00:00:00.000Z
+Preferred-Languages: en, es
+Canonical: https://eddyarriaga00.github.io/CS-Course-Atlas/.well-known/security.txt
+Policy: https://eddyarriaga00.github.io/CS-Course-Atlas/privacy-policy.html
+Acknowledgments: https://eddyarriaga00.github.io/CS-Course-Atlas/about.html
+

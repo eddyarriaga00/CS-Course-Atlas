@@ -1,88 +1,153 @@
-# ☕ Java DSA Learning Hub
+# CS Course Atlas
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge)](https://eddyarriaga00.github.io/Java-DSA-Helper/)
-[![GitHub Stars](https://img.shields.io/github/stars/your-username/java-dsa-learning-hub?style=for-the-badge)](https://github.com/eddyarriaga00/Java-DSA-Helper/stargazers)
-[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-blue?style=for-the-badge)](https://eddyarriaga00.github.io/CS-Course-Atlas/)
+[![GitHub Stars](https://img.shields.io/github/stars/eddyarriaga00/CS-Course-Atlas?style=for-the-badge)](https://github.com/eddyarriaga00/CS-Course-Atlas/stargazers)
+[![Website](https://img.shields.io/badge/Website-Public--Ready-green?style=for-the-badge)](https://eddyarriaga00.github.io/CS-Course-Atlas/)
 
-> **Master Data Structures & Algorithms with interactive Java-first learning.**
+A public CS learning website for students studying core computer science tracks.
 
-Comprehensive modules with runnable code, per-module flashcards, quizzes, glossary links, and a sandbox powered by the Piston API. Built for CS students who want clean explanations, pseudocode, and multi-language examples without leaving the browser.
+## Mission
+CS Course Atlas is built for computer science students who need one place to learn across multiple classes. It combines structured course tracks, guided explanations, code examples, quizzes, flashcards, and progress tools into one consistent learning experience.
 
-## 🧭 Table of Contents
-- [Features](#-features)
-- [Live Demo & Quick Start](#-live-demo--quick-start)
-- [How the Platform Works](#-how-the-platform-works)
-- [Customization](#-customization)
-- [Tech Stack](#-tech-stack)
-- [Roadmap](#-roadmap)
-- [Support](#-support)
-- [Contact](#-contact)
+## Quick Guide
+Use one of these paths depending on what you need.
 
-## ✨ Features
-- **Interactive modules (20+)** with expanded explanations, step-by-step code breakdowns, and runnable samples.
-- **Multi-language code** (Java, Python, C++, JavaScript) with comments + pseudocode mode and comment toggles.
-- **Quiz engine**: 15-question banks per module, 4 random per attempt, 100% required to complete.
-- **Flashcards & glossary**: Module-tied flashcards plus a searchable glossary with highlighted matches.
-- **Progression tools**: Achievements, focus timer, streaks, study plan prompts, daily challenges, and insights.
-- **Code playground (Java/Python/C++/JS)**: Language dropdown with preloaded module snippets (auto-stubs `main` when missing), Piston API ready; reset/copy/run buttons included.
-- **Pagination**: Module grid paginates (5 per page) to keep the page compact on all devices.
-- **Accessibility & UX**: Dark/light themes, accent options, font scaling, compact layout, keyboard/Esc/backdrop closing for modals.
-- **Responsive**: Optimized for laptops, tablets, and phones.
+### 1) Preview the public website (recommended)
+This runs the static site exactly like GitHub Pages behavior.
 
-## 🚀 Live Demo & Quick Start
-Live site: **https://eddyarriaga00.github.io/Java-DSA-Helper/**
-
-Local run:
 ```bash
-git clone https://github.com/eddyarriaga00/Java-DSA-Helper.git
-cd Java-DSA-Helper
-open index.html   # or python -m http.server 8000
+git clone https://github.com/eddyarriaga00/CS-Course-Atlas.git
+cd CS-Course-Atlas
+npm install
+npm run build:site
+py -m http.server --directory dist 4173
 ```
 
-Runner (optional): set `CODE_RUNNER_ENDPOINT` and adjust `CODE_RUNNER_CONFIG` (language/version/filenames) in `js/script.js` to point to your Piston or local runner if you want playground execution offline.
+Open: `http://127.0.0.1:4173/index.html`
 
-## 🎯 How the Platform Works
-- **Modules**: Organized beginner → advanced, paginated 5 per page. Each module has multi-language code, a detailed breakdown, resources, and runnable Java samples.
-- **Playground**: Load any module sample from the dropdown, edit, run, copy output, or reset. Samples include a `main` method stub if one was missing.
-- **Quizzes**: Generated from module descriptions, topics, code breakdowns, resources, glossary terms, and flashcards. Four random questions per attempt; perfect score marks completion.
-- **Flashcards/Glossary**: Per-module decks and a global glossary keep definitions aligned with quizzes and modules.
-- **Progress & Insights**: Tracks completion, streaks, focus time, daily challenges, study plans, and achievements. Settings persist locally (theme, comments, pseudocode, density, etc.).
+### 2) Run full stack (API + auth/session features)
+Use this if you are testing login/profile/state persistence.
 
-## 🔧 Customization
-- **Add modules**: Extend the `modules` array in `js/script.js` (title, description, topics, codeExamples, explanation, resources, codeBreakdown). Java samples auto-stub `main` if absent.
-- **Adjust themes**: Tweak CSS variables in `css/styles.css` for surfaces, accents, and typography. Accent themes are selectable in-app.
-- **Runner**: Point `CODE_RUNNER_ENDPOINT` to your own Piston-compatible runner to execute playground code offline.
+```bash
+npm install
+copy .env.example .env
+npm run db:migrate
+npm run db:doctor
+npm start
+```
 
-## 🛠 Tech Stack
-- **Frontend**: HTML5, CSS3, JavaScript (ES6+)
-- **Styling**: Custom CSS with Tailwind-inspired utilities
-- **Fonts**: Inter (Google Fonts)
-- **Icons**: Emoji-based
-- **Hosting**: GitHub Pages–ready, zero build step
+Required in `.env`:
+- `DATABASE_URL` must point to your Postgres/Neon database and include `sslmode=require` (plus `channel_binding=require` for Neon).
 
-## 🗺 Roadmap (snapshot)
-- More language snippets for advanced modules
-- Additional runnable samples and challenges
-- Optional timed quizzes and coding prompts
-- Offline/PWA enhancements
+Open: `http://127.0.0.1:3000`
 
-## 💝 Support
-- ⭐ Star the repo
-- 🐛 Open issues/PRs for bugs or content fixes
-- ☕ Donate: [PayPal](https://www.paypal.com/paypalme/delamainn)
-- ❤️ Sponsor: [GitHub Sponsors](https://github.com/sponsors/eddyarriaga00/)
+Note for local development:
+- If you run the frontend from another localhost port (for example `http://localhost:5500`), auth/API calls will automatically target `http://localhost:3000`.
+- The backend now performs strict startup environment validation and will fail fast with actionable errors if critical variables are malformed.
 
-## 📞 Contact
-- **Creator**: Eddy Arriaga-Barrientos  
-- **GitHub**: [eddyarriaga00](https://github.com/eddyarriaga00/)  
-- **Email**: eddyarriaga123@gmail.com  
-- **LinkedIn**: [Eddy Arriaga](https://linkedin.com/in/eddy-arriaga/)
+### 2.5) Public auth with GitHub Pages + Neon API
+GitHub Pages is static-only, so auth/session + SQL must run on a separate Node host.
 
----
-<div align="center">
+1. Deploy backend using the included Render Blueprint:
+   - `render.yaml` is already included in this repo.
+   - One-click import URL:
+   - `https://render.com/deploy?repo=https://github.com/eddyarriaga00/CS-Course-Atlas`
+2. Keep Render web service name as `cs-course-atlas-api` (frontend is prewired to `https://cs-course-atlas-api.onrender.com` in `js/app-config.js`).
+3. Fill required Render env vars:
+   - `DATABASE_URL` (Neon production connection string with `sslmode=require&channel_binding=require`)
+   - `OAUTH_POST_LOGIN_FALLBACK_PATH=https://eddyarriaga00.github.io/CS-Course-Atlas/index.html`
+4. Optional OAuth provider env vars:
+   - `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`
+   - `GITHUB_OAUTH_CLIENT_ID`, `GITHUB_OAUTH_CLIENT_SECRET`
+   - Blueprint defaults OAuth vars to `__disabled__` so initial deploy is not blocked.
+5. OAuth callback URLs to register in provider dashboards:
+   - Google: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/google/callback`
+   - GitHub: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/github/callback`
+6. After deployment, verify:
+   - `https://cs-course-atlas-api.onrender.com/api/health`
+   - `https://cs-course-atlas-api.onrender.com/api/auth/oauth/providers`
+7. Push to `main` (GitHub Pages auto-deploy will pick up frontend runtime config updates).
 
-**Made with ❤️ for CS students worldwide**
+### 3) Common issues
+- `DATABASE_URL is required for Neon SQL connection`:
+Set `DATABASE_URL` in `.env` before `npm start`.
+- `db:doctor` reports missing tables:
+Run `npm run db:migrate` on the same environment/branch, then re-run `npm run db:doctor`.
+- Styling looks outdated:
+Run `npm run build:site` after CSS/Tailwind changes so `dist/` is refreshed.
+- Auth not working on static preview:
+Use full-stack mode (`npm start`), not `py -m http.server`.
 
-[⬆ Back to Top](#-java-dsa-learning-hub)
+### 4) Build SEO pages (recommended before launch)
+This generates a complete static artifact under `dist/`, including crawlable route pages, module pages, `sitemap.xml`, and `robots.txt`.
 
-</div>
+```bash
+npm run build:site
+```
+
+Generated outputs:
+- `dist/home.html`, `dist/tracks.html`, `dist/dsa.html`, `dist/java.html`, `dist/git.html`, `dist/assembly.html`, `dist/discrete-math.html`, `dist/flashcards.html`, `dist/quizzes.html`, `dist/playground.html`, `dist/notes.html`, `dist/support.html`, `dist/about.html`
+- `dist/modules/index.html` and one page per module under `dist/modules/`
+- `dist/sitemap.xml`
+- `dist/robots.txt`
+
+## Overview
+CS Course Atlas helps learners study through structured modules, code examples, quizzes, flashcards, glossary tools, and notes in one place.
+
+## Core Features
+- Multi-track navigation: Home, Course Tracks, DSA, Java, Git, Assembly, Discrete Math, Flashcards, Quizzes, Playground, Notes, Support, About.
+- Course Tracks menu expands to show individual classes.
+- Mobile, tablet, and laptop responsive navigation with consistent behavior.
+- Module cards with code examples, explanations, resources, and progress tracking.
+- Interactive quizzes and flashcards for active recall.
+- Glossary and notes support for quick reference and review.
+- Theme and appearance controls.
+
+## Live Website
+- Main site: [https://eddyarriaga00.github.io/CS-Course-Atlas/](https://eddyarriaga00.github.io/CS-Course-Atlas/)
+
+## Launch SEO Checklist
+- Set `GOOGLE_SITE_VERIFICATION_TOKEN` (optional) before building SEO pages:
+  - PowerShell: `$env:GOOGLE_SITE_VERIFICATION_TOKEN='your-token'; npm run build:site`
+  - If omitted, verification meta tags are not emitted.
+- Confirm `sitemap.xml` is reachable on production.
+- In Google Search Console:
+  - Add property for `https://eddyarriaga00.github.io/CS-Course-Atlas/`
+  - Verify meta tag exists on the deployed page after build (if token is set)
+  - Submit sitemap URL: `https://eddyarriaga00.github.io/CS-Course-Atlas/sitemap.xml`
+- Verify mobile page rendering for `home.html`, `tracks.html`, and `modules/index.html`.
+
+## Local Development Notes
+- Public-site checks: use static preview mode from the Quick Guide.
+- API/auth checks: use full-stack mode from the Quick Guide.
+- Build the deployable static artifact: `npm run build:site`.
+
+## Tech Stack
+- HTML
+- CSS
+- JavaScript
+- Tailwind CSS (compiled locally for production)
+- Node.js + Express (optional backend features)
+
+## Project Layout
+- `index.html` stays at project root as the primary app entrypoint.
+- `js/runtime/` contains shared frontend runtime helpers (base-path resolution and lazy asset loading).
+- `dist/` is the generated static artifact used for local static preview and GitHub Pages deploy.
+- `dist/modules/` contains generated crawlable per-module pages after running `npm run build:site`.
+- `server/` contains backend API/auth/SQL code.
+- `scripts/` contains build/verification/diagnostic scripts.
+- `docs/` contains project documentation and reports:
+  - `docs/SEARCH_CONSOLE_SETUP.md`
+  - `docs/reports/security_best_practices_report.md`
+- `backups/js/` contains archived JS snapshots (non-runtime).
+
+## Support
+- GitHub: [https://github.com/eddyarriaga00/CS-Course-Atlas](https://github.com/eddyarriaga00/CS-Course-Atlas)
+- Donate: [PayPal Support](https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=5.00&currency_code=USD&item_name=CS%20Course%20Atlas%20-%20Coffee%20Support)
+- Sponsor ($25): [PayPal Sponsor](https://www.paypal.com/donate?business=eddyarriaga123%40gmail.com&amount=25.00&currency_code=USD&item_name=CS%20Course%20Atlas%20-%20Sponsor%20Support)
+
+## Contact
+- Creator: Eddy Arriaga-Barrientos
+- GitHub: [https://github.com/eddyarriaga00](https://github.com/eddyarriaga00)
+- Email: eddyarriaga123@gmail.com
+- LinkedIn: [https://linkedin.com/in/eddy-arriaga/](https://linkedin.com/in/eddy-arriaga/)
