@@ -5375,7 +5375,7 @@ const quizData = {
                 {
                     id: 3,
                     question: "The java.nio.file.Files utility provides:",
-                    options: ["Database connections", "Modern path handling, metadata, and atomic move/copy helpers", "Network protocols", "Only synchronous IO"],
+                    options: ["Database connections", "Static helpers that operate on Path objects: read/write, metadata, and atomic move/copy", "Network protocols", "Only synchronous IO"],
                     correct: 1,
                     explanation: "NIO's Files class includes convenience methods for interacting with the filesystem safely."
                 }

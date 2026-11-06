@@ -8549,7 +8549,7 @@ window.SPANISH_LOCALIZATION = {
                 "question": "La utilidad java.nio.file.Files proporciona:",
                 "options": [
                   "Conexiones de bases de datos",
-                  "Manejo de rutas moderno, metadatos y ayudas atómicas para mover/copiar",
+                  "Métodos estáticos que operan sobre objetos Path: lectura/escritura, metadatos y mover/copiar atómicos",
                   "Protocolos de red",
                   "Solo IO sincrónica"
                 ],
@@ -10624,7 +10624,7 @@ window.SPANISH_LOCALIZATION = {
     "Resources implementing AutoCloseable are cleaned up without manual finally blocks.": "Los recursos que implementan AutoCloseable se limpian sin bloques finalmente manuales.",
     "The java.nio.file.Files utility provides:": "La utilidad java.nio.file.Files proporciona:",
     "Database connections": "Conexiones de bases de datos",
-    "Modern path handling, metadata, and atomic move/copy helpers": "Manejo de rutas moderno, metadatos y ayudas atómicas para mover/copiar",
+    "Static helpers that operate on Path objects: read/write, metadata, and atomic move/copy": "Métodos estáticos que operan sobre objetos Path: lectura/escritura, metadatos y mover/copiar atómicos",
     "Network protocols": "Protocolos de red",
     "Only synchronous IO": "Solo IO sincrónica",
     "NIO's Files class includes convenience methods for interacting with the filesystem safely.": "La clase Archivos de NIO incluye métodos convenientes para interactuar con el sistema de archivos de forma segura.",
