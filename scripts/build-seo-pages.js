@@ -668,6 +668,7 @@ function headTemplate({ title, description, canonicalPath, assetPrefix = '' }) {
         <meta property="twitter:description" content="${safeDescription}">
         <link rel="icon" href="data:,">
         <link rel="manifest" href="${cssPrefix}manifest.webmanifest">
+        <link rel="stylesheet" href="${cssPrefix}css/utilities-fallback.css">
         <link rel="stylesheet" href="${cssPrefix}css/tailwind.css">
         <link rel="stylesheet" href="${cssPrefix}css/styles.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
