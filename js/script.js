@@ -5348,7 +5348,7 @@ const quizData = {
                 {
                     id: 3,
                     question: "ConcurrentHashMap scales by:",
-                    options: ["Using a single global lock", "Segmenting buckets/using striped locks and allowing lock-free reads", "Copying on write", "Sorting keys"],
+                    options: ["Using a single global lock", "Locking only the bin being updated (with CAS for empty bins) and allowing lock-free reads", "Copying on write", "Sorting keys"],
                     correct: 1,
                     explanation: "It minimizes contention by locking only portions of the map or using CAS for writes."
                 }
@@ -8604,7 +8604,7 @@ public class LambdaStreamExample {
         // Lambda with Streams
         List<Integer> evenSquares = numbers.stream()
             .filter(n -> n % 2 == 0)           // Lambda expression
-            .map(n -> n * n)                   // Method reference alternative: Integer::square
+            .map(n -> n * n)                   // Square each value (no built-in Integer method for this)
             .collect(Collectors.toList());
         
         System.out.println("Even squares: " + evenSquares);
