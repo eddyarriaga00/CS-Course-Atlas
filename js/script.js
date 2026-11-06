@@ -25707,10 +25707,10 @@ function ensureEnhancedVisualAssets() {
         return fallbackLoadScriptOnce(id, src, readyCheck);
     };
 
+    // Only the search library loads at startup. Chart.js and Mermaid (~3.5 MB)
+    // load on demand when the Insights section approaches the viewport.
     enhancedVisualAssetState.loadPromise = Promise.all([
-        loadScript(ENHANCED_VISUAL_ASSET_IDS.fuse, ENHANCED_VISUAL_ASSET_URLS.fuse, () => typeof window.Fuse === 'function'),
-        loadScript(ENHANCED_VISUAL_ASSET_IDS.chart, ENHANCED_VISUAL_ASSET_URLS.chart, () => typeof window.Chart === 'function'),
-        loadScript(ENHANCED_VISUAL_ASSET_IDS.mermaid, ENHANCED_VISUAL_ASSET_URLS.mermaid, () => typeof window.mermaid?.render === 'function')
+        loadScript(ENHANCED_VISUAL_ASSET_IDS.fuse, ENHANCED_VISUAL_ASSET_URLS.fuse, () => typeof window.Fuse === 'function')
     ]).then((results) => {
         const loaded = results.every(Boolean);
         enhancedVisualAssetState.loaded = loaded;
@@ -25721,15 +25721,6 @@ function ensureEnhancedVisualAssets() {
         if (typeof window !== 'undefined' && typeof window.__atlasTranslateFn === 'function') {
             window.t = window.__atlasTranslateFn;
         }
-        if (loaded && typeof window.mermaid?.initialize === 'function' && !enhancedVisualAssetState.mermaidInitialized) {
-            const prefersDark = document.body.classList.contains('dark');
-            window.mermaid.initialize({
-                startOnLoad: false,
-                securityLevel: 'strict',
-                theme: prefersDark ? 'dark' : 'default'
-            });
-            enhancedVisualAssetState.mermaidInitialized = true;
-        }
         return loaded;
     }).catch((error) => {
         console.warn('Enhanced visual assets failed to load:', error);
@@ -25738,6 +25729,64 @@ function ensureEnhancedVisualAssets() {
     });
 
     return enhancedVisualAssetState.loadPromise;
+}
+
+let insightVisualAssetsPromise = null;
+let lastInsightsVisualArgs = null;
+
+function ensureInsightVisualAssets() {
+    if (typeof window.Chart === 'function' && typeof window.mermaid?.render === 'function') {
+        return Promise.resolve(true);
+    }
+    if (insightVisualAssetsPromise) return insightVisualAssetsPromise;
+    const runtimeLoader = window?.CSAtlasRuntime?.assetLoader;
+    const loadScript = (id, src, readyCheck) => (runtimeLoader && typeof runtimeLoader.loadScriptOnce === 'function'
+        ? runtimeLoader.loadScriptOnce({ id, src, readyCheck, cacheMap: runtimeLoader.sharedPromises })
+        : fallbackLoadScriptOnce(id, src, readyCheck));
+    insightVisualAssetsPromise = Promise.all([
+        loadScript(ENHANCED_VISUAL_ASSET_IDS.chart, ENHANCED_VISUAL_ASSET_URLS.chart, () => typeof window.Chart === 'function'),
+        loadScript(ENHANCED_VISUAL_ASSET_IDS.mermaid, ENHANCED_VISUAL_ASSET_URLS.mermaid, () => typeof window.mermaid?.render === 'function')
+    ]).then((results) => {
+        const loaded = results.every(Boolean);
+        if (!loaded) {
+            insightVisualAssetsPromise = null;
+            return false;
+        }
+        if (typeof window.mermaid?.initialize === 'function' && !enhancedVisualAssetState.mermaidInitialized) {
+            window.mermaid.initialize({
+                startOnLoad: false,
+                securityLevel: 'strict',
+                theme: document.body.classList.contains('dark') ? 'dark' : 'default'
+            });
+            enhancedVisualAssetState.mermaidInitialized = true;
+        }
+        if (lastInsightsVisualArgs) {
+            enhancedVisualAssetState.lastInsightsVisualSignature = '';
+            renderEnhancedInsightsVisuals(lastInsightsVisualArgs);
+        }
+        return true;
+    }).catch((error) => {
+        console.warn('Insight visual assets failed to load:', error);
+        insightVisualAssetsPromise = null;
+        return false;
+    });
+    return insightVisualAssetsPromise;
+}
+
+function observeInsightsForVisualAssets() {
+    const section = document.getElementById('insights-section');
+    if (!section) return;
+    if (typeof IntersectionObserver !== 'function') {
+        void ensureInsightVisualAssets();
+        return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+            observer.disconnect();
+            void ensureInsightVisualAssets();
+        }
+    }, { rootMargin: '600px 0px' });
+    observer.observe(section);
 }
 
 function destroyEnhancedChart(chartKey, canvas = null) {
@@ -26109,6 +26158,7 @@ async function renderInsightsRoadmapMermaid(definition = '') {
 }
 
 function renderEnhancedInsightsVisuals({ hasAccess = false, stats = null, guestPreview = null, learningPath = null } = {}) {
+    lastInsightsVisualArgs = { hasAccess, stats, guestPreview, learningPath };
     ensureEnhancedVisualContainers();
     const insightsSection = document.getElementById('insights-section');
     if (insightsSection instanceof HTMLElement && insightsSection.hidden) {
@@ -26158,7 +26208,7 @@ function renderEnhancedInsightsVisuals({ hasAccess = false, stats = null, guestP
 
     if (summaryEl) {
         if (!chartReady || !mermaidReady) {
-            summaryEl.textContent = 'Loading Fuse/Chart/Mermaid enhancements...';
+            summaryEl.textContent = translateLiteral('Loading visual analytics...', appState.language);
         } else if (!hasAccess && guestPreview) {
             summaryEl.textContent = `Guest preview: ${guestPreview.percentage}% sample completion`;
         } else if (stats) {
@@ -26177,6 +26227,7 @@ function renderEnhancedInsightsVisuals({ hasAccess = false, stats = null, guestP
 function initEnhancedLearningExperience() {
     initHeroPretextFlow();
     ensureEnhancedVisualContainers();
+    observeInsightsForVisualAssets();
     void ensureEnhancedVisualAssets().then((loaded) => {
         if (loaded) {
             moduleSearchIndexState.lang = null;
@@ -27465,7 +27516,7 @@ function renderModules() {
 
                             <!-- Language Selector -->
                             ${hasMultipleLanguages ? `
-                                <select onchange="setModuleLanguage('${module.id}', this.value)" class="text-xs px-2 py-1 rounded bg-blue-500 hover:bg-blue-600 text-white border-0 font-medium" title="${t('module.tooltipSelectLanguage')}">
+                                <select onchange="setModuleLanguage('${module.id}', this.value)" class="text-xs px-2 py-1 rounded bg-blue-500 hover:bg-blue-600 text-white border-0 font-medium" title="${t('module.tooltipSelectLanguage')}" aria-label="${t('module.tooltipSelectLanguage')}">
                                     ${Object.entries(SUPPORTED_LANGUAGES).map(([langKey, langInfo]) =>
             moduleCodeExamples && moduleCodeExamples[langKey] ? `
                                             <option value="${langKey}" ${currentLanguage === langKey ? 'selected' : ''} class="bg-white text-black">
@@ -27477,7 +27528,7 @@ function renderModules() {
                             ` : ''}
 
                             <!-- Code Mode Selector -->
-                            <select onchange="setModuleMode('${module.id}', this.value)" class="text-xs px-2 py-1 rounded border-0 font-medium ${currentMode === 'pseudocode' ? 'bg-purple-500 hover:bg-purple-600 text-white' : currentMode === 'discreteTheory' ? 'bg-amber-500 hover:bg-amber-600 text-white' : 'bg-indigo-500 hover:bg-indigo-600 text-white'}" title="${t('module.tooltipSelectMode')}">
+                            <select onchange="setModuleMode('${module.id}', this.value)" class="text-xs px-2 py-1 rounded border-0 font-medium ${currentMode === 'pseudocode' ? 'bg-purple-500 hover:bg-purple-600 text-white' : currentMode === 'discreteTheory' ? 'bg-amber-500 hover:bg-amber-600 text-white' : 'bg-indigo-500 hover:bg-indigo-600 text-white'}" title="${t('module.tooltipSelectMode')}" aria-label="${t('module.tooltipSelectMode')}">
                                 ${availableModes.map((modeKey) => {
             const modeInfo = CODE_MODES[modeKey];
             const label = modeKey === 'discreteTheory'
