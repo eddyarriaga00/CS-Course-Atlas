@@ -13938,13 +13938,15 @@ function safeGetItem(key) {
 function safeSetItem(key, value) {
     if (!shouldAllowLocalStorageAccess(key)) {
         safeRemoveItem(key);
-        return;
+        return false;
     }
     try {
         if (window.localStorage) {
             window.localStorage.setItem(key, value);
+            return true;
         }
     } catch (error) {}
+    return false;
 }
 
 function safeRemoveItem(key) {
@@ -16394,7 +16396,6 @@ let notesLibraryFilter = 'all';
 let booksLibrary = [];
 let lastRenderedModulesPageSize = 4;
 let modulesResizeDebounce = null;
-let notesSaveTimer = null;
 let studyPlanDraft = null;
 let dsActive = 'array';
 let dsCodeLanguage = 'java';
@@ -20187,8 +20188,20 @@ function loadNotesDraft() {
 }
 
 function saveNotesDraft(value) {
-    safeSetItem(STORAGE_KEYS.NOTES, value || '');
+    const saved = safeSetItem(STORAGE_KEYS.NOTES, value || '');
     queueUserStateSync();
+    return saved;
+}
+
+function updateNotesSaveStatus(saved) {
+    const message = !hasAuthenticatedInsightsAccess()
+        ? (appState.language === 'es' ? 'Solo en esta sesión. Descarga tus notas para conservarlas.' : 'Session only. Download your notes to keep them.')
+        : saved
+            ? (appState.language === 'es' ? 'Guardado en este dispositivo.' : 'Saved on this device.')
+            : (appState.language === 'es' ? 'No se pudo guardar. Descarga tus notas para conservarlas.' : 'Could not save. Download your notes to keep them.');
+    const status = document.getElementById('notes-save-status');
+    if (status) status.textContent = message;
+    return message;
 }
 
 function downloadTextFile(filename, text) {
@@ -20209,12 +20222,13 @@ function initNotes() {
     const downloadBtn = document.getElementById('download-notes');
     if (!notesInput) return;
     notesInput.value = notesDraft || '';
+    if (!hasAuthenticatedInsightsAccess()) updateNotesSaveStatus(false);
 
     if (saveBtn) {
         saveBtn.addEventListener('click', () => {
             notesDraft = notesInput.value;
-            saveNotesDraft(notesDraft);
-            showToast('Notes saved!', 'success');
+            const saved = saveNotesDraft(notesDraft);
+            showToast(updateNotesSaveStatus(saved), saved ? 'success' : 'warning');
         });
     }
     if (downloadBtn) {
@@ -20229,10 +20243,9 @@ function initNotes() {
     }
     notesInput.addEventListener('input', () => {
         notesDraft = notesInput.value;
-        if (notesSaveTimer) clearTimeout(notesSaveTimer);
-        notesSaveTimer = setTimeout(() => {
-            saveNotesDraft(notesDraft);
-        }, 500);
+        // Persist locally before navigation can discard this edit. Remote sync
+        // already has its own debounce in queueUserStateSync.
+        updateNotesSaveStatus(saveNotesDraft(notesDraft));
     });
 }
 
@@ -28506,8 +28519,8 @@ function openQuiz(moduleId) {
         score: 0
     };
 
-    openModal('quiz-modal', { initialFocus: '#close-quiz' });
     renderQuiz();
+    openModal('quiz-modal', { initialFocus: '#quiz-question-heading' });
 }
 
 function closeQuiz() {
@@ -28515,7 +28528,7 @@ function closeQuiz() {
     appState.currentQuiz = null;
 }
 
-function renderQuiz() {
+function renderQuiz({ focusQuestion = false } = {}) {
     if (!appState.currentQuiz) return;
 
     const module = modules.find(m => m.id === appState.currentQuiz.moduleId);
@@ -28544,14 +28557,14 @@ function renderQuiz() {
                         <div class="h-full bg-indigo-500 transition-all duration-300" style="width: ${((appState.currentQuiz.currentQuestion + 1) / totalCount) * 100}%"></div>
                     </div>
                 </div>
-                <h4 class="text-lg sm:text-xl font-semibold mb-5 sm:mb-6 text-white leading-relaxed break-words">
+                <h4 id="quiz-question-heading" tabindex="-1" class="text-lg sm:text-xl font-semibold mb-5 sm:mb-6 text-white leading-relaxed break-words">
                     ${currentQuestionText}
                 </h4>
             </div>
 
             <div class="space-y-3 mb-6 sm:mb-8">
                 ${currentQuestionOptions.map((option, index) => `
-                    <button onclick="answerQuestion(${index})" class="w-full p-3 sm:p-4 text-left rounded-xl border-2 transition-all duration-200 quiz-option text-white ${appState.currentQuiz.answers[appState.currentQuiz.currentQuestion] === index ? 'border-indigo-400 bg-slate-800/80' : 'border-white/15 bg-slate-900/80 hover:border-indigo-300'}">
+                    <button type="button" data-quiz-answer="${index}" aria-pressed="${selected === index}" onclick="answerQuestion(${index})" class="w-full p-3 sm:p-4 text-left rounded-xl border-2 transition-all duration-200 quiz-option text-white ${appState.currentQuiz.answers[appState.currentQuiz.currentQuestion] === index ? 'border-indigo-400 bg-slate-800/80' : 'border-white/15 bg-slate-900/80 hover:border-indigo-300'}">
                         <span class="font-medium text-white break-words">
                             ${String.fromCharCode(65 + index)}. ${escapeHtml(String(option ?? ''))}
                         </span>
@@ -28570,7 +28583,7 @@ function renderQuiz() {
                     ${translateLiteral('Previous', appState.language)}
                 </button>
 
-                <button onclick="nextQuestion()" ${appState.currentQuiz.answers[appState.currentQuiz.currentQuestion] === null ? 'disabled' : ''} class="w-full sm:w-auto px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl font-medium transition-all duration-200 quiz-nav-button primary">
+                <button onclick="nextQuestion()" ${selected === null || selected === undefined ? 'disabled' : ''} class="w-full sm:w-auto px-5 py-2.5 sm:px-6 sm:py-3 rounded-xl font-medium transition-all duration-200 quiz-nav-button primary">
                     ${appState.currentQuiz.currentQuestion === appState.currentQuiz.questions.length - 1
                         ? translateLiteral('Submit Quiz', appState.language)
                         : translateLiteral('Next', appState.language)}
@@ -28585,7 +28598,7 @@ function renderQuiz() {
                         ${appState.currentQuiz.score === appState.currentQuiz.questions.length ? 'PERFECT' :
                 appState.currentQuiz.score >= appState.currentQuiz.questions.length * 0.7 ? 'PASS' : 'RETRY'}
                     </div>
-                    <h4 class="text-2xl sm:text-3xl font-bold mb-2 text-indigo-600">${translateLiteral('Quiz Complete!', appState.language)}</h4>
+                    <h4 id="quiz-question-heading" tabindex="-1" class="text-2xl sm:text-3xl font-bold mb-2 text-indigo-600">${translateLiteral('Quiz Complete!', appState.language)}</h4>
                     <p class="text-base sm:text-xl text-slate-800 break-words">
                         ${translateLiteral(`You scored ${appState.currentQuiz.score} out of ${appState.currentQuiz.questions.length}`, appState.language)}
                     </p>
@@ -28648,20 +28661,26 @@ function renderQuiz() {
             </div>
         `;
     }
+    if (focusQuestion) document.getElementById('quiz-question-heading')?.focus();
 }
 
 function answerQuestion(answerIndex) {
-    if (!appState.currentQuiz) return;
+    if (!appState.currentQuiz || appState.currentQuiz.showResults) return;
+    const question = appState.currentQuiz.questions[appState.currentQuiz.currentQuestion];
+    if (!Number.isInteger(answerIndex) || answerIndex < 0 || answerIndex >= question.options.length) return;
     appState.currentQuiz.answers[appState.currentQuiz.currentQuestion] = answerIndex;
     renderQuiz();
+    document.querySelector(`[data-quiz-answer="${answerIndex}"]`)?.focus();
 }
 
 function nextQuestion() {
-    if (!appState.currentQuiz) return;
+    if (!appState.currentQuiz || appState.currentQuiz.showResults) return;
+    const selected = appState.currentQuiz.answers[appState.currentQuiz.currentQuestion];
+    if (selected === null || selected === undefined) return;
 
     if (appState.currentQuiz.currentQuestion < appState.currentQuiz.questions.length - 1) {
         appState.currentQuiz.currentQuestion++;
-        renderQuiz();
+        renderQuiz({ focusQuestion: true });
     } else {
         // Calculate score and show results only if all answered
         const allAnswered = appState.currentQuiz.answers.every(a => a !== null && a !== undefined);
@@ -28681,16 +28700,16 @@ function nextQuestion() {
         } else {
             showToast('Quiz submitted. Sign in to save progress.', 'info');
         }
-        renderQuiz();
+        renderQuiz({ focusQuestion: true });
     }
 }
 
 function prevQuestion() {
-    if (!appState.currentQuiz) return;
+    if (!appState.currentQuiz || appState.currentQuiz.showResults) return;
 
     if (appState.currentQuiz.currentQuestion > 0) {
         appState.currentQuiz.currentQuestion--;
-        renderQuiz();
+        renderQuiz({ focusQuestion: true });
     }
 }
 
@@ -28701,7 +28720,7 @@ function restartQuiz() {
     appState.currentQuiz.answers = new Array(appState.currentQuiz.questions.length).fill(null);
     appState.currentQuiz.showResults = false;
     appState.currentQuiz.score = 0;
-    renderQuiz();
+    renderQuiz({ focusQuestion: true });
 }
 
 // Other Functions

@@ -31,8 +31,8 @@ jobs:
       - name: Install Playwright Chromium
         run: npx playwright install --with-deps chromium
 
-      - name: Run frontend syntax check
-        run: npm run check:frontend
+      - name: Check frontend, course content, and learning behavior
+        run: npm run check
 
       - name: Run smoke tests
         run: npm run test:smoke

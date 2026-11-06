@@ -868,7 +868,8 @@
                     <button id="download-notes" class="px-3 py-2 rounded-lg bg-slate-800 text-slate-100 text-sm font-semibold border border-white/10 shadow-sm hover:bg-slate-700 transition">Download TXT</button>
                 </div>
             </div>
-            <textarea id="notes-input" rows="6" class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-800 border-white/10 text-slate-100 placeholder-slate-400" placeholder="Write your notes here..." aria-label="Study notes"></textarea>
+            <textarea id="notes-input" aria-describedby="notes-save-status" rows="6" class="w-full px-3 py-2 rounded-lg border border-slate-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-slate-800 border-white/10 text-slate-100 placeholder-slate-400" placeholder="Write your notes here..." aria-label="Study notes"></textarea>
+            <p id="notes-save-status" role="status" aria-live="polite" class="text-sm text-slate-300 mt-2"></p>
         </section>
 
         <section id="notes-library-section" class="panel-surface rounded-xl p-4 sm:p-6 mb-5 sm:mb-6 shadow-xl section-spacing bg-slate-900/60 border border-white/10 text-slate-100">
