@@ -20,7 +20,7 @@ git clone https://github.com/eddyarriaga00/CS-Course-Atlas.git
 cd CS-Course-Atlas
 npm install
 npm run build:site
-py -m http.server --directory dist 4173
+npm run preview -- --dist
 ```
 
 Open: `http://127.0.0.1:4173/index.html`
@@ -30,7 +30,7 @@ Use this if you are testing login/profile/state persistence.
 
 ```bash
 npm install
-copy .env.example .env
+cp .env.example .env
 npm run db:migrate
 npm run db:doctor
 npm start
@@ -76,7 +76,7 @@ Run `npm run db:migrate` on the same environment/branch, then re-run `npm run db
 - Styling looks outdated:
 Run `npm run build:site` after CSS/Tailwind changes so `dist/` is refreshed.
 - Auth not working on static preview:
-Use full-stack mode (`npm start`), not `py -m http.server`.
+Use full-stack mode (`npm start`) for API features.
 
 ### 4) Build SEO pages (recommended before launch)
 This generates a complete static artifact under `dist/`, including crawlable route pages, module pages, `sitemap.xml`, and `robots.txt`.
@@ -151,3 +151,22 @@ CS Course Atlas helps learners study through structured modules, code examples, 
 - GitHub: [https://github.com/eddyarriaga00](https://github.com/eddyarriaga00)
 - Email: eddyarriaga123@gmail.com
 - LinkedIn: [https://linkedin.com/in/eddy-arriaga/](https://linkedin.com/in/eddy-arriaga/)
+
+## Verification
+
+```bash
+npm run check         # Syntax, course catalog, translations, styles, and learning state
+npx playwright install chromium
+npm run test:smoke    # Browser navigation and account flows (mocked API)
+npm run build:site    # Generate the deployment artifact
+```
+
+Study notes save immediately on this device when signed in. The status below the
+editor distinguishes a local save from unavailable storage; cloud sync runs separately.
+Guest notes remain session-only and can be preserved with Download TXT.
+Quizzes support keyboard selection, preserve focus after answers, and announce
+selection state to assistive technology.
+
+The `qs` dependency override keeps Express 4 on a patched query parser while
+retaining the current server framework. Remove it once upstream dependency ranges
+include the patched release.

@@ -15,7 +15,11 @@
     "build:css": "tailwindcss -c tailwind.config.cjs -i ./css/tailwind.input.css -o ./css/tailwind.css --minify",
     "dev:css": "tailwindcss -c tailwind.config.cjs -i ./css/tailwind.input.css -o ./css/tailwind.css --watch",
     "build:seo": "node scripts/build-seo-pages.js",
-    "build:site": "npm run build:css && npm run build:seo"
+    "build:site": "npm run build:css && npm run build:seo",
+    "test:unit": "node --test tests/unit/*.test.js",
+    "check:content": "node scripts/verify_catalog_integrity.js && node scripts/verify_localization.js && node scripts/verify_css_integrity.js && node scripts/verify_module_examples.js && node scripts/verify_module_outputs.js && node scripts/verify_spanish_code_examples.js",
+    "check": "npm run check:frontend && npm run check:content && npm run test:unit",
+    "preview": "node scripts/serve-static.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
@@ -31,5 +35,8 @@
   "devDependencies": {
     "@playwright/test": "^1.54.2",
     "tailwindcss": "^3.4.17"
+  },
+  "overrides": {
+    "qs": "^6.17.1"
   }
 }

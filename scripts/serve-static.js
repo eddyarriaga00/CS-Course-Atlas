@@ -4,7 +4,7 @@ const fs = require('fs');
 const http = require('http');
 const path = require('path');
 
-const ROOT_DIR = path.resolve(__dirname, '..');
+const ROOT_DIR = path.resolve(__dirname, '..', process.argv.includes('--dist') ? 'dist' : '.');
 const PORT = Number(process.env.PORT || 4173);
 const HOST = process.env.HOST || '127.0.0.1';
 
@@ -20,6 +20,7 @@ const CONTENT_TYPES = Object.freeze({
     '.png': 'image/png',
     '.svg': 'image/svg+xml',
     '.txt': 'text/plain; charset=utf-8',
+    '.webmanifest': 'application/manifest+json; charset=utf-8',
     '.webp': 'image/webp',
     '.xml': 'application/xml; charset=utf-8'
 });
@@ -40,7 +41,7 @@ function resolveRequestPath(urlPathname = '/') {
 
     const relativePath = pathname.startsWith('/') ? `.${pathname}` : pathname;
     const resolvedPath = path.resolve(ROOT_DIR, relativePath);
-    if (!resolvedPath.startsWith(ROOT_DIR)) {
+    if (resolvedPath !== ROOT_DIR && !resolvedPath.startsWith(`${ROOT_DIR}${path.sep}`)) {
         return null;
     }
     return resolvedPath;
