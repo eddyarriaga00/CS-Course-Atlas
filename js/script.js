@@ -17515,6 +17515,15 @@ async function exchangeOAuthTicketForSession(ticket, options = {}) {
             rememberSessionToken: true,
             silent
         });
+        if (appliedSession?.isAuthenticated) {
+            // Invalidate any session check that was already in flight: its
+            // pre-exchange "not authenticated" response must not sign the
+            // user back out after this exchange succeeded.
+            neonSessionCheckCounter += 1;
+            // The skipped check would have cleared hydration; the session is
+            // now known, so clear it here instead.
+            setAccountSessionHydrating(false);
+        }
         return {
             isAuthenticated: Boolean(appliedSession?.isAuthenticated),
             invalidTicket: false,
@@ -24352,6 +24361,26 @@ function scheduleScrollDrivenUiUpdate(nextScrollY = 0) {
     });
 }
 
+/**
+ * Publish the sticky header's rendered height as --atlas-header-height so
+ * fixed UI (e.g. the mobile sidebar rail) can sit below it. The header wraps
+ * to several rows on phones and shrinks when collapsed, so a hard-coded
+ * offset overlaps the header buttons.
+ */
+function observeHeaderHeight() {
+    const header = document.getElementById('main-header');
+    if (!header) return;
+    const publish = () => {
+        document.documentElement.style.setProperty('--atlas-header-height', `${Math.ceil(header.getBoundingClientRect().height)}px`);
+    };
+    publish();
+    if (typeof ResizeObserver === 'function') {
+        new ResizeObserver(publish).observe(header);
+    } else {
+        window.addEventListener('resize', publish, { passive: true });
+    }
+}
+
 function updateHeaderShrink() {
     const header = document.getElementById('main-header');
     const title = document.getElementById('main-title');
@@ -25234,6 +25263,8 @@ function hideHeroPretextFlow() {
     if (!elements) return;
     elements.container.hidden = true;
     elements.container.classList.remove('is-ready');
+    // Canvas is gone: show the static subtitle again.
+    elements.subtitle.classList.remove('sr-only');
 }
 
 async function renderHeroPretextFlow() {
@@ -25379,6 +25410,9 @@ async function renderHeroPretextFlow() {
 
     container.hidden = false;
     container.classList.add('is-ready');
+    // The canvas re-renders the subtitle text, so keep the static copy for
+    // screen readers/SEO only instead of showing the same paragraph twice.
+    subtitle.classList.add('sr-only');
 }
 
 function scheduleHeroPretextFlowRender() {
@@ -29057,6 +29091,8 @@ function init() {
             refreshFlashcardSession(appState.selectedFlashcardModule);
         });
     }
+
+    observeHeaderHeight();
 
     // Scroll event for header shrinking and page-jump updates.
     window.addEventListener('scroll', () => {

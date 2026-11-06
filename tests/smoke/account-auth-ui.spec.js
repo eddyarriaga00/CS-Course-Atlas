@@ -220,17 +220,29 @@ test.describe('Account Modal Auth States', () => {
 
     test('recovers from transient OAuth ticket exchange failure and signs in', async ({ page }) => {
         let exchangeAttempts = 0;
+        let exchangeSucceeded = false;
+        const oauthUser = {
+            id: 'oauth-user-001',
+            username: 'Eddy',
+            email: 'eddy@example.com',
+            goal: 'interview',
+            socialHandle: 'eddydev',
+            socialStatus: 'Recovered after retry',
+            messagingEnabled: true
+        };
 
         await page.route('**/api/**', async (route) => {
             const { pathname } = new URL(route.request().url());
             if (pathname.endsWith('/api/auth/session')) {
+                // Mirror a real server: once the ticket exchange has succeeded the
+                // session is live. Always answering "unauthenticated" made the test
+                // flaky whenever a session refresh started after sign-in.
                 await route.fulfill({
                     status: 200,
                     contentType: 'application/json',
-                    body: JSON.stringify({
-                        authenticated: false,
-                        user: null
-                    })
+                    body: JSON.stringify(exchangeSucceeded
+                        ? { authenticated: true, authProvider: 'google', user: oauthUser }
+                        : { authenticated: false, user: null })
                 });
                 return;
             }
@@ -257,6 +269,7 @@ test.describe('Account Modal Auth States', () => {
                     });
                     return;
                 }
+                exchangeSucceeded = true;
                 await route.fulfill({
                     status: 200,
                     contentType: 'application/json',
@@ -265,15 +278,7 @@ test.describe('Account Modal Auth States', () => {
                         csrfToken: 'oauth-csrf-token',
                         sessionToken: 'oauth-session-token',
                         authProvider: 'google',
-                        user: {
-                            id: 'oauth-user-001',
-                            username: 'Eddy',
-                            email: 'eddy@example.com',
-                            goal: 'interview',
-                            socialHandle: 'eddydev',
-                            socialStatus: 'Recovered after retry',
-                            messagingEnabled: true
-                        }
+                        user: oauthUser
                     })
                 });
                 return;

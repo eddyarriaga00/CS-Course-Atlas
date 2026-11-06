@@ -7,3 +7,5 @@ dist/
 .translation-cache-es.json
 scripts/translation-cache-es.cache*.json
 scripts/translation-cache-es.cache*
+test-results/
+playwright-report/
