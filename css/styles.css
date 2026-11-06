@@ -9761,3 +9761,20 @@ code.inline-code {
     border: 1px solid rgba(129, 140, 248, 0.28);
     white-space: break-spaces;
 }
+
+/* Phones: the collapsed sidebar button sits in its own row above the content
+   and scrolls with the page, instead of floating over the first card and over
+   text while scrolling. Expanded, it still opens as a fixed overlay drawer. */
+@media (max-width: 640px) {
+    #app-shell {
+        position: relative;
+        padding-top: 3.6rem;
+    }
+
+    body:not(.sidebar-mobile-expanded) #app-shell #app-sidebar,
+    body:not(.sidebar-mobile-expanded) #main-header.header-collapsed ~ #app-shell #app-sidebar {
+        position: absolute;
+        top: 0.45rem;
+        left: 0.55rem;
+    }
+}
