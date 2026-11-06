@@ -9750,3 +9750,14 @@ body.dark :where(
 
 body:not(.dark) .module-unit-kicker { color: #4f46e5; }
 body:not(.dark) .module-unit-title { color: #1e1b4b; }
+
+/* Inline code inside curated course text, quizzes and glossary entries. */
+code.inline-code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace !important;
+    font-size: 0.92em;
+    padding: 0.05em 0.35em;
+    border-radius: 0.3rem;
+    background: rgba(99, 102, 241, 0.16);
+    border: 1px solid rgba(129, 140, 248, 0.28);
+    white-space: break-spaces;
+}

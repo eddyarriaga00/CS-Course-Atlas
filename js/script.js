@@ -835,7 +835,7 @@ const TRANSLATIONS = {
         'a11y.skipToContent': 'Skip to main content',
         // Hero
         'hero.title': 'CS Course Atlas: Learn Across Core CS Courses',
-        'hero.subtitle': 'A structured, beginner-friendly path through five core CS tracks: Data Structures & Algorithms, Java, Discrete Mathematics, Git, and x86-64 Assembly, by Eddy Arriaga-B. Its 45 modules are organized into units, and each one has clear learning objectives, worked code in Java, C++, Python, and JavaScript, graded practice, and a quiz.',
+        'hero.subtitle': 'A structured, beginner-friendly path through five core CS tracks: Data Structures & Algorithms, Java, Discrete Mathematics, Git, and x86-64 Assembly, by Eddy Arriaga-B. Its 45 modules are organized into units, and each one has clear learning objectives, worked code examples, graded practice, and a quiz.',
         'hero.pretextCanvasAria': 'Decorative study intro rendered with Pretext text flow.',
         // Header buttons
         'btn.flashcards': 'Flashcards',
@@ -1552,7 +1552,7 @@ const TRANSLATIONS = {
         'a11y.skipToContent': 'Saltar al contenido principal',
         // Hero
         'hero.title': 'CS Course Atlas: Aprende en Cursos Clave de CS',
-        'hero.subtitle': 'Una ruta estructurada y amigable para principiantes a través de cinco rutas esenciales de computación: Estructuras de Datos y Algoritmos, Java, Matemáticas Discretas, Git y Ensamblador x86-64, por Eddy Arriaga-B. Sus 45 módulos están organizados en unidades, y cada uno incluye objetivos de aprendizaje claros, código resuelto en Java, C++, Python y JavaScript, práctica graduada y un cuestionario.',
+        'hero.subtitle': 'Una ruta estructurada y amigable para principiantes a través de cinco rutas esenciales de computación: Estructuras de Datos y Algoritmos, Java, Matemáticas Discretas, Git y Ensamblador x86-64, por Eddy Arriaga-B. Sus 45 módulos están organizados en unidades, y cada uno incluye objetivos de aprendizaje claros, ejemplos de código resueltos, práctica graduada y un cuestionario.',
         'hero.pretextCanvasAria': 'Introduccion visual de estudio renderizada con flujo de texto de Pretext.',
         // Header buttons
         'btn.flashcards': 'Tarjetas',
@@ -9785,6 +9785,14 @@ function getCurriculumUnitForModule(moduleId) {
         }
     }
     return null;
+}
+
+// Escape text, then render `inline code` spans and line breaks. Used for
+// curated course content, which marks code identifiers with backticks.
+function formatRichText(value) {
+    return escapeHtml(String(value ?? ''))
+        .replace(/`([^`\n]+)`/g, '<code class="inline-code">$1</code>')
+        .replace(/\n/g, '<br>');
 }
 
 function getCuratedModuleDefinitions(moduleId, language = 'en') {
@@ -27290,7 +27298,7 @@ function renderModules() {
                 <div class="bg-white border border-indigo-200 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4 shadow-sm">
                     <h4 class="font-semibold mb-3 text-slate-800 text-sm">${t('module.learningPlan')}</h4>
                     ${moduleLearningPlan.whyItMatters ? `
-                        <p class="text-xs sm:text-sm text-slate-700 leading-relaxed mb-3"><span class="font-semibold text-indigo-700">${escapeHtml(getModuleReadinessText('whyItMatters'))}:</span> ${escapeHtml(moduleLearningPlan.whyItMatters)}</p>
+                        <p class="text-xs sm:text-sm text-slate-700 leading-relaxed mb-3"><span class="font-semibold text-indigo-700">${escapeHtml(getModuleReadinessText('whyItMatters'))}:</span> ${formatRichText(moduleLearningPlan.whyItMatters)}</p>
                     ` : ''}
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
                         <div class="rounded-md border border-indigo-100 bg-indigo-50 px-2.5 py-2">
@@ -27321,14 +27329,14 @@ function renderModules() {
                             ${moduleLearningPlan.goals.map((goal) => `
                                 <li class="text-xs sm:text-sm text-slate-700 leading-relaxed flex items-start gap-1.5">
                                     <span class="text-indigo-500 mt-[1px]">\u2022</span>
-                                    <span>${escapeHtml(goal)}</span>
+                                    <span>${formatRichText(goal)}</span>
                                 </li>
                             `).join('')}
                         </ul>
                     </div>
                     <div class="rounded-md border border-indigo-100 bg-indigo-50 px-2.5 py-2.5">
                         <p class="text-[11px] uppercase tracking-wide font-semibold text-indigo-700 mb-1">${t('module.practicePrompt')}</p>
-                        <p class="text-xs sm:text-sm text-slate-800 leading-relaxed">${escapeHtml(moduleLearningPlan.practicePrompt)}</p>
+                        <p class="text-xs sm:text-sm text-slate-800 leading-relaxed">${formatRichText(moduleLearningPlan.practicePrompt)}</p>
                     </div>
                 </div>
 
@@ -27341,19 +27349,19 @@ function renderModules() {
                         <article class="module-readiness-block">
                             <p class="module-readiness-label">${escapeHtml(getModuleReadinessText('prerequisites'))}</p>
                             <ul class="module-readiness-list">
-                                ${moduleReadinessKit.prerequisites.map((entry) => `<li>${escapeHtml(entry)}</li>`).join('')}
+                                ${moduleReadinessKit.prerequisites.map((entry) => `<li>${formatRichText(entry)}</li>`).join('')}
                             </ul>
                         </article>
                         <article class="module-readiness-block">
                             <p class="module-readiness-label">${escapeHtml(getModuleReadinessText(moduleReadinessKit.outcomesLabelKey || 'outcomes'))}</p>
                             <ul class="module-readiness-list">
-                                ${moduleReadinessKit.outcomes.map((entry) => `<li>${escapeHtml(entry)}</li>`).join('')}
+                                ${moduleReadinessKit.outcomes.map((entry) => `<li>${formatRichText(entry)}</li>`).join('')}
                             </ul>
                         </article>
                         <article class="module-readiness-block">
                             <p class="module-readiness-label">${escapeHtml(getModuleReadinessText('pitfalls'))}</p>
                             <ul class="module-readiness-list">
-                                ${moduleReadinessKit.pitfalls.map((entry) => `<li>${escapeHtml(entry)}</li>`).join('')}
+                                ${moduleReadinessKit.pitfalls.map((entry) => `<li>${formatRichText(entry)}</li>`).join('')}
                             </ul>
                         </article>
                     </div>
@@ -27361,13 +27369,13 @@ function renderModules() {
                         <article class="module-readiness-block">
                             <p class="module-readiness-label">${escapeHtml(getModuleReadinessText('practiceLadder'))}</p>
                             <ol class="module-readiness-list module-readiness-list-ordered">
-                                ${moduleReadinessKit.practiceLadder.map((entry) => `<li>${escapeHtml(entry)}</li>`).join('')}
+                                ${moduleReadinessKit.practiceLadder.map((entry) => `<li>${formatRichText(entry)}</li>`).join('')}
                             </ol>
                         </article>
                         <article class="module-readiness-block">
                             <p class="module-readiness-label">${escapeHtml(getModuleReadinessText('masteryChecks'))}</p>
                             <ul class="module-readiness-list">
-                                ${moduleReadinessKit.masteryChecks.map((entry) => `<li>${escapeHtml(entry)}</li>`).join('')}
+                                ${moduleReadinessKit.masteryChecks.map((entry) => `<li>${formatRichText(entry)}</li>`).join('')}
                             </ul>
                         </article>
                     </div>
@@ -27548,7 +27556,7 @@ function renderModules() {
                     <div class="space-y-2">
                         ${definitions.map((entry) => `
                             <div class="text-xs sm:text-sm text-slate-700 leading-relaxed">
-                                <span class="font-semibold text-slate-900">${escapeHtml(entry.term)}:</span> ${escapeHtml(entry.definition)}
+                                <span class="font-semibold text-slate-900">${formatRichText(entry.term)}:</span> ${formatRichText(entry.definition)}
                             </div>
                         `).join('')}
                     </div>
@@ -28712,7 +28720,7 @@ function renderQuiz() {
         const totalCount = appState.currentQuiz.questions.length;
         const selected = appState.currentQuiz.answers[appState.currentQuiz.currentQuestion];
         const currentQuestion = appState.currentQuiz.questions[appState.currentQuiz.currentQuestion] || {};
-        const currentQuestionText = escapeHtml(String(currentQuestion.question || ''));
+        const currentQuestionText = formatRichText(currentQuestion.question || '');
         const currentQuestionOptions = Array.isArray(currentQuestion.options) ? currentQuestion.options : [];
 
         content.innerHTML = `
@@ -28734,7 +28742,7 @@ function renderQuiz() {
                 ${currentQuestionOptions.map((option, index) => `
                     <button onclick="answerQuestion(${index})" class="w-full p-3 sm:p-4 text-left rounded-xl border-2 transition-all duration-200 quiz-option text-white ${appState.currentQuiz.answers[appState.currentQuiz.currentQuestion] === index ? 'border-indigo-400 bg-slate-800/80' : 'border-white/15 bg-slate-900/80 hover:border-indigo-300'}">
                         <span class="font-medium text-white break-words">
-                            ${String.fromCharCode(65 + index)}. ${escapeHtml(String(option ?? ''))}
+                            ${String.fromCharCode(65 + index)}. ${formatRichText(option ?? '')}
                         </span>
                     </button>
                 `).join('')}
@@ -28787,10 +28795,10 @@ function renderQuiz() {
                 ? translateLiteral('No answer selected', appState.language)
                 : options[answerIndex];
             const correctText = options[question.correct];
-            const safeQuestion = escapeHtml(String(question.question || ''));
-            const safeSelected = escapeHtml(String(selectedText ?? ''));
-            const safeCorrect = escapeHtml(String(correctText ?? ''));
-            const safeExplanation = escapeHtml(String(question.explanation || ''));
+            const safeQuestion = formatRichText(question.question || '');
+            const safeSelected = formatRichText(selectedText ?? '');
+            const safeCorrect = formatRichText(correctText ?? '');
+            const safeExplanation = formatRichText(question.explanation || '');
             const isCorrect = answerIndex === question.correct;
             return `
                         <div class="text-left p-4 rounded-xl border ${isCorrect ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'}">
@@ -31301,8 +31309,8 @@ function renderInteractiveQuizQuestion() {
                 : options[selectedAnswer];
             const correctText = options[question?.correct];
             const safeQuestion = escapeHtml(String(question?.question || ''));
-            const safeSelected = escapeHtml(String(selectedText ?? ''));
-            const safeCorrect = escapeHtml(String(correctText ?? ''));
+            const safeSelected = formatRichText(selectedText ?? '');
+            const safeCorrect = formatRichText(correctText ?? '');
             return `
                             <div class="p-3 rounded-lg border ${isCorrect ? 'border-emerald-200 bg-emerald-50' : 'border-rose-200 bg-rose-50'}">
                                 <p class="text-sm font-semibold text-slate-800 break-words">${safeQuestion}</p>
