@@ -7170,7 +7170,7 @@ window.SPANISH_LOCALIZATION = {
               },
               {
                 "id": 2,
-                "question": "¿Qué técnica es más eficaz para comprobar si una cuerda es un palíndromo?",
+                "question": "¿Qué técnica comprueba si una cadena es un palíndromo en tiempo O(n) usando solo O(1) de espacio extra?",
                 "options": [
                   "Invertir y comparar",
                   "Dos consejos",
@@ -7205,7 +7205,7 @@ window.SPANISH_LOCALIZATION = {
                 "question": "¿Por qué las listas enlazadas pueden crecer o reducirse más fácilmente que las matrices?",
                 "options": [
                   "Usan menos memoria",
-                  "Los elementos viven en el montón y los nodos se conectan mediante punteros.",
+                  "Cada nodo se reserva por separado y se enlaza mediante referencias, así que no hay un bloque contiguo que redimensionar",
                   "Almacenan índices",
                   "Están optimizados para caché"
                 ],
@@ -7534,7 +7534,7 @@ window.SPANISH_LOCALIZATION = {
               },
               {
                 "id": 3,
-                "question": "La recursividad de cola permite a los compiladores:",
+                "question": "En lenguajes que optimizan las llamadas de cola, la recursión de cola permite al compilador:",
                 "options": [
                   "Paralelizar automáticamente",
                   "Reutilice el mismo marco de pila para la llamada recursiva",
@@ -7542,7 +7542,7 @@ window.SPANISH_LOCALIZATION = {
                   "Memorizar resultados"
                 ],
                 "correct": 1,
-                "explanation": "Si la llamada recursiva es la acción final, el fotograma actual no necesita persistir, por lo que los tiempos de ejecución optimizados lo reutilizan."
+                "explanation": "Si la llamada recursiva es la acción final, el marco actual no necesita conservarse, así que los entornos que optimizan lo reutilizan. Nota: javac y la JVM HotSpot no hacen esta optimización, por lo que una recursión de cola profunda puede desbordar la pila en Java."
               }
             ]
           }
@@ -7693,7 +7693,7 @@ window.SPANISH_LOCALIZATION = {
                   "un comando",
                   "un conjunto de numeros"
                 ],
-                "correct": 1,
+                "correct": 0,
                 "explanation": "Las proposiciones tienen valores de verdad definidos, que es la base del razonamiento y las pruebas lógicas."
               },
               {
@@ -10077,7 +10077,7 @@ window.SPANISH_LOCALIZATION = {
     "O(n)": "En)",
     "O(n²)": "O(n²)",
     "Random access arrays compute the memory address via base + index × element_size, so lookup cost is constant.": "Los arreglos de acceso aleatorio calculan la dirección de memoria con base + índice × tamaño_elemento, por lo que el acceso cuesta tiempo constante.",
-    "Which technique is most efficient for checking if a string is a palindrome?": "¿Qué técnica es más eficaz para comprobar si una cuerda es un palíndromo?",
+    "Which technique checks whether a string is a palindrome in O(n) time with only O(1) extra space?": "¿Qué técnica comprueba si una cadena es un palíndromo en tiempo O(n) usando solo O(1) de espacio extra?",
     "Reverse and compare": "Invertir y comparar",
     "Two pointers": "Dos consejos",
     "Stack-based approach": "Enfoque basado en pilas",
@@ -10090,7 +10090,7 @@ window.SPANISH_LOCALIZATION = {
     "Sliding windows reuse previous work (add/remove elements) making contiguous-range problems linear rather than quadratic.": "Las ventanas deslizantes reutilizan trabajos anteriores (agregar o quitar elementos), lo que hace que los problemas de rangos contiguos sean lineales en lugar de cuadráticos.",
     "Why can linked lists grow or shrink more easily than arrays?": "¿Por qué las listas enlazadas pueden crecer o reducirse más fácilmente que las matrices?",
     "They use less memory": "Usan menos memoria",
-    "Elements live on the heap and nodes connect via pointers": "Los elementos viven en el montón y los nodos se conectan mediante punteros.",
+    "Each node is allocated separately and linked by references, so there is no contiguous block to resize": "Cada nodo se reserva por separado y se enlaza mediante referencias, así que no hay un bloque contiguo que redimensionar",
     "They store indices": "Almacenan índices",
     "They are cache-optimized": "Están optimizados para caché",
     "Each node is dynamically allocated and linked, so insertions/deletions adjust pointers without shifting contiguous memory.": "Cada nodo se asigna y vincula dinámicamente, por lo que las inserciones/eliminaciones ajustan los punteros sin desplazar la memoria contigua.",
@@ -10213,12 +10213,12 @@ window.SPANISH_LOCALIZATION = {
     "Reducing memory": "Reducir la memoria",
     "Guaranteeing optimality": "Garantizar la optimización",
     "Drawing branches per call clarifies total work, which is critical for Master Theorem intuition.": "Dibujar ramas por llamada aclara el trabajo total, lo cual es fundamental para la intuición del teorema maestro.",
-    "Tail recursion allows compilers to:": "La recursividad de cola permite a los compiladores:",
+    "In languages that optimize tail calls, tail recursion lets the compiler:": "En lenguajes que optimizan las llamadas de cola, la recursión de cola permite al compilador:",
     "Parallelize automatically": "Paralelizar automáticamente",
     "Reuse the same stack frame for the recursive call": "Reutilice el mismo marco de pila para la llamada recursiva",
     "Skip base cases": "Saltar casos base",
     "Memoize results": "Memorizar resultados",
-    "If the recursive call is the final action, the current frame need not persist, so optimized runtimes reuse it.": "Si la llamada recursiva es la acción final, el fotograma actual no necesita persistir, por lo que los tiempos de ejecución optimizados lo reutilizan.",
+    "If the recursive call is the final action, the current frame need not persist, so optimizing runtimes reuse it. Note: javac and the HotSpot JVM do not perform this optimization, so deep tail recursion can still overflow the stack in Java.": "Si la llamada recursiva es la acción final, el marco actual no necesita conservarse, así que los entornos que optimizan lo reutilizan. Nota: javac y la JVM HotSpot no hacen esta optimización, por lo que una recursión de cola profunda puede desbordar la pila en Java.",
     "Dynamic programming relies on:": "La programación dinámica se basa en:",
     "Independent subproblems": "Subproblemas independientes",
     "Overlapping subproblems and optimal substructure": "Subproblemas superpuestos y subestructura óptima",

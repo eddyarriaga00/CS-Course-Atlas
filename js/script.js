@@ -4530,7 +4530,7 @@ const quizData = {
                 },
                 {
                     id: 2,
-                    question: "Which technique is most efficient for checking if a string is a palindrome?",
+                    question: "Which technique checks whether a string is a palindrome in O(n) time with only O(1) extra space?",
                     options: ["Reverse and compare", "Two pointers", "Recursion", "Stack-based approach"],
                     correct: 1,
                     explanation: "Two pointers toggled inward compare characters in O(n) time while keeping O(1) extra memory."
@@ -4551,7 +4551,7 @@ const quizData = {
                 {
                     id: 1,
                     question: "Why can linked lists grow or shrink more easily than arrays?",
-                    options: ["They use less memory", "Elements live on the heap and nodes connect via pointers", "They store indices", "They are cache-optimized"],
+                    options: ["They use less memory", "Each node is allocated separately and linked by references, so there is no contiguous block to resize", "They store indices", "They are cache-optimized"],
                     correct: 1,
                     explanation: "Each node is dynamically allocated and linked, so insertions/deletions adjust pointers without shifting contiguous memory."
                 },
@@ -4753,10 +4753,10 @@ const quizData = {
                 },
                 {
                     id: 3,
-                    question: "Tail recursion allows compilers to:",
+                    question: "In languages that optimize tail calls, tail recursion lets the compiler:",
                     options: ["Parallelize automatically", "Reuse the same stack frame for the recursive call", "Skip base cases", "Memoize results"],
                     correct: 1,
-                    explanation: "If the recursive call is the final action, the current frame need not persist, so optimized runtimes reuse it."
+                    explanation: "If the recursive call is the final action, the current frame need not persist, so optimizing runtimes reuse it. Note: javac and the HotSpot JVM do not perform this optimization, so deep tail recursion can still overflow the stack in Java."
                 }
             ]
         }]
@@ -4849,7 +4849,7 @@ const quizData = {
                     id: 1,
                     question: "A proposition in discrete math is:",
                     options: ["A sentence that is either true or false", "Any question with a variable", "A command", "A set of numbers"],
-                    correct: 1,
+                    correct: 0,
                     explanation: "Propositions have definite truth values, which is the foundation for logical reasoning and proofs."
                 },
                 {
