@@ -4659,7 +4659,7 @@ const quizData = {
                 {
                     id: 1,
                     question: "A binary heap is stored efficiently in an array because:",
-                    options: ["It sorts automatically", "Parent/child indices follow simple math (i?2i+1/2i+2)", "It needs pointers", "Heapify needs recursion"],
+                    options: ["It sorts automatically", "Parent/child indices follow simple math (i → 2i+1, 2i+2)", "It needs pointers", "Heapify needs recursion"],
                     correct: 1,
                     explanation: "Heap nodes correspond to contiguous indices, so tree relationships derive from arithmetic rather than explicit references."
                 },
@@ -6647,7 +6647,7 @@ public class HashTableDemo {
         }
 
         private int hash(String key) {
-            return Math.abs(key.hashCode()) % buckets.size();
+            return Math.floorMod(key.hashCode(), buckets.size()); // never negative, unlike Math.abs(Integer.MIN_VALUE)
         }
 
         public void put(String key, String value) {
@@ -7004,12 +7004,18 @@ import java.util.*;
 
 public class GreedyAlgorithms {
 
-    public static List<int[]> selectMaxActivities(int[] start, int[] finish) {
-        List<int[]> result = new ArrayList<>();
-        int lastFinish = -1;
-        for (int i = 0; i < start.length; i++) {
+    public static List<String> selectMaxActivities(int[] start, int[] finish) {
+        // Greedy choice: always take the activity that finishes earliest,
+        // so sort indices by finish time first (the input need not be sorted).
+        Integer[] order = new Integer[start.length];
+        for (int i = 0; i < order.length; i++) order[i] = i;
+        Arrays.sort(order, Comparator.comparingInt(i -> finish[i]));
+
+        List<String> result = new ArrayList<>();
+        int lastFinish = Integer.MIN_VALUE;
+        for (int i : order) {
             if (start[i] >= lastFinish) {
-                result.add(new int[]{start[i], finish[i]});
+                result.add(\"[\" + start[i] + \", \" + finish[i] + \")\");
                 lastFinish = finish[i];
             }
         }
@@ -7030,8 +7036,8 @@ public class GreedyAlgorithms {
     }
 
     public static void main(String[] args) {
-        int[] start = {1, 3, 0, 5, 8, 5};
-        int[] finish = {2, 4, 6, 7, 9, 9};
+        int[] start = {5, 1, 3, 0, 8, 5};   // deliberately not sorted by finish time
+        int[] finish = {7, 2, 4, 6, 9, 9};
         System.out.println(\"Selected activities: \" + selectMaxActivities(start, finish));
 
         int[] coins = {25, 10, 5, 1};
