@@ -1825,7 +1825,7 @@ window.SPANISH_LOCALIZATION = {
         ]
       },
       "recursion": {
-        "title": "Recursión y retroceso",
+        "title": "Fundamentos de recursión",
         "description": "El factorial, la resolución de laberintos y la generación de subconjuntos ilustran cómo encajan los casos base, las elecciones y el retroceso; Explicamos qué hace cada cuadro recursivo y cuándo se desenrolla.",
         "topics": [
           "Funciones recursivas",
@@ -9790,7 +9790,7 @@ window.SPANISH_LOCALIZATION = {
         "level": "Principiante"
       },
       "recursion": {
-        "title": "Recursión y retroceso",
+        "title": "Fundamentos de recursión",
         "description": "Casos base, pila de llamadas y lista de verificación de seguimiento.",
         "category": "recursividad",
         "level": "Intermedio"
@@ -10937,7 +10937,8 @@ window.SPANISH_LOCALIZATION = {
     "Search Strategy Comparison": "Comparación de estrategias de búsqueda",
     "Binary Search Guide": "Guía de búsqueda binaria",
     "Search Optimization": "Optimización de búsqueda",
-    "Recursion and Backtracking": "Recursión y retroceso",
+    "Recursion Fundamentals": "Fundamentos de recursión",
+    "Recursion and Backtracking": "Recursión y backtracking",
     "Factorial, maze solving, and subset generation illustrate how base cases, choices, and backtracking fit together; we explain what each recursive frame is doing and when it unwinds.": "El factorial, la resolución de laberintos y la generación de subconjuntos ilustran cómo encajan los casos base, las elecciones y el retroceso; Explicamos qué hace cada cuadro recursivo y cuándo se desenrolla.",
     "We break recursion into base case, choice, and exploration phases, then show how to convert naive recursion into efficient backtracking with state restoration. Examples include permutations, N-Queens, subsets, and memoized tree DP, helping you reason about call stacks and termination.": "Dividimos la recursividad en fases de caso base, elección y exploración, luego mostramos cómo convertir la recursividad ingenua en un retroceso eficiente con restauración de estado. Los ejemplos incluyen permutaciones, N-Queens, subconjuntos y DP de árbol memorizado, que le ayudarán a razonar sobre las pilas de llamadas y la terminación.",
     "Recursive Functions": "Funciones recursivas",
@@ -11559,7 +11560,7 @@ window.SPANISH_LOCALIZATION = {
     "'; // mark visited": "'; // marcar visitado",
     "Factorial(5) =": "Factorial(5) =",
     "Subsets:": "Subconjuntos:",
-    "Recursion and Backtracking - Comprehensive guided sample": "Recursión y retroceso: muestra guiada completa",
+    "Recursion Fundamentals - Comprehensive guided sample": "Fundamentos de recursión: muestra guiada completa",
     "1) Recursive Functions": "1) Funciones recursivas",
     "2) Base Cases": "2) Casos base",
     "3) Backtracking": "3) Retroceder",

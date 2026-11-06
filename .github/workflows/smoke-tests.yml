@@ -34,6 +34,9 @@ jobs:
       - name: Run frontend syntax check
         run: npm run check:frontend
 
+      - name: Verify course curriculum
+        run: npm run check:curriculum
+
       - name: Run smoke tests
         run: npm run test:smoke
 

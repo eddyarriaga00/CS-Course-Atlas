@@ -694,53 +694,58 @@ const MODULE_CATEGORY_BY_ID = {
     'string-algorithms': 'dsa',
     'bit-manipulation': 'dsa'
 };
+// Recommended cross-track study order. Within each track this matches the unit
+// order in js/course-curriculum.js, and every prerequisite appears earlier
+// (enforced by scripts/verify_course_curriculum.js).
 const MODULE_LEARNING_SEQUENCE = [
     'intro-to-coding',
     'java-basics',
-    'java-memory-jvm',
-    'git-basics-workflow',
-    'git-branching-merging',
     'control-flow',
-    'assembly-registers-memory',
+    'git-basics-workflow',
     'oop-basics',
-    'exception-handling',
     'arrays-strings',
-    'matrix-grid-problems',
     'searching-algorithms',
     'stacks-queues',
+    'exception-handling',
     'linked-lists',
-    'sets-relations-functions',
     'propositional-logic-proofs',
-    'combinatorics-discrete-probability',
-    'discrete-graph-theory',
+    'recursion',
+    'sorting-algorithms',
+    'generics',
+    'sets-relations-functions',
+    'matrix-grid-problems',
+    'backtracking-patterns',
     'collections-framework',
+    'hash-tables',
+    'trees-basics',
+    'git-branching-merging',
+    'heaps',
+    'tries',
+    'discrete-graph-theory',
+    'graph-algorithms',
+    'union-find',
+    'lambda-streams',
     'file-io',
+    'combinatorics-discrete-probability',
+    'greedy-algorithms',
+    'dynamic-programming',
+    'testing-junit',
+    'assembly-registers-memory',
+    'bit-manipulation',
     'assembly-control-flow-procedures',
     'assembly-addressing-modes',
     'assembly-arrays-strings-io',
-    'generics',
     'jdbc-basics',
     'multithreading',
-    'trees-basics',
-    'hash-tables',
-    'heaps',
-    'sorting-algorithms',
-    'recursion',
-    'backtracking-patterns',
-    'tries',
-    'union-find',
-    'bit-manipulation',
-    'greedy-algorithms',
-    'testing-junit',
-    'dynamic-programming',
-    'graph-algorithms',
+    'java-memory-jvm',
     'segment-trees',
     'binary-indexed-trees',
     'advanced-trees',
     'string-algorithms',
-    'design-patterns',
-    'lambda-streams'
+    'design-patterns'
 ];
+
+
 const GUEST_PREVIEW_METRICS = {
     completedModules: 4,
     totalModules: Math.max(MODULE_LEARNING_SEQUENCE.length, 12)
@@ -830,7 +835,7 @@ const TRANSLATIONS = {
         'a11y.skipToContent': 'Skip to main content',
         // Hero
         'hero.title': 'CS Course Atlas: Learn Across Core CS Courses',
-        'hero.subtitle': 'A comprehensive, beginner-friendly journey across Data Structures & Algorithms, Assembly, Java, Python, JavaScript, and Discrete Mathematics by Eddy Arriaga-B. Each module includes detailed explanations, extensive code examples where applicable, and practical exercises.',
+        'hero.subtitle': 'A structured, beginner-friendly path through five core CS tracks: Data Structures & Algorithms, Java, Discrete Mathematics, Git, and x86-64 Assembly, by Eddy Arriaga-B. Its 45 modules are organized into units, and each one has clear learning objectives, worked code in Java, C++, Python, and JavaScript, graded practice, and a quiz.',
         'hero.pretextCanvasAria': 'Decorative study intro rendered with Pretext text flow.',
         // Header buttons
         'btn.flashcards': 'Flashcards',
@@ -1547,7 +1552,7 @@ const TRANSLATIONS = {
         'a11y.skipToContent': 'Saltar al contenido principal',
         // Hero
         'hero.title': 'CS Course Atlas: Aprende en Cursos Clave de CS',
-        'hero.subtitle': 'Un recorrido completo y amigable para principiantes a través de Estructuras de Datos y Algoritmos, Ensamblador, Java, Python, JavaScript y Matemáticas Discretas por Eddy Arriaga-B. Cada módulo incluye explicaciones detalladas, amplios ejemplos de código y ejercicios prácticos.',
+        'hero.subtitle': 'Una ruta estructurada y amigable para principiantes a través de cinco rutas esenciales de computación: Estructuras de Datos y Algoritmos, Java, Matemáticas Discretas, Git y Ensamblador x86-64, por Eddy Arriaga-B. Sus 45 módulos están organizados en unidades, y cada uno incluye objetivos de aprendizaje claros, código resuelto en Java, C++, Python y JavaScript, práctica graduada y un cuestionario.',
         'hero.pretextCanvasAria': 'Introduccion visual de estudio renderizada con flujo de texto de Pretext.',
         // Header buttons
         'btn.flashcards': 'Tarjetas',
@@ -1587,25 +1592,25 @@ const TRANSLATIONS = {
         'sidebar.notes': 'Notas',
         'sidebar.support': 'Soporte',
         'sidebar.about': 'Acerca de',
-        'route.kicker': 'Pagina actual',
+        'route.kicker': 'Página actual',
         'route.home.title': 'Inicio',
         'route.home.description': 'Vista general, ritmo de estudio y retos diarios en un solo lugar.',
         'route.tracks.title': 'Rutas de Curso',
-        'route.tracks.description': 'Explora todos los modulos y filtra por ruta, nivel y palabras clave.',
+        'route.tracks.description': 'Explora todos los módulos y filtra por ruta, nivel y palabras clave.',
         'route.dsa.title': 'Ruta DSA',
-        'route.dsa.description': 'Solo modulos de Estructuras de Datos y Algoritmos.',
+        'route.dsa.description': 'Solo módulos de Estructuras de Datos y Algoritmos.',
         'route.java.title': 'Ruta Java',
-        'route.java.description': 'Modulos enfocados en Java con ejemplos practicos y explicaciones.',
+        'route.java.description': 'Módulos enfocados en Java con ejemplos practicos y explicaciones.',
         'route.git.title': 'Ruta Git',
         'route.git.description': 'Flujos de control de versiones, ramas y colaboracion.',
         'route.assembly.title': 'Ruta Ensamblador',
-        'route.assembly.description': 'Modulos de memoria, registros y control de flujo en bajo nivel.',
+        'route.assembly.description': 'Módulos de memoria, registros y control de flujo en bajo nivel.',
         'route.discreteMath.title': 'Ruta Matematica Discreta',
-        'route.discreteMath.description': 'Pruebas, logica y temas esenciales de matematica discreta para CS.',
+        'route.discreteMath.description': 'Pruebas, lógica y temas esenciales de matematica discreta para CS.',
         'route.flashcards.title': 'Tarjetas',
-        'route.flashcards.description': 'Tarjetas se abre directamente desde esta pagina para repaso rapido.',
+        'route.flashcards.description': 'Tarjetas se abre directamente desde esta página para repaso rápido.',
         'route.quizzes.title': 'Quizzes',
-        'route.quizzes.description': 'Las herramientas de quiz se abren directo en esta pagina con practica tipo entrevista.',
+        'route.quizzes.description': 'Las herramientas de quiz se abren directo en esta página con practica tipo entrevista.',
         'route.playground.title': 'Playground',
         'route.playground.description': 'Usa ambos sandboxes para experimentar y visualizar mejor.',
         'route.notes.title': 'Notas y Biblioteca',
@@ -1615,16 +1620,16 @@ const TRANSLATIONS = {
         'route.about.title': 'Acerca de',
         'route.about.description': 'Perfil del creador, alcance del proyecto, actualizaciones, enlaces legales y opciones de feedback.',
         'route.flashcards.launchTitle': 'Practica con Tarjetas',
-        'route.flashcards.launchDescription': 'La pagina de Tarjetas del menu lateral abre el entrenador automaticamente. Usa este boton para abrirlo otra vez cuando quieras.',
+        'route.flashcards.launchDescription': 'La página de Tarjetas del menu lateral abre el entrenador automaticamente. Usa este boton para abrirlo otra vez cuando quieras.',
         'route.flashcards.openAction': 'Abrir Tarjetas',
         'route.quizzes.launchTitle': 'Practica de Quiz',
-        'route.quizzes.launchDescription': 'La pagina de Quizzes del menu lateral abre la biblioteca automaticamente. Tambien puedes abrirla otra vez o saltar a ejemplos de entrevista.',
+        'route.quizzes.launchDescription': 'La página de Quizzes del menu lateral abre la biblioteca automaticamente. Tambien puedes abrirla otra vez o saltar a ejemplos de entrevista.',
         'route.quizzes.openAction': 'Abrir Biblioteca de Quiz',
         'route.quizzes.examplesAction': 'Ejemplos de Entrevista',
         'route.support.launchTitle': 'Necesitas Ayuda o Quieres Apoyar?',
         'route.support.launchDescription': 'Envia una solicitud, abre paginas de confianza o dona para mantener la plataforma gratis.',
         'route.support.openAction': 'Abrir Formulario de Soporte',
-        'route.support.contactAction': 'Pagina de Contacto',
+        'route.support.contactAction': 'Página de Contacto',
         'route.about.launchTitle': 'Acerca de este Proyecto',
         'route.about.launchDescription': 'Revisa el contexto del creador, el alcance, las actualizaciones y las paginas de confianza en un solo lugar.',
         'route.about.guideAction': 'Abrir Guia Rapida',
@@ -1632,7 +1637,7 @@ const TRANSLATIONS = {
         'route.about.repoAction': 'Abrir Repo en GitHub',
         'about.kicker': 'Credibilidad del Proyecto',
         'about.heading': 'Acerca de CS Course Atlas',
-        'about.subtitle': 'Quien construyo este sitio, por que existe, que soporta hoy y que sigue despues.',
+        'about.subtitle': 'Quien construyo este sitio, por que existe, que soporta hoy y que sigue después.',
         'about.who.title': 'Quien Soy',
         'about.who.body': 'Soy Eddy Arriaga-Barrientos, creador de CS Course Atlas. Lo construi como un sistema practico de estudio para estudiantes que necesitan aprender en un solo lugar varias materias de CS.',
         'about.why.title': 'Por Que Lo Construi',
@@ -1644,28 +1649,28 @@ const TRANSLATIONS = {
         'about.courses.four': 'Git y Control de Versiones',
         'about.courses.five': 'Fundamentos de Ensamblador',
         'about.supports.title': 'Lo Que El Sitio Soporta Actualmente',
-        'about.supports.one': 'Modulos estructurados con explicaciones y ejemplos de codigo',
-        'about.supports.two': 'Herramientas de practica: tarjetas, quizzes, glosario y playgrounds',
+        'about.supports.one': 'Módulos estructurados con explicaciones y ejemplos de código',
+        'about.supports.two': 'Herramientas de práctica: tarjetas, quizzes, glosario y playgrounds',
         'about.supports.three': 'Seguimiento de progreso, notas y navegacion amigable para movil',
         'about.supports.four': 'Flujos de cuenta con actualizaciones de perfil seguras',
         'about.progress.title': 'Lo Que Aun Esta En Progreso',
         'about.progress.one': 'Mayor profundidad de rutas para cursos adicionales de CS',
         'about.progress.two': 'Despliegue mas amplio de sincronizacion de cuenta y persistencia en la nube',
-        'about.progress.three': 'Mas rutas guiadas y paquetes de practica de mayor profundidad',
+        'about.progress.three': 'Mas rutas guiadas y paquetes de práctica de mayor profundidad',
         'about.links.title': 'Enlaces del Proyecto',
         'about.links.repo': 'Repositorio en GitHub',
         'about.links.changelog': 'Registro de Cambios / Actualizaciones',
-        'about.links.contact': 'Pagina de Contacto / Soporte',
+        'about.links.contact': 'Página de Contacto / Soporte',
         'about.links.privacyPrompt': 'Si creas una cuenta, revisa estas paginas:',
         'about.links.privacy': 'Politica de Privacidad',
         'about.links.terms': 'Terminos de Uso',
         'about.updates.title': 'Actualizaciones Recientes',
         'about.updates.one': 'Flujo de inicio para principiantes con rutas guiadas',
         'about.updates.two': 'Navegacion responsive mejorada para movil, tablet y laptops',
-        'about.updates.three': 'Modulo de introduccion a programacion expandido con recursos vinculados',
+        'about.updates.three': 'Módulo de introduccion a programacion expandido con recursos vinculados',
         'about.updates.four': 'Base de seguridad mas fuerte para cuenta y perfil',
         'about.feedback.title': 'Formulario de Contacto / Feedback',
-        'about.feedback.subtitle': 'Comparte errores, solicitudes o feedback directo desde esta pagina.',
+        'about.feedback.subtitle': 'Comparte errores, solicitudes o feedback directo desde esta página.',
         'about.feedback.openSupport': 'Abrir Formulario Completo de Soporte',
         'about.feedback.nameLabel': 'Nombre',
         'about.feedback.namePlaceholder': 'Tu nombre',
@@ -1717,7 +1722,7 @@ const TRANSLATIONS = {
         'topic.comingSoon.networks.title': 'Redes de Computadoras',
         'topic.comingSoon.networks.subtitle': 'TCP/IP, enrutamiento, confiabilidad de transporte y depuracion practica de red',
         'topic.comingSoon.algorithmsPlus.title': 'Algoritmos Avanzados',
-        'topic.comingSoon.algorithmsPlus.subtitle': 'Programacion dinamica, metodos avanzados de grafos, algoritmos de cadenas y estrategia de complejidad',
+        'topic.comingSoon.algorithmsPlus.subtitle': 'Programacion dinamica, métodos avanzados de grafos, algoritmos de cadenas y estrategia de complejidad',
         'topic.comingSoon.pl.title': 'Lenguajes de Programacion',
         'topic.comingSoon.pl.subtitle': 'Paradigmas, sistemas de tipos, interpretes, compiladores y fundamentos de diseno de lenguajes',
         'topic.comingSoon.se.title': 'Ingenieria de Software',
@@ -1725,40 +1730,40 @@ const TRANSLATIONS = {
         'topic.comingSoon.arch.title': 'Arquitectura de Computadoras',
         'topic.comingSoon.arch.subtitle': 'Conjuntos de instrucciones, pipelines de CPU, caches y razonamiento de rendimiento',
         'topic.comingSoon.cyber.title': 'Ciberseguridad',
-        'topic.comingSoon.cyber.subtitle': 'Codigo seguro, autenticacion, defensa ante ataques web y fundamentos practicos de seguridad',
+        'topic.comingSoon.cyber.subtitle': 'Código seguro, autenticacion, defensa ante ataques web y fundamentos practicos de seguridad',
         'roadmap.kicker': 'Hoja de Ruta Publica',
-        'roadmap.heading': 'Disponible Ahora, En Progreso, Proximo',
+        'roadmap.heading': 'Disponible Ahora, En Progreso, Próximo',
         'roadmap.subtitle': 'Visualiza lo que ya puedes usar hoy y lo que se esta construyendo de forma intencional.',
         'roadmap.live.title': 'Disponible ahora',
         'roadmap.live.one': 'Rutas de aprendizaje de DSA, Java, Git, Ensamblador y Matematica Discreta',
-        'roadmap.live.two': 'Modulos con ejemplos de codigo, quizzes, tarjetas, glosario y playgrounds',
-        'roadmap.live.three': 'Rutas de inicio para principiantes y flujo guiado rapido',
+        'roadmap.live.two': 'Módulos con ejemplos de código, quizzes, tarjetas, glosario y playgrounds',
+        'roadmap.live.three': 'Rutas de inicio para principiantes y flujo guiado rápido',
         'roadmap.live.four': 'Login de cuenta, controles de perfil y base de sincronizacion de progreso',
         'roadmap.progress.title': 'En progreso',
         'roadmap.progress.one': 'Pulido multiplataforma y mejoras de formato responsive',
-        'roadmap.progress.two': 'Expansion de modulos y pase de consistencia de calidad de codigo',
+        'roadmap.progress.two': 'Expansion de módulos y pase de consistencia de calidad de código',
         'roadmap.progress.three': 'Ajuste de insights personalizados y mejoras de persistencia solo para cuentas',
         'roadmap.progress.four': 'Endurecimiento para lanzamiento publico con auth SQL y controles de seguridad',
-        'roadmap.planned.title': 'Proximo',
+        'roadmap.planned.title': 'Próximo',
         'roadmap.planned.one': 'Rutas de Teoria de la Computacion, C++ y Estadistica',
         'roadmap.planned.two': 'Rutas de Sistemas Operativos, Redes y Ingenieria de Software',
         'roadmap.planned.three': 'Rutas de Lenguajes de Programacion, Arquitectura de Computadores y Ciberseguridad',
-        'roadmap.planned.four': 'Ruta de algoritmos mas profunda y mas sets de practica para entrevistas',
+        'roadmap.planned.four': 'Ruta de algoritmos mas profunda y mas sets de práctica para entrevistas',
         'start.paths.kicker': 'Donde Empezar',
         'start.paths.heading': 'No sabes que abrir primero?',
         'start.paths.subtitle': 'Elige un objetivo y te llevamos al mejor primer paso.',
         'start.paths.foundations.title': 'Nuevo en CS',
-        'start.paths.foundations.description': 'Comienza con fundamentos y abre el primer modulo para principiantes.',
+        'start.paths.foundations.description': 'Comienza con fundamentos y abre el primer módulo para principiantes.',
         'start.paths.foundations.cta': 'Iniciar Fundamentos',
         'start.paths.coursework.title': 'Estudiando para clase',
         'start.paths.coursework.description': 'Abre rutas de curso y elige la clase que estas llevando.',
         'start.paths.coursework.cta': 'Elegir ruta de curso',
-        'start.paths.interview.title': 'Preparacion de entrevista',
-        'start.paths.interview.description': 'Ve a modulos de DSA y practica enfocada en entrevistas.',
+        'start.paths.interview.title': 'Preparación de entrevista',
+        'start.paths.interview.description': 'Ve a módulos de DSA y practica enfocada en entrevistas.',
         'start.paths.interview.cta': 'Ir a practica DSA',
-        'start.paths.review.title': 'Repaso rapido',
-        'start.paths.review.description': 'Haz repaso rapido con tarjetas y luego confirma terminos en el glosario.',
-        'start.paths.review.cta': 'Iniciar repaso rapido',
+        'start.paths.review.title': 'Repaso rápido',
+        'start.paths.review.description': 'Haz repaso rápido con tarjetas y luego confirma terminos en el glosario.',
+        'start.paths.review.cta': 'Iniciar repaso rápido',
         'start.paths.review.toast': 'Tarjetas abiertas. Siguiente paso: usa el Glosario para repasar definiciones.',
         'success.checklist.kicker': 'Ruta de Exito',
         'success.checklist.heading': 'Tu Checklist de Exito Rapido',
@@ -1767,37 +1772,37 @@ const TRANSLATIONS = {
         'success.checklist.done': 'Listo',
         'success.checklist.pending': 'Pendiente',
         'success.checklist.step.track.title': 'Elige tu ruta principal',
-        'success.checklist.step.track.body': 'Selecciona DSA, Java, Git, Assembly o Matematicas Discretas para enfocar tu estudio.',
+        'success.checklist.step.track.body': 'Selecciona DSA, Java, Git, Assembly o Matemáticas Discretas para enfocar tu estudio.',
         'success.checklist.step.track.cta': 'Elegir Ruta',
-        'success.checklist.step.module.title': 'Completa tu primer modulo',
-        'success.checklist.step.module.body': 'Termina un modulo para desbloquear mejores recomendaciones y ritmo.',
-        'success.checklist.step.module.cta': 'Abrir Siguiente Modulo',
-        'success.checklist.step.practice.title': 'Haz una actividad de practica',
-        'success.checklist.step.practice.body': 'Realiza un quiz o una sesion de tarjetas para reforzar lo aprendido.',
+        'success.checklist.step.module.title': 'Completa tu primer módulo',
+        'success.checklist.step.module.body': 'Termina un módulo para desbloquear mejores recomendaciones y ritmo.',
+        'success.checklist.step.module.cta': 'Abrir Siguiente Módulo',
+        'success.checklist.step.practice.title': 'Haz una actividad de práctica',
+        'success.checklist.step.practice.body': 'Realiza un quiz o una sesión de tarjetas para reforzar lo aprendido.',
         'success.checklist.step.practice.cta': 'Empezar Practica',
-        'success.checklist.step.sync.title': 'Inicia sesion para sincronizar',
+        'success.checklist.step.sync.title': 'Inicia sesión para sincronizar',
         'success.checklist.step.sync.body': 'Activa la sincronizacion para que rachas, notas y ajustes te sigan en todos tus dispositivos.',
         'success.checklist.step.sync.cta': 'Abrir Cuenta',
-        'auth.retrySession': 'Reintentar sesion',
-        'auth.status.sessionTimeout': 'La verificacion de sesion se demoro demasiado. Puedes reintentar.',
+        'auth.retrySession': 'Reintentar sesión',
+        'auth.status.sessionTimeout': 'La verificación de sesión se demoro demasiado. Puedes reintentar.',
         'account.card.title': 'Sincronizacion de Cuenta',
         'account.card.subtitle': 'Guarda y sincroniza tu progreso y ajustes de perfil.',
         'account.modal.title': 'Cuenta y Acceso Seguro',
-        'account.modal.subtitle': 'Flujo limpio de autenticacion con acceso por sesion segura.',
+        'account.modal.subtitle': 'Flujo limpio de autenticacion con acceso por sesión segura.',
         'account.modal.closeAria': 'Cerrar dialogo de cuenta',
-        'account.state.notSignedIn': 'No has iniciado sesion',
+        'account.state.notSignedIn': 'No has iniciado sesión',
         'account.state.directLogin': 'Inicio directo',
-        'account.state.sessionActive': 'Sesion activa',
+        'account.state.sessionActive': 'Sesión activa',
         'account.state.guest': 'Invitado',
-        'account.flow.loginTitle': 'Inicia Sesion en tu Cuenta',
+        'account.flow.loginTitle': 'Inicia Sesión en tu Cuenta',
         'account.flow.loginSubtitle': 'Usa un proveedor o continua con tu correo/usuario y contrasena.',
         'account.flow.signupSubtitle': 'Crea un perfil para sincronizar progreso y ajustes entre dispositivos.',
-        'account.flow.authenticatedSubtitle': 'Autenticado{provider}. Usa Cerrar Sesion para cambiar de cuenta.',
-        'account.signedIn.kicker': 'Sesion Iniciada',
+        'account.flow.authenticatedSubtitle': 'Autenticado{provider}. Usa Cerrar Sesión para cambiar de cuenta.',
+        'account.signedIn.kicker': 'Sesión Iniciada',
         'account.signedIn.copy': 'Tu perfil y ajustes seguros ahora estan desbloqueados.',
         'account.actions.openProfileSettings': 'Abrir Ajustes de Perfil',
-        'account.actions.signOut': 'Cerrar Sesion',
-        'account.tab.login': 'Iniciar Sesion',
+        'account.actions.signOut': 'Cerrar Sesión',
+        'account.tab.login': 'Iniciar Sesión',
         'account.tab.signup': 'Registrarse',
         'account.provider.google': 'Continuar con Google',
         'account.provider.github': 'Continuar con GitHub',
@@ -1824,34 +1829,34 @@ const TRANSLATIONS = {
         'account.password.strength.weakText': 'Fuerza de contrasena: Debil',
         'account.auth.rememberMe': 'Recordarme',
         'account.auth.forgotPassword': 'Olvidaste tu contrasena?',
-        'account.auth.submitLogin': 'Iniciar Sesion',
+        'account.auth.submitLogin': 'Iniciar Sesión',
         'account.auth.submitCreate': 'Crear Cuenta',
-        'account.auth.submitChecking': 'Verificando sesion...',
-        'account.auth.submitSigningOut': 'Cerrando sesion...',
-        'account.auth.submitLoggingIn': 'Iniciando sesion...',
+        'account.auth.submitChecking': 'Verificando sesión...',
+        'account.auth.submitSigningOut': 'Cerrando sesión...',
+        'account.auth.submitLoggingIn': 'Iniciando sesión...',
         'account.auth.submitCreating': 'Creando cuenta...',
         'account.auth.legal': 'Al crear una cuenta, aceptas los Terminos y la Politica de Privacidad.',
         'account.auth.switch.needAccount': 'Necesitas una cuenta?',
         'account.auth.switch.haveAccount': 'Ya tienes una cuenta?',
         'account.auth.switch.needAnother': 'Necesitas otra cuenta?',
         'account.auth.switch.signup': 'Registrarse',
-        'account.auth.switch.login': 'Iniciar Sesion',
-        'account.auth.switch.logoutFirst': 'Cierra Sesion Primero',
-        'account.auth.signupLockedTitle': 'Cierra sesion para usar Registrarse.',
-        'account.auth.signupSwitchLockedTitle': 'Cierra sesion para cambiar a Registrarse.',
+        'account.auth.switch.login': 'Iniciar Sesión',
+        'account.auth.switch.logoutFirst': 'Cierra Sesión Primero',
+        'account.auth.signupLockedTitle': 'Cierra sesión para usar Registrarse.',
+        'account.auth.signupSwitchLockedTitle': 'Cierra sesión para cambiar a Registrarse.',
         'account.profile.title': 'Ajustes de Perfil',
         'account.profile.subtitle': 'Perfil de cuenta en vivo, estado de sincronizacion y controles de acceso seguro.',
         'account.profile.toggle.manage': 'Administrar',
         'account.profile.toggle.hide': 'Ocultar',
         'account.profile.displayName.guest': 'Aprendiz Invitado',
-        'account.profile.displayEmail.guest': 'Inicia sesion para sincronizar perfil y progreso.',
-        'account.profile.displayEmail.authFallback': 'Correo disponible desde tu sesion autenticada.',
-        'account.profile.authRequired': 'Inicia sesion para desbloquear detalles editables de perfil, actualizaciones de seguridad y acciones de cuenta.',
+        'account.profile.displayEmail.guest': 'Inicia sesión para sincronizar perfil y progreso.',
+        'account.profile.displayEmail.authFallback': 'Correo disponible desde tu sesión autenticada.',
+        'account.profile.authRequired': 'Inicia sesión para desbloquear detalles editables de perfil, actualizaciones de seguridad y acciones de cuenta.',
         'account.profile.panelsAria': 'Paneles de perfil',
         'account.profile.usernamePlaceholder': 'Configura tu nombre de usuario publico',
         'account.profile.save': 'Guardar Perfil',
         'account.summary.goal': 'Meta',
-        'account.summary.session': 'Sesion',
+        'account.summary.session': 'Sesión',
         'account.summary.sync': 'Sincronizacion',
         'account.panel.profile': 'Editar Perfil',
         'account.panel.security': 'Seguridad',
@@ -1876,15 +1881,15 @@ const TRANSLATIONS = {
         'account.social.messagingOptIn': 'Activar mensajes directos cuando se lancen',
         'account.goal.label': 'Meta de Aprendizaje',
         'account.goal.exploring': 'Explorando',
-        'account.goal.internship': 'Preparacion para Practicas',
-        'account.goal.interview': 'Preparacion para Entrevistas',
+        'account.goal.internship': 'Preparación para Prácticas',
+        'account.goal.interview': 'Preparación para Entrevistas',
         'account.goal.coursework': 'Apoyo para Cursos',
         'account.security.emailUpdateTitle': 'Actualizacion Segura de Correo',
         'account.security.emailUpdateSubtitle': 'Los cambios de correo requieren un PIN de 6 digitos enviado a tu nuevo correo.',
         'account.security.newEmailLabel': 'Nuevo Correo',
         'account.security.newEmailPlaceholder': 'tu@dominio.com',
         'account.security.sendPin': 'Enviar PIN',
-        'account.security.pinLabel': 'PIN de Verificacion',
+        'account.security.pinLabel': 'PIN de Verificación',
         'account.security.pinPlaceholder': 'PIN de 6 digitos',
         'account.security.verifyPin': 'Verificar y Actualizar Correo',
         'account.security.pinStatusDefault': 'Solicita un PIN para verificar tu nuevo correo.',
@@ -1897,7 +1902,7 @@ const TRANSLATIONS = {
         'account.security.confirmNewPasswordLabel': 'Confirmar',
         'account.security.confirmNewPasswordPlaceholder': 'Confirmar contrasena',
         'account.security.updatePassword': 'Actualizar Contrasena',
-        'account.security.passwordStatusDefault': 'Las actualizaciones de contrasena requieren una sesion activa.',
+        'account.security.passwordStatusDefault': 'Las actualizaciones de contrasena requieren una sesión activa.',
         'account.danger.title': 'Eliminar Cuenta',
         'account.danger.subtitle': 'Esto elimina permanentemente tu perfil, sesiones y progreso guardado. No se puede deshacer.',
         'account.danger.currentPasswordLabel': 'Contrasena Actual',
@@ -1906,31 +1911,31 @@ const TRANSLATIONS = {
         'account.danger.confirmPlaceholder': 'DELETE',
         'account.danger.deleteButton': 'Eliminar Cuenta Permanentemente',
         'account.danger.statusDefault': 'Escribe DELETE y confirma tu contrasena para eliminar tu cuenta permanentemente.',
-        'account.sync.status.notSignedIn': 'sin sesion',
+        'account.sync.status.notSignedIn': 'sin sesión',
         'account.sync.metaDefault': 'El estado de sincronizacion del perfil aparecera aqui.',
         'account.sync.idle': 'Sincronizacion inactiva.',
-        'account.auth.state.sessionActive': 'Sesion Activa',
-        'account.auth.state.checking': 'Verificando sesion...',
-        'account.auth.state.validating': 'Validando sesion...',
-        'account.auth.state.guest': 'No has iniciado sesion',
-        'account.auth.redirectingMobile': 'Redirigiendo al host seguro movil de inicio de sesion...',
-        'account.auth.redirectingMobileToast': 'Abriendo host seguro movil de inicio de sesion...',
-        'account.auth.redirectingCanonical': 'Redirigiendo al host seguro de inicio de sesion...',
+        'account.auth.state.sessionActive': 'Sesión Activa',
+        'account.auth.state.checking': 'Verificando sesión...',
+        'account.auth.state.validating': 'Validando sesión...',
+        'account.auth.state.guest': 'No has iniciado sesión',
+        'account.auth.redirectingMobile': 'Redirigiendo al host seguro movil de inicio de sesión...',
+        'account.auth.redirectingMobileToast': 'Abriendo host seguro movil de inicio de sesión...',
+        'account.auth.redirectingCanonical': 'Redirigiendo al host seguro de inicio de sesión...',
         'account.auth.redirectingCanonicalToast': 'Redirigiendo al host seguro para acceso de cuenta.',
-        'account.auth.sessionStatusSignedInProvider': 'Sesion iniciada como {name} via {provider}.',
-        'account.auth.sessionStatusSignedIn': 'Sesion iniciada como {name}.',
+        'account.auth.sessionStatusSignedInProvider': 'Sesión iniciada como {name} via {provider}.',
+        'account.auth.sessionStatusSignedIn': 'Sesión iniciada como {name}.',
         'account.auth.sessionStatusAuthenticatedAs': 'Autenticado como {name}',
-        'account.auth.sessionStatusChecking': 'Verificando sesion...',
-        'account.auth.sessionStatusSignedOut': 'Sesion cerrada.',
-        'account.auth.sessionStatusSignInToEdit': 'Inicia sesion para editar ajustes de perfil.',
+        'account.auth.sessionStatusChecking': 'Verificando sesión...',
+        'account.auth.sessionStatusSignedOut': 'Sesión cerrada.',
+        'account.auth.sessionStatusSignInToEdit': 'Inicia sesión para editar ajustes de perfil.',
         'account.auth.entry.manage': 'Administrar Cuenta',
-        'account.auth.entry.login': 'Iniciar Sesion / Registrarse',
+        'account.auth.entry.login': 'Iniciar Sesión / Registrarse',
         'account.auth.serverNotConfigured': 'Servidor de autenticacion no configurado.',
         'account.auth.serverUnavailable': 'El servidor de autenticacion no esta disponible.',
-        'account.auth.signedOutSuccessToast': 'Sesion cerrada correctamente.',
-        'account.auth.sessionRestored': 'Sesion restaurada.',
-        'account.auth.noActiveSession': 'No se encontro una sesion activa.',
-        'account.sync.notSignedIn': 'No has iniciado sesion.',
+        'account.auth.signedOutSuccessToast': 'Sesión cerrada correctamente.',
+        'account.auth.sessionRestored': 'Sesión restaurada.',
+        'account.auth.noActiveSession': 'No se encontro una sesión activa.',
+        'account.sync.notSignedIn': 'No has iniciado sesión.',
         // Sections
         'section.dailyChallenge': '\u{1F3AF} Desaf\u00edo del D\u00eda',
         'section.studyTip': '\u{1F4A1} Consejo de Estudio',
@@ -1941,19 +1946,19 @@ const TRANSLATIONS = {
         'modules.pagination.prev': 'Anterior',
         'modules.pagination.next': 'Siguiente',
         'modules.pagination.summary': 'Página {current} de {total}',
-        'progress.emptyStart': 'Elige tu primera ruta para cargar modulos.',
-        'achievements.emptyTotal': 'Elige una ruta para ver el total de modulos',
+        'progress.emptyStart': 'Elige tu primera ruta para cargar módulos.',
+        'achievements.emptyTotal': 'Elige una ruta para ver el total de módulos',
         'insights.lock.badge': 'Modo Invitado',
         'insights.lock.title': 'Inicia sesión para desbloquear insights personalizados',
-        'insights.lock.copy': 'Tus analisis personalizados, impulso de enfoque y recomendaciones se desbloquean al iniciar sesion para sincronizar el progreso de forma segura.',
+        'insights.lock.copy': 'Tus análisis personalizados, impulso de enfoque y recomendaciones se desbloquean al iniciar sesión para sincronizar el progreso de forma segura.',
         'insights.lock.cta': 'Iniciar Sesión / Registrarse',
     'insights.lock.updates': 'Modo de vista previa activo',
         'insights.lock.status': 'Invitado',
         'insights.lock.sessionBtn': 'Crea cuenta gratis para sincronizar',
-        'insights.lock.break': 'Como invitado puedes usar modulos, quizzes y tarjetas',
+        'insights.lock.break': 'Como invitado puedes usar módulos, quizzes y tarjetas',
         'insights.lock.totalHint': 'Selecciona una ruta para ver totales',
-        'insights.lock.learningPathHint': 'Elige tu primera ruta para cargar modulos.',
-        'insights.lock.sessionLog': 'Prueba un modulo, quiz o tarjetas para iniciar tu primera sesion.',
+        'insights.lock.learningPathHint': 'Elige tu primera ruta para cargar módulos.',
+        'insights.lock.sessionLog': 'Prueba un módulo, quiz o tarjetas para iniciar tu primera sesión.',
         'insights.lock.guestIntro': 'Empieza ahora mismo en modo invitado:',
         'insights.lock.guestDsa': 'Comienza con Fundamentos DSA',
         'insights.lock.guestJava': 'Comienza con Nucleo de Java',
@@ -1963,7 +1968,7 @@ const TRANSLATIONS = {
         'insights.lock.guestNote': 'Guarda una nota local',
         'insights.lock.guestHint': 'Crea una cuenta gratis para sincronizar tu progreso entre dispositivos cuando quieras.',
         'insights.lock.planPreviewCta': 'Personalizar (Vista previa)',
-    'auth.status.guest': 'No has iniciado sesion. Inicia sesion o crea una cuenta gratis para sincronizar tu progreso entre dispositivos.',
+    'auth.status.guest': 'No has iniciado sesión. Inicia sesión o crea una cuenta gratis para sincronizar tu progreso entre dispositivos.',
         'interview.heading': '\u{1F4C2} Ejemplos de Entrevista',
         'interview.subtitle': 'Recorridos estilo LeetCode. Dos por página con copia rápida.',
         'interview.pages': 'Páginas',
@@ -1979,12 +1984,12 @@ const TRANSLATIONS = {
         'interview.approach': 'Enfoque',
         'interview.language': 'Lenguaje',
         'interview.timedPractice': 'Practica cronometrada',
-        'interview.yourSolution': 'Tu solucion (escribe/pega)',
+        'interview.yourSolution': 'Tu solución (escribe/pega)',
         'interview.referenceSolution': 'Solucion de referencia',
-        'interview.inputPlaceholder': 'Escribe tu solucion aqui...',
+        'interview.inputPlaceholder': 'Escribe tu solución aqui...',
         'interview.submitCompare': 'Enviar y comparar',
         'interview.analysisReady': 'Elige un enfoque para ver cuando y por que aplica.',
-        'interview.compareEmpty': 'Agrega tu borrador de solucion antes de comparar.',
+        'interview.compareEmpty': 'Agrega tu borrador de solución antes de comparar.',
         'interview.compareSuccess': 'Buen trabajo. Compara tu borrador con la referencia y anota diferencias de tradeoffs y complejidad.',
         'interview.detail.whenToUse': 'Cuando usarlo',
         'interview.detail.whyWorks': 'Por que funciona',
@@ -1996,7 +2001,7 @@ const TRANSLATIONS = {
         'interview.approachCount.other': '{count} enfoques',
         'interview.languageCurrent': 'Lenguaje: {language}',
         'interview.solutionCopied': 'Solucion copiada.',
-        'interview.solutionCopyError': 'No se pudo copiar la solucion.',
+        'interview.solutionCopyError': 'No se pudo copiar la solución.',
         'interview.noRunnable': 'Aun no hay muestra ejecutable para este enfoque/lenguaje.',
         'ds.heading': '\u{1F6E0}\uFE0F Playground de C\u00f3digo de Estructuras de Datos',
         'ds.subtitle': 'Interactúa con arreglos, pilas, colas, montículos, grafos y tries. Sigue estructura, punteros, línea de tiempo y complejidad en un solo lugar.',
@@ -2070,7 +2075,7 @@ const TRANSLATIONS = {
         'glossary.stats.category': 'Categoria: {category}',
         'glossary.stats.letter': 'Letra: {letter}',
         'glossary.empty': 'No hay terminos con esos filtros.',
-        'glossary.emptyHint': 'Prueba otra busqueda, categoria o letra.',
+        'glossary.emptyHint': 'Prueba otra búsqueda, categoria o letra.',
         'glossary.copy': 'Copiar',
         'glossary.copySuccess': 'Entrada del glosario copiada.',
         'glossary.copyError': 'No se pudo copiar la entrada del glosario.',
@@ -2114,8 +2119,8 @@ const TRANSLATIONS = {
         'footer.support.sponsor': 'Patrocinar',
         'scroll.jumpTop': 'Volver arriba',
         'scroll.jumpBottom': 'Ir al final',
-        'scroll.jumpTopAria': 'Desplazarse al inicio de esta pagina',
-        'scroll.jumpBottomAria': 'Desplazarse al final de esta pagina',
+        'scroll.jumpTopAria': 'Desplazarse al inicio de esta página',
+        'scroll.jumpBottomAria': 'Desplazarse al final de esta página',
         'footer.trust.title': 'Confianza y Legal',
         'footer.trust.privacy': 'Política de Privacidad',
         'footer.trust.terms': 'Términos de Uso',
@@ -2170,16 +2175,16 @@ const TRANSLATIONS = {
         'settings.goal8': '8 / semana · Acelerado',
         'settings.goal12': '12 / semana · Sprint',
         'settings.weeklyGoalHint': 'Personaliza tus perspectivas de estudio y consejos de ritmo.',
-        'settings.authLockTitle': 'Inicia sesion para personalizacion avanzada',
+        'settings.authLockTitle': 'Inicia sesión para personalizacion avanzada',
         'settings.authLockCopy': 'La mayoria de controles de personalizacion solo estan disponibles cuando tu cuenta esta autenticada y sincronizando.',
-        'settings.authLockCta': 'Iniciar Sesion / Crear Cuenta',
-        'settings.authLockToast': 'Inicia sesion para desbloquear personalizaciones avanzadas.',
+        'settings.authLockCta': 'Iniciar Sesión / Crear Cuenta',
+        'settings.authLockToast': 'Inicia sesión para desbloquear personalizaciones avanzadas.',
         'settings.buttonAnimations': 'Animaciones de Botones',
         'settings.buttonAnimationsHint': 'Activa o desactiva el efecto de toque y ondas estilo social.',
-        'settings.flashcardsPerSession': 'Tarjetas por Sesion',
+        'settings.flashcardsPerSession': 'Tarjetas por Sesión',
         'settings.flashcardsPerSessionHint': 'Define cuantas tarjetas se generan cada vez que inicias un mazo.',
-        'settings.codePreviewLines': 'Longitud de Vista de Codigo',
-        'settings.codePreviewLinesHint': 'Elige cuantas lineas de codigo se ven antes de expandir.',
+        'settings.codePreviewLines': 'Longitud de Vista de Código',
+        'settings.codePreviewLinesHint': 'Elige cuantas lineas de código se ven antes de expandir.',
         'settings.language': 'Idioma / Language',
         'settings.languageLabel': 'Idioma de la Interfaz',
         'settings.languageHint': 'Cambia entre español e inglés / Switch between Spanish and English.',
@@ -2191,17 +2196,17 @@ const TRANSLATIONS = {
         'module.showFewerTopics': 'Mostrar menos temas',
         'module.expandDetailedExamples': 'Expandir ejemplos detallados ({count} m\u00e1s)',
         'module.collapseDetailedExamples': 'Contraer ejemplos detallados',
-        'module.codeExample': '\u{1F4BB} Ejemplo de codigo',
+        'module.codeExample': '\u{1F4BB} Ejemplo de código',
         'module.discreteTheory': '\u{1F4D8} Teor\u00eda de Matem\u00e1ticas Discretas',
         'module.theoryMode': 'Modo Teoría',
         'module.learningResources': '\u{1F4DA} Recursos de aprendizaje:',
         'module.definitionsHeading': '\u{1F4D6} Definiciones Clave',
         'module.learningPlan': '\u{1F9ED} Plan de Aprendizaje',
         'module.pretextHeading': '\u2728 Pretexto',
-        'module.pretextSubtitle': 'Contexto rapido antes de programar para que cada modulo tenga un objetivo claro.',
+        'module.pretextSubtitle': 'Contexto rápido antes de programar para que cada módulo tenga un objetivo claro.',
         'module.pretextChip': 'Contexto Primero',
         'module.pretextNow': 'Donde Estas',
-        'module.pretextNowValue': 'Nivel {difficulty} en {track} \u00b7 modulo {current} de {total}.',
+        'module.pretextNowValue': 'Nivel {difficulty} en {track} \u00b7 módulo {current} de {total}.',
         'module.pretextFocus': 'Enfoque Ahora',
         'module.pretextFocusValueSingle': 'Prioriza {topicOne} primero.',
         'module.pretextFocusValueDual': 'Prioriza {topicOne} y luego conectalo con {topicTwo}.',
@@ -2210,9 +2215,9 @@ const TRANSLATIONS = {
         'module.estimatedTime': 'Tiempo Estimado',
         'module.trackPosition': 'Posicion en la Ruta',
         'module.prerequisite': 'Prerequisito',
-        'module.nextModule': 'Siguiente Modulo',
+        'module.nextModule': 'Siguiente Módulo',
         'module.learningGoals': 'Objetivos de Aprendizaje',
-        'module.practicePrompt': 'Reto de Practica',
+        'module.practicePrompt': 'Reto de Práctica',
         'module.prerequisiteNone': 'Ninguno (empieza aqui)',
         'module.nextModuleNone': 'Estas al final de esta ruta.',
         'module.estimatedTimeValue': '{minutes} min de estudio enfocado',
@@ -2221,11 +2226,11 @@ const TRANSLATIONS = {
         'module.goalTemplate2': 'Implementa un ejemplo funcional de {topic}.',
         'module.goalTemplate3': 'Valida {topic} con un caso de prueba y salida esperada.',
         'module.goalFallback1': 'Resume la idea central y cuando usarla.',
-        'module.goalFallback2': 'Programa una solucion base limpia desde cero.',
+        'module.goalFallback2': 'Programa una solución base limpia desde cero.',
         'module.goalFallback3': 'Compara costos de tiempo/espacio en al menos dos enfoques.',
         'module.practiceTemplate': 'Implementa {topic} desde cero, prueba dos casos limite y luego explica complejidad y un caso real de uso.',
-        'module.practiceFallback': 'Construye una solucion pequena desde cero, prueba casos limite y explica complejidad antes de avanzar.',
-        'module.noResources': 'Aun no hay recursos listados para este modulo.',
+        'module.practiceFallback': 'Construye una solución pequena desde cero, prueba casos limite y explica complejidad antes de avanzar.',
+        'module.noResources': 'Aun no hay recursos listados para este módulo.',
         'module.takeQuizButton': 'Tomar Quiz',
         'module.quizLibraryButton': 'Abrir Biblioteca de Quizzes',
         'module.tooltipHideComments': 'Ocultar comentarios',
@@ -6872,7 +6877,7 @@ public class SearchingAlgorithms {
     },
     {
         id: 'recursion',
-        title: 'Recursion and Backtracking',
+        title: 'Recursion Fundamentals',
         description: 'Factorial, maze solving, and subset generation illustrate how base cases, choices, and backtracking fit together; we explain what each recursive frame is doing and when it unwinds.',
         difficulty: 'intermediate',
         topics: ['Recursive Functions', 'Base Cases', 'Backtracking', 'Memoization', 'Tree Recursion'],
@@ -8586,7 +8591,7 @@ class ShapeFactory {
         id: 'lambda-streams',
         title: 'Lambda Expressions & Streams',
         description: 'The stream pipeline filters even numbers, maps them to squares, collects a list, then chains mapToInt/filter/average, so each stage\'s role is spelled out in order.',
-        difficulty: 'advanced',
+        difficulty: 'intermediate',
         topics: ['Lambda Expressions', 'Stream API', 'Method References', 'Functional Interfaces'],
         codeExample: `// Lambda and Streams
 import java.util.*;
@@ -9730,8 +9735,68 @@ function normalizeSetDeepExplanationValue(rawValue, fallbackText) {
     return fallback;
 }
 
+// Curated course content (units, prerequisites, objectives, glossary, quizzes...)
+// loaded from js/course-curriculum.js. Read lazily so these helpers also work in
+// the Node verification sandboxes (no window there -> template fallbacks).
+const EMPTY_COURSE_CURRICULUM = Object.freeze({ tracks: {}, modules: {} });
+
+function getCourseCurriculum() {
+    const curriculum = typeof window !== 'undefined' ? window.COURSE_CURRICULUM : null;
+    return curriculum && typeof curriculum === 'object' ? curriculum : EMPTY_COURSE_CURRICULUM;
+}
+
+function getCurriculumModule(moduleId) {
+    const entry = getCourseCurriculum().modules?.[moduleId];
+    return entry && typeof entry === 'object' ? entry : null;
+}
+
+function getCurriculumLang(lang) {
+    const resolved = lang || (typeof appState !== 'undefined' ? appState.language : 'en');
+    return resolved === 'es' ? 'es' : 'en';
+}
+
+function getCurriculumText(value, lang) {
+    if (!value || typeof value !== 'object') return '';
+    const resolved = value[getCurriculumLang(lang)] ?? value.en;
+    return typeof resolved === 'string' ? resolved : '';
+}
+
+function getCurriculumList(value, lang) {
+    if (!value || typeof value !== 'object') return [];
+    const resolved = value[getCurriculumLang(lang)] ?? value.en;
+    return Array.isArray(resolved) ? resolved.filter((item) => typeof item === 'string' && item.trim()) : [];
+}
+
+function getCurriculumUnitForModule(moduleId) {
+    const tracks = getCourseCurriculum().tracks || {};
+    for (const [trackKey, units] of Object.entries(tracks)) {
+        if (!Array.isArray(units)) continue;
+        for (let index = 0; index < units.length; index += 1) {
+            const unit = units[index];
+            if (Array.isArray(unit?.modules) && unit.modules.includes(moduleId)) {
+                return { trackKey, unit, unitNumber: index + 1, unitCount: units.length };
+            }
+        }
+    }
+    return null;
+}
+
+function getCuratedModuleDefinitions(moduleId, language = 'en') {
+    const curated = getCurriculumModule(moduleId)?.definitions;
+    if (!Array.isArray(curated) || !curated.length) return null;
+    const definitions = curated
+        .map((entry) => ({
+            term: getCurriculumText(entry?.term, language),
+            definition: getCurriculumText(entry?.definition, language)
+        }))
+        .filter((entry) => entry.term && entry.definition);
+    return definitions.length ? definitions : null;
+}
+
 function buildModuleDefinitions(module, language = 'en') {
     const lang = language === 'es' ? 'es' : 'en';
+    const curatedDefinitions = getCuratedModuleDefinitions(module?.id, lang);
+    if (curatedDefinitions) return curatedDefinitions;
     const title = String(module?.title || (lang === 'es' ? 'este modulo' : 'this module'));
     const topics = Array.isArray(module?.topics) ? module.topics.filter(Boolean) : [];
     const terms = [];
@@ -9947,8 +10012,8 @@ public class InputProcessOutputLecture {
         },
         {
             id: 'source-to-runtime-pipeline',
-            title: { en: 'From Source Code to Running Program', es: 'Del Codigo Fuente al Programa en Ejecucion' },
-            description: { en: 'Understand what happens between writing code and seeing output.', es: 'Entiende que pasa entre escribir codigo y ver salida.' },
+            title: { en: 'From Source Code to Running Program', es: 'Del Código Fuente al Programa en Ejecucion' },
+            description: { en: 'Understand what happens between writing code and seeing output.', es: 'Entiende que pasa entre escribir código y ver salida.' },
             deepExplanation: {
                 en: `Lecture context:
 - Many students run commands without understanding pipeline stages.
@@ -10076,7 +10141,7 @@ public class CareerPathStrategyLecture {
         },
         {
             id: 'environment-and-git-bootstrap',
-            title: { en: 'Environment Setup + Git Bootstrap', es: 'Configuracion Inicial + Git' },
+            title: { en: 'Environment Setup + Git Bootstrap', es: 'Configuración Inicial + Git' },
             description: { en: 'Use a concrete setup checklist and first-commit workflow.', es: 'Usa checklist concreto de setup y primer commit.' },
             deepExplanation: {
                 en: `Lecture context:
@@ -12803,7 +12868,8 @@ function normalizeModuleCatalog(moduleList) {
             existingExpectedOutputs
         );
 
-        module.definitions = buildModuleDefinitions(module, 'en');
+        // Curated definitions are resolved per language at read time.
+        module.definitions = getCurriculumModule(module.id)?.definitions ? undefined : buildModuleDefinitions(module, 'en');
         normalizeModuleCodeExampleSets(module);
     });
 }
@@ -13029,14 +13095,17 @@ function getLocalizedModule(module) {
             codeExamples: localizedCodeExamples,
             expectedOutputs: localizedExpectedOutputs,
             codeExampleSets: localizedCodeExampleSets.length ? localizedCodeExampleSets : module.codeExampleSets,
-            definitions: Array.isArray(module.definitions) && module.definitions.length === 5
-                ? module.definitions
-                : buildModuleDefinitions(module, language)
+            definitions: getCuratedModuleDefinitions(module.id, language)
+                || (Array.isArray(module.definitions) && module.definitions.length === 5
+                    ? module.definitions
+                    : buildModuleDefinitions(module, language))
         };
     }
-    const localizedDefinitions = Array.isArray(localized.definitions) && localized.definitions.length
-        ? localized.definitions.slice(0, 5)
-        : buildModuleDefinitions({
+    const localizedDefinitions = getCuratedModuleDefinitions(module.id, language)
+        || (Array.isArray(localized.definitions) && localized.definitions.length
+            ? localized.definitions.slice(0, 5)
+            : null)
+        || buildModuleDefinitions({
             ...module,
             title: localized.title || module.title,
             topics: localized.topics || module.topics
@@ -13230,9 +13299,28 @@ function buildFallbackModuleQuiz(moduleId) {
     };
 }
 
+function getCuratedQuizQuestions(moduleId, lang = appState.language) {
+    const curatedQuiz = getCurriculumModule(moduleId)?.quiz;
+    if (!Array.isArray(curatedQuiz)) return [];
+    return curatedQuiz
+        .map((entry, index) => ({
+            id: 100 + index,
+            question: getCurriculumText(entry?.question, lang),
+            options: getCurriculumList(entry?.options, lang),
+            correct: Number(entry?.correct),
+            explanation: getCurriculumText(entry?.explanation, lang)
+        }))
+        .filter((question) => question.question
+            && question.options.length >= 2
+            && Number.isInteger(question.correct)
+            && question.correct >= 0
+            && question.correct < question.options.length);
+}
+
 function getModuleQuizData(moduleId) {
     const localizedQuiz = getLocalizedQuizData(moduleId);
-    const localizedQuestions = normalizeQuizQuestions(localizedQuiz);
+    const curatedQuestions = getCuratedQuizQuestions(moduleId);
+    const localizedQuestions = [...normalizeQuizQuestions(localizedQuiz), ...curatedQuestions];
     if (localizedQuestions.length) {
         return {
             quiz: localizedQuiz,
@@ -24566,11 +24654,11 @@ const TRACK_TITLE_KEY_BY_CATEGORY = {
 const MODULE_READINESS_TEXT = Object.freeze({
     title: {
         en: 'Learning Readiness Kit',
-        es: 'Kit de Preparacion de Aprendizaje'
+        es: 'Kit de Preparación de Aprendizaje'
     },
     subtitle: {
         en: 'Quick plan to study this module with stronger retention.',
-        es: 'Plan rapido para estudiar este modulo con mejor retencion.'
+        es: 'Plan rápido para estudiar este módulo con mejor retención.'
     },
     prerequisites: {
         en: 'Before You Start',
@@ -24580,17 +24668,29 @@ const MODULE_READINESS_TEXT = Object.freeze({
         en: 'Target Outcomes',
         es: 'Resultados Objetivo'
     },
+    keyTakeaways: {
+        en: 'Key Takeaways',
+        es: 'Ideas clave'
+    },
+    whyItMatters: {
+        en: 'Why It Matters',
+        es: 'Por qué importa'
+    },
+    unitValue: {
+        en: 'Unit {unit} of {units}: {title}',
+        es: 'Unidad {unit} de {units}: {title}'
+    },
     pitfalls: {
         en: 'Common Mistakes',
         es: 'Errores Comunes'
     },
     practiceLadder: {
         en: 'Practice Ladder',
-        es: 'Escalera de Practica'
+        es: 'Escalera de Práctica'
     },
     masteryChecks: {
         en: 'Mastery Checks',
-        es: 'Verificacion de Dominio'
+        es: 'Verificación de Dominio'
     },
     recommendedTag: {
         en: 'Recommended',
@@ -24622,7 +24722,7 @@ const MODULE_READINESS_TEXT = Object.freeze({
     },
     outcomeFallback2: {
         en: 'Build a clean baseline solution from scratch.',
-        es: 'Construye una solucion base limpia desde cero.'
+        es: 'Construye una solución base limpia desde cero.'
     },
     outcomeFallback3: {
         en: 'Validate behavior with edge cases and expected outputs.',
@@ -24650,7 +24750,7 @@ const MODULE_READINESS_TEXT = Object.freeze({
     },
     masteryImplement: {
         en: 'Can you implement a baseline solution without copy/paste?',
-        es: 'Puedes implementar una solucion base sin copiar/pegar?'
+        es: 'Puedes implementar una solución base sin copiar/pegar?'
     },
     masteryDebug: {
         en: 'Can you name one bug risk and one optimization path?',
@@ -24675,11 +24775,11 @@ const TRACK_READINESS_BLUEPRINTS = Object.freeze({
     java: {
         prerequisites: {
             en: ['Understand variables, methods, and class structure.', 'Compile and run Java code from terminal or IDE.'],
-            es: ['Entender variables, metodos y estructura de clases.', 'Compilar y ejecutar Java en terminal o IDE.']
+            es: ['Entender variables, métodos y estructura de clases.', 'Compilar y ejecutar Java en terminal o IDE.']
         },
         pitfalls: {
             en: ['Mixing primitive and object expectations (null vs default values).', 'Ignoring exception paths and input validation.', 'Not tracing object state changes across methods.'],
-            es: ['Mezclar expectativas de primitivos y objetos (null vs valores por defecto).', 'Ignorar rutas de excepcion y validacion de entrada.', 'No rastrear cambios de estado de objetos entre metodos.']
+            es: ['Mezclar expectativas de primitivos y objetos (null vs valores por defecto).', 'Ignorar rutas de excepcion y validacion de entrada.', 'No rastrear cambios de estado de objetos entre métodos.']
         },
         resources: [
             { label: { en: 'Oracle Java Documentation', es: 'Documentacion Oficial de Java (Oracle)' }, url: 'https://docs.oracle.com/en/java/' },
@@ -24689,7 +24789,7 @@ const TRACK_READINESS_BLUEPRINTS = Object.freeze({
     git: {
         prerequisites: {
             en: ['Know file paths and terminal navigation basics.', 'Understand local repo vs remote repo concept.'],
-            es: ['Conocer rutas de archivos y navegacion basica en terminal.', 'Entender repositorio local vs remoto.']
+            es: ['Conocer rutas de archivos y navegacion básica en terminal.', 'Entender repositorio local vs remoto.']
         },
         pitfalls: {
             en: ['Committing without reviewing diff first.', 'Using reset/rebase commands without understanding impact.', 'Skipping branch naming and pull request hygiene.'],
@@ -24725,7 +24825,7 @@ const TRACK_READINESS_BLUEPRINTS = Object.freeze({
         },
         resources: [
             { label: { en: 'Discrete Mathematics: An Open Introduction', es: 'Matematica Discreta: Introduccion Abierta' }, url: 'https://discrete.openmathbooks.org/dmoi3.html' },
-            { label: { en: 'MIT Mathematics for Computer Science Notes', es: 'Notas MIT de Matematicas para CS' }, url: 'https://courses.csail.mit.edu/6.042/spring18/mcs.pdf' }
+            { label: { en: 'MIT Mathematics for Computer Science Notes', es: 'Notas MIT de Matemáticas para CS' }, url: 'https://courses.csail.mit.edu/6.042/spring18/mcs.pdf' }
         ]
     }
 });
@@ -24740,7 +24840,7 @@ const MODULE_TOPIC_RESOURCE_HINTS = Object.freeze([
     },
     {
         keywords: ['binary search', 'search'],
-        resource: { label: { en: 'Binary Search Pattern Guide', es: 'Guia de Patron de Busqueda Binaria' }, url: 'https://cp-algorithms.com/num_methods/binary_search.html' }
+        resource: { label: { en: 'Binary Search Pattern Guide', es: 'Guia de Patron de Búsqueda Binaria' }, url: 'https://cp-algorithms.com/num_methods/binary_search.html' }
     },
     {
         keywords: ['thread', 'concurrency', 'multithreading'],
@@ -24863,18 +24963,43 @@ function buildModuleLearningPlan(module, localizedModule, modulesByCategory, loc
         return t(`module.goalFallback${index + 1}`);
     });
     const practiceTopic = topicPool[0] || '';
+    const curated = getCurriculumModule(module.id);
+    const curatedGoals = getCurriculumList(curated?.objectives);
+    const curatedPractice = getCurriculumList(curated?.practice);
+    const prerequisiteTitles = (Array.isArray(curated?.prerequisites) ? curated.prerequisites : [])
+        .map((prerequisiteId) => {
+            const prerequisiteModule = getModuleById(prerequisiteId);
+            if (!prerequisiteModule) return '';
+            return (localizedModuleMap.get(prerequisiteId) || getLocalizedModule(prerequisiteModule) || prerequisiteModule).title || '';
+        })
+        .filter(Boolean);
+    const unitInfo = getCurriculumUnitForModule(module.id);
+    const unitLabel = unitInfo
+        ? getModuleReadinessText('unitValue', {
+            unit: unitInfo.unitNumber,
+            units: unitInfo.unitCount,
+            title: getCurriculumText(unitInfo.unit.title)
+        })
+        : '';
+    const curatedMinutes = Number(curated?.minutes);
     return {
         categoryKey,
         trackTitle: getModuleTrackTitle(categoryKey),
-        estimatedMinutes: estimateModuleStudyMinutes(module, localizedModule),
+        estimatedMinutes: Number.isFinite(curatedMinutes) && curatedMinutes > 0
+            ? curatedMinutes
+            : estimateModuleStudyMinutes(module, localizedModule),
         currentPosition,
         totalInTrack,
-        prerequisiteTitle: previousLocalized?.title || '',
+        unitLabel,
+        prerequisiteTitles,
+        prerequisiteTitle: curated ? prerequisiteTitles.join(', ') : (previousLocalized?.title || ''),
         nextModuleTitle: nextLocalized?.title || '',
-        goals,
-        practicePrompt: practiceTopic
-            ? t('module.practiceTemplate', { topic: practiceTopic })
-            : t('module.practiceFallback')
+        goals: curatedGoals.length ? curatedGoals : goals,
+        whyItMatters: getCurriculumText(curated?.whyItMatters),
+        practicePrompt: curatedPractice[curatedPractice.length - 1]
+            || (practiceTopic
+                ? t('module.practiceTemplate', { topic: practiceTopic })
+                : t('module.practiceFallback'))
     };
 }
 
@@ -24969,9 +25094,35 @@ function buildModuleReadinessKit(module, localizedModule, moduleLearningPlan) {
         curatedResources.unshift(topicSpecificResource);
     }
 
+    const curated = getCurriculumModule(module.id);
+    if (curated) {
+        const curatedPrerequisites = [
+            ...(moduleLearningPlan?.prerequisiteTitles || []).map((title) => getModuleReadinessText('prereqTrack', { module: title })),
+            ...getCurriculumList(curated.skillsNeeded)
+        ];
+        const curatedModuleResources = (Array.isArray(curated.resources) ? curated.resources : [])
+            .map((resource) => {
+                const label = getCurriculumText(resource?.label, lang);
+                const url = String(resource?.url || '').trim();
+                return label && /^https:\/\//.test(url) ? { label, url, source: 'recommended' } : null;
+            })
+            .filter(Boolean);
+        const pick = (list, fallback) => (list.length ? list : fallback);
+        return {
+            prerequisites: curatedPrerequisites.length ? curatedPrerequisites : [getModuleReadinessText('prereqStart')],
+            outcomes: pick(getCurriculumList(curated.keyTakeaways), outcomes),
+            outcomesLabelKey: getCurriculumList(curated.keyTakeaways).length ? 'keyTakeaways' : 'outcomes',
+            pitfalls: pick(getCurriculumList(curated.pitfalls), pitfalls),
+            practiceLadder: pick(getCurriculumList(curated.practice), practiceLadder),
+            masteryChecks: pick(getCurriculumList(curated.selfCheck), masteryChecks),
+            curatedResources: [...curatedModuleResources, ...curatedResources]
+        };
+    }
+
     return {
         prerequisites,
         outcomes,
+        outcomesLabelKey: 'outcomes',
         pitfalls,
         practiceLadder,
         masteryChecks,
@@ -26973,8 +27124,28 @@ function renderModules() {
 
     renderModulesPagination(filteredModules.length, modulesPerPage);
 
+    const showUnitHeadings = appState.categoryFilter && appState.categoryFilter !== 'all'
+        && !String(appState.searchTerm || '').trim();
+    let previousUnitId = '';
+
     grid.innerHTML = pagedModules.map(module => {
         const localizedModule = localizedModuleMap.get(module.id) || module;
+        let unitHeadingHtml = '';
+        if (showUnitHeadings) {
+            const unitInfo = getCurriculumUnitForModule(module.id);
+            if (unitInfo && unitInfo.unit.id !== previousUnitId) {
+                previousUnitId = unitInfo.unit.id;
+                unitHeadingHtml = `
+                    <div class="module-unit-heading" role="heading" aria-level="3">
+                        <span class="module-unit-kicker">${escapeHtml(getModuleReadinessText('unitValue', {
+            unit: unitInfo.unitNumber,
+            units: unitInfo.unitCount,
+            title: ''
+        }).replace(/:\s*$/, ''))}</span>
+                        <span class="module-unit-title">${escapeHtml(getCurriculumText(unitInfo.unit.title))}</span>
+                    </div>`;
+            }
+        }
         const codeExampleSets = getModuleCodeExampleSets(module.id, localizedModule);
         const hasCodeExampleSets = codeExampleSets.length > 0;
         const detailedExamplesVisibleByDefault = 4;
@@ -27043,7 +27214,7 @@ function renderModules() {
         const starterCardClass = isStarterModule ? 'starter-module-card' : '';
         const starterTitleClass = isStarterModule ? 'text-xl sm:text-2xl' : 'text-lg sm:text-xl';
 
-        return `
+        return `${unitHeadingHtml}
             <div id="module-${module.id}" data-module-card="${module.id}" class="module-card ${cardThemeClasses} ${starterCardClass} rounded-xl p-4 sm:p-6 shadow-xl border hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
                 <!-- Module Header -->
                 <div class="flex flex-col sm:flex-row justify-between items-start gap-2 sm:gap-3 mb-3 sm:mb-4">
@@ -27112,6 +27283,9 @@ function renderModules() {
 
                 <div class="bg-white border border-indigo-200 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4 shadow-sm">
                     <h4 class="font-semibold mb-3 text-slate-800 text-sm">${t('module.learningPlan')}</h4>
+                    ${moduleLearningPlan.whyItMatters ? `
+                        <p class="text-xs sm:text-sm text-slate-700 leading-relaxed mb-3"><span class="font-semibold text-indigo-700">${escapeHtml(getModuleReadinessText('whyItMatters'))}:</span> ${escapeHtml(moduleLearningPlan.whyItMatters)}</p>
+                    ` : ''}
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
                         <div class="rounded-md border border-indigo-100 bg-indigo-50 px-2.5 py-2">
                             <p class="text-[11px] uppercase tracking-wide font-semibold text-indigo-700">${t('module.estimatedTime')}</p>
@@ -27124,6 +27298,7 @@ function renderModules() {
             total: moduleLearningPlan.totalInTrack,
             track: moduleLearningPlan.trackTitle
         }))}</p>
+                            ${moduleLearningPlan.unitLabel ? `<p class="text-[11px] text-indigo-700 mt-0.5">${escapeHtml(moduleLearningPlan.unitLabel)}</p>` : ''}
                         </div>
                         <div class="rounded-md border border-slate-200 bg-slate-50 px-2.5 py-2">
                             <p class="text-[11px] uppercase tracking-wide font-semibold text-slate-600">${t('module.prerequisite')}</p>
@@ -27164,7 +27339,7 @@ function renderModules() {
                             </ul>
                         </article>
                         <article class="module-readiness-block">
-                            <p class="module-readiness-label">${escapeHtml(getModuleReadinessText('outcomes'))}</p>
+                            <p class="module-readiness-label">${escapeHtml(getModuleReadinessText(moduleReadinessKit.outcomesLabelKey || 'outcomes'))}</p>
                             <ul class="module-readiness-list">
                                 ${moduleReadinessKit.outcomes.map((entry) => `<li>${escapeHtml(entry)}</li>`).join('')}
                             </ul>

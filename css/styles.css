@@ -9717,3 +9717,36 @@ body.dark :where(
         animation: none !important;
     }
 }
+
+/* Curriculum unit headings inside a single-track module grid. */
+.module-unit-heading {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.25rem 0.75rem;
+    margin-top: 0.75rem;
+    padding: 0.5rem 0.25rem 0.35rem;
+    border-bottom: 1px solid rgba(165, 180, 252, 0.28);
+}
+
+.module-unit-heading:first-child {
+    margin-top: 0;
+}
+
+.module-unit-kicker {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #a5b4fc;
+}
+
+.module-unit-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #e0e7ff;
+}
+
+body:not(.dark) .module-unit-kicker { color: #4f46e5; }
+body:not(.dark) .module-unit-title { color: #1e1b4b; }
