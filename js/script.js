@@ -3999,7 +3999,7 @@ const baseFlashcards = [
     {
         id: 14,
         question: "What is a Heap?",
-        answer: "Binary tree with parent-child ordering.\nMin Heap: parent ? children\nMax Heap: parent ? children\n\nUsed in Priority Queues"
+        answer: "Binary tree with parent-child ordering.\nMin Heap: parent ≤ children\nMax Heap: parent ≥ children\n\nUsed in Priority Queues"
     },
     {
         id: 15,
@@ -4144,7 +4144,7 @@ const baseFlashcards = [
     {
         id: 43,
         question: "What is topological sorting?",
-        answer: "Linear ordering of nodes in a DAG so u comes before v for all edges u ? v"
+        answer: "Linear ordering of nodes in a DAG so u comes before v for all edges u → v"
     },
     {
         id: 44,
@@ -4413,7 +4413,7 @@ const glossaryTerms = [
     },
     {
         term: "Topological Sort",
-        definition: "Linear ordering of graph vertices such that for every edge u ? v, u appears before v.",
+        definition: "Linear ordering of graph vertices such that for every edge u → v, u appears before v.",
         category: "Algorithms"
     },
     {
@@ -4521,7 +4521,7 @@ const quizData = {
                     question: "What is the time complexity of accessing an element in an array by its index?",
                     options: ["O(1)", "O(log n)", "O(n)", "O(nÂ²)"],
                     correct: 0,
-                    explanation: "Random access arrays compute the memory address via base + index ? element_size, so lookup cost is constant."
+                    explanation: "Random access arrays compute the memory address via base + index × element_size, so lookup cost is constant."
                 },
                 {
                     id: 2,
@@ -4629,7 +4629,7 @@ const quizData = {
                     question: "The load factor of a hash table measures:",
                     options: ["Average probe length", "Entries divided by bucket count", "Number of collisions", "Memory usage"],
                     correct: 1,
-                    explanation: "Load factor ? = n / m drives when to resize; keeping ? bounded retains O(1) average operations."
+                    explanation: "Load factor α = n / m drives when to resize; keeping α bounded retains O(1) average operations."
                 },
                 {
                     id: 2,
@@ -4849,7 +4849,7 @@ const quizData = {
                 },
                 {
                     id: 2,
-                    question: "Implication p ? q is false only when:",
+                    question: "Implication p → q is false only when:",
                     options: ["p is false and q is true", "p is true and q is false", "p and q are both true", "p and q are both false"],
                     correct: 1,
                     explanation: "An implication fails only when the premise is true but the conclusion is false."
@@ -4869,7 +4869,7 @@ const quizData = {
             questions: [
                 {
                     id: 1,
-                    question: "For sets A and B, A ? B means:",
+                    question: "For sets A and B, A ∩ B means:",
                     options: ["Elements in A or B", "Elements in both A and B", "Elements only in A", "Ordered pairs from A and B"],
                     correct: 1,
                     explanation: "Intersection keeps only elements common to both sets."
@@ -4877,13 +4877,13 @@ const quizData = {
                 {
                     id: 2,
                     question: "A relation R on set A is:",
-                    options: ["A subset of A ? A", "A function from A to A only", "A prime number list", "Always symmetric"],
+                    options: ["A subset of A × A", "A function from A to A only", "A prime number list", "Always symmetric"],
                     correct: 0,
-                    explanation: "A relation on A is any subset of the Cartesian product A ? A."
+                    explanation: "A relation on A is any subset of the Cartesian product A × A."
                 },
                 {
                     id: 3,
-                    question: "A function f: A ? B is injective when:",
+                    question: "A function f: A → B is injective when:",
                     options: ["Every b in B has a preimage", "Distinct inputs map to distinct outputs", "A equals B", "It is always surjective"],
                     correct: 1,
                     explanation: "Injective (one-to-one) functions never map two different domain elements to the same codomain element."
@@ -4910,8 +4910,8 @@ const quizData = {
                 },
                 {
                     id: 3,
-                    question: "For independent events A and B, P(A ? B) equals:",
-                    options: ["P(A) + P(B)", "P(A) / P(B)", "P(A) ? P(B)", "1 - P(A)"],
+                    question: "For independent events A and B, P(A ∩ B) equals:",
+                    options: ["P(A) + P(B)", "P(A) / P(B)", "P(A) × P(B)", "1 - P(A)"],
                     correct: 2,
                     explanation: "Independence means one event does not affect the other, so intersection probability multiplies."
                 }
@@ -7215,8 +7215,8 @@ public class SetsRelationsFunctions {
         Map<Integer, Integer> f = new HashMap<>();
         f.put(1, 10); f.put(2, 20); f.put(3, 30);
 
-        System.out.println("A ? B = " + intersection);
-        System.out.println("A ? B = " + union);
+        System.out.println("A ∩ B = " + intersection);
+        System.out.println("A ∪ B = " + union);
         System.out.println("f is injective? " + isInjective(f));
     }
 }`,
@@ -7244,8 +7244,8 @@ int main() {
     }
     map<int, int> f = {{1, 10}, {2, 20}, {3, 30}};
 
-    cout << "A ? B size = " << intersection.size() << "\\n";
-    cout << "A ? B size = " << uni.size() << "\\n";
+    cout << "A ∩ B size = " << intersection.size() << "\\n";
+    cout << "A ∪ B size = " << uni.size() << "\\n";
     cout << boolalpha << "f is injective? " << isInjective(f) << "\\n";
     return 0;
 }`,
@@ -7257,8 +7257,8 @@ A = {1, 2, 3}
 B = {3, 4, 5}
 f = {1: 10, 2: 20, 3: 30}
 
-print("A ? B =", A & B)
-print("A ? B =", A | B)
+print("A ∩ B =", A & B)
+print("A ∪ B =", A | B)
 print("f is injective?", is_injective(f))`,
             javascript: `// Sets, relations, and functions mini demo
 const A = new Set([1, 2, 3]);
@@ -7270,8 +7270,8 @@ const f = new Map([[1, 10], [2, 20], [3, 30]]);
 const values = [...f.values()];
 const isInjective = new Set(values).size === values.length;
 
-console.log("A ? B =", intersection);
-console.log("A ? B =", [...union]);
+console.log("A ∩ B =", intersection);
+console.log("A ∪ B =", [...union]);
 console.log("f is injective?", isInjective);`
         },
         explanation: `You will model sets, binary relations, and mappings with concrete operations: membership tests, products, relation properties, and injective/surjective checks. The focus is building intuition used later in graph theory and proofs.`,

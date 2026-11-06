@@ -2540,16 +2540,16 @@ window.SPANISH_LOCALIZATION = {
           "Ejercicios de propiedades de funciones"
         ],
         "codeExamples": {
-          "java": "/*\n * Conjuntos, relaciones y funciones: muestra guiada completa\n * Objetivos de cobertura:\n * 1) Establecer operaciones\n * 2) Producto cartesiano\n * 3) Relaciones\n * 4) Funciones Inyectivas\n * 5) Funciones sobreyectivas\n * Estrategia de lectura:\n * - Siga los comentarios en línea de arriba a abajo.\n * - Ejecute una vez, luego edite un concepto a la vez y vuelva a ejecutar.\n * - Verificar la salida después de cada paso lógico.\n */\n// Mini demostración de conjuntos, relaciones y funciones\nimport java.util.*;\n\npublic class SetsRelationsFunctions {\n    static boolean isInjective(Map<Integer, Integer> f) {\n        Set<Integer> seen = new HashSet<>();\n        for (int value : f.values()) {\n            if (!seen.add(value)) return false;\n        }\n        return true;\n    }\n\n    public static void main(String[] args) {\n        Set<Integer> a = new HashSet<>(Arrays.asList(1, 2, 3));\n        Set<Integer> b = new HashSet<>(Arrays.asList(3, 4, 5));\n        Set<Integer> intersection = new HashSet<>(a);\n        intersection.retainAll(b);\n        Set<Integer> union = new HashSet<>(a);\n        union.addAll(b);\n\n        Map<Integer, Integer> f = new HashMap<>();\n        f.put(1, 10); f.put(2, 20); f.put(3, 30);\n\n        System.out.println(\"A ? B = \" + intersection);\n        System.out.println(\"A ? B = \" + union);\n        System.out.println(\"f es inyectiva? \" + isInjective(f));\n    }\n}",
+          "java": "/*\n * Conjuntos, relaciones y funciones: muestra guiada completa\n * Objetivos de cobertura:\n * 1) Establecer operaciones\n * 2) Producto cartesiano\n * 3) Relaciones\n * 4) Funciones Inyectivas\n * 5) Funciones sobreyectivas\n * Estrategia de lectura:\n * - Siga los comentarios en línea de arriba a abajo.\n * - Ejecute una vez, luego edite un concepto a la vez y vuelva a ejecutar.\n * - Verificar la salida después de cada paso lógico.\n */\n// Mini demostración de conjuntos, relaciones y funciones\nimport java.util.*;\n\npublic class SetsRelationsFunctions {\n    static boolean isInjective(Map<Integer, Integer> f) {\n        Set<Integer> seen = new HashSet<>();\n        for (int value : f.values()) {\n            if (!seen.add(value)) return false;\n        }\n        return true;\n    }\n\n    public static void main(String[] args) {\n        Set<Integer> a = new HashSet<>(Arrays.asList(1, 2, 3));\n        Set<Integer> b = new HashSet<>(Arrays.asList(3, 4, 5));\n        Set<Integer> intersection = new HashSet<>(a);\n        intersection.retainAll(b);\n        Set<Integer> union = new HashSet<>(a);\n        union.addAll(b);\n\n        Map<Integer, Integer> f = new HashMap<>();\n        f.put(1, 10); f.put(2, 20); f.put(3, 30);\n\n        System.out.println(\"A ∩ B = \" + intersection);\n        System.out.println(\"A ∪ B = \" + union);\n        System.out.println(\"f es inyectiva? \" + isInjective(f));\n    }\n}",
           "cpp": "// Mini demostración de conjuntos, relaciones y funciones\n#include <iostream>\n#include <set>\n#include <map>\nusing namespace std;\n\nbool isInjective(const map<int, int>& f) {\n    set<int> seen;\n    for (const auto& [k, v] : f) {\n        if (!seen.insert(v).second) return false;\n    }\n    return true;\n}\n\nint main() {\n    set<int> A = {1, 2, 3};\n    set<int> B = {3, 4, 5};\n    set<int> intersection, uni = A;\n    for (int x : B) {\n        if (A.count(x)) intersection.insert(x);\n        uni.insert(x);\n    }\n    map<int, int> f = {{1, 10}, {2, 20}, {3, 30}};\n\n    cout << \"A ? Tamaño B = \" << intersection.size() << \"\\n\";\n    cout << \"A ? Tamaño B = \" << uni.size() << \"\\n\";\n    cout << boolalpha << \"f es inyectiva? \" << isInjective(f) << \"\\n\";\n    return 0;\n}",
-          "python": "# Mini demostración de conjuntos, relaciones y funciones\ndef is_injective(mapping):\n    return len(set(mapping.values())) == len(mapping.values())\n\nA = {1, 2, 3}\nB = {3, 4, 5}\nf = {1: 10, 2: 20, 3: 30}\n\nprint(\"A ? B =\", A & B)\nprint(\"A ? B =\", A | B)\nprint(\"f es inyectiva?\", is_injective(f))",
-          "javascript": "// Mini demostración de conjuntos, relaciones y funciones\nconst A = new Set([1, 2, 3]);\nconst B = new Set([3, 4, 5]);\nconst intersection = [...A].filter((x) => B.has(x));\nconst union = new Set([...A, ...B]);\nconst f = new Map([[1, 10], [2, 20], [3, 30]]);\n\nconst values = [...f.values()];\nconst isInjective = new Set(values).size === values.length;\n\nconsole.log(\"A ? B =\", intersection);\nconsole.log(\"A ? B =\", [...union]);\nconsole.log(\"f es inyectiva?\", isInjective);"
+          "python": "# Mini demostración de conjuntos, relaciones y funciones\ndef is_injective(mapping):\n    return len(set(mapping.values())) == len(mapping.values())\n\nA = {1, 2, 3}\nB = {3, 4, 5}\nf = {1: 10, 2: 20, 3: 30}\n\nprint(\"A ∩ B =\", A & B)\nprint(\"A ∪ B =\", A | B)\nprint(\"f es inyectiva?\", is_injective(f))",
+          "javascript": "// Mini demostración de conjuntos, relaciones y funciones\nconst A = new Set([1, 2, 3]);\nconst B = new Set([3, 4, 5]);\nconst intersection = [...A].filter((x) => B.has(x));\nconst union = new Set([...A, ...B]);\nconst f = new Map([[1, 10], [2, 20], [3, 30]]);\n\nconst values = [...f.values()];\nconst isInjective = new Set(values).size === values.length;\n\nconsole.log(\"A ∩ B =\", intersection);\nconsole.log(\"A ∪ B =\", [...union]);\nconsole.log(\"f es inyectiva?\", isInjective);"
         },
         "expectedOutputs": {
-          "java": "A ? B =\nf is injective?",
-          "cpp": "A ? B size =\nf is injective?",
-          "python": "A ? B =\nf is injective?",
-          "javascript": "A ? B =\nf is injective?"
+          "java": "A ∩ B =\nf is injective?",
+          "cpp": "A ∩ B size =\nf is injective?",
+          "python": "A ∩ B =\nf is injective?",
+          "javascript": "A ∩ B =\nf is injective?"
         },
         "codeExampleSets": [
           {
@@ -7698,7 +7698,7 @@ window.SPANISH_LOCALIZATION = {
               },
               {
                 "id": 2,
-                "question": "Implicación p ? q es falsa sólo cuando:",
+                "question": "Implicación p → q es falsa sólo cuando:",
                 "options": [
                   "p es falso y q es verdadero",
                   "p es verdadero y q es falso",
@@ -7730,7 +7730,7 @@ window.SPANISH_LOCALIZATION = {
             "questions": [
               {
                 "id": 1,
-                "question": "Para los conjuntos A y B, A ? B significa:",
+                "question": "Para los conjuntos A y B, A ∩ B significa:",
                 "options": [
                   "Elementos en A o B",
                   "Elementos tanto en A como en B",
@@ -7754,7 +7754,7 @@ window.SPANISH_LOCALIZATION = {
               },
               {
                 "id": 3,
-                "question": "Una función f: A ? B es inyectivo cuando:",
+                "question": "Una función f: A → B es inyectivo cuando:",
                 "options": [
                   "Cada b en B tiene una preimagen.",
                   "Las distintas entradas se asignan a distintas salidas",
@@ -7798,7 +7798,7 @@ window.SPANISH_LOCALIZATION = {
               },
               {
                 "id": 3,
-                "question": "Para eventos independientes A y B, P(A ? B) es igual a:",
+                "question": "Para eventos independientes A y B, P(A ∩ B) es igual a:",
                 "options": [
                   "P(A) + P(B)",
                   "P(A) / P(B)",
@@ -9317,7 +9317,7 @@ window.SPANISH_LOCALIZATION = {
       },
       "45": {
         "term": "Orden topológico",
-        "definition": "Ordenamiento lineal de los vértices del gráfico tal que para cada arista u ? v, u aparece antes de v.",
+        "definition": "Ordenamiento lineal de los vértices del gráfico tal que para cada arista u → v, u aparece antes de v.",
         "category": "Algoritmos"
       },
       "46": {
@@ -9843,7 +9843,7 @@ window.SPANISH_LOCALIZATION = {
     "What's the difference between DFS and BFS?": "¿Cuál es la diferencia entre DFS y BFS?",
     "DFS: Goes deep using stack/recursion\nBFS: Level-order using queue\n\nUsed for different types of graph exploration": "DFS: Profundiza usando pila/recursión\nBFS: orden de niveles usando cola\n\nSe utiliza para diferentes tipos de exploración de gráficos.",
     "What is a Heap?": "¿Qué es un montón?",
-    "Binary tree with parent-child ordering.\nMin Heap: parent ? children\nMax Heap: parent ? children\n\nUsed in Priority Queues": "Árbol binario con ordenamiento padre-hijo.\nMontón mínimo: ¿padre? niños\nMontón máximo: ¿padre? niños\n\nUtilizado en colas prioritarias",
+    "Binary tree with parent-child ordering.\nMin Heap: parent ≤ children\nMax Heap: parent ≥ children\n\nUsed in Priority Queues": "Árbol binario con orden padre-hijo.\nMontículo mínimo: padre ≤ hijos\nMontículo máximo: padre ≥ hijos\n\nSe usa en colas de prioridad",
     "What is memoization?": "¿Qué es la memorización?",
     "Top-down DP approach.\nStore function call results in cache to avoid repeated work.\n\nUsed in recursion-heavy problems": "Enfoque de DP de arriba hacia abajo.\nAlmacene los resultados de las llamadas a funciones en la memoria caché para evitar trabajos repetidos.\n\nUtilizado en problemas con mucha recursividad",
     "What is tabulation?": "¿Qué es la tabulación?",
@@ -9901,7 +9901,7 @@ window.SPANISH_LOCALIZATION = {
     "What is the difference between pre-order, in-order, and post-order traversal?": "¿Cuál es la diferencia entre recorrido de preorden, en orden y posterior al pedido?",
     "Pre-order: root, left, right\nIn-order: left, root, right\nPost-order: left, right, root": "Reserva: raíz, izquierda, derecha\nEn orden: izquierda, raíz, derecha\nOrden posterior: izquierda, derecha, raíz",
     "What is topological sorting?": "¿Qué es la clasificación topológica?",
-    "Linear ordering of nodes in a DAG so u comes before v for all edges u ? v": "¿Ordenamiento lineal de nodos en un DAG para que u venga antes de v para todos los bordes u? v",
+    "Linear ordering of nodes in a DAG so u comes before v for all edges u → v": "Orden lineal de los nodos de un DAG en el que u va antes que v para toda arista u → v",
     "What is a Disjoint Set Union (Union-Find)?": "¿Qué es una unión de conjuntos disjuntos (unión-hallazgo)?",
     "Tracks a set of elements split into disjoint groups.\nSupports union and find operations": "Realiza un seguimiento de un conjunto de elementos divididos en grupos separados.\nSoporta operaciones de unión y búsqueda.",
     "What is path compression in Union-Find?": "¿Qué es la compresión de ruta en Union-Find?",
@@ -10012,7 +10012,7 @@ window.SPANISH_LOCALIZATION = {
     "Path Compression": "Compresión de ruta",
     "Optimization in union-find to flatten tree structure for faster lookups.": "Optimización en union-find para aplanar la estructura del árbol para búsquedas más rápidas.",
     "Topological Sort": "Orden topológico",
-    "Linear ordering of graph vertices such that for every edge u ? v, u appears before v.": "Ordenamiento lineal de los vértices del gráfico tal que para cada arista u ? v, u aparece antes de v.",
+    "Linear ordering of graph vertices such that for every edge u → v, u appears before v.": "Orden lineal de los vértices del grafo tal que, para cada arista u → v, u aparece antes que v.",
     "Minimum Spanning Tree (MST)": "Árbol de expansión mínimo (MST)",
     "Subset of edges in a weighted graph that connects all vertices with minimum total weight.": "Subconjunto de aristas en un gráfico ponderado que conecta todos los vértices con un peso total mínimo.",
     "Dijkstra's Algorithm": "Algoritmo de Dijkstra",
@@ -10076,7 +10076,7 @@ window.SPANISH_LOCALIZATION = {
     "O(log n)": "O(log n)",
     "O(n)": "En)",
     "O(n²)": "O(n²)",
-    "Random access arrays compute the memory address via base + index ? element_size, so lookup cost is constant.": "¿Las matrices de acceso aleatorio calculan la dirección de memoria mediante base + índice? element_size, por lo que el costo de búsqueda es constante.",
+    "Random access arrays compute the memory address via base + index × element_size, so lookup cost is constant.": "Los arreglos de acceso aleatorio calculan la dirección de memoria con base + índice × tamaño_elemento, por lo que el acceso cuesta tiempo constante.",
     "Which technique is most efficient for checking if a string is a palindrome?": "¿Qué técnica es más eficaz para comprobar si una cuerda es un palíndromo?",
     "Reverse and compare": "Invertir y comparar",
     "Two pointers": "Dos consejos",
@@ -10140,7 +10140,7 @@ window.SPANISH_LOCALIZATION = {
     "Entries divided by bucket count": "Entradas divididas por recuento de depósitos",
     "Number of collisions": "Número de colisiones",
     "Memory usage": "Uso de memoria",
-    "Load factor ? = n / m drives when to resize; keeping ? bounded retains O(1) average operations.": "¿Factor de carga? = n / m determina cuándo cambiar el tamaño; manteniendo? acotado retiene O(1) operaciones promedio.",
+    "Load factor α = n / m drives when to resize; keeping α bounded retains O(1) average operations.": "El factor de carga α = n / m determina cuándo redimensionar; mantener α acotado conserva operaciones O(1) en promedio.",
     "Separate chaining stores collisions by:": "Separe las colisiones de tiendas de encadenamiento mediante:",
     "Linear probing": "Sondeo lineal",
     "Arrays of buckets stored on disk": "Matrices de depósitos almacenados en el disco.",
@@ -10279,7 +10279,7 @@ window.SPANISH_LOCALIZATION = {
     "A command": "un comando",
     "A set of numbers": "un conjunto de numeros",
     "Propositions have definite truth values, which is the foundation for logical reasoning and proofs.": "Las proposiciones tienen valores de verdad definidos, que es la base del razonamiento y las pruebas lógicas.",
-    "Implication p ? q is false only when:": "Implicación p ? q es falsa sólo cuando:",
+    "Implication p → q is false only when:": "La implicación p → q es falsa solo cuando:",
     "p is false and q is true": "p es falso y q es verdadero",
     "p is true and q is false": "p es verdadero y q es falso",
     "p and q are both true": "p y q son ambos verdaderos",
@@ -10291,19 +10291,19 @@ window.SPANISH_LOCALIZATION = {
     "Counterexample search": "Búsqueda de contraejemplo",
     "Truth table for one row only": "Tabla de verdad para una sola fila",
     "Direct proof starts by assuming the hypothesis and logically deriving the conclusion.": "La prueba directa comienza asumiendo la hipótesis y derivando lógicamente la conclusión.",
-    "For sets A and B, A ? B means:": "Para los conjuntos A y B, A ? B significa:",
+    "For sets A and B, A ∩ B means:": "Para los conjuntos A y B, A ∩ B significa:",
     "Elements in A or B": "Elementos en A o B",
     "Elements in both A and B": "Elementos tanto en A como en B",
     "Elements only in A": "Elementos solo en A",
     "Ordered pairs from A and B": "Pares ordenados de A y B",
     "Intersection keeps only elements common to both sets.": "La intersección mantiene solo elementos comunes a ambos conjuntos.",
     "A relation R on set A is:": "Una relación R en el conjunto A es:",
-    "A subset of A ? A": "¿Un subconjunto de A? A",
+    "A subset of A × A": "Un subconjunto de A × A",
     "A function from A to A only": "Una función de A a A solamente",
     "A prime number list": "Una lista de números primos",
     "Always symmetric": "Siempre simétrico",
-    "A relation on A is any subset of the Cartesian product A ? A.": "¿Una relación en A es cualquier subconjunto del producto cartesiano A? A.",
-    "A function f: A ? B is injective when:": "Una función f: A ? B es inyectivo cuando:",
+    "A relation on A is any subset of the Cartesian product A × A.": "Una relación en A es cualquier subconjunto del producto cartesiano A × A.",
+    "A function f: A → B is injective when:": "Una función f: A → B es inyectiva cuando:",
     "Every b in B has a preimage": "Cada b en B tiene una preimagen.",
     "Distinct inputs map to distinct outputs": "Las distintas entradas se asignan a distintas salidas",
     "A equals B": "A es igual a B",
@@ -10321,10 +10321,10 @@ window.SPANISH_LOCALIZATION = {
     "Prime numbers under n": "Números primos bajo n",
     "All subsets of size n": "Todos los subconjuntos de tamaño n",
     "Combinations choose subsets where arrangement is irrelevant.": "Las combinaciones eligen subconjuntos donde la disposición es irrelevante.",
-    "For independent events A and B, P(A ? B) equals:": "Para eventos independientes A y B, P(A ? B) es igual a:",
+    "For independent events A and B, P(A ∩ B) equals:": "Para eventos independientes A y B, P(A ∩ B) es igual a:",
     "P(A) + P(B)": "P(A) + P(B)",
     "P(A) / P(B)": "P(A) / P(B)",
-    "P(A) ? P(B)": "P(A)? P(B)",
+    "P(A) × P(B)": "P(A) × P(B)",
     "1 - P(A)": "1-P(A)",
     "Independence means one event does not affect the other, so intersection probability multiplies.": "La independencia significa que un evento no afecta al otro, por lo que la probabilidad de intersección se multiplica.",
     "Trie lookups depend on:": "Las búsquedas de prueba dependen de:",
@@ -10687,7 +10687,7 @@ window.SPANISH_LOCALIZATION = {
     "Generics cannot be nested": "Los genéricos no se pueden anidar",
     "Only primitives allowed": "Sólo se permiten primitivos",
     "The JVM sees raw types; the compiler enforces type safety and inserts casts.": "La JVM ve tipos sin formato; el compilador impone la seguridad de tipos e inserta conversiones.",
-    "The wildcard ? extends T allows you to:": "¿El comodín? extiende T le permite:",
+    "The wildcard ? extends T allows you to:": "El comodín ? extends T te permite:",
     "Insert arbitrary T values": "Insertar valores T arbitrarios",
     "Read T or subclasses safely but not insert arbitrary values": "Lea T o subclases de forma segura pero no inserte valores arbitrarios",
     "Modify list freely": "Modificar lista libremente",
@@ -11605,7 +11605,7 @@ window.SPANISH_LOCALIZATION = {
     "Direct proof idea: assume p, derive q.\\n": "Idea de prueba directa: asumir p, derivar q.\\n",
     "{p} {q} | {implies(p, q)}    {biconditional(p, q)}": "{p} {q} | {implica(p, q)} {bicondicional(p, q)}",
     "Sets, relations, and functions mini demo": "Mini demostración de conjuntos, relaciones y funciones",
-    "A ? B =": "A ? B =",
+    "A ∩ B =": "A ∩ B =",
     "f is injective?": "f es inyectiva?",
     "Sets, Relations, and Functions - Comprehensive guided sample": "Conjuntos, relaciones y funciones: muestra guiada completa",
     "1) Set Operations": "1) Establecer operaciones",
@@ -11615,7 +11615,7 @@ window.SPANISH_LOCALIZATION = {
     "5) Surjective Functions": "5) Funciones sobreyectivas",
     "include <set>": "incluir <conjunto>",
     "include <map>": "incluir <mapa>",
-    "A ? B size =": "A ? Tamaño B =",
+    "A ∩ B size =": "Tamaño de A ∩ B =",
     "Counting and probability helpers": "Ayudantes de conteo y probabilidad",
     "P(5,2) =": "PAG(5,2) =",
     "C(5,2) =": "C(5,2) =",
