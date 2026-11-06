@@ -37,6 +37,9 @@ jobs:
       - name: Verify course curriculum
         run: npm run check:curriculum
 
+      - name: Verify course examples (structure)
+        run: npm run check:examples
+
       - name: Run smoke tests
         run: npm run test:smoke
 

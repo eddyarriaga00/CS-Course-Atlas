@@ -9787,6 +9787,46 @@ function getCurriculumUnitForModule(moduleId) {
     return null;
 }
 
+// Curated, run-verified code examples from js/course-examples.js (main example
+// plus one example per topic, in every language). Read lazily like the
+// curriculum so Node verification sandboxes fall back to generated examples.
+function getCourseExamples(moduleId) {
+    const store = typeof window !== 'undefined' ? window.COURSE_EXAMPLES : null;
+    const entry = store && typeof store === 'object' ? store.modules?.[moduleId] : null;
+    return entry && entry.main && Array.isArray(entry.sets) ? entry : null;
+}
+
+function buildCuratedExampleSets(moduleId) {
+    const curated = getCourseExamples(moduleId);
+    if (!curated) return null;
+    const usedIds = new Set();
+    return curated.sets.map((set, index) => {
+        let id = slugifyTopicKey(set.topic, `topic-${index + 1}`);
+        while (usedIds.has(id)) id = `${id}-${index + 1}`;
+        usedIds.add(id);
+        return {
+            id,
+            topic: set.topic,
+            title: set.title,
+            description: set.description,
+            deepExplanation: set.explanation,
+            codeExamples: { ...set.code },
+            expectedOutputs: { ...(set.output || {}) },
+            curated: true
+        };
+    });
+}
+
+function applyCuratedExamplesToModule(target, moduleId) {
+    const curated = getCourseExamples(moduleId);
+    if (!curated) return false;
+    target.codeExamples = { ...curated.main.code };
+    target.expectedOutputs = { ...(curated.main.output || {}) };
+    target.codeExampleSets = buildCuratedExampleSets(moduleId);
+    if (curated.main.code.java) target.codeExample = curated.main.code.java;
+    return true;
+}
+
 // Escape text, then render `inline code` spans and line breaks. Used for
 // curated course content, which marks code identifiers with backticks.
 function formatRichText(value) {
@@ -12820,6 +12860,10 @@ function normalizeModuleCodeExampleSets(module) {
 
 function normalizeModuleCatalog(moduleList) {
     moduleList.forEach((module) => {
+        if (applyCuratedExamplesToModule(module, module.id)) {
+            module.definitions = getCurriculumModule(module.id)?.definitions ? undefined : buildModuleDefinitions(module, 'en');
+            return;
+        }
         const existingCodeExamples = module.codeExamples && typeof module.codeExamples === 'object'
             ? { ...module.codeExamples }
             : {};
@@ -13075,6 +13119,15 @@ function localizeModuleResources(resources = [], lang = appState.language || 'en
 }
 
 function getLocalizedModule(module) {
+    if (!module) return module;
+    const localizedResult = buildLocalizedModule(module);
+    if (localizedResult && getCourseExamples(module.id)) {
+        applyCuratedExamplesToModule(localizedResult, module.id);
+    }
+    return localizedResult;
+}
+
+function buildLocalizedModule(module) {
     if (!module) return module;
     const localized = localizeEntity('modules', module.id, null);
     const language = appState.language === 'es' ? 'es' : 'en';
@@ -27493,7 +27546,7 @@ function renderModules() {
                                     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 px-3 py-2">
                                         <div class="min-w-0">
                                             <p class="text-sm font-semibold text-slate-800">${escapeHtml(setTitle || resolveLocalizedValue(setItem.title, 'en') || setId)}</p>
-                                            ${setDescription ? `<p class="text-xs text-slate-600 mt-0.5">${escapeHtml(setDescription)}</p>` : ''}
+                                            ${setDescription ? `<p class="text-xs text-slate-600 mt-0.5">${formatRichText(setDescription)}</p>` : ''}
                                         </div>
                                         <div class="flex gap-1.5 flex-wrap">
                                             ${hasDeepExplanation ? `
@@ -27506,7 +27559,7 @@ function renderModules() {
                                         <div class="px-3 pb-3">
                                             <div class="module-deep-explanation-box rounded-md p-3">
                                                 <p class="module-deep-explanation-label text-xs font-semibold mb-1">${t('module.deepExplanation')}</p>
-                                                <div class="whitespace-pre-line text-xs sm:text-sm module-deep-explanation-text">${escapeHtml(setDeepExplanationText)}</div>
+                                                <div class="text-xs sm:text-sm leading-relaxed module-deep-explanation-text">${formatRichText(setDeepExplanationText)}</div>
                                             </div>
                                         </div>
                                     ` : ''}
