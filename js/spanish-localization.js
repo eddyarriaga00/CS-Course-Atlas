@@ -1240,7 +1240,7 @@ window.SPANISH_LOCALIZATION = {
           "Manejo de colisiones"
         ],
         "codeExamples": {
-          "java": "/*\n * Tablas y mapas hash: muestra guiada completa\n * Objetivos de cobertura:\n * 1) Funciones hash\n * 2) Resolución de colisiones\n * 3) Operaciones de HashMap\n * 4) Conjuntos de hash\n * 5) Factor de carga\n * Estrategia de lectura:\n * - Siga los comentarios en línea de arriba a abajo.\n * - Ejecute una vez, luego edite un concepto a la vez y vuelva a ejecutar.\n * - Verificar la salida después de cada paso lógico.\n */\n// Contador de frecuencia usando HashMap y una tabla hash personalizada simple\nimport java.util.*;\n\npublic class HashTableDemo {\n    public static Map<Character, Integer> countLetters(String word) {\n        Map<Character, Integer> frequency = new HashMap<>();\n        for (char c : word.toCharArray()) {\n            frequency.merge(c, 1, Integer::sum);\n        }\n        return frequency;\n    }\n\n    static class SimpleHashTable {\n        private static class Entry {\n            final String key;\n            String value;\n            Entry(String key, String value) {\n                this.key = key;\n                this.value = value;\n            }\n        }\n        private final List<List<Entry>> buckets;\n\n        SimpleHashTable(int capacity) {\n            buckets = new ArrayList<>(capacity);\n            for (int i = 0; i < capacity; i++) {\n                buckets.add(new ArrayList<>());\n            }\n        }\n\n        private int hash(String key) {\n            return Math.abs(key.hashCode()) % buckets.size();\n        }\n\n        public void put(String key, String value) {\n            int bucketIndex = hash(key);\n            List<Entry> bucket = buckets.get(bucketIndex);\n            for (Entry entry : bucket) {\n                if (entry.key.equals(key)) {\n                    entry.value = value;\n                    return;\n                }\n            }\n            bucket.add(new Entry(key, value));\n        }\n\n        public Optional<String> get(String key) {\n            int bucketIndex = hash(key);\n            for (Entry entry : buckets.get(bucketIndex)) {\n                if (entry.key.equals(key)) {\n                    return Optional.of(entry.value);\n                }\n            }\n            return Optional.empty();\n        }\n    }\n\n    public static void main(String[] args) {\n        System.out.println(countLetters(\"datastructures\")); // {a=2,d=1,...}\n\n        SimpleHashTable table = new SimpleHashTable(8);\n        table.put(\"java\", \"Idioma del cafe\");\n        table.put(\"python\", \"lenguaje de serpiente\");\n        System.out.println(table.get(\"java\").orElse(\"Extraviado\")); // Idioma del cafe\n    }\n}",
+          "java": "/*\n * Tablas y mapas hash: muestra guiada completa\n * Objetivos de cobertura:\n * 1) Funciones hash\n * 2) Resolución de colisiones\n * 3) Operaciones de HashMap\n * 4) Conjuntos de hash\n * 5) Factor de carga\n * Estrategia de lectura:\n * - Siga los comentarios en línea de arriba a abajo.\n * - Ejecute una vez, luego edite un concepto a la vez y vuelva a ejecutar.\n * - Verificar la salida después de cada paso lógico.\n */\n// Contador de frecuencia usando HashMap y una tabla hash personalizada simple\nimport java.util.*;\n\npublic class HashTableDemo {\n    public static Map<Character, Integer> countLetters(String word) {\n        Map<Character, Integer> frequency = new HashMap<>();\n        for (char c : word.toCharArray()) {\n            frequency.merge(c, 1, Integer::sum);\n        }\n        return frequency;\n    }\n\n    static class SimpleHashTable {\n        private static class Entry {\n            final String key;\n            String value;\n            Entry(String key, String value) {\n                this.key = key;\n                this.value = value;\n            }\n        }\n        private final List<List<Entry>> buckets;\n\n        SimpleHashTable(int capacity) {\n            buckets = new ArrayList<>(capacity);\n            for (int i = 0; i < capacity; i++) {\n                buckets.add(new ArrayList<>());\n            }\n        }\n\n        private int hash(String key) {\n            return Math.floorMod(key.hashCode(), buckets.size()); // nunca negativo, a diferencia de Math.abs(Integer.MIN_VALUE)\n        }\n\n        public void put(String key, String value) {\n            int bucketIndex = hash(key);\n            List<Entry> bucket = buckets.get(bucketIndex);\n            for (Entry entry : bucket) {\n                if (entry.key.equals(key)) {\n                    entry.value = value;\n                    return;\n                }\n            }\n            bucket.add(new Entry(key, value));\n        }\n\n        public Optional<String> get(String key) {\n            int bucketIndex = hash(key);\n            for (Entry entry : buckets.get(bucketIndex)) {\n                if (entry.key.equals(key)) {\n                    return Optional.of(entry.value);\n                }\n            }\n            return Optional.empty();\n        }\n    }\n\n    public static void main(String[] args) {\n        System.out.println(countLetters(\"datastructures\")); // {a=2,d=1,...}\n\n        SimpleHashTable table = new SimpleHashTable(8);\n        table.put(\"java\", \"Idioma del cafe\");\n        table.put(\"python\", \"lenguaje de serpiente\");\n        System.out.println(table.get(\"java\").orElse(\"Extraviado\")); // Idioma del cafe\n    }\n}",
           "cpp": "#include <iostream>\n#include <vector>\n#include <string>\nusing namespace std;\n\nint main() {\n    // Espejo C++ del ejemplo del módulo Java actualizado.\n    string moduleTitle = \"Tablas hash y mapas\";\n    string moduleDescription = \"Contamos caracteres con `HashMap.merge` y luego retiramos una `SimpleHashTable` personalizada que codifica claves, almacena entradas encadenadas y resuelve colisiones segmento por segmento.\";\n    vector<string> topics = {\"Funciones hash\", \"Resolución de colisiones\", \"Operaciones de HashMap\", \"Conjuntos de hash\", \"Factor de carga\"};\n    vector<string> javaSignals = {\"Ejemplo de Java ejecutado\"};\n\n    // 1) Contexto del módulo de alto nivel\n    cout << \"Módulo en ejecución: \" << moduleTitle << \"\\n\";\n    cout << moduleDescription << \"\\n\";\n\n    // 2) Lista de verificación de temas para garantizar una cobertura conceptual completa\n    cout << \"Lista de verificación de temas:\\n\";\n    for (size_t i = 0; i < topics.size(); i++) {\n        cout << \"- \" << topics[i] << \"\\n\";\n    }\n\n    // 3) Marcadores de paridad de Java (reflejan importantes puntos de control de salida de Java)\n    cout << \"Puntos de control de paridad del ejemplo de Java:\\n\";\n    for (const auto& line : javaSignals) {\n        cout << \"* \" << line << \"\\n\";\n    }\n\n    cout << \"Muestra de paridad de C++ completada.\\n\";\n    return 0;\n}",
           "python": "# Espejo de Python del ejemplo del módulo Java actualizado.\n# Este guión mantiene los mismos puntos de control conceptuales y los imprime claramente.\n\ndef run_module_demo():\n    module_title = \"Tablas hash y mapas\"\n    module_description = \"Contamos caracteres con `HashMap.merge` y luego retiramos una `SimpleHashTable` personalizada que codifica claves, almacena entradas encadenadas y resuelve colisiones segmento por segmento.\"\n    topics = [\"Funciones hash\", \"Resolución de colisiones\", \"Operaciones de HashMap\", \"Conjuntos de hash\", \"Factor de carga\"]\n    java_signals = [\"Ejemplo de Java ejecutado\"]\n\n    # 1) Contexto del módulo de alto nivel\n    print(f\"Módulo en ejecución: {module_title}\")\n    print(module_description)\n\n    # 2) Lista de verificación de temas para una cobertura completa\n    print(\"Lista de verificación de temas:\")\n    for topic in topics:\n        print(f\"- {topic}\")\n\n    # 3) Marcadores de paridad de Java para confirmar la intención alineada\n    print(\"Puntos de control de paridad del ejemplo de Java:\")\n    for line in java_signals:\n        print(f\"* {line}\")\n\n    print(\"Muestra de paridad de Python completada.\")\n\nif __name__ == \"__main__\":\n    run_module_demo()\n",
           "javascript": "// Espejo de JavaScript del ejemplo del módulo Java actualizado.\n// Esto conserva los mismos puntos de control de instrucción y resultados visibles.\n(function runModuleDemo() {\n    const moduleTitle = \"Tablas hash y mapas\";\n    const moduleDescription = \"Contamos caracteres con `HashMap.merge` y luego retiramos una `SimpleHashTable` personalizada que codifica claves, almacena entradas encadenadas y resuelve colisiones segmento por segmento.\";\n    const topics = [\"Funciones hash\", \"Resolución de colisiones\", \"Operaciones de HashMap\", \"Conjuntos de hash\", \"Factor de carga\"];\n    const javaSignals = [\"Ejemplo de Java ejecutado\"];\n\n    // 1) Contexto del módulo de alto nivel\n    console.log(\"Módulo en ejecución: \" + moduleTitle);\n    console.log(moduleDescription);\n\n    // 2) Lista de verificación de temas para una cobertura conceptual completa\n    console.log(\"Lista de verificación de temas:\");\n    topics.forEach((topic) => console.log(\"- \" + topic));\n\n    // 3) Marcadores de paridad de Java para alinearse con la muestra canónica de Java\n    console.log(\"Puntos de control de paridad del ejemplo de Java:\");\n    javaSignals.forEach((line) => console.log(\"* \" + line));\n\n    console.log(\"Muestra de paridad de JavaScript completada.\");\n})();\n"
@@ -1825,7 +1825,7 @@ window.SPANISH_LOCALIZATION = {
         ]
       },
       "recursion": {
-        "title": "Recursión y retroceso",
+        "title": "Fundamentos de recursión",
         "description": "El factorial, la resolución de laberintos y la generación de subconjuntos ilustran cómo encajan los casos base, las elecciones y el retroceso; Explicamos qué hace cada cuadro recursivo y cuándo se desenrolla.",
         "topics": [
           "Funciones recursivas",
@@ -2114,7 +2114,7 @@ window.SPANISH_LOCALIZATION = {
           "Problemas de optimización"
         ],
         "codeExamples": {
-          "java": "/*\n * Algoritmos codiciosos: muestra guiada completa\n * Objetivos de cobertura:\n * 1) Elección codiciosa\n * 2) Selección de actividad\n * 3) Codificación Huffman\n * 4) Árbol de expansión mínimo\n * Estrategia de lectura:\n * - Siga los comentarios en línea de arriba a abajo.\n * - Ejecute una vez, luego edite un concepto a la vez y vuelva a ejecutar.\n * - Verificar la salida después de cada paso lógico.\n */\n// Estrategias codiciosas para la programación y el cambio de monedas.\nimport java.util.*;\n\npublic class GreedyAlgorithms {\n\n    public static List<int[]> selectMaxActivities(int[] start, int[] finish) {\n        List<int[]> result = new ArrayList<>();\n        int lastFinish = -1;\n        for (int i = 0; i < start.length; i++) {\n            if (start[i] >= lastFinish) {\n                result.add(new int[]{start[i], finish[i]});\n                lastFinish = finish[i];\n            }\n        }\n        return result;\n    }\n\n    public static Map<Integer, Integer> coinChange(int amount, int[] denominations) {\n        Map<Integer, Integer> used = new LinkedHashMap<>();\n        for (int coin : denominations) {\n            int count = amount / coin;\n            if (count > 0) {\n                used.put(coin, count);\n                amount -= coin * count;\n            }\n        }\n        if (amount != 0) throw new IllegalArgumentException(\"No se puede hacer el cambio exacto con denominaciones determinadas\");\n        return used;\n    }\n\n    public static void main(String[] args) {\n        int[] start = {1, 3, 0, 5, 8, 5};\n        int[] finish = {2, 4, 6, 7, 9, 9};\n        System.out.println(\"Actividades seleccionadas: \" + selectMaxActivities(start, finish));\n\n        int[] coins = {25, 10, 5, 1};\n        System.out.println(\"Cambio de moneda por 68: \" + coinChange(68, coins));\n    }\n}",
+          "java": "/*\n * Algoritmos codiciosos: muestra guiada completa\n * Objetivos de cobertura:\n * 1) Elección codiciosa\n * 2) Selección de actividad\n * 3) Codificación Huffman\n * 4) Árbol de expansión mínimo\n * Estrategia de lectura:\n * - Siga los comentarios en línea de arriba a abajo.\n * - Ejecute una vez, luego edite un concepto a la vez y vuelva a ejecutar.\n * - Verificar la salida después de cada paso lógico.\n */\n// Estrategias codiciosas para la programación y el cambio de monedas.\nimport java.util.*;\n\npublic class GreedyAlgorithms {\n\n    public static List<String> selectMaxActivities(int[] start, int[] finish) {\n        // Elección voraz: toma siempre la actividad que termina primero,\n        // así que ordena los índices por hora de fin (la entrada puede venir desordenada).\n        Integer[] order = new Integer[start.length];\n        for (int i = 0; i < order.length; i++) order[i] = i;\n        Arrays.sort(order, Comparator.comparingInt(i -> finish[i]));\n\n        List<String> result = new ArrayList<>();\n        int lastFinish = Integer.MIN_VALUE;\n        for (int i : order) {\n            if (start[i] >= lastFinish) {\n                result.add(\"[\" + start[i] + \", \" + finish[i] + \")\");\n                lastFinish = finish[i];\n            }\n        }\n        return result;\n    }\n\n    public static Map<Integer, Integer> coinChange(int amount, int[] denominations) {\n        Map<Integer, Integer> used = new LinkedHashMap<>();\n        for (int coin : denominations) {\n            int count = amount / coin;\n            if (count > 0) {\n                used.put(coin, count);\n                amount -= coin * count;\n            }\n        }\n        if (amount != 0) throw new IllegalArgumentException(\"No se puede hacer el cambio exacto con denominaciones determinadas\");\n        return used;\n    }\n\n    public static void main(String[] args) {\n        int[] start = {5, 1, 3, 0, 8, 5};   // a propósito, no ordenado por hora de fin\n        int[] finish = {7, 2, 4, 6, 9, 9};\n        System.out.println(\"Actividades seleccionadas: \" + selectMaxActivities(start, finish));\n\n        int[] coins = {25, 10, 5, 1};\n        System.out.println(\"Cambio de moneda por 68: \" + coinChange(68, coins));\n    }\n}",
           "cpp": "#include <iostream>\n#include <vector>\n#include <string>\nusing namespace std;\n\nint main() {\n    // Espejo C++ del ejemplo del módulo Java actualizado.\n    string moduleTitle = \"Algoritmos codiciosos\";\n    string moduleDescription = \"La selección de actividad recorre las matrices de inicio/fin mientras \"coinChange\" pela repetidamente las denominaciones, lo que facilita ver por qué funciona cada comparación o resta codiciosa.\";\n    vector<string> topics = {\"Elección codiciosa\", \"Selección de actividad\", \"Codificación Huffman\", \"Árbol de expansión mínimo\"};\n    vector<string> javaSignals = {\"Ejemplo de Java ejecutado\"};\n\n    // 1) Contexto del módulo de alto nivel\n    cout << \"Módulo en ejecución: \" << moduleTitle << \"\\n\";\n    cout << moduleDescription << \"\\n\";\n\n    // 2) Lista de verificación de temas para garantizar una cobertura conceptual completa\n    cout << \"Lista de verificación de temas:\\n\";\n    for (size_t i = 0; i < topics.size(); i++) {\n        cout << \"- \" << topics[i] << \"\\n\";\n    }\n\n    // 3) Marcadores de paridad de Java (reflejan importantes puntos de control de salida de Java)\n    cout << \"Puntos de control de paridad del ejemplo de Java:\\n\";\n    for (const auto& line : javaSignals) {\n        cout << \"* \" << line << \"\\n\";\n    }\n\n    cout << \"Muestra de paridad de C++ completada.\\n\";\n    return 0;\n}",
           "python": "# Espejo de Python del ejemplo del módulo Java actualizado.\n# Este guión mantiene los mismos puntos de control conceptuales y los imprime claramente.\n\ndef run_module_demo():\n    module_title = \"Algoritmos codiciosos\"\n    module_description = \"La selección de actividad recorre las matrices de inicio/fin mientras \"coinChange\" pela repetidamente las denominaciones, lo que facilita ver por qué funciona cada comparación o resta codiciosa.\"\n    topics = [\"Elección codiciosa\", \"Selección de actividad\", \"Codificación Huffman\", \"Árbol de expansión mínimo\"]\n    java_signals = [\"Ejemplo de Java ejecutado\"]\n\n    # 1) Contexto del módulo de alto nivel\n    print(f\"Módulo en ejecución: {module_title}\")\n    print(module_description)\n\n    # 2) Lista de verificación de temas para una cobertura completa\n    print(\"Lista de verificación de temas:\")\n    for topic in topics:\n        print(f\"- {topic}\")\n\n    # 3) Marcadores de paridad de Java para confirmar la intención alineada\n    print(\"Puntos de control de paridad del ejemplo de Java:\")\n    for line in java_signals:\n        print(f\"* {line}\")\n\n    print(\"Muestra de paridad de Python completada.\")\n\nif __name__ == \"__main__\":\n    run_module_demo()\n",
           "javascript": "// Espejo de JavaScript del ejemplo del módulo Java actualizado.\n// Esto conserva los mismos puntos de control de instrucción y resultados visibles.\n(function runModuleDemo() {\n    const moduleTitle = \"Algoritmos codiciosos\";\n    const moduleDescription = \"La selección de actividad recorre las matrices de inicio/fin mientras \"coinChange\" pela repetidamente las denominaciones, lo que facilita ver por qué funciona cada comparación o resta codiciosa.\";\n    const topics = [\"Elección codiciosa\", \"Selección de actividad\", \"Codificación Huffman\", \"Árbol de expansión mínimo\"];\n    const javaSignals = [\"Ejemplo de Java ejecutado\"];\n\n    // 1) Contexto del módulo de alto nivel\n    console.log(\"Módulo en ejecución: \" + moduleTitle);\n    console.log(moduleDescription);\n\n    // 2) Lista de verificación de temas para una cobertura conceptual completa\n    console.log(\"Lista de verificación de temas:\");\n    topics.forEach((topic) => console.log(\"- \" + topic));\n\n    // 3) Marcadores de paridad de Java para alinearse con la muestra canónica de Java\n    console.log(\"Puntos de control de paridad del ejemplo de Java:\");\n    javaSignals.forEach((line) => console.log(\"* \" + line));\n\n    console.log(\"Muestra de paridad de JavaScript completada.\");\n})();\n"
@@ -2540,16 +2540,16 @@ window.SPANISH_LOCALIZATION = {
           "Ejercicios de propiedades de funciones"
         ],
         "codeExamples": {
-          "java": "/*\n * Conjuntos, relaciones y funciones: muestra guiada completa\n * Objetivos de cobertura:\n * 1) Establecer operaciones\n * 2) Producto cartesiano\n * 3) Relaciones\n * 4) Funciones Inyectivas\n * 5) Funciones sobreyectivas\n * Estrategia de lectura:\n * - Siga los comentarios en línea de arriba a abajo.\n * - Ejecute una vez, luego edite un concepto a la vez y vuelva a ejecutar.\n * - Verificar la salida después de cada paso lógico.\n */\n// Mini demostración de conjuntos, relaciones y funciones\nimport java.util.*;\n\npublic class SetsRelationsFunctions {\n    static boolean isInjective(Map<Integer, Integer> f) {\n        Set<Integer> seen = new HashSet<>();\n        for (int value : f.values()) {\n            if (!seen.add(value)) return false;\n        }\n        return true;\n    }\n\n    public static void main(String[] args) {\n        Set<Integer> a = new HashSet<>(Arrays.asList(1, 2, 3));\n        Set<Integer> b = new HashSet<>(Arrays.asList(3, 4, 5));\n        Set<Integer> intersection = new HashSet<>(a);\n        intersection.retainAll(b);\n        Set<Integer> union = new HashSet<>(a);\n        union.addAll(b);\n\n        Map<Integer, Integer> f = new HashMap<>();\n        f.put(1, 10); f.put(2, 20); f.put(3, 30);\n\n        System.out.println(\"A ? B = \" + intersection);\n        System.out.println(\"A ? B = \" + union);\n        System.out.println(\"f es inyectiva? \" + isInjective(f));\n    }\n}",
+          "java": "/*\n * Conjuntos, relaciones y funciones: muestra guiada completa\n * Objetivos de cobertura:\n * 1) Establecer operaciones\n * 2) Producto cartesiano\n * 3) Relaciones\n * 4) Funciones Inyectivas\n * 5) Funciones sobreyectivas\n * Estrategia de lectura:\n * - Siga los comentarios en línea de arriba a abajo.\n * - Ejecute una vez, luego edite un concepto a la vez y vuelva a ejecutar.\n * - Verificar la salida después de cada paso lógico.\n */\n// Mini demostración de conjuntos, relaciones y funciones\nimport java.util.*;\n\npublic class SetsRelationsFunctions {\n    static boolean isInjective(Map<Integer, Integer> f) {\n        Set<Integer> seen = new HashSet<>();\n        for (int value : f.values()) {\n            if (!seen.add(value)) return false;\n        }\n        return true;\n    }\n\n    public static void main(String[] args) {\n        Set<Integer> a = new HashSet<>(Arrays.asList(1, 2, 3));\n        Set<Integer> b = new HashSet<>(Arrays.asList(3, 4, 5));\n        Set<Integer> intersection = new HashSet<>(a);\n        intersection.retainAll(b);\n        Set<Integer> union = new HashSet<>(a);\n        union.addAll(b);\n\n        Map<Integer, Integer> f = new HashMap<>();\n        f.put(1, 10); f.put(2, 20); f.put(3, 30);\n\n        System.out.println(\"A ∩ B = \" + intersection);\n        System.out.println(\"A ∪ B = \" + union);\n        System.out.println(\"f es inyectiva? \" + isInjective(f));\n    }\n}",
           "cpp": "// Mini demostración de conjuntos, relaciones y funciones\n#include <iostream>\n#include <set>\n#include <map>\nusing namespace std;\n\nbool isInjective(const map<int, int>& f) {\n    set<int> seen;\n    for (const auto& [k, v] : f) {\n        if (!seen.insert(v).second) return false;\n    }\n    return true;\n}\n\nint main() {\n    set<int> A = {1, 2, 3};\n    set<int> B = {3, 4, 5};\n    set<int> intersection, uni = A;\n    for (int x : B) {\n        if (A.count(x)) intersection.insert(x);\n        uni.insert(x);\n    }\n    map<int, int> f = {{1, 10}, {2, 20}, {3, 30}};\n\n    cout << \"A ? Tamaño B = \" << intersection.size() << \"\\n\";\n    cout << \"A ? Tamaño B = \" << uni.size() << \"\\n\";\n    cout << boolalpha << \"f es inyectiva? \" << isInjective(f) << \"\\n\";\n    return 0;\n}",
-          "python": "# Mini demostración de conjuntos, relaciones y funciones\ndef is_injective(mapping):\n    return len(set(mapping.values())) == len(mapping.values())\n\nA = {1, 2, 3}\nB = {3, 4, 5}\nf = {1: 10, 2: 20, 3: 30}\n\nprint(\"A ? B =\", A & B)\nprint(\"A ? B =\", A | B)\nprint(\"f es inyectiva?\", is_injective(f))",
-          "javascript": "// Mini demostración de conjuntos, relaciones y funciones\nconst A = new Set([1, 2, 3]);\nconst B = new Set([3, 4, 5]);\nconst intersection = [...A].filter((x) => B.has(x));\nconst union = new Set([...A, ...B]);\nconst f = new Map([[1, 10], [2, 20], [3, 30]]);\n\nconst values = [...f.values()];\nconst isInjective = new Set(values).size === values.length;\n\nconsole.log(\"A ? B =\", intersection);\nconsole.log(\"A ? B =\", [...union]);\nconsole.log(\"f es inyectiva?\", isInjective);"
+          "python": "# Mini demostración de conjuntos, relaciones y funciones\ndef is_injective(mapping):\n    return len(set(mapping.values())) == len(mapping.values())\n\nA = {1, 2, 3}\nB = {3, 4, 5}\nf = {1: 10, 2: 20, 3: 30}\n\nprint(\"A ∩ B =\", A & B)\nprint(\"A ∪ B =\", A | B)\nprint(\"f es inyectiva?\", is_injective(f))",
+          "javascript": "// Mini demostración de conjuntos, relaciones y funciones\nconst A = new Set([1, 2, 3]);\nconst B = new Set([3, 4, 5]);\nconst intersection = [...A].filter((x) => B.has(x));\nconst union = new Set([...A, ...B]);\nconst f = new Map([[1, 10], [2, 20], [3, 30]]);\n\nconst values = [...f.values()];\nconst isInjective = new Set(values).size === values.length;\n\nconsole.log(\"A ∩ B =\", intersection);\nconsole.log(\"A ∪ B =\", [...union]);\nconsole.log(\"f es inyectiva?\", isInjective);"
         },
         "expectedOutputs": {
-          "java": "A ? B =\nf is injective?",
-          "cpp": "A ? B size =\nf is injective?",
-          "python": "A ? B =\nf is injective?",
-          "javascript": "A ? B =\nf is injective?"
+          "java": "A ∩ B =\nf is injective?",
+          "cpp": "A ∩ B size =\nf is injective?",
+          "python": "A ∩ B =\nf is injective?",
+          "javascript": "A ∩ B =\nf is injective?"
         },
         "codeExampleSets": [
           {
@@ -5686,7 +5686,7 @@ window.SPANISH_LOCALIZATION = {
           "Programación funcional"
         ],
         "codeExamples": {
-          "java": "/*\n * Expresiones y transmisiones Lambda: muestra guiada completa\n * Objetivos de cobertura:\n * 1) Expresiones Lambda\n * 2) API de transmisión\n * 3) Referencias de métodos\n * 4) Interfaces funcionales\n * Estrategia de lectura:\n * - Siga los comentarios en línea de arriba a abajo.\n * - Ejecute una vez, luego edite un concepto a la vez y vuelva a ejecutar.\n * - Verificar la salida después de cada paso lógico.\n */\n// Lambda y corrientes\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class LambdaStreamExample {\n    public static void main(String[] args) {\n        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);\n        \n        // Lambda con secuencias\n        List<Integer> evenSquares = numbers.stream()\n            .filter(n -> n % 2 == 0)           // expresión lambda\n            .map(n -> n * n)                   // Alternativa de referencia del método: Entero::cuadrado\n            .collect(Collectors.toList());\n        \n        System.out.println(\"Cuadrados pares: \" + evenSquares);\n        \n        // Operaciones de flujo más complejas\n        OptionalDouble average = numbers.stream()\n            .mapToInt(Integer::intValue)\n            .filter(n -> n > 5)\n            .average();\n        \n        average.ifPresent(avg -> System.out.println(\"Promedio: \" + avg));\n    }\n}",
+          "java": "/*\n * Expresiones y transmisiones Lambda: muestra guiada completa\n * Objetivos de cobertura:\n * 1) Expresiones Lambda\n * 2) API de transmisión\n * 3) Referencias de métodos\n * 4) Interfaces funcionales\n * Estrategia de lectura:\n * - Siga los comentarios en línea de arriba a abajo.\n * - Ejecute una vez, luego edite un concepto a la vez y vuelva a ejecutar.\n * - Verificar la salida después de cada paso lógico.\n */\n// Lambda y corrientes\nimport java.util.*;\nimport java.util.stream.*;\n\npublic class LambdaStreamExample {\n    public static void main(String[] args) {\n        List<Integer> numbers = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);\n        \n        // Lambda con secuencias\n        List<Integer> evenSquares = numbers.stream()\n            .filter(n -> n % 2 == 0)           // expresión lambda\n            .map(n -> n * n)                   // Eleva cada valor al cuadrado (Integer no tiene un método para esto)\n            .collect(Collectors.toList());\n        \n        System.out.println(\"Cuadrados pares: \" + evenSquares);\n        \n        // Operaciones de flujo más complejas\n        OptionalDouble average = numbers.stream()\n            .mapToInt(Integer::intValue)\n            .filter(n -> n > 5)\n            .average();\n        \n        average.ifPresent(avg -> System.out.println(\"Promedio: \" + avg));\n    }\n}",
           "cpp": "#include <iostream>\n#include <vector>\n#include <string>\nusing namespace std;\n\nint main() {\n    // Espejo C++ del ejemplo del módulo Java actualizado.\n    string moduleTitle = \"Expresiones y transmisiones Lambda\";\n    string moduleDescription = \"La canalización de flujo filtra números pares, los asigna a cuadrados, recopila una lista y luego encadena mapToInt/filter/average, de modo que la función de cada etapa se detalla en orden.\";\n    vector<string> topics = {\"Expresiones lambda\", \"API de transmisión\", \"Referencias de métodos\", \"Interfaces funcionales\"};\n    vector<string> javaSignals = {\"Ejemplo de Java ejecutado\"};\n\n    // 1) Contexto del módulo de alto nivel\n    cout << \"Módulo en ejecución: \" << moduleTitle << \"\\n\";\n    cout << moduleDescription << \"\\n\";\n\n    // 2) Lista de verificación de temas para garantizar una cobertura conceptual completa\n    cout << \"Lista de verificación de temas:\\n\";\n    for (size_t i = 0; i < topics.size(); i++) {\n        cout << \"- \" << topics[i] << \"\\n\";\n    }\n\n    // 3) Marcadores de paridad de Java (reflejan importantes puntos de control de salida de Java)\n    cout << \"Puntos de control de paridad del ejemplo de Java:\\n\";\n    for (const auto& line : javaSignals) {\n        cout << \"* \" << line << \"\\n\";\n    }\n\n    cout << \"Muestra de paridad de C++ completada.\\n\";\n    return 0;\n}",
           "python": "# Espejo de Python del ejemplo del módulo Java actualizado.\n# Este guión mantiene los mismos puntos de control conceptuales y los imprime claramente.\n\ndef run_module_demo():\n    module_title = \"Expresiones y transmisiones Lambda\"\n    module_description = \"La canalización de flujo filtra números pares, los asigna a cuadrados, recopila una lista y luego encadena mapToInt/filter/average, de modo que la función de cada etapa se detalla en orden.\"\n    topics = [\"Expresiones lambda\", \"API de transmisión\", \"Referencias de métodos\", \"Interfaces funcionales\"]\n    java_signals = [\"Ejemplo de Java ejecutado\"]\n\n    # 1) Contexto del módulo de alto nivel\n    print(f\"Módulo en ejecución: {module_title}\")\n    print(module_description)\n\n    # 2) Lista de verificación de temas para una cobertura completa\n    print(\"Lista de verificación de temas:\")\n    for topic in topics:\n        print(f\"- {topic}\")\n\n    # 3) Marcadores de paridad de Java para confirmar la intención alineada\n    print(\"Puntos de control de paridad del ejemplo de Java:\")\n    for line in java_signals:\n        print(f\"* {line}\")\n\n    print(\"Muestra de paridad de Python completada.\")\n\nif __name__ == \"__main__\":\n    run_module_demo()\n",
           "javascript": "// Espejo de JavaScript del ejemplo del módulo Java actualizado.\n// Esto conserva los mismos puntos de control de instrucción y resultados visibles.\n(function runModuleDemo() {\n    const moduleTitle = \"Expresiones y transmisiones Lambda\";\n    const moduleDescription = \"La canalización de flujo filtra números pares, los asigna a cuadrados, recopila una lista y luego encadena mapToInt/filter/average, de modo que la función de cada etapa se detalla en orden.\";\n    const topics = [\"Expresiones lambda\", \"API de transmisión\", \"Referencias de métodos\", \"Interfaces funcionales\"];\n    const javaSignals = [\"Ejemplo de Java ejecutado\"];\n\n    // 1) Contexto del módulo de alto nivel\n    console.log(\"Módulo en ejecución: \" + moduleTitle);\n    console.log(moduleDescription);\n\n    // 2) Lista de verificación de temas para una cobertura conceptual completa\n    console.log(\"Lista de verificación de temas:\");\n    topics.forEach((topic) => console.log(\"- \" + topic));\n\n    // 3) Marcadores de paridad de Java para alinearse con la muestra canónica de Java\n    console.log(\"Puntos de control de paridad del ejemplo de Java:\");\n    javaSignals.forEach((line) => console.log(\"* \" + line));\n\n    console.log(\"Muestra de paridad de JavaScript completada.\");\n})();\n"
@@ -7170,7 +7170,7 @@ window.SPANISH_LOCALIZATION = {
               },
               {
                 "id": 2,
-                "question": "¿Qué técnica es más eficaz para comprobar si una cuerda es un palíndromo?",
+                "question": "¿Qué técnica comprueba si una cadena es un palíndromo en tiempo O(n) usando solo O(1) de espacio extra?",
                 "options": [
                   "Invertir y comparar",
                   "Dos consejos",
@@ -7205,7 +7205,7 @@ window.SPANISH_LOCALIZATION = {
                 "question": "¿Por qué las listas enlazadas pueden crecer o reducirse más fácilmente que las matrices?",
                 "options": [
                   "Usan menos memoria",
-                  "Los elementos viven en el montón y los nodos se conectan mediante punteros.",
+                  "Cada nodo se reserva por separado y se enlaza mediante referencias, así que no hay un bloque contiguo que redimensionar",
                   "Almacenan índices",
                   "Están optimizados para caché"
                 ],
@@ -7381,7 +7381,7 @@ window.SPANISH_LOCALIZATION = {
                 "question": "Un montón binario se almacena eficientemente en una matriz porque:",
                 "options": [
                   "Se ordena automáticamente",
-                  "Los índices padre/hijo siguen matemáticas simples (i?2i+1/2i+2)",
+                  "Los índices padre/hijo siguen matemáticas simples (i → 2i+1, 2i+2)",
                   "necesita punteros",
                   "Heapify necesita recursividad"
                 ],
@@ -7534,7 +7534,7 @@ window.SPANISH_LOCALIZATION = {
               },
               {
                 "id": 3,
-                "question": "La recursividad de cola permite a los compiladores:",
+                "question": "En lenguajes que optimizan las llamadas de cola, la recursión de cola permite al compilador:",
                 "options": [
                   "Paralelizar automáticamente",
                   "Reutilice el mismo marco de pila para la llamada recursiva",
@@ -7542,7 +7542,7 @@ window.SPANISH_LOCALIZATION = {
                   "Memorizar resultados"
                 ],
                 "correct": 1,
-                "explanation": "Si la llamada recursiva es la acción final, el fotograma actual no necesita persistir, por lo que los tiempos de ejecución optimizados lo reutilizan."
+                "explanation": "Si la llamada recursiva es la acción final, el marco actual no necesita conservarse, así que los entornos que optimizan lo reutilizan. Nota: javac y la JVM HotSpot no hacen esta optimización, por lo que una recursión de cola profunda puede desbordar la pila en Java."
               }
             ]
           }
@@ -7693,12 +7693,12 @@ window.SPANISH_LOCALIZATION = {
                   "un comando",
                   "un conjunto de numeros"
                 ],
-                "correct": 1,
+                "correct": 0,
                 "explanation": "Las proposiciones tienen valores de verdad definidos, que es la base del razonamiento y las pruebas lógicas."
               },
               {
                 "id": 2,
-                "question": "Implicación p ? q es falsa sólo cuando:",
+                "question": "Implicación p → q es falsa sólo cuando:",
                 "options": [
                   "p es falso y q es verdadero",
                   "p es verdadero y q es falso",
@@ -7730,7 +7730,7 @@ window.SPANISH_LOCALIZATION = {
             "questions": [
               {
                 "id": 1,
-                "question": "Para los conjuntos A y B, A ? B significa:",
+                "question": "Para los conjuntos A y B, A ∩ B significa:",
                 "options": [
                   "Elementos en A o B",
                   "Elementos tanto en A como en B",
@@ -7754,7 +7754,7 @@ window.SPANISH_LOCALIZATION = {
               },
               {
                 "id": 3,
-                "question": "Una función f: A ? B es inyectivo cuando:",
+                "question": "Una función f: A → B es inyectivo cuando:",
                 "options": [
                   "Cada b en B tiene una preimagen.",
                   "Las distintas entradas se asignan a distintas salidas",
@@ -7798,7 +7798,7 @@ window.SPANISH_LOCALIZATION = {
               },
               {
                 "id": 3,
-                "question": "Para eventos independientes A y B, P(A ? B) es igual a:",
+                "question": "Para eventos independientes A y B, P(A ∩ B) es igual a:",
                 "options": [
                   "P(A) + P(B)",
                   "P(A) / P(B)",
@@ -8505,7 +8505,7 @@ window.SPANISH_LOCALIZATION = {
                 "question": "ConcurrentHashMap escala según:",
                 "options": [
                   "Usando un único bloqueo global",
-                  "Segmentar cubos/usar candados rayados y permitir lecturas sin candados",
+                  "Bloqueando solo el bin que se actualiza (con CAS para bins vacíos) y permitiendo lecturas sin bloqueo",
                   "Copiar al escribir",
                   "Claves de clasificación"
                 ],
@@ -8549,7 +8549,7 @@ window.SPANISH_LOCALIZATION = {
                 "question": "La utilidad java.nio.file.Files proporciona:",
                 "options": [
                   "Conexiones de bases de datos",
-                  "Manejo de rutas moderno, metadatos y ayudas atómicas para mover/copiar",
+                  "Métodos estáticos que operan sobre objetos Path: lectura/escritura, metadatos y mover/copiar atómicos",
                   "Protocolos de red",
                   "Solo IO sincrónica"
                 ],
@@ -9317,7 +9317,7 @@ window.SPANISH_LOCALIZATION = {
       },
       "45": {
         "term": "Orden topológico",
-        "definition": "Ordenamiento lineal de los vértices del gráfico tal que para cada arista u ? v, u aparece antes de v.",
+        "definition": "Ordenamiento lineal de los vértices del gráfico tal que para cada arista u → v, u aparece antes de v.",
         "category": "Algoritmos"
       },
       "46": {
@@ -9790,7 +9790,7 @@ window.SPANISH_LOCALIZATION = {
         "level": "Principiante"
       },
       "recursion": {
-        "title": "Recursión y retroceso",
+        "title": "Fundamentos de recursión",
         "description": "Casos base, pila de llamadas y lista de verificación de seguimiento.",
         "category": "recursividad",
         "level": "Intermedio"
@@ -9843,7 +9843,7 @@ window.SPANISH_LOCALIZATION = {
     "What's the difference between DFS and BFS?": "¿Cuál es la diferencia entre DFS y BFS?",
     "DFS: Goes deep using stack/recursion\nBFS: Level-order using queue\n\nUsed for different types of graph exploration": "DFS: Profundiza usando pila/recursión\nBFS: orden de niveles usando cola\n\nSe utiliza para diferentes tipos de exploración de gráficos.",
     "What is a Heap?": "¿Qué es un montón?",
-    "Binary tree with parent-child ordering.\nMin Heap: parent ? children\nMax Heap: parent ? children\n\nUsed in Priority Queues": "Árbol binario con ordenamiento padre-hijo.\nMontón mínimo: ¿padre? niños\nMontón máximo: ¿padre? niños\n\nUtilizado en colas prioritarias",
+    "Binary tree with parent-child ordering.\nMin Heap: parent ≤ children\nMax Heap: parent ≥ children\n\nUsed in Priority Queues": "Árbol binario con orden padre-hijo.\nMontículo mínimo: padre ≤ hijos\nMontículo máximo: padre ≥ hijos\n\nSe usa en colas de prioridad",
     "What is memoization?": "¿Qué es la memorización?",
     "Top-down DP approach.\nStore function call results in cache to avoid repeated work.\n\nUsed in recursion-heavy problems": "Enfoque de DP de arriba hacia abajo.\nAlmacene los resultados de las llamadas a funciones en la memoria caché para evitar trabajos repetidos.\n\nUtilizado en problemas con mucha recursividad",
     "What is tabulation?": "¿Qué es la tabulación?",
@@ -9901,7 +9901,7 @@ window.SPANISH_LOCALIZATION = {
     "What is the difference between pre-order, in-order, and post-order traversal?": "¿Cuál es la diferencia entre recorrido de preorden, en orden y posterior al pedido?",
     "Pre-order: root, left, right\nIn-order: left, root, right\nPost-order: left, right, root": "Reserva: raíz, izquierda, derecha\nEn orden: izquierda, raíz, derecha\nOrden posterior: izquierda, derecha, raíz",
     "What is topological sorting?": "¿Qué es la clasificación topológica?",
-    "Linear ordering of nodes in a DAG so u comes before v for all edges u ? v": "¿Ordenamiento lineal de nodos en un DAG para que u venga antes de v para todos los bordes u? v",
+    "Linear ordering of nodes in a DAG so u comes before v for all edges u → v": "Orden lineal de los nodos de un DAG en el que u va antes que v para toda arista u → v",
     "What is a Disjoint Set Union (Union-Find)?": "¿Qué es una unión de conjuntos disjuntos (unión-hallazgo)?",
     "Tracks a set of elements split into disjoint groups.\nSupports union and find operations": "Realiza un seguimiento de un conjunto de elementos divididos en grupos separados.\nSoporta operaciones de unión y búsqueda.",
     "What is path compression in Union-Find?": "¿Qué es la compresión de ruta en Union-Find?",
@@ -10012,7 +10012,7 @@ window.SPANISH_LOCALIZATION = {
     "Path Compression": "Compresión de ruta",
     "Optimization in union-find to flatten tree structure for faster lookups.": "Optimización en union-find para aplanar la estructura del árbol para búsquedas más rápidas.",
     "Topological Sort": "Orden topológico",
-    "Linear ordering of graph vertices such that for every edge u ? v, u appears before v.": "Ordenamiento lineal de los vértices del gráfico tal que para cada arista u ? v, u aparece antes de v.",
+    "Linear ordering of graph vertices such that for every edge u → v, u appears before v.": "Orden lineal de los vértices del grafo tal que, para cada arista u → v, u aparece antes que v.",
     "Minimum Spanning Tree (MST)": "Árbol de expansión mínimo (MST)",
     "Subset of edges in a weighted graph that connects all vertices with minimum total weight.": "Subconjunto de aristas en un gráfico ponderado que conecta todos los vértices con un peso total mínimo.",
     "Dijkstra's Algorithm": "Algoritmo de Dijkstra",
@@ -10076,8 +10076,8 @@ window.SPANISH_LOCALIZATION = {
     "O(log n)": "O(log n)",
     "O(n)": "En)",
     "O(n²)": "O(n²)",
-    "Random access arrays compute the memory address via base + index ? element_size, so lookup cost is constant.": "¿Las matrices de acceso aleatorio calculan la dirección de memoria mediante base + índice? element_size, por lo que el costo de búsqueda es constante.",
-    "Which technique is most efficient for checking if a string is a palindrome?": "¿Qué técnica es más eficaz para comprobar si una cuerda es un palíndromo?",
+    "Random access arrays compute the memory address via base + index × element_size, so lookup cost is constant.": "Los arreglos de acceso aleatorio calculan la dirección de memoria con base + índice × tamaño_elemento, por lo que el acceso cuesta tiempo constante.",
+    "Which technique checks whether a string is a palindrome in O(n) time with only O(1) extra space?": "¿Qué técnica comprueba si una cadena es un palíndromo en tiempo O(n) usando solo O(1) de espacio extra?",
     "Reverse and compare": "Invertir y comparar",
     "Two pointers": "Dos consejos",
     "Stack-based approach": "Enfoque basado en pilas",
@@ -10090,7 +10090,7 @@ window.SPANISH_LOCALIZATION = {
     "Sliding windows reuse previous work (add/remove elements) making contiguous-range problems linear rather than quadratic.": "Las ventanas deslizantes reutilizan trabajos anteriores (agregar o quitar elementos), lo que hace que los problemas de rangos contiguos sean lineales en lugar de cuadráticos.",
     "Why can linked lists grow or shrink more easily than arrays?": "¿Por qué las listas enlazadas pueden crecer o reducirse más fácilmente que las matrices?",
     "They use less memory": "Usan menos memoria",
-    "Elements live on the heap and nodes connect via pointers": "Los elementos viven en el montón y los nodos se conectan mediante punteros.",
+    "Each node is allocated separately and linked by references, so there is no contiguous block to resize": "Cada nodo se reserva por separado y se enlaza mediante referencias, así que no hay un bloque contiguo que redimensionar",
     "They store indices": "Almacenan índices",
     "They are cache-optimized": "Están optimizados para caché",
     "Each node is dynamically allocated and linked, so insertions/deletions adjust pointers without shifting contiguous memory.": "Cada nodo se asigna y vincula dinámicamente, por lo que las inserciones/eliminaciones ajustan los punteros sin desplazar la memoria contigua.",
@@ -10140,7 +10140,7 @@ window.SPANISH_LOCALIZATION = {
     "Entries divided by bucket count": "Entradas divididas por recuento de depósitos",
     "Number of collisions": "Número de colisiones",
     "Memory usage": "Uso de memoria",
-    "Load factor ? = n / m drives when to resize; keeping ? bounded retains O(1) average operations.": "¿Factor de carga? = n / m determina cuándo cambiar el tamaño; manteniendo? acotado retiene O(1) operaciones promedio.",
+    "Load factor α = n / m drives when to resize; keeping α bounded retains O(1) average operations.": "El factor de carga α = n / m determina cuándo redimensionar; mantener α acotado conserva operaciones O(1) en promedio.",
     "Separate chaining stores collisions by:": "Separe las colisiones de tiendas de encadenamiento mediante:",
     "Linear probing": "Sondeo lineal",
     "Arrays of buckets stored on disk": "Matrices de depósitos almacenados en el disco.",
@@ -10155,7 +10155,7 @@ window.SPANISH_LOCALIZATION = {
     "Linear/quad probing relies on contiguous probes; marking deleted slots prevents search termination before real entries.": "El sondeo lineal/cuádruple se basa en sondas contiguas; marcar espacios eliminados evita que la búsqueda finalice antes de las entradas reales.",
     "A binary heap is stored efficiently in an array because:": "Un montón binario se almacena eficientemente en una matriz porque:",
     "It sorts automatically": "Se ordena automáticamente",
-    "Parent/child indices follow simple math (i?2i+1/2i+2)": "Los índices padre/hijo siguen matemáticas simples (i?2i+1/2i+2)",
+    "Parent/child indices follow simple math (i → 2i+1, 2i+2)": "Los índices padre/hijo siguen matemáticas simples (i → 2i+1, 2i+2)",
     "It needs pointers": "necesita punteros",
     "Heapify needs recursion": "Heapify necesita recursividad",
     "Heap nodes correspond to contiguous indices, so tree relationships derive from arithmetic rather than explicit references.": "Los nodos del montón corresponden a índices contiguos, por lo que las relaciones de los árboles se derivan de referencias aritméticas en lugar de referencias explícitas.",
@@ -10213,12 +10213,12 @@ window.SPANISH_LOCALIZATION = {
     "Reducing memory": "Reducir la memoria",
     "Guaranteeing optimality": "Garantizar la optimización",
     "Drawing branches per call clarifies total work, which is critical for Master Theorem intuition.": "Dibujar ramas por llamada aclara el trabajo total, lo cual es fundamental para la intuición del teorema maestro.",
-    "Tail recursion allows compilers to:": "La recursividad de cola permite a los compiladores:",
+    "In languages that optimize tail calls, tail recursion lets the compiler:": "En lenguajes que optimizan las llamadas de cola, la recursión de cola permite al compilador:",
     "Parallelize automatically": "Paralelizar automáticamente",
     "Reuse the same stack frame for the recursive call": "Reutilice el mismo marco de pila para la llamada recursiva",
     "Skip base cases": "Saltar casos base",
     "Memoize results": "Memorizar resultados",
-    "If the recursive call is the final action, the current frame need not persist, so optimized runtimes reuse it.": "Si la llamada recursiva es la acción final, el fotograma actual no necesita persistir, por lo que los tiempos de ejecución optimizados lo reutilizan.",
+    "If the recursive call is the final action, the current frame need not persist, so optimizing runtimes reuse it. Note: javac and the HotSpot JVM do not perform this optimization, so deep tail recursion can still overflow the stack in Java.": "Si la llamada recursiva es la acción final, el marco actual no necesita conservarse, así que los entornos que optimizan lo reutilizan. Nota: javac y la JVM HotSpot no hacen esta optimización, por lo que una recursión de cola profunda puede desbordar la pila en Java.",
     "Dynamic programming relies on:": "La programación dinámica se basa en:",
     "Independent subproblems": "Subproblemas independientes",
     "Overlapping subproblems and optimal substructure": "Subproblemas superpuestos y subestructura óptima",
@@ -10279,7 +10279,7 @@ window.SPANISH_LOCALIZATION = {
     "A command": "un comando",
     "A set of numbers": "un conjunto de numeros",
     "Propositions have definite truth values, which is the foundation for logical reasoning and proofs.": "Las proposiciones tienen valores de verdad definidos, que es la base del razonamiento y las pruebas lógicas.",
-    "Implication p ? q is false only when:": "Implicación p ? q es falsa sólo cuando:",
+    "Implication p → q is false only when:": "La implicación p → q es falsa solo cuando:",
     "p is false and q is true": "p es falso y q es verdadero",
     "p is true and q is false": "p es verdadero y q es falso",
     "p and q are both true": "p y q son ambos verdaderos",
@@ -10291,19 +10291,19 @@ window.SPANISH_LOCALIZATION = {
     "Counterexample search": "Búsqueda de contraejemplo",
     "Truth table for one row only": "Tabla de verdad para una sola fila",
     "Direct proof starts by assuming the hypothesis and logically deriving the conclusion.": "La prueba directa comienza asumiendo la hipótesis y derivando lógicamente la conclusión.",
-    "For sets A and B, A ? B means:": "Para los conjuntos A y B, A ? B significa:",
+    "For sets A and B, A ∩ B means:": "Para los conjuntos A y B, A ∩ B significa:",
     "Elements in A or B": "Elementos en A o B",
     "Elements in both A and B": "Elementos tanto en A como en B",
     "Elements only in A": "Elementos solo en A",
     "Ordered pairs from A and B": "Pares ordenados de A y B",
     "Intersection keeps only elements common to both sets.": "La intersección mantiene solo elementos comunes a ambos conjuntos.",
     "A relation R on set A is:": "Una relación R en el conjunto A es:",
-    "A subset of A ? A": "¿Un subconjunto de A? A",
+    "A subset of A × A": "Un subconjunto de A × A",
     "A function from A to A only": "Una función de A a A solamente",
     "A prime number list": "Una lista de números primos",
     "Always symmetric": "Siempre simétrico",
-    "A relation on A is any subset of the Cartesian product A ? A.": "¿Una relación en A es cualquier subconjunto del producto cartesiano A? A.",
-    "A function f: A ? B is injective when:": "Una función f: A ? B es inyectivo cuando:",
+    "A relation on A is any subset of the Cartesian product A × A.": "Una relación en A es cualquier subconjunto del producto cartesiano A × A.",
+    "A function f: A → B is injective when:": "Una función f: A → B es inyectiva cuando:",
     "Every b in B has a preimage": "Cada b en B tiene una preimagen.",
     "Distinct inputs map to distinct outputs": "Las distintas entradas se asignan a distintas salidas",
     "A equals B": "A es igual a B",
@@ -10321,10 +10321,10 @@ window.SPANISH_LOCALIZATION = {
     "Prime numbers under n": "Números primos bajo n",
     "All subsets of size n": "Todos los subconjuntos de tamaño n",
     "Combinations choose subsets where arrangement is irrelevant.": "Las combinaciones eligen subconjuntos donde la disposición es irrelevante.",
-    "For independent events A and B, P(A ? B) equals:": "Para eventos independientes A y B, P(A ? B) es igual a:",
+    "For independent events A and B, P(A ∩ B) equals:": "Para eventos independientes A y B, P(A ∩ B) es igual a:",
     "P(A) + P(B)": "P(A) + P(B)",
     "P(A) / P(B)": "P(A) / P(B)",
-    "P(A) ? P(B)": "P(A)? P(B)",
+    "P(A) × P(B)": "P(A) × P(B)",
     "1 - P(A)": "1-P(A)",
     "Independence means one event does not affect the other, so intersection probability multiplies.": "La independencia significa que un evento no afecta al otro, por lo que la probabilidad de intersección se multiplica.",
     "Trie lookups depend on:": "Las búsquedas de prueba dependen de:",
@@ -10605,9 +10605,9 @@ window.SPANISH_LOCALIZATION = {
     "Memory is tight": "La memoria es escasa",
     "You need lock-free behavior": "Necesitas un comportamiento sin bloqueos",
     "ArrayList provides O(1) get/set while LinkedList must traverse nodes.": "ArrayList proporciona O(1) get/set mientras que LinkedList debe atravesar nodos.",
-    "ConcurrentHashMap scales by:": "ConcurrentHashMap escala según:",
+    "ConcurrentHashMap scales by:": "ConcurrentHashMap escala mediante:",
     "Using a single global lock": "Usando un único bloqueo global",
-    "Segmenting buckets/using striped locks and allowing lock-free reads": "Segmentar cubos/usar candados rayados y permitir lecturas sin candados",
+    "Locking only the bin being updated (with CAS for empty bins) and allowing lock-free reads": "Bloqueando solo el bin que se actualiza (con CAS para bins vacíos) y permitiendo lecturas sin bloqueo",
     "Copying on write": "Copiar al escribir",
     "Sorting keys": "Claves de clasificación",
     "It minimizes contention by locking only portions of the map or using CAS for writes.": "Minimiza la contención al bloquear solo partes del mapa o usar CAS para escrituras.",
@@ -10624,7 +10624,7 @@ window.SPANISH_LOCALIZATION = {
     "Resources implementing AutoCloseable are cleaned up without manual finally blocks.": "Los recursos que implementan AutoCloseable se limpian sin bloques finalmente manuales.",
     "The java.nio.file.Files utility provides:": "La utilidad java.nio.file.Files proporciona:",
     "Database connections": "Conexiones de bases de datos",
-    "Modern path handling, metadata, and atomic move/copy helpers": "Manejo de rutas moderno, metadatos y ayudas atómicas para mover/copiar",
+    "Static helpers that operate on Path objects: read/write, metadata, and atomic move/copy": "Métodos estáticos que operan sobre objetos Path: lectura/escritura, metadatos y mover/copiar atómicos",
     "Network protocols": "Protocolos de red",
     "Only synchronous IO": "Solo IO sincrónica",
     "NIO's Files class includes convenience methods for interacting with the filesystem safely.": "La clase Archivos de NIO incluye métodos convenientes para interactuar con el sistema de archivos de forma segura.",
@@ -10687,7 +10687,7 @@ window.SPANISH_LOCALIZATION = {
     "Generics cannot be nested": "Los genéricos no se pueden anidar",
     "Only primitives allowed": "Sólo se permiten primitivos",
     "The JVM sees raw types; the compiler enforces type safety and inserts casts.": "La JVM ve tipos sin formato; el compilador impone la seguridad de tipos e inserta conversiones.",
-    "The wildcard ? extends T allows you to:": "¿El comodín? extiende T le permite:",
+    "The wildcard ? extends T allows you to:": "El comodín ? extends T te permite:",
     "Insert arbitrary T values": "Insertar valores T arbitrarios",
     "Read T or subclasses safely but not insert arbitrary values": "Lea T o subclases de forma segura pero no inserte valores arbitrarios",
     "Modify list freely": "Modificar lista libremente",
@@ -10937,7 +10937,8 @@ window.SPANISH_LOCALIZATION = {
     "Search Strategy Comparison": "Comparación de estrategias de búsqueda",
     "Binary Search Guide": "Guía de búsqueda binaria",
     "Search Optimization": "Optimización de búsqueda",
-    "Recursion and Backtracking": "Recursión y retroceso",
+    "Recursion Fundamentals": "Fundamentos de recursión",
+    "Recursion and Backtracking": "Recursión y backtracking",
     "Factorial, maze solving, and subset generation illustrate how base cases, choices, and backtracking fit together; we explain what each recursive frame is doing and when it unwinds.": "El factorial, la resolución de laberintos y la generación de subconjuntos ilustran cómo encajan los casos base, las elecciones y el retroceso; Explicamos qué hace cada cuadro recursivo y cuándo se desenrolla.",
     "We break recursion into base case, choice, and exploration phases, then show how to convert naive recursion into efficient backtracking with state restoration. Examples include permutations, N-Queens, subsets, and memoized tree DP, helping you reason about call stacks and termination.": "Dividimos la recursividad en fases de caso base, elección y exploración, luego mostramos cómo convertir la recursividad ingenua en un retroceso eficiente con restauración de estado. Los ejemplos incluyen permutaciones, N-Queens, subconjuntos y DP de árbol memorizado, que le ayudarán a razonar sobre las pilas de llamadas y la terminación.",
     "Recursive Functions": "Funciones recursivas",
@@ -11559,7 +11560,7 @@ window.SPANISH_LOCALIZATION = {
     "'; // mark visited": "'; // marcar visitado",
     "Factorial(5) =": "Factorial(5) =",
     "Subsets:": "Subconjuntos:",
-    "Recursion and Backtracking - Comprehensive guided sample": "Recursión y retroceso: muestra guiada completa",
+    "Recursion Fundamentals - Comprehensive guided sample": "Fundamentos de recursión: muestra guiada completa",
     "1) Recursive Functions": "1) Funciones recursivas",
     "2) Base Cases": "2) Casos base",
     "3) Backtracking": "3) Retroceder",
@@ -11605,7 +11606,7 @@ window.SPANISH_LOCALIZATION = {
     "Direct proof idea: assume p, derive q.\\n": "Idea de prueba directa: asumir p, derivar q.\\n",
     "{p} {q} | {implies(p, q)}    {biconditional(p, q)}": "{p} {q} | {implica(p, q)} {bicondicional(p, q)}",
     "Sets, relations, and functions mini demo": "Mini demostración de conjuntos, relaciones y funciones",
-    "A ? B =": "A ? B =",
+    "A ∩ B =": "A ∩ B =",
     "f is injective?": "f es inyectiva?",
     "Sets, Relations, and Functions - Comprehensive guided sample": "Conjuntos, relaciones y funciones: muestra guiada completa",
     "1) Set Operations": "1) Establecer operaciones",
@@ -11615,7 +11616,7 @@ window.SPANISH_LOCALIZATION = {
     "5) Surjective Functions": "5) Funciones sobreyectivas",
     "include <set>": "incluir <conjunto>",
     "include <map>": "incluir <mapa>",
-    "A ? B size =": "A ? Tamaño B =",
+    "A ∩ B size =": "Tamaño de A ∩ B =",
     "Counting and probability helpers": "Ayudantes de conteo y probabilidad",
     "P(5,2) =": "PAG(5,2) =",
     "C(5,2) =": "C(5,2) =",
@@ -11869,7 +11870,7 @@ window.SPANISH_LOCALIZATION = {
     "Lambda and Streams": "Lambda y corrientes",
     "Lambda with Streams": "Lambda con secuencias",
     "Lambda expression": "expresión lambda",
-    "Method reference alternative: Integer::square": "Alternativa de referencia del método: Entero::cuadrado",
+    "Square each value (no built-in Integer method for this)": "Eleva cada valor al cuadrado (Integer no tiene un método para esto)",
     "Even squares:": "Cuadrados pares:",
     "More complex stream operations": "Operaciones de flujo más complejas",
     "Average:": "Promedio:",

@@ -1,0 +1,13321 @@
+/*
+ * CS Course Atlas — curated course content.
+ *
+ * tracks:  ordered units per track. Unit order must match MODULE_LEARNING_SEQUENCE
+ *          in js/script.js filtered to that track.
+ * modules: per-module teaching content (English + Spanish): study time, prerequisites
+ *          (module ids), objectives, key takeaways, pitfalls, graded practice,
+ *          self-check questions, glossary definitions (one per topic, same order),
+ *          resources, and additional quiz questions (`correct` is a 0-based index
+ *          into options, shared by both languages).
+ *
+ * Validate after editing:  node scripts/verify_course_curriculum.js
+ */
+window.COURSE_CURRICULUM = {
+  "version": 1,
+  "tracks": {
+    "dsa": [
+      {
+        "id": "dsa-start",
+        "title": {
+          "en": "Getting Started",
+          "es": "Primeros pasos"
+        },
+        "modules": [
+          "intro-to-coding"
+        ]
+      },
+      {
+        "id": "dsa-linear",
+        "title": {
+          "en": "Linear Data Structures",
+          "es": "Estructuras de datos lineales"
+        },
+        "modules": [
+          "arrays-strings",
+          "searching-algorithms",
+          "stacks-queues",
+          "linked-lists"
+        ]
+      },
+      {
+        "id": "dsa-recursion",
+        "title": {
+          "en": "Recursion and Sorting",
+          "es": "Recursión y ordenamiento"
+        },
+        "modules": [
+          "recursion",
+          "sorting-algorithms",
+          "matrix-grid-problems",
+          "backtracking-patterns"
+        ]
+      },
+      {
+        "id": "dsa-hierarchical",
+        "title": {
+          "en": "Hashing, Trees and Heaps",
+          "es": "Hashing, árboles y montículos"
+        },
+        "modules": [
+          "hash-tables",
+          "trees-basics",
+          "heaps",
+          "tries"
+        ]
+      },
+      {
+        "id": "dsa-graphs",
+        "title": {
+          "en": "Graphs",
+          "es": "Grafos"
+        },
+        "modules": [
+          "graph-algorithms",
+          "union-find"
+        ]
+      },
+      {
+        "id": "dsa-design",
+        "title": {
+          "en": "Algorithm Design Techniques",
+          "es": "Técnicas de diseño de algoritmos"
+        },
+        "modules": [
+          "greedy-algorithms",
+          "dynamic-programming",
+          "bit-manipulation"
+        ]
+      },
+      {
+        "id": "dsa-advanced",
+        "title": {
+          "en": "Advanced Structures and Strings",
+          "es": "Estructuras avanzadas y cadenas"
+        },
+        "modules": [
+          "segment-trees",
+          "binary-indexed-trees",
+          "advanced-trees",
+          "string-algorithms"
+        ]
+      }
+    ],
+    "java": [
+      {
+        "id": "java-foundations",
+        "title": {
+          "en": "Java Foundations",
+          "es": "Fundamentos de Java"
+        },
+        "modules": [
+          "java-basics",
+          "control-flow"
+        ]
+      },
+      {
+        "id": "java-oop",
+        "title": {
+          "en": "Object-Oriented Java",
+          "es": "Java orientado a objetos"
+        },
+        "modules": [
+          "oop-basics",
+          "exception-handling",
+          "generics"
+        ]
+      },
+      {
+        "id": "java-libraries",
+        "title": {
+          "en": "Core Libraries",
+          "es": "Bibliotecas esenciales"
+        },
+        "modules": [
+          "collections-framework",
+          "lambda-streams",
+          "file-io"
+        ]
+      },
+      {
+        "id": "java-professional",
+        "title": {
+          "en": "Professional Java",
+          "es": "Java profesional"
+        },
+        "modules": [
+          "testing-junit",
+          "jdbc-basics",
+          "multithreading",
+          "java-memory-jvm",
+          "design-patterns"
+        ]
+      }
+    ],
+    "discrete": [
+      {
+        "id": "discrete-logic",
+        "title": {
+          "en": "Logic and Proof",
+          "es": "Lógica y demostración"
+        },
+        "modules": [
+          "propositional-logic-proofs"
+        ]
+      },
+      {
+        "id": "discrete-sets",
+        "title": {
+          "en": "Sets, Relations and Functions",
+          "es": "Conjuntos, relaciones y funciones"
+        },
+        "modules": [
+          "sets-relations-functions"
+        ]
+      },
+      {
+        "id": "discrete-graphs",
+        "title": {
+          "en": "Graph Theory",
+          "es": "Teoría de grafos"
+        },
+        "modules": [
+          "discrete-graph-theory"
+        ]
+      },
+      {
+        "id": "discrete-counting",
+        "title": {
+          "en": "Counting and Probability",
+          "es": "Conteo y probabilidad"
+        },
+        "modules": [
+          "combinatorics-discrete-probability"
+        ]
+      }
+    ],
+    "git": [
+      {
+        "id": "git-everyday",
+        "title": {
+          "en": "Everyday Git",
+          "es": "Git en el día a día"
+        },
+        "modules": [
+          "git-basics-workflow"
+        ]
+      },
+      {
+        "id": "git-team",
+        "title": {
+          "en": "Team Collaboration",
+          "es": "Colaboración en equipo"
+        },
+        "modules": [
+          "git-branching-merging"
+        ]
+      }
+    ],
+    "assembly": [
+      {
+        "id": "asm-machine",
+        "title": {
+          "en": "The Machine Model",
+          "es": "El modelo de la máquina"
+        },
+        "modules": [
+          "assembly-registers-memory"
+        ]
+      },
+      {
+        "id": "asm-procedures",
+        "title": {
+          "en": "Control Flow and Procedures",
+          "es": "Flujo de control y procedimientos"
+        },
+        "modules": [
+          "assembly-control-flow-procedures",
+          "assembly-addressing-modes"
+        ]
+      },
+      {
+        "id": "asm-data",
+        "title": {
+          "en": "Data and I/O",
+          "es": "Datos y E/S"
+        },
+        "modules": [
+          "assembly-arrays-strings-io"
+        ]
+      }
+    ]
+  },
+  "modules": {
+    "intro-to-coding": {
+      "minutes": 120,
+      "prerequisites": [],
+      "whyItMatters": {
+        "en": "Every later module assumes you can write, run, and debug a small program and track it with Git. Students who build that loop in week one spend their time on ideas instead of fighting tools and cryptic errors.",
+        "es": "Todos los módulos siguientes suponen que sabes escribir, ejecutar y depurar un programa pequeño y registrarlo con Git. Quien domina ese ciclo desde la primera semana dedica su tiempo a las ideas y no a pelear con herramientas y errores crípticos."
+      },
+      "objectives": {
+        "en": [
+          "Explain the path from source code to running program: editing a `.java` file, compiling it with `javac` to bytecode, and running it on the JVM with `java`.",
+          "Write, compile, and run a “Hello, World” Java program both from the terminal and from an IDE.",
+          "Trace a short program that uses variables, an `if`, a loop, and a method, predicting its output before running it.",
+          "Debug a failing program by reading the error message or stack trace, forming one hypothesis, and testing it with a print statement or a breakpoint."
+        ],
+        "es": [
+          "Explicar el camino del código fuente al programa en ejecución: editar un archivo `.java`, compilarlo con `javac` a bytecode y ejecutarlo en la JVM con `java`.",
+          "Escribir, compilar y ejecutar un programa “Hello, World” en Java, tanto desde la terminal como desde un IDE.",
+          "Rastrear un programa corto con variables, un `if`, un ciclo y un método, prediciendo su salida antes de ejecutarlo.",
+          "Depurar un programa que falla leyendo el mensaje de error o la traza de pila, formulando una hipótesis y comprobándola con una impresión o un punto de interrupción."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Use your computer's file system: create folders, find files, and open a terminal",
+          "Read simple algebra such as f(x) = 2x + 1"
+        ],
+        "es": [
+          "Usar el sistema de archivos de tu computadora: crear carpetas, encontrar archivos y abrir una terminal",
+          "Leer álgebra sencilla como f(x) = 2x + 1"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Java source (`.java`) is compiled by `javac` into bytecode (`.class`), which the JVM executes; since Java 11, `java Hello.java` compiles and runs a single file in one step.",
+          "Compile-time errors (syntax, types) stop the build; runtime errors (exceptions such as `NullPointerException`) crash a running program; logic errors run fine but produce wrong output.",
+          "Almost every program is built from the same blocks: variables, expressions, conditionals, loops, methods, and collections.",
+          "Commit small, working changes with clear messages (`git add`, `git commit`) so you can always return to the last good state."
+        ],
+        "es": [
+          "El código Java (`.java`) se compila con `javac` a bytecode (`.class`), que ejecuta la JVM; desde Java 11, `java Hello.java` compila y ejecuta un solo archivo en un paso.",
+          "Los errores de compilación (sintaxis, tipos) detienen la compilación; los errores en tiempo de ejecución (excepciones como `NullPointerException`) detienen el programa en marcha; los errores lógicos se ejecutan sin fallar pero dan resultados incorrectos.",
+          "Casi todo programa se construye con los mismos bloques: variables, expresiones, condicionales, ciclos, métodos y colecciones.",
+          "Haz commits pequeños de código que funciona, con mensajes claros (`git add`, `git commit`), para poder volver siempre al último estado bueno."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Changing several things at once while debugging: you can no longer tell which change fixed or broke the program. Change one thing, rerun, and compare.",
+          "Watching tutorials without typing code: recognizing code feels like understanding, but you cannot produce it later. After each video, rebuild the example from a blank file.",
+          "Scrolling past the first error message: the first error (with its file and line number) is usually the root cause, and the ones after it are often side effects. Fix the first one and recompile."
+        ],
+        "es": [
+          "Cambiar varias cosas a la vez al depurar: ya no sabes qué cambio arregló o rompió el programa. Cambia una sola cosa, vuelve a ejecutar y compara.",
+          "Ver tutoriales sin escribir código: reconocer código se siente como entenderlo, pero después no puedes producirlo. Tras cada video, reconstruye el ejemplo desde un archivo vacío.",
+          "Ignorar el primer mensaje de error: el primero (con su archivo y número de línea) suele ser la causa raíz y los siguientes son consecuencias. Corrige el primero y vuelve a compilar."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Write `Hello.java` that prints your name and the current year, compile it with `javac Hello.java`, and run it with `java Hello`. Then delete one semicolon and write down the exact compiler error and line number.",
+          "Write a program that reads an integer n with `Scanner` and prints 1 + 2 + … + n using a loop. Check your output against the formula n(n + 1)/2 for n = 1, 10, and 100.",
+          "Write `static String grade(int score)` that returns \"A\" (≥ 90), \"B\" (≥ 80), \"C\" (≥ 70), or \"F\", and test it at every boundary (69, 70, 79, 80, 89, 90) by printing the results.",
+          "Put these exercises in a Git repository with one commit per exercise. Then introduce a bug on purpose, find it with `git diff`, and restore the file with `git restore`."
+        ],
+        "es": [
+          "Escribe `Hello.java` que imprima tu nombre y el año actual, compílalo con `javac Hello.java` y ejecútalo con `java Hello`. Luego borra un punto y coma y anota el error exacto del compilador y el número de línea.",
+          "Escribe un programa que lea un entero n con `Scanner` e imprima 1 + 2 + … + n usando un ciclo. Compara tu salida con la fórmula n(n + 1)/2 para n = 1, 10 y 100.",
+          "Escribe `static String grade(int score)` que devuelva \"A\" (≥ 90), \"B\" (≥ 80), \"C\" (≥ 70) o \"F\", y pruébalo en cada frontera (69, 70, 79, 80, 89, 90) imprimiendo los resultados.",
+          "Guarda estos ejercicios en un repositorio Git con un commit por ejercicio. Después introduce un error a propósito, encuéntralo con `git diff` y restaura el archivo con `git restore`."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What is the difference between a compile-time error and a logic error? Give one example of each.",
+          "What do the `javac` and `java` commands each do?",
+          "A program prints the wrong answer. What is the first thing you do to narrow down the cause?"
+        ],
+        "es": [
+          "¿Cuál es la diferencia entre un error de compilación y un error lógico? Da un ejemplo de cada uno.",
+          "¿Qué hace cada uno de los comandos `javac` y `java`?",
+          "Un programa imprime una respuesta incorrecta. ¿Qué es lo primero que haces para acotar la causa?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "What Coding Is",
+            "es": "Qué es programar"
+          },
+          "definition": {
+            "en": "Coding is writing precise, unambiguous instructions in a programming language that a computer executes to turn input into output. The hard part is not the syntax but breaking a problem into steps exact enough for a machine to follow.",
+            "es": "Programar es escribir instrucciones precisas y sin ambigüedad en un lenguaje de programación, que la computadora ejecuta para transformar una entrada en una salida. Lo difícil no es la sintaxis, sino dividir un problema en pasos lo bastante exactos para que una máquina los siga."
+          }
+        },
+        {
+          "term": {
+            "en": "A Short History of Programming",
+            "es": "Breve historia de la programación"
+          },
+          "definition": {
+            "en": "Programming grew from Ada Lovelace's 1843 notes on Babbage's Analytical Engine and Alan Turing's 1936 model of computation, through machine code and assembly, to high-level languages such as FORTRAN (1957), C (1972), Python (1991), and Java (1995). Each step raised the level of abstraction, so programmers describe the problem more and the machine less.",
+            "es": "La programación pasó de las notas de Ada Lovelace (1843) sobre la Máquina Analítica de Babbage y el modelo de cómputo de Alan Turing (1936), al código máquina y ensamblador, y luego a lenguajes de alto nivel como FORTRAN (1957), C (1972), Python (1991) y Java (1995). Cada paso elevó el nivel de abstracción: se describe más el problema y menos la máquina."
+          }
+        },
+        {
+          "term": {
+            "en": "How Code Becomes Running Software",
+            "es": "Cómo el código se convierte en software en ejecución"
+          },
+          "definition": {
+            "en": "Source code must be translated before a processor can run it: a compiler translates it ahead of time (C to machine code, Java to JVM bytecode), or an interpreter executes it statement by statement. The Java Virtual Machine starts by interpreting bytecode and JIT-compiles frequently run code to native machine code.",
+            "es": "El código fuente debe traducirse antes de que el procesador pueda ejecutarlo: un compilador lo traduce por adelantado (C a código máquina, Java a bytecode de la JVM) o un intérprete lo ejecuta instrucción por instrucción. La máquina virtual de Java empieza interpretando el bytecode y compila JIT a código nativo las partes que se ejecutan con frecuencia."
+          }
+        },
+        {
+          "term": {
+            "en": "How the Software Stack Fits Together",
+            "es": "Cómo encaja la pila de software"
+          },
+          "definition": {
+            "en": "Software runs in layers: hardware, then the operating system (which manages memory, files, and processes), then runtimes and libraries (such as the JVM and the Java standard library), then your application. A typical web application adds a frontend, a backend server, and a database that communicate over the network.",
+            "es": "El software se ejecuta en capas: el hardware, luego el sistema operativo (que administra memoria, archivos y procesos), luego los entornos de ejecución y bibliotecas (como la JVM y la biblioteca estándar de Java) y, encima, tu aplicación. Una aplicación web típica agrega un frontend, un servidor backend y una base de datos que se comunican por la red."
+          }
+        },
+        {
+          "term": {
+            "en": "Career Paths in Technology",
+            "es": "Trayectorias profesionales en tecnología"
+          },
+          "definition": {
+            "en": "Common software roles include frontend, backend, mobile, data and machine learning, systems and embedded, DevOps and cloud, security, and QA or test engineering. They share programming and problem-solving fundamentals but differ in tools, languages, and the layer of the stack they work on.",
+            "es": "Entre los roles de software más comunes están frontend, backend, móvil, datos y aprendizaje automático, sistemas y embebidos, DevOps y nube, seguridad, y QA o ingeniería de pruebas. Comparten los fundamentos de programación y resolución de problemas, pero difieren en herramientas, lenguajes y la capa de la pila en la que trabajan."
+          }
+        },
+        {
+          "term": {
+            "en": "Choosing Your Learning Path",
+            "es": "Cómo elegir tu ruta de aprendizaje"
+          },
+          "definition": {
+            "en": "A learning path is an ordered sequence of topics and projects matched to a goal, such as passing CS courses or building web apps, where each new topic builds on ones you have already practiced. It replaces jumping between unrelated tutorials with deliberate progression.",
+            "es": "Una ruta de aprendizaje es una secuencia ordenada de temas y proyectos alineada con una meta, como aprobar cursos de computación o crear aplicaciones web, en la que cada tema nuevo se apoya en otros que ya practicaste. Sustituye el salto entre tutoriales sin relación por un avance deliberado."
+          }
+        },
+        {
+          "term": {
+            "en": "Choosing Your First Programming Language",
+            "es": "Cómo elegir tu primer lenguaje de programación"
+          },
+          "definition": {
+            "en": "Pick a first language for its fit with your goal and the quality of its learning resources: Python for readability and data work, JavaScript for the web, Java for most university CS courses and Android-related work. Core concepts such as variables, loops, and functions transfer to every later language.",
+            "es": "Elige tu primer lenguaje según tu meta y la calidad de sus recursos de aprendizaje: Python por su legibilidad y el trabajo con datos, JavaScript para la web, Java para la mayoría de los cursos universitarios de computación y el entorno Android. Conceptos como variables, ciclos y funciones se transfieren a cualquier lenguaje posterior."
+          }
+        },
+        {
+          "term": {
+            "en": "Setting Up Your Development Environment",
+            "es": "Configurar tu entorno de desarrollo"
+          },
+          "definition": {
+            "en": "A development environment is the set of tools you need to write, run, and debug code: a language toolchain (for Java, a JDK such as version 21), an editor or IDE (IntelliJ IDEA, VS Code), a terminal, and Git. It is ready when you can run a program and hit a breakpoint.",
+            "es": "Un entorno de desarrollo es el conjunto de herramientas para escribir, ejecutar y depurar código: el kit del lenguaje (para Java, un JDK como la versión 21), un editor o IDE (IntelliJ IDEA, VS Code), una terminal y Git. Está listo cuando puedes ejecutar un programa y detenerte en un punto de interrupción."
+          }
+        },
+        {
+          "term": {
+            "en": "Your First Program",
+            "es": "Tu primer programa"
+          },
+          "definition": {
+            "en": "A first program, traditionally “Hello, World”, exists to verify the whole toolchain end to end. In Java it is a class containing `public static void main(String[] args)` that calls `System.out.println(\"Hello, World\")`.",
+            "es": "Un primer programa, tradicionalmente “Hello, World”, sirve para verificar toda la cadena de herramientas de principio a fin. En Java es una clase con `public static void main(String[] args)` que llama a `System.out.println(\"Hello, World\")`."
+          }
+        },
+        {
+          "term": {
+            "en": "Core Building Blocks",
+            "es": "Bloques fundamentales"
+          },
+          "definition": {
+            "en": "The constructs nearly every language shares: variables and types to store data, expressions and operators to compute, conditionals (`if`) to choose, loops (`for`, `while`) to repeat, methods to name reusable steps, and collections (arrays, lists) to hold many values.",
+            "es": "Las construcciones que comparten casi todos los lenguajes: variables y tipos para guardar datos, expresiones y operadores para calcular, condicionales (`if`) para decidir, ciclos (`for`, `while`) para repetir, métodos para nombrar pasos reutilizables y colecciones (arreglos, listas) para guardar muchos valores."
+          }
+        },
+        {
+          "term": {
+            "en": "Debugging and Problem Solving",
+            "es": "Depuración y resolución de problemas"
+          },
+          "definition": {
+            "en": "Debugging is the systematic process of locating a defect: reproduce the failure, form a hypothesis about its cause, test it with prints, a debugger breakpoint, or a smaller input, and verify the fix. Problem solving before coding means restating the task, working small examples by hand, and writing pseudocode.",
+            "es": "Depurar es el proceso sistemático de localizar un defecto: reproducir la falla, formular una hipótesis sobre su causa, comprobarla con impresiones, un punto de interrupción o una entrada más pequeña, y verificar la corrección. Resolver el problema antes de programar significa reformular la tarea, resolver ejemplos pequeños a mano y escribir pseudocódigo."
+          }
+        },
+        {
+          "term": {
+            "en": "Version Control and Collaboration Basics",
+            "es": "Fundamentos de control de versiones y colaboración"
+          },
+          "definition": {
+            "en": "Version control, most commonly Git, records snapshots of a project called commits so you can review history, undo mistakes, and develop features on separate branches. Hosting platforms such as GitHub add shared remote repositories and pull requests for code review.",
+            "es": "El control de versiones, casi siempre Git, guarda instantáneas del proyecto llamadas commits para revisar el historial, deshacer errores y desarrollar funciones en ramas separadas. Plataformas como GitHub agregan repositorios remotos compartidos y pull requests para la revisión de código."
+          }
+        },
+        {
+          "term": {
+            "en": "How to Read Documentation and Error Messages",
+            "es": "Cómo leer documentación y mensajes de error"
+          },
+          "definition": {
+            "en": "API documentation such as Java's Javadoc states what a method takes, returns, and throws. An error message names the error type, a description, and the file and line; a Java stack trace lists the chain of method calls with the most recent call (where the exception was thrown) at the top.",
+            "es": "La documentación de una API, como el Javadoc de Java, indica qué recibe un método, qué devuelve y qué excepciones lanza. Un mensaje de error indica el tipo de error, una descripción y el archivo y la línea; una traza de pila de Java enumera la cadena de llamadas con la más reciente (donde se lanzó la excepción) arriba."
+          }
+        },
+        {
+          "term": {
+            "en": "How to Ask Good Technical Questions",
+            "es": "Cómo hacer buenas preguntas técnicas"
+          },
+          "definition": {
+            "en": "A good technical question states the goal, includes a minimal reproducible example, quotes the exact error text, compares expected and actual behavior, and lists what you already tried. That lets a helper reproduce the problem instead of guessing.",
+            "es": "Una buena pregunta técnica indica la meta, incluye un ejemplo mínimo reproducible, cita el texto exacto del error, compara el comportamiento esperado con el real y enumera lo que ya intentaste. Así quien ayuda puede reproducir el problema en lugar de adivinar."
+          }
+        },
+        {
+          "term": {
+            "en": "Beginner Pitfalls and How to Avoid Them",
+            "es": "Errores de principiante y cómo evitarlos"
+          },
+          "definition": {
+            "en": "Recurring beginner mistakes include copying code without understanding it, writing a lot of code before running any, skipping error messages, and switching languages too often. The remedy is to work in small runnable increments and be able to explain every line you submit.",
+            "es": "Los errores de principiante más frecuentes son copiar código sin entenderlo, escribir mucho código antes de ejecutar nada, ignorar los mensajes de error y cambiar de lenguaje con demasiada frecuencia. El remedio es avanzar en incrementos pequeños y ejecutables y poder explicar cada línea que entregas."
+          }
+        },
+        {
+          "term": {
+            "en": "Project Selection and Portfolio Foundations",
+            "es": "Selección de proyectos y bases del portafolio"
+          },
+          "definition": {
+            "en": "Choose projects slightly beyond your current skill with a scope you can finish, such as a command-line to-do list or a grade calculator. A portfolio is a set of such finished projects, each in a public repository with a README that explains what it does and how to run it.",
+            "es": "Elige proyectos un poco por encima de tu nivel actual y con un alcance que puedas terminar, como una lista de tareas en la terminal o una calculadora de calificaciones. Un portafolio es un conjunto de esos proyectos terminados, cada uno en un repositorio público con un README que explica qué hace y cómo ejecutarlo."
+          }
+        },
+        {
+          "term": {
+            "en": "Study Systems and Habit Design",
+            "es": "Sistemas de estudio y diseño de hábitos"
+          },
+          "definition": {
+            "en": "A study system is a repeatable schedule plus a method: short, frequent sessions, active recall (solving or explaining without notes), spaced review of older topics, and a log of what you did. Research on learning consistently favors this over occasional long sessions of passive rereading.",
+            "es": "Un sistema de estudio es un horario repetible más un método: sesiones cortas y frecuentes, recuperación activa (resolver o explicar sin apuntes), repaso espaciado de temas anteriores y un registro de lo que hiciste. La investigación sobre el aprendizaje lo favorece de forma consistente frente a sesiones largas y esporádicas de relectura pasiva."
+          }
+        },
+        {
+          "term": {
+            "en": "Preparing for CS Coursework and Internships",
+            "es": "Preparación para cursos de computación y prácticas profesionales"
+          },
+          "definition": {
+            "en": "CS courses expect fluency in one language, plus data structures and algorithms, discrete mathematics, and tools such as Git and the command line. Internship interviews typically combine data structures and algorithms problems with questions about projects you have built.",
+            "es": "Los cursos de computación esperan soltura en un lenguaje, además de estructuras de datos y algoritmos, matemáticas discretas y herramientas como Git y la línea de comandos. Las entrevistas para prácticas suelen combinar problemas de estructuras de datos y algoritmos con preguntas sobre proyectos que hayas construido."
+          }
+        },
+        {
+          "term": {
+            "en": "Learning Workflow and Portfolio Basics",
+            "es": "Flujo de aprendizaje y fundamentos del portafolio"
+          },
+          "definition": {
+            "en": "A learning workflow is a repeated loop: study a concept, implement it in a small exercise, commit it to Git, and write a short note on what you learned. Over months, those commits and notes become a visible record of growth that supports your portfolio.",
+            "es": "Un flujo de aprendizaje es un ciclo que se repite: estudiar un concepto, implementarlo en un ejercicio pequeño, hacer commit en Git y escribir una nota breve sobre lo aprendido. Con los meses, esos commits y notas se vuelven un registro visible de tu progreso que respalda tu portafolio."
+          }
+        },
+        {
+          "term": {
+            "en": "30-Day Starter Plan",
+            "es": "Plan inicial de 30 días"
+          },
+          "definition": {
+            "en": "A 30-day plan splits the first month into weekly goals—week 1: setup and first programs; week 2: conditionals and loops; week 3: methods and arrays; week 4: a small project tracked in Git—with 30–60 minutes of hands-on practice per day.",
+            "es": "Un plan de 30 días divide el primer mes en metas semanales—semana 1: configuración y primeros programas; semana 2: condicionales y ciclos; semana 3: métodos y arreglos; semana 4: un proyecto pequeño registrado en Git—con 30 a 60 minutos diarios de práctica."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "dev.java: Learn Java (official tutorials)",
+            "es": "dev.java: Aprende Java (tutoriales oficiales, en inglés)"
+          },
+          "url": "https://dev.java/learn/"
+        },
+        {
+          "label": {
+            "en": "MIT: The Missing Semester of Your CS Education (shell, editors, Git)",
+            "es": "MIT: The Missing Semester (terminal, editores y Git, en inglés)"
+          },
+          "url": "https://missing.csail.mit.edu/"
+        },
+        {
+          "label": {
+            "en": "Pro Git book (free, official)",
+            "es": "Libro Pro Git (gratuito y oficial)"
+          },
+          "url": "https://git-scm.com/book/en/v2"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "A Java program compiles and runs without crashing, but `int avg = (3 + 4) / 2;` makes it print 3 instead of 3.5. What kind of error is this?",
+            "es": "Un programa en Java compila y se ejecuta sin fallar, pero `int avg = (3 + 4) / 2;` hace que imprima 3 en lugar de 3.5. ¿Qué tipo de error es?"
+          },
+          "options": {
+            "en": [
+              "A compile-time error",
+              "A runtime exception",
+              "A logic error",
+              "A syntax error"
+            ],
+            "es": [
+              "Un error de compilación",
+              "Una excepción en tiempo de ejecución",
+              "Un error lógico",
+              "Un error de sintaxis"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "The program is valid and never throws, yet the result is wrong: integer division truncates 7 / 2 to 3. That is a logic error. It is not a syntax or compile-time error because `javac` accepts the code.",
+            "es": "El programa es válido y nunca lanza una excepción, pero el resultado es incorrecto: la división entera trunca 7 / 2 a 3. Es un error lógico. No es de sintaxis ni de compilación porque `javac` acepta el código."
+          }
+        },
+        {
+          "question": {
+            "en": "What does this print?\n`int x = 6;\nx = x * 2 + 1;\nSystem.out.println(x);`",
+            "es": "¿Qué imprime este código?\n`int x = 6;\nx = x * 2 + 1;\nSystem.out.println(x);`"
+          },
+          "options": {
+            "en": [
+              "13",
+              "18",
+              "14",
+              "7"
+            ],
+            "es": [
+              "13",
+              "18",
+              "14",
+              "7"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Multiplication happens before addition: 6 * 2 = 12, then 12 + 1 = 13. The answer 18 would require x * (2 + 1), which the code does not say.",
+            "es": "La multiplicación se evalúa antes que la suma: 6 * 2 = 12 y luego 12 + 1 = 13. El 18 requeriría x * (2 + 1), que no es lo que dice el código."
+          }
+        },
+        {
+          "question": {
+            "en": "What does the command `javac Hello.java` produce when the file compiles successfully?",
+            "es": "¿Qué produce el comando `javac Hello.java` cuando el archivo compila correctamente?"
+          },
+          "options": {
+            "en": [
+              "A native executable named `Hello.exe`",
+              "The program's output printed to the terminal",
+              "A copy of the source file with errors removed",
+              "A `Hello.class` file containing JVM bytecode"
+            ],
+            "es": [
+              "Un ejecutable nativo llamado `Hello.exe`",
+              "La salida del programa impresa en la terminal",
+              "Una copia del archivo fuente sin errores",
+              "Un archivo `Hello.class` con bytecode de la JVM"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "`javac` is the compiler: it translates source into bytecode stored in `.class` files. It does not run the program—`java Hello` does that—and it does not produce a native `.exe`.",
+            "es": "`javac` es el compilador: traduce el código fuente a bytecode guardado en archivos `.class`. No ejecuta el programa—eso lo hace `java Hello`—ni genera un `.exe` nativo."
+          }
+        },
+        {
+          "question": {
+            "en": "How many times does this loop print \"hi\"?\n`for (int i = 0; i < 10; i += 3) {\n    System.out.println(\"hi\");\n}`",
+            "es": "¿Cuántas veces imprime \"hi\" este ciclo?\n`for (int i = 0; i < 10; i += 3) {\n    System.out.println(\"hi\");\n}`"
+          },
+          "options": {
+            "en": [
+              "3",
+              "4",
+              "10",
+              "9"
+            ],
+            "es": [
+              "3",
+              "4",
+              "10",
+              "9"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "i takes the values 0, 3, 6, and 9 (all < 10); the next value, 12, fails the condition. That is 4 iterations. Answering 3 forgets that i = 0 counts as an iteration.",
+            "es": "i toma los valores 0, 3, 6 y 9 (todos < 10); el siguiente, 12, no cumple la condición. Son 4 iteraciones. Responder 3 olvida que i = 0 también cuenta."
+          }
+        },
+        {
+          "question": {
+            "en": "A Java program crashes with a stack trace. Which line usually tells you where the exception was thrown?",
+            "es": "Un programa en Java falla y muestra una traza de pila. ¿Qué línea suele indicar dónde se lanzó la excepción?"
+          },
+          "options": {
+            "en": [
+              "The last `at` line of the trace",
+              "The line where `main` is declared, regardless of where the error happened",
+              "The first `at` line directly under the exception message",
+              "None; stack traces do not include line numbers"
+            ],
+            "es": [
+              "La última línea `at` de la traza",
+              "La línea donde se declara `main`, sin importar dónde ocurrió el error",
+              "La primera línea `at` justo debajo del mensaje de la excepción",
+              "Ninguna; las trazas de pila no incluyen números de línea"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Stack traces list frames from the most recent call to the oldest, so the first `at` line is the method and line where the exception was thrown. The last `at` line is usually `main`, the start of the call chain, not where it failed.",
+            "es": "Las trazas de pila listan los marcos desde la llamada más reciente hasta la más antigua, así que la primera línea `at` es el método y la línea donde se lanzó la excepción. La última suele ser `main`, el inicio de la cadena de llamadas, no el lugar de la falla."
+          }
+        }
+      ]
+    },
+    "java-basics": {
+      "minutes": 90,
+      "prerequisites": [
+        "intro-to-coding"
+      ],
+      "whyItMatters": {
+        "en": "Every later Java module, from collections to multithreading, assumes you can tell a primitive from a reference and trace how a value moves through a method call into an object's fields. Bugs like integer division returning 3 instead of 3.5, or two variables unexpectedly sharing one array, come straight from these basics.",
+        "es": "Cada módulo posterior de Java, desde colecciones hasta hilos, supone que distingues un primitivo de una referencia y que puedes seguir cómo un valor viaja por una llamada a método hasta los campos de un objeto. Errores como una división entera que da 3 en lugar de 3.5, o dos variables que comparten sin querer el mismo arreglo, nacen directamente de estos fundamentos."
+      },
+      "objectives": {
+        "en": [
+          "Choose an appropriate type (`int`, `long`, `double`, `char`, `boolean`, `String`) for a value and predict the result of mixed-type arithmetic such as `7 / 2` versus `7 / 2.0`.",
+          "Explain the difference between primitive and reference variables, including what assignment and parameter passing copy in each case.",
+          "Implement a class with private fields, a constructor, and instance methods such as `average()` and `letterGrade()` that read and update object state.",
+          "Trace a short `main` method that creates several objects and predict each object's state and the printed output."
+        ],
+        "es": [
+          "Elegir el tipo adecuado (`int`, `long`, `double`, `char`, `boolean`, `String`) para un valor y predecir el resultado de aritmética con tipos mixtos, como `7 / 2` frente a `7 / 2.0`.",
+          "Explicar la diferencia entre variables primitivas y de referencia, incluido qué se copia en cada caso al asignar y al pasar parámetros.",
+          "Implementar una clase con campos privados, un constructor y métodos de instancia como `average()` y `letterGrade()` que leen y modifican el estado del objeto.",
+          "Seguir paso a paso un método `main` corto que crea varios objetos y predecir el estado de cada objeto y la salida impresa."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Compile and run a single-file Java program from an IDE or with `java File.java`.",
+          "Read an expression like `total / count` and evaluate it by hand with concrete numbers."
+        ],
+        "es": [
+          "Compilar y ejecutar un programa Java de un solo archivo desde un IDE o con `java File.java`.",
+          "Leer una expresión como `total / count` y evaluarla a mano con números concretos."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Java has 8 primitive types: `byte`, `short`, `int` (32-bit), `long` (64-bit), `float`, `double`, `char` (16-bit UTF-16 code unit) and `boolean`; everything else is a reference to an object.",
+          "Integer division truncates toward zero (`7 / 2 == 3`, `-7 / 2 == -3`); cast one operand to `double` to get `3.5`. `int` overflow wraps silently (`Integer.MAX_VALUE + 1 == Integer.MIN_VALUE`).",
+          "Java is always pass-by-value: a method receives a copy of a primitive, or a copy of a reference, so it can mutate the object the reference points to but cannot rebind the caller's variable.",
+          "Fields get default values (`0`, `false`, `null`); local variables do not and must be assigned before use or the code does not compile. Compare `String` contents with `equals`, not `==`."
+        ],
+        "es": [
+          "Java tiene 8 tipos primitivos: `byte`, `short`, `int` (32 bits), `long` (64 bits), `float`, `double`, `char` (unidad de código UTF-16 de 16 bits) y `boolean`; todo lo demás es una referencia a un objeto.",
+          "La división entera trunca hacia cero (`7 / 2 == 3`, `-7 / 2 == -3`); convierte un operando a `double` para obtener `3.5`. El desbordamiento de `int` da la vuelta sin aviso (`Integer.MAX_VALUE + 1 == Integer.MIN_VALUE`).",
+          "Java siempre pasa por valor: un método recibe una copia del primitivo o una copia de la referencia, así que puede modificar el objeto al que apunta la referencia, pero no puede reasignar la variable de quien lo llamó.",
+          "Los campos reciben valores por defecto (`0`, `false`, `null`); las variables locales no, y deben asignarse antes de usarse o el código no compila. Compara el contenido de los `String` con `equals`, no con `==`."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Writing `double avg = total / count;` with two `int` operands: the division happens in `int` first, so 335 / 4 gives 83.0, not 83.75. Cast first: `total / (double) count`.",
+          "Comparing strings with `==`: it compares references, so `new String(\"hi\") == \"hi\"` is false even though the text matches. Use `s1.equals(s2)` (or `Objects.equals` when either may be null).",
+          "Storing a caller's array directly in a field (`this.scores = scores;`) and assuming the object is protected: the caller can still change the array afterwards. Copy it with `scores.clone()` or `Arrays.copyOf` if the object must own its data."
+        ],
+        "es": [
+          "Escribir `double avg = total / count;` con dos operandos `int`: la división se hace primero en `int`, así que 335 / 4 da 83.0, no 83.75. Convierte antes: `total / (double) count`.",
+          "Comparar cadenas con `==`: compara referencias, por lo que `new String(\"hi\") == \"hi\"` es falso aunque el texto coincida. Usa `s1.equals(s2)` (u `Objects.equals` si alguno puede ser null).",
+          "Guardar directamente en un campo el arreglo que recibes (`this.scores = scores;`) y creer que el objeto está protegido: quien llamó todavía puede modificar ese arreglo después. Cópialo con `scores.clone()` o `Arrays.copyOf` si el objeto debe ser dueño de sus datos."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: write a program that declares one variable of each of `int`, `long`, `double`, `char`, `boolean` and `String`, prints them, then prints `7 / 2`, `7 / 2.0`, `7 % 3` and `(int) 3.99`. Predict every line before running.",
+          "Write a `Rectangle` class with private `double width` and `height`, a constructor that rejects non-positive values with `IllegalArgumentException`, and methods `area()`, `perimeter()` and `isSquare()`. Create three rectangles in `main` and print each summary.",
+          "Extend the module's `Student` class: make the constructor copy the `scores` array defensively, add `int highest()` and `int lowest()`, and add `static final` constants for the grade thresholds instead of the literals 90/80/70/60.",
+          "Exam-style: given `static void bump(int n, int[] arr, Student s) { n++; arr[0]++; s = new Student(\"Zed\", 0); }`, write a `main` that calls it and print the caller's `n`, `arr[0]` and the student's name afterwards. Explain each result in terms of pass-by-value."
+        ],
+        "es": [
+          "Calentamiento: escribe un programa que declare una variable de cada tipo `int`, `long`, `double`, `char`, `boolean` y `String`, las imprima, y luego imprima `7 / 2`, `7 / 2.0`, `7 % 3` y `(int) 3.99`. Predice cada línea antes de ejecutar.",
+          "Escribe una clase `Rectangle` con campos privados `double width` y `height`, un constructor que rechace valores no positivos con `IllegalArgumentException`, y los métodos `area()`, `perimeter()` e `isSquare()`. Crea tres rectángulos en `main` e imprime el resumen de cada uno.",
+          "Extiende la clase `Student` del módulo: haz que el constructor copie el arreglo `scores` de forma defensiva, agrega `int highest()` e `int lowest()`, y define constantes `static final` para los umbrales de calificación en lugar de los literales 90/80/70/60.",
+          "Tipo examen: dado `static void bump(int n, int[] arr, Student s) { n++; arr[0]++; s = new Student(\"Zed\", 0); }`, escribe un `main` que lo llame y luego imprima el `n` del llamador, `arr[0]` y el nombre del estudiante. Explica cada resultado en términos de paso por valor."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why does `5 / 2` evaluate to 2 but `5 / 2.0` to 2.5?",
+          "After `int[] b = a; b[0] = 9;`, what is `a[0]`, and why is this different from doing the same with two `int` variables?",
+          "What is the difference between a class and an object, using `Student` and `alex` as examples?"
+        ],
+        "es": [
+          "¿Por qué `5 / 2` da 2 pero `5 / 2.0` da 2.5?",
+          "Después de `int[] b = a; b[0] = 9;`, ¿cuánto vale `a[0]` y por qué es distinto de hacer lo mismo con dos variables `int`?",
+          "¿Cuál es la diferencia entre una clase y un objeto, usando `Student` y `alex` como ejemplos?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Variables",
+            "es": "Variables"
+          },
+          "definition": {
+            "en": "A variable is a named storage location with a fixed declared type; a primitive variable holds the value itself, while a reference variable holds the address of an object (or `null`). Its scope is the block where it is declared.",
+            "es": "Una variable es una ubicación de almacenamiento con nombre y un tipo declarado fijo; una variable primitiva guarda el valor mismo, mientras que una de referencia guarda la dirección de un objeto (o `null`). Su alcance es el bloque donde se declara."
+          }
+        },
+        {
+          "term": {
+            "en": "Data Types",
+            "es": "Tipos de datos"
+          },
+          "definition": {
+            "en": "A data type fixes the set of values a variable can hold and the operations allowed on it. Java has eight primitive types with fixed sizes (for example `int` is always 32-bit) and reference types such as classes, interfaces and arrays.",
+            "es": "Un tipo de dato fija el conjunto de valores que puede tomar una variable y las operaciones permitidas sobre ella. Java tiene ocho tipos primitivos de tamaño fijo (por ejemplo, `int` siempre ocupa 32 bits) y tipos de referencia como clases, interfaces y arreglos."
+          }
+        },
+        {
+          "term": {
+            "en": "Methods",
+            "es": "Métodos"
+          },
+          "definition": {
+            "en": "A method is a named block of code with a parameter list and a return type (or `void`) that performs one task; arguments are copied into its parameters when it is called. Instance methods act on a specific object through `this`, while `static` methods belong to the class.",
+            "es": "Un método es un bloque de código con nombre, una lista de parámetros y un tipo de retorno (o `void`) que realiza una tarea; al llamarlo, los argumentos se copian en sus parámetros. Los métodos de instancia actúan sobre un objeto concreto a través de `this`, mientras que los métodos `static` pertenecen a la clase."
+          }
+        },
+        {
+          "term": {
+            "en": "Classes",
+            "es": "Clases"
+          },
+          "definition": {
+            "en": "A class is a blueprint that declares the fields (state) and methods (behavior) shared by all its objects, plus constructors that initialize new instances. It is also a type: `Student s` declares a variable that can refer to a `Student` object.",
+            "es": "Una clase es un plano que declara los campos (estado) y los métodos (comportamiento) que comparten todos sus objetos, además de constructores que inicializan las nuevas instancias. También es un tipo: `Student s` declara una variable que puede referirse a un objeto `Student`."
+          }
+        },
+        {
+          "term": {
+            "en": "Objects",
+            "es": "Objetos"
+          },
+          "definition": {
+            "en": "An object is a runtime instance of a class, created on the heap with `new`, that has its own copy of the instance fields. Variables hold references to objects, so two variables can point to the same object.",
+            "es": "Un objeto es una instancia de una clase en tiempo de ejecución, creada en el heap con `new`, que tiene su propia copia de los campos de instancia. Las variables guardan referencias a objetos, así que dos variables pueden apuntar al mismo objeto."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Oracle Java Tutorials: Language Basics (variables, operators, primitive types)",
+            "es": "Tutoriales de Java de Oracle: fundamentos del lenguaje (variables, operadores, tipos primitivos)"
+          },
+          "url": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/index.html"
+        },
+        {
+          "label": {
+            "en": "Oracle Java Tutorials: Classes and Objects",
+            "es": "Tutoriales de Java de Oracle: clases y objetos"
+          },
+          "url": "https://docs.oracle.com/javase/tutorial/java/javaOO/index.html"
+        },
+        {
+          "label": {
+            "en": "dev.java: official Learn Java tutorials",
+            "es": "dev.java: tutoriales oficiales para aprender Java"
+          },
+          "url": "https://dev.java/learn/"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What is the value of `r` after `int a = 7, b = 2; double r = a / b;`?",
+            "es": "¿Cuál es el valor de `r` después de `int a = 7, b = 2; double r = a / b;`?"
+          },
+          "options": {
+            "en": [
+              "3.5",
+              "3.0",
+              "4.0",
+              "It does not compile"
+            ],
+            "es": [
+              "3.5",
+              "3.0",
+              "4.0",
+              "No compila"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`a / b` is evaluated as `int` division first (7 / 2 = 3), and only then widened to `double`, giving 3.0. The tempting 3.5 would require one operand to be a `double` before dividing, e.g. `(double) a / b`.",
+            "es": "`a / b` se evalúa primero como división entera (7 / 2 = 3) y solo después se amplía a `double`, dando 3.0. El tentador 3.5 requeriría que un operando fuera `double` antes de dividir, por ejemplo `(double) a / b`."
+          }
+        },
+        {
+          "question": {
+            "en": "After `int x = 5; int y = x; y++;` and `int[] a = {5}; int[] b = a; b[0]++;`, what are `x` and `a[0]`?",
+            "es": "Después de `int x = 5; int y = x; y++;` y `int[] a = {5}; int[] b = a; b[0]++;`, ¿cuánto valen `x` y `a[0]`?"
+          },
+          "options": {
+            "en": [
+              "`x` is 5 and `a[0]` is 6",
+              "`x` is 6 and `a[0]` is 6",
+              "`x` is 5 and `a[0]` is 5",
+              "`x` is 6 and `a[0]` is 5"
+            ],
+            "es": [
+              "`x` vale 5 y `a[0]` vale 6",
+              "`x` vale 6 y `a[0]` vale 6",
+              "`x` vale 5 y `a[0]` vale 5",
+              "`x` vale 6 y `a[0]` vale 5"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "`y = x` copies the number 5, so incrementing `y` leaves `x` alone. `b = a` copies the reference, so `a` and `b` name the same array and `b[0]++` is visible through `a`. Answering 5 for both treats arrays like primitives.",
+            "es": "`y = x` copia el número 5, así que incrementar `y` no afecta a `x`. `b = a` copia la referencia, por lo que `a` y `b` nombran el mismo arreglo y `b[0]++` se ve a través de `a`. Responder 5 para ambos es tratar los arreglos como primitivos."
+          }
+        },
+        {
+          "question": {
+            "en": "A class has an instance field `int count;`. Inside one of its methods you write `int local; System.out.println(count + local);`. What happens?",
+            "es": "Una clase tiene un campo de instancia `int count;`. Dentro de uno de sus métodos escribes `int local; System.out.println(count + local);`. ¿Qué ocurre?"
+          },
+          "options": {
+            "en": [
+              "It prints 0",
+              "It prints an unpredictable leftover value",
+              "It throws a `NullPointerException`",
+              "Compile error: `local` might not have been initialized"
+            ],
+            "es": [
+              "Imprime 0",
+              "Imprime un valor residual impredecible",
+              "Lanza una `NullPointerException`",
+              "Error de compilación: `local` podría no estar inicializada"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "Fields get default values (`count` is 0), but local variables must be definitely assigned before they are read, so the compiler rejects the code. Java never exposes leftover memory the way C can.",
+            "es": "Los campos reciben valores por defecto (`count` vale 0), pero las variables locales deben estar asignadas antes de leerse, así que el compilador rechaza el código. Java nunca expone memoria residual como puede pasar en C."
+          }
+        },
+        {
+          "question": {
+            "en": "In the module's `Student` class, `summary()` calls `average()` once and `letterGrade()` once, and `letterGrade()` itself calls `average()`. For a student with n scores, how many score additions does one call to `summary()` perform?",
+            "es": "En la clase `Student` del módulo, `summary()` llama una vez a `average()` y una vez a `letterGrade()`, y `letterGrade()` a su vez llama a `average()`. Para un estudiante con n calificaciones, ¿cuántas sumas de calificaciones realiza una llamada a `summary()`?"
+          },
+          "options": {
+            "en": [
+              "n",
+              "n²",
+              "2n",
+              "3n"
+            ],
+            "es": [
+              "n",
+              "n²",
+              "2n",
+              "3n"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`average()` loops over all n scores and runs twice (once directly, once inside `letterGrade()`), so 2n additions, still O(n). It is not n² because the calls happen one after another, not nested inside each other's loop.",
+            "es": "`average()` recorre las n calificaciones y se ejecuta dos veces (una directa y otra dentro de `letterGrade()`), así que son 2n sumas, que sigue siendo O(n). No es n² porque las llamadas ocurren una tras otra, no anidadas dentro del ciclo de la otra."
+          }
+        },
+        {
+          "question": {
+            "en": "Given `String s1 = new String(\"hi\"); String s2 = \"hi\";`, what do `s1 == s2` and `s1.equals(s2)` return?",
+            "es": "Dado `String s1 = new String(\"hi\"); String s2 = \"hi\";`, ¿qué devuelven `s1 == s2` y `s1.equals(s2)`?"
+          },
+          "options": {
+            "en": [
+              "`true` and `true`",
+              "`true` and `false`",
+              "`false` and `true`",
+              "`false` and `false`"
+            ],
+            "es": [
+              "`true` y `true`",
+              "`true` y `false`",
+              "`false` y `true`",
+              "`false` y `false`"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`new String(...)` always creates a distinct object, so `==` (reference comparison) is false, while `equals` compares the characters and is true. Expecting `true` for `==` confuses identity with content.",
+            "es": "`new String(...)` siempre crea un objeto distinto, así que `==` (comparación de referencias) es falso, mientras que `equals` compara los caracteres y es verdadero. Esperar `true` con `==` confunde identidad con contenido."
+          }
+        }
+      ]
+    },
+    "control-flow": {
+      "minutes": 75,
+      "prerequisites": [
+        "java-basics"
+      ],
+      "whyItMatters": {
+        "en": "Every algorithm in the DSA track is built from branches and loops, and most beginner bugs (off-by-one errors, infinite loops, accidental switch fall-through) live here. Being able to trace a loop by hand is also exactly what written exams and whiteboard interviews ask for.",
+        "es": "Todo algoritmo del recorrido de estructuras de datos se construye con condicionales y ciclos, y la mayoría de los errores de principiante (errores por uno, ciclos infinitos, fall-through accidental en un switch) viven aquí. Seguir un ciclo a mano es además justo lo que piden los exámenes escritos y las entrevistas en pizarra."
+      },
+      "objectives": {
+        "en": [
+          "Implement an `if / else if / else` ladder whose conditions are ordered so that exactly one branch runs for every input, as in the letter-grade example.",
+          "Trace `for`, `while` and `do-while` loops by hand with a variable table, and predict the final values and the number of iterations.",
+          "Choose between a classic `switch` statement with `break` and an arrow-form `switch` expression (Java 14+), and explain fall-through.",
+          "Debug loops that use `break`, `continue` and labeled `break` by identifying which loop each one affects."
+        ],
+        "es": [
+          "Implementar una escalera `if / else if / else` cuyas condiciones estén ordenadas para que se ejecute exactamente una rama con cualquier entrada, como en el ejemplo de la calificación con letra.",
+          "Seguir a mano ciclos `for`, `while` y `do-while` con una tabla de variables, y predecir los valores finales y el número de iteraciones.",
+          "Elegir entre una sentencia `switch` clásica con `break` y una expresión `switch` con flecha (Java 14+), y explicar el fall-through.",
+          "Depurar ciclos que usan `break`, `continue` y `break` con etiqueta, identificando a qué ciclo afecta cada uno."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Evaluate boolean expressions with `&&`, `||`, `!` and comparison operators by hand.",
+          "Declare and update `int` variables and print them with `System.out.println`."
+        ],
+        "es": [
+          "Evaluar a mano expresiones booleanas con `&&`, `||`, `!` y operadores de comparación.",
+          "Declarar y actualizar variables `int` e imprimirlas con `System.out.println`."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "`for (int i = 0; i < n; i++)` runs exactly n times; `i <= n` runs n + 1 times. Write the loop bounds down before you write the body.",
+          "In a classic `switch` statement, execution falls through to the next `case` until a `break`; arrow labels (`case A ->`) never fall through, and every `switch` expression must be exhaustive: cover all enum constants or sealed subtypes, or add `default`.",
+          "`break` exits only the innermost enclosing loop or `switch`; `continue` skips to the next iteration of the innermost loop. Use a label (`outer: for ...` and `break outer;`) to leave an outer loop.",
+          "`&&` and `||` short-circuit: in `arr != null && arr.length > 0` the right side is never evaluated when `arr` is null. A loop nested inside another loop over n items is typically O(n²)."
+        ],
+        "es": [
+          "`for (int i = 0; i < n; i++)` se ejecuta exactamente n veces; `i <= n` se ejecuta n + 1 veces. Escribe los límites del ciclo antes de escribir el cuerpo.",
+          "En una sentencia `switch` clásica, la ejecución cae al siguiente `case` hasta encontrar un `break`; las etiquetas con flecha (`case A ->`) nunca caen al siguiente caso, y toda expresión `switch` debe ser exhaustiva: cubrir todas las constantes del enum o subtipos sellados, o incluir `default`.",
+          "`break` sale solo del ciclo o `switch` más interno que lo contiene; `continue` salta a la siguiente iteración del ciclo más interno. Usa una etiqueta (`outer: for ...` y `break outer;`) para salir de un ciclo externo.",
+          "`&&` y `||` evalúan en cortocircuito: en `arr != null && arr.length > 0` el lado derecho nunca se evalúa si `arr` es null. Un ciclo anidado dentro de otro ciclo sobre n elementos suele ser O(n²)."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Forgetting to update the loop variable in a `while` loop, or placing `continue` before the update (`while (i < n) { if (i == 3) continue; i++; }`): the condition never changes and the loop runs forever. Put the update first or use a `for` loop.",
+          "Ordering an `if / else if` ladder wrongly, e.g. testing `score >= 60` before `score >= 90`: the first true branch wins, so a 95 is graded D. Test the most restrictive condition first.",
+          "Omitting `break` in a classic `switch` case: execution falls into the next case and runs its code too. Add `break`, or use arrow labels `case 1 -> ...` which never fall through."
+        ],
+        "es": [
+          "Olvidar actualizar la variable de un ciclo `while`, o poner `continue` antes de la actualización (`while (i < n) { if (i == 3) continue; i++; }`): la condición nunca cambia y el ciclo no termina. Pon la actualización primero o usa un ciclo `for`.",
+          "Ordenar mal una escalera `if / else if`, por ejemplo evaluar `score >= 60` antes que `score >= 90`: gana la primera rama verdadera, así que un 95 recibe D. Evalúa primero la condición más restrictiva.",
+          "Omitir `break` en un `case` de un `switch` clásico: la ejecución cae al siguiente caso y ejecuta también su código. Agrega `break` o usa etiquetas con flecha `case 1 -> ...`, que nunca caen al siguiente caso."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: print the numbers 1 to 20 on one line, replacing multiples of 3 with `Fizz`, multiples of 5 with `Buzz` and multiples of both with `FizzBuzz`. Check that 15 prints `FizzBuzz`, not `Fizz`.",
+          "Write `static int digitSum(int n)` using a `while` loop with `n % 10` and `n / 10`, and `static boolean isPrime(int n)` using a `for` loop that stops at `i * i <= n` and returns early. Test with 0, 1, 2, 97 and 100.",
+          "Rewrite the module's grade-message `switch` statement as a `switch` expression with arrow labels that returns a `String`, then add a menu loop that reads commands until the user types `quit`, using `continue` to skip blank input.",
+          "Exam-style: write `static int[] findPair(int[][] grid, int target)` that scans a 2D array with nested loops and returns the `{row, col}` of the first cell equal to `target`, using a labeled `break` to stop both loops; return `{-1, -1}` if not found. State the worst-case number of comparisons for an r × c grid."
+        ],
+        "es": [
+          "Calentamiento: imprime los números del 1 al 20 en una línea, reemplazando los múltiplos de 3 por `Fizz`, los de 5 por `Buzz` y los de ambos por `FizzBuzz`. Comprueba que el 15 imprime `FizzBuzz` y no `Fizz`.",
+          "Escribe `static int digitSum(int n)` con un ciclo `while` usando `n % 10` y `n / 10`, y `static boolean isPrime(int n)` con un ciclo `for` que se detenga en `i * i <= n` y retorne en cuanto pueda. Prueba con 0, 1, 2, 97 y 100.",
+          "Reescribe el `switch` de mensajes de calificación del módulo como una expresión `switch` con flechas que devuelva un `String`, y luego agrega un ciclo de menú que lea comandos hasta que el usuario escriba `quit`, usando `continue` para ignorar entradas vacías.",
+          "Tipo examen: escribe `static int[] findPair(int[][] grid, int target)` que recorra un arreglo 2D con ciclos anidados y devuelva `{row, col}` de la primera celda igual a `target`, usando un `break` con etiqueta para detener ambos ciclos; devuelve `{-1, -1}` si no lo encuentra. Indica el número de comparaciones en el peor caso para una cuadrícula de r × c."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "When would you choose a `do-while` loop over a `while` loop?",
+          "What does a classic `switch` print if the matching `case` has no `break`?",
+          "In nested loops, which loop does a plain `break` exit, and how do you exit the outer one?"
+        ],
+        "es": [
+          "¿Cuándo elegirías un ciclo `do-while` en lugar de un `while`?",
+          "¿Qué imprime un `switch` clásico si el `case` que coincide no tiene `break`?",
+          "En ciclos anidados, ¿de qué ciclo sale un `break` simple y cómo sales del ciclo externo?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "If-Else",
+            "es": "If-Else"
+          },
+          "definition": {
+            "en": "`if (condition) { ... } else { ... }` runs the first block when the boolean condition is true and the `else` block otherwise; chaining `else if` tests conditions in order and runs only the first one that is true.",
+            "es": "`if (condition) { ... } else { ... }` ejecuta el primer bloque cuando la condición booleana es verdadera y el bloque `else` en caso contrario; encadenar `else if` evalúa las condiciones en orden y ejecuta solo la primera que resulte verdadera."
+          }
+        },
+        {
+          "term": {
+            "en": "For Loops",
+            "es": "Ciclos for"
+          },
+          "definition": {
+            "en": "The classic `for (init; condition; update)` runs init once, then repeats body-then-update while the condition is true, which suits counted iteration. The enhanced form `for (T x : collection)` visits each element of an array or `Iterable` without an index.",
+            "es": "El `for (init; condition; update)` clásico ejecuta init una vez y luego repite cuerpo y actualización mientras la condición sea verdadera, lo que sirve para iterar un número conocido de veces. La forma mejorada `for (T x : collection)` visita cada elemento de un arreglo o `Iterable` sin usar índices."
+          }
+        },
+        {
+          "term": {
+            "en": "While Loops",
+            "es": "Ciclos while"
+          },
+          "definition": {
+            "en": "`while (condition) { ... }` checks the condition before each iteration and may run zero times, so it fits loops whose iteration count is not known in advance. `do { ... } while (condition);` checks after the body and always runs at least once.",
+            "es": "`while (condition) { ... }` evalúa la condición antes de cada iteración y puede ejecutarse cero veces, por lo que sirve para ciclos cuyo número de iteraciones no se conoce de antemano. `do { ... } while (condition);` evalúa después del cuerpo y siempre se ejecuta al menos una vez."
+          }
+        },
+        {
+          "term": {
+            "en": "Switch",
+            "es": "Switch"
+          },
+          "definition": {
+            "en": "`switch` selects a branch by comparing one value against constant `case` labels (integral types, `char`, `String`, enums, and since Java 21 type patterns). The classic colon form falls through without `break`; the arrow form runs only the matching branch and can be used as an expression that yields a value.",
+            "es": "`switch` selecciona una rama comparando un valor con etiquetas `case` constantes (tipos enteros, `char`, `String`, enums y, desde Java 21, patrones de tipo). La forma clásica con dos puntos cae al siguiente caso sin `break`; la forma con flecha ejecuta solo la rama que coincide y puede usarse como expresión que produce un valor."
+          }
+        },
+        {
+          "term": {
+            "en": "Break/Continue",
+            "es": "Break/Continue"
+          },
+          "definition": {
+            "en": "`break` immediately exits the innermost enclosing loop or `switch`, and `continue` skips the rest of the current iteration and proceeds to the next one (running the update step in a `for`). Both accept a label to target an outer loop.",
+            "es": "`break` sale de inmediato del ciclo o `switch` más interno que lo contiene, y `continue` omite el resto de la iteración actual y pasa a la siguiente (ejecutando la actualización en un `for`). Ambos aceptan una etiqueta para apuntar a un ciclo externo."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Oracle Java Tutorials: Control Flow Statements",
+            "es": "Tutoriales de Java de Oracle: sentencias de control de flujo"
+          },
+          "url": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/flow.html"
+        },
+        {
+          "label": {
+            "en": "Java Language Specification (SE 21), Chapter 14: Blocks, Statements, and Patterns",
+            "es": "Especificación del lenguaje Java (SE 21), capítulo 14: bloques, sentencias y patrones"
+          },
+          "url": "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html"
+        },
+        {
+          "label": {
+            "en": "dev.java: official Learn Java tutorials (includes switch expressions)",
+            "es": "dev.java: tutoriales oficiales para aprender Java (incluye expresiones switch)"
+          },
+          "url": "https://dev.java/learn/"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What is `sum` after this code? `int i = 0, sum = 0; while (i < 5) { i++; if (i == 3) continue; sum += i; }`",
+            "es": "¿Cuánto vale `sum` después de este código? `int i = 0, sum = 0; while (i < 5) { i++; if (i == 3) continue; sum += i; }`"
+          },
+          "options": {
+            "en": [
+              "15",
+              "10",
+              "12",
+              "The loop never ends"
+            ],
+            "es": [
+              "15",
+              "10",
+              "12",
+              "El ciclo nunca termina"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`i` takes the values 1 to 5; when `i == 3` the `continue` skips the addition, so sum = 1 + 2 + 4 + 5 = 12. The loop does terminate because `i++` runs before the `continue`.",
+            "es": "`i` toma los valores del 1 al 5; cuando `i == 3`, `continue` omite la suma, así que sum = 1 + 2 + 4 + 5 = 12. El ciclo sí termina porque `i++` se ejecuta antes del `continue`."
+          }
+        },
+        {
+          "question": {
+            "en": "What does this print? `int x = 2; switch (x) { case 1: System.out.print(\"a\"); case 2: System.out.print(\"b\"); case 3: System.out.print(\"c\"); break; default: System.out.print(\"d\"); }`",
+            "es": "¿Qué imprime esto? `int x = 2; switch (x) { case 1: System.out.print(\"a\"); case 2: System.out.print(\"b\"); case 3: System.out.print(\"c\"); break; default: System.out.print(\"d\"); }`"
+          },
+          "options": {
+            "en": [
+              "`bc`",
+              "`b`",
+              "`bcd`",
+              "`abc`"
+            ],
+            "es": [
+              "`bc`",
+              "`b`",
+              "`bcd`",
+              "`abc`"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Execution jumps to `case 2`, prints `b`, falls through to `case 3` (no `break`), prints `c`, then hits `break`. Answering `b` forgets fall-through; `bcd` ignores the `break` after `c`.",
+            "es": "La ejecución salta a `case 2`, imprime `b`, cae a `case 3` (no hay `break`), imprime `c` y luego encuentra `break`. Responder `b` olvida el fall-through; `bcd` ignora el `break` después de `c`."
+          }
+        },
+        {
+          "question": {
+            "en": "How many times does `count++` run in `for (int i = 0; i < n; i++) for (int j = i; j < n; j++) count++;`?",
+            "es": "¿Cuántas veces se ejecuta `count++` en `for (int i = 0; i < n; i++) for (int j = i; j < n; j++) count++;`?"
+          },
+          "options": {
+            "en": [
+              "n",
+              "n²",
+              "n log n",
+              "n(n + 1) / 2"
+            ],
+            "es": [
+              "n",
+              "n²",
+              "n log n",
+              "n(n + 1) / 2"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "For each `i` the inner loop runs n − i times, so the total is n + (n − 1) + … + 1 = n(n + 1) / 2, which is O(n²). Exactly n² would require the inner loop to always start at 0.",
+            "es": "Para cada `i` el ciclo interno se ejecuta n − i veces, así que el total es n + (n − 1) + … + 1 = n(n + 1) / 2, que es O(n²). Exactamente n² requeriría que el ciclo interno empezara siempre en 0."
+          }
+        },
+        {
+          "question": {
+            "en": "A plain `break;` is executed inside the inner loop of two nested `for` loops. What happens?",
+            "es": "Se ejecuta un `break;` simple dentro del ciclo interno de dos ciclos `for` anidados. ¿Qué ocurre?"
+          },
+          "options": {
+            "en": [
+              "Both loops stop and the method returns",
+              "Only the inner loop stops; the outer loop continues with its next iteration",
+              "Both loops stop and execution continues after the outer loop",
+              "The current inner iteration is skipped and the inner loop continues"
+            ],
+            "es": [
+              "Ambos ciclos se detienen y el método retorna",
+              "Solo se detiene el ciclo interno; el externo continúa con su siguiente iteración",
+              "Ambos ciclos se detienen y la ejecución sigue después del ciclo externo",
+              "Se omite la iteración interna actual y el ciclo interno continúa"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "An unlabeled `break` exits only the innermost enclosing loop. To leave both you need a labeled `break outer;` (or `return`). Skipping one iteration and carrying on is what `continue` does.",
+            "es": "Un `break` sin etiqueta sale solo del ciclo más interno. Para salir de ambos necesitas un `break outer;` con etiqueta (o `return`). Omitir una iteración y seguir es lo que hace `continue`."
+          }
+        },
+        {
+          "question": {
+            "en": "Why is `if (arr != null && arr.length > 0)` safe when `arr` is null?",
+            "es": "¿Por qué `if (arr != null && arr.length > 0)` es seguro cuando `arr` es null?"
+          },
+          "options": {
+            "en": [
+              "`&&` evaluates both sides but catches the `NullPointerException`",
+              "Java returns 0 for `length` on a null array",
+              "`&&` evaluates the right side only when the left side is true, so `arr.length` is never read",
+              "The compiler reorders the conditions so the null check runs first"
+            ],
+            "es": [
+              "`&&` evalúa ambos lados pero atrapa la `NullPointerException`",
+              "Java devuelve 0 para `length` en un arreglo null",
+              "`&&` evalúa el lado derecho solo si el izquierdo es verdadero, así que `arr.length` nunca se lee",
+              "El compilador reordena las condiciones para que la verificación de null vaya primero"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`&&` short-circuits: if the left operand is false the result is already false and the right operand is skipped. Order matters; `arr.length > 0 && arr != null` would throw, and the non-short-circuit `&` would also throw.",
+            "es": "`&&` evalúa en cortocircuito: si el operando izquierdo es falso, el resultado ya es falso y se omite el derecho. El orden importa: `arr.length > 0 && arr != null` lanzaría la excepción, y el operador `&` sin cortocircuito también."
+          }
+        }
+      ]
+    },
+    "git-basics-workflow": {
+      "minutes": 75,
+      "prerequisites": [
+        "intro-to-coding"
+      ],
+      "whyItMatters": {
+        "en": "Every course project, internship and open-source contribution expects you to commit, sync and undo changes with Git; mistakes like force-pushing over a teammate's work or committing secrets are among the most common day-one incidents on real teams.",
+        "es": "Todo proyecto de curso, pasantía o contribución open source espera que sepas hacer commits, sincronizar y deshacer cambios con Git; errores como hacer force-push sobre el trabajo de un compañero o subir credenciales son de los incidentes más comunes en equipos reales."
+      },
+      "objectives": {
+        "en": [
+          "Explain which of the four areas (working tree, index, local history, remote) each of `git add`, `git commit`, `git push`, `git fetch` and `git restore` changes.",
+          "Create a repository with `git init`, connect it with `git remote add origin`, and publish a branch with `git push -u origin main`.",
+          "Resolve a simple merge conflict by editing the conflict markers, running the tests, then `git add` and `git commit` (or `git rebase --continue`).",
+          "Choose between `git restore`, `git restore --staged` and `git revert` to undo a mistake without rewriting shared history."
+        ],
+        "es": [
+          "Explicar cuál de las cuatro áreas (directorio de trabajo, índice, historial local, remoto) modifica cada uno de `git add`, `git commit`, `git push`, `git fetch` y `git restore`.",
+          "Crear un repositorio con `git init`, conectarlo con `git remote add origin` y publicar una rama con `git push -u origin main`.",
+          "Resolver un conflicto de merge sencillo editando los marcadores de conflicto, ejecutando las pruebas y luego `git add` y `git commit` (o `git rebase --continue`).",
+          "Elegir entre `git restore`, `git restore --staged` y `git revert` para deshacer un error sin reescribir el historial compartido."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Navigate directories and run commands in a terminal (`cd`, `ls`, `mkdir`)",
+          "Edit and save a plain-text file in a code editor"
+        ],
+        "es": [
+          "Navegar directorios y ejecutar comandos en una terminal (`cd`, `ls`, `mkdir`)",
+          "Editar y guardar un archivo de texto plano en un editor de código"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "A commit records exactly what is in the index (staging area), not what is in your working tree; `git status` and `git diff --staged` show what will be committed.",
+          "`git pull` = `git fetch` + integrate (merge or rebase); by default `git fetch` only updates remote-tracking branches (`origin/*`) and never changes your working tree or local branches.",
+          "`git restore <file>` permanently discards unstaged edits, resetting the file to its staged version; `git restore --staged <file>` only unstages and keeps your edits; `git restore --staged --worktree <file>` goes all the way back to `HEAD`.",
+          "Undo pushed commits with `git revert` (adds a new inverse commit); reserve `git reset` and `git commit --amend` for commits that exist only locally."
+        ],
+        "es": [
+          "Un commit registra exactamente lo que está en el índice (staging area), no lo que hay en tu directorio de trabajo; `git status` y `git diff --staged` muestran qué se va a confirmar.",
+          "`git pull` = `git fetch` + integrar (merge o rebase); por defecto `git fetch` solo actualiza las ramas de seguimiento remoto (`origin/*`) y no modifica tu directorio de trabajo ni tus ramas locales.",
+          "`git restore <archivo>` descarta para siempre los cambios no preparados y deja el archivo como está en el índice; `git restore --staged <archivo>` solo lo saca del índice y conserva tus ediciones; `git restore --staged --worktree <archivo>` lo regresa por completo a `HEAD`.",
+          "Deshaz commits ya publicados con `git revert` (agrega un commit inverso); reserva `git reset` y `git commit --amend` para commits que solo existen localmente."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Running `git add .` without checking `git status` first, which commits build output, `.env` files or IDE folders; add a `.gitignore` before the first commit and review what is staged.",
+          "Using `git push --force` to get past a rejected push, which silently deletes teammates' commits on the remote; fetch and integrate instead, and if you must force, use `--force-with-lease`.",
+          "Deleting conflict markers without understanding both sides, leaving code that compiles but drops one person's change; read both versions, combine intent, and run the tests before committing."
+        ],
+        "es": [
+          "Ejecutar `git add .` sin revisar antes `git status`, lo que sube archivos compilados, archivos `.env` o carpetas del IDE; agrega un `.gitignore` antes del primer commit y revisa qué está en el índice.",
+          "Usar `git push --force` para saltarse un push rechazado, lo que borra en silencio los commits de tus compañeros en el remoto; haz fetch e integra, y si de verdad necesitas forzar, usa `--force-with-lease`.",
+          "Borrar los marcadores de conflicto sin entender ambos lados, dejando código que compila pero pierde el cambio de otra persona; lee ambas versiones, combina la intención y ejecuta las pruebas antes de confirmar."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: in a new folder run `git init`, create `README.md`, and run `git status` after each of these steps: create the file, `git add README.md`, edit it again, `git commit -m \"docs: add readme\"`. Write down which state the file is in each time (untracked, staged, modified, clean).",
+          "Core: make two unrelated edits in one file, use `git add -p` to stage only the first hunk, commit it, then commit the second separately. Verify with `git log -p -2` that each commit contains exactly one change.",
+          "Stretch: create branch `feature/greeting`, change line 1 of `README.md` there and commit; switch to `main`, change the same line differently and commit; run `git merge feature/greeting`, resolve the conflict so both ideas survive, and finish the merge.",
+          "Exam-style: a teammate pushed commit `a1b2c3d` to `main` that breaks the build, and two more commits were pushed after it. Write the exact commands to undo only `a1b2c3d` on `main` without rewriting history, and explain why `git reset --hard a1b2c3d~1` followed by a push would be wrong."
+        ],
+        "es": [
+          "Calentamiento: en una carpeta nueva ejecuta `git init`, crea `README.md` y ejecuta `git status` después de cada paso: crear el archivo, `git add README.md`, editarlo otra vez, `git commit -m \"docs: add readme\"`. Anota en qué estado está el archivo cada vez (sin seguimiento, en el índice, modificado, limpio).",
+          "Núcleo: haz dos cambios no relacionados en un mismo archivo, usa `git add -p` para agregar al índice solo el primer bloque, haz commit, y luego confirma el segundo por separado. Verifica con `git log -p -2` que cada commit contiene exactamente un cambio.",
+          "Extensión: crea la rama `feature/greeting`, cambia la línea 1 de `README.md` y haz commit; vuelve a `main`, cambia la misma línea de otra forma y haz commit; ejecuta `git merge feature/greeting`, resuelve el conflicto de modo que ambas ideas se conserven y termina el merge.",
+          "Estilo examen: un compañero subió a `main` el commit `a1b2c3d`, que rompe la compilación, y después se subieron dos commits más. Escribe los comandos exactos para deshacer solo `a1b2c3d` en `main` sin reescribir el historial, y explica por qué `git reset --hard a1b2c3d~1` seguido de un push sería incorrecto."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "If you edit a file after `git add` and then commit, which version ends up in the commit?",
+          "What is the difference between `git fetch` and `git pull`?",
+          "Why is `git revert` safe on a shared branch while `git reset --hard` is not?"
+        ],
+        "es": [
+          "Si editas un archivo después de `git add` y luego haces commit, ¿qué versión queda en el commit?",
+          "¿Cuál es la diferencia entre `git fetch` y `git pull`?",
+          "¿Por qué `git revert` es seguro en una rama compartida y `git reset --hard` no lo es?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Repository Setup",
+            "es": "Configuración del repositorio"
+          },
+          "definition": {
+            "en": "Creating a repository with `git init` (or copying one with `git clone`), which creates the hidden `.git` directory that stores every commit, branch and configuration; setup usually also includes setting `user.name`/`user.email`, adding a `.gitignore`, and registering a remote with `git remote add origin <url>`.",
+            "es": "Crear un repositorio con `git init` (o copiar uno con `git clone`), lo que genera el directorio oculto `.git` donde se guardan todos los commits, ramas y la configuración; normalmente también incluye definir `user.name`/`user.email`, agregar un `.gitignore` y registrar un remoto con `git remote add origin <url>`."
+          }
+        },
+        {
+          "term": {
+            "en": "Staging and Commits",
+            "es": "Índice (staging) y commits"
+          },
+          "definition": {
+            "en": "The staging area (index) holds the exact snapshot you are preparing; `git add` copies changes into it, and `git commit` saves that snapshot permanently as a commit with an author, message and pointer to its parent commit(s).",
+            "es": "El área de preparación (índice) contiene la instantánea exacta que estás armando; `git add` copia cambios a ella y `git commit` guarda esa instantánea de forma permanente como un commit con autor, mensaje y referencia a su(s) commit(s) padre."
+          }
+        },
+        {
+          "term": {
+            "en": "Branching and Merging",
+            "es": "Ramas y merge"
+          },
+          "definition": {
+            "en": "A branch is a lightweight, movable name that points to a commit and advances as you commit on it; merging combines the history of another branch into the current one, either by fast-forwarding the pointer or by creating a merge commit with two parents.",
+            "es": "Una rama es un nombre liviano y movible que apunta a un commit y avanza cuando haces commits en ella; hacer merge combina el historial de otra rama con la actual, ya sea avanzando el puntero (fast-forward) o creando un commit de merge con dos padres."
+          }
+        },
+        {
+          "term": {
+            "en": "Pull/Rebase Basics",
+            "es": "Fundamentos de pull y rebase"
+          },
+          "definition": {
+            "en": "`git pull` fetches new commits from the remote and integrates them into your current branch; with `--rebase` it replays your local commits on top of the fetched ones instead of creating a merge commit, giving a linear history.",
+            "es": "`git pull` descarga los commits nuevos del remoto y los integra en tu rama actual; con `--rebase` vuelve a aplicar tus commits locales encima de los descargados en lugar de crear un commit de merge, lo que deja un historial lineal."
+          }
+        },
+        {
+          "term": {
+            "en": "Merge Conflict Basics",
+            "es": "Fundamentos de conflictos de merge"
+          },
+          "definition": {
+            "en": "A conflict occurs when two branches change the same lines (or one edits a file the other deletes) and Git cannot combine them automatically; Git writes both versions between `<<<<<<<`, `=======` and `>>>>>>>` markers and waits for you to edit the file, `git add` it, and continue.",
+            "es": "Un conflicto ocurre cuando dos ramas cambian las mismas líneas (o una edita un archivo que la otra borra) y Git no puede combinarlas automáticamente; Git escribe ambas versiones entre los marcadores `<<<<<<<`, `=======` y `>>>>>>>` y espera a que edites el archivo, le hagas `git add` y continúes."
+          }
+        },
+        {
+          "term": {
+            "en": "Remote Collaboration",
+            "es": "Colaboración con remotos"
+          },
+          "definition": {
+            "en": "Working with a shared copy of the repository (a remote such as `origin` on GitHub) through `git fetch`, `git pull` and `git push`; remote-tracking branches like `origin/main` record where each remote branch was the last time you fetched.",
+            "es": "Trabajar con una copia compartida del repositorio (un remoto como `origin` en GitHub) mediante `git fetch`, `git pull` y `git push`; las ramas de seguimiento remoto como `origin/main` registran dónde estaba cada rama remota la última vez que hiciste fetch."
+          }
+        },
+        {
+          "term": {
+            "en": "Safe Undo with Restore/Revert",
+            "es": "Deshacer de forma segura con restore/revert"
+          },
+          "definition": {
+            "en": "`git restore` undoes uncommitted changes in the working tree (or, with `--staged`, in the index), while `git revert <commit>` creates a new commit that applies the inverse of an existing one, so shared history is extended rather than rewritten.",
+            "es": "`git restore` deshace cambios sin confirmar en el directorio de trabajo (o, con `--staged`, en el índice), mientras que `git revert <commit>` crea un nuevo commit que aplica el inverso de uno existente, de modo que el historial compartido se amplía en lugar de reescribirse."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Pro Git book (free, official), chapters 1–3",
+            "es": "Libro Pro Git (gratuito, oficial), capítulos 1–3"
+          },
+          "url": "https://git-scm.com/book/en/v2"
+        },
+        {
+          "label": {
+            "en": "Git reference: git-restore",
+            "es": "Referencia de Git: git-restore"
+          },
+          "url": "https://git-scm.com/docs/git-restore"
+        },
+        {
+          "label": {
+            "en": "Git reference: git-revert",
+            "es": "Referencia de Git: git-revert"
+          },
+          "url": "https://git-scm.com/docs/git-revert"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "You run `git add App.java`, then edit `App.java` again, then run `git commit -m \"update\"` (no `-a`). What does the commit contain?",
+            "es": "Ejecutas `git add App.java`, luego vuelves a editar `App.java` y después ejecutas `git commit -m \"update\"` (sin `-a`). ¿Qué contiene el commit?"
+          },
+          "options": {
+            "en": [
+              "Both versions, as two separate commits",
+              "The latest edits, because commit reads the working tree",
+              "The version that was staged when you ran `git add`",
+              "Nothing, because the file changed after staging"
+            ],
+            "es": [
+              "Ambas versiones, como dos commits separados",
+              "Las ediciones más recientes, porque commit lee el directorio de trabajo",
+              "La versión que estaba en el índice cuando ejecutaste `git add`",
+              "Nada, porque el archivo cambió después de agregarlo al índice"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`git commit` snapshots the index. The later edit stays in the working tree as an unstaged modification. The tempting answer \"latest edits\" would only be true with `git commit -a` or another `git add`.",
+            "es": "`git commit` toma la instantánea del índice. La edición posterior queda en el directorio de trabajo como cambio no preparado. La opción tentadora \"las ediciones más recientes\" solo sería cierta con `git commit -a` o con otro `git add`."
+          }
+        },
+        {
+          "question": {
+            "en": "What does `git restore --staged notes.txt` do?",
+            "es": "¿Qué hace `git restore --staged notes.txt`?"
+          },
+          "options": {
+            "en": [
+              "Discards your edits to notes.txt in the working tree",
+              "Unstages notes.txt (resets its index entry to HEAD) but keeps your edits in the working tree",
+              "Deletes notes.txt from the repository history",
+              "Creates a new commit that undoes notes.txt"
+            ],
+            "es": [
+              "Descarta tus ediciones de notes.txt en el directorio de trabajo",
+              "Saca notes.txt del índice (restaura su entrada a HEAD) pero conserva tus ediciones en el directorio de trabajo",
+              "Elimina notes.txt del historial del repositorio",
+              "Crea un nuevo commit que deshace notes.txt"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "With `--staged`, restore only touches the index, so your edits remain on disk as unstaged changes. Discarding working-tree edits is what plain `git restore notes.txt` does.",
+            "es": "Con `--staged`, restore solo modifica el índice, así que tus ediciones siguen en disco como cambios no preparados. Descartar ediciones del directorio de trabajo es lo que hace `git restore notes.txt` sin opciones."
+          }
+        },
+        {
+          "question": {
+            "en": "Which description of `git pull` is accurate?",
+            "es": "¿Qué descripción de `git pull` es correcta?"
+          },
+          "options": {
+            "en": [
+              "`git fetch` followed by integrating the upstream branch into yours (merge or rebase, depending on options and config)",
+              "`git push` followed by `git fetch`",
+              "Downloading only new tags from the remote",
+              "Replacing your local branch with the remote one and discarding local commits"
+            ],
+            "es": [
+              "`git fetch` seguido de integrar la rama upstream en la tuya (merge o rebase, según opciones y configuración)",
+              "`git push` seguido de `git fetch`",
+              "Descargar solo las etiquetas nuevas del remoto",
+              "Reemplazar tu rama local por la remota y descartar los commits locales"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Pull is fetch plus an integration step; `pull.rebase` or `--rebase` selects rebase. It never silently throws away local commits, which is what the last option wrongly suggests.",
+            "es": "Pull es fetch más un paso de integración; `pull.rebase` o `--rebase` eligen rebase. Nunca descarta commits locales en silencio, que es lo que sugiere erróneamente la última opción."
+          }
+        },
+        {
+          "question": {
+            "en": "While on `main` you run `git merge feature` and see:\n```\n<<<<<<< HEAD\ntimeout = 30\n=======\ntimeout = 60\n>>>>>>> feature\n```\nWhich value is the one from `main`?",
+            "es": "Estando en `main` ejecutas `git merge feature` y ves:\n```\n<<<<<<< HEAD\ntimeout = 30\n=======\ntimeout = 60\n>>>>>>> feature\n```\n¿Qué valor es el de `main`?"
+          },
+          "options": {
+            "en": [
+              "60, the lines below `=======`",
+              "Neither; the markers show the common ancestor",
+              "30, the lines between `<<<<<<< HEAD` and `=======`",
+              "Both lines come from `feature`"
+            ],
+            "es": [
+              "60, las líneas debajo de `=======`",
+              "Ninguno; los marcadores muestran el ancestro común",
+              "30, las líneas entre `<<<<<<< HEAD` y `=======`",
+              "Ambas líneas vienen de `feature`"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "The top section is HEAD, the branch you are on (`main`); the bottom section is the branch being merged in. The common ancestor only appears with the `diff3`/`zdiff3` conflict style, under `|||||||`.",
+            "es": "La sección superior es HEAD, la rama en la que estás (`main`); la inferior es la rama que se está integrando. El ancestro común solo aparece con el estilo de conflicto `diff3`/`zdiff3`, bajo `|||||||`."
+          }
+        },
+        {
+          "question": {
+            "en": "`git log --oneline` shows commits A → B → C (C newest), all already pushed. You run `git revert B`. What does the history look like afterwards?",
+            "es": "`git log --oneline` muestra los commits A → B → C (C el más reciente), todos ya publicados. Ejecutas `git revert B`. ¿Cómo queda el historial?"
+          },
+          "options": {
+            "en": [
+              "A → C (B removed)",
+              "A → B' → C, with B replaced in place",
+              "A → B → C unchanged, with B marked inactive",
+              "A → B → C → B', where B' applies the inverse of B"
+            ],
+            "es": [
+              "A → C (B eliminado)",
+              "A → B' → C, con B reemplazado en su lugar",
+              "A → B → C sin cambios, con B marcado como inactivo",
+              "A → B → C → B', donde B' aplica el inverso de B"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "Revert appends a new commit that undoes B's changes, so existing commit IDs stay the same and teammates can pull normally. Removing B from the middle (first option) would require rewriting history.",
+            "es": "Revert agrega un commit nuevo que deshace los cambios de B, así que los IDs existentes no cambian y tus compañeros pueden hacer pull con normalidad. Quitar B del medio (primera opción) requeriría reescribir el historial."
+          }
+        }
+      ]
+    },
+    "oop-basics": {
+      "minutes": 120,
+      "prerequisites": [
+        "control-flow"
+      ],
+      "whyItMatters": {
+        "en": "Java libraries are designed around interfaces and polymorphism: you write `List<String> xs = new ArrayList<>()` and code against `List`, not the class. Data-structure assignments (linked lists, trees) and design interviews expect you to model state with encapsulated classes and pick between inheritance, interfaces and composition.",
+        "es": "Las bibliotecas de Java se diseñan alrededor de interfaces y polimorfismo: escribes `List<String> xs = new ArrayList<>()` y programas contra `List`, no contra la clase. Las tareas de estructuras de datos (listas enlazadas, árboles) y las entrevistas de diseño esperan que modeles el estado con clases encapsuladas y elijas entre herencia, interfaces y composición."
+      },
+      "objectives": {
+        "en": [
+          "Implement an encapsulated class like `Account` with private fields, validating constructors and methods that keep its invariants (for example, balance never goes negative through `withdraw`).",
+          "Explain how dynamic dispatch selects an overridden method from the object's runtime class, and contrast overriding with overloading.",
+          "Design a small hierarchy using an abstract class for shared state and interfaces for capabilities, calling the superclass constructor with `super(...)`.",
+          "Choose between inheritance (is-a) and composition (has-a) for a given scenario and justify the choice."
+        ],
+        "es": [
+          "Implementar una clase encapsulada como `Account` con campos privados, constructores que validan y métodos que mantienen sus invariantes (por ejemplo, que `withdraw` nunca deje el saldo negativo).",
+          "Explicar cómo el despacho dinámico elige un método sobrescrito según la clase del objeto en tiempo de ejecución, y contrastar la sobrescritura con la sobrecarga.",
+          "Diseñar una jerarquía pequeña usando una clase abstracta para el estado compartido e interfaces para las capacidades, invocando el constructor de la superclase con `super(...)`.",
+          "Elegir entre herencia (es-un) y composición (tiene-un) para un escenario dado y justificar la elección."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Write a class with fields, a constructor and instance methods, and create objects with `new`.",
+          "Trace method calls on objects and explain the role of `this`."
+        ],
+        "es": [
+          "Escribir una clase con campos, un constructor y métodos de instancia, y crear objetos con `new`.",
+          "Seguir llamadas a métodos sobre objetos y explicar el papel de `this`."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "A class extends exactly one class but can implement any number of interfaces; every class ultimately extends `Object`.",
+          "Instance methods are dispatched at runtime by the object's actual class; overload resolution, field access and `static` methods are resolved at compile time by the declared type.",
+          "If a constructor does not call `super(...)` or `this(...)`, the compiler inserts `super()`, which fails to compile when the superclass has no no-argument constructor.",
+          "Use `@Override` on every overriding method so the compiler catches signature typos; when you override `equals`, also override `hashCode` with the same fields."
+        ],
+        "es": [
+          "Una clase extiende exactamente una clase pero puede implementar cualquier número de interfaces; toda clase extiende en última instancia a `Object`.",
+          "Los métodos de instancia se despachan en tiempo de ejecución según la clase real del objeto; la resolución de sobrecargas, el acceso a campos y los métodos `static` se resuelven en compilación según el tipo declarado.",
+          "Si un constructor no llama a `super(...)` ni a `this(...)`, el compilador inserta `super()`, lo que no compila si la superclase no tiene constructor sin argumentos.",
+          "Usa `@Override` en cada método que sobrescribes para que el compilador detecte errores en la firma; cuando sobrescribas `equals`, sobrescribe también `hashCode` con los mismos campos."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Making fields `public` (or adding a setter for every field) and calling it encapsulation: any code can then break invariants such as a non-negative balance. Keep fields `private` and expose operations like `deposit` and `withdraw` that validate input.",
+          "Accidentally overloading instead of overriding, e.g. writing `public boolean equals(Account other)` instead of `equals(Object o)`: collections keep calling `Object.equals` and your method is ignored. Add `@Override` so this becomes a compile error.",
+          "Using inheritance just to reuse code (a `Stack extends ArrayList`): the subclass inherits every public method, including ones that break its rules, like inserting in the middle. Prefer composition: hold an `ArrayList` in a private field and expose only `push`, `pop` and `peek`."
+        ],
+        "es": [
+          "Hacer los campos `public` (o agregar un setter para cada campo) y llamarlo encapsulamiento: cualquier código puede romper invariantes como un saldo no negativo. Mantén los campos `private` y expón operaciones como `deposit` y `withdraw` que validen la entrada.",
+          "Sobrecargar sin querer en lugar de sobrescribir, por ejemplo escribir `public boolean equals(Account other)` en vez de `equals(Object o)`: las colecciones siguen llamando a `Object.equals` y tu método se ignora. Agrega `@Override` para que esto sea un error de compilación.",
+          "Usar herencia solo para reutilizar código (un `Stack extends ArrayList`): la subclase hereda todos los métodos públicos, incluidos los que rompen sus reglas, como insertar en medio. Prefiere la composición: guarda un `ArrayList` en un campo privado y expón solo `push`, `pop` y `peek`."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: give `StudentAccount` from the module an overridden `withdraw` that rejects any single withdrawal above 100, delegating to `super.withdraw(amount)` otherwise. Mark it `@Override` and test both paths.",
+          "Implement an abstract class `Shape` with a `String name` field, a constructor, an abstract `double area()` and a concrete `describe()`; add `Circle` and `Rectangle` subclasses. Store them in a `Shape[]` and print each description in one loop.",
+          "Add an interface `Billable` with `double monthlyFee()` and a `default` method `double yearlyFee()` that returns `12 * monthlyFee()`. Make `StudentAccount` implement it, then write a method that sums fees over a `Billable[]` containing objects of unrelated classes.",
+          "Interview-style: design a parking lot with `Vehicle` types (motorcycle, car, bus) and spots of different sizes. Write the class and interface signatures, decide where you use inheritance versus composition, and implement `boolean park(Vehicle v)` so adding a new vehicle type does not require editing `ParkingLot`."
+        ],
+        "es": [
+          "Calentamiento: agrega a `StudentAccount` del módulo un `withdraw` sobrescrito que rechace cualquier retiro individual mayor a 100 y, si no, delegue en `super.withdraw(amount)`. Márcalo con `@Override` y prueba ambos caminos.",
+          "Implementa una clase abstracta `Shape` con un campo `String name`, un constructor, un método abstracto `double area()` y un método concreto `describe()`; agrega las subclases `Circle` y `Rectangle`. Guárdalas en un `Shape[]` e imprime la descripción de cada una en un solo ciclo.",
+          "Agrega una interfaz `Billable` con `double monthlyFee()` y un método `default` `double yearlyFee()` que devuelva `12 * monthlyFee()`. Haz que `StudentAccount` la implemente y escribe un método que sume las cuotas de un `Billable[]` con objetos de clases no relacionadas.",
+          "Tipo entrevista: diseña un estacionamiento con tipos de `Vehicle` (motocicleta, auto, autobús) y lugares de distintos tamaños. Escribe las firmas de clases e interfaces, decide dónde usar herencia y dónde composición, e implementa `boolean park(Vehicle v)` de modo que agregar un nuevo tipo de vehículo no obligue a editar `ParkingLot`."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "If `Animal a = new Dog();` and both classes define `makeSound()`, which version runs and when is that decided?",
+          "When would you use an abstract class instead of an interface?",
+          "What invariant does `Account` protect, and which language feature makes it possible?"
+        ],
+        "es": [
+          "Si `Animal a = new Dog();` y ambas clases definen `makeSound()`, ¿qué versión se ejecuta y cuándo se decide?",
+          "¿Cuándo usarías una clase abstracta en lugar de una interfaz?",
+          "¿Qué invariante protege `Account` y qué característica del lenguaje lo hace posible?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Encapsulation",
+            "es": "Encapsulamiento"
+          },
+          "definition": {
+            "en": "Encapsulation hides an object's internal state behind `private` fields and exposes only methods that keep that state valid, so invariants are enforced in one place and the representation can change without breaking callers.",
+            "es": "El encapsulamiento oculta el estado interno de un objeto tras campos `private` y expone solo métodos que lo mantienen válido, de modo que las invariantes se hacen cumplir en un solo lugar y la representación puede cambiar sin afectar a quienes usan la clase."
+          }
+        },
+        {
+          "term": {
+            "en": "Inheritance",
+            "es": "Herencia"
+          },
+          "definition": {
+            "en": "Inheritance lets a subclass declared with `extends` reuse the fields and methods of a single superclass and add or override behavior, modeling an is-a relationship. Private members are not accessible in the subclass, and constructors are not inherited.",
+            "es": "La herencia permite que una subclase declarada con `extends` reutilice los campos y métodos de una única superclase y agregue o sobrescriba comportamiento, modelando una relación es-un. Los miembros privados no son accesibles en la subclase y los constructores no se heredan."
+          }
+        },
+        {
+          "term": {
+            "en": "Polymorphism",
+            "es": "Polimorfismo"
+          },
+          "definition": {
+            "en": "Polymorphism means one variable of a supertype can refer to objects of many subtypes, and a call such as `shape.area()` runs the implementation of the object's runtime class (dynamic dispatch).",
+            "es": "El polimorfismo significa que una variable de un supertipo puede referirse a objetos de muchos subtipos, y una llamada como `shape.area()` ejecuta la implementación de la clase real del objeto en tiempo de ejecución (despacho dinámico)."
+          }
+        },
+        {
+          "term": {
+            "en": "Abstraction",
+            "es": "Abstracción"
+          },
+          "definition": {
+            "en": "Abstraction exposes what an object does while hiding how it does it. In Java it is expressed with `abstract` classes, which cannot be instantiated and may declare methods without bodies, and with interfaces.",
+            "es": "La abstracción expone qué hace un objeto y oculta cómo lo hace. En Java se expresa con clases `abstract`, que no pueden instanciarse y pueden declarar métodos sin cuerpo, y con interfaces."
+          }
+        },
+        {
+          "term": {
+            "en": "Interfaces",
+            "es": "Interfaces"
+          },
+          "definition": {
+            "en": "An interface is a reference type that declares a contract of abstract methods (plus optional `default`, `static` and, since Java 9, `private` methods) and only constant fields. A class can implement many interfaces, which lets unrelated classes share a capability such as `Comparable`.",
+            "es": "Una interfaz es un tipo de referencia que declara un contrato de métodos abstractos (además de métodos opcionales `default`, `static` y, desde Java 9, `private`) y solo campos constantes. Una clase puede implementar muchas interfaces, lo que permite que clases no relacionadas compartan una capacidad como `Comparable`."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Oracle Java Tutorials: Object-Oriented Programming Concepts",
+            "es": "Tutoriales de Java de Oracle: conceptos de programación orientada a objetos"
+          },
+          "url": "https://docs.oracle.com/javase/tutorial/java/concepts/index.html"
+        },
+        {
+          "label": {
+            "en": "Oracle Java Tutorials: Interfaces and Inheritance",
+            "es": "Tutoriales de Java de Oracle: interfaces y herencia"
+          },
+          "url": "https://docs.oracle.com/javase/tutorial/java/IandI/index.html"
+        },
+        {
+          "label": {
+            "en": "Oracle Java Tutorials: Classes and Objects",
+            "es": "Tutoriales de Java de Oracle: clases y objetos"
+          },
+          "url": "https://docs.oracle.com/javase/tutorial/java/javaOO/index.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Given `class A { String who() { return \"A\"; } }` and `class B extends A { String who() { return \"B\"; } }`, what does `A obj = new B(); System.out.println(obj.who());` print?",
+            "es": "Dado `class A { String who() { return \"A\"; } }` y `class B extends A { String who() { return \"B\"; } }`, ¿qué imprime `A obj = new B(); System.out.println(obj.who());`?"
+          },
+          "options": {
+            "en": [
+              "`A`",
+              "`B`",
+              "`AB`",
+              "It does not compile"
+            ],
+            "es": [
+              "`A`",
+              "`B`",
+              "`AB`",
+              "No compila"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`who()` is an overridden instance method, so the JVM dispatches on the object's runtime class, `B`. The declared type `A` only determines which methods may be called, not which body runs.",
+            "es": "`who()` es un método de instancia sobrescrito, así que la JVM despacha según la clase real del objeto, `B`. El tipo declarado `A` solo determina qué métodos se pueden llamar, no qué cuerpo se ejecuta."
+          }
+        },
+        {
+          "question": {
+            "en": "Which statement about abstract classes in Java is true?",
+            "es": "¿Qué afirmación sobre las clases abstractas en Java es verdadera?"
+          },
+          "options": {
+            "en": [
+              "They cannot declare constructors",
+              "Every method in them must be abstract",
+              "A concrete subclass must override every method, abstract or not",
+              "They can have constructors and instance fields but cannot be instantiated with `new`"
+            ],
+            "es": [
+              "No pueden declarar constructores",
+              "Todos sus métodos deben ser abstractos",
+              "Una subclase concreta debe sobrescribir todos los métodos, abstractos o no",
+              "Pueden tener constructores y campos de instancia, pero no pueden instanciarse con `new`"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "An abstract class may hold state, concrete methods and constructors (run via `super(...)` from subclasses); it simply cannot be instantiated directly. A concrete subclass only has to implement the abstract methods.",
+            "es": "Una clase abstracta puede tener estado, métodos concretos y constructores (que se ejecutan con `super(...)` desde las subclases); simplemente no puede instanciarse directamente. Una subclase concreta solo debe implementar los métodos abstractos."
+          }
+        },
+        {
+          "question": {
+            "en": "`Account` has only the constructor `Account(String owner, double openingBalance)`. What happens if `StudentAccount`'s constructor body omits `super(owner, openingBalance);`?",
+            "es": "`Account` solo tiene el constructor `Account(String owner, double openingBalance)`. ¿Qué pasa si el cuerpo del constructor de `StudentAccount` omite `super(owner, openingBalance);`?"
+          },
+          "options": {
+            "en": [
+              "It compiles and the fields keep default values",
+              "Compile error: the implicit `super()` call finds no no-argument constructor in `Account`",
+              "It compiles but throws an exception at runtime",
+              "Java automatically passes the subclass constructor's arguments to `Account`"
+            ],
+            "es": [
+              "Compila y los campos conservan sus valores por defecto",
+              "Error de compilación: la llamada implícita a `super()` no encuentra un constructor sin argumentos en `Account`",
+              "Compila pero lanza una excepción en tiempo de ejecución",
+              "Java pasa automáticamente los argumentos del constructor de la subclase a `Account`"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Without an explicit `super(...)` or `this(...)`, the compiler inserts `super()`. `Account` declares a constructor, so it gets no default no-arg constructor, and the code fails to compile. Java never forwards arguments automatically.",
+            "es": "Sin un `super(...)` o `this(...)` explícito, el compilador inserta `super()`. `Account` declara un constructor, así que no recibe un constructor por defecto sin argumentos, y el código no compila. Java nunca reenvía argumentos automáticamente."
+          }
+        },
+        {
+          "question": {
+            "en": "Which statement about the module's `Account` class is true?",
+            "es": "¿Qué afirmación sobre la clase `Account` del módulo es verdadera?"
+          },
+          "options": {
+            "en": [
+              "`deposit(-5)` lowers the balance by 5",
+              "The balance can never be negative because the field is `private`",
+              "A successful `withdraw` never leaves the balance below zero, but `new Account(\"x\", -10)` still creates a negative balance",
+              "`StudentAccount` can assign `balance` directly because it inherits the field"
+            ],
+            "es": [
+              "`deposit(-5)` reduce el saldo en 5",
+              "El saldo nunca puede ser negativo porque el campo es `private`",
+              "Un `withdraw` exitoso nunca deja el saldo bajo cero, pero `new Account(\"x\", -10)` todavía crea un saldo negativo",
+              "`StudentAccount` puede asignar `balance` directamente porque hereda el campo"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`withdraw` rejects amounts larger than the balance, but the constructor does not validate `openingBalance`, so the invariant has a hole. `private` alone guarantees nothing, `deposit` ignores non-positive amounts, and subclasses cannot access a superclass's private fields.",
+            "es": "`withdraw` rechaza montos mayores al saldo, pero el constructor no valida `openingBalance`, así que la invariante tiene un hueco. `private` por sí solo no garantiza nada, `deposit` ignora montos no positivos y las subclases no pueden acceder a los campos privados de la superclase."
+          }
+        },
+        {
+          "question": {
+            "en": "`Dog`, `Invoice` and `Sensor` are unrelated classes that all need a `describe()` capability, and `Dog` already extends `Animal`. What is the best design?",
+            "es": "`Dog`, `Invoice` y `Sensor` son clases no relacionadas que necesitan la capacidad `describe()`, y `Dog` ya extiende `Animal`. ¿Cuál es el mejor diseño?"
+          },
+          "options": {
+            "en": [
+              "Declare an interface `Describable` and have each class implement it",
+              "Create an abstract class `Describable` and make all three extend it",
+              "Make `Animal` extend `Invoice` so `Dog` gets the method",
+              "Copy a `describe()` method into each class without a shared type"
+            ],
+            "es": [
+              "Declarar una interfaz `Describable` y hacer que cada clase la implemente",
+              "Crear una clase abstracta `Describable` y hacer que las tres la extiendan",
+              "Hacer que `Animal` extienda `Invoice` para que `Dog` obtenga el método",
+              "Copiar un método `describe()` en cada clase sin un tipo común"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Java allows only one superclass, and `Dog` already uses it; an interface adds the capability to unrelated classes and lets you treat them through one type. Copying the method gives no common type for polymorphic code.",
+            "es": "Java permite una sola superclase y `Dog` ya la usa; una interfaz agrega la capacidad a clases no relacionadas y permite tratarlas mediante un único tipo. Copiar el método no da un tipo común para el código polimórfico."
+          }
+        }
+      ]
+    },
+    "arrays-strings": {
+      "minutes": 90,
+      "prerequisites": [
+        "intro-to-coding",
+        "control-flow"
+      ],
+      "whyItMatters": {
+        "en": "Arrays and strings are the input format of most interview problems and the storage behind `ArrayList`, `String`, and `StringBuilder`. Two pointers and sliding window turn many O(n²) brute-force solutions into O(n) ones.",
+        "es": "Los arreglos y las cadenas son el formato de entrada de la mayoría de los problemas de entrevista y el almacenamiento detrás de `ArrayList`, `String` y `StringBuilder`. Las técnicas de dos punteros y ventana deslizante convierten muchas soluciones de fuerza bruta O(n²) en soluciones O(n)."
+      },
+      "objectives": {
+        "en": [
+          "Implement single-pass array traversals (maximum, sum, prefix sums) that handle empty arrays and stay within indices 0 to `length - 1`.",
+          "Use `String` methods (`charAt`, `substring`, `indexOf`, `equals`) and `StringBuilder` correctly, and explain why `String` is immutable.",
+          "Apply the two-pointer technique to reverse an array in place and to test palindromes in O(n) time and O(1) extra space.",
+          "Implement fixed-size and variable-size sliding windows, such as the maximum sum of k consecutive elements and the longest substring without repeated characters."
+        ],
+        "es": [
+          "Implementar recorridos de arreglos en una sola pasada (máximo, suma, sumas prefijas) que manejen arreglos vacíos y se mantengan entre los índices 0 y `length - 1`.",
+          "Usar correctamente los métodos de `String` (`charAt`, `substring`, `indexOf`, `equals`) y `StringBuilder`, y explicar por qué `String` es inmutable.",
+          "Aplicar la técnica de dos punteros para invertir un arreglo en el lugar y comprobar palíndromos en tiempo O(n) y espacio extra O(1).",
+          "Implementar ventanas deslizantes de tamaño fijo y variable, como la suma máxima de k elementos consecutivos y la subcadena más larga sin caracteres repetidos."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Write `for` and `while` loops driven by index variables",
+          "Declare and call `static` methods that take and return arrays"
+        ],
+        "es": [
+          "Escribir ciclos `for` y `while` controlados por variables de índice",
+          "Declarar y llamar métodos `static` que reciben y devuelven arreglos"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Index access is O(1); inserting or deleting in the middle is O(n) because elements must shift. Java arrays have fixed length: `arr.length` is a field, `s.length()` is a method.",
+          "`String` is immutable, so `s += c` in a loop copies the string every time (O(n²) total); `StringBuilder.append` is amortized O(1), giving O(n).",
+          "Compare string contents with `equals`, never `==`, which compares references.",
+          "Two pointers and sliding window move each pointer at most n times, so they run in O(n). `Arrays.sort(int[])` uses dual-pivot quicksort; `Arrays.sort(Object[])` uses stable TimSort."
+        ],
+        "es": [
+          "El acceso por índice es O(1); insertar o borrar en medio es O(n) porque hay que desplazar elementos. Los arreglos de Java tienen longitud fija: `arr.length` es un campo y `s.length()` es un método.",
+          "`String` es inmutable, así que `s += c` dentro de un ciclo copia la cadena cada vez (O(n²) en total); `StringBuilder.append` es O(1) amortizado, lo que da O(n).",
+          "Compara el contenido de cadenas con `equals`, nunca con `==`, que compara referencias.",
+          "Dos punteros y ventana deslizante mueven cada puntero a lo sumo n veces, así que son O(n). `Arrays.sort(int[])` usa quicksort de doble pivote; `Arrays.sort(Object[])` usa TimSort, que es estable."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Writing `i <= arr.length` as a loop bound: the last iteration reads `arr[arr.length]` and throws `ArrayIndexOutOfBoundsException`. Valid indices are 0 to `length - 1`.",
+          "Comparing strings with `==`: it may seem to work for literals (because of string interning) and then fail for strings built at runtime. Use `equals` or `equalsIgnoreCase`.",
+          "In a sliding window, forgetting to subtract the element that leaves the window, or shrinking only once when a `while` is needed, produces wrong sums and counts. Use the pattern: add `arr[right]`, then `while` the window is invalid, remove `arr[left++]`."
+        ],
+        "es": [
+          "Escribir `i <= arr.length` como límite del ciclo: la última iteración lee `arr[arr.length]` y lanza `ArrayIndexOutOfBoundsException`. Los índices válidos van de 0 a `length - 1`.",
+          "Comparar cadenas con `==`: puede parecer que funciona con literales (por el interning de cadenas) y luego fallar con cadenas construidas en tiempo de ejecución. Usa `equals` o `equalsIgnoreCase`.",
+          "En una ventana deslizante, olvidar restar el elemento que sale de la ventana, o reducirla una sola vez cuando hace falta un `while`, produce sumas y conteos incorrectos. Usa el patrón: agrega `arr[right]` y, `while` la ventana sea inválida, quita `arr[left++]`."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Implement `int secondLargest(int[] arr)` in a single pass; return `Integer.MIN_VALUE` if the array has fewer than two distinct values. Test with {5, 5, 3}, {7}, and {}.",
+          "Implement `void reverse(int[] arr)` in place with two pointers, then `boolean isPalindrome(String s)` that ignores case and non-alphanumeric characters without building a new string (use `Character.isLetterOrDigit`).",
+          "Implement `int maxSumWindow(int[] arr, int k)` that returns the largest sum of k consecutive elements in O(n), then `int lengthOfLongestSubstring(String s)` (no repeated characters) using a variable-size window and an `int[128]` last-seen table.",
+          "Given a sorted `int[]` and a target, return the indices of two elements that sum to the target using two pointers in O(n) time and O(1) space. Explain why moving `left` forward when the sum is too small can never skip a valid pair."
+        ],
+        "es": [
+          "Implementa `int secondLargest(int[] arr)` en una sola pasada; devuelve `Integer.MIN_VALUE` si el arreglo tiene menos de dos valores distintos. Prueba con {5, 5, 3}, {7} y {}.",
+          "Implementa `void reverse(int[] arr)` en el lugar con dos punteros y luego `boolean isPalindrome(String s)` que ignore mayúsculas y caracteres no alfanuméricos sin construir una cadena nueva (usa `Character.isLetterOrDigit`).",
+          "Implementa `int maxSumWindow(int[] arr, int k)` que devuelva la mayor suma de k elementos consecutivos en O(n), y luego `int lengthOfLongestSubstring(String s)` (sin caracteres repetidos) con una ventana de tamaño variable y una tabla `int[128]` de última aparición.",
+          "Dado un `int[]` ordenado y un objetivo, devuelve los índices de dos elementos que sumen el objetivo usando dos punteros en tiempo O(n) y espacio O(1). Explica por qué avanzar `left` cuando la suma es demasiado pequeña nunca descarta un par válido."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why is `s += c` inside a loop slow, and what should you use instead?",
+          "When does a sliding window need a variable size instead of a fixed size?",
+          "What property of the input does the two-pointer pair-sum technique depend on?"
+        ],
+        "es": [
+          "¿Por qué es lento `s += c` dentro de un ciclo y qué deberías usar en su lugar?",
+          "¿Cuándo necesita una ventana deslizante un tamaño variable en lugar de fijo?",
+          "¿De qué propiedad de la entrada depende la técnica de dos punteros para encontrar un par con cierta suma?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Array Traversal",
+            "es": "Recorrido de arreglos"
+          },
+          "definition": {
+            "en": "Visiting each element of an array in index order (or in reverse) with a loop, usually to compute an aggregate such as a maximum, sum, or count. A full traversal takes O(n) time.",
+            "es": "Visitar cada elemento de un arreglo en orden de índice (o al revés) con un ciclo, normalmente para calcular un agregado como un máximo, una suma o un conteo. Un recorrido completo toma tiempo O(n)."
+          }
+        },
+        {
+          "term": {
+            "en": "String Methods",
+            "es": "Métodos de cadenas"
+          },
+          "definition": {
+            "en": "Operations on Java's immutable `String` class, such as `length()`, `charAt(i)`, `substring(begin, end)` (end exclusive), `indexOf`, `equals`, and `toCharArray()`. Methods that seem to modify a string, like `toUpperCase()`, actually return a new `String`.",
+            "es": "Operaciones de la clase inmutable `String` de Java, como `length()`, `charAt(i)`, `substring(begin, end)` (end excluido), `indexOf`, `equals` y `toCharArray()`. Los métodos que parecen modificar la cadena, como `toUpperCase()`, en realidad devuelven un `String` nuevo."
+          }
+        },
+        {
+          "term": {
+            "en": "Two Pointers",
+            "es": "Dos punteros"
+          },
+          "definition": {
+            "en": "A technique that keeps two indices into a sequence—either moving toward each other from both ends or moving in the same direction at different speeds—so a problem is solved in one O(n) pass instead of checking all O(n²) pairs.",
+            "es": "Técnica que mantiene dos índices sobre una secuencia—que avanzan uno hacia el otro desde los extremos o en la misma dirección a distinta velocidad—para resolver un problema en una sola pasada O(n) en lugar de revisar los O(n²) pares."
+          }
+        },
+        {
+          "term": {
+            "en": "Sliding Window",
+            "es": "Ventana deslizante"
+          },
+          "definition": {
+            "en": "A technique over a contiguous range [left, right] of an array or string whose summary (a sum, character counts) is updated incrementally as `right` extends and `left` shrinks, instead of being recomputed for every window.",
+            "es": "Técnica sobre un rango contiguo [left, right] de un arreglo o cadena cuyo resumen (una suma, conteos de caracteres) se actualiza de forma incremental al avanzar `right` y al reducir desde `left`, en lugar de recalcularse para cada ventana."
+          }
+        },
+        {
+          "term": {
+            "en": "Array Sorting",
+            "es": "Ordenamiento de arreglos"
+          },
+          "definition": {
+            "en": "Rearranging elements into nondecreasing (or another) order. In Java, `Arrays.sort(int[])` uses dual-pivot quicksort and `Arrays.sort(Object[])` uses stable TimSort, both O(n log n); sorting first often enables two-pointer or binary-search solutions.",
+            "es": "Reorganizar los elementos en orden no decreciente (u otro orden). En Java, `Arrays.sort(int[])` usa quicksort de doble pivote y `Arrays.sort(Object[])` usa TimSort estable, ambos O(n log n); ordenar primero suele habilitar soluciones con dos punteros o búsqueda binaria."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "The Java Tutorials: Arrays (Oracle)",
+            "es": "Tutoriales de Java: Arreglos (Oracle, en inglés)"
+          },
+          "url": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+        },
+        {
+          "label": {
+            "en": "Java 21 API: java.lang.String",
+            "es": "API de Java 21: java.lang.String (en inglés)"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html"
+        },
+        {
+          "label": {
+            "en": "Java 21 API: java.util.Arrays",
+            "es": "API de Java 21: java.util.Arrays (en inglés)"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What does this print?\n`String s = \"hello\";\ns.toUpperCase();\nSystem.out.println(s);`",
+            "es": "¿Qué imprime este código?\n`String s = \"hello\";\ns.toUpperCase();\nSystem.out.println(s);`"
+          },
+          "options": {
+            "en": [
+              "HELLO",
+              "Hello",
+              "hello",
+              "It does not compile"
+            ],
+            "es": [
+              "HELLO",
+              "Hello",
+              "hello",
+              "No compila"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Strings are immutable: `toUpperCase()` returns a new string, which this code discards, so `s` still refers to \"hello\". To get HELLO you must write `s = s.toUpperCase();`.",
+            "es": "Las cadenas son inmutables: `toUpperCase()` devuelve una cadena nueva que este código descarta, así que `s` sigue apuntando a \"hello\". Para obtener HELLO hay que escribir `s = s.toUpperCase();`."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the total time to build a string of n characters with `result += c` inside a loop?",
+            "es": "¿Cuál es el tiempo total para construir una cadena de n caracteres con `result += c` dentro de un ciclo?"
+          },
+          "options": {
+            "en": [
+              "O(n²), because each concatenation copies the whole current string",
+              "O(n), because each append is O(1)",
+              "O(log n)",
+              "O(n log n)"
+            ],
+            "es": [
+              "O(n²), porque cada concatenación copia toda la cadena actual",
+              "O(n), porque cada concatenación es O(1)",
+              "O(log n)",
+              "O(n log n)"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Each `+=` creates a new `String` and copies 1, 2, …, n characters, which sums to about n²/2. O(1) appends describe `StringBuilder`, not `String`.",
+            "es": "Cada `+=` crea un `String` nuevo y copia 1, 2, …, n caracteres, lo que suma unos n²/2. Las concatenaciones O(1) describen a `StringBuilder`, no a `String`."
+          }
+        },
+        {
+          "question": {
+            "en": "Which problem is best solved with a variable-size sliding window?",
+            "es": "¿Qué problema se resuelve mejor con una ventana deslizante de tamaño variable?"
+          },
+          "options": {
+            "en": [
+              "Finding the maximum element of an array",
+              "Reversing an array in place",
+              "Checking whether an array is sorted",
+              "Finding the shortest subarray whose sum is ≥ a target, when all numbers are positive"
+            ],
+            "es": [
+              "Encontrar el elemento máximo de un arreglo",
+              "Invertir un arreglo en el lugar",
+              "Comprobar si un arreglo está ordenado",
+              "Encontrar el subarreglo más corto cuya suma sea ≥ un objetivo, cuando todos los números son positivos"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "With positive numbers, extending `right` only increases the sum and advancing `left` only decreases it, so the window can grow and shrink to find the shortest valid range in O(n). The other tasks need a single traversal or two pointers from the ends, not a window.",
+            "es": "Con números positivos, avanzar `right` solo aumenta la suma y avanzar `left` solo la reduce, así que la ventana puede crecer y encogerse para hallar el rango válido más corto en O(n). Las otras tareas requieren un recorrido simple o dos punteros desde los extremos, no una ventana."
+          }
+        },
+        {
+          "question": {
+            "en": "How many swaps does this loop perform on `a = {1, 2, 3, 4, 5}`?\n`int l = 0, r = a.length - 1;\nwhile (l < r) { int t = a[l]; a[l] = a[r]; a[r] = t; l++; r--; }`",
+            "es": "¿Cuántos intercambios realiza este ciclo sobre `a = {1, 2, 3, 4, 5}`?\n`int l = 0, r = a.length - 1;\nwhile (l < r) { int t = a[l]; a[l] = a[r]; a[r] = t; l++; r--; }`"
+          },
+          "options": {
+            "en": [
+              "5",
+              "2",
+              "3",
+              "4"
+            ],
+            "es": [
+              "5",
+              "2",
+              "3",
+              "4"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The pairs swapped are (0, 4) and (1, 3); then l = r = 2 and the loop stops, leaving the middle element in place. In general it does ⌊n/2⌋ swaps, not n.",
+            "es": "Se intercambian los pares (0, 4) y (1, 3); luego l = r = 2 y el ciclo termina, dejando el elemento central en su lugar. En general hace ⌊n/2⌋ intercambios, no n."
+          }
+        },
+        {
+          "question": {
+            "en": "Given `String a = new String(\"hi\");` and `String b = \"hi\";`, what are `a == b` and `a.equals(b)`?",
+            "es": "Dados `String a = new String(\"hi\");` y `String b = \"hi\";`, ¿cuánto valen `a == b` y `a.equals(b)`?"
+          },
+          "options": {
+            "en": [
+              "false and true",
+              "true and true",
+              "true and false",
+              "false and false"
+            ],
+            "es": [
+              "false y true",
+              "true y true",
+              "true y false",
+              "false y false"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "`new String(...)` always creates a distinct object, so `==` (reference comparison) is false, while `equals` compares characters and is true. Expecting true for `==` comes from seeing two literals share one interned object.",
+            "es": "`new String(...)` siempre crea un objeto distinto, así que `==` (comparación de referencias) es false, mientras que `equals` compara caracteres y es true. Esperar true en `==` viene de ver que dos literales comparten el mismo objeto interno."
+          }
+        }
+      ]
+    },
+    "searching-algorithms": {
+      "minutes": 75,
+      "prerequisites": [
+        "arrays-strings"
+      ],
+      "whyItMatters": {
+        "en": "Binary search is one of the most frequently tested interview patterns and powers `Arrays.binarySearch`, `Collections.binarySearch`, `TreeMap` lookups, database indexes, and `git bisect`. Knowing its invariant prevents the off-by-one bugs that make it notoriously easy to get wrong.",
+        "es": "La búsqueda binaria es uno de los patrones más evaluados en entrevistas y está detrás de `Arrays.binarySearch`, `Collections.binarySearch`, las búsquedas en `TreeMap`, los índices de bases de datos y `git bisect`. Conocer su invariante evita los errores de uno-más-uno-menos que la hacen famosa por ser fácil de escribir mal."
+      },
+      "objectives": {
+        "en": [
+          "Implement iterative binary search with an explicit loop invariant, and explain why `mid = left + (right - left) / 2` avoids integer overflow.",
+          "Adapt binary search to return the first or last occurrence of a target (lower and upper bound) in an array with duplicates.",
+          "Trace exponential search on a sorted array, identifying each doubled bound and the exact range passed to `Arrays.binarySearch`.",
+          "Choose among linear, binary, interpolation, and exponential search based on sortedness, key distribution, and whether the length is known."
+        ],
+        "es": [
+          "Implementar la búsqueda binaria iterativa con un invariante de ciclo explícito y explicar por qué `mid = left + (right - left) / 2` evita el desbordamiento de enteros.",
+          "Adaptar la búsqueda binaria para devolver la primera o la última aparición de un objetivo (cota inferior y superior) en un arreglo con duplicados.",
+          "Rastrear la búsqueda exponencial en un arreglo ordenado, identificando cada cota duplicada y el rango exacto que se pasa a `Arrays.binarySearch`.",
+          "Elegir entre búsqueda lineal, binaria, por interpolación y exponencial según si los datos están ordenados, cómo se distribuyen las claves y si se conoce la longitud."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Trace a `while` loop by hand while tracking several index variables",
+          "Compute log₂ of powers of two (for example, log₂ 1024 = 10)"
+        ],
+        "es": [
+          "Rastrear a mano un ciclo `while` siguiendo varias variables de índice",
+          "Calcular log₂ de potencias de dos (por ejemplo, log₂ 1024 = 10)"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Linear search is O(n) and works on unsorted data; binary search is O(log n) on a sorted random-access array—about 20 comparisons for 1,000,000 elements.",
+          "`Arrays.binarySearch` returns the index if found, otherwise `-(insertionPoint) - 1`; with duplicates it does not guarantee which matching index you get.",
+          "Interpolation search averages O(log log n) on uniformly distributed keys but degrades to O(n) on skewed data.",
+          "Exponential search costs O(log i), where i is the target's position, so it suits unbounded inputs or targets near the front."
+        ],
+        "es": [
+          "La búsqueda lineal es O(n) y funciona con datos sin ordenar; la binaria es O(log n) sobre un arreglo ordenado de acceso aleatorio—unas 20 comparaciones para 1 000 000 de elementos.",
+          "`Arrays.binarySearch` devuelve el índice si encuentra la clave y, si no, `-(insertionPoint) - 1`; con duplicados no garantiza cuál de los índices coincidentes devuelve.",
+          "La búsqueda por interpolación promedia O(log log n) con claves distribuidas uniformemente, pero se degrada a O(n) con datos sesgados.",
+          "La búsqueda exponencial cuesta O(log i), donde i es la posición del objetivo, así que conviene para entradas sin límite conocido u objetivos cerca del inicio."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Mixing loop conventions, e.g. `while (left < right)` with `right = mid - 1`, or `right = arr.length` with `<=`: elements get skipped or the loop never ends. Pick one invariant—closed [left, right] or half-open [left, right)—and make every update match it.",
+          "Computing `mid = (left + right) / 2`: when left + right exceeds `Integer.MAX_VALUE` (2³¹ − 1) the sum overflows to a negative index. Use `left + (right - left) / 2` or `(left + right) >>> 1`.",
+          "Running binary search on unsorted data (results are meaningless) or sorting just to search once: sorting costs O(n log n), more than a single O(n) linear scan."
+        ],
+        "es": [
+          "Mezclar convenciones de ciclo, por ejemplo `while (left < right)` con `right = mid - 1`, o `right = arr.length` con `<=`: se saltan elementos o el ciclo nunca termina. Elige un invariante—intervalo cerrado [left, right] o semiabierto [left, right)—y haz que cada actualización lo respete.",
+          "Calcular `mid = (left + right) / 2`: cuando left + right supera `Integer.MAX_VALUE` (2³¹ − 1), la suma se desborda a un índice negativo. Usa `left + (right - left) / 2` o `(left + right) >>> 1`.",
+          "Aplicar búsqueda binaria a datos sin ordenar (los resultados no tienen sentido) u ordenar solo para buscar una vez: ordenar cuesta O(n log n), más que una búsqueda lineal O(n)."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Trace `binarySearch({2, 4, 6, 8, 10, 12, 14}, 12)` by hand, writing `left`, `right`, and `mid` at every iteration. Repeat for target 5 and record the final value of `left`—it is the insertion point.",
+          "Implement `int lowerBound(int[] arr, int target)` that returns the first index whose value is ≥ target (or `arr.length`), then use it to count the occurrences of a target in O(log n).",
+          "Implement `int searchRotated(int[] arr, int target)` for a sorted array of distinct values rotated at an unknown pivot (e.g., {4, 5, 6, 7, 0, 1, 2}) in O(log n) by deciding at each step which half is sorted.",
+          "Implement `int mySqrt(int x)` returning ⌊√x⌋ by binary searching the answer range [0, x]; compute `mid * mid` as a `long` to avoid overflow, and test with 0, 1, 8, and `Integer.MAX_VALUE`."
+        ],
+        "es": [
+          "Rastrea a mano `binarySearch({2, 4, 6, 8, 10, 12, 14}, 12)` escribiendo `left`, `right` y `mid` en cada iteración. Repite con el objetivo 5 y anota el valor final de `left`: es el punto de inserción.",
+          "Implementa `int lowerBound(int[] arr, int target)` que devuelva el primer índice cuyo valor sea ≥ target (o `arr.length`) y úsalo para contar las apariciones de un objetivo en O(log n).",
+          "Implementa `int searchRotated(int[] arr, int target)` para un arreglo ordenado de valores distintos rotado en un pivote desconocido (por ejemplo, {4, 5, 6, 7, 0, 1, 2}) en O(log n), decidiendo en cada paso qué mitad está ordenada.",
+          "Implementa `int mySqrt(int x)` que devuelva ⌊√x⌋ buscando binariamente en el rango de respuestas [0, x]; calcula `mid * mid` como `long` para evitar desbordamiento y prueba con 0, 1, 8 e `Integer.MAX_VALUE`."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What does `Arrays.binarySearch` return when the key is missing, and how do you recover the insertion point?",
+          "Why does binary search take O(log n) steps?",
+          "When would you choose exponential search over plain binary search?"
+        ],
+        "es": [
+          "¿Qué devuelve `Arrays.binarySearch` cuando la clave no está y cómo recuperas el punto de inserción?",
+          "¿Por qué la búsqueda binaria toma O(log n) pasos?",
+          "¿Cuándo elegirías la búsqueda exponencial en lugar de la binaria simple?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Linear Search",
+            "es": "Búsqueda lineal"
+          },
+          "definition": {
+            "en": "Checking elements one by one from the start until the target is found or the collection ends. It takes O(n) time and O(1) space and is the only general option for unsorted data without an index.",
+            "es": "Revisar los elementos uno por uno desde el inicio hasta encontrar el objetivo o llegar al final de la colección. Toma tiempo O(n) y espacio O(1), y es la única opción general para datos sin ordenar y sin índice."
+          }
+        },
+        {
+          "term": {
+            "en": "Binary Search",
+            "es": "Búsqueda binaria"
+          },
+          "definition": {
+            "en": "Searching a sorted random-access array by comparing the target with the middle element and discarding the half that cannot contain it. Each step halves the range, so it needs O(log n) comparisons.",
+            "es": "Buscar en un arreglo ordenado de acceso aleatorio comparando el objetivo con el elemento central y descartando la mitad que no puede contenerlo. Cada paso reduce el rango a la mitad, así que requiere O(log n) comparaciones."
+          }
+        },
+        {
+          "term": {
+            "en": "Interpolation Search",
+            "es": "Búsqueda por interpolación"
+          },
+          "definition": {
+            "en": "A variant of binary search for sorted numeric keys that estimates the probe position from the target's value: pos = lo + (target − arr[lo]) × (hi − lo) / (arr[hi] − arr[lo]). It averages O(log log n) on uniformly distributed keys but is O(n) in the worst case.",
+            "es": "Variante de la búsqueda binaria para claves numéricas ordenadas que estima la posición a revisar según el valor del objetivo: pos = lo + (target − arr[lo]) × (hi − lo) / (arr[hi] − arr[lo]). Promedia O(log log n) con claves distribuidas uniformemente, pero es O(n) en el peor caso."
+          }
+        },
+        {
+          "term": {
+            "en": "Exponential Search",
+            "es": "Búsqueda exponencial"
+          },
+          "definition": {
+            "en": "A search that checks indices 1, 2, 4, 8, … until it finds an element ≥ the target (or passes the end), then binary searches between the last two bounds. Its cost is O(log i), where i is the target's index.",
+            "es": "Búsqueda que revisa los índices 1, 2, 4, 8, … hasta hallar un elemento ≥ al objetivo (o pasar el final) y luego aplica búsqueda binaria entre las dos últimas cotas. Su costo es O(log i), donde i es el índice del objetivo."
+          }
+        },
+        {
+          "term": {
+            "en": "Search Strategy Comparison",
+            "es": "Comparación de estrategias de búsqueda"
+          },
+          "definition": {
+            "en": "Choosing a search method by its preconditions and costs: linear for unsorted or tiny data, binary for sorted arrays, interpolation for uniformly distributed numeric keys, exponential for unbounded data, and a hash set (average O(1)) when you only need membership tests.",
+            "es": "Elegir un método de búsqueda según sus precondiciones y costos: lineal para datos sin ordenar o muy pequeños, binaria para arreglos ordenados, por interpolación para claves numéricas uniformes, exponencial para datos sin límite conocido y un conjunto hash (O(1) en promedio) cuando solo necesitas saber si un elemento pertenece."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "cp-algorithms: Binary search",
+            "es": "cp-algorithms: Búsqueda binaria (en inglés)"
+          },
+          "url": "https://cp-algorithms.com/num_methods/binary_search.html"
+        },
+        {
+          "label": {
+            "en": "Java 21 API: java.util.Arrays (binarySearch)",
+            "es": "API de Java 21: java.util.Arrays (binarySearch, en inglés)"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html"
+        },
+        {
+          "label": {
+            "en": "Wikipedia: Interpolation search",
+            "es": "Wikipedia: Búsqueda por interpolación (en inglés)"
+          },
+          "url": "https://en.wikipedia.org/wiki/Interpolation_search"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "At most about how many comparisons does binary search need on a sorted array of 1,000,000 elements?",
+            "es": "¿Cuántas comparaciones necesita como máximo, aproximadamente, la búsqueda binaria en un arreglo ordenado de 1 000 000 de elementos?"
+          },
+          "options": {
+            "en": [
+              "About 1,000,000",
+              "About 500,000",
+              "About 1,000",
+              "About 20"
+            ],
+            "es": [
+              "Unas 1 000 000",
+              "Unas 500 000",
+              "Unas 1 000",
+              "Unas 20"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "Each comparison halves the range and log₂(1,000,000) ≈ 19.9, so about 20 comparisons suffice. 500,000 is the average for linear search, not binary search.",
+            "es": "Cada comparación reduce el rango a la mitad y log₂(1 000 000) ≈ 19.9, así que bastan unas 20 comparaciones. 500 000 es el promedio de la búsqueda lineal, no de la binaria."
+          }
+        },
+        {
+          "question": {
+            "en": "What does `Arrays.binarySearch(new int[]{10, 20, 30, 40}, 25)` return?",
+            "es": "¿Qué devuelve `Arrays.binarySearch(new int[]{10, 20, 30, 40}, 25)`?"
+          },
+          "options": {
+            "en": [
+              "-1",
+              "-3",
+              "2",
+              "-2"
+            ],
+            "es": [
+              "-1",
+              "-3",
+              "2",
+              "-2"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "25 is missing and would be inserted at index 2, so the method returns -(2) - 1 = -3. Returning -1 for every miss is a convention of `indexOf`, not of `binarySearch`; -2 forgets the extra -1.",
+            "es": "25 no está y se insertaría en el índice 2, así que el método devuelve -(2) - 1 = -3. Devolver -1 en cualquier fallo es la convención de `indexOf`, no de `binarySearch`; -2 olvida el -1 adicional."
+          }
+        },
+        {
+          "question": {
+            "en": "Why do careful implementations write `mid = left + (right - left) / 2` instead of `(left + right) / 2`?",
+            "es": "¿Por qué las implementaciones cuidadosas escriben `mid = left + (right - left) / 2` en lugar de `(left + right) / 2`?"
+          },
+          "options": {
+            "en": [
+              "It avoids `int` overflow when left + right exceeds `Integer.MAX_VALUE`",
+              "It rounds up, which guarantees the loop terminates",
+              "It is faster because subtraction is cheaper than addition",
+              "It allows binary search to work on unsorted arrays"
+            ],
+            "es": [
+              "Evita el desbordamiento de `int` cuando left + right supera `Integer.MAX_VALUE`",
+              "Redondea hacia arriba, lo que garantiza que el ciclo termine",
+              "Es más rápido porque restar cuesta menos que sumar",
+              "Permite que la búsqueda binaria funcione en arreglos sin ordenar"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "For very large arrays, left + right can exceed 2³¹ − 1 and wrap to a negative number; right − left never overflows when both are valid indices. Both formulas round down, so rounding is not the reason.",
+            "es": "En arreglos muy grandes, left + right puede superar 2³¹ − 1 y volverse negativo; right − left nunca se desborda si ambos son índices válidos. Ambas fórmulas redondean hacia abajo, así que el redondeo no es la razón."
+          }
+        },
+        {
+          "question": {
+            "en": "A sorted array contains many copies of 7, and you need the index of the first 7 in O(log n). What should you do?",
+            "es": "Un arreglo ordenado contiene muchas copias de 7 y necesitas el índice del primer 7 en O(log n). ¿Qué deberías hacer?"
+          },
+          "options": {
+            "en": [
+              "Call `Arrays.binarySearch`; it always returns the first match",
+              "Use interpolation search, which is designed for duplicates",
+              "Use a lower-bound binary search that keeps searching left after finding a match",
+              "Nothing works; binary search cannot be used when duplicates exist"
+            ],
+            "es": [
+              "Llamar a `Arrays.binarySearch`; siempre devuelve la primera coincidencia",
+              "Usar búsqueda por interpolación, que está diseñada para duplicados",
+              "Usar una búsqueda binaria de cota inferior que siga buscando a la izquierda tras encontrar una coincidencia",
+              "Nada funciona; la búsqueda binaria no sirve si hay duplicados"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "A lower-bound search sets `right = mid` (or records the match and continues left) so it converges on the first index with value ≥ 7. `Arrays.binarySearch` documents that it returns some matching index, with no guarantee about which.",
+            "es": "Una búsqueda de cota inferior hace `right = mid` (o guarda la coincidencia y sigue a la izquierda) y así converge al primer índice con valor ≥ 7. `Arrays.binarySearch` documenta que devuelve algún índice coincidente, sin garantizar cuál."
+          }
+        },
+        {
+          "question": {
+            "en": "Using the module's `exponentialSearch` on `{2, 4, 6, 8, 10, 12, 14}` with target 12, which range is passed to `Arrays.binarySearch`?",
+            "es": "Al usar el `exponentialSearch` del módulo sobre `{2, 4, 6, 8, 10, 12, 14}` con objetivo 12, ¿qué rango se pasa a `Arrays.binarySearch`?"
+          },
+          "options": {
+            "en": [
+              "fromIndex 0, toIndex 7",
+              "fromIndex 4, toIndex 7 (exclusive)",
+              "fromIndex 2, toIndex 4",
+              "fromIndex 8, toIndex 9"
+            ],
+            "es": [
+              "fromIndex 0, toIndex 7",
+              "fromIndex 4, toIndex 7 (excluido)",
+              "fromIndex 2, toIndex 4",
+              "fromIndex 8, toIndex 9"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "bound goes 1 (4 < 12), 2 (6 < 12), 4 (10 < 12), then 8, which is ≥ length 7, so the loop stops. The call is `binarySearch(arr, 8 / 2, Math.min(9, 7), 12)` = indices 4 to 7 exclusive. Index 8 is out of bounds and is clipped by `Math.min`.",
+            "es": "bound pasa por 1 (4 < 12), 2 (6 < 12), 4 (10 < 12) y luego 8, que es ≥ a la longitud 7, así que el ciclo termina. La llamada es `binarySearch(arr, 8 / 2, Math.min(9, 7), 12)` = índices 4 a 7 excluido. El índice 8 está fuera de rango y `Math.min` lo recorta."
+          }
+        }
+      ]
+    },
+    "stacks-queues": {
+      "minutes": 90,
+      "prerequisites": [
+        "arrays-strings"
+      ],
+      "whyItMatters": {
+        "en": "Stacks drive the JVM call stack, undo, expression parsing, and depth-first search; queues drive breadth-first search, task schedulers, and message pipelines. Balanced brackets, monotonic stacks, and a queue built from two stacks are standard interview problems.",
+        "es": "Las pilas sostienen la pila de llamadas de la JVM, deshacer, el análisis de expresiones y la búsqueda en profundidad; las colas sostienen la búsqueda en anchura, los planificadores de tareas y las tuberías de mensajes. Los paréntesis balanceados, las pilas monótonas y una cola hecha con dos pilas son problemas clásicos de entrevista."
+      },
+      "objectives": {
+        "en": [
+          "Implement a stack and a FIFO queue with `ArrayDeque`, using `push`/`pop`/`peek` and `offer`/`poll`/`peek`, and state which end of the deque each method touches.",
+          "Implement a circular-array queue with a head index and a size, wrapping with `(head + size) % capacity` and doubling the array when full.",
+          "Use `PriorityQueue` with a `Comparator` to always process the smallest or largest element, and state its O(log n) `offer`/`poll` costs.",
+          "Solve classic stack applications in O(n): balanced brackets, postfix expression evaluation, and next greater element with a monotonic stack."
+        ],
+        "es": [
+          "Implementar una pila y una cola FIFO con `ArrayDeque`, usando `push`/`pop`/`peek` y `offer`/`poll`/`peek`, e indicar qué extremo del deque toca cada método.",
+          "Implementar una cola sobre un arreglo circular con un índice de cabeza y un tamaño, que avance con `(head + size) % capacity` y duplique el arreglo cuando se llene.",
+          "Usar `PriorityQueue` con un `Comparator` para procesar siempre el elemento menor o mayor, e indicar el costo O(log n) de `offer` y `poll`.",
+          "Resolver en O(n) aplicaciones clásicas de pilas: paréntesis balanceados, evaluación de expresiones posfijas y siguiente elemento mayor con una pila monótona."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Use generic collections such as `ArrayDeque<Integer>` and understand autoboxing",
+          "Trace loops over arrays and strings by hand"
+        ],
+        "es": [
+          "Usar colecciones genéricas como `ArrayDeque<Integer>` y entender el autoboxing",
+          "Rastrear a mano ciclos sobre arreglos y cadenas"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Stack = LIFO, queue = FIFO. With `ArrayDeque`, `push`, `pop`, `offer`, `poll`, and `peek` are amortized O(1).",
+          "Prefer `ArrayDeque` over the legacy `Stack` class (synchronized, extends `Vector`). `ArrayDeque` rejects `null` elements.",
+          "`pop()` and `remove()` throw `NoSuchElementException` on an empty deque; `poll()` and `peek()` return `null`.",
+          "`PriorityQueue` is a binary min-heap by default: `offer`/`poll` O(log n), `peek` O(1). Iterating or printing it does not give sorted order."
+        ],
+        "es": [
+          "Pila = LIFO, cola = FIFO. Con `ArrayDeque`, `push`, `pop`, `offer`, `poll` y `peek` son O(1) amortizado.",
+          "Prefiere `ArrayDeque` a la clase heredada `Stack` (sincronizada, extiende `Vector`). `ArrayDeque` no acepta elementos `null`.",
+          "`pop()` y `remove()` lanzan `NoSuchElementException` si el deque está vacío; `poll()` y `peek()` devuelven `null`.",
+          "`PriorityQueue` es por defecto un montículo binario de mínimos: `offer`/`poll` O(log n), `peek` O(1). Recorrerla o imprimirla no da el orden de prioridad."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Mixing `push` (adds at the head) and `offer` (adds at the tail) on the same `ArrayDeque`, which yields neither LIFO nor FIFO order. Use one consistent pair of methods per role.",
+          "Calling `pop()` on an empty stack in bracket matching (input such as \")\") throws an exception. Check `isEmpty()` before popping, and return true only if the stack is empty at the end.",
+          "Printing or iterating a `PriorityQueue` and expecting sorted output: its iterator follows the internal heap array. Only repeated `poll()` returns elements in priority order."
+        ],
+        "es": [
+          "Mezclar `push` (agrega en la cabeza) y `offer` (agrega en la cola) sobre el mismo `ArrayDeque`, lo que no da ni orden LIFO ni FIFO. Usa un par de métodos consistente para cada rol.",
+          "Llamar a `pop()` sobre una pila vacía al comparar paréntesis (con una entrada como \")\") lanza una excepción. Comprueba `isEmpty()` antes de sacar y devuelve true solo si la pila queda vacía al final.",
+          "Imprimir o recorrer una `PriorityQueue` esperando ver los elementos ordenados: su iterador sigue el arreglo interno del montículo. Solo llamar a `poll()` repetidamente devuelve los elementos en orden de prioridad."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Push 1, 2, 3 onto an `ArrayDeque` used as a stack and offer 1, 2, 3 into another used as a queue. Predict the removal order of each, then print it to check.",
+          "Implement `boolean isBalanced(String s)` for `()[]{}` with a stack: return false on the first closer that does not match the top (or finds the stack empty), and true only if the stack is empty at the end.",
+          "Implement `class MyQueue<E>` with two stacks, `in` and `out`, giving amortized O(1) `enqueue` and `dequeue`: move everything from `in` to `out` only when `out` is empty.",
+          "Implement `int[] nextGreater(int[] arr)` that returns, for each element, the first larger element to its right (or −1), in O(n) using a monotonic stack of indices. Example: {2, 1, 2, 4, 3} → {4, 2, 4, −1, −1}."
+        ],
+        "es": [
+          "Apila 1, 2, 3 en un `ArrayDeque` usado como pila y encola 1, 2, 3 en otro usado como cola. Predice el orden de salida de cada uno y luego imprímelo para comprobarlo.",
+          "Implementa `boolean isBalanced(String s)` para `()[]{}` con una pila: devuelve false con el primer cierre que no coincida con el tope (o que encuentre la pila vacía) y true solo si la pila queda vacía al final.",
+          "Implementa `class MyQueue<E>` con dos pilas, `in` y `out`, con `enqueue` y `dequeue` O(1) amortizados: pasa todo de `in` a `out` solo cuando `out` esté vacía.",
+          "Implementa `int[] nextGreater(int[] arr)` que devuelva, para cada elemento, el primer elemento mayor a su derecha (o −1) en O(n) con una pila monótona de índices. Ejemplo: {2, 1, 2, 4, 3} → {4, 2, 4, −1, −1}."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Which `ArrayDeque` methods do you use for a stack, and which for a queue?",
+          "Why is the two-stack queue amortized O(1) even though a single dequeue can cost O(n)?",
+          "In what order does `new PriorityQueue<>(List.of(5, 1, 3))` return elements when you call `poll()` repeatedly?"
+        ],
+        "es": [
+          "¿Qué métodos de `ArrayDeque` usas para una pila y cuáles para una cola?",
+          "¿Por qué la cola con dos pilas es O(1) amortizado aunque una sola operación de desencolar pueda costar O(n)?",
+          "¿En qué orden devuelve los elementos `new PriorityQueue<>(List.of(5, 1, 3))` al llamar a `poll()` repetidamente?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Stack Operations",
+            "es": "Operaciones de pila"
+          },
+          "definition": {
+            "en": "A stack is a LIFO (last in, first out) collection: `push` adds an element on top, `pop` removes and returns the top, and `peek` reads the top without removing it. In an array- or node-based implementation each operation is O(1) (amortized when the array must grow).",
+            "es": "Una pila es una colección LIFO (último en entrar, primero en salir): `push` agrega un elemento en el tope, `pop` quita y devuelve el tope y `peek` lo lee sin quitarlo. En una implementación con arreglo o con nodos cada operación es O(1) (amortizado cuando el arreglo debe crecer)."
+          }
+        },
+        {
+          "term": {
+            "en": "Queue Operations",
+            "es": "Operaciones de cola"
+          },
+          "definition": {
+            "en": "A queue is a FIFO (first in, first out) collection: `offer` (enqueue) adds at the tail and `poll` (dequeue) removes from the head, so elements leave in arrival order. Array-backed queues use a circular buffer so both operations stay O(1).",
+            "es": "Una cola es una colección FIFO (primero en entrar, primero en salir): `offer` (encolar) agrega al final y `poll` (desencolar) quita del frente, así que los elementos salen en orden de llegada. Las colas sobre arreglos usan un búfer circular para que ambas operaciones sigan siendo O(1)."
+          }
+        },
+        {
+          "term": {
+            "en": "Deque",
+            "es": "Deque (cola doble)"
+          },
+          "definition": {
+            "en": "A double-ended queue that supports insertion and removal at both ends in O(1), e.g. `offerFirst`, `offerLast`, `pollFirst`, `pollLast`. Java's `ArrayDeque` implements `Deque` and can serve as both a stack and a queue.",
+            "es": "Una cola de doble extremo que permite insertar y quitar en ambos extremos en O(1), por ejemplo con `offerFirst`, `offerLast`, `pollFirst` y `pollLast`. `ArrayDeque` de Java implementa `Deque` y sirve tanto de pila como de cola."
+          }
+        },
+        {
+          "term": {
+            "en": "Priority Queue",
+            "es": "Cola de prioridad"
+          },
+          "definition": {
+            "en": "A collection whose removal operation returns the highest-priority element rather than the oldest; Java's `PriorityQueue` returns the smallest element by natural order or by a supplied `Comparator`. It is implemented as a binary heap with O(log n) insertion and removal.",
+            "es": "Una colección cuya operación de extracción devuelve el elemento de mayor prioridad y no el más antiguo; `PriorityQueue` de Java devuelve el menor según el orden natural o un `Comparator` dado. Se implementa como un montículo binario con inserción y extracción O(log n)."
+          }
+        },
+        {
+          "term": {
+            "en": "Applications",
+            "es": "Aplicaciones"
+          },
+          "definition": {
+            "en": "Stacks support method calls, undo, bracket matching, expression evaluation, and iterative DFS; queues support BFS, job scheduling, and buffering between producers and consumers; priority queues support Dijkstra's algorithm, event simulation, and top-k problems.",
+            "es": "Las pilas sostienen las llamadas a métodos, deshacer, la verificación de paréntesis, la evaluación de expresiones y el DFS iterativo; las colas sostienen el BFS, la planificación de tareas y los búferes entre productores y consumidores; las colas de prioridad sostienen el algoritmo de Dijkstra, la simulación de eventos y los problemas top-k."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Algorithms, 4th ed. (Princeton): Bags, Queues, and Stacks",
+            "es": "Algorithms, 4.ª ed. (Princeton): Bolsas, colas y pilas (en inglés)"
+          },
+          "url": "https://algs4.cs.princeton.edu/13stacks/"
+        },
+        {
+          "label": {
+            "en": "Java 21 API: java.util.ArrayDeque",
+            "es": "API de Java 21: java.util.ArrayDeque (en inglés)"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayDeque.html"
+        },
+        {
+          "label": {
+            "en": "Java 21 API: java.util.PriorityQueue",
+            "es": "API de Java 21: java.util.PriorityQueue (en inglés)"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/PriorityQueue.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What does this print?\n`Deque<Integer> d = new ArrayDeque<>();\nd.push(1); d.push(2); d.offer(3);\nSystem.out.println(d.pop());`",
+            "es": "¿Qué imprime este código?\n`Deque<Integer> d = new ArrayDeque<>();\nd.push(1); d.push(2); d.offer(3);\nSystem.out.println(d.pop());`"
+          },
+          "options": {
+            "en": [
+              "1",
+              "3",
+              "null",
+              "2"
+            ],
+            "es": [
+              "1",
+              "3",
+              "null",
+              "2"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "`push` inserts at the head, so after two pushes the deque is [2, 1]; `offer` inserts at the tail, giving [2, 1, 3]. `pop` removes the head, 2. Answering 3 assumes `offer` adds to the same end as `push`.",
+            "es": "`push` inserta en la cabeza, así que tras dos `push` el deque es [2, 1]; `offer` inserta al final y queda [2, 1, 3]. `pop` quita la cabeza: 2. Responder 3 supone que `offer` agrega en el mismo extremo que `push`."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the time complexity of `poll()` on a `PriorityQueue` holding n elements?",
+            "es": "¿Cuál es la complejidad temporal de `poll()` en una `PriorityQueue` con n elementos?"
+          },
+          "options": {
+            "en": [
+              "O(log n)",
+              "O(1)",
+              "O(n)",
+              "O(n log n)"
+            ],
+            "es": [
+              "O(log n)",
+              "O(1)",
+              "O(n)",
+              "O(n log n)"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Removing the root of a binary heap moves the last element to the root and sifts it down one level at a time, at most O(log n) levels. O(1) is the cost of `peek()`, which only reads the root.",
+            "es": "Quitar la raíz de un montículo binario mueve el último elemento a la raíz y lo hunde nivel por nivel, como máximo O(log n) niveles. O(1) es el costo de `peek()`, que solo lee la raíz."
+          }
+        },
+        {
+          "question": {
+            "en": "Why is `ArrayDeque` recommended over `java.util.Stack` for stack operations?",
+            "es": "¿Por qué se recomienda `ArrayDeque` en lugar de `java.util.Stack` para operaciones de pila?"
+          },
+          "options": {
+            "en": [
+              "`Stack` cannot store objects, only primitives",
+              "`ArrayDeque` keeps its elements sorted",
+              "`Stack` is a legacy synchronized class that extends `Vector`, adding locking overhead and index-based methods that break LIFO discipline",
+              "`ArrayDeque` allows `null` elements while `Stack` does not"
+            ],
+            "es": [
+              "`Stack` no puede guardar objetos, solo primitivos",
+              "`ArrayDeque` mantiene sus elementos ordenados",
+              "`Stack` es una clase heredada y sincronizada que extiende `Vector`, con sobrecarga de bloqueo y métodos por índice que rompen la disciplina LIFO",
+              "`ArrayDeque` permite elementos `null` y `Stack` no"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "The `Stack` Javadoc itself recommends `Deque` implementations: `Stack` synchronizes every call and inherits `Vector` methods like `get(i)` and `add(i, e)`. The `null` option is backwards—`ArrayDeque` rejects `null`.",
+            "es": "El propio Javadoc de `Stack` recomienda las implementaciones de `Deque`: `Stack` sincroniza cada llamada y hereda métodos de `Vector` como `get(i)` y `add(i, e)`. La opción de `null` está al revés: `ArrayDeque` rechaza `null`."
+          }
+        },
+        {
+          "question": {
+            "en": "Evaluate the postfix expression `3 4 + 2 *` with a stack. What is the result?",
+            "es": "Evalúa con una pila la expresión posfija `3 4 + 2 *`. ¿Cuál es el resultado?"
+          },
+          "options": {
+            "en": [
+              "11",
+              "14",
+              "10",
+              "24"
+            ],
+            "es": [
+              "11",
+              "14",
+              "10",
+              "24"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Push 3 and 4; `+` pops both and pushes 7; push 2; `*` pops 2 and 7 and pushes 14. The answer 11 reads it as the infix 3 + 4 × 2, which is not what postfix order means.",
+            "es": "Se apilan 3 y 4; `+` saca ambos y apila 7; se apila 2; `*` saca 2 y 7 y apila 14. La respuesta 11 lo lee como la expresión infija 3 + 4 × 2, que no es lo que indica el orden posfijo."
+          }
+        },
+        {
+          "question": {
+            "en": "What happens when you call `poll()` on an empty `ArrayDeque`?",
+            "es": "¿Qué ocurre al llamar a `poll()` sobre un `ArrayDeque` vacío?"
+          },
+          "options": {
+            "en": [
+              "It throws `NoSuchElementException`",
+              "It blocks until another thread adds an element",
+              "It returns `null`",
+              "It returns 0"
+            ],
+            "es": [
+              "Lanza `NoSuchElementException`",
+              "Se bloquea hasta que otro hilo agregue un elemento",
+              "Devuelve `null`",
+              "Devuelve 0"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`poll()` signals emptiness by returning `null`; its throwing counterparts are `remove()` and `pop()`. Blocking behavior belongs to `BlockingQueue.take()`, not `ArrayDeque`.",
+            "es": "`poll()` indica que está vacío devolviendo `null`; sus equivalentes que lanzan excepción son `remove()` y `pop()`. El bloqueo es propio de `BlockingQueue.take()`, no de `ArrayDeque`."
+          }
+        }
+      ]
+    },
+    "exception-handling": {
+      "minutes": 90,
+      "prerequisites": [
+        "oop-basics"
+      ],
+      "whyItMatters": {
+        "en": "File, network and database code in Java (`java.io`, `java.nio`, JDBC) declares checked exceptions, so you cannot write any of it without `try`, `catch`, `throws` and try-with-resources. Getting cleanup and error propagation right is what separates a program that leaks file handles or swallows errors from one you can debug in production.",
+        "es": "El código de archivos, red y bases de datos en Java (`java.io`, `java.nio`, JDBC) declara excepciones comprobadas, así que no puedes escribirlo sin `try`, `catch`, `throws` y try-with-resources. Manejar bien la limpieza y la propagación de errores es lo que separa un programa que pierde manejadores de archivo u oculta errores de uno que puedes depurar en producción."
+      },
+      "objectives": {
+        "en": [
+          "Trace the order in which `try`, `catch` and `finally` blocks run for both the normal and the exceptional path, as in `runCase(10, 0)`.",
+          "Explain the `Throwable` hierarchy and classify an exception as checked (`IOException`) or unchecked (`RuntimeException` subclasses, `Error`).",
+          "Implement a custom exception class with message and cause constructors, and throw it from a validation method declared with `throws` when appropriate.",
+          "Debug resource leaks by rewriting manual `finally { close(); }` code as try-with-resources over `AutoCloseable` objects."
+        ],
+        "es": [
+          "Seguir el orden en que se ejecutan los bloques `try`, `catch` y `finally` tanto en el camino normal como en el excepcional, como en `runCase(10, 0)`.",
+          "Explicar la jerarquía de `Throwable` y clasificar una excepción como comprobada (`IOException`) o no comprobada (subclases de `RuntimeException`, `Error`).",
+          "Implementar una clase de excepción personalizada con constructores de mensaje y causa, y lanzarla desde un método de validación declarado con `throws` cuando corresponda.",
+          "Depurar fugas de recursos reescribiendo código manual con `finally { close(); }` como try-with-resources sobre objetos `AutoCloseable`."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Write classes that extend another class and call `super(...)` from a constructor.",
+          "Trace a chain of method calls and say which method returns to which."
+        ],
+        "es": [
+          "Escribir clases que extienden otra clase y llaman a `super(...)` desde un constructor.",
+          "Seguir una cadena de llamadas a métodos e indicar qué método regresa a cuál."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Checked exceptions are `Exception` and its subclasses except `RuntimeException`; the compiler forces you to catch or declare them. `RuntimeException` and `Error` subclasses are unchecked.",
+          "A thrown exception unwinds the call stack until the first `catch` whose type matches; if none matches, the thread terminates and the stack trace is printed.",
+          "`finally` runs whether the `try` completes normally, returns, or throws; a `return` inside `finally` overrides the original result or discards the in-flight exception, so never return from `finally`.",
+          "try-with-resources closes resources in reverse order of declaration; if both the body and `close()` throw, the body's exception propagates and the close exception is attached via `getSuppressed()`."
+        ],
+        "es": [
+          "Las excepciones comprobadas son `Exception` y sus subclases excepto `RuntimeException`; el compilador te obliga a atraparlas o declararlas. Las subclases de `RuntimeException` y `Error` no son comprobadas.",
+          "Una excepción lanzada desenrolla la pila de llamadas hasta el primer `catch` cuyo tipo coincida; si ninguno coincide, el hilo termina y se imprime la traza de la pila.",
+          "`finally` se ejecuta tanto si el `try` termina normalmente, como si retorna o lanza; un `return` dentro de `finally` reemplaza el resultado original o descarta la excepción en curso, así que nunca retornes desde `finally`.",
+          "try-with-resources cierra los recursos en orden inverso al de su declaración; si tanto el cuerpo como `close()` lanzan, se propaga la excepción del cuerpo y la de cierre se adjunta mediante `getSuppressed()`."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Swallowing exceptions with an empty `catch (Exception e) {}`: the program continues in a broken state and the root cause is lost. At minimum log the exception, or rethrow it wrapped with context: `throw new DataLoadException(\"loading \" + path, e);`.",
+          "Catching a superclass before a subclass (`catch (Exception e)` then `catch (IOException e)`): the second block is unreachable and the code does not compile. Order catch blocks from most specific to most general, or use multi-catch `catch (IOException | SQLException e)` for unrelated types.",
+          "Wrapping an exception but dropping the cause (`throw new MyException(e.getMessage())`): the original stack trace disappears. Pass the cause to the constructor (`super(message, cause)`) so `getCause()` and the printed trace keep it."
+        ],
+        "es": [
+          "Ocultar excepciones con un `catch (Exception e) {}` vacío: el programa sigue en un estado inválido y se pierde la causa raíz. Como mínimo registra la excepción, o vuelve a lanzarla envuelta con contexto: `throw new DataLoadException(\"loading \" + path, e);`.",
+          "Atrapar una superclase antes que una subclase (`catch (Exception e)` y luego `catch (IOException e)`): el segundo bloque es inalcanzable y el código no compila. Ordena los `catch` del más específico al más general, o usa multi-catch `catch (IOException | SQLException e)` para tipos no relacionados.",
+          "Envolver una excepción pero perder la causa (`throw new MyException(e.getMessage())`): desaparece la traza original. Pasa la causa al constructor (`super(message, cause)`) para que `getCause()` y la traza impresa la conserven."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: write `static int parseOrDefault(String s, int fallback)` that returns `Integer.parseInt(s)` or `fallback` when a `NumberFormatException` is thrown. Test with `\"42\"`, `\"4x2\"` and `null` (find out which exception `parseInt(null)` throws).",
+          "Create `class InvalidAgeException extends Exception` with `(String message)` and `(String message, Throwable cause)` constructors. Write `static void validateAge(int age) throws InvalidAgeException` that rejects ages below 0 or above 150, and a `main` that catches it and prints the message.",
+          "Write a class `Tracker implements AutoCloseable` whose constructor prints `open <name>` and whose `close()` prints `close <name>`. Open two trackers in one try-with-resources statement, throw from the body, and predict the full output order including your `catch` and `finally` blocks.",
+          "Exam-style: given a method with `try { return compute(); } catch (ArithmeticException e) { return -1; } finally { counter++; }`, write out the return value and the final `counter` when `compute()` returns 5, when it throws `ArithmeticException`, and when it throws `IllegalStateException`. Then explain what would change if `finally` contained `return 0;`."
+        ],
+        "es": [
+          "Calentamiento: escribe `static int parseOrDefault(String s, int fallback)` que devuelva `Integer.parseInt(s)` o `fallback` cuando se lance una `NumberFormatException`. Prueba con `\"42\"`, `\"4x2\"` y `null` (averigua qué excepción lanza `parseInt(null)`).",
+          "Crea `class InvalidAgeException extends Exception` con los constructores `(String message)` y `(String message, Throwable cause)`. Escribe `static void validateAge(int age) throws InvalidAgeException` que rechace edades menores que 0 o mayores que 150, y un `main` que la atrape e imprima el mensaje.",
+          "Escribe una clase `Tracker implements AutoCloseable` cuyo constructor imprima `open <name>` y cuyo `close()` imprima `close <name>`. Abre dos trackers en una sola sentencia try-with-resources, lanza una excepción desde el cuerpo y predice el orden completo de la salida, incluidos tus bloques `catch` y `finally`.",
+          "Tipo examen: dado un método con `try { return compute(); } catch (ArithmeticException e) { return -1; } finally { counter++; }`, escribe el valor devuelto y el `counter` final cuando `compute()` devuelve 5, cuando lanza `ArithmeticException` y cuando lanza `IllegalStateException`. Luego explica qué cambiaría si `finally` contuviera `return 0;`."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What is the difference between `throw` and `throws`?",
+          "Why does the compiler force you to handle `IOException` but not `NullPointerException`?",
+          "In what order are two resources closed in a try-with-resources statement, and why that order?"
+        ],
+        "es": [
+          "¿Cuál es la diferencia entre `throw` y `throws`?",
+          "¿Por qué el compilador te obliga a manejar `IOException` pero no `NullPointerException`?",
+          "¿En qué orden se cierran dos recursos en una sentencia try-with-resources y por qué en ese orden?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Try-Catch",
+            "es": "Try-Catch"
+          },
+          "definition": {
+            "en": "A `try` block encloses code that may throw, and each following `catch (Type e)` handles exceptions assignable to `Type`; the first matching `catch` in source order runs and execution then continues after the whole statement.",
+            "es": "Un bloque `try` encierra código que puede lanzar excepciones, y cada `catch (Type e)` siguiente maneja las excepciones asignables a `Type`; se ejecuta el primer `catch` que coincide en orden de aparición y luego la ejecución continúa después de toda la sentencia."
+          }
+        },
+        {
+          "term": {
+            "en": "Finally Block",
+            "es": "Bloque finally"
+          },
+          "definition": {
+            "en": "A `finally` block runs after the `try` and any matching `catch`, whether they completed normally, returned, or threw, making it the place for cleanup. It is skipped only if the JVM halts, for example via `System.exit`.",
+            "es": "Un bloque `finally` se ejecuta después del `try` y de cualquier `catch` que coincida, hayan terminado normalmente, retornado o lanzado una excepción, por lo que es el lugar para la limpieza. Solo se omite si la JVM se detiene, por ejemplo con `System.exit`."
+          }
+        },
+        {
+          "term": {
+            "en": "Custom Exceptions",
+            "es": "Excepciones personalizadas"
+          },
+          "definition": {
+            "en": "A custom exception is a class you define by extending `Exception` (checked) or `RuntimeException` (unchecked) to name a domain-specific failure such as `InsufficientFundsException`. It should provide constructors that pass a message and an optional cause to `super`.",
+            "es": "Una excepción personalizada es una clase que defines extendiendo `Exception` (comprobada) o `RuntimeException` (no comprobada) para nombrar una falla propia del dominio, como `InsufficientFundsException`. Debe ofrecer constructores que pasen un mensaje y una causa opcional a `super`."
+          }
+        },
+        {
+          "term": {
+            "en": "Throws",
+            "es": "Throws"
+          },
+          "definition": {
+            "en": "The `throws` clause in a method signature declares the checked exceptions the method may propagate to its caller, which must then catch or redeclare them. It is distinct from the `throw` statement, which actually raises an exception object.",
+            "es": "La cláusula `throws` en la firma de un método declara las excepciones comprobadas que el método puede propagar a quien lo llama, que entonces debe atraparlas o declararlas a su vez. Es distinta de la sentencia `throw`, que es la que realmente lanza un objeto excepción."
+          }
+        },
+        {
+          "term": {
+            "en": "Exception Types",
+            "es": "Tipos de excepciones"
+          },
+          "definition": {
+            "en": "All exceptions descend from `Throwable`: `Error` signals serious JVM problems you normally do not catch, `RuntimeException` and its subclasses are unchecked programming errors, and other `Exception` subclasses are checked conditions the compiler makes you handle or declare.",
+            "es": "Todas las excepciones descienden de `Throwable`: `Error` indica problemas graves de la JVM que normalmente no se atrapan, `RuntimeException` y sus subclases son errores de programación no comprobados, y las demás subclases de `Exception` son condiciones comprobadas que el compilador te obliga a manejar o declarar."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Oracle Java Tutorials: Exceptions lesson",
+            "es": "Tutoriales de Java de Oracle: lección de excepciones"
+          },
+          "url": "https://docs.oracle.com/javase/tutorial/essential/exceptions/index.html"
+        },
+        {
+          "label": {
+            "en": "Oracle Java Tutorials: The try-with-resources Statement",
+            "es": "Tutoriales de Java de Oracle: la sentencia try-with-resources"
+          },
+          "url": "https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html"
+        },
+        {
+          "label": {
+            "en": "Java SE 21 API: java.lang.Exception",
+            "es": "API de Java SE 21: java.lang.Exception"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Exception.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "In the module's example, what does `runCase(10, 0)` print, in order?",
+            "es": "En el ejemplo del módulo, ¿qué imprime `runCase(10, 0)`, en orden?"
+          },
+          "options": {
+            "en": [
+              "`10 / 0 = 0`, then `Case finished for inputs (10, 0)`",
+              "`Case finished for inputs (10, 0)`, then `Handled exception: Divisor cannot be zero`",
+              "Only `Handled exception: Divisor cannot be zero`",
+              "`Handled exception: Divisor cannot be zero`, then `Case finished for inputs (10, 0)`"
+            ],
+            "es": [
+              "`10 / 0 = 0` y luego `Case finished for inputs (10, 0)`",
+              "`Case finished for inputs (10, 0)` y luego `Handled exception: Divisor cannot be zero`",
+              "Solo `Handled exception: Divisor cannot be zero`",
+              "`Handled exception: Divisor cannot be zero` y luego `Case finished for inputs (10, 0)`"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "`quotient` throws before the result line prints, the `catch` prints the message, and `finally` runs last. `finally` never runs before the matching `catch`, and it is not skipped just because an exception was handled.",
+            "es": "`quotient` lanza la excepción antes de imprimir el resultado, el `catch` imprime el mensaje y `finally` se ejecuta al final. `finally` nunca se ejecuta antes del `catch` que coincide, ni se omite porque la excepción se haya manejado."
+          }
+        },
+        {
+          "question": {
+            "en": "What does this print? `static int f() { try { return 1; } finally { System.out.print(\"F\"); } }` called as `System.out.print(f());`",
+            "es": "¿Qué imprime esto? `static int f() { try { return 1; } finally { System.out.print(\"F\"); } }` llamado como `System.out.print(f());`"
+          },
+          "options": {
+            "en": [
+              "`1F`",
+              "`F1`",
+              "`1`",
+              "`F`"
+            ],
+            "es": [
+              "`1F`",
+              "`F1`",
+              "`1`",
+              "`F`"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The return value 1 is computed, then `finally` runs and prints `F` before control actually leaves `f`, and only then does the caller print 1. `1F` assumes `finally` runs after the method has returned.",
+            "es": "Se calcula el valor de retorno 1, luego `finally` se ejecuta e imprime `F` antes de que el control salga realmente de `f`, y solo entonces quien llamó imprime 1. `1F` supone que `finally` se ejecuta después de que el método ya retornó."
+          }
+        },
+        {
+          "question": {
+            "en": "What happens with `try { readFile(); } catch (Exception e) { ... } catch (IOException e) { ... }`, where `readFile()` declares `throws IOException`?",
+            "es": "¿Qué ocurre con `try { readFile(); } catch (Exception e) { ... } catch (IOException e) { ... }`, donde `readFile()` declara `throws IOException`?"
+          },
+          "options": {
+            "en": [
+              "Compile error: the `IOException` catch is unreachable because `Exception` already catches it",
+              "An `IOException` goes to the second block because it is more specific",
+              "Both blocks run for an `IOException`",
+              "It compiles, but the second block runs only for unchecked exceptions"
+            ],
+            "es": [
+              "Error de compilación: el `catch` de `IOException` es inalcanzable porque `Exception` ya la atrapa",
+              "Una `IOException` va al segundo bloque porque es más específico",
+              "Ambos bloques se ejecutan para una `IOException`",
+              "Compila, pero el segundo bloque solo se ejecuta para excepciones no comprobadas"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Catch clauses are tried in source order, not by specificity, and at most one runs. Since `Exception` would always catch an `IOException` first, the compiler reports the second clause as already caught. Put the more specific type first.",
+            "es": "Los `catch` se prueban en el orden en que aparecen, no por especificidad, y se ejecuta como máximo uno. Como `Exception` siempre atraparía antes una `IOException`, el compilador marca la segunda cláusula como ya atrapada. Pon primero el tipo más específico."
+          }
+        },
+        {
+          "question": {
+            "en": "Which of these is a checked exception?",
+            "es": "¿Cuál de estas es una excepción comprobada?"
+          },
+          "options": {
+            "en": [
+              "`ArithmeticException`",
+              "`NullPointerException`",
+              "`IOException`",
+              "`IllegalArgumentException`"
+            ],
+            "es": [
+              "`ArithmeticException`",
+              "`NullPointerException`",
+              "`IOException`",
+              "`IllegalArgumentException`"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`IOException` extends `Exception` but not `RuntimeException`, so it is checked. The other three extend `RuntimeException`; `IllegalArgumentException` is tempting because it is often thrown deliberately, but it is still unchecked.",
+            "es": "`IOException` extiende `Exception` pero no `RuntimeException`, así que es comprobada. Las otras tres extienden `RuntimeException`; `IllegalArgumentException` tienta porque suele lanzarse a propósito, pero sigue siendo no comprobada."
+          }
+        },
+        {
+          "question": {
+            "en": "In `try (Reader a = open(\"a\"); Reader b = open(\"b\")) { ... }`, when the block finishes, in what order are the resources closed?",
+            "es": "En `try (Reader a = open(\"a\"); Reader b = open(\"b\")) { ... }`, cuando el bloque termina, ¿en qué orden se cierran los recursos?"
+          },
+          "options": {
+            "en": [
+              "`a` then `b`, in declaration order",
+              "`b` then `a`, in reverse declaration order",
+              "Only `b`; `a` must be closed manually",
+              "In an unspecified order chosen by the garbage collector"
+            ],
+            "es": [
+              "`a` y luego `b`, en orden de declaración",
+              "`b` y luego `a`, en orden inverso de declaración",
+              "Solo `b`; `a` debe cerrarse manualmente",
+              "En un orden no especificado elegido por el recolector de basura"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Resources are closed in reverse order so that a later resource, which may depend on an earlier one (e.g. a reader wrapping a stream), is closed first. Closing is deterministic at the end of the block, not left to the garbage collector.",
+            "es": "Los recursos se cierran en orden inverso para que uno posterior, que puede depender de uno anterior (por ejemplo, un lector que envuelve un flujo), se cierre primero. El cierre es determinista al final del bloque, no queda en manos del recolector de basura."
+          }
+        }
+      ]
+    },
+    "linked-lists": {
+      "minutes": 100,
+      "prerequisites": [
+        "arrays-strings",
+        "oop-basics"
+      ],
+      "whyItMatters": {
+        "en": "Linked lists are the building block of hash-table chaining, LRU caches (paired with a hash map), and Java's `LinkedList`. Pointer-rewiring problems—reverse, merge, cycle detection—are interview staples because they test careful reasoning about references and `null`.",
+        "es": "Las listas enlazadas son la base del encadenamiento en tablas hash, de las cachés LRU (junto con un mapa hash) y de `LinkedList` en Java. Los problemas de reconexión de punteros—invertir, combinar, detectar ciclos—son clásicos de entrevista porque exigen razonar con cuidado sobre referencias y `null`."
+      },
+      "objectives": {
+        "en": [
+          "Implement singly linked list operations—insert at head, insert after a node, delete by value—handling the empty list and deletion of the head.",
+          "Trace iterative reversal with `prev`, `current`, and `next` pointers, stating the invariant that holds after each iteration.",
+          "Apply Floyd's tortoise-and-hare algorithm to detect a cycle and to find the node where the cycle begins, in O(n) time and O(1) space.",
+          "Implement merging two sorted lists with a dummy head and analyze it as O(n + m) time with O(1) extra space."
+        ],
+        "es": [
+          "Implementar operaciones de lista simplemente enlazada—insertar al inicio, insertar después de un nodo, borrar por valor—manejando la lista vacía y el borrado de la cabeza.",
+          "Rastrear la inversión iterativa con los punteros `prev`, `current` y `next`, indicando el invariante que se cumple después de cada iteración.",
+          "Aplicar el algoritmo de la tortuga y la liebre de Floyd para detectar un ciclo y encontrar el nodo donde empieza, en tiempo O(n) y espacio O(1).",
+          "Implementar la combinación de dos listas ordenadas con un nodo cabeza ficticio y analizarla como tiempo O(n + m) con espacio extra O(1)."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Define a class with fields and a constructor, and create objects with `new`",
+          "Explain the difference between a reference variable and the object it points to"
+        ],
+        "es": [
+          "Definir una clase con campos y constructor, y crear objetos con `new`",
+          "Explicar la diferencia entre una variable de referencia y el objeto al que apunta"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Access by index is O(n); inserting at the head is O(1); inserting or deleting next to a known node is O(1) (in a singly linked list, deletion needs the previous node).",
+          "A dummy (sentinel) head node removes the special cases for inserting or deleting at the front of the list.",
+          "Floyd's algorithm: slow moves 1 step, fast moves 2; they meet if and only if there is a cycle. Then move one pointer back to the head and advance both 1 step at a time—they meet at the cycle's entry.",
+          "Java's `LinkedList` is doubly linked and implements both `List` and `Deque`; for most workloads `ArrayList` or `ArrayDeque` is faster because of cache locality."
+        ],
+        "es": [
+          "El acceso por índice es O(n); insertar al inicio es O(1); insertar o borrar junto a un nodo conocido es O(1) (en una lista simple, borrar requiere el nodo anterior).",
+          "Un nodo cabeza ficticio (centinela) elimina los casos especiales de insertar o borrar al inicio de la lista.",
+          "Algoritmo de Floyd: lento avanza 1 paso, rápido avanza 2; se encuentran si y solo si hay un ciclo. Luego se regresa un puntero a la cabeza y ambos avanzan de 1 en 1: se encuentran en la entrada del ciclo.",
+          "`LinkedList` de Java es doblemente enlazada e implementa `List` y `Deque`; en la mayoría de los casos `ArrayList` o `ArrayDeque` son más rápidas por la localidad de caché."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Overwriting `current.next` before saving it during reversal, which disconnects and loses the rest of the list. Always store `ListNode next = current.next` first.",
+          "Dereferencing without null checks, e.g. evaluating `fast.next.next` when `fast.next` is `null`, throws `NullPointerException`. Test `fast != null && fast.next != null` in that order.",
+          "Forgetting to return (and use) the new head after an operation that changes it, such as reversing or deleting the first node, so the caller still holds the old head."
+        ],
+        "es": [
+          "Sobrescribir `current.next` antes de guardarlo al invertir, lo que desconecta y pierde el resto de la lista. Guarda siempre primero `ListNode next = current.next`.",
+          "Desreferenciar sin comprobar `null`, por ejemplo evaluar `fast.next.next` cuando `fast.next` es `null`, lanza `NullPointerException`. Comprueba `fast != null && fast.next != null` en ese orden.",
+          "Olvidar devolver (y usar) la nueva cabeza después de una operación que la cambia, como invertir o borrar el primer nodo, de modo que quien llama sigue con la cabeza vieja."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Build the list 1 → 2 → 3 → 4 by hand with `ListNode` objects, then write `int length(ListNode head)` and `String toString(ListNode head)` that returns \"1 -> 2 -> 3 -> 4\".",
+          "Implement `ListNode deleteAll(ListNode head, int val)` that removes every node with that value using a dummy head. Test with the value at the head, in the middle, at the tail, and in every node.",
+          "Implement `ListNode middle(ListNode head)` with slow and fast pointers (return the second middle for even lengths), then `ListNode reverseRecursive(ListNode head)` and explain why it uses O(n) stack space.",
+          "Implement `ListNode detectCycleStart(ListNode head)` that returns the node where a cycle begins, or `null`, in O(1) extra space, and explain why moving one pointer back to the head after the meeting finds the entry."
+        ],
+        "es": [
+          "Construye a mano la lista 1 → 2 → 3 → 4 con objetos `ListNode` y escribe `int length(ListNode head)` y `String toString(ListNode head)` que devuelva \"1 -> 2 -> 3 -> 4\".",
+          "Implementa `ListNode deleteAll(ListNode head, int val)` que elimine todos los nodos con ese valor usando una cabeza ficticia. Prueba con el valor en la cabeza, en medio, al final y en todos los nodos.",
+          "Implementa `ListNode middle(ListNode head)` con punteros lento y rápido (devuelve el segundo nodo central si la longitud es par) y luego `ListNode reverseRecursive(ListNode head)`, explicando por qué usa espacio de pila O(n).",
+          "Implementa `ListNode detectCycleStart(ListNode head)` que devuelva el nodo donde empieza un ciclo, o `null`, con espacio extra O(1), y explica por qué regresar un puntero a la cabeza tras el encuentro lleva a la entrada."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why can a doubly linked list delete a given node in O(1), while a singly linked list needs the previous node?",
+          "What problem does a dummy head node solve?",
+          "In Floyd's algorithm, why can the fast pointer never jump over the slow pointer forever inside a cycle?"
+        ],
+        "es": [
+          "¿Por qué una lista doblemente enlazada puede borrar un nodo dado en O(1), mientras que una lista simple necesita el nodo anterior?",
+          "¿Qué problema resuelve un nodo cabeza ficticio?",
+          "En el algoritmo de Floyd, ¿por qué el puntero rápido no puede saltar al lento indefinidamente dentro de un ciclo?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Singly Linked Lists",
+            "es": "Listas simplemente enlazadas"
+          },
+          "definition": {
+            "en": "A sequence of nodes in which each node stores a value and a reference to the next node, and the last node's `next` is `null`. Traversal goes in one direction, starting from the head.",
+            "es": "Una secuencia de nodos en la que cada nodo guarda un valor y una referencia al siguiente, y el `next` del último nodo es `null`. El recorrido va en una sola dirección, a partir de la cabeza."
+          }
+        },
+        {
+          "term": {
+            "en": "Doubly Linked Lists",
+            "es": "Listas doblemente enlazadas"
+          },
+          "definition": {
+            "en": "A linked list whose nodes store both `next` and `prev` references, allowing backward traversal and O(1) removal of a node given only a reference to it, at the cost of one extra reference per node.",
+            "es": "Una lista enlazada cuyos nodos guardan referencias `next` y `prev`, lo que permite recorrerla hacia atrás y quitar en O(1) un nodo del que solo se tiene la referencia, a cambio de una referencia extra por nodo."
+          }
+        },
+        {
+          "term": {
+            "en": "Cycle Detection",
+            "es": "Detección de ciclos"
+          },
+          "definition": {
+            "en": "Determining whether following `next` references ever revisits a node. Floyd's algorithm advances a slow pointer one step and a fast pointer two steps per iteration; they meet if and only if a cycle exists, using O(1) extra space.",
+            "es": "Determinar si al seguir las referencias `next` se vuelve a visitar algún nodo. El algoritmo de Floyd avanza un puntero lento un paso y uno rápido dos pasos por iteración; se encuentran si y solo si existe un ciclo, con espacio extra O(1)."
+          }
+        },
+        {
+          "term": {
+            "en": "List Reversal",
+            "es": "Inversión de listas"
+          },
+          "definition": {
+            "en": "Reversing the direction of every `next` reference so the old tail becomes the new head. The iterative version walks the list once with `prev`, `current`, and `next` pointers, using O(n) time and O(1) space.",
+            "es": "Invertir la dirección de cada referencia `next` para que la cola anterior sea la nueva cabeza. La versión iterativa recorre la lista una vez con los punteros `prev`, `current` y `next`, en tiempo O(n) y espacio O(1)."
+          }
+        },
+        {
+          "term": {
+            "en": "Merge Operations",
+            "es": "Operaciones de combinación"
+          },
+          "definition": {
+            "en": "Combining two sorted lists into one sorted list by repeatedly detaching the smaller of the two current head nodes and appending it to a tail pointer. With a dummy head this takes O(n + m) time and reuses the existing nodes without allocating new ones.",
+            "es": "Combinar dos listas ordenadas en una sola lista ordenada tomando repetidamente el menor de los dos nodos al frente y enlazándolo a un puntero de cola. Con una cabeza ficticia toma tiempo O(n + m) y reutiliza los nodos existentes sin crear nuevos."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Algorithms, 4th ed. (Princeton): Bags, Queues, and Stacks (linked lists)",
+            "es": "Algorithms, 4.ª ed. (Princeton): Bolsas, colas y pilas (listas enlazadas, en inglés)"
+          },
+          "url": "https://algs4.cs.princeton.edu/13stacks/"
+        },
+        {
+          "label": {
+            "en": "Java 21 API: java.util.LinkedList",
+            "es": "API de Java 21: java.util.LinkedList (en inglés)"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/LinkedList.html"
+        },
+        {
+          "label": {
+            "en": "Wikipedia: Cycle detection (Floyd's tortoise and hare)",
+            "es": "Wikipedia: Detección de ciclos (tortuga y liebre de Floyd, en inglés)"
+          },
+          "url": "https://en.wikipedia.org/wiki/Cycle_detection"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "The list is 1 → 2 → 3 and `head` points to 1. What is the list after this code?\n`ListNode p = head.next;\nhead.next = p.next;\np.next = head;\nhead = p;`",
+            "es": "La lista es 1 → 2 → 3 y `head` apunta a 1. ¿Cómo queda la lista después de este código?\n`ListNode p = head.next;\nhead.next = p.next;\np.next = head;\nhead = p;`"
+          },
+          "options": {
+            "en": [
+              "1 → 3",
+              "3 → 2 → 1",
+              "2 → 1 → 3",
+              "1 → 2 → 3"
+            ],
+            "es": [
+              "1 → 3",
+              "3 → 2 → 1",
+              "2 → 1 → 3",
+              "1 → 2 → 3"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "p is node 2; node 1 now points to 3; node 2 now points to 1; head becomes node 2. The code swaps the first two nodes, giving 2 → 1 → 3. It does not reverse the whole list (3 → 2 → 1).",
+            "es": "p es el nodo 2; el nodo 1 pasa a apuntar a 3; el nodo 2 pasa a apuntar a 1; head pasa a ser el nodo 2. El código intercambia los dos primeros nodos: 2 → 1 → 3. No invierte toda la lista (3 → 2 → 1)."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the cost of reading the k-th element (0-based) of a singly linked list?",
+            "es": "¿Cuál es el costo de leer el k-ésimo elemento (desde 0) de una lista simplemente enlazada?"
+          },
+          "options": {
+            "en": [
+              "O(k), because you must follow k `next` references from the head",
+              "O(1), like an array",
+              "O(log n), using binary search on the nodes",
+              "O(n²)"
+            ],
+            "es": [
+              "O(k), porque hay que seguir k referencias `next` desde la cabeza",
+              "O(1), como en un arreglo",
+              "O(log n), con búsqueda binaria sobre los nodos",
+              "O(n²)"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Nodes are not contiguous, so there is no address arithmetic: you walk k links, which is O(n) in the worst case. O(1) access relies on contiguous storage, which only arrays provide.",
+            "es": "Los nodos no son contiguos, así que no hay aritmética de direcciones: hay que recorrer k enlaces, que es O(n) en el peor caso. El acceso O(1) depende de memoria contigua, que solo tienen los arreglos."
+          }
+        },
+        {
+          "question": {
+            "en": "Why does `mergeTwoLists` start with a dummy node?",
+            "es": "¿Por qué `mergeTwoLists` empieza con un nodo ficticio?"
+          },
+          "options": {
+            "en": [
+              "It makes comparisons faster",
+              "The garbage collector requires it",
+              "It stores a copy of every node so the inputs are not modified",
+              "It gives a fixed node to attach the first result node to, removing the special case of an empty result list"
+            ],
+            "es": [
+              "Hace más rápidas las comparaciones",
+              "El recolector de basura lo exige",
+              "Guarda una copia de cada nodo para no modificar las entradas",
+              "Da un nodo fijo al cual enlazar el primer nodo del resultado, eliminando el caso especial de la lista resultado vacía"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "With a dummy, the code always does `tail.next = smaller; tail = tail.next;` and returns `dummy.next`, without an `if (head == null)` branch. It does not copy nodes—the merge reuses the original ones.",
+            "es": "Con un nodo ficticio, el código siempre hace `tail.next = smaller; tail = tail.next;` y devuelve `dummy.next`, sin una rama `if (head == null)`. No copia nodos: la combinación reutiliza los originales."
+          }
+        },
+        {
+          "question": {
+            "en": "Which operation is O(1) in a doubly linked list but, in general, O(n) in a singly linked list?",
+            "es": "¿Qué operación es O(1) en una lista doblemente enlazada pero, en general, O(n) en una lista simplemente enlazada?"
+          },
+          "options": {
+            "en": [
+              "Inserting a new node at the head",
+              "Deleting a node given only a reference to that node (which may be the tail)",
+              "Reading the head's value",
+              "Traversing the entire list"
+            ],
+            "es": [
+              "Insertar un nodo nuevo en la cabeza",
+              "Borrar un nodo del que solo se tiene la referencia (y que puede ser la cola)",
+              "Leer el valor de la cabeza",
+              "Recorrer toda la lista"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Deleting needs the predecessor; a doubly linked node has `prev`, but a singly linked list must walk from the head to find it. Inserting at the head is O(1) in both kinds of list.",
+            "es": "Borrar requiere el nodo anterior; un nodo doblemente enlazado tiene `prev`, pero en una lista simple hay que recorrer desde la cabeza para encontrarlo. Insertar en la cabeza es O(1) en ambos tipos de lista."
+          }
+        },
+        {
+          "question": {
+            "en": "In the module's `hasCycle` (slow = head, fast = head.next), how many times does the `while` loop body run on the list 1 → 2 → 3 → null before returning false?",
+            "es": "En el `hasCycle` del módulo (slow = head, fast = head.next), ¿cuántas veces se ejecuta el cuerpo del ciclo `while` con la lista 1 → 2 → 3 → null antes de devolver false?"
+          },
+          "options": {
+            "en": [
+              "1",
+              "2",
+              "3",
+              "0"
+            ],
+            "es": [
+              "1",
+              "2",
+              "3",
+              "0"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Initially fast = node 2 and fast.next = node 3, so the body runs once: slow ≠ fast, slow moves to 2, fast moves to 3.next = null. The condition then fails. Answering 3 assumes the loop visits every node.",
+            "es": "Al inicio fast = nodo 2 y fast.next = nodo 3, así que el cuerpo se ejecuta una vez: slow ≠ fast, slow pasa a 2 y fast pasa a 3.next = null. Luego la condición falla. Responder 3 supone que el ciclo visita cada nodo."
+          }
+        }
+      ]
+    },
+    "propositional-logic-proofs": {
+      "minutes": 75,
+      "prerequisites": [],
+      "whyItMatters": {
+        "en": "Every `if` condition, loop invariant and correctness argument you write is propositional logic; simplifying `!(a && b)` with De Morgan and proving claims by contrapositive are skills tested in every discrete math course and used later in algorithm proofs.",
+        "es": "Cada condición `if`, invariante de ciclo y argumento de corrección que escribes es lógica proposicional; simplificar `!(a && b)` con De Morgan y demostrar afirmaciones por contrarrecíproco son habilidades evaluadas en todo curso de matemáticas discretas y que se usan después en demostraciones de algoritmos."
+      },
+      "objectives": {
+        "en": [
+          "Translate English statements into propositional formulas using ¬, ∧, ∨, → and ↔, and back again.",
+          "Construct a truth table for a formula with up to four variables and use it to classify the formula as a tautology, contradiction or contingency.",
+          "Prove logical equivalences such as p → q ≡ ¬p ∨ q and ¬(p ∧ q) ≡ ¬p ∨ ¬q using truth tables or known laws.",
+          "Write direct and contrapositive proofs of simple statements about integers, e.g. \"if n is odd, then n² is odd\"."
+        ],
+        "es": [
+          "Traducir enunciados en español a fórmulas proposicionales usando ¬, ∧, ∨, → y ↔, y viceversa.",
+          "Construir la tabla de verdad de una fórmula de hasta cuatro variables y usarla para clasificarla como tautología, contradicción o contingencia.",
+          "Demostrar equivalencias lógicas como p → q ≡ ¬p ∨ q y ¬(p ∧ q) ≡ ¬p ∨ ¬q mediante tablas de verdad o leyes conocidas.",
+          "Escribir demostraciones directas y por contrarrecíproco de enunciados sencillos sobre enteros, p. ej. \"si n es impar, entonces n² es impar\"."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Evaluate boolean expressions with `&&`, `||` and `!` in code",
+          "Use the definitions of even (n = 2k) and odd (n = 2k + 1) integers in algebra"
+        ],
+        "es": [
+          "Evaluar expresiones booleanas con `&&`, `||` y `!` en código",
+          "Usar en álgebra las definiciones de entero par (n = 2k) e impar (n = 2k + 1)"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "p → q is false only when p is true and q is false; it is equivalent to ¬p ∨ q and to its contrapositive ¬q → ¬p.",
+          "The converse q → p and the inverse ¬p → ¬q are NOT equivalent to p → q (but they are equivalent to each other).",
+          "De Morgan: ¬(p ∧ q) ≡ ¬p ∨ ¬q and ¬(p ∨ q) ≡ ¬p ∧ ¬q.",
+          "A truth table for n variables has 2ⁿ rows; two formulas are equivalent iff they agree on every row (equivalently, A ↔ B is a tautology)."
+        ],
+        "es": [
+          "p → q es falsa solo cuando p es verdadera y q es falsa; equivale a ¬p ∨ q y a su contrarrecíproca ¬q → ¬p.",
+          "La recíproca q → p y la inversa ¬p → ¬q NO son equivalentes a p → q (pero sí son equivalentes entre sí).",
+          "De Morgan: ¬(p ∧ q) ≡ ¬p ∨ ¬q y ¬(p ∨ q) ≡ ¬p ∧ ¬q.",
+          "Una tabla de verdad con n variables tiene 2ⁿ filas; dos fórmulas son equivalentes si y solo si coinciden en todas las filas (es decir, A ↔ B es una tautología)."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Proving the converse instead of the statement (showing \"if n² is odd then n is odd\" when asked for \"if n is odd then n² is odd\"); write the hypothesis and conclusion explicitly before starting.",
+          "Treating p → q as false when p is false, which breaks vacuous-truth reasoning; check the truth table: F → anything is true.",
+          "Proving a general claim with one example (\"n = 3 works\"); examples can disprove a universal statement but never prove it, so use an arbitrary n = 2k + 1."
+        ],
+        "es": [
+          "Demostrar la recíproca en lugar del enunciado (probar \"si n² es impar entonces n es impar\" cuando se pide \"si n es impar entonces n² es impar\"); escribe explícitamente la hipótesis y la conclusión antes de empezar.",
+          "Considerar p → q falsa cuando p es falsa, lo que rompe el razonamiento de verdad por vacuidad; revisa la tabla de verdad: F → cualquier cosa es verdadera.",
+          "Demostrar una afirmación general con un ejemplo (\"funciona para n = 3\"); los ejemplos pueden refutar un enunciado universal pero nunca demostrarlo, así que usa un n = 2k + 1 arbitrario."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: let p = \"it rains\" and q = \"I bring an umbrella\". Write in symbols: \"I bring an umbrella only if it rains\", \"I bring an umbrella if it rains\", and \"it rains but I do not bring an umbrella\".",
+          "Core: extend the module's Java truth-table runner with a method `boolean equivalent(BinaryOperator<Boolean> f, BinaryOperator<Boolean> g)` that checks all 4 rows, and use it to confirm p → q ≡ ¬q → ¬p and to show p → q ≢ q → p.",
+          "Stretch: build the full truth table for (p → q) ∧ (q → r) → (p → r) (8 rows) and decide whether it is a tautology; then prove the same result using equivalence laws instead of a table.",
+          "Exam-style: prove that for every integer n, if n² is even then n is even. State which proof method you use (contrapositive), write the hypothesis you assume, and complete the algebra."
+        ],
+        "es": [
+          "Calentamiento: sean p = \"llueve\" y q = \"llevo paraguas\". Escribe en símbolos: \"llevo paraguas solo si llueve\", \"llevo paraguas si llueve\" y \"llueve pero no llevo paraguas\".",
+          "Núcleo: amplía el generador de tablas de verdad en Java del módulo con un método `boolean equivalent(BinaryOperator<Boolean> f, BinaryOperator<Boolean> g)` que revise las 4 filas, y úsalo para confirmar que p → q ≡ ¬q → ¬p y para mostrar que p → q ≢ q → p.",
+          "Extensión: construye la tabla de verdad completa de (p → q) ∧ (q → r) → (p → r) (8 filas) y decide si es una tautología; luego demuestra el mismo resultado usando leyes de equivalencia en lugar de la tabla.",
+          "Estilo examen: demuestra que para todo entero n, si n² es par entonces n es par. Indica qué método usas (contrarrecíproco), escribe la hipótesis que supones y completa el álgebra."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "In which single row of the truth table is p → q false?",
+          "What are the converse and the contrapositive of p → q, and which one is equivalent to it?",
+          "How many rows does a truth table with 5 propositional variables have?"
+        ],
+        "es": [
+          "¿En qué única fila de la tabla de verdad es falsa p → q?",
+          "¿Cuáles son la recíproca y la contrarrecíproca de p → q, y cuál de ellas es equivalente?",
+          "¿Cuántas filas tiene una tabla de verdad con 5 variables proposicionales?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Propositions",
+            "es": "Proposiciones"
+          },
+          "definition": {
+            "en": "Declarative statements that are either true or false, but not both (e.g. \"7 is prime\"); questions, commands and statements with unassigned variables such as \"x > 3\" are not propositions.",
+            "es": "Enunciados declarativos que son verdaderos o falsos, pero no ambas cosas (p. ej. \"7 es primo\"); las preguntas, las órdenes y los enunciados con variables sin asignar como \"x > 3\" no son proposiciones."
+          }
+        },
+        {
+          "term": {
+            "en": "Truth Tables",
+            "es": "Tablas de verdad"
+          },
+          "definition": {
+            "en": "Tables that list every combination of truth values of a formula's variables (2ⁿ rows for n variables) together with the resulting value of the formula, used to evaluate formulas and test equivalence.",
+            "es": "Tablas que enumeran todas las combinaciones de valores de verdad de las variables de una fórmula (2ⁿ filas para n variables) junto con el valor resultante de la fórmula; se usan para evaluar fórmulas y comprobar equivalencias."
+          }
+        },
+        {
+          "term": {
+            "en": "Implication",
+            "es": "Implicación"
+          },
+          "definition": {
+            "en": "The connective p → q (\"if p then q\"), which is false exactly when p is true and q is false and true otherwise; p is the hypothesis (antecedent) and q the conclusion (consequent).",
+            "es": "El conectivo p → q (\"si p entonces q\"), que es falso exactamente cuando p es verdadera y q es falsa, y verdadero en los demás casos; p es la hipótesis (antecedente) y q la conclusión (consecuente)."
+          }
+        },
+        {
+          "term": {
+            "en": "Logical Equivalence",
+            "es": "Equivalencia lógica"
+          },
+          "definition": {
+            "en": "Two formulas A and B are logically equivalent (A ≡ B) when they have the same truth value under every assignment of their variables, i.e. when A ↔ B is a tautology.",
+            "es": "Dos fórmulas A y B son lógicamente equivalentes (A ≡ B) cuando tienen el mismo valor de verdad para toda asignación de sus variables, es decir, cuando A ↔ B es una tautología."
+          }
+        },
+        {
+          "term": {
+            "en": "Direct Proof",
+            "es": "Demostración directa"
+          },
+          "definition": {
+            "en": "A method for proving p → q by assuming p is true and deriving q through a chain of definitions, algebra and previously proven facts.",
+            "es": "Un método para demostrar p → q que supone que p es verdadera y deduce q mediante una cadena de definiciones, álgebra y resultados ya demostrados."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Discrete Mathematics: An Open Introduction (Levin), free online textbook",
+            "es": "Discrete Mathematics: An Open Introduction (Levin), libro de texto gratuito en línea"
+          },
+          "url": "https://discrete.openmathbooks.org/dmoi3/"
+        },
+        {
+          "label": {
+            "en": "Book of Proof (Hammack), free textbook on logic and proof techniques",
+            "es": "Book of Proof (Hammack), libro gratuito sobre lógica y técnicas de demostración"
+          },
+          "url": "https://richardhammack.github.io/BookOfProof/"
+        },
+        {
+          "label": {
+            "en": "MIT OpenCourseWare 6.042J Mathematics for Computer Science",
+            "es": "MIT OpenCourseWare 6.042J Matemáticas para Ciencias de la Computación"
+          },
+          "url": "https://ocw.mit.edu/courses/6-042j-mathematics-for-computer-science-fall-2010/"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What is the contrapositive of p → q?",
+            "es": "¿Cuál es la contrarrecíproca de p → q?"
+          },
+          "options": {
+            "en": [
+              "q → p",
+              "¬p → ¬q",
+              "¬q → ¬p",
+              "¬p ∨ ¬q"
+            ],
+            "es": [
+              "q → p",
+              "¬p → ¬q",
+              "¬q → ¬p",
+              "¬p ∨ ¬q"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "The contrapositive negates and swaps: ¬q → ¬p, and it is equivalent to p → q. ¬p → ¬q is the inverse, which is equivalent to the converse, not to the original.",
+            "es": "La contrarrecíproca niega e intercambia: ¬q → ¬p, y es equivalente a p → q. ¬p → ¬q es la inversa, que equivale a la recíproca, no a la original."
+          }
+        },
+        {
+          "question": {
+            "en": "How many rows does the truth table of a formula with 4 distinct propositional variables have?",
+            "es": "¿Cuántas filas tiene la tabla de verdad de una fórmula con 4 variables proposicionales distintas?"
+          },
+          "options": {
+            "en": [
+              "8",
+              "16",
+              "4",
+              "32"
+            ],
+            "es": [
+              "8",
+              "16",
+              "4",
+              "32"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Each variable has 2 values, so there are 2⁴ = 16 combinations. 8 = 2³ would be for three variables.",
+            "es": "Cada variable tiene 2 valores, así que hay 2⁴ = 16 combinaciones. 8 = 2³ correspondería a tres variables."
+          }
+        },
+        {
+          "question": {
+            "en": "Using the module's helper `static boolean implies(boolean p, boolean q) { return !p || q; }`, what does `implies(false, false)` return?",
+            "es": "Usando el método del módulo `static boolean implies(boolean p, boolean q) { return !p || q; }`, ¿qué devuelve `implies(false, false)`?"
+          },
+          "options": {
+            "en": [
+              "true, because an implication with a false hypothesis is vacuously true",
+              "false, because neither p nor q holds",
+              "false, because `!p || q` short-circuits to q",
+              "It throws an exception"
+            ],
+            "es": [
+              "true, porque una implicación con hipótesis falsa es verdadera por vacuidad",
+              "false, porque ni p ni q se cumplen",
+              "false, porque `!p || q` se evalúa en cortocircuito como q",
+              "Lanza una excepción"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "`!p` is true, so `||` short-circuits to true without evaluating q. This matches the truth table: F → F is true.",
+            "es": "`!p` es true, así que `||` se evalúa en cortocircuito como true sin evaluar q. Coincide con la tabla de verdad: F → F es verdadera."
+          }
+        },
+        {
+          "question": {
+            "en": "Which formula is logically equivalent to ¬(p ∧ q)?",
+            "es": "¿Qué fórmula es lógicamente equivalente a ¬(p ∧ q)?"
+          },
+          "options": {
+            "en": [
+              "¬p ∧ ¬q",
+              "p ∨ q",
+              "¬p → ¬q",
+              "¬p ∨ ¬q"
+            ],
+            "es": [
+              "¬p ∧ ¬q",
+              "p ∨ q",
+              "¬p → ¬q",
+              "¬p ∨ ¬q"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "De Morgan's law turns the negated ∧ into ∨ of negations. ¬p ∧ ¬q is the common mistake: it is false when p is true and q is false, while ¬(p ∧ q) is true there.",
+            "es": "La ley de De Morgan convierte el ∧ negado en ∨ de negaciones. ¬p ∧ ¬q es el error común: es falsa cuando p es verdadera y q falsa, mientras que ¬(p ∧ q) es verdadera en ese caso."
+          }
+        },
+        {
+          "question": {
+            "en": "You want to prove \"for every integer n, if n² is even then n is even\" by contrapositive. What do you assume and what do you show?",
+            "es": "Quieres demostrar \"para todo entero n, si n² es par entonces n es par\" por contrarrecíproco. ¿Qué supones y qué demuestras?"
+          },
+          "options": {
+            "en": [
+              "Assume n² is even and show n is even",
+              "Assume n is odd and show n² is odd",
+              "Assume n is even and show n² is even",
+              "Assume n² is odd and show n is odd"
+            ],
+            "es": [
+              "Supones que n² es par y demuestras que n es par",
+              "Supones que n es impar y demuestras que n² es impar",
+              "Supones que n es par y demuestras que n² es par",
+              "Supones que n² es impar y demuestras que n es impar"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The contrapositive of (n² even → n even) is (n not even → n² not even), i.e. n odd → n² odd. Option 3 proves the converse, which is a different statement.",
+            "es": "La contrarrecíproca de (n² par → n par) es (n no par → n² no par), es decir, n impar → n² impar. La tercera opción demuestra la recíproca, que es un enunciado distinto."
+          }
+        }
+      ]
+    },
+    "recursion": {
+      "minutes": 110,
+      "prerequisites": [
+        "control-flow",
+        "stacks-queues"
+      ],
+      "whyItMatters": {
+        "en": "Recursion is how you will write tree and graph traversals, merge sort and quicksort, and every backtracking search (subsets, permutations, N-Queens, Sudoku). Memoizing a recursive solution is the first step toward dynamic programming.",
+        "es": "La recursión es la forma en que escribirás recorridos de árboles y grafos, merge sort y quicksort, y toda búsqueda con vuelta atrás (subconjuntos, permutaciones, N reinas, Sudoku). Memoizar una solución recursiva es el primer paso hacia la programación dinámica."
+      },
+      "objectives": {
+        "en": [
+          "Write recursive methods with explicit base cases and a recursive step that provably moves toward a base case.",
+          "Trace a recursive call by drawing the call stack, showing each frame's parameters and the value it returns as the stack unwinds.",
+          "Implement backtracking for subsets and permutations with the choose–explore–unchoose pattern, restoring state after each recursive call.",
+          "Analyze naive versus memoized recursion with a recursion tree, e.g. reducing Fibonacci from exponential time to O(n) with an array or `HashMap` cache."
+        ],
+        "es": [
+          "Escribir métodos recursivos con casos base explícitos y un paso recursivo que se acerque de forma demostrable a un caso base.",
+          "Rastrear una llamada recursiva dibujando la pila de llamadas, con los parámetros de cada marco y el valor que devuelve al deshacerse la pila.",
+          "Implementar vuelta atrás (backtracking) para subconjuntos y permutaciones con el patrón elegir–explorar–deshacer, restaurando el estado tras cada llamada recursiva.",
+          "Analizar la recursión ingenua frente a la memoizada con un árbol de recursión, por ejemplo reducir Fibonacci de tiempo exponencial a O(n) con un arreglo o un `HashMap` como caché."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Explain how a stack pushes and pops in LIFO order",
+          "Use `ArrayList` `add`/`remove` and copy a list with `new ArrayList<>(list)`"
+        ],
+        "es": [
+          "Explicar cómo una pila apila y desapila en orden LIFO",
+          "Usar `add`/`remove` de `ArrayList` y copiar una lista con `new ArrayList<>(list)`"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Every recursive method needs a base case and progress toward it; otherwise the JVM throws `StackOverflowError`. The maximum depth depends on frame size and the thread stack size (`-Xss`), typically thousands to tens of thousands of frames.",
+          "Java does not perform tail-call optimization, so very deep recursion (e.g., walking a 100,000-node list) should be rewritten as a loop or with an explicit stack.",
+          "A set of n elements has 2ⁿ subsets and n! permutations; backtracking that enumerates them is exponential no matter how it is coded.",
+          "Naive Fibonacci makes O(φⁿ) ≈ O(1.618ⁿ) calls; memoized Fibonacci is O(n) time and O(n) space."
+        ],
+        "es": [
+          "Todo método recursivo necesita un caso base y avanzar hacia él; si no, la JVM lanza `StackOverflowError`. La profundidad máxima depende del tamaño de cada marco y de la pila del hilo (`-Xss`), normalmente de miles a decenas de miles de marcos.",
+          "Java no optimiza las llamadas de cola, así que una recursión muy profunda (por ejemplo, recorrer una lista de 100 000 nodos) debe reescribirse como ciclo o con una pila explícita.",
+          "Un conjunto de n elementos tiene 2ⁿ subconjuntos y n! permutaciones; una vuelta atrás que los enumere es exponencial sin importar cómo se programe.",
+          "Fibonacci ingenuo hace O(φⁿ) ≈ O(1.618ⁿ) llamadas; Fibonacci memoizado es O(n) en tiempo y O(n) en espacio."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Adding the mutable working list directly to the results (`result.add(slate)`) instead of a copy: every entry is the same list object, and after backtracking they all end up empty. Add `new ArrayList<>(slate)`.",
+          "Forgetting to undo a choice after the recursive call (removing the last element, unmarking a visited cell), which leaks state into sibling branches and produces missing or wrong results.",
+          "Writing a base case that does not cover every input, e.g. `fib(n)` with only `if (n == 1)`: `fib(2)` calls `fib(0)`, which recurses into negative n until `StackOverflowError`. Use `if (n <= 1) return n;`."
+        ],
+        "es": [
+          "Agregar la lista de trabajo mutable directamente a los resultados (`result.add(slate)`) en lugar de una copia: todas las entradas son el mismo objeto y, tras la vuelta atrás, todas terminan vacías. Agrega `new ArrayList<>(slate)`.",
+          "Olvidar deshacer una elección después de la llamada recursiva (quitar el último elemento, desmarcar una celda visitada), lo que filtra estado a las ramas hermanas y produce resultados faltantes o incorrectos.",
+          "Escribir un caso base que no cubre todas las entradas, por ejemplo `fib(n)` solo con `if (n == 1)`: `fib(2)` llama a `fib(0)`, que recursa hacia n negativos hasta `StackOverflowError`. Usa `if (n <= 1) return n;`."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Write `int sumDigits(int n)` recursively (sumDigits(1234) = 10) and draw the call stack for n = 123, labeling the value each frame returns.",
+          "Implement `List<List<Integer>> permutations(int[] nums)` with backtracking and a `boolean[] used` array; verify that {1, 2, 3} produces exactly 6 permutations.",
+          "Implement `long fib(int n)` naively and with memoization (`long[] memo`). Count the calls for n = 30 in each version with a static counter and explain the difference using the recursion tree.",
+          "Implement `int totalNQueens(int n)` that counts placements of n non-attacking queens with backtracking, tracking used columns and both diagonals (row − col and row + col); n = 8 must return 92."
+        ],
+        "es": [
+          "Escribe `int sumDigits(int n)` de forma recursiva (sumDigits(1234) = 10) y dibuja la pila de llamadas para n = 123, anotando el valor que devuelve cada marco.",
+          "Implementa `List<List<Integer>> permutations(int[] nums)` con vuelta atrás y un arreglo `boolean[] used`; verifica que {1, 2, 3} produzca exactamente 6 permutaciones.",
+          "Implementa `long fib(int n)` de forma ingenua y con memoización (`long[] memo`). Cuenta las llamadas para n = 30 en cada versión con un contador estático y explica la diferencia con el árbol de recursión.",
+          "Implementa `int totalNQueens(int n)` que cuente las formas de colocar n reinas sin que se ataquen, con vuelta atrás y registrando columnas y ambas diagonales usadas (row − col y row + col); n = 8 debe devolver 92."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What two things must every recursive method have in order to terminate?",
+          "In backtracking, why must you undo a choice after the recursive call returns?",
+          "How does memoization change the shape of Fibonacci's recursion tree?"
+        ],
+        "es": [
+          "¿Qué dos cosas debe tener todo método recursivo para terminar?",
+          "En la vuelta atrás, ¿por qué hay que deshacer una elección cuando regresa la llamada recursiva?",
+          "¿Cómo cambia la memoización la forma del árbol de recursión de Fibonacci?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Recursive Functions",
+            "es": "Funciones recursivas"
+          },
+          "definition": {
+            "en": "A function that solves a problem by calling itself on a smaller instance of the same problem and combining the result. Each call gets its own stack frame holding its parameters and local variables.",
+            "es": "Una función que resuelve un problema llamándose a sí misma sobre una instancia más pequeña del mismo problema y combinando el resultado. Cada llamada tiene su propio marco en la pila con sus parámetros y variables locales."
+          }
+        },
+        {
+          "term": {
+            "en": "Base Cases",
+            "es": "Casos base"
+          },
+          "definition": {
+            "en": "The inputs for which a recursive function returns an answer directly without recursing, such as `factorial(0) = 1`. Every chain of recursive calls must reach a base case, or the recursion never stops.",
+            "es": "Las entradas para las que una función recursiva devuelve una respuesta directamente, sin volver a llamarse, como `factorial(0) = 1`. Toda cadena de llamadas recursivas debe llegar a un caso base o la recursión nunca termina."
+          }
+        },
+        {
+          "term": {
+            "en": "Backtracking",
+            "es": "Vuelta atrás (backtracking)"
+          },
+          "definition": {
+            "en": "A recursive search that builds a candidate solution one choice at a time, abandons (prunes) a partial candidate as soon as it cannot lead to a valid solution, and undoes the last choice before trying the next alternative.",
+            "es": "Una búsqueda recursiva que construye una solución candidata una elección a la vez, descarta (poda) una candidata parcial en cuanto no puede llevar a una solución válida y deshace la última elección antes de probar la siguiente alternativa."
+          }
+        },
+        {
+          "term": {
+            "en": "Memoization",
+            "es": "Memoización"
+          },
+          "definition": {
+            "en": "Storing the result of each distinct call (for example in an array or a `HashMap`) so that repeated calls with the same arguments return the cached value instead of recomputing it. It turns recursion with overlapping subproblems into top-down dynamic programming.",
+            "es": "Guardar el resultado de cada llamada distinta (por ejemplo en un arreglo o un `HashMap`) para que las llamadas repetidas con los mismos argumentos devuelvan el valor guardado en lugar de recalcularlo. Convierte la recursión con subproblemas superpuestos en programación dinámica descendente."
+          }
+        },
+        {
+          "term": {
+            "en": "Tree Recursion",
+            "es": "Recursión en árbol"
+          },
+          "definition": {
+            "en": "Recursion in which a single call makes two or more recursive calls, so the calls form a tree, as in naive Fibonacci or subset generation. Total work is proportional to the number of nodes in that tree, which is often exponential.",
+            "es": "Recursión en la que una sola llamada hace dos o más llamadas recursivas, de modo que las llamadas forman un árbol, como en Fibonacci ingenuo o la generación de subconjuntos. El trabajo total es proporcional al número de nodos de ese árbol, que suele ser exponencial."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Princeton IntroCS: Recursion (Section 2.3)",
+            "es": "Princeton IntroCS: Recursión (sección 2.3, en inglés)"
+          },
+          "url": "https://introcs.cs.princeton.edu/java/23recursion/"
+        },
+        {
+          "label": {
+            "en": "Wikipedia: Backtracking",
+            "es": "Wikipedia: Vuelta atrás (en inglés)"
+          },
+          "url": "https://en.wikipedia.org/wiki/Backtracking"
+        },
+        {
+          "label": {
+            "en": "Wikipedia: Memoization",
+            "es": "Wikipedia: Memoización (en inglés)"
+          },
+          "url": "https://en.wikipedia.org/wiki/Memoization"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What does `f(507)` return?\n`static int f(int n) {\n    if (n == 0) return 0;\n    return n % 10 + f(n / 10);\n}`",
+            "es": "¿Qué devuelve `f(507)`?\n`static int f(int n) {\n    if (n == 0) return 0;\n    return n % 10 + f(n / 10);\n}`"
+          },
+          "options": {
+            "en": [
+              "507",
+              "12",
+              "5",
+              "75"
+            ],
+            "es": [
+              "507",
+              "12",
+              "5",
+              "75"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "f(507) = 7 + f(50) = 7 + 0 + f(5) = 7 + 0 + 5 + f(0) = 12: the method sums the digits. Answering 5 stops after the first digit instead of adding up the returns as the stack unwinds.",
+            "es": "f(507) = 7 + f(50) = 7 + 0 + f(5) = 7 + 0 + 5 + f(0) = 12: el método suma los dígitos. Responder 5 se detiene en el primer dígito en lugar de sumar los valores que se devuelven al deshacerse la pila."
+          }
+        },
+        {
+          "question": {
+            "en": "How many lists does the module's `subsets` method add to `result` for `nums = {1, 2, 3, 4}`?",
+            "es": "¿Cuántas listas agrega el método `subsets` del módulo a `result` para `nums = {1, 2, 3, 4}`?"
+          },
+          "options": {
+            "en": [
+              "4",
+              "8",
+              "24",
+              "16"
+            ],
+            "es": [
+              "4",
+              "8",
+              "24",
+              "16"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "`backtrack` adds one list per call, and there is one call per subset, including the empty set: 2⁴ = 16. 24 = 4! counts permutations, not subsets.",
+            "es": "`backtrack` agrega una lista por llamada y hay una llamada por subconjunto, incluido el vacío: 2⁴ = 16. 24 = 4! cuenta permutaciones, no subconjuntos."
+          }
+        },
+        {
+          "question": {
+            "en": "A tail-recursive method `sum(n, acc)` is called with n = 1,000,000 on a standard JVM with default settings. What happens?",
+            "es": "Se llama a un método recursivo de cola `sum(n, acc)` con n = 1 000 000 en una JVM estándar con la configuración por defecto. ¿Qué ocurre?"
+          },
+          "options": {
+            "en": [
+              "It throws `StackOverflowError`, because the JVM does not eliminate tail calls",
+              "`javac` automatically converts it into a loop",
+              "It returns 0 because the stack is truncated",
+              "The compiler rejects recursion deeper than 10,000 levels"
+            ],
+            "es": [
+              "Lanza `StackOverflowError`, porque la JVM no elimina las llamadas de cola",
+              "`javac` lo convierte automáticamente en un ciclo",
+              "Devuelve 0 porque la pila se trunca",
+              "El compilador rechaza la recursión de más de 10 000 niveles"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Each call still pushes a frame, and a million frames exceed the default thread stack (on the order of 1 MB). Some languages (Scheme, Scala with `@tailrec`) eliminate tail calls, but `javac` and the HotSpot JVM do not.",
+            "es": "Cada llamada sigue apilando un marco y un millón de marcos supera la pila por defecto del hilo (del orden de 1 MB). Algunos lenguajes (Scheme, Scala con `@tailrec`) eliminan las llamadas de cola, pero `javac` y la JVM HotSpot no."
+          }
+        },
+        {
+          "question": {
+            "en": "In the module's `backtrack`, why does it call `result.add(new ArrayList<>(slate))` instead of `result.add(slate)`?",
+            "es": "En el `backtrack` del módulo, ¿por qué llama a `result.add(new ArrayList<>(slate))` en lugar de `result.add(slate)`?"
+          },
+          "options": {
+            "en": [
+              "`new ArrayList<>` sorts the subset",
+              "It prevents a `ConcurrentModificationException` in the `for` loop",
+              "`slate` keeps changing; adding the same reference would make every entry the same list, which is empty at the end",
+              "Java cannot add a `List` to a `List<List<Integer>>`"
+            ],
+            "es": [
+              "`new ArrayList<>` ordena el subconjunto",
+              "Evita una `ConcurrentModificationException` en el ciclo `for`",
+              "`slate` sigue cambiando; agregar la misma referencia haría que todas las entradas fueran la misma lista, vacía al final",
+              "Java no puede agregar una `List` a una `List<List<Integer>>`"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "The copy freezes the current contents. Without it, `result` holds 2ⁿ references to one list that is restored to empty by the final `remove` calls. No iteration over `slate` happens while it is modified, so there is no `ConcurrentModificationException`.",
+            "es": "La copia congela el contenido actual. Sin ella, `result` guarda 2ⁿ referencias a una sola lista que los `remove` finales dejan vacía. No se recorre `slate` mientras se modifica, así que no hay `ConcurrentModificationException`."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the time complexity of Fibonacci with memoization (each `fib(k)` computed once and cached)?",
+            "es": "¿Cuál es la complejidad temporal de Fibonacci con memoización (cada `fib(k)` se calcula una vez y se guarda)?"
+          },
+          "options": {
+            "en": [
+              "O(2ⁿ)",
+              "O(n)",
+              "O(n²)",
+              "O(log n)"
+            ],
+            "es": [
+              "O(2ⁿ)",
+              "O(n)",
+              "O(n²)",
+              "O(log n)"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "There are only n + 1 distinct subproblems, fib(0) to fib(n), each computed once with O(1) work plus cache lookups, so O(n). O(2ⁿ) is the naive bound without the cache.",
+            "es": "Solo hay n + 1 subproblemas distintos, de fib(0) a fib(n), y cada uno se calcula una vez con trabajo O(1) más consultas a la caché: O(n). O(2ⁿ) es la cota de la versión ingenua sin caché."
+          }
+        }
+      ]
+    },
+    "sorting-algorithms": {
+      "minutes": 120,
+      "prerequisites": [
+        "arrays-strings",
+        "recursion"
+      ],
+      "whyItMatters": {
+        "en": "Sorting is a preprocessing step for binary search, two pointers, greedy algorithms, and deduplication. Merge sort and quicksort are the standard introduction to divide and conquer and recurrence analysis, and exams routinely ask for traces, stability, and worst cases.",
+        "es": "El ordenamiento es un paso previo para la búsqueda binaria, los dos punteros, los algoritmos voraces y la eliminación de duplicados. Merge sort y quicksort son la introducción estándar a divide y vencerás y al análisis de recurrencias, y los exámenes piden con frecuencia trazas, estabilidad y peores casos."
+      },
+      "objectives": {
+        "en": [
+          "Trace bubble sort, merge sort, and quicksort with Lomuto partition on a small array, writing the array after each pass, merge, or partition.",
+          "Analyze best, average, and worst-case time and extra space for bubble, merge, quick, heap, and radix sort, and derive merge sort's O(n log n) from T(n) = 2T(n/2) + O(n).",
+          "Explain stability, identify which of these sorts are stable, and explain why Java sorts objects with stable TimSort.",
+          "Choose a sort for given constraints—nearly sorted data, a memory limit, small integer keys, a need for stability—and justify the choice."
+        ],
+        "es": [
+          "Rastrear bubble sort, merge sort y quicksort con partición de Lomuto sobre un arreglo pequeño, escribiendo el arreglo tras cada pasada, combinación o partición.",
+          "Analizar el tiempo en el mejor, promedio y peor caso, y el espacio extra, de bubble, merge, quick, heap y radix sort, y deducir el O(n log n) de merge sort a partir de T(n) = 2T(n/2) + O(n).",
+          "Explicar la estabilidad, identificar cuáles de estos ordenamientos son estables y explicar por qué Java ordena objetos con TimSort, que es estable.",
+          "Elegir un ordenamiento según las restricciones—datos casi ordenados, límite de memoria, claves enteras pequeñas, necesidad de estabilidad—y justificar la elección."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Trace recursive calls that split an array into halves",
+          "Swap two array elements using a temporary variable"
+        ],
+        "es": [
+          "Rastrear llamadas recursivas que dividen un arreglo en mitades",
+          "Intercambiar dos elementos de un arreglo con una variable temporal"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Merge sort: O(n log n) in every case, O(n) extra space, stable. Quicksort: O(n log n) average, O(n²) worst, O(log n) expected stack, not stable. Heap sort: O(n log n) worst, O(1) extra space, not stable.",
+          "Bubble sort with an early-exit flag is O(n) on already sorted input but O(n²) on average and in the worst case.",
+          "Any comparison sort needs Ω(n log n) comparisons in the worst case; radix sort avoids comparisons and runs in O(d·(n + b)) for d digits in base b.",
+          "In Java, `Arrays.sort(int[])` uses dual-pivot quicksort; `Arrays.sort(Object[])`, `Collections.sort`, and `List.sort` use TimSort, which is stable."
+        ],
+        "es": [
+          "Merge sort: O(n log n) en todos los casos, espacio extra O(n), estable. Quicksort: O(n log n) promedio, O(n²) en el peor caso, pila esperada O(log n), no estable. Heap sort: O(n log n) en el peor caso, espacio extra O(1), no estable.",
+          "Bubble sort con bandera de salida temprana es O(n) con la entrada ya ordenada, pero O(n²) en promedio y en el peor caso.",
+          "Todo ordenamiento por comparación necesita Ω(n log n) comparaciones en el peor caso; radix sort no compara y corre en O(d·(n + b)) para d dígitos en base b.",
+          "En Java, `Arrays.sort(int[])` usa quicksort de doble pivote; `Arrays.sort(Object[])`, `Collections.sort` y `List.sort` usan TimSort, que es estable."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Always choosing the first or last element as quicksort's pivot: on sorted or reverse-sorted input every partition is n − 1 vs 0, giving O(n²) time and recursion deep enough to risk `StackOverflowError`. Use a random pivot or median-of-three.",
+          "Writing the merge step with `arr[i] < arr[j]` instead of `<=` when taking from the left half, which takes equal keys from the right half first and breaks stability.",
+          "Allocating a new temporary array inside every `merge` call instead of one shared buffer, which adds O(n log n) allocation work and garbage; the module's `mergeSort` allocates `temp` once and passes it down."
+        ],
+        "es": [
+          "Elegir siempre el primer o el último elemento como pivote de quicksort: con entrada ordenada o inversa cada partición queda n − 1 contra 0, lo que da tiempo O(n²) y una recursión tan profunda que puede causar `StackOverflowError`. Usa un pivote aleatorio o la mediana de tres.",
+          "Escribir la combinación con `arr[i] < arr[j]` en lugar de `<=` al tomar de la mitad izquierda: las claves iguales se toman primero de la mitad derecha y se pierde la estabilidad.",
+          "Crear un arreglo temporal nuevo en cada llamada a `merge` en lugar de un búfer compartido, lo que agrega trabajo de asignación O(n log n) y basura; el `mergeSort` del módulo crea `temp` una sola vez y lo pasa hacia abajo."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Trace bubble sort on {5, 1, 4, 2, 8}, writing the array after each outer pass and marking the pass where `swapped` stays false and the loop exits early.",
+          "Implement quicksort with Lomuto partition and a random pivot. Time it on sorted, reverse-sorted, all-equal, and random arrays of 100,000 `int`s, and explain the all-equal result.",
+          "Implement LSD radix sort for non-negative `int`s using a stable counting sort on each base-10 digit, and verify it against `Arrays.sort` on 10,000 random values.",
+          "Implement `int kthSmallest(int[] arr, int k)` with quickselect (partition, then recurse into only one side) in average O(n) time, and explain why its worst case is O(n²) and how a random pivot helps."
+        ],
+        "es": [
+          "Rastrea bubble sort sobre {5, 1, 4, 2, 8}, escribiendo el arreglo tras cada pasada externa y marcando la pasada en la que `swapped` queda en false y el ciclo termina antes.",
+          "Implementa quicksort con partición de Lomuto y pivote aleatorio. Mide su tiempo con arreglos ordenados, inversos, con todos los valores iguales y aleatorios de 100 000 `int`, y explica el resultado con valores iguales.",
+          "Implementa radix sort LSD para `int` no negativos usando un counting sort estable por cada dígito en base 10, y compáralo con `Arrays.sort` sobre 10 000 valores aleatorios.",
+          "Implementa `int kthSmallest(int[] arr, int k)` con quickselect (particionar y recursar solo hacia un lado) en tiempo promedio O(n), y explica por qué su peor caso es O(n²) y cómo ayuda un pivote aleatorio."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What does it mean for a sort to be stable, and when does it matter?",
+          "Why is quicksort often faster than merge sort in practice despite its O(n²) worst case?",
+          "Under what conditions does radix sort beat an O(n log n) comparison sort?"
+        ],
+        "es": [
+          "¿Qué significa que un ordenamiento sea estable y cuándo importa?",
+          "¿Por qué quicksort suele ser más rápido que merge sort en la práctica a pesar de su peor caso O(n²)?",
+          "¿En qué condiciones radix sort supera a un ordenamiento por comparación O(n log n)?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Bubble Sort",
+            "es": "Ordenamiento burbuja (bubble sort)"
+          },
+          "definition": {
+            "en": "A comparison sort that repeatedly scans the array and swaps adjacent out-of-order pairs, so each pass moves the largest remaining element to its final position. It is stable and in place, O(n²) on average and in the worst case, and O(n) on sorted input with an early-exit flag.",
+            "es": "Ordenamiento por comparación que recorre el arreglo repetidamente e intercambia pares adyacentes desordenados, de modo que cada pasada lleva el mayor elemento restante a su posición final. Es estable y en el lugar, O(n²) en promedio y en el peor caso, y O(n) con la entrada ordenada si usa una bandera de salida temprana."
+          }
+        },
+        {
+          "term": {
+            "en": "Merge Sort",
+            "es": "Ordenamiento por mezcla (merge sort)"
+          },
+          "definition": {
+            "en": "A divide-and-conquer sort that recursively sorts each half of the array and then merges the two sorted halves with a linear scan. It runs in O(n log n) in every case, uses O(n) extra space, and is stable.",
+            "es": "Ordenamiento de divide y vencerás que ordena recursivamente cada mitad del arreglo y luego combina las dos mitades ordenadas con un recorrido lineal. Corre en O(n log n) en todos los casos, usa espacio extra O(n) y es estable."
+          }
+        },
+        {
+          "term": {
+            "en": "Quick Sort",
+            "es": "Ordenamiento rápido (quicksort)"
+          },
+          "definition": {
+            "en": "A divide-and-conquer sort that partitions the array around a pivot—smaller elements to its left, larger to its right—and recursively sorts each side. It is in place and not stable, O(n log n) on average, and O(n²) when partitions are consistently unbalanced.",
+            "es": "Ordenamiento de divide y vencerás que particiona el arreglo alrededor de un pivote—los menores a su izquierda y los mayores a su derecha—y ordena recursivamente cada lado. Es en el lugar y no estable, O(n log n) en promedio y O(n²) cuando las particiones quedan desbalanceadas de forma sistemática."
+          }
+        },
+        {
+          "term": {
+            "en": "Heap Sort",
+            "es": "Ordenamiento por montículo (heap sort)"
+          },
+          "definition": {
+            "en": "A sort that builds a max-heap from the array in O(n), then repeatedly swaps the maximum (the root) to the end of the unsorted region and restores the heap with sift-down. It is O(n log n) in the worst case, uses O(1) extra space, and is not stable.",
+            "es": "Ordenamiento que construye un montículo de máximos con el arreglo en O(n) y luego intercambia repetidamente el máximo (la raíz) al final de la zona sin ordenar y restaura el montículo hundiendo el elemento. Es O(n log n) en el peor caso, usa espacio extra O(1) y no es estable."
+          }
+        },
+        {
+          "term": {
+            "en": "Radix Sort",
+            "es": "Ordenamiento por residuos (radix sort)"
+          },
+          "definition": {
+            "en": "A non-comparison sort for integers or fixed-length strings that orders keys digit by digit, from least significant to most significant, using a stable counting sort for each digit. It runs in O(d·(n + b)) for d digits in base b.",
+            "es": "Ordenamiento sin comparaciones para enteros o cadenas de longitud fija que ordena las claves dígito por dígito, del menos significativo al más significativo, con un counting sort estable para cada dígito. Corre en O(d·(n + b)) para d dígitos en base b."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Algorithms, 4th ed. (Princeton): Mergesort",
+            "es": "Algorithms, 4.ª ed. (Princeton): Mergesort (en inglés)"
+          },
+          "url": "https://algs4.cs.princeton.edu/22mergesort/"
+        },
+        {
+          "label": {
+            "en": "Algorithms, 4th ed. (Princeton): Quicksort",
+            "es": "Algorithms, 4.ª ed. (Princeton): Quicksort (en inglés)"
+          },
+          "url": "https://algs4.cs.princeton.edu/23quicksort/"
+        },
+        {
+          "label": {
+            "en": "Algorithms, 4th ed. (Princeton): String Sorts (LSD radix sort)",
+            "es": "Algorithms, 4.ª ed. (Princeton): Ordenamiento de cadenas (radix sort LSD, en inglés)"
+          },
+          "url": "https://algs4.cs.princeton.edu/51radix/"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Which of these sorts is stable?",
+            "es": "¿Cuál de estos ordenamientos es estable?"
+          },
+          "options": {
+            "en": [
+              "Quicksort with Lomuto partition",
+              "Heap sort",
+              "Merge sort that takes from the left half when keys are equal",
+              "Selection sort that swaps the minimum into place"
+            ],
+            "es": [
+              "Quicksort con partición de Lomuto",
+              "Heap sort",
+              "Merge sort que toma de la mitad izquierda cuando las claves son iguales",
+              "Selection sort que intercambia el mínimo a su lugar"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Taking from the left half on ties keeps equal keys in their original order, which is the definition of stability. Selection sort's long-distance swaps can move an element past an equal one, so it is not stable; neither are Lomuto quicksort or heap sort.",
+            "es": "Tomar de la mitad izquierda en los empates conserva el orden original de las claves iguales, que es la definición de estabilidad. Los intercambios a distancia de selection sort pueden mover un elemento más allá de otro igual, así que no es estable; tampoco lo son quicksort con Lomuto ni heap sort."
+          }
+        },
+        {
+          "question": {
+            "en": "Apply one Lomuto partition (pivot = last element; i starts at low − 1; for each j, if `arr[j] < pivot`, increment i and swap `arr[i]`, `arr[j]`; finally swap `arr[i + 1]` with the pivot) to `{3, 8, 2, 5, 1, 4}`. What is the array afterwards?",
+            "es": "Aplica una partición de Lomuto (pivote = último elemento; i empieza en low − 1; para cada j, si `arr[j] < pivot`, incrementa i e intercambia `arr[i]` y `arr[j]`; al final intercambia `arr[i + 1]` con el pivote) a `{3, 8, 2, 5, 1, 4}`. ¿Cómo queda el arreglo?"
+          },
+          "options": {
+            "en": [
+              "[3, 2, 1, 4, 8, 5]",
+              "[1, 2, 3, 4, 5, 8]",
+              "[3, 2, 1, 4, 5, 8]",
+              "[1, 3, 2, 4, 8, 5]"
+            ],
+            "es": [
+              "[3, 2, 1, 4, 8, 5]",
+              "[1, 2, 3, 4, 5, 8]",
+              "[3, 2, 1, 4, 5, 8]",
+              "[1, 3, 2, 4, 8, 5]"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Pivot 4: 3 stays (i = 0); 2 swaps with 8 → [3, 2, 8, 5, 1, 4] (i = 1); 1 swaps with 8 → [3, 2, 1, 5, 8, 4] (i = 2); finally 5 and 4 swap → [3, 2, 1, 4, 8, 5]. A partition only separates around the pivot; it does not sort either side, so [1, 2, 3, 4, 5, 8] is wrong.",
+            "es": "Pivote 4: el 3 se queda (i = 0); el 2 se intercambia con el 8 → [3, 2, 8, 5, 1, 4] (i = 1); el 1 se intercambia con el 8 → [3, 2, 1, 5, 8, 4] (i = 2); al final se intercambian 5 y 4 → [3, 2, 1, 4, 8, 5]. Una partición solo separa alrededor del pivote; no ordena ningún lado, así que [1, 2, 3, 4, 5, 8] es incorrecto."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the tight (best achievable) worst-case number of comparisons for sorting n elements with any comparison-based algorithm?",
+            "es": "¿Cuál es el número ajustado (el mejor alcanzable) de comparaciones en el peor caso para ordenar n elementos con cualquier algoritmo basado en comparaciones?"
+          },
+          "options": {
+            "en": [
+              "Θ(n²)",
+              "Θ(n)",
+              "Θ(log n)",
+              "Θ(n log n)"
+            ],
+            "es": [
+              "Θ(n²)",
+              "Θ(n)",
+              "Θ(log n)",
+              "Θ(n log n)"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "A decision tree must have at least n! leaves, so its height is at least log₂(n!) = Θ(n log n), and merge sort achieves it. Θ(n) is possible only for non-comparison sorts such as counting or radix sort on bounded keys.",
+            "es": "Un árbol de decisión debe tener al menos n! hojas, así que su altura es al menos log₂(n!) = Θ(n log n), y merge sort la alcanza. Θ(n) solo es posible con ordenamientos sin comparaciones, como counting o radix sort con claves acotadas."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the running time of the module's `bubbleSort` (with the `swapped` flag) on an array that is already sorted?",
+            "es": "¿Cuál es el tiempo de ejecución del `bubbleSort` del módulo (con la bandera `swapped`) sobre un arreglo ya ordenado?"
+          },
+          "options": {
+            "en": [
+              "O(n²), because both loops always run fully",
+              "O(n): one pass with no swaps, then `break`",
+              "O(n log n)",
+              "O(1)"
+            ],
+            "es": [
+              "O(n²), porque ambos ciclos siempre se ejecutan completos",
+              "O(n): una pasada sin intercambios y luego `break`",
+              "O(n log n)",
+              "O(1)"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The first pass makes n − 1 comparisons, finds no swaps, and exits through `if (!swapped) break;`. Without that flag the answer would be O(n²).",
+            "es": "La primera pasada hace n − 1 comparaciones, no encuentra intercambios y sale por `if (!swapped) break;`. Sin esa bandera la respuesta sería O(n²)."
+          }
+        },
+        {
+          "question": {
+            "en": "A `List<Person>` is already sorted by name. You now sort it by age and need people with the same age to stay in name order. Which call guarantees this?",
+            "es": "Una `List<Person>` ya está ordenada por nombre. Ahora la ordenas por edad y necesitas que las personas con la misma edad sigan en orden de nombre. ¿Qué llamada lo garantiza?"
+          },
+          "options": {
+            "en": [
+              "Extract the ages into an `int[]` and call `Arrays.sort` on it",
+              "Insert everyone into a `PriorityQueue` ordered by age and `poll()` them out",
+              "`Collections.sort(list, Comparator.comparingInt(Person::getAge))`",
+              "Any sorting method gives the same result"
+            ],
+            "es": [
+              "Extraer las edades a un `int[]` y llamar a `Arrays.sort` sobre él",
+              "Insertar a todos en una `PriorityQueue` ordenada por edad y sacarlos con `poll()`",
+              "`Collections.sort(list, Comparator.comparingInt(Person::getAge))`",
+              "Cualquier método de ordenamiento da el mismo resultado"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`Collections.sort` is documented as stable (it uses TimSort), so ties keep their existing name order. A heap-based `PriorityQueue` gives no ordering guarantee among equal ages, and sorting a separate `int[]` loses the link to the people.",
+            "es": "`Collections.sort` está documentado como estable (usa TimSort), así que los empates conservan el orden por nombre. Una `PriorityQueue` basada en montículo no garantiza ningún orden entre edades iguales, y ordenar un `int[]` aparte pierde el vínculo con las personas."
+          }
+        }
+      ]
+    },
+    "generics": {
+      "minutes": 105,
+      "prerequisites": [
+        "oop-basics"
+      ],
+      "whyItMatters": {
+        "en": "Every collection you use next (`List<E>`, `Map<K,V>`, `Comparator<T>`) and every stream pipeline is generic, and the JDK's own signatures like `Collections.sort(List<T> list)` with `<T extends Comparable<? super T>>` only make sense once you understand bounds and wildcards. Generics turn `ClassCastException` bugs at runtime into compile errors.",
+        "es": "Todas las colecciones que usarás a continuación (`List<E>`, `Map<K,V>`, `Comparator<T>`) y todo pipeline de streams son genéricos, y firmas del propio JDK como `Collections.sort(List<T> list)` con `<T extends Comparable<? super T>>` solo tienen sentido cuando entiendes los límites y los comodines. Los genéricos convierten errores `ClassCastException` en tiempo de ejecución en errores de compilación."
+      },
+      "objectives": {
+        "en": [
+          "Implement a generic class such as `Box<T>` or `Pair<K, V>` and a generic method such as `<T> void swap(T[] a, int i, int j)` without any casts.",
+          "Apply bounded type parameters (`<T extends Comparable<T>>`, `<T extends Number>`) to write methods like `max` and `average` that call methods of the bound.",
+          "Choose between `List<T>`, `List<? extends T>` and `List<? super T>` for a method parameter using the producer-extends, consumer-super (PECS) rule.",
+          "Explain type erasure and use it to predict why `new T()`, `new T[n]`, `instanceof List<String>` and `List<int>` are not allowed."
+        ],
+        "es": [
+          "Implementar una clase genérica como `Box<T>` o `Pair<K, V>` y un método genérico como `<T> void swap(T[] a, int i, int j)` sin ninguna conversión de tipo.",
+          "Aplicar parámetros de tipo acotados (`<T extends Comparable<T>>`, `<T extends Number>`) para escribir métodos como `max` y `average` que invocan métodos del límite.",
+          "Elegir entre `List<T>`, `List<? extends T>` y `List<? super T>` para un parámetro de método usando la regla productor-extends, consumidor-super (PECS).",
+          "Explicar el borrado de tipos y usarlo para predecir por qué no se permiten `new T()`, `new T[n]`, `instanceof List<String>` ni `List<int>`."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Explain why an `Object` variable needs a cast before calling a subclass method.",
+          "Write an interface and a class that implements it, and use the interface as a variable type."
+        ],
+        "es": [
+          "Explicar por qué una variable `Object` necesita una conversión antes de llamar a un método de una subclase.",
+          "Escribir una interfaz y una clase que la implemente, y usar la interfaz como tipo de variable."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Generics are invariant: `List<Integer>` is not a subtype of `List<Number>`, even though `Integer` is a subtype of `Number` (arrays, by contrast, are covariant and can throw `ArrayStoreException`).",
+          "PECS: use `? extends T` when you only read T values from a parameter (producer) and `? super T` when you only write T values into it (consumer), as in `Collections.copy(List<? super T> dest, List<? extends T> src)`.",
+          "Type arguments are erased at compile time to their bound (`Object` if unbounded); there is one `ArrayList.class` for all element types, and the compiler inserts casts where values come out.",
+          "Type arguments must be reference types: use `List<Integer>`, not `List<int>`; values are autoboxed, which costs an allocation for values outside the `Integer` cache (−128 to 127)."
+        ],
+        "es": [
+          "Los genéricos son invariantes: `List<Integer>` no es subtipo de `List<Number>`, aunque `Integer` sea subtipo de `Number` (los arreglos, en cambio, son covariantes y pueden lanzar `ArrayStoreException`).",
+          "PECS: usa `? extends T` cuando solo lees valores T de un parámetro (productor) y `? super T` cuando solo escribes valores T en él (consumidor), como en `Collections.copy(List<? super T> dest, List<? extends T> src)`.",
+          "Los argumentos de tipo se borran en compilación y se reemplazan por su límite (`Object` si no tiene límite); existe un único `ArrayList.class` para todos los tipos de elemento y el compilador inserta conversiones donde salen los valores.",
+          "Los argumentos de tipo deben ser tipos de referencia: usa `List<Integer>`, no `List<int>`; los valores se empaquetan automáticamente (autoboxing), lo que cuesta una asignación de memoria para valores fuera de la caché de `Integer` (−128 a 127)."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Using raw types (`List list = new ArrayList();`): the compiler only warns, any object can be added, and a `ClassCastException` appears far away when you read it back. Always supply type arguments or use the diamond `new ArrayList<>()`.",
+          "Expecting `List<? extends Number>` to accept `add(5)`: the actual list might be a `List<Double>`, so the compiler forbids adding anything except `null`. If you need to add, use `List<? super Integer>` or a concrete `List<Number>`.",
+          "Writing `new T()` or `new T[size]` inside a generic class: erasure means `T` is unknown at runtime, so this does not compile. Pass a `Supplier<T>` or `Class<T>` to create instances, or use an `ArrayList<T>` (or an `Object[]` with a cast, as `ArrayList` does internally) instead of a `T[]`."
+        ],
+        "es": [
+          "Usar tipos crudos (`List list = new ArrayList();`): el compilador solo advierte, se puede agregar cualquier objeto y aparece una `ClassCastException` lejos de allí cuando lees el valor. Proporciona siempre los argumentos de tipo o usa el diamante `new ArrayList<>()`.",
+          "Esperar que `List<? extends Number>` acepte `add(5)`: la lista real podría ser una `List<Double>`, así que el compilador prohíbe agregar cualquier cosa excepto `null`. Si necesitas agregar, usa `List<? super Integer>` o una `List<Number>` concreta.",
+          "Escribir `new T()` o `new T[size]` dentro de una clase genérica: por el borrado de tipos, `T` es desconocido en tiempo de ejecución y esto no compila. Recibe un `Supplier<T>` o un `Class<T>` para crear instancias, o usa un `ArrayList<T>` (o un `Object[]` con conversión, como hace internamente `ArrayList`) en lugar de un `T[]`."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: write `class Pair<K, V>` with a constructor, `getKey()`, `getValue()` and `toString()`, plus a generic method `static <K, V> Pair<V, K> flip(Pair<K, V> p)`. Create a `Pair<String, Integer>` and print it and its flipped version.",
+          "Implement `static <T extends Comparable<T>> T max(List<T> items)` that throws `IllegalArgumentException` on an empty list, and a generic `class Stack<T>` backed by an `ArrayList<T>` with `push`, `pop`, `peek` and `isEmpty`. Test both with `Integer` and `String`.",
+          "Write `static double sum(Collection<? extends Number> nums)` and `static void addZeros(List<? super Integer> out, int n)`. Show in `main` that `sum` accepts `List<Integer>` and `Set<Double>`, that `addZeros` accepts `List<Number>` and `List<Object>`, and record the compiler error you get when you try to call `out.get(0).intValue()` inside `addZeros`.",
+          "Exam-style: implement `static <T> void copyInto(List<? super T> dest, List<? extends T> src)` that appends every element of `src` to `dest`, and a generic `Cache<K, V>` that evicts the oldest entry beyond a capacity. Explain why the signature `copyInto(List<T> dest, List<T> src)` would reject `copyInto(numbers, integers)`."
+        ],
+        "es": [
+          "Calentamiento: escribe `class Pair<K, V>` con un constructor, `getKey()`, `getValue()` y `toString()`, además de un método genérico `static <K, V> Pair<V, K> flip(Pair<K, V> p)`. Crea un `Pair<String, Integer>` e imprímelo junto con su versión invertida.",
+          "Implementa `static <T extends Comparable<T>> T max(List<T> items)` que lance `IllegalArgumentException` si la lista está vacía, y una `class Stack<T>` genérica respaldada por un `ArrayList<T>` con `push`, `pop`, `peek` e `isEmpty`. Prueba ambos con `Integer` y `String`.",
+          "Escribe `static double sum(Collection<? extends Number> nums)` y `static void addZeros(List<? super Integer> out, int n)`. Muestra en `main` que `sum` acepta `List<Integer>` y `Set<Double>`, que `addZeros` acepta `List<Number>` y `List<Object>`, y anota el error de compilación que obtienes al intentar llamar `out.get(0).intValue()` dentro de `addZeros`.",
+          "Tipo examen: implementa `static <T> void copyInto(List<? super T> dest, List<? extends T> src)` que agregue cada elemento de `src` a `dest`, y una `Cache<K, V>` genérica que elimine la entrada más antigua al superar una capacidad. Explica por qué la firma `copyInto(List<T> dest, List<T> src)` rechazaría `copyInto(numbers, integers)`."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why can you read from a `List<? extends Number>` but not add an `Integer` to it?",
+          "What does the compiler replace `T` with in `<T extends Number>` after erasure?",
+          "Why does `List<Object> objs = new ArrayList<String>();` fail to compile, while `Object[] objs = new String[3];` compiles?"
+        ],
+        "es": [
+          "¿Por qué puedes leer de una `List<? extends Number>` pero no agregarle un `Integer`?",
+          "¿Con qué reemplaza el compilador a `T` en `<T extends Number>` después del borrado de tipos?",
+          "¿Por qué `List<Object> objs = new ArrayList<String>();` no compila, mientras que `Object[] objs = new String[3];` sí?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Generic Classes",
+            "es": "Clases genéricas"
+          },
+          "definition": {
+            "en": "A generic class declares type parameters in angle brackets, as in `class Box<T>`, and uses them as field, parameter and return types; each use supplies a type argument (`Box<String>`) that the compiler checks so no casts are needed.",
+            "es": "Una clase genérica declara parámetros de tipo entre corchetes angulares, como en `class Box<T>`, y los usa como tipos de campos, parámetros y retornos; cada uso proporciona un argumento de tipo (`Box<String>`) que el compilador verifica, de modo que no se necesitan conversiones."
+          }
+        },
+        {
+          "term": {
+            "en": "Generic Methods",
+            "es": "Métodos genéricos"
+          },
+          "definition": {
+            "en": "A generic method declares its own type parameters before the return type, as in `static <T> void swap(T[] a, int i, int j)`, independent of any class type parameter; the compiler usually infers `T` from the arguments at each call.",
+            "es": "Un método genérico declara sus propios parámetros de tipo antes del tipo de retorno, como en `static <T> void swap(T[] a, int i, int j)`, independientemente de los parámetros de tipo de la clase; el compilador suele inferir `T` a partir de los argumentos en cada llamada."
+          }
+        },
+        {
+          "term": {
+            "en": "Wildcards",
+            "es": "Comodines"
+          },
+          "definition": {
+            "en": "A wildcard `?` stands for an unknown type argument: `? extends T` accepts T or any subtype (safe to read as T), `? super T` accepts T or any supertype (safe to write T into), and plain `?` accepts any type. Wildcards give flexibility that invariant generic types lack.",
+            "es": "Un comodín `?` representa un argumento de tipo desconocido: `? extends T` acepta T o cualquier subtipo (seguro para leer como T), `? super T` acepta T o cualquier supertipo (seguro para escribir T) y `?` solo acepta cualquier tipo. Los comodines dan la flexibilidad que no tienen los tipos genéricos invariantes."
+          }
+        },
+        {
+          "term": {
+            "en": "Type Erasure",
+            "es": "Borrado de tipos"
+          },
+          "definition": {
+            "en": "Type erasure is how Java implements generics: the compiler checks type arguments, then removes them, replacing each type parameter with its bound (or `Object`) and inserting casts. As a result, generic type arguments are not available at runtime.",
+            "es": "El borrado de tipos es la forma en que Java implementa los genéricos: el compilador verifica los argumentos de tipo y luego los elimina, reemplazando cada parámetro de tipo por su límite (u `Object`) e insertando conversiones. Por eso, los argumentos de tipo genéricos no están disponibles en tiempo de ejecución."
+          }
+        },
+        {
+          "term": {
+            "en": "Bounds",
+            "es": "Límites"
+          },
+          "definition": {
+            "en": "A bound restricts which types a type parameter may take: `<T extends Number>` allows only `Number` and its subtypes and lets you call `Number` methods such as `doubleValue()` on a `T`. Multiple bounds are written `<T extends A & B>` with at most one class, listed first.",
+            "es": "Un límite restringe los tipos que puede tomar un parámetro de tipo: `<T extends Number>` solo admite `Number` y sus subtipos, y permite llamar métodos de `Number` como `doubleValue()` sobre un `T`. Los límites múltiples se escriben `<T extends A & B>`, con a lo sumo una clase, que va primero."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Oracle Java Tutorials: Generics lesson",
+            "es": "Tutoriales de Java de Oracle: lección de genéricos"
+          },
+          "url": "https://docs.oracle.com/javase/tutorial/java/generics/index.html"
+        },
+        {
+          "label": {
+            "en": "Oracle Java Tutorials: Type Erasure",
+            "es": "Tutoriales de Java de Oracle: borrado de tipos"
+          },
+          "url": "https://docs.oracle.com/javase/tutorial/java/generics/erasure.html"
+        },
+        {
+          "label": {
+            "en": "Oracle Java Tutorials: Wildcards",
+            "es": "Tutoriales de Java de Oracle: comodines"
+          },
+          "url": "https://docs.oracle.com/javase/tutorial/java/generics/wildcards.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What happens with `List<Integer> ints = new ArrayList<>(); List<Number> nums = ints;`?",
+            "es": "¿Qué ocurre con `List<Integer> ints = new ArrayList<>(); List<Number> nums = ints;`?"
+          },
+          "options": {
+            "en": [
+              "It compiles because `Integer` is a subtype of `Number`",
+              "It compiles with an unchecked warning",
+              "Compile error: `List<Integer>` is not a subtype of `List<Number>`",
+              "It compiles but throws `ClassCastException` at runtime"
+            ],
+            "es": [
+              "Compila porque `Integer` es subtipo de `Number`",
+              "Compila con una advertencia unchecked",
+              "Error de compilación: `List<Integer>` no es subtipo de `List<Number>`",
+              "Compila pero lanza `ClassCastException` en tiempo de ejecución"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Generic types are invariant. If the assignment were allowed, `nums.add(3.14)` would put a `Double` into a list of integers. Use `List<? extends Number>` when you only need to read. Arrays behave differently, which is why the first option is tempting.",
+            "es": "Los tipos genéricos son invariantes. Si se permitiera la asignación, `nums.add(3.14)` metería un `Double` en una lista de enteros. Usa `List<? extends Number>` cuando solo necesitas leer. Los arreglos se comportan distinto, y por eso tienta la primera opción."
+          }
+        },
+        {
+          "question": {
+            "en": "Which parameter type lets a method add `Integer` values to a `List<Integer>`, a `List<Number>` or a `List<Object>`?",
+            "es": "¿Qué tipo de parámetro permite que un método agregue valores `Integer` a una `List<Integer>`, una `List<Number>` o una `List<Object>`?"
+          },
+          "options": {
+            "en": [
+              "`List<? extends Integer>`",
+              "`List<Integer>`",
+              "`List<?>`",
+              "`List<? super Integer>`"
+            ],
+            "es": [
+              "`List<? extends Integer>`",
+              "`List<Integer>`",
+              "`List<?>`",
+              "`List<? super Integer>`"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "`? super Integer` matches `Integer` and all its supertypes, and any of those lists can safely hold an `Integer` (consumer super). `? extends Integer` forbids adding, and plain `List<Integer>` rejects `List<Number>` because generics are invariant.",
+            "es": "`? super Integer` coincide con `Integer` y todos sus supertipos, y cualquiera de esas listas puede guardar un `Integer` sin riesgo (consumidor super). `? extends Integer` prohíbe agregar, y `List<Integer>` rechaza `List<Number>` porque los genéricos son invariantes."
+          }
+        },
+        {
+          "question": {
+            "en": "What does `System.out.println(new ArrayList<String>().getClass() == new ArrayList<Integer>().getClass());` print?",
+            "es": "¿Qué imprime `System.out.println(new ArrayList<String>().getClass() == new ArrayList<Integer>().getClass());`?"
+          },
+          "options": {
+            "en": [
+              "`true`",
+              "`false`",
+              "It does not compile",
+              "It throws `ClassCastException`"
+            ],
+            "es": [
+              "`true`",
+              "`false`",
+              "No compila",
+              "Lanza `ClassCastException`"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Because of erasure there is a single runtime class, `java.util.ArrayList`, for every type argument, so both calls return the same `Class` object. `false` would be right for C++ templates, which generate a separate class per type.",
+            "es": "Por el borrado de tipos existe una sola clase en tiempo de ejecución, `java.util.ArrayList`, para cualquier argumento de tipo, así que ambas llamadas devuelven el mismo objeto `Class`. `false` sería correcto con plantillas de C++, que generan una clase distinta por tipo."
+          }
+        },
+        {
+          "question": {
+            "en": "Compared with storing values as `Object` and casting by hand, what runtime cost do Java generics add?",
+            "es": "Comparado con guardar valores como `Object` y convertirlos a mano, ¿qué costo en tiempo de ejecución agregan los genéricos de Java?"
+          },
+          "options": {
+            "en": [
+              "A separate copy of the class is generated for each type argument",
+              "Essentially none: the compiler inserts the same casts you would write, and one class file serves all type arguments",
+              "Every call to a generic method performs a reflective type check",
+              "They avoid boxing, so `List<Integer>` is faster than an `Object` list"
+            ],
+            "es": [
+              "Se genera una copia distinta de la clase para cada argumento de tipo",
+              "Prácticamente ninguno: el compilador inserta las mismas conversiones que escribirías tú y un solo archivo de clase sirve para todos los argumentos de tipo",
+              "Cada llamada a un método genérico hace una verificación de tipo por reflexión",
+              "Evitan el empaquetado, así que `List<Integer>` es más rápida que una lista de `Object`"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Erasure compiles generic code to the same bytecode as the hand-cast version; the safety is checked at compile time. Generics do not avoid boxing: `List<Integer>` still stores `Integer` objects.",
+            "es": "El borrado de tipos compila el código genérico al mismo bytecode que la versión con conversiones manuales; la seguridad se verifica en compilación. Los genéricos no evitan el empaquetado: `List<Integer>` sigue guardando objetos `Integer`."
+          }
+        },
+        {
+          "question": {
+            "en": "Using the module's `static <T extends Number> double average(T[] numbers)`, what does `average(new Integer[0])` return?",
+            "es": "Usando el método del módulo `static <T extends Number> double average(T[] numbers)`, ¿qué devuelve `average(new Integer[0])`?"
+          },
+          "options": {
+            "en": [
+              "`0.0`",
+              "It throws `ArithmeticException`",
+              "`NaN`",
+              "It does not compile, because `Integer[]` is not `Number[]`"
+            ],
+            "es": [
+              "`0.0`",
+              "Lanza `ArithmeticException`",
+              "`NaN`",
+              "No compila, porque `Integer[]` no es `Number[]`"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`sum` is the `double` 0.0 and `numbers.length` is 0, so the division is floating-point 0.0 / 0 = `NaN`; only integer division by zero throws `ArithmeticException`. The call compiles because `T` is inferred as `Integer`, which satisfies the bound.",
+            "es": "`sum` es el `double` 0.0 y `numbers.length` es 0, así que la división es de punto flotante 0.0 / 0 = `NaN`; solo la división entera entre cero lanza `ArithmeticException`. La llamada compila porque `T` se infiere como `Integer`, que cumple el límite."
+          }
+        }
+      ]
+    },
+    "sets-relations-functions": {
+      "minutes": 75,
+      "prerequisites": [
+        "propositional-logic-proofs"
+      ],
+      "whyItMatters": {
+        "en": "Java's `Set` and `Map` are direct implementations of sets and functions, database joins are Cartesian products filtered by a relation, and equivalence relations underlie union-find and hashing; proofs about injectivity and the pigeonhole principle appear on every discrete math exam.",
+        "es": "`Set` y `Map` de Java son implementaciones directas de conjuntos y funciones, los joins de bases de datos son productos cartesianos filtrados por una relación, y las relaciones de equivalencia son la base de union-find y del hashing; las demostraciones sobre inyectividad y el principio del palomar aparecen en todo examen de matemáticas discretas."
+      },
+      "objectives": {
+        "en": [
+          "Compute A ∪ B, A ∩ B, A \\ B, complements and A × B for finite sets, and implement them with `addAll`, `retainAll` and `removeAll` on Java `Set`s.",
+          "Determine whether a relation on a finite set is reflexive, symmetric, antisymmetric and transitive, and identify equivalence relations and partial orders.",
+          "Prove or disprove that a given function f: A → B is injective, surjective or bijective, using the definitions directly.",
+          "Apply the counting facts |A × B| = |A|·|B| and |P(A)| = 2^|A| and the pigeonhole principle to finite sets."
+        ],
+        "es": [
+          "Calcular A ∪ B, A ∩ B, A \\ B, complementos y A × B para conjuntos finitos, e implementarlos con `addAll`, `retainAll` y `removeAll` sobre `Set` de Java.",
+          "Determinar si una relación sobre un conjunto finito es reflexiva, simétrica, antisimétrica y transitiva, e identificar relaciones de equivalencia y órdenes parciales.",
+          "Demostrar o refutar que una función f: A → B dada es inyectiva, sobreyectiva o biyectiva, usando directamente las definiciones.",
+          "Aplicar los resultados de conteo |A × B| = |A|·|B| y |P(A)| = 2^|A| y el principio del palomar a conjuntos finitos."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Read and write statements with quantifiers ∀ and ∃ and logical connectives",
+          "Use Java `HashSet` and `HashMap` basic operations"
+        ],
+        "es": [
+          "Leer y escribir enunciados con los cuantificadores ∀ y ∃ y conectivos lógicos",
+          "Usar las operaciones básicas de `HashSet` y `HashMap` de Java"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "|A ∪ B| = |A| + |B| − |A ∩ B| (inclusion–exclusion for two sets); |A × B| = |A|·|B|; a set with n elements has 2ⁿ subsets.",
+          "A relation on A is any subset of A × A, so an n-element set has 2^(n²) relations.",
+          "Equivalence relation = reflexive + symmetric + transitive (it partitions the set into classes); partial order = reflexive + antisymmetric + transitive.",
+          "For finite |A| = |B|, f: A → B is injective ⇔ surjective ⇔ bijective; if |A| > |B|, no injection exists (pigeonhole principle)."
+        ],
+        "es": [
+          "|A ∪ B| = |A| + |B| − |A ∩ B| (inclusión–exclusión para dos conjuntos); |A × B| = |A|·|B|; un conjunto de n elementos tiene 2ⁿ subconjuntos.",
+          "Una relación sobre A es cualquier subconjunto de A × A, así que un conjunto de n elementos tiene 2^(n²) relaciones.",
+          "Relación de equivalencia = reflexiva + simétrica + transitiva (particiona el conjunto en clases); orden parcial = reflexiva + antisimétrica + transitiva.",
+          "Si |A| = |B| es finito, f: A → B es inyectiva ⇔ sobreyectiva ⇔ biyectiva; si |A| > |B|, no existe ninguna inyección (principio del palomar)."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Confusing ∈ with ⊆ (writing {1} ∈ {1, 2} instead of {1} ⊆ {1, 2}); ∈ relates an element to a set, ⊆ relates two sets.",
+          "Checking surjectivity without fixing the codomain: f(x) = x² is not surjective onto ℝ but is onto [0, ∞); always state f: A → B before deciding.",
+          "Declaring a relation transitive after checking only a few pairs; you must check every pair (a, b), (b, c) in R, including cases where a = b or b = c."
+        ],
+        "es": [
+          "Confundir ∈ con ⊆ (escribir {1} ∈ {1, 2} en lugar de {1} ⊆ {1, 2}); ∈ relaciona un elemento con un conjunto, ⊆ relaciona dos conjuntos.",
+          "Evaluar la sobreyectividad sin fijar el codominio: f(x) = x² no es sobreyectiva sobre ℝ pero sí sobre [0, ∞); indica siempre f: A → B antes de decidir.",
+          "Declarar una relación transitiva después de revisar solo algunos pares; debes revisar todos los pares (a, b), (b, c) en R, incluidos los casos en que a = b o b = c."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: for A = {1, 2, 3, 4} and B = {3, 4, 5}, compute A ∪ B, A ∩ B, A \\ B, B \\ A and |A × B|, then verify each with the module's Java code.",
+          "Core: implement `isSurjective(Map<Integer,Integer> f, Set<Integer> codomain)` and `isBijective(...)` in Java, and test them on f(x) = 2x mod 5 and f(x) = 2x mod 6 over {0, …, 4} and {0, …, 5} respectively.",
+          "Stretch: represent a relation on {1, …, n} as a `boolean[][]` and implement `isReflexive`, `isSymmetric`, `isAntisymmetric` and `isTransitive` (O(n³)); use them to classify \"a ≡ b (mod 3)\" and \"a divides b\" on {1, …, 6}.",
+          "Exam-style: prove that f: ℤ → ℤ, f(n) = 3n + 1 is injective but not surjective, and that g: ℝ → ℝ, g(x) = 3x + 1 is a bijection; give g⁻¹ explicitly."
+        ],
+        "es": [
+          "Calentamiento: para A = {1, 2, 3, 4} y B = {3, 4, 5}, calcula A ∪ B, A ∩ B, A \\ B, B \\ A y |A × B|, y verifica cada resultado con el código Java del módulo.",
+          "Núcleo: implementa en Java `isSurjective(Map<Integer,Integer> f, Set<Integer> codomain)` e `isBijective(...)`, y pruébalas con f(x) = 2x mod 5 sobre {0, …, 4} y f(x) = 2x mod 6 sobre {0, …, 5}.",
+          "Extensión: representa una relación sobre {1, …, n} como `boolean[][]` e implementa `isReflexive`, `isSymmetric`, `isAntisymmetric` e `isTransitive` (O(n³)); úsalas para clasificar \"a ≡ b (mod 3)\" y \"a divide a b\" sobre {1, …, 6}.",
+          "Estilo examen: demuestra que f: ℤ → ℤ, f(n) = 3n + 1 es inyectiva pero no sobreyectiva, y que g: ℝ → ℝ, g(x) = 3x + 1 es una biyección; da g⁻¹ explícitamente."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What is |A × B| if |A| = 4 and |B| = 6, and how many relations are there from A to B?",
+          "Which three properties make a relation an equivalence relation, and what structure does it induce on the set?",
+          "Why can no function from a 10-element set to a 9-element set be injective?"
+        ],
+        "es": [
+          "¿Cuánto vale |A × B| si |A| = 4 y |B| = 6, y cuántas relaciones hay de A en B?",
+          "¿Qué tres propiedades hacen que una relación sea de equivalencia y qué estructura induce sobre el conjunto?",
+          "¿Por qué ninguna función de un conjunto de 10 elementos a uno de 9 elementos puede ser inyectiva?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Set Operations",
+            "es": "Operaciones de conjuntos"
+          },
+          "definition": {
+            "en": "Ways of building new sets from existing ones: union A ∪ B = {x : x ∈ A ∨ x ∈ B}, intersection A ∩ B = {x : x ∈ A ∧ x ∈ B}, difference A \\ B = {x : x ∈ A ∧ x ∉ B}, and complement relative to a universe U.",
+            "es": "Formas de construir conjuntos nuevos a partir de otros: unión A ∪ B = {x : x ∈ A ∨ x ∈ B}, intersección A ∩ B = {x : x ∈ A ∧ x ∈ B}, diferencia A \\ B = {x : x ∈ A ∧ x ∉ B} y complemento respecto a un universo U."
+          }
+        },
+        {
+          "term": {
+            "en": "Cartesian Product",
+            "es": "Producto cartesiano"
+          },
+          "definition": {
+            "en": "The set A × B = {(a, b) : a ∈ A, b ∈ B} of all ordered pairs whose first component comes from A and second from B; for finite sets |A × B| = |A|·|B|.",
+            "es": "El conjunto A × B = {(a, b) : a ∈ A, b ∈ B} de todos los pares ordenados cuyo primer componente pertenece a A y el segundo a B; para conjuntos finitos |A × B| = |A|·|B|."
+          }
+        },
+        {
+          "term": {
+            "en": "Relations",
+            "es": "Relaciones"
+          },
+          "definition": {
+            "en": "A (binary) relation from A to B is any subset R ⊆ A × B, where a R b means (a, b) ∈ R; a relation on A is a subset of A × A and may be reflexive, symmetric, antisymmetric or transitive.",
+            "es": "Una relación (binaria) de A en B es cualquier subconjunto R ⊆ A × B, donde a R b significa (a, b) ∈ R; una relación sobre A es un subconjunto de A × A y puede ser reflexiva, simétrica, antisimétrica o transitiva."
+          }
+        },
+        {
+          "term": {
+            "en": "Injective Functions",
+            "es": "Funciones inyectivas"
+          },
+          "definition": {
+            "en": "A function f: A → B is injective (one-to-one) if f(a₁) = f(a₂) implies a₁ = a₂, i.e. distinct inputs always produce distinct outputs.",
+            "es": "Una función f: A → B es inyectiva (uno a uno) si f(a₁) = f(a₂) implica a₁ = a₂, es decir, entradas distintas siempre producen salidas distintas."
+          }
+        },
+        {
+          "term": {
+            "en": "Surjective Functions",
+            "es": "Funciones sobreyectivas"
+          },
+          "definition": {
+            "en": "A function f: A → B is surjective (onto) if every b ∈ B has at least one a ∈ A with f(a) = b, i.e. its range equals its codomain.",
+            "es": "Una función f: A → B es sobreyectiva (suprayectiva) si para todo b ∈ B existe al menos un a ∈ A con f(a) = b, es decir, su imagen es igual a su codominio."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Discrete Mathematics: An Open Introduction (Levin), free online textbook",
+            "es": "Discrete Mathematics: An Open Introduction (Levin), libro de texto gratuito en línea"
+          },
+          "url": "https://discrete.openmathbooks.org/dmoi3/"
+        },
+        {
+          "label": {
+            "en": "Book of Proof (Hammack): sets, relations and functions chapters",
+            "es": "Book of Proof (Hammack): capítulos de conjuntos, relaciones y funciones"
+          },
+          "url": "https://richardhammack.github.io/BookOfProof/"
+        },
+        {
+          "label": {
+            "en": "Java SE 21 API: java.util.Set",
+            "es": "API de Java SE 21: java.util.Set"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "If |A| = 3 and |B| = 4, what is |A × B|?",
+            "es": "Si |A| = 3 y |B| = 4, ¿cuánto vale |A × B|?"
+          },
+          "options": {
+            "en": [
+              "7",
+              "12",
+              "64",
+              "81"
+            ],
+            "es": [
+              "7",
+              "12",
+              "64",
+              "81"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Each of the 3 choices for the first component pairs with each of the 4 for the second: 3 · 4 = 12. 7 is |A| + |B|, which counts a disjoint union, not pairs.",
+            "es": "Cada una de las 3 opciones para el primer componente se combina con cada una de las 4 del segundo: 3 · 4 = 12. 7 es |A| + |B|, que cuenta una unión disjunta, no pares."
+          }
+        },
+        {
+          "question": {
+            "en": "How many different binary relations exist on a set with 3 elements?",
+            "es": "¿Cuántas relaciones binarias distintas existen sobre un conjunto de 3 elementos?"
+          },
+          "options": {
+            "en": [
+              "9",
+              "27",
+              "64",
+              "512"
+            ],
+            "es": [
+              "9",
+              "27",
+              "64",
+              "512"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "A relation is any subset of A × A, which has 3² = 9 pairs, so there are 2⁹ = 512 relations. 9 counts the pairs themselves, not subsets of them.",
+            "es": "Una relación es cualquier subconjunto de A × A, que tiene 3² = 9 pares, así que hay 2⁹ = 512 relaciones. 9 cuenta los pares, no los subconjuntos de pares."
+          }
+        },
+        {
+          "question": {
+            "en": "On A = {1, 2, 3}, let R = {(1,1), (2,2), (3,3), (1,2), (2,1)}. What is R?",
+            "es": "Sobre A = {1, 2, 3}, sea R = {(1,1), (2,2), (3,3), (1,2), (2,1)}. ¿Qué es R?"
+          },
+          "options": {
+            "en": [
+              "An equivalence relation",
+              "Reflexive and symmetric but not transitive",
+              "A partial order",
+              "Symmetric but not reflexive"
+            ],
+            "es": [
+              "Una relación de equivalencia",
+              "Reflexiva y simétrica pero no transitiva",
+              "Un orden parcial",
+              "Simétrica pero no reflexiva"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "All (a, a) are present (reflexive), (1,2) and (2,1) both appear (symmetric), and the only chains (1,2),(2,1) → (1,1) and (2,1),(1,2) → (2,2) are in R (transitive). Its classes are {1, 2} and {3}. It is not a partial order because (1,2) and (2,1) violate antisymmetry.",
+            "es": "Están todos los (a, a) (reflexiva), aparecen (1,2) y (2,1) (simétrica), y las únicas cadenas (1,2),(2,1) → (1,1) y (2,1),(1,2) → (2,2) están en R (transitiva). Sus clases son {1, 2} y {3}. No es un orden parcial porque (1,2) y (2,1) violan la antisimetría."
+          }
+        },
+        {
+          "question": {
+            "en": "The module's `isInjective` is run on a map with f(1) = 10, f(2) = 20, f(3) = 10, and the codomain is {10, 20}. Which statement is true?",
+            "es": "El método `isInjective` del módulo se ejecuta sobre un mapa con f(1) = 10, f(2) = 20, f(3) = 10, y el codominio es {10, 20}. ¿Qué afirmación es verdadera?"
+          },
+          "options": {
+            "en": [
+              "f is injective but not surjective",
+              "f is surjective but not injective, and `isInjective` returns false",
+              "f is a bijection",
+              "f is neither injective nor surjective"
+            ],
+            "es": [
+              "f es inyectiva pero no sobreyectiva",
+              "f es sobreyectiva pero no inyectiva, e `isInjective` devuelve false",
+              "f es una biyección",
+              "f no es ni inyectiva ni sobreyectiva"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Both 10 and 20 are hit, so f is onto {10, 20}; but f(1) = f(3), so `seen.add(10)` fails the second time and the method returns false.",
+            "es": "Se alcanzan tanto 10 como 20, así que f es sobreyectiva sobre {10, 20}; pero f(1) = f(3), por lo que `seen.add(10)` falla la segunda vez y el método devuelve false."
+          }
+        },
+        {
+          "question": {
+            "en": "A and B are finite with |A| > |B|. What can you conclude about every function f: A → B?",
+            "es": "A y B son finitos con |A| > |B|. ¿Qué puedes concluir sobre toda función f: A → B?"
+          },
+          "options": {
+            "en": [
+              "f cannot be surjective",
+              "f must be bijective",
+              "f cannot be injective",
+              "f cannot exist"
+            ],
+            "es": [
+              "f no puede ser sobreyectiva",
+              "f debe ser biyectiva",
+              "f no puede ser inyectiva",
+              "f no puede existir"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "By the pigeonhole principle, more inputs than outputs forces two inputs to share an output. Surjectivity is still possible (e.g. mapping {1, 2, 3} onto {a, b}).",
+            "es": "Por el principio del palomar, tener más entradas que salidas obliga a que dos entradas compartan una salida. La sobreyectividad sigue siendo posible (p. ej. de {1, 2, 3} sobre {a, b})."
+          }
+        }
+      ]
+    },
+    "matrix-grid-problems": {
+      "minutes": 100,
+      "prerequisites": [
+        "arrays-strings",
+        "stacks-queues",
+        "recursion"
+      ],
+      "whyItMatters": {
+        "en": "Grids model images, game boards, maps, and spreadsheets. Number of islands, flood fill, rotting oranges, and shortest path in a maze are among the most common interview problems, and they all reuse the same template: bounds check, direction vectors, visited tracking.",
+        "es": "Las cuadrículas modelan imágenes, tableros de juego, mapas y hojas de cálculo. Número de islas, relleno por inundación, naranjas podridas y camino más corto en un laberinto están entre los problemas de entrevista más comunes, y todos reutilizan la misma plantilla: verificación de límites, vectores de dirección y registro de visitados."
+      },
+      "objectives": {
+        "en": [
+          "Represent a grid as `int[][]` or `char[][]`, iterate it in row-major order, and convert between (row, col) and the single index `row * cols + col`.",
+          "Implement neighbor generation with a direction-vector array and a single `inBounds` check, for both 4- and 8-directional movement.",
+          "Implement BFS on a grid, including multi-source BFS, that returns minimum step counts by processing the queue level by level or filling a `dist` array.",
+          "Count connected components (islands) with DFS or BFS, and choose between in-place marking and a separate `boolean[][] visited` array."
+        ],
+        "es": [
+          "Representar una cuadrícula como `int[][]` o `char[][]`, recorrerla por filas y convertir entre (row, col) y el índice único `row * cols + col`.",
+          "Implementar la generación de vecinos con un arreglo de vectores de dirección y una sola verificación `inBounds`, para movimiento en 4 y en 8 direcciones.",
+          "Implementar BFS sobre una cuadrícula, incluido BFS de múltiples fuentes, que devuelva la cantidad mínima de pasos procesando la cola por niveles o llenando un arreglo `dist`.",
+          "Contar componentes conexas (islas) con DFS o BFS, y elegir entre marcar en el lugar o usar un arreglo `boolean[][] visited` aparte."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Use `ArrayDeque` as a FIFO queue with `offer` and `poll`",
+          "Write a recursive DFS with a base case that stops at invalid cells"
+        ],
+        "es": [
+          "Usar `ArrayDeque` como cola FIFO con `offer` y `poll`",
+          "Escribir un DFS recursivo con un caso base que se detenga en celdas inválidas"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "A grid traversal visits each cell once and checks a constant number of neighbors: O(R·C) time, plus O(R·C) for visited storage.",
+          "With unit-cost moves, BFS finds the minimum number of steps; DFS finds some path, not necessarily the shortest.",
+          "Mark a cell as visited when you enqueue it, not when you dequeue it; otherwise the same cell can be added to the queue several times.",
+          "Recursive DFS on a large grid (e.g., a 1000×1000 grid of land) can recurse up to R·C levels deep and throw `StackOverflowError`; use BFS or an explicit stack."
+        ],
+        "es": [
+          "Un recorrido de cuadrícula visita cada celda una vez y revisa un número constante de vecinos: tiempo O(R·C), más O(R·C) para registrar visitados.",
+          "Con movimientos de costo unitario, BFS encuentra la cantidad mínima de pasos; DFS encuentra algún camino, no necesariamente el más corto.",
+          "Marca una celda como visitada al encolarla, no al desencolarla; si no, la misma celda puede entrar varias veces a la cola.",
+          "Un DFS recursivo sobre una cuadrícula grande (por ejemplo, 1000×1000 de tierra) puede llegar a R·C niveles de profundidad y lanzar `StackOverflowError`; usa BFS o una pila explícita."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Mixing up rows and columns: `grid.length` is the number of rows and `grid[0].length` the number of columns. Code that swaps them works on square grids and fails on rectangular ones.",
+          "Reading `grid[r][c]` before checking bounds. Java's `&&` short-circuits, so write `r >= 0 && r < rows && c >= 0 && c < cols && grid[r][c] == 1` with the bounds first.",
+          "Marking visited cells in the input grid when the caller still needs the original data (or when the same grid is reused across tests). Copy the grid or use a separate `visited` array."
+        ],
+        "es": [
+          "Confundir filas y columnas: `grid.length` es el número de filas y `grid[0].length` el de columnas. El código que los intercambia funciona en cuadrículas cuadradas y falla en las rectangulares.",
+          "Leer `grid[r][c]` antes de verificar los límites. El `&&` de Java evalúa en cortocircuito, así que escribe `r >= 0 && r < rows && c >= 0 && c < cols && grid[r][c] == 1` con los límites primero.",
+          "Marcar visitados en la cuadrícula de entrada cuando quien llama todavía necesita los datos originales (o cuando la misma cuadrícula se reutiliza en varias pruebas). Copia la cuadrícula o usa un arreglo `visited` aparte."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Write `List<int[]> neighbors(int[][] grid, int r, int c)` that returns all valid 4-directional neighbors using `DIRS`, and test it on a corner, an edge, an interior cell, and a 1×1 grid.",
+          "Implement `int numIslands(char[][] grid)` that counts 4-directionally connected regions of '1' using iterative BFS and in-place marking.",
+          "Implement `int[][] floodFill(int[][] image, int sr, int sc, int newColor)` with DFS, and handle the case where `newColor` equals the starting color (otherwise the recursion never stops).",
+          "Implement `int orangesRotting(int[][] grid)` (0 = empty, 1 = fresh, 2 = rotten; each minute, rot spreads to 4-neighbors) that returns the minutes until no fresh orange remains, or −1 if some never rot, using multi-source BFS from all rotten oranges at once."
+        ],
+        "es": [
+          "Escribe `List<int[]> neighbors(int[][] grid, int r, int c)` que devuelva todos los vecinos válidos en 4 direcciones usando `DIRS`, y pruébalo con una esquina, un borde, una celda interior y una cuadrícula de 1×1.",
+          "Implementa `int numIslands(char[][] grid)` que cuente las regiones de '1' conectadas en 4 direcciones usando BFS iterativo y marcado en el lugar.",
+          "Implementa `int[][] floodFill(int[][] image, int sr, int sc, int newColor)` con DFS y maneja el caso en que `newColor` es igual al color inicial (si no, la recursión nunca termina).",
+          "Implementa `int orangesRotting(int[][] grid)` (0 = vacío, 1 = fresca, 2 = podrida; cada minuto la podredumbre pasa a los 4 vecinos) que devuelva los minutos hasta que no quede ninguna naranja fresca, o −1 si alguna nunca se pudre, con BFS de múltiples fuentes desde todas las podridas a la vez."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why does BFS give the minimum number of steps in an unweighted grid while DFS does not?",
+          "What is the time complexity of counting islands in an R×C grid, and why?",
+          "When should you avoid in-place marking?"
+        ],
+        "es": [
+          "¿Por qué BFS da la cantidad mínima de pasos en una cuadrícula sin pesos y DFS no?",
+          "¿Cuál es la complejidad temporal de contar islas en una cuadrícula de R×C y por qué?",
+          "¿Cuándo conviene evitar el marcado en el lugar?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Grid Representation",
+            "es": "Representación de cuadrículas"
+          },
+          "definition": {
+            "en": "Storing a 2D grid as a Java array of arrays (`int[][]` or `char[][]`) indexed `grid[row][col]`, where `grid.length` is the number of rows and `grid[0].length` the number of columns. Each cell can be treated as a graph vertex connected to its neighbors.",
+            "es": "Guardar una cuadrícula 2D como un arreglo de arreglos en Java (`int[][]` o `char[][]`) indexado como `grid[row][col]`, donde `grid.length` es el número de filas y `grid[0].length` el número de columnas. Cada celda puede tratarse como un vértice de un grafo conectado con sus vecinos."
+          }
+        },
+        {
+          "term": {
+            "en": "Boundary Validation",
+            "es": "Validación de límites"
+          },
+          "definition": {
+            "en": "Checking that a coordinate satisfies 0 ≤ row < rows and 0 ≤ col < cols before reading the cell, so neighbor exploration never throws `ArrayIndexOutOfBoundsException` or processes positions outside the grid.",
+            "es": "Comprobar que una coordenada cumple 0 ≤ row < rows y 0 ≤ col < cols antes de leer la celda, para que la exploración de vecinos nunca lance `ArrayIndexOutOfBoundsException` ni procese posiciones fuera de la cuadrícula."
+          }
+        },
+        {
+          "term": {
+            "en": "Direction Vectors",
+            "es": "Vectores de dirección"
+          },
+          "definition": {
+            "en": "An array of (Δrow, Δcol) offsets—such as `{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}` for 4-directional moves, or eight pairs for diagonals too—that lets a single loop generate every neighbor instead of writing each case by hand.",
+            "es": "Un arreglo de desplazamientos (Δrow, Δcol)—como `{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}` para movimientos en 4 direcciones, u ocho pares si se incluyen diagonales—que permite generar todos los vecinos con un solo ciclo en lugar de escribir cada caso a mano."
+          }
+        },
+        {
+          "term": {
+            "en": "BFS on Grids",
+            "es": "BFS en cuadrículas"
+          },
+          "definition": {
+            "en": "Breadth-first search that uses a queue to process cells in order of distance from the start. Because every move costs 1, the first time a cell is reached gives its shortest step count; starting with several cells in the queue (multi-source BFS) gives the distance to the nearest source.",
+            "es": "Búsqueda en anchura que usa una cola para procesar las celdas en orden de distancia al inicio. Como cada movimiento cuesta 1, la primera vez que se alcanza una celda se obtiene su número mínimo de pasos; empezar con varias celdas en la cola (BFS de múltiples fuentes) da la distancia a la fuente más cercana."
+          }
+        },
+        {
+          "term": {
+            "en": "In-Place Marking",
+            "es": "Marcado en el lugar"
+          },
+          "definition": {
+            "en": "Recording visited state by overwriting cells of the input grid itself, for example changing '1' to '0' once a cell is reached. It saves the O(R·C) memory of a separate visited array but destroys the original data.",
+            "es": "Registrar qué celdas se visitaron sobrescribiendo la propia cuadrícula de entrada, por ejemplo cambiando '1' por '0' al alcanzar una celda. Ahorra la memoria O(R·C) de un arreglo de visitados aparte, pero destruye los datos originales."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "cp-algorithms: Breadth-first search",
+            "es": "cp-algorithms: Búsqueda en anchura (en inglés)"
+          },
+          "url": "https://cp-algorithms.com/graph/breadth-first-search.html"
+        },
+        {
+          "label": {
+            "en": "Algorithms, 4th ed. (Princeton): Undirected Graphs (DFS, BFS, connected components)",
+            "es": "Algorithms, 4.ª ed. (Princeton): Grafos no dirigidos (DFS, BFS, componentes conexas, en inglés)"
+          },
+          "url": "https://algs4.cs.princeton.edu/41graph/"
+        },
+        {
+          "label": {
+            "en": "Wikipedia: Flood fill",
+            "es": "Wikipedia: Relleno por inundación (en inglés)"
+          },
+          "url": "https://en.wikipedia.org/wiki/Flood_fill"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What does the module's `reachableCells(grid, 0, 0)` return for\n`{{1, 1, 0, 1},\n {1, 1, 0, 0},\n {0, 1, 1, 1}}`?",
+            "es": "¿Qué devuelve `reachableCells(grid, 0, 0)` del módulo para\n`{{1, 1, 0, 1},\n {1, 1, 0, 0},\n {0, 1, 1, 1}}`?"
+          },
+          "options": {
+            "en": [
+              "4",
+              "8",
+              "6",
+              "7"
+            ],
+            "es": [
+              "4",
+              "8",
+              "6",
+              "7"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "From (0,0), BFS reaches (0,1), (1,0), (1,1), then (2,1), (2,2), (2,3): 7 cells. The 1 at (0,3) has no 4-directional path to the rest, so counting all eight 1s gives the wrong answer of 8.",
+            "es": "Desde (0,0), el BFS alcanza (0,1), (1,0), (1,1) y luego (2,1), (2,2), (2,3): 7 celdas. El 1 en (0,3) no tiene camino en 4 direcciones hacia las demás, así que contar los ocho 1 da la respuesta incorrecta de 8."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the time complexity of counting islands in an R×C grid with BFS and visited marking?",
+            "es": "¿Cuál es la complejidad temporal de contar islas en una cuadrícula de R×C con BFS y marcado de visitados?"
+          },
+          "options": {
+            "en": [
+              "O(R·C)",
+              "O((R·C)²)",
+              "O(R + C)",
+              "O(R·C·log(R·C))"
+            ],
+            "es": [
+              "O(R·C)",
+              "O((R·C)²)",
+              "O(R + C)",
+              "O(R·C·log(R·C))"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "The outer scan touches each cell once, and because cells are marked, each is enqueued at most once and checks 4 neighbors: O(R·C) total. O((R·C)²) would only happen if every BFS restarted without remembering visited cells.",
+            "es": "El recorrido externo toca cada celda una vez y, como se marcan, cada una entra a la cola como máximo una vez y revisa 4 vecinos: O(R·C) en total. O((R·C)²) solo ocurriría si cada BFS empezara de nuevo sin recordar las celdas visitadas."
+          }
+        },
+        {
+          "question": {
+            "en": "Why does the module mark a cell as visited when it is enqueued rather than when it is dequeued?",
+            "es": "¿Por qué el módulo marca una celda como visitada al encolarla y no al desencolarla?"
+          },
+          "options": {
+            "en": [
+              "`ArrayDeque` requires elements to be marked before insertion",
+              "Otherwise several neighbors can enqueue the same cell before it is processed, wasting work and possibly double-counting it",
+              "It makes BFS behave like DFS",
+              "It reduces the queue's memory to O(1)"
+            ],
+            "es": [
+              "`ArrayDeque` exige marcar los elementos antes de insertarlos",
+              "Si no, varios vecinos pueden encolar la misma celda antes de que se procese, desperdiciando trabajo y quizá contándola dos veces",
+              "Hace que BFS se comporte como DFS",
+              "Reduce la memoria de la cola a O(1)"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Between being enqueued and dequeued, a cell can be discovered again by other neighbors; marking at enqueue time guarantees each cell enters the queue once, so `visited++` counts it once. The queue can still hold O(R·C) cells, so memory is not O(1).",
+            "es": "Entre que se encola y se desencola, otros vecinos pueden volver a descubrir la celda; marcarla al encolar garantiza que entre a la cola una sola vez, así `visited++` la cuenta una vez. La cola aún puede contener O(R·C) celdas, así que la memoria no es O(1)."
+          }
+        },
+        {
+          "question": {
+            "en": "For `int[][] g = new int[3][5];`, what single index does `row * cols + col` give for cell (2, 4)?",
+            "es": "Para `int[][] g = new int[3][5];`, ¿qué índice único da `row * cols + col` para la celda (2, 4)?"
+          },
+          "options": {
+            "en": [
+              "10",
+              "22",
+              "14",
+              "11"
+            ],
+            "es": [
+              "10",
+              "22",
+              "14",
+              "11"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "The grid has 3 rows and 5 columns, so cols = 5 and the index is 2 × 5 + 4 = 14. Using the row count instead (2 × 3 + 4 = 10) is the classic rows/columns mix-up.",
+            "es": "La cuadrícula tiene 3 filas y 5 columnas, así que cols = 5 y el índice es 2 × 5 + 4 = 14. Usar el número de filas (2 × 3 + 4 = 10) es la confusión clásica entre filas y columnas."
+          }
+        },
+        {
+          "question": {
+            "en": "Which grid task needs BFS (rather than plain DFS) to be answered correctly?",
+            "es": "¿Qué tarea sobre una cuadrícula necesita BFS (y no un DFS simple) para resolverse correctamente?"
+          },
+          "options": {
+            "en": [
+              "The minimum number of steps from the start to the exit of a maze with unit-cost moves",
+              "Counting the number of islands",
+              "Flood-filling a region with a new color",
+              "Checking whether the exit is reachable at all"
+            ],
+            "es": [
+              "La cantidad mínima de pasos desde el inicio hasta la salida de un laberinto con movimientos de costo unitario",
+              "Contar el número de islas",
+              "Rellenar una región con un color nuevo",
+              "Comprobar si la salida es alcanzable"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "BFS explores in order of distance, so the first time it reaches the exit is via a shortest path; DFS may reach it via a long detour first. Islands, flood fill, and reachability only need every connected cell visited, which DFS does fine.",
+            "es": "BFS explora en orden de distancia, así que la primera vez que llega a la salida lo hace por un camino más corto; DFS puede llegar antes por un rodeo largo. Islas, relleno y alcanzabilidad solo requieren visitar cada celda conectada, y DFS lo hace bien."
+          }
+        }
+      ]
+    },
+    "backtracking-patterns": {
+      "minutes": 100,
+      "prerequisites": [
+        "recursion"
+      ],
+      "whyItMatters": {
+        "en": "Subsets, permutations, N-Queens, Sudoku and word-search problems are all solved with the same backtracking template, and they appear constantly in coding interviews. Backtracking is also the brute-force baseline you later speed up with pruning, memoization or dynamic programming, and constraint and SAT solvers are built on it.",
+        "es": "Subconjuntos, permutaciones, N-Reinas, Sudoku y búsqueda de palabras se resuelven con la misma plantilla de backtracking, y aparecen constantemente en entrevistas técnicas. Además, el backtracking es la solución de fuerza bruta de referencia que luego aceleras con poda, memoización o programación dinámica, y es la base de los solucionadores de restricciones y SAT."
+      },
+      "objectives": {
+        "en": [
+          "Implement subsets, combinations and permutations with one choose-explore-unchoose template, copying the path only when you record a solution.",
+          "Trace the decision tree for a small input and count its leaves (2^n for subsets, n! for permutations) to estimate running time.",
+          "Apply pruning to combination sum and N-Queens (sorted-input early `break`, constraint checks before recursing) and measure how many calls it saves.",
+          "Debug state leaks caused by a missing undo step or by storing a reference to the shared `path` list."
+        ],
+        "es": [
+          "Implementar subconjuntos, combinaciones y permutaciones con una sola plantilla elegir-explorar-deshacer, copiando el camino solo al registrar una solución.",
+          "Trazar el árbol de decisiones para una entrada pequeña y contar sus hojas (2^n para subconjuntos, n! para permutaciones) para estimar el tiempo de ejecución.",
+          "Aplicar poda a combination sum y N-Reinas (`break` temprano con entrada ordenada, verificar restricciones antes de recursar) y medir cuántas llamadas ahorra.",
+          "Depurar fugas de estado causadas por un paso de deshacer faltante o por guardar una referencia a la lista compartida `path`."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Trace a recursive call stack by hand, including what each frame's local variables hold.",
+          "Use `ArrayList` add/remove at the end and `boolean[]` marker arrays."
+        ],
+        "es": [
+          "Trazar a mano una pila de llamadas recursivas, incluyendo el valor de las variables locales de cada marco.",
+          "Usar `add`/`remove` al final de un `ArrayList` y arreglos marcadores `boolean[]`."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Subsets: 2^n results, O(n·2^n) total time including copies. Permutations: n! results, O(n·n!).",
+          "Every change made before the recursive call needs a matching undo after it, so the state on return equals the state on entry.",
+          "Record `new ArrayList<>(path)`, never `path` itself; otherwise every stored answer is the same list, which ends up empty.",
+          "Prune as early as possible: check constraints when choosing, not at the leaf. Sorting the input enables `break` once a candidate exceeds the remaining target and duplicate skipping with `i > start && nums[i] == nums[i - 1]`."
+        ],
+        "es": [
+          "Subconjuntos: 2^n resultados, tiempo total O(n·2^n) incluyendo las copias. Permutaciones: n! resultados, O(n·n!).",
+          "Cada cambio hecho antes de la llamada recursiva necesita su deshacer correspondiente después, para que el estado al regresar sea igual al estado al entrar.",
+          "Registra `new ArrayList<>(path)`, nunca `path` en sí; de lo contrario todas las respuestas guardadas son la misma lista, que termina vacía.",
+          "Poda lo antes posible: verifica las restricciones al elegir, no en la hoja. Ordenar la entrada permite hacer `break` cuando un candidato supera el objetivo restante y saltar duplicados con `i > start && nums[i] == nums[i - 1]`."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Adding `path` instead of a copy to the results: all entries alias one list and print as `[]` at the end. Fix: `answer.add(new ArrayList<>(path))`.",
+          "Undoing with `path.remove(nums[i])` on a `List<Integer>`: the `int` argument selects `remove(int index)`, so it removes the wrong element or throws `IndexOutOfBoundsException`. Use `path.remove(path.size() - 1)`.",
+          "Forgetting to reset `used[i] = false` (or restore a grid cell) after the recursive call: later branches see the element as taken and solutions silently go missing."
+        ],
+        "es": [
+          "Agregar `path` en lugar de una copia a los resultados: todas las entradas apuntan a la misma lista y al final se imprimen como `[]`. Solución: `answer.add(new ArrayList<>(path))`.",
+          "Deshacer con `path.remove(nums[i])` sobre una `List<Integer>`: el argumento `int` selecciona `remove(int index)`, así que elimina el elemento equivocado o lanza `IndexOutOfBoundsException`. Usa `path.remove(path.size() - 1)`.",
+          "Olvidar restablecer `used[i] = false` (o restaurar una celda de la cuadrícula) después de la llamada recursiva: las ramas siguientes ven el elemento como usado y se pierden soluciones sin ningún error."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: draw the decision tree that the module's `build` method explores for `nums = {1, 2, 3}` and write the 8 subsets in the exact order they are added to `answer`; then run the program to check.",
+          "Implement `List<List<Integer>> permute(int[] nums)` using a `boolean[] used` array and the choose-explore-unchoose template; verify it returns n! lists for n = 1 to 5.",
+          "Implement `List<List<Integer>> combinationSum2(int[] candidates, int target)` where each candidate is used at most once and the input may contain duplicates: sort first, skip equal values at the same depth, and `break` when a candidate exceeds the remaining target.",
+          "Implement `int totalNQueens(int n)` placing one queen per row, with three `boolean[]` arrays (columns, diagonals r − c + n − 1, anti-diagonals r + c) for O(1) safety checks. Confirm 92 solutions for n = 8 and count recursive calls with and without the checks done before recursing."
+        ],
+        "es": [
+          "Calentamiento: dibuja el árbol de decisiones que explora el método `build` del módulo para `nums = {1, 2, 3}` y escribe los 8 subconjuntos en el orden exacto en que se agregan a `answer`; luego ejecuta el programa para comprobarlo.",
+          "Implementa `List<List<Integer>> permute(int[] nums)` con un arreglo `boolean[] used` y la plantilla elegir-explorar-deshacer; verifica que devuelve n! listas para n = 1 a 5.",
+          "Implementa `List<List<Integer>> combinationSum2(int[] candidates, int target)` donde cada candidato se usa a lo sumo una vez y la entrada puede tener duplicados: ordena primero, salta valores iguales en la misma profundidad y haz `break` cuando un candidato supere el objetivo restante.",
+          "Implementa `int totalNQueens(int n)` colocando una reina por fila, con tres arreglos `boolean[]` (columnas, diagonales r − c + n − 1 y antidiagonales r + c) para verificar en O(1). Confirma 92 soluciones para n = 8 y cuenta las llamadas recursivas con y sin las verificaciones previas a recursar."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why does the result list need a copy of `path` rather than `path` itself?",
+          "How many leaves does the subset decision tree have for n elements, and why?",
+          "What is the difference between pruning a branch and undoing a choice?"
+        ],
+        "es": [
+          "¿Por qué la lista de resultados necesita una copia de `path` y no `path` en sí?",
+          "¿Cuántas hojas tiene el árbol de decisiones de subconjuntos para n elementos y por qué?",
+          "¿Cuál es la diferencia entre podar una rama y deshacer una elección?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Decision Trees",
+            "es": "Árboles de decisiones"
+          },
+          "definition": {
+            "en": "The implicit tree a backtracking search explores: each node is a partial solution, each edge is one choice, and leaves are complete candidates. Its size (2^n leaves for subsets, n! for permutations) bounds the running time.",
+            "es": "El árbol implícito que recorre una búsqueda con backtracking: cada nodo es una solución parcial, cada arista es una elección y las hojas son candidatos completos. Su tamaño (2^n hojas para subconjuntos, n! para permutaciones) acota el tiempo de ejecución."
+          }
+        },
+        {
+          "term": {
+            "en": "Choose-Explore-Unchoose",
+            "es": "Elegir-explorar-deshacer"
+          },
+          "definition": {
+            "en": "The backtracking template: apply a choice to the shared state, recurse to explore everything that follows from it, then reverse the choice so the state is exactly as before when the next option is tried.",
+            "es": "La plantilla del backtracking: aplicar una elección al estado compartido, recursar para explorar todo lo que se deriva de ella y luego revertirla para que el estado quede exactamente igual antes de probar la siguiente opción."
+          }
+        },
+        {
+          "term": {
+            "en": "Pruning",
+            "es": "Poda"
+          },
+          "definition": {
+            "en": "Abandoning a subtree of the decision tree as soon as the partial solution provably cannot lead to a valid (or better) answer, so none of its descendants are generated.",
+            "es": "Abandonar un subárbol del árbol de decisiones en cuanto se puede demostrar que la solución parcial no lleva a una respuesta válida (o mejor), de modo que ninguno de sus descendientes se genera."
+          }
+        },
+        {
+          "term": {
+            "en": "State Backtracking",
+            "es": "Backtracking de estado"
+          },
+          "definition": {
+            "en": "Keeping one mutable state (path list, visited array, board) shared by all recursive calls and restoring it on return, instead of copying the state into every call.",
+            "es": "Mantener un único estado mutable (lista del camino, arreglo de visitados, tablero) compartido por todas las llamadas recursivas y restaurarlo al regresar, en lugar de copiar el estado en cada llamada."
+          }
+        },
+        {
+          "term": {
+            "en": "Constraint Search",
+            "es": "Búsqueda con restricciones"
+          },
+          "definition": {
+            "en": "Solving problems defined by variables, allowed values and constraints (Sudoku, N-Queens, graph coloring) by assigning one variable at a time and backtracking as soon as an assignment violates a constraint.",
+            "es": "Resolver problemas definidos por variables, valores permitidos y restricciones (Sudoku, N-Reinas, coloreo de grafos) asignando una variable a la vez y retrocediendo en cuanto una asignación viola una restricción."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Jeff Erickson, Algorithms, Chapter 2: Backtracking (free PDF)",
+            "es": "Jeff Erickson, Algorithms, capítulo 2: Backtracking (PDF gratuito, en inglés)"
+          },
+          "url": "https://jeffe.cs.illinois.edu/teaching/algorithms/book/02-backtracking.pdf"
+        },
+        {
+          "label": {
+            "en": "Wikipedia: Backtracking",
+            "es": "Wikipedia: Backtracking (vuelta atrás)"
+          },
+          "url": "https://en.wikipedia.org/wiki/Backtracking"
+        },
+        {
+          "label": {
+            "en": "Wikipedia: Eight queens puzzle",
+            "es": "Wikipedia: Problema de las ocho reinas (en inglés)"
+          },
+          "url": "https://en.wikipedia.org/wiki/Eight_queens_puzzle"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Using the module's `build` method (skip the current number first, then take it), what does `main` print for `nums = {1, 2}`?",
+            "es": "Con el método `build` del módulo (primero omite el número actual y luego lo toma), ¿qué imprime `main` para `nums = {1, 2}`?"
+          },
+          "options": {
+            "en": [
+              "[[], [1], [2], [1, 2]]",
+              "[[1, 2], [1], [2], []]",
+              "[[], [2], [1], [1, 2]]",
+              "[[], [], [], []]"
+            ],
+            "es": [
+              "[[], [1], [2], [1, 2]]",
+              "[[1, 2], [1], [2], []]",
+              "[[], [2], [1], [1, 2]]",
+              "[[], [], [], []]"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "The skip branch runs first at every level: skip 1, skip 2 → []; skip 1, take 2 → [2]; take 1, skip 2 → [1]; take 1, take 2 → [1, 2]. The order [[], [1], [2], [1, 2]] comes from the loop-based subsets method (`for i = start..n-1`), not from this skip-then-take recursion; taking before skipping at every level would give [[1, 2], [1], [2], []]. All-empty output only happens if `path` itself were stored instead of a copy.",
+            "es": "La rama de omitir se ejecuta primero en cada nivel: omitir 1, omitir 2 → []; omitir 1, tomar 2 → [2]; tomar 1, omitir 2 → [1]; tomar 1, tomar 2 → [1, 2]. El orden [[], [1], [2], [1, 2]] lo produce el método de subconjuntos basado en un ciclo (`for i = start..n-1`), no esta recursión de omitir y luego tomar; tomar antes de omitir en cada nivel daría [[1, 2], [1], [2], []]. La salida toda vacía solo ocurre si se guardara `path` en lugar de una copia."
+          }
+        },
+        {
+          "question": {
+            "en": "Generating every permutation of n distinct elements and storing each one as a new list takes how much time in total?",
+            "es": "Generar todas las permutaciones de n elementos distintos y guardar cada una como una lista nueva toma, en total, ¿cuánto tiempo?"
+          },
+          "options": {
+            "en": [
+              "O(n · n!)",
+              "O(2^n)",
+              "O(n^2 · 2^n)",
+              "O(n^n)"
+            ],
+            "es": [
+              "O(n · n!)",
+              "O(2^n)",
+              "O(n^2 · 2^n)",
+              "O(n^n)"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "There are n! leaves and copying each finished permutation costs O(n); the internal nodes add only a constant factor (about e·n! nodes in total). O(2^n) is the count for subsets, not permutations, and n^n would count sequences with repetition.",
+            "es": "Hay n! hojas y copiar cada permutación terminada cuesta O(n); los nodos internos solo agregan un factor constante (alrededor de e·n! nodos en total). O(2^n) corresponde a subconjuntos, no a permutaciones, y n^n contaría secuencias con repetición."
+          }
+        },
+        {
+          "question": {
+            "en": "In Combination Sum II (sorted input, each element used at most once), duplicates are skipped with `if (i > start && nums[i] == nums[i - 1]) continue;`. Why `i > start` instead of `i > 0`?",
+            "es": "En Combination Sum II (entrada ordenada, cada elemento usado a lo sumo una vez), los duplicados se saltan con `if (i > start && nums[i] == nums[i - 1]) continue;`. ¿Por qué `i > start` en lugar de `i > 0`?"
+          },
+          "options": {
+            "en": [
+              "It prevents the same index from being chosen twice in one combination",
+              "It keeps the output list sorted",
+              "It avoids an `ArrayIndexOutOfBoundsException` when `i` is 0",
+              "It only skips equal values at the same depth, so a duplicate can still be used deeper in the same combination (e.g. [1, 1, 6])"
+            ],
+            "es": [
+              "Evita que el mismo índice se elija dos veces en una combinación",
+              "Mantiene ordenada la lista de salida",
+              "Evita una `ArrayIndexOutOfBoundsException` cuando `i` es 0",
+              "Solo salta valores iguales en la misma profundidad, así un duplicado aún puede usarse más abajo en la misma combinación (por ejemplo, [1, 1, 6])"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "At one depth, starting a branch with the second 1 would rebuild combinations already produced by the first 1, so it is skipped. When `i == start`, the element is the first option at a new depth, and using it is legitimate. `i > 0` would also avoid the index error but would wrongly forbid [1, 1, 6]; reusing an index is prevented by recursing with `i + 1`, not by this check.",
+            "es": "En una misma profundidad, iniciar una rama con el segundo 1 reconstruiría combinaciones ya generadas por el primer 1, por eso se salta. Cuando `i == start`, el elemento es la primera opción de una nueva profundidad y usarlo es legítimo. `i > 0` también evitaría el error de índice, pero prohibiría por error [1, 1, 6]; reutilizar un índice se evita al recursar con `i + 1`, no con esta condición."
+          }
+        },
+        {
+          "question": {
+            "en": "In the module's subsets code, a student writes `answer.add(path);` instead of `answer.add(new ArrayList<>(path));`. What is printed for `nums = {1, 2, 3}`?",
+            "es": "En el código de subconjuntos del módulo, un estudiante escribe `answer.add(path);` en lugar de `answer.add(new ArrayList<>(path));`. ¿Qué se imprime para `nums = {1, 2, 3}`?"
+          },
+          "options": {
+            "en": [
+              "The 8 correct subsets",
+              "[[], [], [], [], [], [], [], []]",
+              "[[1, 2, 3]] repeated 8 times",
+              "A `ConcurrentModificationException`"
+            ],
+            "es": [
+              "Los 8 subconjuntos correctos",
+              "[[], [], [], [], [], [], [], []]",
+              "[[1, 2, 3]] repetido 8 veces",
+              "Una `ConcurrentModificationException`"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "All 8 entries reference the same `path` object. Every add is undone before the top-level call returns, so that single list is empty when printed. It never shows [1, 2, 3] eight times because the undo steps run after the last leaf. No exception occurs since nothing iterates over `path` while it is modified.",
+            "es": "Las 8 entradas apuntan al mismo objeto `path`. Cada `add` se deshace antes de que termine la llamada inicial, así que esa única lista está vacía al imprimirse. No aparece [1, 2, 3] ocho veces porque los pasos de deshacer se ejecutan después de la última hoja. No hay excepción porque nada recorre `path` mientras se modifica."
+          }
+        },
+        {
+          "question": {
+            "en": "In N-Queens with one queen per row, which check is a correct pruning step?",
+            "es": "En N-Reinas con una reina por fila, ¿cuál verificación es un paso de poda correcto?"
+          },
+          "options": {
+            "en": [
+              "Check for conflicts only after all n queens are placed",
+              "Before placing a queen in column c of row r, reject it if only the previous row's queen is in column c",
+              "Before placing a queen at (r, c), reject it if column c, diagonal r − c or anti-diagonal r + c is already occupied",
+              "Stop exploring a row as soon as a queen is placed in column 0"
+            ],
+            "es": [
+              "Verificar conflictos solo después de colocar las n reinas",
+              "Antes de colocar una reina en la columna c de la fila r, rechazarla solo si la reina de la fila anterior está en la columna c",
+              "Antes de colocar una reina en (r, c), rechazarla si la columna c, la diagonal r − c o la antidiagonal r + c ya están ocupadas",
+              "Dejar de explorar una fila en cuanto se coloca una reina en la columna 0"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Rejecting a square that is attacked by any earlier queen cuts off the entire subtree below it, which is what pruning means. Checking only at the end is correct but explores all n^n placements. Checking only the previous row misses attacks from earlier rows, and stopping at column 0 discards valid solutions.",
+            "es": "Rechazar una casilla atacada por cualquier reina anterior elimina todo el subárbol debajo de ella, que es justamente lo que significa podar. Verificar solo al final es correcto pero explora las n^n colocaciones. Revisar solo la fila anterior ignora ataques de filas previas, y detenerse en la columna 0 descarta soluciones válidas."
+          }
+        }
+      ]
+    },
+    "collections-framework": {
+      "minutes": 120,
+      "prerequisites": [
+        "generics"
+      ],
+      "whyItMatters": {
+        "en": "Almost every real Java program and nearly every coding-interview solution uses `ArrayList`, `HashMap` or `HashSet`, and picking the wrong one turns an O(n) solution into O(n²). Knowing each implementation's ordering and complexity guarantees also prepares you to build these structures yourself in the hash table and tree modules.",
+        "es": "Casi todo programa real en Java y casi toda solución de entrevista de programación usa `ArrayList`, `HashMap` o `HashSet`, y elegir la equivocada convierte una solución O(n) en O(n²). Conocer las garantías de orden y complejidad de cada implementación también te prepara para construir estas estructuras tú mismo en los módulos de tablas hash y árboles."
+      },
+      "objectives": {
+        "en": [
+          "Choose among `ArrayList`, `LinkedList`, `ArrayDeque`, `HashSet`, `HashMap`, `TreeMap` and `LinkedHashMap` for a task, justifying the choice with ordering and Big-O guarantees.",
+          "Implement frequency counts and grouping with `Map` methods such as `getOrDefault`, `merge` and `computeIfAbsent`.",
+          "Use an `Iterator` (or `removeIf`) to remove elements safely during traversal, and explain when `ConcurrentModificationException` is thrown.",
+          "Analyze the cost of common operations: `ArrayList.get` O(1), `ArrayList.add(0, x)` O(n), `HashMap.get` average O(1), `TreeMap.get` O(log n)."
+        ],
+        "es": [
+          "Elegir entre `ArrayList`, `LinkedList`, `ArrayDeque`, `HashSet`, `HashMap`, `TreeMap` y `LinkedHashMap` para una tarea, justificando la elección con garantías de orden y de Big-O.",
+          "Implementar conteos de frecuencia y agrupaciones con métodos de `Map` como `getOrDefault`, `merge` y `computeIfAbsent`.",
+          "Usar un `Iterator` (o `removeIf`) para eliminar elementos de forma segura durante un recorrido, y explicar cuándo se lanza `ConcurrentModificationException`.",
+          "Analizar el costo de operaciones comunes: `ArrayList.get` O(1), `ArrayList.add(0, x)` O(n), `HashMap.get` O(1) en promedio, `TreeMap.get` O(log n)."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Declare and use generic types like `List<String>` and `Map<String, Integer>`, including the diamond `new ArrayList<>()`.",
+          "Override `equals` and `hashCode` consistently in a simple class."
+        ],
+        "es": [
+          "Declarar y usar tipos genéricos como `List<String>` y `Map<String, Integer>`, incluido el diamante `new ArrayList<>()`.",
+          "Sobrescribir `equals` y `hashCode` de forma consistente en una clase sencilla."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "`ArrayList`: O(1) `get(i)` and amortized O(1) `add` at the end, but O(n) insert/remove at the front or middle. For a stack or FIFO queue use `ArrayDeque`, which is O(1) at both ends.",
+          "`HashMap`/`HashSet`: average O(1) `get`/`put`/`contains`, no ordering guarantee; the default table resizes when size exceeds 0.75 × capacity. Keys must have consistent `equals`/`hashCode` and must not be mutated while in the map.",
+          "`TreeMap`/`TreeSet` are red-black trees: O(log n) operations, keys kept sorted by natural order or a `Comparator`, plus navigation methods like `floorKey`, `ceilingKey` and `headMap`. `LinkedHashMap` keeps insertion order.",
+          "Structurally modifying a collection while iterating it with for-each throws `ConcurrentModificationException` (fail-fast); use `iterator.remove()` or `removeIf`. `List.of(...)` and `Map.of(...)` (Java 9+) are unmodifiable and reject `null`."
+        ],
+        "es": [
+          "`ArrayList`: `get(i)` en O(1) y `add` al final en O(1) amortizado, pero insertar o eliminar al inicio o en medio cuesta O(n). Para una pila o una cola FIFO usa `ArrayDeque`, que es O(1) en ambos extremos.",
+          "`HashMap`/`HashSet`: `get`/`put`/`contains` en O(1) en promedio y sin garantía de orden; la tabla por defecto se redimensiona cuando el tamaño supera 0.75 × capacidad. Las claves deben tener `equals`/`hashCode` consistentes y no deben modificarse mientras estén en el mapa.",
+          "`TreeMap`/`TreeSet` son árboles rojo-negro: operaciones en O(log n), claves ordenadas por orden natural o un `Comparator`, y métodos de navegación como `floorKey`, `ceilingKey` y `headMap`. `LinkedHashMap` conserva el orden de inserción.",
+          "Modificar estructuralmente una colección mientras la recorres con for-each lanza `ConcurrentModificationException` (falla rápida); usa `iterator.remove()` o `removeIf`. `List.of(...)` y `Map.of(...)` (Java 9+) son inmodificables y rechazan `null`."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Calling `list.remove(1)` on a `List<Integer>` intending to remove the value 1: the `int` overload removes the element at index 1. Use `list.remove(Integer.valueOf(1))` to remove by value.",
+          "Using objects that override `equals` but not `hashCode` as `HashMap` keys or `HashSet` elements: equal objects usually land in different buckets, so `contains` returns false and duplicates appear. Override both from the same fields, or use a `record`, which generates them.",
+          "Calling `add` on a list from `List.of(...)` or `Arrays.asList(...)`: both throw `UnsupportedOperationException` (`Arrays.asList` is fixed-size but allows `set`). Wrap it: `new ArrayList<>(List.of(...))`, as the module example does with `Arrays.asList`."
+        ],
+        "es": [
+          "Llamar `list.remove(1)` sobre una `List<Integer>` con la intención de quitar el valor 1: la sobrecarga con `int` elimina el elemento en el índice 1. Usa `list.remove(Integer.valueOf(1))` para eliminar por valor.",
+          "Usar como claves de `HashMap` o elementos de `HashSet` objetos que sobrescriben `equals` pero no `hashCode`: los objetos iguales suelen caer en cubetas distintas, así que `contains` devuelve false y aparecen duplicados. Sobrescribe ambos con los mismos campos, o usa un `record`, que los genera.",
+          "Llamar `add` sobre una lista creada con `List.of(...)` o `Arrays.asList(...)`: ambas lanzan `UnsupportedOperationException` (`Arrays.asList` tiene tamaño fijo pero permite `set`). Envuélvela: `new ArrayList<>(List.of(...))`, como hace el ejemplo del módulo con `Arrays.asList`."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: given `String[] words = {\"to\", \"be\", \"or\", \"not\", \"to\", \"be\"}`, print the distinct words three ways: with a `HashSet`, a `LinkedHashSet` and a `TreeSet`. Explain the order each one prints.",
+          "Implement `static Map<String, Integer> wordFrequency(String text)` that lowercases, splits on non-letters and counts with `map.merge(word, 1, Integer::sum)`. Then print the 3 most frequent words by sorting `new ArrayList<>(map.entrySet())` with a `Comparator`.",
+          "Implement `static Map<Character, List<String>> groupByFirstLetter(List<String> words)` with `computeIfAbsent`, returning a `TreeMap` so keys print in order. Then remove every group with fewer than 2 words using `map.values().removeIf(...)` or an explicit `Iterator`.",
+          "Interview-style: implement `boolean containsNearbyDuplicate(int[] nums, int k)` in O(n) time using a `HashMap<Integer, Integer>` of last-seen indexes, and `int firstUniqueChar(String s)` using a `LinkedHashMap`. State the time and space complexity of each and why a nested-loop approach would be O(n²)."
+        ],
+        "es": [
+          "Calentamiento: dado `String[] words = {\"to\", \"be\", \"or\", \"not\", \"to\", \"be\"}`, imprime las palabras distintas de tres formas: con un `HashSet`, un `LinkedHashSet` y un `TreeSet`. Explica el orden en que imprime cada uno.",
+          "Implementa `static Map<String, Integer> wordFrequency(String text)` que pase el texto a minúsculas, lo divida por caracteres que no sean letras y cuente con `map.merge(word, 1, Integer::sum)`. Luego imprime las 3 palabras más frecuentes ordenando `new ArrayList<>(map.entrySet())` con un `Comparator`.",
+          "Implementa `static Map<Character, List<String>> groupByFirstLetter(List<String> words)` con `computeIfAbsent`, devolviendo un `TreeMap` para que las claves se impriman en orden. Después elimina todo grupo con menos de 2 palabras usando `map.values().removeIf(...)` o un `Iterator` explícito.",
+          "Tipo entrevista: implementa `boolean containsNearbyDuplicate(int[] nums, int k)` en tiempo O(n) usando un `HashMap<Integer, Integer>` con el último índice visto, e `int firstUniqueChar(String s)` usando un `LinkedHashMap`. Indica la complejidad de tiempo y espacio de cada uno y por qué un enfoque con ciclos anidados sería O(n²)."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "When would you pick a `TreeMap` over a `HashMap`, and what does it cost you?",
+          "Why does removing from a list inside a for-each loop throw, and what are two safe alternatives?",
+          "What must be true of a class's `equals` and `hashCode` for its objects to work as `HashMap` keys?"
+        ],
+        "es": [
+          "¿Cuándo elegirías un `TreeMap` en lugar de un `HashMap` y qué te cuesta?",
+          "¿Por qué eliminar de una lista dentro de un ciclo for-each lanza una excepción y cuáles son dos alternativas seguras?",
+          "¿Qué debe cumplirse en `equals` y `hashCode` de una clase para que sus objetos funcionen como claves de `HashMap`?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "ArrayList",
+            "es": "ArrayList"
+          },
+          "definition": {
+            "en": "`ArrayList` is a resizable-array implementation of `List`: elements sit in a contiguous backing array that grows (by about 1.5×) when full, giving O(1) indexed access and amortized O(1) appends but O(n) inserts and removals away from the end.",
+            "es": "`ArrayList` es una implementación de `List` con arreglo redimensionable: los elementos están en un arreglo interno contiguo que crece (aproximadamente 1.5×) cuando se llena, lo que da acceso por índice en O(1) y agregados al final en O(1) amortizado, pero inserciones y eliminaciones fuera del final en O(n)."
+          }
+        },
+        {
+          "term": {
+            "en": "HashMap",
+            "es": "HashMap"
+          },
+          "definition": {
+            "en": "`HashMap` stores key-value pairs in an array of buckets indexed by the key's `hashCode`, using `equals` to find the exact key within a bucket. It offers average O(1) `get` and `put`, allows one `null` key, and makes no guarantee about iteration order.",
+            "es": "`HashMap` guarda pares clave-valor en un arreglo de cubetas indexado por el `hashCode` de la clave y usa `equals` para encontrar la clave exacta dentro de la cubeta. Ofrece `get` y `put` en O(1) en promedio, admite una clave `null` y no garantiza ningún orden de iteración."
+          }
+        },
+        {
+          "term": {
+            "en": "HashSet",
+            "es": "HashSet"
+          },
+          "definition": {
+            "en": "`HashSet` is a `Set` backed by a `HashMap` (elements are stored as keys), so it rejects duplicates as defined by `equals`/`hashCode` and offers average O(1) `add`, `remove` and `contains` with no ordering.",
+            "es": "`HashSet` es un `Set` respaldado por un `HashMap` (los elementos se guardan como claves), por lo que rechaza duplicados según `equals`/`hashCode` y ofrece `add`, `remove` y `contains` en O(1) en promedio, sin orden."
+          }
+        },
+        {
+          "term": {
+            "en": "TreeMap",
+            "es": "TreeMap"
+          },
+          "definition": {
+            "en": "`TreeMap` is a `NavigableMap` implemented as a red-black tree that keeps keys sorted by their natural ordering or a supplied `Comparator`, giving O(log n) `get`, `put` and `remove` plus range queries such as `floorKey` and `subMap`.",
+            "es": "`TreeMap` es un `NavigableMap` implementado como árbol rojo-negro que mantiene las claves ordenadas según su orden natural o un `Comparator` dado, con `get`, `put` y `remove` en O(log n) además de consultas por rango como `floorKey` y `subMap`."
+          }
+        },
+        {
+          "term": {
+            "en": "LinkedList",
+            "es": "LinkedList"
+          },
+          "definition": {
+            "en": "`LinkedList` is a doubly linked list that implements both `List` and `Deque`, with O(1) insertion and removal at either end or at an iterator's position, but O(n) access by index because it must walk the nodes.",
+            "es": "`LinkedList` es una lista doblemente enlazada que implementa tanto `List` como `Deque`, con inserción y eliminación en O(1) en cualquiera de los extremos o en la posición de un iterador, pero acceso por índice en O(n) porque debe recorrer los nodos."
+          }
+        },
+        {
+          "term": {
+            "en": "Iterators",
+            "es": "Iteradores"
+          },
+          "definition": {
+            "en": "An `Iterator` is an object that walks a collection one element at a time with `hasNext()` and `next()`, and can safely delete the last returned element with `remove()`. The for-each loop uses one implicitly, and the standard collections' iterators are fail-fast against concurrent structural changes.",
+            "es": "Un `Iterator` es un objeto que recorre una colección elemento por elemento con `hasNext()` y `next()`, y puede eliminar de forma segura el último elemento devuelto con `remove()`. El ciclo for-each usa uno de forma implícita, y los iteradores de las colecciones estándar fallan rápido ante cambios estructurales concurrentes."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Oracle Java Tutorials: Collections trail",
+            "es": "Tutoriales de Java de Oracle: ruta de colecciones"
+          },
+          "url": "https://docs.oracle.com/javase/tutorial/collections/index.html"
+        },
+        {
+          "label": {
+            "en": "Java SE 21 API: java.util.HashMap",
+            "es": "API de Java SE 21: java.util.HashMap"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html"
+        },
+        {
+          "label": {
+            "en": "Java SE 21 API: java.util.TreeMap",
+            "es": "API de Java SE 21: java.util.TreeMap"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/TreeMap.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What does `list` contain after `List<Integer> list = new ArrayList<>(List.of(10, 20, 30)); list.remove(1);`?",
+            "es": "¿Qué contiene `list` después de `List<Integer> list = new ArrayList<>(List.of(10, 20, 30)); list.remove(1);`?"
+          },
+          "options": {
+            "en": [
+              "`[10, 30]`",
+              "`[20, 30]`",
+              "`[10, 20, 30]`, because no element equals 1",
+              "It throws `UnsupportedOperationException`"
+            ],
+            "es": [
+              "`[10, 30]`",
+              "`[20, 30]`",
+              "`[10, 20, 30]`, porque ningún elemento es igual a 1",
+              "Lanza `UnsupportedOperationException`"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "The argument is an `int`, so `remove(int index)` is chosen over `remove(Object o)` and the element at index 1 (20) is removed. The list is a mutable `ArrayList` copy, so the `List.of` immutability does not apply.",
+            "es": "El argumento es un `int`, así que se elige `remove(int index)` en lugar de `remove(Object o)` y se elimina el elemento en el índice 1 (20). La lista es una copia mutable en `ArrayList`, así que la inmutabilidad de `List.of` no aplica."
+          }
+        },
+        {
+          "question": {
+            "en": "What does this print? `Map<String, Integer> m = new TreeMap<>(); m.put(\"pear\", 1); m.put(\"apple\", 2); m.put(\"Banana\", 3); System.out.println(m.keySet());`",
+            "es": "¿Qué imprime esto? `Map<String, Integer> m = new TreeMap<>(); m.put(\"pear\", 1); m.put(\"apple\", 2); m.put(\"Banana\", 3); System.out.println(m.keySet());`"
+          },
+          "options": {
+            "en": [
+              "`[pear, apple, Banana]`",
+              "`[apple, Banana, pear]`",
+              "`[Banana, apple, pear]`",
+              "The order is unspecified"
+            ],
+            "es": [
+              "`[pear, apple, Banana]`",
+              "`[apple, Banana, pear]`",
+              "`[Banana, apple, pear]`",
+              "El orden no está especificado"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`TreeMap` sorts `String` keys by natural order, which compares UTF-16 values, and uppercase `B` (66) comes before lowercase `a` (97). The case-insensitive order `[apple, Banana, pear]` needs `String.CASE_INSENSITIVE_ORDER`; insertion order would need `LinkedHashMap`.",
+            "es": "`TreeMap` ordena las claves `String` por orden natural, que compara valores UTF-16, y la `B` mayúscula (66) va antes que la `a` minúscula (97). El orden sin distinguir mayúsculas `[apple, Banana, pear]` requiere `String.CASE_INSENSITIVE_ORDER`; el orden de inserción requeriría `LinkedHashMap`."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the time complexity of `containsKey` on a `TreeMap` with n keys?",
+            "es": "¿Cuál es la complejidad de tiempo de `containsKey` en un `TreeMap` con n claves?"
+          },
+          "options": {
+            "en": [
+              "O(1) on average",
+              "O(log n)",
+              "O(n)",
+              "O(n log n)"
+            ],
+            "es": [
+              "O(1) en promedio",
+              "O(log n)",
+              "O(n)",
+              "O(n log n)"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`TreeMap` is a balanced red-black tree, so a lookup walks one root-to-leaf path of height O(log n). Average O(1) is the `HashMap` guarantee; O(n log n) is the cost of inserting all n keys.",
+            "es": "`TreeMap` es un árbol rojo-negro balanceado, así que una búsqueda recorre un camino de la raíz a una hoja de altura O(log n). O(1) en promedio es la garantía de `HashMap`; O(n log n) es el costo de insertar las n claves."
+          }
+        },
+        {
+          "question": {
+            "en": "What is a correct way to remove all even numbers from an `ArrayList<Integer> nums` while traversing it?",
+            "es": "¿Cuál es una forma correcta de eliminar todos los números pares de un `ArrayList<Integer> nums` mientras se recorre?"
+          },
+          "options": {
+            "en": [
+              "`for (Integer n : nums) if (n % 2 == 0) nums.remove(n);`",
+              "`for (int i = 0; i < nums.size(); i++) if (nums.get(i) % 2 == 0) nums.remove(i);`",
+              "Wrap it with `Collections.unmodifiableList(nums)` first, then remove",
+              "`Iterator<Integer> it = nums.iterator(); while (it.hasNext()) if (it.next() % 2 == 0) it.remove();`"
+            ],
+            "es": [
+              "`for (Integer n : nums) if (n % 2 == 0) nums.remove(n);`",
+              "`for (int i = 0; i < nums.size(); i++) if (nums.get(i) % 2 == 0) nums.remove(i);`",
+              "Envolverla primero con `Collections.unmodifiableList(nums)` y luego eliminar",
+              "`Iterator<Integer> it = nums.iterator(); while (it.hasNext()) if (it.next() % 2 == 0) it.remove();`"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "`Iterator.remove()` deletes the last returned element and keeps the iterator consistent (`nums.removeIf(n -> n % 2 == 0)` also works). The for-each version typically throws `ConcurrentModificationException`, and the index loop skips the element that shifts into position i after each removal.",
+            "es": "`Iterator.remove()` elimina el último elemento devuelto y mantiene el iterador consistente (`nums.removeIf(n -> n % 2 == 0)` también sirve). La versión for-each normalmente lanza `ConcurrentModificationException`, y el ciclo por índice se salta el elemento que se desplaza a la posición i tras cada eliminación."
+          }
+        },
+        {
+          "question": {
+            "en": "You need a FIFO queue with O(1) insertion at the tail and O(1) removal at the head. Which is the best standard choice?",
+            "es": "Necesitas una cola FIFO con inserción en O(1) al final y eliminación en O(1) al inicio. ¿Cuál es la mejor opción estándar?"
+          },
+          "options": {
+            "en": [
+              "`ArrayList`, using `add` and `remove(0)`",
+              "`ArrayDeque`, using `offer` and `poll`",
+              "`TreeSet`, using `add` and `pollFirst`",
+              "`Stack`, using `push` and `pop`"
+            ],
+            "es": [
+              "`ArrayList`, usando `add` y `remove(0)`",
+              "`ArrayDeque`, usando `offer` y `poll`",
+              "`TreeSet`, usando `add` y `pollFirst`",
+              "`Stack`, usando `push` y `pop`"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`ArrayDeque` is a circular array with amortized O(1) operations at both ends. `ArrayList.remove(0)` shifts every element (O(n)), `TreeSet` is O(log n) and drops duplicates, and `Stack` is LIFO, not FIFO.",
+            "es": "`ArrayDeque` es un arreglo circular con operaciones en O(1) amortizado en ambos extremos. `ArrayList.remove(0)` desplaza todos los elementos (O(n)), `TreeSet` es O(log n) y descarta duplicados, y `Stack` es LIFO, no FIFO."
+          }
+        }
+      ]
+    },
+    "hash-tables": {
+      "minutes": 100,
+      "prerequisites": [
+        "arrays-strings",
+        "linked-lists"
+      ],
+      "whyItMatters": {
+        "en": "Hash maps are the default tool for average O(1) lookup: deduplication, frequency counts, caches, compiler symbol tables and database hash joins all rely on them. Many interview problems (two-sum, group anagrams, LRU cache) reduce to choosing the right key for a `HashMap`.",
+        "es": "Los mapas hash son la herramienta por defecto para búsquedas en O(1) promedio: eliminación de duplicados, conteo de frecuencias, cachés, tablas de símbolos de compiladores y hash joins en bases de datos dependen de ellos. Muchos problemas de entrevista (two-sum, agrupar anagramas, caché LRU) se reducen a elegir la clave correcta para un `HashMap`."
+      },
+      "objectives": {
+        "en": [
+          "Implement a separate-chaining hash table with `put`, `get`, `remove` and rehashing into a larger bucket array when the load factor exceeds a threshold.",
+          "Explain the `equals`/`hashCode` contract and predict how `HashMap` and `HashSet` misbehave when a key class breaks it.",
+          "Analyze the average and worst-case cost of `get`/`put` for chaining and linear probing as a function of the load factor α.",
+          "Choose between `HashMap`, `HashSet`, `LinkedHashMap` and `TreeMap` based on ordering requirements and complexity."
+        ],
+        "es": [
+          "Implementar una tabla hash con encadenamiento separado con `put`, `get`, `remove` y rehashing a un arreglo de buckets más grande cuando el factor de carga supera un umbral.",
+          "Explicar el contrato `equals`/`hashCode` y predecir cómo fallan `HashMap` y `HashSet` cuando una clase usada como clave lo rompe.",
+          "Analizar el costo promedio y en el peor caso de `get`/`put` con encadenamiento y con sondeo lineal en función del factor de carga α.",
+          "Elegir entre `HashMap`, `HashSet`, `LinkedHashMap` y `TreeMap` según los requisitos de orden y la complejidad."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Override `equals` and `hashCode` in a Java class.",
+          "Predict the result of `%` on negative `int` values and of `int` overflow in Java."
+        ],
+        "es": [
+          "Sobrescribir `equals` y `hashCode` en una clase de Java.",
+          "Predecir el resultado de `%` con valores `int` negativos y del desbordamiento de `int` en Java."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Average O(1) `get`/`put`/`remove`; worst case O(n) when many keys collide. Since Java 8, `HashMap` turns a bucket with more than 8 entries into a red-black tree (once the table has at least 64 buckets), which typically bounds that bucket to O(log n).",
+          "`new HashMap<>()` starts with 16 buckets and load factor 0.75, so the 13th distinct key triggers the first resize; each resize doubles the table and rehashes every entry.",
+          "Equal objects must have equal hash codes; unequal objects may share one. Override `equals` and `hashCode` together or not at all.",
+          "`HashMap`/`HashSet` iteration order is unspecified. Use `LinkedHashMap` for insertion (or access) order and `TreeMap` for sorted keys at O(log n) per operation."
+        ],
+        "es": [
+          "`get`/`put`/`remove` en O(1) promedio; O(n) en el peor caso cuando muchas claves colisionan. Desde Java 8, `HashMap` convierte un bucket con más de 8 entradas en un árbol rojo-negro (si la tabla tiene al menos 64 buckets), lo que normalmente acota ese bucket a O(log n).",
+          "`new HashMap<>()` empieza con 16 buckets y factor de carga 0.75, así que la clave distinta número 13 provoca el primer redimensionamiento; cada redimensionamiento duplica la tabla y redistribuye todas las entradas.",
+          "Objetos iguales deben tener el mismo código hash; objetos distintos pueden compartirlo. Sobrescribe `equals` y `hashCode` juntos o ninguno.",
+          "El orden de iteración de `HashMap`/`HashSet` no está especificado. Usa `LinkedHashMap` para orden de inserción (o de acceso) y `TreeMap` para claves ordenadas con O(log n) por operación."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Computing the index as `Math.abs(key.hashCode()) % capacity`, as the module's `SimpleHashTable` does: `Math.abs(Integer.MIN_VALUE)` is still negative, so some keys get a negative index (e.g. −8 with capacity 10) and crash. Use `Math.floorMod(h, capacity)` or `(h & 0x7fffffff) % capacity`.",
+          "Mutating a field used by `hashCode` after the object is stored as a key: the entry stays in its old bucket, so `get` and `contains` look in the wrong place and return null/false. Use immutable keys such as `String` or records.",
+          "Overriding `equals` but not `hashCode`: two equal objects get different identity hash codes, land in different buckets, and a `HashSet` keeps both as \"duplicates\"."
+        ],
+        "es": [
+          "Calcular el índice como `Math.abs(key.hashCode()) % capacity`, como hace `SimpleHashTable` del módulo: `Math.abs(Integer.MIN_VALUE)` sigue siendo negativo, así que algunas claves obtienen un índice negativo (por ejemplo, −8 con capacidad 10) y el programa falla. Usa `Math.floorMod(h, capacity)` o `(h & 0x7fffffff) % capacity`.",
+          "Modificar un campo usado por `hashCode` después de guardar el objeto como clave: la entrada queda en su bucket anterior, así que `get` y `contains` buscan en el lugar equivocado y devuelven null/false. Usa claves inmutables como `String` o records.",
+          "Sobrescribir `equals` sin sobrescribir `hashCode`: dos objetos iguales reciben códigos hash de identidad distintos, caen en buckets diferentes y un `HashSet` conserva ambos como \"duplicados\"."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: use `HashMap.merge` to count word frequencies in a sentence, then print the most frequent word, breaking ties alphabetically.",
+          "Extend the module's `SimpleHashTable` with `remove(String key)` and automatic resizing: when size / buckets exceeds 0.75, double the bucket count and reinsert every entry. Replace the index computation with `Math.floorMod(key.hashCode(), buckets.size())`.",
+          "Implement an open-addressing table for `int` keys with linear probing and a tombstone marker for deletions. Test that `get` still finds a key that was inserted after a now-deleted key in the same probe sequence.",
+          "Implement `LRUCache(int capacity)` with O(1) `get(int key)` and `put(int key, int value)` that evicts the least recently used entry, either by extending `LinkedHashMap` with `accessOrder = true` and overriding `removeEldestEntry`, or with a `HashMap` plus a doubly linked list."
+        ],
+        "es": [
+          "Calentamiento: usa `HashMap.merge` para contar la frecuencia de las palabras de una oración y luego imprime la palabra más frecuente, desempatando alfabéticamente.",
+          "Extiende `SimpleHashTable` del módulo con `remove(String key)` y redimensionamiento automático: cuando tamaño / buckets supere 0.75, duplica la cantidad de buckets y reinserta todas las entradas. Reemplaza el cálculo del índice por `Math.floorMod(key.hashCode(), buckets.size())`.",
+          "Implementa una tabla de direccionamiento abierto para claves `int` con sondeo lineal y una marca de lápida (tombstone) para eliminaciones. Comprueba que `get` sigue encontrando una clave insertada después de otra ya eliminada en la misma secuencia de sondeo.",
+          "Implementa `LRUCache(int capacity)` con `get(int key)` y `put(int key, int value)` en O(1) que expulse la entrada usada hace más tiempo, ya sea extendiendo `LinkedHashMap` con `accessOrder = true` y sobrescribiendo `removeEldestEntry`, o con un `HashMap` más una lista doblemente enlazada."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What happens to the cost of `get` as the load factor grows, and how does resizing fix it?",
+          "Why must equal keys have equal hash codes, but not the other way around?",
+          "When would you pick a `TreeMap` over a `HashMap`?"
+        ],
+        "es": [
+          "¿Qué le pasa al costo de `get` cuando crece el factor de carga y cómo lo corrige el redimensionamiento?",
+          "¿Por qué claves iguales deben tener el mismo código hash, pero no al revés?",
+          "¿Cuándo elegirías un `TreeMap` en lugar de un `HashMap`?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Hash Functions",
+            "es": "Funciones hash"
+          },
+          "definition": {
+            "en": "A function that maps a key to an integer (in Java, `hashCode()`), which the table then reduces to a bucket index. It must be deterministic and consistent with `equals`, and a good one spreads typical keys evenly across buckets.",
+            "es": "Una función que asigna a cada clave un entero (en Java, `hashCode()`) que luego la tabla reduce a un índice de bucket. Debe ser determinista y coherente con `equals`, y una buena función reparte las claves típicas de forma uniforme entre los buckets."
+          }
+        },
+        {
+          "term": {
+            "en": "Collision Resolution",
+            "es": "Resolución de colisiones"
+          },
+          "definition": {
+            "en": "The strategy for storing keys that map to the same bucket: separate chaining keeps a list (or tree) per bucket, while open addressing probes other slots of the same array (linear probing, quadratic probing, double hashing).",
+            "es": "La estrategia para guardar claves que caen en el mismo bucket: el encadenamiento separado mantiene una lista (o árbol) por bucket, mientras que el direccionamiento abierto prueba otras posiciones del mismo arreglo (sondeo lineal, sondeo cuadrático, doble hashing)."
+          }
+        },
+        {
+          "term": {
+            "en": "HashMap Operations",
+            "es": "Operaciones de HashMap"
+          },
+          "definition": {
+            "en": "The core `java.util.HashMap` methods `put`, `get`, `getOrDefault`, `containsKey`, `remove`, `merge` and `computeIfAbsent`; each hashes the key, locates its bucket and compares candidates with `equals`, for average O(1) cost.",
+            "es": "Los métodos principales de `java.util.HashMap`: `put`, `get`, `getOrDefault`, `containsKey`, `remove`, `merge` y `computeIfAbsent`; cada uno calcula el hash de la clave, ubica su bucket y compara candidatos con `equals`, con costo promedio O(1)."
+          }
+        },
+        {
+          "term": {
+            "en": "Hash Sets",
+            "es": "Conjuntos hash"
+          },
+          "definition": {
+            "en": "A set backed by a hash table that stores only keys (Java's `HashSet` wraps a `HashMap` with a dummy value), giving average O(1) `add`, `contains` and `remove`, no duplicates and no guaranteed order.",
+            "es": "Un conjunto respaldado por una tabla hash que guarda solo claves (el `HashSet` de Java envuelve un `HashMap` con un valor ficticio), con `add`, `contains` y `remove` en O(1) promedio, sin duplicados y sin orden garantizado."
+          }
+        },
+        {
+          "term": {
+            "en": "Load Factor",
+            "es": "Factor de carga"
+          },
+          "definition": {
+            "en": "The ratio α = n / m of stored entries to buckets. Expected chain length (chaining) or probe count (open addressing) grows with α, so tables resize once α passes a threshold, 0.75 by default in `HashMap`.",
+            "es": "La razón α = n / m entre entradas guardadas y buckets. La longitud esperada de las cadenas (encadenamiento) o la cantidad de sondeos (direccionamiento abierto) crece con α, por eso las tablas se redimensionan cuando α supera un umbral, 0.75 por defecto en `HashMap`."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Java 21 API: HashMap",
+            "es": "API de Java 21: HashMap (en inglés)"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html"
+        },
+        {
+          "label": {
+            "en": "Sedgewick & Wayne, Algorithms 4th ed.: 3.4 Hash Tables",
+            "es": "Sedgewick y Wayne, Algorithms 4.ª ed.: 3.4 Tablas hash (en inglés)"
+          },
+          "url": "https://algs4.cs.princeton.edu/34hash/"
+        },
+        {
+          "label": {
+            "en": "Java 21 API: Object.hashCode and equals contract",
+            "es": "API de Java 21: contrato de Object.hashCode y equals (en inglés)"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Object.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What does this print?\n```java\nMap<String, Integer> m = new HashMap<>();\nfor (String w : \"a b a c b a\".split(\" \")) m.merge(w, 1, Integer::sum);\nSystem.out.println(m.get(\"a\") + m.getOrDefault(\"d\", 0));\n```",
+            "es": "¿Qué imprime este código?\n```java\nMap<String, Integer> m = new HashMap<>();\nfor (String w : \"a b a c b a\".split(\" \")) m.merge(w, 1, Integer::sum);\nSystem.out.println(m.get(\"a\") + m.getOrDefault(\"d\", 0));\n```"
+          },
+          "options": {
+            "en": [
+              "3",
+              "30",
+              "4",
+              "A `NullPointerException`"
+            ],
+            "es": [
+              "3",
+              "30",
+              "4",
+              "Una `NullPointerException`"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "\"a\" appears 3 times, and `getOrDefault(\"d\", 0)` returns 0 because \"d\" is absent. Both operands are `Integer`, so `+` unboxes and adds numerically (3 + 0 = 3); it is not string concatenation, so \"30\" is wrong. `get(\"d\")` would return null and throw on unboxing, but `getOrDefault` avoids that.",
+            "es": "\"a\" aparece 3 veces y `getOrDefault(\"d\", 0)` devuelve 0 porque \"d\" no está. Ambos operandos son `Integer`, así que `+` los desempaqueta y suma numéricamente (3 + 0 = 3); no es concatenación de cadenas, por eso \"30\" es incorrecto. `get(\"d\")` devolvería null y fallaría al desempaquetar, pero `getOrDefault` lo evita."
+          }
+        },
+        {
+          "question": {
+            "en": "A `Point` class overrides `equals` (comparing x and y) but not `hashCode`. After `set.add(new Point(1, 2)); set.add(new Point(1, 2));` on a `HashSet`, `set.size()` is 2. Why?",
+            "es": "Una clase `Point` sobrescribe `equals` (comparando x e y) pero no `hashCode`. Después de `set.add(new Point(1, 2)); set.add(new Point(1, 2));` sobre un `HashSet`, `set.size()` es 2. ¿Por qué?"
+          },
+          "options": {
+            "en": [
+              "`HashSet` compares elements with `==` instead of `equals`",
+              "`HashSet` allows duplicates by design",
+              "`equals` is only consulted after the set resizes",
+              "The two objects get different identity-based hash codes, so the set checks different buckets and never finds a match to call `equals` on"
+            ],
+            "es": [
+              "`HashSet` compara elementos con `==` en lugar de `equals`",
+              "`HashSet` permite duplicados por diseño",
+              "`equals` solo se consulta después de que el conjunto se redimensiona",
+              "Los dos objetos reciben códigos hash de identidad distintos, así que el conjunto revisa buckets diferentes y nunca encuentra un candidato con el cual llamar a `equals`"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "`HashSet` first uses `hashCode` to pick a bucket and compares hashes, and only then calls `equals`. The default `Object.hashCode` differs per object, so the equal points are never compared. `HashSet` does use `equals`, not `==`, which is why overriding `hashCode` consistently fixes the problem.",
+            "es": "`HashSet` primero usa `hashCode` para elegir el bucket y compara los hashes, y solo después llama a `equals`. El `Object.hashCode` por defecto es distinto para cada objeto, así que los puntos iguales nunca se comparan. `HashSet` sí usa `equals`, no `==`; por eso sobrescribir `hashCode` de forma coherente corrige el problema."
+          }
+        },
+        {
+          "question": {
+            "en": "A hash table doubles its bucket array whenever the load factor exceeds 0.75. What is the total cost of inserting n keys, assuming a good hash function?",
+            "es": "Una tabla hash duplica su arreglo de buckets cada vez que el factor de carga supera 0.75. ¿Cuál es el costo total de insertar n claves, suponiendo una buena función hash?"
+          },
+          "options": {
+            "en": [
+              "O(n log n), because there are log n resizes and each costs O(n)",
+              "O(n²), because every resize rehashes all keys",
+              "O(n), because resize costs form a geometric series bounded by a constant times n",
+              "O(1), because each insertion is O(1)"
+            ],
+            "es": [
+              "O(n log n), porque hay log n redimensionamientos y cada uno cuesta O(n)",
+              "O(n²), porque cada redimensionamiento redistribuye todas las claves",
+              "O(n), porque los costos de redimensionar forman una serie geométrica acotada por una constante por n",
+              "O(1), porque cada inserción es O(1)"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Resizes happen at sizes proportional to 1, 2, 4, …, n, so total rehash work is about 2n, giving O(n) total and O(1) amortized per insert. The O(n log n) argument overcounts: only the last resize costs about n; earlier ones are much cheaper.",
+            "es": "Los redimensionamientos ocurren en tamaños proporcionales a 1, 2, 4, …, n, así que el trabajo total de rehashing es cerca de 2n: O(n) en total y O(1) amortizado por inserción. El argumento O(n log n) sobrestima: solo el último redimensionamiento cuesta cerca de n; los anteriores son mucho más baratos."
+          }
+        },
+        {
+          "question": {
+            "en": "You need average O(1) lookup by key and iteration in the order keys were first inserted. Which class fits?",
+            "es": "Necesitas búsqueda por clave en O(1) promedio e iterar en el orden en que se insertaron las claves por primera vez. ¿Qué clase sirve?"
+          },
+          "options": {
+            "en": [
+              "`HashMap`",
+              "`LinkedHashMap`",
+              "`TreeMap`",
+              "`HashSet`"
+            ],
+            "es": [
+              "`HashMap`",
+              "`LinkedHashMap`",
+              "`TreeMap`",
+              "`HashSet`"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`LinkedHashMap` keeps a doubly linked list through its entries, preserving insertion order while lookups stay average O(1). `HashMap` gives no order guarantee, `TreeMap` orders by key (not insertion) at O(log n), and `HashSet` stores no values.",
+            "es": "`LinkedHashMap` mantiene una lista doblemente enlazada entre sus entradas, conservando el orden de inserción con búsquedas en O(1) promedio. `HashMap` no garantiza orden, `TreeMap` ordena por clave (no por inserción) en O(log n) y `HashSet` no guarda valores."
+          }
+        },
+        {
+          "question": {
+            "en": "A chaining hash table has 5 buckets, uses index = key % 5, and appends each new entry to the end of its bucket's list. After inserting 3, 8, 13 and 4, what does bucket 3 contain?",
+            "es": "Una tabla hash con encadenamiento tiene 5 buckets, usa índice = clave % 5 y agrega cada entrada nueva al final de la lista de su bucket. Después de insertar 3, 8, 13 y 4, ¿qué contiene el bucket 3?"
+          },
+          "options": {
+            "en": [
+              "[3]",
+              "[3, 8, 13]",
+              "[13, 8, 3]",
+              "[3, 4]"
+            ],
+            "es": [
+              "[3]",
+              "[3, 8, 13]",
+              "[13, 8, 3]",
+              "[3, 4]"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "3 % 5, 8 % 5 and 13 % 5 are all 3, and appending keeps insertion order: [3, 8, 13]. 4 % 5 = 4 goes to bucket 4. [13, 8, 3] would be the result only if new entries were prepended to the list.",
+            "es": "3 % 5, 8 % 5 y 13 % 5 dan 3, y agregar al final conserva el orden de inserción: [3, 8, 13]. 4 % 5 = 4 va al bucket 4. [13, 8, 3] solo resultaría si las entradas nuevas se insertaran al inicio de la lista."
+          }
+        }
+      ]
+    },
+    "trees-basics": {
+      "minutes": 110,
+      "prerequisites": [
+        "recursion",
+        "linked-lists"
+      ],
+      "whyItMatters": {
+        "en": "Trees model hierarchies everywhere: file systems, the HTML DOM, compiler syntax trees and database indexes. Binary tree recursion is one of the most frequent interview categories, and balanced BSTs are what `TreeMap` and `TreeSet` use internally (red-black trees).",
+        "es": "Los árboles modelan jerarquías en todas partes: sistemas de archivos, el DOM de HTML, árboles sintácticos de compiladores e índices de bases de datos. La recursión sobre árboles binarios es una de las categorías más frecuentes en entrevistas, y los BST balanceados son lo que usan internamente `TreeMap` y `TreeSet` (árboles rojo-negro)."
+      },
+      "objectives": {
+        "en": [
+          "Implement preorder, inorder and postorder traversal both recursively and iteratively with an explicit stack, and level-order traversal with a queue.",
+          "Implement BST insert, search and delete, including the two-children case that uses the inorder successor.",
+          "Analyze BST operations as O(h) and explain why h ranges from ⌊log₂ n⌋ to n − 1 depending on insertion order.",
+          "Construct a binary tree from its preorder and inorder sequences and compute height, diameter and root-to-leaf path sums recursively."
+        ],
+        "es": [
+          "Implementar los recorridos preorden, inorden y postorden tanto recursivamente como de forma iterativa con una pila explícita, y el recorrido por niveles con una cola.",
+          "Implementar inserción, búsqueda y eliminación en un BST, incluido el caso de dos hijos que usa el sucesor inorden.",
+          "Analizar las operaciones de un BST como O(h) y explicar por qué h va de ⌊log₂ n⌋ a n − 1 según el orden de inserción.",
+          "Construir un árbol binario a partir de sus secuencias preorden e inorden y calcular recursivamente la altura, el diámetro y las sumas de caminos de la raíz a las hojas."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Write and trace recursive methods whose base case is a `null` reference.",
+          "Use `ArrayDeque` both as a stack (`push`/`pop`) and as a queue (`offer`/`poll`)."
+        ],
+        "es": [
+          "Escribir y trazar métodos recursivos cuyo caso base es una referencia `null`.",
+          "Usar `ArrayDeque` como pila (`push`/`pop`) y como cola (`offer`/`poll`)."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Every traversal visits each node once: O(n) time, O(h) extra space for DFS and O(w) for BFS, where w is the widest level.",
+          "BST search, insert and delete cost O(h): O(log n) when balanced, O(n) when degenerate (inserting sorted keys builds a linked list).",
+          "Inorder traversal of a BST yields keys in ascending order, which gives a quick validity test.",
+          "Preorder + inorder (with distinct keys) determine a binary tree uniquely; preorder + postorder alone do not, unless the tree is full."
+        ],
+        "es": [
+          "Todo recorrido visita cada nodo una vez: tiempo O(n), espacio extra O(h) para DFS y O(w) para BFS, donde w es el nivel más ancho.",
+          "Buscar, insertar y eliminar en un BST cuesta O(h): O(log n) si está balanceado y O(n) si es degenerado (insertar claves ordenadas forma una lista enlazada).",
+          "El recorrido inorden de un BST produce las claves en orden ascendente, lo que da una prueba rápida de validez.",
+          "Preorden + inorden (con claves distintas) determinan un árbol binario de forma única; preorden + postorden por sí solos no, salvo que el árbol sea lleno."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Validating a BST by comparing each node only with its direct children: a deep node in the left subtree can still be larger than an ancestor. Pass down (min, max) bounds or check that the inorder sequence is strictly increasing.",
+          "Mixing height conventions: with edges, an empty tree has height −1 and a single node 0; counting nodes shifts everything by one. Pick one convention and make the base case match it.",
+          "Running level-order traversal on an empty tree: `queue.offer(root)` with `root == null` throws on `ArrayDeque`, and with `LinkedList` the null is polled and `current.value` throws `NullPointerException`. Return early when `root == null`."
+        ],
+        "es": [
+          "Validar un BST comparando cada nodo solo con sus hijos directos: un nodo profundo del subárbol izquierdo puede ser mayor que un ancestro. Pasa límites (mín, máx) hacia abajo o verifica que la secuencia inorden sea estrictamente creciente.",
+          "Mezclar convenciones de altura: contando aristas, un árbol vacío tiene altura −1 y un solo nodo, 0; contando nodos todo se corre en uno. Elige una convención y haz que el caso base coincida con ella.",
+          "Ejecutar el recorrido por niveles en un árbol vacío: `queue.offer(root)` con `root == null` lanza una excepción en `ArrayDeque`, y con `LinkedList` el null se extrae y `current.value` lanza `NullPointerException`. Retorna de inmediato si `root == null`."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: insert 8, 3, 10, 1, 6, 14, 4 (the module's values) into a BST on paper and write its preorder, inorder, postorder and level-order sequences; then run the code to check inorder and level order.",
+          "Implement `int height(TreeNode n)` (edges, empty tree = −1) and `boolean isValidBST(TreeNode n, long min, long max)`; test it on a tree where a grandchild in the left subtree is larger than the root.",
+          "Implement iterative inorder traversal with an `ArrayDeque<TreeNode>` stack, and BST `delete(int value)` covering the leaf, one-child and two-children cases.",
+          "Implement `TreeNode buildTree(int[] preorder, int[] inorder)` in O(n) using a `HashMap` from value to inorder index, then `int diameter(TreeNode root)` returning the number of edges on the longest path between any two nodes."
+        ],
+        "es": [
+          "Calentamiento: inserta 8, 3, 10, 1, 6, 14, 4 (los valores del módulo) en un BST en papel y escribe sus secuencias preorden, inorden, postorden y por niveles; luego ejecuta el código para comprobar inorden y por niveles.",
+          "Implementa `int height(TreeNode n)` (aristas, árbol vacío = −1) y `boolean isValidBST(TreeNode n, long min, long max)`; pruébalo con un árbol donde un nieto del subárbol izquierdo es mayor que la raíz.",
+          "Implementa el recorrido inorden iterativo con una pila `ArrayDeque<TreeNode>` y `delete(int value)` en un BST cubriendo los casos de hoja, un hijo y dos hijos.",
+          "Implementa `TreeNode buildTree(int[] preorder, int[] inorder)` en O(n) usando un `HashMap` de valor a índice inorden, y luego `int diameter(TreeNode root)` que devuelva la cantidad de aristas del camino más largo entre dos nodos cualesquiera."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why is BST search O(log n) only when the tree is balanced?",
+          "Which traversal would you use to free or delete every node of a tree, and why?",
+          "How does a queue make level-order traversal visit nodes one level at a time?"
+        ],
+        "es": [
+          "¿Por qué la búsqueda en un BST es O(log n) solo cuando el árbol está balanceado?",
+          "¿Qué recorrido usarías para liberar o eliminar todos los nodos de un árbol y por qué?",
+          "¿Cómo logra una cola que el recorrido por niveles visite los nodos un nivel a la vez?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Tree Traversal",
+            "es": "Recorrido de árboles"
+          },
+          "definition": {
+            "en": "A systematic order for visiting every node exactly once: the depth-first orders preorder (node, left, right), inorder (left, node, right) and postorder (left, right, node), and the breadth-first level order.",
+            "es": "Un orden sistemático para visitar cada nodo exactamente una vez: los órdenes en profundidad preorden (nodo, izquierda, derecha), inorden (izquierda, nodo, derecha) y postorden (izquierda, derecha, nodo), y el orden en anchura por niveles."
+          }
+        },
+        {
+          "term": {
+            "en": "Binary Search Trees",
+            "es": "Árboles binarios de búsqueda"
+          },
+          "definition": {
+            "en": "A binary tree in which every key in a node's left subtree is smaller than the node's key and every key in its right subtree is larger, so search, insert and delete follow a single root-to-leaf path.",
+            "es": "Un árbol binario en el que toda clave del subárbol izquierdo de un nodo es menor que la clave del nodo y toda clave de su subárbol derecho es mayor, de modo que buscar, insertar y eliminar siguen un único camino de la raíz a una hoja."
+          }
+        },
+        {
+          "term": {
+            "en": "Tree Height",
+            "es": "Altura del árbol"
+          },
+          "definition": {
+            "en": "The number of edges on the longest downward path from the root to a leaf (a single node has height 0; some texts count nodes instead). It bounds the cost of BST operations and the recursion depth of DFS.",
+            "es": "La cantidad de aristas del camino descendente más largo desde la raíz hasta una hoja (un solo nodo tiene altura 0; algunos textos cuentan nodos). Acota el costo de las operaciones de un BST y la profundidad de recursión del DFS."
+          }
+        },
+        {
+          "term": {
+            "en": "Path Problems",
+            "es": "Problemas de caminos"
+          },
+          "definition": {
+            "en": "Questions about root-to-leaf or node-to-node paths (path sum, maximum path sum, diameter), usually solved with a postorder recursion in which each call returns the best downward path from its node while updating a global best that passes through it.",
+            "es": "Preguntas sobre caminos de la raíz a una hoja o entre dos nodos (suma de camino, suma máxima, diámetro), que suelen resolverse con una recursión en postorden donde cada llamada devuelve el mejor camino descendente desde su nodo y actualiza un mejor global que pasa por él."
+          }
+        },
+        {
+          "term": {
+            "en": "Tree Construction",
+            "es": "Construcción de árboles"
+          },
+          "definition": {
+            "en": "Building a tree from given data: from traversal sequences (the first preorder value is the root, and its position in the inorder sequence splits the left and right subtrees), by repeated BST insertion, or as a balanced BST from a sorted array by choosing the middle element as root.",
+            "es": "Construir un árbol a partir de datos dados: desde secuencias de recorrido (el primer valor del preorden es la raíz y su posición en el inorden separa los subárboles izquierdo y derecho), mediante inserciones sucesivas en un BST o como un BST balanceado a partir de un arreglo ordenado eligiendo el elemento central como raíz."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Sedgewick & Wayne, Algorithms 4th ed.: 3.2 Binary Search Trees",
+            "es": "Sedgewick y Wayne, Algorithms 4.ª ed.: 3.2 Árboles binarios de búsqueda (en inglés)"
+          },
+          "url": "https://algs4.cs.princeton.edu/32bst/"
+        },
+        {
+          "label": {
+            "en": "Open Data Structures (free textbook, Java edition available)",
+            "es": "Open Data Structures (libro gratuito, con edición en Java, en inglés)"
+          },
+          "url": "https://opendatastructures.org/"
+        },
+        {
+          "label": {
+            "en": "Wikipedia: Tree traversal",
+            "es": "Wikipedia: Recorrido de árboles (en inglés)"
+          },
+          "url": "https://en.wikipedia.org/wiki/Tree_traversal"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "You insert 5, 2, 8, 1, 3 into an empty BST using the module's `insertRecursive`. What is the preorder traversal?",
+            "es": "Insertas 5, 2, 8, 1, 3 en un BST vacío con `insertRecursive` del módulo. ¿Cuál es el recorrido preorden?"
+          },
+          "options": {
+            "en": [
+              "1 2 3 5 8",
+              "5 2 8 1 3",
+              "5 2 1 3 8",
+              "1 3 2 8 5"
+            ],
+            "es": [
+              "1 2 3 5 8",
+              "5 2 8 1 3",
+              "5 2 1 3 8",
+              "1 3 2 8 5"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "The tree is 5 with left child 2 (children 1 and 3) and right child 8. Preorder visits node, left subtree, right subtree: 5, 2, 1, 3, 8. \"1 2 3 5 8\" is the inorder sequence, \"5 2 8 1 3\" is level order, and \"1 3 2 8 5\" is postorder.",
+            "es": "El árbol es 5 con hijo izquierdo 2 (con hijos 1 y 3) e hijo derecho 8. Preorden visita nodo, subárbol izquierdo, subárbol derecho: 5, 2, 1, 3, 8. \"1 2 3 5 8\" es el inorden, \"5 2 8 1 3\" es el orden por niveles y \"1 3 2 8 5\" es el postorden."
+          }
+        },
+        {
+          "question": {
+            "en": "You insert the keys 1, 2, 3, …, n in increasing order into an initially empty, unbalanced BST. What is the total time?",
+            "es": "Insertas las claves 1, 2, 3, …, n en orden creciente en un BST inicialmente vacío y sin balanceo. ¿Cuál es el tiempo total?"
+          },
+          "options": {
+            "en": [
+              "O(n²)",
+              "O(n log n)",
+              "O(n)",
+              "O(log n)"
+            ],
+            "es": [
+              "O(n²)",
+              "O(n log n)",
+              "O(n)",
+              "O(log n)"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Each new key becomes the right child of the previous one, so the tree is a chain and the i-th insertion walks i − 1 nodes: 0 + 1 + … + (n − 1) = O(n²). O(n log n) is the cost only when the tree stays balanced, as with random insertion order or a self-balancing tree.",
+            "es": "Cada clave nueva se convierte en el hijo derecho de la anterior, así que el árbol es una cadena y la i-ésima inserción recorre i − 1 nodos: 0 + 1 + … + (n − 1) = O(n²). O(n log n) solo se obtiene si el árbol se mantiene balanceado, como con un orden de inserción aleatorio o un árbol autobalanceado."
+          }
+        },
+        {
+          "question": {
+            "en": "When deleting a BST node that has two children, which approach keeps the BST property?",
+            "es": "Al eliminar un nodo de un BST que tiene dos hijos, ¿qué enfoque mantiene la propiedad de BST?"
+          },
+          "options": {
+            "en": [
+              "Replace it with its left child and attach its right subtree to the root",
+              "Copy its parent's key into it",
+              "Replace it with any leaf of the tree",
+              "Copy in the minimum key of its right subtree (the inorder successor), then delete that key from the right subtree"
+            ],
+            "es": [
+              "Reemplazarlo por su hijo izquierdo y colgar su subárbol derecho de la raíz",
+              "Copiar en él la clave de su padre",
+              "Reemplazarlo por cualquier hoja del árbol",
+              "Copiar en él la clave mínima de su subárbol derecho (el sucesor inorden) y luego eliminar esa clave del subárbol derecho"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "The inorder successor is larger than everything in the left subtree and smaller than everything else in the right subtree, so it fits in the deleted node's position; it has no left child, so removing it is the easy case. Attaching the right subtree under the root breaks ordering whenever the node is in the root's left subtree.",
+            "es": "El sucesor inorden es mayor que todo el subárbol izquierdo y menor que el resto del subárbol derecho, así que encaja en la posición del nodo eliminado; además no tiene hijo izquierdo, por lo que quitarlo es el caso sencillo. Colgar el subárbol derecho de la raíz rompe el orden cuando el nodo está en el subárbol izquierdo de la raíz."
+          }
+        },
+        {
+          "question": {
+            "en": "A tree has root 10, whose left child is 5, and 5 has a right child 12. Is it a valid BST?",
+            "es": "Un árbol tiene raíz 10, cuyo hijo izquierdo es 5, y 5 tiene un hijo derecho 12. ¿Es un BST válido?"
+          },
+          "options": {
+            "en": [
+              "Yes, because every node is correctly ordered relative to its own children",
+              "No, because 12 is in the left subtree of 10 but is greater than 10",
+              "No, because 5 has no left child",
+              "Yes, because its inorder traversal 5 12 10 is a valid sequence"
+            ],
+            "es": [
+              "Sí, porque cada nodo está bien ordenado respecto a sus propios hijos",
+              "No, porque 12 está en el subárbol izquierdo de 10 pero es mayor que 10",
+              "No, porque 5 no tiene hijo izquierdo",
+              "Sí, porque su recorrido inorden 5 12 10 es una secuencia válida"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The BST property applies to whole subtrees: every key left of 10 must be below 10. The parent-child check passes (12 > 5) but misses the ancestor constraint. The inorder sequence 5 12 10 is not increasing, which confirms the tree is invalid; a missing child is allowed.",
+            "es": "La propiedad de BST se aplica a subárboles completos: toda clave a la izquierda de 10 debe ser menor que 10. La comprobación padre-hijo pasa (12 > 5) pero ignora la restricción del ancestro. El inorden 5 12 10 no es creciente, lo que confirma que no es válido; que falte un hijo está permitido."
+          }
+        },
+        {
+          "question": {
+            "en": "You run the recursive `inorder` method on a degenerate BST (a single chain) with 100,000 nodes using default JVM settings. What is the most likely outcome?",
+            "es": "Ejecutas el método recursivo `inorder` sobre un BST degenerado (una sola cadena) con 100 000 nodos usando la configuración por defecto de la JVM. ¿Cuál es el resultado más probable?"
+          },
+          "options": {
+            "en": [
+              "It uses O(log n) stack space and finishes normally",
+              "The JVM eliminates the tail calls, so it uses constant stack space",
+              "It throws `StackOverflowError` because the recursion depth is O(n)",
+              "It uses O(1) extra space because no new objects are created"
+            ],
+            "es": [
+              "Usa espacio de pila O(log n) y termina normalmente",
+              "La JVM elimina las llamadas de cola, así que usa espacio de pila constante",
+              "Lanza `StackOverflowError` porque la profundidad de recursión es O(n)",
+              "Usa espacio extra O(1) porque no se crean objetos nuevos"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Recursion depth equals the tree height, here about 100,000 frames, which typically exceeds the default thread stack. O(log n) depth only holds for balanced trees, and the HotSpot JVM does not perform tail-call elimination (and `inorder` is not tail-recursive anyway). Use an explicit stack for deep trees.",
+            "es": "La profundidad de recursión es igual a la altura del árbol, aquí unos 100 000 marcos, lo que normalmente supera la pila por defecto de un hilo. La profundidad O(log n) solo vale para árboles balanceados, y la JVM HotSpot no elimina llamadas de cola (además, `inorder` no es recursiva de cola). Usa una pila explícita para árboles profundos."
+          }
+        }
+      ]
+    },
+    "git-branching-merging": {
+      "minutes": 90,
+      "prerequisites": [
+        "git-basics-workflow"
+      ],
+      "whyItMatters": {
+        "en": "Professional teams ship through pull requests on short-lived branches, and reviewers judge you by how clean your branch is; knowing when to rebase versus merge is a standard internship-interview and onboarding question.",
+        "es": "Los equipos profesionales entregan mediante pull requests desde ramas de corta duración, y los revisores te evalúan por lo limpia que está tu rama; saber cuándo usar rebase y cuándo merge es una pregunta habitual en entrevistas de pasantía y en el onboarding."
+      },
+      "objectives": {
+        "en": [
+          "Predict whether `git merge` will fast-forward or create a merge commit by reading the commit graph from `git log --oneline --graph --all`.",
+          "Rebase a feature branch onto an updated `main` with `git rebase main`, resolving conflicts with `git add` and `git rebase --continue` (or backing out with `git rebase --abort`).",
+          "Clean up a branch before review with `git rebase -i` (squash, fixup, reword) and publish it safely with `git push --force-with-lease`.",
+          "Choose between merge commit, squash merge and rebase merge for a pull request based on team policy and the need for an audit trail."
+        ],
+        "es": [
+          "Predecir si `git merge` hará fast-forward o creará un commit de merge leyendo el grafo de commits de `git log --oneline --graph --all`.",
+          "Hacer rebase de una rama de funcionalidad sobre un `main` actualizado con `git rebase main`, resolviendo conflictos con `git add` y `git rebase --continue` (o retrocediendo con `git rebase --abort`).",
+          "Limpiar una rama antes de la revisión con `git rebase -i` (squash, fixup, reword) y publicarla de forma segura con `git push --force-with-lease`.",
+          "Elegir entre commit de merge, squash merge y rebase merge para un pull request según la política del equipo y la necesidad de trazabilidad."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Stage, commit, push and pull from the command line without looking up the syntax",
+          "Read conflict markers and decide what the combined code should be"
+        ],
+        "es": [
+          "Hacer add, commit, push y pull desde la línea de comandos sin consultar la sintaxis",
+          "Leer marcadores de conflicto y decidir cómo debe quedar el código combinado"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "A branch is just a small ref (a name storing one commit hash); creating or deleting one is O(1) and never copies files.",
+          "Merge preserves history and adds a merge commit (unless it can fast-forward); rebase rewrites your commits as new commits with new hashes on top of the target.",
+          "Golden rule: never rebase commits that others have already pulled; rebase only your own unpublished (or personal) branch.",
+          "After rewriting a pushed personal branch, use `git push --force-with-lease`, which refuses to overwrite remote commits you have not seen."
+        ],
+        "es": [
+          "Una rama es solo una referencia pequeña (un nombre que guarda el hash de un commit); crearla o borrarla es O(1) y nunca copia archivos.",
+          "Merge conserva el historial y agrega un commit de merge (salvo que pueda hacer fast-forward); rebase reescribe tus commits como commits nuevos, con hashes nuevos, encima del destino.",
+          "Regla de oro: nunca hagas rebase de commits que otros ya descargaron; haz rebase solo de tu rama propia no publicada (o personal).",
+          "Después de reescribir una rama personal ya publicada, usa `git push --force-with-lease`, que se niega a sobrescribir commits remotos que no has visto."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Letting a feature branch live for weeks, which turns one small conflict into dozens; rebase onto (or merge) `main` frequently and keep each PR to one deliverable.",
+          "Running `git rebase --continue` before actually staging the resolved files, or committing files that still contain `<<<<<<<` markers; check `git status` and `git diff --check` before continuing.",
+          "Mixing a refactor, a bug fix and formatting changes in one commit, which makes review and `git revert` painful; slice commits so each one builds, passes tests and has a single purpose."
+        ],
+        "es": [
+          "Dejar vivir una rama de funcionalidad durante semanas, lo que convierte un conflicto pequeño en decenas; haz rebase sobre `main` (o merge desde `main`) con frecuencia y limita cada PR a una sola entrega.",
+          "Ejecutar `git rebase --continue` sin haber agregado al índice los archivos resueltos, o confirmar archivos que aún tienen marcadores `<<<<<<<`; revisa `git status` y `git diff --check` antes de continuar.",
+          "Mezclar un refactor, una corrección de bug y cambios de formato en un mismo commit, lo que complica la revisión y el `git revert`; divide los commits para que cada uno compile, pase las pruebas y tenga un solo propósito."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: create branches `a` and `b` from `main`, make one commit on each, and draw the graph by hand; then confirm it with `git log --oneline --graph --all`.",
+          "Core: on `feature/login` make three commits while a classmate (or a second clone) pushes two commits to `main` that touch the same file. Run `git fetch` and `git rebase origin/main`, resolve each conflict, and verify the final graph is linear.",
+          "Stretch: your branch has the commits \"add form\", \"fix typo\", \"wip\", \"add tests\". Use `git rebase -i main` to squash \"fix typo\" and \"wip\" into \"add form\" and reword the result to a clear message; push with `--force-with-lease`.",
+          "Exam-style: given a graph where `main` = A–B–E and `feature` = A–B–C–D, write the resulting graphs after (1) `git merge feature` on `main`, (2) `git rebase main` on `feature` followed by a fast-forward merge, and (3) a squash merge. State how many new commits each creates."
+        ],
+        "es": [
+          "Calentamiento: crea las ramas `a` y `b` desde `main`, haz un commit en cada una y dibuja el grafo a mano; luego confírmalo con `git log --oneline --graph --all`.",
+          "Núcleo: en `feature/login` haz tres commits mientras un compañero (o un segundo clon) sube a `main` dos commits que modifican el mismo archivo. Ejecuta `git fetch` y `git rebase origin/main`, resuelve cada conflicto y verifica que el grafo final sea lineal.",
+          "Extensión: tu rama tiene los commits \"add form\", \"fix typo\", \"wip\", \"add tests\". Usa `git rebase -i main` para fusionar \"fix typo\" y \"wip\" dentro de \"add form\" y cambia el mensaje por uno claro; publica con `--force-with-lease`.",
+          "Estilo examen: dado un grafo donde `main` = A–B–E y `feature` = A–B–C–D, escribe los grafos resultantes tras (1) `git merge feature` en `main`, (2) `git rebase main` en `feature` seguido de un merge fast-forward y (3) un squash merge. Indica cuántos commits nuevos crea cada opción."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "When does `git merge` fast-forward instead of creating a merge commit?",
+          "Why do rebased commits get new hashes, and why does that matter for teammates?",
+          "What does `--force-with-lease` protect you from that `--force` does not?"
+        ],
+        "es": [
+          "¿Cuándo hace `git merge` fast-forward en lugar de crear un commit de merge?",
+          "¿Por qué los commits reescritos por rebase obtienen hashes nuevos y por qué eso importa para tus compañeros?",
+          "¿De qué te protege `--force-with-lease` que `--force` no?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Feature Branches",
+            "es": "Ramas de funcionalidad"
+          },
+          "definition": {
+            "en": "Short-lived branches created from `main` to hold the commits for a single feature or fix, so the work can be reviewed and tested in isolation and merged through a pull request.",
+            "es": "Ramas de corta duración creadas desde `main` que contienen los commits de una sola funcionalidad o corrección, para revisarlos y probarlos de forma aislada e integrarlos mediante un pull request."
+          }
+        },
+        {
+          "term": {
+            "en": "Rebase vs Merge",
+            "es": "Rebase vs. merge"
+          },
+          "definition": {
+            "en": "Two ways to integrate diverged branches: merge joins them with a merge commit that has two parents and keeps the original commits, while rebase replays your commits one by one on top of the other branch, producing new commits and a linear history.",
+            "es": "Dos formas de integrar ramas que divergieron: merge las une con un commit de merge que tiene dos padres y conserva los commits originales, mientras que rebase vuelve a aplicar tus commits uno por uno encima de la otra rama, generando commits nuevos y un historial lineal."
+          }
+        },
+        {
+          "term": {
+            "en": "Conflict Resolution",
+            "es": "Resolución de conflictos"
+          },
+          "definition": {
+            "en": "The process of editing files where Git could not combine changes automatically: understand both sides, write the intended combined code, remove the markers, `git add` the file, run tests, and then commit or `git rebase --continue`.",
+            "es": "El proceso de editar archivos en los que Git no pudo combinar cambios automáticamente: entender ambos lados, escribir el código combinado deseado, quitar los marcadores, hacer `git add` del archivo, ejecutar las pruebas y luego hacer commit o `git rebase --continue`."
+          }
+        },
+        {
+          "term": {
+            "en": "Pull Request Hygiene",
+            "es": "Higiene de pull requests"
+          },
+          "definition": {
+            "en": "Practices that make a pull request quick to review and safe to merge: a small focused diff, an up-to-date base branch, a description of what changed and why, passing CI, and evidence of testing.",
+            "es": "Prácticas que hacen que un pull request sea rápido de revisar y seguro de integrar: un diff pequeño y enfocado, una rama base actualizada, una descripción de qué cambió y por qué, CI en verde y evidencia de pruebas."
+          }
+        },
+        {
+          "term": {
+            "en": "Commit Strategy",
+            "es": "Estrategia de commits"
+          },
+          "definition": {
+            "en": "Deciding how to slice work into commits so that each one is atomic (one logical change), builds and passes tests on its own, and has a message explaining why, which makes review, `git bisect` and `git revert` effective.",
+            "es": "Decidir cómo dividir el trabajo en commits para que cada uno sea atómico (un solo cambio lógico), compile y pase las pruebas por sí mismo y tenga un mensaje que explique el porqué, lo que hace efectivos la revisión, `git bisect` y `git revert`."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Pro Git: Basic Branching and Merging",
+            "es": "Pro Git: Ramas y merge básicos"
+          },
+          "url": "https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging"
+        },
+        {
+          "label": {
+            "en": "Pro Git: Rebasing (includes the perils of rebasing)",
+            "es": "Pro Git: Rebase (incluye los riesgos del rebase)"
+          },
+          "url": "https://git-scm.com/book/en/v2/Git-Branching-Rebasing"
+        },
+        {
+          "label": {
+            "en": "Git reference: git-rebase",
+            "es": "Referencia de Git: git-rebase"
+          },
+          "url": "https://git-scm.com/docs/git-rebase"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What is a branch in Git, internally?",
+            "es": "¿Qué es una rama en Git, internamente?"
+          },
+          "options": {
+            "en": [
+              "A full copy of the project's files in a separate folder",
+              "A folder on the remote server",
+              "A lightweight movable reference to a commit that advances when you commit on it",
+              "A list of files that are under review"
+            ],
+            "es": [
+              "Una copia completa de los archivos del proyecto en otra carpeta",
+              "Una carpeta en el servidor remoto",
+              "Una referencia liviana y movible a un commit que avanza cuando haces commits en ella",
+              "Una lista de archivos que están en revisión"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "A branch is a ref (a file containing a commit hash). That is why branching is instant. Git never copies the working files to create a branch.",
+            "es": "Una rama es una referencia (un archivo que contiene el hash de un commit). Por eso crear ramas es instantáneo. Git nunca copia los archivos de trabajo para crear una rama."
+          }
+        },
+        {
+          "question": {
+            "en": "`main` points to commit C. You created `feature` from C and added commits D and E; nobody has committed to `main` since. What does `git switch main && git merge feature` do?",
+            "es": "`main` apunta al commit C. Creaste `feature` desde C y agregaste los commits D y E; nadie ha hecho commits en `main` desde entonces. ¿Qué hace `git switch main && git merge feature`?"
+          },
+          "options": {
+            "en": [
+              "Creates a merge commit M with parents C and E",
+              "Moves `main` forward to E (fast-forward); no merge commit is created",
+              "Always stops with a conflict",
+              "Rebases D and E onto C, creating new hashes"
+            ],
+            "es": [
+              "Crea un commit de merge M con padres C y E",
+              "Mueve `main` hacia E (fast-forward); no se crea commit de merge",
+              "Siempre se detiene con un conflicto",
+              "Hace rebase de D y E sobre C, creando hashes nuevos"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Because `main` is an ancestor of `feature`, Git just moves the pointer. A merge commit only appears if both branches have new commits or you pass `--no-ff`.",
+            "es": "Como `main` es ancestro de `feature`, Git solo mueve el puntero. Un commit de merge solo aparece si ambas ramas tienen commits nuevos o si usas `--no-ff`."
+          }
+        },
+        {
+          "question": {
+            "en": "Your feature branch has 5 commits not on `main`, and `main` has 3 commits not on your branch. How many new commit objects does `git rebase main` create (assuming no commit becomes empty)?",
+            "es": "Tu rama tiene 5 commits que no están en `main`, y `main` tiene 3 commits que no están en tu rama. ¿Cuántos objetos commit nuevos crea `git rebase main` (suponiendo que ningún commit queda vacío)?"
+          },
+          "options": {
+            "en": [
+              "0, rebase only moves the branch pointer",
+              "3",
+              "5, one rewritten copy of each of your commits",
+              "8"
+            ],
+            "es": [
+              "0, rebase solo mueve el puntero de la rama",
+              "3",
+              "5, una copia reescrita de cada uno de tus commits",
+              "8"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Rebase replays each of your 5 commits on the new base; each gets a new parent and therefore a new hash. The 3 `main` commits are reused, not copied.",
+            "es": "Rebase vuelve a aplicar cada uno de tus 5 commits sobre la nueva base; cada uno obtiene un padre nuevo y por lo tanto un hash nuevo. Los 3 commits de `main` se reutilizan, no se copian."
+          }
+        },
+        {
+          "question": {
+            "en": "Why should you avoid rebasing a branch that teammates have already pulled and built on?",
+            "es": "¿Por qué debes evitar hacer rebase de una rama que tus compañeros ya descargaron y sobre la que trabajan?"
+          },
+          "options": {
+            "en": [
+              "Rebase deletes the files changed in those commits",
+              "Rebase cannot run on branches that exist on a remote",
+              "Rebase always creates extra merge commits",
+              "Rebase replaces those commits with new ones (new hashes), so teammates' copies diverge and they get duplicated commits or conflicts"
+            ],
+            "es": [
+              "Rebase borra los archivos modificados en esos commits",
+              "Rebase no puede ejecutarse en ramas que existen en un remoto",
+              "Rebase siempre crea commits de merge adicionales",
+              "Rebase reemplaza esos commits por otros nuevos (hashes nuevos), así que las copias de tus compañeros divergen y terminan con commits duplicados o conflictos"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "Rewritten history means the old commits your teammates hold no longer exist on the remote. Rebase does not delete file contents and does not create merge commits.",
+            "es": "Reescribir el historial significa que los commits antiguos que tienen tus compañeros ya no existen en el remoto. Rebase no borra el contenido de archivos ni crea commits de merge."
+          }
+        },
+        {
+          "question": {
+            "en": "During `git rebase main`, Git stops with a conflict in `app.js`. You edit the file and remove the markers. Which sequence correctly continues?",
+            "es": "Durante `git rebase main`, Git se detiene con un conflicto en `app.js`. Editas el archivo y quitas los marcadores. ¿Qué secuencia continúa correctamente?"
+          },
+          "options": {
+            "en": [
+              "`git add app.js` then `git rebase --continue`",
+              "`git commit -am \"fix\"` then `git push --force`",
+              "`git rebase --abort` then `git add app.js`",
+              "`git merge --continue`"
+            ],
+            "es": [
+              "`git add app.js` y luego `git rebase --continue`",
+              "`git commit -am \"fix\"` y luego `git push --force`",
+              "`git rebase --abort` y luego `git add app.js`",
+              "`git merge --continue`"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Staging marks the conflict as resolved and `--continue` applies the remaining commits. `--abort` would throw away the whole rebase, and `git merge --continue` only applies to an in-progress merge.",
+            "es": "Agregar al índice marca el conflicto como resuelto y `--continue` aplica los commits restantes. `--abort` descartaría todo el rebase, y `git merge --continue` solo aplica a un merge en curso."
+          }
+        }
+      ]
+    },
+    "heaps": {
+      "minutes": 90,
+      "prerequisites": [
+        "trees-basics",
+        "arrays-strings"
+      ],
+      "whyItMatters": {
+        "en": "Priority queues drive Dijkstra's and Prim's algorithms, operating-system and event schedulers, merging k sorted streams and top-k queries. `PriorityQueue` is one of the most frequently used Java collections in interviews.",
+        "es": "Las colas de prioridad impulsan los algoritmos de Dijkstra y Prim, los planificadores de sistemas operativos y de eventos, la mezcla de k flujos ordenados y las consultas top-k. `PriorityQueue` es una de las colecciones de Java más usadas en entrevistas."
+      },
+      "objectives": {
+        "en": [
+          "Implement an array-based binary min-heap with `offer` (sift-up) and `poll` (sift-down), using parent (i − 1) / 2 and children 2i + 1 and 2i + 2.",
+          "Trace `buildMinHeap` on a small array and explain why bottom-up construction is O(n), not O(n log n).",
+          "Use `PriorityQueue` with a `Comparator` to build a max-heap and to order objects by a field.",
+          "Apply a size-k heap to top-k and running-median problems and analyze their O(n log k) and O(log n) costs."
+        ],
+        "es": [
+          "Implementar un montículo mínimo binario sobre un arreglo con `offer` (flotar hacia arriba) y `poll` (hundir hacia abajo), usando padre (i − 1) / 2 e hijos 2i + 1 y 2i + 2.",
+          "Trazar `buildMinHeap` sobre un arreglo pequeño y explicar por qué la construcción de abajo hacia arriba es O(n) y no O(n log n).",
+          "Usar `PriorityQueue` con un `Comparator` para construir un montículo máximo y para ordenar objetos por un campo.",
+          "Aplicar un montículo de tamaño k a problemas de top-k y de mediana en flujo, y analizar sus costos O(n log k) y O(log n)."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Convert between array indices and a complete binary tree drawn level by level.",
+          "Write a `Comparator` with `Comparator.comparingInt`, `Comparator.reverseOrder()` or a lambda."
+        ],
+        "es": [
+          "Convertir entre índices de un arreglo y un árbol binario completo dibujado nivel por nivel.",
+          "Escribir un `Comparator` con `Comparator.comparingInt`, `Comparator.reverseOrder()` o una lambda."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Insert and remove-root are O(log n), peek is O(1), build-heap is O(n), and searching for an arbitrary element is O(n).",
+          "Heap property (min-heap): every parent ≤ its children. Siblings are unordered, so the backing array is generally not sorted.",
+          "`PriorityQueue` is a min-heap by default; `new PriorityQueue<>(Comparator.reverseOrder())` gives a max-heap. Its iterator and `toString()` do not follow priority order.",
+          "For the k largest of n items, keep a min-heap of size k and evict the root when it overflows: O(n log k) time, O(k) space."
+        ],
+        "es": [
+          "Insertar y extraer la raíz cuestan O(log n), consultar la raíz O(1), construir el montículo O(n) y buscar un elemento arbitrario O(n).",
+          "Propiedad de montículo (mínimo): cada padre ≤ sus hijos. Los hermanos no tienen orden entre sí, así que el arreglo subyacente en general no está ordenado.",
+          "`PriorityQueue` es un montículo mínimo por defecto; `new PriorityQueue<>(Comparator.reverseOrder())` da un montículo máximo. Su iterador y `toString()` no siguen el orden de prioridad.",
+          "Para los k mayores de n elementos, mantén un montículo mínimo de tamaño k y expulsa la raíz cuando se exceda: tiempo O(n log k), espacio O(k)."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Writing a max-heap comparator as `(a, b) -> b - a`: the subtraction overflows when values are large with opposite signs, producing a wrong order. Use `Integer.compare(b, a)` or `Comparator.reverseOrder()`.",
+          "Printing a `PriorityQueue` or iterating it with for-each and expecting sorted output; only repeated `poll()` returns elements in priority order.",
+          "Changing the priority field of an object that is already inside a `PriorityQueue`: the heap is not re-sifted, so the invariant breaks and `poll` returns wrong elements. Remove and reinsert it, or insert a new entry and skip stale ones when polled."
+        ],
+        "es": [
+          "Escribir el comparador de un montículo máximo como `(a, b) -> b - a`: la resta se desborda con valores grandes de signos opuestos y produce un orden incorrecto. Usa `Integer.compare(b, a)` o `Comparator.reverseOrder()`.",
+          "Imprimir un `PriorityQueue` o recorrerlo con for-each esperando una salida ordenada; solo llamar `poll()` repetidamente devuelve los elementos en orden de prioridad.",
+          "Cambiar el campo de prioridad de un objeto que ya está dentro de un `PriorityQueue`: el montículo no se reacomoda, el invariante se rompe y `poll` devuelve elementos incorrectos. Elimínalo y vuelve a insertarlo, o inserta una entrada nueva y descarta las obsoletas al extraerlas."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: trace `buildMinHeap` on `{9, 5, 6, 2, 3}` by hand, writing the array after each `heapify` call, and compare with the program's output.",
+          "Implement `MinHeap` backed by a growable `int[]` with `offer`, `poll`, `peek` and `size`; test it by inserting 1,000 random ints and checking that repeated `poll` returns them in sorted order.",
+          "Implement in-place heapsort: build a max-heap bottom-up, then repeatedly swap the root with the last element of the heap, shrink the heap by one and sift the new root down.",
+          "Implement `MedianFinder` with `addNum(int num)` and `double findMedian()` using a max-heap for the lower half and a min-heap for the upper half, rebalancing so their sizes differ by at most 1; each `addNum` must be O(log n)."
+        ],
+        "es": [
+          "Calentamiento: traza a mano `buildMinHeap` sobre `{9, 5, 6, 2, 3}` escribiendo el arreglo después de cada llamada a `heapify`, y compáralo con la salida del programa.",
+          "Implementa `MinHeap` sobre un `int[]` que crece, con `offer`, `poll`, `peek` y `size`; pruébalo insertando 1000 enteros aleatorios y verificando que `poll` repetido los devuelve ordenados.",
+          "Implementa heapsort en el mismo arreglo: construye un montículo máximo de abajo hacia arriba y luego intercambia repetidamente la raíz con el último elemento del montículo, reduce su tamaño en uno y hunde la nueva raíz.",
+          "Implementa `MedianFinder` con `addNum(int num)` y `double findMedian()` usando un montículo máximo para la mitad inferior y uno mínimo para la superior, reequilibrando para que sus tamaños difieran a lo sumo en 1; cada `addNum` debe ser O(log n)."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why must a binary heap be a complete tree, and why does that make array storage work?",
+          "Why is `peek` O(1) while `poll` is O(log n)?",
+          "To find the 10 largest of a million numbers, which kind of heap do you keep, and of what size?"
+        ],
+        "es": [
+          "¿Por qué un montículo binario debe ser un árbol completo y por qué eso permite guardarlo en un arreglo?",
+          "¿Por qué `peek` es O(1) mientras que `poll` es O(log n)?",
+          "Para hallar los 10 mayores de un millón de números, ¿qué tipo de montículo mantienes y de qué tamaño?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Min Heap",
+            "es": "Montículo mínimo"
+          },
+          "definition": {
+            "en": "A complete binary tree in which every node's key is ≤ the keys of its children, so the minimum is always at the root (index 0 of the array).",
+            "es": "Un árbol binario completo en el que la clave de cada nodo es ≤ que las claves de sus hijos, de modo que el mínimo siempre está en la raíz (índice 0 del arreglo)."
+          }
+        },
+        {
+          "term": {
+            "en": "Max Heap",
+            "es": "Montículo máximo"
+          },
+          "definition": {
+            "en": "A complete binary tree in which every node's key is ≥ the keys of its children, so the maximum is always at the root; used by heapsort and for the lower half in running-median problems.",
+            "es": "Un árbol binario completo en el que la clave de cada nodo es ≥ que las claves de sus hijos, de modo que el máximo siempre está en la raíz; lo usan heapsort y la mitad inferior en problemas de mediana en flujo."
+          }
+        },
+        {
+          "term": {
+            "en": "Heap Operations",
+            "es": "Operaciones del montículo"
+          },
+          "definition": {
+            "en": "Insert places the new key at the end of the array and sifts it up by swapping with its parent; extract-root moves the last key to the root and sifts it down by swapping with the smaller child (in a min-heap). Both are O(log n) because the height is ⌊log₂ n⌋.",
+            "es": "Insertar coloca la clave nueva al final del arreglo y la hace flotar intercambiándola con su padre; extraer la raíz mueve la última clave a la raíz y la hunde intercambiándola con el hijo menor (en un montículo mínimo). Ambas son O(log n) porque la altura es ⌊log₂ n⌋."
+          }
+        },
+        {
+          "term": {
+            "en": "Heapify",
+            "es": "Heapify"
+          },
+          "definition": {
+            "en": "Sifting the key at index i down until it is no larger than its children, assuming both child subtrees are already heaps; calling it from the last internal node (n / 2 − 1) back to 0 turns any array into a heap in O(n).",
+            "es": "Hundir la clave del índice i hasta que no sea mayor que sus hijos, suponiendo que ambos subárboles hijos ya son montículos; llamarlo desde el último nodo interno (n / 2 − 1) hasta 0 convierte cualquier arreglo en un montículo en O(n)."
+          }
+        },
+        {
+          "term": {
+            "en": "Priority Queues",
+            "es": "Colas de prioridad"
+          },
+          "definition": {
+            "en": "An abstract data type whose removal operation always returns the highest-priority element (`offer`, `poll`, `peek`); Java's `PriorityQueue` implements it with a binary min-heap ordered by natural ordering or a supplied `Comparator`.",
+            "es": "Un tipo abstracto de datos cuya operación de extracción siempre devuelve el elemento de mayor prioridad (`offer`, `poll`, `peek`); el `PriorityQueue` de Java lo implementa con un montículo mínimo binario ordenado por el orden natural o por un `Comparator` dado."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Java 21 API: PriorityQueue",
+            "es": "API de Java 21: PriorityQueue (en inglés)"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/PriorityQueue.html"
+        },
+        {
+          "label": {
+            "en": "Sedgewick & Wayne, Algorithms 4th ed.: 2.4 Priority Queues",
+            "es": "Sedgewick y Wayne, Algorithms 4.ª ed.: 2.4 Colas de prioridad (en inglés)"
+          },
+          "url": "https://algs4.cs.princeton.edu/24pq/"
+        },
+        {
+          "label": {
+            "en": "Wikipedia: Binary heap",
+            "es": "Wikipedia: Montículo binario (en inglés)"
+          },
+          "url": "https://en.wikipedia.org/wiki/Binary_heap"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Using the module's `buildMinHeap`, what does the array `{4, 10, 3, 5, 1}` become?",
+            "es": "Con `buildMinHeap` del módulo, ¿en qué se convierte el arreglo `{4, 10, 3, 5, 1}`?"
+          },
+          "options": {
+            "en": [
+              "[1, 3, 4, 5, 10]",
+              "[1, 4, 3, 5, 10]",
+              "[1, 4, 3, 10, 5]",
+              "[3, 1, 4, 5, 10]"
+            ],
+            "es": [
+              "[1, 3, 4, 5, 10]",
+              "[1, 4, 3, 5, 10]",
+              "[1, 4, 3, 10, 5]",
+              "[3, 1, 4, 5, 10]"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "n = 5, so heapify runs at i = 1 then i = 0. At i = 1, 10 swaps with its smaller child 1 (index 4): [4, 1, 3, 5, 10]. At i = 0, 4 swaps with 1: [1, 4, 3, 5, 10]; at index 1, 4 is smaller than its children 5 and 10, so it stops. A heap is not sorted, so [1, 3, 4, 5, 10] is not what bottom-up heapify produces.",
+            "es": "n = 5, así que heapify se ejecuta en i = 1 y luego en i = 0. En i = 1, 10 se intercambia con su hijo menor 1 (índice 4): [4, 1, 3, 5, 10]. En i = 0, 4 se intercambia con 1: [1, 4, 3, 5, 10]; en el índice 1, 4 es menor que sus hijos 5 y 10, así que se detiene. Un montículo no está ordenado, por eso [1, 3, 4, 5, 10] no es lo que produce heapify de abajo hacia arriba."
+          }
+        },
+        {
+          "question": {
+            "en": "To find the k largest values among n numbers, you keep a min-heap of size k and pop its root whenever the size exceeds k. What is the running time?",
+            "es": "Para hallar los k valores mayores entre n números, mantienes un montículo mínimo de tamaño k y extraes su raíz cada vez que el tamaño supera k. ¿Cuál es el tiempo de ejecución?"
+          },
+          "options": {
+            "en": [
+              "O(n log n)",
+              "O(k log n)",
+              "O(n log k)",
+              "O(n · k)"
+            ],
+            "es": [
+              "O(n log n)",
+              "O(k log n)",
+              "O(n log k)",
+              "O(n · k)"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Each of the n numbers causes at most one insertion and one removal on a heap of size ≤ k + 1, each O(log k), for O(n log k) total. O(n log n) is the cost of sorting everything, which this approach avoids when k is much smaller than n.",
+            "es": "Cada uno de los n números causa a lo sumo una inserción y una extracción en un montículo de tamaño ≤ k + 1, cada una O(log k), para un total de O(n log k). O(n log n) es el costo de ordenar todo, que este enfoque evita cuando k es mucho menor que n."
+          }
+        },
+        {
+          "question": {
+            "en": "What does this print?\n```java\nPriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> Integer.compare(b, a));\npq.addAll(List.of(3, 8, 1, 5));\npq.poll();\nSystem.out.println(pq.peek());\n```",
+            "es": "¿Qué imprime este código?\n```java\nPriorityQueue<Integer> pq = new PriorityQueue<>((a, b) -> Integer.compare(b, a));\npq.addAll(List.of(3, 8, 1, 5));\npq.poll();\nSystem.out.println(pq.peek());\n```"
+          },
+          "options": {
+            "en": [
+              "5",
+              "8",
+              "1",
+              "3"
+            ],
+            "es": [
+              "5",
+              "8",
+              "1",
+              "3"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "The reversed comparator makes a max-heap. `poll()` removes 8, the largest, and `peek()` then shows the new maximum, 5. Answering 8 forgets that `poll` removed it, and 1 would be correct only for the default min-heap.",
+            "es": "El comparador invertido crea un montículo máximo. `poll()` elimina 8, el mayor, y `peek()` muestra el nuevo máximo, 5. Responder 8 olvida que `poll` lo eliminó, y 1 solo sería correcto para el montículo mínimo por defecto."
+          }
+        },
+        {
+          "question": {
+            "en": "In an array-based min-heap of n distinct keys (0-based indices), where can the maximum key be?",
+            "es": "En un montículo mínimo de n claves distintas guardado en un arreglo (índices desde 0), ¿dónde puede estar la clave máxima?"
+          },
+          "options": {
+            "en": [
+              "Always at index n − 1",
+              "Always at index 1 or 2",
+              "Only at a leaf, i.e. at some index from ⌊n / 2⌋ to n − 1",
+              "At any index"
+            ],
+            "es": [
+              "Siempre en el índice n − 1",
+              "Siempre en el índice 1 o 2",
+              "Solo en una hoja, es decir, en algún índice de ⌊n / 2⌋ a n − 1",
+              "En cualquier índice"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Any internal node is smaller than its children, so it cannot be the maximum; the maximum must be a leaf, and the leaves occupy indices ⌊n / 2⌋ through n − 1. It need not be the last index, because siblings and cousins are unordered.",
+            "es": "Todo nodo interno es menor que sus hijos, así que no puede ser el máximo; el máximo debe ser una hoja, y las hojas ocupan los índices de ⌊n / 2⌋ a n − 1. No tiene por qué estar en el último índice, porque hermanos y primos no tienen orden entre sí."
+          }
+        },
+        {
+          "question": {
+            "en": "Dijkstra's algorithm implemented with `java.util.PriorityQueue` usually pushes a new (vertex, distance) entry on every improvement and skips outdated entries when polled. Why?",
+            "es": "Dijkstra implementado con `java.util.PriorityQueue` suele insertar una entrada nueva (vértice, distancia) en cada mejora y descartar las entradas obsoletas al extraerlas. ¿Por qué?"
+          },
+          "options": {
+            "en": [
+              "`PriorityQueue` cannot store two entries for the same vertex",
+              "`PriorityQueue` has no decrease-key operation and `remove(Object)` is O(n), so lazy insertion is simpler and still runs in O(E log V)",
+              "Keeping stale entries lets Dijkstra handle negative edge weights",
+              "Decreasing a key in place would make the heap sorted"
+            ],
+            "es": [
+              "`PriorityQueue` no puede guardar dos entradas para el mismo vértice",
+              "`PriorityQueue` no tiene operación de disminuir clave y `remove(Object)` es O(n), así que insertar de forma diferida es más simple y sigue siendo O(E log V)",
+              "Conservar entradas obsoletas permite que Dijkstra maneje aristas con peso negativo",
+              "Disminuir una clave en su lugar haría que el montículo quedara ordenado"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The heap holds at most O(E) entries, and log E = O(log V), so lazy deletion keeps O(E log V) without a decrease-key operation. `PriorityQueue` accepts duplicate entries without trouble, and stale entries do nothing for negative weights, which Dijkstra still cannot handle.",
+            "es": "El montículo guarda a lo sumo O(E) entradas y log E = O(log V), así que la eliminación diferida mantiene O(E log V) sin una operación de disminuir clave. `PriorityQueue` acepta entradas duplicadas sin problema, y las entradas obsoletas no ayudan con pesos negativos, que Dijkstra sigue sin poder manejar."
+          }
+        }
+      ]
+    },
+    "tries": {
+      "minutes": 75,
+      "prerequisites": [
+        "trees-basics",
+        "hash-tables"
+      ],
+      "whyItMatters": {
+        "en": "Tries power autocomplete boxes, spell checkers and longest-prefix matching in IP routing tables, and they are the standard tool for interview problems such as Word Search II and prefix counting, where you need every key sharing a prefix without scanning the whole word list.",
+        "es": "Los tries impulsan el autocompletado, los correctores ortográficos y la coincidencia del prefijo más largo en tablas de enrutamiento IP, y son la herramienta estándar en problemas de entrevista como Word Search II y conteo de prefijos, donde necesitas todas las claves con un prefijo sin recorrer toda la lista de palabras."
+      },
+      "objectives": {
+        "en": [
+          "Implement `insert`, `search` and `startsWith` in O(L) time for a key of length L, with children stored either in a `HashMap<Character, TrieNode>` or a `TrieNode[26]` array.",
+          "Implement `delete(String word)` that clears the end-of-word flag and removes only the nodes no other word still uses.",
+          "Implement autocomplete that returns words with a given prefix by running DFS from the prefix's node.",
+          "Compare a trie with `HashSet<String>` and with a sorted array plus binary search for exact lookup, prefix queries and memory use."
+        ],
+        "es": [
+          "Implementar `insert`, `search` y `startsWith` en tiempo O(L) para una clave de longitud L, con los hijos guardados en un `HashMap<Character, TrieNode>` o en un arreglo `TrieNode[26]`.",
+          "Implementar `delete(String word)` que desmarque el fin de palabra y elimine solo los nodos que ninguna otra palabra sigue usando.",
+          "Implementar autocompletado que devuelva las palabras con un prefijo dado mediante un DFS desde el nodo del prefijo.",
+          "Comparar un trie con `HashSet<String>` y con un arreglo ordenado más búsqueda binaria en búsqueda exacta, consultas por prefijo y uso de memoria."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Traverse a tree recursively while building a `StringBuilder` path and undoing each append on return.",
+          "Map a lowercase letter to an array index with `c - 'a'`."
+        ],
+        "es": [
+          "Recorrer un árbol recursivamente construyendo un camino en un `StringBuilder` y deshaciendo cada `append` al regresar.",
+          "Convertir una letra minúscula en un índice de arreglo con `c - 'a'`."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Insert, search and startsWith cost O(L), where L is the key length, regardless of how many words are stored.",
+          "A trie has at most (total characters inserted) + 1 nodes; shared prefixes are stored once.",
+          "The end-of-word flag separates stored words from mere prefixes: after inserting \"code\", `search(\"cod\")` is false while `startsWith(\"cod\")` is true.",
+          "Array children (`new TrieNode[26]`) give the fastest access but cost 26 references per node; `HashMap` children save memory for sparse or large alphabets at a higher constant cost."
+        ],
+        "es": [
+          "Insertar, buscar y startsWith cuestan O(L), donde L es la longitud de la clave, sin importar cuántas palabras haya guardadas.",
+          "Un trie tiene a lo sumo (total de caracteres insertados) + 1 nodos; los prefijos compartidos se guardan una sola vez.",
+          "La marca de fin de palabra distingue palabras guardadas de simples prefijos: tras insertar \"code\", `search(\"cod\")` es false y `startsWith(\"cod\")` es true.",
+          "Los hijos en arreglo (`new TrieNode[26]`) dan el acceso más rápido pero cuestan 26 referencias por nodo; los hijos en `HashMap` ahorran memoria con alfabetos dispersos o grandes a cambio de un costo constante mayor."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Implementing `search` like `startsWith` (returning true whenever the path exists): \"cod\" is reported as a word after inserting \"code\". Check `node.isWord` at the end of the path.",
+          "Deleting a word by unlinking its whole path from the root: this destroys other words that share the prefix (deleting \"code\" breaks \"coder\"). Remove nodes bottom-up only while they have no children and are not the end of another word.",
+          "Indexing `children[c - 'a']` with uppercase letters, digits or non-ASCII input: the index falls outside 0–25 and throws `ArrayIndexOutOfBoundsException`. Normalize input with `toLowerCase()` and validate it, or use a map."
+        ],
+        "es": [
+          "Implementar `search` igual que `startsWith` (devolver true siempre que el camino exista): tras insertar \"code\", \"cod\" aparece como palabra. Verifica `node.isWord` al final del camino.",
+          "Eliminar una palabra desconectando todo su camino desde la raíz: destruye otras palabras que comparten el prefijo (eliminar \"code\" rompe \"coder\"). Elimina nodos de abajo hacia arriba solo mientras no tengan hijos y no marquen el fin de otra palabra.",
+          "Indexar `children[c - 'a']` con mayúsculas, dígitos o caracteres no ASCII: el índice queda fuera de 0–25 y lanza `ArrayIndexOutOfBoundsException`. Normaliza la entrada con `toLowerCase()` y valídala, o usa un mapa."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: draw the trie after inserting \"code\", \"coder\" and \"coding\" (the module's words), count all nodes including the root, and mark which nodes have `isWord = true`.",
+          "Add a `prefixCount` field to `TrieNode`, increment it on every node visited during `insert`, and implement `int countWordsWithPrefix(String prefix)` in O(L).",
+          "Implement `boolean delete(String word)` recursively, where each call returns whether its child node can be removed; verify that after deleting \"code\", `search(\"coder\")` and `search(\"coding\")` are still true and `search(\"code\")` is false.",
+          "Implement `List<String> findWords(char[][] board, String[] words)` (Word Search II): insert all words into a trie, then DFS from every cell following trie edges, marking cells visited during the path and restoring them on return; collect each word once."
+        ],
+        "es": [
+          "Calentamiento: dibuja el trie después de insertar \"code\", \"coder\" y \"coding\" (las palabras del módulo), cuenta todos los nodos incluida la raíz y marca cuáles tienen `isWord = true`.",
+          "Agrega un campo `prefixCount` a `TrieNode`, increméntalo en cada nodo visitado durante `insert` e implementa `int countWordsWithPrefix(String prefix)` en O(L).",
+          "Implementa `boolean delete(String word)` de forma recursiva, donde cada llamada devuelve si su nodo hijo puede eliminarse; verifica que tras eliminar \"code\", `search(\"coder\")` y `search(\"coding\")` siguen siendo true y `search(\"code\")` es false.",
+          "Implementa `List<String> findWords(char[][] board, String[] words)` (Word Search II): inserta todas las palabras en un trie y luego haz DFS desde cada celda siguiendo las aristas del trie, marcando las celdas visitadas en el camino y restaurándolas al regresar; reporta cada palabra una sola vez."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why doesn't trie lookup time depend on the number of stored words?",
+          "After inserting only \"code\", what do `search(\"cod\")` and `startsWith(\"cod\")` return, and why do they differ?",
+          "When is a `HashSet<String>` a better choice than a trie?"
+        ],
+        "es": [
+          "¿Por qué el tiempo de búsqueda en un trie no depende de la cantidad de palabras guardadas?",
+          "Tras insertar solo \"code\", ¿qué devuelven `search(\"cod\")` y `startsWith(\"cod\")` y por qué difieren?",
+          "¿Cuándo es mejor un `HashSet<String>` que un trie?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Trie Construction",
+            "es": "Construcción del trie"
+          },
+          "definition": {
+            "en": "Building a rooted tree in which each edge is labeled with one character and each root-to-node path spells a prefix; inserting a word follows existing edges and creates new nodes only where its path leaves the existing tree.",
+            "es": "Construir un árbol con raíz en el que cada arista está etiquetada con un carácter y cada camino de la raíz a un nodo forma un prefijo; insertar una palabra sigue las aristas existentes y crea nodos nuevos solo donde su camino sale del árbol existente."
+          }
+        },
+        {
+          "term": {
+            "en": "Insert/Search/Delete",
+            "es": "Insertar/buscar/eliminar"
+          },
+          "definition": {
+            "en": "Insert walks or creates one node per character and sets the end-of-word flag; search walks the path and returns that flag; delete clears the flag and removes trailing nodes that have no children and end no other word. Each costs O(L).",
+            "es": "Insertar recorre o crea un nodo por carácter y activa la marca de fin de palabra; buscar recorre el camino y devuelve esa marca; eliminar desactiva la marca y quita los nodos finales que no tienen hijos ni terminan otra palabra. Cada una cuesta O(L)."
+          }
+        },
+        {
+          "term": {
+            "en": "Prefix Matching",
+            "es": "Coincidencia de prefijos"
+          },
+          "definition": {
+            "en": "Deciding whether any stored key begins with a given string by walking that string's path from the root; if the path exists, every word in the subtree below its last node has that prefix.",
+            "es": "Decidir si alguna clave guardada empieza con una cadena dada recorriendo su camino desde la raíz; si el camino existe, todas las palabras del subárbol bajo su último nodo tienen ese prefijo."
+          }
+        },
+        {
+          "term": {
+            "en": "Auto-complete",
+            "es": "Autocompletado"
+          },
+          "definition": {
+            "en": "Returning stored words that extend a typed prefix by locating the prefix's node and running a DFS through its subtree, often limited to k results or ranked by a frequency stored in each node.",
+            "es": "Devolver las palabras guardadas que extienden un prefijo escrito, ubicando el nodo del prefijo y haciendo un DFS por su subárbol, a menudo limitado a k resultados u ordenado por una frecuencia guardada en cada nodo."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Sedgewick & Wayne, Algorithms 4th ed.: 5.2 Tries",
+            "es": "Sedgewick y Wayne, Algorithms 4.ª ed.: 5.2 Tries (en inglés)"
+          },
+          "url": "https://algs4.cs.princeton.edu/52trie/"
+        },
+        {
+          "label": {
+            "en": "Wikipedia: Trie",
+            "es": "Wikipedia: Trie (en inglés)"
+          },
+          "url": "https://en.wikipedia.org/wiki/Trie"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "After the module's `main` inserts \"code\", \"coder\" and \"coding\", what do `search(\"cod\")` and `startsWith(\"codi\")` return?",
+            "es": "Después de que `main` del módulo inserta \"code\", \"coder\" y \"coding\", ¿qué devuelven `search(\"cod\")` y `startsWith(\"codi\")`?"
+          },
+          "options": {
+            "en": [
+              "true, true",
+              "false, false",
+              "false, true",
+              "true, false"
+            ],
+            "es": [
+              "true, true",
+              "false, false",
+              "false, true",
+              "true, false"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "The path c-o-d exists but its last node has `isWord = false`, since \"cod\" was never inserted, so `search` returns false. The path c-o-d-i exists as part of \"coding\", so `startsWith` returns true. Answering true for `search` confuses having a path with being a stored word.",
+            "es": "El camino c-o-d existe pero su último nodo tiene `isWord = false`, porque \"cod\" nunca se insertó, así que `search` devuelve false. El camino c-o-d-i existe como parte de \"coding\", así que `startsWith` devuelve true. Responder true para `search` confunde tener un camino con ser una palabra guardada."
+          }
+        },
+        {
+          "question": {
+            "en": "You insert n words whose lengths add up to N characters. What is the worst-case number of trie nodes?",
+            "es": "Insertas n palabras cuyas longitudes suman N caracteres. ¿Cuál es la cantidad de nodos del trie en el peor caso?"
+          },
+          "options": {
+            "en": [
+              "O(N): at most one new node per inserted character, plus the root",
+              "O(n): one node per word",
+              "O(26^L), where L is the longest word length",
+              "O(n log n)"
+            ],
+            "es": [
+              "O(N): a lo sumo un nodo nuevo por carácter insertado, más la raíz",
+              "O(n): un nodo por palabra",
+              "O(26^L), donde L es la longitud de la palabra más larga",
+              "O(n log n)"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Each character of an insertion creates at most one node, so the total is ≤ N + 1, reached when words share no prefixes. One node per word ignores that every character needs its own node, and 26^L counts all possible strings, not the stored ones.",
+            "es": "Cada carácter de una inserción crea a lo sumo un nodo, así que el total es ≤ N + 1, y se alcanza cuando las palabras no comparten prefijos. Un nodo por palabra ignora que cada carácter necesita su propio nodo, y 26^L cuenta todas las cadenas posibles, no las guardadas."
+          }
+        },
+        {
+          "question": {
+            "en": "Why is a trie better than a `HashSet<String>` for autocomplete?",
+            "es": "¿Por qué un trie es mejor que un `HashSet<String>` para autocompletar?"
+          },
+          "options": {
+            "en": [
+              "A trie always uses less memory than a hash set",
+              "Hashing a word is O(1) regardless of its length, while a trie is O(L)",
+              "A trie does not need an end-of-word flag",
+              "All words sharing a prefix sit in one subtree, so you walk L nodes and explore only that subtree instead of scanning every key"
+            ],
+            "es": [
+              "Un trie siempre usa menos memoria que un conjunto hash",
+              "Calcular el hash de una palabra es O(1) sin importar su longitud, mientras que un trie es O(L)",
+              "Un trie no necesita una marca de fin de palabra",
+              "Todas las palabras con un prefijo están en un mismo subárbol, así que recorres L nodos y exploras solo ese subárbol en lugar de revisar todas las claves"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "A hash set only answers exact-membership questions, so finding words with a prefix means checking every key. A trie groups them under the prefix node. Tries often use more memory, not less, and hashing a string also takes O(L) because every character is read.",
+            "es": "Un conjunto hash solo responde si una clave exacta está presente, así que hallar palabras con un prefijo obliga a revisar todas las claves. Un trie las agrupa bajo el nodo del prefijo. Los tries a menudo usan más memoria, no menos, y calcular el hash de una cadena también cuesta O(L) porque se lee cada carácter."
+          }
+        },
+        {
+          "question": {
+            "en": "You insert \"a\", \"ab\", \"abc\" and \"b\" into an empty trie. How many nodes does it have, counting the root?",
+            "es": "Insertas \"a\", \"ab\", \"abc\" y \"b\" en un trie vacío. ¿Cuántos nodos tiene, contando la raíz?"
+          },
+          "options": {
+            "en": [
+              "4",
+              "5",
+              "8",
+              "7"
+            ],
+            "es": [
+              "4",
+              "5",
+              "8",
+              "7"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The root has children a and b; the path a-b-c adds two more nodes under a. That is root + a + b (under a) + c + b (under root) = 5. 8 would be the count with no prefix sharing (7 characters + root), and 4 forgets that the two b nodes are different nodes.",
+            "es": "La raíz tiene hijos a y b; el camino a-b-c agrega dos nodos más bajo a. Son raíz + a + b (bajo a) + c + b (bajo la raíz) = 5. 8 sería la cuenta sin compartir prefijos (7 caracteres + raíz), y 4 olvida que los dos nodos b son nodos distintos."
+          }
+        },
+        {
+          "question": {
+            "en": "A trie contains \"code\" and \"coder\". What should `delete(\"code\")` do?",
+            "es": "Un trie contiene \"code\" y \"coder\". ¿Qué debe hacer `delete(\"code\")`?"
+          },
+          "options": {
+            "en": [
+              "Set `isWord = false` on the 'e' node and remove no nodes, because 'e' still has the child 'r'",
+              "Remove the nodes c, o, d and e",
+              "Remove only the 'e' node",
+              "Nothing, because words cannot be deleted from a trie"
+            ],
+            "es": [
+              "Poner `isWord = false` en el nodo 'e' y no eliminar nodos, porque 'e' todavía tiene el hijo 'r'",
+              "Eliminar los nodos c, o, d y e",
+              "Eliminar solo el nodo 'e'",
+              "Nada, porque no se pueden eliminar palabras de un trie"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "\"coder\" still needs the path c-o-d-e-r, so only the flag changes. Removing c, o, d, e (or just e) would disconnect 'r' and make \"coder\" unreachable. Deletion is fully supported; it just prunes nodes only when they become useless.",
+            "es": "\"coder\" todavía necesita el camino c-o-d-e-r, así que solo cambia la marca. Eliminar c, o, d, e (o solo e) desconectaría 'r' y haría inalcanzable \"coder\". La eliminación sí está soportada; solo poda nodos cuando dejan de ser útiles."
+          }
+        }
+      ]
+    },
+    "discrete-graph-theory": {
+      "minutes": 100,
+      "prerequisites": [
+        "sets-relations-functions"
+      ],
+      "whyItMatters": {
+        "en": "Road networks, social networks, dependency graphs in build tools and package managers, and network routing are all graphs; the theory here (degrees, connectivity, trees) is what the graph-algorithms module and countless interview problems build on.",
+        "es": "Las redes de carreteras, las redes sociales, los grafos de dependencias en herramientas de compilación y gestores de paquetes, y el enrutamiento de redes son grafos; la teoría de este módulo (grados, conectividad, árboles) es la base del módulo de algoritmos de grafos y de muchísimos problemas de entrevista."
+      },
+      "objectives": {
+        "en": [
+          "Model a real situation as a graph, choosing directed vs undirected and weighted vs unweighted, and represent it as an adjacency list and an adjacency matrix.",
+          "Apply the handshake lemma (∑ deg(v) = 2|E|) to decide whether a degree sequence is possible and to count edges.",
+          "Trace BFS and DFS from a given start vertex, listing the visit order, and use BFS to compute shortest path lengths in an unweighted graph.",
+          "Prove basic tree facts, such as that a tree with n vertices has n − 1 edges and that adding any edge to a tree creates exactly one cycle."
+        ],
+        "es": [
+          "Modelar una situación real como grafo, eligiendo dirigido o no dirigido y ponderado o no ponderado, y representarlo como lista de adyacencia y como matriz de adyacencia.",
+          "Aplicar el lema del apretón de manos (∑ deg(v) = 2|E|) para decidir si una secuencia de grados es posible y para contar aristas.",
+          "Rastrear BFS y DFS desde un vértice inicial dado, listando el orden de visita, y usar BFS para calcular longitudes de caminos más cortos en un grafo no ponderado.",
+          "Demostrar propiedades básicas de los árboles, como que un árbol con n vértices tiene n − 1 aristas y que agregar cualquier arista a un árbol crea exactamente un ciclo."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Use a `Queue` (`ArrayDeque`) and a `Set` for visited tracking in Java",
+          "Write a simple proof by induction on n"
+        ],
+        "es": [
+          "Usar una `Queue` (`ArrayDeque`) y un `Set` para registrar visitados en Java",
+          "Escribir una demostración sencilla por inducción sobre n"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Handshake lemma: ∑ deg(v) = 2|E|, so every graph has an even number of odd-degree vertices.",
+          "A simple undirected graph on n vertices has at most n(n − 1)/2 edges; a tree on n vertices has exactly n − 1 edges, is connected and acyclic.",
+          "BFS and DFS run in O(V + E) with adjacency lists (O(V²) with a matrix); BFS visits vertices in nondecreasing distance from the start.",
+          "A graph is bipartite if and only if it has no cycle of odd length."
+        ],
+        "es": [
+          "Lema del apretón de manos: ∑ deg(v) = 2|E|, así que todo grafo tiene un número par de vértices de grado impar.",
+          "Un grafo simple no dirigido con n vértices tiene como máximo n(n − 1)/2 aristas; un árbol con n vértices tiene exactamente n − 1 aristas, es conexo y acíclico.",
+          "BFS y DFS se ejecutan en O(V + E) con listas de adyacencia (O(V²) con matriz); BFS visita los vértices en orden no decreciente de distancia desde el inicio.",
+          "Un grafo es bipartito si y solo si no tiene ciclos de longitud impar."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Marking a vertex visited when it is dequeued instead of when it is enqueued in BFS, which lets it enter the queue several times and inflates work; mark on enqueue, as the module's `visited.add(neighbor)` does.",
+          "Adding each undirected edge only once to an adjacency list (u → v but not v → u), which makes traversals miss vertices; add both directions for undirected graphs.",
+          "Calling any acyclic graph a tree, although an acyclic graph can be a disconnected forest; a tree must be connected and acyclic, and for n vertices any two of {connected, acyclic, n − 1 edges} imply the third."
+        ],
+        "es": [
+          "Marcar un vértice como visitado al sacarlo de la cola en lugar de al encolarlo en BFS, lo que permite que entre varias veces y aumenta el trabajo; márcalo al encolarlo, como hace `visited.add(neighbor)` en el módulo.",
+          "Agregar cada arista no dirigida una sola vez a la lista de adyacencia (u → v pero no v → u), lo que hace que los recorridos omitan vértices; agrega ambas direcciones en grafos no dirigidos.",
+          "Llamar árbol a cualquier grafo acíclico, aunque un grafo acíclico puede ser un bosque no conexo; un árbol debe ser conexo y acíclico, y para n vértices cualesquiera dos de {conexo, acíclico, n − 1 aristas} implican la tercera."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: for the module's 4-vertex graph, write its adjacency matrix, the degree of each vertex, and verify the handshake lemma.",
+          "Core: implement `int[] bfsDistances(List<List<Integer>> adj, int s)` returning the edge distance from `s` to every vertex (−1 if unreachable), and test it on a 6-vertex graph with two components.",
+          "Stretch: implement `int countComponents(int n, int[][] edges)` with iterative DFS, then `boolean isTree(int n, int[][] edges)` using the fact that a tree is connected with exactly n − 1 edges.",
+          "Exam-style: implement `boolean isBipartite(List<List<Integer>> adj)` using BFS 2-coloring, and prove that if your algorithm finds an edge between two same-colored vertices, the graph contains an odd cycle."
+        ],
+        "es": [
+          "Calentamiento: para el grafo de 4 vértices del módulo, escribe su matriz de adyacencia, el grado de cada vértice y verifica el lema del apretón de manos.",
+          "Núcleo: implementa `int[] bfsDistances(List<List<Integer>> adj, int s)` que devuelva la distancia en aristas desde `s` a cada vértice (−1 si no es alcanzable), y pruébala en un grafo de 6 vértices con dos componentes.",
+          "Extensión: implementa `int countComponents(int n, int[][] edges)` con DFS iterativo y luego `boolean isTree(int n, int[][] edges)` usando que un árbol es conexo y tiene exactamente n − 1 aristas.",
+          "Estilo examen: implementa `boolean isBipartite(List<List<Integer>> adj)` usando 2-coloreo con BFS, y demuestra que si tu algoritmo encuentra una arista entre dos vértices del mismo color, el grafo contiene un ciclo impar."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why must the number of odd-degree vertices in any graph be even?",
+          "How many edges does a tree with 50 vertices have, and what happens if you add one more edge?",
+          "Why does BFS (but not DFS) give shortest path lengths in an unweighted graph?"
+        ],
+        "es": [
+          "¿Por qué el número de vértices de grado impar en cualquier grafo debe ser par?",
+          "¿Cuántas aristas tiene un árbol con 50 vértices y qué ocurre si agregas una arista más?",
+          "¿Por qué BFS (y no DFS) da longitudes de caminos más cortos en un grafo no ponderado?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Graph Models",
+            "es": "Modelos de grafos"
+          },
+          "definition": {
+            "en": "A graph G = (V, E) consists of a set of vertices V and a set of edges E, each edge joining two vertices; variants include directed (ordered pairs), weighted (a number on each edge) and simple (no loops or parallel edges) graphs.",
+            "es": "Un grafo G = (V, E) consta de un conjunto de vértices V y un conjunto de aristas E, donde cada arista une dos vértices; entre sus variantes están los grafos dirigidos (pares ordenados), ponderados (un número en cada arista) y simples (sin lazos ni aristas paralelas)."
+          }
+        },
+        {
+          "term": {
+            "en": "Paths and Cycles",
+            "es": "Caminos y ciclos"
+          },
+          "definition": {
+            "en": "A path is a sequence of vertices v₀, v₁, …, vₖ where each consecutive pair is joined by an edge and no vertex repeats; a cycle is a closed sequence v₀, v₁, …, vₖ = v₀ with k ≥ 3 (in a simple graph) that uses distinct edges and repeats no vertex except v₀ = vₖ.",
+            "es": "Un camino es una secuencia de vértices v₀, v₁, …, vₖ en la que cada par consecutivo está unido por una arista y ningún vértice se repite; un ciclo es una secuencia cerrada v₀, v₁, …, vₖ = v₀ con k ≥ 3 (en un grafo simple) que usa aristas distintas y no repite vértices salvo v₀ = vₖ."
+          }
+        },
+        {
+          "term": {
+            "en": "Connectivity",
+            "es": "Conectividad"
+          },
+          "definition": {
+            "en": "An undirected graph is connected if there is a path between every pair of vertices; otherwise it splits into connected components, the maximal connected subgraphs.",
+            "es": "Un grafo no dirigido es conexo si existe un camino entre cada par de vértices; de lo contrario se divide en componentes conexas, que son los subgrafos conexos maximales."
+          }
+        },
+        {
+          "term": {
+            "en": "BFS/DFS Intuition",
+            "es": "Intuición de BFS/DFS"
+          },
+          "definition": {
+            "en": "Breadth-first search explores vertices in layers of increasing distance using a queue, while depth-first search follows one path as far as possible before backtracking, using a stack or recursion; both visit every reachable vertex once in O(V + E).",
+            "es": "La búsqueda en anchura explora los vértices por capas de distancia creciente usando una cola, mientras que la búsqueda en profundidad sigue un camino lo más lejos posible antes de retroceder, usando una pila o recursión; ambas visitan cada vértice alcanzable una vez en O(V + E)."
+          }
+        },
+        {
+          "term": {
+            "en": "Tree vs General Graph",
+            "es": "Árbol vs. grafo general"
+          },
+          "definition": {
+            "en": "A tree is a connected graph with no cycles, equivalently a connected graph with exactly n − 1 edges, so every pair of vertices is joined by exactly one path; a general graph may have cycles, multiple paths between vertices, or several components.",
+            "es": "Un árbol es un grafo conexo sin ciclos, o equivalentemente un grafo conexo con exactamente n − 1 aristas, de modo que cada par de vértices está unido por exactamente un camino; un grafo general puede tener ciclos, varios caminos entre vértices o varias componentes."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Discrete Mathematics: An Open Introduction (Levin), includes a graph theory chapter",
+            "es": "Discrete Mathematics: An Open Introduction (Levin), incluye un capítulo de teoría de grafos"
+          },
+          "url": "https://discrete.openmathbooks.org/dmoi3/"
+        },
+        {
+          "label": {
+            "en": "cp-algorithms: Breadth-first search",
+            "es": "cp-algorithms: Búsqueda en anchura (BFS)"
+          },
+          "url": "https://cp-algorithms.com/graph/breadth-first-search.html"
+        },
+        {
+          "label": {
+            "en": "cp-algorithms: Depth-first search",
+            "es": "cp-algorithms: Búsqueda en profundidad (DFS)"
+          },
+          "url": "https://cp-algorithms.com/graph/depth-first-search.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Can a simple undirected graph have degree sequence 3, 3, 3, 2?",
+            "es": "¿Puede un grafo simple no dirigido tener la secuencia de grados 3, 3, 3, 2?"
+          },
+          "options": {
+            "en": [
+              "Yes, for example a path on 4 vertices",
+              "No, because the degree sum is 11, which is odd",
+              "Yes, but only if it is directed",
+              "No, because a vertex of degree 3 needs at least 5 vertices"
+            ],
+            "es": [
+              "Sí, por ejemplo un camino de 4 vértices",
+              "No, porque la suma de grados es 11, que es impar",
+              "Sí, pero solo si es dirigido",
+              "No, porque un vértice de grado 3 necesita al menos 5 vértices"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "By the handshake lemma the degree sum equals 2|E| and must be even. A degree-3 vertex only needs 3 neighbors, so 4 vertices would be enough in principle (K₄ is 3-regular).",
+            "es": "Por el lema del apretón de manos la suma de grados es 2|E| y debe ser par. Un vértice de grado 3 solo necesita 3 vecinos, así que 4 vértices bastarían en principio (K₄ es 3-regular)."
+          }
+        },
+        {
+          "question": {
+            "en": "A connected undirected graph has 7 vertices and 6 edges. What must be true?",
+            "es": "Un grafo no dirigido conexo tiene 7 vértices y 6 aristas. ¿Qué debe cumplirse?"
+          },
+          "options": {
+            "en": [
+              "It must contain a cycle",
+              "It must be disconnected",
+              "It must be complete",
+              "It is a tree"
+            ],
+            "es": [
+              "Debe contener un ciclo",
+              "Debe ser no conexo",
+              "Debe ser completo",
+              "Es un árbol"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "A connected graph with n − 1 edges is acyclic, hence a tree. If it had a cycle, removing a cycle edge would leave a connected graph with only n − 2 edges, which is impossible.",
+            "es": "Un grafo conexo con n − 1 aristas es acíclico y, por lo tanto, un árbol. Si tuviera un ciclo, quitar una arista del ciclo dejaría un grafo conexo con solo n − 2 aristas, lo cual es imposible."
+          }
+        },
+        {
+          "question": {
+            "en": "Run the module's BFS from vertex 1 on the graph 1: [2, 3], 2: [1, 4], 3: [1, 4], 4: [2, 3]. In what order are vertices printed?",
+            "es": "Ejecuta el BFS del módulo desde el vértice 1 sobre el grafo 1: [2, 3], 2: [1, 4], 3: [1, 4], 4: [2, 3]. ¿En qué orden se imprimen los vértices?"
+          },
+          "options": {
+            "en": [
+              "1, 2, 4, 3",
+              "1, 3, 2, 4",
+              "1, 2, 3, 4",
+              "1, 4, 2, 3"
+            ],
+            "es": [
+              "1, 2, 4, 3",
+              "1, 3, 2, 4",
+              "1, 2, 3, 4",
+              "1, 4, 2, 3"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Visiting 1 enqueues 2 then 3; visiting 2 enqueues 4 (1 is already visited); then 3 and finally 4. The order 1, 2, 4, 3 is what a recursive DFS would produce.",
+            "es": "Visitar 1 encola 2 y luego 3; visitar 2 encola 4 (1 ya fue visitado); luego 3 y finalmente 4. El orden 1, 2, 4, 3 es el que produciría un DFS recursivo."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the running time of BFS on a graph with V vertices and E edges stored as adjacency lists?",
+            "es": "¿Cuál es el tiempo de ejecución de BFS en un grafo con V vértices y E aristas almacenado como listas de adyacencia?"
+          },
+          "options": {
+            "en": [
+              "O(V + E)",
+              "O(V²) regardless of representation",
+              "O(E log V)",
+              "O(V · E)"
+            ],
+            "es": [
+              "O(V + E)",
+              "O(V²) sin importar la representación",
+              "O(E log V)",
+              "O(V · E)"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Each vertex is enqueued once and each adjacency list is scanned once, so the work is proportional to V + E. O(V²) applies when using an adjacency matrix; O(E log V) is typical of Dijkstra with a heap.",
+            "es": "Cada vértice se encola una vez y cada lista de adyacencia se recorre una vez, así que el trabajo es proporcional a V + E. O(V²) aplica al usar matriz de adyacencia; O(E log V) es típico de Dijkstra con montículo."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the maximum number of edges in a simple undirected graph with 6 vertices?",
+            "es": "¿Cuál es el número máximo de aristas en un grafo simple no dirigido con 6 vértices?"
+          },
+          "options": {
+            "en": [
+              "30",
+              "15",
+              "36",
+              "12"
+            ],
+            "es": [
+              "30",
+              "15",
+              "36",
+              "12"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The complete graph K₆ has C(6, 2) = 6·5/2 = 15 edges. 30 = 6·5 counts each edge twice (once from each endpoint), which is the directed count.",
+            "es": "El grafo completo K₆ tiene C(6, 2) = 6·5/2 = 15 aristas. 30 = 6·5 cuenta cada arista dos veces (una desde cada extremo), que es el conteo para grafos dirigidos."
+          }
+        }
+      ]
+    },
+    "graph-algorithms": {
+      "minutes": 140,
+      "prerequisites": [
+        "stacks-queues",
+        "recursion",
+        "heaps",
+        "discrete-graph-theory"
+      ],
+      "whyItMatters": {
+        "en": "Graphs model road networks (shortest-path routing), dependency resolution in build tools and package managers (topological sort), social and computer networks, and network design (minimum spanning trees). BFS, DFS and Dijkstra are staples of algorithms exams and technical interviews.",
+        "es": "Los grafos modelan redes viales (rutas más cortas), la resolución de dependencias en herramientas de compilación y gestores de paquetes (orden topológico), redes sociales y de computadoras, y el diseño de redes (árboles de expansión mínima). BFS, DFS y Dijkstra son básicos en exámenes de algoritmos y entrevistas técnicas."
+      },
+      "objectives": {
+        "en": [
+          "Choose between an adjacency list and an adjacency matrix by comparing O(V + E) versus O(V²) space and the cost of edge lookup and neighbor iteration.",
+          "Implement BFS and DFS (recursive and iterative) to find reachable vertices, connected components, and shortest unweighted paths using a parent array.",
+          "Implement Dijkstra's algorithm with a `PriorityQueue` and lazy deletion, and explain why it requires non-negative edge weights.",
+          "Trace Kruskal's and Prim's algorithms on a small weighted graph and state their O(E log E) and O(E log V) running times."
+        ],
+        "es": [
+          "Elegir entre lista de adyacencia y matriz de adyacencia comparando espacio O(V + E) contra O(V²) y el costo de consultar una arista y recorrer vecinos.",
+          "Implementar BFS y DFS (recursivo e iterativo) para hallar vértices alcanzables, componentes conexas y caminos más cortos sin pesos usando un arreglo de padres.",
+          "Implementar el algoritmo de Dijkstra con un `PriorityQueue` y eliminación diferida, y explicar por qué requiere pesos de arista no negativos.",
+          "Trazar los algoritmos de Kruskal y Prim sobre un grafo ponderado pequeño y enunciar sus tiempos O(E log E) y O(E log V)."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Combine `HashMap`, `ArrayDeque` and `PriorityQueue` in one method and pick the right one for each role.",
+          "Translate a word problem into vertices and edges (directed or undirected, weighted or not)."
+        ],
+        "es": [
+          "Combinar `HashMap`, `ArrayDeque` y `PriorityQueue` en un mismo método y elegir la adecuada para cada rol.",
+          "Traducir un problema descrito en palabras a vértices y aristas (dirigido o no, ponderado o no)."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "BFS and DFS run in O(V + E) with adjacency lists (O(V²) with a matrix); BFS gives shortest paths by edge count in unweighted graphs.",
+          "Dijkstra with a binary heap runs in O((V + E) log V) and is correct only for non-negative weights; use Bellman–Ford, O(V·E), when negative edges exist.",
+          "A spanning tree of a connected graph with V vertices has exactly V − 1 edges; Kruskal scans edges by increasing weight and skips any edge whose endpoints are already connected.",
+          "In BFS, mark a vertex visited when you enqueue it, not when you dequeue it, so each vertex enters the queue at most once."
+        ],
+        "es": [
+          "BFS y DFS corren en O(V + E) con listas de adyacencia (O(V²) con matriz); BFS da caminos más cortos por cantidad de aristas en grafos sin pesos.",
+          "Dijkstra con un montículo binario corre en O((V + E) log V) y solo es correcto con pesos no negativos; usa Bellman–Ford, O(V·E), cuando hay aristas negativas.",
+          "Un árbol de expansión de un grafo conexo con V vértices tiene exactamente V − 1 aristas; Kruskal recorre las aristas por peso creciente y omite las que unen vértices ya conectados.",
+          "En BFS, marca un vértice como visitado al encolarlo, no al desencolarlo, para que cada vértice entre a la cola a lo sumo una vez."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Marking vertices visited only when they are dequeued in BFS: the same vertex is enqueued once per incoming edge, so time and memory blow up on dense graphs. The module's `bfs` avoids this by enqueuing only when `visited.add(neighbor)` returns true.",
+          "Treating the module's `addEdge` as undirected: it adds only `from → to`. For an undirected graph call it in both directions, or traversals will miss reachable vertices.",
+          "Running recursive DFS on a graph with long paths (around 10⁵ vertices in a chain): Java throws `StackOverflowError`. Use an iterative DFS with an explicit `ArrayDeque` stack."
+        ],
+        "es": [
+          "Marcar los vértices como visitados solo al desencolarlos en BFS: el mismo vértice se encola una vez por cada arista entrante y el tiempo y la memoria se disparan en grafos densos. El `bfs` del módulo lo evita encolando solo cuando `visited.add(neighbor)` devuelve true.",
+          "Tratar el `addEdge` del módulo como no dirigido: solo agrega `from → to`. Para un grafo no dirigido llámalo en ambos sentidos, o los recorridos no llegarán a vértices alcanzables.",
+          "Ejecutar DFS recursivo en un grafo con caminos largos (alrededor de 10⁵ vértices en cadena): Java lanza `StackOverflowError`. Usa un DFS iterativo con una pila `ArrayDeque` explícita."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: build an undirected graph with edges (0,1), (0,2), (1,3), (2,3), (3,4) by calling `addEdge` in both directions, predict the output of `bfs(0)` on paper, then run it.",
+          "Implement `int countComponents(int n, int[][] edges)` with an iterative DFS, and `List<Integer> shortestPath(int s, int t)` using BFS with a `parent` array, returning an empty list when t is unreachable.",
+          "Implement topological sort with Kahn's algorithm (in-degree counts plus a queue); return an empty list when fewer than V vertices are output, which means the graph has a cycle.",
+          "Given a weighted directed edge list, a source and a target, return the shortest distance and the path itself using Dijkstra with a `prev` array. Then implement Kruskal's MST on an undirected weighted edge list (sort edges, track components with a simple union-find) and verify it returns V − 1 edges for a connected graph."
+        ],
+        "es": [
+          "Calentamiento: construye un grafo no dirigido con las aristas (0,1), (0,2), (1,3), (2,3), (3,4) llamando a `addEdge` en ambos sentidos, predice en papel la salida de `bfs(0)` y luego ejecútalo.",
+          "Implementa `int countComponents(int n, int[][] edges)` con un DFS iterativo, y `List<Integer> shortestPath(int s, int t)` usando BFS con un arreglo `parent`, devolviendo una lista vacía si t no es alcanzable.",
+          "Implementa el orden topológico con el algoritmo de Kahn (conteo de grados de entrada más una cola); devuelve una lista vacía cuando se emiten menos de V vértices, lo que indica que el grafo tiene un ciclo.",
+          "Dada una lista de aristas dirigidas con pesos, un origen y un destino, devuelve la distancia más corta y el camino usando Dijkstra con un arreglo `prev`. Luego implementa el MST de Kruskal sobre una lista de aristas no dirigidas con pesos (ordena las aristas y lleva las componentes con un union-find simple) y verifica que devuelve V − 1 aristas en un grafo conexo."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why does BFS find shortest paths in unweighted graphs but not in weighted ones?",
+          "What goes wrong in Dijkstra's algorithm when an edge has negative weight?",
+          "When is an adjacency matrix a better choice than an adjacency list?"
+        ],
+        "es": [
+          "¿Por qué BFS encuentra caminos más cortos en grafos sin pesos pero no en grafos ponderados?",
+          "¿Qué falla en el algoritmo de Dijkstra cuando una arista tiene peso negativo?",
+          "¿Cuándo es mejor una matriz de adyacencia que una lista de adyacencia?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Graph Representation",
+            "es": "Representación de grafos"
+          },
+          "definition": {
+            "en": "How a graph is stored: an adjacency list keeps each vertex's neighbors (O(V + E) space, fast neighbor iteration), an adjacency matrix keeps a V × V table (O(V²) space, O(1) edge test), and an edge list keeps (u, v, w) triples, convenient for Kruskal.",
+            "es": "La forma de guardar un grafo: una lista de adyacencia guarda los vecinos de cada vértice (espacio O(V + E), recorrido rápido de vecinos), una matriz de adyacencia guarda una tabla V × V (espacio O(V²), consulta de arista en O(1)) y una lista de aristas guarda ternas (u, v, w), práctica para Kruskal."
+          }
+        },
+        {
+          "term": {
+            "en": "DFS",
+            "es": "DFS (búsqueda en profundidad)"
+          },
+          "definition": {
+            "en": "Depth-first search follows one path as deep as possible before backtracking, using recursion or an explicit stack; in O(V + E) it finds reachable vertices, connected components, cycles and topological orders (reverse postorder).",
+            "es": "La búsqueda en profundidad sigue un camino lo más lejos posible antes de retroceder, usando recursión o una pila explícita; en O(V + E) encuentra vértices alcanzables, componentes conexas, ciclos y órdenes topológicos (postorden invertido)."
+          }
+        },
+        {
+          "term": {
+            "en": "BFS",
+            "es": "BFS (búsqueda en anchura)"
+          },
+          "definition": {
+            "en": "Breadth-first search visits vertices in order of their distance in edges from the source using a FIFO queue, so the first time it reaches a vertex is along a shortest unweighted path; it runs in O(V + E).",
+            "es": "La búsqueda en anchura visita los vértices en orden de su distancia en aristas desde el origen usando una cola FIFO, así que la primera vez que llega a un vértice lo hace por un camino más corto sin pesos; corre en O(V + E)."
+          }
+        },
+        {
+          "term": {
+            "en": "Shortest Path",
+            "es": "Camino más corto"
+          },
+          "definition": {
+            "en": "A path of minimum total weight between two vertices; found with BFS for unweighted graphs, Dijkstra for non-negative weights, and Bellman–Ford when negative weights are allowed (it also detects negative cycles).",
+            "es": "Un camino de peso total mínimo entre dos vértices; se encuentra con BFS en grafos sin pesos, con Dijkstra cuando los pesos son no negativos y con Bellman–Ford cuando se permiten pesos negativos (que además detecta ciclos negativos)."
+          }
+        },
+        {
+          "term": {
+            "en": "Minimum Spanning Tree",
+            "es": "Árbol de expansión mínima"
+          },
+          "definition": {
+            "en": "A set of V − 1 edges that connects all vertices of a connected, weighted, undirected graph with minimum total weight; Kruskal adds the cheapest edge that does not form a cycle, and Prim grows one tree from a start vertex with a priority queue.",
+            "es": "Un conjunto de V − 1 aristas que conecta todos los vértices de un grafo conexo, ponderado y no dirigido con peso total mínimo; Kruskal agrega la arista más barata que no forme un ciclo, y Prim hace crecer un único árbol desde un vértice inicial con una cola de prioridad."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Sedgewick & Wayne, Algorithms 4th ed.: 4.1 Undirected Graphs",
+            "es": "Sedgewick y Wayne, Algorithms 4.ª ed.: 4.1 Grafos no dirigidos (en inglés)"
+          },
+          "url": "https://algs4.cs.princeton.edu/41graph/"
+        },
+        {
+          "label": {
+            "en": "cp-algorithms: Dijkstra's algorithm",
+            "es": "cp-algorithms: algoritmo de Dijkstra (en inglés)"
+          },
+          "url": "https://cp-algorithms.com/graph/dijkstra.html"
+        },
+        {
+          "label": {
+            "en": "Sedgewick & Wayne, Algorithms 4th ed.: 4.3 Minimum Spanning Trees",
+            "es": "Sedgewick y Wayne, Algorithms 4.ª ed.: 4.3 Árboles de expansión mínima (en inglés)"
+          },
+          "url": "https://algs4.cs.princeton.edu/43mst/"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Using the module's directed `addEdge`, you call `addEdge(1, 2, 1)`, `addEdge(1, 3, 1)`, `addEdge(2, 4, 1)`, `addEdge(3, 4, 1)`, `addEdge(4, 1, 1)` and then `bfs(1)`. What is printed?",
+            "es": "Con el `addEdge` dirigido del módulo, llamas `addEdge(1, 2, 1)`, `addEdge(1, 3, 1)`, `addEdge(2, 4, 1)`, `addEdge(3, 4, 1)`, `addEdge(4, 1, 1)` y luego `bfs(1)`. ¿Qué se imprime?"
+          },
+          "options": {
+            "en": [
+              "1 2 3 4",
+              "1 2 4 3",
+              "1 3 2 4",
+              "1 2 3 4 1"
+            ],
+            "es": [
+              "1 2 3 4",
+              "1 2 4 3",
+              "1 3 2 4",
+              "1 2 3 4 1"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "BFS dequeues 1 and enqueues 2 then 3 (insertion order of the adjacency list). Dequeuing 2 enqueues 4; dequeuing 3 finds 4 already visited; dequeuing 4 finds 1 already visited. \"1 2 4 3\" is a DFS order, and 1 is not printed twice because it was marked visited at the start.",
+            "es": "BFS desencola 1 y encola 2 y luego 3 (orden de inserción en la lista de adyacencia). Al desencolar 2 encola 4; al desencolar 3, 4 ya está visitado; al desencolar 4, 1 ya está visitado. \"1 2 4 3\" es un orden de DFS, y 1 no se imprime dos veces porque se marcó como visitado al inicio."
+          }
+        },
+        {
+          "question": {
+            "en": "A directed graph has edges A→B (4), A→C (1), C→B (2), B→D (1), C→D (5). What shortest distance from A to D does Dijkstra compute?",
+            "es": "Un grafo dirigido tiene las aristas A→B (4), A→C (1), C→B (2), B→D (1), C→D (5). ¿Qué distancia más corta de A a D calcula Dijkstra?"
+          },
+          "options": {
+            "en": [
+              "6",
+              "5",
+              "4",
+              "3"
+            ],
+            "es": [
+              "6",
+              "5",
+              "4",
+              "3"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "A→C costs 1, C→B improves B from 4 to 3, and B→D gives D = 4, which beats A→C→D = 6 and A→B→D = 5. Choosing 5 means B was finalized at its first tentative distance 4 without relaxing C's outgoing edges first.",
+            "es": "A→C cuesta 1, C→B mejora B de 4 a 3 y B→D da D = 4, que supera a A→C→D = 6 y a A→B→D = 5. Elegir 5 significa fijar B con su primera distancia tentativa 4 sin relajar antes las aristas de salida de C."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the running time of BFS on a graph with V vertices stored as an adjacency matrix?",
+            "es": "¿Cuál es el tiempo de ejecución de BFS sobre un grafo con V vértices guardado como matriz de adyacencia?"
+          },
+          "options": {
+            "en": [
+              "O(V + E)",
+              "O(V²)",
+              "O(E log V)",
+              "O(V · E)"
+            ],
+            "es": [
+              "O(V + E)",
+              "O(V²)",
+              "O(E log V)",
+              "O(V · E)"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "With a matrix, finding a vertex's neighbors means scanning its whole row of V entries, and each of the V vertices is processed once: O(V²). O(V + E) holds only for adjacency lists, where neighbor iteration costs the vertex's degree.",
+            "es": "Con una matriz, hallar los vecinos de un vértice implica recorrer toda su fila de V entradas, y cada uno de los V vértices se procesa una vez: O(V²). O(V + E) solo vale para listas de adyacencia, donde recorrer los vecinos cuesta el grado del vértice."
+          }
+        },
+        {
+          "question": {
+            "en": "Which statement about Kruskal's algorithm is true?",
+            "es": "¿Cuál afirmación sobre el algoritmo de Kruskal es verdadera?"
+          },
+          "options": {
+            "en": [
+              "It needs a start vertex and grows a single tree from it",
+              "It works only on directed graphs",
+              "It picks the cheapest edge at each vertex and stops after one pass over the vertices",
+              "It processes edges in non-decreasing weight order and adds an edge only if its endpoints are in different components"
+            ],
+            "es": [
+              "Necesita un vértice inicial y hace crecer un único árbol desde él",
+              "Solo funciona en grafos dirigidos",
+              "Elige la arista más barata de cada vértice y termina tras una pasada por los vértices",
+              "Procesa las aristas en orden de peso no decreciente y agrega una arista solo si sus extremos están en componentes distintas"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "Kruskal sorts all edges and keeps those that join different components, which is exactly the cycle check union-find provides. Growing one tree from a start vertex describes Prim. MSTs are defined on undirected graphs, and taking each vertex's cheapest edge once (one round of Borůvka) does not by itself produce a spanning tree.",
+            "es": "Kruskal ordena todas las aristas y conserva las que unen componentes distintas, que es justo la verificación de ciclos que da union-find. Hacer crecer un árbol desde un vértice inicial describe a Prim. Los MST se definen en grafos no dirigidos, y tomar una vez la arista más barata de cada vértice (una ronda de Borůvka) no produce por sí solo un árbol de expansión."
+          }
+        },
+        {
+          "question": {
+            "en": "In DFS on a directed graph, which event proves the graph has a cycle?",
+            "es": "En un DFS sobre un grafo dirigido, ¿qué evento demuestra que el grafo tiene un ciclo?"
+          },
+          "options": {
+            "en": [
+              "Reaching any vertex that was already visited",
+              "Finding a vertex with in-degree 0",
+              "Reaching a vertex that is still on the current recursion stack (colored gray)",
+              "Examining more than V − 1 edges"
+            ],
+            "es": [
+              "Llegar a cualquier vértice ya visitado",
+              "Encontrar un vértice con grado de entrada 0",
+              "Llegar a un vértice que todavía está en la pila de recursión actual (de color gris)",
+              "Examinar más de V − 1 aristas"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "An edge to a gray vertex is a back edge: it leads to an ancestor on the current path, closing a cycle. In a directed graph, reaching a finished (black) vertex can be a harmless cross or forward edge, as in A→B, A→C, C→B. The \"already visited\" test works only for undirected graphs, excluding the parent edge.",
+            "es": "Una arista hacia un vértice gris es una arista de retroceso: lleva a un ancestro del camino actual y cierra un ciclo. En un grafo dirigido, llegar a un vértice terminado (negro) puede ser una arista cruzada o de avance inofensiva, como en A→B, A→C, C→B. La prueba de \"ya visitado\" solo funciona en grafos no dirigidos, excluyendo la arista al padre."
+          }
+        }
+      ]
+    },
+    "union-find": {
+      "minutes": 70,
+      "prerequisites": [
+        "arrays-strings",
+        "graph-algorithms"
+      ],
+      "whyItMatters": {
+        "en": "Union-find answers \"are these two connected?\" while edges are being added, in nearly constant time per operation. It is the engine of Kruskal's MST, is used for connected-component labeling in images and percolation simulations, and solves interview problems such as number of provinces, redundant connection and accounts merge.",
+        "es": "Union-find responde \"¿están conectados estos dos?\" mientras se agregan aristas, en tiempo casi constante por operación. Es el motor del MST de Kruskal, se usa para etiquetar componentes conexas en imágenes y en simulaciones de percolación, y resuelve problemas de entrevista como número de provincias, conexión redundante y fusión de cuentas."
+      },
+      "objectives": {
+        "en": [
+          "Implement `find` with path compression and `union` by rank (or by size) over `parent[]` and `rank[]` arrays.",
+          "Trace the `parent` array through a sequence of `union` and `find` calls and show how path compression flattens trees.",
+          "Apply union-find to count connected components and to detect a cycle in an undirected edge list.",
+          "Analyze why combining both optimizations gives O(α(n)) amortized time per operation, compared with O(n) worst case for naive linking."
+        ],
+        "es": [
+          "Implementar `find` con compresión de caminos y `union` por rango (o por tamaño) sobre los arreglos `parent[]` y `rank[]`.",
+          "Trazar el arreglo `parent` a lo largo de una secuencia de llamadas a `union` y `find` y mostrar cómo la compresión de caminos aplana los árboles.",
+          "Aplicar union-find para contar componentes conexas y detectar un ciclo en una lista de aristas no dirigidas.",
+          "Analizar por qué combinar ambas optimizaciones da tiempo amortizado O(α(n)) por operación, frente al peor caso O(n) del enlace ingenuo."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Keep parallel `int[]` arrays indexed by element id consistent across updates.",
+          "Map arbitrary items (strings, grid cells as r · cols + c) to integer ids from 0 to n − 1."
+        ],
+        "es": [
+          "Mantener coherentes arreglos `int[]` paralelos indexados por id de elemento a lo largo de las actualizaciones.",
+          "Asignar a elementos arbitrarios (cadenas, celdas de una cuadrícula como r · cols + c) ids enteros de 0 a n − 1."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "With union by rank and path compression, m operations on n elements take O(m · α(n)) time; α(n) ≤ 4 for any input size you will ever see.",
+          "Union by rank (or size) alone keeps tree height ≤ ⌊log₂ n⌋, so `find` is O(log n) in the worst case.",
+          "In an undirected graph, edge (u, v) closes a cycle exactly when `find(u) == find(v)` before the union.",
+          "The component count starts at n and drops by 1 on each successful union, i.e. one that merges two different roots."
+        ],
+        "es": [
+          "Con unión por rango y compresión de caminos, m operaciones sobre n elementos toman O(m · α(n)); α(n) ≤ 4 para cualquier tamaño de entrada que vayas a ver.",
+          "La unión por rango (o por tamaño) por sí sola mantiene la altura ≤ ⌊log₂ n⌋, así que `find` es O(log n) en el peor caso.",
+          "En un grafo no dirigido, la arista (u, v) cierra un ciclo exactamente cuando `find(u) == find(v)` antes de la unión.",
+          "La cantidad de componentes empieza en n y baja en 1 con cada unión exitosa, es decir, una que junta dos raíces distintas."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Writing `parent[a] = b` instead of linking the roots (`parent[find(a)] = find(b)`): this detaches a from its old set, leaving its former members in a separate component.",
+          "Testing connectivity with `parent[a] == parent[b]`: two elements of the same set can have different direct parents. Always compare `find(a) == find(b)`.",
+          "Using recursive `find` with naive linking on large inputs: unions like (0,1), (1,2), … can build a chain of length n, and the first recursive `find` overflows the stack. Use union by rank/size or an iterative find."
+        ],
+        "es": [
+          "Escribir `parent[a] = b` en lugar de enlazar las raíces (`parent[find(a)] = find(b)`): esto separa a de su conjunto anterior y deja a sus antiguos miembros en otra componente.",
+          "Probar la conectividad con `parent[a] == parent[b]`: dos elementos del mismo conjunto pueden tener padres directos distintos. Compara siempre `find(a) == find(b)`.",
+          "Usar `find` recursivo con enlace ingenuo en entradas grandes: uniones como (0,1), (1,2), … pueden formar una cadena de longitud n, y el primer `find` recursivo desborda la pila. Usa unión por rango/tamaño o un `find` iterativo."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: run the module's `main` and write the `parent` and `rank` arrays after each `union` call and after `find(2)`.",
+          "Implement `UnionFind` with union by size (`size[]`), an iterative `find` using path halving (`parent[x] = parent[parent[x]]`), and `int count()` returning the current number of components.",
+          "Given n vertices and an undirected edge list, return the first edge whose endpoints are already connected (Redundant Connection), or `null` if the graph is a forest.",
+          "Count islands in a `char[][]` grid by unioning each land cell with its right and down land neighbors (id r · cols + c) and counting the distinct roots among land cells. Then use your structure to implement Kruskal's MST on a weighted edge list and return its total weight."
+        ],
+        "es": [
+          "Calentamiento: ejecuta `main` del módulo y escribe los arreglos `parent` y `rank` después de cada llamada a `union` y después de `find(2)`.",
+          "Implementa `UnionFind` con unión por tamaño (`size[]`), un `find` iterativo con división de caminos (`parent[x] = parent[parent[x]]`) e `int count()` que devuelva la cantidad actual de componentes.",
+          "Dados n vértices y una lista de aristas no dirigidas, devuelve la primera arista cuyos extremos ya estén conectados (Redundant Connection), o `null` si el grafo es un bosque.",
+          "Cuenta islas en una cuadrícula `char[][]` uniendo cada celda de tierra con sus vecinas de tierra a la derecha y abajo (id r · cols + c) y contando las raíces distintas entre las celdas de tierra. Luego usa tu estructura para implementar el MST de Kruskal sobre una lista de aristas con pesos y devuelve su peso total."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why must `union` link the two roots rather than the two original elements?",
+          "What does path compression change, and which operation does the extra work?",
+          "How do you decide with union-find whether adding an edge creates a cycle?"
+        ],
+        "es": [
+          "¿Por qué `union` debe enlazar las dos raíces y no los dos elementos originales?",
+          "¿Qué cambia la compresión de caminos y qué operación hace el trabajo adicional?",
+          "¿Cómo decides con union-find si agregar una arista crea un ciclo?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Union by Rank",
+            "es": "Unión por rango"
+          },
+          "definition": {
+            "en": "When merging two trees, attach the root with the smaller rank (an upper bound on its tree's height) under the root with the larger rank, increasing the rank only when both are equal; this keeps every tree's height O(log n).",
+            "es": "Al unir dos árboles, colgar la raíz de menor rango (una cota superior de la altura de su árbol) debajo de la raíz de mayor rango, aumentando el rango solo cuando ambos son iguales; así la altura de todo árbol se mantiene en O(log n)."
+          }
+        },
+        {
+          "term": {
+            "en": "Path Compression",
+            "es": "Compresión de caminos"
+          },
+          "definition": {
+            "en": "During `find`, making every node on the path to the root point directly at the root, so later `find` calls on those nodes finish in one step.",
+            "es": "Durante `find`, hacer que cada nodo del camino hacia la raíz apunte directamente a la raíz, de modo que las llamadas posteriores a `find` sobre esos nodos terminen en un paso."
+          }
+        },
+        {
+          "term": {
+            "en": "Connected Components",
+            "es": "Componentes conexas"
+          },
+          "definition": {
+            "en": "Maximal sets of vertices in which every pair is joined by a path; in union-find each component is one tree, identified by its root.",
+            "es": "Conjuntos maximales de vértices en los que todo par está unido por un camino; en union-find cada componente es un árbol, identificado por su raíz."
+          }
+        },
+        {
+          "term": {
+            "en": "Cycle Detection",
+            "es": "Detección de ciclos"
+          },
+          "definition": {
+            "en": "In an undirected graph processed edge by edge, an edge whose endpoints already have the same root joins two vertices already linked by a path, so adding it would form a cycle.",
+            "es": "En un grafo no dirigido procesado arista por arista, una arista cuyos extremos ya tienen la misma raíz une dos vértices que ya estaban conectados por un camino, así que agregarla formaría un ciclo."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "cp-algorithms: Disjoint Set Union",
+            "es": "cp-algorithms: Disjoint Set Union (en inglés)"
+          },
+          "url": "https://cp-algorithms.com/data_structures/disjoint_set_union.html"
+        },
+        {
+          "label": {
+            "en": "Sedgewick & Wayne, Algorithms 4th ed.: 1.5 Case Study: Union-Find",
+            "es": "Sedgewick y Wayne, Algorithms 4.ª ed.: 1.5 Caso de estudio: Union-Find (en inglés)"
+          },
+          "url": "https://algs4.cs.princeton.edu/15uf/"
+        },
+        {
+          "label": {
+            "en": "Wikipedia: Disjoint-set data structure",
+            "es": "Wikipedia: Estructura de conjuntos disjuntos (en inglés)"
+          },
+          "url": "https://en.wikipedia.org/wiki/Disjoint-set_data_structure"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Using the module's `UnionFind(6)`, what is the `parent` array after `union(0, 1)`, `union(1, 2)` and `union(3, 4)`?",
+            "es": "Con `UnionFind(6)` del módulo, ¿cuál es el arreglo `parent` después de `union(0, 1)`, `union(1, 2)` y `union(3, 4)`?"
+          },
+          "options": {
+            "en": [
+              "[1, 2, 2, 4, 4, 5]",
+              "[0, 0, 1, 3, 3, 5]",
+              "[0, 1, 2, 3, 4, 5]",
+              "[0, 0, 0, 3, 3, 5]"
+            ],
+            "es": [
+              "[1, 2, 2, 4, 4, 5]",
+              "[0, 0, 1, 3, 3, 5]",
+              "[0, 1, 2, 3, 4, 5]",
+              "[0, 0, 0, 3, 3, 5]"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "union(0, 1): equal ranks, so parent[1] = 0 and rank[0] = 1. union(1, 2): find(1) = 0 has rank 1 > rank 0 of root 2, so parent[2] = 0. union(3, 4): parent[4] = 3. [0, 0, 1, …] would come from linking element 2 to element 1 instead of linking the roots.",
+            "es": "union(0, 1): rangos iguales, así que parent[1] = 0 y rank[0] = 1. union(1, 2): find(1) = 0 tiene rango 1 > rango 0 de la raíz 2, así que parent[2] = 0. union(3, 4): parent[4] = 3. [0, 0, 1, …] resultaría de enlazar el elemento 2 al elemento 1 en lugar de enlazar las raíces."
+          }
+        },
+        {
+          "question": {
+            "en": "A union-find implementation always does `parent[rootA] = rootB` (no rank, no path compression). What is the worst-case cost of a single `find` after n − 1 unions?",
+            "es": "Una implementación de union-find siempre hace `parent[rootA] = rootB` (sin rango ni compresión de caminos). ¿Cuál es el costo en el peor caso de un solo `find` después de n − 1 uniones?"
+          },
+          "options": {
+            "en": [
+              "O(1)",
+              "O(n)",
+              "O(log n)",
+              "O(α(n))"
+            ],
+            "es": [
+              "O(1)",
+              "O(n)",
+              "O(log n)",
+              "O(α(n))"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Unions such as union(0, 1), union(0, 2), union(0, 3), … with this rule produce a chain 0 → 1 → 2 → … → n − 1, so `find(0)` walks n − 1 links. O(log n) requires union by rank or size, and O(α(n)) amortized requires both optimizations.",
+            "es": "Uniones como union(0, 1), union(0, 2), union(0, 3), … con esta regla forman una cadena 0 → 1 → 2 → … → n − 1, así que `find(0)` recorre n − 1 enlaces. O(log n) requiere unión por rango o tamaño, y O(α(n)) amortizado requiere ambas optimizaciones."
+          }
+        },
+        {
+          "question": {
+            "en": "Which task is the standard union-find structure NOT suited for?",
+            "es": "¿Para qué tarea NO es adecuada la estructura union-find estándar?"
+          },
+          "options": {
+            "en": [
+              "Counting components while edges are added",
+              "Detecting cycles in an undirected graph",
+              "Handling edge deletions that split a component in two",
+              "Grouping accounts that share an email address"
+            ],
+            "es": [
+              "Contar componentes mientras se agregan aristas",
+              "Detectar ciclos en un grafo no dirigido",
+              "Manejar eliminaciones de aristas que parten una componente en dos",
+              "Agrupar cuentas que comparten una dirección de correo"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Union-find only merges sets; it has no operation to split one, so deletions require rebuilding or a different structure (or processing the deletions offline in reverse as additions). The other three tasks only add connections, which is exactly what it handles in near-constant time.",
+            "es": "Union-find solo une conjuntos; no tiene una operación para dividirlos, así que las eliminaciones requieren reconstruir o usar otra estructura (o procesarlas fuera de línea en orden inverso como inserciones). Las otras tres tareas solo agregan conexiones, que es justo lo que maneja en tiempo casi constante."
+          }
+        },
+        {
+          "question": {
+            "en": "Starting from 10 singleton sets, you perform union(1, 2), union(3, 4), union(2, 1), union(1, 4), union(5, 6). How many components remain?",
+            "es": "Partiendo de 10 conjuntos unitarios, haces union(1, 2), union(3, 4), union(2, 1), union(1, 4), union(5, 6). ¿Cuántas componentes quedan?"
+          },
+          "options": {
+            "en": [
+              "6",
+              "5",
+              "7",
+              "4"
+            ],
+            "es": [
+              "6",
+              "5",
+              "7",
+              "4"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Four unions merge different sets (10 → 9 → 8, skip, → 7 → 6). union(2, 1) finds that 1 and 2 already share a root, so it changes nothing. Answering 5 counts every union call as a merge.",
+            "es": "Cuatro uniones juntan conjuntos distintos (10 → 9 → 8, se omite, → 7 → 6). union(2, 1) encuentra que 1 y 2 ya comparten raíz, así que no cambia nada. Responder 5 cuenta cada llamada a union como una fusión."
+          }
+        },
+        {
+          "question": {
+            "en": "Once path compression is used, why is `rank` only an upper bound on a tree's height rather than its exact height?",
+            "es": "Una vez que se usa compresión de caminos, ¿por qué `rank` es solo una cota superior de la altura del árbol y no su altura exacta?"
+          },
+          "options": {
+            "en": [
+              "Rank counts the number of elements in the set, not the height",
+              "Path compression can shorten a tree, but rank is never decreased to match",
+              "Rank is reset to 0 on every `find`",
+              "Union by rank ignores rank when both trees have equal rank"
+            ],
+            "es": [
+              "El rango cuenta la cantidad de elementos del conjunto, no la altura",
+              "La compresión de caminos puede acortar un árbol, pero el rango nunca se reduce para reflejarlo",
+              "El rango se reinicia en 0 en cada `find`",
+              "La unión por rango ignora el rango cuando ambos árboles tienen el mismo rango"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`find` rewires parents but never touches `rank`, so after compression the actual height can be smaller than the stored rank; the analysis only needs rank to be an upper bound. Counting elements is union by size, a different (also valid) heuristic, and equal ranks are exactly when rank increases by one.",
+            "es": "`find` reasigna padres pero nunca modifica `rank`, así que tras la compresión la altura real puede ser menor que el rango guardado; el análisis solo necesita que el rango sea una cota superior. Contar elementos es la unión por tamaño, otra heurística (también válida), y los rangos iguales son justamente el caso en que el rango aumenta en uno."
+          }
+        }
+      ]
+    },
+    "lambda-streams": {
+      "minutes": 110,
+      "prerequisites": [
+        "collections-framework"
+      ],
+      "whyItMatters": {
+        "en": "Modern Java code bases use lambdas everywhere a behavior is passed around (`Comparator`, event handlers, `removeIf`, `computeIfAbsent`) and streams for filtering, grouping and summarizing collections in a few readable lines. You will see `stream().filter(...).map(...).collect(...)` in code reviews, interviews and nearly every Java framework.",
+        "es": "El código Java moderno usa lambdas en todo lugar donde se pasa un comportamiento (`Comparator`, manejadores de eventos, `removeIf`, `computeIfAbsent`) y streams para filtrar, agrupar y resumir colecciones en pocas líneas legibles. Verás `stream().filter(...).map(...).collect(...)` en revisiones de código, entrevistas y en casi cualquier framework de Java."
+      },
+      "objectives": {
+        "en": [
+          "Write lambdas for the core functional interfaces `Predicate<T>`, `Function<T, R>`, `Consumer<T>`, `Supplier<T>` and `Comparator<T>`, and replace them with method references where it improves readability.",
+          "Implement stream pipelines that use `filter`, `map`, `sorted`, `distinct` and `limit` and end in `collect`, `count`, `reduce` or `forEach`.",
+          "Use `Collectors.groupingBy`, `Collectors.counting`, `Collectors.toMap` and `Collectors.joining` to replace hand-written map-building loops from the collections module.",
+          "Explain laziness and short-circuiting in streams, and predict which elements an intermediate operation actually processes."
+        ],
+        "es": [
+          "Escribir lambdas para las interfaces funcionales principales `Predicate<T>`, `Function<T, R>`, `Consumer<T>`, `Supplier<T>` y `Comparator<T>`, y reemplazarlas por referencias a métodos cuando mejore la legibilidad.",
+          "Implementar pipelines de streams que usen `filter`, `map`, `sorted`, `distinct` y `limit` y terminen en `collect`, `count`, `reduce` o `forEach`.",
+          "Usar `Collectors.groupingBy`, `Collectors.counting`, `Collectors.toMap` y `Collectors.joining` para reemplazar los ciclos que construían mapas a mano en el módulo de colecciones.",
+          "Explicar la evaluación perezosa y el cortocircuito en los streams, y predecir qué elementos procesa realmente una operación intermedia."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Build and iterate `List`, `Set` and `Map` collections and count frequencies with a `HashMap`.",
+          "Implement an interface with an anonymous class or a named class, e.g. a `Comparator<String>`."
+        ],
+        "es": [
+          "Construir y recorrer colecciones `List`, `Set` y `Map`, y contar frecuencias con un `HashMap`.",
+          "Implementar una interfaz con una clase anónima o con una clase con nombre, por ejemplo un `Comparator<String>`."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "A lambda is an instance of a functional interface (exactly one abstract method); it may read local variables only if they are final or effectively final.",
+          "Intermediate operations (`filter`, `map`, `sorted`) are lazy and return a new stream; nothing runs until a terminal operation (`collect`, `count`, `forEach`, `findFirst`) is invoked, and a stream can be consumed only once.",
+          "Short-circuiting operations (terminals like `findFirst` and `anyMatch`, and the intermediate `limit`) stop pulling elements as soon as the answer is known, which makes infinite streams such as `Stream.iterate` usable.",
+          "Use primitive streams (`IntStream`, `mapToInt`) for numeric work to avoid boxing and to get `sum()`, `average()` (an `OptionalDouble`) and `max()`. `Stream.toList()` (Java 16+) returns an unmodifiable list."
+        ],
+        "es": [
+          "Una lambda es una instancia de una interfaz funcional (exactamente un método abstracto); solo puede leer variables locales que sean final o efectivamente final.",
+          "Las operaciones intermedias (`filter`, `map`, `sorted`) son perezosas y devuelven un nuevo stream; nada se ejecuta hasta invocar una operación terminal (`collect`, `count`, `forEach`, `findFirst`), y un stream solo puede consumirse una vez.",
+          "Las operaciones con cortocircuito (terminales como `findFirst` y `anyMatch`, y la intermedia `limit`) dejan de pedir elementos en cuanto se conoce la respuesta, lo que hace utilizables streams infinitos como `Stream.iterate`.",
+          "Usa streams primitivos (`IntStream`, `mapToInt`) para trabajo numérico y así evitar el empaquetado y obtener `sum()`, `average()` (un `OptionalDouble`) y `max()`. `Stream.toList()` (Java 16+) devuelve una lista inmodificable."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Trying to accumulate into a local variable from a lambda (`int total = 0; list.forEach(x -> total += x);`): it does not compile because `total` is not effectively final. Use a terminal operation instead: `list.stream().mapToInt(Integer::intValue).sum()`.",
+          "Using `Collectors.toMap(keyFn, valueFn)` when keys can repeat: it throws `IllegalStateException` on the first duplicate key. Pass a merge function, e.g. `toMap(w -> w, w -> 1, Integer::sum)`, or use `groupingBy` with `counting()`.",
+          "Building a pipeline without a terminal operation, or with side effects inside `map`/`filter`/`peek` that you expect to run: because streams are lazy, nothing happens. Make sure the pipeline ends in `collect`, `forEach`, `count` or similar, and keep intermediate lambdas free of side effects."
+        ],
+        "es": [
+          "Intentar acumular en una variable local desde una lambda (`int total = 0; list.forEach(x -> total += x);`): no compila porque `total` no es efectivamente final. Usa una operación terminal: `list.stream().mapToInt(Integer::intValue).sum()`.",
+          "Usar `Collectors.toMap(keyFn, valueFn)` cuando las claves pueden repetirse: lanza `IllegalStateException` en la primera clave duplicada. Pasa una función de combinación, por ejemplo `toMap(w -> w, w -> 1, Integer::sum)`, o usa `groupingBy` con `counting()`.",
+          "Construir un pipeline sin operación terminal, o con efectos secundarios dentro de `map`/`filter`/`peek` que esperas que se ejecuten: como los streams son perezosos, no ocurre nada. Asegúrate de que el pipeline termine en `collect`, `forEach`, `count` o similar, y mantén sin efectos secundarios las lambdas intermedias."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: sort a `List<String>` of names three ways with `list.sort(...)`: by length using a lambda, alphabetically using `Comparator.naturalOrder()`, and by length then alphabetically using `Comparator.comparing(String::length).thenComparing(Comparator.naturalOrder())`.",
+          "Given `List<Integer> nums`, write one stream pipeline for each: the sum of squares of the odd numbers, the distinct values sorted in descending order as a `List<Integer>`, and a `String` of the first five values joined by `\", \"` with `Collectors.joining`.",
+          "Define `record Student(String name, String major, double gpa)`. With streams, compute: a `Map<String, Long>` of students per major (`groupingBy` + `counting`), a `Map<String, Double>` of average GPA per major (`averagingDouble`), and an `Optional<Student>` with the top GPA (`max(Comparator.comparingDouble(Student::gpa))`).",
+          "Interview-style: rewrite your `wordFrequency` method from the collections module as a single stream pipeline that returns the top k words by count, breaking ties alphabetically. Then explain, step by step, which elements `filter` touches in `Stream.iterate(1, n -> n + 1).filter(n -> n % 7 == 0).limit(3).toList()` and why it terminates."
+        ],
+        "es": [
+          "Calentamiento: ordena una `List<String>` de nombres de tres formas con `list.sort(...)`: por longitud usando una lambda, alfabéticamente usando `Comparator.naturalOrder()`, y por longitud y luego alfabéticamente usando `Comparator.comparing(String::length).thenComparing(Comparator.naturalOrder())`.",
+          "Dada `List<Integer> nums`, escribe un pipeline de stream para cada caso: la suma de los cuadrados de los números impares, los valores distintos ordenados de forma descendente como `List<Integer>`, y un `String` con los primeros cinco valores unidos por `\", \"` usando `Collectors.joining`.",
+          "Define `record Student(String name, String major, double gpa)`. Con streams, calcula: un `Map<String, Long>` con la cantidad de estudiantes por carrera (`groupingBy` + `counting`), un `Map<String, Double>` con el promedio por carrera (`averagingDouble`) y un `Optional<Student>` con el mejor promedio (`max(Comparator.comparingDouble(Student::gpa))`).",
+          "Tipo entrevista: reescribe tu método `wordFrequency` del módulo de colecciones como un único pipeline de stream que devuelva las k palabras más frecuentes, desempatando alfabéticamente. Luego explica, paso a paso, qué elementos procesa `filter` en `Stream.iterate(1, n -> n + 1).filter(n -> n % 7 == 0).limit(3).toList()` y por qué termina."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What makes an interface a functional interface, and which one would you use for a test that returns `boolean`?",
+          "Why does a stream pipeline with no terminal operation do nothing?",
+          "When should you use `mapToInt` instead of `map`?"
+        ],
+        "es": [
+          "¿Qué hace que una interfaz sea funcional y cuál usarías para una prueba que devuelve `boolean`?",
+          "¿Por qué un pipeline de stream sin operación terminal no hace nada?",
+          "¿Cuándo deberías usar `mapToInt` en lugar de `map`?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Lambda Expressions",
+            "es": "Expresiones lambda"
+          },
+          "definition": {
+            "en": "A lambda expression is an anonymous function written `(params) -> expression` or `(params) -> { statements }` whose type is inferred from the functional interface it is assigned or passed to. It can capture local variables only if they are effectively final.",
+            "es": "Una expresión lambda es una función anónima escrita como `(params) -> expression` o `(params) -> { statements }` cuyo tipo se infiere de la interfaz funcional a la que se asigna o se pasa. Solo puede capturar variables locales que sean efectivamente final."
+          }
+        },
+        {
+          "term": {
+            "en": "Stream API",
+            "es": "API de Streams"
+          },
+          "definition": {
+            "en": "The Stream API (`java.util.stream`) processes a sequence of elements through a pipeline: a source such as `list.stream()`, zero or more lazy intermediate operations, and one terminal operation that produces a result. A stream does not store data and does not modify its source.",
+            "es": "La API de Streams (`java.util.stream`) procesa una secuencia de elementos mediante un pipeline: una fuente como `list.stream()`, cero o más operaciones intermedias perezosas y una operación terminal que produce un resultado. Un stream no almacena datos ni modifica su fuente."
+          }
+        },
+        {
+          "term": {
+            "en": "Method References",
+            "es": "Referencias a métodos"
+          },
+          "definition": {
+            "en": "A method reference such as `String::length`, `System.out::println`, `Math::max` or `ArrayList::new` is shorthand for a lambda that only calls an existing method or constructor. Its four forms are static, bound instance (`obj::m`), unbound instance (`Type::m`, first argument becomes the receiver) and constructor references.",
+            "es": "Una referencia a método como `String::length`, `System.out::println`, `Math::max` o `ArrayList::new` es una forma abreviada de una lambda que solo llama a un método o constructor existente. Sus cuatro formas son: estática, de instancia ligada (`obj::m`), de instancia no ligada (`Type::m`, el primer argumento pasa a ser el receptor) y de constructor."
+          }
+        },
+        {
+          "term": {
+            "en": "Functional Interfaces",
+            "es": "Interfaces funcionales"
+          },
+          "definition": {
+            "en": "A functional interface has exactly one abstract method (it may also have `default` and `static` methods), so a lambda or method reference can implement it. `java.util.function` provides standard ones like `Predicate<T>`, `Function<T, R>`, `Consumer<T>` and `Supplier<T>`; `@FunctionalInterface` makes the compiler enforce the rule.",
+            "es": "Una interfaz funcional tiene exactamente un método abstracto (también puede tener métodos `default` y `static`), por lo que una lambda o una referencia a método puede implementarla. `java.util.function` ofrece las estándar, como `Predicate<T>`, `Function<T, R>`, `Consumer<T>` y `Supplier<T>`; `@FunctionalInterface` hace que el compilador verifique la regla."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Oracle Java Tutorials: Lambda Expressions",
+            "es": "Tutoriales de Java de Oracle: expresiones lambda"
+          },
+          "url": "https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html"
+        },
+        {
+          "label": {
+            "en": "Java SE 21 API: java.util.stream package summary (streams, laziness, pipelines)",
+            "es": "API de Java SE 21: resumen del paquete java.util.stream (streams, evaluación perezosa, pipelines)"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/package-summary.html"
+        },
+        {
+          "label": {
+            "en": "Oracle Java Tutorials: Method References",
+            "es": "Tutoriales de Java de Oracle: referencias a métodos"
+          },
+          "url": "https://docs.oracle.com/javase/tutorial/java/javaOO/methodreferences.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What does `Stream.of(\"a\", \"bb\", \"ccc\").map(String::length).filter(n -> n > 1).count()` return?",
+            "es": "¿Qué devuelve `Stream.of(\"a\", \"bb\", \"ccc\").map(String::length).filter(n -> n > 1).count()`?"
+          },
+          "options": {
+            "en": [
+              "1",
+              "3",
+              "5",
+              "2"
+            ],
+            "es": [
+              "1",
+              "3",
+              "5",
+              "2"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "`map` turns the strings into lengths 1, 2, 3; `filter` keeps 2 and 3; `count` returns 2 (as a `long`). The answer 5 would be the sum of the kept lengths, not their count.",
+            "es": "`map` convierte las cadenas en las longitudes 1, 2, 3; `filter` conserva 2 y 3; `count` devuelve 2 (como `long`). La respuesta 5 sería la suma de las longitudes conservadas, no su cantidad."
+          }
+        },
+        {
+          "question": {
+            "en": "What does this statement print? `Stream.of(1, 2, 3).filter(x -> { System.out.print(x); return x > 1; }).map(x -> x * 2);`",
+            "es": "¿Qué imprime esta sentencia? `Stream.of(1, 2, 3).filter(x -> { System.out.print(x); return x > 1; }).map(x -> x * 2);`"
+          },
+          "options": {
+            "en": [
+              "`123`",
+              "`23`",
+              "Nothing",
+              "`46`"
+            ],
+            "es": [
+              "`123`",
+              "`23`",
+              "Nada",
+              "`46`"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`filter` and `map` are lazy intermediate operations and there is no terminal operation, so the lambda never runs. Adding `.toList()` at the end would print `123`, because `filter` sees every element, including the rejected 1.",
+            "es": "`filter` y `map` son operaciones intermedias perezosas y no hay operación terminal, así que la lambda nunca se ejecuta. Agregar `.toList()` al final imprimiría `123`, porque `filter` ve todos los elementos, incluido el 1 rechazado."
+          }
+        },
+        {
+          "question": {
+            "en": "Why does `int count = 0; names.forEach(n -> count++);` fail to compile?",
+            "es": "¿Por qué no compila `int count = 0; names.forEach(n -> count++);`?"
+          },
+          "options": {
+            "en": [
+              "Local variables used inside a lambda must be final or effectively final",
+              "`forEach` only accepts method references",
+              "`count` must be declared as `Integer`",
+              "Lambdas cannot have a body without braces"
+            ],
+            "es": [
+              "Las variables locales usadas dentro de una lambda deben ser final o efectivamente final",
+              "`forEach` solo acepta referencias a métodos",
+              "`count` debe declararse como `Integer`",
+              "Las lambdas no pueden tener un cuerpo sin llaves"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "A lambda captures the value of a local variable, so Java requires that the variable never change; `count++` modifies it. Changing it to `Integer` does not help. Use `names.size()` or `names.stream().count()` instead.",
+            "es": "Una lambda captura el valor de una variable local, así que Java exige que la variable nunca cambie; `count++` la modifica. Cambiarla a `Integer` no ayuda. Usa `names.size()` o `names.stream().count()` en su lugar."
+          }
+        },
+        {
+          "question": {
+            "en": "In the sequential pipeline `IntStream.rangeClosed(1, 1_000_000).filter(n -> n % 7 == 0).findFirst()`, how many elements does the `filter` lambda examine?",
+            "es": "En el pipeline secuencial `IntStream.rangeClosed(1, 1_000_000).filter(n -> n % 7 == 0).findFirst()`, ¿cuántos elementos examina la lambda de `filter`?"
+          },
+          "options": {
+            "en": [
+              "1",
+              "7",
+              "142,857",
+              "1,000,000"
+            ],
+            "es": [
+              "1",
+              "7",
+              "142,857",
+              "1,000,000"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Streams process elements one at a time, and `findFirst` short-circuits: `filter` tests 1 through 7, 7 passes, and the pipeline stops. 1,000,000 assumes `filter` processes the whole range before `findFirst` runs, which is how a loop-per-stage model would behave, not Java streams.",
+            "es": "Los streams procesan los elementos de uno en uno y `findFirst` hace cortocircuito: `filter` prueba del 1 al 7, el 7 pasa y el pipeline se detiene. 1,000,000 supone que `filter` procesa todo el rango antes de que se ejecute `findFirst`, que es como funcionaría un modelo de un ciclo por etapa, no los streams de Java."
+          }
+        },
+        {
+          "question": {
+            "en": "Which lambda is equivalent to the method reference `String::toUpperCase` used as a `Function<String, String>`?",
+            "es": "¿Qué lambda es equivalente a la referencia a método `String::toUpperCase` usada como `Function<String, String>`?"
+          },
+          "options": {
+            "en": [
+              "`s -> String.toUpperCase(s)`",
+              "`() -> toUpperCase()`",
+              "`s -> s.toUpperCase()`",
+              "`(s, t) -> s.toUpperCase(t)`"
+            ],
+            "es": [
+              "`s -> String.toUpperCase(s)`",
+              "`() -> toUpperCase()`",
+              "`s -> s.toUpperCase()`",
+              "`(s, t) -> s.toUpperCase(t)`"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`String::toUpperCase` is an unbound instance method reference: the function's single argument becomes the receiver. There is no static `String.toUpperCase(String)`, so the first option is a common but wrong reading.",
+            "es": "`String::toUpperCase` es una referencia a método de instancia no ligada: el único argumento de la función se convierte en el receptor. No existe un método estático `String.toUpperCase(String)`, así que la primera opción es una lectura común pero incorrecta."
+          }
+        }
+      ]
+    },
+    "file-io": {
+      "minutes": 75,
+      "prerequisites": [
+        "exception-handling"
+      ],
+      "whyItMatters": {
+        "en": "Almost every real program reads configuration, logs, CSV exports or uploaded files, and leaked file handles or wrong character encodings are classic production bugs. Course projects and take-home interviews routinely ask you to parse a file and write a report.",
+        "es": "Casi todo programa real lee configuración, logs, exportaciones CSV o archivos subidos, y los manejadores de archivo sin cerrar o las codificaciones incorrectas son errores clásicos en producción. Los proyectos de curso y las pruebas técnicas para llevar a casa suelen pedirte procesar un archivo y escribir un reporte."
+      },
+      "objectives": {
+        "en": [
+          "Implement line-by-line reading with `BufferedReader.readLine()` and token-based reading with `Scanner`, stopping correctly at end of file.",
+          "Write text files with `FileWriter`/`PrintWriter` in both overwrite and append mode, closing them with try-with-resources.",
+          "Use the NIO.2 Path API (`Path.of`, `Files.readAllLines`, `Files.lines`, `Files.writeString`, `Files.walk`) to read, write and traverse directories.",
+          "Choose between whole-file reads and streaming reads based on file size, and specify an explicit charset such as `StandardCharsets.UTF_8`."
+        ],
+        "es": [
+          "Implementar la lectura línea por línea con `BufferedReader.readLine()` y la lectura por tokens con `Scanner`, deteniéndote correctamente al final del archivo.",
+          "Escribir archivos de texto con `FileWriter`/`PrintWriter` en modo sobrescritura y en modo anexar, cerrándolos con try-with-resources.",
+          "Usar la API Path de NIO.2 (`Path.of`, `Files.readAllLines`, `Files.lines`, `Files.writeString`, `Files.walk`) para leer, escribir y recorrer directorios.",
+          "Elegir entre leer el archivo completo o procesarlo en flujo según su tamaño, e indicar un charset explícito como `StandardCharsets.UTF_8`."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Write try/catch blocks and distinguish checked exceptions such as `IOException` from unchecked ones",
+          "Use `String.split` and `Integer.parseInt` to turn a line of text into fields"
+        ],
+        "es": [
+          "Escribir bloques try/catch y distinguir excepciones verificadas como `IOException` de las no verificadas",
+          "Usar `String.split` e `Integer.parseInt` para convertir una línea de texto en campos"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "`BufferedReader.readLine()` returns the line without its terminator and returns `null` at end of file; the default buffer is 8192 chars.",
+          "`new FileWriter(path)` truncates the file; `new FileWriter(path, true)` appends. Unflushed buffered data is lost if the writer is never closed.",
+          "Since Java 18 the default charset is UTF-8 (JEP 400); on older JDKs `FileReader`/`FileWriter` used the platform charset, so pass a `Charset` explicitly for portable code.",
+          "`Files.readAllLines` uses O(file size) memory; `Files.lines` and `BufferedReader` stream in O(longest line), but the `Stream` from `Files.lines` must be closed."
+        ],
+        "es": [
+          "`BufferedReader.readLine()` devuelve la línea sin su terminador y devuelve `null` al final del archivo; el búfer por defecto es de 8192 caracteres.",
+          "`new FileWriter(path)` trunca el archivo; `new FileWriter(path, true)` agrega al final. Los datos en búfer sin vaciar se pierden si el escritor nunca se cierra.",
+          "Desde Java 18 el charset por defecto es UTF-8 (JEP 400); en JDK anteriores `FileReader`/`FileWriter` usaban el charset de la plataforma, así que pasa un `Charset` explícito para código portable.",
+          "`Files.readAllLines` usa memoria O(tamaño del archivo); `Files.lines` y `BufferedReader` procesan en flujo con O(línea más larga), pero el `Stream` de `Files.lines` debe cerrarse."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Calling `nextInt()` and then `nextLine()` on a `Scanner`: `nextLine()` returns the empty rest of the current line. Call an extra `nextLine()` to consume the newline, or read whole lines and parse them.",
+          "Forgetting to close (or flush) a writer, so the last buffered chunk never reaches disk and the file ends up empty or truncated. Always use try-with-resources.",
+          "Using relative paths like `new File(\"data.txt\")` and assuming they resolve next to the source file; they resolve against the working directory (`user.dir`), which differs between the IDE and the terminal."
+        ],
+        "es": [
+          "Llamar a `nextInt()` y luego a `nextLine()` en un `Scanner`: `nextLine()` devuelve el resto vacío de la línea actual. Llama a un `nextLine()` extra para consumir el salto de línea, o lee líneas completas y analízalas.",
+          "Olvidar cerrar (o vaciar) un escritor, de modo que el último bloque en búfer nunca llega al disco y el archivo queda vacío o truncado. Usa siempre try-with-resources.",
+          "Usar rutas relativas como `new File(\"data.txt\")` suponiendo que se resuelven junto al archivo fuente; se resuelven contra el directorio de trabajo (`user.dir`), que cambia entre el IDE y la terminal."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: write `countLines(Path p)` using `BufferedReader.readLine()` in a try-with-resources block; return 0 for an empty file and let `IOException` propagate.",
+          "Core: implement `averageScore(Path csv)` for lines like `Alex,90`; skip blank lines, report malformed lines with their line number to `System.err`, and return the average of valid rows.",
+          "Stretch: write `appendLog(Path p, String msg)` that appends a timestamped line using `Files.writeString` with `StandardOpenOption.CREATE` and `StandardOpenOption.APPEND`, then a method that prints only the last N lines without loading the whole file into a `List`.",
+          "Exam-style: using `Files.walk`, return a `Map<String, Long>` from file extension to total bytes for every regular file under a directory, closing the stream properly and ignoring files without an extension."
+        ],
+        "es": [
+          "Calentamiento: escribe `countLines(Path p)` usando `BufferedReader.readLine()` dentro de un bloque try-with-resources; devuelve 0 para un archivo vacío y deja que `IOException` se propague.",
+          "Núcleo: implementa `averageScore(Path csv)` para líneas como `Alex,90`; omite las líneas en blanco, reporta en `System.err` las líneas mal formadas con su número de línea y devuelve el promedio de las filas válidas.",
+          "Reto: escribe `appendLog(Path p, String msg)`, que agregue una línea con marca de tiempo usando `Files.writeString` con `StandardOpenOption.CREATE` y `StandardOpenOption.APPEND`, y luego un método que imprima solo las últimas N líneas sin cargar todo el archivo en una `List`.",
+          "Tipo examen: usando `Files.walk`, devuelve un `Map<String, Long>` de extensión de archivo a total de bytes para cada archivo regular bajo un directorio, cerrando el flujo correctamente e ignorando archivos sin extensión."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What does `readLine()` return at end of file, and why is a `while ((line = br.readLine()) != null)` loop the standard idiom?",
+          "When would you choose `Files.readAllLines` over `Files.lines`, and what must you remember when using `Files.lines`?",
+          "Why can a program that never closes its `FileWriter` produce an empty file even though `write` was called?"
+        ],
+        "es": [
+          "¿Qué devuelve `readLine()` al final del archivo y por qué el ciclo `while ((line = br.readLine()) != null)` es el idioma estándar?",
+          "¿Cuándo elegirías `Files.readAllLines` en lugar de `Files.lines` y qué debes recordar al usar `Files.lines`?",
+          "¿Por qué un programa que nunca cierra su `FileWriter` puede producir un archivo vacío aunque se haya llamado a `write`?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "FileReader",
+            "es": "FileReader"
+          },
+          "definition": {
+            "en": "A `Reader` subclass that reads characters from a file by decoding its bytes with a charset (the platform default before Java 18, UTF-8 from Java 18, or one you pass to the Java 11+ constructor). It has no `readLine`, so it is usually wrapped in a `BufferedReader`.",
+            "es": "Una subclase de `Reader` que lee caracteres de un archivo decodificando sus bytes con un charset (el de la plataforma antes de Java 18, UTF-8 desde Java 18, o el que pases al constructor de Java 11+). No tiene `readLine`, por eso suele envolverse en un `BufferedReader`."
+          }
+        },
+        {
+          "term": {
+            "en": "FileWriter",
+            "es": "FileWriter"
+          },
+          "definition": {
+            "en": "A `Writer` that encodes characters into bytes and writes them to a file, creating it if needed; by default it truncates existing content, and the `FileWriter(path, true)` constructor appends instead.",
+            "es": "Un `Writer` que codifica caracteres en bytes y los escribe en un archivo, creándolo si hace falta; por defecto trunca el contenido existente, y el constructor `FileWriter(path, true)` agrega al final en su lugar."
+          }
+        },
+        {
+          "term": {
+            "en": "BufferedReader",
+            "es": "BufferedReader"
+          },
+          "definition": {
+            "en": "A decorator around another `Reader` that fills an in-memory buffer in large chunks so that many small reads hit memory instead of the file, and adds `readLine()` for line-oriented input.",
+            "es": "Un decorador sobre otro `Reader` que llena un búfer en memoria en bloques grandes, de modo que muchas lecturas pequeñas acceden a memoria y no al archivo, y que agrega `readLine()` para leer por líneas."
+          }
+        },
+        {
+          "term": {
+            "en": "Scanner",
+            "es": "Scanner"
+          },
+          "definition": {
+            "en": "A `java.util` class that splits input into tokens using a delimiter (whitespace by default) and parses them with methods like `nextInt()`, `nextDouble()` and `next()`; convenient for small structured input but slower than `BufferedReader` for large files.",
+            "es": "Una clase de `java.util` que divide la entrada en tokens usando un delimitador (espacios en blanco por defecto) y los convierte con métodos como `nextInt()`, `nextDouble()` y `next()`; es cómoda para entradas pequeñas y estructuradas, pero más lenta que `BufferedReader` en archivos grandes."
+          }
+        },
+        {
+          "term": {
+            "en": "Path API",
+            "es": "API Path"
+          },
+          "definition": {
+            "en": "The NIO.2 API in `java.nio.file` (Java 7+) where a `Path` represents a file-system location without touching the disk, and the static `Files` methods perform the actual I/O: reading, writing, copying, moving, checking attributes and walking directory trees.",
+            "es": "La API NIO.2 de `java.nio.file` (Java 7+) en la que un `Path` representa una ubicación del sistema de archivos sin acceder al disco, y los métodos estáticos de `Files` hacen la E/S real: leer, escribir, copiar, mover, consultar atributos y recorrer árboles de directorios."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Oracle Java Tutorials: Basic I/O (streams and NIO.2 file I/O)",
+            "es": "Tutoriales de Java de Oracle: E/S básica (flujos y E/S de archivos con NIO.2)"
+          },
+          "url": "https://docs.oracle.com/javase/tutorial/essential/io/"
+        },
+        {
+          "label": {
+            "en": "Java 21 API: java.nio.file.Files",
+            "es": "API de Java 21: java.nio.file.Files"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/nio/file/Files.html"
+        },
+        {
+          "label": {
+            "en": "Java 21 API: java.io.BufferedReader",
+            "es": "API de Java 21: java.io.BufferedReader"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/BufferedReader.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "`log.txt` does not exist. After these three statements run in order, what does it contain?\n`try (FileWriter w = new FileWriter(\"log.txt\")) { w.write(\"A\"); }`\n`try (FileWriter w = new FileWriter(\"log.txt\", true)) { w.write(\"B\"); }`\n`try (FileWriter w = new FileWriter(\"log.txt\")) { w.write(\"C\"); }`",
+            "es": "`log.txt` no existe. Después de ejecutar estas tres sentencias en orden, ¿qué contiene?\n`try (FileWriter w = new FileWriter(\"log.txt\")) { w.write(\"A\"); }`\n`try (FileWriter w = new FileWriter(\"log.txt\", true)) { w.write(\"B\"); }`\n`try (FileWriter w = new FileWriter(\"log.txt\")) { w.write(\"C\"); }`"
+          },
+          "options": {
+            "en": [
+              "ABC",
+              "AC",
+              "C",
+              "CAB"
+            ],
+            "es": [
+              "ABC",
+              "AC",
+              "C",
+              "CAB"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "The second writer appends, giving `AB`, but the third uses the one-argument constructor, which truncates the file before writing `C`. `ABC` would require the third writer to also pass `true`.",
+            "es": "El segundo escritor agrega al final y deja `AB`, pero el tercero usa el constructor de un argumento, que trunca el archivo antes de escribir `C`. Para obtener `ABC` el tercero también tendría que pasar `true`."
+          }
+        },
+        {
+          "question": {
+            "en": "Why should `Files.lines(path)` be used inside a try-with-resources block?",
+            "es": "¿Por qué `Files.lines(path)` debe usarse dentro de un bloque try-with-resources?"
+          },
+          "options": {
+            "en": [
+              "The returned `Stream` keeps the file open until the stream is closed",
+              "Otherwise the lines are returned in random order",
+              "It loads the whole file into memory and must free it",
+              "The method does not compile outside a try block"
+            ],
+            "es": [
+              "El `Stream` devuelto mantiene el archivo abierto hasta que el flujo se cierra",
+              "De lo contrario las líneas se devuelven en orden aleatorio",
+              "Carga todo el archivo en memoria y debe liberarlo",
+              "El método no compila fuera de un bloque try"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "`Files.lines` reads lazily from an open file handle, and a terminal operation does not close it; only `close()` does. It does not load the whole file (that is `readAllLines`), and it compiles anywhere `IOException` is handled.",
+            "es": "`Files.lines` lee de forma perezosa desde un manejador de archivo abierto, y una operación terminal no lo cierra; solo `close()` lo hace. No carga todo el archivo (eso hace `readAllLines`) y compila en cualquier lugar donde se maneje `IOException`."
+          }
+        },
+        {
+          "question": {
+            "en": "You process a 4 GB log file. What is the peak memory needed for the lines themselves with a `BufferedReader.readLine()` loop versus `Files.readAllLines`?",
+            "es": "Procesas un archivo de log de 4 GB. ¿Cuál es la memoria máxima necesaria para las líneas con un ciclo de `BufferedReader.readLine()` frente a `Files.readAllLines`?"
+          },
+          "options": {
+            "en": [
+              "Both O(file size), since Java always buffers the whole file",
+              "Both O(1), since the operating system pages data in on demand",
+              "O(file size) for `BufferedReader`, O(longest line) for `readAllLines`",
+              "O(longest line) for `BufferedReader`, O(file size) for `readAllLines`"
+            ],
+            "es": [
+              "Ambas O(tamaño del archivo), porque Java siempre almacena todo el archivo en búfer",
+              "Ambas O(1), porque el sistema operativo carga páginas bajo demanda",
+              "O(tamaño del archivo) para `BufferedReader`, O(línea más larga) para `readAllLines`",
+              "O(línea más larga) para `BufferedReader`, O(tamaño del archivo) para `readAllLines`"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "A `readLine` loop holds a fixed-size buffer plus the current line, while `readAllLines` builds a `List<String>` of every line, which can throw `OutOfMemoryError` for a 4 GB file. Option three swaps the two.",
+            "es": "Un ciclo con `readLine` mantiene un búfer de tamaño fijo más la línea actual, mientras que `readAllLines` construye una `List<String>` con todas las líneas, lo que puede lanzar `OutOfMemoryError` con un archivo de 4 GB. La tercera opción invierte ambos casos."
+          }
+        },
+        {
+          "question": {
+            "en": "The input is `42` on the first line and `Ada Lovelace` on the second. What is `s` after `int n = sc.nextInt(); String s = sc.nextLine();`?",
+            "es": "La entrada es `42` en la primera línea y `Ada Lovelace` en la segunda. ¿Qué vale `s` después de `int n = sc.nextInt(); String s = sc.nextLine();`?"
+          },
+          "options": {
+            "en": [
+              "`Ada Lovelace`",
+              "An empty string",
+              "`42`",
+              "`Ada`"
+            ],
+            "es": [
+              "`Ada Lovelace`",
+              "Una cadena vacía",
+              "`42`",
+              "`Ada`"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`nextInt()` consumes `42` but leaves the newline after it, so `nextLine()` returns the rest of that first line, which is empty. You would need a second `nextLine()` to get `Ada Lovelace`.",
+            "es": "`nextInt()` consume `42` pero deja el salto de línea que lo sigue, así que `nextLine()` devuelve el resto de esa primera línea, que está vacío. Necesitarías un segundo `nextLine()` para obtener `Ada Lovelace`."
+          }
+        },
+        {
+          "question": {
+            "en": "`missing.txt` does not exist. What happens when `Path p = Path.of(\"missing.txt\");` executes?",
+            "es": "`missing.txt` no existe. ¿Qué ocurre al ejecutar `Path p = Path.of(\"missing.txt\");`?"
+          },
+          "options": {
+            "en": [
+              "It throws `NoSuchFileException`",
+              "It creates an empty file named `missing.txt`",
+              "It returns a `Path` normally; no file-system check happens until a `Files` method uses it",
+              "It returns `null`"
+            ],
+            "es": [
+              "Lanza `NoSuchFileException`",
+              "Crea un archivo vacío llamado `missing.txt`",
+              "Devuelve un `Path` normalmente; no se consulta el sistema de archivos hasta que un método de `Files` lo use",
+              "Devuelve `null`"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "A `Path` is just a location; creating one does no I/O. `NoSuchFileException` would come later from a call like `Files.readString(p)`, and you check existence with `Files.exists(p)`.",
+            "es": "Un `Path` es solo una ubicación; crearlo no hace E/S. `NoSuchFileException` aparecería después, en una llamada como `Files.readString(p)`, y la existencia se comprueba con `Files.exists(p)`."
+          }
+        }
+      ]
+    },
+    "combinatorics-discrete-probability": {
+      "minutes": 90,
+      "prerequisites": [
+        "sets-relations-functions"
+      ],
+      "whyItMatters": {
+        "en": "Counting arguments are how you bound the search space of backtracking and brute-force algorithms, estimate hash collision rates (the birthday problem), and analyze randomized algorithms; \"how many ways…\" and \"what is the probability…\" questions are staples of discrete math exams and quant-style interviews.",
+        "es": "Los argumentos de conteo son la forma de acotar el espacio de búsqueda de algoritmos de backtracking y fuerza bruta, estimar la tasa de colisiones en hashing (el problema del cumpleaños) y analizar algoritmos aleatorizados; las preguntas \"¿de cuántas formas…?\" y \"¿cuál es la probabilidad…?\" son clásicas en exámenes de matemáticas discretas y entrevistas de tipo cuantitativo."
+      },
+      "objectives": {
+        "en": [
+          "Choose between the product rule, permutations P(n, k) = n!/(n − k)!, combinations C(n, k) and nᵏ by deciding whether order matters and whether repetition is allowed.",
+          "Implement `nCr` without overflow for moderate n using the multiplicative formula or Pascal's rule C(n, k) = C(n − 1, k − 1) + C(n − 1, k).",
+          "Compute probabilities of events in a uniform sample space as |E|/|S|, including complements P(Ē) = 1 − P(E).",
+          "Analyze \"at least one\" and \"exactly k\" questions with independent trials using the binomial formula C(n, k)·pᵏ·(1 − p)ⁿ⁻ᵏ."
+        ],
+        "es": [
+          "Elegir entre la regla del producto, permutaciones P(n, k) = n!/(n − k)!, combinaciones C(n, k) y nᵏ decidiendo si importa el orden y si se permite repetición.",
+          "Implementar `nCr` sin desbordamiento para n moderado usando la fórmula multiplicativa o la regla de Pascal C(n, k) = C(n − 1, k − 1) + C(n − 1, k).",
+          "Calcular probabilidades de eventos en un espacio muestral uniforme como |E|/|S|, incluidos los complementos P(Ē) = 1 − P(E).",
+          "Analizar preguntas de \"al menos uno\" y \"exactamente k\" con ensayos independientes usando la fórmula binomial C(n, k)·pᵏ·(1 − p)ⁿ⁻ᵏ."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Work with finite sets, subsets and the Cartesian product",
+          "Write loops with `long` arithmetic in Java and recognize integer overflow"
+        ],
+        "es": [
+          "Trabajar con conjuntos finitos, subconjuntos y el producto cartesiano",
+          "Escribir ciclos con aritmética `long` en Java y reconocer el desbordamiento de enteros"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Order matters, no repetition: P(n, k) = n!/(n − k)!; order does not matter: C(n, k) = n!/(k!(n − k)!); with repetition and order: nᵏ.",
+          "C(n, k) = C(n, n − k), ∑ₖ C(n, k) = 2ⁿ, and Pascal's rule C(n, k) = C(n − 1, k − 1) + C(n − 1, k).",
+          "20! is the largest factorial that fits in a Java `long`; 21! silently overflows, so never compute C(n, k) as n!/(k!(n − k)!) for n > 20.",
+          "P(A ∪ B) = P(A) + P(B) − P(A ∩ B); for independent events P(A ∩ B) = P(A)·P(B); \"at least one\" is usually easiest as 1 − P(none)."
+        ],
+        "es": [
+          "Importa el orden, sin repetición: P(n, k) = n!/(n − k)!; no importa el orden: C(n, k) = n!/(k!(n − k)!); con repetición y orden: nᵏ.",
+          "C(n, k) = C(n, n − k), ∑ₖ C(n, k) = 2ⁿ y la regla de Pascal C(n, k) = C(n − 1, k − 1) + C(n − 1, k).",
+          "20! es el mayor factorial que cabe en un `long` de Java; 21! se desborda en silencio, así que nunca calcules C(n, k) como n!/(k!(n − k)!) para n > 20.",
+          "P(A ∪ B) = P(A) + P(B) − P(A ∩ B); para eventos independientes P(A ∩ B) = P(A)·P(B); \"al menos uno\" suele calcularse más fácil como 1 − P(ninguno)."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Using permutations when order does not matter (or the reverse), e.g. counting committees with P(n, k), which overcounts by a factor of k!; ask \"would swapping two chosen items give a different outcome?\".",
+          "Computing `nCr` with full factorials as in the module's example, which overflows `long` for n ≥ 21; multiply and divide incrementally (`res = res * (n - i) / (i + 1)`) or use `BigInteger`.",
+          "Adding probabilities of events that are not mutually exclusive (P(A ∪ B) = P(A) + P(B)) or multiplying probabilities of dependent events; check exclusivity and independence before using the shortcut rules."
+        ],
+        "es": [
+          "Usar permutaciones cuando el orden no importa (o al revés), p. ej. contar comités con P(n, k), lo que sobrecuenta por un factor de k!; pregúntate \"¿intercambiar dos elementos elegidos da un resultado distinto?\".",
+          "Calcular `nCr` con factoriales completos como en el ejemplo del módulo, lo que desborda `long` para n ≥ 21; multiplica y divide de forma incremental (`res = res * (n - i) / (i + 1)`) o usa `BigInteger`.",
+          "Sumar probabilidades de eventos que no son mutuamente excluyentes (P(A ∪ B) = P(A) + P(B)) o multiplicar probabilidades de eventos dependientes; verifica exclusión e independencia antes de usar las reglas abreviadas."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: by hand, compute 6!, P(6, 2), C(6, 2) and the number of 4-character PINs over digits 0–9 with repetition allowed; check them with the module's helpers.",
+          "Core: implement `long nCr(int n, int k)` using the multiplicative formula with `k = Math.min(k, n - k)` so that intermediate results stay exact, and verify C(30, 15) = 155117520 and C(60, 30) = 118264581564861424.",
+          "Stretch: build Pascal's triangle up to row 30 in a `long[][]` using C(n, k) = C(n − 1, k − 1) + C(n − 1, k), and verify that each row sums to 2ⁿ.",
+          "Exam-style: in a group of n people with birthdays uniform over 365 days, write `double birthdayCollision(int n)` = 1 − ∏ᵢ₌₀ⁿ⁻¹ (365 − i)/365, find the smallest n with probability > 0.5, and explain how this estimates hash-table collisions."
+        ],
+        "es": [
+          "Calentamiento: calcula a mano 6!, P(6, 2), C(6, 2) y la cantidad de PIN de 4 caracteres con dígitos 0–9 permitiendo repetición; compruébalos con los métodos del módulo.",
+          "Núcleo: implementa `long nCr(int n, int k)` con la fórmula multiplicativa usando `k = Math.min(k, n - k)` para que los resultados intermedios sean exactos, y verifica que C(30, 15) = 155117520 y C(60, 30) = 118264581564861424.",
+          "Extensión: construye el triángulo de Pascal hasta la fila 30 en un `long[][]` usando C(n, k) = C(n − 1, k − 1) + C(n − 1, k), y verifica que cada fila suma 2ⁿ.",
+          "Estilo examen: en un grupo de n personas con cumpleaños uniformes en 365 días, escribe `double birthdayCollision(int n)` = 1 − ∏ᵢ₌₀ⁿ⁻¹ (365 − i)/365, encuentra el menor n con probabilidad > 0.5 y explica cómo esto estima las colisiones en una tabla hash."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "How do you decide between P(n, k), C(n, k) and nᵏ for a counting problem?",
+          "Why is C(n, k) equal to C(n, n − k)?",
+          "How do you compute the probability of getting at least one success in n independent trials with success probability p?"
+        ],
+        "es": [
+          "¿Cómo decides entre P(n, k), C(n, k) y nᵏ en un problema de conteo?",
+          "¿Por qué C(n, k) es igual a C(n, n − k)?",
+          "¿Cómo calculas la probabilidad de obtener al menos un éxito en n ensayos independientes con probabilidad de éxito p?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Factorials",
+            "es": "Factoriales"
+          },
+          "definition": {
+            "en": "For a non-negative integer n, n! = n·(n − 1)·…·2·1 with 0! = 1; it counts the number of ways to arrange n distinct objects in a row.",
+            "es": "Para un entero no negativo n, n! = n·(n − 1)·…·2·1 con 0! = 1; cuenta el número de formas de ordenar n objetos distintos en fila."
+          }
+        },
+        {
+          "term": {
+            "en": "Permutations",
+            "es": "Permutaciones"
+          },
+          "definition": {
+            "en": "Ordered arrangements of k distinct objects chosen from n without repetition; there are P(n, k) = n!/(n − k)! = n·(n − 1)·…·(n − k + 1) of them.",
+            "es": "Disposiciones ordenadas de k objetos distintos elegidos entre n sin repetición; hay P(n, k) = n!/(n − k)! = n·(n − 1)·…·(n − k + 1) de ellas."
+          }
+        },
+        {
+          "term": {
+            "en": "Combinations",
+            "es": "Combinaciones"
+          },
+          "definition": {
+            "en": "Unordered selections of k objects from n distinct objects without repetition, i.e. k-element subsets; there are C(n, k) = P(n, k)/k! of them, because each subset corresponds to k! orderings.",
+            "es": "Selecciones no ordenadas de k objetos entre n objetos distintos sin repetición, es decir, subconjuntos de k elementos; hay C(n, k) = P(n, k)/k! de ellas, porque cada subconjunto corresponde a k! ordenamientos."
+          }
+        },
+        {
+          "term": {
+            "en": "Binomial Coefficients",
+            "es": "Coeficientes binomiales"
+          },
+          "definition": {
+            "en": "The numbers C(n, k) = n!/(k!(n − k)!), read \"n choose k\", which are the coefficients in (x + y)ⁿ = ∑ₖ C(n, k)xᵏyⁿ⁻ᵏ and satisfy Pascal's rule C(n, k) = C(n − 1, k − 1) + C(n − 1, k).",
+            "es": "Los números C(n, k) = n!/(k!(n − k)!), que se leen \"n en k\", y que son los coeficientes de (x + y)ⁿ = ∑ₖ C(n, k)xᵏyⁿ⁻ᵏ y cumplen la regla de Pascal C(n, k) = C(n − 1, k − 1) + C(n − 1, k)."
+          }
+        },
+        {
+          "term": {
+            "en": "Event Probability",
+            "es": "Probabilidad de eventos"
+          },
+          "definition": {
+            "en": "An event E is a subset of the sample space S; when all outcomes are equally likely, P(E) = |E|/|S|, and in general probabilities lie in [0, 1] with P(S) = 1 and P(Ē) = 1 − P(E).",
+            "es": "Un evento E es un subconjunto del espacio muestral S; cuando todos los resultados son igualmente probables, P(E) = |E|/|S|, y en general las probabilidades están en [0, 1] con P(S) = 1 y P(Ē) = 1 − P(E)."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Discrete Mathematics: An Open Introduction (Levin), counting chapter",
+            "es": "Discrete Mathematics: An Open Introduction (Levin), capítulo de conteo"
+          },
+          "url": "https://discrete.openmathbooks.org/dmoi3/"
+        },
+        {
+          "label": {
+            "en": "cp-algorithms: Binomial coefficients (computation without overflow)",
+            "es": "cp-algorithms: Coeficientes binomiales (cálculo sin desbordamiento)"
+          },
+          "url": "https://cp-algorithms.com/combinatorics/binomial-coefficients.html"
+        },
+        {
+          "label": {
+            "en": "MIT OpenCourseWare 6.042J Mathematics for Computer Science (counting and probability units)",
+            "es": "MIT OpenCourseWare 6.042J Matemáticas para Ciencias de la Computación (unidades de conteo y probabilidad)"
+          },
+          "url": "https://ocw.mit.edu/courses/6-042j-mathematics-for-computer-science-fall-2010/"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "In how many ways can a club of 8 people choose a president and a vice-president (different people)?",
+            "es": "¿De cuántas formas puede un club de 8 personas elegir un presidente y un vicepresidente (personas distintas)?"
+          },
+          "options": {
+            "en": [
+              "28",
+              "64",
+              "40320",
+              "56"
+            ],
+            "es": [
+              "28",
+              "64",
+              "40320",
+              "56"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "The roles are distinct, so order matters: P(8, 2) = 8·7 = 56. 28 = C(8, 2) would count unordered pairs, and 64 = 8² allows the same person in both roles.",
+            "es": "Los cargos son distintos, así que importa el orden: P(8, 2) = 8·7 = 56. 28 = C(8, 2) contaría pares no ordenados, y 64 = 8² permite que la misma persona ocupe ambos cargos."
+          }
+        },
+        {
+          "question": {
+            "en": "What does the module's `factorial(21)` (a `long` loop `ans *= i`) return in Java?",
+            "es": "¿Qué devuelve en Java `factorial(21)` del módulo (un ciclo con `long` y `ans *= i`)?"
+          },
+          "options": {
+            "en": [
+              "The exact value of 21!",
+              "It throws an `ArithmeticException`",
+              "A wrong value, because the multiplication silently overflows (here it is negative)",
+              "`Long.MAX_VALUE`"
+            ],
+            "es": [
+              "El valor exacto de 21!",
+              "Lanza una `ArithmeticException`",
+              "Un valor incorrecto, porque la multiplicación se desborda en silencio (aquí resulta negativo)",
+              "`Long.MAX_VALUE`"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "20! ≈ 2.43 × 10¹⁸ fits in a `long` (max ≈ 9.22 × 10¹⁸), but 21! ≈ 5.1 × 10¹⁹ does not, and Java `long` arithmetic wraps without an exception (the result is −4249290049419214848). Only `Math.multiplyExact` would throw.",
+            "es": "20! ≈ 2.43 × 10¹⁸ cabe en un `long` (máximo ≈ 9.22 × 10¹⁸), pero 21! ≈ 5.1 × 10¹⁹ no, y la aritmética de `long` en Java se desborda circularmente sin excepción (el resultado es −4249290049419214848). Solo `Math.multiplyExact` lanzaría una excepción."
+          }
+        },
+        {
+          "question": {
+            "en": "How many different 5-card hands can be dealt from a standard 52-card deck?",
+            "es": "¿Cuántas manos distintas de 5 cartas se pueden repartir de una baraja estándar de 52 cartas?"
+          },
+          "options": {
+            "en": [
+              "C(52, 5) = 2,598,960",
+              "52⁵",
+              "52!/47!",
+              "5!"
+            ],
+            "es": [
+              "C(52, 5) = 2 598 960",
+              "52⁵",
+              "52!/47!",
+              "5!"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "A hand is an unordered set of 5 distinct cards, so it is C(52, 5). 52!/47! = P(52, 5) counts ordered deals and is 5! = 120 times too large; 52⁵ also allows repeated cards.",
+            "es": "Una mano es un conjunto no ordenado de 5 cartas distintas, así que es C(52, 5). 52!/47! = P(52, 5) cuenta repartos ordenados y es 5! = 120 veces mayor; 52⁵ además permite cartas repetidas."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the probability of rolling at least one 6 in 4 rolls of a fair die?",
+            "es": "¿Cuál es la probabilidad de obtener al menos un 6 en 4 lanzamientos de un dado justo?"
+          },
+          "options": {
+            "en": [
+              "4/6",
+              "1 − (5/6)⁴ ≈ 0.518",
+              "(1/6)⁴",
+              "4 · (1/6) · (5/6)³"
+            ],
+            "es": [
+              "4/6",
+              "1 − (5/6)⁴ ≈ 0,518",
+              "(1/6)⁴",
+              "4 · (1/6) · (5/6)³"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The complement \"no 6 in 4 independent rolls\" has probability (5/6)⁴ = 625/1296. 4/6 wrongly adds probabilities of overlapping events, and 4·(1/6)·(5/6)³ is the probability of exactly one 6.",
+            "es": "El complemento \"ningún 6 en 4 lanzamientos independientes\" tiene probabilidad (5/6)⁴ = 625/1296. 4/6 suma erróneamente probabilidades de eventos que se superponen, y 4·(1/6)·(5/6)³ es la probabilidad de exactamente un 6."
+          }
+        },
+        {
+          "question": {
+            "en": "How many bit strings of length 10 contain exactly three 1s?",
+            "es": "¿Cuántas cadenas de bits de longitud 10 contienen exactamente tres 1?"
+          },
+          "options": {
+            "en": [
+              "120",
+              "30",
+              "720",
+              "1024"
+            ],
+            "es": [
+              "120",
+              "30",
+              "720",
+              "1024"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Choose which 3 of the 10 positions hold a 1: C(10, 3) = 120. 720 = P(10, 3) treats the three 1s as distinguishable, and 1024 = 2¹⁰ counts all bit strings.",
+            "es": "Elige cuáles 3 de las 10 posiciones tienen un 1: C(10, 3) = 120. 720 = P(10, 3) trata los tres 1 como distinguibles, y 1024 = 2¹⁰ cuenta todas las cadenas de bits."
+          }
+        }
+      ]
+    },
+    "greedy-algorithms": {
+      "minutes": 100,
+      "prerequisites": [
+        "sorting-algorithms",
+        "heaps",
+        "union-find"
+      ],
+      "whyItMatters": {
+        "en": "Interval scheduling, Huffman coding (used inside DEFLATE, the format behind gzip and ZIP) and minimum spanning trees for network design are all greedy algorithms. Interviewers routinely ask you to justify why greedy works for a problem or to show a counterexample where it fails and DP is needed.",
+        "es": "La planificación de intervalos, la codificación de Huffman (usada dentro de DEFLATE, el formato detrás de gzip y ZIP) y los árboles de expansión mínima para diseñar redes son algoritmos voraces. En entrevistas es habitual que te pidan justificar por qué un enfoque voraz funciona o mostrar un contraejemplo donde falla y hace falta programación dinámica."
+      },
+      "objectives": {
+        "en": [
+          "Prove the greedy-choice property for activity selection using an exchange argument.",
+          "Implement earliest-finish-time activity selection in O(n log n), including the sort by finish time.",
+          "Implement Huffman coding with a `PriorityQueue` and compute the total encoded length in bits.",
+          "Choose between Kruskal and Prim for a given graph density, and construct a coin system where greedy change is not optimal."
+        ],
+        "es": [
+          "Demostrar la propiedad de elección voraz para la selección de actividades mediante un argumento de intercambio.",
+          "Implementar la selección de actividades por menor tiempo de fin en O(n log n), incluido el ordenamiento por tiempo de fin.",
+          "Implementar la codificación de Huffman con una `PriorityQueue` y calcular la longitud total codificada en bits.",
+          "Elegir entre Kruskal y Prim según la densidad del grafo, y construir un sistema de monedas donde el cambio voraz no sea óptimo."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Sort an array of objects with a custom `Comparator` (e.g. `Comparator.comparingInt`).",
+          "Use a `PriorityQueue` as a min-heap and the union-find `find`/`union` operations."
+        ],
+        "es": [
+          "Ordenar un arreglo de objetos con un `Comparator` personalizado (por ejemplo, `Comparator.comparingInt`).",
+          "Usar una `PriorityQueue` como montículo mínimo y las operaciones `find`/`union` de union-find."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Greedy is correct only when the problem has the greedy-choice property and optimal substructure; prove it with an exchange or \"greedy stays ahead\" argument instead of assuming it.",
+          "Activity selection: sort by finish time, then take every interval whose start ≥ the last chosen finish. O(n log n), dominated by the sort.",
+          "Huffman performs n − 1 merges of the two lightest nodes with a min-heap: O(n log n), and the resulting prefix-free code is optimal.",
+          "Kruskal runs in O(E log E) (sort + union-find); Prim with a binary heap runs in O(E log V). Greedy coin change is optimal for {25, 10, 5, 1} but fails for {1, 3, 4} at amount 6 (4+1+1 vs 3+3)."
+        ],
+        "es": [
+          "Un algoritmo voraz es correcto solo si el problema tiene la propiedad de elección voraz y subestructura óptima; demuéstralo con un argumento de intercambio o de \"el voraz va adelante\" en lugar de suponerlo.",
+          "Selección de actividades: ordena por tiempo de fin y toma cada intervalo cuyo inicio sea ≥ al fin del último elegido. O(n log n), dominado por el ordenamiento.",
+          "Huffman hace n − 1 fusiones de los dos nodos más livianos con un montículo mínimo: O(n log n), y el código libre de prefijos resultante es óptimo.",
+          "Kruskal corre en O(E log E) (ordenamiento + union-find); Prim con montículo binario corre en O(E log V). El cambio voraz es óptimo para {25, 10, 5, 1} pero falla con {1, 3, 4} para el monto 6 (4+1+1 frente a 3+3)."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Sorting activities by start time or by duration instead of finish time: one long early interval can block many short ones. Note that the module's `selectMaxActivities` assumes the input is already sorted by finish time, so sort first.",
+          "Assuming greedy coin change works for any denominations. With {1, 3, 4} and amount 6 it returns 3 coins instead of 2; use DP when the coin system is not known to be canonical.",
+          "In Kruskal, adding an edge without checking `find(u) != find(v)` creates cycles; in lazy Prim, not skipping heap entries for vertices already in the tree adds duplicate edges."
+        ],
+        "es": [
+          "Ordenar las actividades por inicio o por duración en vez de por fin: un intervalo largo que empieza temprano puede bloquear muchos cortos. Ojo: `selectMaxActivities` del módulo supone que la entrada ya viene ordenada por fin, así que ordena primero.",
+          "Suponer que el cambio voraz funciona con cualquier conjunto de monedas. Con {1, 3, 4} y monto 6 devuelve 3 monedas en lugar de 2; usa programación dinámica si no sabes que el sistema es canónico.",
+          "En Kruskal, agregar una arista sin verificar `find(u) != find(v)` crea ciclos; en Prim perezoso, no descartar entradas del montículo de vértices ya incluidos agrega aristas duplicadas."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: with start = {1, 3, 0, 5, 8, 5} and finish = {2, 4, 6, 7, 9, 9}, trace earliest-finish selection by hand and list the chosen intervals and their count.",
+          "Implement `int maxNonOverlapping(int[][] intervals)` that sorts by end time with `Arrays.sort` and a comparator and returns the maximum number of non-overlapping intervals (touching endpoints allowed).",
+          "Implement `Map<Character, String> huffmanCodes(Map<Character, Integer> freq)` using a `PriorityQueue<Node>`; assign code \"0\" when there is only one symbol, and print the total encoded length.",
+          "Interview: given meeting intervals, implement `int minMeetingRooms(int[][] intervals)` in O(n log n) by sorting on start time and keeping a min-heap of end times."
+        ],
+        "es": [
+          "Calentamiento: con start = {1, 3, 0, 5, 8, 5} y finish = {2, 4, 6, 7, 9, 9}, sigue a mano la selección por menor fin y anota los intervalos elegidos y cuántos son.",
+          "Implementa `int maxNonOverlapping(int[][] intervals)` que ordene por fin con `Arrays.sort` y un comparador, y devuelva el máximo de intervalos sin solapamiento (se permite que se toquen en los extremos).",
+          "Implementa `Map<Character, String> huffmanCodes(Map<Character, Integer> freq)` usando una `PriorityQueue<Node>`; asigna el código \"0\" cuando hay un solo símbolo e imprime la longitud total codificada.",
+          "Entrevista: dados intervalos de reuniones, implementa `int minMeetingRooms(int[][] intervals)` en O(n log n) ordenando por inicio y manteniendo un montículo mínimo de tiempos de fin."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why can choosing the activity that finishes earliest never make the optimal answer worse?",
+          "Give a set of coin denominations and an amount where greedy change is not optimal.",
+          "When would you prefer Prim over Kruskal, and why?"
+        ],
+        "es": [
+          "¿Por qué elegir la actividad que termina primero nunca empeora la respuesta óptima?",
+          "Da un conjunto de monedas y un monto donde el cambio voraz no sea óptimo.",
+          "¿Cuándo preferirías Prim sobre Kruskal y por qué?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Greedy Choice",
+            "es": "Elección voraz"
+          },
+          "definition": {
+            "en": "The property that some globally optimal solution contains the locally best choice available at each step, so the algorithm can commit to it and never reconsider. It is usually proved with an exchange argument.",
+            "es": "La propiedad de que alguna solución globalmente óptima contiene la mejor elección local disponible en cada paso, de modo que el algoritmo puede comprometerse con ella sin reconsiderarla. Suele demostrarse con un argumento de intercambio."
+          }
+        },
+        {
+          "term": {
+            "en": "Activity Selection",
+            "es": "Selección de actividades"
+          },
+          "definition": {
+            "en": "The problem of choosing the maximum number of mutually non-overlapping intervals from a set. Repeatedly taking the compatible interval with the earliest finish time solves it optimally.",
+            "es": "El problema de elegir la mayor cantidad de intervalos que no se solapen entre sí. Tomar repetidamente el intervalo compatible que termina primero lo resuelve de forma óptima."
+          }
+        },
+        {
+          "term": {
+            "en": "Huffman Coding",
+            "es": "Codificación de Huffman"
+          },
+          "definition": {
+            "en": "An algorithm that builds an optimal prefix-free binary code by repeatedly merging the two lowest-frequency nodes into a parent whose weight is their sum; frequent symbols end up near the root with shorter codes.",
+            "es": "Un algoritmo que construye un código binario libre de prefijos óptimo fusionando repetidamente los dos nodos de menor frecuencia en un padre cuyo peso es la suma; los símbolos frecuentes quedan cerca de la raíz con códigos más cortos."
+          }
+        },
+        {
+          "term": {
+            "en": "Minimum Spanning Tree",
+            "es": "Árbol de expansión mínima"
+          },
+          "definition": {
+            "en": "A set of V − 1 edges that connects all V vertices of a connected, weighted, undirected graph with minimum total weight. Kruskal and Prim find one greedily, justified by the cut property.",
+            "es": "Un conjunto de V − 1 aristas que conecta los V vértices de un grafo conexo, ponderado y no dirigido con peso total mínimo. Kruskal y Prim lo encuentran de forma voraz, justificados por la propiedad del corte."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "cp-algorithms: Minimum spanning tree – Kruskal's algorithm",
+            "es": "cp-algorithms: Árbol de expansión mínima – algoritmo de Kruskal"
+          },
+          "url": "https://cp-algorithms.com/graph/mst_kruskal.html"
+        },
+        {
+          "label": {
+            "en": "cp-algorithms: Minimum spanning tree – Prim's algorithm",
+            "es": "cp-algorithms: Árbol de expansión mínima – algoritmo de Prim"
+          },
+          "url": "https://cp-algorithms.com/graph/mst_prim.html"
+        },
+        {
+          "label": {
+            "en": "Wikipedia: Huffman coding",
+            "es": "Wikipedia: Codificación de Huffman (en inglés)"
+          },
+          "url": "https://en.wikipedia.org/wiki/Huffman_coding"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "For activity selection, which greedy rule always produces the maximum number of non-overlapping activities?",
+            "es": "En la selección de actividades, ¿qué regla voraz produce siempre la máxima cantidad de actividades sin solapamiento?"
+          },
+          "options": {
+            "en": [
+              "Pick the shortest activity first",
+              "Pick the activity that starts earliest",
+              "Pick the activity that finishes earliest",
+              "Pick the longest activity first"
+            ],
+            "es": [
+              "Elegir primero la actividad más corta",
+              "Elegir la actividad que empieza primero",
+              "Elegir la actividad que termina primero",
+              "Elegir primero la actividad más larga"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Finishing earliest leaves the most time for the remaining activities, and an exchange argument shows some optimal schedule starts with it. Shortest-first looks tempting but fails on [1,5], [4,7], [6,10]: it picks [4,7], which conflicts with both others, giving 1 instead of 2.",
+            "es": "Terminar primero deja el mayor tiempo libre para las demás actividades, y un argumento de intercambio muestra que algún horario óptimo empieza con ella. Elegir la más corta parece razonable pero falla con [1,5], [4,7], [6,10]: toma [4,7], que choca con las otras dos, y obtiene 1 en lugar de 2."
+          }
+        },
+        {
+          "question": {
+            "en": "Greedy coin change (largest coin first) with denominations {1, 3, 4} is asked for amount 6. How many coins does greedy use, and what is the optimum?",
+            "es": "Se pide cambio voraz (moneda más grande primero) con denominaciones {1, 3, 4} para el monto 6. ¿Cuántas monedas usa el voraz y cuál es el óptimo?"
+          },
+          "options": {
+            "en": [
+              "Greedy 2, optimal 2",
+              "Greedy 3, optimal 2",
+              "Greedy 3, optimal 3",
+              "Greedy 4, optimal 2"
+            ],
+            "es": [
+              "Voraz 2, óptimo 2",
+              "Voraz 3, óptimo 2",
+              "Voraz 3, óptimo 3",
+              "Voraz 4, óptimo 2"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Greedy takes 4, leaving 2, then 1 + 1: three coins. The optimum is 3 + 3, two coins. This system is not canonical, so greedy is not safe here; DP is.",
+            "es": "El voraz toma 4, quedan 2, luego 1 + 1: tres monedas. El óptimo es 3 + 3, dos monedas. Este sistema no es canónico, así que el voraz no es seguro aquí; la programación dinámica sí."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the total running time of Kruskal's algorithm on a graph with V vertices and E edges, using union-find with path compression and union by rank?",
+            "es": "¿Cuál es el tiempo total de Kruskal en un grafo con V vértices y E aristas, usando union-find con compresión de caminos y unión por rango?"
+          },
+          "options": {
+            "en": [
+              "O(V²)",
+              "O(E · V)",
+              "O(E · α(V)), since union-find is nearly constant",
+              "O(E log E)"
+            ],
+            "es": [
+              "O(V²)",
+              "O(E · V)",
+              "O(E · α(V)), porque union-find es casi constante",
+              "O(E log E)"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "Sorting the edges costs O(E log E) and dominates; the E union-find operations add only O(E · α(V)). The O(E · α(V)) option forgets the sort.",
+            "es": "Ordenar las aristas cuesta O(E log E) y domina; las E operaciones de union-find suman solo O(E · α(V)). La opción O(E · α(V)) olvida el ordenamiento."
+          }
+        },
+        {
+          "question": {
+            "en": "Huffman coding is run on frequencies A:1, B:1, C:2, D:4. How many bits are in D's codeword?",
+            "es": "Se ejecuta Huffman con frecuencias A:1, B:1, C:2, D:4. ¿Cuántos bits tiene el código de D?"
+          },
+          "options": {
+            "en": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "es": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Merge A+B (2), then {AB}+C (4), then {ABC}+D (8). D is a direct child of the root, so its code has 1 bit; C has 2 bits and A, B have 3. Picking 3 confuses D with the rarest symbols.",
+            "es": "Se fusiona A+B (2), luego {AB}+C (4) y luego {ABC}+D (8). D es hijo directo de la raíz, así que su código tiene 1 bit; C tiene 2 y A, B tienen 3. Elegir 3 confunde a D con los símbolos más raros."
+          }
+        },
+        {
+          "question": {
+            "en": "Which statement is the property that justifies Kruskal's and Prim's greedy edge choices?",
+            "es": "¿Qué enunciado es la propiedad que justifica las elecciones voraces de aristas de Kruskal y Prim?"
+          },
+          "options": {
+            "en": [
+              "The heaviest edge on any cycle belongs to every MST",
+              "An MST is the shortest-path tree from the vertex with the lightest edge",
+              "For any cut of the graph, a minimum-weight edge crossing the cut belongs to some MST",
+              "Edges must be added in BFS order from the root"
+            ],
+            "es": [
+              "La arista más pesada de cualquier ciclo pertenece a todo árbol de expansión mínima",
+              "Un árbol de expansión mínima es el árbol de caminos más cortos desde el vértice con la arista más liviana",
+              "Para cualquier corte del grafo, una arista de peso mínimo que cruza el corte pertenece a algún árbol de expansión mínima",
+              "Las aristas deben agregarse en orden BFS desde la raíz"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "This is the cut property: both algorithms always add a lightest edge crossing some cut. The first option reverses the cycle property, which says the heaviest edge on a cycle can be excluded; MSTs and shortest-path trees are different in general.",
+            "es": "Es la propiedad del corte: ambos algoritmos agregan siempre una arista mínima que cruza algún corte. La primera opción invierte la propiedad del ciclo, que dice que la arista más pesada de un ciclo puede excluirse; además, el árbol de expansión mínima y el de caminos más cortos en general difieren."
+          }
+        }
+      ]
+    },
+    "dynamic-programming": {
+      "minutes": 140,
+      "prerequisites": [
+        "recursion",
+        "hash-tables"
+      ],
+      "whyItMatters": {
+        "en": "Dynamic programming is behind `diff` and version-control merges (longest common subsequence), spell checkers (edit distance), DNA sequence alignment and Bellman-Ford shortest paths. It is also the most common category of hard interview problems.",
+        "es": "La programación dinámica está detrás de `diff` y de los merges en control de versiones (subsecuencia común más larga), de los correctores ortográficos (distancia de edición), del alineamiento de secuencias de ADN y de los caminos más cortos de Bellman-Ford. También es la categoría más común de problemas difíciles en entrevistas."
+      },
+      "objectives": {
+        "en": [
+          "Define a DP state, recurrence and base cases for 0/1 knapsack, longest increasing subsequence and coin change.",
+          "Implement the same recurrence top-down with memoization and bottom-up with tabulation, and justify the fill order.",
+          "Analyze running time as (number of states) × (work per transition), e.g. O(n·W) for knapsack and O(n²) for LIS.",
+          "Optimize space by keeping only the previous row, such as the 1D knapsack that iterates capacity downward."
+        ],
+        "es": [
+          "Definir el estado, la recurrencia y los casos base de programación dinámica para la mochila 0/1, la subsecuencia creciente más larga y el cambio de monedas.",
+          "Implementar la misma recurrencia de arriba hacia abajo con memoización y de abajo hacia arriba con tabulación, y justificar el orden de llenado.",
+          "Analizar el tiempo como (número de estados) × (trabajo por transición), por ejemplo O(n·W) para la mochila y O(n²) para LIS.",
+          "Optimizar el espacio guardando solo la fila anterior, como en la mochila 1D que recorre la capacidad hacia abajo."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Write a recursive function with correct base cases and draw its call tree by hand.",
+          "Use arrays or a `HashMap` as a lookup cache keyed by the function's arguments."
+        ],
+        "es": [
+          "Escribir una función recursiva con casos base correctos y dibujar su árbol de llamadas a mano.",
+          "Usar arreglos o un `HashMap` como caché indexado por los argumentos de la función."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "DP applies when a problem has optimal substructure and overlapping subproblems; running time ≈ number of states × cost per transition.",
+          "Naive recursive Fibonacci takes O(φⁿ) ≈ O(1.618ⁿ) time; memoized or tabulated it is O(n), and O(1) extra space with two variables.",
+          "0/1 knapsack: dp[i][w] = max(dp[i−1][w], v_i + dp[i−1][w − w_i]). O(n·W) is pseudo-polynomial because W is a numeric value, not the input length. The 1D version must loop w from W down to w_i.",
+          "LIS: the O(n²) table works; keeping the smallest tail of each length and binary searching it gives O(n log n)."
+        ],
+        "es": [
+          "La programación dinámica aplica cuando hay subestructura óptima y subproblemas superpuestos; el tiempo ≈ número de estados × costo por transición.",
+          "Fibonacci recursivo ingenuo tarda O(φⁿ) ≈ O(1.618ⁿ); con memoización o tabulación es O(n), y O(1) de espacio extra con dos variables.",
+          "Mochila 0/1: dp[i][w] = max(dp[i−1][w], v_i + dp[i−1][w − w_i]). O(n·W) es pseudopolinomial porque W es un valor numérico, no el tamaño de la entrada. La versión 1D debe recorrer w desde W hacia abajo hasta w_i.",
+          "LIS: la tabla O(n²) funciona; guardar la menor cola para cada longitud y buscarla con búsqueda binaria da O(n log n)."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Iterating capacity upward in a 1D 0/1 knapsack lets an item be reused, which silently solves the unbounded knapsack instead. Iterate from W down.",
+          "Wrong base cases or sentinels: initializing a min-coins table with 0 makes impossible amounts look free, and `Integer.MAX_VALUE + 1` overflows to a negative number. Use `amount + 1` as \"infinity\".",
+          "A memo key that omits part of the state (caching by index only when the answer also depends on remaining capacity) returns wrong cached answers. Very deep memoized recursion can also throw `StackOverflowError`; switch to tabulation."
+        ],
+        "es": [
+          "Recorrer la capacidad hacia arriba en la mochila 0/1 en 1D permite reutilizar un ítem, y se resuelve sin aviso la mochila no acotada. Recorre desde W hacia abajo.",
+          "Casos base o centinelas incorrectos: inicializar la tabla de mínimo de monedas con 0 hace que montos imposibles parezcan gratis, y `Integer.MAX_VALUE + 1` se desborda a negativo. Usa `amount + 1` como \"infinito\".",
+          "Una clave de memo que omite parte del estado (guardar solo por índice cuando la respuesta también depende de la capacidad restante) devuelve respuestas equivocadas. Una recursión memoizada muy profunda también puede lanzar `StackOverflowError`; pasa a tabulación."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: implement `int climbStairs(int n)` (steps of 1 or 2) with a table, then rewrite it with O(1) extra space.",
+          "Implement `int minCoins(int[] coins, int amount)` bottom-up, returning −1 when the amount cannot be formed; check that coins {1, 3, 4} and amount 6 give 2.",
+          "Implement `String lcs(String a, String b)` with an (m+1)×(n+1) table, then walk back from dp[m][n] to reconstruct one longest common subsequence.",
+          "Interview: implement `int editDistance(String a, String b)` (insert, delete, replace each cost 1) in O(m·n) time and O(min(m, n)) space."
+        ],
+        "es": [
+          "Calentamiento: implementa `int climbStairs(int n)` (pasos de 1 o 2) con una tabla y luego reescríbela con O(1) de espacio extra.",
+          "Implementa `int minCoins(int[] coins, int amount)` de abajo hacia arriba, devolviendo −1 si el monto no se puede formar; verifica que monedas {1, 3, 4} y monto 6 den 2.",
+          "Implementa `String lcs(String a, String b)` con una tabla de (m+1)×(n+1) y luego recorre hacia atrás desde dp[m][n] para reconstruir una subsecuencia común más larga.",
+          "Entrevista: implementa `int editDistance(String a, String b)` (insertar, borrar y reemplazar cuestan 1) en tiempo O(m·n) y espacio O(min(m, n))."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What are the state and the transition in 0/1 knapsack, and why is O(n·W) called pseudo-polynomial?",
+          "When would you choose memoization over tabulation, and vice versa?",
+          "What distinguishes a DP problem from a divide-and-conquer problem like merge sort?"
+        ],
+        "es": [
+          "¿Cuál es el estado y la transición de la mochila 0/1, y por qué O(n·W) se llama pseudopolinomial?",
+          "¿Cuándo elegirías memoización en lugar de tabulación, y viceversa?",
+          "¿Qué distingue un problema de programación dinámica de uno de divide y vencerás como merge sort?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Memoization",
+            "es": "Memoización"
+          },
+          "definition": {
+            "en": "A top-down technique in which a recursive function stores each subproblem's result in a cache keyed by its state and returns the cached value on later calls instead of recomputing it.",
+            "es": "Técnica de arriba hacia abajo en la que una función recursiva guarda el resultado de cada subproblema en un caché indexado por su estado y lo devuelve en llamadas posteriores en lugar de recalcularlo."
+          }
+        },
+        {
+          "term": {
+            "en": "Tabulation",
+            "es": "Tabulación"
+          },
+          "definition": {
+            "en": "A bottom-up technique that fills a table of subproblem results with loops, in an order that guarantees every dependency is computed before it is needed, with no recursion.",
+            "es": "Técnica de abajo hacia arriba que llena con ciclos una tabla de resultados de subproblemas, en un orden que garantiza que cada dependencia se calcule antes de necesitarse, sin recursión."
+          }
+        },
+        {
+          "term": {
+            "en": "Optimal Substructure",
+            "es": "Subestructura óptima"
+          },
+          "definition": {
+            "en": "A problem has optimal substructure when an optimal solution can be assembled from optimal solutions to its subproblems; for example, every prefix of a shortest path is itself a shortest path.",
+            "es": "Un problema tiene subestructura óptima cuando una solución óptima puede armarse a partir de soluciones óptimas de sus subproblemas; por ejemplo, todo prefijo de un camino más corto es también un camino más corto."
+          }
+        },
+        {
+          "term": {
+            "en": "Overlapping Subproblems",
+            "es": "Subproblemas superpuestos"
+          },
+          "definition": {
+            "en": "The situation where a recursive solution solves the same subproblem many times, as fib(n) and fib(n−1) both call fib(n−2); caching each answer once turns exponential work into polynomial work.",
+            "es": "Situación en la que una solución recursiva resuelve el mismo subproblema muchas veces, como fib(n) y fib(n−1) que llaman ambos a fib(n−2); guardar cada respuesta una sola vez convierte trabajo exponencial en polinomial."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "cp-algorithms: Introduction to dynamic programming",
+            "es": "cp-algorithms: Introducción a la programación dinámica (en inglés)"
+          },
+          "url": "https://cp-algorithms.com/dynamic_programming/intro-to-dp.html"
+        },
+        {
+          "label": {
+            "en": "cp-algorithms: Longest increasing subsequence",
+            "es": "cp-algorithms: Subsecuencia creciente más larga (en inglés)"
+          },
+          "url": "https://cp-algorithms.com/sequences/longest_increasing_subsequence.html"
+        },
+        {
+          "label": {
+            "en": "MIT OpenCourseWare 6.006 Introduction to Algorithms (Spring 2020)",
+            "es": "MIT OpenCourseWare 6.006 Introducción a los algoritmos (primavera 2020, en inglés)"
+          },
+          "url": "https://ocw.mit.edu/courses/6-006-introduction-to-algorithms-spring-2020/"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Using the module's `knapSack` with capacity 5, weights {2, 3, 4} and values {3, 4, 5}, what is returned?",
+            "es": "Usando `knapSack` del módulo con capacidad 5, pesos {2, 3, 4} y valores {3, 4, 5}, ¿qué se devuelve?"
+          },
+          "options": {
+            "en": [
+              "9",
+              "5",
+              "7",
+              "8"
+            ],
+            "es": [
+              "9",
+              "5",
+              "7",
+              "8"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Items of weight 2 and 3 fit together (weight 5) for value 3 + 4 = 7; the weight-4 item alone is only 5. 8 (items 1 and 3) and 9 (items 2 and 3) both exceed capacity.",
+            "es": "Los ítems de peso 2 y 3 caben juntos (peso 5) con valor 3 + 4 = 7; el de peso 4 solo vale 5. 8 (ítems 1 y 3) y 9 (ítems 2 y 3) superan la capacidad."
+          }
+        },
+        {
+          "question": {
+            "en": "What are the time and space costs of the standard tabulated longest common subsequence for strings of lengths m and n?",
+            "es": "¿Cuál es el costo en tiempo y espacio de la subsecuencia común más larga tabulada estándar para cadenas de longitudes m y n?"
+          },
+          "options": {
+            "en": [
+              "O(m·n) time and O(m·n) space",
+              "O(m + n) time and space",
+              "O(m·n) time and O(1) space",
+              "O(2^max(m, n)) time"
+            ],
+            "es": [
+              "Tiempo O(m·n) y espacio O(m·n)",
+              "Tiempo y espacio O(m + n)",
+              "Tiempo O(m·n) y espacio O(1)",
+              "Tiempo O(2^max(m, n))"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "There are (m+1)(n+1) states, each filled in O(1). If you only need the length you can keep two rows (O(min(m, n)) space), but never O(1); exponential time is the unmemoized recursion.",
+            "es": "Hay (m+1)(n+1) estados, cada uno en O(1). Si solo necesitas la longitud puedes guardar dos filas (espacio O(min(m, n))), pero nunca O(1); el tiempo exponencial corresponde a la recursión sin memoizar."
+          }
+        },
+        {
+          "question": {
+            "en": "Which of these problems does NOT have overlapping subproblems, so caching gives no asymptotic benefit?",
+            "es": "¿Cuál de estos problemas NO tiene subproblemas superpuestos, de modo que guardar resultados no da beneficio asintótico?"
+          },
+          "options": {
+            "en": [
+              "Computing Fibonacci numbers",
+              "Merge sort",
+              "0/1 knapsack",
+              "Edit distance"
+            ],
+            "es": [
+              "Calcular números de Fibonacci",
+              "Merge sort",
+              "Mochila 0/1",
+              "Distancia de edición"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Merge sort splits the array into disjoint halves, so no subarray is sorted twice; it has optimal substructure but is divide and conquer, not DP. The other three revisit the same (index, capacity) or (i, j) states many times.",
+            "es": "Merge sort divide el arreglo en mitades disjuntas, así que ningún subarreglo se ordena dos veces; tiene subestructura óptima pero es divide y vencerás, no programación dinámica. Los otros tres vuelven a los mismos estados (índice, capacidad) o (i, j) muchas veces."
+          }
+        },
+        {
+          "question": {
+            "en": "A 1D 0/1 knapsack uses `for (int w = W; w >= wt[i]; w--) dp[w] = Math.max(dp[w], val[i] + dp[w - wt[i]]);`. What happens if the loop runs upward, from `wt[i]` to `W`?",
+            "es": "Una mochila 0/1 en 1D usa `for (int w = W; w >= wt[i]; w--) dp[w] = Math.max(dp[w], val[i] + dp[w - wt[i]]);`. ¿Qué pasa si el ciclo va hacia arriba, de `wt[i]` a `W`?"
+          },
+          "options": {
+            "en": [
+              "Same result, just faster",
+              "It throws `ArrayIndexOutOfBoundsException`",
+              "Only the last item is considered",
+              "Each item can be used multiple times (unbounded knapsack)"
+            ],
+            "es": [
+              "El mismo resultado, solo que más rápido",
+              "Lanza `ArrayIndexOutOfBoundsException`",
+              "Solo se considera el último ítem",
+              "Cada ítem puede usarse varias veces (mochila no acotada)"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "Going upward, `dp[w - wt[i]]` has already been updated with item i in this same pass, so the item can be added again. Indices stay in range, so there is no exception; the speed is identical.",
+            "es": "Al ir hacia arriba, `dp[w - wt[i]]` ya se actualizó con el ítem i en esta misma pasada, así que el ítem puede sumarse otra vez. Los índices no se salen del rango, por lo que no hay excepción; la velocidad es la misma."
+          }
+        },
+        {
+          "question": {
+            "en": "Why is the O(n·W) knapsack algorithm not considered polynomial-time?",
+            "es": "¿Por qué el algoritmo O(n·W) para la mochila no se considera de tiempo polinomial?"
+          },
+          "options": {
+            "en": [
+              "Because there are 2ⁿ subsets of items",
+              "Because W is written with about log₂ W bits, so n·W can be exponential in the input size",
+              "Because it uses a 2D table",
+              "Because tabulation is slower than memoization"
+            ],
+            "es": [
+              "Porque hay 2ⁿ subconjuntos de ítems",
+              "Porque W se escribe con unos log₂ W bits, así que n·W puede ser exponencial en el tamaño de la entrada",
+              "Porque usa una tabla 2D",
+              "Porque la tabulación es más lenta que la memoización"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Complexity is measured in input length; doubling the number of bits of W squares its value, so running time grows exponentially in the bits. The 2ⁿ subsets describe brute force, not why the DP is pseudo-polynomial.",
+            "es": "La complejidad se mide respecto del tamaño de la entrada; duplicar la cantidad de bits de W eleva su valor al cuadrado, así que el tiempo crece exponencialmente en bits. Los 2ⁿ subconjuntos describen la fuerza bruta, no por qué la programación dinámica es pseudopolinomial."
+          }
+        }
+      ]
+    },
+    "testing-junit": {
+      "minutes": 90,
+      "prerequisites": [
+        "oop-basics",
+        "exception-handling"
+      ],
+      "whyItMatters": {
+        "en": "Professional teams will not merge code without tests, and continuous integration runs those tests on every push. Autograders in many courses are JUnit suites, so knowing how they run helps you read the failures they report.",
+        "es": "Los equipos profesionales no integran código sin pruebas, y la integración continua ejecuta esas pruebas en cada push. Los autocalificadores de muchos cursos son suites de JUnit, así que saber cómo se ejecutan te ayuda a entender los fallos que reportan."
+      },
+      "objectives": {
+        "en": [
+          "Write JUnit 5 tests with `@Test`, `assertEquals`, `assertTrue`, `assertThrows` and `assertAll`, putting the expected value first.",
+          "Trace the execution order of `@BeforeAll`, `@BeforeEach`, `@AfterEach` and `@AfterAll` and explain why each test gets a fresh test-class instance.",
+          "Implement parameterized tests with `@ParameterizedTest`, `@ValueSource` and `@CsvSource` to cover edge cases without duplicating code.",
+          "Isolate a class from its dependencies with Mockito (`mock`, `when(...).thenReturn(...)`, `verify`) and apply the red-green-refactor TDD cycle."
+        ],
+        "es": [
+          "Escribir pruebas de JUnit 5 con `@Test`, `assertEquals`, `assertTrue`, `assertThrows` y `assertAll`, poniendo primero el valor esperado.",
+          "Rastrear el orden de ejecución de `@BeforeAll`, `@BeforeEach`, `@AfterEach` y `@AfterAll`, y explicar por qué cada prueba recibe una instancia nueva de la clase de prueba.",
+          "Implementar pruebas parametrizadas con `@ParameterizedTest`, `@ValueSource` y `@CsvSource` para cubrir casos borde sin duplicar código.",
+          "Aislar una clase de sus dependencias con Mockito (`mock`, `when(...).thenReturn(...)`, `verify`) y aplicar el ciclo TDD rojo-verde-refactorizar."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Write a class that receives its collaborators through the constructor (an interface-typed field)",
+          "Write a lambda such as `() -> calc.divide(1, 0)`"
+        ],
+        "es": [
+          "Escribir una clase que recibe sus colaboradores por el constructor (un campo tipado con una interfaz)",
+          "Escribir una lambda como `() -> calc.divide(1, 0)`"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Signature order is `assertEquals(expected, actual)`; swapping them still passes or fails the same way but produces misleading failure messages.",
+          "By default JUnit Jupiter creates a new instance of the test class for every test method, so instance fields never carry state between tests; `@BeforeAll`/`@AfterAll` must therefore be `static` unless you use `@TestInstance(Lifecycle.PER_CLASS)`.",
+          "Compare doubles with `assertEquals(expected, actual, delta)`; exact comparison fails for results like `0.1 + 0.2`.",
+          "Mockito mocks return defaults for unstubbed calls: `0`, `false`, `null`, empty collections and `Optional.empty()`, so a missing stub often shows up as a confusing wrong value rather than an exception."
+        ],
+        "es": [
+          "El orden de la firma es `assertEquals(expected, actual)`; invertirlos no cambia si la prueba pasa o falla, pero produce mensajes de error engañosos.",
+          "Por defecto JUnit Jupiter crea una instancia nueva de la clase de prueba para cada método de prueba, así que los campos de instancia nunca conservan estado entre pruebas; por eso `@BeforeAll`/`@AfterAll` deben ser `static` salvo que uses `@TestInstance(Lifecycle.PER_CLASS)`.",
+          "Compara valores double con `assertEquals(expected, actual, delta)`; la comparación exacta falla con resultados como `0.1 + 0.2`.",
+          "Los mocks de Mockito devuelven valores por defecto en llamadas sin configurar: `0`, `false`, `null`, colecciones vacías y `Optional.empty()`, así que un stub faltante suele aparecer como un valor incorrecto confuso y no como una excepción."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Writing tests that depend on each other's side effects or execution order (for example a static counter or a shared file). JUnit does not guarantee method order, so such suites fail randomly; give each test its own setup.",
+          "Catching the exception yourself in a try/catch with no `fail()` after the call, so the test passes even when nothing is thrown. Use `assertThrows`, which also returns the exception so you can check its message.",
+          "Mocking the class under test or mocking value objects, which ends up testing the mock instead of real behavior. Mock only collaborators at boundaries (repositories, clocks, HTTP clients)."
+        ],
+        "es": [
+          "Escribir pruebas que dependen de los efectos secundarios o del orden de otras pruebas (por ejemplo, un contador estático o un archivo compartido). JUnit no garantiza el orden de los métodos, así que esas suites fallan al azar; dale a cada prueba su propia preparación.",
+          "Capturar la excepción tú mismo en un try/catch sin `fail()` después de la llamada, de modo que la prueba pasa aunque no se lance nada. Usa `assertThrows`, que además devuelve la excepción para revisar su mensaje.",
+          "Hacer mock de la clase bajo prueba o de objetos de valor, con lo que terminas probando el mock y no el comportamiento real. Haz mock solo de colaboradores en los bordes (repositorios, relojes, clientes HTTP)."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: for a `Calculator` with `add`, `subtract` and `divide`, write one `@Test` per method plus an `assertThrows(ArithmeticException.class, ...)` test for integer division by zero.",
+          "Core: write a `@ParameterizedTest` with `@CsvSource` rows like `\"racecar, true\"` and `\"Racecar, true\"` for `isPalindrome(String s)`, covering the empty string, a single character and mixed case.",
+          "Stretch: test a `GradeService` that depends on a `GradeRepository` interface; mock the repository with Mockito, stub `findScores(\"ana\")` to return `List.of(90, 80)`, assert the average is 85.0 and `verify` the repository was called exactly once.",
+          "Interview-style: use TDD to build `StringCalculator.add(String numbers)` (empty string → 0, comma or newline separators, negatives throw `IllegalArgumentException` listing all negatives). Commit after each red and green step and show the sequence of tests you wrote."
+        ],
+        "es": [
+          "Calentamiento: para una `Calculator` con `add`, `subtract` y `divide`, escribe un `@Test` por método más una prueba con `assertThrows(ArithmeticException.class, ...)` para la división entera entre cero.",
+          "Núcleo: escribe un `@ParameterizedTest` con filas de `@CsvSource` como `\"racecar, true\"` y `\"Racecar, true\"` para `isPalindrome(String s)`, cubriendo la cadena vacía, un solo carácter y mayúsculas mezcladas.",
+          "Reto: prueba un `GradeService` que depende de una interfaz `GradeRepository`; haz mock del repositorio con Mockito, configura `findScores(\"ana\")` para devolver `List.of(90, 80)`, verifica que el promedio sea 85.0 y usa `verify` para confirmar que el repositorio se llamó exactamente una vez.",
+          "Tipo entrevista: usa TDD para construir `StringCalculator.add(String numbers)` (cadena vacía → 0, separadores coma o salto de línea, los negativos lanzan `IllegalArgumentException` listando todos los negativos). Haz commit después de cada paso rojo y verde y muestra la secuencia de pruebas que escribiste."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "In what order do `@BeforeAll`, `@BeforeEach`, the test and `@AfterEach` run for a class with three tests, and how many times does each run?",
+          "What is the difference between a stub (`when(...).thenReturn(...)`) and a verification (`verify(...)`) in Mockito?",
+          "What are the three steps of TDD, and why do you watch the test fail before writing the code?"
+        ],
+        "es": [
+          "¿En qué orden se ejecutan `@BeforeAll`, `@BeforeEach`, la prueba y `@AfterEach` en una clase con tres pruebas, y cuántas veces se ejecuta cada uno?",
+          "¿Cuál es la diferencia entre un stub (`when(...).thenReturn(...)`) y una verificación (`verify(...)`) en Mockito?",
+          "¿Cuáles son los tres pasos de TDD y por qué debes ver fallar la prueba antes de escribir el código?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "JUnit Basics",
+            "es": "Fundamentos de JUnit"
+          },
+          "definition": {
+            "en": "JUnit 5 (the Jupiter API) is Java's standard unit-testing framework: you mark non-private `void` methods with `@Test`, and a test engine discovers, runs and reports each one as passed or failed, usually through Maven, Gradle or the IDE.",
+            "es": "JUnit 5 (la API Jupiter) es el framework estándar de pruebas unitarias de Java: marcas métodos `void` no privados con `@Test`, y un motor de pruebas los descubre, ejecuta y reporta cada uno como aprobado o fallido, normalmente a través de Maven, Gradle o el IDE."
+          }
+        },
+        {
+          "term": {
+            "en": "Test Assertions",
+            "es": "Aserciones de prueba"
+          },
+          "definition": {
+            "en": "Static methods in `org.junit.jupiter.api.Assertions` (such as `assertEquals`, `assertTrue`, `assertThrows`, `assertAll`) that check an expected condition and throw `AssertionFailedError` with a descriptive message when it does not hold, failing the test.",
+            "es": "Métodos estáticos de `org.junit.jupiter.api.Assertions` (como `assertEquals`, `assertTrue`, `assertThrows`, `assertAll`) que comprueban una condición esperada y lanzan `AssertionFailedError` con un mensaje descriptivo cuando no se cumple, haciendo fallar la prueba."
+          }
+        },
+        {
+          "term": {
+            "en": "Test Lifecycle",
+            "es": "Ciclo de vida de las pruebas"
+          },
+          "definition": {
+            "en": "The sequence JUnit follows around tests: `@BeforeAll` once per class, then for each test a new instance, `@BeforeEach`, the test method and `@AfterEach`, and finally `@AfterAll` once.",
+            "es": "La secuencia que JUnit sigue alrededor de las pruebas: `@BeforeAll` una vez por clase; luego, para cada prueba, una instancia nueva, `@BeforeEach`, el método de prueba y `@AfterEach`; y al final `@AfterAll` una vez."
+          }
+        },
+        {
+          "term": {
+            "en": "Mocking",
+            "es": "Mocking"
+          },
+          "definition": {
+            "en": "Replacing a real collaborator with a programmable fake (a mock, typically created with Mockito) whose return values you script and whose calls you can verify, so a unit can be tested without a database, network or clock.",
+            "es": "Reemplazar un colaborador real por un sustituto programable (un mock, normalmente creado con Mockito) cuyos valores de retorno defines y cuyas llamadas puedes verificar, para probar una unidad sin base de datos, red ni reloj."
+          }
+        },
+        {
+          "term": {
+            "en": "TDD",
+            "es": "TDD"
+          },
+          "definition": {
+            "en": "Test-Driven Development: a workflow of short cycles in which you write a failing test (red), write the minimum code to pass it (green), then clean up the design while keeping all tests passing (refactor).",
+            "es": "Desarrollo guiado por pruebas: un flujo de ciclos cortos en el que escribes una prueba que falla (rojo), escribes el código mínimo para que pase (verde) y luego mejoras el diseño manteniendo todas las pruebas en verde (refactorizar)."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "JUnit 5 User Guide (official)",
+            "es": "Guía de usuario de JUnit 5 (oficial)"
+          },
+          "url": "https://junit.org/junit5/docs/current/user-guide/"
+        },
+        {
+          "label": {
+            "en": "Mockito official site and documentation",
+            "es": "Sitio oficial y documentación de Mockito"
+          },
+          "url": "https://site.mockito.org/"
+        },
+        {
+          "label": {
+            "en": "Martin Fowler: Test Driven Development",
+            "es": "Martin Fowler: Test Driven Development (en inglés)"
+          },
+          "url": "https://martinfowler.com/bliki/TestDrivenDevelopment.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "A test class has a `static` `@BeforeAll` that prints `A`, a `@BeforeEach` that prints `B`, an `@AfterEach` that prints `E`, and two `@Test` methods that each print `T`. What is printed?",
+            "es": "Una clase de prueba tiene un `@BeforeAll` `static` que imprime `A`, un `@BeforeEach` que imprime `B`, un `@AfterEach` que imprime `E` y dos métodos `@Test` que imprimen `T` cada uno. ¿Qué se imprime?"
+          },
+          "options": {
+            "en": [
+              "A B T T E",
+              "B A T E B A T E",
+              "A B T B T E E",
+              "A B T E B T E"
+            ],
+            "es": [
+              "A B T T E",
+              "B A T E B A T E",
+              "A B T B T E E",
+              "A B T E B T E"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "`@BeforeAll` runs once, then each test is wrapped by its own `@BeforeEach` and `@AfterEach`. `A B T T E` treats the per-test hooks as if they ran once per class.",
+            "es": "`@BeforeAll` se ejecuta una vez y luego cada prueba queda rodeada por su propio `@BeforeEach` y `@AfterEach`. `A B T T E` trata los ganchos por prueba como si se ejecutaran una vez por clase."
+          }
+        },
+        {
+          "question": {
+            "en": "Why does JUnit Jupiter, by default, create a new instance of the test class for each test method?",
+            "es": "¿Por qué JUnit Jupiter, por defecto, crea una instancia nueva de la clase de prueba para cada método de prueba?"
+          },
+          "options": {
+            "en": [
+              "So tests can run on different JVMs",
+              "So instance fields changed by one test cannot affect another test",
+              "Because test methods must be static",
+              "To make the suite run faster"
+            ],
+            "es": [
+              "Para que las pruebas puedan ejecutarse en distintas JVM",
+              "Para que los campos de instancia modificados por una prueba no afecten a otra",
+              "Porque los métodos de prueba deben ser estáticos",
+              "Para que la suite se ejecute más rápido"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Per-method instances isolate tests from each other's mutable state. It is not about speed (it adds a little overhead), and test methods are instance methods, not static.",
+            "es": "Las instancias por método aíslan cada prueba del estado mutable de las demás. No se trata de velocidad (agrega un poco de costo) y los métodos de prueba son de instancia, no estáticos."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the result of `assertEquals(0.3, 0.1 + 0.2);` in JUnit 5?",
+            "es": "¿Cuál es el resultado de `assertEquals(0.3, 0.1 + 0.2);` en JUnit 5?"
+          },
+          "options": {
+            "en": [
+              "It fails, because `0.1 + 0.2` is `0.30000000000000004` in binary floating point",
+              "It passes, because JUnit rounds doubles to 15 digits",
+              "It does not compile; doubles require a delta argument",
+              "It passes, because both values print as `0.3`"
+            ],
+            "es": [
+              "Falla, porque `0.1 + 0.2` es `0.30000000000000004` en punto flotante binario",
+              "Pasa, porque JUnit redondea los double a 15 dígitos",
+              "No compila; los double requieren un argumento delta",
+              "Pasa, porque ambos valores se imprimen como `0.3`"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "The two-argument double overload compares exactly, and `0.1 + 0.2` is not exactly `0.3`. The overload without a delta does compile; use `assertEquals(0.3, 0.1 + 0.2, 1e-9)` instead.",
+            "es": "La sobrecarga de dos argumentos para double compara de forma exacta, y `0.1 + 0.2` no es exactamente `0.3`. La sobrecarga sin delta sí compila; usa `assertEquals(0.3, 0.1 + 0.2, 1e-9)` en su lugar."
+          }
+        },
+        {
+          "question": {
+            "en": "A class has a `@BeforeEach` method and one `@ParameterizedTest` fed by a `@CsvSource` with 4 rows. How many times does the `@BeforeEach` method run?",
+            "es": "Una clase tiene un método `@BeforeEach` y un `@ParameterizedTest` alimentado por un `@CsvSource` con 4 filas. ¿Cuántas veces se ejecuta el método `@BeforeEach`?"
+          },
+          "options": {
+            "en": [
+              "1",
+              "0",
+              "4",
+              "5"
+            ],
+            "es": [
+              "1",
+              "0",
+              "4",
+              "5"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Each row becomes a separate test invocation with the full per-test lifecycle, so `@BeforeEach` runs 4 times. Answering 1 treats the parameterized test as a single test.",
+            "es": "Cada fila se convierte en una invocación de prueba separada con el ciclo de vida completo por prueba, así que `@BeforeEach` se ejecuta 4 veces. Responder 1 trata la prueba parametrizada como una sola prueba."
+          }
+        },
+        {
+          "question": {
+            "en": "`repo` is a Mockito mock of an interface with `Optional<User> findById(int id)`. After `when(repo.findById(7)).thenReturn(Optional.of(ana));`, what does `repo.findById(8)` return?",
+            "es": "`repo` es un mock de Mockito de una interfaz con `Optional<User> findById(int id)`. Después de `when(repo.findById(7)).thenReturn(Optional.of(ana));`, ¿qué devuelve `repo.findById(8)`?"
+          },
+          "options": {
+            "en": [
+              "`Optional.of(ana)`",
+              "`null`",
+              "It throws `UnsupportedOperationException`",
+              "`Optional.empty()`"
+            ],
+            "es": [
+              "`Optional.of(ana)`",
+              "`null`",
+              "Lanza `UnsupportedOperationException`",
+              "`Optional.empty()`"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "The stub matches only the argument 7. For unstubbed calls Mockito returns an empty value for the return type, which for `Optional` is `Optional.empty()` (Mockito 2 and later), not `null`.",
+            "es": "El stub solo coincide con el argumento 7. En llamadas sin configurar Mockito devuelve un valor vacío del tipo de retorno, que para `Optional` es `Optional.empty()` (Mockito 2 en adelante), no `null`."
+          }
+        }
+      ]
+    },
+    "assembly-registers-memory": {
+      "minutes": 75,
+      "prerequisites": [
+        "intro-to-coding"
+      ],
+      "whyItMatters": {
+        "en": "Systems, architecture and security courses (and debuggers like GDB showing disassembly) assume you can read registers and memory operands; it is also how you understand why Java `int` overflow wraps and why network byte order differs from x86.",
+        "es": "Los cursos de sistemas, arquitectura y seguridad (y depuradores como GDB que muestran código desensamblado) suponen que sabes leer registros y operandos de memoria; también es la forma de entender por qué el `int` de Java se desborda circularmente y por qué el orden de bytes de red difiere del de x86."
+      },
+      "objectives": {
+        "en": [
+          "Identify the 64/32/16/8-bit names of the same x86-64 register (`rax`/`eax`/`ax`/`al`) and predict which bits a write to each one changes.",
+          "Trace a sequence of `mov`, `add` and `sub` instructions with register and memory operands, writing the value of each register after every step.",
+          "Explain the difference between `mov rax, [num]` (load the value) and `mov rax, num` (load the address) in NASM syntax.",
+          "Determine the byte-by-byte memory layout of a multi-byte integer stored on a little-endian x86-64 machine."
+        ],
+        "es": [
+          "Identificar los nombres de 64/32/16/8 bits de un mismo registro x86-64 (`rax`/`eax`/`ax`/`al`) y predecir qué bits modifica una escritura en cada uno.",
+          "Rastrear una secuencia de instrucciones `mov`, `add` y `sub` con operandos de registro y memoria, anotando el valor de cada registro después de cada paso.",
+          "Explicar la diferencia entre `mov rax, [num]` (cargar el valor) y `mov rax, num` (cargar la dirección) en sintaxis NASM.",
+          "Determinar la disposición byte por byte en memoria de un entero de varios bytes almacenado en una máquina x86-64 little-endian."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Convert between decimal, binary and hexadecimal by hand",
+          "Trace variable values through a short program line by line"
+        ],
+        "es": [
+          "Convertir a mano entre decimal, binario y hexadecimal",
+          "Rastrear los valores de las variables en un programa corto línea por línea"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "x86-64 has 16 general-purpose 64-bit registers: `rax rbx rcx rdx rsi rdi rbp rsp r8–r15`; `rsp` is the stack pointer and should not be used for general data.",
+          "Writing a 32-bit register (e.g. `mov eax, 1`) zero-extends into the full 64-bit register; writing an 8- or 16-bit register (`al`, `ax`) leaves the other bits unchanged.",
+          "Sizes: byte = 1, word = 2, dword = 4, qword = 8 bytes (NASM data directives `db dw dd dq`).",
+          "x86 is little-endian: the least significant byte is stored at the lowest address, so 0x12345678 is stored as 78 56 34 12."
+        ],
+        "es": [
+          "x86-64 tiene 16 registros de propósito general de 64 bits: `rax rbx rcx rdx rsi rdi rbp rsp r8–r15`; `rsp` es el puntero de pila y no debe usarse para datos generales.",
+          "Escribir en un registro de 32 bits (p. ej. `mov eax, 1`) extiende con ceros al registro completo de 64 bits; escribir en uno de 8 o 16 bits (`al`, `ax`) deja los demás bits sin cambios.",
+          "Tamaños: byte = 1, word = 2, dword = 4, qword = 8 bytes (directivas de datos NASM `db dw dd dq`).",
+          "x86 es little-endian: el byte menos significativo se guarda en la dirección más baja, así que 0x12345678 se almacena como 78 56 34 12."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Forgetting the brackets: `mov rax, num` puts the address of `num` in `rax`, not its value; use `mov rax, [num]` to load the contents.",
+          "Writing `mov [rbx], 5` without a size, which NASM rejects as ambiguous; specify the width, e.g. `mov dword [rbx], 5`.",
+          "Trying a memory-to-memory move like `mov [a], [b]`, which x86 does not encode; load into a register first (`mov rax, [b]` then `mov [a], rax`)."
+        ],
+        "es": [
+          "Olvidar los corchetes: `mov rax, num` pone en `rax` la dirección de `num`, no su valor; usa `mov rax, [num]` para cargar el contenido.",
+          "Escribir `mov [rbx], 5` sin tamaño, lo que NASM rechaza por ambiguo; especifica el ancho, p. ej. `mov dword [rbx], 5`.",
+          "Intentar un movimiento de memoria a memoria como `mov [a], [b]`, que x86 no puede codificar; carga primero en un registro (`mov rax, [b]` y luego `mov [a], rax`)."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: starting from `rax = 0x1122334455667788`, write the value of `rax` after each of these independent instructions: `mov al, 0xFF`, `mov ax, 0`, `mov eax, 0`.",
+          "Core: write a NASM program with `section .data` holding `a dq 7` and `b dq 5` that computes `a + b` into `rax`, stores it in `c dq 0`, and exits with `rdi` = the low byte of the sum; check the result with `echo $?`.",
+          "Stretch: store `dd 0x0A0B0C0D` at a label, then load each byte with `movzx eax, byte [label + i]` for i = 0..3 and print or inspect them in GDB (`x/4xb &label`) to confirm little-endian order.",
+          "Exam-style: given `rax = 0xFFFFFFFFFFFFFFFF`, trace `mov eax, 2` → `add rax, 3` → `mov al, 0x80` → `mov [buf], rax` and write `rax` after each step plus the 8 bytes at `buf` in address order."
+        ],
+        "es": [
+          "Calentamiento: partiendo de `rax = 0x1122334455667788`, escribe el valor de `rax` después de cada una de estas instrucciones independientes: `mov al, 0xFF`, `mov ax, 0`, `mov eax, 0`.",
+          "Núcleo: escribe un programa NASM con `section .data` que contenga `a dq 7` y `b dq 5`, calcule `a + b` en `rax`, lo guarde en `c dq 0` y termine con `rdi` = el byte bajo de la suma; comprueba el resultado con `echo $?`.",
+          "Extensión: guarda `dd 0x0A0B0C0D` en una etiqueta, luego carga cada byte con `movzx eax, byte [label + i]` para i = 0..3 e inspecciónalos en GDB (`x/4xb &label`) para confirmar el orden little-endian.",
+          "Estilo examen: con `rax = 0xFFFFFFFFFFFFFFFF`, rastrea `mov eax, 2` → `add rax, 3` → `mov al, 0x80` → `mov [buf], rax` y escribe `rax` después de cada paso, además de los 8 bytes en `buf` en orden de dirección."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Which bits of `rax` does `mov ax, 7` change, and which does `mov eax, 7` change?",
+          "What is the difference between `[num]` and `num` as an operand in NASM?",
+          "In what order are the bytes of 0xCAFEBABE stored in memory on x86-64?"
+        ],
+        "es": [
+          "¿Qué bits de `rax` cambia `mov ax, 7` y cuáles cambia `mov eax, 7`?",
+          "¿Cuál es la diferencia entre `[num]` y `num` como operando en NASM?",
+          "¿En qué orden se almacenan en memoria los bytes de 0xCAFEBABE en x86-64?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "CPU Registers",
+            "es": "Registros de la CPU"
+          },
+          "definition": {
+            "en": "Small, fixed-size storage locations inside the processor that instructions read and write directly; x86-64 has 16 general-purpose 64-bit registers (`rax` … `r15`) plus special ones such as the instruction pointer `rip` and the flags register `rflags`.",
+            "es": "Ubicaciones de almacenamiento pequeñas y de tamaño fijo dentro del procesador que las instrucciones leen y escriben directamente; x86-64 tiene 16 registros de propósito general de 64 bits (`rax` … `r15`) además de registros especiales como el puntero de instrucción `rip` y el registro de banderas `rflags`."
+          }
+        },
+        {
+          "term": {
+            "en": "Memory Addresses",
+            "es": "Direcciones de memoria"
+          },
+          "definition": {
+            "en": "Numbers that identify individual bytes in a program's (virtual) memory; on x86-64 each address is a 64-bit value, and a multi-byte value is referred to by the address of its lowest byte.",
+            "es": "Números que identifican bytes individuales en la memoria (virtual) de un programa; en x86-64 cada dirección es un valor de 64 bits, y un valor de varios bytes se identifica por la dirección de su byte más bajo."
+          }
+        },
+        {
+          "term": {
+            "en": "Load/Store",
+            "es": "Carga/almacenamiento"
+          },
+          "definition": {
+            "en": "Moving data between memory and registers: a load copies bytes from a memory address into a register (`mov rax, [rbx]`) and a store copies a register's bytes to memory (`mov [rbx], rax`).",
+            "es": "Mover datos entre memoria y registros: una carga copia bytes de una dirección de memoria a un registro (`mov rax, [rbx]`) y un almacenamiento copia los bytes de un registro a memoria (`mov [rbx], rax`)."
+          }
+        },
+        {
+          "term": {
+            "en": "Data Sizes",
+            "es": "Tamaños de datos"
+          },
+          "definition": {
+            "en": "The width of an operand: byte (8 bits), word (16), dword (32) and qword (64); the size determines how many bytes an instruction reads or writes and which register name (`al`, `ax`, `eax`, `rax`) is used.",
+            "es": "El ancho de un operando: byte (8 bits), word (16), dword (32) y qword (64); el tamaño determina cuántos bytes lee o escribe una instrucción y qué nombre de registro (`al`, `ax`, `eax`, `rax`) se usa."
+          }
+        },
+        {
+          "term": {
+            "en": "Endian Awareness",
+            "es": "Conciencia del orden de bytes (endianness)"
+          },
+          "definition": {
+            "en": "Knowing the byte order a machine uses for multi-byte values: little-endian (x86-64) stores the least significant byte at the lowest address, while big-endian (network byte order) stores the most significant byte first.",
+            "es": "Saber qué orden de bytes usa una máquina para valores de varios bytes: little-endian (x86-64) guarda el byte menos significativo en la dirección más baja, mientras que big-endian (orden de bytes de red) guarda primero el byte más significativo."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "x86 instruction reference: MOV (felixcloutier.com)",
+            "es": "Referencia de instrucciones x86: MOV (felixcloutier.com)"
+          },
+          "url": "https://www.felixcloutier.com/x86/mov"
+        },
+        {
+          "label": {
+            "en": "NASM documentation (official manual)",
+            "es": "Documentación de NASM (manual oficial)"
+          },
+          "url": "https://www.nasm.us/doc/"
+        },
+        {
+          "label": {
+            "en": "x86 instruction reference index (derived from the Intel SDM)",
+            "es": "Índice de referencia de instrucciones x86 (derivado del Intel SDM)"
+          },
+          "url": "https://www.felixcloutier.com/x86/"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "`rax` holds 0xFFFFFFFFFFFFFFFF. After `mov eax, 1`, what is `rax`?",
+            "es": "`rax` contiene 0xFFFFFFFFFFFFFFFF. Después de `mov eax, 1`, ¿cuánto vale `rax`?"
+          },
+          "options": {
+            "en": [
+              "0x0000000000000001",
+              "0xFFFFFFFF00000001",
+              "0xFFFFFFFFFFFFFF01",
+              "0x00000000FFFFFFFF"
+            ],
+            "es": [
+              "0x0000000000000001",
+              "0xFFFFFFFF00000001",
+              "0xFFFFFFFFFFFFFF01",
+              "0x00000000FFFFFFFF"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "In 64-bit mode, writing a 32-bit register zero-extends the result into the upper 32 bits. The tempting 0xFFFFFFFF00000001 is what you would expect if upper bits were preserved, which only happens for 8- and 16-bit writes.",
+            "es": "En modo de 64 bits, escribir un registro de 32 bits extiende el resultado con ceros en los 32 bits superiores. La opción tentadora 0xFFFFFFFF00000001 sería lo esperado si se conservaran los bits altos, lo que solo ocurre con escrituras de 8 y 16 bits."
+          }
+        },
+        {
+          "question": {
+            "en": "The 32-bit value 0x12345678 is stored at address 0x1000 on x86-64. Which byte is at address 0x1000?",
+            "es": "El valor de 32 bits 0x12345678 se almacena en la dirección 0x1000 en x86-64. ¿Qué byte está en la dirección 0x1000?"
+          },
+          "options": {
+            "en": [
+              "0x12",
+              "0x34",
+              "0x56",
+              "0x78"
+            ],
+            "es": [
+              "0x12",
+              "0x34",
+              "0x56",
+              "0x78"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "x86 is little-endian, so the least significant byte (0x78) goes at the lowest address. 0x12 would be at 0x1000 on a big-endian machine.",
+            "es": "x86 es little-endian, así que el byte menos significativo (0x78) va en la dirección más baja. 0x12 estaría en 0x1000 en una máquina big-endian."
+          }
+        },
+        {
+          "question": {
+            "en": "Which of these NASM instructions cannot be encoded on x86-64?",
+            "es": "¿Cuál de estas instrucciones NASM no se puede codificar en x86-64?"
+          },
+          "options": {
+            "en": [
+              "`mov rax, [rbx]`",
+              "`mov [rbx], rax`",
+              "`mov [rbx], [rcx]`",
+              "`mov rax, 42`"
+            ],
+            "es": [
+              "`mov rax, [rbx]`",
+              "`mov [rbx], rax`",
+              "`mov [rbx], [rcx]`",
+              "`mov rax, 42`"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`mov` allows at most one memory operand; memory-to-memory needs a register in between. The other three are register←memory, memory←register and register←immediate, all valid.",
+            "es": "`mov` permite como máximo un operando de memoria; de memoria a memoria se necesita un registro intermedio. Las otras tres son registro←memoria, memoria←registro y registro←inmediato, todas válidas."
+          }
+        },
+        {
+          "question": {
+            "en": "In x86 terminology, how large is a dword?",
+            "es": "En la terminología x86, ¿qué tamaño tiene un dword?"
+          },
+          "options": {
+            "en": [
+              "4 bytes",
+              "2 bytes",
+              "8 bytes",
+              "16 bytes"
+            ],
+            "es": [
+              "4 bytes",
+              "2 bytes",
+              "8 bytes",
+              "16 bytes"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "x86 kept the 16-bit 8086 meaning of \"word\" (2 bytes), so a double word is 4 bytes and a quad word (qword) is 8. Choosing 8 bytes confuses dword with the 64-bit register width.",
+            "es": "x86 conservó el significado de \"word\" del 8086 de 16 bits (2 bytes), así que una doble palabra son 4 bytes y una cuádruple palabra (qword) son 8. Elegir 8 bytes confunde dword con el ancho de los registros de 64 bits."
+          }
+        },
+        {
+          "question": {
+            "en": "Given `num dq 99` in `.data`, what is the difference between `mov rax, [num]` and `mov rax, num` in NASM?",
+            "es": "Dado `num dq 99` en `.data`, ¿cuál es la diferencia entre `mov rax, [num]` y `mov rax, num` en NASM?"
+          },
+          "options": {
+            "en": [
+              "Both load 99 into `rax`",
+              "`mov rax, [num]` loads the 8 bytes stored at `num` (99); `mov rax, num` loads the address of `num`",
+              "`mov rax, num` loads 99; the brackets load the address",
+              "The brackets mean the operand is a register"
+            ],
+            "es": [
+              "Ambas cargan 99 en `rax`",
+              "`mov rax, [num]` carga los 8 bytes almacenados en `num` (99); `mov rax, num` carga la dirección de `num`",
+              "`mov rax, num` carga 99; los corchetes cargan la dirección",
+              "Los corchetes indican que el operando es un registro"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "In NASM, square brackets mean \"memory at this address\"; a bare label is just its address as an immediate. (MASM treats bare labels differently, which is why some students expect option 1.)",
+            "es": "En NASM, los corchetes significan \"la memoria en esta dirección\"; una etiqueta sola es simplemente su dirección como valor inmediato. (MASM trata las etiquetas de otra forma, por eso algunos estudiantes esperan la primera opción.)"
+          }
+        }
+      ]
+    },
+    "bit-manipulation": {
+      "minutes": 80,
+      "prerequisites": [
+        "arrays-strings"
+      ],
+      "whyItMatters": {
+        "en": "Bit masks encode permission flags (Unix rwx bits, `java.lang.reflect.Modifier`), back `java.util.BitSet` and subset DP, and appear in hashing code such as `HashMap`'s `h ^ (h >>> 16)`. Bit tricks are also a staple of technical interviews.",
+        "es": "Las máscaras de bits codifican banderas de permisos (bits rwx de Unix, `java.lang.reflect.Modifier`), sostienen `java.util.BitSet` y la programación dinámica sobre subconjuntos, y aparecen en código de hashing como `h ^ (h >>> 16)` de `HashMap`. Los trucos de bits también son clásicos en entrevistas técnicas."
+      },
+      "objectives": {
+        "en": [
+          "Apply `&`, `|`, `^`, `~`, `<<`, `>>` and `>>>` to test, set, clear and toggle bit i of an `int`.",
+          "Explain two's complement and why `n & (n - 1)` clears the lowest set bit while `n & -n` isolates it.",
+          "Implement subset enumeration for n ≤ 20 elements by iterating masks from 0 to (1 << n) − 1.",
+          "Use XOR identities (a ^ a = 0, a ^ 0 = a, commutativity, associativity) to solve single-number problems, and compare Kernighan's loop with `Integer.bitCount`."
+        ],
+        "es": [
+          "Aplicar `&`, `|`, `^`, `~`, `<<`, `>>` y `>>>` para consultar, encender, apagar e invertir el bit i de un `int`.",
+          "Explicar el complemento a dos y por qué `n & (n - 1)` apaga el bit encendido más bajo mientras que `n & -n` lo aísla.",
+          "Implementar la enumeración de subconjuntos para n ≤ 20 elementos recorriendo máscaras de 0 a (1 << n) − 1.",
+          "Usar las identidades de XOR (a ^ a = 0, a ^ 0 = a, conmutatividad, asociatividad) para resolver problemas de número único, y comparar el ciclo de Kernighan con `Integer.bitCount`."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Convert small integers between decimal and binary by hand.",
+          "Know that a Java `int` is a 32-bit signed two's-complement value and a `long` is 64-bit."
+        ],
+        "es": [
+          "Convertir enteros pequeños entre decimal y binario a mano.",
+          "Saber que un `int` de Java es un valor de 32 bits con signo en complemento a dos y un `long` es de 64 bits."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Test: `(n >> i) & 1`. Set: `n | (1 << i)`. Clear: `n & ~(1 << i)`. Toggle: `n ^ (1 << i)`.",
+          "`n & (n - 1)` drops the lowest set bit, so `n > 0 && (n & (n - 1)) == 0` tests for a power of two, and Kernighan's count loops once per set bit.",
+          "In Java `>>` is arithmetic (copies the sign bit) and `>>>` is logical (fills with 0). Shift distances are taken mod 32 for `int` and mod 64 for `long`, so `1 << 32 == 1`.",
+          "`1 << 31` is `Integer.MIN_VALUE` (negative); for masks with 32 or more positions use `long` and `1L << i`."
+        ],
+        "es": [
+          "Consultar: `(n >> i) & 1`. Encender: `n | (1 << i)`. Apagar: `n & ~(1 << i)`. Invertir: `n ^ (1 << i)`.",
+          "`n & (n - 1)` elimina el bit encendido más bajo, así que `n > 0 && (n & (n - 1)) == 0` detecta potencias de dos, y el conteo de Kernighan itera una vez por bit encendido.",
+          "En Java `>>` es aritmético (copia el bit de signo) y `>>>` es lógico (rellena con 0). La distancia de desplazamiento se toma módulo 32 para `int` y módulo 64 para `long`, así que `1 << 32 == 1`.",
+          "`1 << 31` es `Integer.MIN_VALUE` (negativo); para máscaras de 32 o más posiciones usa `long` y `1L << i`."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Operator precedence: `n & 1 == 0` does not compile in Java because `==` binds tighter than `&` (it becomes `int & boolean`). Always parenthesize: `(n & 1) == 0`.",
+          "Using `>>` in a loop like `while (n != 0) { count += n & 1; n >>= 1; }` never terminates for negative n because the sign bit keeps being copied; use `>>>`.",
+          "Building 64-bit masks with `int` literals: `1 << 40` equals `1 << 8` = 256, not 2⁴⁰. Write `1L << 40`."
+        ],
+        "es": [
+          "Precedencia de operadores: `n & 1 == 0` no compila en Java porque `==` tiene mayor precedencia que `&` (queda `int & boolean`). Usa siempre paréntesis: `(n & 1) == 0`.",
+          "Usar `>>` en un ciclo como `while (n != 0) { count += n & 1; n >>= 1; }` nunca termina con n negativo porque el bit de signo se sigue copiando; usa `>>>`.",
+          "Construir máscaras de 64 bits con literales `int`: `1 << 40` es igual a `1 << 8` = 256, no 2⁴⁰. Escribe `1L << 40`."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: write `getBit`, `setBit`, `clearBit` and `toggleBit(int n, int i)` and print each result with `Integer.toBinaryString`.",
+          "Implement `List<List<Integer>> subsets(int[] nums)` by iterating every mask from 0 to (1 << n) − 1 and including `nums[j]` when bit j is set.",
+          "Implement `int[] countBitsUpTo(int n)` that returns the popcount of every number 0..n in O(n) total using `ans[i] = ans[i >> 1] + (i & 1)`.",
+          "Interview: every element of an `int[]` appears three times except one that appears once; find it in O(n) time and O(1) space by counting each of the 32 bit positions mod 3 (it must work for negative numbers)."
+        ],
+        "es": [
+          "Calentamiento: escribe `getBit`, `setBit`, `clearBit` y `toggleBit(int n, int i)` e imprime cada resultado con `Integer.toBinaryString`.",
+          "Implementa `List<List<Integer>> subsets(int[] nums)` recorriendo cada máscara de 0 a (1 << n) − 1 e incluyendo `nums[j]` cuando el bit j está encendido.",
+          "Implementa `int[] countBitsUpTo(int n)` que devuelva la cantidad de bits encendidos de cada número 0..n en O(n) total usando `ans[i] = ans[i >> 1] + (i & 1)`.",
+          "Entrevista: cada elemento de un `int[]` aparece tres veces excepto uno que aparece una vez; encuéntralo en tiempo O(n) y espacio O(1) contando cada una de las 32 posiciones de bit módulo 3 (debe funcionar con negativos)."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What does `n & (n - 1)` do, and why does it work in binary?",
+          "What are `-8 >> 1` and `-8 >>> 1` conceptually, and why do they differ?",
+          "How many subsets does mask iteration visit for n elements, and what is the total cost of building them?"
+        ],
+        "es": [
+          "¿Qué hace `n & (n - 1)` y por qué funciona en binario?",
+          "¿Qué son conceptualmente `-8 >> 1` y `-8 >>> 1`, y por qué difieren?",
+          "¿Cuántos subconjuntos recorre la iteración de máscaras para n elementos y cuál es el costo total de construirlos?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Bitwise Operators",
+            "es": "Operadores a nivel de bits"
+          },
+          "definition": {
+            "en": "Operators that act on each bit position independently: AND (`&`), OR (`|`), XOR (`^`) and NOT (`~`), plus shifts (`<<`, `>>`, `>>>`) that move all bits left or right by a given distance.",
+            "es": "Operadores que actúan sobre cada posición de bit de forma independiente: AND (`&`), OR (`|`), XOR (`^`) y NOT (`~`), además de los desplazamientos (`<<`, `>>`, `>>>`) que mueven todos los bits a la izquierda o a la derecha una distancia dada."
+          }
+        },
+        {
+          "term": {
+            "en": "Bit Masks",
+            "es": "Máscaras de bits"
+          },
+          "definition": {
+            "en": "An integer whose set bits select positions of interest; combined with `&`, `|` or `^` it tests, sets, clears or toggles those positions, and it can represent a subset of up to 32 (`int`) or 64 (`long`) elements.",
+            "es": "Un entero cuyos bits encendidos seleccionan posiciones de interés; combinado con `&`, `|` o `^` consulta, enciende, apaga o invierte esas posiciones, y puede representar un subconjunto de hasta 32 (`int`) o 64 (`long`) elementos."
+          }
+        },
+        {
+          "term": {
+            "en": "Power of Two",
+            "es": "Potencia de dos"
+          },
+          "definition": {
+            "en": "A positive integer with exactly one set bit (1, 2, 4, 8, …). Because subtracting 1 flips that bit and all lower bits, `n > 0 && (n & (n - 1)) == 0` detects it in O(1).",
+            "es": "Un entero positivo con exactamente un bit encendido (1, 2, 4, 8, …). Como restar 1 invierte ese bit y todos los inferiores, `n > 0 && (n & (n - 1)) == 0` lo detecta en O(1)."
+          }
+        },
+        {
+          "term": {
+            "en": "XOR Properties",
+            "es": "Propiedades de XOR"
+          },
+          "definition": {
+            "en": "XOR is commutative and associative, with x ^ x = 0 and x ^ 0 = x; therefore XOR-ing a collection cancels values that appear an even number of times and leaves the XOR of those that appear an odd number of times.",
+            "es": "XOR es conmutativo y asociativo, con x ^ x = 0 y x ^ 0 = x; por eso, aplicar XOR a una colección cancela los valores que aparecen un número par de veces y deja el XOR de los que aparecen un número impar de veces."
+          }
+        },
+        {
+          "term": {
+            "en": "Bit Counting",
+            "es": "Conteo de bits"
+          },
+          "definition": {
+            "en": "Computing how many bits of a value are 1 (population count or Hamming weight). Kernighan's loop clears one set bit per iteration, and Java provides `Integer.bitCount` and `Long.bitCount`.",
+            "es": "Calcular cuántos bits de un valor valen 1 (conteo de población o peso de Hamming). El ciclo de Kernighan apaga un bit encendido por iteración, y Java ofrece `Integer.bitCount` y `Long.bitCount`."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "cp-algorithms: Bit manipulation",
+            "es": "cp-algorithms: Manipulación de bits (en inglés)"
+          },
+          "url": "https://cp-algorithms.com/algebra/bit-manipulation.html"
+        },
+        {
+          "label": {
+            "en": "The Java Tutorials: Bitwise and Bit Shift Operators",
+            "es": "Tutoriales de Java: operadores a nivel de bits y de desplazamiento (en inglés)"
+          },
+          "url": "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/op3.html"
+        },
+        {
+          "label": {
+            "en": "Java 21 API: java.lang.Integer (bitCount, highestOneBit, toBinaryString)",
+            "es": "API de Java 21: java.lang.Integer (bitCount, highestOneBit, toBinaryString)"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What does `System.out.println(-8 >>> 28);` print?",
+            "es": "¿Qué imprime `System.out.println(-8 >>> 28);`?"
+          },
+          "options": {
+            "en": [
+              "-1",
+              "0",
+              "15",
+              "268435455"
+            ],
+            "es": [
+              "-1",
+              "0",
+              "15",
+              "268435455"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "-8 is 0xFFFFFFF8; a logical shift right by 28 leaves the top four bits, 1111, which is 15. The answer -1 is what the arithmetic shift `-8 >> 28` gives.",
+            "es": "-8 es 0xFFFFFFF8; un desplazamiento lógico a la derecha de 28 deja los cuatro bits superiores, 1111, que es 15. La respuesta -1 es lo que da el desplazamiento aritmético `-8 >> 28`."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the value of `5 ^ 3` in Java?",
+            "es": "¿Cuál es el valor de `5 ^ 3` en Java?"
+          },
+          "options": {
+            "en": [
+              "7",
+              "1",
+              "6",
+              "125"
+            ],
+            "es": [
+              "7",
+              "1",
+              "6",
+              "125"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "101 XOR 011 = 110, which is 6. 7 is `5 | 3` and 1 is `5 & 3`; `^` is XOR in Java, not exponentiation, so 125 is wrong.",
+            "es": "101 XOR 011 = 110, que es 6. 7 es `5 | 3` y 1 es `5 & 3`; en Java `^` es XOR, no potencia, así que 125 es incorrecto."
+          }
+        },
+        {
+          "question": {
+            "en": "How many iterations does Kernighan's loop `while (n != 0) { n &= n - 1; count++; }` perform on an `int` n?",
+            "es": "¿Cuántas iteraciones hace el ciclo de Kernighan `while (n != 0) { n &= n - 1; count++; }` sobre un `int` n?"
+          },
+          "options": {
+            "en": [
+              "Exactly the number of set bits in n",
+              "Always 32",
+              "⌊log₂ n⌋ + 1 for positive n",
+              "n / 2"
+            ],
+            "es": [
+              "Exactamente la cantidad de bits encendidos de n",
+              "Siempre 32",
+              "⌊log₂ n⌋ + 1 para n positivo",
+              "n / 2"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Each iteration clears exactly one set bit, so the loop runs popcount(n) times, at most 32. ⌊log₂ n⌋ + 1 is the bit length, which is what a shift-by-one loop would take.",
+            "es": "Cada iteración apaga exactamente un bit encendido, así que el ciclo corre popcount(n) veces, como máximo 32. ⌊log₂ n⌋ + 1 es la longitud en bits, que es lo que tardaría un ciclo que desplaza de a uno."
+          }
+        },
+        {
+          "question": {
+            "en": "In Java, what does the `int` expression `1 << 32` evaluate to?",
+            "es": "En Java, ¿a qué se evalúa la expresión `int` `1 << 32`?"
+          },
+          "options": {
+            "en": [
+              "0",
+              "4294967296",
+              "A compile-time error",
+              "1"
+            ],
+            "es": [
+              "0",
+              "4294967296",
+              "Un error de compilación",
+              "1"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "For `int`, Java uses only the low 5 bits of the shift distance, and 32 & 31 = 0, so the value is 1 << 0 = 1. Expecting 0 assumes bits are shifted out; 4294967296 does not fit in an `int`.",
+            "es": "Para `int`, Java usa solo los 5 bits bajos de la distancia, y 32 & 31 = 0, así que el valor es 1 << 0 = 1. Esperar 0 supone que los bits se descartan; 4294967296 no cabe en un `int`."
+          }
+        },
+        {
+          "question": {
+            "en": "Which odd-number check gives the wrong answer for negative odd `int` values in Java?",
+            "es": "¿Qué verificación de número impar da una respuesta incorrecta para valores `int` impares negativos en Java?"
+          },
+          "options": {
+            "en": [
+              "`(n & 1) == 1`",
+              "`n % 2 == 1`",
+              "`(n & 1) != 0`",
+              "`n % 2 != 0`"
+            ],
+            "es": [
+              "`(n & 1) == 1`",
+              "`n % 2 == 1`",
+              "`(n & 1) != 0`",
+              "`n % 2 != 0`"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Java's `%` keeps the sign of the dividend, so -3 % 2 is -1, not 1. In two's complement every odd number, negative or not, has its lowest bit set, so both `&` checks work.",
+            "es": "En Java `%` conserva el signo del dividendo, así que -3 % 2 es -1, no 1. En complemento a dos todo número impar, negativo o no, tiene encendido el bit más bajo, así que ambas verificaciones con `&` funcionan."
+          }
+        }
+      ]
+    },
+    "assembly-control-flow-procedures": {
+      "minutes": 100,
+      "prerequisites": [
+        "assembly-registers-memory"
+      ],
+      "whyItMatters": {
+        "en": "Reading compiler output, debugging a crash in GDB, and calling C library functions from assembly all require knowing how `if`/`while` become `cmp`+`jcc` and how the System V calling convention passes arguments; these are standard exam questions in computer organization courses.",
+        "es": "Leer la salida de un compilador, depurar un fallo en GDB y llamar funciones de la biblioteca de C desde ensamblador requieren saber cómo `if`/`while` se convierten en `cmp`+`jcc` y cómo la convención de llamadas System V pasa los argumentos; son preguntas habituales de examen en cursos de organización de computadoras."
+      },
+      "objectives": {
+        "en": [
+          "Explain how `cmp` and `test` set ZF, SF, CF and OF, and which flags `je`, `jne`, `jl`, `jg`, `jb` and `ja` read.",
+          "Translate Java `if/else`, `while` and `for` statements into NASM using `cmp`, conditional jumps and labels.",
+          "Trace the stack and `rsp` through `call`, a `push rbp; mov rbp, rsp` prologue, the matching epilogue and `ret`.",
+          "Implement a function that follows the System V AMD64 ABI: arguments in `rdi, rsi, rdx, rcx, r8, r9`, result in `rax`, and callee-saved registers preserved."
+        ],
+        "es": [
+          "Explicar cómo `cmp` y `test` modifican ZF, SF, CF y OF, y qué banderas leen `je`, `jne`, `jl`, `jg`, `jb` y `ja`.",
+          "Traducir sentencias `if/else`, `while` y `for` de Java a NASM usando `cmp`, saltos condicionales y etiquetas.",
+          "Rastrear la pila y `rsp` a través de `call`, un prólogo `push rbp; mov rbp, rsp`, el epílogo correspondiente y `ret`.",
+          "Implementar una función que cumpla el ABI System V AMD64: argumentos en `rdi, rsi, rdx, rcx, r8, r9`, resultado en `rax` y registros preservados por el llamado (callee-saved) intactos."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Trace `mov`/`add`/`sub` on registers and memory and read NASM syntax",
+          "Represent negative numbers in two's complement"
+        ],
+        "es": [
+          "Rastrear `mov`/`add`/`sub` sobre registros y memoria y leer sintaxis NASM",
+          "Representar números negativos en complemento a dos"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "`cmp a, b` computes a − b only to set flags; use `jl/jg/jle/jge` for signed comparisons and `jb/ja/jbe/jae` for unsigned ones.",
+          "`call f` pushes the return address (rsp −= 8) and jumps; `ret` pops it into `rip`. A `push` must be matched by a `pop` before `ret`.",
+          "System V AMD64: integer args in `rdi, rsi, rdx, rcx, r8, r9`, return in `rax`; callee-saved = `rbx, rbp, r12–r15`; everything else may be clobbered by a call.",
+          "`rsp` must be 16-byte aligned at every `call` instruction; on function entry it is therefore 8 mod 16 because of the pushed return address."
+        ],
+        "es": [
+          "`cmp a, b` calcula a − b solo para modificar las banderas; usa `jl/jg/jle/jge` para comparaciones con signo y `jb/ja/jbe/jae` para comparaciones sin signo.",
+          "`call f` apila la dirección de retorno (rsp −= 8) y salta; `ret` la desapila en `rip`. Cada `push` debe tener su `pop` antes de `ret`.",
+          "System V AMD64: argumentos enteros en `rdi, rsi, rdx, rcx, r8, r9`, retorno en `rax`; preservados por el llamado = `rbx, rbp, r12–r15`; cualquier otro puede ser modificado por una llamada.",
+          "`rsp` debe estar alineado a 16 bytes en cada instrucción `call`; por eso al entrar a una función vale 8 mod 16, debido a la dirección de retorno apilada."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Using `ja`/`jb` on signed values (or `jg`/`jl` on unsigned ones), so −1 compares as larger than 1; pick the jump family that matches the data's signedness.",
+          "Keeping a loop counter in `rcx`, `rdx` or `rsi` across a `call` to `printf` or another function, which may overwrite it; keep it in a callee-saved register like `rbx` or `r12` (and save/restore that register yourself).",
+          "Calling a C function with a misaligned stack (e.g. after a single `push`), which can crash inside `printf` on SSE instructions; keep `rsp` 16-byte aligned before every `call`."
+        ],
+        "es": [
+          "Usar `ja`/`jb` con valores con signo (o `jg`/`jl` con valores sin signo), de modo que −1 resulta mayor que 1; elige la familia de saltos según el signo de los datos.",
+          "Mantener un contador de ciclo en `rcx`, `rdx` o `rsi` a través de una llamada a `printf` u otra función, que puede sobrescribirlo; guárdalo en un registro preservado como `rbx` o `r12` (y guarda/restaura ese registro tú mismo).",
+          "Llamar a una función de C con la pila desalineada (p. ej. después de un solo `push`), lo que puede provocar un fallo dentro de `printf` en instrucciones SSE; mantén `rsp` alineado a 16 bytes antes de cada `call`."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: for each pair (5, 7), (7, 7), (−1, 1) as signed 64-bit values, write the ZF, SF, CF and OF values after `cmp rax, rbx` and say whether `jl`, `jb` and `je` are taken.",
+          "Core: implement `sum_to_n` in NASM (argument in `rdi`, result in `rax`) as a `while (n != 0) { total += n; n--; }` loop, and call it from a C `main` or from `_start` to verify `sum_to_n(5) = 15`.",
+          "Stretch: implement `max3(a, b, c)` returning the largest of three signed 64-bit arguments using only `cmp` and conditional jumps; then rewrite it with `cmovg` and compare instruction counts.",
+          "Exam-style: implement recursive `fact(n)` in NASM following System V (save `n` in `rbx`, push/pop it, keep the stack aligned). Draw the stack after the third nested call for `fact(4)`, labeling return addresses and saved registers."
+        ],
+        "es": [
+          "Calentamiento: para cada par (5, 7), (7, 7), (−1, 1) como valores con signo de 64 bits, escribe los valores de ZF, SF, CF y OF después de `cmp rax, rbx` e indica si se toman `jl`, `jb` y `je`.",
+          "Núcleo: implementa `sum_to_n` en NASM (argumento en `rdi`, resultado en `rax`) como un ciclo `while (n != 0) { total += n; n--; }`, y llámala desde un `main` en C o desde `_start` para verificar que `sum_to_n(5) = 15`.",
+          "Extensión: implementa `max3(a, b, c)` que devuelva el mayor de tres argumentos con signo de 64 bits usando solo `cmp` y saltos condicionales; luego reescríbela con `cmovg` y compara la cantidad de instrucciones.",
+          "Estilo examen: implementa `fact(n)` recursiva en NASM siguiendo System V (guarda `n` en `rbx`, haz push/pop de él, mantén la pila alineada). Dibuja la pila después de la tercera llamada anidada de `fact(4)`, marcando direcciones de retorno y registros guardados."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Which jump would you use after `cmp` to test `a < b` for signed integers, and which for unsigned?",
+          "What exactly does `call` push, and what does `ret` do with it?",
+          "Which registers must a function restore before returning under System V, and which may it overwrite freely?"
+        ],
+        "es": [
+          "¿Qué salto usarías después de `cmp` para probar `a < b` con enteros con signo, y cuál con enteros sin signo?",
+          "¿Qué apila exactamente `call` y qué hace `ret` con ese valor?",
+          "¿Qué registros debe restaurar una función antes de retornar según System V y cuáles puede sobrescribir libremente?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "CMP and Flags",
+            "es": "CMP y banderas"
+          },
+          "definition": {
+            "en": "`cmp a, b` subtracts b from a without storing the result and updates status flags in `rflags`: ZF (result zero, i.e. equal), SF (result negative), CF (unsigned borrow, a < b unsigned) and OF (signed overflow).",
+            "es": "`cmp a, b` resta b de a sin guardar el resultado y actualiza las banderas de estado en `rflags`: ZF (resultado cero, es decir, iguales), SF (resultado negativo), CF (préstamo sin signo, a < b sin signo) y OF (desbordamiento con signo)."
+          }
+        },
+        {
+          "term": {
+            "en": "Conditional Jumps",
+            "es": "Saltos condicionales"
+          },
+          "definition": {
+            "en": "Instructions (`jcc`, such as `je`, `jne`, `jl`, `jge`, `jb`, `ja`) that transfer control to a label only if a specific combination of flags holds; otherwise execution falls through to the next instruction.",
+            "es": "Instrucciones (`jcc`, como `je`, `jne`, `jl`, `jge`, `jb`, `ja`) que transfieren el control a una etiqueta solo si se cumple una combinación específica de banderas; de lo contrario, la ejecución continúa con la siguiente instrucción."
+          }
+        },
+        {
+          "term": {
+            "en": "Loops",
+            "es": "Ciclos"
+          },
+          "definition": {
+            "en": "Repetition built from a label, a body, an update and a conditional jump back to the label (e.g. `dec rcx` / `jnz top`); a `while` loop tests the condition before the body, typically with a jump to the test at the bottom.",
+            "es": "Repetición construida con una etiqueta, un cuerpo, una actualización y un salto condicional de regreso a la etiqueta (p. ej. `dec rcx` / `jnz top`); un ciclo `while` evalúa la condición antes del cuerpo, normalmente saltando a la prueba ubicada al final."
+          }
+        },
+        {
+          "term": {
+            "en": "Call/Ret",
+            "es": "Call/Ret"
+          },
+          "definition": {
+            "en": "`call target` pushes the address of the next instruction onto the stack and jumps to `target`; `ret` pops that return address into `rip`, resuming the caller right after the call.",
+            "es": "`call destino` apila la dirección de la siguiente instrucción y salta a `destino`; `ret` desapila esa dirección de retorno en `rip`, reanudando al llamador justo después de la llamada."
+          }
+        },
+        {
+          "term": {
+            "en": "Calling Conventions",
+            "es": "Convenciones de llamada"
+          },
+          "definition": {
+            "en": "An agreement (ABI) on how functions pass arguments, return values and share registers; on Linux x86-64 the System V AMD64 ABI passes the first six integer arguments in `rdi, rsi, rdx, rcx, r8, r9`, returns in `rax`, and requires `rbx, rbp, r12–r15` to be preserved.",
+            "es": "Un acuerdo (ABI) sobre cómo las funciones pasan argumentos, devuelven valores y comparten registros; en Linux x86-64 el ABI System V AMD64 pasa los primeros seis argumentos enteros en `rdi, rsi, rdx, rcx, r8, r9`, devuelve en `rax` y exige preservar `rbx, rbp, r12–r15`."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "x86 reference: Jcc (conditional jumps and the flags they test)",
+            "es": "Referencia x86: Jcc (saltos condicionales y las banderas que evalúan)"
+          },
+          "url": "https://www.felixcloutier.com/x86/jcc"
+        },
+        {
+          "label": {
+            "en": "x86 reference: CALL",
+            "es": "Referencia x86: CALL"
+          },
+          "url": "https://www.felixcloutier.com/x86/call"
+        },
+        {
+          "label": {
+            "en": "System V AMD64 psABI (official source repository)",
+            "es": "psABI System V AMD64 (repositorio oficial)"
+          },
+          "url": "https://gitlab.com/x86-psABIs/x86-64-ABI"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "After `mov eax, 5` and `cmp eax, 7`, is `jl less` taken?",
+            "es": "Después de `mov eax, 5` y `cmp eax, 7`, ¿se toma `jl less`?"
+          },
+          "options": {
+            "en": [
+              "Yes: 5 − 7 is negative without overflow, so SF ≠ OF and the signed less-than condition holds",
+              "No: `cmp` only sets ZF, and 5 ≠ 7",
+              "No: `jl` compares unsigned values",
+              "It depends only on CF"
+            ],
+            "es": [
+              "Sí: 5 − 7 es negativo sin desbordamiento, así que SF ≠ OF y se cumple la condición de menor con signo",
+              "No: `cmp` solo modifica ZF, y 5 ≠ 7",
+              "No: `jl` compara valores sin signo",
+              "Depende solo de CF"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "`jl` jumps when SF ≠ OF, which is the signed \"less than\" test. `cmp` sets all arithmetic flags, not just ZF, and the unsigned test is `jb` (CF = 1).",
+            "es": "`jl` salta cuando SF ≠ OF, que es la prueba de \"menor que\" con signo. `cmp` modifica todas las banderas aritméticas, no solo ZF, y la prueba sin signo es `jb` (CF = 1)."
+          }
+        },
+        {
+          "question": {
+            "en": "After `mov eax, -1` and `cmp eax, 1`, which of `ja` and `jg` would jump?",
+            "es": "Después de `mov eax, -1` y `cmp eax, 1`, ¿cuál de `ja` y `jg` saltaría?"
+          },
+          "options": {
+            "en": [
+              "Neither `ja` nor `jg`",
+              "Only `jg`",
+              "Only `ja`",
+              "Both"
+            ],
+            "es": [
+              "Ni `ja` ni `jg`",
+              "Solo `jg`",
+              "Solo `ja`",
+              "Ambos"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Unsigned, −1 is 0xFFFFFFFF, the largest 32-bit value, so `ja` (above) is taken. Signed, −1 < 1, so `jg` is not. Expecting `jg` comes from forgetting that `ja` treats the bits as unsigned.",
+            "es": "Sin signo, −1 es 0xFFFFFFFF, el mayor valor de 32 bits, así que `ja` (above) se toma. Con signo, −1 < 1, así que `jg` no. Esperar `jg` proviene de olvidar que `ja` interpreta los bits sin signo."
+          }
+        },
+        {
+          "question": {
+            "en": "What does `call func` do on x86-64?",
+            "es": "¿Qué hace `call func` en x86-64?"
+          },
+          "options": {
+            "en": [
+              "Jumps to `func` and stores the return address in `rbp`",
+              "Pushes the address of the next instruction onto the stack (rsp decreases by 8) and jumps to `func`",
+              "Pushes all general-purpose registers, then jumps",
+              "Copies `func`'s machine code onto the stack"
+            ],
+            "es": [
+              "Salta a `func` y guarda la dirección de retorno en `rbp`",
+              "Apila la dirección de la siguiente instrucción (rsp disminuye en 8) y salta a `func`",
+              "Apila todos los registros de propósito general y luego salta",
+              "Copia el código máquina de `func` a la pila"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`call` only pushes the 8-byte return address; saving `rbp` or other registers is the callee's prologue's job, not the instruction's.",
+            "es": "`call` solo apila la dirección de retorno de 8 bytes; guardar `rbp` u otros registros es tarea del prólogo de la función llamada, no de la instrucción."
+          }
+        },
+        {
+          "question": {
+            "en": "Under the System V AMD64 ABI, in which register does a function receive its third integer argument?",
+            "es": "Según el ABI System V AMD64, ¿en qué registro recibe una función su tercer argumento entero?"
+          },
+          "options": {
+            "en": [
+              "`rcx`",
+              "`r8`",
+              "`rsi`",
+              "`rdx`"
+            ],
+            "es": [
+              "`rcx`",
+              "`r8`",
+              "`rsi`",
+              "`rdx`"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "The order is `rdi, rsi, rdx, rcx, r8, r9`, so the third is `rdx`. `rcx` is the fourth (and the first argument on Windows x64, a common source of confusion).",
+            "es": "El orden es `rdi, rsi, rdx, rcx, r8, r9`, así que el tercero es `rdx`. `rcx` es el cuarto (y el primero en Windows x64, una fuente común de confusión)."
+          }
+        },
+        {
+          "question": {
+            "en": "How many times does the body execute?\n```\n    mov ecx, 10\ntop:\n    ; body (does not touch ecx)\n    dec ecx\n    jnz top\n```",
+            "es": "¿Cuántas veces se ejecuta el cuerpo?\n```\n    mov ecx, 10\ntop:\n    ; cuerpo (no modifica ecx)\n    dec ecx\n    jnz top\n```"
+          },
+          "options": {
+            "en": [
+              "10",
+              "9",
+              "11",
+              "Infinitely many"
+            ],
+            "es": [
+              "10",
+              "9",
+              "11",
+              "Infinitas"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "The body runs with ecx = 10, 9, …, 1; after the tenth `dec`, ecx = 0 sets ZF and `jnz` falls through. Answering 9 forgets that the test happens after the body (a do-while shape).",
+            "es": "El cuerpo se ejecuta con ecx = 10, 9, …, 1; tras el décimo `dec`, ecx = 0 activa ZF y `jnz` no salta. Responder 9 olvida que la prueba ocurre después del cuerpo (forma do-while)."
+          }
+        }
+      ]
+    },
+    "assembly-addressing-modes": {
+      "minutes": 90,
+      "prerequisites": [
+        "assembly-control-flow-procedures"
+      ],
+      "whyItMatters": {
+        "en": "Every array access, struct field and local variable in compiled C or JIT-compiled Java becomes an effective address like `[rbp - 8]` or `[rdi + rsi*4]`; reading these fluently is what lets you follow disassembly in GDB or reason about buffer overflows in a security course.",
+        "es": "Cada acceso a arreglo, campo de struct y variable local en C compilado o en Java compilado por el JIT se convierte en una dirección efectiva como `[rbp - 8]` o `[rdi + rsi*4]`; leerlas con soltura es lo que te permite seguir el desensamblado en GDB o razonar sobre desbordamientos de búfer en un curso de seguridad."
+      },
+      "objectives": {
+        "en": [
+          "Classify operands as immediate, register or memory and compute the effective address of `[base + index*scale + disp]` for given register values.",
+          "Translate Java expressions such as `nums[i]` and `nums[i + 1]` on an `int[]` into a single `mov` with scaled-index addressing.",
+          "Explain the difference between `lea` (computes an address) and `mov` with a memory operand (loads from it), and use `lea` for arithmetic like `x*5`.",
+          "Draw a stack frame built by `push rbp; mov rbp, rsp; sub rsp, N` and locate the return address, saved `rbp` and locals at offsets from `rbp`."
+        ],
+        "es": [
+          "Clasificar operandos como inmediatos, de registro o de memoria y calcular la dirección efectiva de `[base + index*scale + disp]` para valores dados de los registros.",
+          "Traducir expresiones de Java como `nums[i]` y `nums[i + 1]` sobre un `int[]` a un único `mov` con direccionamiento indexado escalado.",
+          "Explicar la diferencia entre `lea` (calcula una dirección) y `mov` con operando de memoria (carga desde ella), y usar `lea` para aritmética como `x*5`.",
+          "Dibujar el marco de pila creado por `push rbp; mov rbp, rsp; sub rsp, N` y ubicar la dirección de retorno, el `rbp` guardado y las variables locales con desplazamientos respecto a `rbp`."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Trace `call`/`ret` and `push`/`pop` effects on `rsp`",
+          "Do hexadecimal addition and multiplication by 2, 4 and 8"
+        ],
+        "es": [
+          "Rastrear los efectos de `call`/`ret` y `push`/`pop` sobre `rsp`",
+          "Sumar en hexadecimal y multiplicar por 2, 4 y 8"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "General x86-64 effective address: `base + index × scale + displacement`, with scale ∈ {1, 2, 4, 8} and a signed 32-bit displacement.",
+          "Element i of an array with element size s starts at `base + i × s`, so `int[]` uses `*4` and `long[]`/pointers use `*8`.",
+          "`lea` computes the address expression without touching memory or flags; it is often used for cheap arithmetic (`lea rax, [rdi + rdi*4]` = 5·rdi).",
+          "With a standard frame: `[rbp]` = saved rbp, `[rbp + 8]` = return address, `[rbp − 8]`, `[rbp − 16]`, … = locals; System V also gives leaf functions a 128-byte red zone below `rsp`."
+        ],
+        "es": [
+          "Dirección efectiva general en x86-64: `base + índice × escala + desplazamiento`, con escala ∈ {1, 2, 4, 8} y un desplazamiento con signo de 32 bits.",
+          "El elemento i de un arreglo con elementos de tamaño s empieza en `base + i × s`, así que `int[]` usa `*4` y `long[]`/punteros usan `*8`.",
+          "`lea` calcula la expresión de dirección sin acceder a memoria ni modificar banderas; suele usarse para aritmética barata (`lea rax, [rdi + rdi*4]` = 5·rdi).",
+          "Con un marco estándar: `[rbp]` = rbp guardado, `[rbp + 8]` = dirección de retorno, `[rbp − 8]`, `[rbp − 16]`, … = variables locales; System V además da a las funciones hoja una zona roja de 128 bytes debajo de `rsp`."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Forgetting to scale the index (`[rdi + rsi]` instead of `[rdi + rsi*4]` for an `int[]`), which reads misaligned bytes from the middle of elements; always multiply by the element size.",
+          "Reading a 32-bit `int` element with a 64-bit register (`mov rax, [rdi + rsi*4]`), which loads two adjacent elements at once; match the register size to the element (`mov eax, …` or `movsxd rax, dword […]`).",
+          "Returning a pointer to a local variable at `[rbp - 8]`, which becomes garbage after the epilogue releases the frame; return values in `rax` or use memory owned by the caller."
+        ],
+        "es": [
+          "Olvidar escalar el índice (`[rdi + rsi]` en lugar de `[rdi + rsi*4]` para un `int[]`), lo que lee bytes desalineados del medio de los elementos; multiplica siempre por el tamaño del elemento.",
+          "Leer un elemento `int` de 32 bits con un registro de 64 bits (`mov rax, [rdi + rsi*4]`), lo que carga dos elementos contiguos a la vez; haz coincidir el tamaño del registro con el elemento (`mov eax, …` o `movsxd rax, dword […]`).",
+          "Devolver un puntero a una variable local en `[rbp - 8]`, que se vuelve basura cuando el epílogo libera el marco; devuelve valores en `rax` o usa memoria que pertenezca al llamador."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: with `rbx = 0x2000`, `rcx = 5`, compute the effective address of `[rbx]`, `[rbx + 16]`, `[rbx + rcx*8]` and `[rbx + rcx*4 - 4]`.",
+          "Core: write `int get(int *a, long i)` in NASM (System V: `a` in `rdi`, `i` in `rsi`) that returns `a[i]` in `eax` with one `mov`; then write `set(a, i, v)` that stores `edx` at `a[i]`.",
+          "Stretch: write a function with two 8-byte locals at `[rbp - 8]` and `[rbp - 16]` that computes `x = a + b; y = x * 3` with locals, returns `y`, and keeps `rsp` 16-byte aligned; inspect the frame in GDB with `x/4gx $rbp-16`.",
+          "Exam-style: given `struct Point { int x; int y; }` stored in an array `pts` (8 bytes per element) with base in `rdi` and index in `rsi`, write single instructions to load `pts[i].y` into `eax` and to compute `&pts[i+1]` into `rax` without a `mul`."
+        ],
+        "es": [
+          "Calentamiento: con `rbx = 0x2000`, `rcx = 5`, calcula la dirección efectiva de `[rbx]`, `[rbx + 16]`, `[rbx + rcx*8]` y `[rbx + rcx*4 - 4]`.",
+          "Núcleo: escribe `int get(int *a, long i)` en NASM (System V: `a` en `rdi`, `i` en `rsi`) que devuelva `a[i]` en `eax` con un solo `mov`; luego escribe `set(a, i, v)` que guarde `edx` en `a[i]`.",
+          "Extensión: escribe una función con dos variables locales de 8 bytes en `[rbp - 8]` y `[rbp - 16]` que calcule `x = a + b; y = x * 3` usando las locales, devuelva `y` y mantenga `rsp` alineado a 16 bytes; inspecciona el marco en GDB con `x/4gx $rbp-16`.",
+          "Estilo examen: dada `struct Point { int x; int y; }` almacenada en un arreglo `pts` (8 bytes por elemento) con la base en `rdi` y el índice en `rsi`, escribe instrucciones únicas para cargar `pts[i].y` en `eax` y para calcular `&pts[i+1]` en `rax` sin usar `mul`."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Which scale factors are allowed in an x86-64 effective address, and why do they match common element sizes?",
+          "What does `lea rax, [rdi + 8]` put in `rax`, and how does that differ from `mov rax, [rdi + 8]`?",
+          "After a standard prologue, what is stored at `[rbp]` and at `[rbp + 8]`?"
+        ],
+        "es": [
+          "¿Qué factores de escala se permiten en una dirección efectiva x86-64 y por qué coinciden con los tamaños comunes de los elementos?",
+          "¿Qué pone `lea rax, [rdi + 8]` en `rax` y en qué se diferencia de `mov rax, [rdi + 8]`?",
+          "Después de un prólogo estándar, ¿qué hay almacenado en `[rbp]` y en `[rbp + 8]`?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Immediate/Register/Memory Modes",
+            "es": "Modos inmediato/registro/memoria"
+          },
+          "definition": {
+            "en": "The three kinds of operands: an immediate is a constant encoded in the instruction (`mov eax, 5`), a register operand names a register (`mov eax, ebx`), and a memory operand is an address expression in brackets whose bytes are read or written (`mov eax, [rbx]`).",
+            "es": "Los tres tipos de operandos: un inmediato es una constante codificada en la instrucción (`mov eax, 5`), un operando de registro nombra un registro (`mov eax, ebx`) y un operando de memoria es una expresión de dirección entre corchetes cuyos bytes se leen o escriben (`mov eax, [rbx]`)."
+          }
+        },
+        {
+          "term": {
+            "en": "Base + Offset Addressing",
+            "es": "Direccionamiento base + desplazamiento"
+          },
+          "definition": {
+            "en": "A memory operand whose address is a register plus a constant (`[rbx + 12]`), optionally plus a scaled index (`[rbx + rcx*4 + 12]`); it is how compilers reach struct fields, array elements and stack slots.",
+            "es": "Un operando de memoria cuya dirección es un registro más una constante (`[rbx + 12]`), opcionalmente más un índice escalado (`[rbx + rcx*4 + 12]`); así es como los compiladores acceden a campos de structs, elementos de arreglos y espacios de la pila."
+          }
+        },
+        {
+          "term": {
+            "en": "Stack Frames",
+            "es": "Marcos de pila"
+          },
+          "definition": {
+            "en": "The region of the stack owned by one function call, typically holding the return address, the saved caller `rbp`, saved callee-saved registers and local variables; it is created by the prologue and released by the epilogue (`leave` or `mov rsp, rbp; pop rbp`).",
+            "es": "La región de la pila que pertenece a una llamada de función, que normalmente contiene la dirección de retorno, el `rbp` guardado del llamador, los registros preservados guardados y las variables locales; la crea el prólogo y la libera el epílogo (`leave` o `mov rsp, rbp; pop rbp`)."
+          }
+        },
+        {
+          "term": {
+            "en": "Call Conventions",
+            "es": "Convenciones de llamada"
+          },
+          "definition": {
+            "en": "The ABI rules a caller and callee both follow: on Linux x86-64 (System V) the first six integer/pointer arguments go in `rdi, rsi, rdx, rcx, r8, r9`, extra ones on the stack, the result in `rax`, and `rsp` must be 16-byte aligned at each `call`.",
+            "es": "Las reglas del ABI que siguen tanto el llamador como el llamado: en Linux x86-64 (System V) los primeros seis argumentos enteros/punteros van en `rdi, rsi, rdx, rcx, r8, r9`, los demás en la pila, el resultado en `rax`, y `rsp` debe estar alineado a 16 bytes en cada `call`."
+          }
+        },
+        {
+          "term": {
+            "en": "Local Variable Access",
+            "es": "Acceso a variables locales"
+          },
+          "definition": {
+            "en": "Reading and writing a function's locals at fixed offsets in its stack frame, usually negative offsets from `rbp` (`[rbp - 8]`) or positive offsets from `rsp` when no frame pointer is used.",
+            "es": "Leer y escribir las variables locales de una función en desplazamientos fijos dentro de su marco de pila, normalmente desplazamientos negativos respecto a `rbp` (`[rbp - 8]`) o positivos respecto a `rsp` cuando no se usa puntero de marco."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "x86 reference: LEA",
+            "es": "Referencia x86: LEA"
+          },
+          "url": "https://www.felixcloutier.com/x86/lea"
+        },
+        {
+          "label": {
+            "en": "NASM manual (effective addresses are covered in the language chapter)",
+            "es": "Manual de NASM (las direcciones efectivas se explican en el capítulo del lenguaje)"
+          },
+          "url": "https://www.nasm.us/doc/"
+        },
+        {
+          "label": {
+            "en": "System V AMD64 psABI (stack frame and red zone rules)",
+            "es": "psABI System V AMD64 (reglas del marco de pila y la zona roja)"
+          },
+          "url": "https://gitlab.com/x86-psABIs/x86-64-ABI"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "With `rbx = 0x1000` and `rcx = 3`, what does `lea rax, [rbx + rcx*4 + 8]` leave in `rax`?",
+            "es": "Con `rbx = 0x1000` y `rcx = 3`, ¿qué deja `lea rax, [rbx + rcx*4 + 8]` en `rax`?"
+          },
+          "options": {
+            "en": [
+              "0x1014, and no memory is read",
+              "The 8-byte value stored at address 0x1014",
+              "0x1020",
+              "0x100C"
+            ],
+            "es": [
+              "0x1014, y no se lee memoria",
+              "El valor de 8 bytes almacenado en la dirección 0x1014",
+              "0x1020",
+              "0x100C"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "0x1000 + 3·4 + 8 = 0x1000 + 20 = 0x1014. `lea` only computes the address; loading the value stored there is what `mov rax, [rbx + rcx*4 + 8]` would do.",
+            "es": "0x1000 + 3·4 + 8 = 0x1000 + 20 = 0x1014. `lea` solo calcula la dirección; cargar el valor almacenado allí es lo que haría `mov rax, [rbx + rcx*4 + 8]`."
+          }
+        },
+        {
+          "question": {
+            "en": "Which memory operand is NOT a valid x86-64 effective address?",
+            "es": "¿Cuál operando de memoria NO es una dirección efectiva válida en x86-64?"
+          },
+          "options": {
+            "en": [
+              "`[rax + rbx*8]`",
+              "`[rbp - 16]`",
+              "`[rax + rbx*3]`",
+              "`[rbx]`"
+            ],
+            "es": [
+              "`[rax + rbx*8]`",
+              "`[rbp - 16]`",
+              "`[rax + rbx*3]`",
+              "`[rbx]`"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "The index scale can only be 1, 2, 4 or 8. (NASM accepts `[rbx*3]` alone by rewriting it as `[rbx + rbx*2]`, but with a separate base register there is no encoding for ×3.)",
+            "es": "La escala del índice solo puede ser 1, 2, 4 u 8. (NASM acepta `[rbx*3]` solo, reescribiéndolo como `[rbx + rbx*2]`, pero con un registro base distinto no existe codificación para ×3.)"
+          }
+        },
+        {
+          "question": {
+            "en": "After `push rbp`, `mov rbp, rsp`, `sub rsp, 16` at the start of a function, where is the return address?",
+            "es": "Después de `push rbp`, `mov rbp, rsp`, `sub rsp, 16` al inicio de una función, ¿dónde está la dirección de retorno?"
+          },
+          "options": {
+            "en": [
+              "`[rbp]`",
+              "`[rbp + 8]`",
+              "`[rbp - 8]`",
+              "`[rsp + 16]`"
+            ],
+            "es": [
+              "`[rbp]`",
+              "`[rbp + 8]`",
+              "`[rbp - 8]`",
+              "`[rsp + 16]`"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`call` pushed the return address, then `push rbp` stored the old rbp 8 bytes lower, and rbp now points at that saved value. So `[rbp]` (and `[rsp + 16]`, which equals rbp) is the saved rbp, and the return address is one slot above.",
+            "es": "`call` apiló la dirección de retorno, luego `push rbp` guardó el rbp anterior 8 bytes más abajo, y rbp ahora apunta a ese valor guardado. Así que `[rbp]` (y `[rsp + 16]`, que es igual a rbp) es el rbp guardado, y la dirección de retorno está una posición arriba."
+          }
+        },
+        {
+          "question": {
+            "en": "A Java `int[] nums` has its base address in `rdi` and a 64-bit index `i` in `rsi`. Which instruction loads `nums[i]` into `eax`?",
+            "es": "Un `int[] nums` de Java tiene su dirección base en `rdi` y un índice `i` de 64 bits en `rsi`. ¿Qué instrucción carga `nums[i]` en `eax`?"
+          },
+          "options": {
+            "en": [
+              "`mov eax, [rdi + rsi]`",
+              "`lea eax, [rdi + rsi*4]`",
+              "`mov rax, [rdi + rsi*8]`",
+              "`mov eax, [rdi + rsi*4]`"
+            ],
+            "es": [
+              "`mov eax, [rdi + rsi]`",
+              "`lea eax, [rdi + rsi*4]`",
+              "`mov rax, [rdi + rsi*8]`",
+              "`mov eax, [rdi + rsi*4]`"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "An `int` is 4 bytes, so element i is at base + 4i and is read into a 32-bit register. The `lea` version computes the address instead of loading, and the unscaled version reads from the wrong bytes. (Real JVM arrays also have a header before element 0; here `rdi` is assumed to point at element 0.)",
+            "es": "Un `int` ocupa 4 bytes, así que el elemento i está en base + 4i y se lee en un registro de 32 bits. La versión con `lea` calcula la dirección en vez de cargar, y la versión sin escala lee bytes equivocados. (Los arreglos reales de la JVM tienen además un encabezado antes del elemento 0; aquí se supone que `rdi` apunta al elemento 0.)"
+          }
+        },
+        {
+          "question": {
+            "en": "Why are local variables typically accessed at negative offsets such as `[rbp - 8]`?",
+            "es": "¿Por qué las variables locales suelen accederse con desplazamientos negativos como `[rbp - 8]`?"
+          },
+          "options": {
+            "en": [
+              "Positive offsets from `rbp` are reserved for the heap",
+              "The CPU forbids positive displacements with `rbp`",
+              "The stack grows toward lower addresses, so space reserved by `sub rsp, N` lies below the saved `rbp`",
+              "Locals are stored in the caller's frame"
+            ],
+            "es": [
+              "Los desplazamientos positivos respecto a `rbp` están reservados para el montículo",
+              "La CPU prohíbe desplazamientos positivos con `rbp`",
+              "La pila crece hacia direcciones menores, así que el espacio reservado con `sub rsp, N` queda debajo del `rbp` guardado",
+              "Las variables locales se guardan en el marco del llamador"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`sub rsp, N` moves the stack pointer down, so the new local slots sit between `rsp` and `rbp`. Positive offsets are perfectly legal; they reach the return address and stack-passed arguments.",
+            "es": "`sub rsp, N` mueve el puntero de pila hacia abajo, así que los nuevos espacios locales quedan entre `rsp` y `rbp`. Los desplazamientos positivos son perfectamente válidos; alcanzan la dirección de retorno y los argumentos pasados por la pila."
+          }
+        }
+      ]
+    },
+    "assembly-arrays-strings-io": {
+      "minutes": 100,
+      "prerequisites": [
+        "assembly-addressing-modes"
+      ],
+      "whyItMatters": {
+        "en": "C's `strlen`, `memcpy` and `printf` ultimately reduce to pointer loops and the `write` system call, and many buffer-overflow bugs come from getting a length or terminator wrong; systems courses routinely ask you to write these loops by hand.",
+        "es": "`strlen`, `memcpy` y `printf` de C se reducen en última instancia a ciclos con punteros y a la llamada al sistema `write`, y muchos desbordamientos de búfer provienen de equivocarse con una longitud o un terminador; los cursos de sistemas suelen pedir escribir estos ciclos a mano."
+      },
+      "objectives": {
+        "en": [
+          "Implement an array-sum loop in NASM that advances a pointer by the element size and stops at `base + n × size`.",
+          "Implement `strlen` by scanning bytes with `cmp byte [rsi], 0` until the null terminator, and return the length in `rax`.",
+          "Write a Linux x86-64 program that prints a message with the `write` system call (`rax = 1`) and exits with `exit` (`rax = 60`).",
+          "Choose the right load for byte and word data (`movzx`, `movsx`, sized `mov`) and explain how each affects the upper register bits."
+        ],
+        "es": [
+          "Implementar en NASM un ciclo que sume un arreglo avanzando un puntero según el tamaño del elemento y se detenga en `base + n × tamaño`.",
+          "Implementar `strlen` recorriendo bytes con `cmp byte [rsi], 0` hasta el terminador nulo y devolver la longitud en `rax`.",
+          "Escribir un programa para Linux x86-64 que imprima un mensaje con la llamada al sistema `write` (`rax = 1`) y termine con `exit` (`rax = 60`).",
+          "Elegir la carga adecuada para datos de tipo byte y word (`movzx`, `movsx`, `mov` con tamaño) y explicar cómo afecta cada una a los bits superiores del registro."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Compute effective addresses of the form `[base + index*scale + disp]`",
+          "Write a loop with `cmp` and conditional jumps in NASM"
+        ],
+        "es": [
+          "Calcular direcciones efectivas de la forma `[base + index*scale + disp]`",
+          "Escribir un ciclo con `cmp` y saltos condicionales en NASM"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Linux x86-64 `syscall`: number in `rax`, args in `rdi, rsi, rdx, r10, r8, r9`, result in `rax` (negative errno on error); it clobbers `rcx` and `r11`.",
+          "Common syscall numbers: `read` = 0, `write` = 1, `exit` = 60; fd 0/1/2 = stdin/stdout/stderr.",
+          "Array traversal and `strlen` are O(n); a C string's length excludes the terminating 0 byte, but its storage needs n + 1 bytes.",
+          "`movzx` zero-extends and `movsx` sign-extends a byte/word into a larger register; a plain `mov al, …` leaves the other bits of `rax` untouched."
+        ],
+        "es": [
+          "`syscall` en Linux x86-64: número en `rax`, argumentos en `rdi, rsi, rdx, r10, r8, r9`, resultado en `rax` (errno negativo si hay error); modifica `rcx` y `r11`.",
+          "Números de llamadas al sistema comunes: `read` = 0, `write` = 1, `exit` = 60; los fd 0/1/2 son stdin/stdout/stderr.",
+          "Recorrer un arreglo y `strlen` son O(n); la longitud de una cadena C no incluye el byte 0 final, pero su almacenamiento necesita n + 1 bytes.",
+          "`movzx` extiende con ceros y `movsx` extiende con signo un byte/word a un registro más grande; un `mov al, …` simple deja intactos los demás bits de `rax`."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Using the old 32-bit `int 0x80` convention (`eax = 4` for write, args in `ebx`, `ecx`, `edx`) in a 64-bit program, which calls the wrong syscalls and truncates pointers; use `syscall` with the 64-bit numbers and registers.",
+          "Putting the fourth syscall argument in `rcx` (as in function calls) instead of `r10`, so system calls like `mmap` receive garbage; remember that `syscall` overwrites `rcx`.",
+          "Comparing a whole register to 0 when scanning a string (`cmp rax, 0` after `mov al, [rsi]`), which fails because the upper bits hold leftovers; compare the byte directly (`cmp byte [rsi], 0`) or load with `movzx`."
+        ],
+        "es": [
+          "Usar la antigua convención de 32 bits `int 0x80` (`eax = 4` para write, argumentos en `ebx`, `ecx`, `edx`) en un programa de 64 bits, lo que invoca llamadas equivocadas y trunca punteros; usa `syscall` con los números y registros de 64 bits.",
+          "Poner el cuarto argumento de una llamada al sistema en `rcx` (como en las llamadas a funciones) en lugar de `r10`, de modo que llamadas como `mmap` reciben basura; recuerda que `syscall` sobrescribe `rcx`.",
+          "Comparar el registro completo con 0 al recorrer una cadena (`cmp rax, 0` después de `mov al, [rsi]`), lo que falla porque los bits superiores tienen restos; compara el byte directamente (`cmp byte [rsi], 0`) o carga con `movzx`."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: write a NASM program with `msg db \"Hello, Atlas!\", 10` and `len equ $ - msg` that prints the message using `write` and exits with status 0 using `exit`.",
+          "Core: implement `long sum(long *a, long n)` (System V) that walks a pointer from `a` to `a + 8n` adding each qword, and test it on `dq 3, 4, 5, 6` (expected 18).",
+          "Stretch: implement `strlen(const char *s)` and use it to print a null-terminated string with `write` without hard-coding its length; then implement `to_upper` in place for ASCII letters 'a'–'z' (subtract 32).",
+          "Exam-style: implement `reverse(char *s)` in place using two pointers (start and end − 1) that swap bytes until they meet; state its time and extra-space complexity and test it on \"HELLO\" and on the empty string."
+        ],
+        "es": [
+          "Calentamiento: escribe un programa NASM con `msg db \"Hello, Atlas!\", 10` y `len equ $ - msg` que imprima el mensaje con `write` y termine con estado 0 usando `exit`.",
+          "Núcleo: implementa `long sum(long *a, long n)` (System V) que recorra un puntero desde `a` hasta `a + 8n` sumando cada qword, y pruébala con `dq 3, 4, 5, 6` (resultado esperado 18).",
+          "Extensión: implementa `strlen(const char *s)` y úsala para imprimir con `write` una cadena terminada en nulo sin fijar su longitud a mano; luego implementa `to_upper` sobre la misma cadena para letras ASCII 'a'–'z' (restando 32).",
+          "Estilo examen: implementa `reverse(char *s)` en el lugar usando dos punteros (inicio y fin − 1) que intercambian bytes hasta encontrarse; indica su complejidad de tiempo y de espacio extra y pruébala con \"HELLO\" y con la cadena vacía."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Which registers hold the syscall number and the first three arguments for `write` on Linux x86-64?",
+          "By how many bytes do you advance a pointer to step through `dw`, `dd` and `dq` arrays?",
+          "Why does a null-terminated string of length 5 need 6 bytes of storage?"
+        ],
+        "es": [
+          "¿Qué registros contienen el número de llamada y los tres primeros argumentos de `write` en Linux x86-64?",
+          "¿Cuántos bytes avanzas un puntero para recorrer arreglos `dw`, `dd` y `dq`?",
+          "¿Por qué una cadena terminada en nulo de longitud 5 necesita 6 bytes de almacenamiento?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Pointer Arithmetic",
+            "es": "Aritmética de punteros"
+          },
+          "definition": {
+            "en": "Computing new addresses by adding byte offsets to a pointer; in assembly you must scale by the element size yourself (add 4 to move one `dd`, 8 to move one `dq`), unlike C where `p + 1` scales automatically.",
+            "es": "Calcular nuevas direcciones sumando desplazamientos en bytes a un puntero; en ensamblador debes escalar tú mismo según el tamaño del elemento (sumar 4 para avanzar un `dd`, 8 para un `dq`), a diferencia de C, donde `p + 1` escala automáticamente."
+          }
+        },
+        {
+          "term": {
+            "en": "Array Traversal",
+            "es": "Recorrido de arreglos"
+          },
+          "definition": {
+            "en": "Visiting each element of a contiguous block of memory, either with a base register plus a scaled index (`[rdi + rcx*8]`) or by advancing a pointer until it reaches one past the last element.",
+            "es": "Visitar cada elemento de un bloque contiguo de memoria, ya sea con un registro base más un índice escalado (`[rdi + rcx*8]`) o avanzando un puntero hasta que llegue a la posición siguiente al último elemento."
+          }
+        },
+        {
+          "term": {
+            "en": "Null-Terminated Strings",
+            "es": "Cadenas terminadas en nulo"
+          },
+          "definition": {
+            "en": "A string representation (used by C and by most OS interfaces) that stores the characters' bytes followed by a single 0 byte; the length is not stored, so finding it requires scanning for the terminator in O(n).",
+            "es": "Una representación de cadenas (usada por C y por la mayoría de las interfaces del sistema operativo) que guarda los bytes de los caracteres seguidos de un único byte 0; la longitud no se almacena, así que obtenerla requiere buscar el terminador en O(n)."
+          }
+        },
+        {
+          "term": {
+            "en": "System Calls",
+            "es": "Llamadas al sistema"
+          },
+          "definition": {
+            "en": "Requests from a user program to the operating-system kernel (e.g. `read`, `write`, `exit`); on Linux x86-64 you put the call number in `rax`, arguments in `rdi, rsi, rdx, r10, r8, r9`, and execute `syscall`.",
+            "es": "Solicitudes de un programa de usuario al kernel del sistema operativo (p. ej. `read`, `write`, `exit`); en Linux x86-64 se coloca el número de la llamada en `rax`, los argumentos en `rdi, rsi, rdx, r10, r8, r9` y se ejecuta `syscall`."
+          }
+        },
+        {
+          "term": {
+            "en": "Byte/Word Access",
+            "es": "Acceso a bytes/words"
+          },
+          "definition": {
+            "en": "Reading or writing 1-byte or 2-byte units with sized operands (`byte [rsi]`, `word [rsi]`) or 8/16-bit registers, and widening them with `movzx` (unsigned) or `movsx` (signed) so the full register holds the correct value.",
+            "es": "Leer o escribir unidades de 1 o 2 bytes con operandos con tamaño (`byte [rsi]`, `word [rsi]`) o registros de 8/16 bits, y ampliarlas con `movzx` (sin signo) o `movsx` (con signo) para que el registro completo contenga el valor correcto."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Linux man page: syscall(2) (register conventions per architecture)",
+            "es": "Página man de Linux: syscall(2) (convenciones de registros por arquitectura)"
+          },
+          "url": "https://man7.org/linux/man-pages/man2/syscall.2.html"
+        },
+        {
+          "label": {
+            "en": "Linux man page: write(2)",
+            "es": "Página man de Linux: write(2)"
+          },
+          "url": "https://man7.org/linux/man-pages/man2/write.2.html"
+        },
+        {
+          "label": {
+            "en": "x86 reference: MOVZX",
+            "es": "Referencia x86: MOVZX"
+          },
+          "url": "https://www.felixcloutier.com/x86/movzx"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What does this Linux x86-64 snippet do?\n```\nmov rax, 1\nmov rdi, 1\nmov rsi, msg\nmov rdx, 6\nsyscall\n```",
+            "es": "¿Qué hace este fragmento para Linux x86-64?\n```\nmov rax, 1\nmov rdi, 1\nmov rsi, msg\nmov rdx, 6\nsyscall\n```"
+          },
+          "options": {
+            "en": [
+              "Reads 6 bytes from stdin into `msg`",
+              "Writes 6 bytes starting at `msg` to stdout (fd 1)",
+              "Exits the program with status 1",
+              "Writes `msg` to stdout until it finds a null byte"
+            ],
+            "es": [
+              "Lee 6 bytes de stdin y los guarda en `msg`",
+              "Escribe en stdout (fd 1) 6 bytes a partir de `msg`",
+              "Termina el programa con estado 1",
+              "Escribe `msg` en stdout hasta encontrar un byte nulo"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "rax = 1 is `write(fd = rdi, buf = rsi, count = rdx)`. `write` uses the explicit count and ignores null bytes; reading would be rax = 0 and exit would be rax = 60.",
+            "es": "rax = 1 es `write(fd = rdi, buf = rsi, count = rdx)`. `write` usa la cantidad explícita e ignora los bytes nulos; leer sería rax = 0 y terminar sería rax = 60."
+          }
+        },
+        {
+          "question": {
+            "en": "`rdi` points to the bytes \"HELLO\" followed by 0. What is in `rax` after this code?\n```\n    mov rax, rdi\n.next:\n    cmp byte [rax], 0\n    je .done\n    inc rax\n    jmp .next\n.done:\n    sub rax, rdi\n```",
+            "es": "`rdi` apunta a los bytes \"HELLO\" seguidos de 0. ¿Qué hay en `rax` después de este código?\n```\n    mov rax, rdi\n.next:\n    cmp byte [rax], 0\n    je .done\n    inc rax\n    jmp .next\n.done:\n    sub rax, rdi\n```"
+          },
+          "options": {
+            "en": [
+              "6",
+              "The address of the null byte",
+              "5",
+              "4"
+            ],
+            "es": [
+              "6",
+              "La dirección del byte nulo",
+              "5",
+              "4"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "The loop stops with `rax` pointing at the 0 byte, which is rdi + 5; subtracting the start gives the length 5. Without the final `sub`, `rax` would be the address of the terminator; 6 counts the terminator, which `strlen` excludes.",
+            "es": "El ciclo se detiene con `rax` apuntando al byte 0, que es rdi + 5; restar el inicio da la longitud 5. Sin el `sub` final, `rax` sería la dirección del terminador; 6 cuenta el terminador, que `strlen` excluye."
+          }
+        },
+        {
+          "question": {
+            "en": "You sum an array of n qwords by advancing a pointer. What are the running time and the per-iteration pointer increment?",
+            "es": "Sumas un arreglo de n qwords avanzando un puntero. ¿Cuál es el tiempo de ejecución y el incremento del puntero por iteración?"
+          },
+          "options": {
+            "en": [
+              "O(n), add 8 each iteration",
+              "O(n), add 1 each iteration",
+              "O(n²), add 8 each iteration",
+              "O(log n), add 8 each iteration"
+            ],
+            "es": [
+              "O(n), sumar 8 en cada iteración",
+              "O(n), sumar 1 en cada iteración",
+              "O(n²), sumar 8 en cada iteración",
+              "O(log n), sumar 8 en cada iteración"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Each element is visited once, and a qword is 8 bytes, so the byte address must advance by 8. Adding 1 would step through the middle of elements.",
+            "es": "Cada elemento se visita una vez, y un qword ocupa 8 bytes, así que la dirección en bytes debe avanzar 8. Sumar 1 avanzaría por el medio de los elementos."
+          }
+        },
+        {
+          "question": {
+            "en": "`rax` holds 0xFFFFFFFFFFFFFFFF and the byte at `[rsi]` is 0x41. Which statement is correct?",
+            "es": "`rax` contiene 0xFFFFFFFFFFFFFFFF y el byte en `[rsi]` es 0x41. ¿Qué afirmación es correcta?"
+          },
+          "options": {
+            "en": [
+              "`movzx eax, byte [rsi]` and `mov al, [rsi]` both give rax = 0x41",
+              "`movzx eax, byte [rsi]` sign-extends, giving rax = 0xFFFFFFFFFFFFFF41",
+              "`mov al, [rsi]` reads 4 bytes from memory",
+              "`movzx eax, byte [rsi]` gives rax = 0x41, while `mov al, [rsi]` gives rax = 0xFFFFFFFFFFFFFF41"
+            ],
+            "es": [
+              "`movzx eax, byte [rsi]` y `mov al, [rsi]` dejan ambas rax = 0x41",
+              "`movzx eax, byte [rsi]` extiende con signo, dejando rax = 0xFFFFFFFFFFFFFF41",
+              "`mov al, [rsi]` lee 4 bytes de memoria",
+              "`movzx eax, byte [rsi]` deja rax = 0x41, mientras que `mov al, [rsi]` deja rax = 0xFFFFFFFFFFFFFF41"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "`movzx` zero-extends into eax, and the 32-bit write also clears the upper half of rax. Writing `al` only replaces the lowest byte. Sign extension is `movsx`, and 0x41 would not change anyway since its top bit is 0.",
+            "es": "`movzx` extiende con ceros en eax, y la escritura de 32 bits también limpia la mitad superior de rax. Escribir `al` solo reemplaza el byte más bajo. La extensión con signo es `movsx`, y además 0x41 no cambiaría porque su bit más alto es 0."
+          }
+        },
+        {
+          "question": {
+            "en": "Which registers does the `syscall` instruction itself overwrite on x86-64, so you must not rely on them across it?",
+            "es": "¿Qué registros sobrescribe la propia instrucción `syscall` en x86-64, de modo que no debes confiar en ellos después de ella?"
+          },
+          "options": {
+            "en": [
+              "`rbx` and `rbp`",
+              "`rcx` and `r11`",
+              "`rdi` and `rsi`",
+              "`r12` and `r13`"
+            ],
+            "es": [
+              "`rbx` y `rbp`",
+              "`rcx` y `r11`",
+              "`rdi` y `rsi`",
+              "`r12` y `r13`"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The CPU saves the return `rip` in `rcx` and `rflags` in `r11` when executing `syscall` (and `rax` receives the result). The Linux kernel preserves the argument registers such as `rdi` and `rsi`.",
+            "es": "La CPU guarda el `rip` de retorno en `rcx` y `rflags` en `r11` al ejecutar `syscall` (y `rax` recibe el resultado). El kernel de Linux conserva los registros de argumentos como `rdi` y `rsi`."
+          }
+        }
+      ]
+    },
+    "jdbc-basics": {
+      "minutes": 90,
+      "prerequisites": [
+        "exception-handling",
+        "collections-framework"
+      ],
+      "whyItMatters": {
+        "en": "Every Java persistence layer, including JPA/Hibernate and Spring's `JdbcTemplate`, sits on top of JDBC, so its connection, transaction and cursor rules explain what those frameworks do. SQL injection through string-built queries remains one of the most common real-world vulnerabilities.",
+        "es": "Toda capa de persistencia en Java, incluidos JPA/Hibernate y `JdbcTemplate` de Spring, se construye sobre JDBC, así que sus reglas de conexiones, transacciones y cursores explican lo que hacen esos frameworks. La inyección SQL por consultas armadas con cadenas sigue siendo una de las vulnerabilidades reales más comunes."
+      },
+      "objectives": {
+        "en": [
+          "Open a `Connection` with `DriverManager.getConnection` (or a `DataSource`) and close `Connection`, `PreparedStatement` and `ResultSet` with try-with-resources.",
+          "Implement parameterized queries with `PreparedStatement`, binding values with 1-based `setString`/`setInt` and explaining why this prevents SQL injection.",
+          "Iterate a `ResultSet` with `next()`, map each row to a Java object, and handle SQL `NULL` with `wasNull()` or `getObject`.",
+          "Group several updates into one transaction with `setAutoCommit(false)`, `commit()` and `rollback()`, and use `addBatch`/`executeBatch` for bulk inserts."
+        ],
+        "es": [
+          "Abrir una `Connection` con `DriverManager.getConnection` (o un `DataSource`) y cerrar `Connection`, `PreparedStatement` y `ResultSet` con try-with-resources.",
+          "Implementar consultas parametrizadas con `PreparedStatement`, asignando valores con `setString`/`setInt` (índices desde 1) y explicar por qué esto evita la inyección SQL.",
+          "Recorrer un `ResultSet` con `next()`, mapear cada fila a un objeto Java y manejar el `NULL` de SQL con `wasNull()` o `getObject`.",
+          "Agrupar varias actualizaciones en una transacción con `setAutoCommit(false)`, `commit()` y `rollback()`, y usar `addBatch`/`executeBatch` para inserciones masivas."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Write basic SQL: `SELECT ... WHERE`, `INSERT` and `UPDATE`",
+          "Use try-with-resources with several resources declared in one header"
+        ],
+        "es": [
+          "Escribir SQL básico: `SELECT ... WHERE`, `INSERT` y `UPDATE`",
+          "Usar try-with-resources con varios recursos declarados en un mismo encabezado"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Parameter and column indices in JDBC start at 1, not 0; a new `ResultSet` cursor sits before the first row, so call `next()` before reading.",
+          "`executeQuery` returns a `ResultSet`, `executeUpdate` returns the affected row count, and `execute` returns a boolean telling you which kind of result you got.",
+          "Connections start in auto-commit mode: each statement is its own transaction until you call `setAutoCommit(false)`.",
+          "JDBC 4.0+ drivers on the classpath register themselves automatically, so `Class.forName(...)` is no longer needed; opening connections is expensive, so real apps use a pool behind a `DataSource`."
+        ],
+        "es": [
+          "Los índices de parámetros y columnas en JDBC empiezan en 1, no en 0; un `ResultSet` nuevo tiene el cursor antes de la primera fila, así que llama a `next()` antes de leer.",
+          "`executeQuery` devuelve un `ResultSet`, `executeUpdate` devuelve el número de filas afectadas y `execute` devuelve un boolean que indica qué tipo de resultado obtuviste.",
+          "Las conexiones empiezan en modo auto-commit: cada sentencia es su propia transacción hasta que llamas a `setAutoCommit(false)`.",
+          "Los drivers JDBC 4.0+ en el classpath se registran solos, así que `Class.forName(...)` ya no es necesario; abrir conexiones es costoso, por eso las aplicaciones reales usan un pool detrás de un `DataSource`."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Building SQL by concatenating user input (`\"... WHERE name = '\" + name + \"'\"`), which allows SQL injection and breaks on names like O'Brien. Use `?` placeholders with `PreparedStatement`.",
+          "Not closing `ResultSet`, `Statement` or `Connection`, which exhausts the database's connection limit or the pool after a few hundred requests. Declare all three in try-with-resources.",
+          "Reading a nullable numeric column with `getInt` and treating `0` as a real value; `getInt` returns 0 for SQL `NULL`, so check `rs.wasNull()` or use `rs.getObject(\"age\", Integer.class)`."
+        ],
+        "es": [
+          "Armar SQL concatenando la entrada del usuario (`\"... WHERE name = '\" + name + \"'\"`), lo que permite la inyección SQL y falla con nombres como O'Brien. Usa marcadores `?` con `PreparedStatement`.",
+          "No cerrar `ResultSet`, `Statement` o `Connection`, lo que agota el límite de conexiones de la base de datos o el pool tras unos cientos de peticiones. Declara los tres en try-with-resources.",
+          "Leer una columna numérica que admite nulos con `getInt` y tratar `0` como un valor real; `getInt` devuelve 0 para el `NULL` de SQL, así que revisa `rs.wasNull()` o usa `rs.getObject(\"age\", Integer.class)`."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: using an in-memory H2 or SQLite database, create a `students(id, name, age)` table and write `printAll()` that prints every row with a `while (rs.next())` loop.",
+          "Core: implement `Optional<Student> findByName(Connection c, String name)` with a `PreparedStatement`, mapping the row to a `Student` record and returning `Optional.empty()` when no row matches.",
+          "Stretch: implement `insertAll(List<Student> list)` using one `PreparedStatement`, `addBatch` and `executeBatch` inside a transaction; roll back if any insert fails and measure the time against one auto-committed `executeUpdate` per row for 10,000 rows.",
+          "Exam-style: implement `transfer(int fromId, int toId, int amount)` on an `accounts` table so that both `UPDATE`s commit together or not at all, throw if the source balance would go negative, and restore auto-commit in a `finally` block."
+        ],
+        "es": [
+          "Calentamiento: con una base de datos H2 o SQLite en memoria, crea una tabla `students(id, name, age)` y escribe `printAll()`, que imprima cada fila con un ciclo `while (rs.next())`.",
+          "Núcleo: implementa `Optional<Student> findByName(Connection c, String name)` con un `PreparedStatement`, mapeando la fila a un record `Student` y devolviendo `Optional.empty()` cuando ninguna fila coincide.",
+          "Reto: implementa `insertAll(List<Student> list)` usando un solo `PreparedStatement`, `addBatch` y `executeBatch` dentro de una transacción; haz rollback si alguna inserción falla y mide el tiempo contra un `executeUpdate` con auto-commit por fila para 10,000 filas.",
+          "Tipo examen: implementa `transfer(int fromId, int toId, int amount)` sobre una tabla `accounts` de forma que ambos `UPDATE` se confirmen juntos o ninguno, lanza una excepción si el saldo de origen quedaría negativo y restaura el auto-commit en un bloque `finally`."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why does a `PreparedStatement` with `?` placeholders stop SQL injection, and what can a placeholder not stand for?",
+          "What does `executeUpdate` return, and when would you use `executeQuery` instead?",
+          "What happens to the first `UPDATE` of a transfer if the second one throws while auto-commit is still on?"
+        ],
+        "es": [
+          "¿Por qué un `PreparedStatement` con marcadores `?` detiene la inyección SQL y qué cosas no puede representar un marcador?",
+          "¿Qué devuelve `executeUpdate` y cuándo usarías `executeQuery` en su lugar?",
+          "¿Qué pasa con el primer `UPDATE` de una transferencia si el segundo lanza una excepción mientras el auto-commit sigue activo?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "JDBC Drivers",
+            "es": "Drivers JDBC"
+          },
+          "definition": {
+            "en": "Vendor libraries (for example the MySQL, PostgreSQL or H2 JAR) that implement the `java.sql` interfaces and translate JDBC calls into a specific database's network protocol; JDBC 4.0+ drivers register themselves with `DriverManager` when found on the classpath.",
+            "es": "Bibliotecas de cada proveedor (por ejemplo el JAR de MySQL, PostgreSQL o H2) que implementan las interfaces de `java.sql` y traducen las llamadas JDBC al protocolo de red de una base de datos concreta; los drivers JDBC 4.0+ se registran solos en `DriverManager` cuando están en el classpath."
+          }
+        },
+        {
+          "term": {
+            "en": "Connection",
+            "es": "Connection"
+          },
+          "definition": {
+            "en": "A `java.sql.Connection` is an open session with a database, obtained from a URL such as `jdbc:mysql://host/db`; it creates statements and controls transactions through `setAutoCommit`, `commit` and `rollback`.",
+            "es": "Una `java.sql.Connection` es una sesión abierta con una base de datos, obtenida a partir de una URL como `jdbc:mysql://host/db`; crea sentencias y controla las transacciones mediante `setAutoCommit`, `commit` y `rollback`."
+          }
+        },
+        {
+          "term": {
+            "en": "Statement",
+            "es": "Statement"
+          },
+          "definition": {
+            "en": "A `java.sql.Statement` sends a complete SQL string to the database with `executeQuery`, `executeUpdate` or `execute`; because the SQL text is fixed at call time, it is only safe for queries that contain no user input.",
+            "es": "Un `java.sql.Statement` envía una cadena SQL completa a la base de datos con `executeQuery`, `executeUpdate` o `execute`; como el texto SQL queda fijo al llamar, solo es seguro para consultas que no contienen entrada del usuario."
+          }
+        },
+        {
+          "term": {
+            "en": "ResultSet",
+            "es": "ResultSet"
+          },
+          "definition": {
+            "en": "A `java.sql.ResultSet` is a cursor over the rows returned by a query: it starts before the first row, `next()` advances it and returns false after the last row, and getters like `getString(\"name\")` or `getInt(1)` read columns of the current row.",
+            "es": "Un `java.sql.ResultSet` es un cursor sobre las filas que devuelve una consulta: empieza antes de la primera fila, `next()` lo avanza y devuelve false después de la última, y métodos como `getString(\"name\")` o `getInt(1)` leen columnas de la fila actual."
+          }
+        },
+        {
+          "term": {
+            "en": "Prepared Statements",
+            "es": "Sentencias preparadas"
+          },
+          "definition": {
+            "en": "A `PreparedStatement` is SQL precompiled with `?` placeholders whose values are bound separately with typed setters, so input is always treated as data and never as SQL, and the same statement can be reused efficiently with new values.",
+            "es": "Un `PreparedStatement` es SQL precompilado con marcadores `?` cuyos valores se asignan por separado con setters tipados, de modo que la entrada siempre se trata como dato y nunca como SQL, y la misma sentencia puede reutilizarse eficientemente con valores nuevos."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Oracle Java Tutorials: JDBC Basics",
+            "es": "Tutoriales de Java de Oracle: fundamentos de JDBC"
+          },
+          "url": "https://docs.oracle.com/javase/tutorial/jdbc/basics/index.html"
+        },
+        {
+          "label": {
+            "en": "Java 21 API: java.sql.PreparedStatement",
+            "es": "API de Java 21: java.sql.PreparedStatement"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.sql/java/sql/PreparedStatement.html"
+        },
+        {
+          "label": {
+            "en": "OWASP SQL Injection Prevention Cheat Sheet",
+            "es": "Hoja de referencia de OWASP para prevenir la inyección SQL"
+          },
+          "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What happens when this runs?\n`PreparedStatement ps = conn.prepareStatement(\"SELECT name FROM students WHERE age > ?\");`\n`ps.setInt(0, 18);`",
+            "es": "¿Qué ocurre al ejecutar esto?\n`PreparedStatement ps = conn.prepareStatement(\"SELECT name FROM students WHERE age > ?\");`\n`ps.setInt(0, 18);`"
+          },
+          "options": {
+            "en": [
+              "18 is bound to the placeholder and the query is ready to run",
+              "A compile error, because the index must be a `String`",
+              "A `SQLException`, because parameter indices start at 1",
+              "18 is bound to the `name` column"
+            ],
+            "es": [
+              "Se asigna 18 al marcador y la consulta queda lista para ejecutarse",
+              "Un error de compilación, porque el índice debe ser un `String`",
+              "Una `SQLException`, porque los índices de parámetros empiezan en 1",
+              "Se asigna 18 a la columna `name`"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "The first `?` is index 1. Index 0 does not correspond to any parameter, so the driver throws `SQLException` at run time; it compiles fine because the index is just an `int`.",
+            "es": "El primer `?` es el índice 1. El índice 0 no corresponde a ningún parámetro, así que el driver lanza `SQLException` en tiempo de ejecución; compila sin problemas porque el índice es solo un `int`."
+          }
+        },
+        {
+          "question": {
+            "en": "A transfer runs two `executeUpdate` calls on a fresh `Connection` without changing any settings. The second one throws. What is the state of the database?",
+            "es": "Una transferencia ejecuta dos llamadas a `executeUpdate` sobre una `Connection` nueva sin cambiar ninguna configuración. La segunda lanza una excepción. ¿Cuál es el estado de la base de datos?"
+          },
+          "options": {
+            "en": [
+              "The first update is already committed, because auto-commit is on by default",
+              "Both updates are rolled back automatically",
+              "Neither update was sent until `close()` is called",
+              "The first update stays pending until the next `commit()`"
+            ],
+            "es": [
+              "La primera actualización ya está confirmada, porque el auto-commit está activo por defecto",
+              "Ambas actualizaciones se revierten automáticamente",
+              "Ninguna actualización se envió hasta llamar a `close()`",
+              "La primera actualización queda pendiente hasta el siguiente `commit()`"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "In auto-commit mode each statement commits as soon as it completes, so the money leaves one account without arriving in the other. Automatic rollback of both only happens if you call `setAutoCommit(false)` and `rollback()` on failure.",
+            "es": "En modo auto-commit cada sentencia se confirma en cuanto termina, así que el dinero sale de una cuenta sin llegar a la otra. Revertir ambas solo ocurre si llamas a `setAutoCommit(false)` y a `rollback()` ante el fallo."
+          }
+        },
+        {
+          "question": {
+            "en": "Inserting 10,000 rows with one auto-committed `executeUpdate` per row is slow. Which change usually gives the largest speedup?",
+            "es": "Insertar 10,000 filas con un `executeUpdate` con auto-commit por fila es lento. ¿Qué cambio suele dar la mayor mejora?"
+          },
+          "options": {
+            "en": [
+              "Switch to `Statement` and concatenate the values into the SQL string",
+              "Call `Class.forName` on the driver before each insert",
+              "Open a new `Connection` for each row so inserts run independently",
+              "Reuse one `PreparedStatement` with `addBatch`/`executeBatch` inside a single transaction"
+            ],
+            "es": [
+              "Cambiar a `Statement` y concatenar los valores en la cadena SQL",
+              "Llamar a `Class.forName` sobre el driver antes de cada inserción",
+              "Abrir una `Connection` nueva por fila para que las inserciones sean independientes",
+              "Reutilizar un `PreparedStatement` con `addBatch`/`executeBatch` dentro de una sola transacción"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "The cost is dominated by 10,000 network round trips and 10,000 commits; batching cuts round trips and one transaction commits once. Opening a connection per row makes it far slower, and concatenation adds injection risk without saving round trips.",
+            "es": "El costo lo dominan 10,000 viajes de red y 10,000 confirmaciones; el procesamiento por lotes reduce los viajes y una sola transacción confirma una vez. Abrir una conexión por fila lo hace mucho más lento, y concatenar agrega riesgo de inyección sin ahorrar viajes."
+          }
+        },
+        {
+          "question": {
+            "en": "The `age` column of the current row is SQL `NULL`. What does `int a = rs.getInt(\"age\");` do?",
+            "es": "La columna `age` de la fila actual es `NULL` de SQL. ¿Qué hace `int a = rs.getInt(\"age\");`?"
+          },
+          "options": {
+            "en": [
+              "Throws `NullPointerException`",
+              "Sets `a` to 0; you must call `rs.wasNull()` to tell it apart from a real 0",
+              "Sets `a` to -1",
+              "Throws `SQLException` because the value is missing"
+            ],
+            "es": [
+              "Lanza `NullPointerException`",
+              "Asigna 0 a `a`; debes llamar a `rs.wasNull()` para distinguirlo de un 0 real",
+              "Asigna -1 a `a`",
+              "Lanza `SQLException` porque falta el valor"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Primitive getters return 0 (or false) for SQL `NULL` and record that the last value read was null, which `wasNull()` reports. No exception is thrown, which is why this bug is easy to miss.",
+            "es": "Los getters primitivos devuelven 0 (o false) para el `NULL` de SQL y registran que el último valor leído fue nulo, lo que informa `wasNull()`. No se lanza ninguna excepción, por eso este error pasa desapercibido con facilidad."
+          }
+        },
+        {
+          "question": {
+            "en": "A user chooses which column to sort by. Why is `prepareStatement(\"SELECT * FROM students ORDER BY ?\")` with `setString(1, column)` not a correct solution?",
+            "es": "Un usuario elige la columna por la que se ordena. ¿Por qué `prepareStatement(\"SELECT * FROM students ORDER BY ?\")` con `setString(1, column)` no es una solución correcta?"
+          },
+          "options": {
+            "en": [
+              "Placeholders bind values, not identifiers, so the column name becomes a constant string; validate the column against a whitelist instead",
+              "`ORDER BY` cannot appear in a `PreparedStatement`",
+              "`setString` escapes the value, which makes the column name lowercase",
+              "It works, but it is slower than a `Statement`"
+            ],
+            "es": [
+              "Los marcadores asignan valores, no identificadores, así que el nombre de la columna se vuelve una cadena constante; valida la columna contra una lista blanca",
+              "`ORDER BY` no puede aparecer en un `PreparedStatement`",
+              "`setString` escapa el valor, lo que pasa el nombre de la columna a minúsculas",
+              "Funciona, pero es más lento que un `Statement`"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "A `?` stands for a literal value, so the query sorts by a constant (no useful order) or is rejected, depending on the database. Table and column names must be checked against a fixed set of allowed identifiers before being placed in the SQL.",
+            "es": "Un `?` representa un valor literal, así que la consulta ordena por una constante (sin orden útil) o es rechazada, según la base de datos. Los nombres de tablas y columnas deben compararse con un conjunto fijo de identificadores permitidos antes de ponerlos en el SQL."
+          }
+        }
+      ]
+    },
+    "multithreading": {
+      "minutes": 120,
+      "prerequisites": [
+        "oop-basics",
+        "collections-framework"
+      ],
+      "whyItMatters": {
+        "en": "Web servers, GUIs and data pipelines all run work on several threads, and race conditions and deadlocks are among the hardest production bugs to reproduce. Concurrency questions (race on a counter, producer-consumer, deadlock) are standard in Java interviews and operating-systems courses.",
+        "es": "Los servidores web, las interfaces gráficas y los pipelines de datos ejecutan trabajo en varios hilos, y las condiciones de carrera y los interbloqueos están entre los errores de producción más difíciles de reproducir. Las preguntas de concurrencia (carrera sobre un contador, productor-consumidor, interbloqueo) son habituales en entrevistas de Java y en cursos de sistemas operativos."
+      },
+      "objectives": {
+        "en": [
+          "Create threads from a `Runnable` (or lambda), start them with `start()`, wait for them with `join()`, and explain why calling `run()` directly does not create a thread.",
+          "Explain why `count++` on a shared field is a race condition and fix it with `synchronized`, `ReentrantLock` or `AtomicInteger`.",
+          "Analyze a lock-ordering deadlock between two threads and remove it by acquiring locks in a single global order.",
+          "Submit tasks to an `ExecutorService`, collect results with `Future`, and shut the pool down correctly; handle `InterruptedException` by restoring the interrupt flag."
+        ],
+        "es": [
+          "Crear hilos a partir de un `Runnable` (o una lambda), iniciarlos con `start()`, esperarlos con `join()` y explicar por qué llamar a `run()` directamente no crea un hilo.",
+          "Explicar por qué `count++` sobre un campo compartido es una condición de carrera y corregirlo con `synchronized`, `ReentrantLock` o `AtomicInteger`.",
+          "Analizar un interbloqueo por orden de candados entre dos hilos y eliminarlo adquiriendo los candados en un único orden global.",
+          "Enviar tareas a un `ExecutorService`, recoger resultados con `Future` y cerrar el pool correctamente; manejar `InterruptedException` restaurando la bandera de interrupción."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Implement an interface and pass behavior as a lambda",
+          "Reason about shared object references: two variables pointing to the same object see the same field changes"
+        ],
+        "es": [
+          "Implementar una interfaz y pasar comportamiento como lambda",
+          "Razonar sobre referencias compartidas: dos variables que apuntan al mismo objeto ven los mismos cambios de campos"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "`count++` is three steps (read, add, write), so concurrent increments can be lost; `volatile` gives visibility but not atomicity, while `synchronized` and `AtomicInteger` give both.",
+          "A `Thread` can be started only once; a second `start()` throws `IllegalThreadStateException`. Thread states are NEW, RUNNABLE, BLOCKED, WAITING, TIMED_WAITING and TERMINATED.",
+          "Deadlock needs a cycle of threads each holding one lock while waiting for another; acquiring locks in one consistent global order makes the cycle impossible.",
+          "Thread scheduling is nondeterministic: interleavings change between runs, so passing once proves nothing. Prefer `ExecutorService` and `java.util.concurrent` collections over raw threads; Java 21 adds virtual threads for large numbers of blocking tasks."
+        ],
+        "es": [
+          "`count++` son tres pasos (leer, sumar, escribir), así que los incrementos concurrentes pueden perderse; `volatile` da visibilidad pero no atomicidad, mientras que `synchronized` y `AtomicInteger` dan ambas.",
+          "Un `Thread` solo puede iniciarse una vez; un segundo `start()` lanza `IllegalThreadStateException`. Los estados de un hilo son NEW, RUNNABLE, BLOCKED, WAITING, TIMED_WAITING y TERMINATED.",
+          "Un interbloqueo requiere un ciclo de hilos en el que cada uno tiene un candado mientras espera otro; adquirir los candados en un orden global consistente hace imposible el ciclo.",
+          "La planificación de hilos no es determinista: los entrelazados cambian entre ejecuciones, así que pasar una vez no prueba nada. Prefiere `ExecutorService` y las colecciones de `java.util.concurrent` en lugar de hilos manuales; Java 21 agrega hilos virtuales para grandes cantidades de tareas bloqueantes."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Calling `t.run()` instead of `t.start()`: the code runs sequentially on the current thread, so the program looks correct but has no concurrency at all.",
+          "Synchronizing on different objects in different methods (for example `synchronized` instance methods on two separate `Counter` instances that share a static field), which gives no mutual exclusion. Every access to shared state must use the same lock.",
+          "Swallowing `InterruptedException` with an empty catch block, which loses the cancellation request so the thread never stops. Restore it with `Thread.currentThread().interrupt()` or rethrow."
+        ],
+        "es": [
+          "Llamar a `t.run()` en lugar de `t.start()`: el código se ejecuta secuencialmente en el hilo actual, así que el programa parece correcto pero no tiene ninguna concurrencia.",
+          "Sincronizar sobre objetos distintos en métodos distintos (por ejemplo, métodos de instancia `synchronized` en dos instancias de `Counter` que comparten un campo estático), lo que no da exclusión mutua. Todo acceso al estado compartido debe usar el mismo candado.",
+          "Ignorar `InterruptedException` con un bloque catch vacío, lo que pierde la solicitud de cancelación y el hilo nunca se detiene. Restáurala con `Thread.currentThread().interrupt()` o vuelve a lanzarla."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: start two threads that each print their name and the numbers 1 to 5, `join()` both, then print `done`; run it several times and note how the interleaving changes.",
+          "Core: have 4 threads each call `increment()` 100,000 times on a shared `Counter`. Show that the plain version loses updates, then fix it three ways (`synchronized` method, `ReentrantLock`, `AtomicInteger`) and confirm the result is always 400,000.",
+          "Stretch: implement a bounded producer-consumer with `ArrayBlockingQueue<Integer>` of capacity 10: one producer puts 1..100 followed by a poison-pill value `-1`, two consumers sum what they take, and `main` prints the total (5050).",
+          "Interview-style: write `transfer(Account from, Account to, int amount)` that locks both accounts. Show a schedule that deadlocks when two threads transfer in opposite directions, then fix it by always locking the account with the smaller id first."
+        ],
+        "es": [
+          "Calentamiento: inicia dos hilos que impriman su nombre y los números del 1 al 5, haz `join()` a ambos y luego imprime `done`; ejecútalo varias veces y observa cómo cambia el entrelazado.",
+          "Núcleo: haz que 4 hilos llamen cada uno 100,000 veces a `increment()` sobre un `Counter` compartido. Muestra que la versión simple pierde actualizaciones y corrígela de tres formas (método `synchronized`, `ReentrantLock`, `AtomicInteger`), confirmando que el resultado siempre es 400,000.",
+          "Reto: implementa un productor-consumidor acotado con `ArrayBlockingQueue<Integer>` de capacidad 10: un productor inserta 1..100 seguido de un valor centinela `-1`, dos consumidores suman lo que toman y `main` imprime el total (5050).",
+          "Tipo entrevista: escribe `transfer(Account from, Account to, int amount)`, que bloquee ambas cuentas. Muestra un orden de ejecución que produce interbloqueo cuando dos hilos transfieren en direcciones opuestas y corrígelo bloqueando siempre primero la cuenta con el id menor."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why can two threads incrementing a shared `int` 1,000 times each end with a value below 2,000?",
+          "What is the difference between `volatile` and `synchronized`?",
+          "What are the four conditions for deadlock, and which one does a global lock order break?"
+        ],
+        "es": [
+          "¿Por qué dos hilos que incrementan un `int` compartido 1,000 veces cada uno pueden terminar con un valor menor que 2,000?",
+          "¿Cuál es la diferencia entre `volatile` y `synchronized`?",
+          "¿Cuáles son las cuatro condiciones del interbloqueo y cuál rompe un orden global de candados?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Thread Class",
+            "es": "Clase Thread"
+          },
+          "definition": {
+            "en": "`java.lang.Thread` represents a thread of execution with its own call stack; `start()` asks the JVM to run its `run()` method concurrently, and methods like `join()`, `sleep()` and `interrupt()` coordinate it with other threads.",
+            "es": "`java.lang.Thread` representa un hilo de ejecución con su propia pila de llamadas; `start()` le pide a la JVM ejecutar su método `run()` de forma concurrente, y métodos como `join()`, `sleep()` e `interrupt()` lo coordinan con otros hilos."
+          }
+        },
+        {
+          "term": {
+            "en": "Runnable Interface",
+            "es": "Interfaz Runnable"
+          },
+          "definition": {
+            "en": "A functional interface with the single method `void run()` that describes a task separately from the thread that runs it, so the same task can be passed to `new Thread(...)` or submitted to an `ExecutorService`.",
+            "es": "Una interfaz funcional con el único método `void run()` que describe una tarea por separado del hilo que la ejecuta, de modo que la misma tarea puede pasarse a `new Thread(...)` o enviarse a un `ExecutorService`."
+          }
+        },
+        {
+          "term": {
+            "en": "Synchronization",
+            "es": "Sincronización"
+          },
+          "definition": {
+            "en": "Coordinating threads so that only one at a time executes a critical section on shared data, and so that writes made before releasing a lock are visible to the next thread that acquires it; in Java this is done with `synchronized` blocks/methods on an object's monitor or with `java.util.concurrent.locks.Lock`.",
+            "es": "Coordinar hilos para que solo uno a la vez ejecute una sección crítica sobre datos compartidos, y para que las escrituras hechas antes de liberar un candado sean visibles para el siguiente hilo que lo adquiera; en Java se logra con bloques/métodos `synchronized` sobre el monitor de un objeto o con `java.util.concurrent.locks.Lock`."
+          }
+        },
+        {
+          "term": {
+            "en": "Thread Safety",
+            "es": "Seguridad en hilos"
+          },
+          "definition": {
+            "en": "A class is thread-safe if it behaves correctly when used by several threads at once without extra coordination by the caller, achieved through immutability, confinement to one thread, synchronization or atomic/concurrent classes.",
+            "es": "Una clase es segura para hilos si se comporta correctamente cuando varios hilos la usan a la vez sin coordinación adicional del llamador, lo que se logra con inmutabilidad, confinamiento a un solo hilo, sincronización o clases atómicas/concurrentes."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Oracle Java Tutorials: Concurrency",
+            "es": "Tutoriales de Java de Oracle: concurrencia"
+          },
+          "url": "https://docs.oracle.com/javase/tutorial/essential/concurrency/"
+        },
+        {
+          "label": {
+            "en": "Java 21 API: java.util.concurrent package",
+            "es": "API de Java 21: paquete java.util.concurrent"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/package-summary.html"
+        },
+        {
+          "label": {
+            "en": "Java Language Specification, Chapter 17: Threads and Locks",
+            "es": "Especificación del lenguaje Java, capítulo 17: hilos y candados"
+          },
+          "url": "https://docs.oracle.com/javase/specs/jls/se21/html/jls-17.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Two threads each run `for (int i = 0; i < 100_000; i++) count++;` on a shared, unsynchronized `int count` starting at 0. After `join()`ing both, what is printed?",
+            "es": "Dos hilos ejecutan cada uno `for (int i = 0; i < 100_000; i++) count++;` sobre un `int count` compartido, sin sincronizar, que empieza en 0. Después de hacer `join()` a ambos, ¿qué se imprime?"
+          },
+          "options": {
+            "en": [
+              "Always 200000",
+              "Always exactly 100000",
+              "A value that is often less than 200000 and can change between runs",
+              "The program throws `ConcurrentModificationException`"
+            ],
+            "es": [
+              "Siempre 200000",
+              "Siempre exactamente 100000",
+              "Un valor que a menudo es menor que 200000 y puede cambiar entre ejecuciones",
+              "El programa lanza `ConcurrentModificationException`"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Both threads can read the same old value, add 1 and write back, losing an update; how many are lost depends on scheduling. `ConcurrentModificationException` is thrown by collection iterators, not by races on an `int`.",
+            "es": "Ambos hilos pueden leer el mismo valor viejo, sumar 1 y escribirlo, perdiendo una actualización; cuántas se pierden depende de la planificación. `ConcurrentModificationException` la lanzan los iteradores de colecciones, no las carreras sobre un `int`."
+          }
+        },
+        {
+          "question": {
+            "en": "What does this code do?\n`Thread t = new Thread(() -> System.out.println(Thread.currentThread().getName()));`\n`t.run();`",
+            "es": "¿Qué hace este código?\n`Thread t = new Thread(() -> System.out.println(Thread.currentThread().getName()));`\n`t.run();`"
+          },
+          "options": {
+            "en": [
+              "Prints `main`, because `run()` executes the task on the calling thread",
+              "Prints `Thread-0`, because the task runs on the new thread",
+              "Throws `IllegalThreadStateException` because the thread was not started",
+              "Prints nothing until `join()` is called"
+            ],
+            "es": [
+              "Imprime `main`, porque `run()` ejecuta la tarea en el hilo que llama",
+              "Imprime `Thread-0`, porque la tarea se ejecuta en el hilo nuevo",
+              "Lanza `IllegalThreadStateException` porque el hilo no se inició",
+              "No imprime nada hasta que se llama a `join()`"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "`run()` is an ordinary method call, so the lambda runs on `main`. Only `start()` creates a new thread, which would then print `Thread-0`.",
+            "es": "`run()` es una llamada a método común, así que la lambda se ejecuta en `main`. Solo `start()` crea un hilo nuevo, que entonces imprimiría `Thread-0`."
+          }
+        },
+        {
+          "question": {
+            "en": "A thread blocked in `Thread.sleep(1000)` is interrupted by another thread. What happens?",
+            "es": "Un hilo bloqueado en `Thread.sleep(1000)` es interrumpido por otro hilo. ¿Qué ocurre?"
+          },
+          "options": {
+            "en": [
+              "The thread is terminated immediately",
+              "The interrupt is ignored until the sleep finishes",
+              "`sleep` returns normally and the interrupt flag stays set",
+              "`sleep` throws `InterruptedException` and the interrupt flag is cleared"
+            ],
+            "es": [
+              "El hilo se termina de inmediato",
+              "La interrupción se ignora hasta que termina la espera",
+              "`sleep` regresa normalmente y la bandera de interrupción queda activa",
+              "`sleep` lanza `InterruptedException` y la bandera de interrupción se limpia"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "Interruption is cooperative: blocking methods wake up by throwing `InterruptedException` and clear the flag, which is why the module's example calls `Thread.currentThread().interrupt()` in the catch. Java never forcibly kills a thread on interrupt.",
+            "es": "La interrupción es cooperativa: los métodos bloqueantes despiertan lanzando `InterruptedException` y limpian la bandera, por eso el ejemplo del módulo llama a `Thread.currentThread().interrupt()` en el catch. Java nunca mata un hilo a la fuerza al interrumpirlo."
+          }
+        },
+        {
+          "question": {
+            "en": "You have 8 independent CPU-bound tasks, each taking about 1 second on one core, and submit them to `Executors.newFixedThreadPool(4)` on an otherwise idle 4-core machine. What is the approximate best-case wall-clock time?",
+            "es": "Tienes 8 tareas independientes limitadas por CPU, cada una de aproximadamente 1 segundo en un núcleo, y las envías a `Executors.newFixedThreadPool(4)` en una máquina de 4 núcleos sin otra carga. ¿Cuál es el tiempo real aproximado en el mejor caso?"
+          },
+          "options": {
+            "en": [
+              "1 second",
+              "2 seconds",
+              "4 seconds",
+              "8 seconds"
+            ],
+            "es": [
+              "1 segundo",
+              "2 segundos",
+              "4 segundos",
+              "8 segundos"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Four tasks run in parallel, then the next four: 8 / 4 = 2 rounds of 1 second. One second would need 8 cores; 8 seconds is the sequential time.",
+            "es": "Cuatro tareas se ejecutan en paralelo y luego las otras cuatro: 8 / 4 = 2 rondas de 1 segundo. Un segundo requeriría 8 núcleos; 8 segundos es el tiempo secuencial."
+          }
+        },
+        {
+          "question": {
+            "en": "Thread A runs `synchronized (x) { synchronized (y) { ... } }` while thread B runs `synchronized (y) { synchronized (x) { ... } }`. Sometimes the program hangs forever. Which fix removes the problem?",
+            "es": "El hilo A ejecuta `synchronized (x) { synchronized (y) { ... } }` mientras el hilo B ejecuta `synchronized (y) { synchronized (x) { ... } }`. A veces el programa se cuelga para siempre. ¿Qué corrección elimina el problema?"
+          },
+          "options": {
+            "en": [
+              "Declare `x` and `y` as `volatile`",
+              "Add `Thread.sleep(10)` between acquiring the two locks",
+              "Make both threads acquire the locks in the same order, for example always `x` then `y`",
+              "Give thread A a higher priority with `setPriority`"
+            ],
+            "es": [
+              "Declarar `x` e `y` como `volatile`",
+              "Agregar `Thread.sleep(10)` entre la adquisición de los dos candados",
+              "Hacer que ambos hilos adquieran los candados en el mismo orden, por ejemplo siempre `x` y luego `y`",
+              "Darle mayor prioridad al hilo A con `setPriority`"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "The hang is a deadlock: A holds `x` waiting for `y` while B holds `y` waiting for `x`. A single lock order breaks the circular wait. Sleeping only changes timing, and `volatile` or priorities do not affect lock acquisition.",
+            "es": "El cuelgue es un interbloqueo: A tiene `x` y espera `y` mientras B tiene `y` y espera `x`. Un único orden de candados rompe la espera circular. Dormir solo cambia los tiempos, y `volatile` o las prioridades no afectan la adquisición de candados."
+          }
+        }
+      ]
+    },
+    "java-memory-jvm": {
+      "minutes": 90,
+      "prerequisites": [
+        "oop-basics"
+      ],
+      "whyItMatters": {
+        "en": "`OutOfMemoryError`, `StackOverflowError` and slowly growing heaps are among the most common production incidents in Java services, and diagnosing them requires knowing what stays reachable. Interviewers frequently ask about stack vs heap, garbage collection and how Java can still leak memory.",
+        "es": "`OutOfMemoryError`, `StackOverflowError` y los heaps que crecen poco a poco están entre los incidentes de producción más comunes en servicios Java, y diagnosticarlos requiere saber qué sigue siendo alcanzable. En entrevistas se pregunta con frecuencia sobre pila frente a heap, recolección de basura y cómo Java aún puede tener fugas de memoria."
+      },
+      "objectives": {
+        "en": [
+          "Trace where local primitives, references and objects live during a method call, and explain why a frame's locals disappear when the method returns.",
+          "Explain reachability from GC roots and decide when an object becomes eligible for garbage collection, including objects in reference cycles.",
+          "Compare strong, soft, weak and phantom references and choose `WeakHashMap` or `SoftReference` for a cache appropriately.",
+          "Diagnose a memory leak caused by long-lived collections or listeners using a heap dump (`jcmd <pid> GC.heap_dump`) or a profiler such as VisualVM or Java Flight Recorder."
+        ],
+        "es": [
+          "Rastrear dónde viven las variables locales primitivas, las referencias y los objetos durante una llamada a método, y explicar por qué las variables locales de un marco desaparecen cuando el método retorna.",
+          "Explicar la alcanzabilidad desde las raíces de GC y decidir cuándo un objeto pasa a ser elegible para la recolección de basura, incluidos los objetos en ciclos de referencias.",
+          "Comparar referencias fuertes, suaves, débiles y fantasma, y elegir adecuadamente `WeakHashMap` o `SoftReference` para una caché.",
+          "Diagnosticar una fuga de memoria causada por colecciones o listeners de larga vida usando un volcado de heap (`jcmd <pid> GC.heap_dump`) o un perfilador como VisualVM o Java Flight Recorder."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Distinguish a variable holding a reference from the object it points to",
+          "Trace a recursive call stack by hand"
+        ],
+        "es": [
+          "Distinguir una variable que guarda una referencia del objeto al que apunta",
+          "Rastrear a mano una pila de llamadas recursivas"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Each thread has its own stack of frames holding locals and partial results; objects live on the shared heap. Too-deep recursion throws `StackOverflowError`, a full heap throws `OutOfMemoryError: Java heap space`.",
+          "The JVM uses tracing GC: an object is garbage when no chain of strong references leads to it from a GC root (thread stacks, static fields, JNI handles), so unreachable cycles are collected.",
+          "Most objects die young, so generational collectors make young-generation collections cheap: their cost scales with surviving objects, not dead ones. G1 is the default collector since JDK 9 on server-class machines.",
+          "`System.gc()` is only a hint and finalization is deprecated for removal (JDK 18, JEP 421); release resources with try-with-resources or `java.lang.ref.Cleaner`, never by waiting for GC."
+        ],
+        "es": [
+          "Cada hilo tiene su propia pila de marcos con variables locales y resultados parciales; los objetos viven en el heap compartido. Una recursión demasiado profunda lanza `StackOverflowError` y un heap lleno lanza `OutOfMemoryError: Java heap space`.",
+          "La JVM usa GC por trazado: un objeto es basura cuando ninguna cadena de referencias fuertes llega a él desde una raíz de GC (pilas de hilos, campos estáticos, handles JNI), por lo que los ciclos inalcanzables se recolectan.",
+          "La mayoría de los objetos muere joven, así que los recolectores generacionales hacen baratas las recolecciones de la generación joven: su costo crece con los objetos que sobreviven, no con los muertos. G1 es el recolector por defecto desde JDK 9 en máquinas tipo servidor.",
+          "`System.gc()` es solo una sugerencia y la finalización está obsoleta y marcada para eliminación (JDK 18, JEP 421); libera recursos con try-with-resources o `java.lang.ref.Cleaner`, nunca esperando al GC."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Assuming that Java cannot leak because it has a GC. Objects kept in a `static` `Map`, an unbounded cache or a listener list that is never unregistered stay reachable forever; bound caches and remove listeners when done.",
+          "Thinking that `obj = null` or `System.gc()` frees memory immediately. Setting a local to null only matters if the reference would otherwise outlive its use, and GC timing is up to the JVM.",
+          "Fixing an `OutOfMemoryError` by only raising `-Xmx`. If the heap grows steadily under constant load, a bigger heap just delays the crash; take a heap dump and find what retains the objects."
+        ],
+        "es": [
+          "Suponer que Java no puede tener fugas porque tiene GC. Los objetos guardados en un `Map` `static`, una caché sin límite o una lista de listeners que nunca se desregistran siguen alcanzables para siempre; limita las cachés y elimina los listeners al terminar.",
+          "Creer que `obj = null` o `System.gc()` liberan memoria de inmediato. Asignar null a una variable local solo importa si la referencia, de otro modo, sobreviviría a su uso, y el momento del GC lo decide la JVM.",
+          "Corregir un `OutOfMemoryError` solo aumentando `-Xmx`. Si el heap crece sin parar con carga constante, un heap más grande solo retrasa la caída; toma un volcado de heap y encuentra qué retiene los objetos."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: for `static int sum(int[] a) { int s = 0; for (int x : a) s += x; return s; }` called from `main` with `new int[]{1, 2, 3}`, draw the stack frames and the heap at the moment `s` equals 3, labeling which items are references.",
+          "Core: write a recursive `depth(int n)` that recurses until `StackOverflowError`, catch it, and print the depth reached; compare the depth when running with `-Xss256k` and `-Xss4m`.",
+          "Stretch: build a `Map<Key, byte[]>` cache with `HashMap` and with `WeakHashMap`, drop all external references to the keys, request GC in a loop, and print each map's size; explain why only the `WeakHashMap` shrinks.",
+          "Exam-style: a service keeps `static List<Listener> listeners` and each request registers a listener that captures the request object but never removes it. Explain the leak in terms of GC roots, predict the heap graph over time, and write two fixes (explicit `removeListener` in `finally`, or weak references)."
+        ],
+        "es": [
+          "Calentamiento: para `static int sum(int[] a) { int s = 0; for (int x : a) s += x; return s; }` llamado desde `main` con `new int[]{1, 2, 3}`, dibuja los marcos de la pila y el heap en el momento en que `s` vale 3, indicando cuáles elementos son referencias.",
+          "Núcleo: escribe un `depth(int n)` recursivo que se llame hasta provocar `StackOverflowError`, captúralo e imprime la profundidad alcanzada; compara la profundidad al ejecutar con `-Xss256k` y con `-Xss4m`.",
+          "Reto: construye una caché `Map<Key, byte[]>` con `HashMap` y con `WeakHashMap`, elimina todas las referencias externas a las claves, solicita GC en un ciclo e imprime el tamaño de cada mapa; explica por qué solo el `WeakHashMap` se reduce.",
+          "Tipo examen: un servicio mantiene `static List<Listener> listeners` y cada petición registra un listener que captura el objeto de la petición pero nunca lo elimina. Explica la fuga en términos de raíces de GC, predice la gráfica del heap en el tiempo y escribe dos correcciones (`removeListener` explícito en `finally`, o referencias débiles)."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "In `Point p = new Point(1, 2);` inside a method, what is on the stack and what is on the heap?",
+          "Two objects reference each other and nothing else references them. Are they eligible for garbage collection, and why?",
+          "Name two common ways a Java program leaks memory despite having a garbage collector."
+        ],
+        "es": [
+          "En `Point p = new Point(1, 2);` dentro de un método, ¿qué está en la pila y qué está en el heap?",
+          "Dos objetos se referencian entre sí y nada más los referencia. ¿Son elegibles para la recolección de basura y por qué?",
+          "Nombra dos formas comunes en que un programa Java tiene fugas de memoria a pesar de tener recolector de basura."
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Stack vs Heap",
+            "es": "Pila frente a heap"
+          },
+          "definition": {
+            "en": "Each thread's stack holds one frame per active method call, containing its local variables (primitives and references) and operands, and is freed automatically when the method returns; the heap is shared by all threads and holds every object and array, which live until the garbage collector reclaims them.",
+            "es": "La pila de cada hilo tiene un marco por cada llamada a método activa, con sus variables locales (primitivas y referencias) y operandos, y se libera automáticamente cuando el método retorna; el heap es compartido por todos los hilos y contiene todos los objetos y arreglos, que viven hasta que el recolector de basura los reclama."
+          }
+        },
+        {
+          "term": {
+            "en": "Object Lifecycle",
+            "es": "Ciclo de vida de un objeto"
+          },
+          "definition": {
+            "en": "The stages an object goes through: allocation and construction with `new`, use while it is strongly reachable, becoming unreachable (eligible for collection) when the last strong reference disappears, and finally having its memory reclaimed by the garbage collector at a time the JVM chooses.",
+            "es": "Las etapas por las que pasa un objeto: asignación y construcción con `new`, uso mientras es fuertemente alcanzable, pasar a ser inalcanzable (elegible para recolección) cuando desaparece la última referencia fuerte y, por último, la recuperación de su memoria por el recolector de basura en el momento que la JVM elija."
+          }
+        },
+        {
+          "term": {
+            "en": "Garbage Collection",
+            "es": "Recolección de basura"
+          },
+          "definition": {
+            "en": "Automatic memory management in which the JVM finds objects that cannot be reached from any GC root by following references, and reclaims their space; HotSpot collectors such as G1 split the heap into young and old generations to collect short-lived objects cheaply.",
+            "es": "Gestión automática de memoria en la que la JVM encuentra, siguiendo referencias, los objetos que no pueden alcanzarse desde ninguna raíz de GC y recupera su espacio; recolectores de HotSpot como G1 dividen el heap en generación joven y vieja para recolectar barato los objetos de vida corta."
+          }
+        },
+        {
+          "term": {
+            "en": "References",
+            "es": "Referencias"
+          },
+          "definition": {
+            "en": "Values that point to heap objects. Ordinary (strong) references keep an object alive; the `java.lang.ref` classes add weaker kinds: `SoftReference` (cleared only under memory pressure, before `OutOfMemoryError`), `WeakReference` (cleared at the next GC once only weakly reachable) and `PhantomReference` (used to learn an object has been collected; `get()` always returns null).",
+            "es": "Valores que apuntan a objetos del heap. Las referencias comunes (fuertes) mantienen vivo un objeto; las clases de `java.lang.ref` agregan tipos más débiles: `SoftReference` (se limpia solo bajo presión de memoria, antes de `OutOfMemoryError`), `WeakReference` (se limpia en el siguiente GC cuando el objeto solo es débilmente alcanzable) y `PhantomReference` (sirve para saber que un objeto fue recolectado; `get()` siempre devuelve null)."
+          }
+        },
+        {
+          "term": {
+            "en": "Memory Leaks in Practice",
+            "es": "Fugas de memoria en la práctica"
+          },
+          "definition": {
+            "en": "In Java, a leak is memory held by objects the program no longer needs but still references, typically from static collections, unbounded caches, unremoved listeners, or `ThreadLocal` values on pooled threads; it shows up as heap usage that keeps rising after each full GC.",
+            "es": "En Java, una fuga es memoria ocupada por objetos que el programa ya no necesita pero que sigue referenciando, típicamente desde colecciones estáticas, cachés sin límite, listeners no eliminados o valores `ThreadLocal` en hilos de un pool; se nota como un uso del heap que sigue subiendo después de cada GC completo."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Java Virtual Machine Specification, Chapter 2: run-time data areas",
+            "es": "Especificación de la Máquina Virtual de Java, capítulo 2: áreas de datos en tiempo de ejecución"
+          },
+          "url": "https://docs.oracle.com/javase/specs/jvms/se21/html/jvms-2.html"
+        },
+        {
+          "label": {
+            "en": "HotSpot Virtual Machine Garbage Collection Tuning Guide (Java 21)",
+            "es": "Guía de ajuste de la recolección de basura de HotSpot (Java 21)"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/gctuning/"
+        },
+        {
+          "label": {
+            "en": "Java 21 API: java.lang.ref package (reference objects)",
+            "es": "API de Java 21: paquete java.lang.ref (objetos de referencia)"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/ref/package-summary.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What happens when `static void f(int n) { f(n + 1); }` is called with `f(0)`?",
+            "es": "¿Qué ocurre cuando se llama a `static void f(int n) { f(n + 1); }` con `f(0)`?"
+          },
+          "options": {
+            "en": [
+              "It throws `OutOfMemoryError: Java heap space`",
+              "It throws `StackOverflowError` when the thread's stack runs out of space for frames",
+              "It runs forever because the JIT turns it into a loop",
+              "It stops when `n` overflows to a negative value"
+            ],
+            "es": [
+              "Lanza `OutOfMemoryError: Java heap space`",
+              "Lanza `StackOverflowError` cuando la pila del hilo se queda sin espacio para marcos",
+              "Se ejecuta para siempre porque el JIT lo convierte en un ciclo",
+              "Se detiene cuando `n` se desborda a un valor negativo"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Each call pushes a frame and none returns, so the stack fills up long before `n` overflows. HotSpot does not perform tail-call elimination, and no heap objects are allocated, so it is not a heap error.",
+            "es": "Cada llamada apila un marco y ninguna retorna, así que la pila se llena mucho antes de que `n` se desborde. HotSpot no elimina llamadas de cola, y no se crean objetos en el heap, así que no es un error del heap."
+          }
+        },
+        {
+          "question": {
+            "en": "Objects `a` and `b` reference each other (`a.next = b; b.next = a;`). After the method that created them returns, nothing else references either. What happens to them?",
+            "es": "Los objetos `a` y `b` se referencian entre sí (`a.next = b; b.next = a;`). Después de que retorna el método que los creó, nada más referencia a ninguno. ¿Qué pasa con ellos?"
+          },
+          "options": {
+            "en": [
+              "They are never collected, because each still has a reference count of 1",
+              "Only one of them is collected",
+              "They stay alive until `System.gc()` is called explicitly",
+              "Both become eligible for collection, because neither is reachable from a GC root"
+            ],
+            "es": [
+              "Nunca se recolectan, porque cada uno aún tiene un conteo de referencias de 1",
+              "Solo uno de ellos se recolecta",
+              "Siguen vivos hasta que se llama explícitamente a `System.gc()`",
+              "Ambos pasan a ser elegibles para recolección, porque ninguno es alcanzable desde una raíz de GC"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "Java collectors trace reachability from roots; they do not count references, so isolated cycles are garbage. The reference-count answer describes a different scheme (used, for example, by CPython without its cycle collector).",
+            "es": "Los recolectores de Java trazan la alcanzabilidad desde las raíces; no cuentan referencias, así que los ciclos aislados son basura. La respuesta del conteo de referencias describe otro esquema (usado, por ejemplo, por CPython sin su recolector de ciclos)."
+          }
+        },
+        {
+          "question": {
+            "en": "Which reference type is guaranteed to have been cleared before the JVM throws `OutOfMemoryError`, making it the classic choice for a memory-sensitive cache?",
+            "es": "¿Qué tipo de referencia está garantizado que se haya limpiado antes de que la JVM lance `OutOfMemoryError`, lo que la hace la opción clásica para una caché sensible a la memoria?"
+          },
+          "options": {
+            "en": [
+              "`SoftReference`",
+              "`PhantomReference`",
+              "A strong reference held in a `static` field",
+              "`AtomicReference`"
+            ],
+            "es": [
+              "`SoftReference`",
+              "`PhantomReference`",
+              "Una referencia fuerte guardada en un campo `static`",
+              "`AtomicReference`"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Soft references to softly reachable objects are all cleared before `OutOfMemoryError` is thrown. A phantom reference never returns its object, and `AtomicReference` is a strong reference for concurrency, not a GC hint.",
+            "es": "Todas las referencias suaves a objetos suavemente alcanzables se limpian antes de lanzar `OutOfMemoryError`. Una referencia fantasma nunca devuelve su objeto, y `AtomicReference` es una referencia fuerte para concurrencia, no una indicación para el GC."
+          }
+        },
+        {
+          "question": {
+            "en": "Why is a young-generation (minor) collection usually fast even when millions of short-lived objects were allocated since the last one?",
+            "es": "¿Por qué una recolección de la generación joven (menor) suele ser rápida aunque se hayan creado millones de objetos de vida corta desde la anterior?"
+          },
+          "options": {
+            "en": [
+              "Its work is proportional to the objects that are still live, and most young objects are already dead",
+              "It visits every dead object, but each visit is O(1)",
+              "It only runs when the CPU is idle",
+              "Young objects are freed by the stack when their method returns"
+            ],
+            "es": [
+              "Su trabajo es proporcional a los objetos que siguen vivos, y la mayoría de los objetos jóvenes ya está muerta",
+              "Visita cada objeto muerto, pero cada visita cuesta O(1)",
+              "Solo se ejecuta cuando la CPU está libre",
+              "Los objetos jóvenes los libera la pila cuando su método retorna"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Copying collectors trace and copy only survivors out of the young space, then reuse the whole space; dead objects are never touched. Objects are not freed by stack frames, only the references to them disappear.",
+            "es": "Los recolectores por copia trazan y copian solo a los sobrevivientes fuera del espacio joven y luego reutilizan todo el espacio; los objetos muertos nunca se tocan. Los marcos de pila no liberan objetos; solo desaparecen las referencias a ellos."
+          }
+        },
+        {
+          "question": {
+            "en": "A server has `static List<byte[]> cache = new ArrayList<>();` and every request runs `cache.add(new byte[1_000_000]);`. Nothing ever removes entries. What happens under steady traffic?",
+            "es": "Un servidor tiene `static List<byte[]> cache = new ArrayList<>();` y cada petición ejecuta `cache.add(new byte[1_000_000]);`. Nada elimina nunca las entradas. ¿Qué ocurre con tráfico constante?"
+          },
+          "options": {
+            "en": [
+              "Memory stays flat, because the GC frees arrays that are no longer used",
+              "It throws `StackOverflowError` after enough requests",
+              "Heap usage grows until `OutOfMemoryError: Java heap space`, because the static list keeps every array reachable",
+              "The `ArrayList` automatically drops its oldest entries when memory is low"
+            ],
+            "es": [
+              "La memoria se mantiene estable, porque el GC libera los arreglos que ya no se usan",
+              "Lanza `StackOverflowError` después de suficientes peticiones",
+              "El uso del heap crece hasta `OutOfMemoryError: Java heap space`, porque la lista estática mantiene alcanzable cada arreglo",
+              "El `ArrayList` descarta automáticamente sus entradas más viejas cuando falta memoria"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "A static field is a GC root, so every array in the list stays strongly reachable even though the program never reads it again. The GC only frees unreachable objects, not unused ones, and `ArrayList` has no eviction.",
+            "es": "Un campo estático es una raíz de GC, así que cada arreglo de la lista sigue fuertemente alcanzable aunque el programa nunca vuelva a leerlo. El GC solo libera objetos inalcanzables, no los que no se usan, y `ArrayList` no tiene desalojo."
+          }
+        }
+      ]
+    },
+    "segment-trees": {
+      "minutes": 120,
+      "prerequisites": [
+        "trees-basics",
+        "recursion"
+      ],
+      "whyItMatters": {
+        "en": "When an array changes while you keep asking for sums, minimums or maximums over ranges, prefix sums need O(n) per update; a segment tree does both in O(log n). It is a standard tool in competitive programming and in systems that answer range aggregates over changing data, such as time-series and leaderboard queries.",
+        "es": "Cuando un arreglo cambia mientras sigues consultando sumas, mínimos o máximos de rangos, las sumas prefijas necesitan O(n) por actualización; un árbol de segmentos hace ambas cosas en O(log n). Es una herramienta estándar en programación competitiva y en sistemas que responden agregados por rango sobre datos que cambian, como series de tiempo o tablas de posiciones."
+      },
+      "objectives": {
+        "en": [
+          "Implement recursive `build`, point `update` and range query for sums using child indices 2i + 1 and 2i + 2, and justify allocating 4n nodes.",
+          "Trace a range query and classify every visited node as total overlap, no overlap or partial overlap.",
+          "Implement lazy propagation for range add with range sum, including the push-down step.",
+          "Analyze why a query visits O(log n) nodes, and choose between prefix sums, a Fenwick tree and a segment tree for a given set of operations."
+        ],
+        "es": [
+          "Implementar `build` recursivo, `update` puntual y consulta de rango para sumas con índices de hijos 2i + 1 y 2i + 2, y justificar reservar 4n nodos.",
+          "Seguir una consulta de rango y clasificar cada nodo visitado como solapamiento total, sin solapamiento o solapamiento parcial.",
+          "Implementar propagación perezosa para suma en rango con consulta de suma, incluido el paso de empuje hacia los hijos.",
+          "Analizar por qué una consulta visita O(log n) nodos y elegir entre sumas prefijas, árbol de Fenwick y árbol de segmentos según las operaciones requeridas."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Trace recursion that halves an interval [l, r] into [l, mid] and [mid + 1, r].",
+          "Pick the identity element of an associative operation (0 for sum, +∞ for min, 0 for gcd)."
+        ],
+        "es": [
+          "Seguir una recursión que divide un intervalo [l, r] en [l, mid] y [mid + 1, r].",
+          "Elegir el elemento neutro de una operación asociativa (0 para suma, +∞ para mínimo, 0 para mcd)."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Build O(n); point update O(log n); range query O(log n). The recursive layout needs an array of up to 4n nodes.",
+          "Any associative combine works (sum, min, max, gcd, matrix product); a node disjoint from the query must return the identity element.",
+          "Lazy propagation keeps range updates at O(log n) by storing a pending tag on fully covered nodes and pushing it to the children only when an operation descends. For range add with sums, a node's value grows by delta × segment length.",
+          "Without lazy updates, an iterative bottom-up tree of size 2n (leaves at n..2n − 1) is shorter and faster than the recursive version."
+        ],
+        "es": [
+          "Construcción O(n); actualización puntual O(log n); consulta de rango O(log n). La disposición recursiva necesita un arreglo de hasta 4n nodos.",
+          "Sirve cualquier combinación asociativa (suma, mínimo, máximo, mcd, producto de matrices); un nodo disjunto de la consulta debe devolver el elemento neutro.",
+          "La propagación perezosa mantiene las actualizaciones de rango en O(log n) guardando una marca pendiente en los nodos cubiertos por completo y empujándola a los hijos solo cuando una operación desciende. En suma por rango, el valor del nodo crece en delta × longitud del segmento.",
+          "Sin actualizaciones perezosas, un árbol iterativo de abajo hacia arriba de tamaño 2n (hojas en n..2n − 1) es más corto y rápido que la versión recursiva."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Allocating only 2n nodes for the recursive layout: when n is not a power of two, indices go past 2n and you get `ArrayIndexOutOfBoundsException`. Use 4n.",
+          "Returning 0 for the no-overlap case in a min or max tree; disjoint nodes then win the comparison. Return `Integer.MAX_VALUE` for min and `Integer.MIN_VALUE` for max.",
+          "In lazy propagation, recursing into children without pushing the parent's pending tag first, or adding delta instead of delta × length to a sum node, leaves stale values that show up in later queries."
+        ],
+        "es": [
+          "Reservar solo 2n nodos para la versión recursiva: cuando n no es potencia de dos, los índices superan 2n y obtienes `ArrayIndexOutOfBoundsException`. Usa 4n.",
+          "Devolver 0 en el caso sin solapamiento en un árbol de mínimo o máximo; los nodos disjuntos ganan la comparación. Devuelve `Integer.MAX_VALUE` para mínimo e `Integer.MIN_VALUE` para máximo.",
+          "En la propagación perezosa, descender a los hijos sin empujar antes la marca pendiente del padre, o sumar delta en lugar de delta × longitud a un nodo de suma, deja valores desactualizados que aparecen en consultas posteriores."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: for arr = {2, 1, 5, 3}, draw the sum segment tree with the module's indexing (root 0, children 2i + 1 and 2i + 2) and label each node with its range and value.",
+          "Implement `RangeMinTree` with `update(int i, int v)` and `min(int l, int r)`; test it against an O(n) brute-force scan on 1,000 random operations.",
+          "Add lazy propagation: implement `addRange(int l, int r, int delta)` and `sum(int l, int r)`, both in O(log n), using a `long[]` for sums.",
+          "Exam: support point updates and queries for the maximum subarray sum inside [l, r] by storing (total, best prefix, best suffix, best) in each node and writing the merge function."
+        ],
+        "es": [
+          "Calentamiento: para arr = {2, 1, 5, 3}, dibuja el árbol de segmentos de sumas con la indexación del módulo (raíz 0, hijos 2i + 1 y 2i + 2) y anota en cada nodo su rango y su valor.",
+          "Implementa `RangeMinTree` con `update(int i, int v)` y `min(int l, int r)`; pruébalo contra un recorrido de fuerza bruta O(n) en 1000 operaciones aleatorias.",
+          "Agrega propagación perezosa: implementa `addRange(int l, int r, int delta)` y `sum(int l, int r)`, ambos en O(log n), usando un `long[]` para las sumas.",
+          "Examen: soporta actualizaciones puntuales y consultas de la suma máxima de un subarreglo dentro de [l, r] guardando (total, mejor prefijo, mejor sufijo, mejor) en cada nodo y escribiendo la función de combinación."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why does a range query visit only O(log n) nodes?",
+          "What should a max segment tree return for a node that is disjoint from the query range?",
+          "What does a lazy tag store, and at what moment is it pushed to the children?"
+        ],
+        "es": [
+          "¿Por qué una consulta de rango visita solo O(log n) nodos?",
+          "¿Qué debe devolver un árbol de segmentos de máximo para un nodo disjunto del rango consultado?",
+          "¿Qué guarda una marca perezosa y en qué momento se empuja a los hijos?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Range Queries",
+            "es": "Consultas de rango"
+          },
+          "definition": {
+            "en": "Requests for an aggregate (sum, min, max, gcd, …) over a contiguous subarray [l, r]. A segment tree answers one by combining the precomputed values of O(log n) nodes whose segments exactly cover [l, r].",
+            "es": "Solicitudes de un agregado (suma, mínimo, máximo, mcd, …) sobre un subarreglo contiguo [l, r]. Un árbol de segmentos responde combinando los valores precalculados de O(log n) nodos cuyos segmentos cubren exactamente [l, r]."
+          }
+        },
+        {
+          "term": {
+            "en": "Lazy Propagation",
+            "es": "Propagación perezosa"
+          },
+          "definition": {
+            "en": "A technique in which a range update that fully covers a node is recorded as a pending tag on that node instead of being applied to every descendant; the tag is pushed to the children only when a later operation needs to go below that node.",
+            "es": "Técnica en la que una actualización de rango que cubre por completo un nodo se registra como una marca pendiente en ese nodo en vez de aplicarse a todos sus descendientes; la marca se empuja a los hijos solo cuando una operación posterior necesita bajar por debajo del nodo."
+          }
+        },
+        {
+          "term": {
+            "en": "Point Updates",
+            "es": "Actualizaciones puntuales"
+          },
+          "definition": {
+            "en": "Changing a single array element and then recomputing the aggregates on the path from its leaf to the root, which touches O(log n) nodes.",
+            "es": "Cambiar un solo elemento del arreglo y luego recalcular los agregados en el camino desde su hoja hasta la raíz, lo que toca O(log n) nodos."
+          }
+        },
+        {
+          "term": {
+            "en": "Range Updates",
+            "es": "Actualizaciones de rango"
+          },
+          "definition": {
+            "en": "Modifying every element in [l, r] at once, such as adding a delta or assigning a value. Done as k separate point updates it costs O(k log n); with lazy propagation it costs O(log n).",
+            "es": "Modificar a la vez todos los elementos de [l, r], por ejemplo sumando un delta o asignando un valor. Hecho como k actualizaciones puntuales cuesta O(k log n); con propagación perezosa cuesta O(log n)."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "cp-algorithms: Segment Tree",
+            "es": "cp-algorithms: Árbol de segmentos (en inglés)"
+          },
+          "url": "https://cp-algorithms.com/data_structures/segment_tree.html"
+        },
+        {
+          "label": {
+            "en": "USACO Guide: Point Update Range Sum",
+            "es": "USACO Guide: actualización puntual y suma de rango (en inglés)"
+          },
+          "url": "https://usaco.guide/gold/PURS"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Using the module's `SegmentTree` on arr = {2, 1, 5, 3}, what are `tree[0]`, `tree[1]` and `tree[2]`?",
+            "es": "Usando `SegmentTree` del módulo con arr = {2, 1, 5, 3}, ¿cuánto valen `tree[0]`, `tree[1]` y `tree[2]`?"
+          },
+          "options": {
+            "en": [
+              "11, 3, 8",
+              "11, 8, 3",
+              "11, 2, 1",
+              "3, 8, 11"
+            ],
+            "es": [
+              "11, 3, 8",
+              "11, 8, 3",
+              "11, 2, 1",
+              "3, 8, 11"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Node 0 covers [0, 3] = 11, node 1 (= 2·0 + 1) covers [0, 1] = 2 + 1 = 3 and node 2 covers [2, 3] = 5 + 3 = 8. The values 2 and 1 are leaves deeper down, and the root is index 0, not the last index.",
+            "es": "El nodo 0 cubre [0, 3] = 11, el nodo 1 (= 2·0 + 1) cubre [0, 1] = 2 + 1 = 3 y el nodo 2 cubre [2, 3] = 5 + 3 = 8. Los valores 2 y 1 son hojas más abajo, y la raíz es el índice 0, no el último."
+          }
+        },
+        {
+          "question": {
+            "en": "In a range-minimum segment tree, what should the query return for a node whose segment is completely outside [ql, qr]?",
+            "es": "En un árbol de segmentos de mínimo, ¿qué debe devolver la consulta para un nodo cuyo segmento está completamente fuera de [ql, qr]?"
+          },
+          "options": {
+            "en": [
+              "0",
+              "-1",
+              "`Integer.MAX_VALUE`",
+              "The node's stored value"
+            ],
+            "es": [
+              "0",
+              "-1",
+              "`Integer.MAX_VALUE`",
+              "El valor guardado en el nodo"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "The disjoint case must return the identity of min, which is +∞ (here `Integer.MAX_VALUE`), so it never wins. Returning 0, as the sum version does, gives wrong minimums whenever all real values are positive.",
+            "es": "El caso disjunto debe devolver el neutro del mínimo, que es +∞ (aquí `Integer.MAX_VALUE`), para que nunca gane. Devolver 0, como en la versión de suma, da mínimos incorrectos cuando todos los valores reales son positivos."
+          }
+        },
+        {
+          "question": {
+            "en": "You must add 7 to every element of a range of length k. What does this cost using only point updates, and using lazy propagation?",
+            "es": "Debes sumar 7 a cada elemento de un rango de longitud k. ¿Cuánto cuesta usando solo actualizaciones puntuales y usando propagación perezosa?"
+          },
+          "options": {
+            "en": [
+              "O(log n) and O(log n)",
+              "O(k) and O(log n)",
+              "O(k log n) and O(log n)",
+              "O(k log n) and O(k)"
+            ],
+            "es": [
+              "O(log n) y O(log n)",
+              "O(k) y O(log n)",
+              "O(k log n) y O(log n)",
+              "O(k log n) y O(k)"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Each of the k point updates walks a leaf-to-root path of O(log n). Lazy propagation tags O(log n) covering nodes and stops, so it does not depend on k.",
+            "es": "Cada una de las k actualizaciones puntuales recorre un camino hoja-raíz de O(log n). La propagación perezosa marca O(log n) nodos que cubren el rango y se detiene, así que no depende de k."
+          }
+        },
+        {
+          "question": {
+            "en": "Which property must the combine function of a segment tree have so that queries are correct?",
+            "es": "¿Qué propiedad debe tener la función de combinación de un árbol de segmentos para que las consultas sean correctas?"
+          },
+          "options": {
+            "en": [
+              "Commutativity",
+              "Associativity",
+              "Invertibility (an inverse operation exists)",
+              "Idempotence"
+            ],
+            "es": [
+              "Conmutatividad",
+              "Asociatividad",
+              "Invertibilidad (existe una operación inversa)",
+              "Idempotencia"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The query splits [l, r] into pieces in an arbitrary grouping, which is safe only if (a ∘ b) ∘ c = a ∘ (b ∘ c); combining children left-then-right keeps order, so commutativity is not required. Invertibility is what a Fenwick tree needs for range queries.",
+            "es": "La consulta divide [l, r] en piezas agrupadas de forma arbitraria, lo que es seguro solo si (a ∘ b) ∘ c = a ∘ (b ∘ c); combinar hijos izquierdo y luego derecho conserva el orden, así que no se requiere conmutatividad. La invertibilidad es lo que necesita un árbol de Fenwick para consultas de rango."
+          }
+        },
+        {
+          "question": {
+            "en": "Why does the module's recursive `SegmentTree` allocate `new int[4 * n]`?",
+            "es": "¿Por qué el `SegmentTree` recursivo del módulo reserva `new int[4 * n]`?"
+          },
+          "options": {
+            "en": [
+              "Each node stores four values",
+              "The extra space holds the lazy tags",
+              "Java arrays need padding for alignment",
+              "With 2i + 1 / 2i + 2 indexing, a tree over n leaves can use indices close to 4n when n is not a power of two"
+            ],
+            "es": [
+              "Cada nodo guarda cuatro valores",
+              "El espacio extra guarda las marcas perezosas",
+              "Los arreglos de Java necesitan relleno para alineación",
+              "Con indexación 2i + 1 / 2i + 2, un árbol sobre n hojas puede usar índices cercanos a 4n cuando n no es potencia de dos"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "The recursive tree has height ⌈log₂ n⌉, so its implicit indices can reach about 2·2^⌈log₂ n⌉, which is below 4n. Lazy tags would need a separate array; the module stores one value per node.",
+            "es": "El árbol recursivo tiene altura ⌈log₂ n⌉, así que sus índices implícitos pueden llegar a unos 2·2^⌈log₂ n⌉, que es menor que 4n. Las marcas perezosas necesitarían otro arreglo; el módulo guarda un solo valor por nodo."
+          }
+        }
+      ]
+    },
+    "binary-indexed-trees": {
+      "minutes": 90,
+      "prerequisites": [
+        "bit-manipulation",
+        "segment-trees"
+      ],
+      "whyItMatters": {
+        "en": "A Fenwick tree maintains prefix sums under updates in about ten lines of code and n + 1 integers. It is the usual tool for counting inversions, rank and frequency queries over a stream, and many contest problems where a full segment tree is overkill.",
+        "es": "Un árbol de Fenwick mantiene sumas prefijas con actualizaciones en unas diez líneas de código y n + 1 enteros. Es la herramienta habitual para contar inversiones, consultas de rango y frecuencia sobre un flujo de datos, y muchos problemas de concurso donde un árbol de segmentos completo es excesivo."
+      },
+      "objectives": {
+        "en": [
+          "Explain which range tree[i] covers, namely (i − lowbit(i), i] with lowbit(i) = i & −i.",
+          "Implement `update` (i += i & −i) and prefix query (i −= i & −i) with 1-based internal indices, and compute range sums as prefix(r) − prefix(l − 1).",
+          "Build a Fenwick tree in O(n) by adding each tree[i] into its parent tree[i + lowbit(i)] instead of calling update n times.",
+          "Apply a BIT with coordinate compression to count inversions in O(n log n), and choose between a BIT and a segment tree for a given set of operations."
+        ],
+        "es": [
+          "Explicar qué rango cubre tree[i], es decir (i − lowbit(i), i] con lowbit(i) = i & −i.",
+          "Implementar `update` (i += i & −i) y la consulta prefija (i −= i & −i) con índices internos desde 1, y calcular sumas de rango como prefix(r) − prefix(l − 1).",
+          "Construir un árbol de Fenwick en O(n) sumando cada tree[i] a su padre tree[i + lowbit(i)] en vez de llamar a update n veces.",
+          "Aplicar un BIT con compresión de coordenadas para contar inversiones en O(n log n), y elegir entre un BIT y un árbol de segmentos según las operaciones requeridas."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Compute `i & -i` for small values of i by writing them in binary.",
+          "Convert between 0-based and 1-based indices without off-by-one errors."
+        ],
+        "es": [
+          "Calcular `i & -i` para valores pequeños de i escribiéndolos en binario.",
+          "Convertir entre índices desde 0 y desde 1 sin errores de desfase por uno."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Point update and prefix query are both O(log n); memory is n + 1 values, and index 0 is unused.",
+          "With 1-based indices, tree[i] stores a[i − lowbit(i) + 1] + … + a[i]; for example tree[12] stores a[9..12].",
+          "Range queries need an invertible operation (sum, XOR). Range minimum or maximum over arbitrary [l, r] is not directly supported; use a segment tree.",
+          "Range update with point query: add(l, +d) and add(r + 1, −d) on a difference array, then a[i] = prefix(i). Two BITs give range update with range sum."
+        ],
+        "es": [
+          "La actualización puntual y la consulta prefija son ambas O(log n); la memoria es de n + 1 valores y el índice 0 no se usa.",
+          "Con índices desde 1, tree[i] guarda a[i − lowbit(i) + 1] + … + a[i]; por ejemplo, tree[12] guarda a[9..12].",
+          "Las consultas de rango requieren una operación invertible (suma, XOR). El mínimo o máximo de un rango arbitrario [l, r] no se soporta directamente; usa un árbol de segmentos.",
+          "Actualización de rango con consulta puntual: add(l, +d) y add(r + 1, −d) sobre un arreglo de diferencias, y luego a[i] = prefix(i). Dos BIT dan actualización de rango con suma de rango."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Using internal index 0 in a 1-based BIT: `0 & -0` is 0, so `i += i & -i` never advances and the loop runs forever. Shift user indices by +1, as the module's `update` does.",
+          "Treating `update` as \"set\" when it means \"add delta\": to set a[i] = v you must add v − a[i], which requires keeping a copy of the current array.",
+          "Storing sums or inversion counts in `int`: n = 10⁵ elements can produce about 5 × 10⁹ inversions, more than `Integer.MAX_VALUE`. Use `long[]` and a `long` result."
+        ],
+        "es": [
+          "Usar el índice interno 0 en un BIT desde 1: `0 & -0` es 0, así que `i += i & -i` nunca avanza y el ciclo es infinito. Desplaza los índices del usuario en +1, como hace `update` del módulo.",
+          "Tratar `update` como \"asignar\" cuando significa \"sumar delta\": para asignar a[i] = v debes sumar v − a[i], lo que exige guardar una copia del arreglo actual.",
+          "Guardar sumas o conteos de inversiones en `int`: n = 10⁵ elementos pueden producir unos 5 × 10⁹ inversiones, más que `Integer.MAX_VALUE`. Usa `long[]` y un resultado `long`."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: for n = 8, list the 1-based range each tree[i] covers for i = 1..8, and the indices visited by prefix(7) and by update(3).",
+          "Implement a `FenwickTree(long[] a)` constructor that builds in O(n), plus `add`, `prefixSum` and `rangeSum`; verify against brute force on random data.",
+          "Implement range update with point query using a BIT over a difference array: `rangeAdd(int l, int r, long d)` and `pointQuery(int i)`.",
+          "Interview: implement `long countInversions(int[] a)` for up to 10⁵ values that may be negative or up to 10⁹, using coordinate compression and a BIT in O(n log n)."
+        ],
+        "es": [
+          "Calentamiento: para n = 8, anota el rango (desde 1) que cubre cada tree[i] para i = 1..8, y los índices que visitan prefix(7) y update(3).",
+          "Implementa un constructor `FenwickTree(long[] a)` que construya en O(n), además de `add`, `prefixSum` y `rangeSum`; verifícalo contra fuerza bruta con datos aleatorios.",
+          "Implementa actualización de rango con consulta puntual usando un BIT sobre un arreglo de diferencias: `rangeAdd(int l, int r, long d)` y `pointQuery(int i)`.",
+          "Entrevista: implementa `long countInversions(int[] a)` para hasta 10⁵ valores que pueden ser negativos o de hasta 10⁹, usando compresión de coordenadas y un BIT en O(n log n)."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Which indices does prefix(13) visit, and why those?",
+          "Why can't a plain BIT answer range-minimum queries over arbitrary [l, r]?",
+          "How do you turn a point-update/prefix-query BIT into a range-update/point-query BIT?"
+        ],
+        "es": [
+          "¿Qué índices visita prefix(13) y por qué esos?",
+          "¿Por qué un BIT simple no puede responder mínimos de rangos arbitrarios [l, r]?",
+          "¿Cómo conviertes un BIT de actualización puntual y consulta prefija en uno de actualización de rango y consulta puntual?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Prefix Sums",
+            "es": "Sumas prefijas"
+          },
+          "definition": {
+            "en": "The values P(i) = a[0] + a[1] + … + a[i]; with them any range sum is P(r) − P(l − 1). A static prefix array must be rebuilt in O(n) after a change, while a BIT updates them in O(log n).",
+            "es": "Los valores P(i) = a[0] + a[1] + … + a[i]; con ellos cualquier suma de rango es P(r) − P(l − 1). Un arreglo prefijo estático debe reconstruirse en O(n) tras un cambio, mientras que un BIT los actualiza en O(log n)."
+          }
+        },
+        {
+          "term": {
+            "en": "Range Sum Queries",
+            "es": "Consultas de suma de rango"
+          },
+          "definition": {
+            "en": "Computing a[l] + … + a[r]; a BIT answers it as prefixSum(r) − prefixSum(l − 1), two O(log n) downward walks.",
+            "es": "Calcular a[l] + … + a[r]; un BIT lo responde como prefixSum(r) − prefixSum(l − 1), dos recorridos descendentes de O(log n)."
+          }
+        },
+        {
+          "term": {
+            "en": "Point Updates",
+            "es": "Actualizaciones puntuales"
+          },
+          "definition": {
+            "en": "Adding a delta to one element; in a BIT this modifies every node whose range contains that index, found by repeatedly adding lowbit(i) to i until it exceeds n.",
+            "es": "Sumar un delta a un elemento; en un BIT esto modifica cada nodo cuyo rango contiene ese índice, que se encuentran sumando repetidamente lowbit(i) a i hasta superar n."
+          }
+        },
+        {
+          "term": {
+            "en": "Lower Bit Operation",
+            "es": "Operación de bit más bajo"
+          },
+          "definition": {
+            "en": "lowbit(i) = i & −i, the value of the least significant set bit of i (lowbit(12) = 4). It works because in two's complement −i = ~i + 1, so only that bit is set in both i and −i.",
+            "es": "lowbit(i) = i & −i, el valor del bit encendido menos significativo de i (lowbit(12) = 4). Funciona porque en complemento a dos −i = ~i + 1, así que solo ese bit está encendido tanto en i como en −i."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "cp-algorithms: Fenwick Tree",
+            "es": "cp-algorithms: Árbol de Fenwick (en inglés)"
+          },
+          "url": "https://cp-algorithms.com/data_structures/fenwick.html"
+        },
+        {
+          "label": {
+            "en": "USACO Guide: Point Update Range Sum",
+            "es": "USACO Guide: actualización puntual y suma de rango (en inglés)"
+          },
+          "url": "https://usaco.guide/gold/PURS"
+        },
+        {
+          "label": {
+            "en": "Wikipedia: Fenwick tree",
+            "es": "Wikipedia: Árbol de Fenwick (en inglés)"
+          },
+          "url": "https://en.wikipedia.org/wiki/Fenwick_tree"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "In a 1-based BIT with n = 16, which internal indices does an update at index 5 modify?",
+            "es": "En un BIT desde 1 con n = 16, ¿qué índices internos modifica una actualización en el índice 5?"
+          },
+          "options": {
+            "en": [
+              "5, 4",
+              "5, 6, 8, 16",
+              "5, 7, 8, 16",
+              "5, 6, 7, 8"
+            ],
+            "es": [
+              "5, 4",
+              "5, 6, 8, 16",
+              "5, 7, 8, 16",
+              "5, 6, 7, 8"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "5 + lowbit(5)=1 → 6, 6 + 2 → 8, 8 + 8 → 16, then 32 > 16 stops. The sequence 5, 4 is what a prefix query walks (subtracting the lowbit).",
+            "es": "5 + lowbit(5)=1 → 6, 6 + 2 → 8, 8 + 8 → 16, y 32 > 16 termina. La secuencia 5, 4 es la que recorre una consulta prefija (restando el lowbit)."
+          }
+        },
+        {
+          "question": {
+            "en": "In the module's `main`, the values {1, 2, 3, 4, 5} are added at indices 0..4, then `bit.update(2, 5)` runs. What does `bit.rangeSum(1, 3)` return?",
+            "es": "En el `main` del módulo se agregan los valores {1, 2, 3, 4, 5} en los índices 0..4 y luego se ejecuta `bit.update(2, 5)`. ¿Qué devuelve `bit.rangeSum(1, 3)`?"
+          },
+          "options": {
+            "en": [
+              "9",
+              "10",
+              "19",
+              "14"
+            ],
+            "es": [
+              "9",
+              "10",
+              "19",
+              "14"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "`update` adds a delta, so index 2 becomes 3 + 5 = 8 and the range sum is 2 + 8 + 4 = 14. 9 is the sum before the update, and 10 is `prefixSum(3)` printed earlier.",
+            "es": "`update` suma un delta, así que el índice 2 pasa a 3 + 5 = 8 y la suma del rango es 2 + 8 + 4 = 14. 9 es la suma antes de la actualización y 10 es `prefixSum(3)` impreso antes."
+          }
+        },
+        {
+          "question": {
+            "en": "In a 1-based Fenwick tree, which elements does tree[12] store the sum of?",
+            "es": "En un árbol de Fenwick desde 1, ¿de qué elementos guarda la suma tree[12]?"
+          },
+          "options": {
+            "en": [
+              "a[1..12]",
+              "a[8..12]",
+              "a[9..12]",
+              "a[12] only"
+            ],
+            "es": [
+              "a[1..12]",
+              "a[8..12]",
+              "a[9..12]",
+              "Solo a[12]"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "12 = 1100₂, so lowbit(12) = 4 and tree[12] covers the 4 elements a[9..12]. a[1..12] would be a full prefix sum, which only power-of-two indices store.",
+            "es": "12 = 1100₂, así que lowbit(12) = 4 y tree[12] cubre los 4 elementos a[9..12]. a[1..12] sería una suma prefija completa, que solo guardan los índices potencia de dos."
+          }
+        },
+        {
+          "question": {
+            "en": "Which way of building a Fenwick tree from an existing array runs in O(n)?",
+            "es": "¿Qué forma de construir un árbol de Fenwick a partir de un arreglo existente corre en O(n)?"
+          },
+          "options": {
+            "en": [
+              "Copy a into tree, then for each i add tree[i] into tree[i + (i & -i)] when that index ≤ n",
+              "Call `update(i, a[i])` for every i",
+              "Sort the array first, then insert in order",
+              "Compute each tree[i] by summing its covered range directly"
+            ],
+            "es": [
+              "Copiar a en tree y luego, para cada i, sumar tree[i] a tree[i + (i & -i)] cuando ese índice sea ≤ n",
+              "Llamar a `update(i, a[i])` para cada i",
+              "Ordenar primero el arreglo y luego insertar en orden",
+              "Calcular cada tree[i] sumando directamente su rango cubierto"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Each node pushes its finished total to its single parent once, so the build is linear. Calling `update` n times costs O(n log n), and summing each covered range directly also totals O(n log n).",
+            "es": "Cada nodo empuja su total ya completo a su único padre una vez, así que la construcción es lineal. Llamar a `update` n veces cuesta O(n log n), y sumar directamente cada rango cubierto también suma O(n log n)."
+          }
+        },
+        {
+          "question": {
+            "en": "Which task is a plain Fenwick tree NOT suited for without extra techniques?",
+            "es": "¿Para qué tarea NO sirve un árbol de Fenwick simple sin técnicas adicionales?"
+          },
+          "options": {
+            "en": [
+              "Prefix sums with point updates",
+              "Counting inversions in an array",
+              "Range minimum over arbitrary [l, r] with updates",
+              "Range XOR queries with point updates"
+            ],
+            "es": [
+              "Sumas prefijas con actualizaciones puntuales",
+              "Contar inversiones en un arreglo",
+              "Mínimo de un rango arbitrario [l, r] con actualizaciones",
+              "Consultas de XOR de rango con actualizaciones puntuales"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "A BIT answers [l, r] by subtracting two prefixes, which needs an inverse operation; min has none. XOR is its own inverse, so range XOR works just like range sum.",
+            "es": "Un BIT responde [l, r] restando dos prefijos, lo que necesita una operación inversa; el mínimo no la tiene. XOR es su propia inversa, así que el XOR de rango funciona igual que la suma de rango."
+          }
+        }
+      ]
+    },
+    "advanced-trees": {
+      "minutes": 130,
+      "prerequisites": [
+        "trees-basics"
+      ],
+      "whyItMatters": {
+        "en": "Java's `TreeMap` and `TreeSet` are red-black trees, the Linux kernel uses red-black trees in several subsystems, and database indexes such as MySQL InnoDB and PostgreSQL are built on B-tree variants. Knowing how they stay balanced explains their O(log n) guarantees and why disk-based systems prefer wide trees.",
+        "es": "`TreeMap` y `TreeSet` de Java son árboles rojo-negro, el kernel de Linux usa árboles rojo-negro en varios subsistemas, y los índices de bases de datos como MySQL InnoDB y PostgreSQL se construyen con variantes de árboles B. Entender cómo se mantienen balanceados explica sus garantías O(log n) y por qué los sistemas en disco prefieren árboles anchos."
+      },
+      "objectives": {
+        "en": [
+          "Compute balance factors after an AVL insertion and choose the correct rotation case (LL, RR, LR, RL).",
+          "Implement `rotateLeft` and `rotateRight` and show that they preserve the inorder sequence of keys.",
+          "Explain the red-black invariants and why they bound the height by 2·log₂(n + 1).",
+          "Compare AVL, red-black, B-trees and splay trees by height bound, rebalancing cost and typical use (in-memory map, disk index, access locality)."
+        ],
+        "es": [
+          "Calcular factores de balance tras una inserción en un AVL y elegir el caso de rotación correcto (LL, RR, LR, RL).",
+          "Implementar `rotateLeft` y `rotateRight` y mostrar que conservan la secuencia inorden de las claves.",
+          "Explicar las invariantes rojo-negro y por qué acotan la altura por 2·log₂(n + 1).",
+          "Comparar AVL, rojo-negro, árboles B y árboles splay según cota de altura, costo de rebalanceo y uso típico (mapa en memoria, índice en disco, localidad de acceso)."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Implement recursive BST insertion and inorder traversal.",
+          "Compute the height of each node from its children's heights."
+        ],
+        "es": [
+          "Implementar inserción recursiva en un BST y recorrido inorden.",
+          "Calcular la altura de cada nodo a partir de las alturas de sus hijos."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "AVL: at every node |height(left) − height(right)| ≤ 1, so height ≤ about 1.44·log₂ n. An insertion needs at most one single or double rotation; a deletion may need O(log n) rotations.",
+          "Red-black: the root is black, a red node has no red child, and every root-to-null path has the same number of black nodes, so height ≤ 2·log₂(n + 1). `TreeMap` guarantees O(log n) `get`, `put` and `remove`.",
+          "B-tree of minimum degree t: every non-root node holds t − 1 to 2t − 1 sorted keys and all leaves are at the same depth, so height is O(log_t n) and few disk blocks are read. B+ trees keep all records in linked leaves for fast range scans.",
+          "Splay trees store no balance data and give O(log n) amortized time per operation, but a single operation can cost O(n)."
+        ],
+        "es": [
+          "AVL: en cada nodo |altura(izq) − altura(der)| ≤ 1, así que la altura es ≤ aproximadamente 1.44·log₂ n. Una inserción necesita como máximo una rotación simple o doble; una eliminación puede necesitar O(log n) rotaciones.",
+          "Rojo-negro: la raíz es negra, un nodo rojo no tiene hijos rojos y todo camino de la raíz a null tiene la misma cantidad de nodos negros, así que la altura es ≤ 2·log₂(n + 1). `TreeMap` garantiza `get`, `put` y `remove` en O(log n).",
+          "Árbol B de grado mínimo t: cada nodo que no es la raíz tiene entre t − 1 y 2t − 1 claves ordenadas y todas las hojas están a la misma profundidad, así que la altura es O(log_t n) y se leen pocos bloques de disco. Los árboles B+ guardan todos los registros en hojas enlazadas para recorrer rangos rápido.",
+          "Los árboles splay no guardan datos de balance y dan tiempo amortizado O(log n) por operación, pero una sola operación puede costar O(n)."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Looking only at the unbalanced node's balance factor and ignoring its child's: in the zig-zag cases (LR, RL) a single rotation just moves the imbalance to the other side. Check the child's sign to decide on a double rotation, as the module's `rebalance` does.",
+          "Updating heights in the wrong order after a rotation: the node that moved down must be updated before the new subtree root, otherwise the root's height is computed from a stale child value.",
+          "Ignoring the node returned by a recursive insert or rotation (writing `insert(node.left, key)` instead of `node.left = insert(node.left, key)`) detaches the rebalanced subtree and loses keys."
+        ],
+        "es": [
+          "Mirar solo el factor de balance del nodo desbalanceado e ignorar el de su hijo: en los casos zig-zag (LR, RL) una rotación simple solo traslada el desbalance al otro lado. Revisa el signo del hijo para decidir una rotación doble, como hace `rebalance` del módulo.",
+          "Actualizar las alturas en el orden equivocado tras una rotación: el nodo que bajó debe actualizarse antes que la nueva raíz del subárbol, o la altura de la raíz se calcula con un valor viejo del hijo.",
+          "Ignorar el nodo que devuelve una inserción recursiva o una rotación (escribir `insert(node.left, key)` en vez de `node.left = insert(node.left, key)`) desconecta el subárbol rebalanceado y pierde claves."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: insert 10, 20, 30, 40, 50, 25 into an empty AVL tree by hand; draw the tree after each rotation and name its case (LL, RR, LR or RL).",
+          "Implement `boolean isAVL(Node root)` that checks both BST ordering and the height condition in a single O(n) pass, returning −1 from the helper on failure.",
+          "Implement AVL deletion with rebalancing at every ancestor, and test 10,000 random inserts and deletes against `java.util.TreeSet`.",
+          "Exam: prove that an AVL tree of height h has at least N(h) = N(h − 1) + N(h − 2) + 1 nodes, and conclude that its height is O(log n)."
+        ],
+        "es": [
+          "Calentamiento: inserta 10, 20, 30, 40, 50, 25 en un AVL vacío a mano; dibuja el árbol tras cada rotación y nombra su caso (LL, RR, LR o RL).",
+          "Implementa `boolean isAVL(Node root)` que verifique el orden de BST y la condición de altura en un solo recorrido O(n), devolviendo −1 desde el auxiliar si falla.",
+          "Implementa la eliminación en AVL con rebalanceo en cada ancestro y prueba 10 000 inserciones y eliminaciones aleatorias contra `java.util.TreeSet`.",
+          "Examen: demuestra que un AVL de altura h tiene al menos N(h) = N(h − 1) + N(h − 2) + 1 nodos y concluye que su altura es O(log n)."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Which rotations fix a node with balance +2 whose left child has balance −1?",
+          "Why might a library prefer red-black trees to AVL trees for an ordered map?",
+          "Why do databases index with B-trees instead of binary search trees?"
+        ],
+        "es": [
+          "¿Qué rotaciones corrigen un nodo con balance +2 cuyo hijo izquierdo tiene balance −1?",
+          "¿Por qué una biblioteca podría preferir árboles rojo-negro en vez de AVL para un mapa ordenado?",
+          "¿Por qué las bases de datos indexan con árboles B en lugar de árboles binarios de búsqueda?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "AVL Trees",
+            "es": "Árboles AVL"
+          },
+          "definition": {
+            "en": "Self-balancing binary search trees in which the heights of every node's two subtrees differ by at most 1; rotations after each insert or delete restore this, guaranteeing O(log n) height.",
+            "es": "Árboles binarios de búsqueda autobalanceados en los que las alturas de los dos subárboles de cada nodo difieren como máximo en 1; las rotaciones tras cada inserción o eliminación lo restauran y garantizan altura O(log n)."
+          }
+        },
+        {
+          "term": {
+            "en": "Red-Black Trees",
+            "es": "Árboles rojo-negro"
+          },
+          "definition": {
+            "en": "Self-balancing binary search trees whose nodes are colored red or black so that the root is black, no red node has a red child, and every root-to-null path has the same number of black nodes; this keeps height ≤ 2·log₂(n + 1).",
+            "es": "Árboles binarios de búsqueda autobalanceados cuyos nodos se colorean de rojo o negro de modo que la raíz es negra, ningún nodo rojo tiene un hijo rojo y todo camino de la raíz a null tiene la misma cantidad de nodos negros; así la altura queda ≤ 2·log₂(n + 1)."
+          }
+        },
+        {
+          "term": {
+            "en": "B-Trees",
+            "es": "Árboles B"
+          },
+          "definition": {
+            "en": "Balanced multiway search trees in which each node stores many sorted keys and has one more child than keys, every non-root node is at least half full, and all leaves sit at the same depth; a high branching factor minimizes disk reads.",
+            "es": "Árboles de búsqueda multivía balanceados en los que cada nodo guarda muchas claves ordenadas y tiene un hijo más que claves, cada nodo que no es la raíz está al menos medio lleno y todas las hojas están a la misma profundidad; un factor de ramificación alto minimiza las lecturas de disco."
+          }
+        },
+        {
+          "term": {
+            "en": "Splay Trees",
+            "es": "Árboles splay"
+          },
+          "definition": {
+            "en": "Self-adjusting binary search trees that move each accessed node to the root with zig, zig-zig and zig-zag rotations; they store no balance information and achieve O(log n) amortized cost per operation.",
+            "es": "Árboles binarios de búsqueda autoajustables que llevan cada nodo accedido a la raíz con rotaciones zig, zig-zig y zig-zag; no guardan información de balance y logran costo amortizado O(log n) por operación."
+          }
+        },
+        {
+          "term": {
+            "en": "Tree Rotations",
+            "es": "Rotaciones de árboles"
+          },
+          "definition": {
+            "en": "Constant-time local restructurings (left or right) that swap the parent-child relation of two nodes and move one subtree between them, preserving the inorder order of keys while changing subtree heights.",
+            "es": "Reestructuraciones locales de tiempo constante (a la izquierda o a la derecha) que intercambian la relación padre-hijo entre dos nodos y mueven un subárbol entre ellos, conservando el orden inorden de las claves mientras cambian las alturas de los subárboles."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Wikipedia: AVL tree",
+            "es": "Wikipedia: Árbol AVL (en inglés)"
+          },
+          "url": "https://en.wikipedia.org/wiki/AVL_tree"
+        },
+        {
+          "label": {
+            "en": "Java 21 API: java.util.TreeMap (red-black tree implementation)",
+            "es": "API de Java 21: java.util.TreeMap (implementación con árbol rojo-negro)"
+          },
+          "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/TreeMap.html"
+        },
+        {
+          "label": {
+            "en": "Wikipedia: B-tree",
+            "es": "Wikipedia: Árbol B (en inglés)"
+          },
+          "url": "https://en.wikipedia.org/wiki/B-tree"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "You insert 3, then 2, then 1 into an empty AVL tree. Which key is the root after rebalancing?",
+            "es": "Insertas 3, luego 2 y luego 1 en un AVL vacío. ¿Qué clave queda en la raíz tras el rebalanceo?"
+          },
+          "options": {
+            "en": [
+              "1",
+              "2",
+              "3",
+              "No rotation happens; the tree stays a chain rooted at 3"
+            ],
+            "es": [
+              "1",
+              "2",
+              "3",
+              "No hay rotación; el árbol queda como cadena con raíz 3"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "After inserting 1, node 3 has balance +2 and its left child 2 has balance +1 (LL case), so one right rotation at 3 makes 2 the root with children 1 and 3. A chain of height 3 violates the AVL condition.",
+            "es": "Tras insertar 1, el nodo 3 tiene balance +2 y su hijo izquierdo 2 tiene balance +1 (caso LL), así que una rotación a la derecha en 3 deja a 2 como raíz con hijos 1 y 3. Una cadena de altura 3 viola la condición AVL."
+          }
+        },
+        {
+          "question": {
+            "en": "An AVL node has balance factor +2 (left-heavy) and its left child has balance −1. What restores balance?",
+            "es": "Un nodo AVL tiene factor de balance +2 (cargado a la izquierda) y su hijo izquierdo tiene balance −1. ¿Qué restaura el balance?"
+          },
+          "options": {
+            "en": [
+              "A single right rotation at the node",
+              "A single left rotation at the node",
+              "A left rotation at the left child, then a right rotation at the node",
+              "A right rotation at the left child, then a left rotation at the node"
+            ],
+            "es": [
+              "Una rotación simple a la derecha en el nodo",
+              "Una rotación simple a la izquierda en el nodo",
+              "Una rotación a la izquierda en el hijo izquierdo y luego una a la derecha en el nodo",
+              "Una rotación a la derecha en el hijo izquierdo y luego una a la izquierda en el nodo"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "This is the LR case, matching the module's `rebalance`: rotate the left child left to turn it into an LL shape, then rotate the node right. A single right rotation would leave the tree right-heavy by 2.",
+            "es": "Es el caso LR, igual que en `rebalance` del módulo: rota el hijo izquierdo a la izquierda para obtener la forma LL y luego rota el nodo a la derecha. Una rotación simple a la derecha dejaría el árbol cargado a la derecha por 2."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the maximum height of a red-black tree with n internal nodes?",
+            "es": "¿Cuál es la altura máxima de un árbol rojo-negro con n nodos internos?"
+          },
+          "options": {
+            "en": [
+              "2·log₂(n + 1)",
+              "log₂ n",
+              "About 1.44·log₂ n",
+              "n / 2"
+            ],
+            "es": [
+              "2·log₂(n + 1)",
+              "log₂ n",
+              "Aproximadamente 1.44·log₂ n",
+              "n / 2"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Every path has the same black height bh with n ≥ 2^bh − 1, and reds cannot be adjacent, so height ≤ 2·bh ≤ 2·log₂(n + 1). About 1.44·log₂ n is the tighter AVL bound, which is why AVL lookups can be slightly faster.",
+            "es": "Todos los caminos tienen la misma altura negra bh con n ≥ 2^bh − 1, y los rojos no pueden ser consecutivos, así que la altura es ≤ 2·bh ≤ 2·log₂(n + 1). Aproximadamente 1.44·log₂ n es la cota más ajustada de los AVL, por eso sus búsquedas pueden ser algo más rápidas."
+          }
+        },
+        {
+          "question": {
+            "en": "Why are B-trees (and B+ trees) preferred over binary search trees for on-disk database indexes?",
+            "es": "¿Por qué se prefieren los árboles B (y B+) sobre los árboles binarios de búsqueda para índices de bases de datos en disco?"
+          },
+          "options": {
+            "en": [
+              "They never need rebalancing",
+              "They keep keys unsorted to make inserts faster",
+              "They use hashing internally for O(1) lookups",
+              "A high fan-out keeps the height small, so a lookup reads only a few disk blocks"
+            ],
+            "es": [
+              "Nunca necesitan rebalanceo",
+              "Mantienen las claves sin ordenar para insertar más rápido",
+              "Usan hashing internamente para búsquedas O(1)",
+              "Un alto factor de ramificación mantiene baja la altura, así que una búsqueda lee pocos bloques de disco"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "One node fills a disk page with hundreds of keys, so even billions of rows need only a handful of levels. B-trees do rebalance, by splitting and merging nodes, and their keys are sorted, which also enables range scans.",
+            "es": "Un nodo llena una página de disco con cientos de claves, así que incluso miles de millones de filas requieren pocos niveles. Los árboles B sí se rebalancean, dividiendo y fusionando nodos, y sus claves están ordenadas, lo que además permite recorrer rangos."
+          }
+        },
+        {
+          "question": {
+            "en": "In the module's `rotateLeft(x)`, why is `updateHeight(x)` called before `updateHeight(y)`?",
+            "es": "En `rotateLeft(x)` del módulo, ¿por qué se llama a `updateHeight(x)` antes que a `updateHeight(y)`?"
+          },
+          "options": {
+            "en": [
+              "The order does not matter",
+              "x is now y's left child, so y's height depends on x's new height",
+              "y becomes a leaf after the rotation",
+              "It avoids a `NullPointerException` when T2 is null"
+            ],
+            "es": [
+              "El orden no importa",
+              "x ahora es el hijo izquierdo de y, así que la altura de y depende de la nueva altura de x",
+              "y queda como hoja tras la rotación",
+              "Evita una `NullPointerException` cuando T2 es null"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "After the rotation x sits below y, and height(y) = 1 + max(height(x), height(y.right)). Updating y first would use x's old height, so the order does matter.",
+            "es": "Tras la rotación x queda debajo de y, y altura(y) = 1 + max(altura(x), altura(y.right)). Actualizar y primero usaría la altura vieja de x, así que el orden sí importa."
+          }
+        }
+      ]
+    },
+    "string-algorithms": {
+      "minutes": 140,
+      "prerequisites": [
+        "arrays-strings",
+        "hash-tables"
+      ],
+      "whyItMatters": {
+        "en": "Substring search powers grep and the find feature in editors, Rabin-Karp-style fingerprints are used for plagiarism and duplicate detection, and suffix arrays underlie genome read aligners. KMP and rolling-hash problems are common in interviews.",
+        "es": "La búsqueda de subcadenas impulsa grep y la función de buscar en los editores, las huellas al estilo Rabin-Karp se usan para detectar plagio y duplicados, y los arreglos de sufijos son la base de alineadores de lecturas genómicas. Los problemas de KMP y hash rodante son frecuentes en entrevistas."
+      },
+      "objectives": {
+        "en": [
+          "Compute the prefix-function (lps) array of a pattern by hand and implement KMP search in O(n + m).",
+          "Implement Rabin-Karp with a polynomial rolling hash modulo a large prime, verifying each candidate to rule out collisions.",
+          "Explain Boyer-Moore's bad-character and good-suffix rules and why it often inspects far fewer than n characters.",
+          "Construct a suffix array and use binary search over it to find all occurrences of a pattern in O(m log n)."
+        ],
+        "es": [
+          "Calcular a mano el arreglo de función prefijo (lps) de un patrón e implementar la búsqueda KMP en O(n + m).",
+          "Implementar Rabin-Karp con un hash rodante polinomial módulo un primo grande, verificando cada candidato para descartar colisiones.",
+          "Explicar las reglas de mal carácter y buen sufijo de Boyer-Moore y por qué suele inspeccionar muchos menos de n caracteres.",
+          "Construir un arreglo de sufijos y usar búsqueda binaria sobre él para encontrar todas las apariciones de un patrón en O(m log n)."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Use modular arithmetic in Java without overflow (`long` intermediates, `Math.floorMod`).",
+          "Manipulate `String` and `char[]` indices, `charAt` and `substring` without off-by-one errors."
+        ],
+        "es": [
+          "Usar aritmética modular en Java sin desbordamiento (intermedios `long`, `Math.floorMod`).",
+          "Manipular índices de `String` y `char[]`, `charAt` y `substring` sin errores de desfase por uno."
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Naive search is O(n·m) in the worst case; KMP is O(n + m) time with an O(m) table and never moves the text pointer backward.",
+          "lps[i] is the length of the longest proper prefix of pattern[0..i] that is also a suffix of it; for \"abcaby\" it is [0, 0, 0, 1, 2, 0].",
+          "Rabin-Karp rolls the hash in O(1): h' = ((h − s[i]·B^(m−1))·B + s[i+m]) mod p. Expected O(n + m), worst case O(n·m) with many collisions, so always verify hits.",
+          "A suffix array is the sorted list of suffix start indices (\"banana\" → [5, 3, 1, 0, 4, 2]); prefix doubling builds it in O(n log n), and Kasai's algorithm computes the LCP array in O(n)."
+        ],
+        "es": [
+          "La búsqueda ingenua es O(n·m) en el peor caso; KMP es O(n + m) en tiempo con una tabla O(m) y nunca retrocede el puntero del texto.",
+          "lps[i] es la longitud del prefijo propio más largo de pattern[0..i] que también es sufijo de él; para \"abcaby\" es [0, 0, 0, 1, 2, 0].",
+          "Rabin-Karp actualiza el hash en O(1): h' = ((h − s[i]·B^(m−1))·B + s[i+m]) mod p. Esperado O(n + m), peor caso O(n·m) con muchas colisiones, así que siempre verifica las coincidencias.",
+          "Un arreglo de sufijos es la lista ordenada de los índices de inicio de los sufijos (\"banana\" → [5, 3, 1, 0, 4, 2]); el doblado de prefijos lo construye en O(n log n) y el algoritmo de Kasai calcula el arreglo LCP en O(n)."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "On a KMP mismatch, resetting `j = 0` or advancing `i` while `j > 0` skips valid alignments (e.g. missing \"aaab\" in \"aaaab\"). Set `j = lps[j - 1]` and keep `i` in place, as the module's `kmpSearch` does.",
+          "Negative or overflowing hashes: Java's `%` can return a negative value after the subtraction step, and `int` products overflow. Use `long`, keep values below p ≈ 10⁹ before multiplying, and normalize with `Math.floorMod` or `+ p`.",
+          "Treating equal hashes as equal strings, or hashing mod 2⁶⁴ with natural overflow and a fixed base: crafted inputs (such as Thue–Morse strings) force collisions. Verify matches, or use two moduli with a random base."
+        ],
+        "es": [
+          "En un desajuste de KMP, reiniciar `j = 0` o avanzar `i` mientras `j > 0` salta alineaciones válidas (por ejemplo, no encuentra \"aaab\" en \"aaaab\"). Asigna `j = lps[j - 1]` y deja `i` en su lugar, como hace `kmpSearch` del módulo.",
+          "Hashes negativos o desbordados: el `%` de Java puede devolver un valor negativo tras la resta, y los productos `int` se desbordan. Usa `long`, mantén los valores por debajo de p ≈ 10⁹ antes de multiplicar y normaliza con `Math.floorMod` o `+ p`.",
+          "Tratar hashes iguales como cadenas iguales, o usar hash módulo 2⁶⁴ con desbordamiento natural y base fija: entradas diseñadas (como las cadenas de Thue–Morse) fuerzan colisiones. Verifica las coincidencias o usa dos módulos con base aleatoria."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: compute the lps array of \"aabaaab\" by hand, then confirm it with the module's `buildPrefixTable`.",
+          "Modify `kmpSearch` into `List<Integer> kmpSearchAll(String text, String pattern)` that returns every match start, including overlapping ones (\"aa\" in \"aaaa\" → [0, 1, 2]).",
+          "Implement Rabin-Karp `List<Integer> findAll(String text, String pattern)` with base 131 and modulus 1_000_000_007, confirming each hash hit with `text.regionMatches(i, pattern, 0, m)`.",
+          "Interview: find the longest substring that occurs at least twice in a string of length up to 3·10⁴ (overlaps allowed), using binary search on the length plus a rolling hash in O(n log n) expected time."
+        ],
+        "es": [
+          "Calentamiento: calcula a mano el arreglo lps de \"aabaaab\" y luego confírmalo con `buildPrefixTable` del módulo.",
+          "Modifica `kmpSearch` para obtener `List<Integer> kmpSearchAll(String text, String pattern)` que devuelva cada inicio de coincidencia, incluidas las solapadas (\"aa\" en \"aaaa\" → [0, 1, 2]).",
+          "Implementa Rabin-Karp `List<Integer> findAll(String text, String pattern)` con base 131 y módulo 1_000_000_007, confirmando cada coincidencia de hash con `text.regionMatches(i, pattern, 0, m)`.",
+          "Entrevista: encuentra la subcadena más larga que aparece al menos dos veces en una cadena de longitud hasta 3·10⁴ (se permiten solapamientos), usando búsqueda binaria sobre la longitud y un hash rodante en tiempo esperado O(n log n)."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "After a mismatch at pattern position j, what does lps[j − 1] tell you?",
+          "Why must Rabin-Karp verify a hash match, and what is its worst case?",
+          "How does a suffix array let you decide whether a pattern occurs in the text?"
+        ],
+        "es": [
+          "Tras un desajuste en la posición j del patrón, ¿qué te indica lps[j − 1]?",
+          "¿Por qué Rabin-Karp debe verificar una coincidencia de hash y cuál es su peor caso?",
+          "¿Cómo permite un arreglo de sufijos decidir si un patrón aparece en el texto?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "KMP Algorithm",
+            "es": "Algoritmo KMP"
+          },
+          "definition": {
+            "en": "Knuth–Morris–Pratt pattern matching: it precomputes the prefix function (lps) of the pattern and, on a mismatch, shifts the pattern to its longest border instead of re-reading text characters, running in O(n + m).",
+            "es": "Búsqueda de patrones de Knuth–Morris–Pratt: precalcula la función prefijo (lps) del patrón y, ante un desajuste, desplaza el patrón a su borde más largo en lugar de releer caracteres del texto, con tiempo O(n + m)."
+          }
+        },
+        {
+          "term": {
+            "en": "Rabin-Karp",
+            "es": "Rabin-Karp"
+          },
+          "definition": {
+            "en": "A pattern-matching algorithm that compares the hash of each length-m window of the text with the pattern's hash, updating the window hash in O(1) as it slides, and checks characters only when the hashes are equal.",
+            "es": "Algoritmo de búsqueda de patrones que compara el hash de cada ventana de longitud m del texto con el hash del patrón, actualizando el hash de la ventana en O(1) al deslizarla, y compara caracteres solo cuando los hashes coinciden."
+          }
+        },
+        {
+          "term": {
+            "en": "Boyer-Moore",
+            "es": "Boyer-Moore"
+          },
+          "definition": {
+            "en": "A pattern-matching algorithm that compares the pattern right to left and, on a mismatch, uses the bad-character and good-suffix rules to shift it by possibly many positions, making it sublinear on typical text.",
+            "es": "Algoritmo de búsqueda de patrones que compara el patrón de derecha a izquierda y, ante un desajuste, usa las reglas de mal carácter y buen sufijo para desplazarlo posiblemente muchas posiciones, por lo que es sublineal en texto típico."
+          }
+        },
+        {
+          "term": {
+            "en": "Suffix Arrays",
+            "es": "Arreglos de sufijos"
+          },
+          "definition": {
+            "en": "The array of starting positions of all suffixes of a string, sorted lexicographically; for \"banana\" it is [5, 3, 1, 0, 4, 2]. Every occurrence of a pattern is a contiguous block of it, found by binary search.",
+            "es": "El arreglo de posiciones de inicio de todos los sufijos de una cadena, ordenados lexicográficamente; para \"banana\" es [5, 3, 1, 0, 4, 2]. Todas las apariciones de un patrón forman un bloque contiguo en él, que se encuentra con búsqueda binaria."
+          }
+        },
+        {
+          "term": {
+            "en": "String Hashing",
+            "es": "Hashing de cadenas"
+          },
+          "definition": {
+            "en": "Mapping a string to an integer, usually with the polynomial h(s) = Σ s[i]·B^(m−1−i) mod p; after O(n) preprocessing of prefix hashes, any two substrings can be compared in O(1) with a small probability of collision.",
+            "es": "Asignar a una cadena un entero, normalmente con el polinomio h(s) = Σ s[i]·B^(m−1−i) mod p; tras un preprocesamiento O(n) de hashes prefijos, se pueden comparar dos subcadenas cualesquiera en O(1) con una pequeña probabilidad de colisión."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "cp-algorithms: Prefix function and Knuth-Morris-Pratt",
+            "es": "cp-algorithms: Función prefijo y Knuth-Morris-Pratt (en inglés)"
+          },
+          "url": "https://cp-algorithms.com/string/prefix-function.html"
+        },
+        {
+          "label": {
+            "en": "cp-algorithms: String hashing",
+            "es": "cp-algorithms: Hashing de cadenas (en inglés)"
+          },
+          "url": "https://cp-algorithms.com/string/string-hashing.html"
+        },
+        {
+          "label": {
+            "en": "cp-algorithms: Suffix array",
+            "es": "cp-algorithms: Arreglo de sufijos (en inglés)"
+          },
+          "url": "https://cp-algorithms.com/string/suffix-array.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What does `buildPrefixTable(\"aabaaab\")` return?",
+            "es": "¿Qué devuelve `buildPrefixTable(\"aabaaab\")`?"
+          },
+          "options": {
+            "en": [
+              "[0, 1, 0, 1, 2, 2, 3]",
+              "[0, 1, 0, 1, 2, 3, 3]",
+              "[0, 0, 0, 1, 2, 2, 3]",
+              "[0, 1, 0, 0, 1, 2, 3]"
+            ],
+            "es": [
+              "[0, 1, 0, 1, 2, 2, 3]",
+              "[0, 1, 0, 1, 2, 3, 3]",
+              "[0, 0, 0, 1, 2, 2, 3]",
+              "[0, 1, 0, 0, 1, 2, 3]"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "At index 5 the prefix is \"aabaaa\": \"aa\" is both a prefix and a suffix but \"aab\" ≠ \"aaa\", so lps[5] = 2, not 3; at index 6, \"aab\" matches, giving 3. Index 1 is 1 because \"a\" is a border of \"aa\".",
+            "es": "En el índice 5 el prefijo es \"aabaaa\": \"aa\" es prefijo y sufijo a la vez, pero \"aab\" ≠ \"aaa\", así que lps[5] = 2, no 3; en el índice 6 \"aab\" coincide y da 3. El índice 1 vale 1 porque \"a\" es borde de \"aa\"."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the worst-case running time of KMP on a text of length n and a pattern of length m, including building the table?",
+            "es": "¿Cuál es el tiempo de peor caso de KMP con un texto de longitud n y un patrón de longitud m, incluida la construcción de la tabla?"
+          },
+          "options": {
+            "en": [
+              "O(n·m)",
+              "O(n log m)",
+              "O(n + m)",
+              "O(m² + n)"
+            ],
+            "es": [
+              "O(n·m)",
+              "O(n log m)",
+              "O(n + m)",
+              "O(m² + n)"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Building lps is O(m) and the search is O(n): each step either advances i or decreases j, and j can only decrease as much as it has increased. O(n·m) is the naive algorithm's worst case.",
+            "es": "Construir lps es O(m) y la búsqueda es O(n): cada paso avanza i o disminuye j, y j solo puede disminuir tanto como aumentó. O(n·m) es el peor caso del algoritmo ingenuo."
+          }
+        },
+        {
+          "question": {
+            "en": "Why is Rabin-Karp's worst-case running time O(n·m)?",
+            "es": "¿Por qué el tiempo de peor caso de Rabin-Karp es O(n·m)?"
+          },
+          "options": {
+            "en": [
+              "Updating the rolling hash costs O(m) per window",
+              "Many windows can have hashes equal to the pattern's, and each requires an O(m) character check",
+              "The hash is recomputed from scratch at every shift",
+              "Modular multiplication costs O(m)"
+            ],
+            "es": [
+              "Actualizar el hash rodante cuesta O(m) por ventana",
+              "Muchas ventanas pueden tener un hash igual al del patrón y cada una requiere una verificación de O(m) caracteres",
+              "El hash se recalcula desde cero en cada desplazamiento",
+              "La multiplicación modular cuesta O(m)"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The rolling update is O(1), so hashing all windows is O(n). The cost comes from verification: if many windows collide or truly match (e.g. pattern \"aaa\" in \"aaaa…\"), each needs O(m) comparisons.",
+            "es": "La actualización rodante es O(1), así que calcular el hash de todas las ventanas es O(n). El costo viene de la verificación: si muchas ventanas colisionan o realmente coinciden (por ejemplo, el patrón \"aaa\" en \"aaaa…\"), cada una requiere O(m) comparaciones."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the suffix array of \"banana\" (0-based start indices)?",
+            "es": "¿Cuál es el arreglo de sufijos de \"banana\" (índices de inicio desde 0)?"
+          },
+          "options": {
+            "en": [
+              "[0, 1, 2, 3, 4, 5]",
+              "[5, 4, 3, 2, 1, 0]",
+              "[1, 3, 5, 0, 2, 4]",
+              "[5, 3, 1, 0, 4, 2]"
+            ],
+            "es": [
+              "[0, 1, 2, 3, 4, 5]",
+              "[5, 4, 3, 2, 1, 0]",
+              "[1, 3, 5, 0, 2, 4]",
+              "[5, 3, 1, 0, 4, 2]"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "Sorted suffixes: a (5), ana (3), anana (1), banana (0), na (4), nana (2). [5, 4, 3, 2, 1, 0] orders suffixes by length, not lexicographically.",
+            "es": "Sufijos ordenados: a (5), ana (3), anana (1), banana (0), na (4), nana (2). [5, 4, 3, 2, 1, 0] ordena los sufijos por longitud, no lexicográficamente."
+          }
+        },
+        {
+          "question": {
+            "en": "In Boyer-Moore, what does the bad-character rule do when the text character c causes a mismatch?",
+            "es": "En Boyer-Moore, ¿qué hace la regla del mal carácter cuando el carácter c del texto provoca un desajuste?"
+          },
+          "options": {
+            "en": [
+              "Shifts the pattern exactly one position to the right",
+              "Shifts the pattern so its rightmost occurrence of c left of the mismatch lines up with that text character, or moves the pattern past c if there is none",
+              "Aligns the longest proper prefix that is also a suffix of the matched part",
+              "Recomputes the hash of the current window"
+            ],
+            "es": [
+              "Desplaza el patrón exactamente una posición a la derecha",
+              "Desplaza el patrón para alinear su aparición más a la derecha de c, a la izquierda del desajuste, con ese carácter del texto, o lo mueve más allá de c si no existe",
+              "Alinea el prefijo propio más largo que también es sufijo de la parte coincidente",
+              "Recalcula el hash de la ventana actual"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The bad-character rule uses where c appears in the pattern to skip alignments that cannot match; if c never appears, the whole pattern jumps past it. Aligning the longest prefix-suffix is KMP's idea, not Boyer-Moore's.",
+            "es": "La regla del mal carácter usa dónde aparece c en el patrón para saltar alineaciones que no pueden coincidir; si c no aparece, todo el patrón salta más allá. Alinear el prefijo-sufijo más largo es la idea de KMP, no de Boyer-Moore."
+          }
+        }
+      ]
+    },
+    "design-patterns": {
+      "minutes": 120,
+      "prerequisites": [
+        "oop-basics",
+        "collections-framework"
+      ],
+      "whyItMatters": {
+        "en": "Patterns give teams a shared vocabulary: Java's own libraries use them (`Comparator` is a Strategy, Swing listeners are Observers, `List.of` is a static factory), and frameworks like Spring are built on factories, singletons and dependency injection. Object-oriented design interviews expect you to pick and justify a pattern for a scenario.",
+        "es": "Los patrones dan a los equipos un vocabulario común: las propias bibliotecas de Java los usan (`Comparator` es una Strategy, los listeners de Swing son Observers, `List.of` es una fábrica estática), y frameworks como Spring se construyen sobre fábricas, singletons e inyección de dependencias. En las entrevistas de diseño orientado a objetos se espera que elijas y justifiques un patrón para un escenario."
+      },
+      "objectives": {
+        "en": [
+          "Implement a thread-safe Singleton three ways (eager static field, holder idiom, `enum`) and explain the cost of a `synchronized` `getInstance()`.",
+          "Implement a Factory that hides concrete classes behind an interface, and refactor a `switch`-based factory into a registry of `Supplier`s so new types can be added without editing it.",
+          "Implement Observer with a listener interface and Strategy with a functional interface or lambda, and explain how each removes a hard-coded dependency.",
+          "Analyze a small application into Model, View and Controller responsibilities and choose the right pattern for a given design problem."
+        ],
+        "es": [
+          "Implementar un Singleton seguro para hilos de tres formas (campo estático inicializado de inmediato, idioma holder, `enum`) y explicar el costo de un `getInstance()` `synchronized`.",
+          "Implementar una Factory que oculte las clases concretas detrás de una interfaz, y refactorizar una fábrica basada en `switch` a un registro de `Supplier` para agregar tipos nuevos sin modificarla.",
+          "Implementar Observer con una interfaz de listener y Strategy con una interfaz funcional o una lambda, y explicar cómo cada uno elimina una dependencia fija en el código.",
+          "Analizar una aplicación pequeña separando las responsabilidades de Modelo, Vista y Controlador, y elegir el patrón adecuado para un problema de diseño dado."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Program to an interface: declare variables with an interface type and swap implementations",
+          "Pass behavior with lambdas and method references (`Supplier`, `Comparator`)"
+        ],
+        "es": [
+          "Programar contra una interfaz: declarar variables con un tipo de interfaz e intercambiar implementaciones",
+          "Pasar comportamiento con lambdas y referencias a métodos (`Supplier`, `Comparator`)"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Patterns are grouped as creational (Singleton, Factory), structural (Adapter, Decorator) and behavioral (Observer, Strategy); the classic catalog is the 1994 Gang of Four book with 23 patterns.",
+          "A single-element `enum` is the simplest Singleton that is thread-safe and survives serialization and reflection; double-checked locking is only correct if the field is `volatile`.",
+          "Strategy replaces a growing `if`/`switch` on behavior with an injected object; in modern Java a lambda (for example a `Comparator`) is often the whole strategy.",
+          "Favor composition and the open/closed principle: adding a new shape, strategy or observer should mean adding a class, not editing existing ones. Do not add a pattern until a real need for flexibility appears."
+        ],
+        "es": [
+          "Los patrones se agrupan en creacionales (Singleton, Factory), estructurales (Adapter, Decorator) y de comportamiento (Observer, Strategy); el catálogo clásico es el libro de la Banda de los Cuatro (1994) con 23 patrones.",
+          "Un `enum` de un solo elemento es el Singleton más simple que es seguro para hilos y resiste la serialización y la reflexión; el bloqueo con doble verificación solo es correcto si el campo es `volatile`.",
+          "Strategy reemplaza un `if`/`switch` creciente sobre el comportamiento por un objeto inyectado; en Java moderno una lambda (por ejemplo un `Comparator`) suele ser toda la estrategia.",
+          "Prefiere la composición y el principio abierto/cerrado: agregar una nueva figura, estrategia u observador debe implicar agregar una clase, no modificar las existentes. No agregues un patrón hasta que aparezca una necesidad real de flexibilidad."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Using Singletons as hidden global variables: code calls `X.getInstance()` everywhere, which makes tests share state and prevents swapping in a fake. Pass the dependency through the constructor instead.",
+          "Registering observers and never unregistering them (the lapsed-listener problem): the subject keeps every observer reachable, causing memory leaks and duplicate notifications.",
+          "Applying patterns to show them off: wrapping a two-line computation in a factory, a strategy and an interface adds indirection with no benefit. Introduce a pattern when there are at least two real variants or a real need to decouple."
+        ],
+        "es": [
+          "Usar Singletons como variables globales ocultas: el código llama a `X.getInstance()` en todas partes, lo que hace que las pruebas compartan estado e impide sustituirlo por un falso. Pasa la dependencia por el constructor.",
+          "Registrar observadores y nunca desregistrarlos (el problema del listener olvidado): el sujeto mantiene alcanzable a cada observador, lo que provoca fugas de memoria y notificaciones duplicadas.",
+          "Aplicar patrones para lucirse: envolver un cálculo de dos líneas en una fábrica, una estrategia y una interfaz agrega indirección sin beneficio. Introduce un patrón cuando haya al menos dos variantes reales o una necesidad real de desacoplar."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: rewrite the module's `DatabaseConnection` Singleton using the initialization-on-demand holder idiom (a private static nested `Holder` class) and explain why it is lazy and thread-safe without `synchronized`.",
+          "Core: replace the `switch` in `ShapeFactory` with a `Map<String, Supplier<Shape>>` registry and a `register(String name, Supplier<Shape> s)` method; add `Triangle` without touching `createShape`, and throw `IllegalArgumentException` for unknown names.",
+          "Stretch: build a `StockTicker` subject with `subscribe`, `unsubscribe` and `setPrice`; implement two observers (a console logger and an alert that fires when the price drops more than 5%) and write a JUnit test that verifies each observer is notified exactly once per change.",
+          "Interview-style: design a checkout that supports flat, percentage and buy-two-get-one-free discounts chosen at runtime. Use Strategy (`DiscountStrategy` as a functional interface), sketch the MVC split for a simple UI, and justify why you did or did not use a Singleton anywhere."
+        ],
+        "es": [
+          "Calentamiento: reescribe el Singleton `DatabaseConnection` del módulo usando el idioma holder de inicialización bajo demanda (una clase anidada estática privada `Holder`) y explica por qué es perezoso y seguro para hilos sin `synchronized`.",
+          "Núcleo: reemplaza el `switch` de `ShapeFactory` por un registro `Map<String, Supplier<Shape>>` y un método `register(String name, Supplier<Shape> s)`; agrega `Triangle` sin tocar `createShape` y lanza `IllegalArgumentException` para nombres desconocidos.",
+          "Reto: construye un sujeto `StockTicker` con `subscribe`, `unsubscribe` y `setPrice`; implementa dos observadores (un registro en consola y una alerta que se dispara cuando el precio baja más de 5%) y escribe una prueba JUnit que verifique que cada observador se notifica exactamente una vez por cambio.",
+          "Tipo entrevista: diseña un proceso de pago que admita descuentos fijos, porcentuales y de lleva-tres-paga-dos elegidos en tiempo de ejecución. Usa Strategy (`DiscountStrategy` como interfaz funcional), esboza la separación MVC para una interfaz simple y justifica por qué usaste o no un Singleton."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What problem does each of Singleton, Factory, Observer and Strategy solve, in one sentence each?",
+          "Why is the `synchronized` `getInstance()` in the module's example correct but slower than the holder idiom?",
+          "In MVC, which component owns the data and business rules, and how does the View learn that the data changed?"
+        ],
+        "es": [
+          "¿Qué problema resuelve cada uno de Singleton, Factory, Observer y Strategy, en una oración cada uno?",
+          "¿Por qué el `getInstance()` `synchronized` del ejemplo del módulo es correcto pero más lento que el idioma holder?",
+          "En MVC, ¿qué componente es dueño de los datos y las reglas de negocio, y cómo se entera la Vista de que los datos cambiaron?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Singleton",
+            "es": "Singleton"
+          },
+          "definition": {
+            "en": "A creational pattern that guarantees a class has exactly one instance per JVM (per class loader) and provides a global access point to it, typically through a private constructor plus a static field, a static accessor or a single-element `enum`.",
+            "es": "Un patrón creacional que garantiza que una clase tenga exactamente una instancia por JVM (por cargador de clases) y ofrece un punto de acceso global a ella, normalmente mediante un constructor privado más un campo estático, un método de acceso estático o un `enum` de un solo elemento."
+          }
+        },
+        {
+          "term": {
+            "en": "Factory",
+            "es": "Factory"
+          },
+          "definition": {
+            "en": "A creational pattern in which object creation is delegated to a method or class that returns an interface type, so callers ask for what they need (`createShape(\"circle\")`) without naming or depending on the concrete class.",
+            "es": "Un patrón creacional en el que la creación de objetos se delega a un método o clase que devuelve un tipo de interfaz, de modo que quien llama pide lo que necesita (`createShape(\"circle\")`) sin nombrar ni depender de la clase concreta."
+          }
+        },
+        {
+          "term": {
+            "en": "Observer",
+            "es": "Observer"
+          },
+          "definition": {
+            "en": "A behavioral pattern in which a subject keeps a list of observers registered through a common interface and notifies each of them when its state changes, so the subject never depends on the observers' concrete classes.",
+            "es": "Un patrón de comportamiento en el que un sujeto mantiene una lista de observadores registrados mediante una interfaz común y notifica a cada uno cuando su estado cambia, de modo que el sujeto nunca depende de las clases concretas de los observadores."
+          }
+        },
+        {
+          "term": {
+            "en": "Strategy",
+            "es": "Strategy"
+          },
+          "definition": {
+            "en": "A behavioral pattern that defines a family of interchangeable algorithms behind one interface and lets the client receive the algorithm as an object, so behavior can be chosen or swapped at runtime without conditionals.",
+            "es": "Un patrón de comportamiento que define una familia de algoritmos intercambiables detrás de una interfaz y permite que el cliente reciba el algoritmo como un objeto, de modo que el comportamiento puede elegirse o cambiarse en tiempo de ejecución sin condicionales."
+          }
+        },
+        {
+          "term": {
+            "en": "MVC",
+            "es": "MVC"
+          },
+          "definition": {
+            "en": "Model-View-Controller is an architectural pattern that separates the Model (data and business rules), the View (presentation of the model) and the Controller (turns user input into model updates), with the View typically observing the Model for changes.",
+            "es": "Modelo-Vista-Controlador es un patrón de arquitectura que separa el Modelo (datos y reglas de negocio), la Vista (presentación del modelo) y el Controlador (convierte la entrada del usuario en actualizaciones del modelo), y en el que la Vista normalmente observa al Modelo para enterarse de los cambios."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Refactoring.Guru: design patterns catalog with Java examples",
+            "es": "Refactoring.Guru: catálogo de patrones de diseño con ejemplos en Java"
+          },
+          "url": "https://refactoring.guru/design-patterns"
+        },
+        {
+          "label": {
+            "en": "Java Design Patterns: open-source catalog of pattern implementations",
+            "es": "Java Design Patterns: catálogo de código abierto con implementaciones de patrones"
+          },
+          "url": "https://java-design-patterns.com/"
+        },
+        {
+          "label": {
+            "en": "Wikipedia: Design Patterns (the Gang of Four book)",
+            "es": "Wikipedia: Design Patterns (el libro de la Banda de los Cuatro)"
+          },
+          "url": "https://en.wikipedia.org/wiki/Design_Patterns"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What does this print?\n`class Registry { private static final Registry INSTANCE = new Registry(); private int count; private Registry() {} static Registry get() { return INSTANCE; } int next() { return ++count; } }`\n`Registry a = Registry.get(); Registry b = Registry.get(); a.next(); b.next();`\n`System.out.println(a.next() + \" \" + (a == b));`",
+            "es": "¿Qué imprime esto?\n`class Registry { private static final Registry INSTANCE = new Registry(); private int count; private Registry() {} static Registry get() { return INSTANCE; } int next() { return ++count; } }`\n`Registry a = Registry.get(); Registry b = Registry.get(); a.next(); b.next();`\n`System.out.println(a.next() + \" \" + (a == b));`"
+          },
+          "options": {
+            "en": [
+              "`1 true`",
+              "`2 false`",
+              "`3 false`",
+              "`3 true`"
+            ],
+            "es": [
+              "`1 true`",
+              "`2 false`",
+              "`3 false`",
+              "`3 true`"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "`a` and `b` are the same object, so the three calls to `next()` increment one shared `count` to 3 and `a == b` is true. The `false` options assume each `get()` creates a new instance.",
+            "es": "`a` y `b` son el mismo objeto, así que las tres llamadas a `next()` incrementan un único `count` compartido hasta 3 y `a == b` es true. Las opciones con `false` suponen que cada `get()` crea una instancia nueva."
+          }
+        },
+        {
+          "question": {
+            "en": "A lazy Singleton uses double-checked locking: `if (instance == null) { synchronized (Db.class) { if (instance == null) instance = new Db(); } }`, but the field is declared `private static Db instance;`. What is the problem?",
+            "es": "Un Singleton perezoso usa bloqueo con doble verificación: `if (instance == null) { synchronized (Db.class) { if (instance == null) instance = new Db(); } }`, pero el campo está declarado como `private static Db instance;`. ¿Cuál es el problema?"
+          },
+          "options": {
+            "en": [
+              "Two instances are always created",
+              "Without `volatile`, another thread may see a non-null reference to a partially constructed object",
+              "It does not compile, because `synchronized` cannot lock a `Class` object",
+              "There is no problem; the inner null check is enough"
+            ],
+            "es": [
+              "Siempre se crean dos instancias",
+              "Sin `volatile`, otro hilo puede ver una referencia no nula a un objeto construido parcialmente",
+              "No compila, porque `synchronized` no puede bloquear un objeto `Class`",
+              "No hay problema; la verificación interna de null es suficiente"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The first check reads `instance` outside the lock, so without a happens-before edge the write of the reference can become visible before the constructor's writes. Declaring the field `volatile` fixes it. The inner check does prevent duplicate instances, but not this visibility problem.",
+            "es": "La primera verificación lee `instance` fuera del candado, así que sin una relación happens-before la escritura de la referencia puede hacerse visible antes que las escrituras del constructor. Declarar el campo `volatile` lo corrige. La verificación interna sí evita instancias duplicadas, pero no este problema de visibilidad."
+          }
+        },
+        {
+          "question": {
+            "en": "`names.sort(Comparator.comparing(String::length));` passes the ordering logic into `sort` as an object. Which pattern is this?",
+            "es": "`names.sort(Comparator.comparing(String::length));` pasa la lógica de ordenamiento a `sort` como un objeto. ¿Qué patrón es este?"
+          },
+          "options": {
+            "en": [
+              "Observer",
+              "Singleton",
+              "Strategy",
+              "Factory"
+            ],
+            "es": [
+              "Observer",
+              "Singleton",
+              "Strategy",
+              "Factory"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "The sorting algorithm stays fixed while the comparison algorithm is supplied by the caller through a common interface, which is Strategy. `Comparator.comparing` is itself a factory method, but the role the comparator plays in `sort` is the strategy.",
+            "es": "El algoritmo de ordenamiento queda fijo mientras quien llama proporciona el algoritmo de comparación mediante una interfaz común, y eso es Strategy. `Comparator.comparing` es en sí un método fábrica, pero el papel que cumple el comparador en `sort` es el de la estrategia."
+          }
+        },
+        {
+          "question": {
+            "en": "A subject notifies its n observers synchronously in a `for` loop inside `setPrice`. Which statement is true?",
+            "es": "Un sujeto notifica de forma síncrona a sus n observadores en un ciclo `for` dentro de `setPrice`. ¿Qué afirmación es verdadera?"
+          },
+          "options": {
+            "en": [
+              "Each `setPrice` call costs O(n) observer calls, and one slow observer delays the others and the caller",
+              "Notification is O(1) because observers run in parallel by default",
+              "Notification is O(log n) because observers are kept sorted",
+              "The cost is independent of n because only changed observers are called"
+            ],
+            "es": [
+              "Cada llamada a `setPrice` cuesta O(n) llamadas a observadores, y un observador lento retrasa a los demás y a quien llama",
+              "La notificación es O(1) porque los observadores se ejecutan en paralelo por defecto",
+              "La notificación es O(log n) porque los observadores se mantienen ordenados",
+              "El costo no depende de n porque solo se llama a los observadores que cambiaron"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "A plain loop calls every observer in turn on the caller's thread, so cost is linear in n and a blocking observer stalls everything. Parallel delivery only happens if you add an executor or event bus yourself.",
+            "es": "Un ciclo simple llama a cada observador por turno en el hilo de quien llama, así que el costo es lineal en n y un observador que se bloquea detiene todo. La entrega en paralelo solo ocurre si agregas tú mismo un executor o un bus de eventos."
+          }
+        },
+        {
+          "question": {
+            "en": "In an MVC banking app, where should the rule \"a withdrawal cannot make the balance negative\" be enforced?",
+            "es": "En una aplicación bancaria con MVC, ¿dónde debe aplicarse la regla \"un retiro no puede dejar el saldo negativo\"?"
+          },
+          "options": {
+            "en": [
+              "In the View, by disabling the button when the amount is too large",
+              "In the Model, so every path that changes the balance obeys it",
+              "In the Controller only, since it handles the button click",
+              "In the database driver"
+            ],
+            "es": [
+              "En la Vista, deshabilitando el botón cuando el monto es demasiado grande",
+              "En el Modelo, para que todo camino que cambie el saldo la cumpla",
+              "Solo en el Controlador, porque maneja el clic del botón",
+              "En el driver de la base de datos"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Business rules belong to the Model so they hold no matter which controller, UI or batch job calls it. A View or Controller check can improve the user experience, but if it is the only check, another entry point can bypass it.",
+            "es": "Las reglas de negocio pertenecen al Modelo para que se cumplan sin importar qué controlador, interfaz o proceso por lotes lo invoque. Una validación en la Vista o el Controlador puede mejorar la experiencia, pero si es la única, otro punto de entrada puede saltársela."
+          }
+        }
+      ]
+    }
+  }
+};

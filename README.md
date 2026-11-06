@@ -94,6 +94,40 @@ Generated outputs:
 ## Overview
 CS Course Atlas helps learners study through structured modules, code examples, quizzes, flashcards, glossary tools, and notes in one place.
 
+## Curriculum
+
+45 modules across five tracks, each organized into units that build on one another. Every module includes learning objectives, prerequisites, key takeaways, common mistakes, graded practice, a glossary, curated resources, and a quiz, in English and Spanish. A recommended cross-track study order is defined in `MODULE_LEARNING_SEQUENCE` (`js/script.js`); unit structure and course content live in `js/course-curriculum.js` and are validated by `npm run check:curriculum`.
+
+### Data Structures & Algorithms (22 modules)
+1. **Getting Started**: Introduction to Coding
+2. **Linear Data Structures**: Arrays and Strings, Searching Algorithms, Stacks and Queues, Linked Lists
+3. **Recursion and Sorting**: Recursion Fundamentals, Sorting Algorithms, Matrix and Grid Problem Solving, Backtracking Patterns
+4. **Hashing, Trees and Heaps**: Hash Tables and Maps, Binary Trees, Heaps and Priority Queues, Tries (Prefix Trees)
+5. **Graphs**: Graph Algorithms, Union-Find (Disjoint Set)
+6. **Algorithm Design Techniques**: Greedy Algorithms, Dynamic Programming, Bit Manipulation
+7. **Advanced Structures and Strings**: Segment Trees, Binary Indexed Trees (Fenwick Trees), Advanced Tree Structures, Advanced String Algorithms
+
+### Java Programming (13 modules)
+1. **Java Foundations**: Java Fundamentals, Control Flow Statements
+2. **Object-Oriented Java**: Object-Oriented Programming, Exception Handling, Java Generics
+3. **Core Libraries**: Java Collections Framework, Lambda Expressions & Streams, File Input/Output
+4. **Professional Java**: Unit Testing with JUnit, Database Connectivity (JDBC), Multithreading Basics, Java Memory and JVM Fundamentals, Design Patterns
+
+### Discrete Mathematics (4 modules)
+1. **Logic and Proof**: Propositional Logic and Proof Basics
+2. **Sets, Relations and Functions**: Sets, Relations, and Functions
+3. **Graph Theory**: Discrete Graph Theory Foundations
+4. **Counting and Probability**: Combinatorics and Discrete Probability
+
+### Git & Collaboration (2 modules)
+1. **Everyday Git**: Git Basics and Collaboration Workflow
+2. **Team Collaboration**: Git Branching, Merging, and Pull Requests
+
+### x86-64 Assembly (4 modules)
+1. **The Machine Model**: Assembly Registers and Memory Basics
+2. **Control Flow and Procedures**: Assembly Control Flow and Procedures, Assembly Addressing Modes and Stack Frames
+3. **Data and I/O**: Assembly Arrays, Strings, and Basic I/O
+
 ## Core Features
 - Multi-track navigation: Home, Course Tracks, DSA, Java, Git, Assembly, Discrete Math, Flashcards, Quizzes, Playground, Notes, Support, About.
 - Course Tracks menu expands to show individual classes.

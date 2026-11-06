@@ -630,7 +630,11 @@ function baseStyles() {
                 padding: 0.62rem 0.62rem 0.66rem;
             }
         }
-    `;
+    
+        .glossary-list { display: grid; gap: 0.35rem 0; margin: 0; }
+        .glossary-list dt { font-weight: 700; margin-top: 0.6rem; }
+        .glossary-list dd { margin: 0; opacity: 0.9; line-height: 1.55; }
+`;
 }
 
 function headTemplate({ title, description, canonicalPath, assetPrefix = '' }) {
@@ -859,16 +863,81 @@ ${headTemplate({
 </html>`;
 }
 
-function modulePageHtml(module, allModules, indexById) {
+function loadCourseCurriculum() {
+    const curriculumPath = path.join(ROOT, 'js', 'course-curriculum.js');
+    if (!fs.existsSync(curriculumPath)) return { tracks: {}, modules: {} };
+    const sandbox = { window: {} };
+    require('vm').runInNewContext(fs.readFileSync(curriculumPath, 'utf8'), sandbox);
+    return sandbox.window.COURSE_CURRICULUM || { tracks: {}, modules: {} };
+}
+
+function findCurriculumUnit(curriculum, moduleId) {
+    for (const units of Object.values(curriculum.tracks || {})) {
+        const index = (units || []).findIndex((unit) => (unit.modules || []).includes(moduleId));
+        if (index >= 0) return { unit: units[index], number: index + 1, count: units.length };
+    }
+    return null;
+}
+
+const en = (value) => (value && typeof value === 'object' ? (value.en || '') : '');
+const enList = (value) => (value && Array.isArray(value.en) ? value.en : []);
+const listMarkup = (items) => items.length
+    ? `<ul class="link-list">${items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
+    : '';
+
+function moduleCurriculumSections(module, allModules, curriculum) {
+    const entry = curriculum.modules?.[module.id];
+    if (!entry) return '';
+    const titleById = new Map(allModules.map((item) => [item.id, item.title]));
+    const prerequisites = (entry.prerequisites || [])
+        .filter((id) => titleById.has(id))
+        .map((id) => `<li><a href="${encodeURIComponent(id)}.html">${escapeHtml(titleById.get(id))}</a></li>`)
+        .join('');
+    const glossary = (entry.definitions || [])
+        .map((definition) => `<dt>${escapeHtml(en(definition.term))}</dt><dd>${escapeHtml(en(definition.definition))}</dd>`)
+        .join('');
+    const resources = (entry.resources || [])
+        .filter((resource) => /^https:\/\//.test(String(resource.url || '')))
+        .map((resource) => `<li><a href="${escapeHtml(resource.url)}" rel="noopener" target="_blank">${escapeHtml(en(resource.label))}</a></li>`)
+        .join('');
+    return `
+        <section class="panel">
+            <h2>Why It Matters</h2>
+            <p>${escapeHtml(en(entry.whyItMatters))}</p>
+            ${prerequisites ? `<h3>Before You Start</h3><ul class="link-list">${prerequisites}</ul>` : ''}
+        </section>
+        <section class="panel">
+            <h2>What You Will Learn</h2>
+            ${listMarkup(enList(entry.objectives))}
+            <h3>Key Takeaways</h3>
+            ${listMarkup(enList(entry.keyTakeaways))}
+        </section>
+        ${glossary ? `<section class="panel"><h2>Glossary</h2><dl class="glossary-list">${glossary}</dl></section>` : ''}
+        <section class="panel">
+            <h2>Common Mistakes</h2>
+            ${listMarkup(enList(entry.pitfalls))}
+            <h3>Practice</h3>
+            ${listMarkup(enList(entry.practice))}
+        </section>
+        ${resources ? `<section class="panel"><h2>Further Reading</h2><ul class="link-list">${resources}</ul></section>` : ''}`;
+}
+
+function modulePageHtml(module, allModules, indexById, curriculum = { tracks: {}, modules: {} }) {
     const category = module.category;
     const route = CATEGORY_ROUTE_MAP[category] || '/tracks';
     const categoryLabel = CATEGORY_LABEL_MAP[category] || 'Course Track';
-    const currentIndex = indexById.get(module.id);
-    const moduleNumber = Number.isFinite(currentIndex) ? currentIndex + 1 : 1;
     const trackModuleCount = allModules.filter((item) => item.category === category).length;
-    const previous = currentIndex > 0 ? allModules[currentIndex - 1] : null;
-    const next = currentIndex < allModules.length - 1 ? allModules[currentIndex + 1] : null;
-    const related = allModules.filter((item) => item.category === category && item.id !== module.id).slice(0, 6);
+    const trackModules = allModules.filter((item) => item.category === category);
+    const trackIndex = trackModules.findIndex((item) => item.id === module.id);
+    const previous = trackIndex > 0 ? trackModules[trackIndex - 1] : null;
+    const next = trackIndex >= 0 && trackIndex < trackModules.length - 1 ? trackModules[trackIndex + 1] : null;
+    const unitInfo = findCurriculumUnit(curriculum, module.id);
+    const unitModuleIds = new Set(unitInfo ? unitInfo.unit.modules : []);
+    const related = trackModules
+        .filter((item) => item.id !== module.id)
+        .sort((a, b) => Number(unitModuleIds.has(b.id)) - Number(unitModuleIds.has(a.id)))
+        .slice(0, 6);
+    const curriculumEntry = curriculum.modules?.[module.id];
 
     const prevLink = previous
         ? `<li><a href="${encodeURIComponent(previous.id)}.html">Previous: ${escapeHtml(previous.title)}</a></li>`
@@ -921,6 +990,8 @@ ${headTemplate({
             <div class="hero-meta-row">
                 <span class="chip">Track: ${escapeHtml(categoryLabel)}</span>
                 <span class="chip">Difficulty: ${escapeHtml(module.difficulty || 'mixed')}</span>
+                ${unitInfo ? `<span class="chip">Unit ${unitInfo.number} of ${unitInfo.count}: ${escapeHtml(en(unitInfo.unit.title))}</span>` : ''}
+                ${curriculumEntry?.minutes ? `<span class="chip">About ${curriculumEntry.minutes} min</span>` : ''}
             </div>
             <div class="cta-row">
                 <a class="cta" href="${appLink}">Open This Module in Interactive App</a>
@@ -940,8 +1011,8 @@ ${headTemplate({
                     <span>${escapeHtml(module.difficulty || 'mixed')}</span>
                 </div>
                 <div class="detail-card">
-                    <strong>Global Position</strong>
-                    <span>${moduleNumber} of ${allModules.length}</span>
+                    <strong>Track Position</strong>
+                    <span>${trackIndex + 1} of ${trackModules.length}</span>
                 </div>
                 <div class="detail-card">
                     <strong>Track Size</strong>
@@ -949,6 +1020,7 @@ ${headTemplate({
                 </div>
             </div>
         </section>
+        ${moduleCurriculumSections(module, allModules, curriculum)}
         <section class="panel">
             <h2>Continue Learning</h2>
             <ul class="link-list">
@@ -1217,6 +1289,7 @@ function main() {
     copyStaticSourceFiles();
 
     const source = fs.readFileSync(SOURCE_JS, 'utf8');
+    const curriculum = loadCourseCurriculum();
     const categoryMap = parseModuleCategoryMap(source);
     const sequence = parseModuleSequence(source);
     const metadataMap = parseModuleMetadata(source);
@@ -1254,7 +1327,7 @@ function main() {
 
     writeFile(path.join(MODULES_DIR, 'index.html'), moduleIndexHtml(grouped));
     modules.forEach((module) => {
-        const html = modulePageHtml(module, modules, indexById);
+        const html = modulePageHtml(module, modules, indexById, curriculum);
         writeFile(path.join(MODULES_DIR, `${module.id}.html`), html);
     });
 
