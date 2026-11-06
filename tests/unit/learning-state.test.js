@@ -92,3 +92,66 @@ test('save status distinguishes guest, local save, and failed persistence in bot
     c.appState.language = 'es';
     assert.match(c.updateNotesSaveStatus(true), /Guardado/);
 });
+
+function loadConstant(name, context) {
+    const start = source.indexOf(`const ${name} = `);
+    const end = source.indexOf('\n};', start) + 3;
+    assert.ok(start >= 0 && end > start, `Missing ${name}`);
+    vm.runInContext(source.slice(start, end), context);
+}
+
+test('starter definitions explain concepts in both languages without circular placeholders', () => {
+    const c = loadFunctions(['buildModuleDefinitions'], {});
+    loadConstant('CURATED_MODULE_DEFINITIONS', c);
+    for (const id of ['intro-to-coding', 'java-basics', 'java-memory-jvm', 'git-basics-workflow']) {
+        const en = c.buildModuleDefinitions({ id }, 'en');
+        const es = c.buildModuleDefinitions({ id }, 'es');
+        assert.equal(en.length, 5);
+        assert.equal(es.length, 5);
+        for (let i = 0; i < 5; i++) {
+            assert.ok(en[i].definition.length > 80);
+            assert.ok(es[i].definition.length > 80);
+            assert.notEqual(en[i].definition, es[i].definition);
+            assert.doesNotMatch(en[i].definition, /is a core concept/);
+        }
+        // Callers may adjust a returned entry without changing future decks.
+        en[0].definition = 'changed';
+        assert.notEqual(c.buildModuleDefinitions({ id }, 'en')[0].definition, 'changed');
+    }
+});
+
+test('starter plans replace unsuitable generated tasks without changing track order', () => {
+    const c = loadFunctions(['getModuleStarterGuide', 'buildModuleLearningPlan'], {
+        appState: { language: 'en' }, getModuleCategoryKey: () => 'java',
+        getModuleTrackTitle: () => 'Java', estimateModuleStudyMinutes: () => 65,
+        t: () => 'generated fallback'
+    });
+    loadConstant('MODULE_STARTER_GUIDES', c);
+    const module = {id:'java-basics', topics:['Variables','Data Types','Methods']};
+    const next = {id:'java-memory-jvm', title:'JVM'};
+    const tracks = new Map([['java',[module,next]]]);
+    const plan = c.buildModuleLearningPlan(module, module, tracks, new Map());
+    assert.equal(plan.currentPosition, 1);
+    assert.equal(plan.nextModuleTitle, 'JVM');
+    assert.match(plan.practicePrompt, /average\(4, 5\) = 4.5/);
+    assert.ok(plan.goals.every(goal => goal !== 'generated fallback'));
+    c.appState.language = 'es';
+    const localized = c.buildModuleLearningPlan(module, module, tracks, new Map());
+    assert.match(localized.practicePrompt, /Escribe average/);
+    assert.equal(c.getModuleStarterGuide('unknown-module'), null);
+});
+
+test('complexity guidance does not misclassify sequential loops or ordinary calls', () => {
+    const c = loadFunctions(['buildComplexityInsight'], { appState: { language: 'en' } });
+    for (const code of [
+        'for (let i=0;i<n;i++) visit(i); for (let j=0;j<n;j++) visit(j);',
+        'function add(a,b) { return a+b; } add(1,2);',
+        'while (n > 1) n = Math.floor(n / 2);'
+    ]) {
+        const guidance = c.buildComplexityInsight(code);
+        assert.doesNotMatch(guidance, /O\(n\^2\)|Generally O\(n\)|recursion depth/);
+        assert.match(guidance, /Sequential loops add costs/);
+    }
+    c.appState.language = 'es';
+    assert.match(c.buildComplexityInsight(''), /ciclos consecutivos suman/);
+});

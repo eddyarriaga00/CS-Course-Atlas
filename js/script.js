@@ -9730,8 +9730,197 @@ function normalizeSetDeepExplanationValue(rawValue, fallbackText) {
     return fallback;
 }
 
+const CURATED_MODULE_DEFINITIONS = {
+    "intro-to-coding": {
+        "en": [
+            {
+                "term": "What Coding Is",
+                "definition": "Writing precise instructions that a computer can execute to transform input into output. A program can calculate a total, display a page, or control a device."
+            },
+            {
+                "term": "A Short History of Programming",
+                "definition": "Programming evolved from machine instructions and assembly toward higher-level languages that express ideas with less hardware detail. Older and newer levels still coexist."
+            },
+            {
+                "term": "How Code Becomes Running Software",
+                "definition": "Source code must be translated or interpreted by language tools. For example, javac compiles Java source into bytecode, which the JVM executes."
+            },
+            {
+                "term": "How the Software Stack Fits Together",
+                "definition": "Applications use libraries and runtimes, which rely on operating-system services and hardware. A web browser, for example, asks the operating system to communicate over the network."
+            },
+            {
+                "term": "Career Paths in Technology",
+                "definition": "Software development, data analysis, security, and IT operations solve different problems. Compare the work each involves, then try a small project before choosing a specialization."
+            }
+        ],
+        "es": [
+            {
+                "term": "Qué es programar",
+                "definition": "Escribir instrucciones precisas que una computadora ejecuta para transformar entradas en salidas. Un programa puede calcular un total, mostrar una página o controlar un dispositivo."
+            },
+            {
+                "term": "Breve historia de la programación",
+                "definition": "La programación evolucionó de instrucciones de máquina y ensamblador a lenguajes de alto nivel que expresan ideas con menos detalles del hardware. Todos estos niveles siguen coexistiendo."
+            },
+            {
+                "term": "Cómo el código se convierte en software",
+                "definition": "Las herramientas del lenguaje traducen o interpretan el código fuente. Por ejemplo, javac compila Java a bytecode, que ejecuta la JVM."
+            },
+            {
+                "term": "Cómo encajan las capas de software",
+                "definition": "Las aplicaciones usan bibliotecas y entornos de ejecución, que dependen del sistema operativo y del hardware. Un navegador solicita al sistema operativo comunicarse por la red."
+            },
+            {
+                "term": "Carreras en tecnología",
+                "definition": "El desarrollo de software, el análisis de datos, la seguridad y las operaciones de TI resuelven problemas diferentes. Compara sus tareas y prueba un proyecto pequeño antes de especializarte."
+            }
+        ]
+    },
+    "java-basics": {
+        "en": [
+            {
+                "term": "Variables",
+                "definition": "Named storage locations with declared types. In int score = 10, score stores an integer; assigning score = 12 changes its value, not its type."
+            },
+            {
+                "term": "Data Types",
+                "definition": "Types define which values and operations are allowed. Java primitives such as int hold primitive values; reference types such as String hold references to objects or null."
+            },
+            {
+                "term": "Methods",
+                "definition": "Named blocks of behavior declared in a class or interface. Parameters receive inputs, and a return value supplies a result; void means the method returns no value."
+            },
+            {
+                "term": "Classes",
+                "definition": "Types that group fields and methods. A Student class can describe a name field and a method that calculates an average; declaring the class does not itself create a Student object."
+            },
+            {
+                "term": "Objects",
+                "definition": "Instances of classes with identity and state. Two Student objects can have different names; two variables can also refer to the same object, so changes may be visible through both."
+            }
+        ],
+        "es": [
+            {
+                "term": "Variables",
+                "definition": "Ubicaciones de almacenamiento con nombre y tipo declarado. En int score = 10, score almacena un entero; score = 12 cambia su valor, no su tipo."
+            },
+            {
+                "term": "Tipos de datos",
+                "definition": "Definen los valores y operaciones permitidos. Los primitivos de Java, como int, guardan valores primitivos; los tipos de referencia, como String, guardan referencias a objetos o null."
+            },
+            {
+                "term": "Métodos",
+                "definition": "Bloques de comportamiento declarados en una clase o interfaz. Los parámetros reciben entradas y el valor de retorno entrega un resultado; void indica que no se devuelve un valor."
+            },
+            {
+                "term": "Clases",
+                "definition": "Tipos que agrupan campos y métodos. Una clase Student puede declarar un nombre y un método para calcular un promedio; declararla no crea por sí sola un objeto Student."
+            },
+            {
+                "term": "Objetos",
+                "definition": "Instancias de clases con identidad y estado. Dos objetos Student pueden tener nombres distintos; dos variables también pueden referirse al mismo objeto y observar sus cambios."
+            }
+        ]
+    },
+    "java-memory-jvm": {
+        "en": [
+            {
+                "term": "Stack vs Heap",
+                "definition": "Each Java thread has a stack of method frames containing local variables and execution state. Objects and arrays are allocated in the shared heap; a local reference can point to a heap object."
+            },
+            {
+                "term": "Object Lifecycle",
+                "definition": "An object is allocated, initialized, and used through references. It becomes eligible for garbage collection when it is no longer reachable; eligibility does not guarantee immediate collection."
+            },
+            {
+                "term": "Garbage Collection",
+                "definition": "Automatic reclamation of heap memory occupied by unreachable objects. It does not replace explicit cleanup of resources such as files or database connections."
+            },
+            {
+                "term": "References",
+                "definition": "Values that refer to objects rather than containing those objects. Assigning one reference variable to another copies the reference, not the object."
+            },
+            {
+                "term": "Memory Leaks in Practice",
+                "definition": "Unneeded objects can remain reachable, for example through an ever-growing static collection. The garbage collector cannot reclaim them until those retaining references are removed."
+            }
+        ],
+        "es": [
+            {
+                "term": "Pila y heap",
+                "definition": "Cada hilo de Java tiene una pila de marcos de métodos con variables locales y estado de ejecución. Los objetos y arreglos se asignan en el heap compartido; una referencia local puede apuntar a ellos."
+            },
+            {
+                "term": "Ciclo de vida de un objeto",
+                "definition": "Un objeto se asigna, se inicializa y se usa mediante referencias. Cuando deja de ser alcanzable puede ser recolectado, pero eso no garantiza una recolección inmediata."
+            },
+            {
+                "term": "Recolección de basura",
+                "definition": "Recuperación automática de memoria del heap ocupada por objetos inalcanzables. No sustituye el cierre explícito de recursos como archivos o conexiones a bases de datos."
+            },
+            {
+                "term": "Referencias",
+                "definition": "Valores que apuntan a objetos en lugar de contenerlos. Asignar una variable de referencia a otra copia la referencia, no el objeto."
+            },
+            {
+                "term": "Fugas de memoria en la práctica",
+                "definition": "Objetos innecesarios pueden seguir siendo alcanzables, por ejemplo mediante una colección estática que crece sin límite. El recolector no los libera mientras existan esas referencias."
+            }
+        ]
+    },
+    "git-basics-workflow": {
+        "en": [
+            {
+                "term": "Repository Setup",
+                "definition": "A repository stores project history and Git metadata. git init starts one locally; git clone copies an existing repository. A remote is a named URL, not an automatic backup of uncommitted work."
+            },
+            {
+                "term": "Staging and Commits",
+                "definition": "The staging area selects content for the next snapshot. git add updates it; git commit records that snapshot locally. Later edits must be staged again, and committing does not push."
+            },
+            {
+                "term": "Branching and Merging",
+                "definition": "A branch is a movable reference to a commit. New commits advance the current branch; merging integrates another history and may require resolving conflicting edits."
+            },
+            {
+                "term": "Pull/Rebase Basics",
+                "definition": "git pull fetches remote changes and integrates them using the configured merge or rebase behavior. Rebase replays commits onto a new base and changes their identities; coordinate before rewriting shared history."
+            },
+            {
+                "term": "Merge Conflict Basics",
+                "definition": "A conflict means Git cannot automatically combine edits. Inspect the competing changes, edit the intended result, stage the resolved files, and complete the merge or rebase; removing markers alone does not prove correctness."
+            }
+        ],
+        "es": [
+            {
+                "term": "Configuración del repositorio",
+                "definition": "Un repositorio almacena el historial y los metadatos de Git. git init inicia uno y git clone copia uno existente. Un remoto es una URL con nombre, no una copia automática del trabajo sin commit."
+            },
+            {
+                "term": "Preparación y commits",
+                "definition": "El área de preparación selecciona contenido para la próxima instantánea. git add la actualiza y git commit la registra localmente. Los cambios posteriores se preparan otra vez; un commit no hace push."
+            },
+            {
+                "term": "Ramas y fusiones",
+                "definition": "Una rama es una referencia móvil a un commit. Los nuevos commits avanzan la rama actual; una fusión integra otro historial y puede requerir resolver cambios incompatibles."
+            },
+            {
+                "term": "Fundamentos de pull y rebase",
+                "definition": "git pull obtiene cambios remotos y los integra según la configuración de merge o rebase. Rebase reproduce commits sobre una nueva base y cambia sus identidades; coordina antes de reescribir historial compartido."
+            },
+            {
+                "term": "Conflictos de fusión",
+                "definition": "Un conflicto indica que Git no puede combinar cambios automáticamente. Inspecciona las versiones, escribe el resultado correcto, prepara los archivos y completa el merge o rebase; borrar los marcadores no basta."
+            }
+        ]
+    }
+};
+
 function buildModuleDefinitions(module, language = 'en') {
     const lang = language === 'es' ? 'es' : 'en';
+    const curated = CURATED_MODULE_DEFINITIONS[module?.id]?.[lang];
+    if (curated) return curated.map((entry) => ({ ...entry }));
     const title = String(module?.title || (lang === 'es' ? 'este modulo' : 'this module'));
     const topics = Array.isArray(module?.topics) ? module.topics.filter(Boolean) : [];
     const terms = [];
@@ -13029,12 +13218,16 @@ function getLocalizedModule(module) {
             codeExamples: localizedCodeExamples,
             expectedOutputs: localizedExpectedOutputs,
             codeExampleSets: localizedCodeExampleSets.length ? localizedCodeExampleSets : module.codeExampleSets,
-            definitions: Array.isArray(module.definitions) && module.definitions.length === 5
-                ? module.definitions
-                : buildModuleDefinitions(module, language)
+            definitions: CURATED_MODULE_DEFINITIONS[module.id]?.[language]
+                ? buildModuleDefinitions(module, language)
+                : Array.isArray(module.definitions) && module.definitions.length === 5
+                    ? module.definitions
+                    : buildModuleDefinitions(module, language)
         };
     }
-    const localizedDefinitions = Array.isArray(localized.definitions) && localized.definitions.length
+    const localizedDefinitions = CURATED_MODULE_DEFINITIONS[module.id]?.[language]
+        ? buildModuleDefinitions(module, language)
+        : Array.isArray(localized.definitions) && localized.definitions.length
         ? localized.definitions.slice(0, 5)
         : buildModuleDefinitions({
             ...module,
@@ -23968,7 +24161,7 @@ function getCodeSnapshotCopy() {
             quizReady: 'quiz listo',
             quizSoon: 'quiz pendiente',
             checklistTitle: 'Checklist rapido',
-            complexityPrefix: 'Complejidad estimada:'
+            complexityPrefix: 'Analiza la complejidad:'
         };
     }
     return {
@@ -23980,33 +24173,8 @@ function getCodeSnapshotCopy() {
         quizReady: 'quiz ready',
         quizSoon: 'quiz pending',
         checklistTitle: 'Quick checklist',
-        complexityPrefix: 'Estimated complexity:'
+        complexityPrefix: 'Complexity checkpoint:'
     };
-}
-
-function detectCodeRecursionSignature(code = '') {
-    const source = String(code || '');
-    if (!source.trim()) return false;
-    const signatureRegexes = [
-        /\b(?:public|private|protected|static|final|synchronized|\w+)\s+([A-Za-z_]\w*)\s*\([^)]*\)\s*\{/g,
-        /\bdef\s+([A-Za-z_]\w*)\s*\([^)]*\)\s*:/g,
-        /\bfunction\s+([A-Za-z_]\w*)\s*\([^)]*\)\s*\{/g
-    ];
-    const candidateNames = new Set();
-    signatureRegexes.forEach((regex) => {
-        let match;
-        while ((match = regex.exec(source))) {
-            const name = String(match?.[1] || '').trim();
-            if (name && !['if', 'for', 'while', 'switch'].includes(name)) {
-                candidateNames.add(name);
-            }
-        }
-    });
-    return Array.from(candidateNames).some((name) => {
-        const callPattern = new RegExp(`\\b${escapeRegExp(name)}\\s*\\(`, 'g');
-        const matches = source.match(callPattern);
-        return Array.isArray(matches) && matches.length > 1;
-    });
 }
 
 function countUsefulCodeLines(code = '') {
@@ -24023,42 +24191,12 @@ function countUsefulCodeLines(code = '') {
         }).length;
 }
 
-function buildComplexityInsight(code = '') {
-    const source = String(code || '');
-    const isEs = appState.language === 'es';
-    const loopCount = (source.match(/\b(for|while)\b/g) || []).length;
-    const hasSort = /\b(sort|sorted|Arrays\.sort|Collections\.sort|std::sort)\b/.test(source);
-    const hasHash = /\b(HashMap|HashSet|unordered_map|unordered_set|Map<|Set<|dict\(|\{\})\b/.test(source);
-    const hasRecursion = detectCodeRecursionSignature(source);
-
-    if (hasSort && loopCount <= 1) {
-        return isEs
-            ? 'Probablemente O(n log n) por ordenamiento.'
-            : 'Likely O(n log n) due to sorting.';
-    }
-    if (hasRecursion) {
-        return isEs
-            ? 'Depende de la profundidad de recursion (comunmente O(n) u O(log n)).'
-            : 'Depends on recursion depth (commonly O(n) or O(log n)).';
-    }
-    if (loopCount >= 2) {
-        return isEs
-            ? 'Posible O(n^2) o mas por iteraciones multiples.'
-            : 'Potentially O(n^2) or higher due to multiple iteration passes.';
-    }
-    if (loopCount === 1) {
-        return isEs
-            ? 'Generalmente O(n) por recorrido lineal.'
-            : 'Generally O(n) from a linear traversal.';
-    }
-    if (hasHash) {
-        return isEs
-            ? 'Operacion cercana a O(1) promedio con estructuras hash.'
-            : 'Near O(1) average operations using hash-based structures.';
-    }
-    return isEs
-        ? 'Pasos constantes o dominados por operaciones de libreria.'
-        : 'Constant-time steps or library-dominated operations.';
+function buildComplexityInsight() {
+    // Syntax counts cannot establish complexity: sequential loops add work,
+    // function calls are not necessarily recursion, and library costs vary.
+    return appState.language === 'es'
+        ? 'Define el tamaño de entrada y cuenta cómo crece el trabajo, incluidas las llamadas. Los ciclos consecutivos suman costos; los anidados pueden multiplicarlos. Justifica tiempo y memoria por separado.'
+        : 'Define the input size and count how work grows, including called methods. Sequential loops add costs; nested loops may multiply them. Justify time and memory separately.';
 }
 
 function buildCodeFocusChecklist(code = '') {
@@ -24847,6 +24985,188 @@ function estimateModuleStudyMinutes(module, localizedModule) {
     return Math.max(25, Math.min(150, roundedEstimate));
 }
 
+const MODULE_STARTER_GUIDES = {
+    "intro-to-coding": {
+        "en": {
+            "goals": [
+                "Describe a program as input, processing, and output.",
+                "Distinguish source code, language tools, and the running program.",
+                "Choose one small project and explain who it helps."
+            ],
+            "practicePrompt": "Write numbered instructions for calculating the total price of two items. Use prices 3 and 5: predict a total of 8, then translate your steps into a small program. Change one price to 0 and check the result.",
+            "prerequisites": [
+                "No programming experience required.",
+                "Be able to open a text editor and save a file."
+            ],
+            "pitfalls": [
+                "Trying to memorize syntax before understanding what the program should do.",
+                "Confusing writing a file with running the program.",
+                "Choosing a first project too large to finish in small steps."
+            ],
+            "practiceLadder": [
+                "Identify the inputs and expected output before writing code.",
+                "Write a short sequence of plain-language steps.",
+                "Run the program with 3 and 5, then with 0 and 5.",
+                "Explain which line receives, transforms, and displays the data."
+            ],
+            "masteryChecks": [
+                "Can you explain why the example produces 8?",
+                "Can you change the input and predict the new output?",
+                "Can you distinguish an instruction error from a tool setup problem?"
+            ]
+        },
+        "es": {
+            "goals": [
+                "Describe un programa como entrada, procesamiento y salida.",
+                "Distingue el código fuente, las herramientas y el programa en ejecución.",
+                "Elige un proyecto pequeño y explica a quién ayuda."
+            ],
+            "practicePrompt": "Escribe instrucciones numeradas para sumar el precio de dos artículos. Usa 3 y 5: predice un total de 8 y convierte los pasos en un programa pequeño. Cambia un precio a 0 y comprueba el resultado.",
+            "prerequisites": [
+                "No necesitas experiencia programando.",
+                "Saber abrir un editor de texto y guardar un archivo."
+            ],
+            "pitfalls": [
+                "Memorizar sintaxis antes de entender qué debe hacer el programa.",
+                "Confundir guardar un archivo con ejecutar el programa.",
+                "Elegir un primer proyecto demasiado grande."
+            ],
+            "practiceLadder": [
+                "Identifica las entradas y la salida esperada antes de programar.",
+                "Escribe una secuencia corta de pasos en lenguaje cotidiano.",
+                "Ejecuta el programa con 3 y 5, luego con 0 y 5.",
+                "Explica qué línea recibe, transforma y muestra los datos."
+            ],
+            "masteryChecks": [
+                "¿Puedes explicar por qué el ejemplo produce 8?",
+                "¿Puedes cambiar la entrada y predecir la salida?",
+                "¿Puedes distinguir un error en las instrucciones de un problema de configuración?"
+            ]
+        }
+    },
+    "java-basics": {
+        "en": {
+            "goals": [
+                "Declare an int and a String and explain their types.",
+                "Write a method that accepts two scores and returns their average.",
+                "Create two Student objects and explain which state belongs to each."
+            ],
+            "practicePrompt": "Write average(int a, int b) returning a double. Predict and check average(4, 5) = 4.5 and average(0, 0) = 0.0. Explain why dividing by 2 instead of 2.0 changes the first result.",
+            "prerequisites": [
+                "Recognize input, processing, and output in a small program.",
+                "Use a Java compiler or an IDE with a JDK; no prior class design required."
+            ],
+            "pitfalls": [
+                "Using integer division when a fractional result is needed.",
+                "Confusing a class declaration with a constructed object.",
+                "Assuming two references always point to different objects."
+            ],
+            "practiceLadder": [
+                "Trace the declared type and current value of each variable.",
+                "Implement the average method and call it from main.",
+                "Check an odd total and a zero total against predicted outputs.",
+                "Create two Student instances and change one without changing the other."
+            ],
+            "masteryChecks": [
+                "Can you explain why 9 / 2 is 4 but 9 / 2.0 is 4.5?",
+                "Can you identify parameters and the returned value?",
+                "Can you explain the difference between a class and an object?"
+            ]
+        },
+        "es": {
+            "goals": [
+                "Declara un int y un String y explica sus tipos.",
+                "Escribe un método que reciba dos notas y devuelva su promedio.",
+                "Crea dos objetos Student y explica qué estado pertenece a cada uno."
+            ],
+            "practicePrompt": "Escribe average(int a, int b) con retorno double. Predice y verifica average(4, 5) = 4.5 y average(0, 0) = 0.0. Explica por qué dividir entre 2 en vez de 2.0 cambia el primer resultado.",
+            "prerequisites": [
+                "Reconocer entrada, procesamiento y salida en un programa pequeño.",
+                "Usar un compilador Java o un IDE con JDK; no necesitas saber diseñar clases."
+            ],
+            "pitfalls": [
+                "Usar división entera cuando necesitas un resultado fraccionario.",
+                "Confundir declarar una clase con construir un objeto.",
+                "Suponer que dos referencias siempre apuntan a objetos distintos."
+            ],
+            "practiceLadder": [
+                "Rastrea el tipo declarado y el valor actual de cada variable.",
+                "Implementa el método average y llámalo desde main.",
+                "Comprueba un total impar y un total cero con las salidas predichas.",
+                "Crea dos instancias Student y modifica una sin cambiar la otra."
+            ],
+            "masteryChecks": [
+                "¿Puedes explicar por qué 9 / 2 es 4 pero 9 / 2.0 es 4.5?",
+                "¿Puedes identificar parámetros y valor de retorno?",
+                "¿Puedes distinguir una clase de un objeto?"
+            ]
+        }
+    },
+    "git-basics-workflow": {
+        "en": {
+            "goals": [
+                "Distinguish the working tree, staging area, and commit history.",
+                "Make a focused commit and inspect it with git show.",
+                "Create a feature branch and explain why committing is separate from pushing."
+            ],
+            "practicePrompt": "In a new practice folder, initialize a repository and create a README. Stage and commit it, then edit it again. Compare git diff with git diff --staged before and after git add. Explain which version the next commit would contain.",
+            "prerequisites": [
+                "Know how to create a folder and edit a text file.",
+                "Have Git installed and use a new practice repository."
+            ],
+            "pitfalls": [
+                "Assuming a commit includes edits made after the last git add.",
+                "Assuming a local commit has already reached the remote.",
+                "Running destructive undo commands before inspecting git status and git diff."
+            ],
+            "practiceLadder": [
+                "Create a disposable practice folder and run git init.",
+                "Create a README, inspect status, then stage and commit it.",
+                "Edit the README and compare unstaged and staged diffs.",
+                "Create a branch, commit a change, and inspect git log --oneline --all --graph."
+            ],
+            "masteryChecks": [
+                "Can you predict exactly what the next commit will contain?",
+                "Can you explain what git push does that git commit does not?",
+                "Can you identify the current branch and inspect changes before committing?"
+            ]
+        },
+        "es": {
+            "goals": [
+                "Distingue el directorio de trabajo, el área de preparación y el historial.",
+                "Crea un commit enfocado e inspecciónalo con git show.",
+                "Crea una rama y explica por qué hacer commit es distinto de hacer push."
+            ],
+            "practicePrompt": "En una carpeta nueva de práctica, inicia un repositorio y crea un README. Prepáralo y haz commit; luego edítalo otra vez. Compara git diff con git diff --staged antes y después de git add. Explica qué versión incluiría el próximo commit.",
+            "prerequisites": [
+                "Saber crear una carpeta y editar un archivo de texto.",
+                "Tener Git instalado y usar un repositorio nuevo de práctica."
+            ],
+            "pitfalls": [
+                "Suponer que un commit incluye cambios posteriores al último git add.",
+                "Suponer que un commit local ya llegó al remoto.",
+                "Ejecutar comandos destructivos antes de revisar git status y git diff."
+            ],
+            "practiceLadder": [
+                "Crea una carpeta de práctica y ejecuta git init.",
+                "Crea un README, revisa el estado, prepáralo y haz commit.",
+                "Edita el README y compara los cambios preparados y no preparados.",
+                "Crea una rama, registra un cambio e inspecciona git log --oneline --all --graph."
+            ],
+            "masteryChecks": [
+                "¿Puedes predecir qué contendrá exactamente el próximo commit?",
+                "¿Puedes explicar qué hace git push que no hace git commit?",
+                "¿Puedes identificar la rama actual e inspeccionar cambios antes del commit?"
+            ]
+        }
+    }
+};
+
+function getModuleStarterGuide(moduleId) {
+    const lang = appState.language === 'es' ? 'es' : 'en';
+    return MODULE_STARTER_GUIDES[moduleId]?.[lang] || null;
+}
+
 function buildModuleLearningPlan(module, localizedModule, modulesByCategory, localizedModuleMap) {
     const categoryKey = getModuleCategoryKey(module.id);
     const trackModules = modulesByCategory.get(categoryKey) || [module];
@@ -24876,6 +25196,7 @@ function buildModuleLearningPlan(module, localizedModule, modulesByCategory, loc
         return t(`module.goalFallback${index + 1}`);
     });
     const practiceTopic = topicPool[0] || '';
+    const starterGuide = getModuleStarterGuide(module.id);
     return {
         categoryKey,
         trackTitle: getModuleTrackTitle(categoryKey),
@@ -24884,10 +25205,10 @@ function buildModuleLearningPlan(module, localizedModule, modulesByCategory, loc
         totalInTrack,
         prerequisiteTitle: previousLocalized?.title || '',
         nextModuleTitle: nextLocalized?.title || '',
-        goals,
-        practicePrompt: practiceTopic
+        goals: starterGuide?.goals || goals,
+        practicePrompt: starterGuide?.practicePrompt || (practiceTopic
             ? t('module.practiceTemplate', { topic: practiceTopic })
-            : t('module.practiceFallback')
+            : t('module.practiceFallback'))
     };
 }
 
@@ -24982,12 +25303,13 @@ function buildModuleReadinessKit(module, localizedModule, moduleLearningPlan) {
         curatedResources.unshift(topicSpecificResource);
     }
 
+    const starterGuide = getModuleStarterGuide(module.id);
     return {
-        prerequisites,
-        outcomes,
-        pitfalls,
-        practiceLadder,
-        masteryChecks,
+        prerequisites: starterGuide?.prerequisites || prerequisites,
+        outcomes: starterGuide?.goals || outcomes,
+        pitfalls: starterGuide?.pitfalls || pitfalls,
+        practiceLadder: starterGuide?.practiceLadder || practiceLadder,
+        masteryChecks: starterGuide?.masteryChecks || masteryChecks,
         curatedResources
     };
 }
