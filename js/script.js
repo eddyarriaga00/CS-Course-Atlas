@@ -1448,10 +1448,10 @@ const TRANSLATIONS = {
         'settings.hideCompleted': 'Hide Completed Modules',
         'settings.hideCompletedHint': "Keep your grid focused on what's left.",
         'settings.weeklyGoal': 'Weekly Module Goal',
-        'settings.goal3': '3 / week Â· Steady pace',
-        'settings.goal5': '5 / week Â· Balanced',
-        'settings.goal8': '8 / week Â· Accelerated',
-        'settings.goal12': '12 / week Â· Sprint',
+        'settings.goal3': '3 / week · Steady pace',
+        'settings.goal5': '5 / week · Balanced',
+        'settings.goal8': '8 / week · Accelerated',
+        'settings.goal12': '12 / week · Sprint',
         'settings.weeklyGoalHint': 'Personalizes your study insights and pacing tips.',
         'settings.authLockTitle': 'Sign in for advanced customization',
         'settings.authLockCopy': 'Most personalization controls are available only when your account is signed in and syncing.',
@@ -1465,7 +1465,7 @@ const TRANSLATIONS = {
         'settings.codePreviewLinesHint': 'Choose how much code is visible before tapping expand.',
         'settings.language': 'Language / Idioma',
         'settings.languageLabel': 'Interface Language',
-        'settings.languageHint': 'Switch between English and Spanish / Cambia entre inglÃ©s y espaÃ±ol.',
+        'settings.languageHint': 'Switch between English and Spanish / Cambia entre inglés y español.',
         'settings.save': '\u2705 Save & Close',
         // Module card labels/tooltips
         'module.starterBanner': '\u2B50 Starter Module: recommended first step for most learners',
@@ -1543,17 +1543,17 @@ const TRANSLATIONS = {
     es: {
         // Main header
         'main.title': '\u{1F9ED} CS Course Atlas',
-        'main.subtitle': 'Aprendizaje multi-curso para estudiantes de Ciencias de la ComputaciÃ³n',
+        'main.subtitle': 'Aprendizaje multi-curso para estudiantes de Ciencias de la Computación',
         'a11y.skipToContent': 'Saltar al contenido principal',
         // Hero
         'hero.title': 'CS Course Atlas: Aprende en Cursos Clave de CS',
-        'hero.subtitle': 'Un recorrido completo y amigable para principiantes a travÃ©s de Estructuras de Datos y Algoritmos, Ensamblador, Java, Python, JavaScript y MatemÃ¡ticas Discretas por Eddy Arriaga-B. Cada mÃ³dulo incluye explicaciones detalladas, amplios ejemplos de cÃ³digo y ejercicios prÃ¡cticos.',
+        'hero.subtitle': 'Un recorrido completo y amigable para principiantes a través de Estructuras de Datos y Algoritmos, Ensamblador, Java, Python, JavaScript y Matemáticas Discretas por Eddy Arriaga-B. Cada módulo incluye explicaciones detalladas, amplios ejemplos de código y ejercicios prácticos.',
         'hero.pretextCanvasAria': 'Introduccion visual de estudio renderizada con flujo de texto de Pretext.',
         // Header buttons
         'btn.flashcards': 'Tarjetas',
         'btn.flashcardsShort': 'Tarjetas',
         'btn.glossary': 'Glosario',
-        'btn.glossaryShort': 'TÃ©rminos',
+        'btn.glossaryShort': 'Términos',
         'btn.quizzes': 'Cuestionarios',
         'btn.quizzesShort': 'Quiz',
         'btn.settings': 'Ajustes',
@@ -1690,27 +1690,27 @@ const TRANSLATIONS = {
         'progress.kicker': 'Recorrido actual',
         // Topic focus
         'topic.focus.heading': 'Rutas Destacadas de Aprendizaje',
-        'topic.focus.subtitle': 'Comienza con una ruta central de CS. Recomendamos elegir una ruta y completar los mÃ³dulos en orden.',
+        'topic.focus.subtitle': 'Comienza con una ruta central de CS. Recomendamos elegir una ruta y completar los módulos en orden.',
         'topic.focus.badge': 'Rutas Destacadas',
         'topic.all.title': 'Todos los Temas',
         'topic.all.subtitle': 'Todo en una sola vista',
         'topic.dsa.title': 'Estructuras de Datos y Algoritmos',
-        'topic.dsa.subtitle': 'Ruta central para entrevistas tÃ©cnicas',
-        'topic.discrete.title': 'MatemÃ¡ticas Discretas',
-        'topic.discrete.subtitle': 'Pruebas, conteo y lÃ³gica matemÃ¡tica',
+        'topic.dsa.subtitle': 'Ruta central para entrevistas técnicas',
+        'topic.discrete.title': 'Matemáticas Discretas',
+        'topic.discrete.subtitle': 'Pruebas, conteo y lógica matemática',
         'topic.java.title': 'Aprendizaje de Java',
         'topic.java.subtitle': 'Sintaxis base de Java, POO, herramientas y flujos practicos de software',
         'topic.git.title': 'Aprendizaje de Git',
-        'topic.git.subtitle': 'Control de versiones, ramas, colaboraciÃ³n y flujos seguros',
+        'topic.git.subtitle': 'Control de versiones, ramas, colaboración y flujos seguros',
         'topic.assembly.title': 'Fundamentos de Ensamblador',
         'topic.assembly.subtitle': 'Registros, memoria y flujo de programa de bajo nivel',
-        'topic.comingSoon.heading': 'Rutas PrÃ³ximamente',
-        'topic.comingSoon.label': 'PrÃ³ximamente',
-        'topic.comingSoon.toc.title': 'TeorÃ­a de la ComputaciÃ³n',
-        'topic.comingSoon.toc.subtitle': 'AutÃ³matas, lenguajes formales, computabilidad y bases de complejidad',
+        'topic.comingSoon.heading': 'Rutas Próximamente',
+        'topic.comingSoon.label': 'Próximamente',
+        'topic.comingSoon.toc.title': 'Teoría de la Computación',
+        'topic.comingSoon.toc.subtitle': 'Autómatas, lenguajes formales, computabilidad y bases de complejidad',
         'topic.comingSoon.cpp.title': 'Ruta Dedicada de C++',
-        'topic.comingSoon.cpp.subtitle': 'Fundamentos de C++, STL, modelo de memoria y resoluciÃ³n de problemas orientada al rendimiento',
-        'topic.comingSoon.stats.title': 'EstadÃ­stica para CS',
+        'topic.comingSoon.cpp.subtitle': 'Fundamentos de C++, STL, modelo de memoria y resolución de problemas orientada al rendimiento',
+        'topic.comingSoon.stats.title': 'Estadística para CS',
         'topic.comingSoon.stats.subtitle': 'Probabilidad, distribuciones, inferencia y toma de decisiones basada en datos',
         'topic.comingSoon.os.title': 'Sistemas Operativos',
         'topic.comingSoon.os.subtitle': 'Procesos, planificacion, gestion de memoria y sistemas de archivos desde fundamentos',
@@ -1935,18 +1935,18 @@ const TRANSLATIONS = {
         'section.dailyChallenge': '\u{1F3AF} Desaf\u00edo del D\u00eda',
         'section.studyTip': '\u{1F4A1} Consejo de Estudio',
         'section.insights': 'Perspectivas de Estudio Personalizadas',
-        'section.insightsSubtitle': 'Mantente al dÃ­a con estadÃ­sticas en vivo, sugerencias de mÃ³dulos y un compaÃ±ero de enfoque integrado.',
+        'section.insightsSubtitle': 'Mantente al día con estadísticas en vivo, sugerencias de módulos y un compañero de enfoque integrado.',
         'section.expand': 'Expandir',
         'section.collapse': 'Colapsar',
         'modules.pagination.prev': 'Anterior',
         'modules.pagination.next': 'Siguiente',
-        'modules.pagination.summary': 'PÃ¡gina {current} de {total}',
+        'modules.pagination.summary': 'Página {current} de {total}',
         'progress.emptyStart': 'Elige tu primera ruta para cargar modulos.',
         'achievements.emptyTotal': 'Elige una ruta para ver el total de modulos',
         'insights.lock.badge': 'Modo Invitado',
-        'insights.lock.title': 'Inicia sesiÃ³n para desbloquear insights personalizados',
+        'insights.lock.title': 'Inicia sesión para desbloquear insights personalizados',
         'insights.lock.copy': 'Tus analisis personalizados, impulso de enfoque y recomendaciones se desbloquean al iniciar sesion para sincronizar el progreso de forma segura.',
-        'insights.lock.cta': 'Iniciar SesiÃ³n / Registrarse',
+        'insights.lock.cta': 'Iniciar Sesión / Registrarse',
     'insights.lock.updates': 'Modo de vista previa activo',
         'insights.lock.status': 'Invitado',
         'insights.lock.sessionBtn': 'Crea cuenta gratis para sincronizar',
@@ -1965,16 +1965,16 @@ const TRANSLATIONS = {
         'insights.lock.planPreviewCta': 'Personalizar (Vista previa)',
     'auth.status.guest': 'No has iniciado sesion. Inicia sesion o crea una cuenta gratis para sincronizar tu progreso entre dispositivos.',
         'interview.heading': '\u{1F4C2} Ejemplos de Entrevista',
-        'interview.subtitle': 'Recorridos estilo LeetCode. Dos por pÃ¡gina con copia rÃ¡pida.',
-        'interview.pages': 'PÃ¡ginas',
-        'interview.runSolution': 'Ejecutar soluciÃ³n',
+        'interview.subtitle': 'Recorridos estilo LeetCode. Dos por página con copia rápida.',
+        'interview.pages': 'Páginas',
+        'interview.runSolution': 'Ejecutar solución',
         'interview.running': 'Ejecutando...',
         'interview.outputLabel': 'Salida',
         'interview.outputReady': 'Listo',
-        'interview.outputLive': 'EjecuciÃ³n en vivo',
+        'interview.outputLive': 'Ejecución en vivo',
         'interview.outputFallback': 'Salida de respaldo',
-        'interview.outputError': 'Error de ejecuciÃ³n',
-        'interview.outputPlaceholder': 'Ejecuta la soluciÃ³n de ejemplo para ver la salida.',
+        'interview.outputError': 'Error de ejecución',
+        'interview.outputPlaceholder': 'Ejecuta la solución de ejemplo para ver la salida.',
         'interview.runInWorkspace': 'Ejecutar en Workspace',
         'interview.approach': 'Enfoque',
         'interview.language': 'Lenguaje',
@@ -1999,7 +1999,7 @@ const TRANSLATIONS = {
         'interview.solutionCopyError': 'No se pudo copiar la solucion.',
         'interview.noRunnable': 'Aun no hay muestra ejecutable para este enfoque/lenguaje.',
         'ds.heading': '\u{1F6E0}\uFE0F Playground de C\u00f3digo de Estructuras de Datos',
-        'ds.subtitle': 'InteractÃºa con arreglos, pilas, colas, montÃ­culos, grafos y tries. Sigue estructura, punteros, lÃ­nea de tiempo y complejidad en un solo lugar.',
+        'ds.subtitle': 'Interactúa con arreglos, pilas, colas, montículos, grafos y tries. Sigue estructura, punteros, línea de tiempo y complejidad en un solo lugar.',
         'ds.reset': 'Reiniciar playground',
         // Progress chip
         'progress.nowAt': 'Ahora en',
@@ -2008,51 +2008,51 @@ const TRANSLATIONS = {
         'achievements.currentBadge': 'Insignia actual',
         // Support
         'support.heading': '\u2764\uFE0F \u00bfDisfrutas este sitio web?',
-        'support.subtitle': 'Â¡Ayuda a mantener este recurso gratuito y actualizado con contenido nuevo cada semana!',
+        'support.subtitle': '¡Ayuda a mantener este recurso gratuito y actualizado con contenido nuevo cada semana!',
         // Asistente flotante
         'helper.badge': 'Guia Rapida',
         'helper.ariaLabel': 'Guia Rapida',
-        'helper.title': 'GuÃ­a RÃ¡pida del Sitio',
-        'helper.subtitle': 'Un recorrido corto de lo que hace cada secciÃ³n.',
-        'helper.closeAria': 'Cerrar guÃ­a rÃ¡pida del sitio web',
+        'helper.title': 'Guía Rápida del Sitio',
+        'helper.subtitle': 'Un recorrido corto de lo que hace cada sección.',
+        'helper.closeAria': 'Cerrar guía rápida del sitio web',
         'helper.goalTitle': 'Objetivo de CS Course Atlas',
-        'helper.goalText': 'Ayudar a estudiantes de Ciencias de la ComputaciÃ³n a aprender mÃ¡s rÃ¡pido en mÃºltiples clases con explicaciones claras, ejemplos ejecutables y herramientas guiadas de prÃ¡ctica.',
-        'helper.startTitle': 'Empieza AquÃ­ (3 pasos)',
-        'helper.startChip': 'Inicio rÃ¡pido',
-        'helper.startStep1': 'Elige un Enfoque de Tema y abre el primer mÃ³dulo de esa ruta.',
-        'helper.startStep2': 'Usa el Playground de CÃ³digo o de Estructuras para practicar de inmediato.',
+        'helper.goalText': 'Ayudar a estudiantes de Ciencias de la Computación a aprender más rápido en múltiples clases con explicaciones claras, ejemplos ejecutables y herramientas guiadas de práctica.',
+        'helper.startTitle': 'Empieza Aquí (3 pasos)',
+        'helper.startChip': 'Inicio rápido',
+        'helper.startStep1': 'Elige un Enfoque de Tema y abre el primer módulo de esa ruta.',
+        'helper.startStep2': 'Usa el Playground de Código o de Estructuras para practicar de inmediato.',
         'helper.startStep3': 'Cierra con quiz + flashcards y marca el progreso como completado.',
-        'helper.sectionModulesTitle': 'MÃ³dulos',
-        'helper.sectionModulesText': 'Rutas de aprendizaje estructuradas con ejemplos de cÃ³digo, modo teorÃ­a (para discreta), definiciones y recursos.',
-        'helper.sectionPlaygroundTitle': 'Playground de CÃ³digo',
-        'helper.sectionPlaygroundText': 'Ejecuta snippets de Java, C++, Python y JavaScript, prueba cambios e inspecciona la salida rÃ¡pidamente.',
-        'helper.sectionDataTitle': 'Playground de CÃ³digo de Estructuras',
-        'helper.sectionDataText': 'Visuales interactivos para arreglos, pilas, colas, montÃ­culos, grafos y tries con lÃ­nea de tiempo de operaciones y vista de complejidad.',
-        'helper.sectionPracticeTitle': 'Herramientas de PrÃ¡ctica',
+        'helper.sectionModulesTitle': 'Módulos',
+        'helper.sectionModulesText': 'Rutas de aprendizaje estructuradas con ejemplos de código, modo teoría (para discreta), definiciones y recursos.',
+        'helper.sectionPlaygroundTitle': 'Playground de Código',
+        'helper.sectionPlaygroundText': 'Ejecuta snippets de Java, C++, Python y JavaScript, prueba cambios e inspecciona la salida rápidamente.',
+        'helper.sectionDataTitle': 'Playground de Código de Estructuras',
+        'helper.sectionDataText': 'Visuales interactivos para arreglos, pilas, colas, montículos, grafos y tries con línea de tiempo de operaciones y vista de complejidad.',
+        'helper.sectionPracticeTitle': 'Herramientas de Práctica',
         'helper.sectionPracticeText': 'Usa flashcards, cuestionarios interactivos, glosario y ejemplos de entrevista para reforzar conceptos.',
         'helper.sectionResourcesTitle': 'Biblioteca de Notas + Libros',
-        'helper.sectionResourcesText': 'Usa la Biblioteca de Notas para guÃ­as rÃ¡pidas y el Ã¡rea de Libros para referencias mÃ¡s largas que puedes leer o descargar.',
+        'helper.sectionResourcesText': 'Usa la Biblioteca de Notas para guías rápidas y el área de Libros para referencias más largas que puedes leer o descargar.',
         'playground.gitReadOnly': 'Modo Git guiado (solo lectura)',
-        'playground.gitReadOnlyHint': 'Las muestras de Git estÃ¡n bloqueadas para ediciÃ³n para que te enfoques en comandos de terminal y salida.',
+        'playground.gitReadOnlyHint': 'Las muestras de Git están bloqueadas para edición para que te enfoques en comandos de terminal y salida.',
         'helper.sectionProgressTitle': 'Progreso + Ajustes',
         'helper.sectionProgressText': 'Monitorea avance, personaliza ajustes de la interfaz y administra preferencias de cuenta/perfil.',
         'helper.workflowTitle': 'Flujo de Estudio Recomendado',
-        'helper.workflowStep1': 'Aprende el concepto en un mÃ³dulo y revisa las definiciones clave.',
-        'helper.workflowStep2': 'Ejecuta/modifica cÃ³digo y verifica la salida.',
+        'helper.workflowStep1': 'Aprende el concepto en un módulo y revisa las definiciones clave.',
+        'helper.workflowStep2': 'Ejecuta/modifica código y verifica la salida.',
         'helper.workflowStep3': 'Fija el aprendizaje con quiz + flashcards.',
         'helper.workflowStep4': 'Guarda notas y marca progreso para mantener insights precisos.',
         'helper.closeBtn': 'Entendido',
         'books.heading': '\u{1F4DA} Biblioteca de Libros',
-        'books.subtitle': 'Lee libros de referencia completos dentro del sitio o descÃ¡rgalos para estudiar sin conexiÃ³n.',
+        'books.subtitle': 'Lee libros de referencia completos dentro del sitio o descárgalos para estudiar sin conexión.',
         'books.badge': 'Biblioteca de Referencia',
         'books.readerLabel': 'Lector de Libros',
         'books.closeReader': 'Cerrar Lector',
         'books.read': 'Leer en Sitio',
         'books.download': 'Descargar',
         'books.available': 'Disponible',
-        'books.missing': 'No disponible en esta mÃ¡quina',
-        'books.empty': 'AÃºn no hay libros configurados.',
-        'books.unavailable': 'El archivo del libro no estÃ¡ disponible en esta mÃ¡quina.',
+        'books.missing': 'No disponible en esta máquina',
+        'books.empty': 'Aún no hay libros configurados.',
+        'books.unavailable': 'El archivo del libro no está disponible en esta máquina.',
         'glossary.title': 'Glosario de CS Course Atlas',
         'glossary.searchPlaceholder': 'Buscar terminos del glosario...',
         'glossary.searchAria': 'Buscar terminos del glosario',
@@ -2077,11 +2077,11 @@ const TRANSLATIONS = {
         'flashcards.nav.prev': 'Anterior',
         'flashcards.nav.next': 'Siguiente',
         // Footer
-        'footer.kicker': 'Creado para estudiantes de Ciencias de la ComputaciÃ³n',
+        'footer.kicker': 'Creado para estudiantes de Ciencias de la Computación',
         'footer.title': 'Centro de Aprendizaje CS Course Atlas',
-        'footer.subtitle': 'Una plataforma de estudio multi-curso para DSA, MatemÃ¡ticas Discretas, Java, Git, Ensamblador y flujos de prÃ¡ctica de cÃ³digo.',
+        'footer.subtitle': 'Una plataforma de estudio multi-curso para DSA, Matemáticas Discretas, Java, Git, Ensamblador y flujos de práctica de código.',
         'footer.tag.multiCourse': 'Multi-curso',
-        'footer.tag.handsOn': 'PrÃ¡ctica Activa',
+        'footer.tag.handsOn': 'Práctica Activa',
         'footer.tag.bilingual': 'Amigable EN / ES',
         'footer.quick.flashcards': '\u{1F3AF} Abrir Tarjetas',
         'footer.quick.quizzes': '\u{1F9E0} Iniciar Quiz',
@@ -2090,16 +2090,16 @@ const TRANSLATIONS = {
         'footer.tools.flashcards': '\u{1F3AF} Practicar Tarjetas',
         'footer.tools.glossary': '\u{1F4DA} Glosario de CS',
         'footer.tools.quizzes': '\u{1F9E0} Cuestionarios Interactivos',
-        'flashcards.deck.all': 'Todos los mÃ³dulos (mezcla)',
+        'flashcards.deck.all': 'Todos los módulos (mezcla)',
         'flashcards.deck.topicGroup': 'Mazos por tema',
-        'flashcards.deck.moduleGroup': 'Mazos por mÃ³dulo',
+        'flashcards.deck.moduleGroup': 'Mazos por módulo',
         'flashcards.deck.topic.dsa': 'Ruta de DSA',
-        'flashcards.deck.topic.discrete': 'Ruta de MatemÃ¡tica Discreta',
+        'flashcards.deck.topic.discrete': 'Ruta de Matemática Discreta',
         'flashcards.deck.topic.java': 'Ruta de Java',
         'flashcards.deck.topic.git': 'Ruta de Git',
         'flashcards.deck.topic.assembly': 'Ruta de Ensamblador',
         'flashcards.deck.topic.locked': 'Completa quizzes de esta ruta para desbloquear',
-        'flashcards.deck.topic.empty': 'AÃºn no hay tarjetas desbloqueadas en esta ruta. Completa quizzes de esta ruta para desbloquear mÃ¡s tarjetas.',
+        'flashcards.deck.topic.empty': 'Aún no hay tarjetas desbloqueadas en esta ruta. Completa quizzes de esta ruta para desbloquear más tarjetas.',
         'flashcards.deck.module.locked': 'Completa el quiz para desbloquear',
         'flashcards.deck.startPrompt': 'Elige un mazo para comenzar.',
         'footer.features.title': '\u{1F680} Funciones Clave',
@@ -2109,7 +2109,7 @@ const TRANSLATIONS = {
         'footer.features.four': '\u{1F4F1} Dise\u00f1o Optimizado para M\u00f3vil',
         'footer.features.five': '\u{1F319} Soporte de Modo Oscuro',
         'footer.support.title': 'Apoya el Proyecto',
-        'footer.support.copy': 'Hecho con dedicaciÃ³n para estudiantes de CS. Ayuda a mantener la plataforma gratuita y en mejora continua.',
+        'footer.support.copy': 'Hecho con dedicación para estudiantes de CS. Ayuda a mantener la plataforma gratuita y en mejora continua.',
         'footer.support.coffee': '\u2615 Caf\u00e9',
         'footer.support.sponsor': 'Patrocinar',
         'scroll.jumpTop': 'Volver arriba',
@@ -2117,8 +2117,8 @@ const TRANSLATIONS = {
         'scroll.jumpTopAria': 'Desplazarse al inicio de esta pagina',
         'scroll.jumpBottomAria': 'Desplazarse al final de esta pagina',
         'footer.trust.title': 'Confianza y Legal',
-        'footer.trust.privacy': 'PolÃ­tica de Privacidad',
-        'footer.trust.terms': 'TÃ©rminos de Uso',
+        'footer.trust.privacy': 'Política de Privacidad',
+        'footer.trust.terms': 'Términos de Uso',
         'footer.trust.contact': 'Contacto / Soporte',
         'footer.trust.refunds': 'Donaciones y Reembolsos',
         'footer.bottom.author': 'Creado para estudiantes de CS por Eddy Arriaga-B',
@@ -2130,45 +2130,45 @@ const TRANSLATIONS = {
         'settings.darkMode': 'Modo Oscuro',
         'settings.bgTheme': 'Tema de Fondo',
         'settings.themeDefault': 'Degradado Predeterminado',
-        'settings.themeOcean': 'Brisa del OcÃ©ano',
+        'settings.themeOcean': 'Brisa del Océano',
         'settings.themeSunset': 'Resplandor del Atardecer',
         'settings.themeForest': 'Sendero del Bosque',
-        'settings.themeMinimal': 'Luz MÃ­nima',
+        'settings.themeMinimal': 'Luz Mínima',
         'settings.themeSpace': 'Noche Espacial',
         'settings.accentColor': 'Color de Acento',
-        'settings.accentIndigo': 'Aurora Ãndigo',
+        'settings.accentIndigo': 'Aurora Índigo',
         'settings.accentEmerald': 'Enfoque Esmeralda',
-        'settings.accentAmber': 'Amanecer Ãmbar',
+        'settings.accentAmber': 'Amanecer Ámbar',
         'settings.accentRose': 'Nebulosa Rosa',
-        'settings.accentHint': 'Actualiza botones, resaltados y llamadas de atenciÃ³n al instante.',
-        'settings.cardElevation': 'ElevaciÃ³n de Tarjetas',
-        'settings.elevationFlat': 'MÃ­nima (sombra baja)',
+        'settings.accentHint': 'Actualiza botones, resaltados y llamadas de atención al instante.',
+        'settings.cardElevation': 'Elevación de Tarjetas',
+        'settings.elevationFlat': 'Mínima (sombra baja)',
         'settings.elevationStandard': 'Equilibrada',
         'settings.elevationLifted': 'Elevada con Brillo',
-        'settings.layout': 'DiseÃ±o',
-        'settings.compactLayout': 'DiseÃ±o Compacto de MÃ³dulos',
-        'settings.compactLayoutHint': 'Tarjetas mÃ¡s densas para pantallas anchas o multitarea.',
-        'settings.textSize': 'TamaÃ±o de Texto',
+        'settings.layout': 'Diseño',
+        'settings.compactLayout': 'Diseño Compacto de Módulos',
+        'settings.compactLayoutHint': 'Tarjetas más densas para pantallas anchas o multitarea.',
+        'settings.textSize': 'Tamaño de Texto',
         'settings.textCompact': 'Compacto',
-        'settings.textStandard': 'EstÃ¡ndar',
-        'settings.textComfortable': 'CÃ³modo',
+        'settings.textStandard': 'Estándar',
+        'settings.textComfortable': 'Cómodo',
         'settings.textSpacious': 'Espacioso',
-        'settings.textSizeHint': 'Se aplica globalmente para una lectura mÃ¡s fÃ¡cil.',
+        'settings.textSizeHint': 'Se aplica globalmente para una lectura más fácil.',
         'settings.accessibility': 'Accesibilidad',
         'settings.reduceMotion': 'Reducir Movimiento',
         'settings.reduceMotionHint': 'Limita las animaciones para mayor enfoque y accesibilidad.',
         'settings.highContrast': 'Texto de Alto Contraste',
         'settings.highContrastHint': 'Aumenta el contraste del texto para mejor legibilidad.',
         'settings.learning': 'Aprendizaje',
-        'settings.showComments': 'Mostrar Comentarios de CÃ³digo',
-        'settings.showCommentsHint': 'Cada mÃ³dulo puede anular esta configuraciÃ³n.',
-        'settings.hideCompleted': 'Ocultar MÃ³dulos Completados',
-        'settings.hideCompletedHint': 'MantÃ©n tu cuadrÃ­cula enfocada en lo que falta.',
-        'settings.weeklyGoal': 'Meta Semanal de MÃ³dulos',
-        'settings.goal3': '3 / semana Â· Ritmo constante',
-        'settings.goal5': '5 / semana Â· Equilibrado',
-        'settings.goal8': '8 / semana Â· Acelerado',
-        'settings.goal12': '12 / semana Â· Sprint',
+        'settings.showComments': 'Mostrar Comentarios de Código',
+        'settings.showCommentsHint': 'Cada módulo puede anular esta configuración.',
+        'settings.hideCompleted': 'Ocultar Módulos Completados',
+        'settings.hideCompletedHint': 'Mantén tu cuadrícula enfocada en lo que falta.',
+        'settings.weeklyGoal': 'Meta Semanal de Módulos',
+        'settings.goal3': '3 / semana · Ritmo constante',
+        'settings.goal5': '5 / semana · Equilibrado',
+        'settings.goal8': '8 / semana · Acelerado',
+        'settings.goal12': '12 / semana · Sprint',
         'settings.weeklyGoalHint': 'Personaliza tus perspectivas de estudio y consejos de ritmo.',
         'settings.authLockTitle': 'Inicia sesion para personalizacion avanzada',
         'settings.authLockCopy': 'La mayoria de controles de personalizacion solo estan disponibles cuando tu cuenta esta autenticada y sincronizando.',
@@ -2182,7 +2182,7 @@ const TRANSLATIONS = {
         'settings.codePreviewLinesHint': 'Elige cuantas lineas de codigo se ven antes de expandir.',
         'settings.language': 'Idioma / Language',
         'settings.languageLabel': 'Idioma de la Interfaz',
-        'settings.languageHint': 'Cambia entre espaÃ±ol e inglÃ©s / Switch between Spanish and English.',
+        'settings.languageHint': 'Cambia entre español e inglés / Switch between Spanish and English.',
         'settings.save': '\u2705 Guardar y Cerrar',
         // Module card labels/tooltips
         'module.starterBanner': '\u2B50 M\u00f3dulo inicial: primer paso recomendado para la mayor\u00eda',
@@ -2193,7 +2193,7 @@ const TRANSLATIONS = {
         'module.collapseDetailedExamples': 'Contraer ejemplos detallados',
         'module.codeExample': '\u{1F4BB} Ejemplo de codigo',
         'module.discreteTheory': '\u{1F4D8} Teor\u00eda de Matem\u00e1ticas Discretas',
-        'module.theoryMode': 'Modo TeorÃ­a',
+        'module.theoryMode': 'Modo Teoría',
         'module.learningResources': '\u{1F4DA} Recursos de aprendizaje:',
         'module.definitionsHeading': '\u{1F4D6} Definiciones Clave',
         'module.learningPlan': '\u{1F9ED} Plan de Aprendizaje',
@@ -2230,29 +2230,29 @@ const TRANSLATIONS = {
         'module.quizLibraryButton': 'Abrir Biblioteca de Quizzes',
         'module.tooltipHideComments': 'Ocultar comentarios',
         'module.tooltipShowComments': 'Mostrar comentarios',
-        'module.tooltipSelectLanguage': 'Seleccionar lenguaje de programaciÃ³n',
-        'module.tooltipSelectMode': 'Seleccionar modo de cÃ³digo',
+        'module.tooltipSelectLanguage': 'Seleccionar lenguaje de programación',
+        'module.tooltipSelectMode': 'Seleccionar modo de código',
         'module.commentToggleLabel': 'Comentario (Emoji)',
-        'module.modeCode': 'CÃ³digo',
-        'module.modePseudocode': 'PseudocÃ³digo',
+        'module.modeCode': 'Código',
+        'module.modePseudocode': 'Pseudocódigo',
         'module.commentsOn': 'ACT',
         'module.commentsOff': 'DES',
         'module.collapse': '\u{1F53D} Contraer',
         'module.expand': '\u{1F53C} Expandir',
-        'module.discreteModeLabel': 'MatemÃ¡ticas Discretas',
-        'module.examplesHeading': 'Ejemplos de CÃ³digo por Tema',
-        'module.hideExample': 'Ocultar CÃ³digo',
-        'module.showExample': 'Mostrar CÃ³digo',
+        'module.discreteModeLabel': 'Matemáticas Discretas',
+        'module.examplesHeading': 'Ejemplos de Código por Tema',
+        'module.hideExample': 'Ocultar Código',
+        'module.showExample': 'Mostrar Código',
         'module.examplePreview': 'Vista previa',
-        'module.truncateHint': '// ... (haz clic en Expandir para ver el cÃ³digo completo)',
+        'module.truncateHint': '// ... (haz clic en Expandir para ver el código completo)',
         'module.showOutput': 'Salida',
         'module.hideOutput': 'Ocultar Salida',
         'module.outputHeading': 'Salida',
         'module.outputRunning': 'Ejecutando salida...',
         'module.outputSourceLive': 'En vivo',
         'module.outputSourceFallback': 'Respaldo',
-        'module.outputAssemblyNote': 'Ensamblador es solo visual en las tarjetas del mÃ³dulo. Mostrando salida esperada.',
-        'module.outputUnavailableForMode': 'La salida solo estÃ¡ disponible en modo CÃ³digo.',
+        'module.outputAssemblyNote': 'Ensamblador es solo visual en las tarjetas del módulo. Mostrando salida esperada.',
+        'module.outputUnavailableForMode': 'La salida solo está disponible en modo Código.',
         'module.deepExplanation': 'Explicacion Profunda',
         'module.showDeepExplanation': 'Mostrar Explicacion',
         'module.hideDeepExplanation': 'Ocultar Explicacion'
@@ -3964,7 +3964,7 @@ const baseFlashcards = [
     {
         id: 7,
         question: "What is Big O notation?",
-        answer: "Big O describes worst-case time/space complexity.\n\nExamples:\nO(1) - array access\nO(log n) - binary search\nO(nÂ²) - nested loops"
+        answer: "Big O describes worst-case time/space complexity.\n\nExamples:\nO(1) - array access\nO(log n) - binary search\nO(n²) - nested loops"
     },
     {
         id: 8,
@@ -4039,7 +4039,7 @@ const baseFlashcards = [
     {
         id: 22,
         question: "How does quicksort work?",
-        answer: "Pick pivot, partition elements\nRecursively sort partitions\n\nTime: Avg O(n log n), Worst O(nÂ²)"
+        answer: "Pick pivot, partition elements\nRecursively sort partitions\n\nTime: Avg O(n log n), Worst O(n²)"
     },
     {
         id: 23,
@@ -4059,7 +4059,7 @@ const baseFlashcards = [
     {
         id: 26,
         question: "What is the best case and worst case for bubble sort?",
-        answer: "Best: O(n) if already sorted\nWorst: O(nÂ²) with many swaps"
+        answer: "Best: O(n) if already sorted\nWorst: O(n²) with many swaps"
     },
     {
         id: 27,
@@ -4519,7 +4519,7 @@ const quizData = {
                 {
                     id: 1,
                     question: "What is the time complexity of accessing an element in an array by its index?",
-                    options: ["O(1)", "O(log n)", "O(n)", "O(nÂ²)"],
+                    options: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
                     correct: 0,
                     explanation: "Random access arrays compute the memory address via base + index × element_size, so lookup cost is constant."
                 },
@@ -4690,7 +4690,7 @@ const quizData = {
                     question: "Why does quick sort degrade on already sorted arrays with naive pivot choice?",
                     options: ["Recursion depth stays constant", "Partitions become unbalanced (n-1 vs 0 elements)", "Randomization fails", "It copies too much"],
                     correct: 1,
-                    explanation: "Picking first or last element as pivot yields worst-case recursion depth n and total work O(nÂ²)."
+                    explanation: "Picking first or last element as pivot yields worst-case recursion depth n and total work O(n²)."
                 },
                 {
                     id: 3,
@@ -9573,7 +9573,7 @@ function buildTopicFocusedJavaSnippet(module, topic, topicIndex, totalTopics) {
         case 'discrete-logic':
             return `public class ${className} {\n    static boolean implies(boolean p, boolean q) { return !p || q; }\n\n    public static void main(String[] args) {\n        boolean[] values = {false, true};\n        System.out.println("p q | p->q");\n        for (boolean p : values) {\n            for (boolean q : values) {\n                System.out.println(p + " " + q + " | " + implies(p, q));\n            }\n        }\n        System.out.println("Focus topic (${topicIndex + 1}/${totalTopics}): ${focusTopic}");\n    }\n}`;
         case 'discrete-sets':
-            return `import java.util.*;\n\npublic class ${className} {\n    public static void main(String[] args) {\n        Set<Integer> a = new LinkedHashSet<>(List.of(1, 2, 3, 4));\n        Set<Integer> b = new LinkedHashSet<>(List.of(3, 4, 5));\n\n        Set<Integer> union = new LinkedHashSet<>(a);\n        union.addAll(b);\n\n        Set<Integer> intersection = new LinkedHashSet<>(a);\n        intersection.retainAll(b);\n\n        System.out.println("A U B = " + union);\n        System.out.println("A âˆ© B = " + intersection);\n        System.out.println("Focus topic (${topicIndex + 1}/${totalTopics}): ${focusTopic}");\n    }\n}`;
+            return `import java.util.*;\n\npublic class ${className} {\n    public static void main(String[] args) {\n        Set<Integer> a = new LinkedHashSet<>(List.of(1, 2, 3, 4));\n        Set<Integer> b = new LinkedHashSet<>(List.of(3, 4, 5));\n\n        Set<Integer> union = new LinkedHashSet<>(a);\n        union.addAll(b);\n\n        Set<Integer> intersection = new LinkedHashSet<>(a);\n        intersection.retainAll(b);\n\n        System.out.println("A U B = " + union);\n        System.out.println("A ∩ B = " + intersection);\n        System.out.println("Focus topic (${topicIndex + 1}/${totalTopics}): ${focusTopic}");\n    }\n}`;
         case 'discrete-combinatorics':
             return `public class ${className} {\n    static long nCr(int n, int r) {\n        if (r < 0 || r > n) return 0;\n        r = Math.min(r, n - r);\n        long result = 1;\n        for (int i = 1; i <= r; i++) {\n            result = result * (n - r + i) / i;\n        }\n        return result;\n    }\n\n    public static void main(String[] args) {\n        int n = 10;\n        int r = 3;\n        System.out.println("C(" + n + ", " + r + ") = " + nCr(n, r));\n        System.out.println("Focus topic (${topicIndex + 1}/${totalTopics}): ${focusTopic}");\n    }\n}`;
         case 'discrete-graph':
@@ -10343,8 +10343,8 @@ public class DataTypesDemo {
         },
         {
             id: 'methods',
-            title: { en: 'Methods', es: 'MÃ©todos' },
-            description: { en: 'Define reusable methods with parameters and return values.', es: 'Define mÃ©todos reutilizables con parÃ¡metros y valores de retorno.' },
+            title: { en: 'Methods', es: 'Métodos' },
+            description: { en: 'Define reusable methods with parameters and return values.', es: 'Define métodos reutilizables con parámetros y valores de retorno.' },
             codeExamples: {
                 java: `// Methods: parameters, return values, and reuse (Liang Ch. 5 style)
 public class MethodsDemo {
@@ -10425,7 +10425,7 @@ public class ClassesDemo {
         {
             id: 'objects',
             title: { en: 'Objects', es: 'Objetos' },
-            description: { en: 'Instantiate objects, mutate state, and call instance methods.', es: 'Instancia objetos, modifica estado y llama mÃ©todos de instancia.' },
+            description: { en: 'Instantiate objects, mutate state, and call instance methods.', es: 'Instancia objetos, modifica estado y llama métodos de instancia.' },
             codeExamples: {
                 java: `// Objects: references, state change, and method calls
 class StudySession {
@@ -10898,8 +10898,8 @@ public class MemoryLeakPracticeLectureSet {
     'control-flow': [
         {
             id: 'if-else',
-            title: { en: 'If / Else Logic', es: 'LÃ³gica If / Else' },
-            description: { en: 'Branch execution by condition checks.', es: 'Ramifica la ejecuciÃ³n segÃºn condiciones.' },
+            title: { en: 'If / Else Logic', es: 'Lógica If / Else' },
+            description: { en: 'Branch execution by condition checks.', es: 'Ramifica la ejecución según condiciones.' },
             codeExamples: {
                 java: `// If/Else logic for score classification
 public class IfElseDemo {
@@ -10940,7 +10940,7 @@ public class ForLoopDemo {
         {
             id: 'while-loops',
             title: { en: 'While Loops', es: 'Bucles While' },
-            description: { en: 'Repeat while a condition remains true.', es: 'Repite mientras una condiciÃ³n sea verdadera.' },
+            description: { en: 'Repeat while a condition remains true.', es: 'Repite mientras una condición sea verdadera.' },
             codeExamples: {
                 java: `// While loop for countdown
 public class WhileLoopDemo {
@@ -10958,7 +10958,7 @@ public class WhileLoopDemo {
         {
             id: 'switch',
             title: { en: 'Switch Statements', es: 'Sentencias Switch' },
-            description: { en: 'Route behavior based on discrete values.', es: 'Enruta el comportamiento segÃºn valores discretos.' },
+            description: { en: 'Route behavior based on discrete values.', es: 'Enruta el comportamiento según valores discretos.' },
             codeExamples: {
                 java: `// Switch statement for menu actions
 public class SwitchDemo {
@@ -11007,8 +11007,8 @@ public class BreakContinueDemo {
     'oop-basics': [
         {
             id: 'encapsulation',
-            title: { en: 'Encapsulation', es: 'EncapsulaciÃ³n' },
-            description: { en: 'Protect internal state with private fields and methods.', es: 'Protege el estado interno con campos y mÃ©todos privados.' },
+            title: { en: 'Encapsulation', es: 'Encapsulación' },
+            description: { en: 'Protect internal state with private fields and methods.', es: 'Protege el estado interno con campos y métodos privados.' },
             codeExamples: {
                 java: `// Encapsulation with getters/setters and validation
 class BankAccount {
@@ -11115,7 +11115,7 @@ public class PolymorphismDemo {
         },
         {
             id: 'abstraction',
-            title: { en: 'Abstraction', es: 'AbstracciÃ³n' },
+            title: { en: 'Abstraction', es: 'Abstracción' },
             description: { en: 'Expose only essential behavior with abstract classes.', es: 'Expone solo el comportamiento esencial con clases abstractas.' },
             codeExamples: {
                 java: `// Abstraction through abstract class
@@ -11180,7 +11180,7 @@ public class InterfaceDemo {
         {
             id: 'array-traversal',
             title: { en: 'Array Traversal', es: 'Recorrido de Arreglos' },
-            description: { en: 'Walk arrays with index-based and enhanced loops.', es: 'Recorre arreglos con bucles por Ã­ndice y mejorados.' },
+            description: { en: 'Walk arrays with index-based and enhanced loops.', es: 'Recorre arreglos con bucles por índice y mejorados.' },
             codeExamples: {
                 java: `import java.util.Arrays;
 
@@ -11208,8 +11208,8 @@ public class ArrayTraversalSet {
         },
         {
             id: 'string-methods',
-            title: { en: 'String Methods', es: 'MÃ©todos de Cadenas' },
-            description: { en: 'Apply useful string operations and validations.', es: 'Aplica operaciones y validaciones Ãºtiles de cadenas.' },
+            title: { en: 'String Methods', es: 'Métodos de Cadenas' },
+            description: { en: 'Apply useful string operations and validations.', es: 'Aplica operaciones y validaciones útiles de cadenas.' },
             codeExamples: {
                 java: `public class StringMethodsSet {
     public static void main(String[] args) {
@@ -11261,7 +11261,7 @@ public class ArrayTraversalSet {
         {
             id: 'sliding-window',
             title: { en: 'Sliding Window', es: 'Ventana Deslizante' },
-            description: { en: 'Compute subarray metrics without restarting scans.', es: 'Calcula mÃ©tricas de subarreglos sin reiniciar recorridos.' },
+            description: { en: 'Compute subarray metrics without restarting scans.', es: 'Calcula métricas de subarreglos sin reiniciar recorridos.' },
             codeExamples: {
                 java: `public class SlidingWindowSet {
     static int maxWindowSum(int[] arr, int k) {
@@ -11288,7 +11288,7 @@ public class ArrayTraversalSet {
         {
             id: 'array-sorting',
             title: { en: 'Array Sorting', es: 'Ordenamiento de Arreglos' },
-            description: { en: 'Sort arrays and verify order-sensitive logic.', es: 'Ordena arreglos y verifica lÃ³gica sensible al orden.' },
+            description: { en: 'Sort arrays and verify order-sensitive logic.', es: 'Ordena arreglos y verifica lógica sensible al orden.' },
             codeExamples: {
                 java: `import java.util.Arrays;
 
@@ -11310,7 +11310,7 @@ public class ArraySortingSet {
         {
             id: 'singly-linked-list',
             title: { en: 'Singly Linked Lists', es: 'Listas Enlazadas Simples' },
-            description: { en: 'Build and traverse nodes linked in one direction.', es: 'Construye y recorre nodos enlazados en una sola direcciÃ³n.' },
+            description: { en: 'Build and traverse nodes linked in one direction.', es: 'Construye y recorre nodos enlazados en una sola dirección.' },
             codeExamples: {
                 java: `class Node {
     int value;
@@ -11365,8 +11365,8 @@ public class DoublyLinkedListSet {
         },
         {
             id: 'cycle-detection',
-            title: { en: 'Cycle Detection', es: 'DetecciÃ³n de Ciclos' },
-            description: { en: 'Use fast/slow pointers to detect loops.', es: 'Usa punteros rÃ¡pido/lento para detectar bucles.' },
+            title: { en: 'Cycle Detection', es: 'Detección de Ciclos' },
+            description: { en: 'Use fast/slow pointers to detect loops.', es: 'Usa punteros rápido/lento para detectar bucles.' },
             codeExamples: {
                 java: `class CycleNode {
     int value;
@@ -11398,7 +11398,7 @@ public class CycleDetectionSet {
         },
         {
             id: 'list-reversal',
-            title: { en: 'List Reversal', es: 'InversiÃ³n de Lista' },
+            title: { en: 'List Reversal', es: 'Inversión de Lista' },
             description: { en: 'Reverse links in-place using three pointers.', es: 'Invierte enlaces en sitio usando tres punteros.' },
             codeExamples: {
                 java: `class RevNode {
@@ -11441,7 +11441,7 @@ public class ListReversalSet {
         },
         {
             id: 'merge-lists',
-            title: { en: 'Merge Operations', es: 'Operaciones de FusiÃ³n' },
+            title: { en: 'Merge Operations', es: 'Operaciones de Fusión' },
             description: { en: 'Merge sorted linked lists with pointer comparisons.', es: 'Fusiona listas ordenadas con comparaciones de punteros.' },
             codeExamples: {
                 java: `class MergeNode {
@@ -11570,7 +11570,7 @@ public class PriorityQueueSet {
         },
         {
             id: 'practical-applications',
-            title: { en: 'Practical Applications', es: 'Aplicaciones PrÃ¡cticas' },
+            title: { en: 'Practical Applications', es: 'Aplicaciones Prácticas' },
             description: { en: 'Apply stack and queue patterns to real tasks.', es: 'Aplica patrones de pila y cola a tareas reales.' },
             codeExamples: {
                 java: `import java.util.ArrayDeque;
@@ -11607,7 +11607,7 @@ public class PracticalApplicationsSet {
     'searching-algorithms': [
         {
             id: 'linear-search',
-            title: { en: 'Linear Search', es: 'BÃºsqueda Lineal' },
+            title: { en: 'Linear Search', es: 'Búsqueda Lineal' },
             description: { en: 'Scan each element until the target appears.', es: 'Recorre cada elemento hasta encontrar el objetivo.' },
             codeExamples: {
                 java: `import java.util.Arrays;
@@ -11633,8 +11633,8 @@ public class LinearSearchSet {
         },
         {
             id: 'binary-search',
-            title: { en: 'Binary Search', es: 'BÃºsqueda Binaria' },
-            description: { en: 'Use sorted order to cut the search space in half each step.', es: 'Usa el ordenamiento para reducir a la mitad el espacio de bÃºsqueda.' },
+            title: { en: 'Binary Search', es: 'Búsqueda Binaria' },
+            description: { en: 'Use sorted order to cut the search space in half each step.', es: 'Usa el ordenamiento para reducir a la mitad el espacio de búsqueda.' },
             codeExamples: {
                 java: `import java.util.Arrays;
 
@@ -11663,7 +11663,7 @@ public class BinarySearchSet {
         {
             id: 'first-last-occurrence',
             title: { en: 'First & Last Occurrence', es: 'Primera y ?ltima Ocurrencia' },
-            description: { en: 'Find range boundaries for duplicate values in sorted data.', es: 'Encuentra los lÃ­mites de un valor repetido en datos ordenados.' },
+            description: { en: 'Find range boundaries for duplicate values in sorted data.', es: 'Encuentra los límites de un valor repetido en datos ordenados.' },
             codeExamples: {
                 java: `import java.util.Arrays;
 
@@ -11698,8 +11698,8 @@ public class FirstLastOccurrenceSet {
         },
         {
             id: 'hash-lookup',
-            title: { en: 'Hash Lookup Search', es: 'BÃºsqueda con Hash' },
-            description: { en: 'Use a hash map for near O(1) membership and complement lookup.', es: 'Usa un hash map para bÃºsqueda de pertenencia y complementos en casi O(1).' },
+            title: { en: 'Hash Lookup Search', es: 'Búsqueda con Hash' },
+            description: { en: 'Use a hash map for near O(1) membership and complement lookup.', es: 'Usa un hash map para búsqueda de pertenencia y complementos en casi O(1).' },
             codeExamples: {
                 java: `import java.util.HashMap;
 import java.util.Map;
@@ -11729,8 +11729,8 @@ public class HashLookupSet {
         },
         {
             id: 'search-comparison',
-            title: { en: 'Search Strategy Comparison', es: 'ComparaciÃ³n de Estrategias' },
-            description: { en: 'Compare linear vs binary operations on the same target.', es: 'Compara operaciones de bÃºsqueda lineal y binaria para el mismo objetivo.' },
+            title: { en: 'Search Strategy Comparison', es: 'Comparación de Estrategias' },
+            description: { en: 'Compare linear vs binary operations on the same target.', es: 'Compara operaciones de búsqueda lineal y binaria para el mismo objetivo.' },
             codeExamples: {
                 java: `import java.util.Arrays;
 
@@ -11803,7 +11803,7 @@ public class BubbleSortSet {
         {
             id: 'merge-sort',
             title: { en: 'Merge Sort', es: 'Merge Sort' },
-            description: { en: 'Divide-and-conquer sorting with stable merging.', es: 'Ordenamiento divide y vencerÃ¡s con combinaciÃ³n estable.' },
+            description: { en: 'Divide-and-conquer sorting with stable merging.', es: 'Ordenamiento divide y vencerás con combinación estable.' },
             codeExamples: {
                 java: `import java.util.Arrays;
 
@@ -11922,7 +11922,7 @@ public class HeapSortSet {
         {
             id: 'stable-vs-unstable',
             title: { en: 'Stable vs Unstable Sorts', es: 'Ordenamientos Estables e Inestables' },
-            description: { en: 'Understand why stable sorting matters for multi-key records.', es: 'Comprende por quÃ© el ordenamiento estable importa en registros con varias claves.' },
+            description: { en: 'Understand why stable sorting matters for multi-key records.', es: 'Comprende por qué el ordenamiento estable importa en registros con varias claves.' },
             codeExamples: {
                 java: `import java.util.ArrayList;
 import java.util.Comparator;
@@ -11955,7 +11955,7 @@ public class StableSortSet {
     recursion: [
         {
             id: 'base-case-pattern',
-            title: { en: 'Base Case Pattern', es: 'PatrÃ³n de Caso Base' },
+            title: { en: 'Base Case Pattern', es: 'Patrón de Caso Base' },
             description: { en: 'Define stopping conditions before recursive calls.', es: 'Define condiciones de parada antes de las llamadas recursivas.' },
             codeExamples: {
                 java: `public class BaseCasePatternSet {
@@ -11977,7 +11977,7 @@ public class StableSortSet {
         {
             id: 'factorial-fibonacci',
             title: { en: 'Factorial & Fibonacci', es: 'Factorial y Fibonacci' },
-            description: { en: 'Practice classic recursive recurrence relations.', es: 'Practica relaciones de recurrencia clÃ¡sicas con recursiÃ³n.' },
+            description: { en: 'Practice classic recursive recurrence relations.', es: 'Practica relaciones de recurrencia clásicas con recursión.' },
             codeExamples: {
                 java: `public class FactorialFibonacciSet {
     static long factorial(int n) {
@@ -12031,8 +12031,8 @@ public class RecursiveBacktrackingSet {
         },
         {
             id: 'memoization',
-            title: { en: 'Memoization', es: 'MemoizaciÃ³n' },
-            description: { en: 'Cache overlapping subproblems to avoid repeated recursion.', es: 'Almacena subproblemas traslapados para evitar recursiÃ³n repetida.' },
+            title: { en: 'Memoization', es: 'Memoización' },
+            description: { en: 'Cache overlapping subproblems to avoid repeated recursion.', es: 'Almacena subproblemas traslapados para evitar recursión repetida.' },
             codeExamples: {
                 java: `import java.util.HashMap;
 import java.util.Map;
@@ -12059,8 +12059,8 @@ public class MemoizationSet {
         },
         {
             id: 'recursion-tree-tracing',
-            title: { en: 'Recursion Tree Tracing', es: 'Trazado del Ãrbol de RecursiÃ³n' },
-            description: { en: 'Trace call depth and return flow to debug recursive logic.', es: 'Traza profundidad de llamadas y flujo de retorno para depurar recursiÃ³n.' },
+            title: { en: 'Recursion Tree Tracing', es: 'Trazado del Árbol de Recursión' },
+            description: { en: 'Trace call depth and return flow to debug recursive logic.', es: 'Traza profundidad de llamadas y flujo de retorno para depurar recursión.' },
             codeExamples: {
                 java: `public class RecursionTreeTracingSet {
     static int traceSum(int n, int depth) {
@@ -13106,43 +13106,43 @@ function buildFallbackModuleQuiz(moduleId) {
     const questions = isSpanish
         ? [
             {
-                question: `Â¿CuÃ¡l es el objetivo principal del mÃ³dulo "${moduleTitle}"?`,
+                question: `¿Cuál es el objetivo principal del módulo "${moduleTitle}"?`,
                 options: [
-                    'Memorizar tÃ©rminos sin practicar',
+                    'Memorizar términos sin practicar',
                     `Entender ${topicA} y aplicarlo en ejemplos funcionales`,
-                    'Evitar pruebas y casos lÃ­mite',
+                    'Evitar pruebas y casos límite',
                     'Concentrarse solo en sintaxis'
                 ],
                 correct: 1,
-                explanation: `Este mÃ³dulo estÃ¡ diseÃ±ado para construir dominio prÃ¡ctico sobre ${topicA}.`
+                explanation: `Este módulo está diseñado para construir dominio práctico sobre ${topicA}.`
             },
             {
-                question: `DespuÃ©s de programar tu primera soluciÃ³n de ${topicA}, Â¿quÃ© sigue?`,
+                question: `Después de programar tu primera solución de ${topicA}, ¿qué sigue?`,
                 options: [
-                    'Probar casos lÃ­mite y revisar complejidad',
+                    'Probar casos límite y revisar complejidad',
                     'Detenerte sin validar resultados',
-                    'Ignorar entradas invÃ¡lidas',
+                    'Ignorar entradas inválidas',
                     'Reescribir todo sin medir cambios'
                 ],
                 correct: 0,
-                explanation: 'La validaciÃ³n y el anÃ¡lisis de complejidad consolidan aprendizaje real.'
+                explanation: 'La validación y el análisis de complejidad consolidan aprendizaje real.'
             },
             {
-                question: `Â¿QuÃ© secuencia de estudio te da mejor progreso en ${moduleTitle}?`,
+                question: `¿Qué secuencia de estudio te da mejor progreso en ${moduleTitle}?`,
                 options: [
-                    'Leer teorÃ­a, codificar, probar, explicar tradeoffs',
-                    'Saltarte teorÃ­a y copiar una soluciÃ³n',
+                    'Leer teoría, codificar, probar, explicar tradeoffs',
+                    'Saltarte teoría y copiar una solución',
                     'Practicar sin revisar errores',
-                    'Aprender varias tÃ©cnicas sin terminar ninguna'
+                    'Aprender varias técnicas sin terminar ninguna'
                 ],
                 correct: 0,
-                explanation: 'El ciclo teorÃ­a -> implementaciÃ³n -> verificaciÃ³n -> reflexiÃ³n es el mÃ¡s sÃ³lido.'
+                explanation: 'El ciclo teoría -> implementación -> verificación -> reflexión es el más sólido.'
             },
             {
-                question: `Si una soluciÃ³n de ${topicB} falla, Â¿quÃ© acciÃ³n es mÃ¡s efectiva?`,
+                question: `Si una solución de ${topicB} falla, ¿qué acción es más efectiva?`,
                 options: [
                     'Agregar impresiones y verificar estado paso a paso',
-                    'Cambiar todo sin diagnÃ³stico',
+                    'Cambiar todo sin diagnóstico',
                     'Culpar al compilador',
                     'Ignorar la entrada que falla'
                 ],
@@ -13150,15 +13150,15 @@ function buildFallbackModuleQuiz(moduleId) {
                 explanation: 'Depurar de forma estructurada acelera correcciones y evita regresiones.'
             },
             {
-                question: `Â¿QuÃ© habilidad transferible refuerza practicar ${topicC}?`,
+                question: `¿Qué habilidad transferible refuerza practicar ${topicC}?`,
                 options: [
-                    'Razonamiento algorÃ­tmico y toma de decisiones con datos',
-                    'MemorizaciÃ³n sin comprensiÃ³n',
+                    'Razonamiento algorítmico y toma de decisiones con datos',
+                    'Memorización sin comprensión',
                     'Dependencia de plantillas fijas',
-                    'Evitar comunicaciÃ³n tÃ©cnica'
+                    'Evitar comunicación técnica'
                 ],
                 correct: 0,
-                explanation: 'El mÃ³dulo fortalece pensamiento estructurado Ãºtil en cursos y entrevistas.'
+                explanation: 'El módulo fortalece pensamiento estructurado útil en cursos y entrevistas.'
             }
         ]
         : [
@@ -13223,7 +13223,7 @@ function buildFallbackModuleQuiz(moduleId) {
         title: moduleTitle,
         parts: [
             {
-                title: isSpanish ? 'Chequeo de aprendizaje del mÃ³dulo' : 'Module learning checkpoint',
+                title: isSpanish ? 'Chequeo de aprendizaje del módulo' : 'Module learning checkpoint',
                 questions
             }
         ]
@@ -13261,7 +13261,7 @@ function getGlossaryTrackCategoryLabel(categoryKey, lang = appState.language || 
         },
         es: {
             dsa: 'DSA',
-            discrete: 'MatemÃ¡ticas Discretas',
+            discrete: 'Matemáticas Discretas',
             java: 'Java',
             git: 'Git',
             assembly: 'Ensamblador'
@@ -13622,14 +13622,14 @@ function getFlashcardPromptTemplates(lang = 'en') {
     if (lang === 'es') {
         return {
             defineTerm: 'Define "{term}" en el contexto de {module}.',
-            termUseCase: 'Â¿CuÃ¡ndo aplicarÃ­as "{term}" en un problema real?',
-            topicConnection: 'Â¿CÃ³mo se conecta "{topic}" con el objetivo principal de {module}?',
-            pitfallQuestion: 'Â¿QuÃ© error comÃºn debes evitar al estudiar {topic}?',
-            explanationQuestion: 'Resume la idea central que enseÃ±a {module}.',
+            termUseCase: '¿Cuándo aplicarías "{term}" en un problema real?',
+            topicConnection: '¿Cómo se conecta "{topic}" con el objetivo principal de {module}?',
+            pitfallQuestion: '¿Qué error común debes evitar al estudiar {topic}?',
+            explanationQuestion: 'Resume la idea central que enseña {module}.',
             explanationAnswerPrefix: 'Idea central:',
             pitfallAnswerPrefix: 'Evita este error:',
-            useCaseAnswerPrefix: 'Caso prÃ¡ctico:',
-            connectionAnswerPrefix: 'ConexiÃ³n clave:'
+            useCaseAnswerPrefix: 'Caso práctico:',
+            connectionAnswerPrefix: 'Conexión clave:'
         };
     }
     return {
@@ -15068,7 +15068,7 @@ console.log(isValid("(]"));`,
             },
             {
                 id: 'replace-pairs',
-                label: { en: 'Repeated Pair Elimination', es: 'EliminaciÃ³n repetida de pares' },
+                label: { en: 'Repeated Pair Elimination', es: 'Eliminación repetida de pares' },
                 applicability: 'Good for conceptual clarity on short strings, not for large inputs.',
                 explanation: 'Repeatedly remove (), [], and {} until no more changes occur.',
                 complexity: 'Time O(n^2), Space O(n)',
@@ -15358,7 +15358,7 @@ console.log(binarySearch(arr, 6));`,
             },
             {
                 id: 'recursive-search',
-                label: { en: 'Recursive Binary Search', es: 'BÃºsqueda binaria recursiva' },
+                label: { en: 'Recursive Binary Search', es: 'Búsqueda binaria recursiva' },
                 applicability: 'Useful when recursion makes divide-and-conquer proofs easier to reason about.',
                 explanation: 'Each call picks one half and recurses on a strictly smaller interval.',
                 complexity: 'Time O(log n), Space O(log n) call stack',
@@ -15588,7 +15588,7 @@ if __name__ == "__main__":
         approaches: [
             {
                 id: 'min-heap',
-                label: { en: 'Min-Heap of Size k', es: 'Min-heap de tamaÃ±o k' },
+                label: { en: 'Min-Heap of Size k', es: 'Min-heap de tamaño k' },
                 applicability: 'Strong default when k is much smaller than unique values.',
                 explanation: 'Keep only k best frequencies in a min-heap to avoid sorting every key.',
                 complexity: 'Time O(n log k), Space O(n)',
@@ -15931,7 +15931,7 @@ const DS_PLAYGROUND_CONFIG = {
         label: 'Array',
         hint: {
             en: 'Indexed contiguous storage for fast reads and linear inserts/deletes.',
-            es: 'Almacenamiento contiguo indexado para lecturas rÃ¡pidas e inserciones/eliminaciones lineales.'
+            es: 'Almacenamiento contiguo indexado para lecturas rápidas e inserciones/eliminaciones lineales.'
         },
         operations: { access: 'O(1)', search: 'O(n)', insert: 'O(n)', remove: 'O(n)' },
         defaultOperation: 'insert',
@@ -15990,7 +15990,7 @@ array_playground_demo()
         codeExplanations: {
             java: {
                 en: 'Shows indexed insert, tail removal, and linear search with explicit output.',
-                es: 'Muestra inserciÃ³n por Ã­ndice, eliminaciÃ³n al final y bÃºsqueda lineal con salida explÃ­cita.'
+                es: 'Muestra inserción por índice, eliminación al final y búsqueda lineal con salida explícita.'
             },
             cpp: {
                 en: 'Uses vector insert/pop_back/find to mirror array operations and complexity tradeoffs.',
@@ -16010,7 +16010,7 @@ array_playground_demo()
         label: 'Stack',
         hint: {
             en: 'LIFO model for undo flows, parsing, recursion simulation, and backtracking.',
-            es: 'Modelo LIFO para deshacer, anÃ¡lisis de expresiones, simulaciÃ³n de recursiÃ³n y backtracking.'
+            es: 'Modelo LIFO para deshacer, análisis de expresiones, simulación de recursión y backtracking.'
         },
         operations: { push: 'O(1)', pop: 'O(1)', peek: 'O(1)' },
         defaultOperation: 'push',
@@ -16066,14 +16066,14 @@ stack_playground_demo()
             java: { en: 'ArrayDeque gives O(1) push/pop at the top.', es: 'ArrayDeque entrega push/pop O(1) en la parte superior.' },
             cpp: { en: 'std::stack models strict LIFO operations.', es: 'std::stack modela operaciones LIFO estrictas.' },
             python: { en: 'Python list append/pop supports stack behavior cleanly.', es: 'La lista de Python con append/pop soporta comportamiento de pila de forma directa.' },
-            javascript: { en: 'JavaScript arrays naturally support stack push/pop semantics.', es: 'Los arreglos en JavaScript soportan naturalmente la semÃ¡ntica push/pop de pila.' }
+            javascript: { en: 'JavaScript arrays naturally support stack push/pop semantics.', es: 'Los arreglos en JavaScript soportan naturalmente la semántica push/pop de pila.' }
         }
     },
     queue: {
         label: 'Queue',
         hint: {
             en: 'FIFO ordering for scheduling, BFS, buffering, and producer-consumer pipelines.',
-            es: 'Orden FIFO para planificaciÃ³n, BFS, buffering y flujos productor-consumidor.'
+            es: 'Orden FIFO para planificación, BFS, buffering y flujos productor-consumidor.'
         },
         operations: { enqueue: 'O(1)', dequeue: 'O(1)', peek: 'O(1)' },
         defaultOperation: 'enqueue',
@@ -16131,14 +16131,14 @@ queue_playground_demo()
             java: { en: 'ArrayDeque supports queue operations through offer/poll/peek.', es: 'ArrayDeque soporta cola mediante offer/poll/peek.' },
             cpp: { en: 'std::queue encapsulates FIFO behavior cleanly.', es: 'std::queue encapsula comportamiento FIFO de forma clara.' },
             python: { en: 'collections.deque gives O(1) pops from the left.', es: 'collections.deque da extracciones O(1) por la izquierda.' },
-            javascript: { en: 'shift models dequeue; use with care for very large arrays.', es: 'shift modela dequeue; Ãºsalo con cuidado en arreglos muy grandes.' }
+            javascript: { en: 'shift models dequeue; use with care for very large arrays.', es: 'shift modela dequeue; úsalo con cuidado en arreglos muy grandes.' }
         }
     },
     heap: {
         label: 'Heap',
         hint: {
             en: 'Priority structure where root keeps min/max depending on heap type.',
-            es: 'Estructura de prioridad donde la raÃ­z mantiene min/mÃ¡x segÃºn el tipo de heap.'
+            es: 'Estructura de prioridad donde la raíz mantiene min/máx según el tipo de heap.'
         },
         operations: { insert: 'O(log n)', extract: 'O(log n)', peek: 'O(1)' },
         defaultOperation: 'insert',
@@ -16196,10 +16196,10 @@ heap_playground_demo()
 })();`
         },
         codeExplanations: {
-            java: { en: 'PriorityQueue is the standard min-heap implementation in Java.', es: 'PriorityQueue es la implementaciÃ³n estÃ¡ndar de min-heap en Java.' },
+            java: { en: 'PriorityQueue is the standard min-heap implementation in Java.', es: 'PriorityQueue es la implementación estándar de min-heap en Java.' },
             cpp: { en: 'priority_queue with greater<int> yields min-heap behavior.', es: 'priority_queue con greater<int> produce comportamiento de min-heap.' },
             python: { en: 'heapq provides heapify/heappop for efficient priorities.', es: 'heapq ofrece heapify/heappop para prioridades eficientes.' },
-            javascript: { en: 'For teaching clarity this mirror uses sorted order to explain root extraction.', es: 'Para claridad didÃ¡ctica este espejo usa ordenado para explicar extracciÃ³n de raÃ­z.' }
+            javascript: { en: 'For teaching clarity this mirror uses sorted order to explain root extraction.', es: 'Para claridad didáctica este espejo usa ordenado para explicar extracción de raíz.' }
         }
     },
     graph: {
@@ -16272,7 +16272,7 @@ graph_playground_demo()
         codeExplanations: {
             java: { en: 'Adjacency list with HashMap keeps graph updates simple and explicit.', es: 'La lista de adyacencia con HashMap mantiene actualizaciones de grafo claras y simples.' },
             cpp: { en: 'unordered_map<string, vector<string>> mirrors directed adjacency lists.', es: 'unordered_map<string, vector<string>> refleja listas de adyacencia dirigidas.' },
-            python: { en: 'Dictionary-of-lists is concise for graph teaching and quick traversal demos.', es: 'Diccionario de listas es conciso para enseÃ±ar grafos y recorrerlos rÃ¡pido.' },
+            python: { en: 'Dictionary-of-lists is concise for graph teaching and quick traversal demos.', es: 'Diccionario de listas es conciso para enseñar grafos y recorrerlos rápido.' },
             javascript: { en: 'Map + arrays gives readable graph state for browser-based demos.', es: 'Map con arreglos da un estado de grafo legible para demos en navegador.' }
         }
     },
@@ -16280,7 +16280,7 @@ graph_playground_demo()
         label: 'Trie',
         hint: {
             en: 'Prefix tree optimized for dictionary lookups and startsWith queries.',
-            es: 'Ãrbol de prefijos optimizado para bÃºsquedas de diccionario y consultas startsWith.'
+            es: 'Árbol de prefijos optimizado para búsquedas de diccionario y consultas startsWith.'
         },
         operations: { insert: 'O(L)', search: 'O(L)', startsWith: 'O(L)' },
         defaultOperation: 'search',
@@ -16339,9 +16339,9 @@ trie_playground_demo()
         },
         codeExplanations: {
             java: { en: 'Uses a simple prefix-check mirror to explain Trie outcomes with printed results.', es: 'Usa un espejo simple de prefijos para explicar resultados de Trie con salida visible.' },
-            cpp: { en: 'Prefix check with rfind(...,0) demonstrates startsWith logic clearly.', es: 'La verificaciÃ³n con rfind(...,0) demuestra claramente la lÃ³gica startsWith.' },
-            python: { en: 'any(...startswith) models fast prefix matching behavior in a compact way.', es: 'any(...startswith) modela la bÃºsqueda rÃ¡pida por prefijo de forma compacta.' },
-            javascript: { en: 'some/startsWith mirrors prefix lookup semantics used by Trie APIs.', es: 'some/startsWith refleja la semÃ¡ntica de bÃºsqueda por prefijo usada por APIs de Trie.' }
+            cpp: { en: 'Prefix check with rfind(...,0) demonstrates startsWith logic clearly.', es: 'La verificación con rfind(...,0) demuestra claramente la lógica startsWith.' },
+            python: { en: 'any(...startswith) models fast prefix matching behavior in a compact way.', es: 'any(...startswith) modela la búsqueda rápida por prefijo de forma compacta.' },
+            javascript: { en: 'some/startsWith mirrors prefix lookup semantics used by Trie APIs.', es: 'some/startsWith refleja la semántica de búsqueda por prefijo usada por APIs de Trie.' }
         }
     }
 };
@@ -16555,7 +16555,7 @@ function updateAccountChip() {
 
     if (chip) {
         if (isAuthenticated) {
-            const providerSuffix = providerLabel ? ` Â· ${providerLabel}` : '';
+            const providerSuffix = providerLabel ? ` · ${providerLabel}` : '';
             chip.textContent = `${UI_ICONS.profile} ${displayLabel}${providerSuffix}`;
             chip.classList.remove('hidden');
             chip.classList.add('account-chip-authenticated');
@@ -20293,7 +20293,7 @@ function getStudyPlanSummary() {
         status: 'active',
         label: translateLiteral(paceLabel, appState.language),
         pill: translateLiteral('Active', appState.language),
-        note: translateLiteral(`Focus: ${focusLabel} Â· Style: ${styleLabel}`, appState.language)
+        note: translateLiteral(`Focus: ${focusLabel} · Style: ${styleLabel}`, appState.language)
     };
 }
 
@@ -22643,13 +22643,13 @@ function buildDSPointerVisual() {
     if (dsActive === 'stack') {
         return `
             <div class="ds-pointer-row"><span>${translateLiteral('Top index', appState.language)}</span><strong>${dsState.stack.length ? dsState.stack.length - 1 : -1}</strong></div>
-            <div class="ds-pointer-row"><span>${translateLiteral('Top value', appState.language)}</span><strong>${escapeHtml(String(dsState.stack[dsState.stack.length - 1] ?? 'âˆ…'))}</strong></div>
+            <div class="ds-pointer-row"><span>${translateLiteral('Top value', appState.language)}</span><strong>${escapeHtml(String(dsState.stack[dsState.stack.length - 1] ?? '∅'))}</strong></div>
         `;
     }
     if (dsActive === 'queue') {
         return `
-            <div class="ds-pointer-row"><span>${translateLiteral('Front', appState.language)}</span><strong>${escapeHtml(String(dsState.queue[0] ?? 'âˆ…'))}</strong></div>
-            <div class="ds-pointer-row"><span>${translateLiteral('Rear', appState.language)}</span><strong>${escapeHtml(String(dsState.queue[dsState.queue.length - 1] ?? 'âˆ…'))}</strong></div>
+            <div class="ds-pointer-row"><span>${translateLiteral('Front', appState.language)}</span><strong>${escapeHtml(String(dsState.queue[0] ?? '∅'))}</strong></div>
+            <div class="ds-pointer-row"><span>${translateLiteral('Rear', appState.language)}</span><strong>${escapeHtml(String(dsState.queue[dsState.queue.length - 1] ?? '∅'))}</strong></div>
         `;
     }
     if (dsActive === 'heap') {
@@ -23539,25 +23539,25 @@ function getDiscreteTheoryContent(module) {
     const topics = (module?.topics || []).map((topic) => `\u2022 ${topic}`);
     if (appState.language === 'es') {
         return [
-            'Resumen TeÃ³rico Profundo',
-            `MÃ³dulo: ${module?.title || ''}`,
+            'Resumen Teórico Profundo',
+            `Módulo: ${module?.title || ''}`,
             '',
             'Conceptos clave:',
             ...topics,
             '',
             'Marco de razonamiento:',
-            '1) Defina sÃ­mbolos y supuestos antes de resolver.',
+            '1) Defina símbolos y supuestos antes de resolver.',
             '2) Traduzca el enunciado a proposiciones y relaciones formales.',
-            '3) Justifique cada paso de forma lÃ³gica (no por intuiciÃ³n).',
+            '3) Justifique cada paso de forma lógica (no por intuición).',
             '4) Use contraejemplos para validar o refutar afirmaciones.',
             '',
-            'ExplicaciÃ³n detallada:',
+            'Explicación detallada:',
             module?.explanation || '',
             '',
-            'Checklist de prÃ¡ctica:',
+            'Checklist de práctica:',
             '- Escriba definiciones precisas.',
-            '- Identifique hipÃ³tesis y conclusiÃ³n.',
-            '- Verifique equivalencias y casos lÃ­mite.',
+            '- Identifique hipótesis y conclusión.',
+            '- Verifique equivalencias y casos límite.',
             '- Redacte una prueba clara, paso por paso.'
         ].join('\n');
     }
@@ -29393,7 +29393,7 @@ function getBreakReminder() {
     }
     const minutesElapsed = Math.floor((Date.now() - studyTimer.startTime) / 60000);
     if (minutesElapsed >= 25) {
-        return translateLiteral('ðŸ§˜ Stretch & hydrate now!', appState.language);
+        return translateLiteral('🧘 Stretch & hydrate now!', appState.language);
     }
     return translateLiteral(`? Break in ${25 - minutesElapsed} min`, appState.language);
 }
@@ -29719,8 +29719,8 @@ function renderInsights() {
                 const focusText = focusLabelByKey[studyPlanState?.focus] || (appState.language === 'es' ? 'Fundamentos' : 'Foundations');
                 const styleText = styleLabelByKey[studyPlanState?.style] || (appState.language === 'es' ? 'Mixto' : 'Blended');
                 highlightGoalNoteEl.textContent = appState.language === 'es'
-                    ? `Enfoque: ${focusText} â€¢ Estilo: ${styleText}`
-                    : `Focus: ${focusText} â€¢ Style: ${styleText}`;
+                    ? `Enfoque: ${focusText} • Estilo: ${styleText}`
+                    : `Focus: ${focusText} • Style: ${styleText}`;
             } else {
                 highlightGoalNoteEl.textContent = appState.language === 'es'
                     ? 'Empieza por DSA, Git o Java'
@@ -29885,7 +29885,7 @@ function renderInsights() {
                 const percent = total ? Math.round((completed / total) * 100) : 0;
                 return `
                     <span class="insight-pill">
-                        ${translateLiteral(level.charAt(0).toUpperCase() + level.slice(1), appState.language)} Â· ${completed}/${total} (${percent}%)
+                        ${translateLiteral(level.charAt(0).toUpperCase() + level.slice(1), appState.language)} · ${completed}/${total} (${percent}%)
                     </span>
                 `;
             }).join('');
@@ -29946,7 +29946,7 @@ function renderInsights() {
         if (modulesRemaining === 0) {
             tip = translateLiteral('All modules complete - spend time on flashcards or mentor a friend.', appState.language);
         } else if (streak >= 7) {
-            tip = translateLiteral('ðŸ”¥ Your streak is on fire! Consider revisiting advanced challenge sets.', appState.language);
+            tip = translateLiteral('🔥 Your streak is on fire! Consider revisiting advanced challenge sets.', appState.language);
         } else if (todayMinutes < 30) {
             tip = translateLiteral('Try a focused 30-minute sprint to lock in a module today.', appState.language);
         } else {
