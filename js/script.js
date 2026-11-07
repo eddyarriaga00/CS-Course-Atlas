@@ -9787,6 +9787,46 @@ function getCurriculumUnitForModule(moduleId) {
     return null;
 }
 
+// Curated, run-verified code examples from js/course-examples.js (main example
+// plus one example per topic, in every language). Read lazily like the
+// curriculum so Node verification sandboxes fall back to generated examples.
+function getCourseExamples(moduleId) {
+    const store = typeof window !== 'undefined' ? window.COURSE_EXAMPLES : null;
+    const entry = store && typeof store === 'object' ? store.modules?.[moduleId] : null;
+    return entry && entry.main && Array.isArray(entry.sets) ? entry : null;
+}
+
+function buildCuratedExampleSets(moduleId) {
+    const curated = getCourseExamples(moduleId);
+    if (!curated) return null;
+    const usedIds = new Set();
+    return curated.sets.map((set, index) => {
+        let id = slugifyTopicKey(set.topic, `topic-${index + 1}`);
+        while (usedIds.has(id)) id = `${id}-${index + 1}`;
+        usedIds.add(id);
+        return {
+            id,
+            topic: set.topic,
+            title: set.title,
+            description: set.description,
+            deepExplanation: set.explanation,
+            codeExamples: { ...set.code },
+            expectedOutputs: { ...(set.output || {}) },
+            curated: true
+        };
+    });
+}
+
+function applyCuratedExamplesToModule(target, moduleId) {
+    const curated = getCourseExamples(moduleId);
+    if (!curated) return false;
+    target.codeExamples = { ...curated.main.code };
+    target.expectedOutputs = { ...(curated.main.output || {}) };
+    target.codeExampleSets = buildCuratedExampleSets(moduleId);
+    if (curated.main.code.java) target.codeExample = curated.main.code.java;
+    return true;
+}
+
 // Escape text, then render `inline code` spans and line breaks. Used for
 // curated course content, which marks code identifiers with backticks.
 function formatRichText(value) {
@@ -12820,6 +12860,10 @@ function normalizeModuleCodeExampleSets(module) {
 
 function normalizeModuleCatalog(moduleList) {
     moduleList.forEach((module) => {
+        if (applyCuratedExamplesToModule(module, module.id)) {
+            module.definitions = getCurriculumModule(module.id)?.definitions ? undefined : buildModuleDefinitions(module, 'en');
+            return;
+        }
         const existingCodeExamples = module.codeExamples && typeof module.codeExamples === 'object'
             ? { ...module.codeExamples }
             : {};
@@ -13075,6 +13119,15 @@ function localizeModuleResources(resources = [], lang = appState.language || 'en
 }
 
 function getLocalizedModule(module) {
+    if (!module) return module;
+    const localizedResult = buildLocalizedModule(module);
+    if (localizedResult && getCourseExamples(module.id)) {
+        applyCuratedExamplesToModule(localizedResult, module.id);
+    }
+    return localizedResult;
+}
+
+function buildLocalizedModule(module) {
     if (!module) return module;
     const localized = localizeEntity('modules', module.id, null);
     const language = appState.language === 'es' ? 'es' : 'en';
@@ -25654,10 +25707,10 @@ function ensureEnhancedVisualAssets() {
         return fallbackLoadScriptOnce(id, src, readyCheck);
     };
 
+    // Only the search library loads at startup. Chart.js and Mermaid (~3.5 MB)
+    // load on demand when the Insights section approaches the viewport.
     enhancedVisualAssetState.loadPromise = Promise.all([
-        loadScript(ENHANCED_VISUAL_ASSET_IDS.fuse, ENHANCED_VISUAL_ASSET_URLS.fuse, () => typeof window.Fuse === 'function'),
-        loadScript(ENHANCED_VISUAL_ASSET_IDS.chart, ENHANCED_VISUAL_ASSET_URLS.chart, () => typeof window.Chart === 'function'),
-        loadScript(ENHANCED_VISUAL_ASSET_IDS.mermaid, ENHANCED_VISUAL_ASSET_URLS.mermaid, () => typeof window.mermaid?.render === 'function')
+        loadScript(ENHANCED_VISUAL_ASSET_IDS.fuse, ENHANCED_VISUAL_ASSET_URLS.fuse, () => typeof window.Fuse === 'function')
     ]).then((results) => {
         const loaded = results.every(Boolean);
         enhancedVisualAssetState.loaded = loaded;
@@ -25668,15 +25721,6 @@ function ensureEnhancedVisualAssets() {
         if (typeof window !== 'undefined' && typeof window.__atlasTranslateFn === 'function') {
             window.t = window.__atlasTranslateFn;
         }
-        if (loaded && typeof window.mermaid?.initialize === 'function' && !enhancedVisualAssetState.mermaidInitialized) {
-            const prefersDark = document.body.classList.contains('dark');
-            window.mermaid.initialize({
-                startOnLoad: false,
-                securityLevel: 'strict',
-                theme: prefersDark ? 'dark' : 'default'
-            });
-            enhancedVisualAssetState.mermaidInitialized = true;
-        }
         return loaded;
     }).catch((error) => {
         console.warn('Enhanced visual assets failed to load:', error);
@@ -25685,6 +25729,64 @@ function ensureEnhancedVisualAssets() {
     });
 
     return enhancedVisualAssetState.loadPromise;
+}
+
+let insightVisualAssetsPromise = null;
+let lastInsightsVisualArgs = null;
+
+function ensureInsightVisualAssets() {
+    if (typeof window.Chart === 'function' && typeof window.mermaid?.render === 'function') {
+        return Promise.resolve(true);
+    }
+    if (insightVisualAssetsPromise) return insightVisualAssetsPromise;
+    const runtimeLoader = window?.CSAtlasRuntime?.assetLoader;
+    const loadScript = (id, src, readyCheck) => (runtimeLoader && typeof runtimeLoader.loadScriptOnce === 'function'
+        ? runtimeLoader.loadScriptOnce({ id, src, readyCheck, cacheMap: runtimeLoader.sharedPromises })
+        : fallbackLoadScriptOnce(id, src, readyCheck));
+    insightVisualAssetsPromise = Promise.all([
+        loadScript(ENHANCED_VISUAL_ASSET_IDS.chart, ENHANCED_VISUAL_ASSET_URLS.chart, () => typeof window.Chart === 'function'),
+        loadScript(ENHANCED_VISUAL_ASSET_IDS.mermaid, ENHANCED_VISUAL_ASSET_URLS.mermaid, () => typeof window.mermaid?.render === 'function')
+    ]).then((results) => {
+        const loaded = results.every(Boolean);
+        if (!loaded) {
+            insightVisualAssetsPromise = null;
+            return false;
+        }
+        if (typeof window.mermaid?.initialize === 'function' && !enhancedVisualAssetState.mermaidInitialized) {
+            window.mermaid.initialize({
+                startOnLoad: false,
+                securityLevel: 'strict',
+                theme: document.body.classList.contains('dark') ? 'dark' : 'default'
+            });
+            enhancedVisualAssetState.mermaidInitialized = true;
+        }
+        if (lastInsightsVisualArgs) {
+            enhancedVisualAssetState.lastInsightsVisualSignature = '';
+            renderEnhancedInsightsVisuals(lastInsightsVisualArgs);
+        }
+        return true;
+    }).catch((error) => {
+        console.warn('Insight visual assets failed to load:', error);
+        insightVisualAssetsPromise = null;
+        return false;
+    });
+    return insightVisualAssetsPromise;
+}
+
+function observeInsightsForVisualAssets() {
+    const section = document.getElementById('insights-section');
+    if (!section) return;
+    if (typeof IntersectionObserver !== 'function') {
+        void ensureInsightVisualAssets();
+        return;
+    }
+    const observer = new IntersectionObserver((entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+            observer.disconnect();
+            void ensureInsightVisualAssets();
+        }
+    }, { rootMargin: '600px 0px' });
+    observer.observe(section);
 }
 
 function destroyEnhancedChart(chartKey, canvas = null) {
@@ -26056,6 +26158,7 @@ async function renderInsightsRoadmapMermaid(definition = '') {
 }
 
 function renderEnhancedInsightsVisuals({ hasAccess = false, stats = null, guestPreview = null, learningPath = null } = {}) {
+    lastInsightsVisualArgs = { hasAccess, stats, guestPreview, learningPath };
     ensureEnhancedVisualContainers();
     const insightsSection = document.getElementById('insights-section');
     if (insightsSection instanceof HTMLElement && insightsSection.hidden) {
@@ -26105,7 +26208,7 @@ function renderEnhancedInsightsVisuals({ hasAccess = false, stats = null, guestP
 
     if (summaryEl) {
         if (!chartReady || !mermaidReady) {
-            summaryEl.textContent = 'Loading Fuse/Chart/Mermaid enhancements...';
+            summaryEl.textContent = translateLiteral('Loading visual analytics...', appState.language);
         } else if (!hasAccess && guestPreview) {
             summaryEl.textContent = `Guest preview: ${guestPreview.percentage}% sample completion`;
         } else if (stats) {
@@ -26124,6 +26227,7 @@ function renderEnhancedInsightsVisuals({ hasAccess = false, stats = null, guestP
 function initEnhancedLearningExperience() {
     initHeroPretextFlow();
     ensureEnhancedVisualContainers();
+    observeInsightsForVisualAssets();
     void ensureEnhancedVisualAssets().then((loaded) => {
         if (loaded) {
             moduleSearchIndexState.lang = null;
@@ -27412,7 +27516,7 @@ function renderModules() {
 
                             <!-- Language Selector -->
                             ${hasMultipleLanguages ? `
-                                <select onchange="setModuleLanguage('${module.id}', this.value)" class="text-xs px-2 py-1 rounded bg-blue-500 hover:bg-blue-600 text-white border-0 font-medium" title="${t('module.tooltipSelectLanguage')}">
+                                <select onchange="setModuleLanguage('${module.id}', this.value)" class="text-xs px-2 py-1 rounded bg-blue-500 hover:bg-blue-600 text-white border-0 font-medium" title="${t('module.tooltipSelectLanguage')}" aria-label="${t('module.tooltipSelectLanguage')}">
                                     ${Object.entries(SUPPORTED_LANGUAGES).map(([langKey, langInfo]) =>
             moduleCodeExamples && moduleCodeExamples[langKey] ? `
                                             <option value="${langKey}" ${currentLanguage === langKey ? 'selected' : ''} class="bg-white text-black">
@@ -27424,7 +27528,7 @@ function renderModules() {
                             ` : ''}
 
                             <!-- Code Mode Selector -->
-                            <select onchange="setModuleMode('${module.id}', this.value)" class="text-xs px-2 py-1 rounded border-0 font-medium ${currentMode === 'pseudocode' ? 'bg-purple-500 hover:bg-purple-600 text-white' : currentMode === 'discreteTheory' ? 'bg-amber-500 hover:bg-amber-600 text-white' : 'bg-indigo-500 hover:bg-indigo-600 text-white'}" title="${t('module.tooltipSelectMode')}">
+                            <select onchange="setModuleMode('${module.id}', this.value)" class="text-xs px-2 py-1 rounded border-0 font-medium ${currentMode === 'pseudocode' ? 'bg-purple-500 hover:bg-purple-600 text-white' : currentMode === 'discreteTheory' ? 'bg-amber-500 hover:bg-amber-600 text-white' : 'bg-indigo-500 hover:bg-indigo-600 text-white'}" title="${t('module.tooltipSelectMode')}" aria-label="${t('module.tooltipSelectMode')}">
                                 ${availableModes.map((modeKey) => {
             const modeInfo = CODE_MODES[modeKey];
             const label = modeKey === 'discreteTheory'
@@ -27493,7 +27597,7 @@ function renderModules() {
                                     <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 px-3 py-2">
                                         <div class="min-w-0">
                                             <p class="text-sm font-semibold text-slate-800">${escapeHtml(setTitle || resolveLocalizedValue(setItem.title, 'en') || setId)}</p>
-                                            ${setDescription ? `<p class="text-xs text-slate-600 mt-0.5">${escapeHtml(setDescription)}</p>` : ''}
+                                            ${setDescription ? `<p class="text-xs text-slate-600 mt-0.5">${formatRichText(setDescription)}</p>` : ''}
                                         </div>
                                         <div class="flex gap-1.5 flex-wrap">
                                             ${hasDeepExplanation ? `
@@ -27506,7 +27610,7 @@ function renderModules() {
                                         <div class="px-3 pb-3">
                                             <div class="module-deep-explanation-box rounded-md p-3">
                                                 <p class="module-deep-explanation-label text-xs font-semibold mb-1">${t('module.deepExplanation')}</p>
-                                                <div class="whitespace-pre-line text-xs sm:text-sm module-deep-explanation-text">${escapeHtml(setDeepExplanationText)}</div>
+                                                <div class="text-xs sm:text-sm leading-relaxed module-deep-explanation-text">${formatRichText(setDeepExplanationText)}</div>
                                             </div>
                                         </div>
                                     ` : ''}
