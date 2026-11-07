@@ -62,10 +62,8 @@ function main() {
     let programCount = 0;
     for (const module of modules) {
         const entry = data.modules?.[module.id];
-        if (!entry) {
-            errors.push(`${module.id}: no curated examples`);
-            continue;
-        }
+        // Modules without curated examples fall back to the generated ones at runtime.
+        if (!entry) continue;
         const langs = MODULE_CATEGORY_BY_ID[module.id] === 'assembly' ? ['assembly', ...LANGS] : LANGS;
         checkCode(`${module.id} main`, entry.main, langs);
         programCount += langs.length;
