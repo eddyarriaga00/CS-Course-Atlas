@@ -222,6 +222,21 @@ test.describe('Navigation', () => {
         await expect(page.locator('.quiz-top')).toContainText('Question 1 of 2');
     });
 
+    test('progress can be backed up to a file and restored', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html#m-python-first-programs');
+        await page.locator('[data-action="toggle-done"]').click();
+        await page.locator('.side-foot [data-action="backup"]').click();
+        const [download] = await Promise.all([page.waitForEvent('download'), page.locator('[data-action="backup-download"]').click()]);
+        const file = await download.path();
+        await page.evaluate(() => { localStorage.clear(); });
+        await page.reload();
+        await page.locator('.side-foot [data-action="backup"]').click();
+        const [chooser] = await Promise.all([page.waitForEvent('filechooser'), page.locator('[data-action="backup-restore"]').click()]);
+        await chooser.setFiles(file);
+        await expect(page.locator('#backup-msg')).toContainText('Restored. 1 new');
+    });
+
     test('mixed review quizzes across completed modules', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html#m-python-first-programs');
