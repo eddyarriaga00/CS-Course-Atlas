@@ -2,14 +2,14 @@
  *
  * - Pages: network first, falling back to the cached app shell (index.html).
  * - The course index (data/atlas-data.json): network first, so new content shows at once.
- * - Versioned files (?v=… or a content hash) and CDN libraries (Pyodide, sql.js, highlight.js):
- *   cache first, since a given URL never changes. When a file gets a new version, older
+ * - Versioned files (?v=… or a content hash) and CDN libraries (Pyodide, sql.js, highlight.js, the C++
+ *   compiler): cache first, since a given URL never changes. When a file gets a new version, older
  *   copies of the same path are dropped so the cache does not grow forever.
  * - The account API (/api/) is never cached.
  */
 const CACHE = 'atlas-v2';
 const SHELL = ['./', 'index.html', 'preview.html', 'manifest.webmanifest', 'icons/icon-192.png'];
-const CDN = ['https://cdn.jsdelivr.net/pyodide/', 'https://cdnjs.cloudflare.com/ajax/libs/', 'https://fonts.googleapis.com/', 'https://fonts.gstatic.com/'];
+const CDN = ['https://cdn.jsdelivr.net/pyodide/', 'https://cdn.jsdelivr.net/npm/@yowasp/clang@', 'https://cdn.jsdelivr.net/npm/@bjorn3/browser_wasi_shim@', 'https://cdnjs.cloudflare.com/ajax/libs/', 'https://fonts.googleapis.com/', 'https://fonts.gstatic.com/'];
 
 self.addEventListener('install', (event) => {
     event.waitUntil(caches.open(CACHE).then((c) => c.addAll(SHELL)).then(() => self.skipWaiting()));
