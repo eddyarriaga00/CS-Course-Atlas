@@ -116,11 +116,19 @@ for (const t of tracks.filter((x) => x.status === 'available')) {
 }
 // The command-line simulator is a separate file loaded on demand; its hash busts caches when it changes.
 const shellVersion = require('crypto').createHash('sha1').update(fs.readFileSync(path.join(ROOT, 'js/mini-shell.js'))).digest('hex').slice(0, 10);
-const out = { tracks, planned: PLANNED, path: PATH, next: NEXT, modules, videos, harness, webChecks, shellVersion };
+// A compact search list (term names and challenge titles of live courses) so search works without downloading every lesson.
+const search = { terms: [], challenges: [] };
+for (const t of tracks.filter((x) => x.status === 'available')) for (const id of t.units.flatMap((u) => u.modules)) {
+  (full[id].definitions || []).forEach((d) => search.terms.push([id, d.term.en, d.term.es]));
+  (full[id].challenges || []).forEach((c, i) => search.challenges.push([id, i, c.title.en, c.title.es]));
+}
+const searchJson = JSON.stringify(search);
+const searchVersion = crypto.createHash('sha1').update(searchJson).digest('hex').slice(0, 10);
+const out = { tracks, planned: PLANNED, path: PATH, next: NEXT, modules, videos, harness, webChecks, shellVersion, searchVersion };
 const file = path.join(ROOT, 'data/atlas-data.json');
 const lessonDir = path.join(ROOT, 'data/lessons');
 const json = JSON.stringify(out);
-const expected = { [file]: json, ...Object.fromEntries(Object.entries(lessonFiles).map(([id, body]) => [path.join(lessonDir, id + '.json'), body])) };
+const expected = { [file]: json, [path.join(ROOT, 'data/search.json')]: searchJson, ...Object.fromEntries(Object.entries(lessonFiles).map(([id, body]) => [path.join(lessonDir, id + '.json'), body])) };
 if (process.argv.includes('--check')) {
   // CI guard: the committed data files must match their sources.
   const stale = Object.entries(expected).filter(([f, body]) => !fs.existsSync(f) || fs.readFileSync(f, 'utf8') !== body).map(([f]) => path.relative(ROOT, f));
