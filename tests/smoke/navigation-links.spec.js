@@ -138,6 +138,17 @@ test.describe('Navigation', () => {
         await expect(page.locator('.certificate')).toContainText('90% average quiz score');
     });
 
+    test('timed quizzes count running out of time as a miss', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html#quizzes');
+        await page.locator('[data-action="quiz-timed"]').click();
+        await expect(page.locator('#q-timer')).toBeVisible();
+        await page.evaluate(() => { state.quiz.deadline = Date.now() + 200; });
+        await expect(page.locator('.feedback')).toContainText('Time’s up');
+        await page.locator('[data-action="quiz-next"]').click();
+        await expect(page.locator('#q-timer b')).toHaveText(/^(29|30)$/);
+    });
+
     test('mixed review quizzes across completed modules', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html#m-python-first-programs');

@@ -835,3 +835,12 @@ a.path-step.planned .path-go { color: var(--text-3); font-weight: 500; }
 .viz-printed pre { margin: 0; white-space: pre-wrap; font-size: 12.5px; color: #d7dbe8; }
 .viz-printed .err, .viz .err { color: #ff9b94; }
 @media (max-width: 520px) { .viz-bar { gap: 2px; padding: 6px; } .viz-bar [aria-label="First step"], .viz-bar [aria-label="Last step"], .viz-bar [aria-label="Primer paso"], .viz-bar [aria-label="Último paso"] { display: none; } .viz-count { padding: 0 2px; font-size: 12px; } }
+
+/* Timed quiz */
+.timed-toggle { margin-left: 4px; }
+.timed-toggle[aria-pressed="true"] { background: var(--accent); color: var(--on-accent); }
+.q-timer { --left: 1; position: relative; display: flex; align-items: center; justify-content: flex-end; height: 22px; margin: 10px 0 2px; border-radius: 999px; background: var(--surface-2, color-mix(in srgb, var(--text) 6%, transparent)); overflow: hidden; }
+.q-timer-bar { position: absolute; inset: 0 auto 0 0; width: calc(var(--left) * 100%); background: color-mix(in srgb, var(--accent) 22%, transparent); transition: width .25s linear; }
+.q-timer b { position: relative; padding: 0 10px; font-size: 12px; font-variant-numeric: tabular-nums; color: var(--text-2); }
+.q-timer.low .q-timer-bar { background: color-mix(in srgb, var(--danger) 25%, transparent); }
+.q-timer.low b { color: var(--danger); }
