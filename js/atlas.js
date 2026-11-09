@@ -41,7 +41,7 @@ const UI = {
     roadmapLead: 'Where CS Course Atlas is going. Vote for what you want next.', live: 'Live', building: 'In progress', planned: 'Planned', vote: '▲ Vote', voted: '▲ Voted',
     achievements: 'Achievements', earned: (a, b) => `${a} of ${b} earned`,
     studyPlan: 'Study plan', planLead: 'Pick a course and how much time you have; we lay out the rest of it week by week.', hoursWeek: 'Hours per week', startOn: 'Start on', finishBy: 'Finish by', weeksLeft: 'weeks', modulesLeft: 'modules left', weekN: (n) => `Week ${n}`, thisWeek: 'This week', planHome: (d, c) => `At your pace you’ll finish ${c} by <b>${d}</b>.`, editPlan: 'Edit plan', allDone: 'Every module of this course is complete. Time for the next one.', addCalendar: 'Add to calendar', reminders: 'Weekly reminder', 
-    videos: 'Videos', fullSeries: 'Full video series', courseSeries: 'Full course series', watchTopic: 'Watch a video on this topic', watchWait: 'Watch while you wait', videosLead: 'A full series for the module, then one video per topic. All from university or well-known teaching channels; they open on YouTube.', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', expand: 'show modules', collapse: 'hide modules', fullSession: 'Full session', week1: 'week', coursesReady: 'courses ready', course: 'Course', trackCourse: (c) => `${c} course`, terminalExamples: 'Real terminal sessions', terminalHint: 'Run this in an empty folder. Lines starting with $ are what you type; the rest is what Git printed when we ran the session with real Git. Copy gives you just the commands.', terminalOut: 'Terminal', report: 'Report a problem with this module', programs: 'programs', languagesWord: 'languages', waitLead: 'Series that cover these modules, each listed once.',
+    videos: 'Videos', fullSeries: 'Full video series', courseSeries: 'Full course series', watchTopic: 'Watch a video on this topic', watchWait: 'Watch while you wait', videosLead: 'A full series for the module, then one video per topic. All from university or well-known teaching channels; they open on YouTube.', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', showPw: 'Show password', hidePw: 'Hide password', show: 'Show', hide: 'Hide', signupSub: 'Free. Your progress, notes and quiz scores are saved and follow you to any device.', orSignupEmail: 'or sign up with email', createFree: 'Create free account', userHint: '3–32 characters: letters, numbers, dot, underscore or dash.', pwHint: 'At least 8 characters.', accountTitle: 'Account', displayName: 'Display name', saveChanges: 'Save changes', saved: 'Saved', changePw: 'Change password', currentPw: 'Current password', newPw: 'New password', pwChanged: 'Password changed', googleNoPw: 'You sign in with Google, so there is no password to manage here.', saveTitle: 'Keep your progress', saveText: 'It is only on this device right now. A free account saves it and syncs it everywhere.', expand: 'show modules', collapse: 'hide modules', fullSession: 'Full session', week1: 'week', coursesReady: 'courses ready', course: 'Course', trackCourse: (c) => `${c} course`, terminalExamples: 'Real terminal sessions', terminalHint: 'Run this in an empty folder. Lines starting with $ are what you type; the rest is what Git printed when we ran the session with real Git. Copy gives you just the commands.', terminalOut: 'Terminal', report: 'Report a problem with this module', programs: 'programs', languagesWord: 'languages', waitLead: 'Series that cover these modules, each listed once.',
     signedInWith: (p) => `Signed in with ${p}`, syncedAt: (tm) => `Progress synced at ${tm}`, syncPending: 'Syncing progress…', day: 'day', acrossN: (n) => `across ${n} ${n === 1 ? 'quiz' : 'quizzes'}`, noQuizYet: 'No quizzes taken yet',
     modulesWithNotes: 'modules with notes', noActivity: 'Complete a module, take a quiz or write a note and it shows up here.', typeDelete: 'Type DELETE to confirm', deleteViaSupport: 'Ask support to delete it',
     privacy: 'Privacy', terms: 'Terms', contact: 'Contact', checkingSession: 'Checking your account…', emailOrUser: 'Email or username', username: 'Username', confirmPw: 'Confirm password',
@@ -90,7 +90,7 @@ const UI = {
     roadmapLead: 'Hacia dónde va CS Course Atlas. Vota por lo que quieres primero.', live: 'Disponible', building: 'En progreso', planned: 'Planeado', vote: '▲ Votar', voted: '▲ Votado',
     achievements: 'Logros', earned: (a, b) => `${a} de ${b} obtenidos`,
     studyPlan: 'Plan de estudio', planLead: 'Elige un curso y cuánto tiempo tienes; organizamos el resto semana a semana.', hoursWeek: 'Horas por semana', startOn: 'Empezar el', finishBy: 'Terminas el', weeksLeft: 'semanas', modulesLeft: 'módulos restantes', weekN: (n) => `Semana ${n}`, thisWeek: 'Esta semana', planHome: (d, c) => `A tu ritmo terminarás ${c} el <b>${d}</b>.`, editPlan: 'Editar plan', allDone: 'Completaste todos los módulos de este curso. Es hora del siguiente.', addCalendar: 'Agregar al calendario', reminders: 'Recordatorio semanal', 
-    videos: 'Videos', fullSeries: 'Serie completa de videos', courseSeries: 'Serie completa del curso', watchTopic: 'Mira un video sobre este tema', watchWait: 'Mira mientras esperas', videosLead: 'Una serie completa del módulo y un video por tema. Todos de canales universitarios o de enseñanza reconocidos; se abren en YouTube (en inglés).', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', expand: 'mostrar módulos', collapse: 'ocultar módulos', fullSession: 'Sesión completa', week1: 'semana', coursesReady: 'cursos listos', course: 'Curso', trackCourse: (c) => `Curso de ${c}`, terminalExamples: 'Sesiones reales de terminal', terminalHint: 'Ejecútalo en una carpeta vacía. Las líneas que empiezan con $ son lo que escribes; el resto es lo que Git imprimió al ejecutar la sesión con Git real. Copiar te da solo los comandos.', terminalOut: 'Terminal', report: 'Reportar un problema con este módulo', programs: 'programas', languagesWord: 'lenguajes', waitLead: 'Series que cubren estos módulos, cada una una sola vez.',
+    videos: 'Videos', fullSeries: 'Serie completa de videos', courseSeries: 'Serie completa del curso', watchTopic: 'Mira un video sobre este tema', watchWait: 'Mira mientras esperas', videosLead: 'Una serie completa del módulo y un video por tema. Todos de canales universitarios o de enseñanza reconocidos; se abren en YouTube (en inglés).', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', showPw: 'Mostrar contraseña', hidePw: 'Ocultar contraseña', show: 'Ver', hide: 'Ocultar', signupSub: 'Gratis. Tu progreso, notas y resultados se guardan y te siguen a cualquier dispositivo.', orSignupEmail: 'o regístrate con tu correo', createFree: 'Crear cuenta gratis', userHint: 'De 3 a 32 caracteres: letras, números, punto, guion bajo o guion.', pwHint: 'Al menos 8 caracteres.', accountTitle: 'Cuenta', displayName: 'Nombre visible', saveChanges: 'Guardar cambios', saved: 'Guardado', changePw: 'Cambiar contraseña', currentPw: 'Contraseña actual', newPw: 'Contraseña nueva', pwChanged: 'Contraseña cambiada', googleNoPw: 'Inicias sesión con Google, así que aquí no hay contraseña que administrar.', saveTitle: 'Conserva tu progreso', saveText: 'Por ahora solo está en este dispositivo. Una cuenta gratis lo guarda y lo sincroniza en todas partes.', expand: 'mostrar módulos', collapse: 'ocultar módulos', fullSession: 'Sesión completa', week1: 'semana', coursesReady: 'cursos listos', course: 'Curso', trackCourse: (c) => `Curso de ${c}`, terminalExamples: 'Sesiones reales de terminal', terminalHint: 'Ejecútalo en una carpeta vacía. Las líneas que empiezan con $ son lo que escribes; el resto es lo que Git imprimió al ejecutar la sesión con Git real. Copiar te da solo los comandos.', terminalOut: 'Terminal', report: 'Reportar un problema con este módulo', programs: 'programas', languagesWord: 'lenguajes', waitLead: 'Series que cubren estos módulos, cada una una sola vez.',
     signedInWith: (p) => `Sesión iniciada con ${p}`, syncedAt: (tm) => `Progreso sincronizado a las ${tm}`, syncPending: 'Sincronizando progreso…', day: 'día', acrossN: (n) => `en ${n} ${n === 1 ? 'cuestionario' : 'cuestionarios'}`, noQuizYet: 'Aún no haces cuestionarios',
     modulesWithNotes: 'módulos con notas', noActivity: 'Completa un módulo, haz un cuestionario o escribe una nota y aparecerá aquí.', typeDelete: 'Escribe DELETE para confirmar', deleteViaSupport: 'Pide a soporte que la elimine',
     privacy: 'Privacidad', terms: 'Términos', contact: 'Contacto', checkingSession: 'Revisando tu cuenta…', emailOrUser: 'Correo o usuario', username: 'Usuario', confirmPw: 'Confirmar contraseña',
@@ -235,6 +235,7 @@ function viewHome() {
       <h3 style="margin-top:2px">${next ? esc(L(cur.title)) + ' · ' + esc(moduleTitle(next)) : t('courseDone')}</h3>
       <div class="progress"><span style="width:${pct(s.done, s.count)}%"></span></div><div class="muted" style="margin-top:6px">${t('ofModules', s.done, s.count)}</div></div>
       <span class="btn">${s.done ? t('continueBtn') : t('startBtn')}</span></a>
+    ${!state.user && state.authReady && (state.done.size || Object.values(state.notes).some((x) => x && x.trim())) ? `<div class="card save-card"><div class="info"><b>${t('saveTitle')}</b><span>${t('saveText')}</span></div><button class="btn btn-sm" data-action="open-signup">${t('createFree')}</button></div>` : ''}
     ${(() => { const p = buildPlan(); return p.finish ? `<div class="card plan-home"><span class="cicon" style="width:34px;height:34px;font-size:15px">▤</span><div class="info">${t('planHome', fmtDate(p.finish, { month: 'long', day: 'numeric' }), L(track(planTrack()).title))}</div><a class="btn btn-ghost btn-sm" href="#plan">${t('editPlan')}</a></div>` : ''; })()}
     <div class="section-head"><h2>${t('coursesTitle')}</h2><a class="muted" href="#courses">${t('allCourses')} →</a></div>
     <div class="courses">${DATA.tracks.map((tr) => courseCard(tr)).join('')}</div>
@@ -426,6 +427,19 @@ function viewProfile() {
         <div class="setting"><div class="txt"><b>${t('exLang')}</b><span>${t('exLangSub')}</span></div><select class="select" id="pref-code-lang" aria-label="${t('exLang')}">${LANGS.map(([k, label]) => `<option value="${k}" ${k === state.codeLang ? 'selected' : ''}>${label}</option>`).join('')}</select></div>
       </div></div></div>
     <div class="stack">
+      <div class="card panel"><h2>${t('accountTitle')}</h2>
+        <form id="profile-form" class="acct-form">
+          <div class="field"><label for="pf-name">${t('displayName')}</label><input class="input" id="pf-name" maxlength="80" value="${esc(u.name || '')}" autocomplete="name"></div>
+          <div class="field"><label for="pf-user">${t('username')}</label><input class="input" id="pf-user" maxlength="32" value="${esc(u.username || '')}" autocomplete="username"><small class="hint">${t('userHint')}</small></div>
+          <div class="field"><label>${t('email')}</label><div class="readonly">${esc(u.email || '—')}</div></div>
+          <div class="acct-actions"><button class="btn btn-sm" type="submit">${t('saveChanges')}</button><span class="form-status" id="profile-status" role="status"></span></div>
+        </form>
+        ${u.authProvider === 'password' ? `<div class="sep"></div><form id="password-form" class="acct-form"><h3>${t('changePw')}</h3>
+          <div class="field"><label for="pw-cur">${t('currentPw')}</label><input class="input" id="pw-cur" type="password" autocomplete="current-password" required></div>
+          <div class="field"><label for="pw-new">${t('newPw')}</label><input class="input" id="pw-new" type="password" autocomplete="new-password" minlength="8" required><small class="hint">${t('pwHint')}</small></div>
+          <div class="field"><label for="pw-new2">${t('confirmPw')}</label><input class="input" id="pw-new2" type="password" autocomplete="new-password" required></div>
+          <div class="acct-actions"><button class="btn btn-sm btn-ghost" type="submit">${t('changePw')}</button><span class="form-status" id="password-status" role="status"></span></div></form>`
+        : `<p class="muted acct-note">${t('googleNoPw')}</p>`}</div>
       <div class="card panel"><h2 style="display:flex;justify-content:space-between;gap:10px">${t('achievements')}<span class="muted" style="font-weight:500">${t('earned', ach.filter((x) => x[3]).length, ach.length)}</span></h2>
         <div class="badges-grid">${ach.map(([ico, name, how, got]) => `<div class="badge${got ? ' earned' : ''}"><span class="medal">${ico}</span><b>${esc(name)}</b><span>${esc(how)}</span></div>`).join('')}</div></div>
       <div class="card panel"><h2>${t('recent')}</h2>${recent.length ? `<ul class="activity">${recent.map((a) => `<li>${actLine(a)}<span class="when">${relDay(a.at)}</span></li>`).join('')}</ul>` : `<p class="muted" style="margin:0">${t('noActivity')}</p>`}</div>
@@ -677,24 +691,29 @@ async function initAuth() {
 }
 function renderSignIn(err) {
   const signup = state.signinMode === 'signup', g = auth.providers && auth.providers.google;
+  const tab = (mode, label) => `<button type="button" role="tab" class="auth-tab" data-action="signin-mode" data-v="${mode}" aria-selected="${state.signinMode === mode}">${label}</button>`;
+  const pw = (id, label, ac, hint) => `<div class="field"><label for="${id}">${label}</label><div class="pw-wrap"><input id="${id}" type="password" autocomplete="${ac}" required${signup ? ' minlength="8" maxlength="128"' : ''}><button type="button" class="pw-eye" data-action="pw-eye" data-v="${id}" aria-label="${t('showPw')}">${t('show')}</button></div>${hint ? `<small class="hint">${hint}</small>` : ''}</div>`;
   $('#signin-form').innerHTML = `
-    <div class="signin-top"><h2 id="signin-title">${signup ? t('create') : t('signinTitle')}</h2><button type="button" class="icon-btn" data-action="close-signin" aria-label="Close">✕</button></div>
-    <p class="muted" style="margin:-6px 0 0">${t('signinSub')}</p>
-    ${g && !g.enabled ? '' : `<button type="button" class="btn-google" data-action="oauth" data-v="google"><b>G</b>${t('google')}</button><div class="or">${t('orEmail')}</div>`}
+    <div class="signin-top"><div class="auth-tabs" role="tablist">${tab('login', t('signIn'))}${tab('signup', t('create'))}</div><button type="button" class="icon-btn" data-action="close-signin" aria-label="Close">✕</button></div>
+    <h2 id="signin-title" class="sr-only">${signup ? t('create') : t('signinTitle')}</h2>
+    <p class="muted" style="margin:0">${signup ? t('signupSub') : t('signinSub')}</p>
+    ${g && !g.enabled ? '' : `<button type="button" class="btn-google" data-action="oauth" data-v="google"><b>G</b>${t('google')}</button><div class="or">${signup ? t('orSignupEmail') : t('orEmail')}</div>`}
     <div class="field"><label for="si-email">${signup ? t('email') : t('emailOrUser')}</label><input id="si-email" name="email" type="${signup ? 'email' : 'text'}" autocomplete="${signup ? 'email' : 'username'}" required></div>
-    ${signup ? `<div class="field"><label for="si-user">${t('username')}</label><input id="si-user" name="username" autocomplete="username" minlength="3" maxlength="32" pattern="[A-Za-z0-9._\\-]+" required></div>` : ''}
-    <div class="field"><label for="si-pass">${t('password')}</label><input id="si-pass" name="password" type="password" autocomplete="${signup ? 'new-password' : 'current-password'}" required></div>
-    ${signup ? `<div class="field"><label for="si-pass2">${t('confirmPw')}</label><input id="si-pass2" name="confirm" type="password" autocomplete="new-password" required></div>` : ''}
+    ${signup ? `<div class="field"><label for="si-user">${t('username')}</label><input id="si-user" name="username" autocomplete="username" minlength="3" maxlength="32" pattern="[A-Za-z0-9._\-]+" required><small class="hint">${t('userHint')}</small></div>` : ''}
+    ${pw('si-pass', t('password'), signup ? 'new-password' : 'current-password', signup ? t('pwHint') : '')}
+    ${signup ? pw('si-pass2', t('confirmPw'), 'new-password', '') : ''}
     <div class="form-error" id="signin-error" role="alert">${err ? esc(err) : ''}</div>
-    <button type="submit" class="btn" style="height:44px" id="signin-submit">${signup ? t('create') : t('signIn')}</button>
-    <div class="signin-foot">${signup ? `<span>${t('haveAccount')} <a href="#" data-action="signin-mode" data-v="login">${t('signIn')}</a></span>`
-      : `<a href="contact-support.html">${t('forgot')}</a><span>${t('newHere')} <a href="#" data-action="signin-mode" data-v="signup">${t('create')}</a></span>`}</div>
+    <button type="submit" class="btn" style="height:44px" id="signin-submit">${signup ? t('createFree') : t('signIn')}</button>
+    ${signup ? '' : `<div class="signin-foot"><a href="contact-support.html">${t('forgot')}</a></div>`}
     <p class="legal">${t('legal')}</p>`;
 }
+const USERNAME_RE = /^[A-Za-z0-9._-]{3,32}$/;
 async function submitSignIn() {
   const signup = state.signinMode === 'signup', v = (id) => ($('#' + id) ? $('#' + id).value : '');
   const btn = $('#signin-submit'), errBox = $('#signin-error');
-  if (signup && v('si-pass') !== v('si-pass2')) { errBox.textContent = t('pwMismatch'); return; }
+  if (signup && !USERNAME_RE.test(v('si-user'))) { errBox.textContent = t('userHint'); $('#si-user').focus(); return; }
+  if (signup && v('si-pass').length < 8) { errBox.textContent = t('pwHint'); $('#si-pass').focus(); return; }
+  if (signup && v('si-pass') !== v('si-pass2')) { errBox.textContent = t('pwMismatch'); $('#si-pass2').focus(); return; }
   btn.disabled = true; btn.textContent = t('working'); errBox.textContent = '';
   try {
     const d = signup ? await api('/api/auth/signup', { method: 'POST', body: { email: v('si-email'), username: v('si-user'), password: v('si-pass'), confirmPassword: v('si-pass2') } })
@@ -709,6 +728,29 @@ async function submitSignIn() {
     Object.entries(keep).forEach(([id, val]) => { if ($('#' + id)) $('#' + id).value = val; });
     if ($('#si-pass')) $('#si-pass').focus();
   }
+}
+async function saveProfile() {
+  const status = $('#profile-status'), name = $('#pf-name').value.trim(), username = $('#pf-user').value.trim(), u = state.user;
+  if (!USERNAME_RE.test(username)) { status.className = 'form-status err'; status.textContent = t('userHint'); return; }
+  status.className = 'form-status'; status.textContent = t('working');
+  try {
+    // The API replaces every profile field, so send the current values of the ones this form does not edit.
+    const r = await api('/api/profile', { method: 'POST', body: { profile: { name: name || username, username, goal: u.goal, avatarUrl: u.avatarUrl || '', socialHandle: u.socialHandle || '', socialStatus: u.socialStatus || '', messagingEnabled: Boolean(u.messagingEnabled) } } });
+    state.user = { ...u, name: r.profile?.name || name, username: r.profile?.username || username };
+    renderChrome(location.hash.slice(1) || 'home');
+    const h = $('.profile-id h1'); if (h) h.textContent = state.user.name || state.user.username;
+    status.className = 'form-status ok'; status.textContent = t('saved');
+  } catch (e) { status.className = 'form-status err'; status.textContent = e.message; }
+}
+async function changePassword() {
+  const status = $('#password-status'), cur = $('#pw-cur').value, next = $('#pw-new').value, again = $('#pw-new2').value;
+  if (next.length < 8) { status.className = 'form-status err'; status.textContent = t('pwHint'); return; }
+  if (next !== again) { status.className = 'form-status err'; status.textContent = t('pwMismatch'); return; }
+  status.className = 'form-status'; status.textContent = t('working');
+  try {
+    await api('/api/profile/password', { method: 'POST', body: { currentPassword: cur, newPassword: next, confirmPassword: again } });
+    $('#password-form').reset(); status.className = 'form-status ok'; status.textContent = t('pwChanged');
+  } catch (e) { status.className = 'form-status err'; status.textContent = e.message; }
 }
 async function signOut() {
   try { await api('/api/auth/logout', { method: 'POST', body: {} }); } catch (e) { /* the local session is cleared either way */ }
@@ -753,7 +795,7 @@ function render(keepScroll) {
   if (route !== lastRoute && !keepScroll) window.scrollTo(0, 0);
   lastRoute = route;
 }
-function openSignIn() { const d = $('#signin'); if (!d.open) { state.signinMode = 'login'; renderSignIn(); d.showModal(); } }
+function openSignIn(mode = 'login') { const d = $('#signin'); state.signinMode = mode; renderSignIn(); if (!d.open) d.showModal(); }
 
 /* ---------- Events ---------- */
 document.addEventListener('click', (e) => {
@@ -771,7 +813,9 @@ document.addEventListener('click', (e) => {
   }
   else if (a === 'oauth') startOAuth(el.dataset.v);
   else if (a === 'close-signin') $('#signin').close();
-  else if (a === 'signin-mode') { e.preventDefault(); state.signinMode = el.dataset.v; renderSignIn(); $('#si-email').focus(); }
+  else if (a === 'signin-mode') { e.preventDefault(); const keep = $('#si-email')?.value || ''; state.signinMode = el.dataset.v; renderSignIn(); $('#si-email').value = keep; $('#si-email').focus(); }
+  else if (a === 'open-signup') openSignIn('signup');
+  else if (a === 'pw-eye') { const input = $('#' + el.dataset.v), show = input.type === 'password'; input.type = show ? 'text' : 'password'; el.textContent = show ? t('hide') : t('show'); el.setAttribute('aria-label', show ? t('hidePw') : t('showPw')); }
   else if (a === 'sign-out') signOut();
   else if (a === 'calendar') downloadPlanCalendar();
   else if (a === 'toggle-done') { const id = el.dataset.id; if (state.done.has(id)) state.done.delete(id); else { state.done.add(id); logActivity('done', id); } save(); render(true); toast(state.done.has(id) ? t('marked') : t('unmarked')); }
@@ -829,10 +873,12 @@ document.addEventListener('keydown', (e) => {
 });
 $('#menu-btn').addEventListener('click', () => document.body.classList.add('drawer-open'));
 $('#scrim').addEventListener('click', () => document.body.classList.remove('drawer-open'));
-$('#signin-open').addEventListener('click', openSignIn);
+$('#signin-open').addEventListener('click', () => openSignIn());
 document.addEventListener('submit', (e) => {
   if (e.target.id === 'signin-form') { e.preventDefault(); submitSignIn(); }
   if (e.target.id === 'delete-form') { e.preventDefault(); deleteAccount(); }
+  if (e.target.id === 'profile-form') { e.preventDefault(); saveProfile(); }
+  if (e.target.id === 'password-form') { e.preventDefault(); changePassword(); }
 });
 $('#lang-btn').addEventListener('click', () => { state.lang = state.lang === 'en' ? 'es' : 'en'; save(); render(true); });
 $('#theme-btn').addEventListener('click', () => {

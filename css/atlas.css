@@ -537,3 +537,27 @@ pre.code.term { white-space: pre; }
 .side-course { margin: 0 0 2px; }
 .side-course .course-switch { padding: 7px 10px; }
 .mini-bar { margin-top: 4px; }
+
+/* ---------- Accounts ---------- */
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.auth-tabs { display: inline-flex; gap: 2px; padding: 3px; border-radius: 11px; background: var(--surface-2); }
+.auth-tab { border: 0; background: none; padding: 7px 14px; border-radius: 8px; font: 600 14px var(--font-ui); color: var(--text-2); cursor: pointer; }
+.auth-tab[aria-selected="true"] { background: var(--surface); color: var(--text); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+.pw-wrap { position: relative; display: flex; }
+.pw-wrap input { flex: 1; padding-right: 64px; }
+.pw-eye { position: absolute; right: 6px; top: 50%; transform: translateY(-50%); border: 0; background: none; color: var(--accent); font: 600 12.5px var(--font-ui); padding: 6px 8px; border-radius: 6px; cursor: pointer; }
+.field .hint { font-size: 12px; color: var(--text-3); }
+.acct-form { display: grid; gap: 12px; }
+.acct-form h3 { margin: 0; font-size: 15px; }
+.acct-form .input { width: 100%; }
+.acct-form .readonly { font-size: 14px; color: var(--text-2); padding: 2px 0; }
+.acct-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.form-status { font-size: 13px; color: var(--text-3); }
+.form-status.ok { color: var(--success); }
+.form-status.err { color: var(--danger); }
+.acct-note { margin: 12px 0 0; font-size: 13.5px; }
+.save-card { display: flex; gap: 14px; align-items: center; padding: 14px 18px; margin-top: 12px; border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); background: linear-gradient(90deg, var(--accent-soft), var(--surface) 70%); }
+.save-card .info { flex: 1; min-width: 0; display: grid; gap: 2px; font-size: 14px; }
+.save-card .info span { color: var(--text-2); font-size: 13.5px; }
+@media (max-width: 640px) { .save-card { flex-direction: column; align-items: stretch; } }
+.panel > .sep { height: 1px; background: var(--border); margin: 20px 0; border: 0; }
