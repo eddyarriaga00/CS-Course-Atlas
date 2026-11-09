@@ -2,6 +2,41 @@ const { test, expect } = require('@playwright/test');
 const { mockApi, RECOVERY_CODES } = require('./helpers/api-mock');
 
 test.describe('Accounts', () => {
+    test('a new account confirms its email with the emailed code', async ({ page }) => {
+        const calls = await mockApi(page, { emailConfirmation: true });
+        await page.goto('/index.html');
+        await page.locator('#signin-open').click();
+        await page.locator('.auth-tab[data-v="signup"]').click();
+        await page.locator('#si-email').fill('ana@example.com');
+        await page.locator('#si-user').fill('ana');
+        await page.locator('#si-pass').fill('correct-horse');
+        await page.locator('#si-pass2').fill('correct-horse');
+        await page.locator('#signin-submit').click();
+        await page.locator('#rc-dialog [data-rc="done"]').click();
+        const bar = page.locator('#confirm-bar');
+        await expect(bar).toContainText('ana@example.com');
+        await page.goto('/index.html#courses'); // the bar stays across pages and keeps what was typed
+        await bar.locator('#cf-code').fill('111111');
+        await bar.locator('button[type="submit"]').click();
+        await expect(page.locator('#cf-status')).toContainText('wrong or expired');
+        await bar.locator('[data-action="cf-resend"]').click();
+        await expect(page.locator('#cf-status')).toContainText('New code sent');
+        await bar.locator('#cf-code').fill('246 810');
+        await bar.locator('button[type="submit"]').click();
+        await expect(bar).toHaveCount(0);
+        await page.goto('/index.html#profile');
+        await expect(page.locator('.email-row .pill')).toHaveText('✓ Confirmed');
+        await page.locator('[data-action="sign-out"]').click();
+        await page.locator('#signin-open').click();
+        await page.locator('[data-action="signin-mode"][data-v="recover"]').click();
+        await page.locator('[data-action="recover-email"]').click();
+        await expect(page.locator('#recover-email-status')).toHaveText('Enter your email or username first.');
+        await page.locator('#si-email').fill('ana');
+        await page.locator('[data-action="recover-email"]').click();
+        await expect(page.locator('#recover-email-status')).toContainText('we sent it a 6-digit code');
+        expect(calls.resetEmail.email).toBe('ana');
+    });
+
     test('sign-up shows recovery codes once, and a code resets a forgotten password', async ({ page }) => {
         const calls = await mockApi(page);
         await page.goto('/index.html');

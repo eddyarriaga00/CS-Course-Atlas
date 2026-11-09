@@ -64,7 +64,7 @@ const UI = {
     modulesWithNotes: 'modules with notes', noActivity: 'Complete a module, take a quiz or write a note and it shows up here.', typeDelete: 'Type DELETE to confirm', deleteViaSupport: 'Ask support to delete it',
     privacy: 'Privacy', terms: 'Terms', contact: 'Contact', checkingSession: 'Checking your account…', emailOrUser: 'Email or username', username: 'Username', confirmPw: 'Confirm password',
     haveAccount: 'Have an account?', pwMismatch: 'The passwords don’t match.', working: 'One moment…', signinFailed: 'Sign-in didn’t complete. Please try again.', welcome: (n) => (n ? `Signed in as ${n}` : 'Signed in'),
-    rcTitle: 'Recovery codes', rcSub: 'Each code resets your password once if you forget it. Keep them somewhere safe, like a password manager or a printed page.', rcSaveTitle: 'Save your recovery codes', rcSaveText: 'If you ever forget your password, one of these codes lets you set a new one. Each works once. This is the only time they are shown.', rcCopy: 'Copy codes', rcCopied: 'Codes copied', rcDownload: 'Download .txt', rcDone: 'I saved them', rcLeft: (a, b) => `${a} of ${b} codes left.`, rcNone: 'You have no recovery codes yet. Make some so a forgotten password never locks you out.', rcLow: 'Running low: make a fresh set.', rcMake: 'Make new codes', rcMakeHint: 'Your old codes stop working when you make new ones.', rcFileHead: 'CS Course Atlas recovery codes', rcFileUse: 'Use one on the sign-in page: Forgot password? Each code works once.', recoverTitle: 'Reset your password', recoverSub: 'Use one of the recovery codes you saved when you created your account.', recoveryCode: 'Recovery code', recoverBtn: 'Reset password', backToSignIn: 'Back to sign in', noCode: 'No recovery code?', contactUs: 'Contact support', pwReset: (n) => `Password reset. You are signed in (${n} recovery code${n === 1 ? '' : 's'} left).`, recoverOff: 'Password reset is being switched on. Until then, contact support and we will reset it for you.', codeHint: 'Like K7QM-3XRP-W9TD. Dashes and capitals are optional.',
+    cfTitle: 'Confirm your email', cfText: (e) => `We sent a 6-digit code to <b>${e}</b>. Enter it here to confirm your account.`, cfCode: '6-digit code', cfBtn: 'Confirm', cfResend: 'Send a new code', cfSent: 'New code sent. Check your inbox (and spam).', cfDone: 'Email confirmed. Thank you!', cfLater: 'Later', emailConfirmed: 'Confirmed', emailNotConfirmed: 'Not confirmed', emailMeCode: 'Email me a code instead', emailCodeSent: 'If that account has a confirmed email, we sent it a 6-digit code. It works for 30 minutes.', needIdentity: 'Enter your email or username first.', rcTitle: 'Recovery codes', rcSub: 'Each code resets your password once if you forget it. Keep them somewhere safe, like a password manager or a printed page.', rcSaveTitle: 'Save your recovery codes', rcSaveText: 'If you ever forget your password, one of these codes lets you set a new one. Each works once. This is the only time they are shown.', rcCopy: 'Copy codes', rcCopied: 'Codes copied', rcDownload: 'Download .txt', rcDone: 'I saved them', rcLeft: (a, b) => `${a} of ${b} codes left.`, rcNone: 'You have no recovery codes yet. Make some so a forgotten password never locks you out.', rcLow: 'Running low: make a fresh set.', rcMake: 'Make new codes', rcMakeHint: 'Your old codes stop working when you make new ones.', rcFileHead: 'CS Course Atlas recovery codes', rcFileUse: 'Use one on the sign-in page: Forgot password? Each code works once.', recoverTitle: 'Reset your password', recoverSub: 'Use one of the recovery codes you saved when you created your account, or a code we email you.', recoveryCode: 'Recovery code', recoverBtn: 'Reset password', backToSignIn: 'Back to sign in', noCode: 'No recovery code?', contactUs: 'Contact support', pwReset: (n) => `Password reset. You are signed in (${n} recovery code${n === 1 ? '' : 's'} left).`, recoverOff: 'Password reset is being switched on. Until then, contact support and we will reset it for you.', codeHint: 'A recovery code like K7QM-3XRP-W9TD, or the 6-digit code from our email.',
     serverSlow: 'The server is waking up. Try again in a few seconds.', signedOut: 'Signed out', accountDeleted: 'Your account was deleted', savedAccount: 'Saved to your account'
   },
   es: {
@@ -132,7 +132,7 @@ const UI = {
     modulesWithNotes: 'módulos con notas', noActivity: 'Completa un módulo, haz un cuestionario o escribe una nota y aparecerá aquí.', typeDelete: 'Escribe DELETE para confirmar', deleteViaSupport: 'Pide a soporte que la elimine',
     privacy: 'Privacidad', terms: 'Términos', contact: 'Contacto', checkingSession: 'Revisando tu cuenta…', emailOrUser: 'Correo o usuario', username: 'Usuario', confirmPw: 'Confirmar contraseña',
     haveAccount: '¿Ya tienes cuenta?', pwMismatch: 'Las contraseñas no coinciden.', working: 'Un momento…', signinFailed: 'No se completó el inicio de sesión. Inténtalo de nuevo.', welcome: (n) => (n ? `Sesión iniciada como ${n}` : 'Sesión iniciada'),
-    rcTitle: 'Códigos de recuperación', rcSub: 'Cada código restablece tu contraseña una vez si la olvidas. Guárdalos en un lugar seguro, como un gestor de contraseñas o una hoja impresa.', rcSaveTitle: 'Guarda tus códigos de recuperación', rcSaveText: 'Si alguna vez olvidas tu contraseña, uno de estos códigos te permite crear una nueva. Cada uno funciona una vez. Esta es la única vez que se muestran.', rcCopy: 'Copiar códigos', rcCopied: 'Códigos copiados', rcDownload: 'Descargar .txt', rcDone: 'Ya los guardé', rcLeft: (a, b) => `Te quedan ${a} de ${b} códigos.`, rcNone: 'Todavía no tienes códigos de recuperación. Crea algunos para que una contraseña olvidada nunca te deje fuera.', rcLow: 'Te quedan pocos: crea un juego nuevo.', rcMake: 'Crear códigos nuevos', rcMakeHint: 'Tus códigos anteriores dejan de funcionar cuando creas nuevos.', rcFileHead: 'Códigos de recuperación de CS Course Atlas', rcFileUse: 'Usa uno en la página de inicio de sesión: ¿Olvidaste tu contraseña? Cada código funciona una vez.', recoverTitle: 'Restablece tu contraseña', recoverSub: 'Usa uno de los códigos de recuperación que guardaste al crear tu cuenta.', recoveryCode: 'Código de recuperación', recoverBtn: 'Restablecer contraseña', backToSignIn: 'Volver a iniciar sesión', noCode: '¿No tienes un código?', contactUs: 'Contacta a soporte', pwReset: (n) => `Contraseña restablecida. Iniciaste sesión (te quedan ${n} código${n === 1 ? '' : 's'}).`, recoverOff: 'El restablecimiento de contraseña se está activando. Mientras tanto, contacta a soporte y la restableceremos por ti.', codeHint: 'Como K7QM-3XRP-W9TD. Los guiones y las mayúsculas son opcionales.',
+    cfTitle: 'Confirma tu correo', cfText: (e) => `Enviamos un código de 6 dígitos a <b>${e}</b>. Escríbelo aquí para confirmar tu cuenta.`, cfCode: 'Código de 6 dígitos', cfBtn: 'Confirmar', cfResend: 'Enviar un código nuevo', cfSent: 'Código nuevo enviado. Revisa tu bandeja (y el spam).', cfDone: 'Correo confirmado. ¡Gracias!', cfLater: 'Después', emailConfirmed: 'Confirmado', emailNotConfirmed: 'Sin confirmar', emailMeCode: 'Mejor envíame un código por correo', emailCodeSent: 'Si esa cuenta tiene un correo confirmado, le enviamos un código de 6 dígitos. Funciona durante 30 minutos.', needIdentity: 'Primero escribe tu correo o usuario.', rcTitle: 'Códigos de recuperación', rcSub: 'Cada código restablece tu contraseña una vez si la olvidas. Guárdalos en un lugar seguro, como un gestor de contraseñas o una hoja impresa.', rcSaveTitle: 'Guarda tus códigos de recuperación', rcSaveText: 'Si alguna vez olvidas tu contraseña, uno de estos códigos te permite crear una nueva. Cada uno funciona una vez. Esta es la única vez que se muestran.', rcCopy: 'Copiar códigos', rcCopied: 'Códigos copiados', rcDownload: 'Descargar .txt', rcDone: 'Ya los guardé', rcLeft: (a, b) => `Te quedan ${a} de ${b} códigos.`, rcNone: 'Todavía no tienes códigos de recuperación. Crea algunos para que una contraseña olvidada nunca te deje fuera.', rcLow: 'Te quedan pocos: crea un juego nuevo.', rcMake: 'Crear códigos nuevos', rcMakeHint: 'Tus códigos anteriores dejan de funcionar cuando creas nuevos.', rcFileHead: 'Códigos de recuperación de CS Course Atlas', rcFileUse: 'Usa uno en la página de inicio de sesión: ¿Olvidaste tu contraseña? Cada código funciona una vez.', recoverTitle: 'Restablece tu contraseña', recoverSub: 'Usa uno de los códigos de recuperación que guardaste al crear tu cuenta, o un código que te enviamos por correo.', recoveryCode: 'Código de recuperación', recoverBtn: 'Restablecer contraseña', backToSignIn: 'Volver a iniciar sesión', noCode: '¿No tienes un código?', contactUs: 'Contacta a soporte', pwReset: (n) => `Contraseña restablecida. Iniciaste sesión (te quedan ${n} código${n === 1 ? '' : 's'}).`, recoverOff: 'El restablecimiento de contraseña se está activando. Mientras tanto, contacta a soporte y la restableceremos por ti.', codeHint: 'Un código de recuperación como K7QM-3XRP-W9TD, o el código de 6 dígitos de nuestro correo.',
     serverSlow: 'El servidor se está activando. Inténtalo en unos segundos.', signedOut: 'Sesión cerrada', accountDeleted: 'Tu cuenta fue eliminada', savedAccount: 'Guardado en tu cuenta'
   }
 };
@@ -328,7 +328,48 @@ function sideCourse(tr, route) {
     <a class="course-switch" href="#course-${tr.id}"><span class="cmark" data-track="${tr.id}">${esc(tr.icon)}</span><span class="cs-txt"><b>${esc(L(tr.title))}</b><span>${t('ofModules', ts.done, ts.count)}</span><i class="mini-bar"><i style="width:${pct(ts.done, ts.count)}%"></i></i></span></a>
     <button class="side-toggle" data-action="side-toggle" data-v="${tr.id}" aria-expanded="${open}" aria-label="${esc(L(tr.title))}: ${open ? t('collapse') : t('expand')}">${CHEVRON}</button></div>${units}</div>`;
 }
+// "Confirm your email" bar under the header, shown to signed-in people whose address is not confirmed yet.
+// Built only when the account state changes, so typing in it survives page renders.
+let confirmBarKey = '';
+function updateConfirmBar() {
+  const u = state.user, show = Boolean(u && u.emailVerified === false && auth.emailConfirmation && !state.confirmLater);
+  const key = show ? `${u.email}|${state.lang}` : '';
+  if (key === confirmBarKey) return;
+  confirmBarKey = key;
+  let bar = $('#confirm-bar');
+  if (!show) { if (bar) bar.remove(); return; }
+  if (!bar) { bar = document.createElement('form'); bar.id = 'confirm-bar'; bar.className = 'confirm-bar'; bar.setAttribute('aria-labelledby', 'cf-title'); $('.shell').before(bar); }
+  bar.innerHTML = `<span class="cf-icon" aria-hidden="true">✉</span><div class="cf-text"><b id="cf-title">${t('cfTitle')}</b><span>${t('cfText', esc(u.email))}</span></div>
+    <div class="cf-form"><input id="cf-code" class="input code-input" inputmode="numeric" autocomplete="one-time-code" maxlength="7" placeholder="123456" aria-label="${t('cfCode')}" required>
+    <button class="btn btn-sm" type="submit">${t('cfBtn')}</button><button type="button" class="link-btn" data-action="cf-resend">${t('cfResend')}</button></div>
+    <span class="cf-status" id="cf-status" role="status"></span><button type="button" class="icon-btn cf-close" data-action="cf-later" aria-label="${t('cfLater')}">✕</button>`;
+}
+async function confirmEmail() {
+  const status = $('#cf-status'), code = $('#cf-code').value.replace(/\D/g, '');
+  status.className = 'cf-status'; status.textContent = t('working');
+  try {
+    await api('/api/auth/email/confirm', { method: 'POST', body: { code } });
+    state.user = { ...state.user, emailVerified: true }; toast(t('cfDone'), 3000); render(true);
+  } catch (e) { status.className = 'cf-status err'; status.textContent = e.message; }
+}
+async function resendConfirm() {
+  const status = $('#cf-status');
+  status.className = 'cf-status'; status.textContent = t('working');
+  try {
+    const r = await api('/api/auth/email/send-code', { method: 'POST', body: { lang: state.lang } });
+    if (r.verified) { state.user = { ...state.user, emailVerified: true }; render(true); return; }
+    status.className = 'cf-status ok'; status.textContent = t('cfSent');
+  } catch (e) { status.className = 'cf-status err'; status.textContent = e.message; }
+}
+async function recoverByEmail() {
+  const status = $('#recover-email-status'), who = ($('#si-email').value || '').trim();
+  if (!who) { status.className = 'hint form-err'; status.textContent = t('needIdentity'); $('#si-email').focus(); return; }
+  status.className = 'hint'; status.textContent = t('working');
+  try { await api('/api/auth/recover/email', { method: 'POST', body: { email: who, lang: state.lang } }); status.className = 'hint form-ok'; status.textContent = t('emailCodeSent'); $('#si-code').focus(); }
+  catch (e) { status.className = 'hint form-err'; status.textContent = e.status === 404 ? t('recoverOff') : e.message; }
+}
 function renderChrome(route) {
+  updateConfirmBar();
   document.documentElement.lang = state.lang;
   document.body.classList.toggle('signed-in', Boolean(state.user));
   const av = $('.avatar.sm'); if (av) av.textContent = state.user ? initials(state.user) : '';
@@ -811,7 +852,7 @@ function viewProfile() {
         <form id="profile-form" class="acct-form">
           <div class="field"><label for="pf-name">${t('displayName')}</label><input class="input" id="pf-name" maxlength="80" value="${esc(u.name || '')}" autocomplete="name"></div>
           <div class="field"><label for="pf-user">${t('username')}</label><input class="input" id="pf-user" maxlength="32" value="${esc(u.username || '')}" autocomplete="username"><small class="hint">${t('userHint')}</small></div>
-          <div class="field"><label>${t('email')}</label><div class="readonly">${esc(u.email || '—')}</div></div>
+          <div class="field"><label>${t('email')}</label><div class="readonly email-row">${esc(u.email || '—')}${u.emailVerified ? `<span class="pill ok">✓ ${t('emailConfirmed')}</span>` : auth.emailConfirmation ? `<span class="pill soon">${t('emailNotConfirmed')}</span>` : ''}</div></div>
           <div class="acct-actions"><button class="btn btn-sm" type="submit">${t('saveChanges')}</button><span class="form-status" id="profile-status" role="status"></span></div>
         </form>
         ${u.authProvider === 'password' ? `<div class="sep"></div><form id="password-form" class="acct-form"><h3>${t('changePw')}</h3>
@@ -1557,6 +1598,7 @@ async function api(path, opts = {}) {
 function applySession(d) {
   if (d && d.authenticated && d.user) {
     state.user = d.user; if (d.csrfToken) auth.csrf = d.csrfToken;
+    if ('emailConfirmation' in d) auth.emailConfirmation = Boolean(d.emailConfirmation);
     if (d.sessionToken) { auth.token = d.sessionToken; store.set('session', auth.token); }
     return true;
   }
@@ -1644,7 +1686,7 @@ function renderRecover(err) {
     <h2 id="signin-title" class="recover-title">${t('recoverTitle')}</h2>
     <p class="muted" style="margin:0">${t('recoverSub')}</p>
     <div class="field"><label for="si-email">${t('emailOrUser')}</label><input id="si-email" name="email" type="text" autocomplete="username" required></div>
-    <div class="field"><label for="si-code">${t('recoveryCode')}</label><input id="si-code" class="code-input" name="code" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" maxlength="40" required><small class="hint">${t('codeHint')}</small></div>
+    <div class="field"><label for="si-code">${t('recoveryCode')}</label><input id="si-code" class="code-input" name="code" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" maxlength="40" required><small class="hint">${t('codeHint')}</small>${auth.emailConfirmation !== false ? `<button type="button" class="link-btn email-code-btn" data-action="recover-email">✉ ${t('emailMeCode')}</button><small class="hint form-ok" id="recover-email-status" role="status"></small>` : ''}</div>
     ${pw('si-pass', t('newPw'), 'new-password', t('pwHint'))}
     ${pw('si-pass2', t('confirmPw'), 'new-password', '')}
     <div class="form-error" id="signin-error" role="alert">${err ? esc(err) : ''}</div>
@@ -1698,7 +1740,7 @@ async function submitSignIn() {
   btn.disabled = true; btn.textContent = t('working'); errBox.textContent = '';
   try {
     const d = recover ? await api('/api/auth/recover', { method: 'POST', body: { email: v('si-email'), code: v('si-code'), newPassword: v('si-pass'), confirmPassword: v('si-pass2') } })
-      : signup ? await api('/api/auth/signup', { method: 'POST', body: { email: v('si-email'), username: v('si-user'), password: v('si-pass'), confirmPassword: v('si-pass2') } })
+      : signup ? await api('/api/auth/signup', { method: 'POST', body: { email: v('si-email'), username: v('si-user'), password: v('si-pass'), confirmPassword: v('si-pass2'), lang: state.lang } })
       : await api('/api/auth/login', { method: 'POST', body: { email: v('si-email'), password: v('si-pass') } });
     if (!applySession({ authenticated: true, ...d })) throw new Error(t('signinFailed'));
     store.set('hadSession', true); state.authReady = true;
@@ -1823,6 +1865,9 @@ document.addEventListener('click', (e) => {
   if (el.dataset.codeLang) { state.codeLang = el.dataset.codeLang; state.langsSeen.add(el.dataset.codeLang); store.set('codeLangTouched', true); save(); render(true); return; }
   const a = el.dataset.action;
   if (a === 'reload') { location.reload(); return; }
+  if (a === 'cf-resend') { resendConfirm(); return; }
+  if (a === 'cf-later') { state.confirmLater = true; updateConfirmBar(); return; }
+  if (a === 'recover-email') { e.preventDefault(); recoverByEmail(); return; }
   if (a === 'side-toggle') {
     const id = el.dataset.v, opened = new Set(store.get('sideOpen', []));
     if (el.getAttribute('aria-expanded') === 'true') { opened.delete(id); state.sideCollapsed.add(id); } else { opened.add(id); state.sideCollapsed.delete(id); }
@@ -2033,6 +2078,7 @@ document.addEventListener('submit', (e) => {
   if (e.target.id === 'profile-form') { e.preventDefault(); saveProfile(); }
   if (e.target.id === 'password-form') { e.preventDefault(); changePassword(); }
   if (e.target.id === 'rc-form') { e.preventDefault(); makeRecoveryCodes(); }
+  if (e.target.id === 'confirm-bar') { e.preventDefault(); confirmEmail(); }
 });
 $('#lang-btn').addEventListener('click', () => { state.lang = state.lang === 'en' ? 'es' : 'en'; save(); render(true); });
 $('#theme-btn').addEventListener('click', () => {

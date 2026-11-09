@@ -3,7 +3,7 @@ require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
-const { verifyMailer, mailEnabled, sendMail } = require('./mailer');
+const { initMailer, mailEnabled, canConnectGmail, saveGmailSender, sendMail, senderEmail } = require('./mailer');
 const { RECOVERY_CODE_COUNT, generateRecoveryCodes, hashRecoveryCode, findMatchingCode, normalizeRecoveryCode } = require('./recovery-codes');
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -1608,6 +1608,12 @@ async function resolveOAuthUser(profile) {
         );
 
         await client.query('UPDATE users SET last_login_at = NOW(), updated_at = NOW() WHERE id = $1', [userId]);
+        if (profile?.emailVerified && normalizedEmail) {
+            await client.query(
+                'UPDATE users SET email_verified_at = COALESCE(email_verified_at, NOW()) WHERE id = $1 AND LOWER(email) = $2',
+                [userId, normalizedEmail]
+            ).catch(() => {});
+        }
         return loadUserSummary(client, userId);
     });
 }
@@ -1974,6 +1980,7 @@ async function runSecurityCleanup() {
         }
     }
     try {
+        await query('DELETE FROM email_codes WHERE expires_at < NOW() - INTERVAL \'1 day\'').catch(() => {});
         await query(
             `
             DELETE FROM auth_throttles
@@ -2044,6 +2051,11 @@ function logSecurityConfigurationWarnings() {
 }
 
 async function deliverEmailVerificationPin({ toEmail, pin, userId }) {
+    if (mailEnabled() && EMAIL_PIN_DELIVERY_MODE !== 'log') {
+        const mail = buildCodeEmail('change', pin, 'en');
+        const result = await sendMail({ to: toEmail, ...mail });
+        return result.sent ? { delivered: true, mode: 'email' } : { delivered: false, reason: 'We could not send the email right now. Please try again in a minute.' };
+    }
     if (EMAIL_PIN_DELIVERY_MODE === 'log') {
         console.info(
             `[email-pin] user=${safeString(userId, 'unknown')} email=${toEmail} pin=${pin} expires=${EMAIL_PIN_EXPIRY_MINUTES}m mode=log`
@@ -2121,6 +2133,7 @@ async function getSessionByToken(token, options = {}) {
                 s.auth_provider,
                 s.expires_at,
                 u.email,
+                u.email_verified_at,
                 u.username,
                 p.name,
                 p.goal,
@@ -2151,6 +2164,7 @@ async function getSessionByToken(token, options = {}) {
                 'password'::text AS auth_provider,
                 s.expires_at,
                 u.email,
+                u.email_verified_at,
                 u.username,
                 p.name,
                 p.goal,
@@ -2186,6 +2200,7 @@ async function getSessionByToken(token, options = {}) {
         user: {
             id: row.user_id,
             email: row.email,
+            emailVerified: Boolean(row.email_verified_at),
             username: row.profile_username || row.username || row.name || null,
             name: row.name || row.profile_username || row.username || null,
             goal: row.goal || 'exploring',
@@ -2294,6 +2309,7 @@ function sessionResponsePayload(session, options = {}) {
         socialHandle: session.user.socialHandle,
         socialStatus: session.user.socialStatus,
         messagingEnabled: session.user.messagingEnabled,
+        emailVerified: Boolean(session.user.emailVerified),
         authProvider: session.authProvider
     };
     const payload = {
@@ -2305,7 +2321,9 @@ function sessionResponsePayload(session, options = {}) {
         },
         user: userPayload,
         authProvider: session.authProvider,
-        csrfToken: session.csrfToken
+        csrfToken: session.csrfToken,
+        // Whether the server can send email, so the site only asks people to confirm when it can.
+        emailConfirmation: mailEnabled()
     };
     if (sessionToken) {
         payload.sessionToken = sessionToken;
@@ -2402,6 +2420,47 @@ app.get('/api/auth/oauth/:provider/start', authRateLimit, noStore, (req, res) =>
 
     res.cookie(OAUTH_STATE_COOKIE_NAME, stateToken, getOAuthStateCookieOptions());
     return res.redirect(oauthUrl);
+});
+
+// Shares Google's registered callback URL with sign-in; only handles requests that carry the setup cookie.
+app.get('/api/auth/oauth/google/callback', async (req, res, next) => {
+    const cookieState = safeString(req.cookies?.[MAIL_SETUP_COOKIE]);
+    if (!cookieState) return next();
+    res.clearCookie(MAIL_SETUP_COOKIE, { ...getOAuthStateCookieOptions(), maxAge: undefined });
+    // A normal Google sign-in that happens while an old setup cookie lingers goes to the usual handler.
+    const queryState = safeString(req.query?.state);
+    if (!safeTokenCompare(cookieState, queryState)) return next();
+    const decoded = verifyAndDecodeOAuthState(cookieState);
+    if (!decoded || decoded.purpose !== 'mail-setup' || Date.now() - Number(decoded.issuedAt || 0) > OAUTH_STATE_TTL_MS) {
+        return res.status(400).send(setupPage('Setup link expired', '<p>Open the setup link again.</p>'));
+    }
+    if (req.query?.error) {
+        return res.status(400).send(setupPage('Not connected', `<p>Google said: ${safeString(req.query.error).replace(/[<>&"]/g, '')}. Open the setup link again to retry.</p>`));
+    }
+    try {
+        const redirectUri = getOAuthProviderStatusMap(req).google?.redirectUri;
+        const tokens = await fetchJsonWithTimeout('https://oauth2.googleapis.com/token', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: new URLSearchParams({ code: safeString(req.query?.code), client_id: GOOGLE_OAUTH_CLIENT_ID, client_secret: GOOGLE_OAUTH_CLIENT_SECRET, redirect_uri: redirectUri, grant_type: 'authorization_code' }).toString()
+        });
+        const idClaims = await verifyJwtWithProviderJwks('google', tokens?.id_token, { audience: GOOGLE_OAUTH_CLIENT_ID, issuer: ['https://accounts.google.com', 'accounts.google.com'] });
+        const email = normalizeEmail(idClaims?.email || '');
+        if (!tokens?.refresh_token || !email) {
+            return res.status(400).send(setupPage('Not connected', '<p>Google did not return a long-lived permission. Open the setup link again and allow access.</p>'));
+        }
+        if (!String(tokens.scope || '').includes('gmail.send')) {
+            return res.status(400).send(setupPage('Not connected', '<p>The permission to send email was not granted. Open the setup link again and tick the box to send email on your behalf.</p>'));
+        }
+        await saveGmailSender({ email, refreshToken: tokens.refresh_token });
+        const test = await sendMail({ to: email, subject: 'CS Course Atlas can now send email', text: 'This is a test from your CS Course Atlas server. Sign-up confirmation and password reset emails will come from this address.\n', html: '<p>This is a test from your CS Course Atlas server. Sign-up confirmation and password reset emails will come from this address.</p>' });
+        const safe = (v) => String(v).replace(/[<>&"]/g, '');
+        return res.send(test.sent
+            ? setupPage('Email is connected ✓', `<p>CS Course Atlas now sends email from <b>${safe(email)}</b>. A test email is on its way to that inbox. You can close this tab.</p>`)
+            : setupPage('Almost there', `<p>Connected <b>${safe(email)}</b>, but the test email failed: <code>${safe(test.error || '').slice(0, 300)}</code></p>`));
+    } catch (error) {
+        return res.status(500).send(setupPage('Not connected', `<p>Something went wrong: ${String(error?.message || error).replace(/[<>&"]/g, '').slice(0, 200)}. Open the setup link again.</p>`));
+    }
 });
 
 app.get('/api/auth/oauth/:provider/callback', authRateLimit, noStore, async (req, res) => {
@@ -2601,6 +2660,9 @@ app.post('/api/auth/signup', assertSameOrigin, async (req, res) => {
         const createdSession = await createSession(res, req, userId, { authProvider: 'password' });
         const hydratedSession = await getSessionByToken(createdSession.sessionToken, { tokenSource: 'issue' });
         await clearAuthThrottle(throttleKey);
+        const confirmation = mailEnabled()
+            ? await sendEmailCode({ userId, email, purpose: 'confirm', lang: req.body?.lang }).catch(() => ({ sent: false }))
+            : { sent: false };
 
         if (!hydratedSession) {
             return res.status(201).json({
@@ -2628,7 +2690,8 @@ app.post('/api/auth/signup', assertSameOrigin, async (req, res) => {
         return res.status(201).json({
             ok: true,
             ...sessionResponsePayload(hydratedSession, { sessionToken: createdSession.sessionToken }),
-            recoveryCodes
+            recoveryCodes,
+            confirmationSent: Boolean(confirmation.sent)
         });
     } catch (error) {
         if (error?.code === '23505') {
@@ -3006,7 +3069,8 @@ app.post('/api/auth/recover', assertSameOrigin, async (req, res) => {
         }
         return res.status(400).json({ error: wrong });
     };
-    if (!identityIsValid || code.length !== 12) {
+    const emailedCode = /^[0-9]{6}$/.test(code);
+    if (!identityIsValid || (code.length !== 12 && !emailedCode)) {
         return fail();
     }
 
@@ -3029,15 +3093,21 @@ app.post('/api/auth/recover', assertSameOrigin, async (req, res) => {
         }
         const newHash = await hashPassword(newPassword);
         const ok = await withTransaction(async (client) => {
-            const codes = await client.query(
-                'SELECT id, code_hash FROM password_recovery_codes WHERE user_id = $1 AND used_at IS NULL FOR UPDATE',
-                [userId]
-            );
-            const match = findMatchingCode(code, codes.rows);
-            if (!match) {
-                return false;
+            if (emailedCode) {
+                if (!(await consumeEmailCode(client, userId, 'reset', code))) {
+                    return false;
+                }
+            } else {
+                const codes = await client.query(
+                    'SELECT id, code_hash FROM password_recovery_codes WHERE user_id = $1 AND used_at IS NULL FOR UPDATE',
+                    [userId]
+                );
+                const match = findMatchingCode(code, codes.rows);
+                if (!match) {
+                    return false;
+                }
+                await client.query('UPDATE password_recovery_codes SET used_at = NOW() WHERE id = $1', [match.id]);
             }
-            await client.query('UPDATE password_recovery_codes SET used_at = NOW() WHERE id = $1', [match.id]);
             await client.query('UPDATE users SET password_hash = $2, updated_at = NOW() WHERE id = $1', [userId, newHash]);
             // Whoever had the old password is signed out everywhere.
             await client.query('DELETE FROM user_sessions WHERE user_id = $1', [userId]);
@@ -3097,6 +3167,182 @@ app.post('/api/profile/recovery-codes', assertSameOrigin, requireAuth, requireCs
         }
         return res.status(500).json({ error: 'Failed to create recovery codes.' });
     }
+});
+
+// ---- Emailed one-time codes: confirming a new account's address, and resetting a password ----
+const EMAIL_CODE_TTL_MS = 30 * 60 * 1000;
+const EMAIL_CODE_MAX_ATTEMPTS = 5;
+const EMAIL_CODE_RESEND_MS = 60 * 1000;
+const EMAIL_CODE_MAX_PER_HOUR = 5;
+
+function hashEmailCode(userId, purpose, code) {
+    return crypto.createHash('sha256').update(`atlas-email-code|${userId}|${purpose}|${code}|${EMAIL_PIN_PEPPER}`).digest('hex');
+}
+
+const EMAIL_TEXT = {
+    en: {
+        confirm: { subject: 'Confirm your email for CS Course Atlas', lead: 'Welcome to CS Course Atlas! Enter this code on the site to confirm your email:', foot: 'The code works for 30 minutes. If you did not create an account, you can ignore this email.' },
+        reset: { subject: 'Your CS Course Atlas password reset code', lead: 'Someone (hopefully you) asked to reset your CS Course Atlas password. Enter this code on the reset form:', foot: 'The code works for 30 minutes. If you did not ask for this, ignore this email: your password stays the same.' },
+        change: { subject: 'Confirm your new email for CS Course Atlas', lead: 'Enter this code on the Account page to confirm your new email address:', foot: 'The code works for a few minutes. If you did not ask for this, you can ignore this email.' }
+    },
+    es: {
+        confirm: { subject: 'Confirma tu correo en CS Course Atlas', lead: '¡Te damos la bienvenida a CS Course Atlas! Escribe este código en el sitio para confirmar tu correo:', foot: 'El código funciona durante 30 minutos. Si no creaste una cuenta, puedes ignorar este correo.' },
+        reset: { subject: 'Tu código para restablecer la contraseña de CS Course Atlas', lead: 'Alguien (esperamos que tú) pidió restablecer tu contraseña de CS Course Atlas. Escribe este código en el formulario:', foot: 'El código funciona durante 30 minutos. Si no lo pediste, ignora este correo: tu contraseña no cambia.' },
+        change: { subject: 'Confirma tu nuevo correo en CS Course Atlas', lead: 'Escribe este código en la página de tu cuenta para confirmar tu nuevo correo:', foot: 'El código funciona durante unos minutos. Si no lo pediste, puedes ignorar este correo.' }
+    }
+};
+
+function buildCodeEmail(purpose, code, lang) {
+    const t = (EMAIL_TEXT[lang === 'es' ? 'es' : 'en'] || EMAIL_TEXT.en)[purpose];
+    const spaced = `${code.slice(0, 3)} ${code.slice(3)}`;
+    const text = `${t.lead}\n\n    ${spaced}\n\n${t.foot}\n\nCS Course Atlas · https://eddyarriaga00.github.io/CS-Course-Atlas/\n`;
+    const html = `<!doctype html><html><body style="margin:0;background:#f7f7f8;font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#17171c">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="padding:32px 12px"><tr><td align="center">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:460px;background:#fff;border:1px solid #e4e4e9;border-radius:16px;padding:28px">
+<tr><td style="font-weight:700;font-size:16px;color:#4f46e5;padding-bottom:18px">◆ CS Course Atlas</td></tr>
+<tr><td style="font-size:15px;line-height:1.55;padding-bottom:18px">${t.lead}</td></tr>
+<tr><td align="center" style="padding:6px 0 20px"><div style="display:inline-block;font:700 30px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:6px;background:#eef0ff;color:#3730a3;border-radius:12px;padding:16px 22px">${spaced}</div></td></tr>
+<tr><td style="font-size:13px;line-height:1.5;color:#55555f">${t.foot}</td></tr>
+</table></td></tr></table></body></html>`;
+    return { subject: t.subject, text, html };
+}
+
+// Creates (or replaces) a code and emails it. Limits: one email a minute, five an hour.
+async function sendEmailCode({ userId, email, purpose, lang }) {
+    const existing = await query('SELECT sent_at, sent_count, window_started_at FROM email_codes WHERE user_id = $1 AND purpose = $2', [userId, purpose]);
+    const row = existing.rows[0];
+    const now = Date.now();
+    let sentCount = 1;
+    let windowStarted = new Date();
+    if (row) {
+        const sinceLast = now - new Date(row.sent_at).getTime();
+        if (sinceLast < EMAIL_CODE_RESEND_MS) {
+            return { sent: false, retryAfterSeconds: Math.ceil((EMAIL_CODE_RESEND_MS - sinceLast) / 1000) };
+        }
+        const windowAge = now - new Date(row.window_started_at).getTime();
+        if (windowAge < 60 * 60 * 1000) {
+            if (row.sent_count >= EMAIL_CODE_MAX_PER_HOUR) {
+                return { sent: false, retryAfterSeconds: Math.ceil((60 * 60 * 1000 - windowAge) / 1000) };
+            }
+            sentCount = row.sent_count + 1;
+            windowStarted = new Date(row.window_started_at);
+        }
+    }
+    const code = String(crypto.randomInt(0, 1_000_000)).padStart(6, '0');
+    await query(
+        `INSERT INTO email_codes (user_id, purpose, email, code_hash, attempts, sent_count, window_started_at, sent_at, expires_at)
+         VALUES ($1, $2, $3, $4, 0, $5, $6, NOW(), $7)
+         ON CONFLICT (user_id, purpose) DO UPDATE SET email = EXCLUDED.email, code_hash = EXCLUDED.code_hash, attempts = 0,
+             sent_count = EXCLUDED.sent_count, window_started_at = EXCLUDED.window_started_at, sent_at = NOW(), expires_at = EXCLUDED.expires_at`,
+        [userId, purpose, email, hashEmailCode(userId, purpose, code), sentCount, windowStarted, new Date(now + EMAIL_CODE_TTL_MS)]
+    );
+    const result = await sendMail({ to: email, ...buildCodeEmail(purpose, code, lang) });
+    return { sent: result.sent };
+}
+
+// Checks a code inside a transaction; a right code is used up, a wrong one counts as an attempt.
+async function consumeEmailCode(client, userId, purpose, code) {
+    const found = await client.query('SELECT code_hash, attempts, expires_at FROM email_codes WHERE user_id = $1 AND purpose = $2 FOR UPDATE', [userId, purpose]);
+    const row = found.rows[0];
+    if (!row || row.attempts >= EMAIL_CODE_MAX_ATTEMPTS || new Date(row.expires_at).getTime() <= Date.now()) {
+        return false;
+    }
+    if (!safeTokenCompare(row.code_hash, hashEmailCode(userId, purpose, code))) {
+        await client.query('UPDATE email_codes SET attempts = attempts + 1 WHERE user_id = $1 AND purpose = $2', [userId, purpose]);
+        return false;
+    }
+    await client.query('DELETE FROM email_codes WHERE user_id = $1 AND purpose = $2', [userId, purpose]);
+    return true;
+}
+
+app.use('/api/auth/email', authRateLimit, noStore);
+app.use('/api/mail', authRateLimit, noStore);
+
+// Send (or resend) the code that confirms a signed-in person's email address.
+app.post('/api/auth/email/send-code', assertSameOrigin, requireAuth, requireCsrf, async (req, res) => {
+    try {
+        const found = await query('SELECT email, email_verified_at FROM users WHERE id = $1', [req.auth.userId]);
+        const user = found.rows[0];
+        if (!user) return res.status(404).json({ error: 'Account not found.' });
+        if (user.email_verified_at) return res.json({ ok: true, verified: true });
+        if (!mailEnabled()) return res.status(503).json({ error: 'Email confirmation is not available right now.' });
+        const result = await sendEmailCode({ userId: req.auth.userId, email: user.email, purpose: 'confirm', lang: req.body?.lang });
+        if (result.retryAfterSeconds) {
+            res.setHeader('Retry-After', String(result.retryAfterSeconds));
+            return res.status(429).json({ error: `Please wait ${result.retryAfterSeconds} seconds before asking for another code.`, retryAfterSeconds: result.retryAfterSeconds });
+        }
+        if (!result.sent) return res.status(503).json({ error: 'We could not send the email right now. Please try again in a minute.' });
+        return res.json({ ok: true, sent: true });
+    } catch (error) {
+        return res.status(500).json({ error: 'Failed to send the code.' });
+    }
+});
+
+app.post('/api/auth/email/confirm', assertSameOrigin, requireAuth, requireCsrf, async (req, res) => {
+    const code = String(req.body?.code || '').replace(/\D/g, '');
+    if (code.length !== 6) return res.status(400).json({ error: 'Enter the 6-digit code from the email.' });
+    try {
+        const ok = await withTransaction(async (client) => {
+            if (!(await consumeEmailCode(client, req.auth.userId, 'confirm', code))) return false;
+            await client.query('UPDATE users SET email_verified_at = NOW(), updated_at = NOW() WHERE id = $1', [req.auth.userId]);
+            return true;
+        });
+        if (!ok) return res.status(400).json({ error: 'That code is wrong or expired. Check the email, or send a new code.' });
+        return res.json({ ok: true, verified: true });
+    } catch (error) {
+        return res.status(500).json({ error: 'Failed to confirm the email.' });
+    }
+});
+
+// Forgot password, email route: always the same answer, so it cannot reveal who has an account.
+app.post('/api/auth/recover/email', assertSameOrigin, async (req, res) => {
+    const identity = normalizeEmailOrUsername(req.body?.email).toLowerCase();
+    const answer = { ok: true, message: 'If that account has a confirmed email, we sent it a 6-digit code.' };
+    if (!identity || identity.length > AUTH_IDENTIFIER_MAX_LENGTH || !mailEnabled()) {
+        return mailEnabled() ? res.json(answer) : res.status(503).json({ error: 'Email reset is not available right now. Use a recovery code.' });
+    }
+    try {
+        const found = await query(
+            `SELECT u.id, u.email, u.email_verified_at FROM users u LEFT JOIN user_profiles p ON p.user_id = u.id
+             WHERE LOWER(u.email) = $1 OR LOWER(COALESCE(u.username, '')) = $1 OR LOWER(COALESCE(p.username, '')) = $1 LIMIT 1`,
+            [identity]
+        );
+        const user = found.rows[0];
+        if (user && user.email_verified_at) {
+            await sendEmailCode({ userId: user.id, email: user.email, purpose: 'reset', lang: req.body?.lang });
+        }
+        return res.json(answer);
+    } catch (error) {
+        return res.json(answer);
+    }
+});
+
+// One-time setup by the site owner: connect the Gmail account the site sends from.
+// GET /api/mail/setup?key=MAIL_SETUP_KEY -> Google consent (gmail.send) -> callback below.
+const MAIL_SETUP_KEY = String(process.env.MAIL_SETUP_KEY || '').trim();
+const MAIL_SETUP_COOKIE = 'atlas_mail_setup';
+const setupPage = (title, body) => `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${title}</title></head><body style="font-family:-apple-system,Segoe UI,Roboto,sans-serif;max-width:520px;margin:60px auto;padding:0 16px;color:#17171c;line-height:1.55"><h1 style="font-size:22px">${title}</h1>${body}</body></html>`;
+
+app.get('/api/mail/setup', (req, res) => {
+    if (!MAIL_SETUP_KEY || !safeTokenCompare(MAIL_SETUP_KEY, safeString(req.query?.key))) {
+        return res.status(404).json({ error: 'Not found.' });
+    }
+    if (!canConnectGmail()) {
+        return res.status(503).send(setupPage('Not ready', '<p>MAIL_TOKEN_KEY or the Google client is missing on the server.</p>'));
+    }
+    const redirectUri = getOAuthProviderStatusMap(req).google?.redirectUri;
+    const state = signOAuthState({ purpose: 'mail-setup', issuedAt: Date.now(), nonce: randomToken(16) });
+    res.cookie(MAIL_SETUP_COOKIE, state, getOAuthStateCookieOptions());
+    const params = new URLSearchParams({
+        client_id: GOOGLE_OAUTH_CLIENT_ID,
+        redirect_uri: redirectUri,
+        response_type: 'code',
+        scope: 'openid email https://www.googleapis.com/auth/gmail.send',
+        access_type: 'offline',
+        prompt: 'consent',
+        state
+    });
+    return res.redirect(`https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`);
 });
 
 app.post('/api/profile/delete-account', assertSameOrigin, requireAuth, requireCsrf, async (req, res) => {
@@ -3298,7 +3544,7 @@ app.post('/api/profile/email/verify-pin', assertSameOrigin, requireAuth, require
             }
 
             await client.query(
-                'UPDATE users SET email = $2, updated_at = NOW() WHERE id = $1',
+                'UPDATE users SET email = $2, email_verified_at = NOW(), updated_at = NOW() WHERE id = $1',
                 [req.auth.userId, newEmail]
             );
 
@@ -3561,7 +3807,7 @@ logSecurityConfigurationWarnings();
 
 const server = app.listen(PORT, () => {
     console.log(`CS Course Atlas server running on http://localhost:${PORT}`);
-    verifyMailer().catch(() => {});
+    initMailer({ query, googleClientId: GOOGLE_OAUTH_CLIENT_ID, googleClientSecret: GOOGLE_OAUTH_CLIENT_SECRET }).catch(() => {});
 });
 
 server.requestTimeout = SERVER_REQUEST_TIMEOUT_MS;

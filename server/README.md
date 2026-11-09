@@ -9,7 +9,10 @@ This backend enables Neon SQL persistence for auth, profile, support requests, a
 - `POST /api/auth/signup`
 - `POST /api/auth/login`
 - `POST /api/auth/logout`
-- `POST /api/auth/recover` (forgot password: one-time recovery code + new password)
+- `POST /api/auth/recover` (forgot password: a recovery code or an emailed 6-digit code, plus a new password)
+- `POST /api/auth/recover/email` (email a 6-digit reset code to a confirmed address)
+- `POST /api/auth/email/send-code`, `POST /api/auth/email/confirm` (confirm a new account's email)
+- `GET /api/mail/setup?key=MAIL_SETUP_KEY` (site owner only: connect the Gmail account the site sends from)
 - `GET /api/profile`
 - `POST /api/profile`
 - `POST /api/profile/password`
@@ -86,6 +89,10 @@ This repo includes a production `render.yaml` for API hosting as `cs-course-atla
 5. Register provider callback URLs:
    - Google: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/google/callback`
    - GitHub: `https://cs-course-atlas-api.onrender.com/api/auth/oauth/github/callback`
+
+## Email
+
+Render's free plan blocks SMTP ports, so mail goes through the Gmail API over HTTPS. Set `MAIL_TOKEN_KEY` (any long random string) and `MAIL_SETUP_KEY`, then open `/api/mail/setup?key=<MAIL_SETUP_KEY>` once and allow Google to send email on your behalf. The refresh token is stored encrypted (AES-256-GCM) in `app_secrets`, and a test email confirms it works. `SMTP_URL` works instead where SMTP is allowed; locally, `MAIL_LOG=1` prints emails to the console. Without any of these, email confirmation stays off and sign-up works as before.
 
 ## Security defaults
 

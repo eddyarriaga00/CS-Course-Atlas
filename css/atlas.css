@@ -976,3 +976,22 @@ pre[tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 
 .rc-left { margin: 8px 0 2px; font-size: 13.5px; font-weight: 600; color: var(--text-2); min-height: 1.2em; }
 .rc-left.low { color: var(--warn, #b45309); }
 @media (max-width: 420px) { .rc-codes { grid-template-columns: 1fr; } .rc-actions .btn { flex: 1 1 auto; } .rc-actions .btn:last-child { margin-left: 0; flex-basis: 100%; } }
+
+/* "Confirm your email" bar under the header */
+.confirm-bar { position: relative; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin: 12px max(16px, min(4vw, 48px)) 0; padding: 14px 48px 14px 16px; border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border)); border-radius: 14px; background: var(--accent-soft); color: var(--text); }
+.confirm-bar .cf-icon { display: grid; place-items: center; width: 36px; height: 36px; flex: none; border-radius: 10px; background: var(--surface); color: var(--accent); font-size: 17px; }
+.confirm-bar .cf-text { display: flex; flex-direction: column; gap: 2px; flex: 1 1 260px; min-width: 0; font-size: 13.5px; line-height: 1.45; color: var(--text-2); }
+.confirm-bar .cf-text b:first-child { color: var(--text); font-size: 14.5px; }
+.confirm-bar .cf-text span b { color: var(--text); overflow-wrap: anywhere; }
+.confirm-bar .cf-form { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.confirm-bar #cf-code { width: 128px; height: 36px; text-align: center; font-size: 16px; background: var(--surface); }
+.confirm-bar .cf-status { flex-basis: 100%; font-size: 13px; color: var(--text-2); }
+.confirm-bar .cf-status:empty { display: none; }
+.confirm-bar .cf-status.ok { color: var(--success); }
+.confirm-bar .cf-status.err { color: var(--danger, #b91c1c); }
+.confirm-bar .cf-close { position: absolute; top: 8px; right: 8px; }
+.email-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.email-code-btn { display: inline-block; margin-top: 8px; }
+.hint.form-ok { color: var(--success); }
+.hint.form-err { color: var(--danger, #b91c1c); }
+@media (max-width: 600px) { .confirm-bar .cf-form { width: 100%; } .confirm-bar #cf-code { flex: 1 1 auto; } }
