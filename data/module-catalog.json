@@ -258,7 +258,7 @@
     "Tree Construction"
    ],
    "es": {
-    "title": "árboles binarios",
+    "title": "Árboles binarios",
     "description": "Siga `insertRecursive`, `inorder` y `levelOrderTraversal` para ver cómo se construye BST, cómo DFS imprime valores ordenados y cómo una cola genera una salida en amplitud."
    }
   },
