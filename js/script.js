@@ -3290,13 +3290,15 @@ function applyTrackRoute(route) {
 
     const nextCategory = TRACK_ROUTE_CATEGORY_MAP[route];
     const categoryChanged = appState.categoryFilter !== nextCategory;
-    const pageChanged = appState.modulesPage !== 1;
 
     appState.categoryFilter = nextCategory;
-    appState.modulesPage = 1;
+    // Keep the current page within the same track so deep links and search results stay on the module's page.
+    if (categoryChanged) {
+        appState.modulesPage = 1;
+    }
     updateTopicFocusButtons();
 
-    return categoryChanged || pageChanged;
+    return categoryChanged;
 }
 
 function collapseAllModulePanels() {
@@ -3591,7 +3593,7 @@ function continueLearningJourney() {
     appState.difficultyFilter = 'all';
     appState.hideCompletedModules = false;
     appState.searchTerm = '';
-    appState.modulesPage = 1;
+    appState.modulesPage = getModulesPageForModule(targetModule.id);
 
     const searchInput = document.getElementById('search-input');
     const difficultySelect = document.getElementById('difficulty-filter');
@@ -3704,10 +3706,10 @@ function applyInitialModuleDeepLink(moduleId) {
     if (VALID_CATEGORY_FILTERS.has(moduleCategory)) {
         appState.categoryFilter = moduleCategory;
     }
-    appState.modulesPage = 1;
     appState.searchTerm = '';
     appState.difficultyFilter = 'all';
     appState.hideCompletedModules = false;
+    appState.modulesPage = getModulesPageForModule(normalizedId);
 
     const searchInput = document.getElementById('search-input');
     const difficultySelect = document.getElementById('difficulty-filter');
@@ -26812,6 +26814,8 @@ function openModuleFromGlobalSearch(moduleId) {
     if (searchInput) searchInput.value = '';
     if (difficultySelect) difficultySelect.value = 'all';
 
+    appState.modulesPage = getModulesPageForModule(moduleId);
+
     updateHideCompletedToggle();
     updateTopicFocusButtons();
     renderModules();
@@ -27130,6 +27134,12 @@ function getModulesPaginationModel(currentPage, totalPages) {
         previous = page;
     });
     return model;
+}
+
+// Page of the module list that contains moduleId under the current filters (1 if it is filtered out).
+function getModulesPageForModule(moduleId) {
+    const index = filterModules().findIndex((entry) => entry.id === moduleId);
+    return index >= 0 ? Math.floor(index / getModulesPageSize()) + 1 : 1;
 }
 
 function goToModulesPage(page) {
