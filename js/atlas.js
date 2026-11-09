@@ -1011,18 +1011,18 @@ const ROADMAP = [
   ['live', 'bilingual', { en: 'English and Spanish everywhere', es: 'Inglés y español en todo' }, { en: 'Every lesson, quiz and menu in both languages.', es: 'Cada lección, cuestionario y menú en ambos idiomas.' }, ['Access']],
   ['live', 'js-playground', { en: 'Playground for Python, JavaScript, SQL and web pages', es: 'Editor para Python, JavaScript, SQL y páginas web' }, { en: 'Run Python, JavaScript, SQL and HTML right in your browser; every example has a Try it button.', es: 'Ejecuta Python, JavaScript, SQL y HTML en tu navegador; cada ejemplo tiene un botón Pruébalo.' }, ['Tools']],
   ['live', 'exercises', { en: 'Auto-graded coding challenges', es: 'Retos de código con calificación automática' }, { en: 'Python, SQL, HTML, CSS and JavaScript challenges in every beginner course, checked instantly in your browser.', es: 'Retos de Python, SQL, HTML, CSS y JavaScript en cada curso para principiantes, revisados al instante en tu navegador.' }, ['Practice']],
+  ['live', 'offline', { en: 'Install and study offline', es: 'Instalar y estudiar sin conexión' }, { en: 'Add the site to your home screen. Lessons you have opened, and the Python and SQL runners, keep working without internet.', es: 'Agrega el sitio a tu pantalla de inicio. Las lecciones que abriste y los ejecutores de Python y SQL siguen funcionando sin internet.' }, ['Access']],
+  ['live', 'srs', { en: 'Spaced-repetition review', es: 'Repaso con repetición espaciada' }, { en: 'Flashcards you know come back after 1, 3, 7, 16 and 35 days, right before you would forget them.', es: 'Las tarjetas que sabes vuelven después de 1, 3, 7, 16 y 35 días, justo antes de que las olvides.' }, ['Practice']],
   ['live', 'sync', { en: 'Accounts and progress sync', es: 'Cuentas y progreso sincronizado' }, { en: 'Google or email sign-in; progress follows you between devices.', es: 'Inicio con Google o correo; tu progreso te sigue entre dispositivos.' }, ['Account']],
   ['building', 'dsa', { en: 'Data Structures & Algorithms course', es: 'Curso de estructuras de datos y algoritmos' }, { en: '22 modules, from arrays to dynamic programming, with complexity analysis.', es: '22 módulos, de arreglos a programación dinámica, con análisis de complejidad.' }, ['Courses']],
   ['building', 'runner', { en: 'Run Java and C++', es: 'Ejecutar Java y C++' }, { en: 'A sandboxed code server so every example and exercise runs in the browser.', es: 'Un servidor aislado para que cada ejemplo y ejercicio se ejecute en el navegador.' }, ['Tools']],
   ['live', 'redesign', { en: 'New design on every device', es: 'Nuevo diseño en todos los dispositivos' }, { en: 'This design: faster, clearer, with a real phone layout and dark mode.', es: 'Este diseño: más rápido, más claro, con versión para teléfono y modo oscuro.' }, ['Design']],
   ['building', 'more-courses', { en: 'x86-64 Assembly', es: 'Ensamblador x86-64' }, { en: 'Rewritten to the same standard as Java, one course at a time.', es: 'Reescritos con el mismo nivel que Java, un curso a la vez.' }, ['Courses']],
-  ['planned', 'srs', { en: 'Spaced-repetition review', es: 'Repaso con repetición espaciada' }, { en: 'Flashcards and quiz questions come back right before you would forget them.', es: 'Tarjetas y preguntas vuelven justo antes de que las olvides.' }, ['Practice']],
   ['planned', 'visualizers', { en: 'Step-through visualizers', es: 'Visualizadores paso a paso' }, { en: 'Watch the stack, heap, arrays and trees change line by line.', es: 'Mira cómo cambian la pila, el heap, los arreglos y los árboles línea por línea.' }, ['Tools']],
   ['planned', 'tutor', { en: 'Hints from an AI tutor', es: 'Pistas de un tutor con IA' }, { en: 'Ask about any line of an example and get a hint, not the full answer.', es: 'Pregunta por cualquier línea de un ejemplo y recibe una pista, no la respuesta.' }, ['Learning']],
   ['planned', 'certificates', { en: 'Course certificates', es: 'Certificados de curso' }, { en: 'Finish every module and quiz to earn a shareable certificate.', es: 'Completa todos los módulos y cuestionarios para obtener un certificado.' }, ['Account']],
   ['planned', 'classrooms', { en: 'Classrooms for teachers', es: 'Aulas para docentes' }, { en: 'Assign modules, see class progress and quiz results.', es: 'Asigna módulos y ve el progreso y los resultados de la clase.' }, ['Teaching']],
   ['planned', 'interview', { en: 'Interview prep mode', es: 'Modo de preparación para entrevistas' }, { en: 'Timed problem sets that mix topics, like a real technical interview.', es: 'Series de problemas con tiempo que mezclan temas, como una entrevista real.' }, ['Practice']],
-  ['planned', 'offline', { en: 'Install and study offline', es: 'Instalar y estudiar sin conexión' }, { en: 'Add the site to your home screen and keep studying without internet.', es: 'Agrega el sitio a tu pantalla de inicio y estudia sin internet.' }, ['Access']],
   ['planned', 'discussions', { en: 'Questions on every module', es: 'Preguntas en cada módulo' }, { en: 'Ask and answer questions under each lesson.', es: 'Haz y responde preguntas debajo de cada lección.' }, ['Community']]
 ];
 function viewRoadmap() {
@@ -1434,6 +1434,8 @@ $('#theme-btn').addEventListener('click', () => {
   if (location.hash === '#profile') render(true);
 });
 window.addEventListener('hashchange', () => render());
+// Offline support: the service worker caches the app, the lessons you open and the in-browser runtimes.
+if ('serviceWorker' in navigator && window.isSecureContext) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 
 /* ---------- Search ---------- */
 function openSearch() { $('#search').classList.add('open'); $('#search-input').focus(); loadAllForSearch(); }
