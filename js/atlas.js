@@ -635,7 +635,7 @@ ready.catch((err) => postMessage({ t: 'fail', v: String(err && err.message || er
 onmessage = async (e) => {
   const py = await ready;
   const scope = py.globals.get('dict')();
-  try { await py.runPythonAsync(e.data, { globals: scope }); }
+  try { await py.loadPackagesFromImports(e.data); await py.runPythonAsync(e.data, { globals: scope }); }
   catch (err) { postMessage({ t: 'err', v: String(err.message || err).trim().split('\\n').filter((l, i, a) => i === a.length - 1 || l.includes('File "<exec>"')).map((l) => l.trim().replace('File "<exec>", ', '')).join('\\n') }); }
   finally { scope.destroy(); postMessage({ t: 'done' }); }
 };`;
@@ -1148,7 +1148,7 @@ document.addEventListener('click', (e) => { if (!e.target.closest('#search') && 
 
 /* ---------- Boot ---------- */
 // Links from the generated SEO pages use ?route=/java&module=id; turn them into hash routes.
-const ROUTE_HASH = { '/home': 'home', '/tracks': 'courses', '/java': 'course-java', '/dsa': 'course-dsa', '/git': 'course-git', '/assembly': 'course-assembly', '/discrete-math': 'course-discrete', '/python': 'course-python', '/command-line': 'course-cli', '/web': 'course-web', '/sql': 'course-sql', '/how-computers-work': 'course-how-computers-work',
+const ROUTE_HASH = { '/home': 'home', '/tracks': 'courses', '/java': 'course-java', '/dsa': 'course-dsa', '/git': 'course-git', '/assembly': 'course-assembly', '/discrete-math': 'course-discrete', '/python': 'course-python', '/command-line': 'course-cli', '/web': 'course-web', '/sql': 'course-sql', '/how-computers-work': 'course-how-computers-work', '/cybersecurity': 'course-cybersecurity',
   '/flashcards': 'practice', '/quizzes': 'practice', '/playground': 'playground', '/notes': 'notes', '/support': 'roadmap', '/about': 'roadmap' };
 function applyLegacyLink() {
   const url = new URL(location.href), q = url.searchParams, mod = q.get('module'), route = q.get('route');

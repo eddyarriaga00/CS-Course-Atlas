@@ -41,7 +41,8 @@ const CATEGORY_ROUTE_MAP = {
     cli: '/command-line',
     web: '/web',
     sql: '/sql',
-    'how-computers-work': '/how-computers-work'
+    'how-computers-work': '/how-computers-work',
+    cybersecurity: '/cybersecurity'
 };
 
 const CATEGORY_LABEL_MAP = {
@@ -54,7 +55,8 @@ const CATEGORY_LABEL_MAP = {
     cli: 'Command Line & Linux',
     web: 'Web Basics',
     sql: 'SQL & Databases',
-    'how-computers-work': 'How Computers Work'
+    'how-computers-work': 'How Computers Work',
+    cybersecurity: 'Cybersecurity Fundamentals'
 };
 
 const ROUTE_PAGES = [
@@ -165,6 +167,15 @@ const ROUTE_PAGES = [
         heading: 'How Computers Work',
         lead: 'From bits to a running program.',
         moduleCategory: 'how-computers-work'
+    },
+    {
+        route: '/cybersecurity',
+        filename: 'cybersecurity.html',
+        title: 'Cybersecurity Fundamentals | CS Course Atlas',
+        description: 'Learn cybersecurity from zero: password hashing and two-factor login, encryption and HTTPS, phishing, SQL injection and XSS, and defenses, with runnable Python.',
+        heading: 'Cybersecurity Fundamentals',
+        lead: 'How attacks work and how to stop them.',
+        moduleCategory: 'cybersecurity'
     },
     {
         route: '/flashcards',
@@ -433,7 +444,7 @@ let publishedTrackSet = null;
 function trackNavLinks() {
     return [['dsa', 'dsa.html', 'DSA'], ['java', 'java.html', 'Java'], ['git', 'git.html', 'Git'],
         ['assembly', 'assembly.html', 'Assembly'], ['discrete', 'discrete-math.html', 'Discrete Math'],
-        ['python', 'python.html', 'Python'], ['cli', 'command-line.html', 'Command Line'], ['web', 'web.html', 'Web Basics'], ['sql', 'sql.html', 'SQL'], ['how-computers-work', 'how-computers-work.html', 'How Computers Work']]
+        ['python', 'python.html', 'Python'], ['cli', 'command-line.html', 'Command Line'], ['web', 'web.html', 'Web Basics'], ['sql', 'sql.html', 'SQL'], ['how-computers-work', 'how-computers-work.html', 'How Computers Work'], ['cybersecurity', 'cybersecurity.html', 'Cybersecurity']]
         .filter(([category]) => !publishedTrackSet || publishedTrackSet.has(category))
         .map(([, href, label]) => `<a href="${href}">${label}</a>`)
         .join('\n                    ');
