@@ -5330,14 +5330,14 @@
     "es": "Segundos a reloj"
    },
    "prompt": {
-    "en": "Write \\`static String formatTime(int totalSeconds)\\` that turns a number of seconds into \\`H:MM:SS\\`. Minutes and seconds always have two digits; hours do not. Example: \\`formatTime(3661)\\` returns \\`\"1:01:01\"\\`.",
-    "es": "Escribe \\`static String formatTime(int totalSeconds)\\` que convierta una cantidad de segundos en \\`H:MM:SS\\`. Los minutos y los segundos siempre llevan dos dígitos; las horas no. Ejemplo: \\`formatTime(3661)\\` devuelve \\`\"1:01:01\"\\`."
+    "en": "Write `static String formatTime(int totalSeconds)` that turns a number of seconds into `H:MM:SS`. Minutes and seconds always have two digits; hours do not. Example: `formatTime(3661)` returns `\"1:01:01\"`.",
+    "es": "Escribe `static String formatTime(int totalSeconds)` que convierta una cantidad de segundos en `H:MM:SS`. Los minutos y los segundos siempre llevan dos dígitos; las horas no. Ejemplo: `formatTime(3661)` devuelve `\"1:01:01\"`."
    },
    "starter": "class Solution {\n    static String formatTime(int totalSeconds) {\n        // your code\n        return \"\";\n    }\n}\n",
    "solution": "class Solution {\n    static String formatTime(int totalSeconds) {\n        int hours = totalSeconds / 3600;          // whole hours\n        int minutes = totalSeconds % 3600 / 60;   // what is left, in whole minutes\n        int seconds = totalSeconds % 60;\n        return String.format(\"%d:%02d:%02d\", hours, minutes, seconds);\n    }\n}\n",
    "hint": {
-    "en": "Integer division \\`/\\` gives whole hours or minutes, and \\`%\\` gives what is left over. \\`String.format\\` with \\`%02d\\` pads a number to two digits.",
-    "es": "La división entera \\`/\\` da las horas o minutos completos, y \\`%\\` da lo que sobra. \\`String.format\\` con \\`%02d\\` rellena un número a dos dígitos."
+    "en": "Integer division `/` gives whole hours or minutes, and `%` gives what is left over. `String.format` with `%02d` pads a number to two digits.",
+    "es": "La división entera `/` da las horas o minutos completos, y `%` da lo que sobra. `String.format` con `%02d` rellena un número a dos dígitos."
    },
    "tests": [
     [
@@ -5370,14 +5370,14 @@
     "es": "Iniciales de un nombre"
    },
    "prompt": {
-    "en": "Write \\`static String initials(String fullName)\\` that returns the uppercase first letter of each word, each followed by a dot. Words can be separated by several spaces, and there may be spaces at the ends. Example: \\`initials(\"ada lovelace\")\\` returns \\`\"A.L.\"\\`.",
-    "es": "Escribe \\`static String initials(String fullName)\\` que devuelva la primera letra de cada palabra en mayúscula, cada una seguida de un punto. Las palabras pueden estar separadas por varios espacios y puede haber espacios en los extremos. Ejemplo: \\`initials(\"ada lovelace\")\\` devuelve \\`\"A.L.\"\\`."
+    "en": "Write `static String initials(String fullName)` that returns the uppercase first letter of each word, each followed by a dot. Words can be separated by several spaces, and there may be spaces at the ends. Example: `initials(\"ada lovelace\")` returns `\"A.L.\"`.",
+    "es": "Escribe `static String initials(String fullName)` que devuelva la primera letra de cada palabra en mayúscula, cada una seguida de un punto. Las palabras pueden estar separadas por varios espacios y puede haber espacios en los extremos. Ejemplo: `initials(\"ada lovelace\")` devuelve `\"A.L.\"`."
    },
    "starter": "class Solution {\n    static String initials(String fullName) {\n        // your code\n        return \"\";\n    }\n}\n",
    "solution": "class Solution {\n    static String initials(String fullName) {\n        String result = \"\";\n        // trim() drops the outer spaces; \"\\\\s+\" splits on one or more spaces\n        for (String word : fullName.trim().split(\"\\\\s+\")) {\n            result += Character.toUpperCase(word.charAt(0)) + \".\";\n        }\n        return result;\n    }\n}\n",
    "hint": {
-    "en": "Clean the ends with \\`trim()\\`, then \\`split(\"\\\\s+\")\\` gives the words. \\`charAt(0)\\` is a word's first letter and \\`Character.toUpperCase\\` capitalizes it.",
-    "es": "Limpia los extremos con \\`trim()\\` y luego \\`split(\"\\\\s+\")\\` te da las palabras. \\`charAt(0)\\` es la primera letra de una palabra y \\`Character.toUpperCase\\` la pone en mayúscula."
+    "en": "Clean the ends with `trim()`, then `split(\"\\\\s+\")` gives the words. `charAt(0)` is a word's first letter and `Character.toUpperCase` capitalizes it.",
+    "es": "Limpia los extremos con `trim()` y luego `split(\"\\\\s+\")` te da las palabras. `charAt(0)` es la primera letra de una palabra y `Character.toUpperCase` la pone en mayúscula."
    },
    "tests": [
     [
@@ -5468,14 +5468,14 @@
     "es": "FizzBuzz en un texto"
    },
    "prompt": {
-    "en": "Write \\`static String fizzBuzz(int n)\\` that returns the numbers from 1 to \\`n\\` separated by single spaces, but multiples of 3 become \\`Fizz\\`, multiples of 5 become \\`Buzz\\`, and multiples of both become \\`FizzBuzz\\`. For \\`n = 0\\` return \\`\"\"\\`. Example: \\`fizzBuzz(5)\\` returns \\`\"1 2 Fizz 4 Buzz\"\\`.",
-    "es": "Escribe \\`static String fizzBuzz(int n)\\` que devuelva los números del 1 al \\`n\\` separados por un espacio, pero los múltiplos de 3 se vuelven \\`Fizz\\`, los de 5 se vuelven \\`Buzz\\` y los de ambos \\`FizzBuzz\\`. Para \\`n = 0\\` devuelve \\`\"\"\\`. Ejemplo: \\`fizzBuzz(5)\\` devuelve \\`\"1 2 Fizz 4 Buzz\"\\`."
+    "en": "Write `static String fizzBuzz(int n)` that returns the numbers from 1 to `n` separated by single spaces, but multiples of 3 become `Fizz`, multiples of 5 become `Buzz`, and multiples of both become `FizzBuzz`. For `n = 0` return `\"\"`. Example: `fizzBuzz(5)` returns `\"1 2 Fizz 4 Buzz\"`.",
+    "es": "Escribe `static String fizzBuzz(int n)` que devuelva los números del 1 al `n` separados por un espacio, pero los múltiplos de 3 se vuelven `Fizz`, los de 5 se vuelven `Buzz` y los de ambos `FizzBuzz`. Para `n = 0` devuelve `\"\"`. Ejemplo: `fizzBuzz(5)` devuelve `\"1 2 Fizz 4 Buzz\"`."
    },
    "starter": "class Solution {\n    static String fizzBuzz(int n) {\n        // your code\n        return \"\";\n    }\n}\n",
    "solution": "class Solution {\n    static String fizzBuzz(int n) {\n        StringBuilder sb = new StringBuilder();\n        for (int i = 1; i <= n; i++) {\n            if (i > 1) sb.append(' ');            // a space between items, not before the first\n            if (i % 15 == 0) sb.append(\"FizzBuzz\"); // check \"both\" first\n            else if (i % 3 == 0) sb.append(\"Fizz\");\n            else if (i % 5 == 0) sb.append(\"Buzz\");\n            else sb.append(i);\n        }\n        return sb.toString();\n    }\n}\n",
    "hint": {
-    "en": "Loop with \\`for (int i = 1; i <= n; i++)\\` and use \\`%\\` to test divisibility. Order matters in the \\`if / else if\\` chain: test the \"both\" case first.",
-    "es": "Recorre con \\`for (int i = 1; i <= n; i++)\\` y usa \\`%\\` para probar la divisibilidad. El orden importa en la cadena \\`if / else if\\`: prueba primero el caso de \"ambos\"."
+    "en": "Loop with `for (int i = 1; i <= n; i++)` and use `%` to test divisibility. Order matters in the `if / else if` chain: test the \"both\" case first.",
+    "es": "Recorre con `for (int i = 1; i <= n; i++)` y usa `%` para probar la divisibilidad. El orden importa en la cadena `if / else if`: prueba primero el caso de \"ambos\"."
    },
    "tests": [
     [
@@ -5504,14 +5504,14 @@
     "es": "Raíz digital"
    },
    "prompt": {
-    "en": "Write \\`static int digitalRoot(int n)\\` for \\`n >= 0\\`: add up the digits of \\`n\\`, and keep doing it to the result until only one digit is left. Example: \\`digitalRoot(38)\\` is \\`2\\` because 3 + 8 = 11 and 1 + 1 = 2.",
-    "es": "Escribe \\`static int digitalRoot(int n)\\` para \\`n >= 0\\`: suma los dígitos de \\`n\\` y repítelo con el resultado hasta que quede un solo dígito. Ejemplo: \\`digitalRoot(38)\\` es \\`2\\` porque 3 + 8 = 11 y 1 + 1 = 2."
+    "en": "Write `static int digitalRoot(int n)` for `n >= 0`: add up the digits of `n`, and keep doing it to the result until only one digit is left. Example: `digitalRoot(38)` is `2` because 3 + 8 = 11 and 1 + 1 = 2.",
+    "es": "Escribe `static int digitalRoot(int n)` para `n >= 0`: suma los dígitos de `n` y repítelo con el resultado hasta que quede un solo dígito. Ejemplo: `digitalRoot(38)` es `2` porque 3 + 8 = 11 y 1 + 1 = 2."
    },
    "starter": "class Solution {\n    static int digitalRoot(int n) {\n        // your code\n        return 0;\n    }\n}\n",
    "solution": "class Solution {\n    static int digitalRoot(int n) {\n        while (n >= 10) {          // more than one digit left\n            int sum = 0;\n            while (n > 0) {\n                sum += n % 10;     // last digit\n                n /= 10;           // drop the last digit\n            }\n            n = sum;\n        }\n        return n;\n    }\n}\n",
    "hint": {
-    "en": "\\`n % 10\\` is the last digit and \\`n / 10\\` removes it. An inner \\`while\\` adds the digits once; an outer \\`while (n >= 10)\\` repeats that.",
-    "es": "\\`n % 10\\` es el último dígito y \\`n / 10\\` lo quita. Un \\`while\\` interno suma los dígitos una vez; un \\`while (n >= 10)\\` externo lo repite."
+    "en": "`n % 10` is the last digit and `n / 10` removes it. An inner `while` adds the digits once; an outer `while (n >= 10)` repeats that.",
+    "es": "`n % 10` es el último dígito y `n / 10` lo quita. Un `while` interno suma los dígitos una vez; un `while (n >= 10)` externo lo repite."
    },
    "tests": [
     [
@@ -5606,14 +5606,14 @@
     "es": "Una cuenta bancaria"
    },
    "prompt": {
-    "en": "Complete the nested class \\`static class Account\\`: \\`Account(int balance)\\` stores the starting balance, \\`deposit(int amount)\\` adds money, \\`withdraw(int amount)\\` takes money out, and \\`getBalance()\\` returns the balance. Ignore deposits that are not positive and withdrawals larger than the balance. \\`deposit\\` and \\`withdraw\\` return \\`this\\` so calls can be chained. Example: \\`new Solution.Account(100).withdraw(30).getBalance()\\` returns \\`70\\`.",
-    "es": "Completa la clase anidada \\`static class Account\\`: \\`Account(int balance)\\` guarda el saldo inicial, \\`deposit(int amount)\\` agrega dinero, \\`withdraw(int amount)\\` saca dinero y \\`getBalance()\\` devuelve el saldo. Ignora los depósitos que no sean positivos y los retiros mayores que el saldo. \\`deposit\\` y \\`withdraw\\` devuelven \\`this\\` para poder encadenar llamadas. Ejemplo: \\`new Solution.Account(100).withdraw(30).getBalance()\\` devuelve \\`70\\`."
+    "en": "Complete the nested class `static class Account`: `Account(int balance)` stores the starting balance, `deposit(int amount)` adds money, `withdraw(int amount)` takes money out, and `getBalance()` returns the balance. Ignore deposits that are not positive and withdrawals larger than the balance. `deposit` and `withdraw` return `this` so calls can be chained. Example: `new Solution.Account(100).withdraw(30).getBalance()` returns `70`.",
+    "es": "Completa la clase anidada `static class Account`: `Account(int balance)` guarda el saldo inicial, `deposit(int amount)` agrega dinero, `withdraw(int amount)` saca dinero y `getBalance()` devuelve el saldo. Ignora los depósitos que no sean positivos y los retiros mayores que el saldo. `deposit` y `withdraw` devuelven `this` para poder encadenar llamadas. Ejemplo: `new Solution.Account(100).withdraw(30).getBalance()` devuelve `70`."
    },
    "starter": "class Solution {\n    static class Account {\n        Account(int balance) {\n            // your code\n        }\n\n        Account deposit(int amount) {\n            return this;\n        }\n\n        Account withdraw(int amount) {\n            return this;\n        }\n\n        int getBalance() {\n            return 0;\n        }\n    }\n}\n",
    "solution": "class Solution {\n    static class Account {\n        private int balance;   // private: only the methods below can change it\n\n        Account(int balance) {\n            this.balance = balance;\n        }\n\n        Account deposit(int amount) {\n            if (amount > 0) balance += amount;\n            return this;\n        }\n\n        Account withdraw(int amount) {\n            if (amount <= balance) balance -= amount;   // never go below zero\n            return this;\n        }\n\n        int getBalance() {\n            return balance;\n        }\n    }\n}\n",
    "hint": {
-    "en": "Keep the balance in a \\`private int\\` field and set it in the constructor with \\`this.balance = balance\\`. Each method checks its rule with an \\`if\\` before changing the field.",
-    "es": "Guarda el saldo en un campo \\`private int\\` y asígnalo en el constructor con \\`this.balance = balance\\`. Cada método revisa su regla con un \\`if\\` antes de cambiar el campo."
+    "en": "Keep the balance in a `private int` field and set it in the constructor with `this.balance = balance`. Each method checks its rule with an `if` before changing the field.",
+    "es": "Guarda el saldo en un campo `private int` y asígnalo en el constructor con `this.balance = balance`. Cada método revisa su regla con un `if` antes de cambiar el campo."
    },
    "tests": [
     [
@@ -5646,14 +5646,14 @@
     "es": "Una clase Rectangle"
    },
    "prompt": {
-    "en": "Complete \\`static class Rectangle\\` with a constructor \\`Rectangle(int width, int height)\\` and the methods \\`int area()\\`, \\`int perimeter()\\`, \\`boolean isSquare()\\`, \\`Rectangle scale(int factor)\\` (returns a **new** rectangle with both sides multiplied) and \\`toString()\\`, which returns \\`\"WIDTHxHEIGHT\"\\`. Example: \\`new Solution.Rectangle(2, 3).scale(3)\\` prints as \\`6x9\\`.",
-    "es": "Completa \\`static class Rectangle\\` con un constructor \\`Rectangle(int width, int height)\\` y los métodos \\`int area()\\`, \\`int perimeter()\\`, \\`boolean isSquare()\\`, \\`Rectangle scale(int factor)\\` (devuelve un rectángulo **nuevo** con ambos lados multiplicados) y \\`toString()\\`, que devuelve \\`\"ANCHOxALTO\"\\`. Ejemplo: \\`new Solution.Rectangle(2, 3).scale(3)\\` se imprime como \\`6x9\\`."
+    "en": "Complete `static class Rectangle` with a constructor `Rectangle(int width, int height)` and the methods `int area()`, `int perimeter()`, `boolean isSquare()`, `Rectangle scale(int factor)` (returns a **new** rectangle with both sides multiplied) and `toString()`, which returns `\"WIDTHxHEIGHT\"`. Example: `new Solution.Rectangle(2, 3).scale(3)` prints as `6x9`.",
+    "es": "Completa `static class Rectangle` con un constructor `Rectangle(int width, int height)` y los métodos `int area()`, `int perimeter()`, `boolean isSquare()`, `Rectangle scale(int factor)` (devuelve un rectángulo **nuevo** con ambos lados multiplicados) y `toString()`, que devuelve `\"ANCHOxALTO\"`. Ejemplo: `new Solution.Rectangle(2, 3).scale(3)` se imprime como `6x9`."
    },
    "starter": "class Solution {\n    static class Rectangle {\n        Rectangle(int width, int height) {\n            // your code\n        }\n\n        int area() {\n            return 0;\n        }\n\n        int perimeter() {\n            return 0;\n        }\n\n        boolean isSquare() {\n            return false;\n        }\n\n        Rectangle scale(int factor) {\n            return this;\n        }\n\n        @Override\n        public String toString() {\n            return \"\";\n        }\n    }\n}\n",
    "solution": "class Solution {\n    static class Rectangle {\n        private final int width, height;   // final: a Rectangle never changes after it is built\n\n        Rectangle(int width, int height) {\n            this.width = width;\n            this.height = height;\n        }\n\n        int area() {\n            return width * height;\n        }\n\n        int perimeter() {\n            return 2 * (width + height);\n        }\n\n        boolean isSquare() {\n            return width == height;\n        }\n\n        Rectangle scale(int factor) {\n            return new Rectangle(width * factor, height * factor);\n        }\n\n        @Override\n        public String toString() {\n            return width + \"x\" + height;\n        }\n    }\n}\n",
    "hint": {
-    "en": "Store \\`width\\` and \\`height\\` in fields from the constructor; every method reads them. \\`scale\\` calls \\`new Rectangle(...)\\` instead of changing the fields.",
-    "es": "Guarda \\`width\\` y \\`height\\` en campos desde el constructor; todos los métodos los leen. \\`scale\\` llama a \\`new Rectangle(...)\\` en vez de cambiar los campos."
+    "en": "Store `width` and `height` in fields from the constructor; every method reads them. `scale` calls `new Rectangle(...)` instead of changing the fields.",
+    "es": "Guarda `width` y `height` en campos desde el constructor; todos los métodos los leen. `scale` llama a `new Rectangle(...)` en vez de cambiar los campos."
    },
    "tests": [
     [
@@ -5748,14 +5748,14 @@
     "es": "Convertir o usar un valor por defecto"
    },
    "prompt": {
-    "en": "Write \\`static int parseOrDefault(String text, int fallback)\\` that returns the whole number written in \\`text\\` (spaces around it are fine), or \\`fallback\\` when \\`text\\` is \\`null\\` or is not a valid integer. Example: \\`parseOrDefault(\" 7 \", 0)\\` returns \\`7\\` and \\`parseOrDefault(\"abc\", -1)\\` returns \\`-1\\`.",
-    "es": "Escribe \\`static int parseOrDefault(String text, int fallback)\\` que devuelva el número entero escrito en \\`text\\` (puede tener espacios alrededor), o \\`fallback\\` cuando \\`text\\` es \\`null\\` o no es un entero válido. Ejemplo: \\`parseOrDefault(\" 7 \", 0)\\` devuelve \\`7\\` y \\`parseOrDefault(\"abc\", -1)\\` devuelve \\`-1\\`."
+    "en": "Write `static int parseOrDefault(String text, int fallback)` that returns the whole number written in `text` (spaces around it are fine), or `fallback` when `text` is `null` or is not a valid integer. Example: `parseOrDefault(\" 7 \", 0)` returns `7` and `parseOrDefault(\"abc\", -1)` returns `-1`.",
+    "es": "Escribe `static int parseOrDefault(String text, int fallback)` que devuelva el número entero escrito en `text` (puede tener espacios alrededor), o `fallback` cuando `text` es `null` o no es un entero válido. Ejemplo: `parseOrDefault(\" 7 \", 0)` devuelve `7` y `parseOrDefault(\"abc\", -1)` devuelve `-1`."
    },
    "starter": "class Solution {\n    static int parseOrDefault(String text, int fallback) {\n        // your code\n        return 0;\n    }\n}\n",
    "solution": "class Solution {\n    static int parseOrDefault(String text, int fallback) {\n        if (text == null) return fallback;          // calling trim() on null would throw\n        try {\n            return Integer.parseInt(text.trim());\n        } catch (NumberFormatException e) {         // catch only the failure we expect\n            return fallback;\n        }\n    }\n}\n",
    "hint": {
-    "en": "\\`Integer.parseInt\\` throws a \\`NumberFormatException\\` for text that is not a number. Wrap it in \\`try / catch\\`, and check for \\`null\\` before calling \\`trim()\\`.",
-    "es": "\\`Integer.parseInt\\` lanza una \\`NumberFormatException\\` con un texto que no es número. Envuélvelo en \\`try / catch\\` y revisa si es \\`null\\` antes de llamar a \\`trim()\\`."
+    "en": "`Integer.parseInt` throws a `NumberFormatException` for text that is not a number. Wrap it in `try / catch`, and check for `null` before calling `trim()`.",
+    "es": "`Integer.parseInt` lanza una `NumberFormatException` con un texto que no es número. Envuélvelo en `try / catch` y revisa si es `null` antes de llamar a `trim()`."
    },
    "tests": [
     [
@@ -5792,14 +5792,14 @@
     "es": "Lanzar y luego atrapar"
    },
    "prompt": {
-    "en": "The class \\`InvalidAgeException\\` is given. Write \\`static int checkAge(int age) throws InvalidAgeException\\` that returns \\`age\\` when it is between 0 and 150, and otherwise throws with the message \\`\"age cannot be negative\"\\` or \\`\"age is too large\"\\`. Then write \\`static String describe(int age)\\` that calls \\`checkAge\\` and returns \\`\"ok: AGE\"\\`, or \\`\"invalid: MESSAGE\"\\` if it threw. Example: \\`describe(-1)\\` returns \\`\"invalid: age cannot be negative\"\\`.",
-    "es": "La clase \\`InvalidAgeException\\` ya está dada. Escribe \\`static int checkAge(int age) throws InvalidAgeException\\` que devuelva \\`age\\` cuando está entre 0 y 150 y, si no, lance la excepción con el mensaje \\`\"age cannot be negative\"\\` o \\`\"age is too large\"\\`. Luego escribe \\`static String describe(int age)\\` que llame a \\`checkAge\\` y devuelva \\`\"ok: EDAD\"\\`, o \\`\"invalid: MENSAJE\"\\` si lanzó la excepción. Ejemplo: \\`describe(-1)\\` devuelve \\`\"invalid: age cannot be negative\"\\`."
+    "en": "The class `InvalidAgeException` is given. Write `static int checkAge(int age) throws InvalidAgeException` that returns `age` when it is between 0 and 150, and otherwise throws with the message `\"age cannot be negative\"` or `\"age is too large\"`. Then write `static String describe(int age)` that calls `checkAge` and returns `\"ok: AGE\"`, or `\"invalid: MESSAGE\"` if it threw. Example: `describe(-1)` returns `\"invalid: age cannot be negative\"`.",
+    "es": "La clase `InvalidAgeException` ya está dada. Escribe `static int checkAge(int age) throws InvalidAgeException` que devuelva `age` cuando está entre 0 y 150 y, si no, lance la excepción con el mensaje `\"age cannot be negative\"` o `\"age is too large\"`. Luego escribe `static String describe(int age)` que llame a `checkAge` y devuelva `\"ok: EDAD\"`, o `\"invalid: MENSAJE\"` si lanzó la excepción. Ejemplo: `describe(-1)` devuelve `\"invalid: age cannot be negative\"`."
    },
    "starter": "class Solution {\n    static class InvalidAgeException extends Exception {\n        InvalidAgeException(String message) {\n            super(message);\n        }\n    }\n\n    static int checkAge(int age) throws InvalidAgeException {\n        // your code\n        return age;\n    }\n\n    static String describe(int age) {\n        // your code\n        return \"\";\n    }\n}\n",
    "solution": "class Solution {\n    static class InvalidAgeException extends Exception {\n        InvalidAgeException(String message) {\n            super(message);\n        }\n    }\n\n    static int checkAge(int age) throws InvalidAgeException {\n        if (age < 0) throw new InvalidAgeException(\"age cannot be negative\");\n        if (age > 150) throw new InvalidAgeException(\"age is too large\");\n        return age;\n    }\n\n    static String describe(int age) {\n        try {\n            return \"ok: \" + checkAge(age);\n        } catch (InvalidAgeException e) {\n            return \"invalid: \" + e.getMessage();   // the message passed to the constructor\n        }\n    }\n}\n",
    "hint": {
-    "en": "\\`throw new InvalidAgeException(\"...\")\\` stops \\`checkAge\\` right away. In \\`describe\\`, put the call in \\`try\\` and read the text with \\`e.getMessage()\\` in \\`catch\\`.",
-    "es": "\\`throw new InvalidAgeException(\"...\")\\` detiene \\`checkAge\\` en ese momento. En \\`describe\\`, pon la llamada dentro de \\`try\\` y lee el texto con \\`e.getMessage()\\` en el \\`catch\\`."
+    "en": "`throw new InvalidAgeException(\"...\")` stops `checkAge` right away. In `describe`, put the call in `try` and read the text with `e.getMessage()` in `catch`.",
+    "es": "`throw new InvalidAgeException(\"...\")` detiene `checkAge` en ese momento. En `describe`, pon la llamada dentro de `try` y lee el texto con `e.getMessage()` en el `catch`."
    },
    "tests": [
     [
@@ -5894,14 +5894,14 @@
     "es": "El mayor de cualquier tipo"
    },
    "prompt": {
-    "en": "Write the generic method \\`static <T extends Comparable<T>> T maxOf(List<T> items)\\` that returns the largest item, or \\`null\\` for an empty list. It must work for numbers, strings and any other \\`Comparable\\` type. Example: \\`maxOf(List.of(3, 9, 2))\\` returns \\`9\\`.",
-    "es": "Escribe el método genérico \\`static <T extends Comparable<T>> T maxOf(List<T> items)\\` que devuelva el elemento mayor, o \\`null\\` si la lista está vacía. Debe funcionar con números, textos y cualquier otro tipo \\`Comparable\\`. Ejemplo: \\`maxOf(List.of(3, 9, 2))\\` devuelve \\`9\\`."
+    "en": "Write the generic method `static <T extends Comparable<T>> T maxOf(List<T> items)` that returns the largest item, or `null` for an empty list. It must work for numbers, strings and any other `Comparable` type. Example: `maxOf(List.of(3, 9, 2))` returns `9`.",
+    "es": "Escribe el método genérico `static <T extends Comparable<T>> T maxOf(List<T> items)` que devuelva el elemento mayor, o `null` si la lista está vacía. Debe funcionar con números, textos y cualquier otro tipo `Comparable`. Ejemplo: `maxOf(List.of(3, 9, 2))` devuelve `9`."
    },
    "starter": "import java.util.*;\n\nclass Solution {\n    static <T extends Comparable<T>> T maxOf(List<T> items) {\n        // your code\n        return null;\n    }\n}\n",
    "solution": "import java.util.*;\n\nclass Solution {\n    static <T extends Comparable<T>> T maxOf(List<T> items) {\n        T best = null;\n        for (T item : items) {\n            // compareTo is available because T extends Comparable<T>\n            if (best == null || item.compareTo(best) > 0) best = item;\n        }\n        return best;\n    }\n}\n",
    "hint": {
-    "en": "The bound \\`T extends Comparable<T>\\` is what lets you call \\`a.compareTo(b)\\`, which is positive when \\`a\\` is bigger. Keep the best item so far.",
-    "es": "La cota \\`T extends Comparable<T>\\` es lo que te deja llamar a \\`a.compareTo(b)\\`, que es positivo cuando \\`a\\` es mayor. Guarda el mejor elemento hasta ahora."
+    "en": "The bound `T extends Comparable<T>` is what lets you call `a.compareTo(b)`, which is positive when `a` is bigger. Keep the best item so far.",
+    "es": "La cota `T extends Comparable<T>` es lo que te deja llamar a `a.compareTo(b)`, que es positivo cuando `a` es mayor. Guarda el mejor elemento hasta ahora."
    },
    "tests": [
     [
@@ -5934,14 +5934,14 @@
     "es": "Un Pair genérico"
    },
    "prompt": {
-    "en": "Complete \\`static class Pair<A, B>\\` that holds two values of any types: \\`Pair(A first, B second)\\`, \\`A first()\\`, \\`B second()\\`, \\`Pair<B, A> swap()\\` (a new pair with the values switched) and \\`toString()\\` returning \\`\"(FIRST, SECOND)\"\\`. Example: \\`new Solution.Pair<>(\"x\", 1).swap()\\` prints as \\`(1, x)\\`.",
-    "es": "Completa \\`static class Pair<A, B>\\`, que guarda dos valores de cualquier tipo: \\`Pair(A first, B second)\\`, \\`A first()\\`, \\`B second()\\`, \\`Pair<B, A> swap()\\` (un par nuevo con los valores intercambiados) y \\`toString()\\` que devuelva \\`\"(PRIMERO, SEGUNDO)\"\\`. Ejemplo: \\`new Solution.Pair<>(\"x\", 1).swap()\\` se imprime como \\`(1, x)\\`."
+    "en": "Complete `static class Pair<A, B>` that holds two values of any types: `Pair(A first, B second)`, `A first()`, `B second()`, `Pair<B, A> swap()` (a new pair with the values switched) and `toString()` returning `\"(FIRST, SECOND)\"`. Example: `new Solution.Pair<>(\"x\", 1).swap()` prints as `(1, x)`.",
+    "es": "Completa `static class Pair<A, B>`, que guarda dos valores de cualquier tipo: `Pair(A first, B second)`, `A first()`, `B second()`, `Pair<B, A> swap()` (un par nuevo con los valores intercambiados) y `toString()` que devuelva `\"(PRIMERO, SEGUNDO)\"`. Ejemplo: `new Solution.Pair<>(\"x\", 1).swap()` se imprime como `(1, x)`."
    },
    "starter": "class Solution {\n    static class Pair<A, B> {\n        Pair(A first, B second) {\n            // your code\n        }\n\n        A first() {\n            return null;\n        }\n\n        B second() {\n            return null;\n        }\n\n        Pair<B, A> swap() {\n            return null;\n        }\n\n        @Override\n        public String toString() {\n            return \"\";\n        }\n    }\n}\n",
    "solution": "class Solution {\n    static class Pair<A, B> {\n        private final A first;\n        private final B second;\n\n        Pair(A first, B second) {\n            this.first = first;\n            this.second = second;\n        }\n\n        A first() {\n            return first;\n        }\n\n        B second() {\n            return second;\n        }\n\n        Pair<B, A> swap() {\n            return new Pair<>(second, first);   // the type parameters swap places too\n        }\n\n        @Override\n        public String toString() {\n            return \"(\" + first + \", \" + second + \")\";\n        }\n    }\n}\n",
    "hint": {
-    "en": "Fields typed \\`A\\` and \\`B\\` hold the values. In \\`swap\\`, the diamond \\`new Pair<>(second, first)\\` lets Java work out the swapped types.",
-    "es": "Los campos de tipo \\`A\\` y \\`B\\` guardan los valores. En \\`swap\\`, el diamante \\`new Pair<>(second, first)\\` deja que Java deduzca los tipos intercambiados."
+    "en": "Fields typed `A` and `B` hold the values. In `swap`, the diamond `new Pair<>(second, first)` lets Java work out the swapped types.",
+    "es": "Los campos de tipo `A` y `B` guardan los valores. En `swap`, el diamante `new Pair<>(second, first)` deja que Java deduzca los tipos intercambiados."
    },
    "tests": [
     [
@@ -6036,14 +6036,14 @@
     "es": "Contar las palabras"
    },
    "prompt": {
-    "en": "Write \\`static Map<String, Integer> wordCounts(String text)\\` that counts how many times each word appears, ignoring upper/lower case. Words are separated by spaces. Return a \\`TreeMap\\` so the words come out in alphabetical order. Example: \\`wordCounts(\"the cat the hat\")\\` prints as \\`{cat=1, hat=1, the=2}\\`.",
-    "es": "Escribe \\`static Map<String, Integer> wordCounts(String text)\\` que cuente cuántas veces aparece cada palabra, sin distinguir mayúsculas y minúsculas. Las palabras están separadas por espacios. Devuelve un \\`TreeMap\\` para que las palabras salgan en orden alfabético. Ejemplo: \\`wordCounts(\"the cat the hat\")\\` se imprime como \\`{cat=1, hat=1, the=2}\\`."
+    "en": "Write `static Map<String, Integer> wordCounts(String text)` that counts how many times each word appears, ignoring upper/lower case. Words are separated by spaces. Return a `TreeMap` so the words come out in alphabetical order. Example: `wordCounts(\"the cat the hat\")` prints as `{cat=1, hat=1, the=2}`.",
+    "es": "Escribe `static Map<String, Integer> wordCounts(String text)` que cuente cuántas veces aparece cada palabra, sin distinguir mayúsculas y minúsculas. Las palabras están separadas por espacios. Devuelve un `TreeMap` para que las palabras salgan en orden alfabético. Ejemplo: `wordCounts(\"the cat the hat\")` se imprime como `{cat=1, hat=1, the=2}`."
    },
    "starter": "import java.util.*;\n\nclass Solution {\n    static Map<String, Integer> wordCounts(String text) {\n        // your code\n        return new TreeMap<>();\n    }\n}\n",
    "solution": "import java.util.*;\n\nclass Solution {\n    static Map<String, Integer> wordCounts(String text) {\n        Map<String, Integer> counts = new TreeMap<>();   // keeps keys sorted\n        for (String word : text.toLowerCase().split(\" \")) {\n            if (word.isEmpty()) continue;                  // extra spaces give empty pieces\n            counts.merge(word, 1, Integer::sum);           // 1 if new, otherwise add 1\n        }\n        return counts;\n    }\n}\n",
    "hint": {
-    "en": "\\`counts.merge(word, 1, Integer::sum)\\` adds 1 to a word's count (or starts it at 1). Lowercase the text first, and skip the empty strings that \\`split\\` gives for extra spaces.",
-    "es": "\\`counts.merge(word, 1, Integer::sum)\\` suma 1 al conteo de una palabra (o lo empieza en 1). Pasa el texto a minúsculas primero y salta los textos vacíos que da \\`split\\` con espacios de más."
+    "en": "`counts.merge(word, 1, Integer::sum)` adds 1 to a word's count (or starts it at 1). Lowercase the text first, and skip the empty strings that `split` gives for extra spaces.",
+    "es": "`counts.merge(word, 1, Integer::sum)` suma 1 al conteo de una palabra (o lo empieza en 1). Pasa el texto a minúsculas primero y salta los textos vacíos que da `split` con espacios de más."
    },
    "tests": [
     [
@@ -6072,14 +6072,14 @@
     "es": "Quitar repetidos sin perder el orden"
    },
    "prompt": {
-    "en": "Write \\`static List<String> dedupe(List<String> items)\\` that returns the items without repeats, keeping each item where it first appeared. Comparisons are case-sensitive. Example: \\`dedupe(List.of(\"b\", \"a\", \"b\", \"c\", \"a\"))\\` prints as \\`[b, a, c]\\`.",
-    "es": "Escribe \\`static List<String> dedupe(List<String> items)\\` que devuelva los elementos sin repetir, dejando cada uno donde apareció por primera vez. Las comparaciones distinguen mayúsculas. Ejemplo: \\`dedupe(List.of(\"b\", \"a\", \"b\", \"c\", \"a\"))\\` se imprime como \\`[b, a, c]\\`."
+    "en": "Write `static List<String> dedupe(List<String> items)` that returns the items without repeats, keeping each item where it first appeared. Comparisons are case-sensitive. Example: `dedupe(List.of(\"b\", \"a\", \"b\", \"c\", \"a\"))` prints as `[b, a, c]`.",
+    "es": "Escribe `static List<String> dedupe(List<String> items)` que devuelva los elementos sin repetir, dejando cada uno donde apareció por primera vez. Las comparaciones distinguen mayúsculas. Ejemplo: `dedupe(List.of(\"b\", \"a\", \"b\", \"c\", \"a\"))` se imprime como `[b, a, c]`."
    },
    "starter": "import java.util.*;\n\nclass Solution {\n    static List<String> dedupe(List<String> items) {\n        // your code\n        return new ArrayList<>();\n    }\n}\n",
    "solution": "import java.util.*;\n\nclass Solution {\n    static List<String> dedupe(List<String> items) {\n        // A LinkedHashSet ignores repeats and remembers insertion order\n        return new ArrayList<>(new LinkedHashSet<>(items));\n    }\n}\n",
    "hint": {
-    "en": "A \\`HashSet\\` removes repeats but scrambles the order; a \\`LinkedHashSet\\` keeps insertion order. Copy the set back into an \\`ArrayList\\`.",
-    "es": "Un \\`HashSet\\` quita repetidos pero desordena; un \\`LinkedHashSet\\` conserva el orden de inserción. Copia el conjunto de vuelta a un \\`ArrayList\\`."
+    "en": "A `HashSet` removes repeats but scrambles the order; a `LinkedHashSet` keeps insertion order. Copy the set back into an `ArrayList`.",
+    "es": "Un `HashSet` quita repetidos pero desordena; un `LinkedHashSet` conserva el orden de inserción. Copia el conjunto de vuelta a un `ArrayList`."
    },
    "tests": [
     [
@@ -6170,14 +6170,14 @@
     "es": "Cuadrados de los pares"
    },
    "prompt": {
-    "en": "Write \\`static List<Integer> evenSquares(List<Integer> nums)\\` with a stream: keep the even numbers, square them, and return them in their original order. Example: \\`evenSquares(List.of(1, 2, 3, 4))\\` prints as \\`[4, 16]\\`.",
-    "es": "Escribe \\`static List<Integer> evenSquares(List<Integer> nums)\\` con un stream: quédate con los números pares, elévalos al cuadrado y devuélvelos en su orden original. Ejemplo: \\`evenSquares(List.of(1, 2, 3, 4))\\` se imprime como \\`[4, 16]\\`."
+    "en": "Write `static List<Integer> evenSquares(List<Integer> nums)` with a stream: keep the even numbers, square them, and return them in their original order. Example: `evenSquares(List.of(1, 2, 3, 4))` prints as `[4, 16]`.",
+    "es": "Escribe `static List<Integer> evenSquares(List<Integer> nums)` con un stream: quédate con los números pares, elévalos al cuadrado y devuélvelos en su orden original. Ejemplo: `evenSquares(List.of(1, 2, 3, 4))` se imprime como `[4, 16]`."
    },
    "starter": "import java.util.*;\nimport java.util.stream.*;\n\nclass Solution {\n    static List<Integer> evenSquares(List<Integer> nums) {\n        // your code\n        return new ArrayList<>();\n    }\n}\n",
    "solution": "import java.util.*;\nimport java.util.stream.*;\n\nclass Solution {\n    static List<Integer> evenSquares(List<Integer> nums) {\n        return nums.stream()\n                .filter(n -> n % 2 == 0)   // keep the evens (works for negatives too)\n                .map(n -> n * n)\n                .collect(Collectors.toList());\n    }\n}\n",
    "hint": {
-    "en": "\\`nums.stream().filter(...).map(...)\\` with a lambda in each step, then \\`.collect(Collectors.toList())\\` to get a list back.",
-    "es": "\\`nums.stream().filter(...).map(...)\\` con una lambda en cada paso, y luego \\`.collect(Collectors.toList())\\` para obtener una lista."
+    "en": "`nums.stream().filter(...).map(...)` with a lambda in each step, then `.collect(Collectors.toList())` to get a list back.",
+    "es": "`nums.stream().filter(...).map(...)` con una lambda en cada paso, y luego `.collect(Collectors.toList())` para obtener una lista."
    },
    "tests": [
     [
@@ -6206,14 +6206,14 @@
     "es": "Agrupar por longitud"
    },
    "prompt": {
-    "en": "Write \\`static Map<Integer, List<String>> groupByLength(List<String> words)\\` that groups the words by their length with a stream. The lengths must be in increasing order (use a \\`TreeMap\\`), and the words in each group keep their original order. Example: \\`groupByLength(List.of(\"hi\", \"to\", \"cat\", \"a\"))\\` prints as \\`{1=[a], 2=[hi, to], 3=[cat]}\\`.",
-    "es": "Escribe \\`static Map<Integer, List<String>> groupByLength(List<String> words)\\` que agrupe las palabras por su longitud con un stream. Las longitudes deben ir en orden creciente (usa un \\`TreeMap\\`) y las palabras de cada grupo conservan su orden original. Ejemplo: \\`groupByLength(List.of(\"hi\", \"to\", \"cat\", \"a\"))\\` se imprime como \\`{1=[a], 2=[hi, to], 3=[cat]}\\`."
+    "en": "Write `static Map<Integer, List<String>> groupByLength(List<String> words)` that groups the words by their length with a stream. The lengths must be in increasing order (use a `TreeMap`), and the words in each group keep their original order. Example: `groupByLength(List.of(\"hi\", \"to\", \"cat\", \"a\"))` prints as `{1=[a], 2=[hi, to], 3=[cat]}`.",
+    "es": "Escribe `static Map<Integer, List<String>> groupByLength(List<String> words)` que agrupe las palabras por su longitud con un stream. Las longitudes deben ir en orden creciente (usa un `TreeMap`) y las palabras de cada grupo conservan su orden original. Ejemplo: `groupByLength(List.of(\"hi\", \"to\", \"cat\", \"a\"))` se imprime como `{1=[a], 2=[hi, to], 3=[cat]}`."
    },
    "starter": "import java.util.*;\nimport java.util.stream.*;\n\nclass Solution {\n    static Map<Integer, List<String>> groupByLength(List<String> words) {\n        // your code\n        return new TreeMap<>();\n    }\n}\n",
    "solution": "import java.util.*;\nimport java.util.stream.*;\n\nclass Solution {\n    static Map<Integer, List<String>> groupByLength(List<String> words) {\n        // groupingBy(key, which map to build, how to collect each group)\n        return words.stream()\n                .collect(Collectors.groupingBy(String::length, TreeMap::new, Collectors.toList()));\n    }\n}\n",
    "hint": {
-    "en": "\\`Collectors.groupingBy\\` has a three-argument form: the key function (\\`String::length\\`), a map factory (\\`TreeMap::new\\`) and a collector for each group.",
-    "es": "\\`Collectors.groupingBy\\` tiene una forma de tres argumentos: la función que da la clave (\\`String::length\\`), una fábrica de mapas (\\`TreeMap::new\\`) y un colector para cada grupo."
+    "en": "`Collectors.groupingBy` has a three-argument form: the key function (`String::length`), a map factory (`TreeMap::new`) and a collector for each group.",
+    "es": "`Collectors.groupingBy` tiene una forma de tres argumentos: la función que da la clave (`String::length`), una fábrica de mapas (`TreeMap::new`) y un colector para cada grupo."
    },
    "tests": [
     [
@@ -6304,14 +6304,14 @@
     "es": "Contar líneas no vacías"
    },
    "prompt": {
-    "en": "Reading a file and reading a \\`String\\` use the same \\`Reader\\` classes, so here the \"file\" is text. Write \\`static int countLines(String text) throws IOException\\` that reads \\`text\\` line by line with a \\`BufferedReader\\` over a \\`StringReader\\` and counts the lines that are not blank (lines with only spaces do not count). Example: \\`countLines(\"a\\n\\n  \\nb\\n\")\\` returns \\`2\\`.",
-    "es": "Leer un archivo y leer un \\`String\\` usan las mismas clases \\`Reader\\`, así que aquí el \"archivo\" es texto. Escribe \\`static int countLines(String text) throws IOException\\` que lea \\`text\\` línea por línea con un \\`BufferedReader\\` sobre un \\`StringReader\\` y cuente las líneas que no están en blanco (las que solo tienen espacios no cuentan). Ejemplo: \\`countLines(\"a\\n\\n  \\nb\\n\")\\` devuelve \\`2\\`."
+    "en": "Reading a file and reading a `String` use the same `Reader` classes, so here the \"file\" is text. Write `static int countLines(String text) throws IOException` that reads `text` line by line with a `BufferedReader` over a `StringReader` and counts the lines that are not blank (lines with only spaces do not count). Example: `countLines(\"a\\n\\n  \\nb\\n\")` returns `2`.",
+    "es": "Leer un archivo y leer un `String` usan las mismas clases `Reader`, así que aquí el \"archivo\" es texto. Escribe `static int countLines(String text) throws IOException` que lea `text` línea por línea con un `BufferedReader` sobre un `StringReader` y cuente las líneas que no están en blanco (las que solo tienen espacios no cuentan). Ejemplo: `countLines(\"a\\n\\n  \\nb\\n\")` devuelve `2`."
    },
    "starter": "import java.io.*;\n\nclass Solution {\n    static int countLines(String text) throws IOException {\n        // your code\n        return 0;\n    }\n}\n",
    "solution": "import java.io.*;\n\nclass Solution {\n    static int countLines(String text) throws IOException {\n        int count = 0;\n        // try-with-resources closes the reader, exactly as it would close a file\n        try (BufferedReader reader = new BufferedReader(new StringReader(text))) {\n            String line;\n            while ((line = reader.readLine()) != null) {   // null means end of input\n                if (!line.isBlank()) count++;\n            }\n        }\n        return count;\n    }\n}\n",
    "hint": {
-    "en": "\\`readLine()\\` returns the next line without the \\`\\n\\`, or \\`null\\` at the end, so loop with \\`while ((line = reader.readLine()) != null)\\`. \\`line.isBlank()\\` is true for empty or all-space lines.",
-    "es": "\\`readLine()\\` devuelve la siguiente línea sin el \\`\\n\\`, o \\`null\\` al final, así que recorre con \\`while ((line = reader.readLine()) != null)\\`. \\`line.isBlank()\\` es verdadero para líneas vacías o solo con espacios."
+    "en": "`readLine()` returns the next line without the `\\n`, or `null` at the end, so loop with `while ((line = reader.readLine()) != null)`. `line.isBlank()` is true for empty or all-space lines.",
+    "es": "`readLine()` devuelve la siguiente línea sin el `\\n`, o `null` al final, así que recorre con `while ((line = reader.readLine()) != null)`. `line.isBlank()` es verdadero para líneas vacías o solo con espacios."
    },
    "tests": [
     [
@@ -6344,14 +6344,14 @@
     "es": "Sumar una columna CSV"
    },
    "prompt": {
-    "en": "Write \\`static int sumColumn(String csv, int column) throws IOException\\`. The text is CSV: the first line is a header, and every other line has comma-separated values. Read it with a \\`BufferedReader\\`, skip the header and any blank lines, and return the sum of the whole numbers in the given column (0 is the first column). Example: \\`sumColumn(\"name,qty\\napple,3\\npear,5\", 1)\\` returns \\`8\\`.",
-    "es": "Escribe \\`static int sumColumn(String csv, int column) throws IOException\\`. El texto es CSV: la primera línea es el encabezado y cada una de las demás tiene valores separados por comas. Léelo con un \\`BufferedReader\\`, salta el encabezado y las líneas vacías, y devuelve la suma de los enteros de la columna indicada (la primera columna es la 0). Ejemplo: \\`sumColumn(\"name,qty\\napple,3\\npear,5\", 1)\\` devuelve \\`8\\`."
+    "en": "Write `static int sumColumn(String csv, int column) throws IOException`. The text is CSV: the first line is a header, and every other line has comma-separated values. Read it with a `BufferedReader`, skip the header and any blank lines, and return the sum of the whole numbers in the given column (0 is the first column). Example: `sumColumn(\"name,qty\\napple,3\\npear,5\", 1)` returns `8`.",
+    "es": "Escribe `static int sumColumn(String csv, int column) throws IOException`. El texto es CSV: la primera línea es el encabezado y cada una de las demás tiene valores separados por comas. Léelo con un `BufferedReader`, salta el encabezado y las líneas vacías, y devuelve la suma de los enteros de la columna indicada (la primera columna es la 0). Ejemplo: `sumColumn(\"name,qty\\napple,3\\npear,5\", 1)` devuelve `8`."
    },
    "starter": "import java.io.*;\n\nclass Solution {\n    static int sumColumn(String csv, int column) throws IOException {\n        // your code\n        return 0;\n    }\n}\n",
    "solution": "import java.io.*;\n\nclass Solution {\n    static int sumColumn(String csv, int column) throws IOException {\n        int total = 0;\n        try (BufferedReader reader = new BufferedReader(new StringReader(csv))) {\n            reader.readLine();                       // skip the header\n            String line;\n            while ((line = reader.readLine()) != null) {\n                if (line.isBlank()) continue;\n                String[] fields = line.split(\",\");\n                total += Integer.parseInt(fields[column].trim());\n            }\n        }\n        return total;\n    }\n}\n",
    "hint": {
-    "en": "Call \\`readLine()\\` once before the loop to throw away the header. In the loop, \\`line.split(\",\")\\` gives the fields and \\`Integer.parseInt\\` turns one into a number.",
-    "es": "Llama a \\`readLine()\\` una vez antes del bucle para descartar el encabezado. En el bucle, \\`line.split(\",\")\\` da los campos e \\`Integer.parseInt\\` convierte uno en número."
+    "en": "Call `readLine()` once before the loop to throw away the header. In the loop, `line.split(\",\")` gives the fields and `Integer.parseInt` turns one into a number.",
+    "es": "Llama a `readLine()` una vez antes del bucle para descartar el encabezado. En el bucle, `line.split(\",\")` da los campos e `Integer.parseInt` convierte uno en número."
    },
    "tests": [
     [
@@ -6446,14 +6446,14 @@
     "es": "Tu propio assertEquals"
    },
    "prompt": {
-    "en": "JUnit's \\`assertEquals\\` compares with \\`equals\\` (not \\`==\\`) and explains failures. Write \\`static String assertEquals(Object expected, Object actual)\\` that returns \\`\"PASS\"\\` when the two are equal (two \\`null\\`s are equal too), and otherwise \\`\"FAIL: expected: <EXPECTED> but was: <ACTUAL>\"\\`. Example: \\`assertEquals(\"a\", \"b\")\\` returns \\`\"FAIL: expected: <a> but was: <b>\"\\`.",
-    "es": "El \\`assertEquals\\` de JUnit compara con \\`equals\\` (no con \\`==\\`) y explica los fallos. Escribe \\`static String assertEquals(Object expected, Object actual)\\` que devuelva \\`\"PASS\"\\` cuando los dos son iguales (dos \\`null\\` también lo son) y, si no, \\`\"FAIL: expected: <ESPERADO> but was: <REAL>\"\\`. Ejemplo: \\`assertEquals(\"a\", \"b\")\\` devuelve \\`\"FAIL: expected: <a> but was: <b>\"\\`."
+    "en": "JUnit's `assertEquals` compares with `equals` (not `==`) and explains failures. Write `static String assertEquals(Object expected, Object actual)` that returns `\"PASS\"` when the two are equal (two `null`s are equal too), and otherwise `\"FAIL: expected: <EXPECTED> but was: <ACTUAL>\"`. Example: `assertEquals(\"a\", \"b\")` returns `\"FAIL: expected: <a> but was: <b>\"`.",
+    "es": "El `assertEquals` de JUnit compara con `equals` (no con `==`) y explica los fallos. Escribe `static String assertEquals(Object expected, Object actual)` que devuelva `\"PASS\"` cuando los dos son iguales (dos `null` también lo son) y, si no, `\"FAIL: expected: <ESPERADO> but was: <REAL>\"`. Ejemplo: `assertEquals(\"a\", \"b\")` devuelve `\"FAIL: expected: <a> but was: <b>\"`."
    },
    "starter": "class Solution {\n    static String assertEquals(Object expected, Object actual) {\n        // your code\n        return \"\";\n    }\n}\n",
    "solution": "import java.util.Objects;\n\nclass Solution {\n    static String assertEquals(Object expected, Object actual) {\n        // Objects.equals handles null on either side without throwing\n        if (Objects.equals(expected, actual)) return \"PASS\";\n        return \"FAIL: expected: <\" + expected + \"> but was: <\" + actual + \">\";\n    }\n}\n",
    "hint": {
-    "en": "\\`expected.equals(actual)\\` throws when \\`expected\\` is \\`null\\`. \\`java.util.Objects.equals(a, b)\\` does the null checks for you.",
-    "es": "\\`expected.equals(actual)\\` lanza una excepción cuando \\`expected\\` es \\`null\\`. \\`java.util.Objects.equals(a, b)\\` hace las revisiones de null por ti."
+    "en": "`expected.equals(actual)` throws when `expected` is `null`. `java.util.Objects.equals(a, b)` does the null checks for you.",
+    "es": "`expected.equals(actual)` lanza una excepción cuando `expected` es `null`. `java.util.Objects.equals(a, b)` hace las revisiones de null por ti."
    },
    "tests": [
     [
@@ -6490,8 +6490,8 @@
     "es": "Corrige el error del año bisiesto"
    },
    "prompt": {
-    "en": "The starter \\`static boolean isLeapYear(int year)\\` passes the obvious tests (2024, 2023) but the edge cases in the test list catch a bug. Fix it. The rule: a year is a leap year if it is divisible by 4, except years divisible by 100, which are leap years only if they are also divisible by 400. Example: \\`isLeapYear(1900)\\` is \\`false\\` and \\`isLeapYear(2000)\\` is \\`true\\`.",
-    "es": "El \\`static boolean isLeapYear(int year)\\` inicial pasa las pruebas obvias (2024, 2023), pero los casos límite de la lista de pruebas atrapan un error. Corrígelo. La regla: un año es bisiesto si es divisible entre 4, excepto los divisibles entre 100, que solo son bisiestos si también son divisibles entre 400. Ejemplo: \\`isLeapYear(1900)\\` es \\`false\\` e \\`isLeapYear(2000)\\` es \\`true\\`."
+    "en": "The starter `static boolean isLeapYear(int year)` passes the obvious tests (2024, 2023) but the edge cases in the test list catch a bug. Fix it. The rule: a year is a leap year if it is divisible by 4, except years divisible by 100, which are leap years only if they are also divisible by 400. Example: `isLeapYear(1900)` is `false` and `isLeapYear(2000)` is `true`.",
+    "es": "El `static boolean isLeapYear(int year)` inicial pasa las pruebas obvias (2024, 2023), pero los casos límite de la lista de pruebas atrapan un error. Corrígelo. La regla: un año es bisiesto si es divisible entre 4, excepto los divisibles entre 100, que solo son bisiestos si también son divisibles entre 400. Ejemplo: `isLeapYear(1900)` es `false` e `isLeapYear(2000)` es `true`."
    },
    "starter": "class Solution {\n    static boolean isLeapYear(int year) {\n        return year % 4 == 0;\n    }\n}\n",
    "solution": "class Solution {\n    static boolean isLeapYear(int year) {\n        if (year % 400 == 0) return true;    // 2000: century, but divisible by 400\n        if (year % 100 == 0) return false;   // 1900, 2100: centuries are not leap years\n        return year % 4 == 0;\n    }\n}\n",
@@ -6592,14 +6592,14 @@
     "es": "Arma un INSERT con ?"
    },
    "prompt": {
-    "en": "With JDBC you never paste values into SQL; you write \\`?\\` placeholders and fill them with a \\`PreparedStatement\\`. Write \\`static String insertSql(String table, List<String> columns)\\` that builds the SQL text for such a statement. Example: \\`insertSql(\"users\", List.of(\"name\", \"email\"))\\` returns \\`\"INSERT INTO users (name, email) VALUES (?, ?)\"\\`.",
-    "es": "Con JDBC nunca pegas valores dentro del SQL; escribes marcadores \\`?\\` y los llenas con un \\`PreparedStatement\\`. Escribe \\`static String insertSql(String table, List<String> columns)\\` que arme el texto SQL de esa sentencia. Ejemplo: \\`insertSql(\"users\", List.of(\"name\", \"email\"))\\` devuelve \\`\"INSERT INTO users (name, email) VALUES (?, ?)\"\\`."
+    "en": "With JDBC you never paste values into SQL; you write `?` placeholders and fill them with a `PreparedStatement`. Write `static String insertSql(String table, List<String> columns)` that builds the SQL text for such a statement. Example: `insertSql(\"users\", List.of(\"name\", \"email\"))` returns `\"INSERT INTO users (name, email) VALUES (?, ?)\"`.",
+    "es": "Con JDBC nunca pegas valores dentro del SQL; escribes marcadores `?` y los llenas con un `PreparedStatement`. Escribe `static String insertSql(String table, List<String> columns)` que arme el texto SQL de esa sentencia. Ejemplo: `insertSql(\"users\", List.of(\"name\", \"email\"))` devuelve `\"INSERT INTO users (name, email) VALUES (?, ?)\"`."
    },
    "starter": "import java.util.*;\n\nclass Solution {\n    static String insertSql(String table, List<String> columns) {\n        // your code\n        return \"\";\n    }\n}\n",
    "solution": "import java.util.*;\n\nclass Solution {\n    static String insertSql(String table, List<String> columns) {\n        String names = String.join(\", \", columns);\n        // one \"?\" per column; the values are bound later with setString, setInt, ...\n        String marks = String.join(\", \", Collections.nCopies(columns.size(), \"?\"));\n        return \"INSERT INTO \" + table + \" (\" + names + \") VALUES (\" + marks + \")\";\n    }\n}\n",
    "hint": {
-    "en": "\\`String.join(\", \", list)\\` puts commas between items. \\`Collections.nCopies(n, \"?\")\\` makes a list of \\`n\\` question marks to join the same way.",
-    "es": "\\`String.join(\", \", lista)\\` pone comas entre los elementos. \\`Collections.nCopies(n, \"?\")\\` crea una lista de \\`n\\` signos de interrogación para unirlos igual."
+    "en": "`String.join(\", \", list)` puts commas between items. `Collections.nCopies(n, \"?\")` makes a list of `n` question marks to join the same way.",
+    "es": "`String.join(\", \", lista)` pone comas entre los elementos. `Collections.nCopies(n, \"?\")` crea una lista de `n` signos de interrogación para unirlos igual."
    },
    "tests": [
     [
@@ -6624,14 +6624,14 @@
     "es": "Totales a partir de filas"
    },
    "prompt": {
-    "en": "Each row from \\`SELECT customer, amount FROM orders\\` has been copied into a \\`Map\\` (column name to value), just as you would read it from a \\`ResultSet\\`. Write \\`static Map<String, Integer> totalsByCustomer(List<Map<String, Object>> rows)\\` that adds up \\`amount\\` per \\`customer\\`, with customers in alphabetical order. Example: rows for Ana 10, Ben 5, Ana 7 give \\`{Ana=17, Ben=5}\\`.",
-    "es": "Cada fila de \\`SELECT customer, amount FROM orders\\` se copió en un \\`Map\\` (nombre de columna a valor), igual que la leerías de un \\`ResultSet\\`. Escribe \\`static Map<String, Integer> totalsByCustomer(List<Map<String, Object>> rows)\\` que sume \\`amount\\` por \\`customer\\`, con los clientes en orden alfabético. Ejemplo: las filas Ana 10, Ben 5, Ana 7 dan \\`{Ana=17, Ben=5}\\`."
+    "en": "Each row from `SELECT customer, amount FROM orders` has been copied into a `Map` (column name to value), just as you would read it from a `ResultSet`. Write `static Map<String, Integer> totalsByCustomer(List<Map<String, Object>> rows)` that adds up `amount` per `customer`, with customers in alphabetical order. Example: rows for Ana 10, Ben 5, Ana 7 give `{Ana=17, Ben=5}`.",
+    "es": "Cada fila de `SELECT customer, amount FROM orders` se copió en un `Map` (nombre de columna a valor), igual que la leerías de un `ResultSet`. Escribe `static Map<String, Integer> totalsByCustomer(List<Map<String, Object>> rows)` que sume `amount` por `customer`, con los clientes en orden alfabético. Ejemplo: las filas Ana 10, Ben 5, Ana 7 dan `{Ana=17, Ben=5}`."
    },
    "starter": "import java.util.*;\n\nclass Solution {\n    static Map<String, Integer> totalsByCustomer(List<Map<String, Object>> rows) {\n        // your code\n        return new TreeMap<>();\n    }\n}\n",
    "solution": "import java.util.*;\n\nclass Solution {\n    static Map<String, Integer> totalsByCustomer(List<Map<String, Object>> rows) {\n        Map<String, Integer> totals = new TreeMap<>();\n        for (Map<String, Object> row : rows) {\n            // like rs.getString(\"customer\") and rs.getInt(\"amount\")\n            String customer = (String) row.get(\"customer\");\n            int amount = (Integer) row.get(\"amount\");\n            totals.merge(customer, amount, Integer::sum);\n        }\n        return totals;\n    }\n}\n",
    "hint": {
-    "en": "\\`row.get(\"customer\")\\` returns an \\`Object\\`, so cast it: \\`(String)\\` for the name, \\`(Integer)\\` for the amount. A \\`TreeMap\\` with \\`merge\\` adds up per key in sorted order.",
-    "es": "\\`row.get(\"customer\")\\` devuelve un \\`Object\\`, así que conviértelo: \\`(String)\\` para el nombre e \\`(Integer)\\` para la cantidad. Un \\`TreeMap\\` con \\`merge\\` suma por clave en orden."
+    "en": "`row.get(\"customer\")` returns an `Object`, so cast it: `(String)` for the name, `(Integer)` for the amount. A `TreeMap` with `merge` adds up per key in sorted order.",
+    "es": "`row.get(\"customer\")` devuelve un `Object`, así que conviértelo: `(String)` para el nombre e `(Integer)` para la cantidad. Un `TreeMap` con `merge` suma por clave en orden."
    },
    "tests": [
     [
@@ -6722,14 +6722,14 @@
     "es": "Sumar con un pool de hilos"
    },
    "prompt": {
-    "en": "Write \\`static long parallelSum(int[] nums, int parts) throws Exception\\` that splits \\`nums\\` into \\`parts\\` chunks, sums each chunk in an \\`ExecutorService\\` (submit one \\`Callable\\` per chunk), then adds the results of the \\`Future\\`s. Shut the pool down when you are done. Example: \\`parallelSum(new int[]{1, 2, 3, 4, 5}, 2)\\` returns \\`15\\`.",
-    "es": "Escribe \\`static long parallelSum(int[] nums, int parts) throws Exception\\` que divida \\`nums\\` en \\`parts\\` trozos, sume cada trozo en un \\`ExecutorService\\` (envía un \\`Callable\\` por trozo) y luego sume los resultados de los \\`Future\\`. Apaga el pool al terminar. Ejemplo: \\`parallelSum(new int[]{1, 2, 3, 4, 5}, 2)\\` devuelve \\`15\\`."
+    "en": "Write `static long parallelSum(int[] nums, int parts) throws Exception` that splits `nums` into `parts` chunks, sums each chunk in an `ExecutorService` (submit one `Callable` per chunk), then adds the results of the `Future`s. Shut the pool down when you are done. Example: `parallelSum(new int[]{1, 2, 3, 4, 5}, 2)` returns `15`.",
+    "es": "Escribe `static long parallelSum(int[] nums, int parts) throws Exception` que divida `nums` en `parts` trozos, sume cada trozo en un `ExecutorService` (envía un `Callable` por trozo) y luego sume los resultados de los `Future`. Apaga el pool al terminar. Ejemplo: `parallelSum(new int[]{1, 2, 3, 4, 5}, 2)` devuelve `15`."
    },
    "starter": "import java.util.*;\nimport java.util.concurrent.*;\n\nclass Solution {\n    static long parallelSum(int[] nums, int parts) throws Exception {\n        // your code\n        return 0;\n    }\n}\n",
    "solution": "import java.util.*;\nimport java.util.concurrent.*;\n\nclass Solution {\n    static long parallelSum(int[] nums, int parts) throws Exception {\n        ExecutorService pool = Executors.newFixedThreadPool(parts);\n        try {\n            List<Future<Long>> futures = new ArrayList<>();\n            int size = (nums.length + parts - 1) / parts;   // chunk size, rounded up\n            for (int start = 0; start < nums.length; start += size) {\n                int from = start, to = Math.min(start + size, nums.length);\n                futures.add(pool.submit(() -> {              // runs on a pool thread\n                    long sum = 0;\n                    for (int i = from; i < to; i++) sum += nums[i];\n                    return sum;\n                }));\n            }\n            long total = 0;\n            for (Future<Long> f : futures) total += f.get();  // get() waits for that chunk\n            return total;\n        } finally {\n            pool.shutdown();                                  // always release the threads\n        }\n    }\n}\n",
    "hint": {
-    "en": "Compute a chunk size, and for each chunk \\`pool.submit(() -> ...)\\` a lambda that returns its sum. \\`future.get()\\` waits for a result. Put \\`pool.shutdown()\\` in a \\`finally\\`.",
-    "es": "Calcula un tamaño de trozo y, por cada trozo, haz \\`pool.submit(() -> ...)\\` con una lambda que devuelva su suma. \\`future.get()\\` espera un resultado. Pon \\`pool.shutdown()\\` en un \\`finally\\`."
+    "en": "Compute a chunk size, and for each chunk `pool.submit(() -> ...)` a lambda that returns its sum. `future.get()` waits for a result. Put `pool.shutdown()` in a `finally`.",
+    "es": "Calcula un tamaño de trozo y, por cada trozo, haz `pool.submit(() -> ...)` con una lambda que devuelva su suma. `future.get()` espera un resultado. Pon `pool.shutdown()` en un `finally`."
    },
    "tests": [
     [
@@ -6762,14 +6762,14 @@
     "es": "Un contador seguro entre hilos"
    },
    "prompt": {
-    "en": "Write \\`static int countWithThreads(int threads, int incrementsEach) throws InterruptedException\\` that starts \\`threads\\` threads, each adding 1 to a shared counter \\`incrementsEach\\` times, waits for all of them with \\`join()\\`, and returns the final count. Use an \\`AtomicInteger\\` so no increment is lost. Example: \\`countWithThreads(4, 1000)\\` returns \\`4000\\`.",
-    "es": "Escribe \\`static int countWithThreads(int threads, int incrementsEach) throws InterruptedException\\` que inicie \\`threads\\` hilos, cada uno sumando 1 a un contador compartido \\`incrementsEach\\` veces, espere a todos con \\`join()\\` y devuelva el conteo final. Usa un \\`AtomicInteger\\` para que no se pierda ningún incremento. Ejemplo: \\`countWithThreads(4, 1000)\\` devuelve \\`4000\\`."
+    "en": "Write `static int countWithThreads(int threads, int incrementsEach) throws InterruptedException` that starts `threads` threads, each adding 1 to a shared counter `incrementsEach` times, waits for all of them with `join()`, and returns the final count. Use an `AtomicInteger` so no increment is lost. Example: `countWithThreads(4, 1000)` returns `4000`.",
+    "es": "Escribe `static int countWithThreads(int threads, int incrementsEach) throws InterruptedException` que inicie `threads` hilos, cada uno sumando 1 a un contador compartido `incrementsEach` veces, espere a todos con `join()` y devuelva el conteo final. Usa un `AtomicInteger` para que no se pierda ningún incremento. Ejemplo: `countWithThreads(4, 1000)` devuelve `4000`."
    },
    "starter": "import java.util.*;\nimport java.util.concurrent.atomic.*;\n\nclass Solution {\n    static int countWithThreads(int threads, int incrementsEach) throws InterruptedException {\n        // your code\n        return 0;\n    }\n}\n",
    "solution": "import java.util.*;\nimport java.util.concurrent.atomic.*;\n\nclass Solution {\n    static int countWithThreads(int threads, int incrementsEach) throws InterruptedException {\n        AtomicInteger counter = new AtomicInteger();\n        List<Thread> started = new ArrayList<>();\n        for (int t = 0; t < threads; t++) {\n            Thread thread = new Thread(() -> {\n                for (int i = 0; i < incrementsEach; i++) counter.incrementAndGet();   // atomic, unlike count++\n            });\n            thread.start();\n            started.add(thread);\n        }\n        for (Thread thread : started) thread.join();   // wait until every thread has finished\n        return counter.get();\n    }\n}\n",
    "hint": {
-    "en": "Create each \\`Thread\\` with a lambda, call \\`start()\\`, and keep it in a list. Only read the counter after calling \\`join()\\` on every thread; \\`incrementAndGet()\\` is the safe version of \\`++\\`.",
-    "es": "Crea cada \\`Thread\\` con una lambda, llama a \\`start()\\` y guárdalo en una lista. Lee el contador solo después de llamar a \\`join()\\` en cada hilo; \\`incrementAndGet()\\` es la versión segura de \\`++\\`."
+    "en": "Create each `Thread` with a lambda, call `start()`, and keep it in a list. Only read the counter after calling `join()` on every thread; `incrementAndGet()` is the safe version of `++`.",
+    "es": "Crea cada `Thread` con una lambda, llama a `start()` y guárdalo en una lista. Lee el contador solo después de llamar a `join()` en cada hilo; `incrementAndGet()` es la versión segura de `++`."
    },
    "tests": [
     [
@@ -6864,14 +6864,14 @@
     "es": "Comprimir con StringBuilder"
    },
    "prompt": {
-    "en": "Strings are immutable, so \\`s += x\\` in a loop builds a new String every time; a \\`StringBuilder\\` grows one buffer instead. Use one to write \\`static String compress(String s)\\`, which replaces each run of the same character with the character and the run length. Example: \\`compress(\"aaabcc\")\\` returns \\`\"a3b1c2\"\\`.",
-    "es": "Los String son inmutables, así que \\`s += x\\` en un bucle crea un String nuevo cada vez; un \\`StringBuilder\\` hace crecer un solo búfer. Úsalo para escribir \\`static String compress(String s)\\`, que reemplaza cada racha del mismo carácter por el carácter y la longitud de la racha. Ejemplo: \\`compress(\"aaabcc\")\\` devuelve \\`\"a3b1c2\"\\`."
+    "en": "Strings are immutable, so `s += x` in a loop builds a new String every time; a `StringBuilder` grows one buffer instead. Use one to write `static String compress(String s)`, which replaces each run of the same character with the character and the run length. Example: `compress(\"aaabcc\")` returns `\"a3b1c2\"`.",
+    "es": "Los String son inmutables, así que `s += x` en un bucle crea un String nuevo cada vez; un `StringBuilder` hace crecer un solo búfer. Úsalo para escribir `static String compress(String s)`, que reemplaza cada racha del mismo carácter por el carácter y la longitud de la racha. Ejemplo: `compress(\"aaabcc\")` devuelve `\"a3b1c2\"`."
    },
    "starter": "class Solution {\n    static String compress(String s) {\n        // your code\n        return \"\";\n    }\n}\n",
    "solution": "class Solution {\n    static String compress(String s) {\n        StringBuilder sb = new StringBuilder();   // one growing buffer, no copies per step\n        int i = 0;\n        while (i < s.length()) {\n            char c = s.charAt(i);\n            int run = 0;\n            while (i < s.length() && s.charAt(i) == c) {   // count this run\n                run++;\n                i++;\n            }\n            sb.append(c).append(run);\n        }\n        return sb.toString();\n    }\n}\n",
    "hint": {
-    "en": "Walk the string with an index; an inner loop counts how many times the current character repeats. \\`sb.append(c).append(run)\\` adds both, and \\`toString()\\` gives the final String.",
-    "es": "Recorre el texto con un índice; un bucle interno cuenta cuántas veces se repite el carácter actual. \\`sb.append(c).append(run)\\` agrega ambos y \\`toString()\\` da el String final."
+    "en": "Walk the string with an index; an inner loop counts how many times the current character repeats. `sb.append(c).append(run)` adds both, and `toString()` gives the final String.",
+    "es": "Recorre el texto con un índice; un bucle interno cuenta cuántas veces se repite el carácter actual. `sb.append(c).append(run)` agrega ambos y `toString()` da el String final."
    },
    "tests": [
     [
@@ -6904,14 +6904,14 @@
     "es": "equals y hashCode"
    },
    "prompt": {
-    "en": "\\`==\\` asks \"same object in memory?\" while \\`equals\\` asks \"same value?\". By default \\`equals\\` behaves like \\`==\\`. Give \\`static class Point\\` (fields \\`x\\` and \\`y\\`) an \\`equals\\` that compares the coordinates and a matching \\`hashCode\\`, so a \\`HashSet\\` treats equal points as one. Example: \\`new Solution.Point(1, 2).equals(new Solution.Point(1, 2))\\` is \\`true\\`, while \\`==\\` stays \\`false\\`.",
-    "es": "\\`==\\` pregunta \"¿el mismo objeto en memoria?\" y \\`equals\\` pregunta \"¿el mismo valor?\". Por defecto \\`equals\\` se comporta como \\`==\\`. Dale a \\`static class Point\\` (campos \\`x\\` e \\`y\\`) un \\`equals\\` que compare las coordenadas y un \\`hashCode\\` que coincida, para que un \\`HashSet\\` trate los puntos iguales como uno solo. Ejemplo: \\`new Solution.Point(1, 2).equals(new Solution.Point(1, 2))\\` es \\`true\\`, mientras que \\`==\\` sigue siendo \\`false\\`."
+    "en": "`==` asks \"same object in memory?\" while `equals` asks \"same value?\". By default `equals` behaves like `==`. Give `static class Point` (fields `x` and `y`) an `equals` that compares the coordinates and a matching `hashCode`, so a `HashSet` treats equal points as one. Example: `new Solution.Point(1, 2).equals(new Solution.Point(1, 2))` is `true`, while `==` stays `false`.",
+    "es": "`==` pregunta \"¿el mismo objeto en memoria?\" y `equals` pregunta \"¿el mismo valor?\". Por defecto `equals` se comporta como `==`. Dale a `static class Point` (campos `x` e `y`) un `equals` que compare las coordenadas y un `hashCode` que coincida, para que un `HashSet` trate los puntos iguales como uno solo. Ejemplo: `new Solution.Point(1, 2).equals(new Solution.Point(1, 2))` es `true`, mientras que `==` sigue siendo `false`."
    },
    "starter": "class Solution {\n    static class Point {\n        final int x, y;\n\n        Point(int x, int y) {\n            this.x = x;\n            this.y = y;\n        }\n\n        // add equals and hashCode here\n    }\n}\n",
    "solution": "import java.util.Objects;\n\nclass Solution {\n    static class Point {\n        final int x, y;\n\n        Point(int x, int y) {\n            this.x = x;\n            this.y = y;\n        }\n\n        @Override\n        public boolean equals(Object o) {\n            if (this == o) return true;                      // same object\n            if (!(o instanceof Point)) return false;         // also handles null\n            Point p = (Point) o;\n            return x == p.x && y == p.y;\n        }\n\n        @Override\n        public int hashCode() {\n            return Objects.hash(x, y);   // equal points must give equal hash codes\n        }\n    }\n}\n",
    "hint": {
-    "en": "Override \\`public boolean equals(Object o)\\`: check the type with \\`instanceof\\`, cast, and compare the fields. A \\`HashSet\\` looks at \\`hashCode()\\` first, so return \\`Objects.hash(x, y)\\`.",
-    "es": "Sobrescribe \\`public boolean equals(Object o)\\`: revisa el tipo con \\`instanceof\\`, convierte y compara los campos. Un \\`HashSet\\` mira primero \\`hashCode()\\`, así que devuelve \\`Objects.hash(x, y)\\`."
+    "en": "Override `public boolean equals(Object o)`: check the type with `instanceof`, cast, and compare the fields. A `HashSet` looks at `hashCode()` first, so return `Objects.hash(x, y)`.",
+    "es": "Sobrescribe `public boolean equals(Object o)`: revisa el tipo con `instanceof`, convierte y compara los campos. Un `HashSet` mira primero `hashCode()`, así que devuelve `Objects.hash(x, y)`."
    },
    "tests": [
     [
@@ -7010,14 +7010,14 @@
     "es": "Un builder de pizzas"
    },
    "prompt": {
-    "en": "Complete the Builder pattern for \\`Solution.Pizza\\`. \\`new Pizza.Builder()\\` starts with size \\`\"medium\"\\` and no toppings; \\`size(String)\\` and \\`addTopping(String)\\` return the builder so calls chain; \\`build()\\` returns the \\`Pizza\\`. \\`Pizza.toString()\\` returns \\`\"SIZE pizza with T1, T2\"\\`, or \\`\"SIZE pizza with no toppings\"\\`. Example: \\`new Solution.Pizza.Builder().size(\"large\").addTopping(\"cheese\").build()\\` prints as \\`large pizza with cheese\\`.",
-    "es": "Completa el patrón Builder de \\`Solution.Pizza\\`. \\`new Pizza.Builder()\\` empieza con tamaño \\`\"medium\"\\` y sin ingredientes; \\`size(String)\\` y \\`addTopping(String)\\` devuelven el builder para encadenar llamadas; \\`build()\\` devuelve la \\`Pizza\\`. \\`Pizza.toString()\\` devuelve \\`\"TAMAÑO pizza with I1, I2\"\\`, o \\`\"TAMAÑO pizza with no toppings\"\\`. Ejemplo: \\`new Solution.Pizza.Builder().size(\"large\").addTopping(\"cheese\").build()\\` se imprime como \\`large pizza with cheese\\`."
+    "en": "Complete the Builder pattern for `Solution.Pizza`. `new Pizza.Builder()` starts with size `\"medium\"` and no toppings; `size(String)` and `addTopping(String)` return the builder so calls chain; `build()` returns the `Pizza`. `Pizza.toString()` returns `\"SIZE pizza with T1, T2\"`, or `\"SIZE pizza with no toppings\"`. Example: `new Solution.Pizza.Builder().size(\"large\").addTopping(\"cheese\").build()` prints as `large pizza with cheese`.",
+    "es": "Completa el patrón Builder de `Solution.Pizza`. `new Pizza.Builder()` empieza con tamaño `\"medium\"` y sin ingredientes; `size(String)` y `addTopping(String)` devuelven el builder para encadenar llamadas; `build()` devuelve la `Pizza`. `Pizza.toString()` devuelve `\"TAMAÑO pizza with I1, I2\"`, o `\"TAMAÑO pizza with no toppings\"`. Ejemplo: `new Solution.Pizza.Builder().size(\"large\").addTopping(\"cheese\").build()` se imprime como `large pizza with cheese`."
    },
    "starter": "import java.util.*;\n\nclass Solution {\n    static class Pizza {\n        // fields go here\n\n        private Pizza(Builder b) {\n            // your code\n        }\n\n        @Override\n        public String toString() {\n            return \"\";\n        }\n\n        static class Builder {\n            Builder size(String size) {\n                return this;\n            }\n\n            Builder addTopping(String topping) {\n                return this;\n            }\n\n            Pizza build() {\n                return new Pizza(this);\n            }\n        }\n    }\n}\n",
    "solution": "import java.util.*;\n\nclass Solution {\n    static class Pizza {\n        private final String size;\n        private final List<String> toppings;\n\n        private Pizza(Builder b) {                 // only the Builder can make a Pizza\n            this.size = b.size;\n            this.toppings = List.copyOf(b.toppings);   // a fixed copy the builder cannot change later\n        }\n\n        @Override\n        public String toString() {\n            String list = toppings.isEmpty() ? \"no toppings\" : String.join(\", \", toppings);\n            return size + \" pizza with \" + list;\n        }\n\n        static class Builder {\n            private String size = \"medium\";        // sensible defaults\n            private final List<String> toppings = new ArrayList<>();\n\n            Builder size(String size) {\n                this.size = size;\n                return this;                       // returning this allows chaining\n            }\n\n            Builder addTopping(String topping) {\n                toppings.add(topping);\n                return this;\n            }\n\n            Pizza build() {\n                return new Pizza(this);\n            }\n        }\n    }\n}\n",
    "hint": {
-    "en": "The \\`Builder\\` keeps the settings in its own fields (with defaults), each setter returns \\`this\\`, and the private \\`Pizza\\` constructor copies them from the builder. \\`String.join(\", \", toppings)\\` formats the list.",
-    "es": "El \\`Builder\\` guarda la configuración en sus propios campos (con valores por defecto), cada método devuelve \\`this\\` y el constructor privado de \\`Pizza\\` los copia del builder. \\`String.join(\", \", toppings)\\` da formato a la lista."
+    "en": "The `Builder` keeps the settings in its own fields (with defaults), each setter returns `this`, and the private `Pizza` constructor copies them from the builder. `String.join(\", \", toppings)` formats the list.",
+    "es": "El `Builder` guarda la configuración en sus propios campos (con valores por defecto), cada método devuelve `this` y el constructor privado de `Pizza` los copia del builder. `String.join(\", \", toppings)` da formato a la lista."
    },
    "tests": [
     [
@@ -7046,14 +7046,14 @@
     "es": "Estrategias de descuento"
    },
    "prompt": {
-    "en": "The interface \\`Discount\\` has one method, \\`double apply(double price)\\`, so each strategy can be a lambda. Write \\`static Discount forCode(String code)\\` that returns the strategy for a promo code: \\`\"HALF\"\\` takes 50% off, \\`\"TENOFF\"\\` takes 10 off but never goes below 0, and any other code changes nothing. Example: \\`forCode(\"HALF\").apply(80.0)\\` returns \\`40.0\\`.",
-    "es": "La interfaz \\`Discount\\` tiene un solo método, \\`double apply(double price)\\`, así que cada estrategia puede ser una lambda. Escribe \\`static Discount forCode(String code)\\` que devuelva la estrategia de un código promocional: \\`\"HALF\"\\` descuenta el 50%, \\`\"TENOFF\"\\` resta 10 pero nunca baja de 0, y cualquier otro código no cambia nada. Ejemplo: \\`forCode(\"HALF\").apply(80.0)\\` devuelve \\`40.0\\`."
+    "en": "The interface `Discount` has one method, `double apply(double price)`, so each strategy can be a lambda. Write `static Discount forCode(String code)` that returns the strategy for a promo code: `\"HALF\"` takes 50% off, `\"TENOFF\"` takes 10 off but never goes below 0, and any other code changes nothing. Example: `forCode(\"HALF\").apply(80.0)` returns `40.0`.",
+    "es": "La interfaz `Discount` tiene un solo método, `double apply(double price)`, así que cada estrategia puede ser una lambda. Escribe `static Discount forCode(String code)` que devuelva la estrategia de un código promocional: `\"HALF\"` descuenta el 50%, `\"TENOFF\"` resta 10 pero nunca baja de 0, y cualquier otro código no cambia nada. Ejemplo: `forCode(\"HALF\").apply(80.0)` devuelve `40.0`."
    },
    "starter": "class Solution {\n    interface Discount {\n        double apply(double price);\n    }\n\n    static Discount forCode(String code) {\n        // your code\n        return price -> price;\n    }\n}\n",
    "solution": "class Solution {\n    interface Discount {\n        double apply(double price);\n    }\n\n    static Discount forCode(String code) {\n        // each case returns a different strategy; the caller just calls apply()\n        switch (code) {\n            case \"HALF\":\n                return price -> price * 0.5;\n            case \"TENOFF\":\n                return price -> Math.max(0, price - 10);\n            default:\n                return price -> price;   // no discount\n        }\n    }\n}\n",
    "hint": {
-    "en": "A \\`switch\\` on the code can return a different lambda in each case, such as \\`price -> price * 0.5\\`. \\`Math.max(0, ...)\\` keeps a price from going negative.",
-    "es": "Un \\`switch\\` sobre el código puede devolver una lambda distinta en cada caso, como \\`price -> price * 0.5\\`. \\`Math.max(0, ...)\\` evita que un precio quede negativo."
+    "en": "A `switch` on the code can return a different lambda in each case, such as `price -> price * 0.5`. `Math.max(0, ...)` keeps a price from going negative.",
+    "es": "Un `switch` sobre el código puede devolver una lambda distinta en cada caso, como `price -> price * 0.5`. `Math.max(0, ...)` evita que un precio quede negativo."
    },
    "tests": [
     [
