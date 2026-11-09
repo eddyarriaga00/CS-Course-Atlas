@@ -7,7 +7,7 @@
     <meta name="csatlas-api-base-url" content="">
     <title>CS Course Atlas - Multi-Class Learning for Computer Science Students</title>
     <link rel="icon" href="data:,">
-    <meta name="description" content="Free, structured computer science courses: Data Structures &amp; Algorithms, Java, Discrete Math, Git, and x86-64 Assembly. 45 modules in ordered units with learning objectives, worked code examples, a Java/C++/Python/JavaScript playground, practice problems, flashcards, and quizzes, in English and Spanish.">
+    <meta name="description" content="Free, structured computer science courses, starting with Java: 13 modules in ordered units with learning objectives, worked code examples, a Java/C++/Python/JavaScript playground, practice problems, flashcards, and quizzes, in English and Spanish.">
     <meta name="robots" content="index,follow,max-image-preview:large">
     <meta name="theme-color" content="#1d4ed8">
     <meta name="application-name" content="CS Course Atlas">
@@ -18,11 +18,11 @@
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="CS Course Atlas">
     <meta property="og:title" content="CS Course Atlas - Multi-Class Learning for Computer Science Students">
-    <meta property="og:description" content="Beginner-friendly CS learning across DSA, Java, Discrete Math, Git, and Assembly with interactive practice tools.">
+    <meta property="og:description" content="Beginner-friendly CS learning, starting with a full Java track and interactive practice tools.">
     <meta property="og:url" content="https://eddyarriaga00.github.io/CS-Course-Atlas/">
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:title" content="CS Course Atlas - Multi-Class Learning for Computer Science Students">
-    <meta property="twitter:description" content="Beginner-friendly CS learning across DSA, Java, Discrete Math, Git, and Assembly with interactive practice tools.">
+    <meta property="twitter:description" content="Beginner-friendly CS learning, starting with a full Java track and interactive practice tools.">
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="stylesheet" href="css/utilities-fallback.css?v=20261106">
     <link rel="stylesheet" href="css/tailwind.css?v=20261106">
@@ -153,7 +153,7 @@
                 CS Course Atlas: Learn Across Core CS Courses
             </h2>
             <p class="text-lg sm:text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed text-base sm:text-lg text-slate-200" data-i18n="hero.subtitle">
-                A structured, beginner-friendly path through five core CS tracks: Data Structures &amp; Algorithms, Java, Discrete Mathematics, Git, and x86-64 Assembly, by Eddy Arriaga-B. Its 45 modules are organized into units, and each one has clear learning objectives, worked code examples, graded practice, and a quiz.
+                A structured, beginner-friendly path through core CS courses, by Eddy Arriaga-B. It starts with the Java track: 13 modules organized into units, each with clear learning objectives, worked code examples in Java, C++, Python and JavaScript, graded practice, and a quiz. More tracks are on the way.
             </p>
             <div id="hero-pretext-flow" class="hero-pretext-flow" hidden>
                 <canvas
@@ -383,7 +383,7 @@
                     <p class="text-xs sm:text-sm text-slate-300 mt-1" data-i18n="start.paths.coursework.description">Open course tracks and choose the class you are taking now.</p>
                     <span class="inline-flex mt-3 text-xs font-semibold px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-100 border border-emerald-300/30" data-i18n="start.paths.coursework.cta">Pick a course track</span>
                 </button>
-                <button type="button" onclick="startGuidedPath('interview')" class="text-left rounded-xl border border-white/10 bg-slate-900/70 p-4 hover:bg-slate-800/80 transition-all duration-200">
+                <button type="button" data-requires-track="dsa" onclick="startGuidedPath('interview')" class="text-left rounded-xl border border-white/10 bg-slate-900/70 p-4 hover:bg-slate-800/80 transition-all duration-200">
                     <p class="text-sm font-semibold text-slate-100" data-i18n="start.paths.interview.title">Interview prep</p>
                     <p class="text-xs sm:text-sm text-slate-300 mt-1" data-i18n="start.paths.interview.description">Jump into DSA modules and interview-focused practice.</p>
                     <span class="inline-flex mt-3 text-xs font-semibold px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-100 border border-amber-300/30" data-i18n="start.paths.interview.cta">Go to DSA practice</span>
@@ -665,9 +665,9 @@
                 <div class="insights-guest-starter" aria-label="Guest starter actions">
                     <p class="insights-guest-starter-title" data-i18n="insights.lock.guestIntro">Start learning right now in guest mode:</p>
                     <div class="insights-guest-actions">
-                        <button id="guest-start-dsa" type="button" class="insights-guest-action" data-i18n="insights.lock.guestDsa">Start with DSA Foundations</button>
+                        <button id="guest-start-dsa" data-requires-track="dsa" type="button" class="insights-guest-action" data-i18n="insights.lock.guestDsa">Start with DSA Foundations</button>
                         <button id="guest-start-java" type="button" class="insights-guest-action" data-i18n="insights.lock.guestJava">Start with Java Core</button>
-                        <button id="guest-start-git" type="button" class="insights-guest-action" data-i18n="insights.lock.guestGit">Start with Git Basics</button>
+                        <button id="guest-start-git" data-requires-track="git" type="button" class="insights-guest-action" data-i18n="insights.lock.guestGit">Start with Git Basics</button>
                         <button id="guest-start-quiz" type="button" class="insights-guest-action" data-i18n="insights.lock.guestQuiz">Try a sample quiz</button>
                         <button id="guest-start-flashcards" type="button" class="insights-guest-action" data-i18n="insights.lock.guestFlashcards">Practice flashcards</button>
                         <button id="guest-save-note" type="button" class="insights-guest-action" data-i18n="insights.lock.guestNote">Save one local note</button>

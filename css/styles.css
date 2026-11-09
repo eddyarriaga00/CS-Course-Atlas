@@ -4047,6 +4047,11 @@ body.dark .settings-modal-footer {
     gap: 0.55rem;
 }
 
+/* Only one sign-in provider is configured: let it span the full row. */
+#account-modal .account-auth-social-grid:has(> [hidden]) {
+    grid-template-columns: 1fr;
+}
+
 #account-modal .account-auth-provider-btn {
     display: inline-flex;
     align-items: center;
