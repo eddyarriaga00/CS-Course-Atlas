@@ -854,3 +854,7 @@ pre.ch-setup code { color: #c9cde0; background: none; padding: 0; }
 .transcript .t-cmd { color: var(--code-text, #e6e9f2); font-weight: 500; }
 .transcript .t-ps { color: #7ee787; user-select: none; }
 .transcript .t-err { color: #ff9b94; }
+.pg-out .t-cmd { color: #e6e9f2; font-weight: 500; }
+.pg-out .t-ps { color: #7ee787; user-select: none; }
+.pg-out .code-bar { flex-wrap: wrap; row-gap: 2px; }
+.pg-out .pg-status { white-space: normal; min-width: 0; flex: 1 1 140px; text-align: right; }
