@@ -1,0 +1,83 @@
+{
+ "_about": "Auto-graded coding challenges. Each test is [call, expected] where both are Python expressions; the learner's code passes when eval(call) == eval(expected). scripts/verify_challenges.js checks that every solution passes and every starter fails.",
+ "python-first-programs": [
+  {
+   "id": "to-hours",
+   "title": { "en": "Minutes to hours", "es": "Minutos a horas" },
+   "prompt": { "en": "Write `to_hours(minutes)` that returns the time as text like `\"2 h 15 min\"`. Use `//` for whole hours and `%` for the minutes left over.", "es": "Escribe `to_hours(minutes)` que devuelva el tiempo como texto, por ejemplo `\"2 h 15 min\"`. Usa `//` para las horas completas y `%` para los minutos que sobran." },
+   "starter": "def to_hours(minutes):\n    # Return text like \"2 h 15 min\"\n    pass\n",
+   "solution": "def to_hours(minutes):\n    hours = minutes // 60\n    left = minutes % 60\n    return f\"{hours} h {left} min\"\n",
+   "hint": { "en": "`135 // 60` is 2 and `135 % 60` is 15. Build the text with an f-string: `f\"{hours} h {left} min\"`.", "es": "`135 // 60` es 2 y `135 % 60` es 15. Arma el texto con una f-string: `f\"{hours} h {left} min\"`." },
+   "tests": [["to_hours(135)", "'2 h 15 min'"], ["to_hours(60)", "'1 h 0 min'"], ["to_hours(5)", "'0 h 5 min'"], ["to_hours(0)", "'0 h 0 min'"]]
+  },
+  {
+   "id": "initials",
+   "title": { "en": "Initials", "es": "Iniciales" },
+   "prompt": { "en": "Write `initials(name)` that returns the first letter of every word in upper case, so `\"ana maría ruiz\"` gives `\"AMR\"`.", "es": "Escribe `initials(name)` que devuelva la primera letra de cada palabra en mayúscula, así `\"ana maría ruiz\"` da `\"AMR\"`." },
+   "starter": "def initials(name):\n    # \"ana maría ruiz\" -> \"AMR\"\n    pass\n",
+   "solution": "def initials(name):\n    result = \"\"\n    for word in name.split():\n        result += word[0].upper()\n    return result\n",
+   "hint": { "en": "`name.split()` gives a list of words, `word[0]` is the first letter and `.upper()` makes it a capital.", "es": "`name.split()` da una lista de palabras, `word[0]` es la primera letra y `.upper()` la vuelve mayúscula." },
+   "tests": [["initials('ana maría ruiz')", "'AMR'"], ["initials('Ben')", "'B'"], ["initials('grace   brewster hopper')", "'GBH'"], ["initials('')", "''"]]
+  }
+ ],
+ "python-decisions-loops": [
+  {
+   "id": "letter-grade",
+   "title": { "en": "Letter grade", "es": "Calificación con letra" },
+   "prompt": { "en": "Write `letter(score)` that returns `\"A\"` for 90 and up, `\"B\"` for 80–89, `\"C\"` for 70–79 and `\"F\"` for anything lower.", "es": "Escribe `letter(score)` que devuelva `\"A\"` para 90 o más, `\"B\"` para 80–89, `\"C\"` para 70–79 y `\"F\"` para cualquier valor menor." },
+   "starter": "def letter(score):\n    # 90+ A, 80+ B, 70+ C, otherwise F\n    pass\n",
+   "solution": "def letter(score):\n    if score >= 90:\n        return \"A\"\n    elif score >= 80:\n        return \"B\"\n    elif score >= 70:\n        return \"C\"\n    return \"F\"\n",
+   "hint": { "en": "Check from the highest grade down with `if`, `elif` and `else`; the first true condition wins, so 95 never reaches the `>= 80` check.", "es": "Revisa de la calificación más alta hacia abajo con `if`, `elif` y `else`; gana la primera condición verdadera, así 95 nunca llega a la comprobación `>= 80`." },
+   "tests": [["letter(95)", "'A'"], ["letter(90)", "'A'"], ["letter(89)", "'B'"], ["letter(70)", "'C'"], ["letter(12)", "'F'"]]
+  },
+  {
+   "id": "count-vowels",
+   "title": { "en": "Count the vowels", "es": "Cuenta las vocales" },
+   "prompt": { "en": "Write `count_vowels(text)` that returns how many vowels (a, e, i, o, u, upper or lower case) the text contains.", "es": "Escribe `count_vowels(text)` que devuelva cuántas vocales (a, e, i, o, u, mayúsculas o minúsculas) tiene el texto." },
+   "starter": "def count_vowels(text):\n    count = 0\n    # loop over the letters and add 1 for each vowel\n    return count\n",
+   "solution": "def count_vowels(text):\n    count = 0\n    for ch in text.lower():\n        if ch in \"aeiou\":\n            count += 1\n    return count\n",
+   "hint": { "en": "Loop with `for ch in text.lower():` and check `if ch in \"aeiou\":`.", "es": "Recorre con `for ch in text.lower():` y comprueba `if ch in \"aeiou\":`." },
+   "tests": [["count_vowels('Python')", "1"], ["count_vowels('AEIOU')", "5"], ["count_vowels('rhythm')", "0"], ["count_vowels('Hello, World!')", "3"]]
+  }
+ ],
+ "python-functions": [
+  {
+   "id": "c-to-f",
+   "title": { "en": "Celsius to Fahrenheit", "es": "Celsius a Fahrenheit" },
+   "prompt": { "en": "Write `c_to_f(celsius)` that returns the temperature in Fahrenheit (`F = C × 9/5 + 32`), rounded to 1 decimal place.", "es": "Escribe `c_to_f(celsius)` que devuelva la temperatura en Fahrenheit (`F = C × 9/5 + 32`), redondeada a 1 decimal." },
+   "starter": "def c_to_f(celsius):\n    pass\n",
+   "solution": "def c_to_f(celsius):\n    return round(celsius * 9 / 5 + 32, 1)\n",
+   "hint": { "en": "Compute `celsius * 9 / 5 + 32` and wrap it in `round(..., 1)`. Remember to `return` the result instead of printing it.", "es": "Calcula `celsius * 9 / 5 + 32` y envuélvelo en `round(..., 1)`. Recuerda hacer `return` del resultado en lugar de imprimirlo." },
+   "tests": [["c_to_f(0)", "32.0"], ["c_to_f(100)", "212.0"], ["c_to_f(-40)", "-40.0"], ["c_to_f(36.6)", "97.9"]]
+  },
+  {
+   "id": "clamp",
+   "title": { "en": "Keep it in range", "es": "Mantenlo en el rango" },
+   "prompt": { "en": "Write `clamp(value, low=0, high=100)` that returns `value`, but never less than `low` or more than `high`. The defaults should make `clamp(150)` return 100.", "es": "Escribe `clamp(value, low=0, high=100)` que devuelva `value`, pero nunca menos que `low` ni más que `high`. Los valores por defecto deben hacer que `clamp(150)` devuelva 100." },
+   "starter": "def clamp(value, low=0, high=100):\n    pass\n",
+   "solution": "def clamp(value, low=0, high=100):\n    if value < low:\n        return low\n    if value > high:\n        return high\n    return value\n",
+   "hint": { "en": "Two `if` checks are enough: below `low` return `low`, above `high` return `high`, otherwise return `value`.", "es": "Bastan dos `if`: por debajo de `low` devuelve `low`, por encima de `high` devuelve `high` y si no devuelve `value`." },
+   "tests": [["clamp(50)", "50"], ["clamp(150)", "100"], ["clamp(-5)", "0"], ["clamp(5, low=10)", "10"], ["clamp(7, 1, 5)", "5"]]
+  }
+ ],
+ "python-collections": [
+  {
+   "id": "word-counts",
+   "title": { "en": "Word counts", "es": "Conteo de palabras" },
+   "prompt": { "en": "Write `word_counts(text)` that returns a dictionary mapping each lower-case word to how many times it appears, so `\"the cat the\"` gives `{\"the\": 2, \"cat\": 1}`.", "es": "Escribe `word_counts(text)` que devuelva un diccionario con cada palabra en minúsculas y cuántas veces aparece, así `\"the cat the\"` da `{\"the\": 2, \"cat\": 1}`." },
+   "starter": "def word_counts(text):\n    counts = {}\n    # add 1 to counts[word] for every word\n    return counts\n",
+   "solution": "def word_counts(text):\n    counts = {}\n    for word in text.lower().split():\n        counts[word] = counts.get(word, 0) + 1\n    return counts\n",
+   "hint": { "en": "`counts.get(word, 0)` returns the current count or 0 if the word is new, so `counts[word] = counts.get(word, 0) + 1` works for both.", "es": "`counts.get(word, 0)` devuelve el conteo actual o 0 si la palabra es nueva, así `counts[word] = counts.get(word, 0) + 1` sirve para ambos casos." },
+   "tests": [["word_counts('the cat the')", "{'the': 2, 'cat': 1}"], ["word_counts('Go go GO')", "{'go': 3}"], ["word_counts('')", "{}"]]
+  },
+  {
+   "id": "top-student",
+   "title": { "en": "Top student", "es": "Mejor estudiante" },
+   "prompt": { "en": "Write `top_student(scores)` that takes a dictionary of name → score and returns the name with the highest score. If the dictionary is empty, return `None`.", "es": "Escribe `top_student(scores)` que reciba un diccionario de nombre → calificación y devuelva el nombre con la calificación más alta. Si el diccionario está vacío, devuelve `None`." },
+   "starter": "def top_student(scores):\n    pass\n",
+   "solution": "def top_student(scores):\n    best = None\n    for name, score in scores.items():\n        if best is None or score > scores[best]:\n            best = name\n    return best\n",
+   "hint": { "en": "Loop over `scores.items()` and remember the best name so far; replace it when you find a higher score. Start with `best = None`.", "es": "Recorre `scores.items()` y recuerda el mejor nombre hasta ahora; reemplázalo cuando encuentres una calificación más alta. Empieza con `best = None`." },
+   "tests": [["top_student({'Ana': 91, 'Ben': 78, 'Chen': 95})", "'Chen'"], ["top_student({'Solo': 50})", "'Solo'"], ["top_student({})", "None"]]
+  }
+ ]
+}

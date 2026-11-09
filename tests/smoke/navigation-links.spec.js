@@ -115,6 +115,19 @@ test.describe('Navigation', () => {
         await expect(page.locator('.score')).toContainText('/5');
     });
 
+    test('python modules have challenges with an editor that keeps drafts', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html#m-python-collections');
+        await page.locator('.tab[data-tab="challenges"]').click();
+        await expect(page.locator('.challenge')).toHaveCount(2);
+        await page.locator('#ch-code-0').fill('def word_counts(text):\n    return {}\n');
+        await page.reload();
+        await page.locator('.tab[data-tab="challenges"]').click();
+        await expect(page.locator('#ch-code-0')).toHaveValue(/return \{\}/);
+        await page.locator('[data-action="ch-reset"][data-i="0"]').click();
+        await expect(page.locator('#ch-code-0')).toHaveValue(/counts = \{\}/);
+    });
+
     test('links from the generated pages open the right module', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html?route=%2Fjava&module=collections-framework');
