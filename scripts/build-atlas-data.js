@@ -123,12 +123,17 @@ for (const t of tracks.filter((x) => x.status === 'available')) for (const id of
   (full[id].challenges || []).forEach((c, i) => search.challenges.push([id, i, c.title.en, c.title.es]));
 }
 const searchJson = JSON.stringify(search);
+// The glossary needs only the terms, not whole lessons: one small file with every live module's definitions.
+const glossary = {};
+for (const t of tracks.filter((x) => x.status === 'available')) for (const id of t.units.flatMap((u) => u.modules)) glossary[id] = full[id].definitions || [];
+const glossaryJson = JSON.stringify(glossary);
+const glossaryVersion = crypto.createHash('sha1').update(glossaryJson).digest('hex').slice(0, 10);
 const searchVersion = crypto.createHash('sha1').update(searchJson).digest('hex').slice(0, 10);
-const out = { tracks, planned: PLANNED, path: PATH, next: NEXT, modules, videos, harness, webChecks, shellVersion, searchVersion };
+const out = { tracks, planned: PLANNED, path: PATH, next: NEXT, modules, videos, harness, webChecks, shellVersion, searchVersion, glossaryVersion };
 const file = path.join(ROOT, 'data/atlas-data.json');
 const lessonDir = path.join(ROOT, 'data/lessons');
 const json = JSON.stringify(out);
-const expected = { [file]: json, [path.join(ROOT, 'data/search.json')]: searchJson, ...Object.fromEntries(Object.entries(lessonFiles).map(([id, body]) => [path.join(lessonDir, id + '.json'), body])) };
+const expected = { [file]: json, [path.join(ROOT, 'data/search.json')]: searchJson, [path.join(ROOT, 'data/glossary.json')]: glossaryJson, ...Object.fromEntries(Object.entries(lessonFiles).map(([id, body]) => [path.join(lessonDir, id + '.json'), body])) };
 if (process.argv.includes('--check')) {
   // CI guard: the committed data files must match their sources.
   const stale = Object.entries(expected).filter(([f, body]) => !fs.existsSync(f) || fs.readFileSync(f, 'utf8') !== body).map(([f]) => path.relative(ROOT, f));
