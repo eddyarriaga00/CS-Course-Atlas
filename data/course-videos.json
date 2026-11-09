@@ -75,6 +75,13 @@
    "type": "playlist",
    "title": "How AI Works",
    "channel": "CodeAI"
+  },
+  "networks": {
+   "id": "PLBlnK6fEyqRgMCUAG0XRw78UA8qnv6jEx",
+   "type": "playlist",
+   "title": "Computer Networks",
+   "channel": "Neso Academy",
+   "count": "135"
   }
  },
  "modules": {
@@ -3129,6 +3136,190 @@
      "title": "AI and Academic Integrity: What Students Need to Know",
      "channel": "Jessica Bernards",
      "length": "4:51"
+    }
+   }
+  },
+  "net-basics": {
+   "series": {
+    "id": "PLIFyRwBY_4bRLmKfP1KnZA6rZbRHtxmXi",
+    "type": "playlist",
+    "title": "Networking Fundamentals",
+    "channel": "Practical Networking",
+    "count": "15"
+   },
+   "topics": {
+    "Packets and Packet Switching": {
+     "id": "G7n8thqwO2c",
+     "type": "video",
+     "title": "Circuit Switching vs Packet Switching",
+     "channel": "PowerCert Animated Videos",
+     "length": "5:35"
+    },
+    "Network Layers (TCP/IP and OSI)": {
+     "id": "CRdL1PcherM",
+     "type": "video",
+     "title": "what is TCP/IP and OSI? // FREE CCNA // EP 3",
+     "channel": "NetworkChuck",
+     "length": "12:04"
+    },
+    "Bandwidth and Latency": {
+     "id": "5AVuUgEJu1E",
+     "type": "video",
+     "title": "Network Performance",
+     "channel": "Neso Academy",
+     "length": "6:32"
+    },
+    "MAC and IP Addresses": {
+     "id": "rYodcvhh7b8",
+     "type": "video",
+     "title": "Packet Traveling - How Packets Move Through a Network",
+     "channel": "Practical Networking",
+     "length": "14:39"
+    },
+    "Clients and Servers": {
+     "id": "-dSXvLAwXO0",
+     "type": "video",
+     "title": "What is the Client Server Model? | System Design Concepts",
+     "channel": "Be A Better Dev",
+     "length": "9:14"
+    }
+   }
+  },
+  "net-ip": {
+   "series": {
+    "id": "PLBlnK6fEyqRi7E6_6rLC5N_v50TW6qlrf",
+    "type": "playlist",
+    "title": "Logical Addressing & Subnetting | Chapter 3 | Computer Networks",
+    "channel": "Neso Academy",
+    "count": "33"
+   },
+   "topics": {
+    "IPv4 and IPv6 Addresses": {
+     "id": "ThdO9beHhpA",
+     "type": "video",
+     "title": "IP Address - IPv4 vs IPv6 Tutorial",
+     "channel": "PowerCert Animated Videos",
+     "length": "9:23"
+    },
+    "Subnets and CIDR": {
+     "id": "BWZ-MHIhqjM",
+     "type": "video",
+     "title": "What is Subnetting? - Subnetting Mastery - Part 1 of 7",
+     "channel": "Practical Networking",
+     "length": "8:37"
+    },
+    "Routing Tables and Longest-Prefix Match": {
+     "id": "AzXys5kxpAM",
+     "type": "video",
+     "title": "Everything Routers do - Part 1 - Networking Fundamentals - Lesson 5",
+     "channel": "Practical Networking",
+     "length": "17:17"
+    },
+    "Routing Algorithms": {
+     "id": "bdh2kfgxVuw",
+     "type": "video",
+     "title": "5.2 Routing algorithms: link state routing",
+     "channel": "JimKurose",
+     "length": "20:18"
+    },
+    "NAT and Private Addresses": {
+     "id": "01ajHxPLxAw",
+     "type": "video",
+     "title": "Network Address Translation - Computerphile",
+     "channel": "Computerphile",
+     "length": "10:50"
+    }
+   }
+  },
+  "net-transport": {
+   "series": {
+    "id": "PLW8bTPfXNGdAZIKv-y9v_XLXtEqrPtntm",
+    "type": "playlist",
+    "title": "How TCP Works",
+    "channel": "Chris Greer",
+    "count": "30"
+   },
+   "topics": {
+    "UDP Datagrams": {
+     "id": "ihvbhwGblQg",
+     "type": "video",
+     "title": "Network Basics - Transport Layer and User Datagram Protocol Explained - Computerphile",
+     "channel": "Computerphile",
+     "length": "15:21"
+    },
+    "The TCP Handshake": {
+     "id": "bW_BILl7n0Y",
+     "type": "video",
+     "title": "What is the TCP 3-Way Handshake and Why Backend Engineers should understand it",
+     "channel": "Hussein Nasser",
+     "length": "11:37"
+    },
+    "Reliable Delivery": {
+     "id": "UYJP-6mhF6E",
+     "type": "video",
+     "title": "3.5-1 TCP Reliability, Flow Control, and Connection Management",
+     "channel": "JimKurose",
+     "length": "14:20"
+    },
+    "Flow and Congestion Control": {
+     "id": "cIHiSR4j3g4",
+     "type": "video",
+     "title": "3 7 TCP Congestion Control",
+     "channel": "JimKurose",
+     "length": "22:28"
+    },
+    "Ports and Sockets": {
+     "id": "g2fT-g9PX9o",
+     "type": "video",
+     "title": "Network Ports Explained",
+     "channel": "PowerCert Animated Videos",
+     "length": "10:33"
+    }
+   }
+  },
+  "net-web": {
+   "series": {
+    "id": "PLQnljOFTspQUNnO4p00ua_C5mKTfldiYT",
+    "type": "playlist",
+    "title": "Backend Engineering (Beginner)",
+    "channel": "Hussein Nasser",
+    "count": "36"
+   },
+   "topics": {
+    "DNS": {
+     "id": "uOfonONtIuk",
+     "type": "video",
+     "title": "How DNS Works - Computerphile",
+     "channel": "Computerphile",
+     "length": "8:04"
+    },
+    "HTTP Requests and Responses": {
+     "id": "-Zea7GB2OwA",
+     "type": "video",
+     "title": "What are HTTP requests?",
+     "channel": "Codecademy",
+     "length": "4:56"
+    },
+    "HTTPS and TLS": {
+     "id": "hExRDVZHhig",
+     "type": "video",
+     "title": "SSL, TLS, HTTP, HTTPS Explained",
+     "channel": "PowerCert Animated Videos",
+     "length": "6:31"
+    },
+    "What Happens When You Open a Website": {
+     "id": "AlkDbnbv7dk",
+     "type": "video",
+     "title": "What happens when you type a URL into your browser?",
+     "channel": "ByteByteGo",
+     "length": "5:20"
+    },
+    "REST APIs and JSON": {
+     "id": "lsMQRaeKNDk",
+     "type": "video",
+     "title": "What is a REST API?",
+     "channel": "IBM Technology",
+     "length": "9:12"
     }
    }
   }
