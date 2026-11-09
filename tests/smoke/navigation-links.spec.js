@@ -77,7 +77,7 @@ test.describe('Navigation', () => {
     test('quizzes and flashcards are separate pages and remember known cards', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html#practice');
-        await expect(page.locator('a.hub-card')).toHaveCount(2);
+        await expect(page.locator('a.hub-card')).toHaveCount(3);
         await page.locator('a.hub-card[href="#flashcards"]').click();
         await expect(page).toHaveURL(/#flashcards$/);
         await expect(page.locator('.deck-known')).toContainText('0 of');
