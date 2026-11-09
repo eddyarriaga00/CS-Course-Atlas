@@ -652,13 +652,49 @@
   },
   "arrays-strings": {
    "series": {
-    "id": "PLBlnK6fEyqRhU6vNrQ-6ndkcbM7D7q-U8",
+    "id": "PLgUwDviBIf0rENwdL0nEH0uGom9no0nyB",
     "type": "playlist",
-    "title": "Arrays in C | Chapter 8 | C Programming",
-    "channel": "Neso Academy",
-    "count": "16"
+    "title": "Arrays Playlist | Basics to Advanced | C++/Java/Python | DSA | Placements",
+    "channel": "take U forward",
+    "count": "28"
    },
-   "topics": {}
+   "topics": {
+    "Array Traversal": {
+     "id": "9dr2mHYYoug",
+     "type": "video",
+     "title": "Learn Java arrays in 9 minutes! 🍎",
+     "channel": "Bro Code",
+     "length": "9:09"
+    },
+    "String Methods": {
+     "id": "Ntl3DxhyrQQ",
+     "type": "video",
+     "title": "Useful string methods in Java! 🧵",
+     "channel": "Bro Code",
+     "length": "8:36"
+    },
+    "Two Pointers": {
+     "id": "cQ1Oz4ckceM",
+     "type": "video",
+     "title": "TWO SUM II - Amazon Coding Interview Question - Leetcode 167 - Python",
+     "channel": "NeetCode",
+     "length": "8:18"
+    },
+    "Sliding Window": {
+     "id": "9kdHxplyl5I",
+     "type": "video",
+     "title": "L1. Introduction to Sliding Window and 2 Pointers | Templates | Patterns",
+     "channel": "take U forward",
+     "length": "36:55"
+    },
+    "Array Sorting": {
+     "id": "0lOnnd50cGI",
+     "type": "video",
+     "title": "Insertion Sort Algorithm in Java - Full Tutorial With Source",
+     "channel": "Coding with John",
+     "length": "10:17"
+    }
+   }
   },
   "searching-algorithms": {
    "series": {
@@ -668,7 +704,43 @@
     "channel": "Abdul Bari",
     "count": "84"
    },
-   "topics": {}
+   "topics": {
+    "Linear Search": {
+     "id": "246V51AWwZM",
+     "type": "video",
+     "title": "Learn Linear Search in 3 minutes ⬇️",
+     "channel": "Bro Code",
+     "length": "3:42"
+    },
+    "Binary Search": {
+     "id": "C2apEw9pgtw",
+     "type": "video",
+     "title": "2.6.1 Binary Search Iterative Method",
+     "channel": "Abdul Bari",
+     "length": "19:36"
+    },
+    "Interpolation Search": {
+     "id": "YSVS5GG1JuI",
+     "type": "video",
+     "title": "Learn Interpolation search in 8 minutes ❓",
+     "channel": "Bro Code",
+     "length": "8:24"
+    },
+    "Exponential Search": {
+     "id": "BDVYtuWXgXE",
+     "type": "video",
+     "title": "Exponential Search - better than Binary search? (Explained)",
+     "channel": "Techdose",
+     "length": "11:23"
+    },
+    "Search Strategy Comparison": {
+     "id": "j5uXyPJ0Pew",
+     "type": "video",
+     "title": "What is binary search",
+     "channel": "mycodeschool",
+     "length": "12:45"
+    }
+   }
   },
   "stacks-queues": {
    "series": {
@@ -678,7 +750,43 @@
     "channel": "WilliamFiset",
     "count": "55"
    },
-   "topics": {}
+   "topics": {
+    "Stack Operations": {
+     "id": "F1F2imiOJfk",
+     "type": "video",
+     "title": "Data structures: Introduction to stack",
+     "channel": "mycodeschool",
+     "length": "8:26"
+    },
+    "Queue Operations": {
+     "id": "XuCbpw6Bj1U",
+     "type": "video",
+     "title": "Data structures: Introduction to Queues",
+     "channel": "mycodeschool",
+     "length": "9:19"
+    },
+    "Deque": {
+     "id": "DfljaUwZsOk",
+     "type": "video",
+     "title": "Sliding Window Maximum - Monotonic Queue - Leetcode 239",
+     "channel": "NeetCode",
+     "length": "15:46"
+    },
+    "Priority Queue": {
+     "id": "7z_HXFZqXqc",
+     "type": "video",
+     "title": "Learn Priority Queue data structures in 5 minutes 🥇",
+     "channel": "Bro Code",
+     "length": "5:01"
+    },
+    "Applications": {
+     "id": "QZOLb0xHB_Q",
+     "type": "video",
+     "title": "Check for balanced parentheses using stack",
+     "channel": "mycodeschool",
+     "length": "14:13"
+    }
+   }
   },
   "linked-lists": {
    "series": {
@@ -688,17 +796,89 @@
     "channel": "WilliamFiset",
     "count": "55"
    },
-   "topics": {}
+   "topics": {
+    "Singly Linked Lists": {
+     "id": "NobHlGUjV3g",
+     "type": "video",
+     "title": "Introduction to linked list",
+     "channel": "mycodeschool",
+     "length": "17:13"
+    },
+    "Doubly Linked Lists": {
+     "id": "JdQeNxWCguQ",
+     "type": "video",
+     "title": "Data structures: Introduction to Doubly Linked List",
+     "channel": "mycodeschool",
+     "length": "7:13"
+    },
+    "Cycle Detection": {
+     "id": "gBTe7lFR3vc",
+     "type": "video",
+     "title": "Linked List Cycle - Floyd's Tortoise and Hare - Leetcode 141 - Python",
+     "channel": "NeetCode",
+     "length": "10:44"
+    },
+    "List Reversal": {
+     "id": "sYcOK51hl-A",
+     "type": "video",
+     "title": "Reverse a linked list - Iterative method",
+     "channel": "mycodeschool",
+     "length": "13:50"
+    },
+    "Merge Operations": {
+     "id": "XIdigk956u0",
+     "type": "video",
+     "title": "Merge Two Sorted Lists - Leetcode 21 - Python",
+     "channel": "NeetCode",
+     "length": "6:16"
+    }
+   }
   },
   "recursion": {
    "series": {
-    "id": "PLBlnK6fEyqRhLdzzJADYp1o8O-qlY6pv_",
+    "id": "PLgUwDviBIf0rGlzIn_7rsaR2FQ5e6ZOL9",
     "type": "playlist",
-    "title": "Time Complexity of Recursive Algorithms | Chapter 5 | Design and Analysis of Algorithms",
-    "channel": "Neso Academy",
-    "count": "18"
+    "title": "Recursion (Basics to Advanced) and Bactracking Series",
+    "channel": "take U forward",
+    "count": "22"
    },
-   "topics": {}
+   "topics": {
+    "Recursive Functions": {
+     "id": "B0NtAFf4bvU",
+     "type": "video",
+     "title": "Introduction to Recursion (Data Structures & Algorithms #6)",
+     "channel": "CS Dojo",
+     "length": "22:37"
+    },
+    "Base Cases": {
+     "id": "ngCos392W4w",
+     "type": "video",
+     "title": "5 Simple Steps for Solving Any Recursive Problem",
+     "channel": "Reducible",
+     "length": "21:03"
+    },
+    "Backtracking": {
+     "id": "DKCbsiDBN6c",
+     "type": "video",
+     "title": "6 Introduction to Backtracking - Brute Force Approach",
+     "channel": "Abdul Bari",
+     "length": "8:15"
+    },
+    "Memoization": {
+     "id": "P8Xa2BitN3I",
+     "type": "video",
+     "title": "Algorithms: Memoization and Dynamic Programming",
+     "channel": "HackerRank",
+     "length": "11:17"
+    },
+    "Tree Recursion": {
+     "id": "dxyYP3BSdcQ",
+     "type": "video",
+     "title": "Fibonacci Sequence - Anatomy of recursion and space complexity analysis",
+     "channel": "mycodeschool",
+     "length": "9:39"
+    }
+   }
   },
   "sorting-algorithms": {
    "series": {
@@ -708,7 +888,43 @@
     "channel": "Abdul Bari",
     "count": "84"
    },
-   "topics": {}
+   "topics": {
+    "Bubble Sort": {
+     "id": "Dv4qLJcxus8",
+     "type": "video",
+     "title": "Learn Bubble Sort in 7 minutes 🤿",
+     "channel": "Bro Code",
+     "length": "7:44"
+    },
+    "Merge Sort": {
+     "id": "mB5HXBb_HY8",
+     "type": "video",
+     "title": "2.7.2.  Merge Sort Algorithm",
+     "channel": "Abdul Bari",
+     "length": "20:23"
+    },
+    "Quick Sort": {
+     "id": "7h1s2SojIRw",
+     "type": "video",
+     "title": "2.8.1  QuickSort Algorithm",
+     "channel": "Abdul Bari",
+     "length": "13:43"
+    },
+    "Heap Sort": {
+     "id": "2DmK_H7IdTo",
+     "type": "video",
+     "title": "Heap sort in 4 minutes",
+     "channel": "Michael Sambol",
+     "length": "4:13"
+    },
+    "Radix Sort": {
+     "id": "XiuSW_mEn7g",
+     "type": "video",
+     "title": "Radix Sort Algorithm Introduction in 5 Minutes",
+     "channel": "CS Dojo",
+     "length": "4:39"
+    }
+   }
   },
   "matrix-grid-problems": {
    "series": {
@@ -718,27 +934,135 @@
     "channel": "NeetCode",
     "count": "30"
    },
-   "topics": {}
+   "topics": {
+    "Grid Representation": {
+     "id": "Gbz3Ao2xq_4",
+     "type": "video",
+     "title": "Two-Dimensional Arrays in Java (Part 1)",
+     "channel": "Neso Academy",
+     "length": "7:27"
+    },
+    "Boundary Validation": {
+     "id": "pV2kpPD66nE",
+     "type": "video",
+     "title": "NUMBER OF ISLANDS - Leetcode 200 - Python",
+     "channel": "NeetCode",
+     "length": "11:41"
+    },
+    "Direction Vectors": {
+     "id": "KiCBXu4P-2Y",
+     "type": "video",
+     "title": "Breadth First Search grid shortest path | Graph Theory",
+     "channel": "WilliamFiset",
+     "length": "16:51"
+    },
+    "BFS on Grids": {
+     "id": "y704fEOx0s0",
+     "type": "video",
+     "title": "Rotting Oranges - Leetcode 994 - Python",
+     "channel": "NeetCode",
+     "length": "12:19"
+    },
+    "In-Place Marking": {
+     "id": "9z2BunfoZ5Y",
+     "type": "video",
+     "title": "Surrounded Regions - Graph - Leetcode 130 - Python",
+     "channel": "NeetCode",
+     "length": "14:50"
+    }
+   }
   },
   "backtracking-patterns": {
    "series": {
-    "id": "PLDN4rrl48XKpZkf03iYFl-O29szjTrs_O",
+    "id": "PLot-Xpze53lf5C3HSjCnyFghlW0G1HHXo",
     "type": "playlist",
-    "title": "Algorithms",
-    "channel": "Abdul Bari",
-    "count": "84"
+    "title": "Backtracking",
+    "channel": "NeetCode",
+    "count": "20"
    },
-   "topics": {}
+   "topics": {
+    "Decision Trees": {
+     "id": "REOH22Xwdkk",
+     "type": "video",
+     "title": "Subsets - Backtracking - Leetcode 78",
+     "channel": "NeetCode",
+     "length": "8:47"
+    },
+    "Choose-Explore-Unchoose": {
+     "id": "Zq4upTEaQyM",
+     "type": "video",
+     "title": "The Backtracking Blueprint: The Legendary 3 Keys To Backtracking Algorithms",
+     "channel": "Back To Back SWE",
+     "length": "13:44"
+    },
+    "Pruning": {
+     "id": "xFv_Hl4B83A",
+     "type": "video",
+     "title": "6.1 N Queens Problem using Backtracking",
+     "channel": "Abdul Bari",
+     "length": "13:41"
+    },
+    "State Backtracking": {
+     "id": "pfiQ_PS1g8E",
+     "type": "video",
+     "title": "Word Search - Backtracking - Leetcode 79 - Python",
+     "channel": "NeetCode",
+     "length": "10:18"
+    },
+    "Constraint Search": {
+     "id": "JzONv5kaPJM",
+     "type": "video",
+     "title": "Implement A Sudoku Solver - Sudoku Solving Backtracking Algorithm (\"Sudoku Solver\" on LeetCode)",
+     "channel": "Back To Back SWE",
+     "length": "9:53"
+    }
+   }
   },
   "hash-tables": {
    "series": {
-    "id": "PLWKjhJtqVAbkso-IbgiiP48n-O-JQA9PJ",
+    "id": "PLDV1Zeh2NRsDH5Wq-Vk5tDb8gH03cULZS",
     "type": "playlist",
-    "title": "Data Structures and Algorithms - Beau teaches JavaScript",
-    "channel": "freeCodeCamp.org",
-    "count": "13"
+    "title": "Hash Tables Playlist",
+    "channel": "WilliamFiset",
+    "count": "9"
    },
-   "topics": {}
+   "topics": {
+    "Hash Functions": {
+     "id": "2E54GqF0H4s",
+     "type": "video",
+     "title": "Hash table hash function",
+     "channel": "WilliamFiset",
+     "length": "17:21"
+    },
+    "Collision Resolution": {
+     "id": "T9gct6Dx-jo",
+     "type": "video",
+     "title": "Hash table separate chaining",
+     "channel": "WilliamFiset",
+     "length": "8:14"
+    },
+    "HashMap Operations": {
+     "id": "H62Jfv1DJlU",
+     "type": "video",
+     "title": "Map and HashMap in Java - Full Tutorial",
+     "channel": "Coding with John",
+     "length": "10:10"
+    },
+    "Hash Sets": {
+     "id": "QvHBHuuddYk",
+     "type": "video",
+     "title": "Set and HashSet in Java - Full Tutorial",
+     "channel": "Coding with John",
+     "length": "20:43"
+    },
+    "Load Factor": {
+     "id": "xIejolxzZS8",
+     "type": "video",
+     "title": "Hash table open addressing",
+     "channel": "WilliamFiset",
+     "length": "11:09"
+    }
+   }
   },
   "trees-basics": {
    "series": {
@@ -748,7 +1072,43 @@
     "channel": "NeetCode",
     "count": "36"
    },
-   "topics": {}
+   "topics": {
+    "Tree Traversal": {
+     "id": "gm8DUJJhmY4",
+     "type": "video",
+     "title": "Binary tree traversal: Preorder, Inorder, Postorder",
+     "channel": "mycodeschool",
+     "length": "14:29"
+    },
+    "Binary Search Trees": {
+     "id": "pYT9F8_LFTM",
+     "type": "video",
+     "title": "Data structures: Binary Search Tree",
+     "channel": "mycodeschool",
+     "length": "19:28"
+    },
+    "Tree Height": {
+     "id": "_pnqMz5nrRs",
+     "type": "video",
+     "title": "Find height of a binary tree",
+     "channel": "mycodeschool",
+     "length": "7:09"
+    },
+    "Path Problems": {
+     "id": "Hr5cWUld4vU",
+     "type": "video",
+     "title": "Binary Tree Maximum Path Sum - DFS - Leetcode 124 - Python",
+     "channel": "NeetCode",
+     "length": "15:19"
+    },
+    "Tree Construction": {
+     "id": "ihj4IQGZ2zc",
+     "type": "video",
+     "title": "Construct Binary Tree from Inorder and Preorder Traversal - Leetcode 105 - Python",
+     "channel": "NeetCode",
+     "length": "17:02"
+    }
+   }
   },
   "heaps": {
    "series": {
@@ -758,11 +1118,82 @@
     "channel": "WilliamFiset",
     "count": "55"
    },
-   "topics": {}
+   "topics": {
+    "Min Heap": {
+     "id": "t0Cq6tVNRBA",
+     "type": "video",
+     "title": "Data Structures: Heaps",
+     "channel": "HackerRank",
+     "length": "10:32"
+    },
+    "Max Heap": {
+     "id": "NEtwJASLU8Q",
+     "type": "video",
+     "title": "7.8 Max Heap Insertion and Deletion | Heap Tree Insertion and Deletion with example| Data Structure",
+     "channel": "Jenny's Lectures CS IT",
+     "length": "34:28"
+    },
+    "Heap Operations": {
+     "id": "QOJ-CmQiXko",
+     "type": "video",
+     "title": "Priority Queue Inserting Elements",
+     "channel": "WilliamFiset",
+     "length": "9:59"
+    },
+    "Heapify": {
+     "id": "cuL8gXCSA58",
+     "type": "video",
+     "title": "Heapify Algorithm | Max Heapify | Min Heapify",
+     "channel": "Techdose",
+     "length": "16:29"
+    },
+    "Priority Queues": {
+     "id": "wptevk0bshY",
+     "type": "video",
+     "title": "Priority Queue Introduction",
+     "channel": "WilliamFiset",
+     "length": "13:18"
+    }
+   }
   },
   "tries": {
-   "series": null,
-   "topics": {}
+   "series": {
+    "id": "PLgUwDviBIf0pcIDCZnxhv0LkHf5KzG9zp",
+    "type": "playlist",
+    "title": "Trie Series | Striver",
+    "channel": "take U forward",
+    "count": "7"
+   },
+   "topics": {
+    "Trie Construction": {
+     "id": "zIjfhVPRZCg",
+     "type": "video",
+     "title": "Data Structures: Tries",
+     "channel": "HackerRank",
+     "length": "4:55"
+    },
+    "Insert/Search/Delete": {
+     "id": "AXjmTQ8LEoI",
+     "type": "video",
+     "title": "Trie Data Structure",
+     "channel": "Tushar Roy - Coding Made Simple",
+     "length": "19:40"
+    },
+    "Prefix Matching": {
+     "id": "oobqoCJlHA0",
+     "type": "video",
+     "title": "Implement Trie (Prefix Tree) - Leetcode 208",
+     "channel": "NeetCode",
+     "length": "18:56"
+    },
+    "Auto-complete": {
+     "id": "D4T2N0yAr20",
+     "type": "video",
+     "title": "Search Suggestions System - Leetcode 1268 - Python",
+     "channel": "NeetCode",
+     "length": "13:16"
+    }
+   }
   },
   "graph-algorithms": {
    "series": {
@@ -772,7 +1203,43 @@
     "channel": "WilliamFiset",
     "count": "43"
    },
-   "topics": {}
+   "topics": {
+    "Graph Representation": {
+     "id": "eQA-m22wjTQ",
+     "type": "video",
+     "title": "Graph Theory Introduction",
+     "channel": "WilliamFiset",
+     "length": "14:08"
+    },
+    "DFS": {
+     "id": "7fujbpJ0LB4",
+     "type": "video",
+     "title": "Depth First Search Algorithm | Graph Theory",
+     "channel": "WilliamFiset",
+     "length": "10:20"
+    },
+    "BFS": {
+     "id": "oDqjPvD54Ss",
+     "type": "video",
+     "title": "Breadth First Search Algorithm | Shortest Path | Graph Theory",
+     "channel": "WilliamFiset",
+     "length": "7:23"
+    },
+    "Shortest Path": {
+     "id": "pSqmAO-m7Lk",
+     "type": "video",
+     "title": "Dijkstra's Shortest Path Algorithm | Graph Theory",
+     "channel": "WilliamFiset",
+     "length": "24:47"
+    },
+    "Minimum Spanning Tree": {
+     "id": "jsmMtJpPnhU",
+     "type": "video",
+     "title": "Prim's Minimum Spanning Tree Algorithm | Graph Theory",
+     "channel": "WilliamFiset",
+     "length": "14:53"
+    }
+   }
   },
   "union-find": {
    "series": {
@@ -782,7 +1249,36 @@
     "channel": "WilliamFiset",
     "count": "55"
    },
-   "topics": {}
+   "topics": {
+    "Union by Rank": {
+     "id": "ID00PMy0-vE",
+     "type": "video",
+     "title": "Disjoint Sets using union by rank and path compression Graph Algorithm",
+     "channel": "Tushar Roy - Coding Made Simple",
+     "length": "17:49"
+    },
+    "Path Compression": {
+     "id": "VHRhJWacxis",
+     "type": "video",
+     "title": "Union Find Path Compression",
+     "channel": "WilliamFiset",
+     "length": "6:36"
+    },
+    "Connected Components": {
+     "id": "8f1XPm4WOUc",
+     "type": "video",
+     "title": "Number of Connected Components in an Undirected Graph - Union Find - Leetcode 323 - Python",
+     "channel": "NeetCode",
+     "length": "15:59"
+    },
+    "Cycle Detection": {
+     "id": "FXWRE67PLL0",
+     "type": "video",
+     "title": "Redundant Connection - Union Find - Leetcode 684 - Python",
+     "channel": "NeetCode",
+     "length": "16:04"
+    }
+   }
   },
   "greedy-algorithms": {
    "series": {
@@ -792,17 +1288,162 @@
     "channel": "Abdul Bari",
     "count": "84"
    },
-   "topics": {}
+   "topics": {
+    "Greedy Choice": {
+     "id": "ARvQcqJ_-NY",
+     "type": "video",
+     "title": "3. Greedy Method -  Introduction",
+     "channel": "Abdul Bari",
+     "length": "12:02"
+    },
+    "Activity Selection": {
+     "id": "poWB2UCuozA",
+     "type": "video",
+     "title": "Greedy Algorithms | Set 1 (Activity Selection Problem) | GeeksforGeeks",
+     "channel": "GeeksforGeeks",
+     "length": "5:06"
+    },
+    "Huffman Coding": {
+     "id": "co4_ahEDCho",
+     "type": "video",
+     "title": "3.4 Huffman Coding - Greedy Method",
+     "channel": "Abdul Bari",
+     "length": "17:33"
+    },
+    "Minimum Spanning Tree": {
+     "id": "4ZlRH0eK-qQ",
+     "type": "video",
+     "title": "3.5 Prims and Kruskals Algorithms - Greedy Method",
+     "channel": "Abdul Bari",
+     "length": "20:12"
+    }
+   }
   },
   "dynamic-programming": {
-   "series": null,
-   "topics": {}
+   "series": {
+    "id": "PLgUwDviBIf0qUlt5H_kiKYaNSqJ81PMMY",
+    "type": "playlist",
+    "title": "Dynamic Programming Playlist | Interview Questions | Recursion | Tabulation | Striver | C++ | Java | DSA | Placements",
+    "channel": "take U forward",
+    "count": "57"
+   },
+   "topics": {
+    "Memoization": {
+     "id": "vYquumk4nWw",
+     "type": "video",
+     "title": "What Is Dynamic Programming and How To Use It",
+     "channel": "CS Dojo",
+     "length": "14:28"
+    },
+    "Tabulation": {
+     "id": "H9bfqozjoqs",
+     "type": "video",
+     "title": "Coin Change - Dynamic Programming Bottom Up - Leetcode 322",
+     "channel": "NeetCode",
+     "length": "19:23"
+    },
+    "Optimal Substructure": {
+     "id": "5dRGRueKU3M",
+     "type": "video",
+     "title": "4 Principle  of Optimality  - Dynamic Programming introduction",
+     "channel": "Abdul Bari",
+     "length": "14:52"
+    },
+    "Overlapping Subproblems": {
+     "id": "mmjDZGSr7EA",
+     "type": "video",
+     "title": "Dynamic Programming | Set 1 (Overlapping Subproblems Property) | GeeksforGeeks",
+     "channel": "GeeksforGeeks",
+     "length": "4:50"
+    }
+   }
   },
   "bit-manipulation": {
-   "series": null,
-   "topics": {}
+   "series": {
+    "id": "PLgUwDviBIf0rnqh8QsJaHyIX7KUiaPUv7",
+    "type": "playlist",
+    "title": "Bit Manipulation Playlist | Language Independent Course",
+    "channel": "take U forward",
+    "count": "9"
+   },
+   "topics": {
+    "Bitwise Operators": {
+     "id": "NLKQEOgBAnw",
+     "type": "video",
+     "title": "Algorithms: Bit Manipulation",
+     "channel": "HackerRank",
+     "length": "9:06"
+    },
+    "Bit Masks": {
+     "id": "xXKL9YBWgCY",
+     "type": "video",
+     "title": "Bitwise Operations tutorial #1 | XOR, Shift, Subsets",
+     "channel": "Errichto Algorithms",
+     "length": "12:04"
+    },
+    "Power of Two": {
+     "id": "H2bjttEV4Vc",
+     "type": "video",
+     "title": "Power of Two - Leetcode 231 - Python",
+     "channel": "NeetCodeIO",
+     "length": "12:42"
+    },
+    "XOR Properties": {
+     "id": "qMPX1AOa83k",
+     "type": "video",
+     "title": "Single Number - Leetcode 136 - Python",
+     "channel": "NeetCode",
+     "length": "7:09"
+    },
+    "Bit Counting": {
+     "id": "5Km3utixwZs",
+     "type": "video",
+     "title": "Number of 1 Bits - Leetcode 191 - Python",
+     "channel": "NeetCode",
+     "length": "11:59"
+    }
+   }
   },
   "segment-trees": {
+   "series": {
+    "id": "PLgUwDviBIf0rf5CQf_HFt35_cF04d8dHN",
+    "type": "playlist",
+    "title": "Advanced Data Structures and Algorithms",
+    "channel": "take U forward",
+    "count": "5"
+   },
+   "topics": {
+    "Range Queries": {
+     "id": "ZBHKZF5w4YU",
+     "type": "video",
+     "title": "Segment Tree Range Minimum Query",
+     "channel": "Tushar Roy - Coding Made Simple",
+     "length": "27:44"
+    },
+    "Lazy Propagation": {
+     "id": "xuoQdt5pHj0",
+     "type": "video",
+     "title": "Lazy Propagation Segment Tree",
+     "channel": "Tushar Roy - Coding Made Simple",
+     "length": "28:27"
+    },
+    "Point Updates": {
+     "id": "2bSS8rtFym4",
+     "type": "video",
+     "title": "Range Sum Query - Mutable | Leetcode 307 | Segment tree construction and update",
+     "channel": "Techdose",
+     "length": "26:32"
+    },
+    "Range Updates": {
+     "id": "rwXVCELcrqU",
+     "type": "video",
+     "title": "Lazy Propagation in Segment Tree | Point and Range Updates | Live Coding",
+     "channel": "take U forward",
+     "length": "21:29"
+    }
+   }
+  },
+  "binary-indexed-trees": {
    "series": {
     "id": "PLDV1Zeh2NRsB6SWUrDFW2RmDotAfPbeHu",
     "type": "playlist",
@@ -810,11 +1451,36 @@
     "channel": "WilliamFiset",
     "count": "55"
    },
-   "topics": {}
-  },
-  "binary-indexed-trees": {
-   "series": null,
-   "topics": {}
+   "topics": {
+    "Prefix Sums": {
+     "id": "2pndAmo_sMA",
+     "type": "video",
+     "title": "Range Sum Query Immutable - Leetcode 303 - Python",
+     "channel": "NeetCodeIO",
+     "length": "7:42"
+    },
+    "Range Sum Queries": {
+     "id": "RgITNht_f4Q",
+     "type": "video",
+     "title": "Fenwick Tree range queries",
+     "channel": "WilliamFiset",
+     "length": "13:45"
+    },
+    "Point Updates": {
+     "id": "B-BkW9ZpKKM",
+     "type": "video",
+     "title": "Fenwick Tree point updates",
+     "channel": "WilliamFiset",
+     "length": "4:36"
+    },
+    "Lower Bit Operation": {
+     "id": "CWDQJGaN1gY",
+     "type": "video",
+     "title": "Fenwick Tree or Binary Indexed Tree",
+     "channel": "Tushar Roy - Coding Made Simple",
+     "length": "22:43"
+    }
+   }
   },
   "advanced-trees": {
    "series": {
@@ -824,11 +1490,89 @@
     "channel": "WilliamFiset",
     "count": "55"
    },
-   "topics": {}
+   "topics": {
+    "AVL Trees": {
+     "id": "jDM6_TnYIqE",
+     "type": "video",
+     "title": "10.1 AVL Tree - Insertion and Rotations",
+     "channel": "Abdul Bari",
+     "length": "43:08"
+    },
+    "Red-Black Trees": {
+     "id": "3RQtq7PDHog",
+     "type": "video",
+     "title": "5.16 Red Black tree | Introduction to Red Black trees | DSA Tutorials",
+     "channel": "Jenny's Lectures CS IT",
+     "length": "33:00"
+    },
+    "B-Trees": {
+     "id": "aZjYr87r1b8",
+     "type": "video",
+     "title": "10.2  B Trees and B+ Trees. How they are useful in Databases",
+     "channel": "Abdul Bari",
+     "length": "39:41"
+    },
+    "Splay Trees": {
+     "id": "qMmqOHr75b8",
+     "type": "video",
+     "title": "5.19 Splay Tree Introduction | Data structure & Algorithm",
+     "channel": "Jenny's Lectures CS IT",
+     "length": "28:32"
+    },
+    "Tree Rotations": {
+     "id": "q4fnJZr8ztY",
+     "type": "video",
+     "title": "Balanced binary search tree rotations",
+     "channel": "WilliamFiset",
+     "length": "8:51"
+    }
+   }
   },
   "string-algorithms": {
-   "series": null,
-   "topics": {}
+   "series": {
+    "id": "PL2mpR0RYFQsBiCWVJSvVAO3OJ2t7DzoHA",
+    "type": "playlist",
+    "title": "Algorithms for DNA Sequencing",
+    "channel": "Ben Langmead",
+    "count": "55"
+   },
+   "topics": {
+    "KMP Algorithm": {
+     "id": "V5-7GzOfADQ",
+     "type": "video",
+     "title": "9.1 Knuth-Morris-Pratt KMP String Matching Algorithm",
+     "channel": "Abdul Bari",
+     "length": "18:56"
+    },
+    "Rabin-Karp": {
+     "id": "qQ8vS2btsxI",
+     "type": "video",
+     "title": "9.2 Rabin-Karp String Matching Algorithm",
+     "channel": "Abdul Bari",
+     "length": "23:50"
+    },
+    "Boyer-Moore": {
+     "id": "4Xyhb72LCX4",
+     "type": "video",
+     "title": "ADS1: Boyer-Moore basics",
+     "channel": "Ben Langmead",
+     "length": "8:51"
+    },
+    "Suffix Arrays": {
+     "id": "-qmvbpmS2bE",
+     "type": "video",
+     "title": "Suffix arrays: definition & size",
+     "channel": "Ben Langmead",
+     "length": "12:33"
+    },
+    "String Hashing": {
+     "id": "jtMwp0FqEcg",
+     "type": "video",
+     "title": "Hashes 4  Hash Functions for Strings",
+     "channel": "RobEdwards",
+     "length": "11:16"
+    }
+   }
   },
   "propositional-logic-proofs": {
    "series": {
