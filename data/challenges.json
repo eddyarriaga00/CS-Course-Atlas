@@ -1283,5 +1283,334 @@
     "es": "Dos sentencias: `DELETE FROM products WHERE stock = 0;` y luego un `SELECT` con `WHERE price < 10 ORDER BY price`."
    }
   }
+ ],
+ "web-html": [
+  {
+   "id": "about-me",
+   "lang": "html",
+   "title": {
+    "en": "An about-me page",
+    "es": "Una página sobre mí"
+   },
+   "prompt": {
+    "en": "Build a page with exactly one `<h1>` with your name, a paragraph about you, and an unordered list with at least three hobbies.",
+    "es": "Construye una página con exactamente un `<h1>` con tu nombre, un párrafo sobre ti y una lista sin orden con al menos tres pasatiempos."
+   },
+   "starter": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>My page</title>\n</head>\n<body>\n  <!-- your heading, paragraph and list go here -->\n</body>\n</html>\n",
+   "solution": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>My page</title>\n</head>\n<body>\n  <h1>Ana Ruiz</h1>\n  <p>I am learning to build websites.</p>\n  <ul>\n    <li>Drawing</li>\n    <li>Soccer</li>\n    <li>Music</li>\n  </ul>\n</body>\n</html>\n",
+   "hint": {
+    "en": "Use `<h1>`, `<p>` and `<ul>` with one `<li>` per hobby.",
+    "es": "Usa `<h1>`, `<p>` y `<ul>` con un `<li>` por pasatiempo."
+   },
+   "checks": [
+    {
+     "sel": "h1",
+     "count": 1,
+     "label": {
+      "en": "exactly one <h1>",
+      "es": "exactamente un <h1>"
+     }
+    },
+    {
+     "sel": "p",
+     "min": 1,
+     "label": {
+      "en": "at least one <p>",
+      "es": "al menos un <p>"
+     }
+    },
+    {
+     "sel": "ul > li",
+     "min": 3,
+     "label": {
+      "en": "a <ul> with 3 or more <li>",
+      "es": "un <ul> con 3 o más <li>"
+     }
+    }
+   ]
+  },
+  {
+   "id": "links-images",
+   "lang": "html",
+   "title": {
+    "en": "A link and an image",
+    "es": "Un enlace y una imagen"
+   },
+   "prompt": {
+    "en": "Add a link to `https://developer.mozilla.org` whose text mentions MDN, and an `<img>` that has a meaningful `alt` text (any `src` is fine).",
+    "es": "Agrega un enlace a `https://developer.mozilla.org` cuyo texto mencione MDN, y un `<img>` con un texto `alt` significativo (cualquier `src` sirve)."
+   },
+   "starter": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>My page</title>\n</head>\n<body>\n  <h1>Resources</h1>\n  <!-- add the link and the image -->\n</body>\n</html>\n",
+   "solution": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>My page</title>\n</head>\n<body>\n  <h1>Resources</h1>\n  <p>I learn from <a href=\"https://developer.mozilla.org\">the MDN docs</a>.</p>\n  <img src=\"photo.jpg\" alt=\"A laptop open on a desk\">\n</body>\n</html>\n",
+   "hint": {
+    "en": "`<a href=\"https://developer.mozilla.org\">the MDN docs</a>` and `<img src=\"photo.jpg\" alt=\"what the image shows\">`.",
+    "es": "`<a href=\"https://developer.mozilla.org\">la documentación de MDN</a>` e `<img src=\"foto.jpg\" alt=\"lo que muestra la imagen\">`."
+   },
+   "checks": [
+    {
+     "sel": "a[href^='https://developer.mozilla.org']",
+     "min": 1,
+     "text": "MDN",
+     "label": {
+      "en": "a link to MDN that says MDN",
+      "es": "un enlace a MDN que diga MDN"
+     }
+    },
+    {
+     "sel": "img",
+     "min": 1,
+     "attr": "alt",
+     "label": {
+      "en": "an <img> with alt text",
+      "es": "un <img> con texto alt"
+     }
+    }
+   ]
+  }
+ ],
+ "web-css": [
+  {
+   "id": "style-card",
+   "lang": "css",
+   "title": {
+    "en": "Style a card",
+    "es": "Dale estilo a una tarjeta"
+   },
+   "prompt": {
+    "en": "Give the `.card` element a `padding` of 16px, a `border-radius` of 12px and a white `background-color` (`white`). Keep the HTML as it is; write CSS in the `<style>` block.",
+    "es": "Dale al elemento `.card` un `padding` de 16px, un `border-radius` de 12px y un `background-color` blanco (`white`). Deja el HTML como está; escribe CSS en el bloque `<style>`."
+   },
+   "starter": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>My page</title>\n  <style>\n    /* your CSS here */\n  </style>\n</head>\n<body>\n  <div class=\"card\">Hello</div>\n</body>\n</html>\n",
+   "solution": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>My page</title>\n  <style>\n    .card { padding: 16px; border-radius: 12px; background-color: white; }\n  </style>\n</head>\n<body>\n  <div class=\"card\">Hello</div>\n</body>\n</html>\n",
+   "hint": {
+    "en": "One rule: `.card { padding: 16px; border-radius: 12px; background-color: white; }`.",
+    "es": "Una regla: `.card { padding: 16px; border-radius: 12px; background-color: white; }`."
+   },
+   "checks": [
+    {
+     "sel": ".card",
+     "count": 1,
+     "style": {
+      "paddingTop": "16px",
+      "paddingLeft": "16px"
+     },
+     "label": {
+      "en": "padding is 16px",
+      "es": "el padding es 16px"
+     }
+    },
+    {
+     "sel": ".card",
+     "count": 1,
+     "style": {
+      "borderTopLeftRadius": "12px"
+     },
+     "label": {
+      "en": "border-radius is 12px",
+      "es": "el border-radius es 12px"
+     }
+    },
+    {
+     "sel": ".card",
+     "count": 1,
+     "style": {
+      "backgroundColor": "rgb(255, 255, 255)"
+     },
+     "label": {
+      "en": "background is white",
+      "es": "el fondo es blanco"
+     }
+    }
+   ]
+  },
+  {
+   "id": "flex-row",
+   "lang": "css",
+   "title": {
+    "en": "Cards in a row",
+    "es": "Tarjetas en fila"
+   },
+   "prompt": {
+    "en": "Make `.row` a flex container with a `gap` of 12px, and center its items vertically with `align-items`.",
+    "es": "Haz de `.row` un contenedor flex con un `gap` de 12px, y centra sus elementos verticalmente con `align-items`."
+   },
+   "starter": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>My page</title>\n  <style>\n    /* your CSS here */\n  </style>\n</head>\n<body>\n  <div class=\"row\">\n    <div>One</div>\n    <div>Two</div>\n    <div>Three</div>\n  </div>\n</body>\n</html>\n",
+   "solution": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>My page</title>\n  <style>\n    .row { display: flex; gap: 12px; align-items: center; }\n  </style>\n</head>\n<body>\n  <div class=\"row\">\n    <div>One</div>\n    <div>Two</div>\n    <div>Three</div>\n  </div>\n</body>\n</html>\n",
+   "hint": {
+    "en": "`.row { display: flex; gap: 12px; align-items: center; }`",
+    "es": "`.row { display: flex; gap: 12px; align-items: center; }`"
+   },
+   "checks": [
+    {
+     "sel": ".row",
+     "count": 1,
+     "style": {
+      "display": "flex"
+     },
+     "label": {
+      "en": ".row is display: flex",
+      "es": ".row tiene display: flex"
+     }
+    },
+    {
+     "sel": ".row",
+     "count": 1,
+     "style": {
+      "columnGap": "12px"
+     },
+     "label": {
+      "en": "gap is 12px",
+      "es": "el gap es 12px"
+     }
+    },
+    {
+     "sel": ".row",
+     "count": 1,
+     "style": {
+      "alignItems": "center"
+     },
+     "label": {
+      "en": "items centered vertically",
+      "es": "elementos centrados verticalmente"
+     }
+    }
+   ]
+  }
+ ],
+ "web-javascript": [
+  {
+   "id": "greeting",
+   "lang": "js",
+   "title": {
+    "en": "Build a greeting",
+    "es": "Arma un saludo"
+   },
+   "prompt": {
+    "en": "Write `greeting(name)` that returns `\"Hello, NAME!\"`, or `\"Hello, friend!\"` when the name is empty or only spaces. Trim the name first.",
+    "es": "Escribe `greeting(name)` que devuelva `\"Hello, NAME!\"`, o `\"Hello, friend!\"` cuando el nombre está vacío o solo tiene espacios. Quita los espacios del nombre primero."
+   },
+   "starter": "function greeting(name) {\n  // your code\n}\n",
+   "solution": "function greeting(name) {\n  const clean = name.trim();\n  return clean ? `Hello, ${clean}!` : 'Hello, friend!';\n}\n",
+   "hint": {
+    "en": "`name.trim()` removes spaces; an empty string is falsy, so `clean ? ... : ...` picks the right message.",
+    "es": "`name.trim()` quita los espacios; una cadena vacía es falsa, así `clean ? ... : ...` elige el mensaje correcto."
+   },
+   "tests": [
+    [
+     "greeting('Ana')",
+     "\"Hello, Ana!\""
+    ],
+    [
+     "greeting('  Ben ')",
+     "\"Hello, Ben!\""
+    ],
+    [
+     "greeting('')",
+     "\"Hello, friend!\""
+    ],
+    [
+     "greeting('   ')",
+     "\"Hello, friend!\""
+    ]
+   ]
+  },
+  {
+   "id": "top-scores",
+   "lang": "js",
+   "title": {
+    "en": "Top scores",
+    "es": "Mejores calificaciones"
+   },
+   "prompt": {
+    "en": "Write `topNames(students, n)` that takes an array of `{ name, score }` objects and returns the names of the `n` highest scores, highest first.",
+    "es": "Escribe `topNames(students, n)` que reciba un arreglo de objetos `{ name, score }` y devuelva los nombres de las `n` calificaciones más altas, de mayor a menor."
+   },
+   "starter": "function topNames(students, n) {\n  // sort a copy, keep n, return the names\n}\n",
+   "solution": "function topNames(students, n) {\n  return [...students].sort((a, b) => b.score - a.score).slice(0, n).map((s) => s.name);\n}\n",
+   "hint": {
+    "en": "`[...students].sort((a, b) => b.score - a.score)` sorts a copy from highest to lowest; then `.slice(0, n).map((s) => s.name)`.",
+    "es": "`[...students].sort((a, b) => b.score - a.score)` ordena una copia de mayor a menor; luego `.slice(0, n).map((s) => s.name)`."
+   },
+   "tests": [
+    [
+     "topNames([{name:'Ana',score:91},{name:'Ben',score:78},{name:'Chen',score:95}], 2)",
+     "[\"Chen\",\"Ana\"]"
+    ],
+    [
+     "topNames([{name:'Ana',score:91}], 3)",
+     "[\"Ana\"]"
+    ],
+    [
+     "topNames([], 2)",
+     "[]"
+    ]
+   ]
+  }
+ ],
+ "web-project": [
+  {
+   "id": "parse-total",
+   "lang": "js",
+   "title": {
+    "en": "Total from JSON",
+    "es": "Total desde JSON"
+   },
+   "prompt": {
+    "en": "Write `totalPrice(json)` that parses a JSON array of `{ \"price\": number, \"qty\": number }` items and returns the total cost. Return `0` if the text is not valid JSON.",
+    "es": "Escribe `totalPrice(json)` que interprete un arreglo JSON de elementos `{ \"price\": número, \"qty\": número }` y devuelva el costo total. Devuelve `0` si el texto no es JSON válido."
+   },
+   "starter": "function totalPrice(json) {\n  // JSON.parse, then add price * qty\n}\n",
+   "solution": "function totalPrice(json) {\n  try {\n    return JSON.parse(json).reduce((sum, item) => sum + item.price * item.qty, 0);\n  } catch (error) {\n    return 0;\n  }\n}\n",
+   "hint": {
+    "en": "Wrap `JSON.parse` in `try`/`catch`, then `reduce` the items adding `price * qty`.",
+    "es": "Envuelve `JSON.parse` en `try`/`catch` y luego usa `reduce` sumando `price * qty`."
+   },
+   "tests": [
+    [
+     "totalPrice('[{\"price\":2.5,\"qty\":2},{\"price\":10,\"qty\":1}]')",
+     "15"
+    ],
+    [
+     "totalPrice('[]')",
+     "0"
+    ],
+    [
+     "totalPrice('not json')",
+     "0"
+    ]
+   ]
+  },
+  {
+   "id": "toggle-task",
+   "lang": "js",
+   "title": {
+    "en": "Toggle a task",
+    "es": "Cambiar una tarea"
+   },
+   "prompt": {
+    "en": "Write `toggle(tasks, id)` that returns a NEW array where the task with that `id` has its `done` flipped. Do not change the original array or objects.",
+    "es": "Escribe `toggle(tasks, id)` que devuelva un arreglo NUEVO donde la tarea con ese `id` tenga su `done` invertido. No cambies el arreglo ni los objetos originales."
+   },
+   "starter": "function toggle(tasks, id) {\n  // return a new array; use map and the spread operator\n}\n",
+   "solution": "function toggle(tasks, id) {\n  return tasks.map((t) => (t.id === id ? { ...t, done: !t.done } : t));\n}\n",
+   "hint": {
+    "en": "`tasks.map(...)` builds a new array; for the matching task return a copy `{ ...t, done: !t.done }`, otherwise return `t` unchanged.",
+    "es": "`tasks.map(...)` crea un arreglo nuevo; para la tarea que coincide devuelve una copia `{ ...t, done: !t.done }` y si no devuelve `t` sin cambios."
+   },
+   "tests": [
+    [
+     "toggle([{id:1,done:false},{id:2,done:true}], 1)",
+     "[{\"id\":1,\"done\":true},{\"id\":2,\"done\":true}]"
+    ],
+    [
+     "(() => { const a = [{id:1,done:false}]; toggle(a, 1); return a[0].done; })()",
+     "false"
+    ],
+    [
+     "toggle([], 5)",
+     "[]"
+    ]
+   ]
+  }
  ]
 }
