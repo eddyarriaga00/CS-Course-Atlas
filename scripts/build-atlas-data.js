@@ -7,19 +7,19 @@ const ROOT = path.resolve(__dirname, '..');
 const load = (f, key) => { const sb = { window: {} }; vm.runInNewContext(fs.readFileSync(path.join(ROOT, f), 'utf8'), sb); return sb.window[key]; };
 const cur = load('js/course-curriculum.js', 'COURSE_CURRICULUM');
 const ex = load('js/course-examples.js', 'COURSE_EXAMPLES').modules;
-const catalog = require('./lib/catalog').loadCatalog().modules;
+const { modules: catalog, PUBLISHED_TRACKS } = require('./lib/catalog').loadCatalog();
 const byId = Object.fromEntries(catalog.map((m) => [m.id, m]));
 
 const TRACK_META = {
-  java: { title: { en: 'Java', es: 'Java' }, status: 'available', icon: 'J',
+  java: { title: { en: 'Java', es: 'Java' }, icon: 'J',
     blurb: { en: 'From variables and objects to collections, streams, testing, JDBC and the JVM.', es: 'De variables y objetos a colecciones, streams, pruebas, JDBC y la JVM.' } },
-  dsa: { title: { en: 'Data Structures & Algorithms', es: 'Estructuras de datos y algoritmos' }, status: 'soon', icon: 'A',
+  dsa: { title: { en: 'Data Structures & Algorithms', es: 'Estructuras de datos y algoritmos' }, icon: 'A',
     blurb: { en: 'Arrays to graphs, sorting to dynamic programming, with complexity analysis throughout.', es: 'De arreglos a grafos, de ordenamiento a programación dinámica, con análisis de complejidad.' } },
-  discrete: { title: { en: 'Discrete Math', es: 'Matemáticas discretas' }, status: 'soon', icon: '∑',
+  discrete: { title: { en: 'Discrete Math', es: 'Matemáticas discretas' }, icon: '∑',
     blurb: { en: 'Logic and proofs, sets and relations, counting, probability and graph theory.', es: 'Lógica y demostraciones, conjuntos y relaciones, conteo, probabilidad y teoría de grafos.' } },
-  git: { title: { en: 'Git', es: 'Git' }, status: 'soon', icon: 'G',
+  git: { title: { en: 'Git', es: 'Git' }, icon: 'G',
     blurb: { en: 'How Git really stores your work, and the branching workflow teams use every day.', es: 'Cómo Git guarda realmente tu trabajo y el flujo de ramas que los equipos usan a diario.' } },
-  assembly: { title: { en: 'x86-64 Assembly', es: 'Ensamblador x86-64' }, status: 'soon', icon: '⚙',
+  assembly: { title: { en: 'x86-64 Assembly', es: 'Ensamblador x86-64' }, icon: '⚙',
     blurb: { en: 'Registers, memory, calls and the stack: what your high-level code turns into.', es: 'Registros, memoria, llamadas y la pila: en qué se convierte tu código de alto nivel.' } }
 };
 const ORDER = ['java', 'dsa', 'discrete', 'git', 'assembly'];
@@ -28,18 +28,20 @@ const PLANNED = [
   ['Computer Networks', 'Redes de computadoras'], ['Computer Architecture', 'Arquitectura de computadoras'], ['Statistics for CS', 'Estadística para computación']
 ].map(([en, esT]) => ({ en, es: esT }));
 
-const tracks = ORDER.map((id) => ({ id, ...TRACK_META[id], units: cur.tracks[id].map((u) => ({ id: u.id, title: u.title, modules: u.modules })) }));
+// A track is "available" (fully written, shown with lessons) when it is listed in publishedTracks.
+const tracks = ORDER.map((id) => ({ id, ...TRACK_META[id], status: PUBLISHED_TRACKS.includes(id) ? 'available' : 'soon', units: cur.tracks[id].map((u) => ({ id: u.id, title: u.title, modules: u.modules })) }));
 const modules = {};
 for (const t of tracks) for (const u of t.units) for (const id of u.modules) {
   const m = byId[id];
   modules[id] = { track: t.id, title: { en: m.title, es: m.es.title }, description: { en: m.description, es: m.es.description },
     difficulty: m.difficulty, topics: m.topics, minutes: cur.modules[id]?.minutes || null };
 }
-const java = {};
-for (const id of tracks[0].units.flatMap((u) => u.modules)) {
+// Full lesson content for every module of an available track.
+const full = {};
+for (const id of tracks.filter((t) => t.status === 'available').flatMap((t) => t.units.flatMap((u) => u.modules))) {
   const c = cur.modules[id], e = ex[id];
   const strip = (x) => ({ code: x.code, output: x.output });
-  java[id] = {
+  full[id] = {
     prerequisites: c.prerequisites, whyItMatters: c.whyItMatters, objectives: c.objectives, skillsNeeded: c.skillsNeeded,
     keyTakeaways: c.keyTakeaways, pitfalls: c.pitfalls, practice: c.practice, selfCheck: c.selfCheck,
     definitions: c.definitions, resources: c.resources, quiz: c.quiz,
@@ -47,7 +49,7 @@ for (const id of tracks[0].units.flatMap((u) => u.modules)) {
   };
 }
 const videos = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/course-videos.json'), 'utf8'));
-const out = { tracks, planned: PLANNED, modules, java, videos };
+const out = { tracks, planned: PLANNED, modules, full, videos };
 const file = path.join(ROOT, 'data/atlas-data.json');
 const json = JSON.stringify(out);
 if (process.argv.includes('--check')) {
@@ -58,4 +60,4 @@ if (process.argv.includes('--check')) {
   process.exit(0);
 }
 fs.writeFileSync(file, json);
-console.log('wrote data/atlas-data.json:', Math.round(fs.statSync(file).size / 1024), 'KB;', Object.keys(modules).length, 'modules,', Object.keys(java).length, 'full Java modules');
+console.log('wrote data/atlas-data.json:', Math.round(fs.statSync(file).size / 1024), 'KB;', Object.keys(modules).length, 'modules,', Object.keys(full).length, 'with full lessons');

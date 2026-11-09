@@ -1,6 +1,7 @@
 {
  "publishedTracks": [
-  "java"
+  "java",
+  "git"
  ],
  "sequence": [
   "intro-to-coding",
@@ -568,7 +569,7 @@
   {
    "id": "git-basics-workflow",
    "title": "Git Basics and Collaboration Workflow",
-   "description": "Learn the complete day-one Git workflow with a realistic terminal sequence: initialize, commit with intent, branch safely, sync with remote, handle conflicts, and undo mistakes without rewriting shared history.",
+   "description": "The day-one Git workflow, run in a real terminal: create a repository, stage and commit, branch and merge, share work through a remote, resolve a conflict, and undo mistakes without rewriting shared history.",
    "difficulty": "beginner",
    "topics": [
     "Repository Setup",
@@ -580,8 +581,8 @@
     "Safe Undo with Restore/Revert"
    ],
    "es": {
-    "title": "Conceptos básicos de Git y flujo de trabajo de colaboración",
-    "description": "Este módulo inicial explica la configuración del repositorio, la puesta en escena, las confirmaciones, las bifurcaciones, el flujo de extracción/fusión, los conceptos básicos de resolución de conflictos y los comandos de deshacer seguros que puede usar en proyectos de equipo reales."
+    "title": "Git básico y flujo de trabajo en equipo",
+    "description": "El flujo de trabajo de Git del primer día, ejecutado en una terminal real: crear un repositorio, preparar y confirmar cambios, crear y fusionar ramas, compartir trabajo con un remoto, resolver un conflicto y deshacer errores sin reescribir el historial compartido."
    }
   },
   {
@@ -772,8 +773,8 @@
   },
   {
    "id": "git-branching-merging",
-   "title": "Git Branching, Merging, and Pull Requests",
-   "description": "Practice an intermediate team workflow with branch strategy, commit slicing, rebase conflict handling, PR-ready history cleanup, and production-safe merge patterns.",
+   "title": "Git Branching, Merging and Pull Requests",
+   "description": "The team workflow: one feature branch per change, rebase or merge on purpose, resolve conflicts during a rebase, tidy a branch with fixup commits, and merge it as a clean pull request.",
    "difficulty": "intermediate",
    "topics": [
     "Feature Branches",
@@ -783,8 +784,8 @@
     "Commit Strategy"
    ],
    "es": {
-    "title": "Solicitudes de ramificación, fusión y extracción de Git",
-    "description": "Aprenda un flujo de trabajo de equipo repetible: cree ramas de funciones, manténgalas actualizadas, resuelva conflictos de fusión de forma segura y abra solicitudes de extracción limpias con confirmaciones listas para revisión."
+    "title": "Ramas, merge y pull requests en Git",
+    "description": "El flujo de trabajo en equipo: una rama por cambio, rebase o merge a propósito, resolver conflictos durante un rebase, ordenar una rama con commits fixup y fusionarla como un pull request limpio."
    }
   },
   {

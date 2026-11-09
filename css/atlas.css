@@ -499,3 +499,11 @@ pre.code { max-height: min(760px, 78vh); }
 .mod-foot .report:hover { color: var(--text); }
 .results .result.kb { background: var(--surface-2); }
 @media (max-width: 860px) { .search kbd { display: none; } .search input { padding-right: 12px; } }
+.notes-course { font-size: 11.5px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; color: var(--text-3); padding: 10px 10px 4px; }
+.notes-course:first-child { padding-top: 2px; }
+.term-hint { font-size: 13.5px; color: var(--text-2); margin: 0 0 10px; }
+.course-switch.open { border-color: color-mix(in srgb, var(--accent) 35%, var(--border)); }
+pre.code.term { white-space: pre; }
+.term .t-cmd { color: var(--code-text); font-weight: 500; }
+.term .t-ps { color: #7ee787; user-select: none; }
+.term .t-out { color: #a9adbd; }

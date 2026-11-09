@@ -20,10 +20,11 @@
    "channel": "MIT OpenCourseWare"
   },
   "git": {
-   "id": "PLyzOVJj3bHQuloKGG59rS43e29ro7I57J",
+   "id": "PL0lo9MOBetEFcp4SCWinBdpml9B2U25-f",
    "type": "playlist",
-   "title": "Missing Semester IAP 2020",
-   "channel": "Missing Semester"
+   "title": "GitHub for Beginners",
+   "channel": "GitHub",
+   "count": "16"
   },
   "assembly": {
    "id": "PLKK11Ligqitg9MOX3-0tFT1Rmh3uJp7kA",
@@ -831,17 +832,103 @@
   },
   "git-basics-workflow": {
    "series": {
-    "id": "PLA3GkZPtsafYYWC-N6vicOLP0w-4fiQ2S",
+    "id": "PL-osiE80TeTuRUfjRe54Eea17-YfnOOAx",
     "type": "playlist",
-    "title": "Master Git & GitHub: A Complete Beginner to Advanced Playlist",
-    "channel": "Engineering Digest",
-    "count": "18"
+    "title": "Git Tutorials",
+    "channel": "Corey Schafer",
+    "count": "7"
    },
-   "topics": {}
+   "topics": {
+    "Repository Setup": {
+     "id": "U6b4BHlCKRE",
+     "type": "video",
+     "title": "Git Crash Course #3 - Making a New Git Repository",
+     "channel": "Net Ninja",
+     "length": "4:31"
+    },
+    "Staging and Commits": {
+     "id": "e9lnsKot_SQ",
+     "type": "video",
+     "title": "How Git Works: Explained in 4 Minutes",
+     "channel": "ByteByteGo",
+     "length": "4:18"
+    },
+    "Branching and Merging": {
+     "id": "0Vfwd6vbRAA",
+     "type": "video",
+     "title": "Git Crash Course #13 - Merging Branches",
+     "channel": "Net Ninja",
+     "length": "4:38"
+    },
+    "Pull/Rebase Basics": {
+     "id": "T13gDBXarj0",
+     "type": "video",
+     "title": "Git Pull vs Fetch: When To Use Each",
+     "channel": "The Modern Coder",
+     "length": "7:13"
+    },
+    "Merge Conflict Basics": {
+     "id": "DloR0BOGNU0",
+     "type": "video",
+     "title": "Never fear merge conflicts again - git merge/pull tutorial",
+     "channel": "Philomatics",
+     "length": "5:12"
+    },
+    "Remote Collaboration": {
+     "id": "LIHIRBz5ZXk",
+     "type": "video",
+     "title": "What is origin in Git (version control)? Why does it seem we have multiple remote repository names?",
+     "channel": "Anna Skoulikari",
+     "length": "7:13"
+    },
+    "Safe Undo with Restore/Revert": {
+     "id": "GytsxgB4-HU",
+     "type": "video",
+     "title": "Undo a git commit - git reset/revert - pushed/not pushed",
+     "channel": "Philomatics",
+     "length": "3:28"
+    }
+   }
   },
   "git-branching-merging": {
    "series": null,
-   "topics": {}
+   "topics": {
+    "Feature Branches": {
+     "id": "Lj_jAFwofLs",
+     "type": "video",
+     "title": "Intro to git feature branch workflow",
+     "channel": "Coding Garden",
+     "length": "7:50"
+    },
+    "Rebase vs Merge": {
+     "id": "0chZFIZLR_0",
+     "type": "video",
+     "title": "Git MERGE vs REBASE: Everything You Need to Know",
+     "channel": "ByteByteGo",
+     "length": "4:34"
+    },
+    "Conflict Resolution": {
+     "id": "DkWDHzmMvyg",
+     "type": "video",
+     "title": "git rebase - Why, When & How to fix conflicts",
+     "channel": "Philomatics",
+     "length": "9:45"
+    },
+    "Pull Request Hygiene": {
+     "id": "42392W7SgnE",
+     "type": "video",
+     "title": "git interactive rebase - Undo, Edit & Squash git commits with a single command",
+     "channel": "Philomatics",
+     "length": "7:52"
+    },
+    "Commit Strategy": {
+     "id": "OJqUWvmf4gg",
+     "type": "video",
+     "title": "Write git commit messages like a PRO with Conventional Commits",
+     "channel": "Justin Brooks",
+     "length": "4:08"
+    }
+   }
   },
   "assembly-registers-memory": {
    "series": null,
