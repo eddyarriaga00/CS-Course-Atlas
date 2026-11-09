@@ -59,7 +59,7 @@ function main() {
         if (!entry) continue;
         const track = MODULE_CATEGORY_BY_ID[module.id];
         // Git and the command line are taught as terminal sessions, Web Basics as live pages and the Python course only in Python.
-        const langs = track === 'git' || track === 'cli' ? ['bash'] : track === 'web' ? ['html'] : track === 'python' ? ['python'] : track === 'assembly' ? ['assembly', ...LANGS] : LANGS;
+        const langs = track === 'git' || track === 'cli' ? ['bash'] : track === 'web' ? ['html'] : track === 'sql' ? ['sql'] : track === 'python' ? ['python'] : track === 'assembly' ? ['assembly', ...LANGS] : LANGS;
         checkCode(`${module.id} main`, entry.main, langs);
         programCount += langs.length;
         const topics = Array.isArray(module.topics) ? module.topics : [];

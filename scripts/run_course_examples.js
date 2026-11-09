@@ -30,7 +30,7 @@ const { spawnSync, spawn } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const DEFAULT_DATA = path.join(ROOT, 'js', 'course-examples.js');
-const RUNNABLE = ['java', 'cpp', 'python', 'javascript', 'assembly', 'bash', 'html'];
+const RUNNABLE = ['java', 'cpp', 'python', 'javascript', 'assembly', 'bash', 'html', 'sql'];
 const PARITY_LANGS = ['java', 'cpp', 'python', 'javascript'];
 const TIMEOUT_MS = 30000;
 
@@ -131,6 +131,13 @@ async function runProgram(language, source, workDir) {
             : await run('ld', ['-o', binary, object], { cwd: workDir });
         if (linked.code !== 0) return { ...linked, phase: 'link' };
         return run(binary, [], { cwd: workDir });
+    }
+    if (language === 'sql') {
+        // SQL course: a fresh in-memory SQLite database per example (Python's sqlite3 module),
+        // printed like an sqlite3 session; see scripts/lib/run_sql.py.
+        const file = path.join(workDir, 'main.sql');
+        fs.writeFileSync(file, source);
+        return run('python3', [path.join(__dirname, 'lib', 'run_sql.py'), file], { cwd: workDir });
     }
     if (language === 'html') {
         // Web pages (Web Basics course): rendered in headless Chromium; the recorded output is

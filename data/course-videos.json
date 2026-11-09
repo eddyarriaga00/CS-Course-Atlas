@@ -51,6 +51,12 @@
    "type": "playlist",
    "title": "HTML and CSS Tutorials",
    "channel": "freeCodeCamp.org"
+  },
+  "sql": {
+   "id": "PLSQl0a2vh4HCtgJXRDRah4IlKPfeflhii",
+   "type": "playlist",
+   "title": "Intro to SQL: Querying and managing data | Computer Programming | Khan Academy",
+   "channel": "Khan Academy"
   }
  },
  "modules": {
@@ -1650,6 +1656,186 @@
      "title": "How to Host a Website On Github Pages",
      "channel": "Kenny Yip Coding",
      "length": "6:57"
+    }
+   }
+  },
+  "sql-first-queries": {
+   "series": {
+    "id": "PLNcg_FV9n7qZDdRInCl7wfOO8yZqYX5hO",
+    "type": "playlist",
+    "title": "SQL Course | For Beginners",
+    "channel": "Data with Baraa"
+   },
+   "topics": {
+    "Tables, Rows and Columns": {
+     "id": "OqjJjpjDRLc",
+     "type": "video",
+     "title": "What is a Relational Database?",
+     "channel": "IBM Technology",
+     "length": "7:54"
+    },
+    "SELECT and FROM": {
+     "id": "YufocuHbYZo",
+     "type": "video",
+     "title": "SQL SELECT Tutorial   |¦| SQL Tutorial |¦| SQL for Beginners",
+     "channel": "Socratica",
+     "length": "8:56"
+    },
+    "Filtering with WHERE": {
+     "id": "4Uv0o8IBqw0",
+     "type": "video",
+     "title": "How to Filter with the WHERE clause in SQL",
+     "channel": "Becoming a Data Scientist",
+     "length": "11:14"
+    },
+    "Sorting and Limiting": {
+     "id": "wyWnJ7QYME4",
+     "type": "video",
+     "title": "The ORDER BY and LIMIT Clauses in SQL to Help With Sorting",
+     "channel": "Becoming a Data Scientist",
+     "length": "3:08"
+    },
+    "Calculated Columns": {
+     "id": "mf_IFI3I7to",
+     "type": "video",
+     "title": "Writing CASE WHEN Statements in SQL (IF/THEN)",
+     "channel": "Becoming a Data Scientist",
+     "length": "5:50"
+    }
+   }
+  },
+  "sql-summarizing": {
+   "series": {
+    "id": "PLNcg_FV9n7qZDdRInCl7wfOO8yZqYX5hO",
+    "type": "playlist",
+    "title": "SQL Course | For Beginners",
+    "channel": "Data with Baraa"
+   },
+   "topics": {
+    "Aggregate Functions": {
+     "id": "jcoJuc5e3RE",
+     "type": "video",
+     "title": "Basic Aggregate Functions in SQL (COUNT, SUM, AVG, MAX, and MIN)",
+     "channel": "Becoming a Data Scientist",
+     "length": "5:44"
+    },
+    "GROUP BY": {
+     "id": "x2_mOJ3skSc",
+     "type": "video",
+     "title": "SQL Group By: An Explanation and How To Use It",
+     "channel": "Database Star",
+     "length": "5:05"
+    },
+    "HAVING": {
+     "id": "nNrgRVIzeHg",
+     "type": "video",
+     "title": "Advanced Aggregate Functions in SQL (GROUP BY, HAVING vs. WHERE)",
+     "channel": "Becoming a Data Scientist",
+     "length": "6:00"
+    },
+    "DISTINCT": {
+     "id": "zWtewD294W0",
+     "type": "video",
+     "title": "What Is SQL Distinct and How Can You Use It?",
+     "channel": "Database Star",
+     "length": "6:35"
+    },
+    "NULL Values": {
+     "id": "xhol4V9u-ic",
+     "type": "video",
+     "title": "NULL Values in RDBMS",
+     "channel": "Neso Academy",
+     "length": "7:17"
+    }
+   }
+  },
+  "sql-joins": {
+   "series": {
+    "id": "PLNcg_FV9n7qZDdRInCl7wfOO8yZqYX5hO",
+    "type": "playlist",
+    "title": "SQL Course | For Beginners",
+    "channel": "Data with Baraa"
+   },
+   "topics": {
+    "Primary and Foreign Keys": {
+     "id": "B5r8CcTUs5Y",
+     "type": "video",
+     "title": "Primary & Foreign Keys",
+     "channel": "Eddie Woo",
+     "length": "8:25"
+    },
+    "INNER JOIN": {
+     "id": "FjxtntY5sO0",
+     "type": "video",
+     "title": "How to Join Tables in SQL | Clearly Explained | Beginners Start Here!",
+     "channel": "Maven Analytics",
+     "length": "7:46"
+    },
+    "LEFT JOIN": {
+     "id": "tgx3hFGi_mc",
+     "type": "video",
+     "title": "Inner Joins vs Left Joins in SQL [The Only Video You Need]",
+     "channel": "Jess Ramos | Data, AI, & Tech ⚡️",
+     "length": "11:22"
+    },
+    "Joining Three Tables": {
+     "id": "TGt2xa7EzvI",
+     "type": "video",
+     "title": "SQL Join 3 Tables: How-To with Example",
+     "channel": "Database Star",
+     "length": "4:06"
+    },
+    "Subqueries": {
+     "id": "GpC0XyiJPEo",
+     "type": "video",
+     "title": "How to do Subqueries in SQL with Examples",
+     "channel": "Becoming a Data Scientist",
+     "length": "8:20"
+    }
+   }
+  },
+  "sql-design": {
+   "series": {
+    "id": "PLNcg_FV9n7qZDdRInCl7wfOO8yZqYX5hO",
+    "type": "playlist",
+    "title": "SQL Course | For Beginners",
+    "channel": "Data with Baraa"
+   },
+   "topics": {
+    "CREATE TABLE and Types": {
+     "id": "XfrgCK6BX5w",
+     "type": "video",
+     "title": "MySQL: How to create a TABLE",
+     "channel": "Bro Code",
+     "length": "8:10"
+    },
+    "INSERT, UPDATE and DELETE": {
+     "id": "QX1eOjAZzws",
+     "type": "video",
+     "title": "SQL Query Basics: Insert, Select, Update, and Delete",
+     "channel": "Engineer Man",
+     "length": "11:05"
+    },
+    "Constraints": {
+     "id": "9WP35xwZ3tk",
+     "type": "video",
+     "title": "Constraints - SQL - Tutorial 8",
+     "channel": "Giraffe Academy",
+     "length": "10:13"
+    },
+    "Normalization": {
+     "id": "GFQaEYEc8_8",
+     "type": "video",
+     "title": "Learn Database Normalization - 1NF, 2NF, 3NF, 4NF, 5NF",
+     "channel": "Decomplexify",
+     "length": "28:34"
+    },
+    "Indexes and Transactions": {
+     "id": "Oy2NpxfV9ok",
+     "type": "video",
+     "title": "Understand SQL Transactions in 5 Minutes",
+     "channel": "Unwired",
+     "length": "4:43"
     }
    }
   }

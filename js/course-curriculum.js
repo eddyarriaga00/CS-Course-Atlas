@@ -374,6 +374,48 @@ window.COURSE_CURRICULUM = {
           "web-project"
         ]
       }
+    ],
+    "sql": [
+      {
+        "id": "sql-reading",
+        "title": {
+          "en": "Reading Data",
+          "es": "Leer datos"
+        },
+        "modules": [
+          "sql-first-queries"
+        ]
+      },
+      {
+        "id": "sql-analysis",
+        "title": {
+          "en": "Answering Questions",
+          "es": "Responder preguntas"
+        },
+        "modules": [
+          "sql-summarizing"
+        ]
+      },
+      {
+        "id": "sql-relations",
+        "title": {
+          "en": "Relationships",
+          "es": "Relaciones"
+        },
+        "modules": [
+          "sql-joins"
+        ]
+      },
+      {
+        "id": "sql-building",
+        "title": {
+          "en": "Building a Database",
+          "es": "Construir una base de datos"
+        },
+        "modules": [
+          "sql-design"
+        ]
+      }
     ]
   },
   "modules": {
@@ -16925,6 +16967,1168 @@ window.COURSE_CURRICULUM = {
           "explanation": {
             "en": "Project sites live under `/repository-name/`, so `/style.css` points to the wrong place. A relative path like `style.css` works in both.",
             "es": "Los sitios de proyecto viven bajo `/nombre-repositorio/`, así que `/style.css` apunta al lugar equivocado. Una ruta relativa como `style.css` funciona en ambos."
+          }
+        }
+      ]
+    },
+    "sql-first-queries": {
+      "minutes": 75,
+      "prerequisites": [
+        "web-html"
+      ],
+      "whyItMatters": {
+        "en": "Almost every app keeps its data in a database: your messages, orders, grades, playlists. SQL is the language for asking that data questions, and it has barely changed in fifty years, so what you learn here works in SQLite on a phone, PostgreSQL behind a website and the data tools analysts use every day. You describe *what* you want and the database works out *how* to get it, which makes even beginners productive quickly.",
+        "es": "Casi toda app guarda sus datos en una base de datos: tus mensajes, pedidos, calificaciones, listas de reproducción. SQL es el lenguaje para hacerle preguntas a esos datos, y casi no ha cambiado en cincuenta años, así que lo que aprendas aquí funciona en SQLite en un teléfono, en PostgreSQL detrás de un sitio web y en las herramientas de datos que los analistas usan a diario. Describes *qué* quieres y la base de datos decide *cómo* conseguirlo, lo que hace productivos incluso a los principiantes."
+      },
+      "objectives": {
+        "en": [
+          "Describe a table in terms of rows, columns, types and a primary key, and read a `CREATE TABLE` statement.",
+          "Read data with `SELECT columns FROM table`, including `*` and column aliases with `AS`.",
+          "Filter rows with `WHERE` using `=`, `<>`, `<`, `>`, `AND`, `OR`, `IN`, `BETWEEN` and `LIKE`.",
+          "Order results with `ORDER BY ... ASC/DESC` on one or more columns and take the top rows with `LIMIT`.",
+          "Compute new columns with arithmetic, `ROUND`, `UPPER` and `||`, and give them names."
+        ],
+        "es": [
+          "Describir una tabla en términos de filas, columnas, tipos y llave primaria, y leer una sentencia `CREATE TABLE`.",
+          "Leer datos con `SELECT columnas FROM tabla`, incluidos `*` y alias de columna con `AS`.",
+          "Filtrar filas con `WHERE` usando `=`, `<>`, `<`, `>`, `AND`, `OR`, `IN`, `BETWEEN` y `LIKE`.",
+          "Ordenar resultados con `ORDER BY ... ASC/DESC` en una o más columnas y tomar las primeras filas con `LIMIT`.",
+          "Calcular columnas nuevas con aritmética, `ROUND`, `UPPER` y `||`, y darles nombre."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Comfort with spreadsheets or tables of data",
+          "No programming needed, though the Python course helps"
+        ],
+        "es": [
+          "Familiaridad con hojas de cálculo o tablas de datos",
+          "No hace falta programar, aunque el curso de Python ayuda"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "A table is like a strict spreadsheet: every row has the same columns, each column has a type, and a primary key identifies each row.",
+          "A query is written in the order SELECT, FROM, WHERE, ORDER BY, LIMIT, but the database filters first, then sorts, then picks columns.",
+          "Text values go in single quotes (`'Austin'`); column names do not.",
+          "Without `ORDER BY`, the order of rows is not guaranteed, so always sort when order matters."
+        ],
+        "es": [
+          "Una tabla es como una hoja de cálculo estricta: cada fila tiene las mismas columnas, cada columna tiene un tipo y una llave primaria identifica cada fila.",
+          "Una consulta se escribe en el orden SELECT, FROM, WHERE, ORDER BY, LIMIT, pero la base de datos primero filtra, luego ordena y luego elige columnas.",
+          "Los valores de texto van entre comillas simples (`'Austin'`); los nombres de columna no.",
+          "Sin `ORDER BY`, el orden de las filas no está garantizado, así que ordena siempre que el orden importe."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Using double quotes for text: in standard SQL `\"Austin\"` means a column name; write `'Austin'`.",
+          "Mixing `AND` and `OR` without parentheses: `grade = 10 OR grade = 11 AND score > 80` applies the `AND` first. Add parentheses.",
+          "Comparing with `= NULL`: it is never true. Use `IS NULL` (covered in module 2).",
+          "Forgetting that `LIKE` patterns need `%`: `LIKE 'A'` only matches exactly \"A\"; `LIKE 'A%'` matches names starting with A."
+        ],
+        "es": [
+          "Usar comillas dobles para texto: en SQL estándar `\"Austin\"` significa un nombre de columna; escribe `'Austin'`.",
+          "Mezclar `AND` y `OR` sin paréntesis: `grade = 10 OR grade = 11 AND score > 80` aplica primero el `AND`. Agrega paréntesis.",
+          "Comparar con `= NULL`: nunca es verdadero. Usa `IS NULL` (lo verás en el módulo 2).",
+          "Olvidar que los patrones `LIKE` necesitan `%`: `LIKE 'A'` solo coincide con \"A\" exacto; `LIKE 'A%'` coincide con nombres que empiezan con A."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: list every student's name and city, then only the students from Denver.",
+          "Core: find students in grade 11 or 12 with a score of at least 80, sorted from highest score to lowest.",
+          "Core: show the top 3 scores with each student's name, and the bottom score separately.",
+          "Stretch: show each student as one line of text like `Ana (Austin): 92`, using `||` and `ROUND`, sorted by name."
+        ],
+        "es": [
+          "Calentamiento: lista el nombre y la ciudad de cada estudiante, y luego solo los estudiantes de Denver.",
+          "Núcleo: encuentra estudiantes de grado 11 o 12 con una calificación de al menos 80, ordenados de mayor a menor calificación.",
+          "Núcleo: muestra las 3 mejores calificaciones con el nombre de cada estudiante, y la peor calificación por separado.",
+          "Extensión: muestra cada estudiante como una línea de texto como `Ana (Austin): 92`, usando `||` y `ROUND`, ordenados por nombre."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What is a primary key, and why can two students share a name but not an id?",
+          "In what order does the database apply `WHERE`, `ORDER BY` and `LIMIT`?",
+          "Why does `WHERE city = Austin` (without quotes) fail?"
+        ],
+        "es": [
+          "¿Qué es una llave primaria, y por qué dos estudiantes pueden compartir nombre pero no id?",
+          "¿En qué orden aplica la base de datos `WHERE`, `ORDER BY` y `LIMIT`?",
+          "¿Por qué falla `WHERE city = Austin` (sin comillas)?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Tables, Rows and Columns",
+            "es": "Tablas, filas y columnas"
+          },
+          "definition": {
+            "en": "A relational database stores data in tables. Each column has a name and a type (`INTEGER`, `REAL`, `TEXT`), each row is one record, and the primary key is a column whose value is unique for every row, usually an `id`.",
+            "es": "Una base de datos relacional guarda datos en tablas. Cada columna tiene un nombre y un tipo (`INTEGER`, `REAL`, `TEXT`), cada fila es un registro, y la llave primaria es una columna cuyo valor es único para cada fila, normalmente un `id`."
+          }
+        },
+        {
+          "term": {
+            "en": "SELECT and FROM",
+            "es": "SELECT y FROM"
+          },
+          "definition": {
+            "en": "`SELECT name, city FROM students;` returns the chosen columns of every row. `*` means all columns, and `AS` renames a column in the result. A statement ends with a semicolon.",
+            "es": "`SELECT name, city FROM students;` devuelve las columnas elegidas de cada fila. `*` significa todas las columnas, y `AS` renombra una columna en el resultado. Una sentencia termina con punto y coma."
+          }
+        },
+        {
+          "term": {
+            "en": "Filtering with WHERE",
+            "es": "Filtrar con WHERE"
+          },
+          "definition": {
+            "en": "`WHERE` keeps only rows where a condition is true. Conditions use comparisons (`=`, `<>`, `<`, `>=`), `AND`, `OR`, `NOT`, `IN (...)`, `BETWEEN a AND b` and `LIKE` patterns where `%` means any text and `_` one character.",
+            "es": "`WHERE` conserva solo las filas donde una condición es verdadera. Las condiciones usan comparaciones (`=`, `<>`, `<`, `>=`), `AND`, `OR`, `NOT`, `IN (...)`, `BETWEEN a AND b` y patrones `LIKE` donde `%` significa cualquier texto y `_` un carácter."
+          }
+        },
+        {
+          "term": {
+            "en": "Sorting and Limiting",
+            "es": "Ordenar y limitar"
+          },
+          "definition": {
+            "en": "`ORDER BY score DESC` sorts the result (ascending `ASC` is the default; ties can be broken by a second column). `LIMIT 3` keeps only the first three rows, and `OFFSET` skips some first.",
+            "es": "`ORDER BY score DESC` ordena el resultado (ascendente `ASC` es el valor por defecto; los empates se pueden romper con una segunda columna). `LIMIT 3` conserva solo las tres primeras filas, y `OFFSET` salta algunas antes."
+          }
+        },
+        {
+          "term": {
+            "en": "Calculated Columns",
+            "es": "Columnas calculadas"
+          },
+          "definition": {
+            "en": "A `SELECT` can compute values: arithmetic (`score / 10`), functions such as `ROUND`, `UPPER` and `LENGTH`, and text joined with `||`. Name the result with `AS`; the table itself is not changed.",
+            "es": "Un `SELECT` puede calcular valores: aritmética (`score / 10`), funciones como `ROUND`, `UPPER` y `LENGTH`, y texto unido con `||`. Ponle nombre al resultado con `AS`; la tabla en sí no cambia."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "SQLBolt: interactive SQL lessons",
+            "es": "SQLBolt: lecciones interactivas de SQL"
+          },
+          "url": "https://sqlbolt.com/"
+        },
+        {
+          "label": {
+            "en": "SQLite: SELECT reference",
+            "es": "SQLite: referencia de SELECT"
+          },
+          "url": "https://www.sqlite.org/lang_select.html"
+        },
+        {
+          "label": {
+            "en": "Khan Academy: Intro to SQL",
+            "es": "Khan Academy: introducción a SQL"
+          },
+          "url": "https://www.khanacademy.org/computing/computer-programming/sql"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Which query lists only the names of all students?",
+            "es": "¿Qué consulta lista solo los nombres de todos los estudiantes?"
+          },
+          "options": {
+            "en": [
+              "SELECT * FROM students;",
+              "SELECT name FROM students;",
+              "GET name FROM students;",
+              "SELECT students FROM name;"
+            ],
+            "es": [
+              "SELECT * FROM students;",
+              "SELECT name FROM students;",
+              "GET name FROM students;",
+              "SELECT students FROM name;"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`SELECT` lists the columns you want and `FROM` names the table. `*` would return every column.",
+            "es": "`SELECT` lista las columnas que quieres y `FROM` nombra la tabla. `*` devolvería todas las columnas."
+          }
+        },
+        {
+          "question": {
+            "en": "Which condition matches names that start with \"Da\"?",
+            "es": "¿Qué condición coincide con nombres que empiezan con \"Da\"?"
+          },
+          "options": {
+            "en": [
+              "name = 'Da'",
+              "name LIKE 'Da%'",
+              "name LIKE '%Da'",
+              "name IN ('Da')"
+            ],
+            "es": [
+              "name = 'Da'",
+              "name LIKE 'Da%'",
+              "name LIKE '%Da'",
+              "name IN ('Da')"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "In `LIKE`, `%` stands for any text, so `'Da%'` means \"Da followed by anything\".",
+            "es": "En `LIKE`, `%` representa cualquier texto, así que `'Da%'` significa \"Da seguido de lo que sea\"."
+          }
+        },
+        {
+          "question": {
+            "en": "How do you get the 3 highest scores?",
+            "es": "¿Cómo obtienes las 3 calificaciones más altas?"
+          },
+          "options": {
+            "en": [
+              "ORDER BY score LIMIT 3",
+              "ORDER BY score DESC LIMIT 3",
+              "WHERE score LIMIT 3",
+              "LIMIT 3 ORDER BY score DESC"
+            ],
+            "es": [
+              "ORDER BY score LIMIT 3",
+              "ORDER BY score DESC LIMIT 3",
+              "WHERE score LIMIT 3",
+              "LIMIT 3 ORDER BY score DESC"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Sort descending so the highest come first, then keep three. `LIMIT` always comes after `ORDER BY`.",
+            "es": "Ordena de forma descendente para que las más altas vayan primero y luego conserva tres. `LIMIT` siempre va después de `ORDER BY`."
+          }
+        },
+        {
+          "question": {
+            "en": "What does `SELECT score / 10 AS tenths FROM students` do to the table?",
+            "es": "¿Qué le hace `SELECT score / 10 AS tenths FROM students` a la tabla?"
+          },
+          "options": {
+            "en": [
+              "Divides every stored score by 10",
+              "Nothing: it only computes a column in the result",
+              "Adds a column named tenths",
+              "Fails because tenths does not exist"
+            ],
+            "es": [
+              "Divide entre 10 cada calificación guardada",
+              "Nada: solo calcula una columna en el resultado",
+              "Agrega una columna llamada tenths",
+              "Falla porque tenths no existe"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`SELECT` only reads. Calculated columns exist in the result; changing data needs `UPDATE` (module 4).",
+            "es": "`SELECT` solo lee. Las columnas calculadas existen en el resultado; cambiar datos requiere `UPDATE` (módulo 4)."
+          }
+        },
+        {
+          "question": {
+            "en": "What does `WHERE grade = 10 OR grade = 11 AND score > 90` return?",
+            "es": "¿Qué devuelve `WHERE grade = 10 OR grade = 11 AND score > 90`?"
+          },
+          "options": {
+            "en": [
+              "Grades 10 or 11 with score over 90",
+              "All grade 10, plus grade 11 with score over 90",
+              "Nothing",
+              "Only grade 11"
+            ],
+            "es": [
+              "Grados 10 u 11 con calificación mayor a 90",
+              "Todo el grado 10, más el grado 11 con calificación mayor a 90",
+              "Nada",
+              "Solo el grado 11"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`AND` binds tighter than `OR`, like × before +. Write `(grade = 10 OR grade = 11) AND score > 90` for the first meaning.",
+            "es": "`AND` se aplica antes que `OR`, como × antes que +. Escribe `(grade = 10 OR grade = 11) AND score > 90` para el primer significado."
+          }
+        }
+      ]
+    },
+    "sql-summarizing": {
+      "minutes": 80,
+      "prerequisites": [
+        "sql-first-queries"
+      ],
+      "whyItMatters": {
+        "en": "Most real questions are about totals and groups, not single rows: \"how much did each customer spend?\", \"which category sells best?\", \"how many students passed in each class?\". Aggregates and GROUP BY answer them in one query, on tables of any size, and they are the heart of every report, dashboard and analytics job. Handling NULL correctly is what keeps those answers right when data is missing.",
+        "es": "La mayoría de las preguntas reales son sobre totales y grupos, no sobre filas sueltas: \"¿cuánto gastó cada cliente?\", \"¿qué categoría vende más?\", \"¿cuántos estudiantes aprobaron en cada clase?\". Las funciones de agregación y GROUP BY las responden en una sola consulta, con tablas de cualquier tamaño, y son el corazón de todo reporte, tablero y trabajo de análisis. Manejar bien NULL es lo que mantiene correctas esas respuestas cuando faltan datos."
+      },
+      "objectives": {
+        "en": [
+          "Use `COUNT`, `SUM`, `AVG`, `MIN` and `MAX` to summarize a whole table or a filtered part of it.",
+          "Group rows with `GROUP BY` and compute one summary row per group.",
+          "Filter groups with `HAVING`, and explain how it differs from `WHERE`.",
+          "Find unique values with `DISTINCT` and count them with `COUNT(DISTINCT ...)`.",
+          "Recognize `NULL`, test for it with `IS NULL`, and replace it with `COALESCE`."
+        ],
+        "es": [
+          "Usar `COUNT`, `SUM`, `AVG`, `MIN` y `MAX` para resumir una tabla completa o una parte filtrada.",
+          "Agrupar filas con `GROUP BY` y calcular una fila de resumen por grupo.",
+          "Filtrar grupos con `HAVING` y explicar en qué se diferencia de `WHERE`.",
+          "Encontrar valores únicos con `DISTINCT` y contarlos con `COUNT(DISTINCT ...)`.",
+          "Reconocer `NULL`, comprobarlo con `IS NULL` y reemplazarlo con `COALESCE`."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "SELECT, WHERE and ORDER BY from module 1"
+        ],
+        "es": [
+          "SELECT, WHERE y ORDER BY del módulo 1"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Aggregate functions collapse many rows into one value: `SELECT COUNT(*), AVG(price) FROM orders`.",
+          "`GROUP BY customer` makes one result row per customer; every selected column must be grouped or aggregated.",
+          "`WHERE` filters rows before grouping; `HAVING` filters groups after.",
+          "`NULL` means \"unknown\": it is not 0 or empty text, `= NULL` is never true, and aggregates skip it."
+        ],
+        "es": [
+          "Las funciones de agregación juntan muchas filas en un valor: `SELECT COUNT(*), AVG(price) FROM orders`.",
+          "`GROUP BY customer` crea una fila de resultado por cliente; cada columna seleccionada debe estar agrupada o agregada.",
+          "`WHERE` filtra filas antes de agrupar; `HAVING` filtra grupos después.",
+          "`NULL` significa \"desconocido\": no es 0 ni texto vacío, `= NULL` nunca es verdadero y las funciones de agregación lo ignoran."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Selecting a column that is neither grouped nor aggregated: other databases reject it and SQLite returns an arbitrary value from the group.",
+          "Putting an aggregate in `WHERE` (`WHERE SUM(price) > 50`): it fails; use `HAVING`.",
+          "Assuming `AVG` counts missing values as zero: it ignores `NULL` rows, which changes the average.",
+          "Writing `WHERE phone = NULL` instead of `WHERE phone IS NULL`."
+        ],
+        "es": [
+          "Seleccionar una columna que no está agrupada ni agregada: otras bases de datos la rechazan y SQLite devuelve un valor arbitrario del grupo.",
+          "Poner una función de agregación en `WHERE` (`WHERE SUM(price) > 50`): falla; usa `HAVING`.",
+          "Suponer que `AVG` cuenta los valores faltantes como cero: ignora las filas `NULL`, lo que cambia el promedio.",
+          "Escribir `WHERE phone = NULL` en lugar de `WHERE phone IS NULL`."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: how many orders are there, and what is the most expensive single item price?",
+          "Core: show each category with its number of orders and its total revenue (quantity × price), highest revenue first.",
+          "Core: list customers who spent more than $30 in total.",
+          "Stretch: for each customer, show how many different products they bought and their average order value rounded to 2 decimals."
+        ],
+        "es": [
+          "Calentamiento: ¿cuántos pedidos hay y cuál es el precio unitario más caro?",
+          "Núcleo: muestra cada categoría con su número de pedidos y sus ingresos totales (cantidad × precio), de mayor a menor ingreso.",
+          "Núcleo: lista los clientes que gastaron más de $30 en total.",
+          "Extensión: para cada cliente, muestra cuántos productos distintos compró y el valor promedio de sus pedidos redondeado a 2 decimales."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What is the difference between `COUNT(*)` and `COUNT(phone)`?",
+          "Why can you not use `WHERE COUNT(*) > 2`, and what do you write instead?",
+          "A column has values 10, NULL and 20. What are its `SUM`, `AVG` and `COUNT`?"
+        ],
+        "es": [
+          "¿Cuál es la diferencia entre `COUNT(*)` y `COUNT(phone)`?",
+          "¿Por qué no puedes usar `WHERE COUNT(*) > 2`, y qué escribes en su lugar?",
+          "Una columna tiene los valores 10, NULL y 20. ¿Cuáles son su `SUM`, `AVG` y `COUNT`?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Aggregate Functions",
+            "es": "Funciones de agregación"
+          },
+          "definition": {
+            "en": "Functions that turn a set of rows into one value: `COUNT(*)` counts rows, `SUM` adds, `AVG` averages, and `MIN`/`MAX` find extremes. Without `GROUP BY` they summarize all rows the `WHERE` kept.",
+            "es": "Funciones que convierten un conjunto de filas en un valor: `COUNT(*)` cuenta filas, `SUM` suma, `AVG` promedia y `MIN`/`MAX` encuentran los extremos. Sin `GROUP BY` resumen todas las filas que conservó el `WHERE`."
+          }
+        },
+        {
+          "term": {
+            "en": "GROUP BY",
+            "es": "GROUP BY"
+          },
+          "definition": {
+            "en": "`GROUP BY column` splits the rows into groups that share a value and returns one row per group, so aggregates are computed per group, for example total spent per customer.",
+            "es": "`GROUP BY columna` divide las filas en grupos que comparten un valor y devuelve una fila por grupo, así que las agregaciones se calculan por grupo, por ejemplo el total gastado por cliente."
+          }
+        },
+        {
+          "term": {
+            "en": "HAVING",
+            "es": "HAVING"
+          },
+          "definition": {
+            "en": "`HAVING condition` filters the groups produced by `GROUP BY`, and can use aggregates (`HAVING SUM(price) > 50`). `WHERE` filters individual rows before grouping.",
+            "es": "`HAVING condición` filtra los grupos que produce `GROUP BY`, y puede usar agregaciones (`HAVING SUM(price) > 50`). `WHERE` filtra filas individuales antes de agrupar."
+          }
+        },
+        {
+          "term": {
+            "en": "DISTINCT",
+            "es": "DISTINCT"
+          },
+          "definition": {
+            "en": "`SELECT DISTINCT column` removes duplicate rows from the result, and `COUNT(DISTINCT column)` counts how many different values a column has.",
+            "es": "`SELECT DISTINCT columna` quita las filas duplicadas del resultado, y `COUNT(DISTINCT columna)` cuenta cuántos valores distintos tiene una columna."
+          }
+        },
+        {
+          "term": {
+            "en": "NULL Values",
+            "es": "Valores NULL"
+          },
+          "definition": {
+            "en": "`NULL` marks a missing or unknown value. Comparisons with it are never true, so use `IS NULL` / `IS NOT NULL`. Aggregates other than `COUNT(*)` skip it, and `COALESCE(x, default)` replaces it.",
+            "es": "`NULL` marca un valor faltante o desconocido. Las comparaciones con él nunca son verdaderas, así que usa `IS NULL` / `IS NOT NULL`. Las agregaciones distintas de `COUNT(*)` lo ignoran, y `COALESCE(x, valor)` lo reemplaza."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "SQLBolt: Queries with aggregates",
+            "es": "SQLBolt: consultas con agregaciones"
+          },
+          "url": "https://sqlbolt.com/lesson/select_queries_with_aggregates"
+        },
+        {
+          "label": {
+            "en": "SQLite: aggregate functions",
+            "es": "SQLite: funciones de agregación"
+          },
+          "url": "https://www.sqlite.org/lang_aggfunc.html"
+        },
+        {
+          "label": {
+            "en": "Mode SQL Tutorial: GROUP BY",
+            "es": "Tutorial de SQL de Mode: GROUP BY"
+          },
+          "url": "https://mode.com/sql-tutorial/sql-group-by"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Which query counts the orders in the tech category?",
+            "es": "¿Qué consulta cuenta los pedidos de la categoría tech?"
+          },
+          "options": {
+            "en": [
+              "SELECT COUNT(*) FROM orders WHERE category = 'tech';",
+              "SELECT COUNT(category) FROM orders;",
+              "SELECT SUM(*) FROM orders WHERE category = 'tech';",
+              "SELECT category FROM orders HAVING 'tech';"
+            ],
+            "es": [
+              "SELECT COUNT(*) FROM orders WHERE category = 'tech';",
+              "SELECT COUNT(category) FROM orders;",
+              "SELECT SUM(*) FROM orders WHERE category = 'tech';",
+              "SELECT category FROM orders HAVING 'tech';"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Filter the rows with `WHERE`, then count what is left with `COUNT(*)`.",
+            "es": "Filtra las filas con `WHERE` y luego cuenta lo que queda con `COUNT(*)`."
+          }
+        },
+        {
+          "question": {
+            "en": "What does `GROUP BY customer` produce?",
+            "es": "¿Qué produce `GROUP BY customer`?"
+          },
+          "options": {
+            "en": [
+              "The rows sorted by customer",
+              "One row per customer",
+              "Only the first customer",
+              "A new table"
+            ],
+            "es": [
+              "Las filas ordenadas por cliente",
+              "Una fila por cliente",
+              "Solo el primer cliente",
+              "Una tabla nueva"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Grouping collapses all rows with the same customer into one result row, where aggregates are computed per customer.",
+            "es": "Agrupar junta todas las filas con el mismo cliente en una fila de resultado, donde las agregaciones se calculan por cliente."
+          }
+        },
+        {
+          "question": {
+            "en": "Where does a condition like `SUM(quantity) > 3` go?",
+            "es": "¿Dónde va una condición como `SUM(quantity) > 3`?"
+          },
+          "options": {
+            "en": [
+              "WHERE",
+              "HAVING",
+              "ORDER BY",
+              "SELECT"
+            ],
+            "es": [
+              "WHERE",
+              "HAVING",
+              "ORDER BY",
+              "SELECT"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Conditions on aggregates filter groups, so they belong in `HAVING`, which runs after `GROUP BY`.",
+            "es": "Las condiciones sobre agregaciones filtran grupos, así que van en `HAVING`, que se ejecuta después de `GROUP BY`."
+          }
+        },
+        {
+          "question": {
+            "en": "A column holds 10, NULL and 20. What is its AVG?",
+            "es": "Una columna tiene 10, NULL y 20. ¿Cuál es su AVG?"
+          },
+          "options": {
+            "en": [
+              "10",
+              "15",
+              "NULL",
+              "30"
+            ],
+            "es": [
+              "10",
+              "15",
+              "NULL",
+              "30"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`AVG` ignores NULL, so it averages 10 and 20: 15. If NULL meant 0, the answer would be 10, which is why the difference matters.",
+            "es": "`AVG` ignora NULL, así que promedia 10 y 20: 15. Si NULL significara 0, la respuesta sería 10; por eso importa la diferencia."
+          }
+        },
+        {
+          "question": {
+            "en": "Which condition finds customers with no phone number recorded?",
+            "es": "¿Qué condición encuentra clientes sin número de teléfono registrado?"
+          },
+          "options": {
+            "en": [
+              "phone = NULL",
+              "phone = ''",
+              "phone IS NULL",
+              "phone == 0"
+            ],
+            "es": [
+              "phone = NULL",
+              "phone = ''",
+              "phone IS NULL",
+              "phone == 0"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Comparisons with NULL are never true; `IS NULL` is the special test for it.",
+            "es": "Las comparaciones con NULL nunca son verdaderas; `IS NULL` es la prueba especial para eso."
+          }
+        }
+      ]
+    },
+    "sql-joins": {
+      "minutes": 90,
+      "prerequisites": [
+        "sql-summarizing"
+      ],
+      "whyItMatters": {
+        "en": "Databases avoid repeating information: a student's name is stored once, and other tables point to it by id. That keeps data consistent, but it means most real questions (\"which courses is Ana taking, and who teaches them?\") need data from several tables at once. Joins are how you put the pieces back together, and they are the single most important skill that separates someone who can use SQL from someone who can only read one table.",
+        "es": "Las bases de datos evitan repetir información: el nombre de un estudiante se guarda una vez, y otras tablas lo señalan por su id. Eso mantiene los datos consistentes, pero significa que la mayoría de las preguntas reales (\"¿qué cursos toma Ana y quién los enseña?\") necesitan datos de varias tablas a la vez. Los joins son cómo vuelves a juntar las piezas, y son la habilidad más importante que separa a quien sabe usar SQL de quien solo puede leer una tabla."
+      },
+      "objectives": {
+        "en": [
+          "Explain primary keys and foreign keys and draw how `students`, `courses` and `enrollments` relate.",
+          "Combine matching rows from two tables with `INNER JOIN ... ON`.",
+          "Keep rows that have no match with `LEFT JOIN`, and find \"missing\" rows with `IS NULL`.",
+          "Join three tables through a linking table and aggregate the result.",
+          "Use a subquery in `WHERE` or `FROM` to answer a question in two steps."
+        ],
+        "es": [
+          "Explicar las llaves primarias y foráneas y dibujar cómo se relacionan `students`, `courses` y `enrollments`.",
+          "Combinar filas que coinciden de dos tablas con `INNER JOIN ... ON`.",
+          "Conservar filas sin coincidencia con `LEFT JOIN` y encontrar filas \"faltantes\" con `IS NULL`.",
+          "Unir tres tablas a través de una tabla de enlace y agregar el resultado.",
+          "Usar una subconsulta en `WHERE` o en `FROM` para responder una pregunta en dos pasos."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "SELECT, WHERE, GROUP BY and aggregates from modules 1 and 2"
+        ],
+        "es": [
+          "SELECT, WHERE, GROUP BY y agregaciones de los módulos 1 y 2"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "A foreign key is a column that holds another table's primary key, linking the rows: `enrollments.student_id` points to `students.id`.",
+          "`INNER JOIN` keeps only rows that match on both sides; `LEFT JOIN` keeps every row from the left table and fills in `NULL` where there is no match.",
+          "A many-to-many relationship (students and courses) needs a linking table (enrollments); joining through it takes two joins.",
+          "Short table aliases (`FROM students s`) and qualified columns (`s.name`) keep joins readable and avoid ambiguous names."
+        ],
+        "es": [
+          "Una llave foránea es una columna que guarda la llave primaria de otra tabla y enlaza las filas: `enrollments.student_id` apunta a `students.id`.",
+          "`INNER JOIN` conserva solo las filas que coinciden en ambos lados; `LEFT JOIN` conserva todas las filas de la tabla izquierda y pone `NULL` donde no hay coincidencia.",
+          "Una relación de muchos a muchos (estudiantes y cursos) necesita una tabla de enlace (enrollments); unir a través de ella lleva dos joins.",
+          "Los alias cortos de tabla (`FROM students s`) y las columnas calificadas (`s.name`) mantienen legibles los joins y evitan nombres ambiguos."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Forgetting the `ON` condition: every row is paired with every other row (a cross join), and the result explodes.",
+          "Writing `id` when both tables have one: the database reports an ambiguous column. Write `s.id` or `c.id`.",
+          "Using `INNER JOIN` when you need everyone: students with no enrollments silently disappear. Use `LEFT JOIN`.",
+          "Filtering the right table of a `LEFT JOIN` in `WHERE` (`WHERE e.grade > 80`): it removes the unmatched rows again. Put such conditions in `ON`."
+        ],
+        "es": [
+          "Olvidar la condición `ON`: cada fila se empareja con todas las demás (un cross join) y el resultado explota.",
+          "Escribir `id` cuando ambas tablas tienen uno: la base de datos reporta una columna ambigua. Escribe `s.id` o `c.id`.",
+          "Usar `INNER JOIN` cuando necesitas a todos: los estudiantes sin inscripciones desaparecen en silencio. Usa `LEFT JOIN`.",
+          "Filtrar la tabla derecha de un `LEFT JOIN` en `WHERE` (`WHERE e.grade > 80`): vuelve a quitar las filas sin coincidencia. Pon esas condiciones en `ON`."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: list every enrollment as student name and course title.",
+          "Core: list every student with the number of courses they take, including students with none (they should show 0).",
+          "Core: show each teacher with the average grade across all their courses.",
+          "Stretch: find the students whose grade in a course is above that course's average grade."
+        ],
+        "es": [
+          "Calentamiento: lista cada inscripción como nombre de estudiante y título de curso.",
+          "Núcleo: lista a cada estudiante con el número de cursos que toma, incluidos los que no toman ninguno (deben mostrar 0).",
+          "Núcleo: muestra a cada profesor con la calificación promedio de todos sus cursos.",
+          "Extensión: encuentra a los estudiantes cuya calificación en un curso está por encima del promedio de ese curso."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why does `enrollments` store `student_id` instead of the student's name?",
+          "Dara has no enrollments. Does she appear in `students INNER JOIN enrollments`? In `students LEFT JOIN enrollments`?",
+          "What would happen if you joined `students` and `courses` with no `ON` condition?"
+        ],
+        "es": [
+          "¿Por qué `enrollments` guarda `student_id` en lugar del nombre del estudiante?",
+          "Dara no tiene inscripciones. ¿Aparece en `students INNER JOIN enrollments`? ¿Y en `students LEFT JOIN enrollments`?",
+          "¿Qué pasaría si unieras `students` y `courses` sin condición `ON`?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Primary and Foreign Keys",
+            "es": "Llaves primarias y foráneas"
+          },
+          "definition": {
+            "en": "A primary key uniquely identifies each row of a table. A foreign key is a column in another table that stores those key values, creating a link; `REFERENCES` declares it, and the database can refuse values that point to nothing.",
+            "es": "Una llave primaria identifica de forma única cada fila de una tabla. Una llave foránea es una columna en otra tabla que guarda esos valores de llave, creando un enlace; `REFERENCES` la declara, y la base de datos puede rechazar valores que no apuntan a nada."
+          }
+        },
+        {
+          "term": {
+            "en": "INNER JOIN",
+            "es": "INNER JOIN"
+          },
+          "definition": {
+            "en": "`A JOIN B ON A.x = B.y` pairs each row of A with the rows of B that match the condition and keeps only those pairs. Rows without a match on either side are left out.",
+            "es": "`A JOIN B ON A.x = B.y` empareja cada fila de A con las filas de B que cumplen la condición y conserva solo esas parejas. Las filas sin coincidencia en cualquiera de los lados quedan fuera."
+          }
+        },
+        {
+          "term": {
+            "en": "LEFT JOIN",
+            "es": "LEFT JOIN"
+          },
+          "definition": {
+            "en": "`A LEFT JOIN B ON ...` keeps every row of A. Where B has a match, its columns are filled in; where it does not, they are `NULL`. Filtering on `B.column IS NULL` finds rows of A with no match.",
+            "es": "`A LEFT JOIN B ON ...` conserva todas las filas de A. Donde B tiene coincidencia, sus columnas se llenan; donde no, quedan en `NULL`. Filtrar con `B.columna IS NULL` encuentra filas de A sin coincidencia."
+          }
+        },
+        {
+          "term": {
+            "en": "Joining Three Tables",
+            "es": "Unir tres tablas"
+          },
+          "definition": {
+            "en": "Joins can be chained: `students JOIN enrollments ON ... JOIN courses ON ...`. A linking table such as `enrollments` turns a many-to-many relationship into two one-to-many links.",
+            "es": "Los joins se pueden encadenar: `students JOIN enrollments ON ... JOIN courses ON ...`. Una tabla de enlace como `enrollments` convierte una relación de muchos a muchos en dos enlaces de uno a muchos."
+          }
+        },
+        {
+          "term": {
+            "en": "Subqueries",
+            "es": "Subconsultas"
+          },
+          "definition": {
+            "en": "A query inside another query, in parentheses. It can produce a single value (`WHERE grade > (SELECT AVG(grade) ...)`), a list (`WHERE id IN (SELECT ...)`) or a temporary table in `FROM`.",
+            "es": "Una consulta dentro de otra, entre paréntesis. Puede producir un solo valor (`WHERE grade > (SELECT AVG(grade) ...)`), una lista (`WHERE id IN (SELECT ...)`) o una tabla temporal en `FROM`."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "SQLBolt: Multi-table queries with JOINs",
+            "es": "SQLBolt: consultas con JOIN"
+          },
+          "url": "https://sqlbolt.com/lesson/select_queries_with_joins"
+        },
+        {
+          "label": {
+            "en": "SQLite: SELECT and join operators",
+            "es": "SQLite: SELECT y operadores de join"
+          },
+          "url": "https://www.sqlite.org/lang_select.html#joins"
+        },
+        {
+          "label": {
+            "en": "Mode SQL Tutorial: Joins",
+            "es": "Tutorial de SQL de Mode: joins"
+          },
+          "url": "https://mode.com/sql-tutorial/sql-joins"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "In `enrollments(student_id, course_id)`, what is `student_id`?",
+            "es": "En `enrollments(student_id, course_id)`, ¿qué es `student_id`?"
+          },
+          "options": {
+            "en": [
+              "A primary key",
+              "A foreign key pointing to students",
+              "A copy of the student's name",
+              "An index"
+            ],
+            "es": [
+              "Una llave primaria",
+              "Una llave foránea que apunta a students",
+              "Una copia del nombre del estudiante",
+              "Un índice"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "It stores the `id` of a row in `students`, linking each enrollment to its student.",
+            "es": "Guarda el `id` de una fila de `students`, enlazando cada inscripción con su estudiante."
+          }
+        },
+        {
+          "question": {
+            "en": "Which join keeps students who have no enrollments?",
+            "es": "¿Qué join conserva a los estudiantes que no tienen inscripciones?"
+          },
+          "options": {
+            "en": [
+              "INNER JOIN",
+              "students LEFT JOIN enrollments",
+              "enrollments LEFT JOIN students",
+              "Any join"
+            ],
+            "es": [
+              "INNER JOIN",
+              "students LEFT JOIN enrollments",
+              "enrollments LEFT JOIN students",
+              "Cualquier join"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "A LEFT JOIN keeps every row of the left table, here students, and fills NULL where nothing matches.",
+            "es": "Un LEFT JOIN conserva todas las filas de la tabla izquierda, aquí students, y pone NULL donde nada coincide."
+          }
+        },
+        {
+          "question": {
+            "en": "Both tables have an `id` column. How do you select the student's id in a join?",
+            "es": "Ambas tablas tienen una columna `id`. ¿Cómo seleccionas el id del estudiante en un join?"
+          },
+          "options": {
+            "en": [
+              "SELECT id",
+              "SELECT students.id",
+              "SELECT id(students)",
+              "SELECT student id"
+            ],
+            "es": [
+              "SELECT id",
+              "SELECT students.id",
+              "SELECT id(students)",
+              "SELECT student id"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Qualify the column with its table (or alias): `students.id` or `s.id`. Plain `id` is ambiguous.",
+            "es": "Califica la columna con su tabla (o alias): `students.id` o `s.id`. `id` solo es ambiguo."
+          }
+        },
+        {
+          "question": {
+            "en": "What does `WHERE id IN (SELECT student_id FROM enrollments)` select?",
+            "es": "¿Qué selecciona `WHERE id IN (SELECT student_id FROM enrollments)`?"
+          },
+          "options": {
+            "en": [
+              "Students with at least one enrollment",
+              "Students with no enrollments",
+              "All enrollments",
+              "An error: subqueries need JOIN"
+            ],
+            "es": [
+              "Estudiantes con al menos una inscripción",
+              "Estudiantes sin inscripciones",
+              "Todas las inscripciones",
+              "Un error: las subconsultas necesitan JOIN"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "The subquery produces the list of student ids that appear in enrollments, and `IN` keeps the students whose id is in that list.",
+            "es": "La subconsulta produce la lista de ids de estudiantes que aparecen en enrollments, y `IN` conserva a los estudiantes cuyo id está en esa lista."
+          }
+        },
+        {
+          "question": {
+            "en": "A join with 4 students and 4 courses and no ON condition returns how many rows?",
+            "es": "Un join con 4 estudiantes y 4 cursos sin condición ON devuelve cuántas filas?"
+          },
+          "options": {
+            "en": [
+              "4",
+              "8",
+              "16",
+              "0"
+            ],
+            "es": [
+              "4",
+              "8",
+              "16",
+              "0"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Without a condition every student is paired with every course: 4 × 4 = 16 rows, a cross join.",
+            "es": "Sin condición, cada estudiante se empareja con cada curso: 4 × 4 = 16 filas, un cross join."
+          }
+        }
+      ]
+    },
+    "sql-design": {
+      "minutes": 95,
+      "prerequisites": [
+        "sql-joins"
+      ],
+      "whyItMatters": {
+        "en": "Reading data is half the job; the other half is putting it in and keeping it correct. A good design makes wrong data impossible (a negative price, a missing email, an order for a product that does not exist) instead of hoping every program gets it right. These are the decisions behind every app's database, and getting them right early saves endless bugs later. By the end you will be able to design, build and maintain a small database on your own.",
+        "es": "Leer datos es la mitad del trabajo; la otra mitad es meterlos y mantenerlos correctos. Un buen diseño hace imposibles los datos equivocados (un precio negativo, un correo faltante, un pedido de un producto que no existe) en lugar de esperar que cada programa lo haga bien. Estas son las decisiones detrás de la base de datos de cada app, y acertarlas temprano ahorra errores sin fin después. Al terminar podrás diseñar, construir y mantener una base de datos pequeña por tu cuenta."
+      },
+      "objectives": {
+        "en": [
+          "Create tables with `CREATE TABLE`, choosing types, a primary key and defaults, and change them with `ALTER TABLE`.",
+          "Add, change and remove data with `INSERT`, `UPDATE ... WHERE` and `DELETE ... WHERE`, checking with `SELECT` first.",
+          "Protect data with `NOT NULL`, `UNIQUE`, `CHECK`, `DEFAULT` and `FOREIGN KEY` constraints.",
+          "Spot repeated data in a table and split it into related tables (normalization).",
+          "Speed up lookups with an index and group changes into an all-or-nothing transaction."
+        ],
+        "es": [
+          "Crear tablas con `CREATE TABLE`, eligiendo tipos, una llave primaria y valores por defecto, y cambiarlas con `ALTER TABLE`.",
+          "Agregar, cambiar y quitar datos con `INSERT`, `UPDATE ... WHERE` y `DELETE ... WHERE`, revisando antes con `SELECT`.",
+          "Proteger los datos con las restricciones `NOT NULL`, `UNIQUE`, `CHECK`, `DEFAULT` y `FOREIGN KEY`.",
+          "Detectar datos repetidos en una tabla y dividirla en tablas relacionadas (normalización).",
+          "Acelerar búsquedas con un índice y agrupar cambios en una transacción de todo o nada."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Queries, aggregates and joins from modules 1–3"
+        ],
+        "es": [
+          "Consultas, agregaciones y joins de los módulos 1–3"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "`UPDATE` and `DELETE` without `WHERE` change every row. Run the same `WHERE` in a `SELECT` first.",
+          "Constraints are rules the database enforces on every insert and update, no matter which program writes the data.",
+          "Store each fact once: repeated data (like a customer's address on every order) belongs in its own table, referenced by id.",
+          "A transaction (`BEGIN` ... `COMMIT`) makes several changes happen together; `ROLLBACK` undoes them all."
+        ],
+        "es": [
+          "`UPDATE` y `DELETE` sin `WHERE` cambian todas las filas. Ejecuta primero el mismo `WHERE` en un `SELECT`.",
+          "Las restricciones son reglas que la base de datos impone en cada inserción y actualización, sin importar qué programa escriba los datos.",
+          "Guarda cada dato una sola vez: los datos repetidos (como la dirección de un cliente en cada pedido) van en su propia tabla, referenciados por id.",
+          "Una transacción (`BEGIN` ... `COMMIT`) hace que varios cambios ocurran juntos; `ROLLBACK` los deshace todos."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Running `DELETE FROM users;` meaning to delete one user: every row is gone. Always write the `WHERE` first.",
+          "Storing several values in one column (`\"Math, Art\"`): it cannot be searched or joined properly. Use a separate table.",
+          "Building SQL by gluing user input into strings: that allows SQL injection. Real programs pass values as parameters (`?`).",
+          "Adding an index on every column: indexes speed up reads but slow down writes and take space. Index what you search by."
+        ],
+        "es": [
+          "Ejecutar `DELETE FROM users;` queriendo borrar un usuario: todas las filas desaparecen. Escribe siempre primero el `WHERE`.",
+          "Guardar varios valores en una columna (`\"Math, Art\"`): no se puede buscar ni unir bien. Usa una tabla aparte.",
+          "Construir SQL pegando datos del usuario en cadenas: eso permite la inyección SQL. Los programas reales pasan los valores como parámetros (`?`).",
+          "Agregar un índice en cada columna: los índices aceleran las lecturas pero hacen más lentas las escrituras y ocupan espacio. Indexa lo que buscas."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: create a `movies` table with id, title (required), year and rating (between 0 and 10), and insert five movies.",
+          "Core: raise every rating from before 2000 by 0.5, then delete movies rated below 3, checking each `WHERE` with a `SELECT` first.",
+          "Core: design tables for a small library: books, members and loans. Write the `CREATE TABLE` statements with keys and constraints.",
+          "Stretch: write a transaction that moves a book loan from one member to another and rolls back if the new member does not exist."
+        ],
+        "es": [
+          "Calentamiento: crea una tabla `movies` con id, título (obligatorio), año y calificación (entre 0 y 10), e inserta cinco películas.",
+          "Núcleo: sube 0.5 la calificación de las películas anteriores a 2000 y luego borra las calificadas por debajo de 3, revisando cada `WHERE` con un `SELECT` antes.",
+          "Núcleo: diseña tablas para una biblioteca pequeña: libros, socios y préstamos. Escribe las sentencias `CREATE TABLE` con llaves y restricciones.",
+          "Extensión: escribe una transacción que pase el préstamo de un libro de un socio a otro y que se revierta si el socio nuevo no existe."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What happens if you run `UPDATE products SET price = 0;` and why is it dangerous?",
+          "Name three constraints and the mistake each one prevents.",
+          "Why is it a problem to store the customer's name and city on every row of an orders table?"
+        ],
+        "es": [
+          "¿Qué pasa si ejecutas `UPDATE products SET price = 0;` y por qué es peligroso?",
+          "Nombra tres restricciones y el error que evita cada una.",
+          "¿Por qué es un problema guardar el nombre y la ciudad del cliente en cada fila de una tabla de pedidos?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "CREATE TABLE and Types",
+            "es": "CREATE TABLE y tipos"
+          },
+          "definition": {
+            "en": "`CREATE TABLE name (column TYPE options, ...)` defines a table. Common types are `INTEGER`, `REAL`, `TEXT` and `BLOB`; dates are usually stored as ISO text (`'2026-03-14'`). `ALTER TABLE ... ADD COLUMN` adds a column later and `DROP TABLE` deletes a table.",
+            "es": "`CREATE TABLE nombre (columna TIPO opciones, ...)` define una tabla. Los tipos comunes son `INTEGER`, `REAL`, `TEXT` y `BLOB`; las fechas se suelen guardar como texto ISO (`'2026-03-14'`). `ALTER TABLE ... ADD COLUMN` agrega una columna después y `DROP TABLE` borra una tabla."
+          }
+        },
+        {
+          "term": {
+            "en": "INSERT, UPDATE and DELETE",
+            "es": "INSERT, UPDATE y DELETE"
+          },
+          "definition": {
+            "en": "`INSERT INTO t (cols) VALUES (...)` adds rows, `UPDATE t SET col = value WHERE ...` changes matching rows, and `DELETE FROM t WHERE ...` removes them. Without `WHERE`, `UPDATE` and `DELETE` affect every row.",
+            "es": "`INSERT INTO t (cols) VALUES (...)` agrega filas, `UPDATE t SET col = valor WHERE ...` cambia las filas que coinciden y `DELETE FROM t WHERE ...` las quita. Sin `WHERE`, `UPDATE` y `DELETE` afectan todas las filas."
+          }
+        },
+        {
+          "term": {
+            "en": "Constraints",
+            "es": "Restricciones"
+          },
+          "definition": {
+            "en": "Rules attached to columns or tables: `NOT NULL` (a value is required), `UNIQUE` (no duplicates), `CHECK (condition)` (values must pass a test), `DEFAULT` (value used when none is given) and `FOREIGN KEY` (must match a row in another table).",
+            "es": "Reglas unidas a columnas o tablas: `NOT NULL` (se exige un valor), `UNIQUE` (sin duplicados), `CHECK (condición)` (los valores deben pasar una prueba), `DEFAULT` (valor usado cuando no se da ninguno) y `FOREIGN KEY` (debe coincidir con una fila de otra tabla)."
+          }
+        },
+        {
+          "term": {
+            "en": "Normalization",
+            "es": "Normalización"
+          },
+          "definition": {
+            "en": "Organizing tables so each fact is stored once. Repeated groups of columns or values move into their own table and are referenced by a key, which prevents data that disagrees with itself when it is updated in one place but not another.",
+            "es": "Organizar las tablas para que cada dato se guarde una sola vez. Los grupos repetidos de columnas o valores pasan a su propia tabla y se referencian con una llave, lo que evita datos que se contradicen cuando se actualizan en un lugar pero no en otro."
+          }
+        },
+        {
+          "term": {
+            "en": "Indexes and Transactions",
+            "es": "Índices y transacciones"
+          },
+          "definition": {
+            "en": "An index (`CREATE INDEX`) is a sorted lookup structure that lets the database find rows by a column without scanning the whole table. A transaction (`BEGIN`, then `COMMIT` or `ROLLBACK`) applies a group of changes all together or not at all.",
+            "es": "Un índice (`CREATE INDEX`) es una estructura de búsqueda ordenada que permite a la base de datos encontrar filas por una columna sin recorrer toda la tabla. Una transacción (`BEGIN`, luego `COMMIT` o `ROLLBACK`) aplica un grupo de cambios todos juntos o ninguno."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "SQLite: CREATE TABLE",
+            "es": "SQLite: CREATE TABLE"
+          },
+          "url": "https://www.sqlite.org/lang_createtable.html"
+        },
+        {
+          "label": {
+            "en": "SQLBolt: Inserting, updating and deleting rows",
+            "es": "SQLBolt: insertar, actualizar y borrar filas"
+          },
+          "url": "https://sqlbolt.com/lesson/inserting_rows"
+        },
+        {
+          "label": {
+            "en": "Microsoft Learn: Database normalization basics",
+            "es": "Microsoft Learn: fundamentos de normalización"
+          },
+          "url": "https://learn.microsoft.com/en-us/office/troubleshoot/access/database-normalization-description"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What does `DELETE FROM products;` delete?",
+            "es": "¿Qué borra `DELETE FROM products;`?"
+          },
+          "options": {
+            "en": [
+              "Nothing without a WHERE",
+              "The products table",
+              "Every row in products",
+              "The last row"
+            ],
+            "es": [
+              "Nada sin un WHERE",
+              "La tabla products",
+              "Todas las filas de products",
+              "La última fila"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Without `WHERE`, every row matches. The table still exists, but it is empty. `DROP TABLE` would remove the table itself.",
+            "es": "Sin `WHERE`, todas las filas coinciden. La tabla sigue existiendo, pero vacía. `DROP TABLE` quitaría la tabla misma."
+          }
+        },
+        {
+          "question": {
+            "en": "Which constraint stops two users from registering the same email?",
+            "es": "¿Qué restricción impide que dos usuarios registren el mismo correo?"
+          },
+          "options": {
+            "en": [
+              "NOT NULL",
+              "UNIQUE",
+              "CHECK",
+              "DEFAULT"
+            ],
+            "es": [
+              "NOT NULL",
+              "UNIQUE",
+              "CHECK",
+              "DEFAULT"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`UNIQUE` rejects a value that already exists in the column. `NOT NULL` only requires some value.",
+            "es": "`UNIQUE` rechaza un valor que ya existe en la columna. `NOT NULL` solo exige que haya algún valor."
+          }
+        },
+        {
+          "question": {
+            "en": "Every order row stores the customer's name and city. What is the main problem?",
+            "es": "Cada fila de pedido guarda el nombre y la ciudad del cliente. ¿Cuál es el problema principal?"
+          },
+          "options": {
+            "en": [
+              "Queries get slower",
+              "If the customer moves, some rows may keep the old city",
+              "SQLite cannot store text twice",
+              "Nothing"
+            ],
+            "es": [
+              "Las consultas son más lentas",
+              "Si el cliente se muda, algunas filas pueden quedar con la ciudad vieja",
+              "SQLite no puede guardar texto dos veces",
+              "Nada"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Repeated facts can get out of sync. Storing the customer once and referencing it by id (normalization) avoids that.",
+            "es": "Los datos repetidos pueden desincronizarse. Guardar al cliente una vez y referenciarlo por id (normalización) lo evita."
+          }
+        },
+        {
+          "question": {
+            "en": "A transfer runs two UPDATEs inside BEGIN ... and the second fails. What should happen?",
+            "es": "Una transferencia ejecuta dos UPDATE dentro de BEGIN ... y el segundo falla. ¿Qué debe pasar?"
+          },
+          "options": {
+            "en": [
+              "Keep the first update",
+              "ROLLBACK so neither change is kept",
+              "Run the second again forever",
+              "Delete the table"
+            ],
+            "es": [
+              "Conservar la primera actualización",
+              "ROLLBACK para que no se conserve ningún cambio",
+              "Ejecutar el segundo una y otra vez",
+              "Borrar la tabla"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Transactions are all-or-nothing: rolling back undoes the first update so money is never half-moved.",
+            "es": "Las transacciones son de todo o nada: revertir deshace la primera actualización para que el dinero nunca quede movido a medias."
+          }
+        },
+        {
+          "question": {
+            "en": "What does an index on `users(email)` mainly speed up?",
+            "es": "¿Qué acelera principalmente un índice en `users(email)`?"
+          },
+          "options": {
+            "en": [
+              "Inserting users",
+              "Finding users by email",
+              "Deleting the table",
+              "Sorting by name"
+            ],
+            "es": [
+              "Insertar usuarios",
+              "Buscar usuarios por correo",
+              "Borrar la tabla",
+              "Ordenar por nombre"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The index keeps emails sorted so lookups by email skip the full table scan. Inserts get slightly slower because the index must be updated too.",
+            "es": "El índice mantiene ordenados los correos para que las búsquedas por correo eviten recorrer toda la tabla. Las inserciones se vuelven algo más lentas porque también hay que actualizar el índice."
           }
         }
       ]
