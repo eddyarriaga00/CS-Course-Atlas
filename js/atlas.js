@@ -46,7 +46,7 @@ const UI = {
     comments: 'Show code comments', commentsSub: 'Inline explanations in examples', weekly: 'Weekly progress email', weeklySub: 'A short summary every Monday',
     methods: 'Sign-in methods', emailPw: 'Email and password', emailPwSub: 'Add a password to sign in without Google', setUp: 'Set up', connected: 'Connected',
     deleteTitle: 'Delete account', deleteText: 'Permanently removes your profile, progress and notes. This can’t be undone.', deleteBtn: 'Delete my account',
-    signinTitle: 'Sign in', signinSub: 'Save your progress and pick up on any device.', google: 'Continue with Google', orEmail: 'or use email', email: 'Email', password: 'Password',
+    signinTitle: 'Sign in', signinSub: 'Save your progress and pick up on any device.', google: 'Continue with Google', github: 'Continue with GitHub', orEmail: 'or use email', email: 'Email', password: 'Password',
     forgot: 'Forgot password?', newHere: 'New here?', create: 'Create an account', legal: 'By continuing you agree to the <a href="terms-of-use.html">Terms of Use</a> and <a href="privacy-policy.html">Privacy Policy</a>.',
     noResults: 'No matches', today: 'Today', yesterday: 'Yesterday', daysAgo: (n) => `${n} days ago`, completed: 'Completed', reviewed: 'Reviewed 12 flashcards', notFound: 'That page doesn’t exist.',
     glossary: 'Glossary', roadmap: 'Roadmap', whatsComing: 'What’s coming', tryIt: 'Try it ▸', run: 'Run ▸', reset: 'Reset', running: 'Running…',
@@ -114,7 +114,7 @@ const UI = {
     comments: 'Mostrar comentarios en el código', commentsSub: 'Explicaciones dentro de los ejemplos', weekly: 'Correo semanal de progreso', weeklySub: 'Un resumen breve cada lunes',
     methods: 'Métodos de inicio de sesión', emailPw: 'Correo y contraseña', emailPwSub: 'Agrega una contraseña para entrar sin Google', setUp: 'Configurar', connected: 'Conectado',
     deleteTitle: 'Eliminar cuenta', deleteText: 'Elimina para siempre tu perfil, tu progreso y tus notas. No se puede deshacer.', deleteBtn: 'Eliminar mi cuenta',
-    signinTitle: 'Iniciar sesión', signinSub: 'Guarda tu progreso y continúa en cualquier dispositivo.', google: 'Continuar con Google', orEmail: 'o usa tu correo', email: 'Correo', password: 'Contraseña',
+    signinTitle: 'Iniciar sesión', signinSub: 'Guarda tu progreso y continúa en cualquier dispositivo.', google: 'Continuar con Google', github: 'Continuar con GitHub', orEmail: 'o usa tu correo', email: 'Correo', password: 'Contraseña',
     forgot: '¿Olvidaste tu contraseña?', newHere: '¿Eres nuevo?', create: 'Crear una cuenta', legal: 'Al continuar aceptas los <a href="terms-of-use.html">Términos de uso</a> y la <a href="privacy-policy.html">Política de privacidad</a>.',
     noResults: 'Sin resultados', today: 'Hoy', yesterday: 'Ayer', daysAgo: (n) => `Hace ${n} días`, completed: 'Completaste', reviewed: 'Repasaste 12 tarjetas', notFound: 'Esa página no existe.',
     glossary: 'Glosario', roadmap: 'Hoja de ruta', whatsComing: 'Lo que viene', tryIt: 'Probar ▸', run: 'Ejecutar ▸', reset: 'Restablecer', running: 'Ejecutando…',
@@ -1831,6 +1831,20 @@ async function pushProgress() {
   const pill = $('#sync-pill'); if (pill) pill.textContent = syncLabel();
 }
 const syncLabel = () => (state.syncedAt ? t('syncedAt', new Intl.DateTimeFormat(state.lang, { hour: 'numeric', minute: '2-digit' }).format(state.syncedAt)) : t('syncPending'));
+// Google shows until the server says it is off (it is the usual way in); GitHub shows only once the server says it is on.
+const GITHUB_MARK = '<svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>';
+function oauthButtons() {
+  const p = auth.providers || {}, google = p.google?.enabled !== false, github = p.github?.enabled === true;
+  return (google ? `<button type="button" class="btn-google" data-action="oauth" data-v="google"><b>G</b>${t('google')}</button>` : '')
+    + (github ? `<button type="button" class="btn-google btn-github" data-action="oauth" data-v="github">${GITHUB_MARK}${t('github')}</button>` : '');
+}
+// Updates just the provider buttons, so whatever someone is typing in the form stays put.
+function refreshOAuthButtons() {
+  const wrap = $('#google-wrap'); if (!wrap) return;
+  wrap.querySelectorAll('.btn-google').forEach((b) => b.remove());
+  wrap.insertAdjacentHTML('afterbegin', oauthButtons());
+  wrap.hidden = !wrap.querySelector('.btn-google');
+}
 function startOAuth(provider) {
   const back = location.origin + location.pathname + (location.hash && location.hash !== '#profile' ? location.hash : '#home');
   location.href = `${API}/api/auth/oauth/${provider}/start?returnTo=${encodeURIComponent(back)}`;
@@ -1839,8 +1853,7 @@ async function initAuth() {
   const url = new URL(location.href), q = url.searchParams;
   const ticket = q.get('oauth_ticket'), oauth = q.get('oauth');
   if (oauth || ticket) { ['oauth', 'oauth_provider', 'oauth_ticket', 'oauth_error'].forEach((k) => q.delete(k)); history.replaceState(null, '', url.pathname + url.search + url.hash); }
-  // Only show/hide the Google button when this arrives: re-rendering the form would erase what the person is typing.
-  api('/api/auth/oauth/providers', { timeout: 20000 }).then((r) => { auth.providers = r.providers || null; const gw = $('#google-wrap'); if (gw) gw.hidden = auth.providers?.google?.enabled === false; }).catch(() => {});
+  api('/api/auth/oauth/providers', { timeout: 20000 }).then((r) => { auth.providers = r.providers || null; refreshOAuthButtons(); }).catch(() => {});
   if (ticket) { try { applySession(await api('/api/auth/oauth/exchange-ticket', { method: 'POST', body: { ticket } })); } catch (e) { /* fall back to the cookie below */ } }
   if (!state.user && (auth.token || ticket || oauth || store.get('hadSession', false))) {
     try { if (!applySession(await api('/api/auth/session'))) clearSession(); } catch (e) { if (e.status === 401) clearSession(); }
@@ -1854,14 +1867,14 @@ async function initAuth() {
 }
 function renderSignIn(err) {
   if (state.signinMode === 'recover') return renderRecover(err);
-  const signup = state.signinMode === 'signup', g = auth.providers && auth.providers.google;
+  const signup = state.signinMode === 'signup';
   const tab = (mode, label) => `<button type="button" role="tab" class="auth-tab" data-action="signin-mode" data-v="${mode}" aria-selected="${state.signinMode === mode}">${label}</button>`;
   const pw = (id, label, ac, hint) => `<div class="field"><label for="${id}">${label}</label><div class="pw-wrap"><input id="${id}" type="password" autocomplete="${ac}" required${signup ? ' minlength="8" maxlength="128"' : ''}><button type="button" class="pw-eye" data-action="pw-eye" data-v="${id}" aria-label="${t('showPw')}">${t('show')}</button></div>${hint ? `<small class="hint">${hint}</small>` : ''}</div>`;
   $('#signin-form').innerHTML = `
     <div class="signin-top"><div class="auth-tabs" role="tablist">${tab('login', t('signIn'))}${tab('signup', t('create'))}</div><button type="button" class="icon-btn" data-action="close-signin" aria-label="Close">✕</button></div>
     <h2 id="signin-title" class="sr-only">${signup ? t('create') : t('signinTitle')}</h2>
     <p class="muted" style="margin:0">${signup ? t('signupSub') : t('signinSub')}</p>
-    <div id="google-wrap" class="google-wrap"${g && !g.enabled ? ' hidden' : ''}><button type="button" class="btn-google" data-action="oauth" data-v="google"><b>G</b>${t('google')}</button><div class="or">${signup ? t('orSignupEmail') : t('orEmail')}</div></div>
+    <div id="google-wrap" class="google-wrap"${oauthButtons() ? '' : ' hidden'}>${oauthButtons()}<div class="or">${signup ? t('orSignupEmail') : t('orEmail')}</div></div>
     <div class="field"><label for="si-email">${signup ? t('email') : t('emailOrUser')}</label><input id="si-email" name="email" type="${signup ? 'email' : 'text'}" autocomplete="${signup ? 'email' : 'username'}" required></div>
     ${signup ? `<div class="field"><label for="si-user">${t('username')}</label><input id="si-user" name="username" autocomplete="username" minlength="3" maxlength="32" pattern="[A-Za-z0-9._\\-]+" required><small class="hint">${t('userHint')}</small></div>` : ''}
     ${pw('si-pass', t('password'), signup ? 'new-password' : 'current-password', signup ? t('pwHint') : '')}
