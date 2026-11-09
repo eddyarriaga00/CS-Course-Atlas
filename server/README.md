@@ -72,6 +72,8 @@ If frontend and API are on different domains, point frontend runtime config to t
 
 ## Render Hosting (Blueprint Included)
 
+The service auto-deploys every commit to `main` (Render's GitHub app must have access to `eddyarriaga00/CS-Course-Atlas`). Migrations run on start (`npm run db:migrate && npm start`).
+
 This repo includes a production `render.yaml` for API hosting as `cs-course-atlas-api`.
 
 1. Open:
