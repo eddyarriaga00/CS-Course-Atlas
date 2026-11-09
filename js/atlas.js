@@ -20,7 +20,7 @@ const UI = {
     nextTitle: 'After the beginner path', nextLead: 'Bigger languages, algorithms and how real systems work.',
     startJava: 'Start the Java course', browse: 'Browse courses', continueTitle: 'Continue where you left off', continueBtn: 'Continue', startBtn: 'Start',
     ofModules: (a, b) => `${a} of ${b} modules complete`, courseDone: 'Course complete. Nice work.',
-    coursesTitle: 'Courses', coursesLead: 'New to programming? Follow the beginner path in order. Courses marked Ready are complete; the rest are being written now, and you can vote for the ones you want first.',
+    coursesTitle: 'Courses', coursesLead: 'New to programming? Follow the beginner path in order: all nine courses are ready. After it come Java and the next-level courses; the ones still being written show their outline, and you can vote for what you want next.',
     plannedTitle: 'Planned courses', plannedNote: 'Beginner courses first. Vote for the ones you want next.', javaTrack: 'Java course', studyTools: 'Study tools',
     toolFlash: 'Spaced review of the key terms.', toolQuiz: 'Check yourself after each module.', toolPlay: 'Run Java, C++, Python and JS.', toolNotes: 'Your notes, saved per module.',
     notifyMe: 'Notify me when it opens', notified: 'Saved: it will show up here when it opens',
@@ -82,7 +82,7 @@ const UI = {
     nextTitle: 'Después de la ruta para principiantes', nextLead: 'Lenguajes más grandes, algoritmos y cómo funcionan los sistemas reales.',
     startJava: 'Empezar el curso de Java', browse: 'Ver cursos', continueTitle: 'Continúa donde te quedaste', continueBtn: 'Continuar', startBtn: 'Empezar',
     ofModules: (a, b) => `${a} de ${b} módulos completados`, courseDone: 'Curso completado. ¡Buen trabajo!',
-    coursesTitle: 'Cursos', coursesLead: '¿Nuevo en programación? Sigue la ruta para principiantes en orden. Los cursos marcados como Listo están completos; los demás se están escribiendo y puedes votar por los que quieras primero.',
+    coursesTitle: 'Cursos', coursesLead: '¿Nuevo en programación? Sigue la ruta para principiantes en orden: los nueve cursos están listos. Después vienen Java y los cursos del siguiente nivel; los que aún se escriben muestran su temario y puedes votar por lo que quieras primero.',
     plannedTitle: 'Cursos planeados', plannedNote: 'Primero los de nivel principiante. Vota por los que quieres primero.', javaTrack: 'Curso de Java', studyTools: 'Herramientas de estudio',
     toolFlash: 'Repaso espaciado de los términos clave.', toolQuiz: 'Ponte a prueba después de cada módulo.', toolPlay: 'Ejecuta Java, C++, Python y JS.', toolNotes: 'Tus notas, guardadas por módulo.',
     notifyMe: 'Avísame cuando abra', notified: 'Guardado: aparecerá aquí cuando abra',
@@ -748,17 +748,16 @@ function viewGlossary() {
 }
 const ROADMAP = [
   ['live', 'java', { en: 'Full Java course', es: 'Curso completo de Java' }, { en: '13 modules with lessons, examples in 4 languages, practice and quizzes.', es: '13 módulos con lecciones, ejemplos en 4 lenguajes, práctica y cuestionarios.' }, ['Courses']],
+  ['live', 'beginner-path', { en: 'The complete beginner path', es: 'La ruta completa para principiantes' }, { en: 'Nine courses from zero: Python, Command Line, Git, Web Basics, SQL, How Computers Work, Cybersecurity, AI Fundamentals and Discrete Math, each with lessons, runnable examples, quizzes and videos.', es: 'Nueve cursos desde cero: Python, Línea de comandos, Git, Web básica, SQL, Cómo funcionan las computadoras, Ciberseguridad, Fundamentos de IA y Matemáticas discretas, cada uno con lecciones, ejemplos ejecutables, cuestionarios y videos.' }, ['Courses']],
   ['live', 'git', { en: 'Git course', es: 'Curso de Git' }, { en: '2 modules taught through real terminal sessions, each one run with real Git to record its output.', es: '2 módulos enseñados con sesiones reales de terminal, cada una ejecutada con Git real para grabar su salida.' }, ['Courses']],
   ['live', 'discrete', { en: 'Discrete Math course', es: 'Curso de Matemáticas discretas' }, { en: 'Logic, sets, counting and graph theory, with every idea checked by code in 4 languages.', es: 'Lógica, conjuntos, conteo y teoría de grafos, con cada idea comprobada con código en 4 lenguajes.' }, ['Courses']],
   ['live', 'bilingual', { en: 'English and Spanish everywhere', es: 'Inglés y español en todo' }, { en: 'Every lesson, quiz and menu in both languages.', es: 'Cada lección, cuestionario y menú en ambos idiomas.' }, ['Access']],
-  ['live', 'js-playground', { en: 'JavaScript and Python playground', es: 'Editor de JavaScript y Python' }, { en: 'Run JavaScript and Python in the browser and load any example into it.', es: 'Ejecuta JavaScript y Python en el navegador y carga cualquier ejemplo.' }, ['Tools']],
+  ['live', 'js-playground', { en: 'Playground for Python, JavaScript, SQL and web pages', es: 'Editor para Python, JavaScript, SQL y páginas web' }, { en: 'Run Python, JavaScript, SQL and HTML right in your browser; every example has a Try it button.', es: 'Ejecuta Python, JavaScript, SQL y HTML en tu navegador; cada ejemplo tiene un botón Pruébalo.' }, ['Tools']],
   ['live', 'sync', { en: 'Accounts and progress sync', es: 'Cuentas y progreso sincronizado' }, { en: 'Google or email sign-in; progress follows you between devices.', es: 'Inicio con Google o correo; tu progreso te sigue entre dispositivos.' }, ['Account']],
   ['building', 'dsa', { en: 'Data Structures & Algorithms course', es: 'Curso de estructuras de datos y algoritmos' }, { en: '22 modules, from arrays to dynamic programming, with complexity analysis.', es: '22 módulos, de arreglos a programación dinámica, con análisis de complejidad.' }, ['Courses']],
   ['building', 'runner', { en: 'Run Java and C++', es: 'Ejecutar Java y C++' }, { en: 'A sandboxed code server so every example and exercise runs in the browser.', es: 'Un servidor aislado para que cada ejemplo y ejercicio se ejecute en el navegador.' }, ['Tools']],
   ['live', 'redesign', { en: 'New design on every device', es: 'Nuevo diseño en todos los dispositivos' }, { en: 'This design: faster, clearer, with a real phone layout and dark mode.', es: 'Este diseño: más rápido, más claro, con versión para teléfono y modo oscuro.' }, ['Design']],
   ['building', 'more-courses', { en: 'x86-64 Assembly', es: 'Ensamblador x86-64' }, { en: 'Rewritten to the same standard as Java, one course at a time.', es: 'Reescritos con el mismo nivel que Java, un curso a la vez.' }, ['Courses']],
-  ['planned', 'cybersecurity', { en: 'Cybersecurity Fundamentals course', es: 'Curso de fundamentos de ciberseguridad' }, { en: 'Passwords, phishing, encryption, network security and safe coding, for beginners.', es: 'Contraseñas, phishing, cifrado, seguridad en redes y código seguro, para principiantes.' }, ['Courses']],
-  ['planned', 'beginner-courses', { en: 'More beginner courses', es: 'Más cursos para principiantes' }, { en: 'Command Line & Linux, Web Basics, SQL, How Computers Work and AI Fundamentals, in beginner-path order.', es: 'Línea de comandos y Linux, Web básica, SQL, Cómo funcionan las computadoras y Fundamentos de IA, en el orden de la ruta.' }, ['Courses']],
   ['planned', 'exercises', { en: 'Auto-graded coding exercises', es: 'Ejercicios de código con calificación automática' }, { en: 'Write a solution, run hidden tests, see which cases fail and why.', es: 'Escribe una solución, ejecuta pruebas ocultas y ve qué casos fallan y por qué.' }, ['Practice']],
   ['planned', 'srs', { en: 'Spaced-repetition review', es: 'Repaso con repetición espaciada' }, { en: 'Flashcards and quiz questions come back right before you would forget them.', es: 'Tarjetas y preguntas vuelven justo antes de que las olvides.' }, ['Practice']],
   ['planned', 'visualizers', { en: 'Step-through visualizers', es: 'Visualizadores paso a paso' }, { en: 'Watch the stack, heap, arrays and trees change line by line.', es: 'Mira cómo cambian la pila, el heap, los arreglos y los árboles línea por línea.' }, ['Tools']],
@@ -1148,7 +1147,7 @@ document.addEventListener('click', (e) => { if (!e.target.closest('#search') && 
 
 /* ---------- Boot ---------- */
 // Links from the generated SEO pages use ?route=/java&module=id; turn them into hash routes.
-const ROUTE_HASH = { '/home': 'home', '/tracks': 'courses', '/java': 'course-java', '/dsa': 'course-dsa', '/git': 'course-git', '/assembly': 'course-assembly', '/discrete-math': 'course-discrete', '/python': 'course-python', '/command-line': 'course-cli', '/web': 'course-web', '/sql': 'course-sql', '/how-computers-work': 'course-how-computers-work', '/cybersecurity': 'course-cybersecurity',
+const ROUTE_HASH = { '/home': 'home', '/tracks': 'courses', '/java': 'course-java', '/dsa': 'course-dsa', '/git': 'course-git', '/assembly': 'course-assembly', '/discrete-math': 'course-discrete', '/python': 'course-python', '/command-line': 'course-cli', '/web': 'course-web', '/sql': 'course-sql', '/how-computers-work': 'course-how-computers-work', '/cybersecurity': 'course-cybersecurity', '/ai': 'course-ai',
   '/flashcards': 'practice', '/quizzes': 'practice', '/playground': 'playground', '/notes': 'notes', '/support': 'roadmap', '/about': 'roadmap' };
 function applyLegacyLink() {
   const url = new URL(location.href), q = url.searchParams, mod = q.get('module'), route = q.get('route');

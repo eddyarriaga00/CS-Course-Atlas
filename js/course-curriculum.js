@@ -500,6 +500,48 @@ window.COURSE_CURRICULUM = {
           "sec-defense"
         ]
       }
+    ],
+    "ai": [
+      {
+        "id": "ai-foundations",
+        "title": {
+          "en": "Foundations",
+          "es": "Fundamentos"
+        },
+        "modules": [
+          "ai-what"
+        ]
+      },
+      {
+        "id": "ai-models",
+        "title": {
+          "en": "Learning from Data",
+          "es": "Aprender de los datos"
+        },
+        "modules": [
+          "ai-first-models"
+        ]
+      },
+      {
+        "id": "ai-networks",
+        "title": {
+          "en": "Neural Networks",
+          "es": "Redes neuronales"
+        },
+        "modules": [
+          "ai-neural"
+        ]
+      },
+      {
+        "id": "ai-today",
+        "title": {
+          "en": "AI Today",
+          "es": "La IA hoy"
+        },
+        "modules": [
+          "ai-language"
+        ]
+      }
     ]
   },
   "modules": {
@@ -20547,6 +20589,1172 @@ window.COURSE_CURRICULUM = {
           "explanation": {
             "en": "Data you never collect cannot leak. It is one of the core principles of privacy laws like the GDPR.",
             "es": "Los datos que nunca recopilas no se pueden filtrar. Es uno de los principios centrales de leyes de privacidad como el RGPD."
+          }
+        }
+      ]
+    },
+    "ai-what": {
+      "minutes": 70,
+      "prerequisites": [
+        "python-collections"
+      ],
+      "whyItMatters": {
+        "en": "AI tools are now part of school, work and everyday apps, and they are surrounded by hype and fear. Under the buzzwords is a simple idea you can understand completely: instead of writing every rule by hand, we show a program many examples and let it find the pattern. Knowing how that works, and how it fails when the examples are bad, lets you use AI tools wisely, judge claims about them, and start building your own.",
+        "es": "Las herramientas de IA ya son parte de la escuela, el trabajo y las apps de todos los días, y están rodeadas de exageraciones y miedo. Debajo de los términos de moda hay una idea simple que puedes entender por completo: en lugar de escribir cada regla a mano, le mostramos a un programa muchos ejemplos y dejamos que encuentre el patrón. Saber cómo funciona eso, y cómo falla cuando los ejemplos son malos, te permite usar la IA con criterio, juzgar lo que se dice de ella y empezar a construir la tuya."
+      },
+      "objectives": {
+        "en": [
+          "Explain the difference between AI, machine learning and deep learning, and name real examples of each.",
+          "Describe a dataset as examples with features and labels, and turn real things into numbers.",
+          "Compare a hand-written rule with a rule learned from examples, and say when each makes sense.",
+          "Explain why models are judged on test data they never saw during training.",
+          "Recognize how biased or unrepresentative data produces unfair or wrong results."
+        ],
+        "es": [
+          "Explicar la diferencia entre IA, aprendizaje automático y aprendizaje profundo, y nombrar ejemplos reales de cada uno.",
+          "Describir un conjunto de datos como ejemplos con características y etiquetas, y convertir cosas reales en números.",
+          "Comparar una regla escrita a mano con una regla aprendida de ejemplos, y decir cuándo tiene sentido cada una.",
+          "Explicar por qué los modelos se evalúan con datos de prueba que nunca vieron durante el entrenamiento.",
+          "Reconocer cómo los datos sesgados o poco representativos producen resultados injustos o equivocados."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Python lists, dictionaries, loops and functions (Python course)"
+        ],
+        "es": [
+          "Listas, diccionarios, ciclos y funciones de Python (curso de Python)"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "AI is the broad goal of machines doing tasks that seem intelligent; machine learning learns patterns from data; deep learning uses large neural networks.",
+          "A model only sees numbers: each example is a list of features, and supervised learning also needs the right answer (a label).",
+          "Learning means adjusting a model's settings until its answers on the training examples are good.",
+          "A model is only as good as its data: unrepresentative or biased data gives wrong or unfair predictions, however clever the algorithm."
+        ],
+        "es": [
+          "La IA es el objetivo amplio de que las máquinas hagan tareas que parecen inteligentes; el aprendizaje automático aprende patrones de los datos; el aprendizaje profundo usa redes neuronales grandes.",
+          "Un modelo solo ve números: cada ejemplo es una lista de características, y el aprendizaje supervisado también necesita la respuesta correcta (una etiqueta).",
+          "Aprender significa ajustar los parámetros de un modelo hasta que sus respuestas en los ejemplos de entrenamiento sean buenas.",
+          "Un modelo es tan bueno como sus datos: datos poco representativos o sesgados dan predicciones equivocadas o injustas, por ingenioso que sea el algoritmo."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Thinking AI \"understands\" like a person: models find statistical patterns in their data, nothing more.",
+          "Measuring a model on the same data it learned from: it looks great and fails on new data.",
+          "Assuming more data always fixes bias: more of the same skewed data repeats the same skew.",
+          "Using features that leak the answer (like a \"passed\" column when predicting passing), which gives fake-perfect results."
+        ],
+        "es": [
+          "Pensar que la IA \"entiende\" como una persona: los modelos encuentran patrones estadísticos en sus datos, nada más.",
+          "Medir un modelo con los mismos datos de los que aprendió: se ve muy bien y falla con datos nuevos.",
+          "Suponer que más datos siempre arreglan el sesgo: más de los mismos datos desbalanceados repiten el mismo desbalance.",
+          "Usar características que filtran la respuesta (como una columna \"aprobó\" al predecir si aprueba), lo que da resultados falsamente perfectos."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: list three apps you use and decide whether each uses rules, machine learning or both.",
+          "Core: describe songs as features (tempo, length, loudness) for five songs you know, and label each \"calm\" or \"energetic\".",
+          "Core: write a hand-made rule that classifies your five songs, then a learned threshold like in the examples, and compare.",
+          "Stretch: split a dataset of 20 made-up examples into training and test sets with a fixed random seed and report accuracy on both."
+        ],
+        "es": [
+          "Calentamiento: lista tres apps que uses y decide si cada una usa reglas, aprendizaje automático o ambos.",
+          "Núcleo: describe cinco canciones que conozcas con características (tempo, duración, volumen) y etiqueta cada una como \"tranquila\" o \"enérgica\".",
+          "Núcleo: escribe una regla hecha a mano que clasifique tus cinco canciones, luego un umbral aprendido como en los ejemplos, y compáralos.",
+          "Extensión: divide un conjunto de 20 ejemplos inventados en entrenamiento y prueba con una semilla aleatoria fija e informa la precisión en ambos."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Is a spam filter that blocks emails containing \"FREE MONEY\" machine learning? What would make it machine learning?",
+          "What are features and labels in a dataset of houses and their prices?",
+          "Why can a model score 100% on its training data and still be useless?"
+        ],
+        "es": [
+          "¿Un filtro de spam que bloquea correos con \"DINERO GRATIS\" es aprendizaje automático? ¿Qué lo convertiría en aprendizaje automático?",
+          "¿Qué son las características y las etiquetas en un conjunto de datos de casas y sus precios?",
+          "¿Por qué un modelo puede obtener 100% en sus datos de entrenamiento y aun así no servir?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "AI, Machine Learning and Deep Learning",
+            "es": "IA, aprendizaje automático y aprendizaje profundo"
+          },
+          "definition": {
+            "en": "Artificial intelligence is the broad field of making computers do tasks that seem to need intelligence. Machine learning is the part of AI where programs learn patterns from data instead of following hand-written rules. Deep learning is machine learning with large, many-layered neural networks.",
+            "es": "La inteligencia artificial es el campo amplio de hacer que las computadoras realicen tareas que parecen requerir inteligencia. El aprendizaje automático es la parte de la IA donde los programas aprenden patrones de los datos en lugar de seguir reglas escritas a mano. El aprendizaje profundo es aprendizaje automático con redes neuronales grandes de muchas capas."
+          }
+        },
+        {
+          "term": {
+            "en": "Data and Features",
+            "es": "Datos y características"
+          },
+          "definition": {
+            "en": "A dataset is a collection of examples. Each example is described by features, numbers that capture its properties (size, color, word counts), and in supervised learning a label, the answer we want the model to predict.",
+            "es": "Un conjunto de datos es una colección de ejemplos. Cada ejemplo se describe con características, números que capturan sus propiedades (tamaño, color, conteos de palabras), y en el aprendizaje supervisado con una etiqueta, la respuesta que queremos que prediga el modelo."
+          }
+        },
+        {
+          "term": {
+            "en": "Rules Versus Learning",
+            "es": "Reglas frente a aprendizaje"
+          },
+          "definition": {
+            "en": "Traditional programs follow rules a person wrote. Machine learning programs have adjustable settings (parameters) and an algorithm that tunes them to fit examples. Learning works when the pattern is hard to write down but easy to show.",
+            "es": "Los programas tradicionales siguen reglas que escribió una persona. Los programas de aprendizaje automático tienen ajustes modificables (parámetros) y un algoritmo que los ajusta para encajar con los ejemplos. Aprender funciona cuando el patrón es difícil de escribir pero fácil de mostrar."
+          }
+        },
+        {
+          "term": {
+            "en": "Training and Test Data",
+            "es": "Datos de entrenamiento y de prueba"
+          },
+          "definition": {
+            "en": "Examples are split into a training set, used to fit the model, and a test set, held back and used only to measure how well the model works on data it has never seen. Test accuracy estimates real-world performance.",
+            "es": "Los ejemplos se dividen en un conjunto de entrenamiento, que se usa para ajustar el modelo, y un conjunto de prueba, que se guarda aparte y se usa solo para medir qué tan bien funciona el modelo con datos que nunca vio. La precisión en prueba estima el desempeño en el mundo real."
+          }
+        },
+        {
+          "term": {
+            "en": "Bias in Data",
+            "es": "Sesgo en los datos"
+          },
+          "definition": {
+            "en": "When training data does not fairly represent the people or situations a model will meet, or reflects past unfair decisions, the model learns and repeats those patterns. Checking results separately for each group reveals it.",
+            "es": "Cuando los datos de entrenamiento no representan con justicia a las personas o situaciones que encontrará un modelo, o reflejan decisiones injustas del pasado, el modelo aprende y repite esos patrones. Revisar los resultados por separado para cada grupo lo revela."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Elements of AI (free online course, University of Helsinki)",
+            "es": "Elements of AI (curso gratuito, Universidad de Helsinki)"
+          },
+          "url": "https://www.elementsofai.com/"
+        },
+        {
+          "label": {
+            "en": "Google: Machine Learning Crash Course",
+            "es": "Google: curso intensivo de aprendizaje automático"
+          },
+          "url": "https://developers.google.com/machine-learning/crash-course"
+        },
+        {
+          "label": {
+            "en": "Code.org: How AI Works video series",
+            "es": "Code.org: serie de videos Cómo funciona la IA"
+          },
+          "url": "https://code.org/ai/how-ai-works"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Which is true?",
+            "es": "¿Cuál es verdadera?"
+          },
+          "options": {
+            "en": [
+              "All AI is deep learning",
+              "Machine learning is a part of AI, and deep learning is a part of machine learning",
+              "They are three unrelated fields",
+              "Deep learning does not use data"
+            ],
+            "es": [
+              "Toda la IA es aprendizaje profundo",
+              "El aprendizaje automático es parte de la IA, y el profundo es parte del automático",
+              "Son tres campos sin relación",
+              "El aprendizaje profundo no usa datos"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "They are nested: AI ⊃ machine learning ⊃ deep learning.",
+            "es": "Están anidados: IA ⊃ aprendizaje automático ⊃ aprendizaje profundo."
+          }
+        },
+        {
+          "question": {
+            "en": "In a dataset predicting house prices, what is the label?",
+            "es": "En un conjunto de datos que predice precios de casas, ¿qué es la etiqueta?"
+          },
+          "options": {
+            "en": [
+              "The number of bedrooms",
+              "The price",
+              "The street name",
+              "The dataset size"
+            ],
+            "es": [
+              "El número de habitaciones",
+              "El precio",
+              "El nombre de la calle",
+              "El tamaño del conjunto"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The label is the answer to predict. Bedrooms, size and location are features.",
+            "es": "La etiqueta es la respuesta a predecir. Las habitaciones, el tamaño y la ubicación son características."
+          }
+        },
+        {
+          "question": {
+            "en": "Why keep a test set separate from training data?",
+            "es": "¿Por qué se mantiene un conjunto de prueba separado de los datos de entrenamiento?"
+          },
+          "options": {
+            "en": [
+              "To train faster",
+              "To measure how the model does on examples it has never seen",
+              "Because test data is cleaner",
+              "It is not necessary"
+            ],
+            "es": [
+              "Para entrenar más rápido",
+              "Para medir cómo le va al modelo con ejemplos que nunca vio",
+              "Porque los datos de prueba son más limpios",
+              "No es necesario"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Scoring on training data rewards memorizing. Unseen test data shows whether the model generalizes.",
+            "es": "Calificar con datos de entrenamiento premia memorizar. Los datos de prueba no vistos muestran si el modelo generaliza."
+          }
+        },
+        {
+          "question": {
+            "en": "A face detector was trained mostly on photos of one group of people. What is the likely result?",
+            "es": "Un detector de rostros se entrenó sobre todo con fotos de un grupo de personas. ¿Cuál es el resultado probable?"
+          },
+          "options": {
+            "en": [
+              "Equal accuracy for everyone",
+              "Lower accuracy for underrepresented groups",
+              "It refuses to run",
+              "Higher accuracy for everyone"
+            ],
+            "es": [
+              "La misma precisión para todos",
+              "Menor precisión para los grupos poco representados",
+              "Se niega a ejecutarse",
+              "Mayor precisión para todos"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Models learn from what they see. Underrepresented groups get worse results, a well-documented real-world problem.",
+            "es": "Los modelos aprenden de lo que ven. Los grupos poco representados obtienen peores resultados, un problema real bien documentado."
+          }
+        },
+        {
+          "question": {
+            "en": "When is machine learning a better fit than writing rules?",
+            "es": "¿Cuándo es el aprendizaje automático mejor opción que escribir reglas?"
+          },
+          "options": {
+            "en": [
+              "When the rules are simple and known",
+              "When the pattern is hard to describe but there are many labeled examples",
+              "When there is no data",
+              "Always"
+            ],
+            "es": [
+              "Cuando las reglas son simples y conocidas",
+              "Cuando el patrón es difícil de describir pero hay muchos ejemplos etiquetados",
+              "Cuando no hay datos",
+              "Siempre"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Recognizing handwriting or spam is hard to write as rules but easy to show with examples. Tax rules are better written by hand.",
+            "es": "Reconocer letra manuscrita o spam es difícil de escribir como reglas pero fácil de mostrar con ejemplos. Las reglas de impuestos es mejor escribirlas a mano."
+          }
+        }
+      ]
+    },
+    "ai-first-models": {
+      "minutes": 90,
+      "prerequisites": [
+        "ai-what"
+      ],
+      "whyItMatters": {
+        "en": "Libraries like scikit-learn and PyTorch make machine learning look like one function call, which hides what is actually happening. Writing the classic models yourself, in a few lines each, shows that a model is just numbers adjusted to fit examples, and that judging it honestly is as important as building it. These ideas, distance, fitting by reducing error, accuracy versus other measures, and overfitting, are the foundation of every model you will ever use.",
+        "es": "Bibliotecas como scikit-learn y PyTorch hacen que el aprendizaje automático parezca una llamada a función, lo que oculta lo que realmente pasa. Escribir tú mismo los modelos clásicos, en unas pocas líneas cada uno, muestra que un modelo es solo números ajustados para encajar con ejemplos, y que evaluarlo con honestidad es tan importante como construirlo. Estas ideas, distancia, ajustar reduciendo el error, precisión frente a otras medidas y sobreajuste, son la base de todo modelo que llegues a usar."
+      },
+      "objectives": {
+        "en": [
+          "Classify new examples with k-nearest neighbors using distance between feature vectors.",
+          "Fit a straight line to data with gradient descent by repeatedly reducing the mean squared error.",
+          "Measure a classifier with accuracy, a confusion matrix, precision and recall.",
+          "Recognize overfitting by comparing training and test error as a model gets more complex.",
+          "Evaluate a model fairly against a simple baseline and with cross-validation."
+        ],
+        "es": [
+          "Clasificar ejemplos nuevos con k vecinos más cercanos usando la distancia entre vectores de características.",
+          "Ajustar una recta a los datos con descenso de gradiente reduciendo una y otra vez el error cuadrático medio.",
+          "Medir un clasificador con precisión, matriz de confusión, precisión positiva y exhaustividad.",
+          "Reconocer el sobreajuste comparando el error de entrenamiento y de prueba a medida que un modelo se vuelve más complejo.",
+          "Evaluar un modelo con justicia frente a una línea base simple y con validación cruzada."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Module 1 of this course",
+          "Python lists, loops and functions; basic algebra (y = mx + b)"
+        ],
+        "es": [
+          "El módulo 1 de este curso",
+          "Listas, ciclos y funciones de Python; álgebra básica (y = mx + b)"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "k-nearest neighbors predicts by looking at the most similar training examples; it needs no training but must keep all the data.",
+          "Training a model means choosing parameters that minimize a loss (error); gradient descent does it by small steps downhill.",
+          "Accuracy can mislead when one class is rare; precision and recall show what kinds of mistakes a model makes.",
+          "A model that fits the training data too closely (overfits) gets worse on new data; always compare against a simple baseline."
+        ],
+        "es": [
+          "k vecinos más cercanos predice mirando los ejemplos de entrenamiento más parecidos; no necesita entrenamiento pero debe guardar todos los datos.",
+          "Entrenar un modelo significa elegir parámetros que minimicen una pérdida (error); el descenso de gradiente lo hace con pasos pequeños cuesta abajo.",
+          "La precisión puede engañar cuando una clase es rara; la precisión positiva y la exhaustividad muestran qué tipo de errores comete un modelo.",
+          "Un modelo que se ajusta demasiado a los datos de entrenamiento (sobreajuste) empeora con datos nuevos; compara siempre con una línea base simple."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Forgetting to scale features for nearest neighbors: a feature measured in thousands drowns out one measured from 0 to 1.",
+          "Choosing a learning rate that is too large: gradient descent overshoots and the error grows instead of shrinking.",
+          "Reporting 95% accuracy on data where 95% of examples are one class: a model that always says that class scores the same.",
+          "Tuning a model again and again against the test set until it looks good, which secretly turns the test set into training data."
+        ],
+        "es": [
+          "Olvidar escalar las características para vecinos más cercanos: una característica medida en miles ahoga a una medida de 0 a 1.",
+          "Elegir una tasa de aprendizaje demasiado grande: el descenso de gradiente se pasa y el error crece en lugar de bajar.",
+          "Informar 95% de precisión en datos donde el 95% de los ejemplos son de una clase: un modelo que siempre dice esa clase obtiene lo mismo.",
+          "Ajustar un modelo una y otra vez contra el conjunto de prueba hasta que se vea bien, lo que en secreto convierte la prueba en datos de entrenamiento."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: compute by hand the distance between (1, 2) and (4, 6), then check with `math.dist`.",
+          "Core: change k in the nearest-neighbor example to 1, 3 and 5 and explain why the prediction for a borderline point changes.",
+          "Core: use the gradient descent code to fit study hours to test scores for 6 made-up students, and predict the score for 7 hours.",
+          "Stretch: build a \"always predict the majority class\" baseline for the confusion-matrix example and compare its accuracy, precision and recall with the model."
+        ],
+        "es": [
+          "Calentamiento: calcula a mano la distancia entre (1, 2) y (4, 6) y compruébala con `math.dist`.",
+          "Núcleo: cambia k en el ejemplo de vecinos más cercanos a 1, 3 y 5 y explica por qué cambia la predicción para un punto en el límite.",
+          "Núcleo: usa el código de descenso de gradiente para ajustar horas de estudio a calificaciones de 6 estudiantes inventados, y predice la calificación para 7 horas.",
+          "Extensión: construye una línea base \"siempre predecir la clase mayoritaria\" para el ejemplo de la matriz de confusión y compara su precisión, precisión positiva y exhaustividad con el modelo."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why does nearest neighbors need features on similar scales?",
+          "What does the learning rate control in gradient descent, and what happens if it is too big or too small?",
+          "A disease test has 99% accuracy, but only 1% of people have the disease. Why is that not impressive on its own?"
+        ],
+        "es": [
+          "¿Por qué los vecinos más cercanos necesitan características en escalas parecidas?",
+          "¿Qué controla la tasa de aprendizaje en el descenso de gradiente, y qué pasa si es demasiado grande o demasiado pequeña?",
+          "Una prueba de una enfermedad tiene 99% de precisión, pero solo el 1% de las personas tiene la enfermedad. ¿Por qué eso no impresiona por sí solo?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Nearest Neighbors",
+            "es": "Vecinos más cercanos"
+          },
+          "definition": {
+            "en": "k-nearest neighbors (k-NN) classifies a new example by finding the k training examples closest to it (usually by Euclidean distance) and taking a majority vote of their labels. It is simple and needs no training, but it is slow on large datasets.",
+            "es": "Los k vecinos más cercanos (k-NN) clasifican un ejemplo nuevo buscando los k ejemplos de entrenamiento más cercanos (normalmente con distancia euclidiana) y tomando la votación mayoritaria de sus etiquetas. Es simple y no necesita entrenamiento, pero es lento con conjuntos grandes."
+          }
+        },
+        {
+          "term": {
+            "en": "Linear Regression",
+            "es": "Regresión lineal"
+          },
+          "definition": {
+            "en": "Predicting a number with a straight line, y = w·x + b. Training chooses w and b to minimize the mean squared error between predictions and true values, either with a formula or step by step with gradient descent.",
+            "es": "Predecir un número con una recta, y = w·x + b. Entrenar elige w y b para minimizar el error cuadrático medio entre las predicciones y los valores reales, con una fórmula o paso a paso con descenso de gradiente."
+          }
+        },
+        {
+          "term": {
+            "en": "Classification and Accuracy",
+            "es": "Clasificación y precisión"
+          },
+          "definition": {
+            "en": "Classification predicts a category. Accuracy is the share of correct predictions. A confusion matrix counts true and false positives and negatives; precision is how many predicted positives were right, and recall is how many real positives were found.",
+            "es": "La clasificación predice una categoría. La precisión (accuracy) es la proporción de predicciones correctas. Una matriz de confusión cuenta los verdaderos y falsos positivos y negativos; la precisión positiva es cuántos positivos predichos eran correctos, y la exhaustividad es cuántos positivos reales se encontraron."
+          }
+        },
+        {
+          "term": {
+            "en": "Overfitting",
+            "es": "Sobreajuste"
+          },
+          "definition": {
+            "en": "When a model learns the training data too closely, including its noise, so it performs well on training examples and poorly on new ones. Signs: training error keeps dropping while test error rises. Simpler models, more data and regularization help.",
+            "es": "Cuando un modelo aprende los datos de entrenamiento demasiado de cerca, incluido su ruido, así que le va bien con los ejemplos de entrenamiento y mal con los nuevos. Señales: el error de entrenamiento sigue bajando mientras el de prueba sube. Los modelos más simples, más datos y la regularización ayudan."
+          }
+        },
+        {
+          "term": {
+            "en": "Evaluating a Model",
+            "es": "Evaluar un modelo"
+          },
+          "definition": {
+            "en": "Judging a model on data it did not train on, compared with a simple baseline (such as always predicting the most common answer). Cross-validation repeats the train/test split several ways and averages the results for a more reliable estimate.",
+            "es": "Juzgar un modelo con datos con los que no entrenó, comparándolo con una línea base simple (como predecir siempre la respuesta más común). La validación cruzada repite la división de entrenamiento y prueba de varias formas y promedia los resultados para una estimación más confiable."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Google Machine Learning Crash Course: Linear regression",
+            "es": "Curso intensivo de ML de Google: regresión lineal"
+          },
+          "url": "https://developers.google.com/machine-learning/crash-course/linear-regression"
+        },
+        {
+          "label": {
+            "en": "StatQuest: Machine Learning fundamentals (video series)",
+            "es": "StatQuest: fundamentos de aprendizaje automático (videos)"
+          },
+          "url": "https://statquest.org/video-index/"
+        },
+        {
+          "label": {
+            "en": "scikit-learn: Getting started (for real projects)",
+            "es": "scikit-learn: primeros pasos (para proyectos reales)"
+          },
+          "url": "https://scikit-learn.org/stable/getting_started.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "With k = 3, the three nearest neighbors are labeled cat, dog, cat. What does k-NN predict?",
+            "es": "Con k = 3, los tres vecinos más cercanos tienen las etiquetas gato, perro, gato. ¿Qué predice k-NN?"
+          },
+          "options": {
+            "en": [
+              "dog",
+              "cat",
+              "It cannot decide",
+              "The average of the labels"
+            ],
+            "es": [
+              "perro",
+              "gato",
+              "No puede decidir",
+              "El promedio de las etiquetas"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "k-NN takes a majority vote of the k nearest labels: two cats beat one dog.",
+            "es": "k-NN toma la votación mayoritaria de las k etiquetas más cercanas: dos gatos le ganan a un perro."
+          }
+        },
+        {
+          "question": {
+            "en": "What does gradient descent do at each step?",
+            "es": "¿Qué hace el descenso de gradiente en cada paso?"
+          },
+          "options": {
+            "en": [
+              "Picks random parameters",
+              "Moves the parameters a little in the direction that reduces the error",
+              "Deletes bad examples",
+              "Doubles the learning rate"
+            ],
+            "es": [
+              "Elige parámetros al azar",
+              "Mueve un poco los parámetros en la dirección que reduce el error",
+              "Borra los ejemplos malos",
+              "Duplica la tasa de aprendizaje"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The gradient points uphill in error, so stepping against it reduces the error a little each time.",
+            "es": "El gradiente apunta cuesta arriba en el error, así que dar un paso en contra lo reduce un poco cada vez."
+          }
+        },
+        {
+          "question": {
+            "en": "A model finds 8 of the 10 real spam emails. What is its recall?",
+            "es": "Un modelo encuentra 8 de los 10 correos de spam reales. ¿Cuál es su exhaustividad?"
+          },
+          "options": {
+            "en": [
+              "8%",
+              "80%",
+              "10%",
+              "Cannot tell"
+            ],
+            "es": [
+              "8%",
+              "80%",
+              "10%",
+              "No se puede saber"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Recall = found positives / all real positives = 8 / 10.",
+            "es": "Exhaustividad = positivos encontrados / todos los positivos reales = 8 / 10."
+          }
+        },
+        {
+          "question": {
+            "en": "Training error is 1% and test error is 30%. What is most likely happening?",
+            "es": "El error de entrenamiento es 1% y el de prueba es 30%. ¿Qué es lo más probable?"
+          },
+          "options": {
+            "en": [
+              "Underfitting",
+              "Overfitting",
+              "Perfect model",
+              "The test set is too small to matter"
+            ],
+            "es": [
+              "Subajuste",
+              "Sobreajuste",
+              "Modelo perfecto",
+              "El conjunto de prueba es demasiado pequeño para importar"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "A big gap between training and test performance means the model memorized the training data instead of learning the general pattern.",
+            "es": "Una gran diferencia entre el desempeño de entrenamiento y de prueba significa que el modelo memorizó los datos de entrenamiento en lugar de aprender el patrón general."
+          }
+        },
+        {
+          "question": {
+            "en": "Why compare a model with a baseline?",
+            "es": "¿Por qué comparar un modelo con una línea base?"
+          },
+          "options": {
+            "en": [
+              "Baselines are always better",
+              "To know whether the model learned anything beyond a trivial guess",
+              "To make training faster",
+              "It is required by law"
+            ],
+            "es": [
+              "Las líneas base siempre son mejores",
+              "Para saber si el modelo aprendió algo más allá de una suposición trivial",
+              "Para entrenar más rápido",
+              "Lo exige la ley"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "If \"always predict the most common class\" scores 90%, a model with 91% has learned very little.",
+            "es": "Si \"predecir siempre la clase más común\" obtiene 90%, un modelo con 91% aprendió muy poco."
+          }
+        }
+      ]
+    },
+    "ai-neural": {
+      "minutes": 95,
+      "prerequisites": [
+        "ai-first-models"
+      ],
+      "whyItMatters": {
+        "en": "Neural networks power image recognition, speech, translation and chatbots, and they are often described as mysterious \"brains\". In fact each piece is simple arithmetic: multiply inputs by weights, add them up, squash the result, and nudge the weights to reduce the error. Building a small network yourself, in plain Python, shows exactly what training does and why networks need data, layers and many small steps, and it makes the headlines about AI far easier to evaluate.",
+        "es": "Las redes neuronales impulsan el reconocimiento de imágenes, la voz, la traducción y los chatbots, y a menudo se describen como \"cerebros\" misteriosos. En realidad cada pieza es aritmética simple: multiplicar las entradas por pesos, sumarlas, comprimir el resultado y empujar un poco los pesos para reducir el error. Construir tú mismo una red pequeña, en Python puro, muestra exactamente qué hace el entrenamiento y por qué las redes necesitan datos, capas y muchos pasos pequeños, y hace mucho más fácil evaluar los titulares sobre IA."
+      },
+      "objectives": {
+        "en": [
+          "Compute a neuron's output from inputs, weights and a bias, and interpret the weights.",
+          "Explain why activation functions such as sigmoid and ReLU are needed, and compute them.",
+          "Train a single neuron with gradient descent on a loss function.",
+          "Build and train a two-layer network with backpropagation that learns XOR, which one neuron cannot.",
+          "Explain what makes deep learning \"deep\" and why it needs large data and computing power."
+        ],
+        "es": [
+          "Calcular la salida de una neurona a partir de entradas, pesos y un sesgo, e interpretar los pesos.",
+          "Explicar por qué se necesitan funciones de activación como sigmoide y ReLU, y calcularlas.",
+          "Entrenar una sola neurona con descenso de gradiente sobre una función de pérdida.",
+          "Construir y entrenar una red de dos capas con retropropagación que aprenda XOR, algo que una sola neurona no puede.",
+          "Explicar qué hace \"profundo\" al aprendizaje profundo y por qué necesita muchos datos y potencia de cómputo."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Gradient descent and loss from module 2",
+          "Python lists, loops and functions; the idea of a slope from algebra"
+        ],
+        "es": [
+          "Descenso de gradiente y pérdida del módulo 2",
+          "Listas, ciclos y funciones de Python; la idea de pendiente del álgebra"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "A neuron computes `activation(w1·x1 + w2·x2 + ... + b)`: a weighted sum plus a bias, passed through a non-linear function.",
+          "Without non-linear activations, any number of layers collapses into one straight-line model.",
+          "Training repeats: predict, measure the loss, compute how each weight affected it (backpropagation), and step each weight downhill.",
+          "Stacking layers lets networks build complex features from simple ones; deep networks have millions or billions of weights learned from huge datasets."
+        ],
+        "es": [
+          "Una neurona calcula `activación(w1·x1 + w2·x2 + ... + b)`: una suma ponderada más un sesgo, pasada por una función no lineal.",
+          "Sin activaciones no lineales, cualquier cantidad de capas se reduce a un solo modelo de línea recta.",
+          "Entrenar repite: predecir, medir la pérdida, calcular cómo afectó cada peso (retropropagación) y mover cada peso cuesta abajo.",
+          "Apilar capas permite que las redes construyan características complejas a partir de simples; las redes profundas tienen millones o miles de millones de pesos aprendidos de enormes conjuntos de datos."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Starting every weight at the same value: all neurons then learn the same thing. Start with small random weights.",
+          "Expecting one neuron to learn everything: a single neuron can only draw one straight boundary.",
+          "Training for too long on small data, so the network memorizes it (overfitting, module 2).",
+          "Reading a network's weights as human reasons: large networks are hard to interpret, which matters for high-stakes decisions."
+        ],
+        "es": [
+          "Empezar todos los pesos con el mismo valor: así todas las neuronas aprenden lo mismo. Empieza con pesos aleatorios pequeños.",
+          "Esperar que una neurona aprenda todo: una sola neurona solo puede trazar una frontera recta.",
+          "Entrenar demasiado tiempo con pocos datos, así la red los memoriza (sobreajuste, módulo 2).",
+          "Leer los pesos de una red como razones humanas: las redes grandes son difíciles de interpretar, y eso importa en decisiones de alto impacto."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: compute by hand the output of a neuron with weights (2, −1), bias 0.5 and inputs (1, 3), with and without a sigmoid.",
+          "Core: train the single neuron from the examples to learn OR instead of AND, and print its final weights.",
+          "Core: change the hidden layer of the XOR network from 3 to 2 and to 6 neurons and compare how many epochs it needs.",
+          "Stretch: replace the sigmoid in the hidden layer with ReLU and see whether the XOR network still trains with the same learning rate."
+        ],
+        "es": [
+          "Calentamiento: calcula a mano la salida de una neurona con pesos (2, −1), sesgo 0.5 y entradas (1, 3), con y sin sigmoide.",
+          "Núcleo: entrena la neurona de los ejemplos para que aprenda OR en lugar de AND, e imprime sus pesos finales.",
+          "Núcleo: cambia la capa oculta de la red XOR de 3 a 2 y a 6 neuronas y compara cuántas épocas necesita.",
+          "Extensión: reemplaza la sigmoide de la capa oculta por ReLU y mira si la red XOR sigue entrenando con la misma tasa de aprendizaje."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What do a neuron's weights and bias each control?",
+          "Why can a single neuron learn AND but not XOR?",
+          "In one sentence each, what are the forward pass and backpropagation?"
+        ],
+        "es": [
+          "¿Qué controlan los pesos y el sesgo de una neurona?",
+          "¿Por qué una sola neurona puede aprender AND pero no XOR?",
+          "En una oración cada uno, ¿qué son la pasada hacia adelante y la retropropagación?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Neurons and Weights",
+            "es": "Neuronas y pesos"
+          },
+          "definition": {
+            "en": "An artificial neuron multiplies each input by a weight, adds them together with a bias and passes the total through an activation function. Weights say how much each input matters (and in which direction); the bias shifts how easily the neuron activates.",
+            "es": "Una neurona artificial multiplica cada entrada por un peso, las suma junto con un sesgo y pasa el total por una función de activación. Los pesos dicen cuánto importa cada entrada (y en qué dirección); el sesgo desplaza qué tan fácil se activa la neurona."
+          }
+        },
+        {
+          "term": {
+            "en": "Activation Functions",
+            "es": "Funciones de activación"
+          },
+          "definition": {
+            "en": "Non-linear functions applied to a neuron's weighted sum. Sigmoid squashes any number into 0–1, tanh into −1–1, and ReLU outputs max(0, x). Without them, stacked layers would be equivalent to a single linear layer.",
+            "es": "Funciones no lineales que se aplican a la suma ponderada de una neurona. La sigmoide comprime cualquier número entre 0 y 1, tanh entre −1 y 1, y ReLU da max(0, x). Sin ellas, las capas apiladas equivaldrían a una sola capa lineal."
+          }
+        },
+        {
+          "term": {
+            "en": "Gradient Descent",
+            "es": "Descenso de gradiente"
+          },
+          "definition": {
+            "en": "The training method: compute the loss (how wrong the predictions are), find the gradient (how the loss changes as each weight changes) and move every weight a small step, scaled by the learning rate, in the direction that lowers the loss. Repeat many times.",
+            "es": "El método de entrenamiento: calcular la pérdida (qué tan equivocadas son las predicciones), encontrar el gradiente (cómo cambia la pérdida al cambiar cada peso) y mover cada peso un pequeño paso, escalado por la tasa de aprendizaje, en la dirección que baja la pérdida. Repetir muchas veces."
+          }
+        },
+        {
+          "term": {
+            "en": "A Tiny Network from Scratch",
+            "es": "Una red pequeña desde cero"
+          },
+          "definition": {
+            "en": "A multi-layer network passes inputs through a hidden layer of neurons and then an output layer (the forward pass). Backpropagation uses the chain rule to send the error backwards and compute every weight's gradient, so all layers learn together.",
+            "es": "Una red de varias capas pasa las entradas por una capa oculta de neuronas y luego por una capa de salida (la pasada hacia adelante). La retropropagación usa la regla de la cadena para enviar el error hacia atrás y calcular el gradiente de cada peso, para que todas las capas aprendan juntas."
+          }
+        },
+        {
+          "term": {
+            "en": "Deep Learning",
+            "es": "Aprendizaje profundo"
+          },
+          "definition": {
+            "en": "Machine learning with neural networks of many layers. Early layers learn simple features (edges, sounds), later layers combine them into complex ones (faces, words). It needs large datasets and specialized hardware (GPUs), and powers vision, speech and language models.",
+            "es": "Aprendizaje automático con redes neuronales de muchas capas. Las primeras capas aprenden características simples (bordes, sonidos) y las posteriores las combinan en complejas (rostros, palabras). Necesita grandes conjuntos de datos y hardware especializado (GPU), e impulsa la visión, la voz y los modelos de lenguaje."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "3Blue1Brown: Neural networks (visual series)",
+            "es": "3Blue1Brown: redes neuronales (serie visual)"
+          },
+          "url": "https://www.3blue1brown.com/topics/neural-networks"
+        },
+        {
+          "label": {
+            "en": "TensorFlow Playground: train a network in your browser",
+            "es": "TensorFlow Playground: entrena una red en tu navegador"
+          },
+          "url": "https://playground.tensorflow.org/"
+        },
+        {
+          "label": {
+            "en": "Google Machine Learning Crash Course: Neural networks",
+            "es": "Curso intensivo de ML de Google: redes neuronales"
+          },
+          "url": "https://developers.google.com/machine-learning/crash-course/neural-networks"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "A neuron has weights (2, 3), bias −1 and inputs (1, 1). What is the weighted sum before activation?",
+            "es": "Una neurona tiene pesos (2, 3), sesgo −1 y entradas (1, 1). ¿Cuál es la suma ponderada antes de la activación?"
+          },
+          "options": {
+            "en": [
+              "5",
+              "4",
+              "6",
+              "−1"
+            ],
+            "es": [
+              "5",
+              "4",
+              "6",
+              "−1"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "2·1 + 3·1 + (−1) = 4.",
+            "es": "2·1 + 3·1 + (−1) = 4."
+          }
+        },
+        {
+          "question": {
+            "en": "What does ReLU output for −3 and for 2?",
+            "es": "¿Qué da ReLU para −3 y para 2?"
+          },
+          "options": {
+            "en": [
+              "−3 and 2",
+              "0 and 2",
+              "0 and 0",
+              "3 and 2"
+            ],
+            "es": [
+              "−3 y 2",
+              "0 y 2",
+              "0 y 0",
+              "3 y 2"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "ReLU(x) = max(0, x): negatives become 0, positives pass through.",
+            "es": "ReLU(x) = max(0, x): los negativos se vuelven 0, los positivos pasan igual."
+          }
+        },
+        {
+          "question": {
+            "en": "Why can't a single neuron learn XOR?",
+            "es": "¿Por qué una sola neurona no puede aprender XOR?"
+          },
+          "options": {
+            "en": [
+              "XOR needs more data",
+              "A single neuron draws one straight boundary, and XOR's classes cannot be split by one straight line",
+              "Neurons only do addition",
+              "XOR is random"
+            ],
+            "es": [
+              "XOR necesita más datos",
+              "Una sola neurona traza una sola frontera recta, y las clases de XOR no se pueden separar con una recta",
+              "Las neuronas solo suman",
+              "XOR es aleatorio"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The XOR points (0,1) and (1,0) are true while (0,0) and (1,1) are false, a pattern no single line can separate. A hidden layer fixes this.",
+            "es": "Los puntos de XOR (0,1) y (1,0) son verdaderos y (0,0) y (1,1) falsos, un patrón que ninguna recta puede separar. Una capa oculta lo resuelve."
+          }
+        },
+        {
+          "question": {
+            "en": "What does backpropagation compute?",
+            "es": "¿Qué calcula la retropropagación?"
+          },
+          "options": {
+            "en": [
+              "The network's predictions",
+              "How much each weight contributed to the error (its gradient)",
+              "The training data",
+              "The best learning rate"
+            ],
+            "es": [
+              "Las predicciones de la red",
+              "Cuánto contribuyó cada peso al error (su gradiente)",
+              "Los datos de entrenamiento",
+              "La mejor tasa de aprendizaje"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "It sends the error backwards through the layers with the chain rule, giving every weight the direction to move.",
+            "es": "Envía el error hacia atrás por las capas con la regla de la cadena, dándole a cada peso la dirección en que debe moverse."
+          }
+        },
+        {
+          "question": {
+            "en": "What makes deep learning \"deep\"?",
+            "es": "¿Qué hace \"profundo\" al aprendizaje profundo?"
+          },
+          "options": {
+            "en": [
+              "It thinks deeply",
+              "Networks with many layers of neurons",
+              "It uses deep data",
+              "It runs on deep servers"
+            ],
+            "es": [
+              "Piensa profundamente",
+              "Redes con muchas capas de neuronas",
+              "Usa datos profundos",
+              "Corre en servidores profundos"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Depth means layers: each layer builds on the features found by the layer before it.",
+            "es": "La profundidad significa capas: cada capa se construye sobre las características que encontró la capa anterior."
+          }
+        }
+      ]
+    },
+    "ai-language": {
+      "minutes": 80,
+      "prerequisites": [
+        "ai-neural"
+      ],
+      "whyItMatters": {
+        "en": "AI assistants can explain code, draft essays and answer questions, and you will use them in school and at work. Using them well depends on understanding what they are: systems that predict likely next words from patterns in enormous amounts of text. That one idea explains why clear prompts help, why answers can sound confident and still be wrong, and why you must check facts, protect private information and stay honest about what is your own work.",
+        "es": "Los asistentes de IA pueden explicar código, redactar ensayos y responder preguntas, y los usarás en la escuela y en el trabajo. Usarlos bien depende de entender qué son: sistemas que predicen las siguientes palabras más probables a partir de patrones en cantidades enormes de texto. Esa sola idea explica por qué ayudan los prompts claros, por qué las respuestas pueden sonar seguras y aun así estar equivocadas, y por qué debes verificar los datos, proteger la información privada y ser honesto sobre qué trabajo es tuyo."
+      },
+      "objectives": {
+        "en": [
+          "Explain tokens and how text is split into them before a model sees it.",
+          "Describe how a language model generates text by repeatedly predicting a likely next token, and what temperature changes.",
+          "Write prompts with a clear task, context, format and examples, and improve a weak prompt.",
+          "Explain why models hallucinate and use strategies to check their answers.",
+          "Apply guidelines for honest, private and safe use of AI tools in school and work."
+        ],
+        "es": [
+          "Explicar los tokens y cómo se divide el texto en ellos antes de que lo vea un modelo.",
+          "Describir cómo un modelo de lenguaje genera texto prediciendo una y otra vez un siguiente token probable, y qué cambia la temperatura.",
+          "Escribir prompts con una tarea clara, contexto, formato y ejemplos, y mejorar un prompt débil.",
+          "Explicar por qué los modelos alucinan y usar estrategias para comprobar sus respuestas.",
+          "Aplicar pautas para un uso honesto, privado y seguro de las herramientas de IA en la escuela y el trabajo."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Modules 1–3 of this course",
+          "Python dictionaries, strings and random with a seed"
+        ],
+        "es": [
+          "Los módulos 1–3 de este curso",
+          "Diccionarios, cadenas y random con semilla en Python"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Language models read and write tokens (word pieces), and their limits, such as context length and cost, are measured in tokens.",
+          "A chatbot writes one token at a time, each time choosing a likely next token given everything so far; it predicts plausible text, it does not look facts up.",
+          "Good prompts state the task, give context and constraints, show the format you want, and include examples.",
+          "Fluent is not the same as true: verify facts, citations and code, keep private data out, and follow your school's or employer's rules on AI use."
+        ],
+        "es": [
+          "Los modelos de lenguaje leen y escriben tokens (pedazos de palabras), y sus límites, como la longitud de contexto y el costo, se miden en tokens.",
+          "Un chatbot escribe un token a la vez, eligiendo cada vez un siguiente token probable según todo lo anterior; predice texto plausible, no busca datos.",
+          "Los buenos prompts indican la tarea, dan contexto y restricciones, muestran el formato que quieres e incluyen ejemplos.",
+          "Fluido no es lo mismo que verdadero: verifica datos, citas y código, deja fuera la información privada y sigue las reglas de tu escuela o empresa sobre el uso de IA."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Trusting a confident answer without checking it: models produce fake facts, quotes and references that look real.",
+          "Pasting passwords, personal data or confidential code into an AI tool that may store it.",
+          "Submitting AI-written work as entirely your own where that is not allowed, which is academic dishonesty.",
+          "Writing vague prompts like \"make it better\" and blaming the tool for vague results."
+        ],
+        "es": [
+          "Confiar en una respuesta segura sin comprobarla: los modelos producen datos, citas y referencias falsas que parecen reales.",
+          "Pegar contraseñas, datos personales o código confidencial en una herramienta de IA que podría guardarlos.",
+          "Entregar como totalmente tuyo un trabajo escrito por IA donde eso no está permitido, lo que es deshonestidad académica.",
+          "Escribir prompts vagos como \"mejóralo\" y culpar a la herramienta por resultados vagos."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: split three sentences into tokens with the toy tokenizer from the examples and count them.",
+          "Core: train the next-word model on a paragraph you write, generate text at three different temperatures and describe the differences.",
+          "Core: take the prompt \"help with my essay\", rewrite it with task, context, format and constraints, and compare the answers an assistant gives.",
+          "Stretch: ask an AI assistant for three sources on a topic, then check each one exists and says what was claimed. Report what you found."
+        ],
+        "es": [
+          "Calentamiento: divide tres oraciones en tokens con el tokenizador de juguete de los ejemplos y cuéntalos.",
+          "Núcleo: entrena el modelo de siguiente palabra con un párrafo que escribas, genera texto con tres temperaturas distintas y describe las diferencias.",
+          "Núcleo: toma el prompt \"ayúdame con mi ensayo\", reescríbelo con tarea, contexto, formato y restricciones, y compara las respuestas que da un asistente.",
+          "Extensión: pídele a un asistente de IA tres fuentes sobre un tema, luego comprueba que cada una exista y diga lo que se afirmó. Informa lo que encontraste."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why might a model count the letters in a word wrongly?",
+          "What does lowering the temperature do to generated text?",
+          "Name two things you should never paste into a public AI assistant, and two ways to check an AI answer."
+        ],
+        "es": [
+          "¿Por qué un modelo podría contar mal las letras de una palabra?",
+          "¿Qué le hace al texto generado bajar la temperatura?",
+          "Nombra dos cosas que nunca deberías pegar en un asistente de IA público, y dos formas de comprobar una respuesta de IA."
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Tokens",
+            "es": "Tokens"
+          },
+          "definition": {
+            "en": "The units a language model reads and writes: whole common words, pieces of rarer words, punctuation and spaces, each mapped to a number. A model's context window, speed and cost are all measured in tokens, roughly ¾ of an English word each.",
+            "es": "Las unidades que lee y escribe un modelo de lenguaje: palabras comunes completas, pedazos de palabras raras, puntuación y espacios, cada uno asignado a un número. La ventana de contexto, la velocidad y el costo de un modelo se miden en tokens, aproximadamente ¾ de palabra en inglés cada uno."
+          }
+        },
+        {
+          "term": {
+            "en": "Predicting the Next Word",
+            "es": "Predecir la siguiente palabra"
+          },
+          "definition": {
+            "en": "A language model is trained to predict the next token from the tokens before it. To generate text it repeats that step, sampling from its predicted probabilities; temperature controls how adventurous the sampling is.",
+            "es": "Un modelo de lenguaje se entrena para predecir el siguiente token a partir de los tokens anteriores. Para generar texto repite ese paso, eligiendo según sus probabilidades predichas; la temperatura controla qué tan arriesgada es la elección."
+          }
+        },
+        {
+          "term": {
+            "en": "Writing Good Prompts",
+            "es": "Escribir buenos prompts"
+          },
+          "definition": {
+            "en": "A prompt is the instruction and context given to a model. Effective prompts say who the answer is for, the exact task, relevant context, constraints (length, level, tone) and the output format, often with an example of what good output looks like.",
+            "es": "Un prompt es la instrucción y el contexto que se le da a un modelo. Los prompts eficaces dicen para quién es la respuesta, la tarea exacta, el contexto relevante, las restricciones (longitud, nivel, tono) y el formato de salida, a menudo con un ejemplo de cómo se ve una buena respuesta."
+          }
+        },
+        {
+          "term": {
+            "en": "Limits and Hallucinations",
+            "es": "Límites y alucinaciones"
+          },
+          "definition": {
+            "en": "A hallucination is fluent, confident output that is false, such as invented facts, quotes or citations. It happens because models generate plausible text rather than retrieving verified facts. Models also have knowledge cutoffs and can make reasoning and arithmetic mistakes.",
+            "es": "Una alucinación es una salida fluida y segura que es falsa, como datos, citas o referencias inventadas. Ocurre porque los modelos generan texto plausible en lugar de recuperar datos verificados. Los modelos también tienen fechas de corte de conocimiento y pueden cometer errores de razonamiento y aritmética."
+          }
+        },
+        {
+          "term": {
+            "en": "Using AI Responsibly",
+            "es": "Usar la IA con responsabilidad"
+          },
+          "definition": {
+            "en": "Using AI in ways that are honest (follow the rules on AI use and disclose it), private (keep personal and confidential data out), accurate (verify before relying on output) and fair (watch for biased output), with a person accountable for the final result.",
+            "es": "Usar la IA de formas que sean honestas (seguir las reglas sobre su uso y declararlo), privadas (dejar fuera los datos personales y confidenciales), precisas (verificar antes de confiar en la salida) y justas (estar atento a salidas sesgadas), con una persona responsable del resultado final."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Anthropic: Prompt engineering overview",
+            "es": "Anthropic: introducción a la ingeniería de prompts"
+          },
+          "url": "https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview"
+        },
+        {
+          "label": {
+            "en": "3Blue1Brown: But what is a GPT? (visual explainer)",
+            "es": "3Blue1Brown: ¿qué es un GPT? (explicación visual)"
+          },
+          "url": "https://www.3blue1brown.com/lessons/gpt"
+        },
+        {
+          "label": {
+            "en": "Elements of AI: the societal implications of AI",
+            "es": "Elements of AI: implicaciones sociales de la IA"
+          },
+          "url": "https://course.elementsofai.com/6"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What is a token?",
+            "es": "¿Qué es un token?"
+          },
+          "options": {
+            "en": [
+              "A password for the AI",
+              "A piece of text (a word or part of a word) that the model reads and writes",
+              "A unit of money",
+              "A whole sentence"
+            ],
+            "es": [
+              "Una contraseña para la IA",
+              "Un pedazo de texto (una palabra o parte de una) que el modelo lee y escribe",
+              "Una unidad de dinero",
+              "Una oración completa"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Text is split into tokens and each token becomes a number the network can process.",
+            "es": "El texto se divide en tokens y cada token se vuelve un número que la red puede procesar."
+          }
+        },
+        {
+          "question": {
+            "en": "How does a chatbot write its answer?",
+            "es": "¿Cómo escribe un chatbot su respuesta?"
+          },
+          "options": {
+            "en": [
+              "It copies a stored answer",
+              "It predicts one likely next token at a time",
+              "It searches a database of facts",
+              "It writes the whole answer at once"
+            ],
+            "es": [
+              "Copia una respuesta guardada",
+              "Predice un siguiente token probable a la vez",
+              "Busca en una base de datos de hechos",
+              "Escribe toda la respuesta de una vez"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Generation is repeated next-token prediction, each step conditioned on everything written so far.",
+            "es": "Generar es predecir el siguiente token una y otra vez, cada paso según todo lo escrito hasta ahora."
+          }
+        },
+        {
+          "question": {
+            "en": "Which prompt is likely to get the best answer?",
+            "es": "¿Qué prompt probablemente dará la mejor respuesta?"
+          },
+          "options": {
+            "en": [
+              "\"explain loops\"",
+              "\"Explain for loops in Python to a beginner in under 150 words, with one short example that prints 1 to 5.\"",
+              "\"loops??\"",
+              "\"make it good\""
+            ],
+            "es": [
+              "\"explica los ciclos\"",
+              "\"Explica los ciclos for en Python a un principiante en menos de 150 palabras, con un ejemplo corto que imprima del 1 al 5.\"",
+              "\"¿ciclos??\"",
+              "\"hazlo bien\""
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "It states the topic, audience, length and the example wanted, so the model knows exactly what good output looks like.",
+            "es": "Indica el tema, el público, la longitud y el ejemplo que se quiere, así el modelo sabe exactamente cómo es una buena salida."
+          }
+        },
+        {
+          "question": {
+            "en": "An AI gives you a book citation that looks perfect. What should you do?",
+            "es": "Una IA te da una cita de un libro que se ve perfecta. ¿Qué debes hacer?"
+          },
+          "options": {
+            "en": [
+              "Use it; AI does not make mistakes",
+              "Check that the book exists and says that before using it",
+              "Ask the AI if it is sure and trust its answer",
+              "Change a few words"
+            ],
+            "es": [
+              "Usarla; la IA no se equivoca",
+              "Comprobar que el libro existe y dice eso antes de usarla",
+              "Preguntarle a la IA si está segura y confiar en su respuesta",
+              "Cambiar algunas palabras"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Models can invent plausible citations (hallucinations). Asking the model again is not verification; check the source itself.",
+            "es": "Los modelos pueden inventar citas plausibles (alucinaciones). Volver a preguntarle al modelo no es verificar; revisa la fuente misma."
+          }
+        },
+        {
+          "question": {
+            "en": "Which is a responsible use of an AI assistant for homework?",
+            "es": "¿Cuál es un uso responsable de un asistente de IA para la tarea?"
+          },
+          "options": {
+            "en": [
+              "Paste the assignment and submit the answer as yours",
+              "Ask it to explain a concept you are stuck on, then write the answer yourself, following your class rules",
+              "Share your classmate's private information with it",
+              "Use it to take a test that forbids it"
+            ],
+            "es": [
+              "Pegar la tarea y entregar la respuesta como tuya",
+              "Pedirle que te explique un concepto en el que estás atorado y luego escribir tú la respuesta, siguiendo las reglas de tu clase",
+              "Compartir con ella la información privada de un compañero",
+              "Usarla en un examen que lo prohíbe"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Using AI as a tutor while doing the work yourself, within the rules, helps you learn and stays honest.",
+            "es": "Usar la IA como tutor mientras haces el trabajo tú mismo, dentro de las reglas, te ayuda a aprender y es honesto."
           }
         }
       ]

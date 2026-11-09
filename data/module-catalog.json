@@ -6,6 +6,7 @@
   "sql",
   "how-computers-work",
   "cybersecurity",
+  "ai",
   "java",
   "discrete",
   "git"
@@ -56,6 +57,10 @@
   "sec-crypto",
   "sec-attacks",
   "sec-defense",
+  "ai-what",
+  "ai-first-models",
+  "ai-neural",
+  "ai-language",
   "heaps",
   "tries",
   "discrete-graph-theory",
@@ -150,7 +155,11 @@
   "sec-passwords": "cybersecurity",
   "sec-crypto": "cybersecurity",
   "sec-attacks": "cybersecurity",
-  "sec-defense": "cybersecurity"
+  "sec-defense": "cybersecurity",
+  "ai-what": "ai",
+  "ai-first-models": "ai",
+  "ai-neural": "ai",
+  "ai-language": "ai"
  },
  "modules": [
   {
@@ -1334,6 +1343,74 @@
    "es": {
     "title": "Mantenerse seguro y programar con seguridad",
     "description": "Los hábitos que evitan la mayoría de los incidentes: mínimo privilegio, validar los datos de entrada, mantener el software actualizado, respaldos que de verdad se restauran y proteger los datos personales de la gente."
+   }
+  },
+  {
+   "id": "ai-what",
+   "title": "What AI Really Is",
+   "description": "Clear up the buzzwords: what AI, machine learning and deep learning are, how data and features describe the world, how learning from examples differs from writing rules, why we test on unseen data, and how bias gets in.",
+   "difficulty": "beginner",
+   "topics": [
+    "AI, Machine Learning and Deep Learning",
+    "Data and Features",
+    "Rules Versus Learning",
+    "Training and Test Data",
+    "Bias in Data"
+   ],
+   "es": {
+    "title": "Qué es realmente la IA",
+    "description": "Aclara los términos de moda: qué son la IA, el aprendizaje automático y el aprendizaje profundo, cómo los datos y las características describen el mundo, en qué se diferencia aprender de ejemplos de escribir reglas, por qué se prueba con datos no vistos y cómo entra el sesgo."
+   }
+  },
+  {
+   "id": "ai-first-models",
+   "title": "Your First Models",
+   "description": "Build real machine learning models in a few lines of plain Python: nearest neighbors, a line fitted with gradient descent, a classifier measured with accuracy and a confusion matrix, and the overfitting trap.",
+   "difficulty": "beginner",
+   "topics": [
+    "Nearest Neighbors",
+    "Linear Regression",
+    "Classification and Accuracy",
+    "Overfitting",
+    "Evaluating a Model"
+   ],
+   "es": {
+    "title": "Tus primeros modelos",
+    "description": "Construye modelos reales de aprendizaje automático en unas pocas líneas de Python puro: vecinos más cercanos, una recta ajustada con descenso de gradiente, un clasificador medido con precisión y matriz de confusión, y la trampa del sobreajuste."
+   }
+  },
+  {
+   "id": "ai-neural",
+   "title": "Neural Networks",
+   "description": "Open the black box: a neuron as weights and a bias, activation functions, learning by gradient descent and backpropagation, a tiny network trained from scratch to solve XOR, and what changes when networks get deep.",
+   "difficulty": "beginner",
+   "topics": [
+    "Neurons and Weights",
+    "Activation Functions",
+    "Gradient Descent",
+    "A Tiny Network from Scratch",
+    "Deep Learning"
+   ],
+   "es": {
+    "title": "Redes neuronales",
+    "description": "Abre la caja negra: una neurona como pesos y un sesgo, funciones de activación, aprender con descenso de gradiente y retropropagación, una red pequeña entrenada desde cero para resolver XOR, y qué cambia cuando las redes se vuelven profundas."
+   }
+  },
+  {
+   "id": "ai-language",
+   "title": "Language Models and Using AI Well",
+   "description": "How chatbots work under the hood (tokens and next-word prediction), how to write prompts that get good results, why models confidently make things up, and how to use AI tools honestly and safely.",
+   "difficulty": "beginner",
+   "topics": [
+    "Tokens",
+    "Predicting the Next Word",
+    "Writing Good Prompts",
+    "Limits and Hallucinations",
+    "Using AI Responsibly"
+   ],
+   "es": {
+    "title": "Modelos de lenguaje y usar bien la IA",
+    "description": "Cómo funcionan por dentro los chatbots (tokens y predicción de la siguiente palabra), cómo escribir prompts que den buenos resultados, por qué los modelos inventan cosas con seguridad y cómo usar las herramientas de IA con honestidad y seguridad."
    }
   }
  ]
