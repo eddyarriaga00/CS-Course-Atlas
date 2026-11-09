@@ -174,10 +174,15 @@ Every example's output on the site is real, recorded by `scripts/run_course_exam
 - **Beginner path** on the home page and Courses page, with a "where are you starting from?" chooser, per-course progress and next-course links.
 - **Lessons** with objectives, key takeaways, common mistakes, practice, self-checks, terms and further reading.
 - **Runnable examples in the browser**: Python (Pyodide), JavaScript, SQL (sql.js) and live HTML/CSS/JS previews, each with a Try it button that opens the playground.
-- **Practice**: per-module quizzes with a best-score board, flashcard decks that remember the cards you know, and mixed review across completed modules.
+- **Auto-graded challenges** in every beginner course: Python (graded in Pyodide), SQL (result sets compared in sql.js), HTML/CSS (DOM and computed-style checks) and JavaScript (worker tests). `scripts/verify_challenges.js` proves every solution passes and every starter fails.
+- **Step-through visualizer** for Python: run any program line by line and watch each variable and call frame change (Playground → Step through, or straight from a Python example).
+- **Practice**: per-module quizzes with a best-score board and an optional 30-second timer, mixed review across completed modules, and flashcards with **spaced repetition** (cards come back after 1, 3, 7, 16 and 35 days in a *Due for review* deck).
+- **Course certificates**: finish every module and pass every quiz (60%+) to unlock a certificate you can print or save as PDF.
 - **Study plan** for one course or the whole beginner path, exportable to a calendar.
-- **Glossary**, per-module notes, search (Ctrl/⌘ K), dark mode and a phone layout.
-- **Accounts** (email or Google) that sync progress, notes, quiz scores and known cards across devices.
+- **Glossary**, per-module notes (downloadable as Markdown), search over courses, modules, terms, challenges and pages (Ctrl/⌘ K), dark mode and a phone layout.
+- **Shareable playground links** that carry the code in the URL.
+- **Installable and offline-ready**: a service worker (`sw.js`) caches the app, the lessons you open and the Python/SQL runtimes.
+- **Accounts** (email or Google) that sync progress, notes, quiz scores, flashcard reviews and certificates across devices.
 
 ## Live Website
 - Main site: [https://eddyarriaga00.github.io/CS-Course-Atlas/](https://eddyarriaga00.github.io/CS-Course-Atlas/)
