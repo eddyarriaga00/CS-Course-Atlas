@@ -872,9 +872,8 @@ function viewProfile() {
         <div class="badges-grid">${ach.map(([ico, name, how, got]) => `<div class="badge${got ? ' earned' : ''}"><span class="medal">${ico}</span><b>${esc(name)}</b><span>${esc(how)}</span></div>`).join('')}</div></div>
       <div class="card panel"><h2>${t('recent')}</h2>${recent.length ? `<ul class="activity">${recent.map((a) => `<li>${actLine(a)}<span class="when">${relDay(a.at)}</span></li>`).join('')}</ul>` : `<p class="muted" style="margin:0">${t('noActivity')}</p>`}</div>
       <div class="card panel danger"><h2>${t('deleteTitle')}</h2><p class="muted" style="margin:0 0 12px;font-size:13.5px">${t('deleteText')}</p>
-        ${u.authProvider === 'password' ? `<form id="delete-form" class="stack" style="gap:10px"><div class="field"><label for="del-pass">${t('password')}</label><input class="input" id="del-pass" type="password" autocomplete="current-password" required></div>
-          <div class="field"><label for="del-confirm">${t('typeDelete')}</label><input class="input" id="del-confirm" autocomplete="off" required></div><button class="btn btn-danger" type="submit">${t('deleteBtn')}</button><div class="form-error" id="delete-error" role="alert"></div></form>`
-        : `<a class="btn btn-danger" href="contact-support.html">${t('deleteViaSupport')}</a>`}</div>
+        <form id="delete-form" class="stack" style="gap:10px">${u.authProvider === 'password' ? `<div class="field"><label for="del-pass">${t('password')}</label><input class="input" id="del-pass" type="password" autocomplete="current-password" required></div>` : ''}
+          <div class="field"><label for="del-confirm">${t('typeDelete')}</label><input class="input" id="del-confirm" autocomplete="off" required></div><button class="btn btn-danger" type="submit">${t('deleteBtn')}</button><div class="form-error" id="delete-error" role="alert"></div></form></div>
     </div></div></section>`;
 }
 
@@ -1990,7 +1989,7 @@ async function signOut() {
 async function deleteAccount() {
   const err = $('#delete-error');
   try {
-    await api('/api/profile/delete-account', { method: 'POST', body: { currentPassword: $('#del-pass').value, confirmation: $('#del-confirm').value } });
+    await api('/api/profile/delete-account', { method: 'POST', body: { currentPassword: $('#del-pass')?.value || '', confirmation: $('#del-confirm').value } });
     clearSession(); store.set('hadSession', false); location.hash = '#home'; toast(t('accountDeleted'));
   } catch (e) { err.textContent = e.message; }
 }

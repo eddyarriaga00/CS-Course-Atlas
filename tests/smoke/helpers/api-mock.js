@@ -47,6 +47,12 @@ async function mockApi(page, { remoteState = null, emailConfirmation = false, pr
             return json({ ok: true, authenticated: true, user: USER, csrfToken: 'csrf', sessionToken: 'recover-token', recoveryCodesLeft: 7 });
         }
         if (pathname.endsWith('/profile/recovery-codes')) return json({ ok: true, left: 7, total: 8 });
+        if (pathname.endsWith('/profile/delete-account')) {
+            calls.deleted = request.postDataJSON();
+            if (calls.deleted.confirmation !== 'DELETE') return json({ error: 'Type DELETE to confirm account deletion.' }, 400);
+            signedIn = false;
+            return json({ ok: true, message: 'Account deleted permanently.' });
+        }
         if (pathname.endsWith('/auth/logout')) { signedIn = false; return json({ ok: true }); }
         if (pathname.endsWith('/user-state')) {
             if (request.method() === 'GET') return json({ ok: true, state: remoteState });
