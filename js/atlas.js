@@ -204,7 +204,6 @@ function renderChrome(route) {
   $('#bottom-nav').innerHTML = tab('home', '⌂', t('home'), route === 'home')
     + tab('courses', '▦', t('courses'), route === 'courses' || route.startsWith('course-') || route.startsWith('m-'))
     + tab('practice', '✓', t('practice'), route === 'practice') + tab('profile', '◯', t('account'), route === 'profile');
-  if ($('#signin').open) renderSignIn();
 }
 
 /* ---------- Views ---------- */
@@ -677,7 +676,8 @@ async function initAuth() {
   const url = new URL(location.href), q = url.searchParams;
   const ticket = q.get('oauth_ticket'), oauth = q.get('oauth');
   if (oauth || ticket) { ['oauth', 'oauth_provider', 'oauth_ticket', 'oauth_error'].forEach((k) => q.delete(k)); history.replaceState(null, '', url.pathname + url.search + url.hash); }
-  api('/api/auth/oauth/providers', { timeout: 20000 }).then((r) => { auth.providers = r.providers || null; if ($('#signin').open) renderSignIn(); }).catch(() => {});
+  // Only show/hide the Google button when this arrives: re-rendering the form would erase what the person is typing.
+  api('/api/auth/oauth/providers', { timeout: 20000 }).then((r) => { auth.providers = r.providers || null; const gw = $('#google-wrap'); if (gw) gw.hidden = auth.providers?.google?.enabled === false; }).catch(() => {});
   if (ticket) { try { applySession(await api('/api/auth/oauth/exchange-ticket', { method: 'POST', body: { ticket } })); } catch (e) { /* fall back to the cookie below */ } }
   if (!state.user && (auth.token || ticket || oauth || store.get('hadSession', false))) {
     try { if (!applySession(await api('/api/auth/session'))) clearSession(); } catch (e) { if (e.status === 401) clearSession(); }
@@ -697,7 +697,7 @@ function renderSignIn(err) {
     <div class="signin-top"><div class="auth-tabs" role="tablist">${tab('login', t('signIn'))}${tab('signup', t('create'))}</div><button type="button" class="icon-btn" data-action="close-signin" aria-label="Close">✕</button></div>
     <h2 id="signin-title" class="sr-only">${signup ? t('create') : t('signinTitle')}</h2>
     <p class="muted" style="margin:0">${signup ? t('signupSub') : t('signinSub')}</p>
-    ${g && !g.enabled ? '' : `<button type="button" class="btn-google" data-action="oauth" data-v="google"><b>G</b>${t('google')}</button><div class="or">${signup ? t('orSignupEmail') : t('orEmail')}</div>`}
+    <div id="google-wrap" class="google-wrap"${g && !g.enabled ? ' hidden' : ''}><button type="button" class="btn-google" data-action="oauth" data-v="google"><b>G</b>${t('google')}</button><div class="or">${signup ? t('orSignupEmail') : t('orEmail')}</div></div>
     <div class="field"><label for="si-email">${signup ? t('email') : t('emailOrUser')}</label><input id="si-email" name="email" type="${signup ? 'email' : 'text'}" autocomplete="${signup ? 'email' : 'username'}" required></div>
     ${signup ? `<div class="field"><label for="si-user">${t('username')}</label><input id="si-user" name="username" autocomplete="username" minlength="3" maxlength="32" pattern="[A-Za-z0-9._\-]+" required><small class="hint">${t('userHint')}</small></div>` : ''}
     ${pw('si-pass', t('password'), signup ? 'new-password' : 'current-password', signup ? t('pwHint') : '')}

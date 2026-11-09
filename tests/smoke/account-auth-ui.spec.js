@@ -35,6 +35,21 @@ test.describe('Accounts', () => {
         await expect(page).toHaveURL(/#home$/);
     });
 
+    test('a slow server reply does not erase what someone is typing in the sign-up form', async ({ page }) => {
+        await page.route('**/api/**', async (route) => {
+            await new Promise((resolve) => setTimeout(resolve, 1500)); // a sleeping Render server
+            await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ ok: true, authenticated: false, providers: { google: { enabled: true } } }) });
+        });
+        await page.goto('/index.html');
+        await page.locator('#signin-open').click();
+        await page.locator('.auth-tab[data-v="signup"]').click();
+        await page.locator('#si-email').fill('slow@example.com');
+        await page.locator('#si-user').fill('slowpoke');
+        await page.waitForTimeout(2500);
+        await expect(page.locator('#si-email')).toHaveValue('slow@example.com');
+        await expect(page.locator('#si-user')).toHaveValue('slowpoke');
+    });
+
     test('Google sign-in return exchanges the ticket and stays signed in after reload', async ({ page }) => {
         const calls = await mockApi(page);
         await page.goto('/index.html?oauth=success&oauth_provider=google&oauth_ticket=T1#m-generics');
