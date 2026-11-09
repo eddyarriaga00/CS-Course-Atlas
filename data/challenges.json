@@ -1115,5 +1115,173 @@
     ]
    ]
   }
+ ],
+ "sql-first-queries": [
+  {
+   "id": "austin-top",
+   "lang": "sql",
+   "title": {
+    "en": "Top students in Austin",
+    "es": "Mejores estudiantes de Austin"
+   },
+   "prompt": {
+    "en": "From `students`, list the `name` and `score` of students in Austin with a score of at least 80, highest score first.",
+    "es": "De `students`, lista `name` y `score` de los estudiantes de Austin con una calificación de al menos 80, de mayor a menor."
+   },
+   "setup": "CREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, grade INTEGER, city TEXT, score REAL);\nINSERT INTO students VALUES (1, 'Ana', 10, 'Austin', 91.5), (2, 'Ben', 11, 'Denver', 78.0), (3, 'Chen', 10, 'Austin', 85.5),\n  (4, 'Dara', 12, 'Boston', 95.0), (5, 'Eli', 11, 'Austin', 62.5), (6, 'Fay', 12, 'Denver', 88.0);",
+   "starter": "-- Write your query here\n",
+   "solution": "SELECT name, score FROM students WHERE city = 'Austin' AND score >= 80 ORDER BY score DESC;",
+   "ordered": true,
+   "hint": {
+    "en": "Two conditions joined with `AND` in `WHERE`, then `ORDER BY score DESC`.",
+    "es": "Dos condiciones unidas con `AND` en `WHERE`, y luego `ORDER BY score DESC`."
+   }
+  },
+  {
+   "id": "label-scores",
+   "lang": "sql",
+   "title": {
+    "en": "Label the scores",
+    "es": "Etiqueta las calificaciones"
+   },
+   "prompt": {
+    "en": "List every student's `name` and a column named `label` that is `'pass'` when the score is 70 or more and `'retry'` otherwise, ordered by name.",
+    "es": "Lista el `name` de cada estudiante y una columna llamada `label` que sea `'pass'` cuando la calificación es 70 o más y `'retry'` si no, ordenados por nombre."
+   },
+   "setup": "CREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, grade INTEGER, city TEXT, score REAL);\nINSERT INTO students VALUES (1, 'Ana', 10, 'Austin', 91.5), (2, 'Ben', 11, 'Denver', 78.0), (3, 'Chen', 10, 'Austin', 85.5),\n  (4, 'Dara', 12, 'Boston', 95.0), (5, 'Eli', 11, 'Austin', 62.5), (6, 'Fay', 12, 'Denver', 88.0);",
+   "starter": "-- Write your query here\n",
+   "solution": "SELECT name, CASE WHEN score >= 70 THEN 'pass' ELSE 'retry' END AS label FROM students ORDER BY name;",
+   "ordered": true,
+   "hint": {
+    "en": "Use `CASE WHEN score >= 70 THEN 'pass' ELSE 'retry' END AS label`.",
+    "es": "Usa `CASE WHEN score >= 70 THEN 'pass' ELSE 'retry' END AS label`."
+   }
+  }
+ ],
+ "sql-summarizing": [
+  {
+   "id": "spend-per-customer",
+   "lang": "sql",
+   "title": {
+    "en": "Spending per customer",
+    "es": "Gasto por cliente"
+   },
+   "prompt": {
+    "en": "From `orders`, show each `customer` and their total spending as `spent` (quantity × price), biggest spender first.",
+    "es": "De `orders`, muestra cada `customer` y su gasto total como `spent` (cantidad × precio), del que más gastó al que menos."
+   },
+   "setup": "CREATE TABLE orders (id INTEGER PRIMARY KEY, customer TEXT, product TEXT, category TEXT, quantity INTEGER, price REAL);\nINSERT INTO orders VALUES (1, 'Ana', 'Notebook', 'school', 3, 2.50), (2, 'Ben', 'Headphones', 'tech', 1, 25.00),\n  (3, 'Ana', 'Pens', 'school', 2, 4.00), (4, 'Chen', 'Mouse', 'tech', 1, 15.00), (5, 'Dara', 'Backpack', 'school', 1, 30.00),\n  (6, 'Ben', 'Notebook', 'school', 5, 2.50), (7, 'Chen', 'Cable', 'tech', 2, 6.00), (8, 'Ana', 'Headphones', 'tech', 1, 25.00);",
+   "starter": "-- Write your query here\n",
+   "solution": "SELECT customer, SUM(quantity * price) AS spent FROM orders GROUP BY customer ORDER BY spent DESC;",
+   "ordered": true,
+   "hint": {
+    "en": "`SUM(quantity * price)` with `GROUP BY customer`, then sort by the alias `spent`.",
+    "es": "`SUM(quantity * price)` con `GROUP BY customer`, y luego ordena por el alias `spent`."
+   }
+  },
+  {
+   "id": "busy-categories",
+   "lang": "sql",
+   "title": {
+    "en": "Popular categories",
+    "es": "Categorías populares"
+   },
+   "prompt": {
+    "en": "Show each `category` with its number of orders as `orders`, but only categories with more than 3 orders.",
+    "es": "Muestra cada `category` con su número de pedidos como `orders`, pero solo las categorías con más de 3 pedidos."
+   },
+   "setup": "CREATE TABLE orders (id INTEGER PRIMARY KEY, customer TEXT, product TEXT, category TEXT, quantity INTEGER, price REAL);\nINSERT INTO orders VALUES (1, 'Ana', 'Notebook', 'school', 3, 2.50), (2, 'Ben', 'Headphones', 'tech', 1, 25.00),\n  (3, 'Ana', 'Pens', 'school', 2, 4.00), (4, 'Chen', 'Mouse', 'tech', 1, 15.00), (5, 'Dara', 'Backpack', 'school', 1, 30.00),\n  (6, 'Ben', 'Notebook', 'school', 5, 2.50), (7, 'Chen', 'Cable', 'tech', 2, 6.00), (8, 'Ana', 'Headphones', 'tech', 1, 25.00);",
+   "starter": "-- Write your query here\n",
+   "solution": "SELECT category, COUNT(*) AS orders FROM orders GROUP BY category HAVING COUNT(*) > 3;",
+   "ordered": false,
+   "hint": {
+    "en": "Group by category and filter the groups with `HAVING COUNT(*) > 3` (not `WHERE`).",
+    "es": "Agrupa por categoría y filtra los grupos con `HAVING COUNT(*) > 3` (no con `WHERE`)."
+   }
+  }
+ ],
+ "sql-joins": [
+  {
+   "id": "who-takes-what",
+   "lang": "sql",
+   "title": {
+    "en": "Who takes what",
+    "es": "Quién toma qué"
+   },
+   "prompt": {
+    "en": "Join the three tables to list each student's `name` and the course `title` they are enrolled in, ordered by name and then title.",
+    "es": "Une las tres tablas para listar el `name` de cada estudiante y el `title` del curso en el que está inscrito, ordenados por nombre y luego por título."
+   },
+   "setup": "CREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, city TEXT);\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nCREATE TABLE enrollments (student_id INTEGER, course_id INTEGER, grade INTEGER);\nINSERT INTO students VALUES (1, 'Ana', 'Austin'), (2, 'Ben', 'Denver'), (3, 'Chen', 'Austin'), (4, 'Dara', 'Boston');\nINSERT INTO courses VALUES (10, 'Python', 'Ms. Lee'), (20, 'Web Basics', 'Mr. Diaz'), (30, 'SQL', 'Ms. Lee'), (40, 'Art', 'Mr. Kim');\nINSERT INTO enrollments VALUES (1, 10, 95), (1, 30, 88), (2, 10, 72), (2, 20, 81), (3, 30, 90), (3, 20, 77);",
+   "starter": "-- Write your query here\n",
+   "solution": "SELECT s.name, c.title FROM enrollments e JOIN students s ON s.id = e.student_id JOIN courses c ON c.id = e.course_id ORDER BY s.name, c.title;",
+   "ordered": true,
+   "hint": {
+    "en": "Start `FROM enrollments e`, then `JOIN students s ON s.id = e.student_id` and `JOIN courses c ON c.id = e.course_id`.",
+    "es": "Empieza con `FROM enrollments e`, luego `JOIN students s ON s.id = e.student_id` y `JOIN courses c ON c.id = e.course_id`."
+   }
+  },
+  {
+   "id": "empty-courses",
+   "lang": "sql",
+   "title": {
+    "en": "Courses nobody takes",
+    "es": "Cursos que nadie toma"
+   },
+   "prompt": {
+    "en": "List the `title` of every course that has no enrollments.",
+    "es": "Lista el `title` de cada curso que no tiene inscripciones."
+   },
+   "setup": "CREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, city TEXT);\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nCREATE TABLE enrollments (student_id INTEGER, course_id INTEGER, grade INTEGER);\nINSERT INTO students VALUES (1, 'Ana', 'Austin'), (2, 'Ben', 'Denver'), (3, 'Chen', 'Austin'), (4, 'Dara', 'Boston');\nINSERT INTO courses VALUES (10, 'Python', 'Ms. Lee'), (20, 'Web Basics', 'Mr. Diaz'), (30, 'SQL', 'Ms. Lee'), (40, 'Art', 'Mr. Kim');\nINSERT INTO enrollments VALUES (1, 10, 95), (1, 30, 88), (2, 10, 72), (2, 20, 81), (3, 30, 90), (3, 20, 77);",
+   "starter": "-- Write your query here\n",
+   "solution": "SELECT c.title FROM courses c LEFT JOIN enrollments e ON e.course_id = c.id WHERE e.course_id IS NULL;",
+   "ordered": false,
+   "hint": {
+    "en": "`LEFT JOIN` enrollments onto courses and keep the rows where the enrollment side `IS NULL`.",
+    "es": "Haz `LEFT JOIN` de enrollments sobre courses y conserva las filas donde el lado de la inscripción `IS NULL`."
+   }
+  }
+ ],
+ "sql-design": [
+  {
+   "id": "restock",
+   "lang": "sql",
+   "title": {
+    "en": "Restock and check",
+    "es": "Reabastecer y revisar"
+   },
+   "prompt": {
+    "en": "The Headphones are out of stock. Write an `UPDATE` that sets their `stock` to 20, then a `SELECT name, stock FROM products ORDER BY id;` to show the table.",
+    "es": "Los Headphones están agotados. Escribe un `UPDATE` que ponga su `stock` en 20 y luego un `SELECT name, stock FROM products ORDER BY id;` para mostrar la tabla."
+   },
+   "setup": "CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT, price REAL, stock INTEGER);\nINSERT INTO products VALUES (1, 'Notebook', 2.50, 100), (2, 'Headphones', 25.00, 0), (3, 'Pens', 4.00, 40), (4, 'Backpack', 30.00, 3);",
+   "starter": "-- Write your query here\n",
+   "solution": "UPDATE products SET stock = 20 WHERE name = 'Headphones';\nSELECT name, stock FROM products ORDER BY id;",
+   "ordered": true,
+   "hint": {
+    "en": "`UPDATE products SET stock = 20 WHERE name = 'Headphones';` and remember the `WHERE`, or every product changes.",
+    "es": "`UPDATE products SET stock = 20 WHERE name = 'Headphones';` y recuerda el `WHERE`, o cambiará cada producto."
+   }
+  },
+  {
+   "id": "cheap-in-stock",
+   "lang": "sql",
+   "title": {
+    "en": "Cheap and available",
+    "es": "Baratos y disponibles"
+   },
+   "prompt": {
+    "en": "Delete every product with `stock` 0, then list the `name` of the remaining products cheaper than 10, ordered by price.",
+    "es": "Borra cada producto con `stock` 0 y luego lista el `name` de los productos restantes que cuestan menos de 10, ordenados por precio."
+   },
+   "setup": "CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT, price REAL, stock INTEGER);\nINSERT INTO products VALUES (1, 'Notebook', 2.50, 100), (2, 'Headphones', 25.00, 0), (3, 'Pens', 4.00, 40), (4, 'Backpack', 30.00, 3);",
+   "starter": "-- Write your query here\n",
+   "solution": "DELETE FROM products WHERE stock = 0;\nSELECT name FROM products WHERE price < 10 ORDER BY price;",
+   "ordered": true,
+   "hint": {
+    "en": "Two statements: `DELETE FROM products WHERE stock = 0;` and then a `SELECT` with `WHERE price < 10 ORDER BY price`.",
+    "es": "Dos sentencias: `DELETE FROM products WHERE stock = 0;` y luego un `SELECT` con `WHERE price < 10 ORDER BY price`."
+   }
+  }
  ]
 }

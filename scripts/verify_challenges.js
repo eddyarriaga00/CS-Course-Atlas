@@ -20,6 +20,13 @@ function grade(code, tests) {
   return { results: JSON.parse(line.slice('__ATLAS_RESULTS__'.length)) };
 }
 
+function sqlRows(setup, query) {
+  const py = `import json, sqlite3, sys\ndb = sqlite3.connect(':memory:')\ndb.executescript(sys.argv[1])\nrows = []\ncur = db.cursor()\nimport re\nbuf = ''\nfor line in sys.argv[2].splitlines():\n    buf += line + '\\n'\n    if sqlite3.complete_statement(buf):\n        cur.execute(buf)\n        if cur.description: rows = cur.fetchall()\n        buf = ''\nprint(json.dumps(rows))`;
+  const r = spawnSync('python3', ['-c', py, setup, query], { encoding: 'utf8', timeout: 10000 });
+  if (r.status !== 0) return { error: (r.stderr || '').trim().split('\n').pop() };
+  return { rows: JSON.parse(r.stdout) };
+}
+
 for (const [moduleId, list] of Object.entries(data)) {
   if (moduleId.startsWith('_')) continue;
   if (!modules.some((m) => m.id === moduleId)) { errors.push(`${moduleId}: not a catalog module`); continue; }
@@ -30,6 +37,15 @@ for (const [moduleId, list] of Object.entries(data)) {
     if (ids.has(ch.id)) errors.push(`${where}: duplicate id`);
     ids.add(ch.id);
     for (const key of ['title', 'prompt', 'hint']) for (const lang of ['en', 'es']) if (!ch[key]?.[lang]?.trim()) errors.push(`${where}: missing ${key}.${lang}`);
+    if (ch.lang === 'sql') {
+      // SQL challenges: the learner's last result set must equal the solution's (as sets when unordered).
+      const sol = sqlRows(ch.setup, ch.solution);
+      if (sol.error) { errors.push(`${where}: solution fails: ${sol.error}`); continue; }
+      if (!sol.rows.length) errors.push(`${where}: solution returns no rows`);
+      const start = sqlRows(ch.setup, ch.starter);
+      if (!start.error && JSON.stringify(start.rows) === JSON.stringify(sol.rows)) errors.push(`${where}: starter already matches`);
+      continue;
+    }
     if (!Array.isArray(ch.tests) || ch.tests.length < 3) errors.push(`${where}: needs at least 3 tests`);
     const sol = grade(ch.solution, ch.tests);
     if (sol.error) errors.push(`${where}: solution crashed: ${sol.error}`);
