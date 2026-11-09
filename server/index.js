@@ -3,6 +3,7 @@ require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { verifyMailer, mailEnabled, sendMail } = require('./mailer');
 const { RECOVERY_CODE_COUNT, generateRecoveryCodes, hashRecoveryCode, findMatchingCode, normalizeRecoveryCode } = require('./recovery-codes');
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -3560,6 +3561,7 @@ logSecurityConfigurationWarnings();
 
 const server = app.listen(PORT, () => {
     console.log(`CS Course Atlas server running on http://localhost:${PORT}`);
+    verifyMailer().catch(() => {});
 });
 
 server.requestTimeout = SERVER_REQUEST_TIMEOUT_MS;
