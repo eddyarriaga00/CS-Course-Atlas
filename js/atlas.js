@@ -494,16 +494,16 @@ function viewModule(id) {
       <div class="ex-head"><h2>${state.exIndex === 0 ? (terminal ? t('fullSession') : t('fullProgram')) : esc(L(ex.title))}</h2><p>${fmt(L(state.exIndex === 0 ? meta.description : ex.description))}</p></div>
       ${lang === 'bash' ? `<p class="term-hint">${t('terminalHint')}</p>` : ''}
       <div class="code-card"><div class="code-bar">${langs.map((k) => `<button class="lang" data-code-lang="${k}" aria-pressed="${k === lang}">${LANG_LABEL[k]}</button>`).join('')}<button class="lang copy" data-action="copy">${t('copy')}</button>${lang === 'python' ? `<button class="lang" data-action="try-step" data-id="${id}" title="${t('vizHint')}">⇥ ${t('vizStep')}</button>` : ''}${lang === 'bash' ? '' : `<button class="lang run" data-action="try-it" data-id="${id}">${t('tryIt')}</button>`}</div>
-        ${lang === 'bash' ? `<code id="code-block" hidden>${esc(code)}</code><pre class="code term">${transcriptHtml(out)}</pre>`
-          : lang === 'html' ? `<pre class="code"><code id="code-block" class="language-html">${esc(code)}</code></pre>
+        ${lang === 'bash' ? `<code id="code-block" hidden>${esc(code)}</code><pre tabindex="0" class="code term">${transcriptHtml(out)}</pre>`
+          : lang === 'html' ? `<pre tabindex="0" class="code"><code id="code-block" class="language-html">${esc(code)}</code></pre>
         <div class="output preview"><div class="output-label">${t('preview')}</div><iframe class="web-preview" sandbox="allow-scripts allow-forms allow-modals" title="${t('preview')}" srcdoc="${esc(code)}"></iframe></div>`
-          : `<pre class="code"><code id="code-block" class="language-${lang}">${esc(code)}</code></pre>
-        <div class="output"><div class="output-label">${t('output')}</div><pre>${esc(out)}</pre></div>`}</div>
-      ${state.exIndex > 0 ? `<div class="card explain prose"><h3>${t('explanation')}</h3>${rich(L(ex.explanation))}</div>` : ''}
+          : `<pre tabindex="0" class="code"><code id="code-block" class="language-${lang}">${esc(code)}</code></pre>
+        <div class="output"><div class="output-label">${t('output')}</div><pre tabindex="0">${esc(out)}</pre></div>`}</div>
+      ${state.exIndex > 0 ? `<div class="card explain prose"><h2 class="h3">${t('explanation')}</h2>${rich(L(ex.explanation))}</div>` : ''}
       ${(() => { const v = state.exIndex === 0 ? null : modVideos(id)?.topics[ex.topic]; const list = v ? null : seriesFor(id);
         return v || list ? `<div class="watch"><div class="watch-label">${v ? t('watchTopic') : t('fullSeries')}</div>${v ? vidCard(v) : vidCard(list, true)}</div>` : ''; })()}`;
   } else if (state.tab === 'terms') {
-    body = `<div class="terms">${(c.definitions || []).map((d) => `<div class="card term"><h3>${esc(L(d.term))}</h3><p>${fmt(L(d.definition))}</p></div>`).join('')}</div>`;
+    body = `<div class="terms">${(c.definitions || []).map((d) => `<div class="card term"><h2 class="h3">${esc(L(d.term))}</h2><p>${fmt(L(d.definition))}</p></div>`).join('')}</div>`;
   } else if (state.tab === 'practice') {
     body = `<div class="block"><h2>${t('practiceProblems')}</h2><ol class="numbered">${LL(c.practice).map((x) => `<li class="card"><span>${fmt(x)}</span></li>`).join('')}</ol></div>
       <div class="block"><h2>${t('selfCheck')}</h2>${LL(c.selfCheck).map((q) => `<details class="card check"><summary>${fmt(q)}</summary><p>${t('selfCheckHint')}</p></details>`).join('')}</div>`;
@@ -622,7 +622,7 @@ function flashHtml(id) {
   return `<div class="deck-top"><span class="muted">${t('cardOf', f.pos + 1, cards.length)}</span><span class="deck-known">${id === DUE ? t('reviewedOf', f.reviewed || 0, d.n) : t('knownOf', d.known, d.n)}</span></div>
     <div class="progress deck-progress${id !== DUE && d.known === d.n ? ' done' : ''}"><span style="width:${id === DUE ? pct(f.reviewed || 0, d.n) : pct(d.known, d.n)}%"></span></div>
     <div class="flash${f.flipped ? ' flipped' : ''}" id="flash" role="button" tabindex="0" aria-label="${t('tapFlip')}" data-action="flip">
-      <div class="flash-inner"><div class="flash-face">${known ? `<span class="flash-badge">✓ ${t('knownBadge')}</span>` : ''}<div><div class="muted flash-course">${esc(L(track(DATA.modules[entry.mod].track).title))}${id === MIX || id === DUE ? ' · ' + esc(moduleTitle(entry.mod)) : ''}</div><h3>${esc(L(card.term))}</h3><p class="muted" style="margin-top:10px">${t('tapFlip')}</p></div></div>
+      <div class="flash-inner"><div class="flash-face">${known ? `<span class="flash-badge">✓ ${t('knownBadge')}</span>` : ''}<div><div class="muted flash-course">${esc(L(track(DATA.modules[entry.mod].track).title))}${id === MIX || id === DUE ? ' · ' + esc(moduleTitle(entry.mod)) : ''}</div><h2 class="h3">${esc(L(card.term))}</h2><p class="muted" style="margin-top:10px">${t('tapFlip')}</p></div></div>
       <div class="flash-face back"><p>${fmt(L(card.definition))}</p></div></div></div>
     <div class="flash-controls"><button class="btn btn-ghost" data-action="flash-again">← ${t('again')}</button><button class="btn" data-action="flash-next">${t('gotIt')} →</button></div>
     ${id !== DUE && d.known === d.n && d.n ? `<div class="deck-done">🎉 ${t(id === MIX ? 'mixDeckDone' : 'deckDone')} <button class="btn btn-sm" data-action="go-quiz" data-id="${id}">${t('takeQuiz')}</button></div>` : ''}
@@ -668,7 +668,7 @@ function viewQuizzes() {
   return `<section class="wrap"><div class="crumbs"><a href="#practice">${t('practice')}</a><span>/</span><span style="color:var(--text)">${t('quizzes')}</span></div>
     <h1>${t('quizzes')}</h1><p class="lead">${t('quizzesLead')}</p>
     <div class="toolbar"><label class="muted" for="quiz-module">${t('pickModule')}</label><select class="select" id="quiz-module">${mixOption(id)}${moduleOptions(id)}</select><button class="lang timed-toggle" data-action="quiz-timed" aria-pressed="${!!state.quizTimed}" title="${t('timedHint')}">⏱ ${t('timedMode')}</button></div>
-    <div class="quiz-layout"><div>${quizHtml(id, state.quizTimed)}</div><aside class="card scoreboard"><h3>${t('yourScores')}</h3>${board}</aside></div></section>`;
+    <div class="quiz-layout"><div>${quizHtml(id, state.quizTimed)}</div><aside class="card scoreboard"><h2 class="h3">${t('yourScores')}</h2>${board}</aside></div></section>`;
 }
 function viewFlashcards() {
   if (!state.flashModule || !validPick(state.flashModule)) state.flashModule = dueCount() ? DUE : practiceDefault();
@@ -1020,15 +1020,15 @@ const chDraft = (id, ch) => (store.get('chDrafts', {})[chKey(id, ch)] ?? ch.star
 function challengeHtml(id, ch, i) {
   const key = chKey(id, ch), solved = state.solved.has(key), tries = state.chTries[key] || 0;
   return `<div class="card challenge${solved ? ' solved' : ''}" id="ch-${i}">
-    <div class="ch-head"><span class="ch-no">${i + 1}</span><h3>${esc(L(ch.title))}</h3>${solved ? `<span class="pill ok">✓ ${t('solved')}</span>` : ''}</div>
+    <div class="ch-head"><span class="ch-no">${i + 1}</span><h2 class="h3">${esc(L(ch.title))}</h2>${solved ? `<span class="pill ok">✓ ${t('solved')}</span>` : ''}</div>
     <p class="ch-prompt">${fmt(L(ch.prompt))}</p>
-    ${ch.lang === 'bash' ? `<details class="ch-tables" open><summary>${t('startingFiles')}</summary><pre class="code ch-setup" data-shell-setup="${i}"><code>${t('loadingWord')}</code></pre></details>` : ''}
-    ${ch.lang === 'sql' ? `<details class="ch-tables"><summary>${t('seeTables')}</summary><pre class="code"><code>${esc(ch.setup)}</code></pre></details>` : ''}
-    <div class="ch-editor"><div class="code-bar"><span class="lang" aria-pressed="true">${{ sql: 'SQL', html: 'HTML', css: 'HTML · CSS', js: 'JavaScript', bash: t('terminal') }[ch.lang] || 'Python'}</span><button class="lang" data-action="ch-reset" data-i="${i}">${t('reset')}</button><button class="lang run" data-action="ch-run" data-i="${i}">▶ ${t('runTests')}</button></div>
+    ${ch.lang === 'bash' ? `<details class="ch-tables" open><summary>${t('startingFiles')}</summary><pre tabindex="0" class="code ch-setup" data-shell-setup="${i}"><code>${t('loadingWord')}</code></pre></details>` : ''}
+    ${ch.lang === 'sql' ? `<details class="ch-tables"><summary>${t('seeTables')}</summary><pre tabindex="0" class="code"><code>${esc(ch.setup)}</code></pre></details>` : ''}
+    <div class="ch-editor"><div class="code-bar"><span class="lang is-on">${{ sql: 'SQL', html: 'HTML', css: 'HTML · CSS', js: 'JavaScript', bash: t('terminal') }[ch.lang] || 'Python'}</span><button class="lang" data-action="ch-reset" data-i="${i}">${t('reset')}</button><button class="lang run" data-action="ch-run" data-i="${i}">▶ ${t('runTests')}</button></div>
       <textarea class="ch-code" id="ch-code-${i}" data-key="${esc(key)}" spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off" aria-label="${esc(L(ch.title))}: ${t('yourCode')}">${esc(chDraft(id, ch))}</textarea></div>
     <div class="ch-result" id="ch-res-${i}" aria-live="polite"></div>
     <div class="ch-help"><details><summary>${t('hint')}</summary><p>${fmt(L(ch.hint))}</p></details>
-      ${solved || tries >= 2 ? `<details><summary>${t('showSolution')}</summary><pre class="code"><code>${esc(ch.solution)}</code></pre></details>` : `<span class="muted ch-lock">${t('solutionAfter')}</span>`}</div>
+      ${solved || tries >= 2 ? `<details><summary>${t('showSolution')}</summary><pre tabindex="0" class="code"><code>${esc(ch.solution)}</code></pre></details>` : `<span class="muted ch-lock">${t('solutionAfter')}</span>`}</div>
   </div>`;
 }
 // SQL challenges: run the setup and the learner's statements in sql.js and compare the last result
@@ -1150,7 +1150,7 @@ async function runChallenge(i) {
 function refreshChallengeHelp(i) {
   const id = state.chModule, ch = DATA.full[id].challenges[i], key = chKey(id, ch);
   const lock = $('#ch-' + i + ' .ch-lock');
-  if (lock && (state.solved.has(key) || (state.chTries[key] || 0) >= 2)) lock.outerHTML = `<details><summary>${t('showSolution')}</summary><pre class="code"><code>${esc(ch.solution)}</code></pre></details>`;
+  if (lock && (state.solved.has(key) || (state.chTries[key] || 0) >= 2)) lock.outerHTML = `<details><summary>${t('showSolution')}</summary><pre tabindex="0" class="code"><code>${esc(ch.solution)}</code></pre></details>`;
 }
 // SQL runs in the browser with sql.js (SQLite compiled to WebAssembly), loaded on first use. Each run
 // starts from an empty database and prints results the same way the course examples do.
@@ -1247,7 +1247,7 @@ function allTerms() {
 function glossaryGrid() {
   const q = state.glossQuery.toLowerCase();
   const list = allTerms().filter((x) => (state.glossLetter === 'all' || x.term[0].toUpperCase() === state.glossLetter) && (!q || x.term.toLowerCase().includes(q) || x.def.toLowerCase().includes(q)));
-  return list.length ? list.map((x) => `<div class="card term"><h3>${esc(x.term)}</h3><p>${fmt(x.def)}</p><a class="from" href="#m-${x.id}">${esc(t('fromModule', moduleTitle(x.id)))}</a></div>`).join('') : `<p class="muted">${t('noResults')}</p>`;
+  return list.length ? list.map((x) => `<div class="card term"><h2 class="h3">${esc(x.term)}</h2><p>${fmt(x.def)}</p><a class="from" href="#m-${x.id}">${esc(t('fromModule', moduleTitle(x.id)))}</a></div>`).join('') : `<p class="muted">${t('noResults')}</p>`;
 }
 function viewGlossary() {
   const terms = allTerms(), have = new Set(terms.map((x) => x.term[0].toUpperCase()));
