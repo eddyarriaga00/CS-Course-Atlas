@@ -1,0 +1,162 @@
+{
+ "_about": "Guided projects: multi-step builds. Each step is a normal challenge (same format and graders as data/challenges.json). A step's starter usually carries the previous step's solution forward, so the project grows step by step. Checked by scripts/verify_challenges.js.",
+ "projects": [
+  {
+   "id": "py-gradebook",
+   "track": "python",
+   "icon": "📒",
+   "level": "beginner",
+   "minutes": 45,
+   "title": {
+    "en": "Build a grade book",
+    "es": "Construye un libro de calificaciones"
+   },
+   "blurb": {
+    "en": "Store students and scores, compute averages and letter grades, then print a ranked report card. Uses lists, dictionaries, functions and loops.",
+    "es": "Guarda estudiantes y notas, calcula promedios y letras, y luego imprime un boletín ordenado. Usa listas, diccionarios, funciones y ciclos."
+   },
+   "steps": [
+    {
+     "id": "average",
+     "title": {
+      "en": "Average of a list",
+      "es": "Promedio de una lista"
+     },
+     "prompt": {
+      "en": "Start the grade book with `average(scores)`: return the mean of a list of numbers rounded to 1 decimal, or `0.0` for an empty list.",
+      "es": "Empieza el libro con `average(scores)`: devuelve la media de una lista de números redondeada a 1 decimal, o `0.0` si la lista está vacía."
+     },
+     "starter": "def average(scores):\n    pass\n",
+     "solution": "def average(scores):\n    if not scores:\n        return 0.0\n    return round(sum(scores) / len(scores), 1)\n",
+     "hint": {
+      "en": "Check for an empty list first, then `round(sum(scores) / len(scores), 1)`.",
+      "es": "Revisa primero si la lista está vacía y luego `round(sum(scores) / len(scores), 1)`."
+     },
+     "tests": [
+      [
+       "average([90, 80, 70])",
+       "80.0"
+      ],
+      [
+       "average([95, 88])",
+       "91.5"
+      ],
+      [
+       "average([])",
+       "0.0"
+      ],
+      [
+       "average([100])",
+       "100.0"
+      ]
+     ]
+    },
+    {
+     "id": "letter",
+     "title": {
+      "en": "Letter grades",
+      "es": "Letras de calificación"
+     },
+     "prompt": {
+      "en": "Add `letter(avg)`: `A` for 90 or more, `B` for 80 or more, `C` for 70 or more, `D` for 60 or more, otherwise `F`. Keep `average` from step 1.",
+      "es": "Agrega `letter(avg)`: `A` desde 90, `B` desde 80, `C` desde 70, `D` desde 60 y si no `F`. Conserva `average` del paso 1."
+     },
+     "starter": "def average(scores):\n    if not scores:\n        return 0.0\n    return round(sum(scores) / len(scores), 1)\n\n\ndef letter(avg):\n    pass\n",
+     "solution": "def average(scores):\n    if not scores:\n        return 0.0\n    return round(sum(scores) / len(scores), 1)\n\n\ndef letter(avg):\n    if avg >= 90:\n        return \"A\"\n    if avg >= 80:\n        return \"B\"\n    if avg >= 70:\n        return \"C\"\n    if avg >= 60:\n        return \"D\"\n    return \"F\"\n",
+     "hint": {
+      "en": "Check from the highest grade down with `if` and `return`, so the first match wins.",
+      "es": "Revisa de la nota más alta hacia abajo con `if` y `return`, así gana la primera coincidencia."
+     },
+     "tests": [
+      [
+       "letter(95)",
+       "'A'"
+      ],
+      [
+       "letter(90)",
+       "'A'"
+      ],
+      [
+       "letter(89.9)",
+       "'B'"
+      ],
+      [
+       "letter(72.5)",
+       "'C'"
+      ],
+      [
+       "letter(60)",
+       "'D'"
+      ],
+      [
+       "letter(12)",
+       "'F'"
+      ]
+     ]
+    },
+    {
+     "id": "summary",
+     "title": {
+      "en": "Every student's result",
+      "es": "El resultado de cada estudiante"
+     },
+     "prompt": {
+      "en": "Add `summary(book)`, where `book` is a dictionary like `{\"Ana\": [90, 95], \"Ben\": [70, 65]}`. Return a dictionary from each name to a tuple `(average, letter)`.",
+      "es": "Agrega `summary(book)`, donde `book` es un diccionario como `{\"Ana\": [90, 95], \"Ben\": [70, 65]}`. Devuelve un diccionario de cada nombre a una tupla `(promedio, letra)`."
+     },
+     "starter": "def average(scores):\n    if not scores:\n        return 0.0\n    return round(sum(scores) / len(scores), 1)\n\n\ndef letter(avg):\n    if avg >= 90:\n        return \"A\"\n    if avg >= 80:\n        return \"B\"\n    if avg >= 70:\n        return \"C\"\n    if avg >= 60:\n        return \"D\"\n    return \"F\"\n\n\ndef summary(book):\n    result = {}\n    # fill result\n    return result\n",
+     "solution": "def average(scores):\n    if not scores:\n        return 0.0\n    return round(sum(scores) / len(scores), 1)\n\n\ndef letter(avg):\n    if avg >= 90:\n        return \"A\"\n    if avg >= 80:\n        return \"B\"\n    if avg >= 70:\n        return \"C\"\n    if avg >= 60:\n        return \"D\"\n    return \"F\"\n\n\ndef summary(book):\n    result = {}\n    for name, scores in book.items():\n        avg = average(scores)\n        result[name] = (avg, letter(avg))\n    return result\n",
+     "hint": {
+      "en": "Loop with `for name, scores in book.items():` and reuse your two functions.",
+      "es": "Recorre con `for name, scores in book.items():` y reutiliza tus dos funciones."
+     },
+     "tests": [
+      [
+       "summary({'Ana': [90, 95], 'Ben': [70, 65]})",
+       "{'Ana': (92.5, 'A'), 'Ben': (67.5, 'D')}"
+      ],
+      [
+       "summary({})",
+       "{}"
+      ],
+      [
+       "summary({'Cy': []})",
+       "{'Cy': (0.0, 'F')}"
+      ]
+     ]
+    },
+    {
+     "id": "report",
+     "title": {
+      "en": "The report card",
+      "es": "El boletín"
+     },
+     "prompt": {
+      "en": "Finish with `report(book)`: return a list of lines like `\"1. Ana 92.5 A\"`, best average first; break ties by name A→Z.",
+      "es": "Termina con `report(book)`: devuelve una lista de líneas como `\"1. Ana 92.5 A\"`, el mejor promedio primero; en empate, por nombre de la A a la Z."
+     },
+     "starter": "def average(scores):\n    if not scores:\n        return 0.0\n    return round(sum(scores) / len(scores), 1)\n\n\ndef letter(avg):\n    if avg >= 90:\n        return \"A\"\n    if avg >= 80:\n        return \"B\"\n    if avg >= 70:\n        return \"C\"\n    if avg >= 60:\n        return \"D\"\n    return \"F\"\n\n\ndef summary(book):\n    result = {}\n    for name, scores in book.items():\n        avg = average(scores)\n        result[name] = (avg, letter(avg))\n    return result\n\n\ndef report(book):\n    pass\n",
+     "solution": "def average(scores):\n    if not scores:\n        return 0.0\n    return round(sum(scores) / len(scores), 1)\n\n\ndef letter(avg):\n    if avg >= 90:\n        return \"A\"\n    if avg >= 80:\n        return \"B\"\n    if avg >= 70:\n        return \"C\"\n    if avg >= 60:\n        return \"D\"\n    return \"F\"\n\n\ndef summary(book):\n    result = {}\n    for name, scores in book.items():\n        avg = average(scores)\n        result[name] = (avg, letter(avg))\n    return result\n\n\ndef report(book):\n    rows = sorted(summary(book).items(), key=lambda item: (-item[1][0], item[0]))\n    return [f\"{i}. {name} {avg} {grade}\" for i, (name, (avg, grade)) in enumerate(rows, start=1)]\n",
+     "hint": {
+      "en": "`sorted(..., key=lambda item: (-average, name))` sorts high to low, then by name. `enumerate(rows, start=1)` numbers the lines.",
+      "es": "`sorted(..., key=lambda item: (-promedio, nombre))` ordena de mayor a menor y luego por nombre. `enumerate(rows, start=1)` numera las líneas."
+     },
+     "tests": [
+      [
+       "report({'Ana': [90, 95], 'Ben': [70, 65], 'Cy': [88, 92]})",
+       "['1. Ana 92.5 A', '2. Cy 90.0 A', '3. Ben 67.5 D']"
+      ],
+      [
+       "report({'Zoe': [80], 'Al': [80]})",
+       "['1. Al 80.0 B', '2. Zoe 80.0 B']"
+      ],
+      [
+       "report({})",
+       "[]"
+      ]
+     ]
+    }
+   ]
+  }
+ ]
+}
