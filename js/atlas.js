@@ -35,13 +35,13 @@ const UI = {
     pgLead: 'Write and run code right here. JavaScript runs in your browser; Java, Python and C++ will run on the CS Course Atlas server.',
     pgServer: 'Running this language needs the code server, which is on the roadmap. Here is the output this example prints:', pgServerNoExpected: 'Running this language needs the code server, which is on the roadmap. Switch to JavaScript to run code now.',
     pgDone: (ms) => `Finished in ${ms} ms`, pgTimeout: 'Stopped after 3 seconds (infinite loop?)', pgEmpty: '(no output)', pgLoaded: (m) => `Loaded from ${m}`,
-    notesLead: 'One page of notes per module, saved on this device. With an account they sync everywhere.', notePlaceholder: 'What clicked? What confused you? Write it in your own words.',
+    notesLeadIn: 'One page of notes per module, saved to your account and synced to every device you sign in on.', notesLead: 'One page of notes per module, saved on this device. With an account they sync everywhere.', notePlaceholder: 'What clicked? What confused you? Write it in your own words.',
     savedDevice: 'Saved on this device', notesFor: 'Notes for', words: 'words',
     glossaryLead: (n) => `${n} terms from the Java course, each linked to the module that teaches it.`, filterTerms: 'Filter terms', all: 'All', fromModule: (m) => `From ${m} →`,
     roadmapLead: 'Where CS Course Atlas is going. Vote for what you want next.', live: 'Live', building: 'In progress', planned: 'Planned', vote: '▲ Vote', voted: '▲ Voted',
     achievements: 'Achievements', earned: (a, b) => `${a} of ${b} earned`,
     studyPlan: 'Study plan', planLead: 'Tell us how much time you have; we lay out the rest of the Java course week by week.', hoursWeek: 'Hours per week', startOn: 'Start on', finishBy: 'Finish by', weeksLeft: 'weeks', modulesLeft: 'modules left', weekN: (n) => `Week ${n}`, thisWeek: 'This week', planHome: (d) => `At your pace you’ll finish Java by <b>${d}</b>.`, editPlan: 'Edit plan', allDone: 'Every Java module is complete. Time for the next course.', addCalendar: 'Add to calendar', reminders: 'Weekly reminder', 
-    videos: 'Videos', fullSeries: 'Full video series', courseSeries: 'Full course series', watchTopic: 'Watch a video on this topic', watchWait: 'Watch while you wait', videosLead: 'A full series for the module, then one video per topic. All from university or well-known teaching channels; they open on YouTube.', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube',
+    videos: 'Videos', fullSeries: 'Full video series', courseSeries: 'Full course series', watchTopic: 'Watch a video on this topic', watchWait: 'Watch while you wait', videosLead: 'A full series for the module, then one video per topic. All from university or well-known teaching channels; they open on YouTube.', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', report: 'Report a problem with this module', programs: 'programs', languagesWord: 'languages', waitLead: 'Series that cover these modules, each listed once.',
     signedInWith: (p) => `Signed in with ${p}`, syncedAt: (tm) => `Progress synced at ${tm}`, syncPending: 'Syncing progress…', day: 'day', acrossN: (n) => `across ${n} ${n === 1 ? 'quiz' : 'quizzes'}`, noQuizYet: 'No quizzes taken yet',
     modulesWithNotes: 'modules with notes', noActivity: 'Complete a module, take a quiz or write a note and it shows up here.', typeDelete: 'Type DELETE to confirm', deleteViaSupport: 'Ask support to delete it',
     privacy: 'Privacy', terms: 'Terms', contact: 'Contact', checkingSession: 'Checking your account…', emailOrUser: 'Email or username', username: 'Username', confirmPw: 'Confirm password',
@@ -84,13 +84,13 @@ const UI = {
     pgLead: 'Escribe y ejecuta código aquí mismo. JavaScript corre en tu navegador; Java, Python y C++ correrán en el servidor de CS Course Atlas.',
     pgServer: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Esta es la salida que imprime el ejemplo:', pgServerNoExpected: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Cambia a JavaScript para ejecutar código ahora.',
     pgDone: (ms) => `Terminó en ${ms} ms`, pgTimeout: 'Detenido después de 3 segundos (¿bucle infinito?)', pgEmpty: '(sin salida)', pgLoaded: (m) => `Cargado desde ${m}`,
-    notesLead: 'Una página de notas por módulo, guardada en este dispositivo. Con una cuenta se sincronizan en todas partes.', notePlaceholder: '¿Qué entendiste? ¿Qué te confundió? Escríbelo con tus palabras.',
+    notesLeadIn: 'Una página de notas por módulo, guardada en tu cuenta y sincronizada en cada dispositivo donde inicies sesión.', notesLead: 'Una página de notas por módulo, guardada en este dispositivo. Con una cuenta se sincronizan en todas partes.', notePlaceholder: '¿Qué entendiste? ¿Qué te confundió? Escríbelo con tus palabras.',
     savedDevice: 'Guardado en este dispositivo', notesFor: 'Notas de', words: 'palabras',
     glossaryLead: (n) => `${n} términos del curso de Java, cada uno enlazado al módulo que lo enseña.`, filterTerms: 'Filtrar términos', all: 'Todos', fromModule: (m) => `De ${m} →`,
     roadmapLead: 'Hacia dónde va CS Course Atlas. Vota por lo que quieres primero.', live: 'Disponible', building: 'En progreso', planned: 'Planeado', vote: '▲ Votar', voted: '▲ Votado',
     achievements: 'Logros', earned: (a, b) => `${a} de ${b} obtenidos`,
     studyPlan: 'Plan de estudio', planLead: 'Dinos cuánto tiempo tienes y organizamos el resto del curso de Java semana a semana.', hoursWeek: 'Horas por semana', startOn: 'Empezar el', finishBy: 'Terminas el', weeksLeft: 'semanas', modulesLeft: 'módulos restantes', weekN: (n) => `Semana ${n}`, thisWeek: 'Esta semana', planHome: (d) => `A tu ritmo terminarás Java el <b>${d}</b>.`, editPlan: 'Editar plan', allDone: 'Completaste todos los módulos de Java. Es hora del siguiente curso.', addCalendar: 'Agregar al calendario', reminders: 'Recordatorio semanal', 
-    videos: 'Videos', fullSeries: 'Serie completa de videos', courseSeries: 'Serie completa del curso', watchTopic: 'Mira un video sobre este tema', watchWait: 'Mira mientras esperas', videosLead: 'Una serie completa del módulo y un video por tema. Todos de canales universitarios o de enseñanza reconocidos; se abren en YouTube (en inglés).', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube',
+    videos: 'Videos', fullSeries: 'Serie completa de videos', courseSeries: 'Serie completa del curso', watchTopic: 'Mira un video sobre este tema', watchWait: 'Mira mientras esperas', videosLead: 'Una serie completa del módulo y un video por tema. Todos de canales universitarios o de enseñanza reconocidos; se abren en YouTube (en inglés).', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', report: 'Reportar un problema con este módulo', programs: 'programas', languagesWord: 'lenguajes', waitLead: 'Series que cubren estos módulos, cada una una sola vez.',
     signedInWith: (p) => `Sesión iniciada con ${p}`, syncedAt: (tm) => `Progreso sincronizado a las ${tm}`, syncPending: 'Sincronizando progreso…', day: 'día', acrossN: (n) => `en ${n} ${n === 1 ? 'cuestionario' : 'cuestionarios'}`, noQuizYet: 'Aún no haces cuestionarios',
     modulesWithNotes: 'módulos con notas', noActivity: 'Completa un módulo, haz un cuestionario o escribe una nota y aparecerá aquí.', typeDelete: 'Escribe DELETE para confirmar', deleteViaSupport: 'Pide a soporte que la elimine',
     privacy: 'Privacidad', terms: 'Términos', contact: 'Contacto', checkingSession: 'Revisando tu cuenta…', emailOrUser: 'Correo o usuario', username: 'Usuario', confirmPw: 'Confirmar contraseña',
@@ -158,7 +158,7 @@ function renderChrome(route) {
     <a class="nav-item${is('home')}" href="#home"><span class="ico">⌂</span>${t('home')}</a>
     <a class="nav-item${is('courses')}" href="#courses"><span class="ico">▦</span>${t('allCourses')}</a>
     <div class="nav-label">${t('javaTrack')}</div>
-    <a class="course-switch" href="#course-java"><span class="cmark">J</span><span><b>Java</b><span>${t('ofModules', js.done, js.count)}</span></span></a>
+    <a class="course-switch" href="#course-java"><span class="cmark" data-track="java">J</span><span><b>Java</b><span>${t('ofModules', js.done, js.count)}</span></span></a>
     ${java.units.map((u, i) => `<div class="unit-name">${i + 1}. ${esc(L(u.title))}</div>` + u.modules.map((id) =>
       `<a class="mod-link${route === 'm-' + id ? ' active' : ''}" href="#m-${id}">${dot(id)}${esc(moduleTitle(id))}</a>`).join('')).join('')}
     <div class="nav-label">${t('otherCourses')}</div>
@@ -185,7 +185,7 @@ function renderChrome(route) {
 function courseCard(tr, big) {
   const s = trackStats(tr), live = tr.status === 'available';
   return `<a class="card course${live ? ' live' : ''}" href="#course-${tr.id}">
-    <div class="course-top"><span class="cicon">${esc(tr.icon)}</span><div style="min-width:0"><h3>${esc(L(tr.title))}</h3><div class="muted">${s.units} ${t('units')} · ${s.count} ${t('modules')}${s.hours ? ` · ≈ ${s.hours} ${t('hours')}` : ''}</div></div></div>
+    <div class="course-top"><span class="cicon" data-track="${tr.id}">${esc(tr.icon)}</span><div style="min-width:0"><h3>${esc(L(tr.title))}</h3><div class="muted">${s.units} ${t('units')} · ${s.count} ${t('modules')}${s.hours ? ` · ≈ ${s.hours} ${t('hours')}` : ''}</div></div></div>
     <p>${esc(L(tr.blurb))}</p>
     ${live ? `<div class="progress${s.done === s.count ? ' done' : ''}"><span style="width:${pct(s.done, s.count)}%"></span></div>
       <div class="facts"><span class="pill ok">${t('available')}</span><span class="muted">${t('ofModules', s.done, s.count)}</span></div>`
@@ -201,8 +201,10 @@ function unitCards(tr, live) {
 function viewHome() {
   const java = track('java'), s = trackStats(java), next = nextModule();
   return `<section class="wrap">
-    <div class="hero"><h1>${t('heroTitle')}</h1><p class="lead">${t('heroLead')}</p>
-      <div class="hero-actions"><a class="btn" href="#course-java">${t('startJava')}</a><a class="btn btn-ghost" href="#courses">${t('browse')}</a></div></div>
+    <div class="hero"><div class="hero-text"><h1>${t('heroTitle')}</h1><p class="lead">${t('heroLead')}</p>
+      <div class="hero-actions"><a class="btn" href="#course-java">${t('startJava')}</a><a class="btn btn-ghost" href="#courses">${t('browse')}</a></div>
+      <div class="hero-facts"><span><b>${s.count}</b> ${t('modules')}</span><span><b>${javaIds().reduce((n, id) => n + DATA.java[id].examples.sets.length + 1, 0)}</b> ${t('examples').toLowerCase()}</span><span><b>4</b> ${t('languagesWord')}</span><span><b>EN · ES</b></span></div></div>
+      ${heroArt()}</div>
     <a class="card continue" href="${next ? '#m-' + next : '#course-java'}"><div class="info"><div class="muted">${t('continueTitle')}</div>
       <h3 style="margin-top:2px">${next ? 'Java · ' + esc(moduleTitle(next)) : t('courseDone')}</h3>
       <div class="progress"><span style="width:${pct(s.done, s.count)}%"></span></div><div class="muted" style="margin-top:6px">${t('ofModules', s.done, s.count)}</div></div>
@@ -220,6 +222,17 @@ function viewHome() {
       <a class="card tool" href="#notes"><div class="ico">✎</div><h3>${t('notes')}</h3><p>${t('toolNotes')}</p></a>
     </div></section>`;
 }
+function heroArt() {
+  return `<div class="hero-art" aria-hidden="true"><div class="win"><div class="win-bar"><i></i><i></i><i></i><span>Grades.java</span></div>
+<pre><span class="k">var</span> scores = List.<span class="f">of</span>(<span class="n">72</span>, <span class="n">95</span>, <span class="n">88</span>);
+<span class="k">double</span> avg = scores.<span class="f">stream</span>()
+    .<span class="f">mapToInt</span>(Integer::intValue)
+    .<span class="f">average</span>().<span class="f">orElse</span>(<span class="n">0</span>);
+System.out.<span class="f">printf</span>(<span class="s">"avg %.1f%n"</span>, avg);</pre>
+    <div class="win-out"><span>${t('output')}</span>avg 85.0</div></div>
+    <div class="float-card fc-1"><span class="tick-c">✓</span><div><b>${t('quiz')} · Streams</b><small>5 / 5</small></div></div>
+    <div class="float-card fc-2"><span class="play-c">▶</span><div><b>${t('watchTopic')}</b><small>Java Brains</small></div></div></div>`;
+}
 function viewCourses() {
   return `<section class="wrap"><h1>${t('coursesTitle')}</h1><p class="lead">${t('coursesLead')}</p>
     <div class="courses" style="margin-top:24px">${DATA.tracks.map((tr) => courseCard(tr, true)).join('')}</div>
@@ -231,7 +244,7 @@ function viewCourse(id) {
   const s = trackStats(tr), live = tr.status === 'available', next = nextModule();
   return `<section class="wrap">
     <div class="crumbs"><a href="#courses">${t('courses')}</a><span>/</span><span style="color:var(--text)">${esc(L(tr.title))}</span></div>
-    <div class="course-hero" style="margin-top:12px"><span class="cicon" style="${live ? 'background:var(--accent);color:var(--on-accent)' : ''}">${esc(tr.icon)}</span>
+    <div class="course-hero" style="margin-top:12px"><span class="cicon" data-track="${tr.id}">${esc(tr.icon)}</span>
       <div style="min-width:0;flex:1"><h1 style="margin-top:0">${esc(L(tr.title))}</h1><p class="lead">${esc(L(tr.blurb))}</p></div></div>
     <div class="course-stats"><div><b>${s.units}</b><span>${t('units')}</span></div><div><b>${s.count}</b><span>${t('modules')}</span></div>${s.hours ? `<div><b>≈ ${s.hours}</b><span>${t('hours')}</span></div>` : ''}${live ? `<div><b>${s.done}/${s.count}</b><span>${t('modulesComplete').toLowerCase()}</span></div>` : ''}</div>
     ${live ? `<div class="hero-actions"><a class="btn" href="#m-${next || javaIds()[0]}">${s.done ? t('continueBtn') : t('startBtn')}${next ? ': ' + esc(moduleTitle(next)) : ''}</a></div>`
@@ -239,7 +252,7 @@ function viewCourse(id) {
     ${DATA.videos?.courses?.[id] ? `<div class="section-head"><h2>${t('courseSeries')}</h2></div>${vidCard(DATA.videos.courses[id], true)}` : ''}
     <div class="section-head"><h2>${t('unitsTitle')}</h2></div>
     ${unitCards(tr, live)}
-    ${!live && DATA.videos ? `<div class="section-head"><h2>${t('watchWait')}</h2></div><div class="vids">${tr.units.flatMap((u) => u.modules).map((m) => modVideos(m)?.series ? `<div><div class="vid-topic">${esc(moduleTitle(m))}</div>${vidCard(modVideos(m).series, true)}</div>` : '').join('')}</div>` : ''}</section>`;
+    ${!live && DATA.videos ? `<div class="section-head"><h2>${t('watchWait')}</h2></div><p class="muted" style="margin:-6px 0 14px">${t('waitLead')}</p><div class="vids grid-vids">${waitGroups(tr).map((g) => `<div class="wait-card card"><div class="wait-mods">${g.mods.map((m) => `<span>${esc(moduleTitle(m))}</span>`).join('')}</div>${vidCard(g.v, true)}</div>`).join('')}</div>` : ''}</section>`;
 }
 function viewMissing() { return `<section class="wrap"><h1>${t('notFound')}</h1><a class="btn" href="#home">${t('home')}</a></section>`; }
 
@@ -293,6 +306,7 @@ function viewModule(id) {
     <div class="tabs" role="tablist">${tabs.map(([k, label, n]) => `<button class="tab" role="tab" data-tab="${k}" aria-selected="${state.tab === k}">${label}${n ? `<span class="count">${n}</span>` : ''}</button>`).join('')}</div>
     ${body}
     <div class="mod-foot"><button class="btn${done ? ' btn-ghost' : ''}" data-action="toggle-done" data-id="${id}">${done ? t('marked') : t('markDone')}</button>
+      <a class="report" href="contact-support.html?module=${id}">${t('report')}</a>
       <div class="pn">${idx > 0 ? `<a class="btn btn-ghost" href="#m-${ids[idx - 1]}">${t('prev')}</a>` : ''}${idx < ids.length - 1 ? `<a class="btn btn-ghost" href="#m-${ids[idx + 1]}">${t('next')}</a>` : ''}</div></div>
   </section>`;
 }
@@ -436,9 +450,9 @@ function viewNotes() {
   if (!state.noteModule) state.noteModule = nextModule() || ids[0];
   const id = state.noteModule, text = state.notes[id] || '';
   const words = (x) => (x.trim() ? x.trim().split(/\s+/).length : 0);
-  return `<section class="wrap"><h1>${t('notes')}</h1><p class="lead">${t('notesLead')}</p>
+  return `<section class="wrap"><h1>${t('notes')}</h1><p class="lead">${state.user ? t('notesLeadIn') : t('notesLead')}</p>
     <div class="notes" style="margin-top:22px"><div class="card notes-list">${ids.map((m) => `<button data-action="note-pick" data-id="${m}" aria-pressed="${m === id}">${dot(m)}<span>${esc(moduleTitle(m))}</span>${state.notes[m] ? `<span class="n">${words(state.notes[m])}</span>` : ''}</button>`).join('')}</div>
-      <div class="card note-editor"><div class="row-top"><b>${t('notesFor')} ${esc(moduleTitle(id))}</b><a class="muted" href="#m-${id}">${t('module')} →</a></div>
+      <div class="card note-editor"><select class="select note-pick" id="note-module" aria-label="${t('module')}">${ids.map((m) => `<option value="${m}" ${m === id ? 'selected' : ''}>${esc(moduleTitle(m))}${state.notes[m] && state.notes[m].trim() ? ' ✎' : ''}</option>`).join('')}</select><div class="row-top"><b>${t('notesFor')} ${esc(moduleTitle(id))}</b><a class="muted" href="#m-${id}">${t('module')} →</a></div>
         <textarea id="note-text" placeholder="${t('notePlaceholder')}">${esc(text)}</textarea>
         <div class="muted" id="note-status">${text ? `${state.user ? t('savedAccount') : t('savedDevice')} · ${words(text)} ${t('words')}` : ''}</div></div></div></section>`;
 }
@@ -507,6 +521,11 @@ function vidCard(v, isList) {
   const url = isList ? `https://www.youtube.com/playlist?list=${v.id}` : `https://www.youtube.com/watch?v=${v.id}`;
   const meta = [v.channel, isList && v.count ? t('videoCount', v.count) : v.length].filter(Boolean).join(' · ');
   return `<a class="card vid" href="${url}" target="_blank" rel="noopener"><span class="play${isList ? ' list' : ''}">${isList ? '☰' : '▶'}</span><span class="vt"><b>${esc(v.title)}</b><span>${esc(meta)}</span></span><span class="ext">${t('onYoutube')} ↗</span></a>`;
+}
+function waitGroups(tr) {
+  const groups = new Map();
+  tr.units.flatMap((u) => u.modules).forEach((m) => { const v = modVideos(m)?.series; if (!v) return; if (!groups.has(v.id)) groups.set(v.id, { v, mods: [] }); groups.get(v.id).mods.push(m); });
+  return [...groups.values()];
 }
 const modVideos = (id) => (DATA.videos && DATA.videos.modules[id]) || null;
 // The module's own series, or the whole course's series when the module has none yet.
@@ -737,12 +756,23 @@ document.addEventListener('input', (e) => {
 });
 document.addEventListener('change', (e) => {
   if (e.target.id === 'practice-module') { state.practiceModule = e.target.value; state.quiz = null; state.flash = null; render(true); }
+  if (e.target.id === 'note-module') { state.noteModule = e.target.value; render(true); }
   if (e.target.id === 'pref-code-lang') { state.codeLang = e.target.value; store.set('codeLangTouched', true); save(); }
   if (e.target.id === 'plan-hours' || e.target.id === 'plan-start') { state.plan[e.target.id === 'plan-hours' ? 'hours' : 'start'] = e.target.value; store.set('planTouched', true); save(); render(true); }
 });
 document.addEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openSearch(); }
   if (e.key === 'Escape') closeSearch();
+  if (e.target.id === 'search-input' && ['ArrowDown', 'ArrowUp', 'Enter'].includes(e.key)) {
+    const items = [...document.querySelectorAll('#search-results .result[href]')];
+    if (!items.length) return;
+    e.preventDefault();
+    let i = items.findIndex((x) => x.classList.contains('kb'));
+    if (e.key === 'Enter') { (items[i] || items[0]).click(); return; }
+    items.forEach((x) => x.classList.remove('kb'));
+    i = e.key === 'ArrowDown' ? (i + 1) % items.length : (i <= 0 ? items.length - 1 : i - 1);
+    items[i].classList.add('kb'); items[i].scrollIntoView({ block: 'nearest' });
+  }
   if (e.target.id === 'flash' && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); e.target.click(); }
   if (e.target.id === 'pg-code') {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); runPlayground(); }

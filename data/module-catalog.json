@@ -1,0 +1,876 @@
+{
+ "publishedTracks": [
+  "java"
+ ],
+ "sequence": [
+  "intro-to-coding",
+  "java-basics",
+  "control-flow",
+  "git-basics-workflow",
+  "oop-basics",
+  "arrays-strings",
+  "searching-algorithms",
+  "stacks-queues",
+  "exception-handling",
+  "linked-lists",
+  "propositional-logic-proofs",
+  "recursion",
+  "sorting-algorithms",
+  "generics",
+  "sets-relations-functions",
+  "matrix-grid-problems",
+  "backtracking-patterns",
+  "collections-framework",
+  "hash-tables",
+  "trees-basics",
+  "git-branching-merging",
+  "heaps",
+  "tries",
+  "discrete-graph-theory",
+  "graph-algorithms",
+  "union-find",
+  "lambda-streams",
+  "file-io",
+  "combinatorics-discrete-probability",
+  "greedy-algorithms",
+  "dynamic-programming",
+  "testing-junit",
+  "assembly-registers-memory",
+  "bit-manipulation",
+  "assembly-control-flow-procedures",
+  "assembly-addressing-modes",
+  "assembly-arrays-strings-io",
+  "jdbc-basics",
+  "multithreading",
+  "java-memory-jvm",
+  "segment-trees",
+  "binary-indexed-trees",
+  "advanced-trees",
+  "string-algorithms",
+  "design-patterns"
+ ],
+ "categoryById": {
+  "git-basics-workflow": "git",
+  "git-branching-merging": "git",
+  "java-basics": "java",
+  "java-memory-jvm": "java",
+  "control-flow": "java",
+  "oop-basics": "java",
+  "exception-handling": "java",
+  "collections-framework": "java",
+  "file-io": "java",
+  "multithreading": "java",
+  "design-patterns": "java",
+  "lambda-streams": "java",
+  "generics": "java",
+  "testing-junit": "java",
+  "jdbc-basics": "java",
+  "propositional-logic-proofs": "discrete",
+  "sets-relations-functions": "discrete",
+  "combinatorics-discrete-probability": "discrete",
+  "discrete-graph-theory": "discrete",
+  "assembly-registers-memory": "assembly",
+  "assembly-control-flow-procedures": "assembly",
+  "assembly-arrays-strings-io": "assembly",
+  "assembly-addressing-modes": "assembly",
+  "intro-to-coding": "dsa",
+  "arrays-strings": "dsa",
+  "linked-lists": "dsa",
+  "stacks-queues": "dsa",
+  "trees-basics": "dsa",
+  "hash-tables": "dsa",
+  "heaps": "dsa",
+  "sorting-algorithms": "dsa",
+  "searching-algorithms": "dsa",
+  "matrix-grid-problems": "dsa",
+  "recursion": "dsa",
+  "backtracking-patterns": "dsa",
+  "dynamic-programming": "dsa",
+  "greedy-algorithms": "dsa",
+  "graph-algorithms": "dsa",
+  "tries": "dsa",
+  "union-find": "dsa",
+  "segment-trees": "dsa",
+  "binary-indexed-trees": "dsa",
+  "advanced-trees": "dsa",
+  "string-algorithms": "dsa",
+  "bit-manipulation": "dsa"
+ },
+ "modules": [
+  {
+   "id": "intro-to-coding",
+   "title": "Introduction to Coding",
+   "description": "Start here if you are brand new. This module explains what coding is, where it came from, what careers exist, how to choose your path and first language, how to set up your environment, and the core habits that make beginners successful.",
+   "difficulty": "beginner",
+   "topics": [
+    "What Coding Is",
+    "A Short History of Programming",
+    "How Code Becomes Running Software",
+    "How the Software Stack Fits Together",
+    "Career Paths in Technology",
+    "Choosing Your Learning Path",
+    "Choosing Your First Programming Language",
+    "Setting Up Your Development Environment",
+    "Your First Program",
+    "Core Building Blocks",
+    "Debugging and Problem Solving",
+    "Version Control and Collaboration Basics",
+    "How to Read Documentation and Error Messages",
+    "How to Ask Good Technical Questions",
+    "Beginner Pitfalls and How to Avoid Them",
+    "Project Selection and Portfolio Foundations",
+    "Study Systems and Habit Design",
+    "Preparing for CS Coursework and Internships",
+    "Learning Workflow and Portfolio Basics",
+    "30-Day Starter Plan"
+   ],
+   "es": {
+    "title": "Introducción a la codificación",
+    "description": "Comienza aquí si eres nuevo. Este módulo explica qué es la codificación, de dónde viene, qué carreras existen, cómo elegir su camino y su primer idioma, cómo configurar su entorno y los hábitos básicos que hacen que los principiantes tengan éxito."
+   }
+  },
+  {
+   "id": "arrays-strings",
+   "title": "Arrays and Strings",
+   "description": "This walkthrough dissects the `findMax`, `reverseString`, and `isPalindrome` helpers so you can watch loops, boundary guards, and two-pointer swaps combine into real array/string utilities.",
+   "difficulty": "beginner",
+   "topics": [
+    "Array Traversal",
+    "String Methods",
+    "Two Pointers",
+    "Sliding Window",
+    "Array Sorting"
+   ],
+   "es": {
+    "title": "Matrices y cadenas",
+    "description": "Este tutorial analiza los ayudantes `findMax`, `reverseString` e `isPalindrome` para que pueda observar cómo los bucles, las protecciones de límites y los intercambios de dos punteros se combinan en utilidades reales de matriz/cadena."
+   }
+  },
+  {
+   "id": "linked-lists",
+   "title": "Linked Lists",
+   "description": "We narrate every pointer move in `reverseList`, `hasCycle`, and `mergeTwoLists`, showing how temp nodes, tortoise - hare detection, and dummy heads keep lists consistent.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Singly Linked Lists",
+    "Doubly Linked Lists",
+    "Cycle Detection",
+    "List Reversal",
+    "Merge Operations"
+   ],
+   "es": {
+    "title": "Listas enlazadas",
+    "description": "Narramos cada movimiento del puntero en `reverseList`, `hasCycle` y `mergeTwoLists`, mostrando cómo los nodos temporales, la detección de tortugas y liebres y las cabezas ficticias mantienen las listas consistentes."
+   }
+  },
+  {
+   "id": "stacks-queues",
+   "title": "Stacks and Queues",
+   "description": "The `ArrayStack` and `ArrayQueue` wrappers expose each push/pop/peek and enqueue/dequeue call so you can see how ArrayDeque underpins both LIFO and FIFO flows in `main`.",
+   "difficulty": "beginner",
+   "topics": [
+    "Stack Operations",
+    "Queue Operations",
+    "Deque",
+    "Priority Queue",
+    "Applications"
+   ],
+   "es": {
+    "title": "Pilas y colas",
+    "description": "Los contenedores `ArrayStack` y `ArrayQueue` exponen cada llamada push/pop/peek y enqueue/dequeue para que pueda ver cómo ArrayDeque sustenta los flujos LIFO y FIFO en `main`."
+   }
+  },
+  {
+   "id": "trees-basics",
+   "title": "Binary Trees",
+   "description": "Follow `insertRecursive`, `inorder`, and `levelOrderTraversal` to see how the BST is built, how DFS prints sorted values, and how a queue drives breadth-first output.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Tree Traversal",
+    "Binary Search Trees",
+    "Tree Height",
+    "Path Problems",
+    "Tree Construction"
+   ],
+   "es": {
+    "title": "árboles binarios",
+    "description": "Siga `insertRecursive`, `inorder` y `levelOrderTraversal` para ver cómo se construye BST, cómo DFS imprime valores ordenados y cómo una cola genera una salida en amplitud."
+   }
+  },
+  {
+   "id": "hash-tables",
+   "title": "Hash Tables and Maps",
+   "description": "We count characters with `HashMap.merge` and then peel back a custom `SimpleHashTable` that hashes keys, stores chained entries, and resolves collisions bucket by bucket.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Hash Functions",
+    "Collision Resolution",
+    "HashMap Operations",
+    "Hash Sets",
+    "Load Factor"
+   ],
+   "es": {
+    "title": "Tablas hash y mapas",
+    "description": "Contamos caracteres con `HashMap.merge` y luego retiramos una `SimpleHashTable` personalizada que codifica claves, almacena entradas encadenadas y resuelve colisiones segmento por segmento."
+   }
+  },
+  {
+   "id": "heaps",
+   "title": "Heaps and Priority Queues",
+   "description": "First `priorityQueueDemo` shows the library min-heap, then `heapify`/`buildMinHeap` rebuild the structure from an array so you can trace index math, swaps, and bottom-up heap construction.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Min Heap",
+    "Max Heap",
+    "Heap Operations",
+    "Heapify",
+    "Priority Queues"
+   ],
+   "es": {
+    "title": "Montones y colas prioritarias",
+    "description": "Primero, `priorityQueueDemo` muestra el montón mínimo de la biblioteca, luego `heapify`/`buildMinHeap` reconstruye la estructura a partir de una matriz para que pueda rastrear las matemáticas de índice, los intercambios y la construcción del montón ascendente."
+   }
+  },
+  {
+   "id": "sorting-algorithms",
+   "title": "Sorting Algorithms",
+   "description": "`bubbleSort`, `mergeSort`, and `quickSort` live in one class, letting us highlight each loop condition, partition, and merge so the control flow behind every comparison is crystal clear.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Bubble Sort",
+    "Merge Sort",
+    "Quick Sort",
+    "Heap Sort",
+    "Radix Sort"
+   ],
+   "es": {
+    "title": "Algoritmos de clasificación",
+    "description": "`bubbleSort`, `mergeSort` y `quickSort` viven en una clase, lo que nos permite resaltar cada condición de bucle, partición y fusión para que el flujo de control detrás de cada comparación sea muy claro."
+   }
+  },
+  {
+   "id": "searching-algorithms",
+   "title": "Searching Algorithms",
+   "description": "Linear, binary, and exponential search are implemented side by side, so we break down pointer shifts, boundary tests, and the final `Arrays.binarySearch` call that finishes the exponential window.",
+   "difficulty": "beginner",
+   "topics": [
+    "Linear Search",
+    "Binary Search",
+    "Interpolation Search",
+    "Exponential Search",
+    "Search Strategy Comparison"
+   ],
+   "es": {
+    "title": "Algoritmos de búsqueda",
+    "description": "La búsqueda lineal, binaria y exponencial se implementan en paralelo, por lo que desglosamos los cambios de puntero, las pruebas de límites y la llamada final a `Arrays.binarySearch` que finaliza la ventana exponencial."
+   }
+  },
+  {
+   "id": "recursion",
+   "title": "Recursion Fundamentals",
+   "description": "Factorial, maze solving, and subset generation illustrate how base cases, choices, and backtracking fit together; we explain what each recursive frame is doing and when it unwinds.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Recursive Functions",
+    "Base Cases",
+    "Backtracking",
+    "Memoization",
+    "Tree Recursion"
+   ],
+   "es": {
+    "title": "Fundamentos de recursión",
+    "description": "El factorial, la resolución de laberintos y la generación de subconjuntos ilustran cómo encajan los casos base, las elecciones y el retroceso; Explicamos qué hace cada cuadro recursivo y cuándo se desenrolla."
+   }
+  },
+  {
+   "id": "dynamic-programming",
+   "title": "Dynamic Programming",
+   "description": "The memoized Fibonacci map, LIS DP array, and 0/1 knapsack table are spelled out step by step so you can follow how states are cached, transitions chosen, and answers read back.",
+   "difficulty": "advanced",
+   "topics": [
+    "Memoization",
+    "Tabulation",
+    "Optimal Substructure",
+    "Overlapping Subproblems"
+   ],
+   "es": {
+    "title": "Programación dinámica",
+    "description": "El mapa de Fibonacci memorizado, la matriz LIS DP y la tabla de mochila 0/1 se detallan paso a paso para que pueda seguir cómo se almacenan en caché los estados, se eligen las transiciones y se leen las respuestas."
+   }
+  },
+  {
+   "id": "greedy-algorithms",
+   "title": "Greedy Algorithms",
+   "description": "Activity selection walks through the start/finish arrays while `coinChange` repeatedly peels denominations, making it easy to see why each greedy comparison or subtraction works.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Greedy Choice",
+    "Activity Selection",
+    "Huffman Coding",
+    "Minimum Spanning Tree"
+   ],
+   "es": {
+    "title": "Algoritmos codiciosos",
+    "description": "La selección de actividad recorre las matrices de inicio/fin mientras \"coinChange\" pela repetidamente las denominaciones, lo que facilita ver por qué funciona cada comparación o resta codiciosa."
+   }
+  },
+  {
+   "id": "graph-algorithms",
+   "title": "Graph Algorithms",
+   "description": "`Graph.addEdge`, `bfs`, and `dijkstra` all run in one demo, giving you line-by-line insight into adjacency lists, queue-based traversal, and heap-driven distance relaxation.",
+   "difficulty": "advanced",
+   "topics": [
+    "Graph Representation",
+    "DFS",
+    "BFS",
+    "Shortest Path",
+    "Minimum Spanning Tree"
+   ],
+   "es": {
+    "title": "Algoritmos gráficos",
+    "description": "`Graph.addEdge`, `bfs` y `dijkstra` se ejecutan en una demostración, lo que le brinda información línea por línea sobre las listas de adyacencia, el recorrido basado en colas y la relajación de distancia impulsada por el montón."
+   }
+  },
+  {
+   "id": "propositional-logic-proofs",
+   "title": "Propositional Logic and Proof Basics",
+   "description": "Truth-value helpers for implication, conjunction, and biconditional are traced in a mini truth-table runner so you can connect symbolic logic to executable reasoning.",
+   "difficulty": "beginner",
+   "topics": [
+    "Propositions",
+    "Truth Tables",
+    "Implication",
+    "Logical Equivalence",
+    "Direct Proof"
+   ],
+   "es": {
+    "title": "Lógica proposicional y conceptos básicos de prueba",
+    "description": "Los ayudantes de valor de verdad para implicación, conjunción y bicondicional se rastrean en un mini corredor de tabla de verdad para que pueda conectar la lógica simbólica con el razonamiento ejecutable."
+   }
+  },
+  {
+   "id": "sets-relations-functions",
+   "title": "Sets, Relations, and Functions",
+   "description": "Set union/intersection, Cartesian products, and injective checks run in one compact sample so you can connect formal definitions to concrete data structures.",
+   "difficulty": "beginner",
+   "topics": [
+    "Set Operations",
+    "Cartesian Product",
+    "Relations",
+    "Injective Functions",
+    "Surjective Functions"
+   ],
+   "es": {
+    "title": "Conjuntos, relaciones y funciones",
+    "description": "Establezca uniones/intersecciones, productos cartesianos y comprobaciones inyectivas ejecutadas en una muestra compacta para que pueda conectar definiciones formales a estructuras de datos concretas."
+   }
+  },
+  {
+   "id": "combinatorics-discrete-probability",
+   "title": "Combinatorics and Discrete Probability",
+   "description": "Factorial/permutation/combination helpers pair with basic probability calculations so counting principles and event models become practical problem-solving tools.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Factorials",
+    "Permutations",
+    "Combinations",
+    "Binomial Coefficients",
+    "Event Probability"
+   ],
+   "es": {
+    "title": "Combinatoria y probabilidad discreta",
+    "description": "Los ayudantes factoriales/permutación/combinación se combinan con cálculos de probabilidad básicos para que los principios de conteo y los modelos de eventos se conviertan en herramientas prácticas para la resolución de problemas."
+   }
+  },
+  {
+   "id": "tries",
+   "title": "Tries (Prefix Trees)",
+   "description": "The trie builds nodes character by character in `insert`, reuses them via `traverse`, and flags words/prefixes, so we spell out how each loop navigates the shared structure.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Trie Construction",
+    "Insert/Search/Delete",
+    "Prefix Matching",
+    "Auto-complete"
+   ],
+   "es": {
+    "title": "Intentos (árboles de prefijos)",
+    "description": "El trie construye nodos carácter por carácter en `insertar`, los reutiliza mediante `traverse` y marca palabras/prefijos, por lo que explicamos cómo cada bucle navega por la estructura compartida."
+   }
+  },
+  {
+   "id": "union-find",
+   "title": "Union-Find (Disjoint Set)",
+   "description": "`find` performs recursive path compression and `union` compares ranks before reparenting nodes, letting you trace exactly how the disjoint-set forest flattens.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Union by Rank",
+    "Path Compression",
+    "Connected Components",
+    "Cycle Detection"
+   ],
+   "es": {
+    "title": "Union-Find (conjunto disjunto)",
+    "description": "`find` realiza una compresión de ruta recursiva y `union` compara rangos antes de volver a emparentar los nodos, lo que le permite rastrear exactamente cómo se aplana el bosque de conjuntos disjuntos."
+   }
+  },
+  {
+   "id": "segment-trees",
+   "title": "Segment Trees",
+   "description": "`build`, `update`, and `rangeSum` split ranges by midpoint, handle cover/disjoint/partial cases, and bubble results upward so the entire range-query story is easy to follow.",
+   "difficulty": "advanced",
+   "topics": [
+    "Range Queries",
+    "Lazy Propagation",
+    "Point Updates",
+    "Range Updates"
+   ],
+   "es": {
+    "title": "Árboles de segmentos",
+    "description": "`build`, `update` y `rangeSum` dividen rangos por punto medio, manejan casos de cobertura/separados/parciales y distribuyen los resultados hacia arriba para que toda la historia de la consulta de rango sea fácil de seguir."
+   }
+  },
+  {
+   "id": "binary-indexed-trees",
+   "title": "Binary Indexed Trees (Fenwick Trees)",
+   "description": "The BIT demo emphasizes the lowbit trick: `update` climbs with `i += i & -i`, `prefixSum` walks downward, and `rangeSum` just subtracts prefixes so you can visualize the implicit tree.",
+   "difficulty": "advanced",
+   "topics": [
+    "Prefix Sums",
+    "Range Sum Queries",
+    "Point Updates",
+    "Lower Bit Operation"
+   ],
+   "es": {
+    "title": "Árboles indexados binarios (árboles de Fenwick)",
+    "description": "La demostración de BIT enfatiza el truco de los bits bajos: `update` sube con `i += i & -i`, `prefixSum` camina hacia abajo y `rangeSum` simplemente resta prefijos para que puedas visualizar el árbol implícito."
+   }
+  },
+  {
+   "id": "advanced-trees",
+   "title": "Advanced Tree Structures",
+   "description": "The AVL insert pipeline updates heights, checks balance factors, and triggers the correct rotations before an inorder traversal verifies the tree stayed sorted.",
+   "difficulty": "advanced",
+   "topics": [
+    "AVL Trees",
+    "Red-Black Trees",
+    "B-Trees",
+    "Splay Trees",
+    "Tree Rotations"
+   ],
+   "es": {
+    "title": "Estructuras de árbol avanzadas",
+    "description": "La tubería de inserción AVL actualiza las alturas, verifica los factores de equilibrio y activa las rotaciones correctas antes de que un recorrido en orden verifique que el árbol permaneció ordenado."
+   }
+  },
+  {
+   "id": "string-algorithms",
+   "title": "Advanced String Algorithms",
+   "description": "We build the KMP prefix table and feed it into `kmpSearch`, pausing on each pointer jump so you understand how the `lps` array skips redundant comparisons.",
+   "difficulty": "advanced",
+   "topics": [
+    "KMP Algorithm",
+    "Rabin-Karp",
+    "Boyer-Moore",
+    "Suffix Arrays",
+    "String Hashing"
+   ],
+   "es": {
+    "title": "Algoritmos de cadenas avanzados",
+    "description": "Construimos la tabla de prefijos KMP y la introducimos en `kmpSearch`, haciendo una pausa en cada salto del puntero para que comprenda cómo la matriz `lps` omite comparaciones redundantes."
+   }
+  },
+  {
+   "id": "assembly-registers-memory",
+   "title": "Assembly Registers and Memory Basics",
+   "description": "This starter module introduces register roles, immediate values, and memory addressing by tracing simple load/add/store sequences side by side with high-level equivalents.",
+   "difficulty": "beginner",
+   "topics": [
+    "CPU Registers",
+    "Memory Addresses",
+    "Load/Store",
+    "Data Sizes",
+    "Endian Awareness"
+   ],
+   "es": {
+    "title": "Registros de ensamblaje y conceptos básicos de memoria",
+    "description": "Este módulo inicial presenta funciones de registro, valores inmediatos y direccionamiento de memoria mediante el seguimiento de secuencias simples de carga/agregación/almacenamiento al lado de equivalentes de alto nivel."
+   }
+  },
+  {
+   "id": "assembly-control-flow-procedures",
+   "title": "Assembly Control Flow and Procedures",
+   "description": "Branch flags, loop counters, and call/return frames are demonstrated in short routines so you can see how high-level `if`, `while`, and function calls are represented in assembly.",
+   "difficulty": "intermediate",
+   "topics": [
+    "CMP and Flags",
+    "Conditional Jumps",
+    "Loops",
+    "Call/Ret",
+    "Calling Conventions"
+   ],
+   "es": {
+    "title": "Procedimientos y flujo de control de montaje",
+    "description": "Los indicadores de bifurcación, los contadores de bucle y los marcos de llamada/retorno se demuestran en rutinas breves para que pueda ver cómo se representan las llamadas de alto nivel \"if\", \"mientras\" y funciones en el ensamblado."
+   }
+  },
+  {
+   "id": "assembly-arrays-strings-io",
+   "title": "Assembly Arrays, Strings, and Basic I/O",
+   "description": "Pointer stepping over arrays, null-terminated string scans, and minimal I/O patterns are broken into small examples so data traversal in assembly feels concrete.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Pointer Arithmetic",
+    "Array Traversal",
+    "Null-Terminated Strings",
+    "System Calls",
+    "Byte/Word Access"
+   ],
+   "es": {
+    "title": "Matrices de ensamblaje, cadenas y E/S básicas",
+    "description": "El puntero que pasa por encima de matrices, escaneos de cadenas terminadas en nulo y patrones mínimos de E/S se dividen en pequeños ejemplos para que el recorrido de datos en el ensamblaje se sienta concreto."
+   }
+  },
+  {
+   "id": "bit-manipulation",
+   "title": "Bit Manipulation",
+   "description": "Functions like `isPowerOfTwo`, `countBits`, `singleNumber`, and `lowbit` expose masks and XOR tricks; we call out what each operation does to the underlying bits.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Bitwise Operators",
+    "Bit Masks",
+    "Power of Two",
+    "XOR Properties",
+    "Bit Counting"
+   ],
+   "es": {
+    "title": "Manipulación de bits",
+    "description": "Funciones como `isPowerOfTwo`, `countBits`, `singleNumber` y `lowbit` exponen máscaras y trucos XOR; decimos lo que cada operación hace a los bits subyacentes."
+   }
+  },
+  {
+   "id": "java-basics",
+   "title": "Java Fundamentals",
+   "description": "Learn Java as a full programming system: variables and types feed methods, methods power classes, and classes create objects with real state transitions.",
+   "difficulty": "beginner",
+   "topics": [
+    "Variables",
+    "Data Types",
+    "Methods",
+    "Classes",
+    "Objects"
+   ],
+   "es": {
+    "title": "Fundamentos de Java",
+    "description": "`JavaBasics` conecta campos a través de un constructor, expone `getInfo` y crea una instancia en `main`, desglosando cómo los objetos almacenan el estado y exponen el comportamiento."
+   }
+  },
+  {
+   "id": "git-basics-workflow",
+   "title": "Git Basics and Collaboration Workflow",
+   "description": "Learn the complete day-one Git workflow with a realistic terminal sequence: initialize, commit with intent, branch safely, sync with remote, handle conflicts, and undo mistakes without rewriting shared history.",
+   "difficulty": "beginner",
+   "topics": [
+    "Repository Setup",
+    "Staging and Commits",
+    "Branching and Merging",
+    "Pull/Rebase Basics",
+    "Merge Conflict Basics",
+    "Remote Collaboration",
+    "Safe Undo with Restore/Revert"
+   ],
+   "es": {
+    "title": "Conceptos básicos de Git y flujo de trabajo de colaboración",
+    "description": "Este módulo inicial explica la configuración del repositorio, la puesta en escena, las confirmaciones, las bifurcaciones, el flujo de extracción/fusión, los conceptos básicos de resolución de conflictos y los comandos de deshacer seguros que puede usar en proyectos de equipo reales."
+   }
+  },
+  {
+   "id": "control-flow",
+   "title": "Control Flow Statements",
+   "description": "`ControlFlow.main` chains an if/else ladder, classic for loop, and enhanced for loop so you can trace how each branch or counter drives console output.",
+   "difficulty": "beginner",
+   "topics": [
+    "If-Else",
+    "For Loops",
+    "While Loops",
+    "Switch",
+    "Break/Continue"
+   ],
+   "es": {
+    "title": "Declaraciones de flujo de control",
+    "description": "`ControlFlow.main` encadena una escalera if/else, un bucle for clásico y un bucle for mejorado para que puedas rastrear cómo cada rama o contador impulsa la salida de la consola."
+   }
+  },
+  {
+   "id": "oop-basics",
+   "title": "Object-Oriented Programming",
+   "description": "An abstract `Animal` defines shared state/behavior, `Dog` overrides `makeSound`, and the inherited `sleep` method demonstrates encapsulation and polymorphism in one snippet.",
+   "difficulty": "beginner",
+   "topics": [
+    "Encapsulation",
+    "Inheritance",
+    "Polymorphism",
+    "Abstraction",
+    "Interfaces"
+   ],
+   "es": {
+    "title": "Programación orientada a objetos",
+    "description": "Un \"Animal\" abstracto define el estado/comportamiento compartido, \"Perro\" anula \"makeSound\" y el método heredado \"dormir\" demuestra encapsulación y polimorfismo en un fragmento."
+   }
+  },
+  {
+   "id": "exception-handling",
+   "title": "Exception Handling",
+   "description": "`divide` wraps division in try/catch/finally while `validateAge` throws a custom exception, showing exactly how execution moves through error paths and cleanup blocks.",
+   "difficulty": "beginner",
+   "topics": [
+    "Try-Catch",
+    "Finally Block",
+    "Custom Exceptions",
+    "Throws",
+    "Exception Types"
+   ],
+   "es": {
+    "title": "Manejo de excepciones",
+    "description": "`divide` envuelve la división en try/catch/finally mientras que `validateAge` genera una excepción personalizada, que muestra exactamente cómo se mueve la ejecución a través de rutas de error y bloques de limpieza."
+   }
+  },
+  {
+   "id": "collections-framework",
+   "title": "Java Collections Framework",
+   "description": "`CollectionsExample` builds an `ArrayList`, `HashMap`, and `HashSet` inside `main`, highlighting adds, puts, and duplicate handling so each collection's behavior is tangible.",
+   "difficulty": "intermediate",
+   "topics": [
+    "ArrayList",
+    "HashMap",
+    "HashSet",
+    "TreeMap",
+    "LinkedList",
+    "Iterators"
+   ],
+   "es": {
+    "title": "Marco de colecciones de Java",
+    "description": "`CollectionsExample` construye un `ArrayList`, `HashMap` y `HashSet` dentro de `main`, resaltando las adiciones, colocaciones y el manejo de duplicados para que el comportamiento de cada colección sea tangible."
+   }
+  },
+  {
+   "id": "file-io",
+   "title": "File Input/Output",
+   "description": "`writeToFile` and `readFromFile` pair try-with-resources with FileWriter and Scanner, illustrating how to open, stream, and close files while surfacing friendly error messages.",
+   "difficulty": "intermediate",
+   "topics": [
+    "FileReader",
+    "FileWriter",
+    "BufferedReader",
+    "Scanner",
+    "Path API"
+   ],
+   "es": {
+    "title": "Entrada/salida de archivos",
+    "description": "`writeToFile` y `readFromFile` combinan prueba con recursos con FileWriter y Scanner, lo que ilustra cómo abrir, transmitir y cerrar archivos mientras aparecen mensajes de error amigables."
+   }
+  },
+  {
+   "id": "multithreading",
+   "title": "Multithreading Basics",
+   "description": "A `Counter` implements Runnable, prints progress inside `run`, and two threads are started in `main`, letting you trace scheduling, sleeping, and graceful interruption.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Thread Class",
+    "Runnable Interface",
+    "Synchronization",
+    "Thread Safety"
+   ],
+   "es": {
+    "title": "Conceptos básicos de subprocesos múltiples",
+    "description": "Un \"Contador\" implementa Runnable, imprime el progreso dentro de \"ejecutar\" y se inician dos subprocesos en \"principal\", lo que le permite rastrear la programación, el sueño y la interrupción elegante."
+   }
+  },
+  {
+   "id": "design-patterns",
+   "title": "Design Patterns",
+   "description": "We showcase a synchronized lazy `DatabaseConnection` singleton plus a switch-based `ShapeFactory`, explaining why constructors stay private and how factories centralize object creation.",
+   "difficulty": "advanced",
+   "topics": [
+    "Singleton",
+    "Factory",
+    "Observer",
+    "Strategy",
+    "MVC"
+   ],
+   "es": {
+    "title": "Patrones de diseño",
+    "description": "Mostramos un singleton `DatabaseConnection` diferido sincronizado más un `ShapeFactory` basado en switch, explicando por qué los constructores permanecen privados y cómo las fábricas centralizan la creación de objetos."
+   }
+  },
+  {
+   "id": "lambda-streams",
+   "title": "Lambda Expressions & Streams",
+   "description": "The stream pipeline filters even numbers, maps them to squares, collects a list, then chains mapToInt/filter/average, so each stage's role is spelled out in order.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Lambda Expressions",
+    "Stream API",
+    "Method References",
+    "Functional Interfaces"
+   ],
+   "es": {
+    "title": "Expresiones y transmisiones Lambda",
+    "description": "La canalización de flujo filtra números pares, los asigna a cuadrados, recopila una lista y luego encadena mapToInt/filter/average, de modo que la función de cada etapa se detalla en orden."
+   }
+  },
+  {
+   "id": "generics",
+   "title": "Java Generics",
+   "description": "Generic `Box<T>`, the `<T> void swap` helper, and the bounded `average` method demonstrate how type parameters travel through classes, methods, and Number constraints.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Generic Classes",
+    "Generic Methods",
+    "Wildcards",
+    "Type Erasure",
+    "Bounds"
+   ],
+   "es": {
+    "title": "Genéricos de Java",
+    "description": "El `Box<T>` genérico, el ayudante `<T> void swap` y el método `average` acotado demuestran cómo los parámetros de tipo viajan a través de clases, métodos y restricciones numéricas."
+   }
+  },
+  {
+   "id": "testing-junit",
+   "title": "Unit Testing with JUnit",
+   "description": "`CalculatorTest` uses `@BeforeEach` setup, assertion-based tests, exception checks, and a parameterized suite, clarifying what each annotation adds to the run.",
+   "difficulty": "intermediate",
+   "topics": [
+    "JUnit Basics",
+    "Test Assertions",
+    "Test Lifecycle",
+    "Mocking",
+    "TDD"
+   ],
+   "es": {
+    "title": "Pruebas unitarias con JUnit",
+    "description": "`CalculatorTest` usa la configuración `@BeforeEach`, pruebas basadas en aserciones, comprobaciones de excepciones y un conjunto de parámetros, aclarando qué agrega cada anotación a la ejecución."
+   }
+  },
+  {
+   "id": "jdbc-basics",
+   "title": "Database Connectivity (JDBC)",
+   "description": "`getStudents` and `insertStudent` open connections with try-with-resources, build statements (plain vs prepared), bind parameters, and iterate result sets so database I/O order is explicit.",
+   "difficulty": "intermediate",
+   "topics": [
+    "JDBC Drivers",
+    "Connection",
+    "Statement",
+    "ResultSet",
+    "Prepared Statements"
+   ],
+   "es": {
+    "title": "Conectividad de base de datos (JDBC)",
+    "description": "`getStudents` e `insertStudent` abren conexiones con prueba con recursos, crean declaraciones (simples o preparadas), vinculan parámetros e iteran conjuntos de resultados para que el orden de E/S de la base de datos sea explícito."
+   }
+  },
+  {
+   "id": "git-branching-merging",
+   "title": "Git Branching, Merging, and Pull Requests",
+   "description": "Practice an intermediate team workflow with branch strategy, commit slicing, rebase conflict handling, PR-ready history cleanup, and production-safe merge patterns.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Feature Branches",
+    "Rebase vs Merge",
+    "Conflict Resolution",
+    "Pull Request Hygiene",
+    "Commit Strategy"
+   ],
+   "es": {
+    "title": "Solicitudes de ramificación, fusión y extracción de Git",
+    "description": "Aprenda un flujo de trabajo de equipo repetible: cree ramas de funciones, manténgalas actualizadas, resuelva conflictos de fusión de forma segura y abra solicitudes de extracción limpias con confirmaciones listas para revisión."
+   }
+  },
+  {
+   "id": "java-memory-jvm",
+   "title": "Java Memory and JVM Fundamentals",
+   "description": "Build a practical JVM memory model: stack vs heap behavior, object lifecycle, garbage-collection triggers, reference strength, and leak patterns that appear in real apps.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Stack vs Heap",
+    "Object Lifecycle",
+    "Garbage Collection",
+    "References",
+    "Memory Leaks in Practice"
+   ],
+   "es": {
+    "title": "Memoria Java y fundamentos de JVM",
+    "description": "Comprenda la pila frente al montón, la vida útil de los objetos, los conceptos básicos de la recolección de basura y por qué las decisiones de codificación basadas en la memoria mejoran la confiabilidad y el rendimiento."
+   }
+  },
+  {
+   "id": "discrete-graph-theory",
+   "title": "Discrete Graph Theory Foundations",
+   "description": "Bridge discrete math and practical CS by modeling vertices/edges, traversing graphs, and reasoning about paths, cycles, and connectivity.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Graph Models",
+    "Paths and Cycles",
+    "Connectivity",
+    "BFS/DFS Intuition",
+    "Tree vs General Graph"
+   ],
+   "es": {
+    "title": "Fundamentos de la teoría de grafos discretos",
+    "description": "Conecte las matemáticas discretas y la informática práctica modelando vértices/aristas, recorriendo gráficos y razonando sobre rutas, ciclos y conectividad."
+   }
+  },
+  {
+   "id": "assembly-addressing-modes",
+   "title": "Assembly Addressing Modes and Stack Frames",
+   "description": "Read and write memory using immediate, register, and base+offset addressing while understanding how stack frames support function calls.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Immediate/Register/Memory Modes",
+    "Base + Offset Addressing",
+    "Stack Frames",
+    "Call Conventions",
+    "Local Variable Access"
+   ],
+   "es": {
+    "title": "Modos de direccionamiento de ensamblaje y marcos de pila",
+    "description": "Lea y escriba memoria usando direccionamiento inmediato, de registro y de base+desplazamiento mientras comprende cómo los marcos de pila admiten llamadas a funciones."
+   }
+  },
+  {
+   "id": "backtracking-patterns",
+   "title": "Backtracking Patterns",
+   "description": "Master the decision-tree template used in subsets, combinations, permutations, and constraint problems by tracking state, choices, and undo steps.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Decision Trees",
+    "Choose-Explore-Unchoose",
+    "Pruning",
+    "State Backtracking",
+    "Constraint Search"
+   ],
+   "es": {
+    "title": "Patrones de retroceso",
+    "description": "Domine la plantilla de árbol de decisiones utilizada en subconjuntos, combinaciones, permutaciones y problemas de restricciones mediante el seguimiento del estado, las opciones y los pasos de deshacer."
+   }
+  },
+  {
+   "id": "matrix-grid-problems",
+   "title": "Matrix and Grid Problem Solving",
+   "description": "Learn reliable patterns for traversing 2D grids using boundary checks, direction vectors, BFS waves, and in-place marking strategies.",
+   "difficulty": "intermediate",
+   "topics": [
+    "Grid Representation",
+    "Boundary Validation",
+    "Direction Vectors",
+    "BFS on Grids",
+    "In-Place Marking"
+   ],
+   "es": {
+    "title": "Problemas de Matrices y Cuadriculas",
+    "description": "Aprende patrones confiables para recorrer cuadriculas 2D con validacion de limites, vectores de direccion, BFS por capas y marcado en sitio."
+   }
+  }
+ ]
+}

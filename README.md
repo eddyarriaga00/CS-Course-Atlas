@@ -96,7 +96,7 @@ CS Course Atlas helps learners study through structured modules, code examples, 
 
 ## Curriculum
 
-45 modules across five tracks, each organized into units that build on one another. Every module includes learning objectives, prerequisites, key takeaways, common mistakes, graded practice, a glossary, curated resources, and a quiz, in English and Spanish. A recommended cross-track study order is defined in `MODULE_LEARNING_SEQUENCE` (`js/script.js`); unit structure and course content live in `js/course-curriculum.js` and are validated by `npm run check:curriculum`.
+45 modules across five tracks, each organized into units that build on one another. Every module includes learning objectives, prerequisites, key takeaways, common mistakes, graded practice, a glossary, curated resources, and a quiz, in English and Spanish. The module catalog, study order and published tracks are in `data/module-catalog.json`; unit structure and course content live in `js/course-curriculum.js` and are validated by `npm run check:curriculum`.
 
 ### Data Structures & Algorithms (22 modules)
 1. **Getting Started**: Introduction to Coding

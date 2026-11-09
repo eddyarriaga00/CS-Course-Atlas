@@ -6,7 +6,7 @@
     <title>Contact and Support | CS Course Atlas</title>
     <meta name="description" content="Contact and support options for CS Course Atlas.">
     <meta name="robots" content="index,follow">
-    <meta name="theme-color" content="#1d4ed8">
+    <meta name="theme-color" content="#4f46e5">
     <link rel="canonical" href="https://eddyarriaga00.github.io/CS-Course-Atlas/contact-support.html">
     <meta property="og:type" content="website">
     <meta property="og:site_name" content="CS Course Atlas">
@@ -16,8 +16,9 @@
     <link rel="manifest" href="manifest.webmanifest">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Pixelify+Sans:wght@400&family=Silkscreen:wght@400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/trust-pages.css">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/trust-pages.css?v=20261109">
+    <script>try { var th = JSON.parse(localStorage.getItem("atlas-theme")); if (th === "light" || th === "dark") document.documentElement.dataset.theme = th; } catch (e) {}</script>
 </head>
 <body>
     <header class="trust-header">
@@ -68,11 +69,18 @@
                         <select id="support-module-id" name="moduleId">
                             <option value="">General support</option>
                             <option value="java-basics">Java Fundamentals</option>
-                            <option value="git-basics-workflow">Git Basics</option>
-                            <option value="control-flow">Control Flow</option>
-                            <option value="oop-basics">OOP Basics</option>
-                            <option value="collections-framework">Collections Framework</option>
-                            <option value="data-structures">Data Structures</option>
+                            <option value="control-flow">Control Flow Statements</option>
+                            <option value="oop-basics">Object-Oriented Programming</option>
+                            <option value="exception-handling">Exception Handling</option>
+                            <option value="generics">Java Generics</option>
+                            <option value="collections-framework">Java Collections Framework</option>
+                            <option value="lambda-streams">Lambda Expressions &amp; Streams</option>
+                            <option value="file-io">File Input/Output</option>
+                            <option value="testing-junit">Unit Testing with JUnit</option>
+                            <option value="jdbc-basics">Database Connectivity (JDBC)</option>
+                            <option value="multithreading">Multithreading Basics</option>
+                            <option value="java-memory-jvm">Java Memory and JVM Fundamentals</option>
+                            <option value="design-patterns">Design Patterns</option>
                         </select>
                     </div>
                 </div>
@@ -93,7 +101,7 @@
                 </div>
             </form>
 
-            <div class="trust-note">Need immediate self-help? Return to the main site and use Quick Guide, Settings, and module definitions to troubleshoot common issues.</div>
+            <div class="trust-note">Looking for an answer about a topic? Each module has a <a href="index.html#glossary">glossary</a> of terms, a quiz and video series, and the <a href="index.html#roadmap">roadmap</a> shows what is coming next.</div>
 
             <div class="trust-footer">
                 <p>CS Course Atlas Contact and Support</p>
@@ -101,6 +109,7 @@
         </article>
     </main>
 
+    <script src="js/app-config.js"></script>
     <script>
         (function () {
             const form = document.getElementById('public-support-form');
@@ -110,6 +119,10 @@
             const moduleInput = document.getElementById('support-module-id');
             const topicInput = document.getElementById('support-topic');
             const messageInput = document.getElementById('support-message');
+
+            // index.html links here as contact-support.html?module=<id> from each module page.
+            const linkedModule = new URLSearchParams(location.search).get('module');
+            if (linkedModule && moduleInput.querySelector('option[value="' + CSS.escape(linkedModule) + '"]')) moduleInput.value = linkedModule;
 
             function showStatus(kind, text) {
                 status.textContent = text;
@@ -126,7 +139,7 @@
                 }
 
                 submitButton.disabled = true;
-                showStatus('success', 'Sending...');
+                showStatus('success', 'Sending… (the server can take up to 30 seconds to wake up)');
 
                 const payload = {
                     email: emailInput.value.trim() || null,
@@ -137,7 +150,8 @@
                 };
 
                 try {
-                    const response = await fetch('/api/support', {
+                    const apiBase = (window.__APP_CONFIG && window.__APP_CONFIG.apiBaseUrl) || '';
+                    const response = await fetch(apiBase + '/api/support', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'

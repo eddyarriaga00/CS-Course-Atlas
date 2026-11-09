@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /*
- * Validates js/course-curriculum.js against the module catalog in js/script.js:
+ * Validates js/course-curriculum.js against the module catalog in data/module-catalog.json:
  * - every module has a curriculum entry with the expected fields and counts
  * - English and Spanish are both present for every text field
  * - glossary terms match the module's topics (same order)
@@ -15,24 +15,9 @@ const path = require('path');
 const vm = require('vm');
 
 const ROOT = path.resolve(__dirname, '..');
-const SCRIPT_PATH = path.join(ROOT, 'js', 'script.js');
+const { loadCatalog } = require('./lib/catalog');
 const CURRICULUM_PATH = path.join(ROOT, 'js', 'course-curriculum.js');
 
-function loadCatalog() {
-    const src = fs.readFileSync(SCRIPT_PATH, 'utf8');
-    const categoryMatch = src.match(/const MODULE_CATEGORY_BY_ID = \{([\s\S]*?)\n\};/);
-    const sequenceMatch = src.match(/const MODULE_LEARNING_SEQUENCE = \[([\s\S]*?)\n\];/);
-    const modulesMatch = src.match(/const modules = \[([\s\S]*?)\n\];/);
-    if (!categoryMatch || !sequenceMatch || !modulesMatch) {
-        throw new Error('Could not parse module catalog structures from script.js');
-    }
-    return vm.runInNewContext([
-        `const MODULE_CATEGORY_BY_ID = {${categoryMatch[1]}\n};`,
-        `const MODULE_LEARNING_SEQUENCE = [${sequenceMatch[1]}\n];`,
-        `const modules = [${modulesMatch[1]}\n];`,
-        '({ MODULE_CATEGORY_BY_ID, MODULE_LEARNING_SEQUENCE, modules })'
-    ].join('\n'), {});
-}
 
 function loadCurriculum() {
     const sandbox = { window: {} };

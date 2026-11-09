@@ -14,18 +14,11 @@ const path = require('path');
 const vm = require('vm');
 
 const ROOT = path.resolve(__dirname, '..');
-const SCRIPT_PATH = path.join(ROOT, 'js', 'script.js');
+const { loadCatalog } = require('./lib/catalog');
 const EXAMPLES_PATH = path.join(ROOT, 'js', 'course-examples.js');
 const LANGS = ['java', 'cpp', 'python', 'javascript'];
 const PLACEHOLDER_PATTERNS = [/compute_running_total|computeRunningTotal|Running total:/, /Focus topic \(\d+\/\d+\)/, /Comprehensive guided sample/];
 
-function loadCatalog() {
-    const src = fs.readFileSync(SCRIPT_PATH, 'utf8');
-    const categoryMatch = src.match(/const MODULE_CATEGORY_BY_ID = \{([\s\S]*?)\n\};/);
-    const modulesMatch = src.match(/const modules = \[([\s\S]*?)\n\];/);
-    if (!categoryMatch || !modulesMatch) throw new Error('Could not parse module catalog from script.js');
-    return vm.runInNewContext(`const MODULE_CATEGORY_BY_ID = {${categoryMatch[1]}\n};\nconst modules = [${modulesMatch[1]}\n];\n({ MODULE_CATEGORY_BY_ID, modules })`, {});
-}
 
 function loadExamples() {
     const sandbox = { window: {} };
