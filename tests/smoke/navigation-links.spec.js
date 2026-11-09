@@ -75,6 +75,18 @@ test.describe('Navigation', () => {
         }
     });
 
+    test('sidebar keeps courses collapsed and opens the one you are in', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html#home');
+        await expect(page.locator('#sidebar .side-course.open')).toHaveCount(0);
+        await page.goto('/index.html#m-generics');
+        await expect(page.locator('#sidebar .side-course.open .cs-txt b')).toHaveText(['Java']);
+        await expect(page.locator('#sidebar .side-unit[open] .un')).toHaveText(['2. Object-Oriented Java']);
+        await page.locator('#sidebar .side-toggle[data-v="git"]').click();
+        await page.goto('/index.html#practice');
+        await expect(page.locator('#sidebar .side-course.open .cs-txt b')).toHaveText(['Git']);
+    });
+
     test('search finds a module and opens it', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html');
