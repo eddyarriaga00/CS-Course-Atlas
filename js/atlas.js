@@ -41,7 +41,7 @@ const UI = {
     roadmapLead: 'Where CS Course Atlas is going. Vote for what you want next.', live: 'Live', building: 'In progress', planned: 'Planned', vote: '▲ Vote', voted: '▲ Voted',
     achievements: 'Achievements', earned: (a, b) => `${a} of ${b} earned`,
     studyPlan: 'Study plan', planLead: 'Pick a course and how much time you have; we lay out the rest of it week by week.', hoursWeek: 'Hours per week', startOn: 'Start on', finishBy: 'Finish by', weeksLeft: 'weeks', modulesLeft: 'modules left', weekN: (n) => `Week ${n}`, thisWeek: 'This week', planHome: (d, c) => `At your pace you’ll finish ${c} by <b>${d}</b>.`, editPlan: 'Edit plan', allDone: 'Every module of this course is complete. Time for the next one.', addCalendar: 'Add to calendar', reminders: 'Weekly reminder', 
-    videos: 'Videos', fullSeries: 'Full video series', courseSeries: 'Full course series', watchTopic: 'Watch a video on this topic', watchWait: 'Watch while you wait', videosLead: 'A full series for the module, then one video per topic. All from university or well-known teaching channels; they open on YouTube.', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', fullSession: 'Full session', week1: 'week', coursesReady: 'courses ready', course: 'Course', trackCourse: (c) => `${c} course`, terminalExamples: 'Real terminal sessions', terminalHint: 'Run this in an empty folder. Lines starting with $ are what you type; the rest is what Git printed when we ran the session with real Git. Copy gives you just the commands.', terminalOut: 'Terminal', report: 'Report a problem with this module', programs: 'programs', languagesWord: 'languages', waitLead: 'Series that cover these modules, each listed once.',
+    videos: 'Videos', fullSeries: 'Full video series', courseSeries: 'Full course series', watchTopic: 'Watch a video on this topic', watchWait: 'Watch while you wait', videosLead: 'A full series for the module, then one video per topic. All from university or well-known teaching channels; they open on YouTube.', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', expand: 'show modules', collapse: 'hide modules', fullSession: 'Full session', week1: 'week', coursesReady: 'courses ready', course: 'Course', trackCourse: (c) => `${c} course`, terminalExamples: 'Real terminal sessions', terminalHint: 'Run this in an empty folder. Lines starting with $ are what you type; the rest is what Git printed when we ran the session with real Git. Copy gives you just the commands.', terminalOut: 'Terminal', report: 'Report a problem with this module', programs: 'programs', languagesWord: 'languages', waitLead: 'Series that cover these modules, each listed once.',
     signedInWith: (p) => `Signed in with ${p}`, syncedAt: (tm) => `Progress synced at ${tm}`, syncPending: 'Syncing progress…', day: 'day', acrossN: (n) => `across ${n} ${n === 1 ? 'quiz' : 'quizzes'}`, noQuizYet: 'No quizzes taken yet',
     modulesWithNotes: 'modules with notes', noActivity: 'Complete a module, take a quiz or write a note and it shows up here.', typeDelete: 'Type DELETE to confirm', deleteViaSupport: 'Ask support to delete it',
     privacy: 'Privacy', terms: 'Terms', contact: 'Contact', checkingSession: 'Checking your account…', emailOrUser: 'Email or username', username: 'Username', confirmPw: 'Confirm password',
@@ -90,7 +90,7 @@ const UI = {
     roadmapLead: 'Hacia dónde va CS Course Atlas. Vota por lo que quieres primero.', live: 'Disponible', building: 'En progreso', planned: 'Planeado', vote: '▲ Votar', voted: '▲ Votado',
     achievements: 'Logros', earned: (a, b) => `${a} de ${b} obtenidos`,
     studyPlan: 'Plan de estudio', planLead: 'Elige un curso y cuánto tiempo tienes; organizamos el resto semana a semana.', hoursWeek: 'Horas por semana', startOn: 'Empezar el', finishBy: 'Terminas el', weeksLeft: 'semanas', modulesLeft: 'módulos restantes', weekN: (n) => `Semana ${n}`, thisWeek: 'Esta semana', planHome: (d, c) => `A tu ritmo terminarás ${c} el <b>${d}</b>.`, editPlan: 'Editar plan', allDone: 'Completaste todos los módulos de este curso. Es hora del siguiente.', addCalendar: 'Agregar al calendario', reminders: 'Recordatorio semanal', 
-    videos: 'Videos', fullSeries: 'Serie completa de videos', courseSeries: 'Serie completa del curso', watchTopic: 'Mira un video sobre este tema', watchWait: 'Mira mientras esperas', videosLead: 'Una serie completa del módulo y un video por tema. Todos de canales universitarios o de enseñanza reconocidos; se abren en YouTube (en inglés).', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', fullSession: 'Sesión completa', week1: 'semana', coursesReady: 'cursos listos', course: 'Curso', trackCourse: (c) => `Curso de ${c}`, terminalExamples: 'Sesiones reales de terminal', terminalHint: 'Ejecútalo en una carpeta vacía. Las líneas que empiezan con $ son lo que escribes; el resto es lo que Git imprimió al ejecutar la sesión con Git real. Copiar te da solo los comandos.', terminalOut: 'Terminal', report: 'Reportar un problema con este módulo', programs: 'programas', languagesWord: 'lenguajes', waitLead: 'Series que cubren estos módulos, cada una una sola vez.',
+    videos: 'Videos', fullSeries: 'Serie completa de videos', courseSeries: 'Serie completa del curso', watchTopic: 'Mira un video sobre este tema', watchWait: 'Mira mientras esperas', videosLead: 'Una serie completa del módulo y un video por tema. Todos de canales universitarios o de enseñanza reconocidos; se abren en YouTube (en inglés).', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', expand: 'mostrar módulos', collapse: 'ocultar módulos', fullSession: 'Sesión completa', week1: 'semana', coursesReady: 'cursos listos', course: 'Curso', trackCourse: (c) => `Curso de ${c}`, terminalExamples: 'Sesiones reales de terminal', terminalHint: 'Ejecútalo en una carpeta vacía. Las líneas que empiezan con $ son lo que escribes; el resto es lo que Git imprimió al ejecutar la sesión con Git real. Copiar te da solo los comandos.', terminalOut: 'Terminal', report: 'Reportar un problema con este módulo', programs: 'programas', languagesWord: 'lenguajes', waitLead: 'Series que cubren estos módulos, cada una una sola vez.',
     signedInWith: (p) => `Sesión iniciada con ${p}`, syncedAt: (tm) => `Progreso sincronizado a las ${tm}`, syncPending: 'Sincronizando progreso…', day: 'día', acrossN: (n) => `en ${n} ${n === 1 ? 'cuestionario' : 'cuestionarios'}`, noQuizYet: 'Aún no haces cuestionarios',
     modulesWithNotes: 'módulos con notas', noActivity: 'Completa un módulo, haz un cuestionario o escribe una nota y aparecerá aquí.', typeDelete: 'Escribe DELETE para confirmar', deleteViaSupport: 'Pide a soporte que la elimine',
     privacy: 'Privacidad', terms: 'Términos', contact: 'Contacto', checkingSession: 'Revisando tu cuenta…', emailOrUser: 'Correo o usuario', username: 'Usuario', confirmPw: 'Confirmar contraseña',
@@ -106,7 +106,7 @@ const state = {
   lang: store.get('lang', (navigator.language || '').toLowerCase().startsWith('es') ? 'es' : 'en'), user: null, authReady: false, syncedAt: null, done: new Set(store.get('done', [])),
   codeLang: store.get('codeLang', 'java'), notified: new Set(store.get('notified', [])), tab: 'overview', exIndex: 0, quiz: null, flash: null, practiceModule: null,
   notes: store.get('notes', {}), aces: new Set(store.get('aces', [])), langsSeen: new Set(store.get('langsSeen', ['java'])), votes: new Set(store.get('votes', [])),
-  plan: store.get('plan', { hours: 4, start: new Date().toISOString().slice(0, 10) }), quizBest: store.get('quizBest', {}), activity: store.get('activity', []), pg: null, noteModule: null, glossLetter: 'all', glossQuery: ''
+  plan: store.get('plan', { hours: 4, start: new Date().toISOString().slice(0, 10) }), quizBest: store.get('quizBest', {}), activity: store.get('activity', []), pg: null, sideCollapsed: new Set(), noteModule: null, glossLetter: 'all', glossQuery: ''
 };
 let DATA = null;
 const $ = (s, r = document) => r.querySelector(s);
@@ -158,6 +158,21 @@ const pct = (a, b) => (b ? Math.round(100 * a / b) : 0);
 function dot(id) { return `<span class="dot ${state.done.has(id) ? 'done' : id === nextModule(DATA.modules[id]?.track) ? 'next' : ''}"></span>`; }
 
 /* ---------- Chrome: sidebar, bottom nav, dialog ---------- */
+// Sidebar courses are collapsed rows. The course you are in opens on its own; any other course opens
+// with its arrow (remembered). Inside an open course only the unit you are working in is expanded.
+const CHEVRON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg>';
+function sideCourse(tr, route) {
+  const ts = trackStats(tr), activeMod = route.startsWith('m-') ? route.slice(2) : null;
+  const here = (activeMod && DATA.modules[activeMod]?.track === tr.id) || route === 'course-' + tr.id;
+  const open = !state.sideCollapsed.has(tr.id) && (here || store.get('sideOpen', []).includes(tr.id));
+  const focus = tr.units.find((u) => u.modules.includes(activeMod)) || tr.units.find((u) => u.modules.includes(nextModule(tr.id))) || tr.units[0];
+  const units = open ? `<div class="side-units">${tr.units.map((u, i) => { const d = u.modules.filter((m) => state.done.has(m)).length;
+    return `<details class="side-unit"${u === focus ? ' open' : ''}><summary><span class="sv">${CHEVRON}</span><span class="un">${i + 1}. ${esc(L(u.title))}</span><span class="cnt${d === u.modules.length ? ' full' : ''}">${d}/${u.modules.length}</span></summary>`
+      + u.modules.map((id) => `<a class="mod-link${activeMod === id ? ' active' : ''}" href="#m-${id}">${dot(id)}${esc(moduleTitle(id))}</a>`).join('') + '</details>'; }).join('')}</div>` : '';
+  return `<div class="side-course${open ? ' open' : ''}${here ? ' here' : ''}"><div class="side-head">
+    <a class="course-switch" href="#course-${tr.id}"><span class="cmark" data-track="${tr.id}">${esc(tr.icon)}</span><span class="cs-txt"><b>${esc(L(tr.title))}</b><span>${t('ofModules', ts.done, ts.count)}</span><i class="mini-bar"><i style="width:${pct(ts.done, ts.count)}%"></i></i></span></a>
+    <button class="side-toggle" data-action="side-toggle" data-v="${tr.id}" aria-expanded="${open}" aria-label="${esc(L(tr.title))}: ${open ? t('collapse') : t('expand')}">${CHEVRON}</button></div>${units}</div>`;
+}
 function renderChrome(route) {
   document.documentElement.lang = state.lang;
   document.body.classList.toggle('signed-in', Boolean(state.user));
@@ -166,16 +181,12 @@ function renderChrome(route) {
   $('#lang-btn').textContent = state.lang === 'en' ? 'ES' : 'EN';
   $('#lang-btn').setAttribute('aria-label', state.lang === 'en' ? 'Cambiar a español' : 'Switch to English');
   $('#signin-open').textContent = t('signIn');
-  const active = routeTrack(route);
   const is = (r) => (route === r ? ' active' : '');
   $('#sidebar').innerHTML = `
     <a class="nav-item${is('home')}" href="#home"><span class="ico">⌂</span>${t('home')}</a>
     <a class="nav-item${is('courses')}" href="#courses"><span class="ico">▦</span>${t('allCourses')}</a>
     <div class="nav-label">${t('yourCourses')}</div>
-    ${liveTracks().map((tr) => { const ts = trackStats(tr), open = tr.id === active;
-      return `<a class="course-switch${open ? ' open' : ''}" href="#course-${tr.id}"><span class="cmark" data-track="${tr.id}">${esc(tr.icon)}</span><span><b>${esc(L(tr.title))}</b><span>${t('ofModules', ts.done, ts.count)}</span></span></a>`
-        + (open ? tr.units.map((u, i) => `<div class="unit-name">${i + 1}. ${esc(L(u.title))}</div>` + u.modules.map((id) =>
-          `<a class="mod-link${route === 'm-' + id ? ' active' : ''}" href="#m-${id}">${dot(id)}${esc(moduleTitle(id))}</a>`).join('')).join('') : ''); }).join('')}
+    ${liveTracks().map((tr) => sideCourse(tr, route)).join('')}
     <div class="nav-label">${t('otherCourses')}</div>
     ${DATA.tracks.filter((x) => x.status !== 'available').map((x) => `<a class="nav-item${is('course-' + x.id)}" href="#course-${x.id}"><span class="ico">${esc(x.icon)}</span>${esc(L(x.title))}<span class="tag">${t('soon')}</span></a>`).join('')}
     <div class="nav-label">${t('practice')}</div>
@@ -732,7 +743,7 @@ function render(keepScroll) {
     route = lastRoute && lastRoute !== 'profile' ? lastRoute : 'home';
     history.replaceState(null, '', '#' + route);
   }
-  if (route !== lastRoute) { state.tab = 'overview'; state.exIndex = 0; }
+  if (route !== lastRoute) { state.tab = 'overview'; state.exIndex = 0; state.sideCollapsed.clear(); }
   const html = route === 'home' ? viewHome() : route === 'courses' ? viewCourses() : route === 'practice' ? viewPractice() : route === 'profile' ? viewProfile() : route === 'playground' ? viewPlayground() : route === 'notes' ? viewNotes() : route === 'glossary' ? viewGlossary() : route === 'roadmap' ? viewRoadmap() : route === 'plan' ? viewPlan()
     : route.startsWith('course-') ? viewCourse(route.slice(7)) : route.startsWith('m-') ? viewModule(route.slice(2)) : viewMissing();
   renderChrome(route);
@@ -752,7 +763,13 @@ document.addEventListener('click', (e) => {
   if (el.dataset.ex != null) { state.exIndex = Number(el.dataset.ex); render(true); return; }
   if (el.dataset.codeLang) { state.codeLang = el.dataset.codeLang; state.langsSeen.add(el.dataset.codeLang); store.set('codeLangTouched', true); save(); render(true); return; }
   const a = el.dataset.action;
-  if (a === 'oauth') startOAuth(el.dataset.v);
+  if (a === 'side-toggle') {
+    const id = el.dataset.v, opened = new Set(store.get('sideOpen', []));
+    if (el.getAttribute('aria-expanded') === 'true') { opened.delete(id); state.sideCollapsed.add(id); } else { opened.add(id); state.sideCollapsed.delete(id); }
+    store.set('sideOpen', [...opened]);
+    const scroll = $('#sidebar').scrollTop; renderChrome(location.hash.slice(1) || 'home'); $('#sidebar').scrollTop = scroll;
+  }
+  else if (a === 'oauth') startOAuth(el.dataset.v);
   else if (a === 'close-signin') $('#signin').close();
   else if (a === 'signin-mode') { e.preventDefault(); state.signinMode = el.dataset.v; renderSignIn(); $('#si-email').focus(); }
   else if (a === 'sign-out') signOut();
