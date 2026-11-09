@@ -2392,5 +2392,176 @@
     ]
    ]
   }
+ ],
+ "cli-files-folders": [
+  {
+   "id": "project-skeleton",
+   "lang": "bash",
+   "title": {
+    "en": "Set up a project",
+    "es": "Arma un proyecto"
+   },
+   "prompt": {
+    "en": "Create a folder `site` containing an empty `index.html`, a folder `css` with an empty `style.css`, and a folder `js` with an empty `app.js`.",
+    "es": "Crea una carpeta `site` que contenga un `index.html` vacío, una carpeta `css` con un `style.css` vacío y una carpeta `js` con un `app.js` vacío."
+   },
+   "setup": "",
+   "starter": "# Type one command per line, then press Run.\n",
+   "solution": "mkdir -p site/css site/js\ntouch site/index.html site/css/style.css site/js/app.js\n",
+   "hint": {
+    "en": "`mkdir -p site/css site/js` makes the folders (and `site` itself) in one go; `touch` creates empty files.",
+    "es": "`mkdir -p site/css site/js` crea las carpetas (y `site` misma) de una vez; `touch` crea archivos vacíos."
+   },
+   "output": false
+  },
+  {
+   "id": "tidy-downloads",
+   "lang": "bash",
+   "title": {
+    "en": "Tidy the downloads",
+    "es": "Ordena las descargas"
+   },
+   "prompt": {
+    "en": "Inside `downloads`, make a folder `texts`, move every `.txt` file into it, and delete the `old` folder with everything in it.",
+    "es": "Dentro de `downloads`, crea una carpeta `texts`, mueve ahí cada archivo `.txt` y borra la carpeta `old` con todo su contenido."
+   },
+   "setup": "mkdir -p downloads/old\ncd downloads\ntouch report.txt notes.txt draft.txt photo.jpg song.mp3 old/junk.tmp\n",
+   "starter": "# Type one command per line, then press Run.\n",
+   "solution": "cd downloads\nmkdir texts\nmv *.txt texts/\nrm -r old\n",
+   "hint": {
+    "en": "`cd downloads`, then `mkdir texts`, `mv *.txt texts/` (the wildcard picks every .txt file) and `rm -r old`.",
+    "es": "`cd downloads`, luego `mkdir texts`, `mv *.txt texts/` (el comodín toma cada .txt) y `rm -r old`."
+   },
+   "output": false
+  }
+ ],
+ "cli-text-pipes": [
+  {
+   "id": "count-errors",
+   "lang": "bash",
+   "title": {
+    "en": "Count the errors",
+    "es": "Cuenta los errores"
+   },
+   "prompt": {
+    "en": "`app.log` has one event per line. Save the **number** of lines that contain `ERROR` into a new file `errors.txt` (just the number).",
+    "es": "`app.log` tiene un evento por línea. Guarda el **número** de líneas que contienen `ERROR` en un archivo nuevo `errors.txt` (solo el número)."
+   },
+   "setup": "printf '%s\\n' 'INFO server started' 'ERROR disk full' 'INFO user login' 'WARN slow request' 'ERROR timeout' 'INFO user logout' 'ERROR disk full' > app.log\n",
+   "starter": "# Type one command per line, then press Run.\n",
+   "solution": "grep -c ERROR app.log > errors.txt\n",
+   "hint": {
+    "en": "`grep -c ERROR app.log` prints how many lines match; `>` sends that into a file.",
+    "es": "`grep -c ERROR app.log` imprime cuántas líneas coinciden; `>` lo manda a un archivo."
+   },
+   "output": false
+  },
+  {
+   "id": "unique-visitors",
+   "lang": "bash",
+   "title": {
+    "en": "Unique visitors",
+    "es": "Visitantes únicos"
+   },
+   "prompt": {
+    "en": "`visitors.txt` lists a name per visit, with repeats. Write the names sorted with no repeats into `unique.txt`, then print how many unique visitors there are.",
+    "es": "`visitors.txt` tiene un nombre por visita, con repeticiones. Escribe los nombres ordenados y sin repetir en `unique.txt` y luego imprime cuántos visitantes únicos hay."
+   },
+   "setup": "printf '%s\\n' Chen Ana Ben Ana Chen Ana > visitors.txt\n",
+   "starter": "# Type one command per line, then press Run.\n",
+   "solution": "sort visitors.txt | uniq > unique.txt\nwc -l < unique.txt\n",
+   "hint": {
+    "en": "`sort visitors.txt | uniq > unique.txt` (uniq only removes repeats that are next to each other, so sort first). Then `wc -l < unique.txt` prints just the count.",
+    "es": "`sort visitors.txt | uniq > unique.txt` (uniq solo quita repetidos contiguos, por eso primero se ordena). Luego `wc -l < unique.txt` imprime solo la cantidad."
+   },
+   "output": true
+  }
+ ],
+ "cli-permissions-env": [
+  {
+   "id": "make-runnable",
+   "lang": "bash",
+   "title": {
+    "en": "Make it runnable",
+    "es": "Hazlo ejecutable"
+   },
+   "prompt": {
+    "en": "Make `deploy.sh` executable for everyone with `chmod +x`, make `secrets.txt` readable and writable **only by you** (mode `600`), then run `./deploy.sh`.",
+    "es": "Haz que `deploy.sh` sea ejecutable para todos con `chmod +x`, que `secrets.txt` se pueda leer y escribir **solo por ti** (modo `600`) y luego ejecuta `./deploy.sh`."
+   },
+   "setup": "printf '%s\\n' '#!/bin/bash' 'echo Deploying the site...' > deploy.sh\necho 'api-key=12345' > secrets.txt\n",
+   "starter": "# Type one command per line, then press Run.\n",
+   "solution": "chmod +x deploy.sh\nchmod 600 secrets.txt\n./deploy.sh\n",
+   "hint": {
+    "en": "`chmod +x deploy.sh`, `chmod 600 secrets.txt` (6 = read + write for the owner, 0 for everyone else), then `./deploy.sh`.",
+    "es": "`chmod +x deploy.sh`, `chmod 600 secrets.txt` (6 = leer + escribir para el dueño, 0 para los demás) y luego `./deploy.sh`."
+   },
+   "output": true
+  },
+  {
+   "id": "env-and-chain",
+   "lang": "bash",
+   "title": {
+    "en": "Variables and &&",
+    "es": "Variables y &&"
+   },
+   "prompt": {
+    "en": "Set a variable `PROJECT` to `atlas`. Then, in one line joined with `&&`, create a folder named after the variable and write the variable's value into `name.txt` inside it.",
+    "es": "Asigna `atlas` a una variable `PROJECT`. Luego, en una línea unida con `&&`, crea una carpeta con el nombre de la variable y escribe su valor en `name.txt` dentro de ella."
+   },
+   "setup": "",
+   "starter": "# Type one command per line, then press Run.\n",
+   "solution": "export PROJECT=atlas\nmkdir \"$PROJECT\" && echo \"$PROJECT\" > \"$PROJECT/name.txt\"\n",
+   "hint": {
+    "en": "`export PROJECT=atlas` (no spaces around `=`), then `mkdir \"$PROJECT\" && echo \"$PROJECT\" > \"$PROJECT/name.txt\"`.",
+    "es": "`export PROJECT=atlas` (sin espacios alrededor de `=`), luego `mkdir \"$PROJECT\" && echo \"$PROJECT\" > \"$PROJECT/name.txt\"`."
+   },
+   "output": false
+  }
+ ],
+ "cli-shell-scripts": [
+  {
+   "id": "rename-loop",
+   "lang": "bash",
+   "title": {
+    "en": "Rename with a loop",
+    "es": "Renombra con un ciclo"
+   },
+   "prompt": {
+    "en": "Inside `photos`, use a `for` loop to rename every `.jpg` file by adding `trip-` to the front (`a.jpg` becomes `trip-a.jpg`).",
+    "es": "Dentro de `photos`, usa un ciclo `for` para renombrar cada archivo `.jpg` agregando `trip-` al inicio (`a.jpg` pasa a ser `trip-a.jpg`)."
+   },
+   "setup": "mkdir photos\ntouch photos/a.jpg photos/b.jpg photos/c.jpg photos/notes.txt\n",
+   "starter": "# Type one command per line, then press Run.\n",
+   "solution": "cd photos\nfor f in *.jpg; do mv \"$f\" \"trip-$f\"; done\n",
+   "hint": {
+    "en": "`cd photos`, then `for f in *.jpg; do mv \"$f\" \"trip-$f\"; done`. The quotes keep names with spaces in one piece.",
+    "es": "`cd photos`, luego `for f in *.jpg; do mv \"$f\" \"trip-$f\"; done`. Las comillas mantienen juntos los nombres con espacios."
+   },
+   "output": false
+  },
+  {
+   "id": "greet-script",
+   "lang": "bash",
+   "title": {
+    "en": "A script with an argument",
+    "es": "Un script con argumento"
+   },
+   "prompt": {
+    "en": "Write a script `greet.sh` that prints `Hello, NAME!` using its first argument, make it executable, and run it as `./greet.sh Ana`.",
+    "es": "Escribe un script `greet.sh` que imprima `Hello, NAME!` usando su primer argumento, hazlo ejecutable y ejecútalo como `./greet.sh Ana`."
+   },
+   "setup": "",
+   "starter": "# Type one command per line, then press Run.\n",
+   "solution": "echo 'echo \"Hello, $1!\"' > greet.sh\nchmod +x greet.sh\n./greet.sh Ana\n",
+   "hint": {
+    "en": "`echo 'echo \"Hello, $1!\"' > greet.sh` writes the script (single quotes keep `$1` as text), then `chmod +x greet.sh` and `./greet.sh Ana`.",
+    "es": "`echo 'echo \"Hello, $1!\"' > greet.sh` escribe el script (las comillas simples dejan `$1` como texto), luego `chmod +x greet.sh` y `./greet.sh Ana`."
+   },
+   "output": true,
+   "loose": [
+    "greet.sh"
+   ]
+  }
  ]
 }
