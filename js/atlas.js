@@ -132,7 +132,7 @@ const state = {
   lang: store.get('lang', (navigator.language || '').toLowerCase().startsWith('es') ? 'es' : 'en'), user: null, authReady: false, syncedAt: null, done: new Set(store.get('done', [])),
   codeLang: store.get('codeLang', 'java'), notified: new Set(store.get('notified', [])), tab: 'overview', exIndex: 0, quiz: null, flash: null,
   notes: store.get('notes', {}), aces: new Set(store.get('aces', [])), langsSeen: new Set(store.get('langsSeen', ['java'])), votes: new Set(store.get('votes', [])),
-  plan: store.get('plan', { hours: 4, start: new Date().toISOString().slice(0, 10) }), quizBest: store.get('quizBest', {}), cardsKnown: new Set(store.get('cardsKnown', [])), quizModule: null, flashModule: null, activity: store.get('activity', []), pg: null, sideCollapsed: new Set(), noteModule: null, glossLetter: 'all', glossQuery: ''
+  plan: store.get('plan', { hours: 4, start: new Date().toISOString().slice(0, 10) }), quizBest: store.get('quizBest', {}), cardsKnown: new Set(store.get('cardsKnown', [])), quizModule: null, flashModule: null, activity: store.get('activity', []), pg: null, sideCollapsed: new Set(), noteModule: null, glossLetter: 'all', glossQuery: '', glossCourse: 'all'
 };
 let DATA = null;
 const $ = (s, r = document) => r.querySelector(s);
@@ -157,6 +157,8 @@ const liveTracks = () => DATA.tracks.filter((x) => x.status === 'available');
 const inPath = (id) => DATA.path.some((st) => st.id === id);
 // Live courses on the beginner path, in path order.
 const pathTracks = () => DATA.path.map((st) => track(st.id)).filter((tr) => tr && tr.status === 'available');
+// Every live course, beginner path first (in path order), then the rest.
+const orderedTracks = () => pathTracks().concat(liveTracks().filter((tr) => !inPath(tr.id)));
 const liveIds = () => liveTracks().flatMap((x) => trackIds(x.id));
 const isLive = (id) => track(DATA.modules[id]?.track)?.status === 'available';
 // Lessons are loaded per course (data/lessons/<track>.json) the first time a page needs them.
@@ -193,7 +195,7 @@ function routeTrack(route) {
 const LANG_LABEL = { java: 'Java', cpp: 'C++', python: 'Python', javascript: 'JavaScript', assembly: 'Assembly', bash: 'Terminal', html: 'HTML · CSS · JS', sql: 'SQL' };
 const exampleLangs = (ex) => Object.keys(LANG_LABEL).filter((k) => ex.code && ex.code[k]);
 // Selects lessons/quizzes grouped by course.
-const moduleOptions = (selected) => liveTracks().map((tr) => `<optgroup label="${esc(L(tr.title))}">${trackIds(tr.id).map((m) => `<option value="${m}" ${m === selected ? 'selected' : ''}>${esc(moduleTitle(m))}</option>`).join('')}</optgroup>`).join('');
+const moduleOptions = (selected) => orderedTracks().map((tr) => `<optgroup label="${esc(L(tr.title))}">${trackIds(tr.id).map((m) => `<option value="${m}" ${m === selected ? 'selected' : ''}>${esc(moduleTitle(m))}</option>`).join('')}</optgroup>`).join('');
 const moduleTitle = (id) => L(DATA.modules[id]?.title) || id;
 // Everything that belongs to the learner, in one plain object: saved locally and, when signed in, to the account.
 const progressSnapshot = () => ({ done: [...state.done], codeLang: state.codeLang, notified: [...state.notified], notes: state.notes, aces: [...state.aces],
@@ -530,7 +532,7 @@ function viewPractice() {
 function viewQuizzes() {
   if (!state.quizModule || !isLive(state.quizModule)) state.quizModule = practiceDefault();
   const id = state.quizModule;
-  const board = pathTracks().concat(liveTracks().filter((tr) => !inPath(tr.id))).map((tr) => `<div class="board-course"><div class="board-title"><span class="cmark" data-track="${tr.id}">${esc(tr.icon)}</span>${esc(L(tr.title))}</div>
+  const board = orderedTracks().map((tr) => `<div class="board-course"><div class="board-title"><span class="cmark" data-track="${tr.id}">${esc(tr.icon)}</span>${esc(L(tr.title))}</div>
     ${trackIds(tr.id).map((m) => { const best = state.quizBest[m]; return `<button class="board-row${m === id ? ' active' : ''}" data-action="quiz-choose" data-id="${m}"><span>${esc(moduleTitle(m))}</span><span class="pill${best == null ? '' : best === 1 ? ' ok' : ' soon'}">${best == null ? t('notTaken') : Math.round(best * 100) + '%'}</span></button>`; }).join('')}</div>`).join('');
   return `<section class="wrap"><div class="crumbs"><a href="#practice">${t('practice')}</a><span>/</span><span style="color:var(--text)">${t('quizzes')}</span></div>
     <h1>${t('quizzes')}</h1><p class="lead">${t('quizzesLead')}</p>
@@ -808,14 +810,14 @@ function viewNotes() {
   const id = state.noteModule, text = state.notes[id] || '';
   const words = (x) => (x.trim() ? x.trim().split(/\s+/).length : 0);
   return `<section class="wrap"><h1>${t('notes')}</h1><p class="lead">${state.user ? t('notesLeadIn') : t('notesLead')}</p>
-    <div class="notes" style="margin-top:22px"><div class="card notes-list">${liveTracks().map((tr) => `<div class="notes-course">${esc(L(tr.title))}</div>` + trackIds(tr.id).map((m) => `<button data-action="note-pick" data-id="${m}" aria-pressed="${m === id}">${dot(m)}<span>${esc(moduleTitle(m))}</span>${state.notes[m] ? `<span class="n">${words(state.notes[m])}</span>` : ''}</button>`).join('')).join('')}</div>
+    <div class="notes" style="margin-top:22px"><div class="card notes-list">${orderedTracks().map((tr) => `<div class="notes-course">${esc(L(tr.title))}</div>` + trackIds(tr.id).map((m) => `<button data-action="note-pick" data-id="${m}" aria-pressed="${m === id}">${dot(m)}<span>${esc(moduleTitle(m))}</span>${state.notes[m] ? `<span class="n">${words(state.notes[m])}</span>` : ''}</button>`).join('')).join('')}</div>
       <div class="card note-editor"><select class="select note-pick" id="note-module" aria-label="${t('module')}">${moduleOptions(id)}</select><div class="row-top"><b>${t('notesFor')} ${esc(moduleTitle(id))}</b><a class="muted" href="#m-${id}">${t('module')} →</a></div>
         <textarea id="note-text" placeholder="${t('notePlaceholder')}">${esc(text)}</textarea>
         <div class="muted" id="note-status">${text ? `${state.user ? t('savedAccount') : t('savedDevice')} · ${words(text)} ${t('words')}` : ''}</div></div></div></section>`;
 }
 function allTerms() {
   const out = [];
-  liveIds().forEach((id) => (DATA.full[id].definitions || []).forEach((d) => out.push({ id, term: L(d.term), def: L(d.definition) })));
+  liveIds().filter((id) => state.glossCourse === 'all' || DATA.modules[id].track === state.glossCourse).forEach((id) => (DATA.full[id].definitions || []).forEach((d) => out.push({ id, term: L(d.term), def: L(d.definition) })));
   return out.sort((a, b) => a.term.localeCompare(b.term, state.lang));
 }
 function glossaryGrid() {
@@ -826,7 +828,8 @@ function glossaryGrid() {
 function viewGlossary() {
   const terms = allTerms(), have = new Set(terms.map((x) => x.term[0].toUpperCase()));
   return `<section class="wrap"><h1>${t('glossary')}</h1><p class="lead">${t('glossaryLead', terms.length)}</p>
-    <div class="toolbar"><input class="input" id="gloss-q" type="search" placeholder="${t('filterTerms')}" value="${esc(state.glossQuery)}" aria-label="${t('filterTerms')}"></div>
+    <div class="toolbar"><input class="input" id="gloss-q" type="search" placeholder="${t('filterTerms')}" value="${esc(state.glossQuery)}" aria-label="${t('filterTerms')}">
+      <select class="select" id="gloss-course" aria-label="${t('course')}"><option value="all">${t('allCourses')}</option>${orderedTracks().map((tr) => `<option value="${tr.id}" ${state.glossCourse === tr.id ? 'selected' : ''}>${esc(L(tr.title))}</option>`).join('')}</select></div>
     <div class="letters"><button data-action="gloss-letter" data-v="all" aria-pressed="${state.glossLetter === 'all'}">${t('all')}</button>${'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').map((c) => `<button data-action="gloss-letter" data-v="${c}" aria-pressed="${state.glossLetter === c}" ${have.has(c) ? '' : 'disabled'}>${c}</button>`).join('')}</div>
     <div class="terms" id="gloss-grid">${glossaryGrid()}</div></section>`;
 }
@@ -910,7 +913,7 @@ function viewPlan() {
   const p = buildPlan();
   return `<section class="wrap"><h1>${t('studyPlan')}</h1><p class="lead">${t('planLead')}</p>
     <div class="card plan-controls">
-      <div class="field"><label for="plan-track">${t('course')}</label><select class="select" id="plan-track"><option value="path" ${planTrack() === 'path' ? 'selected' : ''}>${t('wholePath')}</option>${liveTracks().map((tr) => `<option value="${tr.id}" ${tr.id === planTrack() ? 'selected' : ''}>${esc(L(tr.title))}</option>`).join('')}</select></div>
+      <div class="field"><label for="plan-track">${t('course')}</label><select class="select" id="plan-track"><option value="path" ${planTrack() === 'path' ? 'selected' : ''}>${t('wholePath')}</option>${orderedTracks().map((tr) => `<option value="${tr.id}" ${tr.id === planTrack() ? 'selected' : ''}>${esc(L(tr.title))}</option>`).join('')}</select></div>
       <div class="field"><label for="plan-hours">${t('hoursWeek')}</label><select class="select" id="plan-hours">${[2, 3, 4, 6, 8, 10, 15].map((h) => `<option value="${h}" ${Number(state.plan.hours) === h ? 'selected' : ''}>${h} h</option>`).join('')}</select></div>
       <div class="field"><label for="plan-start">${t('startOn')}</label><input class="select" id="plan-start" type="date" value="${state.plan.start}"></div>
       ${p.weeks.length ? `<button class="btn btn-ghost" style="margin-left:auto" data-action="calendar">${t('addCalendar')} ↓</button>` : ''}
@@ -1188,6 +1191,7 @@ document.addEventListener('click', (e) => {
 function selectCode() { const r = document.createRange(); r.selectNodeContents($('#code-block')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
 document.addEventListener('input', (e) => {
   if (e.target.id === 'note-text') { const fresh = !(state.notes[state.noteModule] || '').trim(); state.notes[state.noteModule] = e.target.value; if (fresh && e.target.value.trim()) logActivity('note', state.noteModule); save(); const n = e.target.value.trim() ? e.target.value.trim().split(/\s+/).length : 0; $('#note-status').textContent = n ? `${state.user ? t('savedAccount') : t('savedDevice')} · ${n} ${t('words')}` : ''; }
+  if (e.target.id === 'gloss-course') { state.glossCourse = e.target.value; state.glossLetter = 'all'; render(true); }
   if (e.target.id === 'gloss-q') { state.glossQuery = e.target.value; $('#gloss-grid').innerHTML = glossaryGrid(); }
   if (e.target.id === 'pg-code' && state.pg) state.pg.code = e.target.value;
 });
