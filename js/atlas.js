@@ -23,7 +23,7 @@ const UI = {
     vizStep: 'Step through', vizHint: 'Run line by line and watch the variables change', vizSteps: (n) => `${n} steps recorded`, vizStepOf: (a, b) => `Step ${a} of ${b}`, vizBack: 'Back', vizNext: 'Next', vizFirst: 'First step', vizLast: 'Last step', vizClose: 'Close', vizAbout: (n) => `About to run line ${n}`, vizReturns: (f, v) => `${f}() returns <code>${v}</code>`, vizEnd: 'The program finished.', vizCrashed: (n) => `The program stopped with an error on line ${n}.`, vizGlobals: 'Global variables', vizNoVars: 'No variables yet', vizNothing: 'Nothing printed yet', vizCapped: 'Stopped after 600 steps. Try a smaller input to see the whole run.',
     notesDownload: 'Download all (.md)', pageKind: 'Page', challengeKind: 'Challenge', pgShare: 'Share', pgShareHint: 'Copy a link that opens this code in the playground', linkCopied: 'Link copied. Anyone who opens it sees this code.', copyThisLink: 'Copy this link:', pgShared: 'a shared link', pgBadLink: 'That code link is broken, so the playground opened as usual.', pgTooLong: 'This code is too long for a link (8,000 characters max).',
     gitNoRepo: (p) => `There is no Git repository in ${p}`, gitExtraRepo: (p) => `${p} should not be a Git repository`, gitHead: (a, b) => `You are on branch ${a}, expected ${b}`, gitNoBranch: (b) => `Branch ${b} is missing`, gitExtraBranch: (b) => `Branch ${b} should not exist`, gitCommits: (b, a, w) => `Commits on ${b}: ${a} (expected ${w})`, gitTracked: (b, a, w) => `Files committed on ${b}: ${a} (expected ${w})`, gitStatus: (a, w) => `git status -s shows ${a} (expected ${w})`, gitRepoNote: (r, h, n) => `[${r}: Git repository on branch ${h}, ${n} commit${n === 1 ? '' : 's'}]`,
-    terminal: 'Terminal', startingFiles: 'Starting files', loadingWord: 'Loading…', emptyHome: '~/ (empty)', shellFailed: 'The practice terminal could not load. Check your connection and try again.', noCommands: 'No commands yet.', shMissing: (p) => `${p} is missing`, shExtra: (p) => `${p} should not be there`, shContent: (p) => `${p} has different contents`, shMode: (p, a, b) => `${p} has permissions ${a}, expected ${b}`, shNotExec: (p) => `${p} is not executable`, shExec: (p) => `${p} should not be executable`, shFilesLabel: 'Your files and folders end up right', shRepoLabel: 'Your files and Git repository end up right', shOutLabel: 'It prints the right output', nothingPrinted: '(nothing)',
+    termRan: (n) => `${n} command${n === 1 ? '' : 's'} ran in the practice terminal`, terminal: 'Terminal', startingFiles: 'Starting files', loadingWord: 'Loading…', emptyHome: '~/ (empty)', shellFailed: 'The practice terminal could not load. Check your connection and try again.', noCommands: 'No commands yet.', shMissing: (p) => `${p} is missing`, shExtra: (p) => `${p} should not be there`, shContent: (p) => `${p} has different contents`, shMode: (p, a, b) => `${p} has permissions ${a}, expected ${b}`, shNotExec: (p) => `${p} is not executable`, shExec: (p) => `${p} should not be executable`, shFilesLabel: 'Your files and folders end up right', shRepoLabel: 'Your files and Git repository end up right', shOutLabel: 'It prints the right output', nothingPrinted: '(nothing)',
     ofModules: (a, b) => `${a} of ${b} modules complete`, courseDone: 'Course complete. Nice work.',
     coursesTitle: 'Courses', coursesLead: 'New to programming? Follow the beginner path in order: all nine courses are ready. After it come Java and the next-level courses; the ones still being written show their outline, and you can vote for what you want next.',
     plannedTitle: 'Planned courses', plannedNote: 'Beginner courses first. Vote for the ones you want next.', javaTrack: 'Java course', studyTools: 'Study tools',
@@ -50,7 +50,7 @@ const UI = {
     forgot: 'Forgot password?', newHere: 'New here?', create: 'Create an account', legal: 'By continuing you agree to the <a href="terms-of-use.html">Terms of Use</a> and <a href="privacy-policy.html">Privacy Policy</a>.',
     noResults: 'No matches', today: 'Today', yesterday: 'Yesterday', daysAgo: (n) => `${n} days ago`, completed: 'Completed', reviewed: 'Reviewed 12 flashcards', notFound: 'That page doesn’t exist.',
     glossary: 'Glossary', roadmap: 'Roadmap', whatsComing: 'What’s coming', tryIt: 'Try it ▸', run: 'Run ▸', reset: 'Reset', running: 'Running…',
-    pgLead: 'Write and run code right here. JavaScript, Python, SQL and web pages run in your browser; Java and C++ will run on the CS Course Atlas server.',
+    pgLead: 'Write and run code right here. JavaScript, Python, SQL, web pages and a practice terminal run in your browser; Java and C++ will run on the CS Course Atlas server.',
     pgServer: 'Running this language needs the code server, which is on the roadmap. Here is the output this example prints:', pgServerNoExpected: 'Running this language needs the code server, which is on the roadmap. Switch to JavaScript or Python to run code now.',
     pgDone: (ms) => `Finished in ${ms} ms`, pgTimeout: 'Stopped after 3 seconds (infinite loop?)', pgEmpty: '(no output)', pgLoaded: (m) => `Loaded from ${m}`,
     notesLeadIn: 'One page of notes per module, saved to your account and synced to every device you sign in on.', notesLead: 'One page of notes per module, saved on this device. With an account they sync everywhere.', notePlaceholder: 'What clicked? What confused you? Write it in your own words.',
@@ -90,7 +90,7 @@ const UI = {
     vizStep: 'Paso a paso', vizHint: 'Ejecuta línea por línea y mira cómo cambian las variables', vizSteps: (n) => `${n} pasos registrados`, vizStepOf: (a, b) => `Paso ${a} de ${b}`, vizBack: 'Atrás', vizNext: 'Siguiente', vizFirst: 'Primer paso', vizLast: 'Último paso', vizClose: 'Cerrar', vizAbout: (n) => `A punto de ejecutar la línea ${n}`, vizReturns: (f, v) => `${f}() devuelve <code>${v}</code>`, vizEnd: 'El programa terminó.', vizCrashed: (n) => `El programa se detuvo con un error en la línea ${n}.`, vizGlobals: 'Variables globales', vizNoVars: 'Aún no hay variables', vizNothing: 'Aún no se imprimió nada', vizCapped: 'Se detuvo tras 600 pasos. Prueba con una entrada más pequeña para ver toda la ejecución.',
     notesDownload: 'Descargar todo (.md)', pageKind: 'Página', challengeKind: 'Reto', pgShare: 'Compartir', pgShareHint: 'Copia un enlace que abre este código en el editor', linkCopied: 'Enlace copiado. Quien lo abra verá este código.', copyThisLink: 'Copia este enlace:', pgShared: 'un enlace compartido', pgBadLink: 'Ese enlace de código está dañado, así que el editor se abrió como siempre.', pgTooLong: 'Este código es demasiado largo para un enlace (máximo 8.000 caracteres).',
     gitNoRepo: (p) => `No hay un repositorio de Git en ${p}`, gitExtraRepo: (p) => `${p} no debería ser un repositorio de Git`, gitHead: (a, b) => `Estás en la rama ${a}, se esperaba ${b}`, gitNoBranch: (b) => `Falta la rama ${b}`, gitExtraBranch: (b) => `La rama ${b} no debería existir`, gitCommits: (b, a, w) => `Commits en ${b}: ${a} (se esperaba ${w})`, gitTracked: (b, a, w) => `Archivos con commit en ${b}: ${a} (se esperaba ${w})`, gitStatus: (a, w) => `git status -s muestra ${a} (se esperaba ${w})`, gitRepoNote: (r, h, n) => `[${r}: repositorio de Git en la rama ${h}, ${n} commit${n === 1 ? '' : 's'}]`,
-    terminal: 'Terminal', startingFiles: 'Archivos iniciales', loadingWord: 'Cargando…', emptyHome: '~/ (vacío)', shellFailed: 'La terminal de práctica no se pudo cargar. Revisa tu conexión e inténtalo otra vez.', noCommands: 'Aún no hay comandos.', shMissing: (p) => `falta ${p}`, shExtra: (p) => `${p} no debería estar`, shContent: (p) => `${p} tiene otro contenido`, shMode: (p, a, b) => `${p} tiene permisos ${a}, se esperaba ${b}`, shNotExec: (p) => `${p} no es ejecutable`, shExec: (p) => `${p} no debería ser ejecutable`, shFilesLabel: 'Tus archivos y carpetas quedan bien', shRepoLabel: 'Tus archivos y tu repositorio de Git quedan bien', shOutLabel: 'Imprime la salida correcta', nothingPrinted: '(nada)',
+    termRan: (n) => `${n} comando${n === 1 ? '' : 's'} en la terminal de práctica`, terminal: 'Terminal', startingFiles: 'Archivos iniciales', loadingWord: 'Cargando…', emptyHome: '~/ (vacío)', shellFailed: 'La terminal de práctica no se pudo cargar. Revisa tu conexión e inténtalo otra vez.', noCommands: 'Aún no hay comandos.', shMissing: (p) => `falta ${p}`, shExtra: (p) => `${p} no debería estar`, shContent: (p) => `${p} tiene otro contenido`, shMode: (p, a, b) => `${p} tiene permisos ${a}, se esperaba ${b}`, shNotExec: (p) => `${p} no es ejecutable`, shExec: (p) => `${p} no debería ser ejecutable`, shFilesLabel: 'Tus archivos y carpetas quedan bien', shRepoLabel: 'Tus archivos y tu repositorio de Git quedan bien', shOutLabel: 'Imprime la salida correcta', nothingPrinted: '(nada)',
     ofModules: (a, b) => `${a} de ${b} módulos completados`, courseDone: 'Curso completado. ¡Buen trabajo!',
     coursesTitle: 'Cursos', coursesLead: '¿Nuevo en programación? Sigue la ruta para principiantes en orden: los nueve cursos están listos. Después vienen Java y los cursos del siguiente nivel; los que aún se escriben muestran su temario y puedes votar por lo que quieras primero.',
     plannedTitle: 'Cursos planeados', plannedNote: 'Primero los de nivel principiante. Vota por los que quieres primero.', javaTrack: 'Curso de Java', studyTools: 'Herramientas de estudio',
@@ -117,7 +117,7 @@ const UI = {
     forgot: '¿Olvidaste tu contraseña?', newHere: '¿Eres nuevo?', create: 'Crear una cuenta', legal: 'Al continuar aceptas los <a href="terms-of-use.html">Términos de uso</a> y la <a href="privacy-policy.html">Política de privacidad</a>.',
     noResults: 'Sin resultados', today: 'Hoy', yesterday: 'Ayer', daysAgo: (n) => `Hace ${n} días`, completed: 'Completaste', reviewed: 'Repasaste 12 tarjetas', notFound: 'Esa página no existe.',
     glossary: 'Glosario', roadmap: 'Hoja de ruta', whatsComing: 'Lo que viene', tryIt: 'Probar ▸', run: 'Ejecutar ▸', reset: 'Restablecer', running: 'Ejecutando…',
-    pgLead: 'Escribe y ejecuta código aquí mismo. JavaScript, Python, SQL y las páginas web corren en tu navegador; Java y C++ correrán en el servidor de CS Course Atlas.',
+    pgLead: 'Escribe y ejecuta código aquí mismo. JavaScript, Python, SQL, las páginas web y una terminal de práctica corren en tu navegador; Java y C++ correrán en el servidor de CS Course Atlas.',
     pgServer: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Esta es la salida que imprime el ejemplo:', pgServerNoExpected: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Cambia a JavaScript o Python para ejecutar código ahora.',
     pgDone: (ms) => `Terminó en ${ms} ms`, pgTimeout: 'Detenido después de 3 segundos (¿bucle infinito?)', pgEmpty: '(sin salida)', pgLoaded: (m) => `Cargado desde ${m}`,
     notesLeadIn: 'Una página de notas por módulo, guardada en tu cuenta y sincronizada en cada dispositivo donde inicies sesión.', notesLead: 'Una página de notas por módulo, guardada en este dispositivo. Con una cuenta se sincronizan en todas partes.', notePlaceholder: '¿Qué entendiste? ¿Qué te confundió? Escríbelo con tus palabras.',
@@ -161,6 +161,8 @@ function rich(text) {
   }).join('');
 }
 const LANGS = [['python', 'Python'], ['javascript', 'JavaScript'], ['html', 'HTML'], ['sql', 'SQL'], ['java', 'Java'], ['cpp', 'C++']];
+// The playground adds a practice terminal (the simulated shell from js/mini-shell.js).
+const PG_LANGS = [...LANGS.slice(0, 4), ['bash', 'Terminal'], ...LANGS.slice(4)];
 const track = (id) => DATA.tracks.find((x) => x.id === id);
 const trackIds = (tid) => (track(tid) ? track(tid).units.flatMap((u) => u.modules) : []);
 const liveTracks = () => DATA.tracks.filter((x) => x.status === 'available');
@@ -737,6 +739,17 @@ function viewProfile() {
     </div></div></section>`;
 }
 
+const PG_TERM = `# A practice terminal: nothing here touches your computer.
+# Change these commands, then press Run.
+pwd
+ls
+cat notes.txt | grep -i git
+mkdir -p projects/site
+echo "<h1>Hello</h1>" > projects/site/index.html
+ls projects/site
+for f in photos/*.jpg; do echo "found $f"; done
+`;
+const PG_TERM_SETUP = "printf '%s\\n' 'Learn Python' 'Practice Git every day' 'Read about git branches' > notes.txt\nmkdir photos\ntouch photos/beach.jpg photos/city.jpg\n";
 const PG_HTML = `<!doctype html>
 <html>
 <head>
@@ -773,7 +786,7 @@ function viewPlayground() {
   const pg = state.pg;
   return `<section class="wrap" style="max-width:1200px"><h1>${t('playground')}</h1><p class="lead">${t('pgLead')}</p>
     <div class="pg" style="margin-top:22px">
-      <div class="pg-editor"><div class="code-bar">${LANGS.map(([k, label]) => `<button class="lang" data-action="pg-lang" data-v="${k}" aria-pressed="${k === pg.lang}">${label}</button>`).join('')}
+      <div class="pg-editor"><div class="code-bar">${PG_LANGS.map(([k, label]) => `<button class="lang" data-action="pg-lang" data-v="${k}" aria-pressed="${k === pg.lang}">${label}</button>`).join('')}
         <button class="lang" data-action="pg-reset" style="margin-left:auto">${t('reset')}</button><button class="lang run" data-action="pg-run">${t('run')}</button></div>
         ${pg.from ? `<div class="pg-from">${esc(t('pgLoaded', pg.from))}</div>` : ''}
         <textarea id="pg-code" wrap="off" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Code editor">${esc(pg.code)}</textarea></div>
@@ -786,7 +799,7 @@ const b64url = (str) => { let bin = ''; new TextEncoder().encode(str).forEach((b
 const unb64url = (s) => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0)));
 function decodeShared(route) {
   const [, lang, data] = route.split('/');
-  try { if (LANGS.some(([k]) => k === lang) && data) return { lang, code: unb64url(data).slice(0, 20000), expected: '', from: t('pgShared') }; } catch (e) { /* bad link */ }
+  try { if (PG_LANGS.some(([k]) => k === lang) && data) return { lang, code: unb64url(data).slice(0, 20000), expected: '', from: t('pgShared') }; } catch (e) { /* bad link */ }
   toast(t('pgBadLink')); return null;
 }
 function sharePlayground() {
@@ -802,6 +815,15 @@ function runPlayground() {
   pg.code = $('#pg-code').value;
   if (pg.lang === 'python') { runPython(pg.code, out, status); return; }
   if (pg.lang === 'sql') { runSql(pg.code, out, status); return; }
+  if (pg.lang === 'bash') {
+    out.innerHTML = `<span class="info">${t('loadingWord')}</span>`;
+    loadMiniShell().then((M) => {
+      const r = M.runChallengeShell(PG_TERM_SETUP, pg.code);
+      out.innerHTML = r.error ? `<span class="err">${esc(r.error)}</span>` : r.transcript.map((x) => `<span class="t-cmd"><span class="t-ps">$</span> ${esc(x.cmd)}</span>\n${esc(x.out)}${x.err ? `<span class="err">${esc(x.err)}</span>` : ''}`).join('') || `<span class="info">${t('pgEmpty')}</span>`;
+      status.textContent = t('termRan', r.transcript.length);
+    }, () => { out.innerHTML = `<span class="err">${t('shellFailed')}</span>`; });
+    return;
+  }
   if (pg.lang === 'html') {
     // Web pages render in a sandboxed frame: scripts run, but the page cannot reach this site.
     let frame = $('#pg-frame');
@@ -1568,10 +1590,10 @@ document.addEventListener('click', (e) => {
   else if (a === 'pg-run') runPlayground();
   else if (a === 'pg-lang') {
     state.viz = null;
-    const code = $('#pg-code').value, samples = [PG_SAMPLE, PG_HTML];
+    const code = $('#pg-code').value, samples = [PG_SAMPLE, PG_HTML, PG_TERM];
     state.pg.lang = el.dataset.v;
     // Switching between the starter samples swaps them; your own code is kept.
-    state.pg.code = samples.includes(code) ? (el.dataset.v === 'html' ? PG_HTML : PG_SAMPLE) : code;
+    state.pg.code = samples.includes(code) ? (el.dataset.v === 'html' ? PG_HTML : el.dataset.v === 'bash' ? PG_TERM : PG_SAMPLE) : code;
     render(true);
   }
   else if (a === 'pg-reset') { state.pg = null; state.viz = null; render(true); }
