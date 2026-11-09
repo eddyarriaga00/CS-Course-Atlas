@@ -471,7 +471,7 @@ function viewModule(id) {
     body = `<div class="chips" role="group" aria-label="${t('examples')}">${[terminal ? t('fullSession') : t('fullProgram'), ...sets.map((s) => L(s.title) || s.topic)].map((label, i) => `<button class="chip" data-ex="${i}" aria-pressed="${i === state.exIndex}">${esc(label)}</button>`).join('')}</div>
       <div class="ex-head"><h2>${state.exIndex === 0 ? (terminal ? t('fullSession') : t('fullProgram')) : esc(L(ex.title))}</h2><p>${fmt(L(state.exIndex === 0 ? meta.description : ex.description))}</p></div>
       ${lang === 'bash' ? `<p class="term-hint">${t('terminalHint')}</p>` : ''}
-      <div class="code-card"><div class="code-bar">${langs.map((k) => `<button class="lang" data-code-lang="${k}" aria-pressed="${k === lang}">${LANG_LABEL[k]}</button>`).join('')}<button class="lang copy" data-action="copy">${t('copy')}</button>${lang === 'bash' ? '' : `<button class="lang run" data-action="try-it" data-id="${id}">${t('tryIt')}</button>`}</div>
+      <div class="code-card"><div class="code-bar">${langs.map((k) => `<button class="lang" data-code-lang="${k}" aria-pressed="${k === lang}">${LANG_LABEL[k]}</button>`).join('')}<button class="lang copy" data-action="copy">${t('copy')}</button>${lang === 'python' ? `<button class="lang" data-action="try-it" data-step="1" data-id="${id}" title="${t('vizHint')}">⇥ ${t('vizStep')}</button>` : ''}${lang === 'bash' ? '' : `<button class="lang run" data-action="try-it" data-id="${id}">${t('tryIt')}</button>`}</div>
         ${lang === 'bash' ? `<code id="code-block" hidden>${esc(code)}</code><pre class="code term">${transcriptHtml(out)}</pre>`
           : lang === 'html' ? `<pre class="code"><code id="code-block" class="language-html">${esc(code)}</code></pre>
         <div class="output preview"><div class="output-label">${t('preview')}</div><iframe class="web-preview" sandbox="allow-scripts allow-forms allow-modals" title="${t('preview')}" srcdoc="${esc(code)}"></iframe></div>`
@@ -1434,6 +1434,7 @@ function render(keepScroll) {
     : route.startsWith('cert-') ? viewCert(route.slice(5)) : route.startsWith('course-') ? viewCourse(route.slice(7)) : route.startsWith('m-') ? viewModule(route.slice(2)) : viewMissing());
   renderChrome(route);
   $('#main').innerHTML = html;
+  if (route === 'playground' && state.pgAutoStep) { state.pgAutoStep = false; traceProgram(); }
   highlightCode();
   document.body.classList.remove('drawer-open');
   if (route !== lastRoute && !keepScroll) window.scrollTo(0, 0);
@@ -1478,7 +1479,7 @@ document.addEventListener('click', (e) => {
   else if (a === 'quiz-retry') { state.quiz = null; state.mixQuiz = null; render(true); }
   else if (a === 'try-it') { const c = DATA.full[el.dataset.id], ex = state.exIndex === 0 ? c.examples.main : c.examples.sets[state.exIndex - 1];
     const langs = exampleLangs(ex), lang = langs.includes(state.codeLang) ? state.codeLang : langs[0];
-    state.pg = { lang, code: ex.code[lang], expected: ex.output?.[lang] || '', from: moduleTitle(el.dataset.id) }; location.hash = '#playground'; }
+    state.pg = { lang, code: ex.code[lang], expected: ex.output?.[lang] || '', from: moduleTitle(el.dataset.id) }; state.pgAutoStep = !!el.dataset.step && lang === 'python'; location.hash = '#playground'; }
   else if (a === 'pg-run') runPlayground();
   else if (a === 'pg-lang') {
     state.viz = null;
