@@ -7,7 +7,7 @@
 A public CS learning website for students studying core computer science tracks.
 
 ## Mission
-CS Course Atlas is built for computer science students who need one place to learn across multiple classes. It combines structured course tracks, guided explanations, code examples, quizzes, flashcards, and progress tools into one consistent learning experience.
+CS Course Atlas teaches computer science from zero, for free, in English and Spanish. A nine-course beginner path takes someone who has never programmed through Python, the command line, Git, the web, databases, how computers work, cybersecurity, AI and discrete math, and then on to Java and data structures. Every module has a short lesson, examples you can run in the browser, practice problems, a quiz, flashcards and a hand-picked video for every topic.
 
 ## Quick Guide
 Use one of these paths depending on what you need.
@@ -20,7 +20,7 @@ git clone https://github.com/eddyarriaga00/CS-Course-Atlas.git
 cd CS-Course-Atlas
 npm install
 npm run build:site
-py -m http.server --directory dist 4173
+python3 -m http.server --directory dist 4173   # or: py -m http.server --directory dist 4173 on Windows
 ```
 
 Open: `http://127.0.0.1:4173/index.html`
@@ -74,7 +74,7 @@ Set `DATABASE_URL` in `.env` before `npm start`.
 - `db:doctor` reports missing tables:
 Run `npm run db:migrate` on the same environment/branch, then re-run `npm run db:doctor`.
 - Styling looks outdated:
-Run `npm run build:site` after CSS/Tailwind changes so `dist/` is refreshed.
+Run `npm run build:site` after changes so `dist/` is refreshed.
 - Auth not working on static preview:
 Use full-stack mode (`npm start`), not `py -m http.server`.
 
@@ -91,14 +91,63 @@ Generated outputs:
 - `dist/sitemap.xml`
 - `dist/robots.txt`
 
-## Overview
-CS Course Atlas helps learners study through structured modules, code examples, quizzes, flashcards, glossary tools, and notes in one place.
-
 ## Curriculum
 
-45 modules across five tracks, each organized into units that build on one another. Every module includes learning objectives, prerequisites, key takeaways, common mistakes, graded practice, a glossary, curated resources, and a quiz, in English and Spanish. The module catalog, study order and published tracks are in `data/module-catalog.json`; unit structure and course content live in `js/course-curriculum.js` and are validated by `npm run check:curriculum`.
+The beginner path, in order, then the next level. Courses marked "in progress" show their outline on the site until they are written. The module catalog, study order and published tracks are in `data/module-catalog.json`; unit structure and lesson content live in `js/course-curriculum.js` and `js/course-examples.js`, validated by `npm run check:curriculum` and `npm run check:examples`. Outlines for unwritten courses are in `data/course-outlines.json`.
 
-### Data Structures & Algorithms (22 modules)
+### The beginner path (9 courses)
+
+#### Intro to Programming with Python (4 modules)
+1. **First Steps**: Your First Python Programs
+2. **Decisions and Loops**: Decisions and Loops
+3. **Organizing Code**: Functions
+4. **Working with Data**: Lists and Dictionaries
+#### Command Line & Linux (4 modules)
+1. **Getting Around**: Files and Folders from the Terminal
+2. **Working with Text**: Reading, Searching and Pipes
+3. **Permissions and the Environment**: Permissions, Programs and the Environment
+4. **Automating with Scripts**: Automating with Shell Scripts
+#### Git (2 modules)
+1. **Everyday Git**: Git Basics and Collaboration Workflow
+2. **Team Collaboration**: Git Branching, Merging and Pull Requests
+#### Web Basics: HTML, CSS & JavaScript (4 modules)
+1. **Structure with HTML**: HTML: The Structure of a Page
+2. **Style with CSS**: CSS: Styling Pages
+3. **Interactivity with JavaScript**: JavaScript: Interactive Pages
+4. **Build and Publish**: Build and Publish a Site
+#### SQL & Databases (4 modules)
+1. **Reading Data**: Tables and Your First Queries
+2. **Answering Questions**: Summarizing Data
+3. **Relationships**: Combining Tables
+4. **Building a Database**: Designing and Changing a Database
+#### How Computers Work (4 modules)
+1. **Bits and Numbers**: Bits, Bytes and Number Systems
+2. **Representing Everything**: How Data Is Represented
+3. **The Hardware**: Inside the Machine
+4. **The Software Stack**: From Code to Running Program
+#### Cybersecurity Fundamentals (4 modules)
+1. **Protecting Accounts**: Passwords and Authentication
+2. **Cryptography**: Encryption Basics
+3. **Understanding Attacks**: How Attacks Work
+4. **Defending in Practice**: Staying Safe and Building Safely
+#### AI Fundamentals (4 modules)
+1. **Foundations**: What AI Really Is
+2. **Learning from Data**: Your First Models
+3. **Neural Networks**: Neural Networks
+4. **AI Today**: Language Models and Using AI Well
+#### Discrete Math (4 modules)
+1. **Logic and Proof**: Propositional Logic and Proofs
+2. **Sets, Relations and Functions**: Sets, Relations and Functions
+3. **Graph Theory**: Graph Theory
+4. **Counting and Probability**: Combinatorics and Discrete Probability
+### Next level
+
+#### Java (13 modules)
+1. **Java Foundations**: Java Fundamentals, Control Flow Statements
+2. **Object-Oriented Java**: Object-Oriented Programming, Exception Handling, Java Generics
+3. **Core Libraries**: Java Collections Framework, Lambda Expressions & Streams, File Input/Output
+4. **Professional Java**: Unit Testing with JUnit, Database Connectivity (JDBC), Multithreading Basics, Java Memory and JVM Fundamentals, Design Patterns
+#### Data Structures & Algorithms (22 modules, in progress)
 1. **Getting Started**: Introduction to Coding
 2. **Linear Data Structures**: Arrays and Strings, Searching Algorithms, Stacks and Queues, Linked Lists
 3. **Recursion and Sorting**: Recursion Fundamentals, Sorting Algorithms, Matrix and Grid Problem Solving, Backtracking Patterns
@@ -106,36 +155,29 @@ CS Course Atlas helps learners study through structured modules, code examples, 
 5. **Graphs**: Graph Algorithms, Union-Find (Disjoint Set)
 6. **Algorithm Design Techniques**: Greedy Algorithms, Dynamic Programming, Bit Manipulation
 7. **Advanced Structures and Strings**: Segment Trees, Binary Indexed Trees (Fenwick Trees), Advanced Tree Structures, Advanced String Algorithms
-
-### Java Programming (13 modules)
-1. **Java Foundations**: Java Fundamentals, Control Flow Statements
-2. **Object-Oriented Java**: Object-Oriented Programming, Exception Handling, Java Generics
-3. **Core Libraries**: Java Collections Framework, Lambda Expressions & Streams, File Input/Output
-4. **Professional Java**: Unit Testing with JUnit, Database Connectivity (JDBC), Multithreading Basics, Java Memory and JVM Fundamentals, Design Patterns
-
-### Discrete Mathematics (4 modules)
-1. **Logic and Proof**: Propositional Logic and Proof Basics
-2. **Sets, Relations and Functions**: Sets, Relations, and Functions
-3. **Graph Theory**: Discrete Graph Theory Foundations
-4. **Counting and Probability**: Combinatorics and Discrete Probability
-
-### Git & Collaboration (2 modules)
-1. **Everyday Git**: Git Basics and Collaboration Workflow
-2. **Team Collaboration**: Git Branching, Merging, and Pull Requests
-
-### x86-64 Assembly (4 modules)
+#### x86-64 Assembly (4 modules, in progress)
 1. **The Machine Model**: Assembly Registers and Memory Basics
 2. **Control Flow and Procedures**: Assembly Control Flow and Procedures, Assembly Addressing Modes and Stack Frames
 3. **Data and I/O**: Assembly Arrays, Strings, and Basic I/O
 
+
+## How the examples are checked
+Every example's output on the site is real, recorded by `scripts/run_course_examples.js` and re-checked in CI (`.github/workflows/course-examples.yml`):
+- Java, C++, Python, JavaScript and NASM programs are compiled and run.
+- Command Line and Git examples are real Bash sessions run in a scratch folder with a fixed home, clock and identity, so the transcript is identical on every machine.
+- SQL examples run against a fresh SQLite database (`scripts/lib/run_sql.py`) and print like the `sqlite3` tool.
+- Web Basics pages are rendered in headless Chromium and the text they display is compared.
+
+`node scripts/run_course_examples.js --write --module <id>` records new outputs.
+
 ## Core Features
-- Multi-track navigation: Home, Course Tracks, DSA, Java, Git, Assembly, Discrete Math, Flashcards, Quizzes, Playground, Notes, Support, About.
-- Course Tracks menu expands to show individual classes.
-- Mobile, tablet, and laptop responsive navigation with consistent behavior.
-- Module cards with code examples, explanations, resources, and progress tracking.
-- Interactive quizzes and flashcards for active recall.
-- Glossary and notes support for quick reference and review.
-- Theme and appearance controls.
+- **Beginner path** on the home page and Courses page, with a "where are you starting from?" chooser, per-course progress and next-course links.
+- **Lessons** with objectives, key takeaways, common mistakes, practice, self-checks, terms and further reading.
+- **Runnable examples in the browser**: Python (Pyodide), JavaScript, SQL (sql.js) and live HTML/CSS/JS previews, each with a Try it button that opens the playground.
+- **Practice**: per-module quizzes with a best-score board, flashcard decks that remember the cards you know, and mixed review across completed modules.
+- **Study plan** for one course or the whole beginner path, exportable to a calendar.
+- **Glossary**, per-module notes, search (Ctrl/⌘ K), dark mode and a phone layout.
+- **Accounts** (email or Google) that sync progress, notes, quiz scores and known cards across devices.
 
 ## Live Website
 - Main site: [https://eddyarriaga00.github.io/CS-Course-Atlas/](https://eddyarriaga00.github.io/CS-Course-Atlas/)
@@ -157,23 +199,18 @@ CS Course Atlas helps learners study through structured modules, code examples, 
 - Build the deployable static artifact: `npm run build:site`.
 
 ## Tech Stack
-- HTML
-- CSS
-- JavaScript
-- Tailwind CSS (compiled locally for production)
-- Node.js + Express (optional backend features)
+- Plain HTML, CSS and JavaScript (no framework or bundler) for the site
+- Node.js + Express + Postgres (Neon) for the optional accounts API on Render
+- Playwright for smoke tests and for rendering web examples in CI
 
 ## Project Layout
-- `index.html` stays at project root as the primary app entrypoint.
-- `js/runtime/` contains shared frontend runtime helpers (base-path resolution and lazy asset loading).
-- `dist/` is the generated static artifact used for local static preview and GitHub Pages deploy.
-- `dist/modules/` contains generated crawlable per-module pages after running `npm run build:site`.
-- `server/` contains backend API/auth/SQL code.
-- `scripts/` contains build/verification/diagnostic scripts.
-- `docs/` contains project documentation and reports:
-  - `docs/SEARCH_CONSOLE_SETUP.md`
-  - `docs/reports/security_best_practices_report.md`
-- `backups/js/` contains archived JS snapshots (non-runtime).
+- `index.html`, `css/atlas.css`, `js/atlas.js`: the single-page app.
+- `data/atlas-data.json`: the small course index the site loads first; `data/lessons/<course>.json`: full lessons, loaded on demand. Both are generated by `npm run build:data` (CI checks they are up to date).
+- `data/module-catalog.json`, `js/course-curriculum.js`, `js/course-examples.js`, `data/course-videos.json`, `data/course-outlines.json`: course sources.
+- `scripts/`: data and SEO page builders, example runner and validators.
+- `tests/smoke/`: Playwright smoke tests (`npm run test:smoke`).
+- `server/`: accounts API; `render.yaml` deploys it to Render.
+- `dist/`: generated static site for GitHub Pages (`npm run build:site`).
 
 ## Support
 - GitHub: [https://github.com/eddyarriaga00/CS-Course-Atlas](https://github.com/eddyarriaga00/CS-Course-Atlas)
