@@ -1,0 +1,863 @@
+{
+ "courses": {
+  "java": {
+   "id": "PLZPZq0r_RZOOj_NOZYq_R2PECIMglLemc",
+   "type": "playlist",
+   "title": "Java tutorial for beginners ☕",
+   "channel": "Bro Code",
+   "count": "71"
+  },
+  "dsa": {
+   "id": "PLUl4u3cNGP63EdVPNLG3ToM6LaEUuStEY",
+   "type": "playlist",
+   "title": "MIT 6.006 Introduction to Algorithms, Spring 2020",
+   "channel": "MIT OpenCourseWare"
+  },
+  "discrete": {
+   "id": "PLB7540DEDD482705B",
+   "type": "playlist",
+   "title": "MIT 6.042J Mathematics for Computer Science, Fall 2010",
+   "channel": "MIT OpenCourseWare"
+  },
+  "git": {
+   "id": "PLyzOVJj3bHQuloKGG59rS43e29ro7I57J",
+   "type": "playlist",
+   "title": "Missing Semester IAP 2020",
+   "channel": "Missing Semester"
+  },
+  "assembly": {
+   "id": "PLKK11Ligqitg9MOX3-0tFT1Rmh3uJp7kA",
+   "type": "playlist",
+   "title": "Modern x64 Assembly",
+   "channel": "Creel",
+   "count": "16"
+  }
+ },
+ "modules": {
+  "java-basics": {
+   "series": {
+    "id": "PLZPZq0r_RZOOj_NOZYq_R2PECIMglLemc",
+    "type": "playlist",
+    "title": "Java tutorial for beginners ☕",
+    "channel": "Bro Code",
+    "count": "71"
+   },
+   "topics": {
+    "Variables": {
+     "id": "h1Sq8p2GL2g",
+     "type": "video",
+     "title": "6. Everything about Variables in JAVA",
+     "channel": "Abdul Bari",
+     "length": "29:05"
+    },
+    "Data Types": {
+     "id": "WQ7mvQFSmYc",
+     "type": "video",
+     "title": "Primitives Data Types In Java - All the Primitives And What They Do",
+     "channel": "Coding with John",
+     "length": "10:24"
+    },
+    "Methods": {
+     "id": "r0SewFmbCUI",
+     "type": "video",
+     "title": "Methods in Java",
+     "channel": "Neso Academy",
+     "length": "9:16"
+    },
+    "Classes": {
+     "id": "EplETikbJis",
+     "type": "video",
+     "title": "Creating a Class in Java",
+     "channel": "Neso Academy",
+     "length": "6:07"
+    },
+    "Objects": {
+     "id": "DYbi93vuSaU",
+     "type": "video",
+     "title": "Learn Java Object Oriented Programming in 10 minutes! 🧱",
+     "channel": "Bro Code",
+     "length": "9:51"
+    }
+   }
+  },
+  "control-flow": {
+   "series": {
+    "id": "PLZPZq0r_RZOOj_NOZYq_R2PECIMglLemc",
+    "type": "playlist",
+    "title": "Java tutorial for beginners ☕",
+    "channel": "Bro Code",
+    "count": "71"
+   },
+   "topics": {
+    "If-Else": {
+     "id": "-VeUElwL27I",
+     "type": "video",
+     "title": "if-else Statement in Java",
+     "channel": "Neso Academy",
+     "length": "3:37"
+    },
+    "For Loops": {
+     "id": "GwcisLY5avc",
+     "type": "video",
+     "title": "The For Loop in Java",
+     "channel": "Neso Academy",
+     "length": "8:29"
+    },
+    "While Loops": {
+     "id": "g8GcFboF2rM",
+     "type": "video",
+     "title": "The While Loop in Java",
+     "channel": "Neso Academy",
+     "length": "7:54"
+    },
+    "Switch": {
+     "id": "wcwWlasmLWs",
+     "type": "video",
+     "title": "switch Statement in Java",
+     "channel": "Neso Academy",
+     "length": "4:39"
+    },
+    "Break/Continue": {
+     "id": "aITdnsUTeek",
+     "type": "video",
+     "title": "Break and Continue Keywords in Java",
+     "channel": "Neso Academy",
+     "length": "6:00"
+    }
+   }
+  },
+  "oop-basics": {
+   "series": {
+    "id": "PLBlnK6fEyqRiwWLbSXKFtdGV8OVqr9dZr",
+    "type": "playlist",
+    "title": "Objects & Classes | Chapter 7 | Java Programming",
+    "channel": "Neso Academy",
+    "count": "22"
+   },
+   "topics": {
+    "Encapsulation": {
+     "id": "JYPMgbeQVvs",
+     "type": "video",
+     "title": "Data Field Encapsulation in Java",
+     "channel": "Neso Academy",
+     "length": "6:46"
+    },
+    "Inheritance": {
+     "id": "Zs342ePFvRI",
+     "type": "video",
+     "title": "Java inheritance 👪",
+     "channel": "Bro Code",
+     "length": "6:11"
+    },
+    "Polymorphism": {
+     "id": "jhDUxynEQRI",
+     "type": "video",
+     "title": "Java Polymorphism Fully Explained In 7 Minutes",
+     "channel": "Coding with John",
+     "length": "7:16"
+    },
+    "Abstraction": {
+     "id": "HvPlEJ3LHgE",
+     "type": "video",
+     "title": "Abstract Classes and Methods in Java Explained in 7 Minutes",
+     "channel": "Coding with John",
+     "length": "7:00"
+    },
+    "Interfaces": {
+     "id": "JFuMei9Wwk4",
+     "type": "video",
+     "title": "Java Interfaces Tutorial",
+     "channel": "Programming with Mosh",
+     "length": "15:42"
+    }
+   }
+  },
+  "exception-handling": {
+   "series": null,
+   "topics": {
+    "Try-Catch": {
+     "id": "1XAfapkBQjk",
+     "type": "video",
+     "title": "Exception Handling in Java Tutorial",
+     "channel": "Coding with John",
+     "length": "13:20"
+    },
+    "Finally Block": {
+     "id": "bLGzEqd-ELM",
+     "type": "video",
+     "title": "Java Finally Keyword - Try Catch Finally Java Tutorial #47",
+     "channel": "Alex Lee",
+     "length": "10:01"
+    },
+    "Custom Exceptions": {
+     "id": "OIozDnGYqIU",
+     "type": "video",
+     "title": "Java Custom Exceptions Tutorial - It's Way Easier Than You Think",
+     "channel": "Coding with John",
+     "length": "14:29"
+    },
+    "Throws": {
+     "id": "OIozDnGYqIU",
+     "type": "video",
+     "title": "Java Custom Exceptions Tutorial - It's Way Easier Than You Think",
+     "channel": "Coding with John",
+     "length": "14:29"
+    },
+    "Exception Types": {
+     "id": "bCPClyGsVhc",
+     "type": "video",
+     "title": "Checked vs. Unchecked Exceptions in Java Tutorial - What's The Difference?",
+     "channel": "Coding with John",
+     "length": "10:14"
+    }
+   }
+  },
+  "generics": {
+   "series": {
+    "id": "PLqq-6Pq4lTTbJNCU_lS7XC6hPEiTAABn_",
+    "type": "playlist",
+    "title": "Generics In Depth - Full Course",
+    "channel": "Java Brains",
+    "count": "18"
+   },
+   "topics": {
+    "Generic Classes": {
+     "id": "K1iu1kXkVoA",
+     "type": "video",
+     "title": "Generics In Java - Full Simple Tutorial",
+     "channel": "Coding with John",
+     "length": "17:34"
+    },
+    "Generic Methods": {
+     "id": "K1iu1kXkVoA",
+     "type": "video",
+     "title": "Generics In Java - Full Simple Tutorial",
+     "channel": "Coding with John",
+     "length": "17:34"
+    },
+    "Wildcards": {
+     "id": "vqjA6dqugq8",
+     "type": "video",
+     "title": "Generics and Wildcards in Java | Part 1 | Generics with Wildcards in Java Made Simple | Geekific",
+     "channel": "Geekific",
+     "length": "8:37"
+    },
+    "Bounds": {
+     "id": "NAZkukK5zX0",
+     "type": "video",
+     "title": "Java Generics Finally Explained (Wildcards, PECS & More) | Geekific",
+     "channel": "Geekific",
+     "length": "9:10"
+    }
+   }
+  },
+  "collections-framework": {
+   "series": {
+    "id": "PLA3GkZPtsafZZsLj0Tybu3y0HVl-hp1ea",
+    "type": "playlist",
+    "title": "Java Collections Framework Complete Course 2026 | From Zero to Professional",
+    "channel": "Engineering Digest",
+    "count": "22"
+   },
+   "topics": {
+    "ArrayList": {
+     "id": "NbYgm0r7u6o",
+     "type": "video",
+     "title": "Array vs. ArrayList in Java Tutorial - What's The Difference?",
+     "channel": "Coding with John",
+     "length": "17:36"
+    },
+    "HashMap": {
+     "id": "H62Jfv1DJlU",
+     "type": "video",
+     "title": "Map and HashMap in Java - Full Tutorial",
+     "channel": "Coding with John",
+     "length": "10:10"
+    },
+    "HashSet": {
+     "id": "QvHBHuuddYk",
+     "type": "video",
+     "title": "Set and HashSet in Java - Full Tutorial",
+     "channel": "Coding with John",
+     "length": "20:43"
+    },
+    "TreeMap": {
+     "id": "b8bBkPS_9X0",
+     "type": "video",
+     "title": "Java SortedMap Explained: Master TreeMap & NavigableMap with Examples",
+     "channel": "Engineering Digest",
+     "length": "14:58"
+    },
+    "LinkedList": {
+     "id": "5dscMs2hnDI",
+     "type": "video",
+     "title": "LinkedList vs ArrayList in Java Tutorial - Which Should You Use?",
+     "channel": "Coding with John",
+     "length": "11:43"
+    },
+    "Iterators": {
+     "id": "wqD4fOiGep4",
+     "type": "video",
+     "title": "Iterator pattern explained - Brain Bytes (Java Brains)",
+     "channel": "Java Brains",
+     "length": "8:02"
+    }
+   }
+  },
+  "lambda-streams": {
+   "series": {
+    "id": "PLqq-6Pq4lTTa9YGfyhyW2CqdtW9RtY-I3",
+    "type": "playlist",
+    "title": "Java 8 Lambda Basics",
+    "channel": "Java Brains",
+    "count": "25"
+   },
+   "topics": {
+    "Lambda Expressions": {
+     "id": "tj5sLSFjVj4",
+     "type": "video",
+     "title": "Lambda Expressions in Java - Full Simple Tutorial",
+     "channel": "Coding with John",
+     "length": "13:05"
+    },
+    "Stream API": {
+     "id": "tklkyVa7KZo",
+     "type": "video",
+     "title": "Stream API in Java",
+     "channel": "Telusko",
+     "length": "26:04"
+    },
+    "Method References": {
+     "id": "lwwIZuwYmNI",
+     "type": "video",
+     "title": "Java 8 Lambda Basics 21 - Method References",
+     "channel": "Java Brains",
+     "length": "10:27"
+    },
+    "Functional Interfaces": {
+     "id": "Gs8ZPKCFlTc",
+     "type": "video",
+     "title": "#73 Functional Interface New in Java",
+     "channel": "Telusko",
+     "length": "3:34"
+    }
+   }
+  },
+  "file-io": {
+   "series": null,
+   "topics": {
+    "FileReader": {
+     "id": "ScUJx4aWRi0",
+     "type": "video",
+     "title": "Java File Input/Output - It's Way Easier Than You Think",
+     "channel": "Coding with John",
+     "length": "8:18"
+    },
+    "FileWriter": {
+     "id": "ScUJx4aWRi0",
+     "type": "video",
+     "title": "Java File Input/Output - It's Way Easier Than You Think",
+     "channel": "Coding with John",
+     "length": "8:18"
+    },
+    "BufferedReader": {
+     "id": "ScUJx4aWRi0",
+     "type": "video",
+     "title": "Java File Input/Output - It's Way Easier Than You Think",
+     "channel": "Coding with John",
+     "length": "8:18"
+    },
+    "Scanner": {
+     "id": "huZ1neRqNho",
+     "type": "video",
+     "title": "The Scanner Class in Java",
+     "channel": "Neso Academy",
+     "length": "6:33"
+    },
+    "Path API": {
+     "id": "_hN-m7qOn9Y",
+     "type": "video",
+     "title": "Java NIO | Reading from and Writing to a file in Java | Transient Java Keyword | Geekific",
+     "channel": "Geekific",
+     "length": "8:37"
+    }
+   }
+  },
+  "testing-junit": {
+   "series": {
+    "id": "PLqq-6Pq4lTTa4ad5JISViSb2FVG8Vwa4o",
+    "type": "playlist",
+    "title": "JUnit 5 Basics",
+    "channel": "Java Brains",
+    "count": "27"
+   },
+   "topics": {
+    "JUnit Basics": {
+     "id": "vZm0lHciFsQ",
+     "type": "video",
+     "title": "Java Unit Testing with JUnit - Tutorial - How to Create And Use Unit Tests",
+     "channel": "Coding with John",
+     "length": "21:35"
+    },
+    "Test Assertions": {
+     "id": "L5RA3KMLG5Y",
+     "type": "video",
+     "title": "JUnit 5 Basics 10 - Using Assertions",
+     "channel": "Java Brains",
+     "length": "7:55"
+    },
+    "Test Lifecycle": {
+     "id": "flpmSXVTqBI",
+     "type": "video",
+     "title": "Java Testing - JUnit 5 Crash Course",
+     "channel": "freeCodeCamp.org",
+     "length": "26:05"
+    },
+    "Mocking": {
+     "id": "PJNcxY4I1F8",
+     "type": "video",
+     "title": "Introduction to Mockito | Mock vs Spy | thenReturn vs thenAnswer | Injecting Mocks | Geekific",
+     "channel": "Geekific",
+     "length": "7:24"
+    },
+    "TDD": {
+     "id": "z6gOPonp2t0",
+     "type": "video",
+     "title": "Test Driven Development (TDD) | Crash Course | 2020",
+     "channel": "Amigoscode",
+     "length": "43:53"
+    }
+   }
+  },
+  "jdbc-basics": {
+   "series": {
+    "id": "PLGwb7xZHg-oPC_5yNqKN82IZKpa6AFCSX",
+    "type": "playlist",
+    "title": "JDBC - Java Database Connectivity MySql",
+    "channel": "Navin Reddy",
+    "count": "7"
+   },
+   "topics": {
+    "JDBC Drivers": {
+     "id": "7v2OnUti2eM",
+     "type": "video",
+     "title": "Java Database Connectivity | JDBC",
+     "channel": "Telusko",
+     "length": "20:34"
+    },
+    "Connection": {
+     "id": "7v2OnUti2eM",
+     "type": "video",
+     "title": "Java Database Connectivity | JDBC",
+     "channel": "Telusko",
+     "length": "20:34"
+    },
+    "Statement": {
+     "id": "7v2OnUti2eM",
+     "type": "video",
+     "title": "Java Database Connectivity | JDBC",
+     "channel": "Telusko",
+     "length": "20:34"
+    },
+    "ResultSet": {
+     "id": "7v2OnUti2eM",
+     "type": "video",
+     "title": "Java Database Connectivity | JDBC",
+     "channel": "Telusko",
+     "length": "20:34"
+    },
+    "Prepared Statements": {
+     "id": "7v2OnUti2eM",
+     "type": "video",
+     "title": "Java Database Connectivity | JDBC",
+     "channel": "Telusko",
+     "length": "20:34"
+    }
+   }
+  },
+  "multithreading": {
+   "series": {
+    "id": "PLA3GkZPtsafYhmrZR_1nmQqfFSnkftOud",
+    "type": "playlist",
+    "title": "Java MultiThreading Zero to Hero Masterclass 2026 🚀",
+    "channel": "Engineering Digest",
+    "count": "21"
+   },
+   "topics": {
+    "Thread Class": {
+     "id": "r_MbozD32eo",
+     "type": "video",
+     "title": "Multithreading in Java Explained in 10 Minutes",
+     "channel": "Coding with John",
+     "length": "10:01"
+    },
+    "Runnable Interface": {
+     "id": "Z4KSgLpY0d8",
+     "type": "video",
+     "title": "#88 Runnable vs Thread in Java",
+     "channel": "Telusko",
+     "length": "8:27"
+    },
+    "Synchronization": {
+     "id": "RH7G-N2pa8M",
+     "type": "video",
+     "title": "13.7 Multithreading Synchronized Keyword",
+     "channel": "Telusko",
+     "length": "10:17"
+    },
+    "Thread Safety": {
+     "id": "px4W-HXRWKk",
+     "type": "video",
+     "title": "Thread Safety in Java",
+     "channel": "Telusko",
+     "length": "9:13"
+    }
+   }
+  },
+  "java-memory-jvm": {
+   "series": {
+    "id": "PLv_YUy7zGY8KjH7F6o_90LAq0QUdJeRU0",
+    "type": "playlist",
+    "title": "JVM",
+    "channel": "Java",
+    "count": "16"
+   },
+   "topics": {
+    "Stack vs Heap": {
+     "id": "_GK3WoFFKUE",
+     "type": "video",
+     "title": "#26 Stack And Heap in Java",
+     "channel": "Telusko",
+     "length": "12:37"
+    },
+    "Object Lifecycle": {
+     "id": "Mlbyft_MFYM",
+     "type": "video",
+     "title": "Java's Garbage Collection Explained - How It Saves your Lazy Programmer Butt",
+     "channel": "Coding with John",
+     "length": "9:01"
+    },
+    "Garbage Collection": {
+     "id": "Mlbyft_MFYM",
+     "type": "video",
+     "title": "Java's Garbage Collection Explained - How It Saves your Lazy Programmer Butt",
+     "channel": "Coding with John",
+     "length": "9:01"
+    },
+    "References": {
+     "id": "OmcFVHpb0v0",
+     "type": "video",
+     "title": "Primitive Types and Reference Types in Java",
+     "channel": "Neso Academy",
+     "length": "6:28"
+    },
+    "Memory Leaks in Practice": {
+     "id": "pq2ZO3tQXW8",
+     "type": "video",
+     "title": "Java Memory Management Best Practices",
+     "channel": "Java",
+     "length": "47:53"
+    }
+   }
+  },
+  "design-patterns": {
+   "series": {
+    "id": "PLlsmxlJgn1HJpa28yHzkBmUY-Ty71ZUGc",
+    "type": "playlist",
+    "title": "Design Patterns",
+    "channel": "Geekific",
+    "count": "25"
+   },
+   "topics": {
+    "Singleton": {
+     "id": "tSZn4wkBIu8",
+     "type": "video",
+     "title": "The Singleton Pattern Explained and Implemented in Java | Creational Design Patterns | Geekific",
+     "channel": "Geekific",
+     "length": "8:28"
+    },
+    "Factory": {
+     "id": "EdFq_JIThqM",
+     "type": "video",
+     "title": "The Factory Method Pattern Explained and Implemented in Java | Creational Design Patterns | Geekific",
+     "channel": "Geekific",
+     "length": "8:28"
+    },
+    "Observer": {
+     "id": "-oLDJ2dbadA",
+     "type": "video",
+     "title": "The Observer Pattern Explained and Implemented in Java | Behavioral Design Patterns | Geekific",
+     "channel": "Geekific",
+     "length": "6:49"
+    },
+    "Strategy": {
+     "id": "Nrwj3gZiuJU",
+     "type": "video",
+     "title": "The Strategy Pattern Explained and Implemented in Java | Behavioral Design Patterns | Geekific",
+     "channel": "Geekific",
+     "length": "7:26"
+    },
+    "MVC": {
+     "id": "dTVVa2gfht8",
+     "type": "video",
+     "title": "MVC Java Tutorial",
+     "channel": "Derek Banas",
+     "length": "13:16"
+    }
+   }
+  },
+  "intro-to-coding": {
+   "series": {
+    "id": "PLhQjrBD2T383f9scHRNYJkior2VvYjpSL",
+    "type": "playlist",
+    "title": "CS50 Lectures 2021 (HDR)",
+    "channel": "CS50"
+   },
+   "topics": {}
+  },
+  "arrays-strings": {
+   "series": {
+    "id": "PLBlnK6fEyqRhU6vNrQ-6ndkcbM7D7q-U8",
+    "type": "playlist",
+    "title": "Arrays in C | Chapter 8 | C Programming",
+    "channel": "Neso Academy",
+    "count": "16"
+   },
+   "topics": {}
+  },
+  "searching-algorithms": {
+   "series": {
+    "id": "PLDN4rrl48XKpZkf03iYFl-O29szjTrs_O",
+    "type": "playlist",
+    "title": "Algorithms",
+    "channel": "Abdul Bari",
+    "count": "84"
+   },
+   "topics": {}
+  },
+  "stacks-queues": {
+   "series": {
+    "id": "PLDV1Zeh2NRsB6SWUrDFW2RmDotAfPbeHu",
+    "type": "playlist",
+    "title": "Data structures playlist",
+    "channel": "WilliamFiset",
+    "count": "55"
+   },
+   "topics": {}
+  },
+  "linked-lists": {
+   "series": {
+    "id": "PLDV1Zeh2NRsB6SWUrDFW2RmDotAfPbeHu",
+    "type": "playlist",
+    "title": "Data structures playlist",
+    "channel": "WilliamFiset",
+    "count": "55"
+   },
+   "topics": {}
+  },
+  "recursion": {
+   "series": {
+    "id": "PLBlnK6fEyqRhLdzzJADYp1o8O-qlY6pv_",
+    "type": "playlist",
+    "title": "Time Complexity of Recursive Algorithms | Chapter 5 | Design and Analysis of Algorithms",
+    "channel": "Neso Academy",
+    "count": "18"
+   },
+   "topics": {}
+  },
+  "sorting-algorithms": {
+   "series": {
+    "id": "PLDN4rrl48XKpZkf03iYFl-O29szjTrs_O",
+    "type": "playlist",
+    "title": "Algorithms",
+    "channel": "Abdul Bari",
+    "count": "84"
+   },
+   "topics": {}
+  },
+  "matrix-grid-problems": {
+   "series": {
+    "id": "PLot-Xpze53ldBT_7QA8NVot219jFNr_GI",
+    "type": "playlist",
+    "title": "Graph Problems",
+    "channel": "NeetCode",
+    "count": "30"
+   },
+   "topics": {}
+  },
+  "backtracking-patterns": {
+   "series": {
+    "id": "PLDN4rrl48XKpZkf03iYFl-O29szjTrs_O",
+    "type": "playlist",
+    "title": "Algorithms",
+    "channel": "Abdul Bari",
+    "count": "84"
+   },
+   "topics": {}
+  },
+  "hash-tables": {
+   "series": {
+    "id": "PLWKjhJtqVAbkso-IbgiiP48n-O-JQA9PJ",
+    "type": "playlist",
+    "title": "Data Structures and Algorithms - Beau teaches JavaScript",
+    "channel": "freeCodeCamp.org",
+    "count": "13"
+   },
+   "topics": {}
+  },
+  "trees-basics": {
+   "series": {
+    "id": "PLot-Xpze53ldg4pN6PfzoJY7KsKcxF1jg",
+    "type": "playlist",
+    "title": "Trees",
+    "channel": "NeetCode",
+    "count": "36"
+   },
+   "topics": {}
+  },
+  "heaps": {
+   "series": {
+    "id": "PLDV1Zeh2NRsB6SWUrDFW2RmDotAfPbeHu",
+    "type": "playlist",
+    "title": "Data structures playlist",
+    "channel": "WilliamFiset",
+    "count": "55"
+   },
+   "topics": {}
+  },
+  "tries": {
+   "series": null,
+   "topics": {}
+  },
+  "graph-algorithms": {
+   "series": {
+    "id": "PLDV1Zeh2NRsDGO4--qE8yH72HFL1Km93P",
+    "type": "playlist",
+    "title": "Graph Theory Playlist",
+    "channel": "WilliamFiset",
+    "count": "43"
+   },
+   "topics": {}
+  },
+  "union-find": {
+   "series": {
+    "id": "PLDV1Zeh2NRsB6SWUrDFW2RmDotAfPbeHu",
+    "type": "playlist",
+    "title": "Data structures playlist",
+    "channel": "WilliamFiset",
+    "count": "55"
+   },
+   "topics": {}
+  },
+  "greedy-algorithms": {
+   "series": {
+    "id": "PLDN4rrl48XKpZkf03iYFl-O29szjTrs_O",
+    "type": "playlist",
+    "title": "Algorithms",
+    "channel": "Abdul Bari",
+    "count": "84"
+   },
+   "topics": {}
+  },
+  "dynamic-programming": {
+   "series": null,
+   "topics": {}
+  },
+  "bit-manipulation": {
+   "series": null,
+   "topics": {}
+  },
+  "segment-trees": {
+   "series": {
+    "id": "PLDV1Zeh2NRsB6SWUrDFW2RmDotAfPbeHu",
+    "type": "playlist",
+    "title": "Data structures playlist",
+    "channel": "WilliamFiset",
+    "count": "55"
+   },
+   "topics": {}
+  },
+  "binary-indexed-trees": {
+   "series": null,
+   "topics": {}
+  },
+  "advanced-trees": {
+   "series": {
+    "id": "PLDV1Zeh2NRsB6SWUrDFW2RmDotAfPbeHu",
+    "type": "playlist",
+    "title": "Data structures playlist",
+    "channel": "WilliamFiset",
+    "count": "55"
+   },
+   "topics": {}
+  },
+  "string-algorithms": {
+   "series": null,
+   "topics": {}
+  },
+  "propositional-logic-proofs": {
+   "series": {
+    "id": "PLBlnK6fEyqRjZU477sHY1rUFlNZO0_Q9x",
+    "type": "playlist",
+    "title": "Propositional Logic | Chapter 1 | Discrete Mathematics",
+    "channel": "Neso Academy",
+    "count": "31"
+   },
+   "topics": {}
+  },
+  "sets-relations-functions": {
+   "series": {
+    "id": "PLBlnK6fEyqRjNrxDZWQrow5lA5ppnKxen",
+    "type": "playlist",
+    "title": "Set Theory | Chapter 3 | Discrete Mathematics",
+    "channel": "Neso Academy",
+    "count": "26"
+   },
+   "topics": {}
+  },
+  "discrete-graph-theory": {
+   "series": {
+    "id": "PLxCzCOWd7aiG0M5FqjyoqB20Edk0tyzVt",
+    "type": "playlist",
+    "title": "Graph Theory",
+    "channel": "Gate Smashers",
+    "count": "11"
+   },
+   "topics": {}
+  },
+  "combinatorics-discrete-probability": {
+   "series": null,
+   "topics": {}
+  },
+  "git-basics-workflow": {
+   "series": {
+    "id": "PLA3GkZPtsafYYWC-N6vicOLP0w-4fiQ2S",
+    "type": "playlist",
+    "title": "Master Git & GitHub: A Complete Beginner to Advanced Playlist",
+    "channel": "Engineering Digest",
+    "count": "18"
+   },
+   "topics": {}
+  },
+  "git-branching-merging": {
+   "series": null,
+   "topics": {}
+  },
+  "assembly-registers-memory": {
+   "series": null,
+   "topics": {}
+  },
+  "assembly-control-flow-procedures": {
+   "series": null,
+   "topics": {}
+  },
+  "assembly-addressing-modes": {
+   "series": null,
+   "topics": {}
+  },
+  "assembly-arrays-strings-io": {
+   "series": null,
+   "topics": {}
+  }
+ }
+}

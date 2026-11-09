@@ -25,7 +25,10 @@ const STATIC_COPY_EXCLUDES = new Set([
     'render.yaml',
     'scripts',
     'server',
-    'tailwind.config.cjs'
+    'tailwind.config.cjs',
+    'tests',
+    'test-results',
+    'playwright.config.js'
 ]);
 
 const CATEGORY_ROUTE_MAP = {

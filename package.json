@@ -9,16 +9,17 @@
     "dev": "node --watch server/index.js",
     "db:migrate": "node server/migrate.js",
     "db:doctor": "node scripts/neon-doctor.js",
-    "check:frontend": "node --check js/script.js && node --check js/course-curriculum.js && node --check js/course-examples.js",
+    "check:frontend": "node --check js/atlas.js && node --check js/script.js && node --check js/course-curriculum.js && node --check js/course-examples.js && node scripts/build-atlas-data.js --check",
     "test:smoke": "playwright test",
     "test:smoke:headed": "playwright test --headed",
     "build:css": "tailwindcss -c tailwind.config.cjs -i ./css/tailwind.input.css -o ./css/tailwind.css --minify",
     "dev:css": "tailwindcss -c tailwind.config.cjs -i ./css/tailwind.input.css -o ./css/tailwind.css --watch",
     "build:seo": "node scripts/build-seo-pages.js",
-    "build:site": "npm run build:css && npm run build:seo",
+    "build:site": "npm run build:data && npm run build:css && npm run build:seo",
     "check:curriculum": "node scripts/verify_course_curriculum.js",
     "check:examples": "node scripts/verify_course_examples.js",
-    "test:examples": "node scripts/run_course_examples.js"
+    "test:examples": "node scripts/run_course_examples.js",
+    "build:data": "node scripts/build-atlas-data.js"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.10.4",
