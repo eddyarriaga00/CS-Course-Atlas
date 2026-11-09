@@ -756,7 +756,7 @@ function viewProfile() {
     <div class="split"><div class="stack">
       <div class="card panel"><h2>${t('yourCourses')}</h2><div class="unit-progress">${DATA.tracks.map((tr) => { const ts = trackStats(tr), live = tr.status === 'available';
         return `<a href="#${live && state.certs[tr.id] ? 'cert' : 'course'}-${tr.id}"><div class="row-top"><span>${esc(L(tr.title))}${live && state.certs[tr.id] ? ` <span class="pill ok" title="${t('certEarned')}">🎓</span>` : ''}</span><span>${live ? `${ts.done} / ${ts.count}` : t('comingSoon')}</span></div><div class="progress${live && ts.done === ts.count ? ' done' : ''}"><span style="width:${live ? pct(ts.done, ts.count) : 0}%"></span></div></a>`; }).join('')}</div></div>
-      ${liveTracks().map((tr) => `<div class="card panel"><h2>${t('progressUnit', L(tr.title))}</h2><div class="unit-progress">${tr.units.map((un, i) => { const d = un.modules.filter((m) => state.done.has(m)).length;
+      ${liveTracks().filter((tr) => trackStats(tr).done > 0).map((tr) => `<div class="card panel"><h2>${t('progressUnit', L(tr.title))}</h2><div class="unit-progress">${tr.units.map((un, i) => { const d = un.modules.filter((m) => state.done.has(m)).length;
         return `<div><div class="row-top"><span>${i + 1} · ${esc(L(un.title))}</span><span>${d} / ${un.modules.length}</span></div><div class="progress${d === un.modules.length ? ' done' : ''}"><span style="width:${pct(d, un.modules.length)}%"></span></div></div>`; }).join('')}</div></div>`).join('')}
       <div class="card panel"><h2>${t('prefs')}</h2><div>
         <div class="setting"><div class="txt"><b>${t('language')}</b><span>${t('languageSub')}</span></div>${seg([['en', 'English'], ['es', 'Español']], state.lang, 'set-lang')}</div>
