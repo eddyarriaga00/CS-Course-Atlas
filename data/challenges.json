@@ -3,81 +3,1117 @@
  "python-first-programs": [
   {
    "id": "to-hours",
-   "title": { "en": "Minutes to hours", "es": "Minutos a horas" },
-   "prompt": { "en": "Write `to_hours(minutes)` that returns the time as text like `\"2 h 15 min\"`. Use `//` for whole hours and `%` for the minutes left over.", "es": "Escribe `to_hours(minutes)` que devuelva el tiempo como texto, por ejemplo `\"2 h 15 min\"`. Usa `//` para las horas completas y `%` para los minutos que sobran." },
+   "title": {
+    "en": "Minutes to hours",
+    "es": "Minutos a horas"
+   },
+   "prompt": {
+    "en": "Write `to_hours(minutes)` that returns the time as text like `\"2 h 15 min\"`. Use `//` for whole hours and `%` for the minutes left over.",
+    "es": "Escribe `to_hours(minutes)` que devuelva el tiempo como texto, por ejemplo `\"2 h 15 min\"`. Usa `//` para las horas completas y `%` para los minutos que sobran."
+   },
    "starter": "def to_hours(minutes):\n    # Return text like \"2 h 15 min\"\n    pass\n",
    "solution": "def to_hours(minutes):\n    hours = minutes // 60\n    left = minutes % 60\n    return f\"{hours} h {left} min\"\n",
-   "hint": { "en": "`135 // 60` is 2 and `135 % 60` is 15. Build the text with an f-string: `f\"{hours} h {left} min\"`.", "es": "`135 // 60` es 2 y `135 % 60` es 15. Arma el texto con una f-string: `f\"{hours} h {left} min\"`." },
-   "tests": [["to_hours(135)", "'2 h 15 min'"], ["to_hours(60)", "'1 h 0 min'"], ["to_hours(5)", "'0 h 5 min'"], ["to_hours(0)", "'0 h 0 min'"]]
+   "hint": {
+    "en": "`135 // 60` is 2 and `135 % 60` is 15. Build the text with an f-string: `f\"{hours} h {left} min\"`.",
+    "es": "`135 // 60` es 2 y `135 % 60` es 15. Arma el texto con una f-string: `f\"{hours} h {left} min\"`."
+   },
+   "tests": [
+    [
+     "to_hours(135)",
+     "'2 h 15 min'"
+    ],
+    [
+     "to_hours(60)",
+     "'1 h 0 min'"
+    ],
+    [
+     "to_hours(5)",
+     "'0 h 5 min'"
+    ],
+    [
+     "to_hours(0)",
+     "'0 h 0 min'"
+    ]
+   ]
   },
   {
    "id": "initials",
-   "title": { "en": "Initials", "es": "Iniciales" },
-   "prompt": { "en": "Write `initials(name)` that returns the first letter of every word in upper case, so `\"ana maría ruiz\"` gives `\"AMR\"`.", "es": "Escribe `initials(name)` que devuelva la primera letra de cada palabra en mayúscula, así `\"ana maría ruiz\"` da `\"AMR\"`." },
+   "title": {
+    "en": "Initials",
+    "es": "Iniciales"
+   },
+   "prompt": {
+    "en": "Write `initials(name)` that returns the first letter of every word in upper case, so `\"ana maría ruiz\"` gives `\"AMR\"`.",
+    "es": "Escribe `initials(name)` que devuelva la primera letra de cada palabra en mayúscula, así `\"ana maría ruiz\"` da `\"AMR\"`."
+   },
    "starter": "def initials(name):\n    # \"ana maría ruiz\" -> \"AMR\"\n    pass\n",
    "solution": "def initials(name):\n    result = \"\"\n    for word in name.split():\n        result += word[0].upper()\n    return result\n",
-   "hint": { "en": "`name.split()` gives a list of words, `word[0]` is the first letter and `.upper()` makes it a capital.", "es": "`name.split()` da una lista de palabras, `word[0]` es la primera letra y `.upper()` la vuelve mayúscula." },
-   "tests": [["initials('ana maría ruiz')", "'AMR'"], ["initials('Ben')", "'B'"], ["initials('grace   brewster hopper')", "'GBH'"], ["initials('')", "''"]]
+   "hint": {
+    "en": "`name.split()` gives a list of words, `word[0]` is the first letter and `.upper()` makes it a capital.",
+    "es": "`name.split()` da una lista de palabras, `word[0]` es la primera letra y `.upper()` la vuelve mayúscula."
+   },
+   "tests": [
+    [
+     "initials('ana maría ruiz')",
+     "'AMR'"
+    ],
+    [
+     "initials('Ben')",
+     "'B'"
+    ],
+    [
+     "initials('grace   brewster hopper')",
+     "'GBH'"
+    ],
+    [
+     "initials('')",
+     "''"
+    ]
+   ]
   }
  ],
  "python-decisions-loops": [
   {
    "id": "letter-grade",
-   "title": { "en": "Letter grade", "es": "Calificación con letra" },
-   "prompt": { "en": "Write `letter(score)` that returns `\"A\"` for 90 and up, `\"B\"` for 80–89, `\"C\"` for 70–79 and `\"F\"` for anything lower.", "es": "Escribe `letter(score)` que devuelva `\"A\"` para 90 o más, `\"B\"` para 80–89, `\"C\"` para 70–79 y `\"F\"` para cualquier valor menor." },
+   "title": {
+    "en": "Letter grade",
+    "es": "Calificación con letra"
+   },
+   "prompt": {
+    "en": "Write `letter(score)` that returns `\"A\"` for 90 and up, `\"B\"` for 80–89, `\"C\"` for 70–79 and `\"F\"` for anything lower.",
+    "es": "Escribe `letter(score)` que devuelva `\"A\"` para 90 o más, `\"B\"` para 80–89, `\"C\"` para 70–79 y `\"F\"` para cualquier valor menor."
+   },
    "starter": "def letter(score):\n    # 90+ A, 80+ B, 70+ C, otherwise F\n    pass\n",
    "solution": "def letter(score):\n    if score >= 90:\n        return \"A\"\n    elif score >= 80:\n        return \"B\"\n    elif score >= 70:\n        return \"C\"\n    return \"F\"\n",
-   "hint": { "en": "Check from the highest grade down with `if`, `elif` and `else`; the first true condition wins, so 95 never reaches the `>= 80` check.", "es": "Revisa de la calificación más alta hacia abajo con `if`, `elif` y `else`; gana la primera condición verdadera, así 95 nunca llega a la comprobación `>= 80`." },
-   "tests": [["letter(95)", "'A'"], ["letter(90)", "'A'"], ["letter(89)", "'B'"], ["letter(70)", "'C'"], ["letter(12)", "'F'"]]
+   "hint": {
+    "en": "Check from the highest grade down with `if`, `elif` and `else`; the first true condition wins, so 95 never reaches the `>= 80` check.",
+    "es": "Revisa de la calificación más alta hacia abajo con `if`, `elif` y `else`; gana la primera condición verdadera, así 95 nunca llega a la comprobación `>= 80`."
+   },
+   "tests": [
+    [
+     "letter(95)",
+     "'A'"
+    ],
+    [
+     "letter(90)",
+     "'A'"
+    ],
+    [
+     "letter(89)",
+     "'B'"
+    ],
+    [
+     "letter(70)",
+     "'C'"
+    ],
+    [
+     "letter(12)",
+     "'F'"
+    ]
+   ]
   },
   {
    "id": "count-vowels",
-   "title": { "en": "Count the vowels", "es": "Cuenta las vocales" },
-   "prompt": { "en": "Write `count_vowels(text)` that returns how many vowels (a, e, i, o, u, upper or lower case) the text contains.", "es": "Escribe `count_vowels(text)` que devuelva cuántas vocales (a, e, i, o, u, mayúsculas o minúsculas) tiene el texto." },
+   "title": {
+    "en": "Count the vowels",
+    "es": "Cuenta las vocales"
+   },
+   "prompt": {
+    "en": "Write `count_vowels(text)` that returns how many vowels (a, e, i, o, u, upper or lower case) the text contains.",
+    "es": "Escribe `count_vowels(text)` que devuelva cuántas vocales (a, e, i, o, u, mayúsculas o minúsculas) tiene el texto."
+   },
    "starter": "def count_vowels(text):\n    count = 0\n    # loop over the letters and add 1 for each vowel\n    return count\n",
    "solution": "def count_vowels(text):\n    count = 0\n    for ch in text.lower():\n        if ch in \"aeiou\":\n            count += 1\n    return count\n",
-   "hint": { "en": "Loop with `for ch in text.lower():` and check `if ch in \"aeiou\":`.", "es": "Recorre con `for ch in text.lower():` y comprueba `if ch in \"aeiou\":`." },
-   "tests": [["count_vowels('Python')", "1"], ["count_vowels('AEIOU')", "5"], ["count_vowels('rhythm')", "0"], ["count_vowels('Hello, World!')", "3"]]
+   "hint": {
+    "en": "Loop with `for ch in text.lower():` and check `if ch in \"aeiou\":`.",
+    "es": "Recorre con `for ch in text.lower():` y comprueba `if ch in \"aeiou\":`."
+   },
+   "tests": [
+    [
+     "count_vowels('Python')",
+     "1"
+    ],
+    [
+     "count_vowels('AEIOU')",
+     "5"
+    ],
+    [
+     "count_vowels('rhythm')",
+     "0"
+    ],
+    [
+     "count_vowels('Hello, World!')",
+     "3"
+    ]
+   ]
   }
  ],
  "python-functions": [
   {
    "id": "c-to-f",
-   "title": { "en": "Celsius to Fahrenheit", "es": "Celsius a Fahrenheit" },
-   "prompt": { "en": "Write `c_to_f(celsius)` that returns the temperature in Fahrenheit (`F = C × 9/5 + 32`), rounded to 1 decimal place.", "es": "Escribe `c_to_f(celsius)` que devuelva la temperatura en Fahrenheit (`F = C × 9/5 + 32`), redondeada a 1 decimal." },
+   "title": {
+    "en": "Celsius to Fahrenheit",
+    "es": "Celsius a Fahrenheit"
+   },
+   "prompt": {
+    "en": "Write `c_to_f(celsius)` that returns the temperature in Fahrenheit (`F = C × 9/5 + 32`), rounded to 1 decimal place.",
+    "es": "Escribe `c_to_f(celsius)` que devuelva la temperatura en Fahrenheit (`F = C × 9/5 + 32`), redondeada a 1 decimal."
+   },
    "starter": "def c_to_f(celsius):\n    pass\n",
    "solution": "def c_to_f(celsius):\n    return round(celsius * 9 / 5 + 32, 1)\n",
-   "hint": { "en": "Compute `celsius * 9 / 5 + 32` and wrap it in `round(..., 1)`. Remember to `return` the result instead of printing it.", "es": "Calcula `celsius * 9 / 5 + 32` y envuélvelo en `round(..., 1)`. Recuerda hacer `return` del resultado en lugar de imprimirlo." },
-   "tests": [["c_to_f(0)", "32.0"], ["c_to_f(100)", "212.0"], ["c_to_f(-40)", "-40.0"], ["c_to_f(36.6)", "97.9"]]
+   "hint": {
+    "en": "Compute `celsius * 9 / 5 + 32` and wrap it in `round(..., 1)`. Remember to `return` the result instead of printing it.",
+    "es": "Calcula `celsius * 9 / 5 + 32` y envuélvelo en `round(..., 1)`. Recuerda hacer `return` del resultado en lugar de imprimirlo."
+   },
+   "tests": [
+    [
+     "c_to_f(0)",
+     "32.0"
+    ],
+    [
+     "c_to_f(100)",
+     "212.0"
+    ],
+    [
+     "c_to_f(-40)",
+     "-40.0"
+    ],
+    [
+     "c_to_f(36.6)",
+     "97.9"
+    ]
+   ]
   },
   {
    "id": "clamp",
-   "title": { "en": "Keep it in range", "es": "Mantenlo en el rango" },
-   "prompt": { "en": "Write `clamp(value, low=0, high=100)` that returns `value`, but never less than `low` or more than `high`. The defaults should make `clamp(150)` return 100.", "es": "Escribe `clamp(value, low=0, high=100)` que devuelva `value`, pero nunca menos que `low` ni más que `high`. Los valores por defecto deben hacer que `clamp(150)` devuelva 100." },
+   "title": {
+    "en": "Keep it in range",
+    "es": "Mantenlo en el rango"
+   },
+   "prompt": {
+    "en": "Write `clamp(value, low=0, high=100)` that returns `value`, but never less than `low` or more than `high`. The defaults should make `clamp(150)` return 100.",
+    "es": "Escribe `clamp(value, low=0, high=100)` que devuelva `value`, pero nunca menos que `low` ni más que `high`. Los valores por defecto deben hacer que `clamp(150)` devuelva 100."
+   },
    "starter": "def clamp(value, low=0, high=100):\n    pass\n",
    "solution": "def clamp(value, low=0, high=100):\n    if value < low:\n        return low\n    if value > high:\n        return high\n    return value\n",
-   "hint": { "en": "Two `if` checks are enough: below `low` return `low`, above `high` return `high`, otherwise return `value`.", "es": "Bastan dos `if`: por debajo de `low` devuelve `low`, por encima de `high` devuelve `high` y si no devuelve `value`." },
-   "tests": [["clamp(50)", "50"], ["clamp(150)", "100"], ["clamp(-5)", "0"], ["clamp(5, low=10)", "10"], ["clamp(7, 1, 5)", "5"]]
+   "hint": {
+    "en": "Two `if` checks are enough: below `low` return `low`, above `high` return `high`, otherwise return `value`.",
+    "es": "Bastan dos `if`: por debajo de `low` devuelve `low`, por encima de `high` devuelve `high` y si no devuelve `value`."
+   },
+   "tests": [
+    [
+     "clamp(50)",
+     "50"
+    ],
+    [
+     "clamp(150)",
+     "100"
+    ],
+    [
+     "clamp(-5)",
+     "0"
+    ],
+    [
+     "clamp(5, low=10)",
+     "10"
+    ],
+    [
+     "clamp(7, 1, 5)",
+     "5"
+    ]
+   ]
   }
  ],
  "python-collections": [
   {
    "id": "word-counts",
-   "title": { "en": "Word counts", "es": "Conteo de palabras" },
-   "prompt": { "en": "Write `word_counts(text)` that returns a dictionary mapping each lower-case word to how many times it appears, so `\"the cat the\"` gives `{\"the\": 2, \"cat\": 1}`.", "es": "Escribe `word_counts(text)` que devuelva un diccionario con cada palabra en minúsculas y cuántas veces aparece, así `\"the cat the\"` da `{\"the\": 2, \"cat\": 1}`." },
+   "title": {
+    "en": "Word counts",
+    "es": "Conteo de palabras"
+   },
+   "prompt": {
+    "en": "Write `word_counts(text)` that returns a dictionary mapping each lower-case word to how many times it appears, so `\"the cat the\"` gives `{\"the\": 2, \"cat\": 1}`.",
+    "es": "Escribe `word_counts(text)` que devuelva un diccionario con cada palabra en minúsculas y cuántas veces aparece, así `\"the cat the\"` da `{\"the\": 2, \"cat\": 1}`."
+   },
    "starter": "def word_counts(text):\n    counts = {}\n    # add 1 to counts[word] for every word\n    return counts\n",
    "solution": "def word_counts(text):\n    counts = {}\n    for word in text.lower().split():\n        counts[word] = counts.get(word, 0) + 1\n    return counts\n",
-   "hint": { "en": "`counts.get(word, 0)` returns the current count or 0 if the word is new, so `counts[word] = counts.get(word, 0) + 1` works for both.", "es": "`counts.get(word, 0)` devuelve el conteo actual o 0 si la palabra es nueva, así `counts[word] = counts.get(word, 0) + 1` sirve para ambos casos." },
-   "tests": [["word_counts('the cat the')", "{'the': 2, 'cat': 1}"], ["word_counts('Go go GO')", "{'go': 3}"], ["word_counts('')", "{}"]]
+   "hint": {
+    "en": "`counts.get(word, 0)` returns the current count or 0 if the word is new, so `counts[word] = counts.get(word, 0) + 1` works for both.",
+    "es": "`counts.get(word, 0)` devuelve el conteo actual o 0 si la palabra es nueva, así `counts[word] = counts.get(word, 0) + 1` sirve para ambos casos."
+   },
+   "tests": [
+    [
+     "word_counts('the cat the')",
+     "{'the': 2, 'cat': 1}"
+    ],
+    [
+     "word_counts('Go go GO')",
+     "{'go': 3}"
+    ],
+    [
+     "word_counts('')",
+     "{}"
+    ]
+   ]
   },
   {
    "id": "top-student",
-   "title": { "en": "Top student", "es": "Mejor estudiante" },
-   "prompt": { "en": "Write `top_student(scores)` that takes a dictionary of name → score and returns the name with the highest score. If the dictionary is empty, return `None`.", "es": "Escribe `top_student(scores)` que reciba un diccionario de nombre → calificación y devuelva el nombre con la calificación más alta. Si el diccionario está vacío, devuelve `None`." },
+   "title": {
+    "en": "Top student",
+    "es": "Mejor estudiante"
+   },
+   "prompt": {
+    "en": "Write `top_student(scores)` that takes a dictionary of name → score and returns the name with the highest score. If the dictionary is empty, return `None`.",
+    "es": "Escribe `top_student(scores)` que reciba un diccionario de nombre → calificación y devuelva el nombre con la calificación más alta. Si el diccionario está vacío, devuelve `None`."
+   },
    "starter": "def top_student(scores):\n    pass\n",
    "solution": "def top_student(scores):\n    best = None\n    for name, score in scores.items():\n        if best is None or score > scores[best]:\n            best = name\n    return best\n",
-   "hint": { "en": "Loop over `scores.items()` and remember the best name so far; replace it when you find a higher score. Start with `best = None`.", "es": "Recorre `scores.items()` y recuerda el mejor nombre hasta ahora; reemplázalo cuando encuentres una calificación más alta. Empieza con `best = None`." },
-   "tests": [["top_student({'Ana': 91, 'Ben': 78, 'Chen': 95})", "'Chen'"], ["top_student({'Solo': 50})", "'Solo'"], ["top_student({})", "None"]]
+   "hint": {
+    "en": "Loop over `scores.items()` and remember the best name so far; replace it when you find a higher score. Start with `best = None`.",
+    "es": "Recorre `scores.items()` y recuerda el mejor nombre hasta ahora; reemplázalo cuando encuentres una calificación más alta. Empieza con `best = None`."
+   },
+   "tests": [
+    [
+     "top_student({'Ana': 91, 'Ben': 78, 'Chen': 95})",
+     "'Chen'"
+    ],
+    [
+     "top_student({'Solo': 50})",
+     "'Solo'"
+    ],
+    [
+     "top_student({})",
+     "None"
+    ]
+   ]
+  }
+ ],
+ "hcw-binary": [
+  {
+   "id": "to-binary",
+   "title": {
+    "en": "Decimal to binary",
+    "es": "Decimal a binario"
+   },
+   "prompt": {
+    "en": "Write `to_binary(n)` that returns the binary digits of a non-negative integer as text, without using `bin()` or `format()`. `to_binary(13)` is `\"1101\"` and `to_binary(0)` is `\"0\"`.",
+    "es": "Escribe `to_binary(n)` que devuelva los dígitos binarios de un entero no negativo como texto, sin usar `bin()` ni `format()`. `to_binary(13)` es `\"1101\"` y `to_binary(0)` es `\"0\"`."
+   },
+   "starter": "def to_binary(n):\n    # repeatedly divide by 2 and collect the remainders\n    pass\n",
+   "solution": "def to_binary(n):\n    if n == 0:\n        return \"0\"\n    bits = \"\"\n    while n > 0:\n        bits = str(n % 2) + bits\n        n = n // 2\n    return bits\n",
+   "hint": {
+    "en": "Each `n % 2` is the next bit from the right, so add it to the front of the text, then divide with `n // 2` until `n` is 0.",
+    "es": "Cada `n % 2` es el siguiente bit desde la derecha, así que agrégalo al principio del texto y luego divide con `n // 2` hasta que `n` sea 0."
+   },
+   "tests": [
+    [
+     "to_binary(13)",
+     "'1101'"
+    ],
+    [
+     "to_binary(0)",
+     "'0'"
+    ],
+    [
+     "to_binary(1)",
+     "'1'"
+    ],
+    [
+     "to_binary(255)",
+     "'11111111'"
+    ],
+    [
+     "to_binary(1024)",
+     "'10000000000'"
+    ]
+   ]
+  },
+  {
+   "id": "byte-wrap",
+   "title": {
+    "en": "A byte that overflows",
+    "es": "Un byte que se desborda"
+   },
+   "prompt": {
+    "en": "Write `add_bytes(a, b)` that adds two numbers the way an 8-bit byte would: the result wraps around after 255, so `add_bytes(250, 10)` is `4`.",
+    "es": "Escribe `add_bytes(a, b)` que sume dos números como lo haría un byte de 8 bits: el resultado da la vuelta después de 255, así `add_bytes(250, 10)` es `4`."
+   },
+   "starter": "def add_bytes(a, b):\n    pass\n",
+   "solution": "def add_bytes(a, b):\n    return (a + b) % 256\n",
+   "hint": {
+    "en": "A byte has 256 possible values, so keep only the remainder after dividing by 256 (`% 256`, or `& 0xFF`).",
+    "es": "Un byte tiene 256 valores posibles, así que conserva solo el residuo al dividir entre 256 (`% 256`, o `& 0xFF`)."
+   },
+   "tests": [
+    [
+     "add_bytes(1, 2)",
+     "3"
+    ],
+    [
+     "add_bytes(250, 10)",
+     "4"
+    ],
+    [
+     "add_bytes(255, 1)",
+     "0"
+    ],
+    [
+     "add_bytes(128, 128)",
+     "0"
+    ]
+   ]
+  }
+ ],
+ "hcw-data": [
+  {
+   "id": "caesar-codes",
+   "title": {
+    "en": "Letters to numbers",
+    "es": "Letras a números"
+   },
+   "prompt": {
+    "en": "Write `codes(text)` that returns a list with the Unicode code point of every character, using `ord`. `codes(\"Hi\")` is `[72, 105]`.",
+    "es": "Escribe `codes(text)` que devuelva una lista con el punto de código Unicode de cada carácter, usando `ord`. `codes(\"Hi\")` es `[72, 105]`."
+   },
+   "starter": "def codes(text):\n    result = []\n    return result\n",
+   "solution": "def codes(text):\n    result = []\n    for ch in text:\n        result.append(ord(ch))\n    return result\n",
+   "hint": {
+    "en": "Loop over the text with `for ch in text:` and `append(ord(ch))` to the list.",
+    "es": "Recorre el texto con `for ch in text:` y agrega `ord(ch)` a la lista con `append`."
+   },
+   "tests": [
+    [
+     "codes('Hi')",
+     "[72, 105]"
+    ],
+    [
+     "codes('')",
+     "[]"
+    ],
+    [
+     "codes('é')",
+     "[233]"
+    ],
+    [
+     "codes('A a')",
+     "[65, 32, 97]"
+    ]
+   ]
+  },
+  {
+   "id": "rle",
+   "title": {
+    "en": "Run-length encoding",
+    "es": "Codificación por longitud de series"
+   },
+   "prompt": {
+    "en": "Write `rle(text)` that compresses runs of the same character: `\"aaabcc\"` becomes `\"3a1b2c\"`.",
+    "es": "Escribe `rle(text)` que comprima series del mismo carácter: `\"aaabcc\"` se vuelve `\"3a1b2c\"`."
+   },
+   "starter": "def rle(text):\n    pass\n",
+   "solution": "def rle(text):\n    out = \"\"\n    i = 0\n    while i < len(text):\n        j = i\n        while j < len(text) and text[j] == text[i]:\n            j += 1\n        out += str(j - i) + text[i]\n        i = j\n    return out\n",
+   "hint": {
+    "en": "Walk through the text with an index. From each position, move a second index forward while the character stays the same; the distance is the count.",
+    "es": "Recorre el texto con un índice. Desde cada posición, avanza un segundo índice mientras el carácter siga siendo el mismo; la distancia es el conteo."
+   },
+   "tests": [
+    [
+     "rle('aaabcc')",
+     "'3a1b2c'"
+    ],
+    [
+     "rle('')",
+     "''"
+    ],
+    [
+     "rle('abc')",
+     "'1a1b1c'"
+    ],
+    [
+     "rle('WWWWWWBBB')",
+     "'6W3B'"
+    ]
+   ]
+  }
+ ],
+ "hcw-hardware": [
+  {
+   "id": "xor-gate",
+   "title": {
+    "en": "Build XOR from AND, OR and NOT",
+    "es": "Construye XOR con AND, OR y NOT"
+   },
+   "prompt": {
+    "en": "Using only the given `AND`, `OR` and `NOT` functions, write `XOR(a, b)` that returns 1 when exactly one input is 1.",
+    "es": "Usando solo las funciones `AND`, `OR` y `NOT` que se dan, escribe `XOR(a, b)` que devuelva 1 cuando exactamente una entrada es 1."
+   },
+   "starter": "def AND(a, b): return a & b\ndef OR(a, b): return a | b\ndef NOT(a): return 1 - a\n\ndef XOR(a, b):\n    pass\n",
+   "solution": "def AND(a, b): return a & b\ndef OR(a, b): return a | b\ndef NOT(a): return 1 - a\n\ndef XOR(a, b):\n    return AND(OR(a, b), NOT(AND(a, b)))\n",
+   "hint": {
+    "en": "XOR is \"a or b, but not both\": combine `OR(a, b)` with `NOT(AND(a, b))` using `AND`.",
+    "es": "XOR es \"a o b, pero no ambos\": combina `OR(a, b)` con `NOT(AND(a, b))` usando `AND`."
+   },
+   "tests": [
+    [
+     "XOR(0, 0)",
+     "0"
+    ],
+    [
+     "XOR(0, 1)",
+     "1"
+    ],
+    [
+     "XOR(1, 0)",
+     "1"
+    ],
+    [
+     "XOR(1, 1)",
+     "0"
+    ]
+   ]
+  },
+  {
+   "id": "half-adder",
+   "title": {
+    "en": "A half adder",
+    "es": "Un medio sumador"
+   },
+   "prompt": {
+    "en": "Write `half_adder(a, b)` that adds two bits and returns a tuple `(sum, carry)`. `half_adder(1, 1)` is `(0, 1)`.",
+    "es": "Escribe `half_adder(a, b)` que sume dos bits y devuelva una tupla `(suma, acarreo)`. `half_adder(1, 1)` es `(0, 1)`."
+   },
+   "starter": "def half_adder(a, b):\n    # return (sum, carry)\n    pass\n",
+   "solution": "def half_adder(a, b):\n    return (a ^ b, a & b)\n",
+   "hint": {
+    "en": "The sum bit is XOR (`a ^ b`) and the carry is AND (`a & b`).",
+    "es": "El bit de suma es XOR (`a ^ b`) y el acarreo es AND (`a & b`)."
+   },
+   "tests": [
+    [
+     "half_adder(0, 0)",
+     "(0, 0)"
+    ],
+    [
+     "half_adder(0, 1)",
+     "(1, 0)"
+    ],
+    [
+     "half_adder(1, 0)",
+     "(1, 0)"
+    ],
+    [
+     "half_adder(1, 1)",
+     "(0, 1)"
+    ]
+   ]
+  }
+ ],
+ "hcw-software": [
+  {
+   "id": "reassemble",
+   "title": {
+    "en": "Reassemble the packets",
+    "es": "Reordena los paquetes"
+   },
+   "prompt": {
+    "en": "Packets arrive as `(sequence_number, text)` tuples in any order. Write `reassemble(packets)` that puts them in order and joins the text.",
+    "es": "Los paquetes llegan como tuplas `(número_de_secuencia, texto)` en cualquier orden. Escribe `reassemble(packets)` que los ordene y una el texto."
+   },
+   "starter": "def reassemble(packets):\n    pass\n",
+   "solution": "def reassemble(packets):\n    return \"\".join(text for _, text in sorted(packets))\n",
+   "hint": {
+    "en": "`sorted(packets)` orders tuples by their first item, the sequence number. Then join the text parts with `\"\".join(...)`.",
+    "es": "`sorted(packets)` ordena las tuplas por su primer elemento, el número de secuencia. Luego une los textos con `\"\".join(...)`."
+   },
+   "tests": [
+    [
+     "reassemble([(1, 'lo'), (0, 'hel')])",
+     "'hello'"
+    ],
+    [
+     "reassemble([])",
+     "''"
+    ],
+    [
+     "reassemble([(2, 'c'), (0, 'a'), (1, 'b')])",
+     "'abc'"
+    ]
+   ]
+  },
+  {
+   "id": "round-robin",
+   "title": {
+    "en": "Take turns",
+    "es": "Por turnos"
+   },
+   "prompt": {
+    "en": "A scheduler gives each process up to `slice` units of work per turn, in order, until all are done. Write `finish_order(work, slice)` where `work` is a dict of name → units, returning the names in the order they finish.",
+    "es": "Un planificador da a cada proceso hasta `slice` unidades de trabajo por turno, en orden, hasta que todos terminan. Escribe `finish_order(work, slice)` donde `work` es un diccionario de nombre → unidades, que devuelva los nombres en el orden en que terminan."
+   },
+   "starter": "def finish_order(work, slice):\n    finished = []\n    return finished\n",
+   "solution": "def finish_order(work, slice):\n    left = dict(work)\n    finished = []\n    while left:\n        for name in list(left):\n            left[name] -= min(slice, left[name])\n            if left[name] == 0:\n                finished.append(name)\n                del left[name]\n    return finished\n",
+   "hint": {
+    "en": "Copy the dict, then loop while anything is left: give each remaining process `min(slice, left[name])` units, and when one reaches 0 add it to `finished` and remove it.",
+    "es": "Copia el diccionario y repite mientras quede algo: da a cada proceso restante `min(slice, left[name])` unidades, y cuando uno llegue a 0 agrégalo a `finished` y quítalo."
+   },
+   "tests": [
+    [
+     "finish_order({'a': 5, 'b': 3, 'c': 4}, 2)",
+     "['b', 'c', 'a']"
+    ],
+    [
+     "finish_order({'x': 1}, 4)",
+     "['x']"
+    ],
+    [
+     "finish_order({'a': 2, 'b': 2}, 2)",
+     "['a', 'b']"
+    ]
+   ]
+  }
+ ],
+ "sec-passwords": [
+  {
+   "id": "strength",
+   "title": {
+    "en": "Password strength",
+    "es": "Fortaleza de contraseña"
+   },
+   "prompt": {
+    "en": "Write `pool_size(password)` that returns how many possible characters each position could be: add 26 if it has a lower-case letter, 26 for upper case, 10 for digits, and 33 for anything else.",
+    "es": "Escribe `pool_size(password)` que devuelva cuántos caracteres posibles podría tener cada posición: suma 26 si tiene minúsculas, 26 por mayúsculas, 10 por dígitos y 33 por cualquier otra cosa."
+   },
+   "starter": "def pool_size(password):\n    size = 0\n    return size\n",
+   "solution": "def pool_size(password):\n    size = 0\n    if any(c.islower() for c in password): size += 26\n    if any(c.isupper() for c in password): size += 26\n    if any(c.isdigit() for c in password): size += 10\n    if any(not c.isalnum() for c in password): size += 33\n    return size\n",
+   "hint": {
+    "en": "Use `any(...)` with `c.islower()`, `c.isupper()`, `c.isdigit()` and `not c.isalnum()` to test each kind of character.",
+    "es": "Usa `any(...)` con `c.islower()`, `c.isupper()`, `c.isdigit()` y `not c.isalnum()` para comprobar cada tipo de carácter."
+   },
+   "tests": [
+    [
+     "pool_size('dragon')",
+     "26"
+    ],
+    [
+     "pool_size('Dragon7')",
+     "62"
+    ],
+    [
+     "pool_size('P@ss')",
+     "85"
+    ],
+    [
+     "pool_size('')",
+     "0"
+    ],
+    [
+     "pool_size('1234')",
+     "10"
+    ]
+   ]
+  },
+  {
+   "id": "check-login",
+   "title": {
+    "en": "Check a login safely",
+    "es": "Comprobar un inicio de sesión con seguridad"
+   },
+   "prompt": {
+    "en": "Write `check(password, salt, stored)` that hashes `salt + password` with SHA-256 (as bytes) and returns `True` only if the hex digest equals `stored`. Compare with `hmac.compare_digest`.",
+    "es": "Escribe `check(password, salt, stored)` que calcule el SHA-256 de `salt + password` (como bytes) y devuelva `True` solo si el resumen hex es igual a `stored`. Compara con `hmac.compare_digest`."
+   },
+   "starter": "import hashlib\nimport hmac\n\ndef check(password, salt, stored):\n    pass\n",
+   "solution": "import hashlib\nimport hmac\n\ndef check(password, salt, stored):\n    digest = hashlib.sha256((salt + password).encode()).hexdigest()\n    return hmac.compare_digest(digest, stored)\n",
+   "hint": {
+    "en": "`hashlib.sha256((salt + password).encode()).hexdigest()` gives the hash; `hmac.compare_digest(a, b)` compares in constant time.",
+    "es": "`hashlib.sha256((salt + password).encode()).hexdigest()` da el hash; `hmac.compare_digest(a, b)` compara en tiempo constante."
+   },
+   "tests": [
+    [
+     "check('tulip', 's1', __import__('hashlib').sha256(b's1tulip').hexdigest())",
+     "True"
+    ],
+    [
+     "check('tulips', 's1', __import__('hashlib').sha256(b's1tulip').hexdigest())",
+     "False"
+    ],
+    [
+     "check('tulip', 's2', __import__('hashlib').sha256(b's1tulip').hexdigest())",
+     "False"
+    ]
+   ]
+  }
+ ],
+ "sec-crypto": [
+  {
+   "id": "caesar",
+   "title": {
+    "en": "Caesar cipher",
+    "es": "Cifrado César"
+   },
+   "prompt": {
+    "en": "Write `caesar(text, shift)` that shifts every upper-case letter A–Z by `shift` places, wrapping from Z back to A, and leaves other characters unchanged.",
+    "es": "Escribe `caesar(text, shift)` que desplace cada letra mayúscula A–Z `shift` lugares, volviendo de la Z a la A, y deje sin cambios los demás caracteres."
+   },
+   "starter": "def caesar(text, shift):\n    pass\n",
+   "solution": "def caesar(text, shift):\n    out = \"\"\n    for ch in text:\n        if \"A\" <= ch <= \"Z\":\n            out += chr((ord(ch) - 65 + shift) % 26 + 65)\n        else:\n            out += ch\n    return out\n",
+   "hint": {
+    "en": "Turn a letter into 0–25 with `ord(ch) - 65`, add the shift, wrap with `% 26`, and turn it back with `chr(... + 65)`.",
+    "es": "Convierte una letra en 0–25 con `ord(ch) - 65`, suma el desplazamiento, da la vuelta con `% 26` y vuelve a convertirla con `chr(... + 65)`."
+   },
+   "tests": [
+    [
+     "caesar('ABC', 3)",
+     "'DEF'"
+    ],
+    [
+     "caesar('XYZ', 3)",
+     "'ABC'"
+    ],
+    [
+     "caesar('HELLO, WORLD', 13)",
+     "'URYYB, JBEYQ'"
+    ],
+    [
+     "caesar('DEF', -3)",
+     "'ABC'"
+    ]
+   ]
+  },
+  {
+   "id": "xor-cipher",
+   "title": {
+    "en": "XOR with a key",
+    "es": "XOR con una clave"
+   },
+   "prompt": {
+    "en": "Write `xor_bytes(data, key)` that XORs each byte of `data` with the key bytes, repeating the key as needed, and returns `bytes`. Running it twice with the same key must give back the original.",
+    "es": "Escribe `xor_bytes(data, key)` que aplique XOR a cada byte de `data` con los bytes de la clave, repitiendo la clave según haga falta, y devuelva `bytes`. Ejecutarla dos veces con la misma clave debe devolver el original."
+   },
+   "starter": "def xor_bytes(data, key):\n    pass\n",
+   "solution": "def xor_bytes(data, key):\n    return bytes(b ^ key[i % len(key)] for i, b in enumerate(data))\n",
+   "hint": {
+    "en": "Use `enumerate(data)` to get each position `i`, and `key[i % len(key)]` to repeat the key. Wrap the results in `bytes(...)`.",
+    "es": "Usa `enumerate(data)` para obtener cada posición `i`, y `key[i % len(key)]` para repetir la clave. Envuelve los resultados en `bytes(...)`."
+   },
+   "tests": [
+    [
+     "xor_bytes(b'AB', b'\\x01')",
+     "b'@C'"
+    ],
+    [
+     "xor_bytes(xor_bytes(b'secret', b'key'), b'key')",
+     "b'secret'"
+    ],
+    [
+     "xor_bytes(b'', b'k')",
+     "b''"
+    ]
+   ]
+  }
+ ],
+ "sec-attacks": [
+  {
+   "id": "real-domain",
+   "title": {
+    "en": "Who owns this link?",
+    "es": "¿Quién controla este enlace?"
+   },
+   "prompt": {
+    "en": "Write `real_domain(url)` that returns the last two parts of the link's host name, so `\"https://paypal.com.secure-login.net/x\"` gives `\"secure-login.net\"`. Use `urlparse` from `urllib.parse`.",
+    "es": "Escribe `real_domain(url)` que devuelva las dos últimas partes del nombre de host del enlace, así `\"https://paypal.com.secure-login.net/x\"` da `\"secure-login.net\"`. Usa `urlparse` de `urllib.parse`."
+   },
+   "starter": "from urllib.parse import urlparse\n\ndef real_domain(url):\n    pass\n",
+   "solution": "from urllib.parse import urlparse\n\ndef real_domain(url):\n    host = urlparse(url).hostname or \"\"\n    return \".\".join(host.split(\".\")[-2:])\n",
+   "hint": {
+    "en": "`urlparse(url).hostname` gives the host; split it on `.` and keep the last two parts with `[-2:]`.",
+    "es": "`urlparse(url).hostname` da el host; divídelo por `.` y conserva las dos últimas partes con `[-2:]`."
+   },
+   "tests": [
+    [
+     "real_domain('https://www.paypal.com/signin')",
+     "'paypal.com'"
+    ],
+    [
+     "real_domain('https://paypal.com.secure-login.net/x')",
+     "'secure-login.net'"
+    ],
+    [
+     "real_domain('http://g00gle.com')",
+     "'g00gle.com'"
+    ]
+   ]
+  },
+  {
+   "id": "escape-html",
+   "title": {
+    "en": "Escape for HTML",
+    "es": "Escapar para HTML"
+   },
+   "prompt": {
+    "en": "Without using the `html` module, write `escape(text)` that replaces `&` with `&amp;`, `<` with `&lt;`, `>` with `&gt;` and `\"` with `&quot;`, so user text cannot become tags.",
+    "es": "Sin usar el módulo `html`, escribe `escape(text)` que reemplace `&` por `&amp;`, `<` por `&lt;`, `>` por `&gt;` y `\"` por `&quot;`, para que el texto del usuario no pueda volverse etiquetas."
+   },
+   "starter": "def escape(text):\n    pass\n",
+   "solution": "def escape(text):\n    return text.replace(\"&\", \"&amp;\").replace(\"<\", \"&lt;\").replace(\">\", \"&gt;\").replace('\"', \"&quot;\")\n",
+   "hint": {
+    "en": "Chain `.replace(...)` calls, and replace `&` first, otherwise you would turn the `&` of `&lt;` into `&amp;lt;`.",
+    "es": "Encadena llamadas a `.replace(...)`, y reemplaza `&` primero; si no, convertirías el `&` de `&lt;` en `&amp;lt;`."
+   },
+   "tests": [
+    [
+     "escape('<b>hi</b>')",
+     "'&lt;b&gt;hi&lt;/b&gt;'"
+    ],
+    [
+     "escape('Tom & Jerry')",
+     "'Tom &amp; Jerry'"
+    ],
+    [
+     "escape('say \"hi\"')",
+     "'say &quot;hi&quot;'"
+    ],
+    [
+     "escape('plain')",
+     "'plain'"
+    ]
+   ]
+  }
+ ],
+ "sec-defense": [
+  {
+   "id": "valid-username",
+   "title": {
+    "en": "Validate a username",
+    "es": "Validar un nombre de usuario"
+   },
+   "prompt": {
+    "en": "Write `valid_username(name)` that returns `True` only for 3 to 20 characters made of letters, digits or underscores. Use `re.fullmatch`.",
+    "es": "Escribe `valid_username(name)` que devuelva `True` solo para 3 a 20 caracteres formados por letras, dígitos o guiones bajos. Usa `re.fullmatch`."
+   },
+   "starter": "import re\n\ndef valid_username(name):\n    pass\n",
+   "solution": "import re\n\ndef valid_username(name):\n    return re.fullmatch(r\"[A-Za-z0-9_]{3,20}\", name) is not None\n",
+   "hint": {
+    "en": "The pattern `[A-Za-z0-9_]{3,20}` is an allow-list; `re.fullmatch` checks the whole string, and returns `None` when it does not match.",
+    "es": "El patrón `[A-Za-z0-9_]{3,20}` es una lista de permitidos; `re.fullmatch` revisa toda la cadena y devuelve `None` cuando no coincide."
+   },
+   "tests": [
+    [
+     "valid_username('ana_ruiz')",
+     "True"
+    ],
+    [
+     "valid_username('ab')",
+     "False"
+    ],
+    [
+     "valid_username('ana; DROP TABLE')",
+     "False"
+    ],
+    [
+     "valid_username('x' * 21)",
+     "False"
+    ],
+    [
+     "valid_username('Ben_2026')",
+     "True"
+    ]
+   ]
+  },
+  {
+   "id": "version-check",
+   "title": {
+    "en": "Is this version vulnerable?",
+    "es": "¿Esta versión es vulnerable?"
+   },
+   "prompt": {
+    "en": "Write `is_vulnerable(installed, fixed_in)` that compares dotted version strings as numbers and returns `True` when `installed` is older than `fixed_in`. `\"1.10.0\"` is newer than `\"1.9.2\"`.",
+    "es": "Escribe `is_vulnerable(installed, fixed_in)` que compare cadenas de versión con puntos como números y devuelva `True` cuando `installed` es más vieja que `fixed_in`. `\"1.10.0\"` es más nueva que `\"1.9.2\"`."
+   },
+   "starter": "def is_vulnerable(installed, fixed_in):\n    pass\n",
+   "solution": "def is_vulnerable(installed, fixed_in):\n    parse = lambda v: tuple(int(p) for p in v.split(\".\"))\n    return parse(installed) < parse(fixed_in)\n",
+   "hint": {
+    "en": "Split on dots, turn each part into an `int`, and compare tuples: `(1, 10, 0) < (1, 9, 2)` is `False`, as it should be.",
+    "es": "Divide por los puntos, convierte cada parte en `int` y compara tuplas: `(1, 10, 0) < (1, 9, 2)` es `False`, como debe ser."
+   },
+   "tests": [
+    [
+     "is_vulnerable('2.4.1', '2.4.3')",
+     "True"
+    ],
+    [
+     "is_vulnerable('1.10.0', '1.9.2')",
+     "False"
+    ],
+    [
+     "is_vulnerable('3.1.0', '3.1.0')",
+     "False"
+    ],
+    [
+     "is_vulnerable('0.9', '1.0')",
+     "True"
+    ]
+   ]
+  }
+ ],
+ "ai-what": [
+  {
+   "id": "accuracy",
+   "title": {
+    "en": "Measure accuracy",
+    "es": "Medir la precisión"
+   },
+   "prompt": {
+    "en": "Write `accuracy(predictions, labels)` that returns the fraction of positions where the prediction equals the label, as a float. Return `0.0` for empty lists.",
+    "es": "Escribe `accuracy(predictions, labels)` que devuelva la proporción de posiciones donde la predicción es igual a la etiqueta, como float. Devuelve `0.0` para listas vacías."
+   },
+   "starter": "def accuracy(predictions, labels):\n    pass\n",
+   "solution": "def accuracy(predictions, labels):\n    if not labels:\n        return 0.0\n    correct = sum(p == y for p, y in zip(predictions, labels))\n    return correct / len(labels)\n",
+   "hint": {
+    "en": "`zip(predictions, labels)` pairs them up; `sum(p == y for ...)` counts the matches because `True` counts as 1.",
+    "es": "`zip(predictions, labels)` los empareja; `sum(p == y for ...)` cuenta las coincidencias porque `True` cuenta como 1."
+   },
+   "tests": [
+    [
+     "accuracy([1, 0, 1, 1], [1, 1, 1, 0])",
+     "0.5"
+    ],
+    [
+     "accuracy(['cat', 'dog'], ['cat', 'dog'])",
+     "1.0"
+    ],
+    [
+     "accuracy([], [])",
+     "0.0"
+    ]
+   ]
+  },
+  {
+   "id": "train-test",
+   "title": {
+    "en": "Split the data",
+    "es": "Divide los datos"
+   },
+   "prompt": {
+    "en": "Write `split(data, fraction)` that returns `(train, test)`, where `train` is the first `int(len(data) * fraction)` items and `test` is the rest.",
+    "es": "Escribe `split(data, fraction)` que devuelva `(train, test)`, donde `train` son los primeros `int(len(data) * fraction)` elementos y `test` el resto."
+   },
+   "starter": "def split(data, fraction):\n    pass\n",
+   "solution": "def split(data, fraction):\n    cut = int(len(data) * fraction)\n    return data[:cut], data[cut:]\n",
+   "hint": {
+    "en": "Compute the cut point with `int(len(data) * fraction)`, then use slices `data[:cut]` and `data[cut:]`.",
+    "es": "Calcula el punto de corte con `int(len(data) * fraction)` y usa las rebanadas `data[:cut]` y `data[cut:]`."
+   },
+   "tests": [
+    [
+     "split([1, 2, 3, 4], 0.75)",
+     "([1, 2, 3], [4])"
+    ],
+    [
+     "split(list(range(10)), 0.8)",
+     "([0, 1, 2, 3, 4, 5, 6, 7], [8, 9])"
+    ],
+    [
+     "split([], 0.5)",
+     "([], [])"
+    ]
+   ]
+  }
+ ],
+ "ai-first-models": [
+  {
+   "id": "nearest",
+   "title": {
+    "en": "Nearest neighbor",
+    "es": "Vecino más cercano"
+   },
+   "prompt": {
+    "en": "Write `nearest_label(point, examples)` where `examples` is a list of `((x, y), label)`; return the label of the example closest to `point` (use `math.dist`).",
+    "es": "Escribe `nearest_label(point, examples)` donde `examples` es una lista de `((x, y), etiqueta)`; devuelve la etiqueta del ejemplo más cercano a `point` (usa `math.dist`)."
+   },
+   "starter": "import math\n\ndef nearest_label(point, examples):\n    pass\n",
+   "solution": "import math\n\ndef nearest_label(point, examples):\n    best = min(examples, key=lambda ex: math.dist(point, ex[0]))\n    return best[1]\n",
+   "hint": {
+    "en": "`min(examples, key=lambda ex: math.dist(point, ex[0]))` finds the closest example; return its label with `[1]`.",
+    "es": "`min(examples, key=lambda ex: math.dist(point, ex[0]))` encuentra el ejemplo más cercano; devuelve su etiqueta con `[1]`."
+   },
+   "tests": [
+    [
+     "nearest_label((0, 0), [((1, 1), 'a'), ((5, 5), 'b')])",
+     "'a'"
+    ],
+    [
+     "nearest_label((4, 4), [((1, 1), 'a'), ((5, 5), 'b')])",
+     "'b'"
+    ],
+    [
+     "nearest_label((2, 0), [((0, 0), 'x'), ((3, 0), 'y'), ((9, 9), 'z')])",
+     "'y'"
+    ]
+   ]
+  },
+  {
+   "id": "mse",
+   "title": {
+    "en": "Mean squared error",
+    "es": "Error cuadrático medio"
+   },
+   "prompt": {
+    "en": "Write `mse(predictions, truth)` that returns the average of the squared differences between the two lists.",
+    "es": "Escribe `mse(predictions, truth)` que devuelva el promedio de las diferencias al cuadrado entre las dos listas."
+   },
+   "starter": "def mse(predictions, truth):\n    pass\n",
+   "solution": "def mse(predictions, truth):\n    return sum((p - t) ** 2 for p, t in zip(predictions, truth)) / len(truth)\n",
+   "hint": {
+    "en": "For each pair, compute `(p - t) ** 2`, add them up with `sum(...)` and divide by how many there are.",
+    "es": "Para cada pareja calcula `(p - t) ** 2`, súmalas con `sum(...)` y divide entre cuántas hay."
+   },
+   "tests": [
+    [
+     "mse([1, 2, 3], [1, 2, 3])",
+     "0.0"
+    ],
+    [
+     "mse([2, 4], [0, 0])",
+     "10.0"
+    ],
+    [
+     "mse([1.5], [0.5])",
+     "1.0"
+    ]
+   ]
+  }
+ ],
+ "ai-neural": [
+  {
+   "id": "neuron",
+   "title": {
+    "en": "One neuron",
+    "es": "Una neurona"
+   },
+   "prompt": {
+    "en": "Write `neuron(inputs, weights, bias)` that returns the weighted sum `w1·x1 + w2·x2 + ... + bias`.",
+    "es": "Escribe `neuron(inputs, weights, bias)` que devuelva la suma ponderada `w1·x1 + w2·x2 + ... + sesgo`."
+   },
+   "starter": "def neuron(inputs, weights, bias):\n    pass\n",
+   "solution": "def neuron(inputs, weights, bias):\n    return sum(x * w for x, w in zip(inputs, weights)) + bias\n",
+   "hint": {
+    "en": "Multiply each input by its weight with `zip`, add them with `sum(...)`, then add the bias.",
+    "es": "Multiplica cada entrada por su peso con `zip`, súmalas con `sum(...)` y luego suma el sesgo."
+   },
+   "tests": [
+    [
+     "neuron([1, 1], [2, 3], -1)",
+     "4"
+    ],
+    [
+     "neuron([0, 0], [5, 5], 0.5)",
+     "0.5"
+    ],
+    [
+     "neuron([1, 2, 3], [1, 0, -1], 0)",
+     "-2"
+    ]
+   ]
+  },
+  {
+   "id": "relu-sigmoid",
+   "title": {
+    "en": "Activation functions",
+    "es": "Funciones de activación"
+   },
+   "prompt": {
+    "en": "Write `relu(x)` (0 for negatives, `x` otherwise) and `sigmoid(x)` (`1 / (1 + e^-x)`, using `math.exp`).",
+    "es": "Escribe `relu(x)` (0 para negativos, `x` en otro caso) y `sigmoid(x)` (`1 / (1 + e^-x)`, usando `math.exp`)."
+   },
+   "starter": "import math\n\ndef relu(x):\n    pass\n\ndef sigmoid(x):\n    pass\n",
+   "solution": "import math\n\ndef relu(x):\n    return max(0, x)\n\ndef sigmoid(x):\n    return 1 / (1 + math.exp(-x))\n",
+   "hint": {
+    "en": "`relu` is `max(0, x)`. For `sigmoid`, `math.exp(-x)` is e to the power −x.",
+    "es": "`relu` es `max(0, x)`. Para `sigmoid`, `math.exp(-x)` es e elevado a −x."
+   },
+   "tests": [
+    [
+     "relu(-3)",
+     "0"
+    ],
+    [
+     "relu(2.5)",
+     "2.5"
+    ],
+    [
+     "sigmoid(0)",
+     "0.5"
+    ],
+    [
+     "round(sigmoid(2), 3)",
+     "0.881"
+    ]
+   ]
+  }
+ ],
+ "ai-language": [
+  {
+   "id": "bigrams",
+   "title": {
+    "en": "Count word pairs",
+    "es": "Cuenta parejas de palabras"
+   },
+   "prompt": {
+    "en": "Write `next_counts(text, word)` that returns a dict of which words follow `word` in the text and how many times, the core of a next-word model.",
+    "es": "Escribe `next_counts(text, word)` que devuelva un diccionario con qué palabras siguen a `word` en el texto y cuántas veces, el núcleo de un modelo de siguiente palabra."
+   },
+   "starter": "def next_counts(text, word):\n    counts = {}\n    return counts\n",
+   "solution": "def next_counts(text, word):\n    words = text.split()\n    counts = {}\n    for current, nxt in zip(words, words[1:]):\n        if current == word:\n            counts[nxt] = counts.get(nxt, 0) + 1\n    return counts\n",
+   "hint": {
+    "en": "`zip(words, words[1:])` gives every pair of neighbouring words; count the second one when the first is `word`.",
+    "es": "`zip(words, words[1:])` da cada pareja de palabras vecinas; cuenta la segunda cuando la primera es `word`."
+   },
+   "tests": [
+    [
+     "next_counts('the cat sat on the mat', 'the')",
+     "{'cat': 1, 'mat': 1}"
+    ],
+    [
+     "next_counts('a b a b a c', 'a')",
+     "{'b': 2, 'c': 1}"
+    ],
+    [
+     "next_counts('hello world', 'world')",
+     "{}"
+    ]
+   ]
+  },
+  {
+   "id": "tokens",
+   "title": {
+    "en": "A tiny tokenizer",
+    "es": "Un tokenizador pequeño"
+   },
+   "prompt": {
+    "en": "Write `tokenize(text, vocab)` that splits `text` into pieces from `vocab`, always taking the longest piece that matches at the current position. Every single letter is in `vocab`, so a match always exists.",
+    "es": "Escribe `tokenize(text, vocab)` que divida `text` en piezas de `vocab`, tomando siempre la pieza más larga que coincida en la posición actual. Cada letra suelta está en `vocab`, así que siempre hay coincidencia."
+   },
+   "starter": "def tokenize(text, vocab):\n    tokens = []\n    return tokens\n",
+   "solution": "def tokenize(text, vocab):\n    tokens, i = [], 0\n    while i < len(text):\n        piece = max((p for p in vocab if text.startswith(p, i)), key=len)\n        tokens.append(piece)\n        i += len(piece)\n    return tokens\n",
+   "hint": {
+    "en": "At position `i`, look at every `p` in `vocab` with `text.startswith(p, i)`, keep the longest with `max(..., key=len)`, then move `i` forward by its length.",
+    "es": "En la posición `i`, revisa cada `p` de `vocab` con `text.startswith(p, i)`, conserva la más larga con `max(..., key=len)` y avanza `i` según su longitud."
+   },
+   "tests": [
+    [
+     "tokenize('learning', ['learn', 'ing', 'l', 'e', 'a', 'r', 'n', 'i', 'g'])",
+     "['learn', 'ing']"
+    ],
+    [
+     "tokenize('unable', ['un', 'able', 'u', 'n', 'a', 'b', 'l', 'e'])",
+     "['un', 'able']"
+    ],
+    [
+     "tokenize('cab', ['c', 'a', 'b', 'ca'])",
+     "['ca', 'b']"
+    ]
+   ]
   }
  ]
 }
