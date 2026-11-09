@@ -587,6 +587,7 @@ pre.code.term { white-space: pre; }
 [data-track="how-computers-work"] { --track: #7c3aed; }
 [data-track="cybersecurity"] { --track: #15803d; }
 [data-track="ai"] { --track: #c026d3; }
+[data-track="networks"] { --track: #b45309; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) [data-track="python"] { --track: #6aa8e8; } :root:not([data-theme="light"]) [data-track="cli"] { --track: #94a3b8; } }
 :root[data-theme="dark"] [data-track="python"] { --track: #6aa8e8; }
 :root[data-theme="dark"] [data-track="cli"] { --track: #94a3b8; }
@@ -1049,3 +1050,8 @@ pre[tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 
 .start-card .start-no { background: var(--accent-soft) !important; color: inherit !important; font-size: 18px; width: 40px; height: 40px; border-radius: 12px; }
 /* Long "Next challenge: <title>" labels wrap instead of pushing the page sideways on phones. */
 .ch-next { white-space: normal; max-width: 100%; height: auto; min-height: 40px; text-align: left; line-height: 1.35; padding-block: 8px; }
+/* Four practice tools: a 2 × 2 grid on wide screens, one column on narrow ones. */
+.practice-hub { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 900px) { .practice-hub { grid-template-columns: 1fr; } }
+/* The playground's language bar wraps instead of scrolling, so no language button hides off the edge. */
+.pg-editor .code-bar { flex-wrap: wrap; row-gap: 4px; overflow-x: visible; }

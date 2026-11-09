@@ -1760,6 +1760,314 @@
    ]
   }
  ],
+ "net-basics": [
+  {
+   "id": "packets-needed",
+   "title": {
+    "en": "How many packets?",
+    "es": "¿Cuántos paquetes?"
+   },
+   "prompt": {
+    "en": "Each packet can be at most `mtu` bytes, and 40 of those bytes are IP and TCP headers. Write `packets_needed(data_bytes, mtu)` that returns how many packets it takes to send `data_bytes` bytes of data. Sending 0 bytes needs 0 packets.",
+    "es": "Cada paquete puede tener como máximo `mtu` bytes, y 40 de esos bytes son encabezados IP y TCP. Escribe `packets_needed(data_bytes, mtu)` que devuelva cuántos paquetes hacen falta para enviar `data_bytes` bytes de datos. Enviar 0 bytes necesita 0 paquetes."
+   },
+   "starter": "def packets_needed(data_bytes, mtu):\n    per_packet = mtu - 40\n    return data_bytes // per_packet\n",
+   "solution": "def packets_needed(data_bytes, mtu):\n    per_packet = mtu - 40\n    return -(-data_bytes // per_packet)\n",
+   "hint": {
+    "en": "Each packet carries `mtu - 40` bytes of data. Plain `//` rounds down, so a partly full last packet is forgotten: round up instead, for example with `-(-a // b)` or `(a + b - 1) // b`.",
+    "es": "Cada paquete lleva `mtu - 40` bytes de datos. `//` redondea hacia abajo y se olvida del último paquete a medio llenar: redondea hacia arriba, por ejemplo con `-(-a // b)` o `(a + b - 1) // b`."
+   },
+   "tests": [
+    [
+     "packets_needed(1460, 1500)",
+     "1"
+    ],
+    [
+     "packets_needed(1461, 1500)",
+     "2"
+    ],
+    [
+     "packets_needed(0, 1500)",
+     "0"
+    ],
+    [
+     "packets_needed(1000000, 1500)",
+     "685"
+    ],
+    [
+     "packets_needed(100, 100)",
+     "2"
+    ]
+   ]
+  },
+  {
+   "id": "transfer-time",
+   "title": {
+    "en": "Latency plus bandwidth",
+    "es": "Latencia más ancho de banda"
+   },
+   "prompt": {
+    "en": "Write `transfer_ms(size_bytes, mbps, latency_ms)` that returns how many milliseconds it takes until the last bit arrives: the latency plus the time to push all the bits through a link of `mbps` megabits per second (1 Mbps = 1,000,000 bits per second). Round the result to 1 decimal place.",
+    "es": "Escribe `transfer_ms(size_bytes, mbps, latency_ms)` que devuelva cuántos milisegundos pasan hasta que llega el último bit: la latencia más el tiempo de pasar todos los bits por un enlace de `mbps` megabits por segundo (1 Mbps = 1,000,000 bits por segundo). Redondea el resultado a 1 decimal."
+   },
+   "starter": "def transfer_ms(size_bytes, mbps, latency_ms):\n    seconds = size_bytes / (mbps * 1_000_000)\n    return round(latency_ms + seconds * 1000, 1)\n",
+   "solution": "def transfer_ms(size_bytes, mbps, latency_ms):\n    seconds = size_bytes * 8 / (mbps * 1_000_000)\n    return round(latency_ms + seconds * 1000, 1)\n",
+   "hint": {
+    "en": "Bandwidth is in bits per second but the size is in bytes: multiply the size by 8 before dividing. Then convert seconds to milliseconds and add the latency.",
+    "es": "El ancho de banda está en bits por segundo pero el tamaño está en bytes: multiplica el tamaño por 8 antes de dividir. Luego pasa de segundos a milisegundos y suma la latencia."
+   },
+   "tests": [
+    [
+     "transfer_ms(1_000_000, 8, 20)",
+     "1020.0"
+    ],
+    [
+     "transfer_ms(2_000, 100, 28)",
+     "28.2"
+    ],
+    [
+     "transfer_ms(0, 50, 35)",
+     "35.0"
+    ],
+    [
+     "transfer_ms(500_000_000, 100, 239)",
+     "40239.0"
+    ]
+   ]
+  }
+ ],
+ "net-ip": [
+  {
+   "id": "ip-to-int",
+   "title": {
+    "en": "Dotted IP to a number and back",
+    "es": "De IP con puntos a número y de vuelta"
+   },
+   "prompt": {
+    "en": "Write `ip_to_int(ip)` that turns a dotted IPv4 address like `\"192.168.1.20\"` into its 32-bit integer (`3232235796`), and `int_to_ip(n)` that does the reverse. Use bit shifts or arithmetic, not the `ipaddress` module.",
+    "es": "Escribe `ip_to_int(ip)` que convierta una dirección IPv4 con puntos como `\"192.168.1.20\"` en su entero de 32 bits (`3232235796`), e `int_to_ip(n)` que haga lo contrario. Usa desplazamientos de bits o aritmética, no el módulo `ipaddress`."
+   },
+   "starter": "def ip_to_int(ip):\n    parts = [int(p) for p in ip.split(\".\")]\n    return sum(parts)\n\n\ndef int_to_ip(n):\n    return \"0.0.0.0\"\n",
+   "solution": "def ip_to_int(ip):\n    n = 0\n    for part in ip.split(\".\"):\n        n = (n << 8) | int(part)\n    return n\n\n\ndef int_to_ip(n):\n    return \".\".join(str((n >> shift) & 255) for shift in (24, 16, 8, 0))\n",
+   "hint": {
+    "en": "Each part is one byte. Going forward, shift what you have 8 bits left and add the next part: `n = n * 256 + part`. Going back, `(n >> 24) & 255` is the first part, then shift by 16, 8 and 0.",
+    "es": "Cada parte es un byte. Hacia adelante, desplaza lo que tienes 8 bits a la izquierda y suma la siguiente parte: `n = n * 256 + parte`. De vuelta, `(n >> 24) & 255` es la primera parte, luego desplaza 16, 8 y 0."
+   },
+   "tests": [
+    [
+     "ip_to_int('192.168.1.20')",
+     "3232235796"
+    ],
+    [
+     "ip_to_int('0.0.0.1')",
+     "1"
+    ],
+    [
+     "ip_to_int('255.255.255.255')",
+     "4294967295"
+    ],
+    [
+     "int_to_ip(3232235796)",
+     "'192.168.1.20'"
+    ],
+    [
+     "int_to_ip(167772161)",
+     "'10.0.0.1'"
+    ],
+    [
+     "int_to_ip(ip_to_int('172.16.254.3'))",
+     "'172.16.254.3'"
+    ]
+   ]
+  },
+  {
+   "id": "longest-prefix",
+   "title": {
+    "en": "Longest-prefix match",
+    "es": "Coincidencia del prefijo más largo"
+   },
+   "prompt": {
+    "en": "A routing table is a list of `(cidr, next_hop)` pairs such as `(\"10.1.0.0/16\", \"B\")`. Write `route(table, ip)` that returns the next hop of the most specific route that contains `ip`, or `None` if no route matches. You may use the `ipaddress` module.",
+    "es": "Una tabla de enrutamiento es una lista de pares `(cidr, siguiente_salto)` como `(\"10.1.0.0/16\", \"B\")`. Escribe `route(table, ip)` que devuelva el siguiente salto de la ruta más específica que contiene `ip`, o `None` si ninguna ruta coincide. Puedes usar el módulo `ipaddress`."
+   },
+   "starter": "import ipaddress\n\n\ndef route(table, ip):\n    address = ipaddress.ip_address(ip)\n    for cidr, hop in table:\n        if address in ipaddress.ip_network(cidr):\n            return hop\n    return None\n",
+   "solution": "import ipaddress\n\n\ndef route(table, ip):\n    address = ipaddress.ip_address(ip)\n    best, best_len = None, -1\n    for cidr, hop in table:\n        net = ipaddress.ip_network(cidr)\n        if address in net and net.prefixlen > best_len:\n            best, best_len = hop, net.prefixlen\n    return best\n",
+   "hint": {
+    "en": "Do not stop at the first match. Look at every route that contains the address and keep the one with the largest `ipaddress.ip_network(cidr).prefixlen`.",
+    "es": "No te detengas en la primera coincidencia. Revisa todas las rutas que contienen la dirección y quédate con la de mayor `ipaddress.ip_network(cidr).prefixlen`."
+   },
+   "tests": [
+    [
+     "route([('0.0.0.0/0', 'ISP'), ('10.0.0.0/8', 'A'), ('10.1.0.0/16', 'B')], '10.1.2.3')",
+     "'B'"
+    ],
+    [
+     "route([('0.0.0.0/0', 'ISP'), ('10.0.0.0/8', 'A'), ('10.1.0.0/16', 'B')], '10.9.9.9')",
+     "'A'"
+    ],
+    [
+     "route([('0.0.0.0/0', 'ISP'), ('10.0.0.0/8', 'A')], '8.8.8.8')",
+     "'ISP'"
+    ],
+    [
+     "route([('10.0.0.0/8', 'A')], '192.168.1.1')",
+     "None"
+    ],
+    [
+     "route([('172.16.5.128/25', 'lab'), ('172.16.5.0/24', 'printers')], '172.16.5.20')",
+     "'printers'"
+    ]
+   ]
+  }
+ ],
+ "net-transport": [
+  {
+   "id": "tcp-flags",
+   "title": {
+    "en": "Read the TCP flags",
+    "es": "Lee las banderas de TCP"
+   },
+   "prompt": {
+    "en": "TCP flags are bits of one byte: FIN = 0x01, SYN = 0x02, RST = 0x04, PSH = 0x08, ACK = 0x10, URG = 0x20. Write `tcp_flags(value)` that returns the list of flag names that are set, in that order (lowest bit first). For example `tcp_flags(0x12)` is `['SYN', 'ACK']`.",
+    "es": "Las banderas de TCP son bits de un byte: FIN = 0x01, SYN = 0x02, RST = 0x04, PSH = 0x08, ACK = 0x10, URG = 0x20. Escribe `tcp_flags(value)` que devuelva la lista de nombres de las banderas encendidas, en ese orden (del bit más bajo al más alto). Por ejemplo `tcp_flags(0x12)` es `['SYN', 'ACK']`."
+   },
+   "starter": "FLAGS = [(\"FIN\", 0x01), (\"SYN\", 0x02), (\"RST\", 0x04), (\"PSH\", 0x08), (\"ACK\", 0x10), (\"URG\", 0x20)]\n\n\ndef tcp_flags(value):\n    names = []\n    return names\n",
+   "solution": "FLAGS = [(\"FIN\", 0x01), (\"SYN\", 0x02), (\"RST\", 0x04), (\"PSH\", 0x08), (\"ACK\", 0x10), (\"URG\", 0x20)]\n\n\ndef tcp_flags(value):\n    return [name for name, bit in FLAGS if value & bit]\n",
+   "hint": {
+    "en": "Loop over `FLAGS` and use the bitwise AND: `value & bit` is nonzero exactly when that flag's bit is set.",
+    "es": "Recorre `FLAGS` y usa el AND de bits: `value & bit` es distinto de cero justo cuando el bit de esa bandera está encendido."
+   },
+   "tests": [
+    [
+     "tcp_flags(0x02)",
+     "['SYN']"
+    ],
+    [
+     "tcp_flags(0x12)",
+     "['SYN', 'ACK']"
+    ],
+    [
+     "tcp_flags(0x11)",
+     "['FIN', 'ACK']"
+    ],
+    [
+     "tcp_flags(0x18)",
+     "['PSH', 'ACK']"
+    ],
+    [
+     "tcp_flags(0)",
+     "[]"
+    ]
+   ]
+  },
+  {
+   "id": "handshake-numbers",
+   "title": {
+    "en": "Handshake sequence numbers",
+    "es": "Números de secuencia del saludo"
+   },
+   "prompt": {
+    "en": "Write `handshake(client_isn, server_isn)` that returns the three segments of a TCP handshake as `(flags, seq, ack)` tuples: `('SYN', client_isn, 0)`, then `('SYN-ACK', server_isn, client_isn + 1)`, then `('ACK', client_isn + 1, server_isn + 1)`. Sequence numbers are 32 bits, so every `+ 1` wraps around: after `4294967295` comes `0`.",
+    "es": "Escribe `handshake(client_isn, server_isn)` que devuelva los tres segmentos de un saludo TCP como tuplas `(banderas, seq, ack)`: `('SYN', client_isn, 0)`, luego `('SYN-ACK', server_isn, client_isn + 1)` y luego `('ACK', client_isn + 1, server_isn + 1)`. Los números de secuencia tienen 32 bits, así que cada `+ 1` da la vuelta: después de `4294967295` viene `0`."
+   },
+   "starter": "def handshake(client_isn, server_isn):\n    return [\n        (\"SYN\", client_isn, 0),\n        (\"SYN-ACK\", server_isn, client_isn + 1),\n        (\"ACK\", client_isn + 1, server_isn + 1),\n    ]\n",
+   "solution": "def handshake(client_isn, server_isn):\n    wrap = 2 ** 32\n    return [\n        (\"SYN\", client_isn, 0),\n        (\"SYN-ACK\", server_isn, (client_isn + 1) % wrap),\n        (\"ACK\", (client_isn + 1) % wrap, (server_isn + 1) % wrap),\n    ]\n",
+   "hint": {
+    "en": "The starter is right except at the edge. Use `% 2**32` after every `+ 1` so 4294967295 + 1 becomes 0.",
+    "es": "El código inicial es correcto salvo en el borde. Usa `% 2**32` después de cada `+ 1` para que 4294967295 + 1 sea 0."
+   },
+   "tests": [
+    [
+     "handshake(1000, 5000)",
+     "[('SYN', 1000, 0), ('SYN-ACK', 5000, 1001), ('ACK', 1001, 5001)]"
+    ],
+    [
+     "handshake(4294967295, 7)",
+     "[('SYN', 4294967295, 0), ('SYN-ACK', 7, 0), ('ACK', 0, 8)]"
+    ],
+    [
+     "handshake(0, 4294967295)",
+     "[('SYN', 0, 0), ('SYN-ACK', 4294967295, 1), ('ACK', 1, 0)]"
+    ]
+   ]
+  }
+ ],
+ "net-web": [
+  {
+   "id": "parse-status",
+   "title": {
+    "en": "Parse an HTTP response head",
+    "es": "Lee la cabecera de una respuesta HTTP"
+   },
+   "prompt": {
+    "en": "Write `parse_head(raw)` that takes a raw HTTP/1.1 response (lines end in `\\r\\n`, an empty line separates the headers from the body) and returns `(status_code, headers)`: the status code as an `int` and a dict of headers with lowercase names and values without surrounding spaces. Ignore the body.",
+    "es": "Escribe `parse_head(raw)` que reciba una respuesta HTTP/1.1 cruda (las líneas terminan en `\\r\\n` y una línea vacía separa los encabezados del cuerpo) y devuelva `(status_code, headers)`: el código de estado como `int` y un diccionario de encabezados con los nombres en minúsculas y los valores sin espacios alrededor. Ignora el cuerpo."
+   },
+   "starter": "def parse_head(raw):\n    lines = raw.split(\"\\r\\n\")\n    code = lines[0].split(\" \")[1]\n    headers = {}\n    for line in lines[1:]:\n        name, value = line.split(\": \")\n        headers[name] = value\n    return code, headers\n",
+   "solution": "def parse_head(raw):\n    head = raw.split(\"\\r\\n\\r\\n\", 1)[0]\n    status_line, *lines = head.split(\"\\r\\n\")\n    code = int(status_line.split(\" \")[1])\n    headers = {}\n    for line in lines:\n        name, _, value = line.partition(\":\")\n        headers[name.strip().lower()] = value.strip()\n    return code, headers\n",
+   "hint": {
+    "en": "First cut off the body with `raw.split(\"\\r\\n\\r\\n\", 1)[0]`. The code is the second word of the first line; convert it with `int`. For each header line, `partition(\":\")` splits at the first colon only, then use `.strip().lower()` on the name and `.strip()` on the value.",
+    "es": "Primero quita el cuerpo con `raw.split(\"\\r\\n\\r\\n\", 1)[0]`. El código es la segunda palabra de la primera línea; conviértelo con `int`. En cada línea de encabezado, `partition(\":\")` corta solo en los primeros dos puntos; luego usa `.strip().lower()` en el nombre y `.strip()` en el valor."
+   },
+   "tests": [
+    [
+     "parse_head('HTTP/1.1 200 OK\\r\\nContent-Type: text/html\\r\\nContent-Length: 5\\r\\n\\r\\nhello')",
+     "(200, {'content-type': 'text/html', 'content-length': '5'})"
+    ],
+    [
+     "parse_head('HTTP/1.1 404 Not Found\\r\\n\\r\\n')",
+     "(404, {})"
+    ],
+    [
+     "parse_head('HTTP/1.1 301 Moved Permanently\\r\\nLocation: https://example.com:8443/new\\r\\n\\r\\n')",
+     "(301, {'location': 'https://example.com:8443/new'})"
+    ],
+    [
+     "parse_head('HTTP/1.1 500 Internal Server Error\\r\\nX-Trace:  abc \\r\\nRetry-After: 30\\r\\n\\r\\nboom: oops')",
+     "(500, {'x-trace': 'abc', 'retry-after': '30'})"
+    ]
+   ]
+  },
+  {
+   "id": "cname-chain",
+   "title": {
+    "en": "Follow the CNAME chain",
+    "es": "Sigue la cadena de CNAME"
+   },
+   "prompt": {
+    "en": "`records` maps a name to either `('A', ip)` or `('CNAME', other_name)`. Write `resolve(records, name)` that follows CNAMEs until it reaches an A record and returns its IP. Return `None` if a name is missing, or if the chain loops or is longer than 10 steps.",
+    "es": "`records` relaciona un nombre con `('A', ip)` o con `('CNAME', otro_nombre)`. Escribe `resolve(records, name)` que siga los CNAME hasta llegar a un registro A y devuelva su IP. Devuelve `None` si falta un nombre, o si la cadena forma un ciclo o tiene más de 10 pasos."
+   },
+   "starter": "def resolve(records, name):\n    kind, value = records[name]\n    if kind == \"CNAME\":\n        kind, value = records[value]\n    return value\n",
+   "solution": "def resolve(records, name):\n    for _ in range(11):\n        if name not in records:\n            return None\n        kind, value = records[name]\n        if kind == \"A\":\n            return value\n        name = value\n    return None\n",
+   "hint": {
+    "en": "Use a loop instead of a single step: look the name up, return the IP on an A record, otherwise replace `name` with the CNAME target. Limit the loop (for example `for _ in range(11)`) so a cycle cannot run forever, and check `name in records` before each lookup.",
+    "es": "Usa un ciclo en lugar de un solo paso: busca el nombre, devuelve la IP si es un registro A y, si no, reemplaza `name` por el destino del CNAME. Limita el ciclo (por ejemplo `for _ in range(11)`) para que un ciclo de alias no corra para siempre, y comprueba `name in records` antes de cada búsqueda."
+   },
+   "tests": [
+    [
+     "resolve({'a.com': ('A', '1.2.3.4')}, 'a.com')",
+     "'1.2.3.4'"
+    ],
+    [
+     "resolve({'www.shop.org': ('CNAME', 'edge.shop.org'), 'edge.shop.org': ('CNAME', 'n1.cdn.net'), 'n1.cdn.net': ('A', '203.0.113.50')}, 'www.shop.org')",
+     "'203.0.113.50'"
+    ],
+    [
+     "resolve({'x.org': ('CNAME', 'y.org')}, 'x.org')",
+     "None"
+    ],
+    [
+     "resolve({'a': ('CNAME', 'b'), 'b': ('CNAME', 'a')}, 'a')",
+     "None"
+    ],
+    [
+     "resolve({}, 'missing.org')",
+     "None"
+    ]
+   ]
+  }
+ ],
  "sql-first-queries": [
   {
    "id": "austin-top",

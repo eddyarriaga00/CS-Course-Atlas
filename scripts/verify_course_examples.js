@@ -58,9 +58,10 @@ function main() {
         // Modules without curated examples fall back to the generated ones at runtime.
         if (!entry) continue;
         const track = MODULE_CATEGORY_BY_ID[module.id];
-        // Git and the command line are taught as terminal sessions, Web Basics as live pages, the Python course only in Python
+        // Git and the command line are taught as terminal sessions, Web Basics as live pages, the Python course
+        // and the Python-taught courses (How Computers Work, Cybersecurity, AI, Networks) only in Python
         // and Data Structures & Algorithms in Java and Python.
-        const langs = track === 'git' || track === 'cli' ? ['bash'] : track === 'web' ? ['html'] : track === 'sql' ? ['sql'] : ['how-computers-work', 'cybersecurity', 'ai'].includes(track) ? ['python'] : track === 'python' ? ['python'] : track === 'dsa' ? ['java', 'python'] : track === 'assembly' ? ['assembly', ...LANGS] : LANGS;
+        const langs = track === 'git' || track === 'cli' ? ['bash'] : track === 'web' ? ['html'] : track === 'sql' ? ['sql'] : ['how-computers-work', 'cybersecurity', 'ai', 'networks'].includes(track) ? ['python'] : track === 'python' ? ['python'] : track === 'dsa' ? ['java', 'python'] : track === 'assembly' ? ['assembly', ...LANGS] : LANGS;
         checkCode(`${module.id} main`, entry.main, langs);
         programCount += langs.length;
         const topics = Array.isArray(module.topics) ? module.topics : [];

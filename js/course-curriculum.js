@@ -532,6 +532,48 @@ window.COURSE_CURRICULUM = {
           "ai-language"
         ]
       }
+    ],
+    "networks": [
+      {
+        "id": "net-foundations",
+        "title": {
+          "en": "Network Foundations",
+          "es": "Fundamentos de redes"
+        },
+        "modules": [
+          "net-basics"
+        ]
+      },
+      {
+        "id": "net-network-layer",
+        "title": {
+          "en": "Addressing and Routing",
+          "es": "Direccionamiento y enrutamiento"
+        },
+        "modules": [
+          "net-ip"
+        ]
+      },
+      {
+        "id": "net-transport-layer",
+        "title": {
+          "en": "Between Programs",
+          "es": "Entre programas"
+        },
+        "modules": [
+          "net-transport"
+        ]
+      },
+      {
+        "id": "net-applications",
+        "title": {
+          "en": "The Web",
+          "es": "La web"
+        },
+        "modules": [
+          "net-web"
+        ]
+      }
     ]
   },
   "modules": {
@@ -21308,6 +21350,1196 @@ window.COURSE_CURRICULUM = {
           "explanation": {
             "en": "Using AI as a tutor while doing the work yourself, within the rules, helps you learn and stays honest.",
             "es": "Usar la IA como tutor mientras haces el trabajo tú mismo, dentro de las reglas, te ayuda a aprender y es honesto."
+          }
+        }
+      ]
+    },
+    "net-basics": {
+      "minutes": 75,
+      "prerequisites": [
+        "python-collections"
+      ],
+      "whyItMatters": {
+        "en": "Almost every program you will write talks to a network: a web page loading data, an app syncing to the cloud, a game sending your moves. When something is slow or fails, \"the network\" is not a black box you have to accept: it is a stack of simple ideas. Data is cut into packets, every packet carries addresses, layers each do one job, and speed has two separate parts, bandwidth and latency. Once you can picture a packet's trip, error messages like \"connection refused\" or \"timed out\" start to make sense, and the rest of this course builds directly on that picture.",
+        "es": "Casi todo programa que escribas habla con una red: una página web que carga datos, una app que se sincroniza con la nube, un juego que envía tus jugadas. Cuando algo va lento o falla, \"la red\" no es una caja negra que debas aceptar: es una pila de ideas simples. Los datos se cortan en paquetes, cada paquete lleva direcciones, cada capa hace un solo trabajo, y la velocidad tiene dos partes separadas, el ancho de banda y la latencia. Cuando puedes imaginar el viaje de un paquete, mensajes de error como \"connection refused\" o \"timed out\" empiezan a tener sentido, y el resto de este curso se construye directamente sobre esa imagen."
+      },
+      "objectives": {
+        "en": [
+          "Explain packet switching: why data is split into packets and how many conversations share one link.",
+          "Name the layers of the TCP/IP model, match them to the OSI model, and describe encapsulation.",
+          "Tell bandwidth from latency and estimate how long a transfer takes with `latency + size / bandwidth`.",
+          "Explain what MAC and IP addresses are for, and which one changes on every hop.",
+          "Describe the client–server model and what it means for a server to listen on a port."
+        ],
+        "es": [
+          "Explicar la conmutación de paquetes: por qué los datos se dividen en paquetes y cómo muchas conversaciones comparten un enlace.",
+          "Nombrar las capas del modelo TCP/IP, relacionarlas con el modelo OSI y describir el encapsulamiento.",
+          "Distinguir el ancho de banda de la latencia y estimar cuánto tarda una transferencia con `latencia + tamaño / ancho de banda`.",
+          "Explicar para qué sirven las direcciones MAC e IP, y cuál cambia en cada salto.",
+          "Describir el modelo cliente-servidor y qué significa que un servidor escuche en un puerto."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Python lists, dictionaries and functions (Intro to Python course)",
+          "Bits and bytes; the How Computers Work course helps"
+        ],
+        "es": [
+          "Listas, diccionarios y funciones de Python (curso de Introducción a Python)",
+          "Bits y bytes; el curso Cómo funcionan las computadoras ayuda"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "The internet is packet switched: data travels in small packets, each with its own header, and many conversations share the same links by taking turns.",
+          "Each layer wraps the data from the layer above in its own header (encapsulation): application data goes into a TCP segment, into an IP packet, into an Ethernet frame.",
+          "Latency is how long one bit takes to arrive; bandwidth is how many bits per second fit through. Small requests are limited by latency, big downloads by bandwidth.",
+          "IP addresses identify the final destination and stay the same end to end; MAC addresses identify the next device on the local link and change at every hop.",
+          "A server listens on a known port and answers; a client starts the conversation. Port numbers tell the computer which program a packet is for."
+        ],
+        "es": [
+          "Internet usa conmutación de paquetes: los datos viajan en paquetes pequeños, cada uno con su propio encabezado, y muchas conversaciones comparten los mismos enlaces turnándose.",
+          "Cada capa envuelve los datos de la capa superior en su propio encabezado (encapsulamiento): los datos de la aplicación van dentro de un segmento TCP, dentro de un paquete IP, dentro de una trama Ethernet.",
+          "La latencia es cuánto tarda en llegar un bit; el ancho de banda es cuántos bits por segundo caben. Las peticiones pequeñas están limitadas por la latencia, las descargas grandes por el ancho de banda.",
+          "Las direcciones IP identifican el destino final y se mantienen de extremo a extremo; las direcciones MAC identifican el siguiente dispositivo del enlace local y cambian en cada salto.",
+          "Un servidor escucha en un puerto conocido y responde; un cliente inicia la conversación. Los números de puerto le dicen a la computadora para qué programa es un paquete."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Treating \"speed\" as one number: a faster plan (more bandwidth) does not make a far-away server answer sooner, because latency is set mostly by distance.",
+          "Mixing up Mbps and MB/s: network speeds are in megabits per second, file sizes in megabytes. Divide by 8 to compare (100 Mbps is about 12.5 MB/s).",
+          "Thinking the OSI model is what the internet runs: the internet runs TCP/IP. OSI is a 7-layer vocabulary people use to talk about it (\"a layer 2 problem\").",
+          "Assuming a MAC address identifies you on the internet: it never leaves your local network; routers replace it at every hop."
+        ],
+        "es": [
+          "Tratar la \"velocidad\" como un solo número: un plan más rápido (más ancho de banda) no hace que un servidor lejano responda antes, porque la latencia depende sobre todo de la distancia.",
+          "Confundir Mbps con MB/s: las velocidades de red van en megabits por segundo y los archivos en megabytes. Divide entre 8 para comparar (100 Mbps son unos 12.5 MB/s).",
+          "Pensar que internet funciona con el modelo OSI: internet usa TCP/IP. OSI es un vocabulario de 7 capas que la gente usa para hablar de ella (\"un problema de capa 2\").",
+          "Suponer que una dirección MAC te identifica en internet: nunca sale de tu red local; los enrutadores la reemplazan en cada salto."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: change `MAX_DATA` in the main example to 4 and to 100, and predict how many packets the message needs before you run it.",
+          "Core: write `transfer_ms(size_bytes, mbps, latency_ms)` and use it to find the file size at which a 10 Mbps fiber link beats a 100 Mbps satellite link.",
+          "Core: build an Ethernet + IP + TCP header for a 1,460-byte payload and print how many bytes each layer adds and what percentage of the frame is headers.",
+          "Stretch: extend the client–server simulation so the server remembers each client's visit count in a dictionary and answers `GET /stats`."
+        ],
+        "es": [
+          "Calentamiento: cambia `MAX_DATA` en el ejemplo principal a 4 y a 100, y predice cuántos paquetes necesita el mensaje antes de ejecutarlo.",
+          "Núcleo: escribe `transfer_ms(size_bytes, mbps, latency_ms)` y úsala para encontrar el tamaño de archivo a partir del cual un enlace de fibra de 10 Mbps le gana a uno satelital de 100 Mbps.",
+          "Núcleo: arma un encabezado Ethernet + IP + TCP para una carga de 1,460 bytes e imprime cuántos bytes agrega cada capa y qué porcentaje de la trama son encabezados.",
+          "Extensión: amplía la simulación cliente-servidor para que el servidor recuerde en un diccionario cuántas visitas hizo cada cliente y responda a `GET /stats`."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why does the internet split data into packets instead of reserving a line for each conversation, like old telephone calls?",
+          "A packet goes from your laptop through three routers to a server. Which addresses in it change along the way, and which stay the same?",
+          "Your video call stutters but big downloads are fast. Is the problem more likely bandwidth or latency? Why?"
+        ],
+        "es": [
+          "¿Por qué internet divide los datos en paquetes en lugar de reservar una línea para cada conversación, como las antiguas llamadas telefónicas?",
+          "Un paquete va de tu laptop a un servidor pasando por tres enrutadores. ¿Qué direcciones cambian en el camino y cuáles se mantienen?",
+          "Tu videollamada se entrecorta pero las descargas grandes van rápido. ¿Es más probable que el problema sea el ancho de banda o la latencia? ¿Por qué?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Packets and Packet Switching",
+            "es": "Paquetes y conmutación de paquetes"
+          },
+          "definition": {
+            "en": "A packet is a small piece of data with a header that says where it comes from and where it goes. In packet switching, every packet travels on its own and links are shared: packets from many conversations take turns, instead of each conversation reserving a line (circuit switching).",
+            "es": "Un paquete es un trozo pequeño de datos con un encabezado que dice de dónde viene y a dónde va. En la conmutación de paquetes cada paquete viaja por su cuenta y los enlaces se comparten: los paquetes de muchas conversaciones se turnan, en lugar de que cada conversación reserve una línea (conmutación de circuitos)."
+          }
+        },
+        {
+          "term": {
+            "en": "Network Layers (TCP/IP and OSI)",
+            "es": "Capas de red (TCP/IP y OSI)"
+          },
+          "definition": {
+            "en": "Networking is split into layers that each do one job. The TCP/IP model the internet uses has four: link (the local hop), internet (IP, across networks), transport (TCP/UDP, between programs) and application (HTTP, DNS...). The OSI model describes the same ideas with seven layers.",
+            "es": "Las redes se dividen en capas que hacen un solo trabajo cada una. El modelo TCP/IP que usa internet tiene cuatro: enlace (el salto local), internet (IP, entre redes), transporte (TCP/UDP, entre programas) y aplicación (HTTP, DNS...). El modelo OSI describe las mismas ideas con siete capas."
+          }
+        },
+        {
+          "term": {
+            "en": "Bandwidth and Latency",
+            "es": "Ancho de banda y latencia"
+          },
+          "definition": {
+            "en": "Bandwidth is how much data a link can carry per second (for example 100 Mbps). Latency is how long data takes to get from one end to the other (for example 30 ms), set mostly by distance. The round-trip time (RTT) is the latency there and back.",
+            "es": "El ancho de banda es cuántos datos puede llevar un enlace por segundo (por ejemplo 100 Mbps). La latencia es cuánto tardan los datos en ir de un extremo al otro (por ejemplo 30 ms), y depende sobre todo de la distancia. El tiempo de ida y vuelta (RTT) es la latencia de ida y de regreso."
+          }
+        },
+        {
+          "term": {
+            "en": "MAC and IP Addresses",
+            "es": "Direcciones MAC e IP"
+          },
+          "definition": {
+            "en": "A MAC address (6 bytes, like 3c:22:fb:a1:07:9e) identifies a network card on the local link. An IP address (4 bytes in IPv4, like 192.168.1.20) identifies a host across the internet. ARP lets a device find the MAC address that goes with a local IP address.",
+            "es": "Una dirección MAC (6 bytes, como 3c:22:fb:a1:07:9e) identifica una tarjeta de red en el enlace local. Una dirección IP (4 bytes en IPv4, como 192.168.1.20) identifica un equipo a través de internet. ARP permite a un dispositivo encontrar la dirección MAC que corresponde a una IP local."
+          }
+        },
+        {
+          "term": {
+            "en": "Clients and Servers",
+            "es": "Clientes y servidores"
+          },
+          "definition": {
+            "en": "A server is a program that waits (listens) on a known port and answers requests; a client is a program that starts the conversation, like your browser. The same computer can run both. In peer-to-peer systems every machine acts as both client and server.",
+            "es": "Un servidor es un programa que espera (escucha) en un puerto conocido y responde peticiones; un cliente es un programa que inicia la conversación, como tu navegador. La misma computadora puede ejecutar ambos. En los sistemas entre pares (peer-to-peer) cada máquina actúa como cliente y como servidor."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Computer Networking: A Top-Down Approach, author videos and resources (Kurose & Ross)",
+            "es": "Computer Networking: A Top-Down Approach, videos y recursos de los autores (Kurose y Ross)"
+          },
+          "url": "https://gaia.cs.umass.edu/kurose_ross/index.php"
+        },
+        {
+          "label": {
+            "en": "MDN: How does the Internet work?",
+            "es": "MDN: ¿Cómo funciona internet?"
+          },
+          "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Howto/Web_mechanics/How_does_the_Internet_work"
+        },
+        {
+          "label": {
+            "en": "Cloudflare Learning: What is the OSI model?",
+            "es": "Cloudflare Learning: ¿Qué es el modelo OSI?"
+          },
+          "url": "https://www.cloudflare.com/learning/ddos/glossary/open-systems-interconnection-model-osi/"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Why is a large file sent as many packets instead of one huge message?",
+            "es": "¿Por qué un archivo grande se envía como muchos paquetes en lugar de un solo mensaje enorme?"
+          },
+          "options": {
+            "en": [
+              "Packets are encrypted and messages are not",
+              "So links can be shared fairly and a lost piece can be resent alone",
+              "Because IP addresses only fit in small messages",
+              "Packets travel faster than light"
+            ],
+            "es": [
+              "Los paquetes van cifrados y los mensajes no",
+              "Para que los enlaces se compartan de forma justa y una pieza perdida se pueda reenviar sola",
+              "Porque las direcciones IP solo caben en mensajes pequeños",
+              "Los paquetes viajan más rápido que la luz"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Small packets let many conversations take turns on the same link, and if one packet is lost only that piece has to be sent again.",
+            "es": "Los paquetes pequeños permiten que muchas conversaciones se turnen en el mismo enlace, y si se pierde un paquete solo hay que reenviar esa pieza."
+          }
+        },
+        {
+          "question": {
+            "en": "In the TCP/IP model, which layer gets a packet from one network to another across the internet?",
+            "es": "En el modelo TCP/IP, ¿qué capa lleva un paquete de una red a otra a través de internet?"
+          },
+          "options": {
+            "en": [
+              "Application",
+              "Transport",
+              "Internet (IP)",
+              "Link"
+            ],
+            "es": [
+              "Aplicación",
+              "Transporte",
+              "Internet (IP)",
+              "Enlace"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "The internet layer (IP) carries packets between networks using IP addresses. The link layer only handles one hop, and the transport layer connects programs.",
+            "es": "La capa de internet (IP) lleva los paquetes entre redes usando direcciones IP. La capa de enlace solo maneja un salto, y la capa de transporte conecta programas."
+          }
+        },
+        {
+          "question": {
+            "en": "A 1 KB request to a server 10,000 km away is slow even on a 1 Gbps connection. What dominates the time?",
+            "es": "Una petición de 1 KB a un servidor a 10,000 km es lenta incluso con una conexión de 1 Gbps. ¿Qué domina el tiempo?"
+          },
+          "options": {
+            "en": [
+              "Latency: the signal still needs about 50 ms to travel that far",
+              "Bandwidth: 1 Gbps is too little for 1 KB",
+              "The size of the IP address",
+              "The number of layers"
+            ],
+            "es": [
+              "La latencia: la señal igual necesita unos 50 ms para recorrer esa distancia",
+              "El ancho de banda: 1 Gbps es poco para 1 KB",
+              "El tamaño de la dirección IP",
+              "La cantidad de capas"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Sending 1 KB at 1 Gbps takes about 0.008 ms, but light in fiber needs about 50 ms for 10,000 km. For small transfers latency dominates.",
+            "es": "Enviar 1 KB a 1 Gbps toma unos 0.008 ms, pero la luz en la fibra necesita unos 50 ms para 10,000 km. En transferencias pequeñas domina la latencia."
+          }
+        },
+        {
+          "question": {
+            "en": "As a packet crosses several routers, what happens to its addresses?",
+            "es": "Cuando un paquete cruza varios enrutadores, ¿qué pasa con sus direcciones?"
+          },
+          "options": {
+            "en": [
+              "Both MAC and IP addresses stay the same",
+              "Both change at every router",
+              "The IP addresses change; the MAC addresses stay the same",
+              "The MAC addresses change at every hop; the IP addresses stay the same"
+            ],
+            "es": [
+              "Las direcciones MAC e IP se mantienen",
+              "Ambas cambian en cada enrutador",
+              "Las IP cambian; las MAC se mantienen",
+              "Las MAC cambian en cada salto; las IP se mantienen"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "Each link builds a new frame addressed to the next device's MAC, while the IP header keeps the original source and final destination (NAT is the exception, covered in the next module).",
+            "es": "Cada enlace arma una trama nueva dirigida a la MAC del siguiente dispositivo, mientras el encabezado IP conserva el origen y el destino final (NAT es la excepción, se ve en el siguiente módulo)."
+          }
+        },
+        {
+          "question": {
+            "en": "What does it mean that a web server \"listens on port 443\"?",
+            "es": "¿Qué significa que un servidor web \"escucha en el puerto 443\"?"
+          },
+          "options": {
+            "en": [
+              "It only accepts clients from port 443",
+              "It waits for incoming connections addressed to port 443 on its IP address",
+              "It records audio from users",
+              "It sends a packet every 443 milliseconds"
+            ],
+            "es": [
+              "Solo acepta clientes desde el puerto 443",
+              "Espera conexiones entrantes dirigidas al puerto 443 de su dirección IP",
+              "Graba audio de los usuarios",
+              "Envía un paquete cada 443 milisegundos"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The server program asks the OS to deliver everything that arrives for port 443. Clients connect to that port from their own, usually random, port.",
+            "es": "El programa servidor le pide al SO que le entregue todo lo que llegue para el puerto 443. Los clientes se conectan a ese puerto desde un puerto propio, normalmente aleatorio."
+          }
+        }
+      ]
+    },
+    "net-ip": {
+      "minutes": 90,
+      "prerequisites": [
+        "net-basics"
+      ],
+      "whyItMatters": {
+        "en": "An IP address is how the whole internet finds your device, and every cloud server, home network and phone plan is configured with the ideas in this module. A line like `10.0.0.0/16` in a cloud console, a \"no route to host\" error, or two devices that cannot see each other on the same Wi-Fi all come down to address math and routing tables. The math is just bits, which you already know, and Python's `ipaddress` module lets you check every answer. By the end you will be able to read a routing table the way a router does and explain how your laptop's private address reaches the public internet.",
+        "es": "Una dirección IP es la forma en que todo internet encuentra tu dispositivo, y cada servidor en la nube, red doméstica y plan de telefonía se configura con las ideas de este módulo. Una línea como `10.0.0.0/16` en una consola de la nube, un error \"no route to host\" o dos dispositivos que no se ven en el mismo Wi-Fi se reducen a cálculos de direcciones y tablas de enrutamiento. Los cálculos son solo bits, que ya conoces, y el módulo `ipaddress` de Python te deja comprobar cada respuesta. Al terminar podrás leer una tabla de enrutamiento como lo hace un enrutador y explicar cómo la dirección privada de tu laptop llega a internet."
+      },
+      "objectives": {
+        "en": [
+          "Convert IPv4 addresses between dotted notation, a 32-bit integer and binary, and read shortened IPv6 addresses.",
+          "Use CIDR notation to find a subnet's mask, network address, broadcast address and number of usable hosts.",
+          "Pick the route for a destination with longest-prefix match, including the default route `0.0.0.0/0`.",
+          "Explain link-state routing and run Dijkstra's algorithm to build a router's forwarding table.",
+          "Explain private address ranges and how NAT lets many devices share one public address."
+        ],
+        "es": [
+          "Convertir direcciones IPv4 entre la notación con puntos, un entero de 32 bits y binario, y leer direcciones IPv6 abreviadas.",
+          "Usar la notación CIDR para hallar la máscara, la dirección de red, la de difusión y la cantidad de hosts utilizables de una subred.",
+          "Elegir la ruta para un destino con la coincidencia del prefijo más largo, incluida la ruta por defecto `0.0.0.0/0`.",
+          "Explicar el enrutamiento de estado de enlace y ejecutar el algoritmo de Dijkstra para armar la tabla de reenvío de un enrutador.",
+          "Explicar los rangos de direcciones privadas y cómo NAT permite que muchos dispositivos compartan una dirección pública."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Packets, layers and addresses (module 1)",
+          "Binary numbers and bitwise operators like `&`, `|` and `<<`"
+        ],
+        "es": [
+          "Paquetes, capas y direcciones (módulo 1)",
+          "Números binarios y operadores de bits como `&`, `|` y `<<`"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "An IPv4 address is a 32-bit number written as four bytes; IPv6 uses 128 bits written in hex, with `::` standing for one run of zero groups.",
+          "In CIDR notation `/n` means the first n bits are the network part. A `/n` block has 2^(32-n) addresses; two of them (network and broadcast) are not usable by hosts, except in `/31` and `/32`.",
+          "A router forwards each packet using the most specific matching route (longest prefix); `0.0.0.0/0` matches everything and is used only when nothing else does.",
+          "In link-state routing every router learns the full map and runs Dijkstra's shortest-path algorithm; when a link fails the routers recompute.",
+          "Private ranges (10/8, 172.16/12, 192.168/16) are reused in millions of networks; NAT rewrites addresses and ports so they can share one public IP."
+        ],
+        "es": [
+          "Una dirección IPv4 es un número de 32 bits escrito como cuatro bytes; IPv6 usa 128 bits escritos en hexadecimal, y `::` representa una sola racha de grupos en cero.",
+          "En la notación CIDR, `/n` significa que los primeros n bits son la parte de red. Un bloque `/n` tiene 2^(32-n) direcciones; dos de ellas (la de red y la de difusión) no las pueden usar los hosts, salvo en `/31` y `/32`.",
+          "Un enrutador reenvía cada paquete usando la ruta coincidente más específica (prefijo más largo); `0.0.0.0/0` coincide con todo y solo se usa cuando no coincide nada más.",
+          "En el enrutamiento de estado de enlace cada enrutador conoce el mapa completo y ejecuta el algoritmo de caminos más cortos de Dijkstra; cuando falla un enlace, los enrutadores recalculan.",
+          "Los rangos privados (10/8, 172.16/12, 192.168/16) se reutilizan en millones de redes; NAT reescribe direcciones y puertos para que compartan una IP pública."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Picking the first matching route instead of the longest one: route order in a table must not change the answer.",
+          "Forgetting that the network and broadcast addresses are not usable hosts: a `/24` has 256 addresses but only 254 hosts.",
+          "Assuming every address starting with 172 is private: only 172.16.0.0 to 172.31.255.255 is (172.16.0.0/12).",
+          "Writing a network with host bits set, like `10.20.30.5/24`: the network is `10.20.30.0/24`, and `ipaddress.ip_network` raises a `ValueError` to warn you."
+        ],
+        "es": [
+          "Elegir la primera ruta que coincide en lugar de la más larga: el orden de las rutas en la tabla no debe cambiar la respuesta.",
+          "Olvidar que las direcciones de red y de difusión no son hosts utilizables: un `/24` tiene 256 direcciones pero solo 254 hosts.",
+          "Suponer que toda dirección que empieza con 172 es privada: solo lo es de 172.16.0.0 a 172.31.255.255 (172.16.0.0/12).",
+          "Escribir una red con bits de host encendidos, como `10.20.30.5/24`: la red es `10.20.30.0/24`, y `ipaddress.ip_network` lanza un `ValueError` para avisarte."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: convert 10.0.0.1, 172.16.0.0 and 255.255.255.255 to integers and binary by hand, then check with `int(ipaddress.ip_address(...))`.",
+          "Core: write `subnet_info(cidr)` that returns the netmask, first host, last host and broadcast address, and test it on /24, /26 and /30 blocks.",
+          "Core: add a `/32` host route to the routing table example and predict which route wins for five addresses before running it.",
+          "Stretch: change the Dijkstra example so the forwarding table also records the full path, and print what happens when the link B-C fails as well."
+        ],
+        "es": [
+          "Calentamiento: convierte 10.0.0.1, 172.16.0.0 y 255.255.255.255 a enteros y a binario a mano, y comprueba con `int(ipaddress.ip_address(...))`.",
+          "Núcleo: escribe `subnet_info(cidr)` que devuelva la máscara, el primer host, el último host y la dirección de difusión, y pruébala con bloques /24, /26 y /30.",
+          "Núcleo: agrega una ruta de host `/32` al ejemplo de tabla de enrutamiento y predice qué ruta gana para cinco direcciones antes de ejecutarlo.",
+          "Extensión: cambia el ejemplo de Dijkstra para que la tabla de reenvío también guarde el camino completo, e imprime qué pasa cuando además falla el enlace B-C."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "How many usable host addresses does 192.168.4.0/27 have, and what are the first and last ones?",
+          "A router has routes for 10.0.0.0/8, 10.1.0.0/16 and 0.0.0.0/0. Where does it send 10.1.7.7, 10.9.9.9 and 8.8.8.8, and why?",
+          "Your laptop (192.168.1.20) and your phone (192.168.1.31) both load the same website. How does the reply for each one find its way back through your home router?"
+        ],
+        "es": [
+          "¿Cuántas direcciones de host utilizables tiene 192.168.4.0/27, y cuáles son la primera y la última?",
+          "Un enrutador tiene rutas para 10.0.0.0/8, 10.1.0.0/16 y 0.0.0.0/0. ¿A dónde envía 10.1.7.7, 10.9.9.9 y 8.8.8.8, y por qué?",
+          "Tu laptop (192.168.1.20) y tu teléfono (192.168.1.31) cargan el mismo sitio web. ¿Cómo encuentra el camino de regreso la respuesta de cada uno a través de tu enrutador doméstico?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "IPv4 and IPv6 Addresses",
+            "es": "Direcciones IPv4 e IPv6"
+          },
+          "definition": {
+            "en": "An IPv4 address is a 32-bit number written as four decimal bytes (192.168.1.20), about 4.3 billion in all. IPv6 addresses are 128 bits written as eight groups of hex (2001:db8::ff00:42:8329), enough that address shortage is no longer a problem.",
+            "es": "Una dirección IPv4 es un número de 32 bits escrito como cuatro bytes decimales (192.168.1.20), unos 4,300 millones en total. Las direcciones IPv6 tienen 128 bits escritos como ocho grupos hexadecimales (2001:db8::ff00:42:8329), tantas que la escasez de direcciones deja de ser un problema."
+          }
+        },
+        {
+          "term": {
+            "en": "Subnets and CIDR",
+            "es": "Subredes y CIDR"
+          },
+          "definition": {
+            "en": "A subnet is a block of consecutive addresses that share their first bits. CIDR notation writes the block as address/prefix length: 192.168.10.64/26 means the first 26 bits are fixed, giving 64 addresses. The mask (255.255.255.192) has a 1 for every network bit.",
+            "es": "Una subred es un bloque de direcciones consecutivas que comparten sus primeros bits. La notación CIDR escribe el bloque como dirección/longitud de prefijo: 192.168.10.64/26 significa que los primeros 26 bits son fijos, lo que da 64 direcciones. La máscara (255.255.255.192) tiene un 1 en cada bit de red."
+          }
+        },
+        {
+          "term": {
+            "en": "Routing Tables and Longest-Prefix Match",
+            "es": "Tablas de enrutamiento y coincidencia del prefijo más largo"
+          },
+          "definition": {
+            "en": "A routing table lists destination prefixes and where to send matching packets next. When several prefixes contain the destination, the router uses the longest (most specific) one. The default route 0.0.0.0/0 matches everything and catches what nothing else does.",
+            "es": "Una tabla de enrutamiento lista prefijos de destino y a dónde enviar los paquetes que coinciden. Cuando varios prefijos contienen el destino, el enrutador usa el más largo (el más específico). La ruta por defecto 0.0.0.0/0 coincide con todo y atrapa lo que ninguna otra ruta atrapa."
+          }
+        },
+        {
+          "term": {
+            "en": "Routing Algorithms",
+            "es": "Algoritmos de enrutamiento"
+          },
+          "definition": {
+            "en": "How routers fill their tables automatically. In link-state routing (like OSPF) every router learns the whole network map and runs Dijkstra's shortest-path algorithm. In distance-vector routing (like RIP) routers share only their distance estimates with neighbors. Between organizations the internet uses BGP.",
+            "es": "Cómo llenan los enrutadores sus tablas automáticamente. En el enrutamiento de estado de enlace (como OSPF) cada enrutador conoce el mapa completo de la red y ejecuta el algoritmo de caminos más cortos de Dijkstra. En el de vector de distancias (como RIP) los enrutadores solo comparten sus estimaciones de distancia con sus vecinos. Entre organizaciones, internet usa BGP."
+          }
+        },
+        {
+          "term": {
+            "en": "NAT and Private Addresses",
+            "es": "NAT y direcciones privadas"
+          },
+          "definition": {
+            "en": "Private ranges (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, RFC 1918) are not routed on the internet and can be reused in every home or office. NAT (network address translation) on the router rewrites outgoing packets to its public address and a port, and keeps a table to send replies back to the right device.",
+            "es": "Los rangos privados (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, RFC 1918) no se enrutan en internet y se pueden reutilizar en cada casa u oficina. NAT (traducción de direcciones de red) en el enrutador reescribe los paquetes salientes con su dirección pública y un puerto, y guarda una tabla para devolver las respuestas al dispositivo correcto."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Python docs: ipaddress, IPv4/IPv6 manipulation library",
+            "es": "Documentación de Python: ipaddress, biblioteca para IPv4/IPv6"
+          },
+          "url": "https://docs.python.org/3/library/ipaddress.html"
+        },
+        {
+          "label": {
+            "en": "Python docs: An introduction to the ipaddress module",
+            "es": "Documentación de Python: introducción al módulo ipaddress"
+          },
+          "url": "https://docs.python.org/3/howto/ipaddress.html"
+        },
+        {
+          "label": {
+            "en": "RFC 1918: Address Allocation for Private Internets",
+            "es": "RFC 1918: asignación de direcciones para redes privadas"
+          },
+          "url": "https://www.rfc-editor.org/rfc/rfc1918.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "How many addresses are in the block 10.0.0.0/22?",
+            "es": "¿Cuántas direcciones hay en el bloque 10.0.0.0/22?"
+          },
+          "options": {
+            "en": [
+              "22",
+              "256",
+              "1024",
+              "4096"
+            ],
+            "es": [
+              "22",
+              "256",
+              "1024",
+              "4096"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "A /22 leaves 32 - 22 = 10 host bits, and 2^10 = 1024 addresses (1022 usable hosts).",
+            "es": "Un /22 deja 32 - 22 = 10 bits de host, y 2^10 = 1024 direcciones (1022 hosts utilizables)."
+          }
+        },
+        {
+          "question": {
+            "en": "Which address is the broadcast address of 192.168.10.64/26?",
+            "es": "¿Cuál es la dirección de difusión de 192.168.10.64/26?"
+          },
+          "options": {
+            "en": [
+              "192.168.10.127",
+              "192.168.10.255",
+              "192.168.10.65",
+              "192.168.10.128"
+            ],
+            "es": [
+              "192.168.10.127",
+              "192.168.10.255",
+              "192.168.10.65",
+              "192.168.10.128"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "The block has 64 addresses, from .64 to .127. The broadcast address sets every host bit to 1, which is the last one, .127.",
+            "es": "El bloque tiene 64 direcciones, de .64 a .127. La dirección de difusión pone en 1 todos los bits de host, que es la última, .127."
+          }
+        },
+        {
+          "question": {
+            "en": "A router has routes 0.0.0.0/0, 172.16.0.0/12 and 172.16.5.0/24. Which one does it use for 172.16.5.9?",
+            "es": "Un enrutador tiene las rutas 0.0.0.0/0, 172.16.0.0/12 y 172.16.5.0/24. ¿Cuál usa para 172.16.5.9?"
+          },
+          "options": {
+            "en": [
+              "0.0.0.0/0, because it is the default",
+              "172.16.0.0/12, because it was added first",
+              "172.16.5.0/24, the longest matching prefix",
+              "None: it drops the packet"
+            ],
+            "es": [
+              "0.0.0.0/0, porque es la ruta por defecto",
+              "172.16.0.0/12, porque se agregó primero",
+              "172.16.5.0/24, el prefijo coincidente más largo",
+              "Ninguna: descarta el paquete"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "All three contain the address, so the router picks the most specific one, /24. The default route is only used when nothing else matches.",
+            "es": "Las tres contienen la dirección, así que el enrutador elige la más específica, /24. La ruta por defecto solo se usa cuando no coincide ninguna otra."
+          }
+        },
+        {
+          "question": {
+            "en": "In link-state routing, what does each router know before it computes its routes?",
+            "es": "En el enrutamiento de estado de enlace, ¿qué sabe cada enrutador antes de calcular sus rutas?"
+          },
+          "options": {
+            "en": [
+              "Only its own IP address",
+              "The whole network map: every router, every link and its cost",
+              "Only the next hop for the default route",
+              "The MAC address of every computer on the internet"
+            ],
+            "es": [
+              "Solo su propia dirección IP",
+              "El mapa completo de la red: cada enrutador, cada enlace y su costo",
+              "Solo el siguiente salto de la ruta por defecto",
+              "La dirección MAC de cada computadora de internet"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Routers flood link-state advertisements so everyone has the same map, then each runs Dijkstra from itself to find the cheapest path and next hop to every destination.",
+            "es": "Los enrutadores difunden anuncios de estado de enlace para que todos tengan el mismo mapa, y luego cada uno ejecuta Dijkstra desde sí mismo para hallar el camino más barato y el siguiente salto hacia cada destino."
+          }
+        },
+        {
+          "question": {
+            "en": "Why can a web server on the internet not start a connection to 192.168.1.20 in your home?",
+            "es": "¿Por qué un servidor web en internet no puede iniciar una conexión con 192.168.1.20 en tu casa?"
+          },
+          "options": {
+            "en": [
+              "Because port 80 is blocked by law",
+              "Because 192.168.1.20 is too short to be an address",
+              "Because servers can only answer, never connect",
+              "Because it is a private address that is not routed on the internet, and NAT has no table entry for an unrequested connection"
+            ],
+            "es": [
+              "Porque la ley bloquea el puerto 80",
+              "Porque 192.168.1.20 es demasiado corta para ser una dirección",
+              "Porque los servidores solo responden, nunca se conectan",
+              "Porque es una dirección privada que no se enruta en internet, y NAT no tiene entrada para una conexión que nadie pidió"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "Thousands of homes use 192.168.1.20, so internet routers have no route for it. Packets reach your router's public address, and NAT drops them unless a device inside started that conversation (or you set up port forwarding).",
+            "es": "Miles de casas usan 192.168.1.20, así que los enrutadores de internet no tienen ruta hacia ella. Los paquetes llegan a la dirección pública de tu enrutador, y NAT los descarta salvo que un dispositivo de adentro haya iniciado esa conversación (o configures un reenvío de puertos)."
+          }
+        }
+      ]
+    },
+    "net-transport": {
+      "minutes": 95,
+      "prerequisites": [
+        "net-ip"
+      ],
+      "whyItMatters": {
+        "en": "IP only promises to try: packets can be lost, duplicated or arrive out of order. Yet your downloads arrive byte for byte, and your video calls keep going even when the Wi-Fi is bad. The transport layer is the reason, and it is where most of the networking you meet as a developer happens: choosing TCP or UDP, a server that \"accepts connections\", a timeout, a port already in use, or an app that is slow because of round trips. In this module you will build the pieces of TCP yourself, a handshake, sequence numbers, retransmission and congestion control, so that the behavior of real connections stops being a mystery.",
+        "es": "IP solo promete intentarlo: los paquetes se pueden perder, duplicar o llegar desordenados. Aun así, tus descargas llegan byte por byte y tus videollamadas siguen aunque el Wi-Fi sea malo. La capa de transporte es la razón, y es donde ocurre la mayor parte de las redes con las que te encuentras como desarrollador: elegir TCP o UDP, un servidor que \"acepta conexiones\", un tiempo de espera agotado, un puerto ya en uso o una app lenta por los viajes de ida y vuelta. En este módulo construirás tú mismo las piezas de TCP, un saludo, números de secuencia, retransmisión y control de congestión, para que el comportamiento de las conexiones reales deje de ser un misterio."
+      },
+      "objectives": {
+        "en": [
+          "Build and parse an 8-byte UDP header with `struct` and verify it with the Internet checksum.",
+          "Trace the TCP three-way handshake (SYN, SYN-ACK, ACK) with sequence and acknowledgment numbers and connection states.",
+          "Explain how sequence numbers, cumulative ACKs, timeouts and fast retransmit give reliable, in-order delivery.",
+          "Tell flow control (the receiver's window) from congestion control (slow start, congestion avoidance) and simulate both.",
+          "Explain ports, ephemeral ports and how the 4-tuple lets one machine keep many connections apart."
+        ],
+        "es": [
+          "Construir y leer un encabezado UDP de 8 bytes con `struct` y verificarlo con la suma de verificación de internet.",
+          "Seguir el saludo de tres vías de TCP (SYN, SYN-ACK, ACK) con números de secuencia y de acuse y los estados de conexión.",
+          "Explicar cómo los números de secuencia, los ACK acumulativos, los tiempos de espera y la retransmisión rápida dan una entrega confiable y en orden.",
+          "Distinguir el control de flujo (la ventana del receptor) del control de congestión (arranque lento, evitación de congestión) y simular ambos.",
+          "Explicar los puertos, los puertos efímeros y cómo la tupla de 4 elementos permite a una máquina separar muchas conexiones."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "IP addresses and packets (modules 1 and 2)",
+          "Python functions, dictionaries and loops; bytes and `struct` help"
+        ],
+        "es": [
+          "Direcciones IP y paquetes (módulos 1 y 2)",
+          "Funciones, diccionarios y ciclos de Python; ayudan los bytes y `struct`"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "UDP adds only ports, a length and a checksum (8 bytes) to IP: fast and simple, with no connection, ordering or retransmission. DNS, games and video calls use it.",
+          "TCP opens a connection with SYN, SYN-ACK, ACK. Each side picks a starting sequence number, and SYN and FIN each use up one number.",
+          "TCP sequence numbers count bytes. The receiver acknowledges the next byte it expects; a timeout or three duplicate ACKs make the sender retransmit.",
+          "Flow control protects the receiver (it advertises a window, rwnd); congestion control protects the network (the sender's cwnd). The sender keeps at most min(cwnd, rwnd) unacknowledged.",
+          "A connection is identified by source IP, source port, destination IP and destination port. Servers listen on well-known ports; clients use temporary (ephemeral) ports."
+        ],
+        "es": [
+          "UDP solo agrega a IP puertos, una longitud y una suma de verificación (8 bytes): rápido y simple, sin conexión, orden ni retransmisión. Lo usan DNS, los juegos y las videollamadas.",
+          "TCP abre una conexión con SYN, SYN-ACK, ACK. Cada lado elige un número de secuencia inicial, y SYN y FIN consumen un número cada uno.",
+          "Los números de secuencia de TCP cuentan bytes. El receptor confirma el siguiente byte que espera; un tiempo de espera agotado o tres ACK duplicados hacen que el emisor retransmita.",
+          "El control de flujo protege al receptor (anuncia una ventana, rwnd); el control de congestión protege a la red (la cwnd del emisor). El emisor mantiene como máximo min(cwnd, rwnd) sin confirmar.",
+          "Una conexión se identifica por IP de origen, puerto de origen, IP de destino y puerto de destino. Los servidores escuchan en puertos conocidos; los clientes usan puertos temporales (efímeros)."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Thinking TCP sequence numbers count packets: they count bytes, so after sending 100 bytes from seq 1000 the next segment starts at 1100.",
+          "Believing UDP is \"unreliable\" in the sense of corrupting data: its checksum catches damaged datagrams; it just does not resend lost ones or fix their order.",
+          "Mixing up flow and congestion control: a fast receiver does not help if the network is congested, and an empty network does not help if the receiver's buffer is full.",
+          "Expecting TCP to keep message boundaries: it is a byte stream, so two `send` calls can arrive as one `recv`, or one as two. Protocols like HTTP add lengths or delimiters."
+        ],
+        "es": [
+          "Pensar que los números de secuencia de TCP cuentan paquetes: cuentan bytes, así que tras enviar 100 bytes desde la secuencia 1000 el siguiente segmento empieza en 1100.",
+          "Creer que UDP es \"poco confiable\" en el sentido de que corrompe datos: su suma de verificación detecta datagramas dañados; solo no reenvía los perdidos ni corrige su orden.",
+          "Confundir el control de flujo con el de congestión: un receptor rápido no ayuda si la red está congestionada, y una red vacía no ayuda si el búfer del receptor está lleno.",
+          "Esperar que TCP respete los límites de los mensajes: es un flujo de bytes, así que dos llamadas a `send` pueden llegar en un solo `recv`, o una en dos. Protocolos como HTTP agregan longitudes o delimitadores."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: in the UDP example, change the payload and the ports, and confirm the receiver check is still 0 and becomes nonzero when you flip a byte.",
+          "Core: extend the handshake trace with a connection close (FIN, ACK, FIN, ACK) and print the states FIN_WAIT_1, FIN_WAIT_2, TIME_WAIT, CLOSE_WAIT and LAST_ACK in the right places.",
+          "Core: change the reliable-delivery example so two different segments are lost, and so the sender retransmits on a timeout when fewer than three duplicate ACKs arrive.",
+          "Stretch: plot (with text bars) cwnd over 30 round trips with losses every 10 round trips, and compare TCP Reno with a version that resets to 1 on every loss."
+        ],
+        "es": [
+          "Calentamiento: en el ejemplo de UDP cambia la carga y los puertos, y confirma que la comprobación del receptor sigue en 0 y deja de serlo cuando cambias un byte.",
+          "Núcleo: amplía el saludo con el cierre de la conexión (FIN, ACK, FIN, ACK) e imprime los estados FIN_WAIT_1, FIN_WAIT_2, TIME_WAIT, CLOSE_WAIT y LAST_ACK en el lugar correcto.",
+          "Núcleo: cambia el ejemplo de entrega confiable para que se pierdan dos segmentos distintos, y para que el emisor retransmita por tiempo agotado cuando lleguen menos de tres ACK duplicados.",
+          "Extensión: grafica (con barras de texto) la cwnd en 30 viajes de ida y vuelta con pérdidas cada 10, y compara TCP Reno con una versión que vuelve a 1 en cada pérdida."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "A client sends SYN with seq=1000 and the server answers SYN-ACK with seq=5000. What are the seq and ack numbers of the client's final ACK?",
+          "Why does a video call usually use UDP instead of TCP, even though UDP does not resend lost packets?",
+          "Two browser tabs on your laptop are connected to the same server on port 443. How does your laptop know which tab each incoming packet belongs to?"
+        ],
+        "es": [
+          "Un cliente envía SYN con seq=1000 y el servidor responde SYN-ACK con seq=5000. ¿Cuáles son los números seq y ack del ACK final del cliente?",
+          "¿Por qué una videollamada suele usar UDP en lugar de TCP, aunque UDP no reenvíe los paquetes perdidos?",
+          "Dos pestañas del navegador en tu laptop están conectadas al mismo servidor en el puerto 443. ¿Cómo sabe tu laptop a qué pestaña pertenece cada paquete que llega?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "UDP Datagrams",
+            "es": "Datagramas UDP"
+          },
+          "definition": {
+            "en": "UDP (User Datagram Protocol) sends independent messages called datagrams. Its 8-byte header has a source port, destination port, length and checksum. There is no connection, no ordering and no retransmission: each datagram arrives once, or not at all.",
+            "es": "UDP (User Datagram Protocol) envía mensajes independientes llamados datagramas. Su encabezado de 8 bytes tiene puerto de origen, puerto de destino, longitud y suma de verificación. No hay conexión, ni orden, ni retransmisión: cada datagrama llega una vez o no llega."
+          }
+        },
+        {
+          "term": {
+            "en": "The TCP Handshake",
+            "es": "El saludo de TCP"
+          },
+          "definition": {
+            "en": "TCP opens a connection in three steps: the client sends SYN with its starting sequence number x, the server replies SYN-ACK with its own number y and ack x+1, and the client sends ACK with ack y+1. Both sides are then ESTABLISHED.",
+            "es": "TCP abre una conexión en tres pasos: el cliente envía SYN con su número de secuencia inicial x, el servidor responde SYN-ACK con su propio número y y ack x+1, y el cliente envía ACK con ack y+1. Entonces ambos lados quedan en ESTABLISHED."
+          }
+        },
+        {
+          "term": {
+            "en": "Reliable Delivery",
+            "es": "Entrega confiable"
+          },
+          "definition": {
+            "en": "TCP numbers every byte. The receiver replies with a cumulative acknowledgment, the number of the next byte it expects. If an ACK does not arrive before a timeout, or three duplicate ACKs arrive, the sender retransmits the missing data. Out-of-order data is buffered and handed to the application in order.",
+            "es": "TCP numera cada byte. El receptor responde con un acuse acumulativo, el número del siguiente byte que espera. Si un ACK no llega antes de un tiempo de espera, o llegan tres ACK duplicados, el emisor retransmite los datos que faltan. Los datos desordenados se guardan y se entregan a la aplicación en orden."
+          }
+        },
+        {
+          "term": {
+            "en": "Flow and Congestion Control",
+            "es": "Control de flujo y de congestión"
+          },
+          "definition": {
+            "en": "Flow control stops a sender from overrunning the receiver: every ACK advertises how much buffer space is free (rwnd). Congestion control stops senders from overloading the network: the congestion window (cwnd) grows with slow start and congestion avoidance and shrinks when packets are lost.",
+            "es": "El control de flujo evita que el emisor desborde al receptor: cada ACK anuncia cuánto espacio libre queda en el búfer (rwnd). El control de congestión evita que los emisores saturen la red: la ventana de congestión (cwnd) crece con el arranque lento y la evitación de congestión, y se reduce cuando se pierden paquetes."
+          }
+        },
+        {
+          "term": {
+            "en": "Ports and Sockets",
+            "es": "Puertos y sockets"
+          },
+          "definition": {
+            "en": "A port is a 16-bit number (0 to 65535) that names a program on a host: web servers use 80 and 443, DNS 53, SSH 22. A socket is a program's endpoint for communication; a TCP connection is identified by the 4-tuple of source IP, source port, destination IP and destination port.",
+            "es": "Un puerto es un número de 16 bits (de 0 a 65535) que identifica a un programa en un equipo: los servidores web usan 80 y 443, DNS el 53, SSH el 22. Un socket es el extremo de comunicación de un programa; una conexión TCP se identifica por la tupla de IP de origen, puerto de origen, IP de destino y puerto de destino."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "RFC 9293: Transmission Control Protocol (TCP)",
+            "es": "RFC 9293: Transmission Control Protocol (TCP)"
+          },
+          "url": "https://www.rfc-editor.org/rfc/rfc9293.html"
+        },
+        {
+          "label": {
+            "en": "RFC 768: User Datagram Protocol",
+            "es": "RFC 768: User Datagram Protocol"
+          },
+          "url": "https://www.rfc-editor.org/rfc/rfc768.html"
+        },
+        {
+          "label": {
+            "en": "Python docs: struct, interpret bytes as packed binary data",
+            "es": "Documentación de Python: struct, interpretar bytes como datos binarios empaquetados"
+          },
+          "url": "https://docs.python.org/3/library/struct.html"
+        },
+        {
+          "label": {
+            "en": "Python docs: Socket Programming HOWTO",
+            "es": "Documentación de Python: guía de programación con sockets"
+          },
+          "url": "https://docs.python.org/3/howto/sockets.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "How big is a UDP header?",
+            "es": "¿Qué tamaño tiene un encabezado UDP?"
+          },
+          "options": {
+            "en": [
+              "8 bytes",
+              "20 bytes",
+              "40 bytes",
+              "It depends on the payload"
+            ],
+            "es": [
+              "8 bytes",
+              "20 bytes",
+              "40 bytes",
+              "Depende de la carga"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "UDP's header is four 16-bit fields: source port, destination port, length and checksum, 8 bytes in all. A TCP header is at least 20 bytes.",
+            "es": "El encabezado UDP son cuatro campos de 16 bits: puerto de origen, puerto de destino, longitud y suma de verificación, 8 bytes en total. Un encabezado TCP tiene al menos 20 bytes."
+          }
+        },
+        {
+          "question": {
+            "en": "A client sends SYN with seq=300. The server replies SYN-ACK with seq=900. What does the client's ACK carry?",
+            "es": "Un cliente envía SYN con seq=300. El servidor responde SYN-ACK con seq=900. ¿Qué lleva el ACK del cliente?"
+          },
+          "options": {
+            "en": [
+              "seq=300, ack=900",
+              "seq=301, ack=900",
+              "seq=301, ack=901",
+              "seq=900, ack=301"
+            ],
+            "es": [
+              "seq=300, ack=900",
+              "seq=301, ack=900",
+              "seq=301, ack=901",
+              "seq=900, ack=301"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "A SYN uses up one sequence number, so the client's next number is 301, and it acknowledges the server's SYN by asking for byte 901.",
+            "es": "Un SYN consume un número de secuencia, así que el siguiente número del cliente es 301, y confirma el SYN del servidor pidiendo el byte 901."
+          }
+        },
+        {
+          "question": {
+            "en": "The receiver got bytes 0-199, missed 200-299, and then got 300-399. What does it acknowledge?",
+            "es": "El receptor recibió los bytes 0-199, le faltan los 200-299 y luego recibió los 300-399. ¿Qué confirma?"
+          },
+          "options": {
+            "en": [
+              "400, because it has byte 399",
+              "200, the next byte it is still waiting for",
+              "300, the start of the last segment",
+              "Nothing until the gap is filled"
+            ],
+            "es": [
+              "400, porque tiene el byte 399",
+              "200, el siguiente byte que todavía espera",
+              "300, el inicio del último segmento",
+              "Nada hasta que se llene el hueco"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "ACKs are cumulative: they name the first missing byte. Repeating ACK 200 (a duplicate ACK) tells the sender that 200 is missing; after three duplicates it retransmits it right away.",
+            "es": "Los ACK son acumulativos: nombran el primer byte que falta. Repetir ACK 200 (un ACK duplicado) le dice al emisor que falta el 200; tras tres duplicados lo retransmite de inmediato."
+          }
+        },
+        {
+          "question": {
+            "en": "Which window protects a slow receiver from being flooded with data?",
+            "es": "¿Qué ventana protege a un receptor lento de recibir demasiados datos?"
+          },
+          "options": {
+            "en": [
+              "The congestion window (cwnd)",
+              "The slow start threshold (ssthresh)",
+              "The time-to-live (TTL)",
+              "The receive window (rwnd) advertised in each ACK"
+            ],
+            "es": [
+              "La ventana de congestión (cwnd)",
+              "El umbral de arranque lento (ssthresh)",
+              "El tiempo de vida (TTL)",
+              "La ventana de recepción (rwnd) anunciada en cada ACK"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "That is flow control: the receiver advertises its free buffer space as rwnd. The congestion window is the sender's estimate of what the network can carry.",
+            "es": "Eso es control de flujo: el receptor anuncia su espacio libre como rwnd. La ventana de congestión es la estimación del emisor de lo que puede llevar la red."
+          }
+        },
+        {
+          "question": {
+            "en": "Why do two browser tabs talking to the same server on port 443 not mix up their data?",
+            "es": "¿Por qué dos pestañas que hablan con el mismo servidor en el puerto 443 no mezclan sus datos?"
+          },
+          "options": {
+            "en": [
+              "Each tab uses a different ephemeral source port, so the 4-tuples differ",
+              "The server uses a different port for each tab",
+              "TCP encrypts each tab differently",
+              "Only one tab can be connected at a time"
+            ],
+            "es": [
+              "Cada pestaña usa un puerto de origen efímero distinto, así que las tuplas son distintas",
+              "El servidor usa un puerto distinto para cada pestaña",
+              "TCP cifra cada pestaña de forma distinta",
+              "Solo una pestaña puede estar conectada a la vez"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Both connections go to the server's port 443, but the operating system gives each one its own local port, so (source IP, source port, destination IP, destination port) is unique for each.",
+            "es": "Ambas conexiones van al puerto 443 del servidor, pero el sistema operativo le da a cada una su propio puerto local, así que (IP de origen, puerto de origen, IP de destino, puerto de destino) es único para cada una."
+          }
+        }
+      ]
+    },
+    "net-web": {
+      "minutes": 95,
+      "prerequisites": [
+        "net-transport"
+      ],
+      "whyItMatters": {
+        "en": "This is the layer you will program against most: every website, mobile app and cloud service is built on DNS, HTTP and TLS. Knowing what really happens when you type a URL turns vague problems into specific ones. Is the name not resolving? Is the connection refused? Did the server answer 404 or 500? Is the certificate wrong? HTTP is plain text with a strict shape, DNS is a distributed lookup table with caching, and a REST API is just HTTP methods applied to URLs with JSON bodies. Here you will build and parse all of them yourself, so tools like browser dev tools, `curl` and API docs read like something you already understand.",
+        "es": "Esta es la capa contra la que más vas a programar: cada sitio web, app móvil y servicio en la nube se construye sobre DNS, HTTP y TLS. Saber qué pasa realmente cuando escribes una URL convierte problemas vagos en problemas concretos. ¿El nombre no se resuelve? ¿Se rechaza la conexión? ¿El servidor respondió 404 o 500? ¿El certificado está mal? HTTP es texto simple con una forma estricta, DNS es una tabla de búsqueda distribuida con caché, y una API REST es solo métodos HTTP aplicados a URL con cuerpos JSON. Aquí los construirás y leerás tú mismo, para que herramientas como las herramientas de desarrollo del navegador, `curl` y la documentación de las API se lean como algo que ya entiendes."
+      },
+      "objectives": {
+        "en": [
+          "Explain how DNS resolves a name through root, top-level-domain and authoritative servers, including CNAME aliases and caching with TTLs.",
+          "Write and parse raw HTTP/1.1 requests and responses: request line, status line, headers, blank line and body.",
+          "Describe what TLS adds to HTTP: server authentication with certificates, key agreement, encryption and integrity.",
+          "List, in order, the steps and round trips between typing a URL and seeing the page.",
+          "Design and call a small REST API with the right methods, status codes and JSON bodies."
+        ],
+        "es": [
+          "Explicar cómo DNS resuelve un nombre pasando por los servidores raíz, de dominio de nivel superior y autoritativos, incluidos los alias CNAME y la caché con TTL.",
+          "Escribir y leer peticiones y respuestas HTTP/1.1 en crudo: línea de petición, línea de estado, encabezados, línea en blanco y cuerpo.",
+          "Describir qué agrega TLS a HTTP: autenticación del servidor con certificados, acuerdo de claves, cifrado e integridad.",
+          "Enumerar en orden los pasos y viajes de ida y vuelta entre escribir una URL y ver la página.",
+          "Diseñar y usar una pequeña API REST con los métodos, códigos de estado y cuerpos JSON correctos."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "TCP connections and ports (module 3)",
+          "Python strings, dictionaries and `json`; the Web Basics course helps"
+        ],
+        "es": [
+          "Conexiones TCP y puertos (módulo 3)",
+          "Cadenas, diccionarios y `json` de Python; el curso de Web básica ayuda"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "DNS is a hierarchy: a resolver asks a root server, is referred to the TLD servers, then to the domain's authoritative server. Answers are cached for their TTL, which is why DNS changes take time to spread.",
+          "An HTTP message is text lines ending in `\\r\\n`: a request line or status line, headers, an empty line, then the body, whose length is given by `Content-Length`.",
+          "HTTPS is HTTP inside TLS. TLS checks the server's certificate (right name, trusted issuer, not expired), agrees on fresh keys, and then encrypts and authenticates every record.",
+          "Opening a site costs several round trips before the first byte of content: DNS, the TCP handshake, the TLS handshake, then the request. Latency, not bandwidth, usually decides how fast a page feels.",
+          "REST APIs name resources with URLs and act on them with HTTP methods (GET reads, POST creates, PUT replaces, DELETE removes), answering with status codes and JSON."
+        ],
+        "es": [
+          "DNS es una jerarquía: un resolutor pregunta a un servidor raíz, es remitido a los servidores del TLD y luego al servidor autoritativo del dominio. Las respuestas se guardan en caché durante su TTL, por eso los cambios de DNS tardan en propagarse.",
+          "Un mensaje HTTP son líneas de texto que terminan en `\\r\\n`: una línea de petición o de estado, encabezados, una línea vacía y luego el cuerpo, cuya longitud indica `Content-Length`.",
+          "HTTPS es HTTP dentro de TLS. TLS comprueba el certificado del servidor (nombre correcto, emisor de confianza, no vencido), acuerda claves nuevas y luego cifra y autentica cada registro.",
+          "Abrir un sitio cuesta varios viajes de ida y vuelta antes del primer byte de contenido: DNS, el saludo TCP, el saludo TLS y luego la petición. La latencia, no el ancho de banda, suele decidir qué tan rápida se siente una página.",
+          "Las API REST nombran recursos con URL y actúan sobre ellos con métodos HTTP (GET lee, POST crea, PUT reemplaza, DELETE borra), y responden con códigos de estado y JSON."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Using `\\n` instead of `\\r\\n` in raw HTTP, or forgetting the empty line after the headers: the server keeps waiting for more headers.",
+          "Treating header names as case-sensitive: `Content-Type` and `content-type` are the same header, so normalize names before looking them up.",
+          "Thinking HTTPS hides everything: the content, path and headers are encrypted, but the server's IP address, and usually the domain name, are still visible to the network.",
+          "Using GET for actions that change data: GET must be safe to repeat, because browsers, caches and crawlers may send it again without asking."
+        ],
+        "es": [
+          "Usar `\\n` en lugar de `\\r\\n` en HTTP crudo, u olvidar la línea vacía después de los encabezados: el servidor se queda esperando más encabezados.",
+          "Tratar los nombres de encabezado como sensibles a mayúsculas: `Content-Type` y `content-type` son el mismo encabezado, así que normaliza los nombres antes de buscarlos.",
+          "Pensar que HTTPS lo oculta todo: el contenido, la ruta y los encabezados van cifrados, pero la dirección IP del servidor, y normalmente el nombre del dominio, siguen visibles para la red.",
+          "Usar GET para acciones que cambian datos: GET debe poder repetirse sin riesgo, porque los navegadores, las cachés y los rastreadores pueden volver a enviarlo sin preguntar."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: add an `AAAA` record and a second CNAME level to the toy DNS, and predict how many servers are asked before running it.",
+          "Core: write `build_request(method, url, headers, body)` that returns a correct raw HTTP/1.1 request, using `urllib.parse.urlsplit` for the host and path.",
+          "Core: extend `parse_response` to handle a `301` with a `Location` header by \"following\" the redirect to a second simulated response.",
+          "Stretch: add `PATCH /todos/<id>` (partial update) and `GET /todos?done=true` (filter) to the REST example, with the right status codes for missing items and bad JSON."
+        ],
+        "es": [
+          "Calentamiento: agrega un registro `AAAA` y un segundo nivel de CNAME al DNS de juguete, y predice cuántos servidores se consultan antes de ejecutarlo.",
+          "Núcleo: escribe `build_request(method, url, headers, body)` que devuelva una petición HTTP/1.1 correcta, usando `urllib.parse.urlsplit` para el host y la ruta.",
+          "Núcleo: amplía `parse_response` para manejar un `301` con encabezado `Location` \"siguiendo\" la redirección hacia una segunda respuesta simulada.",
+          "Extensión: agrega `PATCH /todos/<id>` (actualización parcial) y `GET /todos?done=true` (filtro) al ejemplo REST, con los códigos de estado correctos para elementos que no existen y JSON inválido."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "You change your website's IP address in DNS, but some visitors still reach the old server for an hour. Why?",
+          "What separates the headers from the body in an HTTP message, and how does the receiver know where the body ends?",
+          "Starting with no cache, how many round trips happen before the browser receives the first byte of an HTTPS page? Name each one."
+        ],
+        "es": [
+          "Cambias la dirección IP de tu sitio en DNS, pero algunos visitantes siguen llegando al servidor viejo durante una hora. ¿Por qué?",
+          "¿Qué separa los encabezados del cuerpo en un mensaje HTTP, y cómo sabe el receptor dónde termina el cuerpo?",
+          "Sin nada en caché, ¿cuántos viajes de ida y vuelta ocurren antes de que el navegador reciba el primer byte de una página HTTPS? Nombra cada uno."
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "DNS",
+            "es": "DNS"
+          },
+          "definition": {
+            "en": "The Domain Name System turns names like www.example.com into IP addresses. A resolver asks root servers, then top-level-domain servers (.com), then the domain's authoritative server. Records include A (IPv4), AAAA (IPv6), CNAME (alias) and NS (name server), and each answer is cached for its TTL.",
+            "es": "El sistema de nombres de dominio convierte nombres como www.example.com en direcciones IP. Un resolutor pregunta a los servidores raíz, luego a los del dominio de nivel superior (.com) y luego al servidor autoritativo del dominio. Los registros incluyen A (IPv4), AAAA (IPv6), CNAME (alias) y NS (servidor de nombres), y cada respuesta se guarda en caché durante su TTL."
+          }
+        },
+        {
+          "term": {
+            "en": "HTTP Requests and Responses",
+            "es": "Peticiones y respuestas HTTP"
+          },
+          "definition": {
+            "en": "HTTP is the request/response protocol of the web. A request has a method (GET, POST...), a path and headers; a response has a status code (200 OK, 404 Not Found, 500 Internal Server Error), headers and usually a body. In HTTP/1.1 both are text lines ending in CRLF, with an empty line before the body.",
+            "es": "HTTP es el protocolo de petición y respuesta de la web. Una petición tiene un método (GET, POST...), una ruta y encabezados; una respuesta tiene un código de estado (200 OK, 404 Not Found, 500 Internal Server Error), encabezados y normalmente un cuerpo. En HTTP/1.1 ambos son líneas de texto que terminan en CRLF, con una línea vacía antes del cuerpo."
+          }
+        },
+        {
+          "term": {
+            "en": "HTTPS and TLS",
+            "es": "HTTPS y TLS"
+          },
+          "definition": {
+            "en": "HTTPS is HTTP sent through TLS (Transport Layer Security), usually on port 443. During the TLS handshake the server proves its identity with a certificate signed by a trusted authority and both sides agree on session keys; afterwards every record is encrypted and protected against tampering.",
+            "es": "HTTPS es HTTP enviado a través de TLS (Transport Layer Security), normalmente en el puerto 443. Durante el saludo TLS el servidor demuestra su identidad con un certificado firmado por una autoridad de confianza y ambos lados acuerdan claves de sesión; después, cada registro va cifrado y protegido contra modificaciones."
+          }
+        },
+        {
+          "term": {
+            "en": "What Happens When You Open a Website",
+            "es": "Qué pasa cuando abres un sitio web"
+          },
+          "definition": {
+            "en": "The browser parses the URL, resolves the host name with DNS, opens a TCP connection, performs the TLS handshake, sends an HTTP request, receives the HTML, finds the CSS, JavaScript and images it references and requests them too, then lays out and paints the page.",
+            "es": "El navegador analiza la URL, resuelve el nombre del host con DNS, abre una conexión TCP, hace el saludo TLS, envía una petición HTTP, recibe el HTML, encuentra el CSS, el JavaScript y las imágenes que menciona y también los pide, y luego organiza y dibuja la página."
+          }
+        },
+        {
+          "term": {
+            "en": "REST APIs and JSON",
+            "es": "API REST y JSON"
+          },
+          "definition": {
+            "en": "A REST API exposes resources at URLs (/todos, /todos/2) and uses HTTP methods on them: GET to read, POST to create, PUT to replace, PATCH to change part, DELETE to remove. Data travels as JSON, and status codes such as 200, 201, 204, 400 and 404 report the result.",
+            "es": "Una API REST expone recursos en URL (/todos, /todos/2) y usa métodos HTTP sobre ellos: GET para leer, POST para crear, PUT para reemplazar, PATCH para cambiar una parte, DELETE para borrar. Los datos viajan como JSON, y códigos de estado como 200, 201, 204, 400 y 404 informan el resultado."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "MDN: An overview of HTTP",
+            "es": "MDN: panorama general de HTTP"
+          },
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Overview"
+        },
+        {
+          "label": {
+            "en": "Cloudflare Learning: What is DNS?",
+            "es": "Cloudflare Learning: ¿Qué es DNS?"
+          },
+          "url": "https://www.cloudflare.com/learning/dns/what-is-dns/"
+        },
+        {
+          "label": {
+            "en": "Cloudflare Learning: What happens in a TLS handshake?",
+            "es": "Cloudflare Learning: ¿Qué pasa en un saludo TLS?"
+          },
+          "url": "https://www.cloudflare.com/learning/ssl/what-happens-in-a-tls-handshake/"
+        },
+        {
+          "label": {
+            "en": "Python docs: json, JSON encoder and decoder",
+            "es": "Documentación de Python: json, codificador y decodificador JSON"
+          },
+          "url": "https://docs.python.org/3/library/json.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Which DNS record makes www.shop.org an alias for edge.shop.org?",
+            "es": "¿Qué registro DNS hace de www.shop.org un alias de edge.shop.org?"
+          },
+          "options": {
+            "en": [
+              "A",
+              "NS",
+              "CNAME",
+              "MX"
+            ],
+            "es": [
+              "A",
+              "NS",
+              "CNAME",
+              "MX"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "A CNAME (canonical name) record says \"this name is another name for that one\"; the resolver then looks up the A or AAAA record of the target.",
+            "es": "Un registro CNAME (nombre canónico) dice \"este nombre es otro nombre de aquel\"; luego el resolutor busca el registro A o AAAA del destino."
+          }
+        },
+        {
+          "question": {
+            "en": "In an HTTP/1.1 message, what marks the end of the headers?",
+            "es": "En un mensaje HTTP/1.1, ¿qué marca el final de los encabezados?"
+          },
+          "options": {
+            "en": [
+              "A line with only `END`",
+              "An empty line (`\\r\\n\\r\\n` after the last header)",
+              "The `Host` header",
+              "The connection closing"
+            ],
+            "es": [
+              "Una línea que solo dice `END`",
+              "Una línea vacía (`\\r\\n\\r\\n` después del último encabezado)",
+              "El encabezado `Host`",
+              "El cierre de la conexión"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Each header line ends with CRLF, and one empty line separates the headers from the body. The body's size comes from `Content-Length` (or chunked encoding).",
+            "es": "Cada línea de encabezado termina con CRLF, y una línea vacía separa los encabezados del cuerpo. El tamaño del cuerpo lo da `Content-Length` (o la codificación por fragmentos)."
+          }
+        },
+        {
+          "question": {
+            "en": "Your browser connects to bank.example, but the certificate it receives is for other.example. What should happen?",
+            "es": "Tu navegador se conecta a bank.example, pero el certificado que recibe es de other.example. ¿Qué debería pasar?"
+          },
+          "options": {
+            "en": [
+              "Nothing, any valid certificate is fine",
+              "The browser downloads the right certificate from DNS",
+              "The connection continues without encryption",
+              "The browser refuses or shows a warning, because the server did not prove it is bank.example"
+            ],
+            "es": [
+              "Nada, cualquier certificado válido sirve",
+              "El navegador descarga el certificado correcto desde DNS",
+              "La conexión sigue sin cifrado",
+              "El navegador rechaza o muestra una advertencia, porque el servidor no demostró que es bank.example"
+            ]
+          },
+          "correct": 3,
+          "explanation": {
+            "en": "Encryption is useless if you are talking to the wrong server. The certificate must name the host you asked for and be signed by a trusted authority.",
+            "es": "El cifrado no sirve de nada si hablas con el servidor equivocado. El certificado debe nombrar al host que pediste y estar firmado por una autoridad de confianza."
+          }
+        },
+        {
+          "question": {
+            "en": "With nothing cached, which step comes first when you open https://example.com?",
+            "es": "Sin nada en caché, ¿qué paso va primero cuando abres https://example.com?"
+          },
+          "options": {
+            "en": [
+              "A DNS lookup for example.com",
+              "The TLS handshake",
+              "The HTTP GET request",
+              "The TCP handshake"
+            ],
+            "es": [
+              "Una consulta DNS de example.com",
+              "El saludo TLS",
+              "La petición HTTP GET",
+              "El saludo TCP"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "The browser needs the server's IP address before it can open a TCP connection. Then come the TCP handshake, the TLS handshake and finally the HTTP request.",
+            "es": "El navegador necesita la dirección IP del servidor antes de abrir una conexión TCP. Después vienen el saludo TCP, el saludo TLS y por último la petición HTTP."
+          }
+        },
+        {
+          "question": {
+            "en": "A REST API creates a new todo when you POST to /todos. Which status code fits best?",
+            "es": "Una API REST crea una tarea nueva cuando haces POST a /todos. ¿Qué código de estado encaja mejor?"
+          },
+          "options": {
+            "en": [
+              "200 OK",
+              "201 Created",
+              "204 No Content",
+              "404 Not Found"
+            ],
+            "es": [
+              "200 OK",
+              "201 Created",
+              "204 No Content",
+              "404 Not Found"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "201 Created says a new resource exists, usually returned with the new item in the body and its URL in a `Location` header.",
+            "es": "201 Created indica que existe un recurso nuevo; normalmente se devuelve con el elemento nuevo en el cuerpo y su URL en el encabezado `Location`."
           }
         }
       ]
