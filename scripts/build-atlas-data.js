@@ -91,15 +91,35 @@ const videos = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/course-videos.js
 // Courses being written carry their final outline so their page can show the syllabus.
 const outlines = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/course-outlines.json'), 'utf8'));
 for (const p of PLANNED) if (outlines[p.id]) p.outline = outlines[p.id];
-const out = { tracks, planned: PLANNED, path: PATH, next: NEXT, modules, full, videos };
+// The site loads a small index first (data/atlas-data.json) and each course's full lessons
+// on demand (data/lessons/<track>.json), so the first page needs a fraction of the data.
+const crypto = require('crypto');
+const lessonFiles = {};
+for (const t of tracks.filter((x) => x.status === 'available')) {
+  const part = {};
+  for (const id of t.units.flatMap((u) => u.modules)) {
+    part[id] = full[id];
+    modules[id].counts = { examples: full[id].examples.sets.length + 1, terms: (full[id].definitions || []).length, quiz: (full[id].quiz || []).length };
+  }
+  const json = JSON.stringify(part);
+  lessonFiles[t.id] = json;
+  t.lessons = crypto.createHash('sha1').update(json).digest('hex').slice(0, 10);   // cache-busting version
+}
+const out = { tracks, planned: PLANNED, path: PATH, next: NEXT, modules, videos };
 const file = path.join(ROOT, 'data/atlas-data.json');
+const lessonDir = path.join(ROOT, 'data/lessons');
 const json = JSON.stringify(out);
+const expected = { [file]: json, ...Object.fromEntries(Object.entries(lessonFiles).map(([id, body]) => [path.join(lessonDir, id + '.json'), body])) };
 if (process.argv.includes('--check')) {
-  // CI guard: the committed data file must match its sources.
-  const current = fs.existsSync(file) ? fs.readFileSync(file, 'utf8') : '';
-  if (current !== json) { console.error('data/atlas-data.json is out of date. Run: npm run build:data'); process.exit(1); }
-  console.log('data/atlas-data.json is up to date');
+  // CI guard: the committed data files must match their sources.
+  const stale = Object.entries(expected).filter(([f, body]) => !fs.existsSync(f) || fs.readFileSync(f, 'utf8') !== body).map(([f]) => path.relative(ROOT, f));
+  const extra = fs.existsSync(lessonDir) ? fs.readdirSync(lessonDir).map((f) => path.join(lessonDir, f)).filter((f) => !(f in expected)).map((f) => path.relative(ROOT, f)) : [];
+  if (stale.length || extra.length) { console.error('Course data is out of date (' + [...stale, ...extra].join(', ') + '). Run: npm run build:data'); process.exit(1); }
+  console.log('data/atlas-data.json and data/lessons/ are up to date');
   process.exit(0);
 }
-fs.writeFileSync(file, json);
-console.log('wrote data/atlas-data.json:', Math.round(fs.statSync(file).size / 1024), 'KB;', Object.keys(modules).length, 'modules,', Object.keys(full).length, 'with full lessons');
+fs.mkdirSync(lessonDir, { recursive: true });
+for (const f of fs.readdirSync(lessonDir)) if (!(path.join(lessonDir, f) in expected)) fs.unlinkSync(path.join(lessonDir, f));
+for (const [f, body] of Object.entries(expected)) fs.writeFileSync(f, body);
+console.log('wrote data/atlas-data.json:', Math.round(json.length / 1024), 'KB index;', Object.keys(lessonFiles).length, 'lesson files,',
+  Math.round(Object.values(lessonFiles).reduce((n, b) => n + b.length, 0) / 1024), 'KB;', Object.keys(modules).length, 'modules,', Object.keys(full).length, 'with full lessons');
