@@ -1412,6 +1412,26 @@
     "en": "Use `CASE WHEN score >= 70 THEN 'pass' ELSE 'retry' END AS label`.",
     "es": "Usa `CASE WHEN score >= 70 THEN 'pass' ELSE 'retry' END AS label`."
    }
+  },
+  {
+   "id": "distinct-cities",
+   "lang": "sql",
+   "title": {
+    "en": "Cities, once each",
+    "es": "Ciudades, una vez cada una"
+   },
+   "prompt": {
+    "en": "List each `city` that appears in `students` only once, in alphabetical order.",
+    "es": "Lista cada `city` que aparece en `students` una sola vez, en orden alfabético."
+   },
+   "setup": "CREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, grade INTEGER, city TEXT, score REAL);\nINSERT INTO students VALUES (1, 'Ana', 10, 'Austin', 91.5), (2, 'Ben', 11, 'Denver', 78.0), (3, 'Chen', 10, 'Austin', 85.5),\n  (4, 'Dara', 12, 'Boston', 95.0), (5, 'Eli', 11, 'Austin', 62.5), (6, 'Fay', 12, 'Denver', 88.0);",
+   "starter": "-- Write your query here\n",
+   "solution": "SELECT DISTINCT city FROM students ORDER BY city;",
+   "ordered": true,
+   "hint": {
+    "en": "`SELECT DISTINCT city` removes repeated rows; add `ORDER BY city`.",
+    "es": "`SELECT DISTINCT city` quita las filas repetidas; agrega `ORDER BY city`."
+   }
   }
  ],
  "sql-summarizing": [
@@ -1453,6 +1473,26 @@
    "hint": {
     "en": "Group by category and filter the groups with `HAVING COUNT(*) > 3` (not `WHERE`).",
     "es": "Agrupa por categoría y filtra los grupos con `HAVING COUNT(*) > 3` (no con `WHERE`)."
+   }
+  },
+  {
+   "id": "avg-per-grade",
+   "lang": "sql",
+   "title": {
+    "en": "Average per grade",
+    "es": "Promedio por grado"
+   },
+   "prompt": {
+    "en": "From `students`, show each `grade` and the average score rounded to 1 decimal as `avg_score`, ordered by grade.",
+    "es": "De `students`, muestra cada `grade` y el promedio de calificación redondeado a 1 decimal como `avg_score`, ordenado por grado."
+   },
+   "setup": "CREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, grade INTEGER, city TEXT, score REAL);\nINSERT INTO students VALUES (1, 'Ana', 10, 'Austin', 91.5), (2, 'Ben', 11, 'Denver', 78.0), (3, 'Chen', 10, 'Austin', 85.5),\n  (4, 'Dara', 12, 'Boston', 95.0), (5, 'Eli', 11, 'Austin', 62.5), (6, 'Fay', 12, 'Denver', 88.0);",
+   "starter": "-- Write your query here\n",
+   "solution": "SELECT grade, ROUND(AVG(score), 1) AS avg_score FROM students GROUP BY grade ORDER BY grade;",
+   "ordered": true,
+   "hint": {
+    "en": "`ROUND(AVG(score), 1) AS avg_score` with `GROUP BY grade`, then `ORDER BY grade`.",
+    "es": "`ROUND(AVG(score), 1) AS avg_score` con `GROUP BY grade` y luego `ORDER BY grade`."
    }
   }
  ],
@@ -1496,6 +1536,26 @@
     "en": "`LEFT JOIN` enrollments onto courses and keep the rows where the enrollment side `IS NULL`.",
     "es": "Haz `LEFT JOIN` de enrollments sobre courses y conserva las filas donde el lado de la inscripción `IS NULL`."
    }
+  },
+  {
+   "id": "course-sizes",
+   "lang": "sql",
+   "title": {
+    "en": "How many in each course",
+    "es": "Cuántos hay en cada curso"
+   },
+   "prompt": {
+    "en": "List every course `title` with how many students are enrolled as `students` (courses with nobody show 0), biggest first, then by title.",
+    "es": "Lista el `title` de cada curso con cuántos estudiantes tiene inscritos como `students` (los cursos sin nadie muestran 0), de mayor a menor y luego por título."
+   },
+   "setup": "CREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT, city TEXT);\nCREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT, teacher TEXT);\nCREATE TABLE enrollments (student_id INTEGER, course_id INTEGER, grade INTEGER);\nINSERT INTO students VALUES (1, 'Ana', 'Austin'), (2, 'Ben', 'Denver'), (3, 'Chen', 'Austin'), (4, 'Dara', 'Boston');\nINSERT INTO courses VALUES (10, 'Python', 'Ms. Lee'), (20, 'Web Basics', 'Mr. Diaz'), (30, 'SQL', 'Ms. Lee'), (40, 'Art', 'Mr. Kim');\nINSERT INTO enrollments VALUES (1, 10, 95), (1, 30, 88), (2, 10, 72), (2, 20, 81), (3, 30, 90), (3, 20, 77);",
+   "starter": "-- Write your query here\n",
+   "solution": "SELECT c.title, COUNT(e.student_id) AS students FROM courses c LEFT JOIN enrollments e ON e.course_id = c.id GROUP BY c.id ORDER BY students DESC, c.title;",
+   "ordered": true,
+   "hint": {
+    "en": "`LEFT JOIN` keeps courses with no enrollments, and `COUNT(e.student_id)` counts only real matches, so they get 0.",
+    "es": "`LEFT JOIN` conserva los cursos sin inscripciones, y `COUNT(e.student_id)` solo cuenta coincidencias reales, así que quedan en 0."
+   }
   }
  ],
  "sql-design": [
@@ -1537,6 +1597,26 @@
    "hint": {
     "en": "Two statements: `DELETE FROM products WHERE stock = 0;` and then a `SELECT` with `WHERE price < 10 ORDER BY price`.",
     "es": "Dos sentencias: `DELETE FROM products WHERE stock = 0;` y luego un `SELECT` con `WHERE price < 10 ORDER BY price`."
+   }
+  },
+  {
+   "id": "add-product",
+   "lang": "sql",
+   "title": {
+    "en": "Add a product",
+    "es": "Agrega un producto"
+   },
+   "prompt": {
+    "en": "Insert a product with id `5`, name `Ruler`, price `1.25` and stock `50`. Then list the `name` of every product with more than 10 in stock, alphabetically.",
+    "es": "Inserta un producto con id `5`, nombre `Ruler`, precio `1.25` y stock `50`. Luego lista el `name` de cada producto con más de 10 en stock, en orden alfabético."
+   },
+   "setup": "CREATE TABLE products (id INTEGER PRIMARY KEY, name TEXT, price REAL, stock INTEGER);\nINSERT INTO products VALUES (1, 'Notebook', 2.50, 100), (2, 'Headphones', 25.00, 0), (3, 'Pens', 4.00, 40), (4, 'Backpack', 30.00, 3);",
+   "starter": "-- Write your query here\n",
+   "solution": "INSERT INTO products VALUES (5, 'Ruler', 1.25, 50);\nSELECT name FROM products WHERE stock > 10 ORDER BY name;",
+   "ordered": true,
+   "hint": {
+    "en": "`INSERT INTO products VALUES (5, 'Ruler', 1.25, 50);` (text in single quotes), then a `SELECT ... WHERE stock > 10 ORDER BY name`.",
+    "es": "`INSERT INTO products VALUES (5, 'Ruler', 1.25, 50);` (texto entre comillas simples) y luego un `SELECT ... WHERE stock > 10 ORDER BY name`."
    }
   }
  ],
@@ -1619,6 +1699,58 @@
      "label": {
       "en": "an <img> with alt text",
       "es": "un <img> con texto alt"
+     }
+    }
+   ]
+  },
+  {
+   "id": "signup-form",
+   "lang": "html",
+   "title": {
+    "en": "A sign-up form",
+    "es": "Un formulario de registro"
+   },
+   "prompt": {
+    "en": "Build a `<form>` with a `<label for=\"email\">`, an `<input>` with `id=\"email\"` and `type=\"email\"`, and a `<button type=\"submit\">`.",
+    "es": "Construye un `<form>` con un `<label for=\"email\">`, un `<input>` con `id=\"email\"` y `type=\"email\"`, y un `<button type=\"submit\">`."
+   },
+   "starter": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>My page</title>\n</head>\n<body>\n  <h1>Join the club</h1>\n  <!-- your form goes here -->\n</body>\n</html>\n",
+   "solution": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>My page</title>\n</head>\n<body>\n  <h1>Join the club</h1>\n  <form>\n    <label for=\"email\">Email</label>\n    <input id=\"email\" type=\"email\" name=\"email\">\n    <button type=\"submit\">Sign up</button>\n  </form>\n</body>\n</html>\n",
+   "hint": {
+    "en": "The label's `for` must match the input's `id`, which connects them for screen readers and clicks.",
+    "es": "El `for` de la etiqueta debe coincidir con el `id` del input; así quedan conectados para lectores de pantalla y clics."
+   },
+   "checks": [
+    {
+     "sel": "form",
+     "count": 1,
+     "label": {
+      "en": "one <form>",
+      "es": "un <form>"
+     }
+    },
+    {
+     "sel": "form label[for='email']",
+     "min": 1,
+     "label": {
+      "en": "a <label for=\"email\"> in the form",
+      "es": "un <label for=\"email\"> en el formulario"
+     }
+    },
+    {
+     "sel": "form input#email[type='email']",
+     "count": 1,
+     "label": {
+      "en": "an email <input> with id=\"email\"",
+      "es": "un <input> de correo con id=\"email\""
+     }
+    },
+    {
+     "sel": "form button[type='submit']",
+     "min": 1,
+     "label": {
+      "en": "a submit button",
+      "es": "un botón de envío"
      }
     }
    ]
@@ -1731,6 +1863,59 @@
      }
     }
    ]
+  },
+  {
+   "id": "title-style",
+   "lang": "css",
+   "title": {
+    "en": "A big centered title",
+    "es": "Un título grande y centrado"
+   },
+   "prompt": {
+    "en": "Style `.title` with a `font-size` of 32px, centered text (`text-align`) and the color `#4f46e5`.",
+    "es": "Dale estilo a `.title` con un `font-size` de 32px, texto centrado (`text-align`) y el color `#4f46e5`."
+   },
+   "starter": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>My page</title>\n  <style>\n    /* your CSS here */\n  </style>\n</head>\n<body>\n  <h1 class=\"title\">Welcome</h1>\n</body>\n</html>\n",
+   "solution": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>My page</title>\n  <style>\n    .title { font-size: 32px; text-align: center; color: #4f46e5; }\n  </style>\n</head>\n<body>\n  <h1 class=\"title\">Welcome</h1>\n</body>\n</html>\n",
+   "hint": {
+    "en": "`.title { font-size: 32px; text-align: center; color: #4f46e5; }`",
+    "es": "`.title { font-size: 32px; text-align: center; color: #4f46e5; }`"
+   },
+   "checks": [
+    {
+     "sel": ".title",
+     "count": 1,
+     "style": {
+      "fontSize": "32px"
+     },
+     "label": {
+      "en": "font-size is 32px",
+      "es": "font-size es 32px"
+     }
+    },
+    {
+     "sel": ".title",
+     "count": 1,
+     "style": {
+      "textAlign": "center"
+     },
+     "label": {
+      "en": "text is centered",
+      "es": "el texto está centrado"
+     }
+    },
+    {
+     "sel": ".title",
+     "count": 1,
+     "style": {
+      "color": "rgb(79, 70, 229)"
+     },
+     "label": {
+      "en": "color is #4f46e5",
+      "es": "el color es #4f46e5"
+     }
+    }
+   ]
   }
  ],
  "web-javascript": [
@@ -1801,6 +1986,42 @@
      "[]"
     ]
    ]
+  },
+  {
+   "id": "count-words",
+   "lang": "js",
+   "title": {
+    "en": "Count the words",
+    "es": "Cuenta las palabras"
+   },
+   "prompt": {
+    "en": "Write `countWords(text)` that returns how many words a text has. Words are separated by one or more spaces, and spaces at the ends do not count.",
+    "es": "Escribe `countWords(text)` que devuelva cuántas palabras tiene un texto. Las palabras se separan con uno o más espacios, y los espacios de los extremos no cuentan."
+   },
+   "starter": "function countWords(text) {\n  // your code\n}\n",
+   "solution": "function countWords(text) {\n  const clean = text.trim();\n  return clean ? clean.split(/\\s+/).length : 0;\n}\n",
+   "hint": {
+    "en": "`text.trim()` first; an empty string has 0 words. Otherwise `split(/\\s+/)` splits on any run of spaces.",
+    "es": "Primero `text.trim()`; un texto vacío tiene 0 palabras. Si no, `split(/\\s+/)` separa por cualquier grupo de espacios."
+   },
+   "tests": [
+    [
+     "countWords('hello world')",
+     "2"
+    ],
+    [
+     "countWords('  lots   of   space  ')",
+     "3"
+    ],
+    [
+     "countWords('')",
+     "0"
+    ],
+    [
+     "countWords('   ')",
+     "0"
+    ]
+   ]
   }
  ],
  "web-project": [
@@ -1864,6 +2085,38 @@
     ],
     [
      "toggle([], 5)",
+     "[]"
+    ]
+   ]
+  },
+  {
+   "id": "search-items",
+   "lang": "js",
+   "title": {
+    "en": "Search a list",
+    "es": "Busca en una lista"
+   },
+   "prompt": {
+    "en": "Write `search(items, query)` that returns the items whose `name` contains `query`, ignoring upper/lower case. An empty query returns every item.",
+    "es": "Escribe `search(items, query)` que devuelva los elementos cuyo `name` contiene `query`, sin importar mayúsculas o minúsculas. Una búsqueda vacía devuelve todos los elementos."
+   },
+   "starter": "function search(items, query) {\n  // filter by name\n}\n",
+   "solution": "function search(items, query) {\n  const q = query.toLowerCase();\n  return items.filter((item) => item.name.toLowerCase().includes(q));\n}\n",
+   "hint": {
+    "en": "Lower-case both sides, then `items.filter((item) => item.name.toLowerCase().includes(q))`. Every text includes the empty string.",
+    "es": "Pasa ambos a minúsculas y luego `items.filter((item) => item.name.toLowerCase().includes(q))`. Todo texto incluye la cadena vacía."
+   },
+   "tests": [
+    [
+     "search([{name:'Red Pen'},{name:'Blue pen'},{name:'Ruler'}], 'PEN')",
+     "[{\"name\":\"Red Pen\"},{\"name\":\"Blue pen\"}]"
+    ],
+    [
+     "search([{name:'Ruler'}], '')",
+     "[{\"name\":\"Ruler\"}]"
+    ],
+    [
+     "search([{name:'Ruler'}], 'x')",
      "[]"
     ]
    ]
