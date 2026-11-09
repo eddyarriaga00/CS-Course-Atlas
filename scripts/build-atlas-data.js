@@ -104,6 +104,10 @@ for (const t of tracks.filter((x) => x.status === 'available')) {
   const part = {};
   for (const id of t.units.flatMap((u) => u.modules)) {
     part[id] = full[id];
+    // Each module also gets its own small file, so a module page downloads only that module.
+    const one = JSON.stringify(full[id]);
+    lessonFiles['m-' + id] = one;
+    modules[id].lessons = crypto.createHash('sha1').update(one).digest('hex').slice(0, 10);
     modules[id].counts = { examples: full[id].examples.sets.length + 1, terms: (full[id].definitions || []).length, quiz: (full[id].quiz || []).length, challenges: (full[id].challenges || []).length };
   }
   const json = JSON.stringify(part);
@@ -128,5 +132,5 @@ if (process.argv.includes('--check')) {
 fs.mkdirSync(lessonDir, { recursive: true });
 for (const f of fs.readdirSync(lessonDir)) if (!(path.join(lessonDir, f) in expected)) fs.unlinkSync(path.join(lessonDir, f));
 for (const [f, body] of Object.entries(expected)) fs.writeFileSync(f, body);
-console.log('wrote data/atlas-data.json:', Math.round(json.length / 1024), 'KB index;', Object.keys(lessonFiles).length, 'lesson files,',
+console.log('wrote data/atlas-data.json:', Math.round(json.length / 1024), 'KB index;', Object.keys(lessonFiles).length, 'lesson files (courses and single modules),',
   Math.round(Object.values(lessonFiles).reduce((n, b) => n + b.length, 0) / 1024), 'KB;', Object.keys(modules).length, 'modules,', Object.keys(full).length, 'with full lessons');
