@@ -908,3 +908,4 @@ pre[tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 
 .side-foot .link-btn:hover { color: var(--text); }
 .bk-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .ch-next { margin: 4px 0 18px; }
+.course-links button.chip-link { cursor: pointer; font: inherit; font-size: 13.5px; font-weight: 500; color: inherit; }
