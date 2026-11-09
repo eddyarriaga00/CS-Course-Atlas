@@ -844,3 +844,6 @@ a.path-step.planned .path-go { color: var(--text-3); font-weight: 500; }
 .q-timer b { position: relative; padding: 0 10px; font-size: 12px; font-variant-numeric: tabular-nums; color: var(--text-2); }
 .q-timer.low .q-timer-bar { background: color-mix(in srgb, var(--danger) 25%, transparent); }
 .q-timer.low b { color: var(--danger); }
+.page-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.page-head h1 { margin-bottom: 0; }
+.page-head + .lead { margin-top: 10px; }

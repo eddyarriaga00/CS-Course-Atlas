@@ -149,6 +149,16 @@ test.describe('Navigation', () => {
         await expect(page.locator('#q-timer b')).toHaveText(/^(29|30)$/);
     });
 
+    test('a shared playground link opens the same code', async ({ page }) => {
+        await mockApi(page);
+        const code = 'name = "José 🎉"\nprint(name)\n';
+        const enc = Buffer.from(code, 'utf8').toString('base64').replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+        await page.goto('/index.html#code/python/' + enc);
+        await expect(page).toHaveURL(/#playground$/);
+        await expect(page.locator('#pg-code')).toHaveValue(code);
+        await expect(page.locator('[data-action="pg-lang"][aria-pressed="true"]')).toHaveText('Python');
+    });
+
     test('mixed review quizzes across completed modules', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html#m-python-first-programs');
