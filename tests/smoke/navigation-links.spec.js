@@ -204,7 +204,7 @@ test.describe('Navigation', () => {
         await mockApi(page);
         await page.goto('/index.html#m-python-collections');
         await page.locator('.tab[data-tab="challenges"]').click();
-        await expect(page.locator('.challenge')).toHaveCount(2);
+        await expect(page.locator('.challenge')).toHaveCount(4);
         await page.locator('#ch-code-0').fill('def word_counts(text):\n    return {}\n');
         await page.reload();
         await page.locator('.tab[data-tab="challenges"]').click();
