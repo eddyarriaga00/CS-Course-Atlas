@@ -760,3 +760,8 @@ a.path-step.planned .path-go { color: var(--text-3); font-weight: 500; }
 .ch-course { padding: 16px; }
 .ch-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 8px; font-size: 14px; color: var(--text-2); }
 .ch-row:hover { background: var(--surface-2); color: var(--text); }
+.ch-tables { margin: -4px 0 12px; font-size: 14px; }
+.ch-tables summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+.ch-tables pre { margin-top: 8px; white-space: pre-wrap; }
+.ch-compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 12px; margin-top: 8px; font-size: 13px; }
+.ch-compare pre { white-space: pre; overflow-x: auto; }
