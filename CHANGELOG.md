@@ -12,6 +12,13 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Course certificates (every module done, every quiz ≥ 60%), printable or saved as PDF.
 - Home: a daily challenge, due-card reminder and challenge count; new achievements.
 
+### Review and practice, later the same night
+- Java predict-the-output challenges (39): read a short program, type what it prints; every answer is proven by compiling and running it (CI sets up Java 21).
+- A third challenge for most beginner modules and four per Python module: 159 verified challenges in total.
+- Course cheat sheets (printable), whole-course review quizzes and term decks, retry-missed-questions rounds, a daily challenge, a next-challenge button, progress backup/restore, a keyboard-shortcuts dialog and Ctrl/Cmd+Enter to check a challenge.
+- Accessibility: zero axe violations in light/dark mode (contrast, heading order, ARIA, focusable scroll regions); the logo is a real home link, so Lighthouse accessibility is 100.
+- Performance: module pages paint their header from the index before the lessons arrive (live Lighthouse 94 → 97–99).
+
 ### Site
 - Installable and offline-ready: service worker caching the app, opened lessons and the Python/SQL runtimes; real manifest icons.
 - Skip-to-content link; search covers challenges and pages (and opens the right tab); notes download as Markdown.

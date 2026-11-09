@@ -178,9 +178,12 @@ Every example's output on the site is real, recorded by `scripts/run_course_exam
 - **Step-through visualizer** for Python: run any program line by line and watch each variable and call frame change (Playground → Step through, or straight from a Python example).
 - **Practice**: per-module quizzes with a best-score board and an optional 30-second timer, mixed review across completed modules, and flashcards with **spaced repetition** (cards come back after 1, 3, 7, 16 and 35 days in a *Due for review* deck).
 - **Course certificates**: finish every module and pass every quiz (60%+) to unlock a certificate you can print or save as PDF.
+- **Review tools**: a printable cheat sheet per course (key ideas, mistakes and terms), a whole-course review quiz and all-terms deck, retrying only the quiz questions you missed, and a daily challenge on the home page.
+- **Your data**: back up progress to a JSON file and restore it (merged, never overwriting), with or without an account.
 - **Study plan** for one course or the whole beginner path, exportable to a calendar.
 - **Glossary**, per-module notes (downloadable as Markdown), search over courses, modules, terms, challenges and pages (Ctrl/⌘ K), dark mode and a phone layout.
 - **Shareable playground links** that carry the code in the URL.
+- **Keyboard shortcuts** everywhere (press `?` for the list), and an accessibility pass with zero axe violations in light and dark mode.
 - **Installable and offline-ready**: a service worker (`sw.js`) caches the app, the lessons you open and the Python/SQL runtimes.
 - **Accounts** (email or Google) that sync progress, notes, quiz scores, flashcard reviews and certificates across devices.
 
