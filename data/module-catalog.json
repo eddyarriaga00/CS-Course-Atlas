@@ -5,6 +5,7 @@
   "web",
   "sql",
   "how-computers-work",
+  "cybersecurity",
   "java",
   "discrete",
   "git"
@@ -51,6 +52,10 @@
   "hcw-data",
   "hcw-hardware",
   "hcw-software",
+  "sec-passwords",
+  "sec-crypto",
+  "sec-attacks",
+  "sec-defense",
   "heaps",
   "tries",
   "discrete-graph-theory",
@@ -141,7 +146,11 @@
   "hcw-binary": "how-computers-work",
   "hcw-data": "how-computers-work",
   "hcw-hardware": "how-computers-work",
-  "hcw-software": "how-computers-work"
+  "hcw-software": "how-computers-work",
+  "sec-passwords": "cybersecurity",
+  "sec-crypto": "cybersecurity",
+  "sec-attacks": "cybersecurity",
+  "sec-defense": "cybersecurity"
  },
  "modules": [
   {
@@ -1257,6 +1266,74 @@
    "es": {
     "title": "Del código al programa en ejecución",
     "description": "Qué pasa entre pulsar Ejecutar y ver la salida: compiladores e intérpretes, el sistema operativo, procesos y memoria, archivos y sistemas de archivos, y cómo viajan los datos por internet."
+   }
+  },
+  {
+   "id": "sec-passwords",
+   "title": "Passwords and Authentication",
+   "description": "How websites should store passwords (hashing and salting), what makes a password strong, why two-factor login stops most account takeovers, and how password managers help.",
+   "difficulty": "beginner",
+   "topics": [
+    "Hashing Passwords",
+    "Salting",
+    "Password Strength",
+    "Multi-Factor Authentication",
+    "Password Managers"
+   ],
+   "es": {
+    "title": "Contraseñas y autenticación",
+    "description": "Cómo deberían guardar los sitios web las contraseñas (hash y sal), qué hace fuerte a una contraseña, por qué el inicio de sesión en dos pasos frena la mayoría de los robos de cuentas y cómo ayudan los gestores de contraseñas."
+   }
+  },
+  {
+   "id": "sec-crypto",
+   "title": "Encryption Basics",
+   "description": "How secrets are kept: classic ciphers and how they are broken, modern symmetric encryption, public-key cryptography, digital signatures, and what the padlock in your browser (HTTPS) really protects.",
+   "difficulty": "beginner",
+   "topics": [
+    "Classical Ciphers",
+    "Symmetric Encryption",
+    "Public-Key Cryptography",
+    "Digital Signatures",
+    "HTTPS and TLS"
+   ],
+   "es": {
+    "title": "Fundamentos de cifrado",
+    "description": "Cómo se guardan los secretos: cifrados clásicos y cómo se rompen, cifrado simétrico moderno, criptografía de clave pública, firmas digitales y qué protege realmente el candado de tu navegador (HTTPS)."
+   }
+  },
+  {
+   "id": "sec-attacks",
+   "title": "How Attacks Work",
+   "description": "The attacks behind most real incidents, and the defense for each: phishing and social engineering, malware, SQL injection, cross-site scripting, and brute-force login attempts.",
+   "difficulty": "beginner",
+   "topics": [
+    "Phishing and Social Engineering",
+    "Malware",
+    "SQL Injection",
+    "Cross-Site Scripting",
+    "Brute Force and Rate Limiting"
+   ],
+   "es": {
+    "title": "Cómo funcionan los ataques",
+    "description": "Los ataques detrás de la mayoría de los incidentes reales y la defensa para cada uno: phishing e ingeniería social, malware, inyección SQL, cross-site scripting e intentos de inicio de sesión por fuerza bruta."
+   }
+  },
+  {
+   "id": "sec-defense",
+   "title": "Staying Safe and Building Safely",
+   "description": "The habits that prevent most incidents: least privilege, validating input, keeping software updated, backups that actually restore, and protecting people's personal data.",
+   "difficulty": "beginner",
+   "topics": [
+    "Least Privilege",
+    "Validating Input",
+    "Updates and Patching",
+    "Backups",
+    "Privacy and Personal Data"
+   ],
+   "es": {
+    "title": "Mantenerse seguro y programar con seguridad",
+    "description": "Los hábitos que evitan la mayoría de los incidentes: mínimo privilegio, validar los datos de entrada, mantener el software actualizado, respaldos que de verdad se restauran y proteger los datos personales de la gente."
    }
   }
  ]

@@ -63,6 +63,12 @@
    "type": "playlist",
    "title": "Computer Science",
    "channel": "CrashCourse"
+  },
+  "cybersecurity": {
+   "id": "PLOspHqNVtKADkWLFt9OcziQF7EatuANSY",
+   "type": "playlist",
+   "title": "Cybersecurity Architecture Series",
+   "channel": "IBM Technology"
   }
  },
  "modules": {
@@ -2022,6 +2028,186 @@
      "title": "The Internet: Packets, Routing & Reliability",
      "channel": "CodeAI",
      "length": "6:26"
+    }
+   }
+  },
+  "sec-passwords": {
+   "series": {
+    "id": "PLOspHqNVtKADkWLFt9OcziQF7EatuANSY",
+    "type": "playlist",
+    "title": "Cybersecurity Architecture Series",
+    "channel": "IBM Technology"
+   },
+   "topics": {
+    "Hashing Passwords": {
+     "id": "8ZtInClXe1Q",
+     "type": "video",
+     "title": "How NOT to Store Passwords! - Computerphile",
+     "channel": "Computerphile",
+     "length": "9:24"
+    },
+    "Salting": {
+     "id": "FvstbO787Qo",
+     "type": "video",
+     "title": "Salting, peppering, and hashing passwords",
+     "channel": "mCoding",
+     "length": "8:56"
+    },
+    "Password Strength": {
+     "id": "xUp5S0nBnfc",
+     "type": "video",
+     "title": "How to make passwords more secure",
+     "channel": "IBM Technology",
+     "length": "2:56"
+    },
+    "Multi-Factor Authentication": {
+     "id": "jxxtVzVLm3c",
+     "type": "video",
+     "title": "How TOTP  (Time-based One-time Password Algorithm) Works for 2 Factor Authentication",
+     "channel": "Lawrence Systems",
+     "length": "10:12"
+    },
+    "Password Managers": {
+     "id": "w68BBPDAWr8",
+     "type": "video",
+     "title": "How Password Managers Work - Computerphile",
+     "channel": "Computerphile",
+     "length": "12:09"
+    }
+   }
+  },
+  "sec-crypto": {
+   "series": {
+    "id": "PLOspHqNVtKADkWLFt9OcziQF7EatuANSY",
+    "type": "playlist",
+    "title": "Cybersecurity Architecture Series",
+    "channel": "IBM Technology"
+   },
+   "topics": {
+    "Classical Ciphers": {
+     "id": "sMOZf4GN3oc",
+     "type": "video",
+     "title": "The Caesar cipher | Journey into cryptography | Computer Science | Khan Academy",
+     "channel": "Khan Academy",
+     "length": "2:36"
+    },
+    "Symmetric Encryption": {
+     "id": "O4xNJsjtN6E",
+     "type": "video",
+     "title": "AES Explained (Advanced Encryption Standard) - Computerphile",
+     "channel": "Computerphile",
+     "length": "14:14"
+    },
+    "Public-Key Cryptography": {
+     "id": "GSIDS_lvRv4",
+     "type": "video",
+     "title": "Public Key Cryptography - Computerphile",
+     "channel": "Computerphile",
+     "length": "6:20"
+    },
+    "Digital Signatures": {
+     "id": "s22eJ1eVLTU",
+     "type": "video",
+     "title": "What are Digital Signatures? - Computerphile",
+     "channel": "Computerphile",
+     "length": "10:17"
+    },
+    "HTTPS and TLS": {
+     "id": "j9QmMEWmcfo",
+     "type": "video",
+     "title": "SSL, TLS, HTTPS Explained",
+     "channel": "ByteByteGo",
+     "length": "5:54"
+    }
+   }
+  },
+  "sec-attacks": {
+   "series": {
+    "id": "PLOspHqNVtKADkWLFt9OcziQF7EatuANSY",
+    "type": "playlist",
+    "title": "Cybersecurity Architecture Series",
+    "channel": "IBM Technology"
+   },
+   "topics": {
+    "Phishing and Social Engineering": {
+     "id": "o0btqyGWIQw",
+     "type": "video",
+     "title": "Spot Phishing Emails | Here is how",
+     "channel": "GRC Solutions",
+     "length": "2:18"
+    },
+    "Malware": {
+     "id": "fkchAkdC-TQ",
+     "type": "video",
+     "title": "What is Malware? Types of Malware and What To Look For",
+     "channel": "Eye on Tech",
+     "length": "3:06"
+    },
+    "SQL Injection": {
+     "id": "_jKylhJtPmI",
+     "type": "video",
+     "title": "Hacking Websites with SQL Injection - Computerphile",
+     "channel": "Computerphile",
+     "length": "8:59"
+    },
+    "Cross-Site Scripting": {
+     "id": "EoaDgUgS6QA",
+     "type": "video",
+     "title": "Cross-Site Scripting (XSS) Explained",
+     "channel": "PwnFunction",
+     "length": "11:27"
+    },
+    "Brute Force and Rate Limiting": {
+     "id": "4FGJcP6hp0k",
+     "type": "video",
+     "title": "Brute Force vs. Password Spraying vs. Credential Stuffing Explained",
+     "channel": "BadRoot99",
+     "length": "5:20"
+    }
+   }
+  },
+  "sec-defense": {
+   "series": {
+    "id": "PLOspHqNVtKADkWLFt9OcziQF7EatuANSY",
+    "type": "playlist",
+    "title": "Cybersecurity Architecture Series",
+    "channel": "IBM Technology"
+   },
+   "topics": {
+    "Least Privilege": {
+     "id": "8GZ6516Kao4",
+     "type": "video",
+     "title": "What is the Principle of Least Privilege?",
+     "channel": "Google Cloud Tech",
+     "length": "7:34"
+    },
+    "Validating Input": {
+     "id": "XZRnzhYttRk",
+     "type": "video",
+     "title": "Secure Coding Practices: The Art of Input Validation",
+     "channel": "TechInFive",
+     "length": "5:00"
+    },
+    "Updates and Patching": {
+     "id": "6yeHa7wXqII",
+     "type": "video",
+     "title": "Why Software Updates are important",
+     "channel": "Dr. Nichelle Dionne",
+     "length": "3:13"
+    },
+    "Backups": {
+     "id": "rFO6NyLIP7M",
+     "type": "video",
+     "title": "Data Backup: The 3-2-1 Rule",
+     "channel": "ExplainingComputers",
+     "length": "6:16"
+    },
+    "Privacy and Personal Data": {
+     "id": "YJInlE99vSs",
+     "type": "video",
+     "title": "Data protection explained in three minutes",
+     "channel": "Information Commission's Office (ICO)",
+     "length": "2:54"
     }
    }
   }

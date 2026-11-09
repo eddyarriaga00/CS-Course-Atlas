@@ -458,6 +458,48 @@ window.COURSE_CURRICULUM = {
           "hcw-software"
         ]
       }
+    ],
+    "cybersecurity": [
+      {
+        "id": "sec-accounts",
+        "title": {
+          "en": "Protecting Accounts",
+          "es": "Proteger las cuentas"
+        },
+        "modules": [
+          "sec-passwords"
+        ]
+      },
+      {
+        "id": "sec-cryptography",
+        "title": {
+          "en": "Cryptography",
+          "es": "Criptografía"
+        },
+        "modules": [
+          "sec-crypto"
+        ]
+      },
+      {
+        "id": "sec-threats",
+        "title": {
+          "en": "Understanding Attacks",
+          "es": "Entender los ataques"
+        },
+        "modules": [
+          "sec-attacks"
+        ]
+      },
+      {
+        "id": "sec-practice",
+        "title": {
+          "en": "Defending in Practice",
+          "es": "Defender en la práctica"
+        },
+        "modules": [
+          "sec-defense"
+        ]
+      }
     ]
   },
   "modules": {
@@ -19339,6 +19381,1172 @@ window.COURSE_CURRICULUM = {
           "explanation": {
             "en": "TCP numbers every packet, reorders them on arrival and asks again for any that were lost.",
             "es": "TCP numera cada paquete, los reordena al llegar y vuelve a pedir los que se perdieron."
+          }
+        }
+      ]
+    },
+    "sec-passwords": {
+      "minutes": 75,
+      "prerequisites": [
+        "python-functions"
+      ],
+      "whyItMatters": {
+        "en": "Stolen and reused passwords are behind most account break-ins, and every app you build that has a login is responsible for protecting its users' passwords. The good news is that the right techniques are well known and not hard: never store passwords, store slow salted hashes; encourage long passphrases; add a second factor. Knowing why each step matters protects you as a user too, and it is the first thing a security-minded developer is expected to get right.",
+        "es": "Las contraseñas robadas y reutilizadas están detrás de la mayoría de los accesos indebidos a cuentas, y cada app con inicio de sesión que construyas es responsable de proteger las contraseñas de sus usuarios. La buena noticia es que las técnicas correctas son conocidas y no son difíciles: nunca guardes contraseñas, guarda hashes lentos con sal; fomenta frases largas; agrega un segundo factor. Saber por qué importa cada paso también te protege como usuario, y es lo primero que se espera que haga bien un desarrollador con mentalidad de seguridad."
+      },
+      "objectives": {
+        "en": [
+          "Explain what a cryptographic hash is and why sites store password hashes instead of passwords.",
+          "Explain how a salt defeats precomputed (rainbow) tables and why password hashing must be slow.",
+          "Estimate password strength from length and character set, and explain why length beats complexity.",
+          "Describe the three kinds of authentication factor and how one-time codes (TOTP) work.",
+          "Explain how password managers and unique passwords limit the damage of a data breach."
+        ],
+        "es": [
+          "Explicar qué es un hash criptográfico y por qué los sitios guardan hashes de contraseñas en lugar de contraseñas.",
+          "Explicar cómo una sal derrota las tablas precalculadas (rainbow) y por qué el hash de contraseñas debe ser lento.",
+          "Estimar la fortaleza de una contraseña según su longitud y su conjunto de caracteres, y explicar por qué la longitud le gana a la complejidad.",
+          "Describir los tres tipos de factor de autenticación y cómo funcionan los códigos de un solo uso (TOTP).",
+          "Explicar cómo los gestores de contraseñas y las contraseñas únicas limitan el daño de una filtración de datos."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Python functions, strings and loops (Python course)"
+        ],
+        "es": [
+          "Funciones, cadenas y ciclos de Python (curso de Python)"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "A hash is a one-way fingerprint: the same input always gives the same hash, but you cannot run it backwards.",
+          "Store `slow_hash(salt + password)` with a unique random salt per user, using an algorithm built for passwords (bcrypt, scrypt, Argon2, PBKDF2).",
+          "Every extra character multiplies the number of guesses; a long passphrase of random words beats a short \"complex\" password.",
+          "A second factor (a code or security key) means a stolen password alone is not enough to get in."
+        ],
+        "es": [
+          "Un hash es una huella de un solo sentido: la misma entrada siempre da el mismo hash, pero no se puede revertir.",
+          "Guarda `hash_lento(sal + contraseña)` con una sal aleatoria única por usuario, usando un algoritmo hecho para contraseñas (bcrypt, scrypt, Argon2, PBKDF2).",
+          "Cada carácter extra multiplica la cantidad de intentos; una frase larga de palabras al azar le gana a una contraseña corta \"compleja\".",
+          "Un segundo factor (un código o una llave de seguridad) significa que una contraseña robada no basta para entrar."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Storing passwords in plain text or with reversible encryption: one breach exposes every user.",
+          "Using a fast hash like plain SHA-256 or MD5 for passwords: attackers can try billions per second.",
+          "Using the same salt for everyone, or no salt: identical passwords get identical hashes and precomputed tables work again.",
+          "Reusing one password on many sites: a breach anywhere unlocks your accounts everywhere (credential stuffing)."
+        ],
+        "es": [
+          "Guardar contraseñas en texto plano o con cifrado reversible: una filtración expone a todos los usuarios.",
+          "Usar un hash rápido como SHA-256 simple o MD5 para contraseñas: los atacantes pueden probar miles de millones por segundo.",
+          "Usar la misma sal para todos, o ninguna: contraseñas iguales dan hashes iguales y las tablas precalculadas vuelven a funcionar.",
+          "Reutilizar una contraseña en muchos sitios: una filtración en cualquier lado abre tus cuentas en todos (relleno de credenciales)."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: hash \"hello\" and \"Hello\" with SHA-256 and count how many hex characters differ.",
+          "Core: write `register(username, password)` and `login(username, password)` that store a random salt and a PBKDF2 hash per user and check logins correctly.",
+          "Core: write `strength(password)` that estimates guesses from length and character types, and rate five passwords of your choice.",
+          "Stretch: implement TOTP from the example as a function and check that two codes 30 seconds apart differ while the same window repeats."
+        ],
+        "es": [
+          "Calentamiento: calcula el hash SHA-256 de \"hello\" y \"Hello\" y cuenta cuántos caracteres hex son distintos.",
+          "Núcleo: escribe `register(usuario, contraseña)` y `login(usuario, contraseña)` que guarden una sal aleatoria y un hash PBKDF2 por usuario y comprueben bien los inicios de sesión.",
+          "Núcleo: escribe `strength(contraseña)` que estime los intentos a partir de la longitud y los tipos de caracteres, y califica cinco contraseñas que elijas.",
+          "Extensión: implementa el TOTP del ejemplo como función y comprueba que dos códigos separados por 30 segundos son distintos mientras que la misma ventana se repite."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "If a site can email you your current password, what does that tell you about how it stores passwords?",
+          "Why does a unique salt per user make cracking a whole database much slower?",
+          "Name one factor from each category: something you know, something you have, something you are."
+        ],
+        "es": [
+          "Si un sitio puede enviarte por correo tu contraseña actual, ¿qué te dice eso sobre cómo guarda las contraseñas?",
+          "¿Por qué una sal única por usuario hace mucho más lento descifrar toda una base de datos?",
+          "Nombra un factor de cada categoría: algo que sabes, algo que tienes, algo que eres."
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Hashing Passwords",
+            "es": "Hash de contraseñas"
+          },
+          "definition": {
+            "en": "A cryptographic hash function turns any input into a fixed-size fingerprint; it is deterministic, fast to compute and practically impossible to reverse or to find two inputs with the same hash. Sites store the hash of your password and compare hashes at login.",
+            "es": "Una función hash criptográfica convierte cualquier entrada en una huella de tamaño fijo; es determinista, rápida de calcular y prácticamente imposible de revertir o de encontrar dos entradas con el mismo hash. Los sitios guardan el hash de tu contraseña y comparan hashes al iniciar sesión."
+          }
+        },
+        {
+          "term": {
+            "en": "Salting",
+            "es": "Sal"
+          },
+          "definition": {
+            "en": "A salt is a random value, unique per user, mixed into the password before hashing and stored next to the hash. It makes identical passwords hash differently and forces attackers to crack each account separately. Password hashes should also be deliberately slow (many rounds).",
+            "es": "Una sal es un valor aleatorio, único por usuario, que se mezcla con la contraseña antes de calcular el hash y se guarda junto al hash. Hace que contraseñas iguales den hashes distintos y obliga a los atacantes a descifrar cada cuenta por separado. Los hashes de contraseñas también deben ser lentos a propósito (muchas rondas)."
+          }
+        },
+        {
+          "term": {
+            "en": "Password Strength",
+            "es": "Fortaleza de contraseñas"
+          },
+          "definition": {
+            "en": "How many guesses an attacker needs. It grows as (number of possible characters) ^ (length), so length matters most. Predictable choices, dictionary words with substitutions or leaked passwords, are weak no matter how they look.",
+            "es": "Cuántos intentos necesita un atacante. Crece como (cantidad de caracteres posibles) ^ (longitud), así que la longitud es lo que más importa. Las elecciones predecibles, palabras del diccionario con sustituciones o contraseñas filtradas, son débiles aunque parezcan fuertes."
+          }
+        },
+        {
+          "term": {
+            "en": "Multi-Factor Authentication",
+            "es": "Autenticación multifactor"
+          },
+          "definition": {
+            "en": "Requiring two or more different kinds of proof: something you know (password), something you have (phone, security key) and something you are (fingerprint). Authenticator apps generate time-based one-time passwords (TOTP) from a shared secret and the current time.",
+            "es": "Exigir dos o más tipos distintos de prueba: algo que sabes (contraseña), algo que tienes (teléfono, llave de seguridad) y algo que eres (huella digital). Las apps autenticadoras generan contraseñas de un solo uso basadas en el tiempo (TOTP) a partir de un secreto compartido y la hora actual."
+          }
+        },
+        {
+          "term": {
+            "en": "Password Managers",
+            "es": "Gestores de contraseñas"
+          },
+          "definition": {
+            "en": "Apps that generate a long random password for every site and store them in an encrypted vault unlocked by one strong master password. They make unique passwords practical and can refuse to fill in passwords on look-alike phishing sites.",
+            "es": "Apps que generan una contraseña larga y aleatoria para cada sitio y las guardan en una bóveda cifrada que se abre con una contraseña maestra fuerte. Hacen práctico usar contraseñas únicas y pueden negarse a llenar contraseñas en sitios de phishing que imitan a los reales."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "OWASP Password Storage Cheat Sheet",
+            "es": "OWASP: guía para guardar contraseñas"
+          },
+          "url": "https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html"
+        },
+        {
+          "label": {
+            "en": "NIST SP 800-63B: Digital Identity Guidelines",
+            "es": "NIST SP 800-63B: pautas de identidad digital"
+          },
+          "url": "https://pages.nist.gov/800-63-3/sp800-63b.html"
+        },
+        {
+          "label": {
+            "en": "Have I Been Pwned: check if your email was in a breach",
+            "es": "Have I Been Pwned: revisa si tu correo estuvo en una filtración"
+          },
+          "url": "https://haveibeenpwned.com/"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Why do sites store password hashes instead of the passwords?",
+            "es": "¿Por qué los sitios guardan hashes de contraseñas en lugar de las contraseñas?"
+          },
+          "options": {
+            "en": [
+              "Hashes are shorter",
+              "If the database leaks, attackers do not directly get the passwords",
+              "Hashes load faster",
+              "The law requires hex"
+            ],
+            "es": [
+              "Los hashes son más cortos",
+              "Si la base de datos se filtra, los atacantes no obtienen directamente las contraseñas",
+              "Los hashes cargan más rápido",
+              "La ley exige hex"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "A hash cannot be reversed, so a stolen database does not reveal passwords directly; attackers must guess each one.",
+            "es": "Un hash no se puede revertir, así que una base de datos robada no revela las contraseñas directamente; los atacantes deben adivinar cada una."
+          }
+        },
+        {
+          "question": {
+            "en": "What does a salt protect against?",
+            "es": "¿Contra qué protege una sal?"
+          },
+          "options": {
+            "en": [
+              "Phishing",
+              "Precomputed tables and spotting users with the same password",
+              "Forgetting your password",
+              "Slow logins"
+            ],
+            "es": [
+              "Phishing",
+              "Tablas precalculadas y detectar usuarios con la misma contraseña",
+              "Olvidar tu contraseña",
+              "Inicios de sesión lentos"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "With a unique salt, the same password hashes differently for every user, so one table or one guess cannot crack many accounts at once.",
+            "es": "Con una sal única, la misma contraseña da un hash distinto para cada usuario, así que una tabla o un intento no puede descifrar muchas cuentas a la vez."
+          }
+        },
+        {
+          "question": {
+            "en": "Which password is strongest against guessing?",
+            "es": "¿Qué contraseña es más fuerte contra intentos de adivinarla?"
+          },
+          "options": {
+            "en": [
+              "P@ssw0rd!",
+              "Tr0ub4dor&3",
+              "correct horse battery staple",
+              "Summer2026"
+            ],
+            "es": [
+              "P@ssw0rd!",
+              "Tr0ub4dor&3",
+              "correct horse battery staple",
+              "Summer2026"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Four random words make a long password with far more combinations; the others are short or follow patterns attackers try first.",
+            "es": "Cuatro palabras al azar forman una contraseña larga con muchas más combinaciones; las otras son cortas o siguen patrones que los atacantes prueban primero."
+          }
+        },
+        {
+          "question": {
+            "en": "A code from an authenticator app is which factor?",
+            "es": "Un código de una app autenticadora es ¿qué factor?"
+          },
+          "options": {
+            "en": [
+              "Something you know",
+              "Something you have",
+              "Something you are",
+              "Not a factor"
+            ],
+            "es": [
+              "Algo que sabes",
+              "Algo que tienes",
+              "Algo que eres",
+              "No es un factor"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The code proves you have the device holding the secret, a different factor from the password you know.",
+            "es": "El código demuestra que tienes el dispositivo que guarda el secreto, un factor distinto de la contraseña que sabes."
+          }
+        },
+        {
+          "question": {
+            "en": "Why is password hashing designed to be slow?",
+            "es": "¿Por qué el hash de contraseñas está diseñado para ser lento?"
+          },
+          "options": {
+            "en": [
+              "To save energy",
+              "So each guess costs attackers time, while one login check is still quick",
+              "Because computers are slow",
+              "It is not; fast is better"
+            ],
+            "es": [
+              "Para ahorrar energía",
+              "Para que cada intento le cueste tiempo al atacante, mientras una comprobación de inicio de sesión sigue siendo rápida",
+              "Porque las computadoras son lentas",
+              "No lo está; rápido es mejor"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "A user logs in once and barely notices 0.1 s; an attacker making billions of guesses is slowed down enormously.",
+            "es": "Un usuario inicia sesión una vez y apenas nota 0.1 s; un atacante que hace miles de millones de intentos se frena enormemente."
+          }
+        }
+      ]
+    },
+    "sec-crypto": {
+      "minutes": 90,
+      "prerequisites": [
+        "sec-passwords"
+      ],
+      "whyItMatters": {
+        "en": "Every message you send, every card payment and every login travels across networks owned by strangers. Encryption is what keeps it private and tamper-proof, and it rests on a few ideas you can understand and even run yourself: shared-key ciphers, public and private key pairs, and signatures. Knowing how they fit together lets you use them correctly, and recognize the classic mistakes, like inventing your own cipher, that turn strong math into weak security.",
+        "es": "Cada mensaje que envías, cada pago con tarjeta y cada inicio de sesión viaja por redes que son de desconocidos. El cifrado es lo que lo mantiene privado y a prueba de alteraciones, y se basa en unas pocas ideas que puedes entender y hasta ejecutar tú mismo: cifrados con clave compartida, pares de claves pública y privada, y firmas. Saber cómo encajan te permite usarlas bien y reconocer los errores clásicos, como inventar tu propio cifrado, que convierten matemáticas fuertes en seguridad débil."
+      },
+      "objectives": {
+        "en": [
+          "Encrypt and decrypt with a Caesar cipher and break it with brute force and letter frequencies.",
+          "Explain symmetric encryption, why the key must stay secret, and why real systems use AES rather than homemade ciphers.",
+          "Explain public-key cryptography with a small RSA example: anyone can encrypt, only the key owner can decrypt.",
+          "Explain how a digital signature proves who wrote a message and that it was not changed.",
+          "Describe what HTTPS/TLS protects, how a key exchange creates a shared secret, and what it does not protect."
+        ],
+        "es": [
+          "Cifrar y descifrar con un cifrado César y romperlo con fuerza bruta y frecuencias de letras.",
+          "Explicar el cifrado simétrico, por qué la clave debe seguir siendo secreta y por qué los sistemas reales usan AES en lugar de cifrados caseros.",
+          "Explicar la criptografía de clave pública con un pequeño ejemplo RSA: cualquiera puede cifrar, solo el dueño de la clave puede descifrar.",
+          "Explicar cómo una firma digital demuestra quién escribió un mensaje y que no fue cambiado.",
+          "Describir qué protege HTTPS/TLS, cómo un intercambio de claves crea un secreto compartido y qué no protege."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Hashing from module 1",
+          "Python loops, strings and the % operator"
+        ],
+        "es": [
+          "El hash del módulo 1",
+          "Ciclos, cadenas y el operador % de Python"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Security must rest on the secrecy of the key, never of the method (Kerckhoffs's principle).",
+          "Symmetric encryption uses one shared key for both directions; it is fast, but the key must be shared safely first.",
+          "Public-key cryptography uses a pair: the public key locks (or verifies), the private key unlocks (or signs).",
+          "HTTPS combines all three: a key exchange, certificates signed by trusted authorities, and fast symmetric encryption for the data."
+        ],
+        "es": [
+          "La seguridad debe depender del secreto de la clave, nunca del método (principio de Kerckhoffs).",
+          "El cifrado simétrico usa una sola clave compartida en ambas direcciones; es rápido, pero primero hay que compartir la clave de forma segura.",
+          "La criptografía de clave pública usa un par: la clave pública cierra (o verifica), la privada abre (o firma).",
+          "HTTPS combina las tres cosas: un intercambio de claves, certificados firmados por autoridades de confianza y cifrado simétrico rápido para los datos."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Inventing your own cipher or \"encrypting\" with base64: base64 is an encoding anyone can reverse, not encryption.",
+          "Reusing the same key stream for two messages: XOR-ing the ciphertexts cancels the key and leaks both messages.",
+          "Thinking the padlock means a site is trustworthy: HTTPS protects the connection, not the honesty of whoever runs the site.",
+          "Using the toy RSA numbers from examples in real code: real keys are 2048+ bits and need padding; always use a vetted library."
+        ],
+        "es": [
+          "Inventar tu propio cifrado o \"cifrar\" con base64: base64 es una codificación que cualquiera puede revertir, no un cifrado.",
+          "Reutilizar el mismo flujo de clave para dos mensajes: aplicar XOR a los textos cifrados cancela la clave y filtra ambos mensajes.",
+          "Pensar que el candado significa que un sitio es confiable: HTTPS protege la conexión, no la honestidad de quien maneja el sitio.",
+          "Usar los números RSA de juguete de los ejemplos en código real: las claves reales tienen 2048+ bits y necesitan relleno; usa siempre una biblioteca revisada."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: encrypt your name with a Caesar shift of 7, then decrypt it with a shift of −7.",
+          "Core: write a function that tries all 26 shifts on a ciphertext and picks the one whose result contains the most common English words.",
+          "Core: with p = 17, q = 23 and e = 3, compute n, φ and d like the RSA example, then encrypt and decrypt the number 42.",
+          "Stretch: sign the message \"pay 10\" with the toy RSA key, change it to \"pay 99\", and show that verification fails."
+        ],
+        "es": [
+          "Calentamiento: cifra tu nombre con un desplazamiento César de 7 y luego descífralo con un desplazamiento de −7.",
+          "Núcleo: escribe una función que pruebe los 26 desplazamientos sobre un texto cifrado y elija aquel cuyo resultado tenga más palabras comunes del inglés.",
+          "Núcleo: con p = 17, q = 23 y e = 3, calcula n, φ y d como en el ejemplo RSA, y luego cifra y descifra el número 42.",
+          "Extensión: firma el mensaje \"pay 10\" con la clave RSA de juguete, cámbialo a \"pay 99\" y muestra que la verificación falla."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why can the Caesar cipher be broken in seconds, even without knowing the key?",
+          "If Ana wants to send Ben a secret, whose public key does she use, and who can read it?",
+          "What does the padlock icon guarantee, and what does it not guarantee?"
+        ],
+        "es": [
+          "¿Por qué el cifrado César se puede romper en segundos, incluso sin conocer la clave?",
+          "Si Ana quiere enviarle un secreto a Ben, ¿la clave pública de quién usa, y quién puede leerlo?",
+          "¿Qué garantiza el ícono del candado y qué no garantiza?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Classical Ciphers",
+            "es": "Cifrados clásicos"
+          },
+          "definition": {
+            "en": "Historic ciphers such as Caesar (shift every letter) and substitution ciphers. With few possible keys or letter patterns preserved, they fall to brute force (trying every key) or frequency analysis (E is the most common English letter).",
+            "es": "Cifrados históricos como el César (desplazar cada letra) y los de sustitución. Con pocas claves posibles o patrones de letras conservados, caen ante la fuerza bruta (probar cada clave) o el análisis de frecuencias (la E es la letra más común en inglés)."
+          }
+        },
+        {
+          "term": {
+            "en": "Symmetric Encryption",
+            "es": "Cifrado simétrico"
+          },
+          "definition": {
+            "en": "Encryption where the same secret key encrypts and decrypts. Modern ciphers like AES and ChaCha20 are fast and secure, but both sides must already share the key, and a key or keystream must not be reused carelessly.",
+            "es": "Cifrado donde la misma clave secreta cifra y descifra. Los cifrados modernos como AES y ChaCha20 son rápidos y seguros, pero ambos lados ya deben compartir la clave, y una clave o flujo de clave no debe reutilizarse a la ligera."
+          }
+        },
+        {
+          "term": {
+            "en": "Public-Key Cryptography",
+            "es": "Criptografía de clave pública"
+          },
+          "definition": {
+            "en": "Each person has a key pair: a public key they share with everyone and a private key they keep. Data encrypted with the public key can only be decrypted with the private key. RSA relies on how hard it is to factor the product of two large primes.",
+            "es": "Cada persona tiene un par de claves: una pública que comparte con todos y una privada que guarda. Los datos cifrados con la clave pública solo se pueden descifrar con la privada. RSA se basa en lo difícil que es factorizar el producto de dos primos grandes."
+          }
+        },
+        {
+          "term": {
+            "en": "Digital Signatures",
+            "es": "Firmas digitales"
+          },
+          "definition": {
+            "en": "The owner of a private key signs (a hash of) a message; anyone with the public key can verify it. A valid signature proves who signed and that the message has not changed since. Certificates, software updates and Git commits use them.",
+            "es": "El dueño de una clave privada firma (el hash de) un mensaje; cualquiera con la clave pública puede verificarlo. Una firma válida demuestra quién firmó y que el mensaje no cambió desde entonces. Los certificados, las actualizaciones de software y los commits de Git las usan."
+          }
+        },
+        {
+          "term": {
+            "en": "HTTPS and TLS",
+            "es": "HTTPS y TLS"
+          },
+          "definition": {
+            "en": "HTTPS is HTTP inside TLS. The server proves its identity with a certificate signed by a trusted authority, both sides agree on a fresh shared key through a key exchange such as Diffie-Hellman, and the rest of the connection is encrypted and checked with symmetric cryptography.",
+            "es": "HTTPS es HTTP dentro de TLS. El servidor demuestra su identidad con un certificado firmado por una autoridad de confianza, ambos lados acuerdan una clave compartida nueva mediante un intercambio de claves como Diffie-Hellman, y el resto de la conexión se cifra y comprueba con criptografía simétrica."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Khan Academy: Journey into cryptography",
+            "es": "Khan Academy: viaje a la criptografía"
+          },
+          "url": "https://www.khanacademy.org/computing/computer-science/cryptography"
+        },
+        {
+          "label": {
+            "en": "Cloudflare Learning: What is HTTPS?",
+            "es": "Cloudflare Learning: ¿qué es HTTPS?"
+          },
+          "url": "https://www.cloudflare.com/learning/ssl/what-is-https/"
+        },
+        {
+          "label": {
+            "en": "Python cryptography library (for real projects)",
+            "es": "Biblioteca cryptography de Python (para proyectos reales)"
+          },
+          "url": "https://cryptography.io/en/latest/"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "How many keys does a Caesar cipher on English letters have?",
+            "es": "¿Cuántas claves tiene un cifrado César sobre letras del inglés?"
+          },
+          "options": {
+            "en": [
+              "2",
+              "25 useful shifts",
+              "Millions",
+              "It has no key"
+            ],
+            "es": [
+              "2",
+              "25 desplazamientos útiles",
+              "Millones",
+              "No tiene clave"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "There are only 26 shifts (one does nothing), so trying all of them takes a moment.",
+            "es": "Solo hay 26 desplazamientos (uno no hace nada), así que probarlos todos toma un instante."
+          }
+        },
+        {
+          "question": {
+            "en": "Ben wants anyone to send him secrets. What does he publish?",
+            "es": "Ben quiere que cualquiera le envíe secretos. ¿Qué publica?"
+          },
+          "options": {
+            "en": [
+              "His private key",
+              "His public key",
+              "His password",
+              "Both keys"
+            ],
+            "es": [
+              "Su clave privada",
+              "Su clave pública",
+              "Su contraseña",
+              "Ambas claves"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "People encrypt with his public key; only his private key, which he never shares, can decrypt.",
+            "es": "La gente cifra con su clave pública; solo su clave privada, que nunca comparte, puede descifrar."
+          }
+        },
+        {
+          "question": {
+            "en": "What does a valid digital signature prove?",
+            "es": "¿Qué demuestra una firma digital válida?"
+          },
+          "options": {
+            "en": [
+              "The message is secret",
+              "The holder of the private key signed this exact message",
+              "The message is true",
+              "The sender is online"
+            ],
+            "es": [
+              "Que el mensaje es secreto",
+              "Que el dueño de la clave privada firmó este mensaje exacto",
+              "Que el mensaje es verdadero",
+              "Que el remitente está conectado"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Signatures give authenticity and integrity, not secrecy. Any change to the message breaks the signature.",
+            "es": "Las firmas dan autenticidad e integridad, no secreto. Cualquier cambio en el mensaje rompe la firma."
+          }
+        },
+        {
+          "question": {
+            "en": "Is base64 a form of encryption?",
+            "es": "¿Es base64 una forma de cifrado?"
+          },
+          "options": {
+            "en": [
+              "Yes, a strong one",
+              "Yes, a weak one",
+              "No, it is an encoding anyone can reverse without a key",
+              "Only with a password"
+            ],
+            "es": [
+              "Sí, uno fuerte",
+              "Sí, uno débil",
+              "No, es una codificación que cualquiera puede revertir sin clave",
+              "Solo con contraseña"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Base64 just represents bytes as text. There is no key, so it hides nothing.",
+            "es": "Base64 solo representa bytes como texto. No hay clave, así que no oculta nada."
+          }
+        },
+        {
+          "question": {
+            "en": "A site shows the HTTPS padlock. What is protected?",
+            "es": "Un sitio muestra el candado de HTTPS. ¿Qué está protegido?"
+          },
+          "options": {
+            "en": [
+              "The site is guaranteed honest",
+              "The data between you and that server is encrypted and comes from the domain in the certificate",
+              "Your computer is virus-free",
+              "Your password is strong"
+            ],
+            "es": [
+              "Se garantiza que el sitio es honesto",
+              "Los datos entre tú y ese servidor están cifrados y vienen del dominio del certificado",
+              "Tu computadora está libre de virus",
+              "Tu contraseña es fuerte"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "TLS protects the connection to the named domain. A phishing site can have a valid padlock for its own look-alike domain.",
+            "es": "TLS protege la conexión con el dominio indicado. Un sitio de phishing puede tener un candado válido para su propio dominio parecido."
+          }
+        }
+      ]
+    },
+    "sec-attacks": {
+      "minutes": 90,
+      "prerequisites": [
+        "sec-crypto"
+      ],
+      "whyItMatters": {
+        "en": "You cannot defend against what you do not understand. Most breaches are not movie-style hacking but a handful of well-known attacks: a convincing fake email, a malicious download, a form that passes user input straight into a database query or a web page, or an attacker guessing passwords millions of times. Each one has a simple, reliable defense, and as a developer you are often the person who decides whether that defense is in place. Seeing the attacks work on a safe toy system makes the fixes stick.",
+        "es": "No puedes defenderte de lo que no entiendes. La mayoría de las filtraciones no son hackeos de película sino un puñado de ataques bien conocidos: un correo falso convincente, una descarga maliciosa, un formulario que pasa los datos del usuario directo a una consulta de base de datos o a una página web, o un atacante adivinando contraseñas millones de veces. Cada uno tiene una defensa simple y confiable, y como desarrollador a menudo eres quien decide si esa defensa está. Ver los ataques funcionar en un sistema de juguete seguro hace que las soluciones se queden."
+      },
+      "objectives": {
+        "en": [
+          "Recognize the warning signs of phishing and check where a link really leads.",
+          "Explain common kinds of malware and how signature and behavior detection work.",
+          "Show how SQL injection works and prevent it with parameterized queries.",
+          "Show how cross-site scripting works and prevent it by escaping output.",
+          "Explain brute-force and credential-stuffing attacks and defend with rate limiting and lockouts."
+        ],
+        "es": [
+          "Reconocer las señales de alerta del phishing y comprobar a dónde lleva realmente un enlace.",
+          "Explicar tipos comunes de malware y cómo funciona la detección por firmas y por comportamiento.",
+          "Mostrar cómo funciona la inyección SQL y prevenirla con consultas parametrizadas.",
+          "Mostrar cómo funciona el cross-site scripting y prevenirlo escapando la salida.",
+          "Explicar los ataques de fuerza bruta y de relleno de credenciales y defenderse con límites de intentos y bloqueos."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Python functions and strings",
+          "Basic SQL SELECT and WHERE (SQL course) and HTML (Web Basics) help for topics 3 and 4"
+        ],
+        "es": [
+          "Funciones y cadenas de Python",
+          "SELECT y WHERE básicos de SQL (curso de SQL) y HTML (Web básica) ayudan en los temas 3 y 4"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Phishing attacks people, not computers: check the real domain of every link and never enter a password from an unexpected message.",
+          "Never build SQL by joining strings with user input; pass values as parameters (`?`) so they can never become code.",
+          "Never insert user text into HTML without escaping it; `html.escape` or `textContent` turns `<script>` into harmless text.",
+          "Slow attackers down: limit login attempts per account and per address, and add a second factor."
+        ],
+        "es": [
+          "El phishing ataca a las personas, no a las computadoras: revisa el dominio real de cada enlace y nunca escribas una contraseña desde un mensaje inesperado.",
+          "Nunca construyas SQL uniendo cadenas con datos del usuario; pasa los valores como parámetros (`?`) para que nunca se vuelvan código.",
+          "Nunca metas texto del usuario en HTML sin escaparlo; `html.escape` o `textContent` convierten `<script>` en texto inofensivo.",
+          "Frena a los atacantes: limita los intentos de inicio de sesión por cuenta y por dirección, y agrega un segundo factor."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Trusting the text of a link: the visible words can say one address while the link goes to another.",
+          "\"Sanitizing\" SQL input by removing quotes yourself: attackers find another way. Use parameters.",
+          "Escaping input when it arrives but forgetting other places it is shown: escape at the moment you output into HTML.",
+          "Showing different messages for \"unknown user\" and \"wrong password\": it tells attackers which usernames exist."
+        ],
+        "es": [
+          "Confiar en el texto de un enlace: las palabras visibles pueden decir una dirección mientras el enlace va a otra.",
+          "\"Limpiar\" la entrada SQL quitando comillas a mano: los atacantes encuentran otra forma. Usa parámetros.",
+          "Escapar los datos cuando llegan pero olvidar otros lugares donde se muestran: escapa en el momento de escribir en el HTML.",
+          "Mostrar mensajes distintos para \"usuario desconocido\" y \"contraseña incorrecta\": le dice a los atacantes qué usuarios existen."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: list five warning signs in a suspicious email you invent (sender, urgency, link, attachment, request).",
+          "Core: write `real_domain(url)` that returns the registrable domain of a link and flag ones that do not match a list of trusted sites.",
+          "Core: take the vulnerable login from the SQL injection example, attack it with `' OR 1=1 --`, then fix it with a parameterized query and show the attack fails.",
+          "Stretch: add per-IP rate limiting to the brute-force example so one address cannot try more than 5 passwords a minute across all accounts."
+        ],
+        "es": [
+          "Calentamiento: lista cinco señales de alerta en un correo sospechoso que inventes (remitente, urgencia, enlace, adjunto, petición).",
+          "Núcleo: escribe `real_domain(url)` que devuelva el dominio registrable de un enlace y marque los que no coinciden con una lista de sitios de confianza.",
+          "Núcleo: toma el inicio de sesión vulnerable del ejemplo de inyección SQL, atácalo con `' OR 1=1 --` y luego arréglalo con una consulta parametrizada y muestra que el ataque falla.",
+          "Extensión: agrega un límite por IP al ejemplo de fuerza bruta para que una dirección no pueda probar más de 5 contraseñas por minuto entre todas las cuentas."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "In `https://paypal.com.secure-login.net/account`, which company controls the site?",
+          "Why does a parameterized query stop SQL injection even if the input contains quotes and SQL keywords?",
+          "What is the difference between brute force and credential stuffing, and which defense helps against both?"
+        ],
+        "es": [
+          "En `https://paypal.com.secure-login.net/account`, ¿qué empresa controla el sitio?",
+          "¿Por qué una consulta parametrizada detiene la inyección SQL aunque la entrada tenga comillas y palabras clave de SQL?",
+          "¿Cuál es la diferencia entre fuerza bruta y relleno de credenciales, y qué defensa ayuda contra ambos?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Phishing and Social Engineering",
+            "es": "Phishing e ingeniería social"
+          },
+          "definition": {
+            "en": "Tricking people instead of breaking systems: fake emails, texts or sites that create urgency and ask for passwords, payments or downloads. Look-alike domains, mismatched links and unexpected requests are the main signs.",
+            "es": "Engañar a las personas en lugar de romper sistemas: correos, mensajes o sitios falsos que crean urgencia y piden contraseñas, pagos o descargas. Los dominios parecidos, los enlaces que no coinciden y las peticiones inesperadas son las señales principales."
+          }
+        },
+        {
+          "term": {
+            "en": "Malware",
+            "es": "Malware"
+          },
+          "definition": {
+            "en": "Malicious software: viruses and worms that spread, trojans disguised as useful programs, ransomware that encrypts files for ransom, and spyware. Antivirus tools match known file hashes and patterns (signatures) and watch for suspicious behavior.",
+            "es": "Software malicioso: virus y gusanos que se propagan, troyanos disfrazados de programas útiles, ransomware que cifra archivos para pedir rescate, y spyware. Las herramientas antivirus comparan hashes y patrones de archivos conocidos (firmas) y vigilan comportamientos sospechosos."
+          }
+        },
+        {
+          "term": {
+            "en": "SQL Injection",
+            "es": "Inyección SQL"
+          },
+          "definition": {
+            "en": "An attack where user input is pasted into an SQL statement and changes its meaning, for example `' OR 1=1 --` turning a login check into \"any user\". Parameterized queries send the input separately as data, so it can never become SQL.",
+            "es": "Un ataque donde los datos del usuario se pegan en una sentencia SQL y cambian su significado, por ejemplo `' OR 1=1 --` convirtiendo una comprobación de inicio de sesión en \"cualquier usuario\". Las consultas parametrizadas envían los datos por separado, así que nunca pueden volverse SQL."
+          }
+        },
+        {
+          "term": {
+            "en": "Cross-Site Scripting",
+            "es": "Cross-site scripting"
+          },
+          "definition": {
+            "en": "XSS: an attacker gets their own JavaScript into a page other people view, usually through a comment or profile field shown without escaping. The script runs as the victim and can steal data. Escaping output (`<` becomes `&lt;`) prevents it.",
+            "es": "XSS: un atacante logra meter su propio JavaScript en una página que ven otras personas, normalmente mediante un comentario o un campo de perfil que se muestra sin escapar. El script se ejecuta como la víctima y puede robar datos. Escapar la salida (`<` se vuelve `&lt;`) lo evita."
+          }
+        },
+        {
+          "term": {
+            "en": "Brute Force and Rate Limiting",
+            "es": "Fuerza bruta y límite de intentos"
+          },
+          "definition": {
+            "en": "Brute force tries many passwords for one account; credential stuffing tries leaked username/password pairs on other sites. Rate limiting caps attempts per account and per address over time, often with growing delays or temporary lockouts.",
+            "es": "La fuerza bruta prueba muchas contraseñas para una cuenta; el relleno de credenciales prueba pares de usuario y contraseña filtrados en otros sitios. El límite de intentos restringe los intentos por cuenta y por dirección en el tiempo, a menudo con esperas crecientes o bloqueos temporales."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "OWASP Top 10 web application risks",
+            "es": "OWASP Top 10: riesgos de aplicaciones web"
+          },
+          "url": "https://owasp.org/www-project-top-ten/"
+        },
+        {
+          "label": {
+            "en": "OWASP SQL Injection Prevention Cheat Sheet",
+            "es": "OWASP: guía para prevenir la inyección SQL"
+          },
+          "url": "https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html"
+        },
+        {
+          "label": {
+            "en": "CISA: Recognize and report phishing",
+            "es": "CISA: reconocer y reportar phishing"
+          },
+          "url": "https://www.cisa.gov/secure-our-world/recognize-and-report-phishing"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Which link actually goes to a site controlled by Google?",
+            "es": "¿Qué enlace va realmente a un sitio controlado por Google?"
+          },
+          "options": {
+            "en": [
+              "https://google.com.account-check.io",
+              "https://accounts.google.com/signin",
+              "https://g00gle.com/login",
+              "https://google-security.support"
+            ],
+            "es": [
+              "https://google.com.account-check.io",
+              "https://accounts.google.com/signin",
+              "https://g00gle.com/login",
+              "https://google-security.support"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Read the domain right before the first single slash: accounts.google.com ends in google.com. The others are controlled by whoever owns account-check.io, g00gle.com and google-security.support.",
+            "es": "Lee el dominio justo antes de la primera barra: accounts.google.com termina en google.com. Los otros los controla quien sea dueño de account-check.io, g00gle.com y google-security.support."
+          }
+        },
+        {
+          "question": {
+            "en": "What stops SQL injection?",
+            "es": "¿Qué detiene la inyección SQL?"
+          },
+          "options": {
+            "en": [
+              "Hiding error messages",
+              "Parameterized queries",
+              "Using HTTPS",
+              "Longer passwords"
+            ],
+            "es": [
+              "Ocultar los mensajes de error",
+              "Consultas parametrizadas",
+              "Usar HTTPS",
+              "Contraseñas más largas"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "With parameters, the database receives the input purely as a value, never as part of the SQL command.",
+            "es": "Con parámetros, la base de datos recibe la entrada únicamente como un valor, nunca como parte del comando SQL."
+          }
+        },
+        {
+          "question": {
+            "en": "A comment containing `<script>` runs in other visitors' browsers. What is this?",
+            "es": "Un comentario que contiene `<script>` se ejecuta en los navegadores de otros visitantes. ¿Qué es esto?"
+          },
+          "options": {
+            "en": [
+              "SQL injection",
+              "Cross-site scripting",
+              "Phishing",
+              "Ransomware"
+            ],
+            "es": [
+              "Inyección SQL",
+              "Cross-site scripting",
+              "Phishing",
+              "Ransomware"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Stored XSS: the site showed user input as HTML. Escaping it on output would have displayed the text harmlessly.",
+            "es": "XSS almacenado: el sitio mostró los datos del usuario como HTML. Escaparlos al mostrarlos habría mostrado el texto de forma inofensiva."
+          }
+        },
+        {
+          "question": {
+            "en": "Which malware encrypts your files and demands payment?",
+            "es": "¿Qué malware cifra tus archivos y exige un pago?"
+          },
+          "options": {
+            "en": [
+              "Spyware",
+              "Adware",
+              "Ransomware",
+              "A worm"
+            ],
+            "es": [
+              "Spyware",
+              "Adware",
+              "Ransomware",
+              "Un gusano"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Ransomware holds files hostage. Offline backups (module 4) are the best defense.",
+            "es": "El ransomware toma los archivos como rehenes. Los respaldos sin conexión (módulo 4) son la mejor defensa."
+          }
+        },
+        {
+          "question": {
+            "en": "What does rate limiting a login form do?",
+            "es": "¿Qué hace limitar los intentos de un formulario de inicio de sesión?"
+          },
+          "options": {
+            "en": [
+              "Makes passwords longer",
+              "Caps how many attempts can be made in a period, slowing guessing attacks",
+              "Encrypts the password",
+              "Blocks all users"
+            ],
+            "es": [
+              "Hace más largas las contraseñas",
+              "Limita cuántos intentos se pueden hacer en un periodo, frenando los ataques de adivinanza",
+              "Cifra la contraseña",
+              "Bloquea a todos los usuarios"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Billions of guesses become a handful per minute, which makes online guessing hopeless for strong passwords.",
+            "es": "Miles de millones de intentos se vuelven unos pocos por minuto, lo que hace inútil adivinar en línea contraseñas fuertes."
+          }
+        }
+      ]
+    },
+    "sec-defense": {
+      "minutes": 80,
+      "prerequisites": [
+        "sec-attacks"
+      ],
+      "whyItMatters": {
+        "en": "Attacks will always exist, so good security is about making them fail or limiting the damage when they succeed. A small set of habits does most of the work: give every account and program only the access it needs, reject bad input at the door, patch known holes quickly, keep backups you have tested, and collect as little personal data as possible. These habits protect you on your own devices and they are what employers expect from any developer who handles real users' data.",
+        "es": "Los ataques siempre existirán, así que la buena seguridad consiste en hacerlos fallar o limitar el daño cuando tienen éxito. Un pequeño conjunto de hábitos hace la mayor parte del trabajo: dar a cada cuenta y programa solo el acceso que necesita, rechazar los datos malos en la entrada, corregir rápido los agujeros conocidos, tener respaldos que hayas probado y recopilar la menor cantidad posible de datos personales. Estos hábitos te protegen en tus propios dispositivos y son lo que los empleadores esperan de cualquier desarrollador que maneja datos de usuarios reales."
+      },
+      "objectives": {
+        "en": [
+          "Apply least privilege with roles and permission checks, and explain how it limits damage.",
+          "Validate input with allow-lists, types, lengths and ranges, and explain why validation happens on the server.",
+          "Explain why updates matter and compare version numbers against known-vulnerable versions.",
+          "Plan backups with the 3-2-1 rule and verify them with checksums.",
+          "Apply data minimization and pseudonymization to protect personal data."
+        ],
+        "es": [
+          "Aplicar el mínimo privilegio con roles y comprobaciones de permisos, y explicar cómo limita el daño.",
+          "Validar datos de entrada con listas de permitidos, tipos, longitudes y rangos, y explicar por qué la validación ocurre en el servidor.",
+          "Explicar por qué importan las actualizaciones y comparar números de versión con versiones vulnerables conocidas.",
+          "Planificar respaldos con la regla 3-2-1 y verificarlos con sumas de comprobación.",
+          "Aplicar la minimización de datos y la seudonimización para proteger datos personales."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Modules 1–3 of this course",
+          "Python dictionaries, functions and exceptions"
+        ],
+        "es": [
+          "Los módulos 1–3 de este curso",
+          "Diccionarios, funciones y excepciones de Python"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Least privilege: every user, program and key gets the minimum access it needs, so one compromise cannot reach everything.",
+          "Validate on the server with allow-lists (what is allowed), not deny-lists (what is forbidden); client-side checks are only for convenience.",
+          "Most attacks use vulnerabilities that already have a fix: turn on automatic updates and update dependencies.",
+          "A backup you have never restored is not a backup; keep 3 copies, on 2 kinds of media, 1 offline or off-site."
+        ],
+        "es": [
+          "Mínimo privilegio: cada usuario, programa y clave recibe el acceso mínimo que necesita, así un compromiso no puede alcanzarlo todo.",
+          "Valida en el servidor con listas de permitidos (lo que se acepta), no con listas de prohibidos; las comprobaciones en el cliente son solo por comodidad.",
+          "La mayoría de los ataques usan vulnerabilidades que ya tienen solución: activa las actualizaciones automáticas y actualiza las dependencias.",
+          "Un respaldo que nunca restauraste no es un respaldo; guarda 3 copias, en 2 tipos de medio, 1 fuera de línea o fuera del lugar."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Running everything as administrator or root \"to avoid permission errors\": any bug then has full control.",
+          "Trusting checks done in the browser: attackers can send requests directly and skip them.",
+          "Postponing updates indefinitely, or depending on libraries that are no longer maintained.",
+          "Logging or storing personal data \"just in case\": every extra field is something that can leak."
+        ],
+        "es": [
+          "Ejecutar todo como administrador o root \"para evitar errores de permisos\": cualquier error tiene entonces control total.",
+          "Confiar en comprobaciones hechas en el navegador: los atacantes pueden enviar peticiones directamente y saltárselas.",
+          "Posponer las actualizaciones indefinidamente, o depender de bibliotecas que ya no tienen mantenimiento.",
+          "Registrar o guardar datos personales \"por si acaso\": cada campo extra es algo que se puede filtrar."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: list every account on your phone or computer that has admin rights and decide which really need them.",
+          "Core: write `validate_signup(form)` that checks a username (3–20 letters, digits or underscores), an email and an age (13–120), returning a list of errors.",
+          "Core: write a script that copies a folder to a backup folder, records a SHA-256 checksum for every file, and later reports any file whose checksum changed.",
+          "Stretch: take a list of user records and produce an analytics export with names removed, emails replaced by keyed hashes and ages grouped into ranges."
+        ],
+        "es": [
+          "Calentamiento: lista cada cuenta de tu teléfono o computadora que tenga permisos de administrador y decide cuáles los necesitan de verdad.",
+          "Núcleo: escribe `validate_signup(formulario)` que compruebe un usuario (3–20 letras, dígitos o guiones bajos), un correo y una edad (13–120), devolviendo una lista de errores.",
+          "Núcleo: escribe un script que copie una carpeta a una carpeta de respaldo, registre una suma SHA-256 de cada archivo y después informe cualquier archivo cuya suma haya cambiado.",
+          "Extensión: toma una lista de registros de usuarios y produce una exportación para análisis sin nombres, con los correos reemplazados por hashes con clave y las edades agrupadas en rangos."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "A web app's database account can drop tables. Why is that a problem, and what should it be allowed to do?",
+          "Why is an allow-list usually safer than a deny-list for validating input?",
+          "What is the 3-2-1 backup rule, and why should one copy be offline?"
+        ],
+        "es": [
+          "La cuenta de base de datos de una app web puede borrar tablas. ¿Por qué es un problema, y qué debería poder hacer?",
+          "¿Por qué una lista de permitidos suele ser más segura que una lista de prohibidos para validar datos?",
+          "¿Qué es la regla de respaldo 3-2-1, y por qué una copia debe estar fuera de línea?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Least Privilege",
+            "es": "Mínimo privilegio"
+          },
+          "definition": {
+            "en": "Giving each user, process and credential only the permissions needed for its job, and only for as long as needed. If one is compromised, the attacker is boxed in. Roles (viewer, editor, admin) and separate service accounts put it into practice.",
+            "es": "Dar a cada usuario, proceso y credencial solo los permisos necesarios para su trabajo, y solo mientras los necesite. Si uno se ve comprometido, el atacante queda encerrado. Los roles (lector, editor, administrador) y las cuentas de servicio separadas lo ponen en práctica."
+          }
+        },
+        {
+          "term": {
+            "en": "Validating Input",
+            "es": "Validar los datos de entrada"
+          },
+          "definition": {
+            "en": "Checking that every piece of input has the expected type, length, format and range before using it, on the server. Allow-lists (accept only known-good patterns) are safer than deny-lists. Validation complements, but does not replace, parameterized queries and escaping.",
+            "es": "Comprobar que cada dato de entrada tenga el tipo, la longitud, el formato y el rango esperados antes de usarlo, en el servidor. Las listas de permitidos (aceptar solo patrones conocidos como buenos) son más seguras que las de prohibidos. La validación complementa, pero no reemplaza, las consultas parametrizadas y el escapado."
+          }
+        },
+        {
+          "term": {
+            "en": "Updates and Patching",
+            "es": "Actualizaciones y parches"
+          },
+          "definition": {
+            "en": "Installing fixes for known vulnerabilities in operating systems, apps and libraries. Vulnerabilities are published with identifiers (CVEs) and affected versions, so attackers target unpatched systems quickly; dependency scanners flag vulnerable versions in projects.",
+            "es": "Instalar correcciones de vulnerabilidades conocidas en sistemas operativos, apps y bibliotecas. Las vulnerabilidades se publican con identificadores (CVE) y versiones afectadas, así que los atacantes apuntan rápido a sistemas sin parchear; los escáneres de dependencias marcan versiones vulnerables en los proyectos."
+          }
+        },
+        {
+          "term": {
+            "en": "Backups",
+            "es": "Respaldos"
+          },
+          "definition": {
+            "en": "Copies of data kept separately so it can be restored after deletion, hardware failure or ransomware. The 3-2-1 rule: 3 copies, on 2 types of storage, 1 off-site or offline. Checksums and regular test restores prove backups actually work.",
+            "es": "Copias de los datos guardadas por separado para poder restaurarlos después de un borrado, una falla de hardware o un ransomware. La regla 3-2-1: 3 copias, en 2 tipos de almacenamiento, 1 fuera del lugar o sin conexión. Las sumas de comprobación y las pruebas de restauración periódicas demuestran que los respaldos funcionan."
+          }
+        },
+        {
+          "term": {
+            "en": "Privacy and Personal Data",
+            "es": "Privacidad y datos personales"
+          },
+          "definition": {
+            "en": "Protecting information that identifies people. Collect only what you need (data minimization), restrict who can see it, delete it when no longer needed, and replace identifiers with pseudonyms or aggregates for analysis. Laws such as the GDPR and CCPA set rules for this.",
+            "es": "Proteger la información que identifica a las personas. Recopila solo lo que necesitas (minimización de datos), restringe quién puede verla, bórrala cuando ya no la necesites y reemplaza los identificadores por seudónimos o agregados para el análisis. Leyes como el RGPD y la CCPA fijan reglas para esto."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "OWASP Input Validation Cheat Sheet",
+            "es": "OWASP: guía de validación de datos de entrada"
+          },
+          "url": "https://cheatsheetseries.owasp.org/cheatsheets/Input_Validation_Cheat_Sheet.html"
+        },
+        {
+          "label": {
+            "en": "CISA: Secure Our World (basic cyber hygiene)",
+            "es": "CISA: Secure Our World (higiene digital básica)"
+          },
+          "url": "https://www.cisa.gov/secure-our-world"
+        },
+        {
+          "label": {
+            "en": "NIST Cybersecurity Framework",
+            "es": "Marco de ciberseguridad del NIST"
+          },
+          "url": "https://www.nist.gov/cyberframework"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "A reporting tool only needs to read sales data. What access should its database account have?",
+            "es": "Una herramienta de reportes solo necesita leer datos de ventas. ¿Qué acceso debe tener su cuenta de base de datos?"
+          },
+          "options": {
+            "en": [
+              "Full admin",
+              "Read-only on the sales tables",
+              "Read and write everywhere",
+              "The same as the developers"
+            ],
+            "es": [
+              "Administrador total",
+              "Solo lectura en las tablas de ventas",
+              "Lectura y escritura en todo",
+              "El mismo que los desarrolladores"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Least privilege: if the tool is compromised, the attacker can read sales data but cannot change or delete anything.",
+            "es": "Mínimo privilegio: si la herramienta se ve comprometida, el atacante puede leer datos de ventas pero no cambiar ni borrar nada."
+          }
+        },
+        {
+          "question": {
+            "en": "Where must input validation happen to be a security control?",
+            "es": "¿Dónde debe ocurrir la validación de datos para ser un control de seguridad?"
+          },
+          "options": {
+            "en": [
+              "Only in the browser",
+              "On the server",
+              "In the CSS",
+              "It does not matter"
+            ],
+            "es": [
+              "Solo en el navegador",
+              "En el servidor",
+              "En el CSS",
+              "No importa"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Anyone can bypass the browser and send requests directly. Browser checks are for user experience; server checks are for security.",
+            "es": "Cualquiera puede saltarse el navegador y enviar peticiones directamente. Las comprobaciones del navegador son para la experiencia del usuario; las del servidor son para la seguridad."
+          }
+        },
+        {
+          "question": {
+            "en": "Why do attackers often target recently patched vulnerabilities?",
+            "es": "¿Por qué los atacantes suelen apuntar a vulnerabilidades corregidas hace poco?"
+          },
+          "options": {
+            "en": [
+              "Patches add new bugs",
+              "Many systems are not updated yet, and the patch shows where the hole is",
+              "They cannot find new ones",
+              "Patches disable antivirus"
+            ],
+            "es": [
+              "Los parches agregan errores nuevos",
+              "Muchos sistemas aún no se actualizan, y el parche muestra dónde está el agujero",
+              "No pueden encontrar nuevas",
+              "Los parches desactivan el antivirus"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Once a fix is published, the vulnerability is public knowledge, and every unpatched system is an easy target.",
+            "es": "Una vez que se publica una corrección, la vulnerabilidad es de conocimiento público, y cada sistema sin parchear es un blanco fácil."
+          }
+        },
+        {
+          "question": {
+            "en": "Which backup plan survives ransomware that encrypts every connected drive?",
+            "es": "¿Qué plan de respaldo sobrevive a un ransomware que cifra cada unidad conectada?"
+          },
+          "options": {
+            "en": [
+              "A second folder on the same disk",
+              "A USB drive always plugged in",
+              "An offline or off-site copy",
+              "No backup is needed with antivirus"
+            ],
+            "es": [
+              "Una segunda carpeta en el mismo disco",
+              "Una memoria USB siempre conectada",
+              "Una copia sin conexión o fuera del lugar",
+              "Con antivirus no hace falta respaldo"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Ransomware encrypts everything it can reach. A copy that is disconnected or stored elsewhere stays safe, which is the \"1\" in 3-2-1.",
+            "es": "El ransomware cifra todo lo que puede alcanzar. Una copia desconectada o guardada en otro lugar queda a salvo, que es el \"1\" de 3-2-1."
+          }
+        },
+        {
+          "question": {
+            "en": "What is data minimization?",
+            "es": "¿Qué es la minimización de datos?"
+          },
+          "options": {
+            "en": [
+              "Compressing data",
+              "Collecting and keeping only the personal data you actually need",
+              "Deleting all data",
+              "Encrypting small files"
+            ],
+            "es": [
+              "Comprimir datos",
+              "Recopilar y conservar solo los datos personales que de verdad necesitas",
+              "Borrar todos los datos",
+              "Cifrar archivos pequeños"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Data you never collect cannot leak. It is one of the core principles of privacy laws like the GDPR.",
+            "es": "Los datos que nunca recopilas no se pueden filtrar. Es uno de los principios centrales de leyes de privacidad como el RGPD."
           }
         }
       ]
