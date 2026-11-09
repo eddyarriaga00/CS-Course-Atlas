@@ -45,6 +45,12 @@
    "type": "playlist",
    "title": "Missing Semester IAP 2020",
    "channel": "Missing Semester"
+  },
+  "web": {
+   "id": "PLWKjhJtqVAbnSe1qUNMG7AbPmjIG54u88",
+   "type": "playlist",
+   "title": "HTML and CSS Tutorials",
+   "channel": "freeCodeCamp.org"
   }
  },
  "modules": {
@@ -1464,6 +1470,186 @@
      "title": "How To Write Bash Scripts In Linux - Complete Guide (Part 12 - Functions)",
      "channel": "Learn Linux TV",
      "length": "9:39"
+    }
+   }
+  },
+  "web-html": {
+   "series": {
+    "id": "PL4-IK0AVhVjPRj8P56TtFX2hg33BlbT3x",
+    "type": "playlist",
+    "title": "CSS Fundamentals",
+    "channel": "Kevin Powell"
+   },
+   "topics": {
+    "Elements and Tags": {
+     "id": "ok-plXXHlWw",
+     "type": "video",
+     "title": "HTML in 100 Seconds",
+     "channel": "Fireship",
+     "length": "2:34"
+    },
+    "Headings, Paragraphs and Lists": {
+     "id": "yqcd-XkxZNM",
+     "type": "video",
+     "title": "HTML & CSS for Beginners Part 3: Paragraphs and Headings",
+     "channel": "Kevin Powell",
+     "length": "6:35"
+    },
+    "Links and Images": {
+     "id": "tsEQgGjSmkM",
+     "type": "video",
+     "title": "HTML & CSS for Beginners Part 5: Links",
+     "channel": "Kevin Powell",
+     "length": "8:50"
+    },
+    "Tables": {
+     "id": "aNC6LY34yVM",
+     "type": "video",
+     "title": "Learn HTML tables in 4 minutes! 📊",
+     "channel": "Bro Code",
+     "length": "4:43"
+    },
+    "Forms": {
+     "id": "2O8pkybH6po",
+     "type": "video",
+     "title": "Learn HTML forms in 8 minutes 📝",
+     "channel": "Bro Code",
+     "length": "8:39"
+    }
+   }
+  },
+  "web-css": {
+   "series": {
+    "id": "PL4-IK0AVhVjPRj8P56TtFX2hg33BlbT3x",
+    "type": "playlist",
+    "title": "CSS Fundamentals",
+    "channel": "Kevin Powell"
+   },
+   "topics": {
+    "Selectors and Rules": {
+     "id": "QgxkYbGr2II",
+     "type": "video",
+     "title": "CSS Selectors Tutorial for Beginners",
+     "channel": "Dave Gray",
+     "length": "20:34"
+    },
+    "Colors, Fonts and Units": {
+     "id": "N5wpD9Ov_To",
+     "type": "video",
+     "title": "Are you using the right CSS units?",
+     "channel": "Kevin Powell",
+     "length": "6:30"
+    },
+    "The Box Model": {
+     "id": "rIO5326FgPE",
+     "type": "video",
+     "title": "Learn CSS Box Model In 8 Minutes",
+     "channel": "Web Dev Simplified",
+     "length": "8:22"
+    },
+    "Flexbox Layout": {
+     "id": "JJSoEo8JSnc",
+     "type": "video",
+     "title": "Flexbox CSS In 20 Minutes",
+     "channel": "Traversy Media",
+     "length": "19:59"
+    },
+    "Responsive Design": {
+     "id": "x4u1yp3Msao",
+     "type": "video",
+     "title": "A practical guide to responsive web design",
+     "channel": "Kevin Powell",
+     "length": "23:13"
+    }
+   }
+  },
+  "web-javascript": {
+   "series": {
+    "id": "PL4cUxeGkcC9gfoKa5la9dsdCNpuey2s-V",
+    "type": "playlist",
+    "title": "JavaScript DOM Tutorial",
+    "channel": "Net Ninja"
+   },
+   "topics": {
+    "The DOM and Selecting Elements": {
+     "id": "JlgLDfINXvY",
+     "type": "video",
+     "title": "JavaScript DOM Tutorial #4 - The Query Selector",
+     "channel": "Net Ninja",
+     "length": "7:34"
+    },
+    "Changing Text and Styles": {
+     "id": "1UsllDMhvN4",
+     "type": "video",
+     "title": "textContent vs innerHTML in the JavaScript DOM",
+     "channel": "dcode",
+     "length": "4:38"
+    },
+    "Events": {
+     "id": "XF1_MlZ5l6M",
+     "type": "video",
+     "title": "Learn JavaScript Event Listeners In 18 Minutes",
+     "channel": "Web Dev Simplified",
+     "length": "18:03"
+    },
+    "Creating Elements from Data": {
+     "id": "VW8kNAous88",
+     "type": "video",
+     "title": "Document.createElement() - Javascript DOM",
+     "channel": "dcode",
+     "length": "3:46"
+    },
+    "Reading Form Input": {
+     "id": "In0nB0ABaUk",
+     "type": "video",
+     "title": "JavaScript Form Validation",
+     "channel": "Web Dev Simplified",
+     "length": "6:39"
+    }
+   }
+  },
+  "web-project": {
+   "series": {
+    "id": "PL4-IK0AVhVjNDRHoXGort7sDWcna8cGPA",
+    "type": "playlist",
+    "title": "Build a responsive website with HTML & CSS",
+    "channel": "Kevin Powell"
+   },
+   "topics": {
+    "Semantic Layout": {
+     "id": "YOsMJQfwqow",
+     "type": "video",
+     "title": "HTML & CSS for Absolute Beginners: Semantic HTML",
+     "channel": "Kevin Powell",
+     "length": "9:33"
+    },
+    "Accessibility": {
+     "id": "2oiBKSjOOFE",
+     "type": "video",
+     "title": "The Only Accessibility Video You Will Ever Need",
+     "channel": "Web Dev Simplified",
+     "length": "37:33"
+    },
+    "Working with JSON": {
+     "id": "iiADhChRriM",
+     "type": "video",
+     "title": "Learn JSON in 10 Minutes",
+     "channel": "Web Dev Simplified",
+     "length": "12:00"
+    },
+    "A Small Interactive App": {
+     "id": "G0jO8kUrg-I",
+     "type": "video",
+     "title": "How To Create To-Do List App Using HTML CSS And JavaScript | Task App In JavaScript",
+     "channel": "GreatStack",
+     "length": "26:48"
+    },
+    "Publishing Your Site": {
+     "id": "OltY8JIaP-4",
+     "type": "video",
+     "title": "How to Host a Website On Github Pages",
+     "channel": "Kenny Yip Coding",
+     "length": "6:57"
     }
    }
   }

@@ -343,6 +343,36 @@ window.COURSE_CURRICULUM = {
         "modules": [
           "web-html"
         ]
+      },
+      {
+        "id": "web-style",
+        "title": {
+          "en": "Style with CSS",
+          "es": "Estilo con CSS"
+        },
+        "modules": [
+          "web-css"
+        ]
+      },
+      {
+        "id": "web-interactivity",
+        "title": {
+          "en": "Interactivity with JavaScript",
+          "es": "Interactividad con JavaScript"
+        },
+        "modules": [
+          "web-javascript"
+        ]
+      },
+      {
+        "id": "web-shipping",
+        "title": {
+          "en": "Build and Publish",
+          "es": "Construir y publicar"
+        },
+        "modules": [
+          "web-project"
+        ]
       }
     ]
   },
@@ -16021,6 +16051,880 @@ window.COURSE_CURRICULUM = {
           "explanation": {
             "en": "The label's `for` must match the input's `id`. (Wrapping the input inside the label also works.)",
             "es": "El `for` de la etiqueta debe coincidir con el `id` del campo. (Poner el campo dentro de la etiqueta también funciona.)"
+          }
+        }
+      ]
+    },
+    "web-css": {
+      "minutes": 90,
+      "prerequisites": [
+        "web-html"
+      ],
+      "whyItMatters": {
+        "en": "HTML says what things are; CSS decides how they look: colors, spacing, fonts and where everything sits on the screen. The same HTML can look like a plain document or a polished app depending on its stylesheet. Learning a few core ideas, how selectors pick elements, how every element is a box, and how flexbox lines boxes up, lets you build layouts that work on any screen instead of fighting the browser.",
+        "es": "HTML dice qué son las cosas; CSS decide cómo se ven: colores, espacios, fuentes y dónde va cada cosa en la pantalla. El mismo HTML puede verse como un documento simple o como una app pulida según su hoja de estilos. Aprender unas pocas ideas centrales, cómo los selectores eligen elementos, cómo cada elemento es una caja y cómo flexbox alinea cajas, te permite construir diseños que funcionan en cualquier pantalla en lugar de pelear con el navegador."
+      },
+      "objectives": {
+        "en": [
+          "Write CSS rules with element, class, id, descendant and `:hover` selectors, and explain which rule wins when two apply.",
+          "Set colors with names, hex and `rgb()`, choose fonts, and size things with `px`, `rem`, `%` and `vw`.",
+          "Use the box model, `padding`, `border`, `margin`, `width` and `box-sizing: border-box`, to control spacing.",
+          "Lay out rows and columns of items with flexbox: `display: flex`, `gap`, `justify-content`, `align-items` and `flex-wrap`.",
+          "Make a page responsive with the viewport meta tag, flexible widths and `@media` queries."
+        ],
+        "es": [
+          "Escribir reglas CSS con selectores de elemento, clase, id, descendiente y `:hover`, y explicar qué regla gana cuando se aplican dos.",
+          "Definir colores con nombres, hex y `rgb()`, elegir fuentes y dar tamaño con `px`, `rem`, `%` y `vw`.",
+          "Usar el modelo de caja, `padding`, `border`, `margin`, `width` y `box-sizing: border-box`, para controlar el espacio.",
+          "Acomodar filas y columnas de elementos con flexbox: `display: flex`, `gap`, `justify-content`, `align-items` y `flex-wrap`.",
+          "Hacer una página adaptable con la etiqueta meta viewport, anchos flexibles y consultas `@media`."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Write an HTML page with headings, lists, links and forms (module 1)"
+        ],
+        "es": [
+          "Escribir una página HTML con títulos, listas, enlaces y formularios (módulo 1)"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "A rule is `selector { property: value; }`. Classes (`.card`) are the everyday way to target elements.",
+          "When rules conflict, the more specific selector wins (id > class > element); with equal specificity, the later rule wins.",
+          "Every element is a box: content, then padding, then border, then margin. `box-sizing: border-box` makes `width` include padding and border.",
+          "Flexbox lines children up in a row or column; `gap` spaces them, `justify-content` spreads them along the line and `align-items` aligns them across it."
+        ],
+        "es": [
+          "Una regla es `selector { propiedad: valor; }`. Las clases (`.card`) son la forma cotidiana de apuntar a elementos.",
+          "Cuando las reglas chocan, gana el selector más específico (id > clase > elemento); con igual especificidad, gana la regla posterior.",
+          "Cada elemento es una caja: contenido, luego padding, luego borde, luego margen. `box-sizing: border-box` hace que `width` incluya padding y borde.",
+          "Flexbox alinea a los hijos en una fila o columna; `gap` los separa, `justify-content` los reparte a lo largo de la línea y `align-items` los alinea a lo ancho."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Forgetting the dot or hash: `card { }` targets `<card>` elements, not `class=\"card\"`; write `.card`.",
+          "Missing semicolons: one missing `;` silently breaks the next declaration.",
+          "Fixed pixel widths such as `width: 900px` that overflow phone screens; prefer `max-width` and percentages.",
+          "Fighting specificity with `!important` everywhere; use a class instead and keep selectors simple."
+        ],
+        "es": [
+          "Olvidar el punto o el numeral: `card { }` apunta a elementos `<card>`, no a `class=\"card\"`; escribe `.card`.",
+          "Faltan puntos y comas: un `;` que falta rompe en silencio la siguiente declaración.",
+          "Anchos fijos en píxeles como `width: 900px` que se desbordan en pantallas de teléfono; prefiere `max-width` y porcentajes.",
+          "Pelear con la especificidad poniendo `!important` en todas partes; usa una clase y mantén los selectores simples."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: style your \"about me\" page: a background color, a font for the body, a different color for headings and links that change color on hover.",
+          "Core: turn your three hobbies into cards with padding, a border, rounded corners and a shadow, using one `.card` class.",
+          "Core: put the cards in a row with flexbox and `gap`, and make them wrap onto new lines on narrow screens.",
+          "Stretch: add a navigation bar with your name on the left and three links on the right, which stacks vertically under 600px wide."
+        ],
+        "es": [
+          "Calentamiento: da estilo a tu página \"sobre mí\": un color de fondo, una fuente para el cuerpo, otro color para los títulos y enlaces que cambien de color al pasar el ratón.",
+          "Núcleo: convierte tus tres pasatiempos en tarjetas con padding, borde, esquinas redondeadas y sombra, usando una sola clase `.card`.",
+          "Núcleo: pon las tarjetas en una fila con flexbox y `gap`, y haz que pasen a nuevas líneas en pantallas angostas.",
+          "Extensión: agrega una barra de navegación con tu nombre a la izquierda y tres enlaces a la derecha, que se apile en vertical por debajo de 600px de ancho."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "An element has `class=\"note\"` and `id=\"first\"`. `.note { color: blue }` and `#first { color: red }` both apply. Which color wins and why?",
+          "A box has `width: 200px; padding: 20px; border: 5px solid`. How wide is it with and without `box-sizing: border-box`?",
+          "What is the difference between `justify-content` and `align-items` in a flex row?"
+        ],
+        "es": [
+          "Un elemento tiene `class=\"note\"` e `id=\"first\"`. Se aplican `.note { color: blue }` y `#first { color: red }`. ¿Qué color gana y por qué?",
+          "Una caja tiene `width: 200px; padding: 20px; border: 5px solid`. ¿Qué tan ancha es con y sin `box-sizing: border-box`?",
+          "¿Cuál es la diferencia entre `justify-content` y `align-items` en una fila flex?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Selectors and Rules",
+            "es": "Selectores y reglas"
+          },
+          "definition": {
+            "en": "A CSS rule is a selector followed by declarations in braces: `p { color: gray; }`. Selectors pick elements by tag (`p`), class (`.card`), id (`#top`), position (`nav a`) or state (`a:hover`). When rules conflict, specificity and then order decide.",
+            "es": "Una regla CSS es un selector seguido de declaraciones entre llaves: `p { color: gray; }`. Los selectores eligen elementos por etiqueta (`p`), clase (`.card`), id (`#top`), posición (`nav a`) o estado (`a:hover`). Cuando las reglas chocan, deciden la especificidad y luego el orden."
+          }
+        },
+        {
+          "term": {
+            "en": "Colors, Fonts and Units",
+            "es": "Colores, fuentes y unidades"
+          },
+          "definition": {
+            "en": "Colors can be names (`tomato`), hex (`#4f46e5`) or `rgb()`/`hsl()`. `font-family` lists fonts to try in order. Sizes use absolute `px` or relative units: `rem` (relative to the root font size), `%` (of the parent) and `vw`/`vh` (of the window).",
+            "es": "Los colores pueden ser nombres (`tomato`), hex (`#4f46e5`) o `rgb()`/`hsl()`. `font-family` lista fuentes que se prueban en orden. Los tamaños usan `px` absolutos o unidades relativas: `rem` (relativo al tamaño de letra raíz), `%` (del padre) y `vw`/`vh` (de la ventana)."
+          }
+        },
+        {
+          "term": {
+            "en": "The Box Model",
+            "es": "El modelo de caja"
+          },
+          "definition": {
+            "en": "Every element is a rectangle made of its content, padding (space inside the border), border and margin (space outside). By default `width` sets only the content; with `box-sizing: border-box` it includes padding and border.",
+            "es": "Cada elemento es un rectángulo formado por su contenido, padding (espacio dentro del borde), borde y margen (espacio afuera). Por defecto `width` define solo el contenido; con `box-sizing: border-box` incluye padding y borde."
+          }
+        },
+        {
+          "term": {
+            "en": "Flexbox Layout",
+            "es": "Diseño con flexbox"
+          },
+          "definition": {
+            "en": "`display: flex` lines up an element's children in a row (or a column with `flex-direction: column`). `gap` spaces them, `justify-content` distributes them along the main axis, `align-items` aligns them across it, `flex-wrap` lets them wrap and `flex: 1` lets one grow.",
+            "es": "`display: flex` alinea a los hijos de un elemento en una fila (o una columna con `flex-direction: column`). `gap` los separa, `justify-content` los distribuye en el eje principal, `align-items` los alinea en el eje cruzado, `flex-wrap` les permite pasar de línea y `flex: 1` deja crecer a uno."
+          }
+        },
+        {
+          "term": {
+            "en": "Responsive Design",
+            "es": "Diseño adaptable"
+          },
+          "definition": {
+            "en": "Building pages that work at any screen size: the viewport meta tag makes phones use their real width, flexible widths (`max-width`, `%`) let content shrink, and `@media (max-width: 600px) { ... }` changes rules on small screens.",
+            "es": "Construir páginas que funcionan en cualquier tamaño de pantalla: la etiqueta meta viewport hace que los teléfonos usen su ancho real, los anchos flexibles (`max-width`, `%`) dejan que el contenido se encoja y `@media (max-width: 600px) { ... }` cambia reglas en pantallas pequeñas."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "MDN: CSS first steps",
+            "es": "MDN: primeros pasos con CSS"
+          },
+          "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Styling_basics"
+        },
+        {
+          "label": {
+            "en": "CSS-Tricks: A Complete Guide to Flexbox",
+            "es": "CSS-Tricks: guía completa de Flexbox"
+          },
+          "url": "https://css-tricks.com/snippets/css/a-guide-to-flexbox/"
+        },
+        {
+          "label": {
+            "en": "web.dev: Learn CSS",
+            "es": "web.dev: aprende CSS"
+          },
+          "url": "https://web.dev/learn/css"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Which selector targets every element with `class=\"card\"`?",
+            "es": "¿Qué selector apunta a todo elemento con `class=\"card\"`?"
+          },
+          "options": {
+            "en": [
+              "card",
+              "#card",
+              ".card",
+              "*card"
+            ],
+            "es": [
+              "card",
+              "#card",
+              ".card",
+              "*card"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "A dot means class, a hash means id, and a bare word means a tag name.",
+            "es": "Un punto significa clase, un numeral significa id y una palabra sola significa nombre de etiqueta."
+          }
+        },
+        {
+          "question": {
+            "en": "`p { color: blue }` comes first and `p { color: green }` later. What color are paragraphs?",
+            "es": "`p { color: blue }` va primero y `p { color: green }` después. ¿De qué color son los párrafos?"
+          },
+          "options": {
+            "en": [
+              "Blue",
+              "Green",
+              "Black",
+              "A mix"
+            ],
+            "es": [
+              "Azul",
+              "Verde",
+              "Negro",
+              "Una mezcla"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Both selectors are equally specific, so the later rule wins. That is the \"cascade\" in Cascading Style Sheets.",
+            "es": "Ambos selectores son igual de específicos, así que gana la regla posterior. Esa es la \"cascada\" de las hojas de estilo en cascada."
+          }
+        },
+        {
+          "question": {
+            "en": "Which property adds space between an element's border and its content?",
+            "es": "¿Qué propiedad agrega espacio entre el borde de un elemento y su contenido?"
+          },
+          "options": {
+            "en": [
+              "margin",
+              "padding",
+              "gap",
+              "spacing"
+            ],
+            "es": [
+              "margin",
+              "padding",
+              "gap",
+              "spacing"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Padding is inside the border; margin is outside it; gap spaces flex or grid children.",
+            "es": "El padding va dentro del borde; el margen va afuera; gap separa a los hijos de flex o grid."
+          }
+        },
+        {
+          "question": {
+            "en": "In a flex row, which property spreads items out along the row?",
+            "es": "En una fila flex, ¿qué propiedad reparte los elementos a lo largo de la fila?"
+          },
+          "options": {
+            "en": [
+              "align-items",
+              "justify-content",
+              "flex-wrap",
+              "text-align"
+            ],
+            "es": [
+              "align-items",
+              "justify-content",
+              "flex-wrap",
+              "text-align"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`justify-content` works along the main axis (the row); `align-items` works across it (vertically in a row).",
+            "es": "`justify-content` actúa en el eje principal (la fila); `align-items` actúa en el eje cruzado (vertical en una fila)."
+          }
+        },
+        {
+          "question": {
+            "en": "What does `@media (max-width: 600px) { ... }` do?",
+            "es": "¿Qué hace `@media (max-width: 600px) { ... }`?"
+          },
+          "options": {
+            "en": [
+              "Limits the page to 600px wide",
+              "Applies the rules inside only on screens 600px wide or narrower",
+              "Applies the rules only when printing",
+              "Loads a mobile stylesheet"
+            ],
+            "es": [
+              "Limita la página a 600px de ancho",
+              "Aplica las reglas de adentro solo en pantallas de 600px o más angostas",
+              "Aplica las reglas solo al imprimir",
+              "Carga una hoja de estilos móvil"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "A media query is a condition: its rules only apply while the window matches, which is how layouts change on phones.",
+            "es": "Una consulta de medios es una condición: sus reglas solo se aplican mientras la ventana coincide, que es como cambian los diseños en los teléfonos."
+          }
+        }
+      ]
+    },
+    "web-javascript": {
+      "minutes": 100,
+      "prerequisites": [
+        "web-css"
+      ],
+      "whyItMatters": {
+        "en": "HTML and CSS make a page; JavaScript makes it respond. Every button that does something, every search box that filters as you type, every list loaded from a server is JavaScript changing the page while it is open. The browser exposes the page as an object you can program (the DOM), and the handful of tools in this module, querySelector, textContent, classList, addEventListener and createElement, are enough to build real interactive features.",
+        "es": "HTML y CSS hacen una página; JavaScript la hace responder. Cada botón que hace algo, cada buscador que filtra mientras escribes, cada lista cargada desde un servidor es JavaScript cambiando la página mientras está abierta. El navegador expone la página como un objeto que puedes programar (el DOM), y el puñado de herramientas de este módulo, querySelector, textContent, classList, addEventListener y createElement, alcanzan para construir funciones interactivas reales."
+      },
+      "objectives": {
+        "en": [
+          "Explain the DOM as a tree of elements and find elements with `querySelector` and `querySelectorAll`.",
+          "Change content with `textContent`, styles with `classList`, and attributes such as `hidden` and `disabled`.",
+          "React to user actions with `addEventListener` for `click`, `input` and `keydown`, using the event object.",
+          "Build page content from an array of objects with `createElement`, `append` and loops.",
+          "Handle a form submit with `preventDefault`, read and validate its values, and show the result."
+        ],
+        "es": [
+          "Explicar el DOM como un árbol de elementos y encontrar elementos con `querySelector` y `querySelectorAll`.",
+          "Cambiar contenido con `textContent`, estilos con `classList` y atributos como `hidden` y `disabled`.",
+          "Reaccionar a las acciones del usuario con `addEventListener` para `click`, `input` y `keydown`, usando el objeto evento.",
+          "Construir contenido de la página a partir de un arreglo de objetos con `createElement`, `append` y ciclos.",
+          "Manejar el envío de un formulario con `preventDefault`, leer y validar sus valores y mostrar el resultado."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "HTML and CSS from modules 1 and 2",
+          "Variables, if, loops and functions in any language (the Python course covers them)"
+        ],
+        "es": [
+          "HTML y CSS de los módulos 1 y 2",
+          "Variables, if, ciclos y funciones en cualquier lenguaje (el curso de Python los cubre)"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "`document.querySelector(\".x\")` returns the first match (or `null`); `querySelectorAll` returns all matches.",
+          "Set `textContent` to change text safely; toggle CSS classes with `classList` instead of setting many styles in JavaScript.",
+          "`element.addEventListener(\"click\", fn)` runs `fn` every time; the event object tells you what happened.",
+          "Forms submit and reload by default; call `event.preventDefault()` to handle them yourself."
+        ],
+        "es": [
+          "`document.querySelector(\".x\")` devuelve la primera coincidencia (o `null`); `querySelectorAll` devuelve todas.",
+          "Asigna `textContent` para cambiar texto de forma segura; activa y desactiva clases CSS con `classList` en lugar de poner muchos estilos desde JavaScript.",
+          "`elemento.addEventListener(\"click\", fn)` ejecuta `fn` cada vez; el objeto evento te dice qué pasó.",
+          "Los formularios se envían y recargan por defecto; llama a `event.preventDefault()` para manejarlos tú."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Running the script before the elements exist: put `<script>` at the end of `<body>` (or use `defer`), otherwise `querySelector` returns `null`.",
+          "Using `innerHTML` with text that came from a user: it can run injected HTML. Use `textContent` for text.",
+          "Writing `onclick = handler()` with parentheses: that calls the function immediately. Pass the function itself: `addEventListener(\"click\", handler)`.",
+          "Forgetting that input values are strings: `\"2\" + \"3\"` is `\"23\"`; use `Number(input.value)`."
+        ],
+        "es": [
+          "Ejecutar el script antes de que existan los elementos: pon `<script>` al final de `<body>` (o usa `defer`), si no `querySelector` devuelve `null`.",
+          "Usar `innerHTML` con texto que vino de un usuario: puede ejecutar HTML inyectado. Usa `textContent` para texto.",
+          "Escribir `onclick = manejador()` con paréntesis: eso llama a la función de inmediato. Pasa la función misma: `addEventListener(\"click\", manejador)`.",
+          "Olvidar que los valores de los campos son texto: `\"2\" + \"3\"` es `\"23\"`; usa `Number(campo.value)`."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: a page with a heading and a button; clicking the button changes the heading text to the current time.",
+          "Core: a \"dark mode\" button that toggles a `dark` class on `<body>`, with CSS for both looks.",
+          "Core: show a list of 5 movies from an array of objects (title, year), newest first, each as an `<li>`.",
+          "Stretch: a tip calculator form (bill, tip %, people) that validates the inputs and shows the amount per person, updating as you type."
+        ],
+        "es": [
+          "Calentamiento: una página con un título y un botón; al pulsarlo, el título cambia a la hora actual.",
+          "Núcleo: un botón de \"modo oscuro\" que activa y desactiva una clase `dark` en `<body>`, con CSS para ambos aspectos.",
+          "Núcleo: muestra una lista de 5 películas a partir de un arreglo de objetos (título, año), de la más nueva a la más vieja, cada una como `<li>`.",
+          "Extensión: un formulario de calculadora de propinas (cuenta, % de propina, personas) que valide los datos y muestre el monto por persona, actualizándose mientras escribes."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What does `document.querySelector(\"#total\")` return if no element has that id, and what error follows if you use it anyway?",
+          "Why is `classList.toggle(\"open\")` usually better than setting `style.display` from JavaScript?",
+          "What happens when you submit a form without calling `preventDefault()`?"
+        ],
+        "es": [
+          "¿Qué devuelve `document.querySelector(\"#total\")` si ningún elemento tiene ese id, y qué error sigue si lo usas de todos modos?",
+          "¿Por qué `classList.toggle(\"open\")` suele ser mejor que poner `style.display` desde JavaScript?",
+          "¿Qué pasa cuando envías un formulario sin llamar a `preventDefault()`?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "The DOM and Selecting Elements",
+            "es": "El DOM y seleccionar elementos"
+          },
+          "definition": {
+            "en": "The Document Object Model is the browser's live tree of the page: every element is an object with properties and methods. `document.querySelector(css)` returns the first element matching a CSS selector and `querySelectorAll` returns all of them.",
+            "es": "El Document Object Model es el árbol vivo de la página en el navegador: cada elemento es un objeto con propiedades y métodos. `document.querySelector(css)` devuelve el primer elemento que coincide con un selector CSS y `querySelectorAll` los devuelve todos."
+          }
+        },
+        {
+          "term": {
+            "en": "Changing Text and Styles",
+            "es": "Cambiar texto y estilos"
+          },
+          "definition": {
+            "en": "`el.textContent = \"...\"` replaces an element's text. `el.classList.add/remove/toggle(\"name\")` changes its classes so CSS restyles it, `el.style.color` sets one style directly, and properties like `hidden` and `disabled` show, hide or lock elements.",
+            "es": "`el.textContent = \"...\"` reemplaza el texto de un elemento. `el.classList.add/remove/toggle(\"nombre\")` cambia sus clases para que CSS lo vuelva a estilizar, `el.style.color` define un estilo directamente, y propiedades como `hidden` y `disabled` muestran, ocultan o bloquean elementos."
+          }
+        },
+        {
+          "term": {
+            "en": "Events",
+            "es": "Eventos"
+          },
+          "definition": {
+            "en": "Events are things that happen on the page: `click`, `input`, `keydown`, `submit`. `el.addEventListener(\"click\", handler)` calls `handler(event)` each time; the event object has details such as `event.target` and `event.key`.",
+            "es": "Los eventos son cosas que pasan en la página: `click`, `input`, `keydown`, `submit`. `el.addEventListener(\"click\", manejador)` llama a `manejador(evento)` cada vez; el objeto evento tiene detalles como `evento.target` y `evento.key`."
+          }
+        },
+        {
+          "term": {
+            "en": "Creating Elements from Data",
+            "es": "Crear elementos a partir de datos"
+          },
+          "definition": {
+            "en": "`document.createElement(\"li\")` makes a new element, you set its text and classes, and `parent.append(el)` adds it to the page. Looping over an array of objects this way is how lists, tables and cards are built from data.",
+            "es": "`document.createElement(\"li\")` crea un elemento nuevo, le pones texto y clases, y `padre.append(el)` lo agrega a la página. Recorrer un arreglo de objetos así es como se construyen listas, tablas y tarjetas a partir de datos."
+          }
+        },
+        {
+          "term": {
+            "en": "Reading Form Input",
+            "es": "Leer datos de formularios"
+          },
+          "definition": {
+            "en": "`input.value` is what the user typed (always a string), `checkbox.checked` is true or false, and a form's `submit` event fires when it is sent. `event.preventDefault()` stops the page reload so your code can validate and use the values.",
+            "es": "`campo.value` es lo que escribió el usuario (siempre texto), `casilla.checked` es verdadero o falso, y el evento `submit` de un formulario se dispara al enviarlo. `evento.preventDefault()` detiene la recarga para que tu código valide y use los valores."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "MDN: Manipulating documents",
+            "es": "MDN: manipular documentos"
+          },
+          "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/DOM_scripting"
+        },
+        {
+          "label": {
+            "en": "MDN: Introduction to events",
+            "es": "MDN: introducción a los eventos"
+          },
+          "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Scripting/Events"
+        },
+        {
+          "label": {
+            "en": "javascript.info: Document",
+            "es": "javascript.info: el documento"
+          },
+          "url": "https://javascript.info/document"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What does `document.querySelectorAll(\".item\")` return?",
+            "es": "¿Qué devuelve `document.querySelectorAll(\".item\")`?"
+          },
+          "options": {
+            "en": [
+              "The first element with class item",
+              "A list of every element with class item",
+              "The number of items",
+              "An error if there are several"
+            ],
+            "es": [
+              "El primer elemento con clase item",
+              "Una lista de todos los elementos con clase item",
+              "La cantidad de items",
+              "Un error si hay varios"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`querySelectorAll` returns a NodeList of every match (possibly empty); `querySelector` returns only the first.",
+            "es": "`querySelectorAll` devuelve una NodeList con todas las coincidencias (quizá vacía); `querySelector` devuelve solo la primera."
+          }
+        },
+        {
+          "question": {
+            "en": "Which line safely shows a user's name inside `#hello`?",
+            "es": "¿Qué línea muestra de forma segura el nombre de un usuario dentro de `#hello`?"
+          },
+          "options": {
+            "en": [
+              "hello.innerHTML = name",
+              "hello.textContent = name",
+              "hello = name",
+              "hello.value = name"
+            ],
+            "es": [
+              "hello.innerHTML = name",
+              "hello.textContent = name",
+              "hello = name",
+              "hello.value = name"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`textContent` treats the value as plain text, so HTML typed by a user is shown, not run.",
+            "es": "`textContent` trata el valor como texto plano, así que el HTML que escriba un usuario se muestra, no se ejecuta."
+          }
+        },
+        {
+          "question": {
+            "en": "What is wrong with `button.addEventListener(\"click\", save())`?",
+            "es": "¿Qué está mal en `button.addEventListener(\"click\", save())`?"
+          },
+          "options": {
+            "en": [
+              "Nothing",
+              "save() runs immediately and its result is used as the handler",
+              "click must be uppercase",
+              "addEventListener needs three arguments"
+            ],
+            "es": [
+              "Nada",
+              "save() se ejecuta de inmediato y su resultado se usa como manejador",
+              "click debe ir en mayúsculas",
+              "addEventListener necesita tres argumentos"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The parentheses call the function now. Pass the function itself: `addEventListener(\"click\", save)`.",
+            "es": "Los paréntesis llaman a la función ahora. Pasa la función misma: `addEventListener(\"click\", save)`."
+          }
+        },
+        {
+          "question": {
+            "en": "An input contains 5. What is `input.value + 1`?",
+            "es": "Un campo contiene 5. ¿Qué es `input.value + 1`?"
+          },
+          "options": {
+            "en": [
+              "6",
+              "\"51\"",
+              "NaN",
+              "An error"
+            ],
+            "es": [
+              "6",
+              "\"51\"",
+              "NaN",
+              "Un error"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`value` is always a string, and `+` with a string joins text. Convert first: `Number(input.value) + 1` is 6.",
+            "es": "`value` siempre es texto, y `+` con texto une cadenas. Convierte primero: `Number(input.value) + 1` es 6."
+          }
+        },
+        {
+          "question": {
+            "en": "Why call `event.preventDefault()` in a submit handler?",
+            "es": "¿Por qué llamar a `event.preventDefault()` en un manejador de envío?"
+          },
+          "options": {
+            "en": [
+              "To clear the form",
+              "To stop the browser from sending the form and reloading the page",
+              "To validate the email",
+              "To prevent double clicks"
+            ],
+            "es": [
+              "Para limpiar el formulario",
+              "Para que el navegador no envíe el formulario ni recargue la página",
+              "Para validar el correo",
+              "Para evitar dobles clics"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "By default a submit navigates away. Preventing it lets your JavaScript handle the data on the same page.",
+            "es": "Por defecto, enviar navega a otra página. Evitarlo deja que tu JavaScript maneje los datos en la misma página."
+          }
+        }
+      ]
+    },
+    "web-project": {
+      "minutes": 110,
+      "prerequisites": [
+        "web-javascript"
+      ],
+      "whyItMatters": {
+        "en": "Knowing HTML, CSS and JavaScript separately is not the same as shipping a site. Real sites are organized so browsers, search engines and assistive technology understand them, they load data instead of hard-coding it, and they live at a URL anyone can open. This module ties the pieces together into a small app and ends with the step that makes it real: publishing it, the same way this site is published.",
+        "es": "Saber HTML, CSS y JavaScript por separado no es lo mismo que publicar un sitio. Los sitios reales están organizados para que los navegadores, los buscadores y las tecnologías de asistencia los entiendan, cargan datos en lugar de tenerlos escritos a mano y viven en una URL que cualquiera puede abrir. Este módulo une las piezas en una app pequeña y termina con el paso que la hace real: publicarla, igual que se publica este sitio."
+      },
+      "objectives": {
+        "en": [
+          "Lay out a page with `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>` and `<footer>`.",
+          "Check a page for common accessibility problems: alt text, labels, headings, color contrast and keyboard use.",
+          "Read and write JSON with `JSON.parse` and `JSON.stringify`, and explain how `fetch` loads JSON from a server.",
+          "Build a small app that keeps its data in an array, renders it and updates it on user actions.",
+          "Publish a static site with GitHub Pages and know what files and settings it needs."
+        ],
+        "es": [
+          "Organizar una página con `<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<aside>` y `<footer>`.",
+          "Revisar una página en busca de problemas comunes de accesibilidad: texto alt, etiquetas, títulos, contraste de color y uso con teclado.",
+          "Leer y escribir JSON con `JSON.parse` y `JSON.stringify`, y explicar cómo `fetch` carga JSON desde un servidor.",
+          "Construir una app pequeña que guarda sus datos en un arreglo, los dibuja y los actualiza con las acciones del usuario.",
+          "Publicar un sitio estático con GitHub Pages y saber qué archivos y configuración necesita."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "HTML, CSS and DOM JavaScript from modules 1–3",
+          "Commit and push with Git (the Git course)"
+        ],
+        "es": [
+          "HTML, CSS y JavaScript del DOM de los módulos 1–3",
+          "Hacer commit y push con Git (el curso de Git)"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Semantic elements describe the role of each part of the page, which helps screen readers, search engines and your own CSS.",
+          "Accessibility basics: real buttons and links, labels on every field, alt text, enough contrast and nothing that needs a mouse.",
+          "JSON is text; `JSON.parse` turns it into objects and `JSON.stringify` turns objects into text. `fetch(url).then(r => r.json())` loads it from a server.",
+          "A static site (HTML, CSS, JS files) can be hosted free on GitHub Pages: push the files, enable Pages, and it gets a public URL."
+        ],
+        "es": [
+          "Los elementos semánticos describen el papel de cada parte de la página, lo que ayuda a los lectores de pantalla, a los buscadores y a tu propio CSS.",
+          "Accesibilidad básica: botones y enlaces de verdad, etiquetas en cada campo, texto alt, contraste suficiente y nada que necesite ratón.",
+          "JSON es texto; `JSON.parse` lo convierte en objetos y `JSON.stringify` convierte objetos en texto. `fetch(url).then(r => r.json())` lo carga desde un servidor.",
+          "Un sitio estático (archivos HTML, CSS y JS) puede alojarse gratis en GitHub Pages: sube los archivos, activa Pages y obtiene una URL pública."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Building the whole page out of `<div>`s: it looks fine but is a blank wall to screen readers and search engines.",
+          "Using color alone to show meaning (red for errors): also add text or an icon.",
+          "Forgetting that `JSON.parse` throws on invalid JSON (a trailing comma or single quotes); wrap it in `try`/`catch` when the text comes from outside.",
+          "Linking files with absolute paths like `/style.css`: on GitHub Pages your site lives at `/repo-name/`, so use relative paths such as `style.css`."
+        ],
+        "es": [
+          "Construir toda la página con `<div>`: se ve bien pero es una pared en blanco para los lectores de pantalla y los buscadores.",
+          "Usar solo el color para dar significado (rojo para errores): agrega también texto o un ícono.",
+          "Olvidar que `JSON.parse` falla con JSON inválido (una coma final o comillas simples); envuélvelo en `try`/`catch` cuando el texto viene de afuera.",
+          "Enlazar archivos con rutas absolutas como `/style.css`: en GitHub Pages tu sitio vive en `/nombre-repo/`, así que usa rutas relativas como `style.css`."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: rewrite your \"about me\" page with `<header>`, `<nav>`, `<main>` and `<footer>`, keeping the same look.",
+          "Core: test your page using only the keyboard (Tab, Shift+Tab, Enter) and fix anything you cannot reach or see focused.",
+          "Core: store your hobbies as a JSON string, parse it, and build the list from the data instead of typing it in HTML.",
+          "Stretch: publish your site with GitHub Pages, then add a second page linked from the nav and push again."
+        ],
+        "es": [
+          "Calentamiento: reescribe tu página \"sobre mí\" con `<header>`, `<nav>`, `<main>` y `<footer>`, conservando el mismo aspecto.",
+          "Núcleo: prueba tu página usando solo el teclado (Tab, Shift+Tab, Enter) y arregla todo lo que no puedas alcanzar o que no se vea enfocado.",
+          "Núcleo: guarda tus pasatiempos como texto JSON, interprétalo y construye la lista a partir de los datos en lugar de escribirla en el HTML.",
+          "Extensión: publica tu sitio con GitHub Pages, luego agrega una segunda página enlazada desde la navegación y vuelve a hacer push."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What is the difference between `<section>`, `<article>` and `<div>`, and when would you use each?",
+          "Name three things you can check in two minutes to make a page more accessible.",
+          "What does `JSON.stringify({ a: 1 })` return, and what type is it?"
+        ],
+        "es": [
+          "¿Cuál es la diferencia entre `<section>`, `<article>` y `<div>`, y cuándo usarías cada uno?",
+          "Nombra tres cosas que puedes revisar en dos minutos para hacer una página más accesible.",
+          "¿Qué devuelve `JSON.stringify({ a: 1 })` y de qué tipo es?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Semantic Layout",
+            "es": "Estructura semántica"
+          },
+          "definition": {
+            "en": "Using elements that describe their role: `<header>` (top of the page or a section), `<nav>` (main links), `<main>` (the unique content), `<section>` (a themed group with a heading), `<article>` (a self-contained piece), `<aside>` (related extras) and `<footer>`.",
+            "es": "Usar elementos que describen su papel: `<header>` (parte superior de la página o de una sección), `<nav>` (enlaces principales), `<main>` (el contenido único), `<section>` (un grupo temático con título), `<article>` (una pieza independiente), `<aside>` (extras relacionados) y `<footer>`."
+          }
+        },
+        {
+          "term": {
+            "en": "Accessibility",
+            "es": "Accesibilidad"
+          },
+          "definition": {
+            "en": "Making pages usable by everyone, including people who use screen readers, keyboards, zoom or high contrast. The basics: semantic HTML, alt text, labels, visible focus, enough color contrast, and `aria-*` attributes only when HTML alone cannot express something.",
+            "es": "Hacer páginas usables por todos, incluidas las personas que usan lectores de pantalla, teclado, zoom o alto contraste. Lo básico: HTML semántico, texto alt, etiquetas, foco visible, contraste de color suficiente y atributos `aria-*` solo cuando el HTML por sí solo no puede expresar algo."
+          }
+        },
+        {
+          "term": {
+            "en": "Working with JSON",
+            "es": "Trabajar con JSON"
+          },
+          "definition": {
+            "en": "JSON (JavaScript Object Notation) is a text format for data: objects in `{}`, arrays in `[]`, strings in double quotes. `JSON.parse(text)` turns it into JavaScript values, `JSON.stringify(value)` does the reverse, and `fetch(url)` downloads it from a server.",
+            "es": "JSON (JavaScript Object Notation) es un formato de texto para datos: objetos en `{}`, arreglos en `[]`, cadenas entre comillas dobles. `JSON.parse(texto)` lo convierte en valores de JavaScript, `JSON.stringify(valor)` hace lo contrario y `fetch(url)` lo descarga de un servidor."
+          }
+        },
+        {
+          "term": {
+            "en": "A Small Interactive App",
+            "es": "Una pequeña app interactiva"
+          },
+          "definition": {
+            "en": "A common structure for small apps: keep the data (state) in variables, write one `render()` function that draws the page from the state, and have every event handler change the state and call `render()` again.",
+            "es": "Una estructura común para apps pequeñas: guarda los datos (el estado) en variables, escribe una función `render()` que dibuja la página a partir del estado, y haz que cada manejador de eventos cambie el estado y vuelva a llamar a `render()`."
+          }
+        },
+        {
+          "term": {
+            "en": "Publishing Your Site",
+            "es": "Publicar tu sitio"
+          },
+          "definition": {
+            "en": "A static site is just files, so any static host can serve it. With GitHub Pages you push the files (with an `index.html` at the top) to a repository, turn on Pages in the repository settings, and the site appears at `https://username.github.io/repository/`.",
+            "es": "Un sitio estático son solo archivos, así que cualquier servicio de hosting estático puede servirlo. Con GitHub Pages subes los archivos (con un `index.html` en la raíz) a un repositorio, activas Pages en la configuración del repositorio y el sitio aparece en `https://usuario.github.io/repositorio/`."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "MDN: Document and website structure",
+            "es": "MDN: estructura de documentos y sitios web"
+          },
+          "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Structuring_documents"
+        },
+        {
+          "label": {
+            "en": "web.dev: Learn Accessibility",
+            "es": "web.dev: aprende accesibilidad"
+          },
+          "url": "https://web.dev/learn/accessibility"
+        },
+        {
+          "label": {
+            "en": "GitHub Docs: Creating a GitHub Pages site",
+            "es": "GitHub Docs: crear un sitio de GitHub Pages"
+          },
+          "url": "https://docs.github.com/en/pages/getting-started-with-github-pages/creating-a-github-pages-site"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Which element should wrap the main navigation links of a site?",
+            "es": "¿Qué elemento debe envolver los enlaces de navegación principales de un sitio?"
+          },
+          "options": {
+            "en": [
+              "<div class=\"nav\">",
+              "<nav>",
+              "<menu>",
+              "<header>"
+            ],
+            "es": [
+              "<div class=\"nav\">",
+              "<nav>",
+              "<menu>",
+              "<header>"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`<nav>` marks a block of navigation links, so screen-reader users can jump straight to it.",
+            "es": "`<nav>` marca un bloque de enlaces de navegación, para que los usuarios de lectores de pantalla puedan saltar directo a él."
+          }
+        },
+        {
+          "question": {
+            "en": "Which is the best alt text for a photo of a golden retriever catching a frisbee?",
+            "es": "¿Cuál es el mejor texto alt para una foto de un golden retriever atrapando un frisbee?"
+          },
+          "options": {
+            "en": [
+              "image",
+              "dog.jpg",
+              "A golden retriever leaping to catch a frisbee",
+              "Click here"
+            ],
+            "es": [
+              "imagen",
+              "perro.jpg",
+              "Un golden retriever saltando para atrapar un frisbee",
+              "Haz clic aquí"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Good alt text says what the image shows and why it matters, as you would describe it to someone on the phone.",
+            "es": "Un buen texto alt dice qué muestra la imagen y por qué importa, como se lo describirías a alguien por teléfono."
+          }
+        },
+        {
+          "question": {
+            "en": "What does `JSON.parse('{\"n\": 2}').n + 1` give?",
+            "es": "¿Qué da `JSON.parse('{\"n\": 2}').n + 1`?"
+          },
+          "options": {
+            "en": [
+              "\"21\"",
+              "3",
+              "undefined",
+              "An error"
+            ],
+            "es": [
+              "\"21\"",
+              "3",
+              "undefined",
+              "Un error"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Parsing turns the text into an object whose `n` is the number 2, so adding 1 gives 3.",
+            "es": "Interpretar convierte el texto en un objeto cuyo `n` es el número 2, así que sumar 1 da 3."
+          }
+        },
+        {
+          "question": {
+            "en": "In the \"state + render\" pattern, what should a click handler do?",
+            "es": "En el patrón \"estado + render\", ¿qué debe hacer un manejador de clic?"
+          },
+          "options": {
+            "en": [
+              "Edit the HTML directly in several places",
+              "Change the data, then call render()",
+              "Reload the page",
+              "Call render() only"
+            ],
+            "es": [
+              "Editar el HTML directamente en varios lugares",
+              "Cambiar los datos y luego llamar a render()",
+              "Recargar la página",
+              "Solo llamar a render()"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Keeping one source of truth (the state) and one function that draws it means the page can never get out of sync with the data.",
+            "es": "Tener una sola fuente de verdad (el estado) y una función que la dibuja significa que la página nunca se desincroniza de los datos."
+          }
+        },
+        {
+          "question": {
+            "en": "Your GitHub Pages site shows no styles, but works locally. What is the likely cause?",
+            "es": "Tu sitio de GitHub Pages se ve sin estilos, pero funciona en tu computadora. ¿Cuál es la causa probable?"
+          },
+          "options": {
+            "en": [
+              "GitHub Pages does not support CSS",
+              "The stylesheet is linked with an absolute path like /style.css",
+              "CSS files must be named index.css",
+              "You need a server language"
+            ],
+            "es": [
+              "GitHub Pages no admite CSS",
+              "La hoja de estilos se enlaza con una ruta absoluta como /style.css",
+              "Los archivos CSS deben llamarse index.css",
+              "Necesitas un lenguaje de servidor"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Project sites live under `/repository-name/`, so `/style.css` points to the wrong place. A relative path like `style.css` works in both.",
+            "es": "Los sitios de proyecto viven bajo `/nombre-repositorio/`, así que `/style.css` apunta al lugar equivocado. Una ruta relativa como `style.css` funciona en ambos."
           }
         }
       ]

@@ -2,6 +2,7 @@
  "publishedTracks": [
   "python",
   "cli",
+  "web",
   "java",
   "discrete",
   "git"
@@ -37,6 +38,9 @@
   "trees-basics",
   "git-branching-merging",
   "web-html",
+  "web-css",
+  "web-javascript",
+  "web-project",
   "heaps",
   "tries",
   "discrete-graph-theory",
@@ -116,7 +120,10 @@
   "cli-text-pipes": "cli",
   "cli-permissions-env": "cli",
   "cli-shell-scripts": "cli",
-  "web-html": "web"
+  "web-html": "web",
+  "web-css": "web",
+  "web-javascript": "web",
+  "web-project": "web"
  },
  "modules": [
   {
@@ -1045,6 +1052,57 @@
    "es": {
     "title": "HTML: la estructura de una página",
     "description": "Escribe páginas web reales desde cero: elementos y etiquetas, títulos y listas, enlaces e imágenes, tablas y formularios, y cómo el navegador los convierte en lo que ves."
+   }
+  },
+  {
+   "id": "web-css",
+   "title": "CSS: Styling Pages",
+   "description": "Make pages look good with CSS: selectors and rules, colors, fonts and units, the box model, flexbox layouts, and designs that adapt to phones.",
+   "difficulty": "beginner",
+   "topics": [
+    "Selectors and Rules",
+    "Colors, Fonts and Units",
+    "The Box Model",
+    "Flexbox Layout",
+    "Responsive Design"
+   ],
+   "es": {
+    "title": "CSS: dar estilo a las páginas",
+    "description": "Haz que las páginas se vean bien con CSS: selectores y reglas, colores, fuentes y unidades, el modelo de caja, diseños con flexbox y diseños que se adaptan a los teléfonos."
+   }
+  },
+  {
+   "id": "web-javascript",
+   "title": "JavaScript: Interactive Pages",
+   "description": "Bring pages to life with JavaScript: find elements in the DOM, change their text and styles, react to clicks and typing, build lists from data and handle forms.",
+   "difficulty": "beginner",
+   "topics": [
+    "The DOM and Selecting Elements",
+    "Changing Text and Styles",
+    "Events",
+    "Creating Elements from Data",
+    "Reading Form Input"
+   ],
+   "es": {
+    "title": "JavaScript: páginas interactivas",
+    "description": "Dale vida a las páginas con JavaScript: encuentra elementos en el DOM, cambia su texto y estilos, reacciona a clics y teclado, construye listas a partir de datos y maneja formularios."
+   }
+  },
+  {
+   "id": "web-project",
+   "title": "Build and Publish a Site",
+   "description": "Put it all together: semantic page layout, accessibility, working with JSON data, a small interactive app, and publishing your site on the internet for free.",
+   "difficulty": "beginner",
+   "topics": [
+    "Semantic Layout",
+    "Accessibility",
+    "Working with JSON",
+    "A Small Interactive App",
+    "Publishing Your Site"
+   ],
+   "es": {
+    "title": "Construye y publica un sitio",
+    "description": "Junta todo: estructura semántica de la página, accesibilidad, trabajar con datos JSON, una pequeña app interactiva y publicar tu sitio en internet gratis."
    }
   }
  ]
