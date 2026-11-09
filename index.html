@@ -19,8 +19,10 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/atlas.css?v=20261109">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
+<link rel="preload" href="data/atlas-data.json" as="fetch" crossorigin="anonymous">
+<link rel="stylesheet" href="css/atlas.css?v=20261110">
 <script>try { var th = JSON.parse(localStorage.getItem('atlas-theme')); if (th === 'light' || th === 'dark') document.documentElement.dataset.theme = th; } catch (e) {}</script>
 </head>
 <body>
@@ -53,8 +55,7 @@
 </dialog>
 <div class="toast" id="toast" role="status" hidden></div>
 
-<script src="js/app-config.js?v=20261109"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js" defer></script>
-<script src="js/atlas.js?v=20261109" defer></script>
+<script src="js/app-config.js?v=20261110" defer></script>
+<script src="js/atlas.js?v=20261110" defer></script>
 </body>
 </html>
