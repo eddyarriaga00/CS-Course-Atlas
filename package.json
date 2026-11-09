@@ -20,7 +20,7 @@
     "build:data": "node scripts/build-atlas-data.js"
   },
   "dependencies": {
-    "@neondatabase/serverless": "^0.10.4",
+    "@neondatabase/serverless": "^1.2.0",
     "compression": "^1.8.1",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
