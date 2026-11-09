@@ -208,6 +208,20 @@ test.describe('Navigation', () => {
         await expect(page.locator('#ch-0')).toHaveClass(/solved/);
     });
 
+    test('a quiz can be retried with only the missed questions', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html#quizzes');
+        await expect(page.locator('.option').first()).toBeVisible();
+        for (let i = 0; i < 5; i += 1) {
+            const right = await page.evaluate(() => roundItems(state.quiz)[state.quiz.i].correct);
+            await page.locator('.option').nth(i < 3 ? right : (right + 1) % 4).click();
+            await page.locator('[data-action="quiz-next"]').click();
+        }
+        await expect(page.locator('[data-action="quiz-missed"]')).toHaveText('Retry the 2 I missed');
+        await page.locator('[data-action="quiz-missed"]').click();
+        await expect(page.locator('.quiz-top')).toContainText('Question 1 of 2');
+    });
+
     test('mixed review quizzes across completed modules', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html#m-python-first-programs');
