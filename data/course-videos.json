@@ -804,7 +804,43 @@
     "channel": "Neso Academy",
     "count": "31"
    },
-   "topics": {}
+   "topics": {
+    "Propositions": {
+     "id": "itrXYg41-V0",
+     "type": "video",
+     "title": "INTRODUCTION to PROPOSITIONAL LOGIC - DISCRETE MATHEMATICS",
+     "channel": "TrevTutor",
+     "length": "11:02"
+    },
+    "Truth Tables": {
+     "id": "7mulE-zramc",
+     "type": "video",
+     "title": "Intro to Truth Tables |  Negation, Conjunction, and Disjunction",
+     "channel": "Dr. Trefor Bazett",
+     "length": "5:53"
+    },
+    "Implication": {
+     "id": "F3544ZyO-eU",
+     "type": "video",
+     "title": "Conditional Statements: if p then q",
+     "channel": "Dr. Trefor Bazett",
+     "length": "7:09"
+    },
+    "Logical Equivalence": {
+     "id": "tDH67yRNXzI",
+     "type": "video",
+     "title": "Propositional Logic − Logical Equivalences",
+     "channel": "Neso Academy",
+     "length": "17:23"
+    },
+    "Direct Proof": {
+     "id": "YFZzLQN5qOU",
+     "type": "video",
+     "title": "DIRECT PROOFS - DISCRETE MATHEMATICS",
+     "channel": "TrevTutor",
+     "length": "7:24"
+    }
+   }
   },
   "sets-relations-functions": {
    "series": {
@@ -814,7 +850,43 @@
     "channel": "Neso Academy",
     "count": "26"
    },
-   "topics": {}
+   "topics": {
+    "Set Operations": {
+     "id": "4TlCToZZ5gA",
+     "type": "video",
+     "title": "SET OPERATIONS - DISCRETE MATHEMATICS",
+     "channel": "TrevTutor",
+     "length": "6:57"
+    },
+    "Cartesian Product": {
+     "id": "ufjEv-5nmcA",
+     "type": "video",
+     "title": "Cartesian Product of Two Sets A x B",
+     "channel": "Dr. Trefor Bazett",
+     "length": "7:10"
+    },
+    "Relations": {
+     "id": "q0xN_N7l_Kw",
+     "type": "video",
+     "title": "Reflexive, Symmetric, and Transitive Relations on a Set",
+     "channel": "Dr. Trefor Bazett",
+     "length": "6:54"
+    },
+    "Injective Functions": {
+     "id": "bZred_Ksz2k",
+     "type": "video",
+     "title": "INJECTIVE, SURJECTIVE, and BIJECTIVE FUNCTIONS - DISCRETE MATHEMATICS",
+     "channel": "TrevTutor",
+     "length": "17:15"
+    },
+    "Surjective Functions": {
+     "id": "xKNX8BUWR0g",
+     "type": "video",
+     "title": "Surjective (onto) and injective (one-to-one) functions | Linear Algebra | Khan Academy",
+     "channel": "Khan Academy",
+     "length": "9:32"
+    }
+   }
   },
   "discrete-graph-theory": {
    "series": {
@@ -824,11 +896,83 @@
     "channel": "Gate Smashers",
     "count": "11"
    },
-   "topics": {}
+   "topics": {
+    "Graph Models": {
+     "id": "WTNBNSUhSTY",
+     "type": "video",
+     "title": "Degree of Vertices | Definition, Theorem & Example | Graph Theory",
+     "channel": "Dr. Trefor Bazett",
+     "length": "4:57"
+    },
+    "Paths and Cycles": {
+     "id": "koXFopNHE2U",
+     "type": "video",
+     "title": "Graph Theory: 16. Walks Trails and Paths",
+     "channel": "Sarada Herke",
+     "length": "12:47"
+    },
+    "Connectivity": {
+     "id": "SFFEc8DbO0Y",
+     "type": "video",
+     "title": "Graph Theory: 35. Bridges in Connected Graphs",
+     "channel": "Sarada Herke",
+     "length": "5:37"
+    },
+    "BFS/DFS Intuition": {
+     "id": "pcKY4hjDrxk",
+     "type": "video",
+     "title": "5.1 Graph Traversals - BFS & DFS -Breadth First Search and Depth First Search",
+     "channel": "Abdul Bari",
+     "length": "18:31"
+    },
+    "Tree vs General Graph": {
+     "id": "_Hbq_dV8enw",
+     "type": "video",
+     "title": "Proof: Tree Graph of Order n Has Size n-1 | Graph Theory",
+     "channel": "Wrath of Math",
+     "length": "6:39"
+    }
+   }
   },
   "combinatorics-discrete-probability": {
    "series": null,
-   "topics": {}
+   "topics": {
+    "Factorials": {
+     "id": "pxh__ugRKz8",
+     "type": "video",
+     "title": "Factorials Explained!",
+     "channel": "The Organic Chemistry Tutor",
+     "length": "11:17"
+    },
+    "Permutations": {
+     "id": "tkhyQXqVxWA",
+     "type": "video",
+     "title": "FACTORIALS and PERMUTATIONS - DISCRETE MATHEMATICS",
+     "channel": "TrevTutor",
+     "length": "14:05"
+    },
+    "Combinations": {
+     "id": "kWPj-Q5e9Lo",
+     "type": "video",
+     "title": "COMBINATIONS - DISCRETE MATHEMATICS",
+     "channel": "TrevTutor",
+     "length": "17:38"
+    },
+    "Binomial Coefficients": {
+     "id": "stfqYC13bSY",
+     "type": "video",
+     "title": "[Discrete Mathematics] Binomial Theorem and Pascal's Triangle",
+     "channel": "TrevTutor",
+     "length": "15:52"
+    },
+    "Event Probability": {
+     "id": "4wV9xGJXFjg",
+     "type": "video",
+     "title": "Introduction to probability  // Events, Sample Space, Formula, Independence",
+     "channel": "Dr. Trefor Bazett",
+     "length": "8:52"
+    }
+   }
   },
   "git-basics-workflow": {
    "series": {
