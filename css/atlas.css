@@ -1053,3 +1053,5 @@ pre[tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 
 /* Four practice tools: a 2 × 2 grid on wide screens, one column on narrow ones. */
 .practice-hub { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 @media (max-width: 900px) { .practice-hub { grid-template-columns: 1fr; } }
+/* The playground's language bar wraps instead of scrolling, so no language button hides off the edge. */
+.pg-editor .code-bar { flex-wrap: wrap; row-gap: 4px; overflow-x: visible; }
