@@ -1,6 +1,7 @@
 {
  "publishedTracks": [
-  "java"
+  "java",
+  "git"
  ],
  "sequence": [
   "intro-to-coding",
@@ -333,8 +334,8 @@
   },
   {
    "id": "propositional-logic-proofs",
-   "title": "Propositional Logic and Proof Basics",
-   "description": "Truth-value helpers for implication, conjunction, and biconditional are traced in a mini truth-table runner so you can connect symbolic logic to executable reasoning.",
+   "title": "Propositional Logic and Proofs",
+   "description": "Truth tables, implication and logical equivalence, each checked by brute force in code, and how they turn into a direct proof.",
    "difficulty": "beginner",
    "topics": [
     "Propositions",
@@ -344,14 +345,14 @@
     "Direct Proof"
    ],
    "es": {
-    "title": "Lógica proposicional y conceptos básicos de prueba",
-    "description": "Los ayudantes de valor de verdad para implicación, conjunción y bicondicional se rastrean en un mini corredor de tabla de verdad para que pueda conectar la lógica simbólica con el razonamiento ejecutable."
+    "title": "Lógica proposicional y demostraciones",
+    "description": "Tablas de verdad, implicación y equivalencia lógica, cada una comprobada por fuerza bruta en código, y cómo se convierten en una demostración directa."
    }
   },
   {
    "id": "sets-relations-functions",
-   "title": "Sets, Relations, and Functions",
-   "description": "Set union/intersection, Cartesian products, and injective checks run in one compact sample so you can connect formal definitions to concrete data structures.",
+   "title": "Sets, Relations and Functions",
+   "description": "Set operations and their sizes, Cartesian products, the properties of a relation, and when a function is one-to-one or onto.",
    "difficulty": "beginner",
    "topics": [
     "Set Operations",
@@ -362,13 +363,13 @@
    ],
    "es": {
     "title": "Conjuntos, relaciones y funciones",
-    "description": "Establezca uniones/intersecciones, productos cartesianos y comprobaciones inyectivas ejecutadas en una muestra compacta para que pueda conectar definiciones formales a estructuras de datos concretas."
+    "description": "Operaciones con conjuntos y sus tamaños, productos cartesianos, las propiedades de una relación, y cuándo una función es inyectiva o sobreyectiva."
    }
   },
   {
    "id": "combinatorics-discrete-probability",
    "title": "Combinatorics and Discrete Probability",
-   "description": "Factorial/permutation/combination helpers pair with basic probability calculations so counting principles and event models become practical problem-solving tools.",
+   "description": "Count without listing: factorials, permutations, combinations and binomial coefficients, then use those counts to compute the probability of an event.",
    "difficulty": "intermediate",
    "topics": [
     "Factorials",
@@ -379,7 +380,7 @@
    ],
    "es": {
     "title": "Combinatoria y probabilidad discreta",
-    "description": "Los ayudantes factoriales/permutación/combinación se combinan con cálculos de probabilidad básicos para que los principios de conteo y los modelos de eventos se conviertan en herramientas prácticas para la resolución de problemas."
+    "description": "Contar sin enumerar: factoriales, permutaciones, combinaciones y coeficientes binomiales, y usar esos conteos para calcular la probabilidad de un evento."
    }
   },
   {
@@ -568,7 +569,7 @@
   {
    "id": "git-basics-workflow",
    "title": "Git Basics and Collaboration Workflow",
-   "description": "Learn the complete day-one Git workflow with a realistic terminal sequence: initialize, commit with intent, branch safely, sync with remote, handle conflicts, and undo mistakes without rewriting shared history.",
+   "description": "The day-one Git workflow, run in a real terminal: create a repository, stage and commit, branch and merge, share work through a remote, resolve a conflict, and undo mistakes without rewriting shared history.",
    "difficulty": "beginner",
    "topics": [
     "Repository Setup",
@@ -580,8 +581,8 @@
     "Safe Undo with Restore/Revert"
    ],
    "es": {
-    "title": "Conceptos básicos de Git y flujo de trabajo de colaboración",
-    "description": "Este módulo inicial explica la configuración del repositorio, la puesta en escena, las confirmaciones, las bifurcaciones, el flujo de extracción/fusión, los conceptos básicos de resolución de conflictos y los comandos de deshacer seguros que puede usar en proyectos de equipo reales."
+    "title": "Git básico y flujo de trabajo en equipo",
+    "description": "El flujo de trabajo de Git del primer día, ejecutado en una terminal real: crear un repositorio, preparar y confirmar cambios, crear y fusionar ramas, compartir trabajo con un remoto, resolver un conflicto y deshacer errores sin reescribir el historial compartido."
    }
   },
   {
@@ -772,8 +773,8 @@
   },
   {
    "id": "git-branching-merging",
-   "title": "Git Branching, Merging, and Pull Requests",
-   "description": "Practice an intermediate team workflow with branch strategy, commit slicing, rebase conflict handling, PR-ready history cleanup, and production-safe merge patterns.",
+   "title": "Git Branching, Merging and Pull Requests",
+   "description": "The team workflow: one feature branch per change, rebase or merge on purpose, resolve conflicts during a rebase, tidy a branch with fixup commits, and merge it as a clean pull request.",
    "difficulty": "intermediate",
    "topics": [
     "Feature Branches",
@@ -783,8 +784,8 @@
     "Commit Strategy"
    ],
    "es": {
-    "title": "Solicitudes de ramificación, fusión y extracción de Git",
-    "description": "Aprenda un flujo de trabajo de equipo repetible: cree ramas de funciones, manténgalas actualizadas, resuelva conflictos de fusión de forma segura y abra solicitudes de extracción limpias con confirmaciones listas para revisión."
+    "title": "Ramas, merge y pull requests en Git",
+    "description": "El flujo de trabajo en equipo: una rama por cambio, rebase o merge a propósito, resolver conflictos durante un rebase, ordenar una rama con commits fixup y fusionarla como un pull request limpio."
    }
   },
   {
@@ -806,8 +807,8 @@
   },
   {
    "id": "discrete-graph-theory",
-   "title": "Discrete Graph Theory Foundations",
-   "description": "Bridge discrete math and practical CS by modeling vertices/edges, traversing graphs, and reasoning about paths, cycles, and connectivity.",
+   "title": "Graph Theory",
+   "description": "Model real situations as graphs, then reason about them: degrees and the handshake lemma, paths and cycles, connected components and bridges, BFS and DFS, and what makes a graph a tree.",
    "difficulty": "intermediate",
    "topics": [
     "Graph Models",
@@ -817,8 +818,8 @@
     "Tree vs General Graph"
    ],
    "es": {
-    "title": "Fundamentos de la teoría de grafos discretos",
-    "description": "Conecte las matemáticas discretas y la informática práctica modelando vértices/aristas, recorriendo gráficos y razonando sobre rutas, ciclos y conectividad."
+    "title": "Teoría de grafos",
+    "description": "Modela situaciones reales como grafos y razona sobre ellos: grados y el lema del apretón de manos, caminos y ciclos, componentes conexas y puentes, BFS y DFS, y qué hace que un grafo sea un árbol."
    }
   },
   {

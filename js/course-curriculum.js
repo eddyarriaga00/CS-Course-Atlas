@@ -2,7 +2,7 @@
  * CS Course Atlas — curated course content.
  *
  * tracks:  ordered units per track. Unit order must match MODULE_LEARNING_SEQUENCE
- *          in js/script.js filtered to that track.
+ *          in data/module-catalog.json filtered to that track.
  * modules: per-module teaching content (English + Spanish): study time, prerequisites
  *          (module ids), objectives, key takeaways, pitfalls, graded practice,
  *          self-check questions, glossary definitions (one per topic, same order),
@@ -1265,9 +1265,7 @@ window.COURSE_CURRICULUM = {
     },
     "git-basics-workflow": {
       "minutes": 75,
-      "prerequisites": [
-        "intro-to-coding"
-      ],
+      "prerequisites": [],
       "whyItMatters": {
         "en": "Every course project, internship and open-source contribution expects you to commit, sync and undo changes with Git; mistakes like force-pushing over a teammate's work or committing secrets are among the most common day-one incidents on real teams.",
         "es": "Todo proyecto de curso, pasantía o contribución open source espera que sepas hacer commits, sincronizar y deshacer cambios con Git; errores como hacer force-push sobre el trabajo de un compañero o subir credenciales son de los incidentes más comunes en equipos reales."

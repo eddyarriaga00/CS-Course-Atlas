@@ -15,7 +15,7 @@ const CRITICAL_PAGES = [
     '/sitemap.xml'
 ];
 
-const ROUTES = ['home', 'courses', 'course-java', 'course-dsa', 'm-java-basics', 'practice', 'playground', 'plan', 'notes', 'glossary', 'roadmap'];
+const ROUTES = ['home', 'courses', 'course-java', 'course-git', 'course-dsa', 'm-java-basics', 'm-git-basics-workflow', 'practice', 'playground', 'plan', 'notes', 'glossary', 'roadmap'];
 
 test.describe('Navigation', () => {
     test('critical pages return non-error HTTP responses', async ({ request }) => {
@@ -57,6 +57,21 @@ test.describe('Navigation', () => {
         for (let i = 1; i < count; i += 1) {
             await chips.nth(i).click();
             await expect(page.locator('.watch a.vid')).toHaveAttribute('href', /youtube\.com/);
+        }
+    });
+
+    test('Git examples are terminal sessions with a video for every topic', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html#m-git-basics-workflow');
+        await page.locator('.tab[data-tab="examples"]').click();
+        await expect(page.locator('.code-bar .lang[data-code-lang]')).toHaveText(['Terminal']);
+        const chips = page.locator('.chips .chip');
+        const count = await chips.count();
+        expect(count).toBe(8);
+        for (let i = 1; i < count; i += 1) {
+            await chips.nth(i).click();
+            await expect(page.locator('pre.term')).toContainText('$ git ');
+            await expect(page.locator('.watch a.vid')).toHaveAttribute('href', /youtube\.com\/watch/);
         }
     });
 

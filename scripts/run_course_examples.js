@@ -5,7 +5,9 @@
  * Data: js/course-examples.js (window.COURSE_EXAMPLES) or a JSON file with the
  * same `modules` shape. For each module: `main` and every entry of `sets` has
  * `code` (java/cpp/python/javascript and, for the assembly track, assembly)
- * and `output` (expected stdout per language, recorded with --write).
+ * and `output` (expected stdout per language, recorded with --write). The Git track uses
+ * `bash` instead: a terminal session run with real git in an empty folder, recorded as a
+ * transcript ("$ command" then its output).
  *
  * Usage:
  *   node scripts/run_course_examples.js                 # verify js/course-examples.js
@@ -17,7 +19,7 @@
  * Checks: every program compiles, exits 0 within the timeout and prints something;
  * recorded outputs match; java/cpp/python/javascript print the same thing unless the
  * example sets `outputsMayDiffer` (e.g. hash iteration order).
- * Toolchain: java (17+), g++, python3, node, nasm + ld/gcc.
+ * Toolchain: java (17+), g++, python3, node, nasm + ld/gcc, bash + git.
  */
 const fs = require('fs');
 const os = require('os');
@@ -27,7 +29,7 @@ const { spawnSync, spawn } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const DEFAULT_DATA = path.join(ROOT, 'js', 'course-examples.js');
-const RUNNABLE = ['java', 'cpp', 'python', 'javascript', 'assembly'];
+const RUNNABLE = ['java', 'cpp', 'python', 'javascript', 'assembly', 'bash'];
 const PARITY_LANGS = ['java', 'cpp', 'python', 'javascript'];
 const TIMEOUT_MS = 30000;
 
@@ -65,6 +67,8 @@ function normalizeOutput(text) {
     return String(text || '')
         .replace(/\r\n/g, '\n')
         .split('\n')
+        // A bare \r (git's progress counters) overwrites the line, so keep what a terminal would show last.
+        .map((line) => line.split('\r').filter((part) => part.trim()).pop() || '')
         .map((line) => line.replace(/\s+$/, ''))
         .join('\n')
         .replace(/\n+$/, '');
@@ -72,7 +76,8 @@ function normalizeOutput(text) {
 
 function run(command, args, options = {}) {
     return new Promise((resolve) => {
-        const child = spawn(command, args, { cwd: options.cwd, env: { ...process.env, JAVA_TOOL_OPTIONS: '' } });
+        const env = options.env ? { PATH: process.env.PATH, ...options.env } : { ...process.env, JAVA_TOOL_OPTIONS: '' };
+        const child = spawn(command, args, { cwd: options.cwd, env });
         let stdout = '';
         let stderr = '';
         const timer = setTimeout(() => child.kill('SIGKILL'), TIMEOUT_MS);
@@ -126,7 +131,81 @@ async function runProgram(language, source, workDir) {
         if (linked.code !== 0) return { ...linked, phase: 'link' };
         return run(binary, [], { cwd: workDir });
     }
+    if (language === 'bash') {
+        // Terminal sessions (Git course): run in an empty folder with a throwaway HOME and a fixed
+        // identity and clock, so commit hashes and output are the same on every machine.
+        const home = path.join(workDir, 'home');
+        fs.mkdirSync(home, { recursive: true });
+        fs.writeFileSync(path.join(home, '.gitconfig'), GIT_CONFIG);
+        const sessionDir = path.join(workDir, 'session');
+        fs.mkdirSync(sessionDir, { recursive: true });
+        const file = path.join(workDir, 'session.sh');
+        fs.writeFileSync(file, transcriptScript(source));
+        return run('bash', ['--noprofile', '--norc', file], { cwd: sessionDir, env: { HOME: home, GIT_CONFIG_NOSYSTEM: '1', ...FIXED_GIT_CLOCK, LANG: 'C', LC_ALL: 'C', TERM: 'dumb' } });
+    }
     return { code: -1, stdout: '', stderr: `unsupported language ${language}` };
+}
+
+const GIT_CONFIG = `[user]
+\tname = Ana Ruiz
+\temail = ana@example.com
+[init]
+\tdefaultBranch = main
+[advice]
+\tdetachedHead = false
+\tskippedCherryPicks = false
+\tstatusHints = false
+\tresolveConflict = false
+\tmergeConflict = false
+[color]
+\tui = false
+[core]
+\tpager = cat
+[pull]
+\trebase = false
+`;
+const FIXED_GIT_CLOCK = {
+    GIT_AUTHOR_DATE: '2026-01-05T10:00:00Z',
+    GIT_COMMITTER_DATE: '2026-01-05T10:00:00Z'
+};
+
+// Turns a session script into one that prints each command (as typed, after "$ ") before running
+// it, so the recorded output reads like a terminal. A block is one line, a line continued with a
+// trailing backslash, or a command with a here-document. Comment and blank lines are not echoed.
+function transcriptScript(source) {
+    const lines = String(source).replace(/\r\n/g, '\n').split('\n');
+    const out = ['exec 2>&1'];
+    for (let i = 0; i < lines.length; i += 1) {
+        const line = lines[i];
+        if (!line.trim() || /^\s*#/.test(line)) continue;
+        const block = [line];
+        const heredoc = line.match(/<<-?\s*['"]?(\w+)['"]?/);
+        if (heredoc) {
+            while (i + 1 < lines.length) { i += 1; block.push(lines[i]); if (lines[i].trim() === heredoc[1]) break; }
+        } else {
+            while (/\\$/.test(block[block.length - 1]) && i + 1 < lines.length) { i += 1; block.push(lines[i]); }
+        }
+        const shown = block.map((text, index) => (index === 0 ? `$ ${text}` : text)).join('\n');
+        out.push(`printf '%s\\n' ${shellQuote(shown)}`, block.join('\n'));
+    }
+    return `${out.join('\n')}\n`;
+}
+
+// Git's "hint:" lines are advice whose wording changes between Git versions; leave them out of
+// recorded sessions so the same session matches on any recent Git.
+function dropGitHints(text) {
+    return String(text).split('\n').filter((line) => !/^hint:/.test(line)).join('\n');
+}
+
+function firstDifference(expected, actual) {
+    const a = expected.split('\n'), b = actual.split('\n');
+    let i = 0;
+    while (i < a.length && i < b.length && a[i] === b[i]) i += 1;
+    return `  first difference at line ${i + 1}:\n    expected: ${a[i] === undefined ? '(end)' : JSON.stringify(a[i])}\n    actual:   ${b[i] === undefined ? '(end)' : JSON.stringify(b[i])}`;
+}
+
+function shellQuote(text) {
+    return `'${String(text).replace(/'/g, `'\\''`)}'`;
 }
 
 function collectJobs(data, selectedModules) {
@@ -149,7 +228,7 @@ function collectJobs(data, selectedModules) {
 
 async function main() {
     const args = parseArgs(process.argv.slice(2));
-    for (const [tool, flag] of [['java', '-version'], ['g++', '--version'], ['python3', '--version'], ['node', '--version'], ['nasm', '-v']]) {
+    for (const [tool, flag] of [['java', '-version'], ['g++', '--version'], ['python3', '--version'], ['node', '--version'], ['nasm', '-v'], ['git', '--version']]) {
         if (spawnSync(tool, [flag]).status !== 0) {
             console.error(`Missing required tool: ${tool}`);
             process.exit(2);
@@ -169,7 +248,7 @@ async function main() {
             const result = await runProgram(job.language, job.example.code[job.language], workDir);
             fs.rmSync(workDir, { recursive: true, force: true });
             done += 1;
-            const actual = normalizeOutput(result.stdout);
+            const actual = normalizeOutput(job.language === 'bash' ? dropGitHints(result.stdout) : result.stdout);
             if (result.code !== 0 || result.signal) {
                 failures.push(`${job.label} [${job.language}] ${result.phase || 'run'} failed (exit ${result.code}${result.signal ? `, ${result.signal}` : ''}):\n${String(result.stderr || result.stdout).trim().split('\n').slice(0, 12).join('\n')}`);
                 continue;
@@ -182,7 +261,7 @@ async function main() {
             if (args.write) {
                 job.example.output[job.language] = actual;
             } else if (normalizeOutput(job.example.output[job.language]) !== actual) {
-                failures.push(`${job.label} [${job.language}] output differs from recorded expected output (re-run with --write if the change is intended)`);
+                failures.push(`${job.label} [${job.language}] output differs from recorded expected output (re-run with --write if the change is intended)\n${firstDifference(normalizeOutput(job.example.output[job.language]), actual)}`);
             }
             job.actual = actual;
         }
