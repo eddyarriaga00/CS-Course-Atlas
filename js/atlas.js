@@ -4,7 +4,7 @@ const UI = {
     flashcards: 'Flashcards', quizzes: 'Quizzes', playground: 'Playground', notes: 'Notes', support: 'Support', more: 'More', otherCourses: 'Other courses',
     soon: 'Soon', comingSoon: 'Coming soon', available: 'Available', modules: 'modules', moduleLower: 'module', units: 'units', unitsTitle: 'Units', unit: 'Unit', hours: 'hours', min: 'min', module: 'Module', term: 'Term',
     heroTitle: 'Learn computer science from zero.',
-    heroLead: 'Free, step-by-step courses that start at the very beginning. Short lessons, code you can run right in your browser, quizzes and a video for every topic, in English and Spanish.',
+    heroLead: 'Free, step-by-step courses that start at the very beginning. Short lessons, code you can run right in your browser, challenges that check your work, and a video for every topic, in English and Spanish.',
     startPython: 'Start with Python', noExperience: 'No experience needed. Free, no account required.', continueCourse: (c) => `Continue ${c}`,
     startFrom: 'Where are you starting from?',
     s1Title: 'I’m brand new', s1Text: 'Never written a line of code? Start with Python. The first lesson is one line long.', s1Cta: 'Start Python',
@@ -15,7 +15,7 @@ const UI = {
     howTitle: 'How every module works',
     how1: 'Read', how1Text: 'A short lesson: why it matters, the key ideas and the mistakes to avoid.',
     how2: 'Run', how2Text: 'Examples you can edit and run in your browser. Nothing to install.',
-    how3: 'Practice', how3Text: 'Practice problems, a quiz and flashcards so it sticks.',
+    how3: 'Practice', how3Text: 'Coding challenges checked instantly, a quiz, and flashcards that come back right before you forget them.',
     how4: 'Watch', how4Text: 'A hand-picked video for every topic from university and teaching channels.',
     nextTitle: 'After the beginner path', nextLead: 'Bigger languages, algorithms and how real systems work.',
     startJava: 'Start the Java course', browse: 'Browse courses', continueTitle: 'Continue where you left off', continueBtn: 'Continue', startBtn: 'Start',
@@ -71,7 +71,7 @@ const UI = {
     flashcards: 'Tarjetas', quizzes: 'Cuestionarios', playground: 'Editor', notes: 'Notas', support: 'Soporte', more: 'Más', otherCourses: 'Otros cursos',
     soon: 'Pronto', comingSoon: 'Próximamente', available: 'Disponible', modules: 'módulos', moduleLower: 'módulo', units: 'unidades', unitsTitle: 'Unidades', unit: 'Unidad', hours: 'horas', min: 'min', module: 'Módulo', term: 'Término',
     heroTitle: 'Aprende ciencias de la computación desde cero.',
-    heroLead: 'Cursos gratis, paso a paso, que empiezan desde el principio. Lecciones cortas, código que puedes ejecutar en tu navegador, cuestionarios y un video para cada tema, en español e inglés.',
+    heroLead: 'Cursos gratis, paso a paso, que empiezan desde el principio. Lecciones cortas, código que puedes ejecutar en tu navegador, retos que revisan tu trabajo y un video para cada tema, en español e inglés.',
     startPython: 'Empieza con Python', noExperience: 'No necesitas experiencia. Gratis y sin cuenta.', continueCourse: (c) => `Continuar ${c}`,
     startFrom: '¿Desde dónde empiezas?',
     s1Title: 'Soy completamente nuevo', s1Text: '¿Nunca has escrito código? Empieza con Python. La primera lección es de una sola línea.', s1Cta: 'Empezar Python',
@@ -82,7 +82,7 @@ const UI = {
     howTitle: 'Cómo funciona cada módulo',
     how1: 'Lee', how1Text: 'Una lección corta: por qué importa, las ideas clave y los errores a evitar.',
     how2: 'Ejecuta', how2Text: 'Ejemplos que puedes editar y ejecutar en tu navegador. Nada que instalar.',
-    how3: 'Practica', how3Text: 'Ejercicios, un cuestionario y tarjetas para que se te quede.',
+    how3: 'Practica', how3Text: 'Retos de código revisados al instante, un cuestionario y tarjetas que vuelven justo antes de que las olvides.',
     how4: 'Mira', how4Text: 'Un video elegido para cada tema, de canales universitarios y de enseñanza.',
     nextTitle: 'Después de la ruta para principiantes', nextLead: 'Lenguajes más grandes, algoritmos y cómo funcionan los sistemas reales.',
     startJava: 'Empezar el curso de Java', browse: 'Ver cursos', continueTitle: 'Continúa donde te quedaste', continueBtn: 'Continuar', startBtn: 'Empezar',
@@ -360,7 +360,7 @@ function viewHome() {
     <div class="hero"><div class="hero-text"><h1>${t('heroTitle')}</h1><p class="lead">${t('heroLead')}</p>
       <div class="hero-actions">${started && next ? `<a class="btn" href="#m-${next}">${t('continueCourse', esc(L(started.title)))}</a>` : `<a class="btn" href="#course-${first}">${t('startPython')}</a>`}<a class="btn btn-ghost" href="#courses">${t('browse')}</a></div>
       ${started ? '' : `<p class="hero-note">${t('noExperience')}</p>`}
-      <div class="hero-facts"><span><b>${liveTracks().length}</b> ${t('coursesReady')}</span><span><b>${live.length}</b> ${t('modules')}</span><span><b>${live.reduce((n, id) => n + (DATA.modules[id].counts?.examples || 0), 0)}</b> ${t('examples').toLowerCase()}</span><span><b>EN · ES</b></span></div></div>
+      <div class="hero-facts"><span><b>${liveTracks().length}</b> ${t('coursesReady')}</span><span><b>${live.length}</b> ${t('modules')}</span><span><b>${live.reduce((n, id) => n + (DATA.modules[id].counts?.examples || 0), 0)}</b> ${t('examples').toLowerCase()}</span><span><b>${live.reduce((n, id) => n + (DATA.modules[id].counts?.challenges || 0), 0)}</b> ${t('challenges').toLowerCase()}</span><span><b>EN · ES</b></span></div></div>
       ${heroArt()}</div>
     ${started ? `<a class="card continue" href="${next ? '#m-' + next : '#course-' + started.id}"><div class="info"><div class="muted">${t('continueTitle')}</div>
       <h3 style="margin-top:2px">${next ? esc(L(started.title)) + ' · ' + esc(moduleTitle(next)) : t('courseDone')}</h3>
