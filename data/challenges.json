@@ -1612,5 +1612,285 @@
     ]
    ]
   }
+ ],
+ "propositional-logic-proofs": [
+  {
+   "id": "implies",
+   "title": {
+    "en": "Implication",
+    "es": "Implicación"
+   },
+   "prompt": {
+    "en": "Write `implies(p, q)` that returns the truth value of **p → q**. It is only `False` when `p` is `True` and `q` is `False`.",
+    "es": "Escribe `implies(p, q)` que devuelva el valor de verdad de **p → q**. Solo es `False` cuando `p` es `True` y `q` es `False`."
+   },
+   "starter": "def implies(p, q):\n    pass\n",
+   "solution": "def implies(p, q):\n    return (not p) or q\n",
+   "hint": {
+    "en": "p → q has the same truth table as `(not p) or q`.",
+    "es": "p → q tiene la misma tabla de verdad que `(not p) or q`."
+   },
+   "tests": [
+    [
+     "implies(True, True)",
+     "True"
+    ],
+    [
+     "implies(True, False)",
+     "False"
+    ],
+    [
+     "implies(False, True)",
+     "True"
+    ],
+    [
+     "implies(False, False)",
+     "True"
+    ]
+   ]
+  },
+  {
+   "id": "tautology",
+   "title": {
+    "en": "Is it a tautology?",
+    "es": "¿Es una tautología?"
+   },
+   "prompt": {
+    "en": "Write `is_tautology(f)` where `f` takes two booleans `(p, q)`. Return `True` if `f` is `True` for all four combinations of `p` and `q`.",
+    "es": "Escribe `is_tautology(f)` donde `f` recibe dos booleanos `(p, q)`. Devuelve `True` si `f` es `True` en las cuatro combinaciones de `p` y `q`."
+   },
+   "starter": "def is_tautology(f):\n    # try every row of the truth table\n    pass\n",
+   "solution": "def is_tautology(f):\n    for p in (True, False):\n        for q in (True, False):\n            if not f(p, q):\n                return False\n    return True\n",
+   "hint": {
+    "en": "Two nested loops over `(True, False)` cover every row; return `False` as soon as one row fails.",
+    "es": "Dos ciclos anidados sobre `(True, False)` cubren cada fila; devuelve `False` en cuanto una fila falle."
+   },
+   "tests": [
+    [
+     "is_tautology(lambda p, q: p or not p)",
+     "True"
+    ],
+    [
+     "is_tautology(lambda p, q: p and q)",
+     "False"
+    ],
+    [
+     "is_tautology(lambda p, q: (not (p and q)) == ((not p) or (not q)))",
+     "True"
+    ],
+    [
+     "is_tautology(lambda p, q: p or q)",
+     "False"
+    ]
+   ]
+  }
+ ],
+ "sets-relations-functions": [
+  {
+   "id": "set-ops",
+   "title": {
+    "en": "Union, intersection, difference",
+    "es": "Unión, intersección, diferencia"
+   },
+   "prompt": {
+    "en": "Write `set_summary(a, b)` that returns a tuple of three **sorted lists**: the union, the intersection, and `a` minus `b`.",
+    "es": "Escribe `set_summary(a, b)` que devuelva una tupla de tres **listas ordenadas**: la unión, la intersección y `a` menos `b`."
+   },
+   "starter": "def set_summary(a, b):\n    pass\n",
+   "solution": "def set_summary(a, b):\n    a, b = set(a), set(b)\n    return (sorted(a | b), sorted(a & b), sorted(a - b))\n",
+   "hint": {
+    "en": "Python sets have `|` (union), `&` (intersection) and `-` (difference); wrap each in `sorted()`.",
+    "es": "Los conjuntos de Python tienen `|` (unión), `&` (intersección) y `-` (diferencia); envuelve cada uno en `sorted()`."
+   },
+   "tests": [
+    [
+     "set_summary({1, 2, 3}, {2, 3, 4})",
+     "([1, 2, 3, 4], [2, 3], [1])"
+    ],
+    [
+     "set_summary(set(), {5})",
+     "([5], [], [])"
+    ],
+    [
+     "set_summary({7, 8}, {7, 8})",
+     "([7, 8], [7, 8], [])"
+    ]
+   ]
+  },
+  {
+   "id": "is-function",
+   "title": {
+    "en": "Is it a function?",
+    "es": "¿Es una función?"
+   },
+   "prompt": {
+    "en": "A relation is a list of `(x, y)` pairs. Write `is_function(pairs, domain)` that returns `True` when every element of `domain` is paired with **exactly one** `y`.",
+    "es": "Una relación es una lista de pares `(x, y)`. Escribe `is_function(pairs, domain)` que devuelva `True` cuando cada elemento de `domain` está emparejado con **exactamente un** `y`."
+   },
+   "starter": "def is_function(pairs, domain):\n    pass\n",
+   "solution": "def is_function(pairs, domain):\n    outputs = {}\n    for x, y in pairs:\n        outputs.setdefault(x, set()).add(y)\n    return all(len(outputs.get(x, ())) == 1 for x in domain)\n",
+   "hint": {
+    "en": "Collect the set of outputs for each `x` in a dictionary, then check that every `x` in the domain has exactly one.",
+    "es": "Reúne el conjunto de salidas de cada `x` en un diccionario y luego revisa que cada `x` del dominio tenga exactamente una."
+   },
+   "tests": [
+    [
+     "is_function([(1, 'a'), (2, 'b')], {1, 2})",
+     "True"
+    ],
+    [
+     "is_function([(1, 'a'), (1, 'b'), (2, 'c')], {1, 2})",
+     "False"
+    ],
+    [
+     "is_function([(1, 'a')], {1, 2})",
+     "False"
+    ],
+    [
+     "is_function([(1, 'a'), (1, 'a'), (2, 'a')], {1, 2})",
+     "True"
+    ]
+   ]
+  }
+ ],
+ "discrete-graph-theory": [
+  {
+   "id": "degrees",
+   "title": {
+    "en": "Vertex degrees",
+    "es": "Grados de los vértices"
+   },
+   "prompt": {
+    "en": "An undirected graph is a list of edges `(u, v)`. Write `degrees(edges)` that returns a dictionary from each vertex to its degree (number of edges touching it).",
+    "es": "Un grafo no dirigido es una lista de aristas `(u, v)`. Escribe `degrees(edges)` que devuelva un diccionario de cada vértice a su grado (número de aristas que lo tocan)."
+   },
+   "starter": "def degrees(edges):\n    pass\n",
+   "solution": "def degrees(edges):\n    deg = {}\n    for u, v in edges:\n        deg[u] = deg.get(u, 0) + 1\n        deg[v] = deg.get(v, 0) + 1\n    return deg\n",
+   "hint": {
+    "en": "Each edge adds 1 to both of its ends. Use `deg.get(x, 0) + 1`.",
+    "es": "Cada arista suma 1 a sus dos extremos. Usa `deg.get(x, 0) + 1`."
+   },
+   "tests": [
+    [
+     "degrees([('A', 'B'), ('B', 'C'), ('A', 'C'), ('C', 'D')])",
+     "{'A': 2, 'B': 2, 'C': 3, 'D': 1}"
+    ],
+    [
+     "degrees([])",
+     "{}"
+    ],
+    [
+     "sum(degrees([(1, 2), (2, 3), (3, 1)]).values())",
+     "6"
+    ]
+   ]
+  },
+  {
+   "id": "connected",
+   "title": {
+    "en": "Is it connected?",
+    "es": "¿Es conexo?"
+   },
+   "prompt": {
+    "en": "Write `is_connected(vertices, edges)` that returns `True` when every vertex can reach every other one by following edges (undirected).",
+    "es": "Escribe `is_connected(vertices, edges)` que devuelva `True` cuando cada vértice puede llegar a todos los demás siguiendo aristas (no dirigidas)."
+   },
+   "starter": "def is_connected(vertices, edges):\n    # build neighbours, then explore from one vertex\n    pass\n",
+   "solution": "def is_connected(vertices, edges):\n    vertices = list(vertices)\n    if not vertices:\n        return True\n    nbrs = {v: [] for v in vertices}\n    for u, v in edges:\n        nbrs[u].append(v)\n        nbrs[v].append(u)\n    seen, stack = {vertices[0]}, [vertices[0]]\n    while stack:\n        for w in nbrs[stack.pop()]:\n            if w not in seen:\n                seen.add(w)\n                stack.append(w)\n    return len(seen) == len(vertices)\n",
+   "hint": {
+    "en": "Start from any vertex, visit neighbours with a stack (or queue) and a `seen` set, then compare how many you reached with the total.",
+    "es": "Empieza en cualquier vértice, visita vecinos con una pila (o cola) y un conjunto `seen`, y compara cuántos alcanzaste con el total."
+   },
+   "tests": [
+    [
+     "is_connected(['A', 'B', 'C'], [('A', 'B'), ('B', 'C')])",
+     "True"
+    ],
+    [
+     "is_connected(['A', 'B', 'C', 'D'], [('A', 'B'), ('C', 'D')])",
+     "False"
+    ],
+    [
+     "is_connected([1], [])",
+     "True"
+    ],
+    [
+     "is_connected([1, 2], [])",
+     "False"
+    ]
+   ]
+  }
+ ],
+ "combinatorics-discrete-probability": [
+  {
+   "id": "choose",
+   "title": {
+    "en": "n choose k",
+    "es": "n en k (combinaciones)"
+   },
+   "prompt": {
+    "en": "Write `choose(n, k)` that returns how many ways there are to pick `k` items from `n` (order does not matter), without `math.comb`. Return `0` when `k > n`.",
+    "es": "Escribe `choose(n, k)` que devuelva de cuántas formas se pueden elegir `k` elementos de `n` (sin importar el orden), sin `math.comb`. Devuelve `0` cuando `k > n`."
+   },
+   "starter": "def choose(n, k):\n    pass\n",
+   "solution": "def choose(n, k):\n    if k < 0 or k > n:\n        return 0\n    result = 1\n    for i in range(1, k + 1):\n        result = result * (n - k + i) // i\n    return result\n",
+   "hint": {
+    "en": "C(n, k) = n! / (k! (n − k)!). Multiply and divide step by step to keep every value a whole number.",
+    "es": "C(n, k) = n! / (k! (n − k)!). Multiplica y divide paso a paso para que cada valor sea entero."
+   },
+   "tests": [
+    [
+     "choose(5, 2)",
+     "10"
+    ],
+    [
+     "choose(10, 0)",
+     "1"
+    ],
+    [
+     "choose(3, 5)",
+     "0"
+    ],
+    [
+     "choose(52, 5)",
+     "2598960"
+    ]
+   ]
+  },
+  {
+   "id": "dice-sum",
+   "title": {
+    "en": "Chance of a dice total",
+    "es": "Probabilidad de una suma de dados"
+   },
+   "prompt": {
+    "en": "Two fair six-sided dice are rolled. Write `p_sum(total)` that returns the probability that they add up to `total`, rounded to 4 decimals.",
+    "es": "Se lanzan dos dados justos de seis caras. Escribe `p_sum(total)` que devuelva la probabilidad de que sumen `total`, redondeada a 4 decimales."
+   },
+   "starter": "def p_sum(total):\n    # count the favourable outcomes out of 36\n    pass\n",
+   "solution": "def p_sum(total):\n    hits = sum(1 for a in range(1, 7) for b in range(1, 7) if a + b == total)\n    return round(hits / 36, 4)\n",
+   "hint": {
+    "en": "List all 36 pairs `(a, b)`, count those with `a + b == total`, divide by 36 and `round(..., 4)`.",
+    "es": "Recorre los 36 pares `(a, b)`, cuenta los que cumplen `a + b == total`, divide entre 36 y usa `round(..., 4)`."
+   },
+   "tests": [
+    [
+     "p_sum(7)",
+     "0.1667"
+    ],
+    [
+     "p_sum(2)",
+     "0.0278"
+    ],
+    [
+     "p_sum(12)",
+     "0.0278"
+    ],
+    [
+     "p_sum(13)",
+     "0.0"
+    ]
+   ]
+  }
  ]
 }
