@@ -955,3 +955,24 @@ pre[tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 
   .hub-card .hub-body { grid-column: 1 / -1; grid-row: 2; }
   .hub-card .hub-body h2 { margin-top: 0; }
 }
+
+/* Password recovery: link-style buttons, the reset form and the one-time codes dialog */
+.link-btn { border: 0; background: none; padding: 0; font: 600 13px var(--font-ui); color: var(--accent); cursor: pointer; }
+.link-btn:hover { text-decoration: underline; }
+.recover-title { margin: 4px 0 0; font-size: 20px; letter-spacing: -.01em; }
+.code-input { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: .08em; text-transform: uppercase; }
+.rc-dialog { box-sizing: border-box; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); color: var(--text); padding: 22px 22px 18px; width: min(460px, calc(100vw - 24px)); box-shadow: 0 24px 70px rgba(0,0,0,.28); }
+.rc-dialog::backdrop { background: rgba(10,10,20,.55); backdrop-filter: blur(3px); }
+.rc-head { display: flex; align-items: center; gap: 12px; }
+.rc-head h2 { margin: 0; font-size: 19px; letter-spacing: -.01em; }
+.rc-icon { display: grid; place-items: center; width: 40px; height: 40px; flex: none; border-radius: 12px; background: color-mix(in srgb, var(--accent) 14%, transparent); font-size: 19px; }
+.rc-dialog > p { margin: 12px 0 14px; font-size: 14px; line-height: 1.55; }
+.rc-codes { list-style: none; margin: 0; padding: 14px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; border: 1px dashed var(--border); border-radius: 12px; background: color-mix(in srgb, var(--text) 4%, transparent); counter-reset: rc; }
+.rc-codes li { counter-increment: rc; display: flex; align-items: baseline; gap: 8px; }
+.rc-codes li::before { content: counter(rc); font-size: 11px; color: var(--text-3); min-width: 1ch; text-align: right; }
+.rc-codes code { font: 600 14.5px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; letter-spacing: .06em; user-select: all; }
+.rc-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.rc-actions .btn:last-child { margin-left: auto; }
+.rc-left { margin: 8px 0 2px; font-size: 13.5px; font-weight: 600; color: var(--text-2); min-height: 1.2em; }
+.rc-left.low { color: var(--warn, #b45309); }
+@media (max-width: 420px) { .rc-codes { grid-template-columns: 1fr; } .rc-actions .btn { flex: 1 1 auto; } .rc-actions .btn:last-child { margin-left: 0; flex-basis: 100%; } }

@@ -3,6 +3,7 @@ require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { RECOVERY_CODE_COUNT, generateRecoveryCodes, hashRecoveryCode, findMatchingCode, normalizeRecoveryCode } = require('./recovery-codes');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
@@ -258,6 +259,8 @@ app.use('/api/auth/logout', noStore);
 app.use('/api/auth/oauth/providers', noStore);
 app.use('/api/auth/oauth/exchange-ticket', authRateLimit, noStore);
 app.use('/api/profile/password', authRateLimit, noStore);
+app.use('/api/auth/recover', authRateLimit, noStore);
+app.use('/api/profile/recovery-codes', authRateLimit, noStore);
 app.use('/api/profile/delete-account', authRateLimit, noStore);
 app.use('/api/profile/email/request-pin', authRateLimit, noStore);
 app.use('/api/profile/email/verify-pin', authRateLimit, noStore);
@@ -2537,6 +2540,8 @@ app.post('/api/auth/signup', assertSameOrigin, async (req, res) => {
 
     try {
         const passwordHash = await hashPassword(password);
+        // New accounts get one-time recovery codes, shown once, so a forgotten password never locks anyone out.
+        const recoveryCodes = generateRecoveryCodes();
         const userId = await withTransaction(async (client) => {
             const created = await client.query(
                 `
@@ -2560,6 +2565,7 @@ app.post('/api/auth/signup', assertSameOrigin, async (req, res) => {
                 `,
                 [nextUserId, username, email]
             );
+            await replaceRecoveryCodes(client, nextUserId, recoveryCodes);
             return nextUserId;
         });
 
@@ -2585,13 +2591,15 @@ app.post('/api/auth/signup', assertSameOrigin, async (req, res) => {
                     authProvider: 'password'
                 },
                 csrfToken: createdSession.csrfToken,
-                sessionToken: createdSession.sessionToken
+                sessionToken: createdSession.sessionToken,
+                recoveryCodes
             });
         }
 
         return res.status(201).json({
             ok: true,
-            ...sessionResponsePayload(hydratedSession, { sessionToken: createdSession.sessionToken })
+            ...sessionResponsePayload(hydratedSession, { sessionToken: createdSession.sessionToken }),
+            recoveryCodes
         });
     } catch (error) {
         if (error?.code === '23505') {
@@ -2904,6 +2912,161 @@ app.post('/api/profile/password', assertSameOrigin, requireAuth, requireCsrf, as
             return res.status(error.statusCode).json({ error: error.message });
         }
         return res.status(500).json({ error: 'Failed to update password.' });
+    }
+});
+
+async function replaceRecoveryCodes(client, userId, codes) {
+    await client.query('DELETE FROM password_recovery_codes WHERE user_id = $1', [userId]);
+    for (const code of codes) {
+        await client.query(
+            'INSERT INTO password_recovery_codes (user_id, code_hash) VALUES ($1, $2)',
+            [userId, hashRecoveryCode(code)]
+        );
+    }
+}
+
+async function countRecoveryCodesLeft(userId) {
+    const result = await query(
+        'SELECT COUNT(*)::int AS left_count, MAX(created_at) AS created_at FROM password_recovery_codes WHERE user_id = $1 AND used_at IS NULL',
+        [userId]
+    );
+    return { left: Number(result.rows[0]?.left_count || 0), total: RECOVERY_CODE_COUNT };
+}
+
+// Forgot password: a one-time recovery code (given at sign-up or made on the Account page) sets a new
+// password, signs out every other device and signs this one in. Same answer for an unknown account
+// and a wrong code, so the form cannot be used to find out who has an account.
+app.post('/api/auth/recover', assertSameOrigin, async (req, res) => {
+    const identity = normalizeEmailOrUsername(req.body?.email).toLowerCase();
+    const code = normalizeRecoveryCode(req.body?.code);
+    const newPassword = String(req.body?.newPassword || '');
+    const confirmPassword = String(req.body?.confirmPassword || '');
+    const throttleKey = buildAuthThrottleKey(`recover|${identity}`, req);
+    const wrong = 'That recovery code does not match this account, or it was already used.';
+
+    try {
+        await assertAuthThrottleAllowed(throttleKey);
+    } catch (error) {
+        if (error?.statusCode === 429) {
+            if (error.retryAfterSeconds) {
+                res.setHeader('Retry-After', String(error.retryAfterSeconds));
+            }
+            return res.status(429).json({ error: error.message });
+        }
+        return res.status(500).json({ error: 'Password reset temporarily unavailable.' });
+    }
+
+    if (!identity || !code) {
+        return res.status(400).json({ error: 'Enter your email or username and a recovery code.' });
+    }
+    if (newPassword.length < PASSWORD_MIN_LENGTH || newPassword.length > PASSWORD_MAX_LENGTH) {
+        return res.status(400).json({
+            error: `New password must be between ${PASSWORD_MIN_LENGTH} and ${PASSWORD_MAX_LENGTH} characters.`
+        });
+    }
+    if (newPassword !== confirmPassword) {
+        return res.status(400).json({ error: 'New password confirmation does not match.' });
+    }
+    const identityIsValid = identity.length <= AUTH_IDENTIFIER_MAX_LENGTH
+        && (identity.includes('@') ? isValidEmail(identity) : isValidUsername(identity));
+
+    const fail = async () => {
+        const throttleState = await recordAuthFailure(throttleKey).catch(() => ({ blocked: false, retryAfterSeconds: 0 }));
+        if (throttleState.blocked) {
+            res.setHeader('Retry-After', String(throttleState.retryAfterSeconds));
+        }
+        return res.status(400).json({ error: wrong });
+    };
+    if (!identityIsValid || code.length !== 12) {
+        return fail();
+    }
+
+    try {
+        const found = await query(
+            `
+            SELECT u.id
+            FROM users u
+            LEFT JOIN user_profiles p ON p.user_id = u.id
+            WHERE LOWER(u.email) = $1
+               OR LOWER(COALESCE(u.username, '')) = $1
+               OR LOWER(COALESCE(p.username, '')) = $1
+            LIMIT 1
+            `,
+            [identity]
+        );
+        const userId = found.rows[0]?.id;
+        if (!userId) {
+            return fail();
+        }
+        const newHash = await hashPassword(newPassword);
+        const ok = await withTransaction(async (client) => {
+            const codes = await client.query(
+                'SELECT id, code_hash FROM password_recovery_codes WHERE user_id = $1 AND used_at IS NULL FOR UPDATE',
+                [userId]
+            );
+            const match = findMatchingCode(code, codes.rows);
+            if (!match) {
+                return false;
+            }
+            await client.query('UPDATE password_recovery_codes SET used_at = NOW() WHERE id = $1', [match.id]);
+            await client.query('UPDATE users SET password_hash = $2, updated_at = NOW() WHERE id = $1', [userId, newHash]);
+            // Whoever had the old password is signed out everywhere.
+            await client.query('DELETE FROM user_sessions WHERE user_id = $1', [userId]);
+            return true;
+        });
+        if (!ok) {
+            return fail();
+        }
+
+        await query('UPDATE users SET last_login_at = NOW() WHERE id = $1', [userId]);
+        const createdSession = await createSession(res, req, userId, { authProvider: 'password' });
+        const hydratedSession = await getSessionByToken(createdSession.sessionToken, { tokenSource: 'issue' });
+        await clearAuthThrottle(throttleKey);
+        const recovery = await countRecoveryCodesLeft(userId);
+        if (!hydratedSession) {
+            return res.json({ ok: true, authenticated: false, recoveryCodesLeft: recovery.left });
+        }
+        return res.json({
+            ok: true,
+            ...sessionResponsePayload(hydratedSession, { sessionToken: createdSession.sessionToken }),
+            recoveryCodesLeft: recovery.left
+        });
+    } catch (error) {
+        return res.status(500).json({ error: 'Password reset failed. Please try again.' });
+    }
+});
+
+app.get('/api/profile/recovery-codes', requireAuth, async (req, res) => {
+    try {
+        return res.json({ ok: true, ...(await countRecoveryCodesLeft(req.auth.userId)) });
+    } catch (error) {
+        return res.status(500).json({ error: 'Failed to load recovery codes.' });
+    }
+});
+
+// Make a fresh set of codes (the old ones stop working). Needs the current password.
+app.post('/api/profile/recovery-codes', assertSameOrigin, requireAuth, requireCsrf, async (req, res) => {
+    const currentPassword = String(req.body?.currentPassword || '');
+    if (!currentPassword || currentPassword.length > PASSWORD_MAX_LENGTH) {
+        return res.status(400).json({ error: 'Current password is required.' });
+    }
+    try {
+        const codes = generateRecoveryCodes();
+        await withTransaction(async (client) => {
+            const found = await client.query('SELECT password_hash FROM users WHERE id = $1 LIMIT 1', [req.auth.userId]);
+            const row = found.rows[0];
+            const isPasswordValid = row ? await verifyPassword(currentPassword, row.password_hash) : false;
+            if (!row || !isPasswordValid) {
+                throw createHttpError(401, 'Current password is incorrect.');
+            }
+            await replaceRecoveryCodes(client, req.auth.userId, codes);
+        });
+        return res.json({ ok: true, recoveryCodes: codes });
+    } catch (error) {
+        if (error?.statusCode) {
+            return res.status(error.statusCode).json({ error: error.message });
+        }
+        return res.status(500).json({ error: 'Failed to create recovery codes.' });
     }
 });
 

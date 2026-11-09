@@ -9,9 +9,12 @@ This backend enables Neon SQL persistence for auth, profile, support requests, a
 - `POST /api/auth/signup`
 - `POST /api/auth/login`
 - `POST /api/auth/logout`
+- `POST /api/auth/recover` (forgot password: one-time recovery code + new password)
 - `GET /api/profile`
 - `POST /api/profile`
 - `POST /api/profile/password`
+- `GET /api/profile/recovery-codes` (how many are left)
+- `POST /api/profile/recovery-codes` (make a new set; needs the current password)
 - `POST /api/profile/delete-account`
 - `POST /api/profile/email/request-pin`
 - `POST /api/profile/email/verify-pin`
@@ -98,6 +101,7 @@ This repo includes a production `render.yaml` for API hosting as `cs-course-atla
 - Mutating API payloads are inspected for prototype-pollution keys and abusive JSON shapes (depth/key/array/string caps).
 - API request surface limits block oversized headers, overlong request targets, and risky HTTP methods (`TRACE`/`TRACK`/`CONNECT`).
 - In-memory IP rate-limit maps now cap tracked key cardinality to reduce memory pressure during distributed abuse bursts.
+- Forgotten passwords are reset with one-time recovery codes (8 per account, shown once at sign-up or when regenerated, stored only as SHA-256 hashes). No email provider is needed. A reset signs out every other session, and wrong codes count toward the same lockout as failed logins.
 - Email changes use one-time 6-digit PIN verification with expiry + attempt limits.
 - Optional host allowlist protection is available via `ALLOWED_HOSTS`.
 - Optional Fetch Metadata enforcement blocks cross-site state-changing API requests.

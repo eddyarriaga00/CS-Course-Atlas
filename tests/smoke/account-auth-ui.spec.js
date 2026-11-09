@@ -1,7 +1,48 @@
 const { test, expect } = require('@playwright/test');
-const { mockApi } = require('./helpers/api-mock');
+const { mockApi, RECOVERY_CODES } = require('./helpers/api-mock');
 
 test.describe('Accounts', () => {
+    test('sign-up shows recovery codes once, and a code resets a forgotten password', async ({ page }) => {
+        const calls = await mockApi(page);
+        await page.goto('/index.html');
+        await page.locator('#signin-open').click();
+        await page.locator('.auth-tab[data-v="signup"]').click();
+        await page.locator('#si-email').fill('ana@example.com');
+        await page.locator('#si-user').fill('ana');
+        await page.locator('#si-pass').fill('correct-horse');
+        await page.locator('#si-pass2').fill('correct-horse');
+        await page.locator('#signin-submit').click();
+        const dialog = page.locator('#rc-dialog');
+        await expect(dialog).toBeVisible();
+        await expect(dialog.locator('.rc-codes code')).toHaveText(RECOVERY_CODES);
+        await page.keyboard.press('Escape');
+        await expect(dialog).toBeVisible(); // only closes on purpose
+        await dialog.locator('[data-rc="done"]').click();
+        await expect(dialog).toBeHidden();
+
+        await page.goto('/index.html#profile');
+        await expect(page.locator('#rc-left')).toHaveText('7 of 8 codes left.');
+        await page.locator('[data-action="sign-out"]').click();
+
+        await page.locator('#signin-open').click();
+        await page.locator('[data-action="signin-mode"][data-v="recover"]').click();
+        await expect(page.locator('#signin-title')).toHaveText('Reset your password');
+        await page.locator('#si-email').fill('ana');
+        await page.locator('#si-code').fill('wrong-code-0000');
+        await page.locator('#si-pass').fill('new-password-1');
+        await page.locator('#si-pass2').fill('new-password-1');
+        await page.locator('#signin-submit').click();
+        await expect(page.locator('#signin-error')).toContainText('does not match');
+        await expect(page.locator('#si-email')).toHaveValue('ana');
+        await page.locator('#si-code').fill(RECOVERY_CODES[0].toLowerCase().replace(/-/g, ' '));
+        await page.locator('#si-pass').fill('new-password-1');
+        await page.locator('#si-pass2').fill('new-password-1');
+        await page.locator('#signin-submit').click();
+        await expect(page.locator('body')).toHaveClass(/signed-in/);
+        await expect(page.locator('#toast')).toContainText('Password reset');
+        expect(calls.recovered.newPassword).toBe('new-password-1');
+    });
+
     test('profile asks signed-out visitors to sign in', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html#profile');
