@@ -1,13 +1,13 @@
 {
   "name": "CS Course Atlas",
   "short_name": "CS Atlas",
-  "description": "Multi-class computer science learning platform with tracks, modules, quizzes, flashcards, and progress sync.",
+  "description": "Free computer science courses, starting with Java: lessons, code examples in four languages, quizzes and video series.",
   "start_url": "/CS-Course-Atlas/index.html",
   "scope": "/CS-Course-Atlas/",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#020617",
-  "theme_color": "#1d4ed8",
+  "orientation": "any",
+  "background_color": "#f7f7f8",
+  "theme_color": "#4f46e5",
   "lang": "en-US",
   "categories": ["education", "developer", "productivity"]
 }
