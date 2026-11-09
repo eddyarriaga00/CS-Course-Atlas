@@ -562,3 +562,15 @@ pre.code.term { white-space: pre; }
 @media (max-width: 640px) { .save-card { flex-direction: column; align-items: stretch; } }
 .panel > .sep { height: 1px; background: var(--border); margin: 20px 0; border: 0; }
 .google-wrap { display: grid; gap: 14px; } .google-wrap[hidden] { display: none; }
+
+/* ---------- Levels and planned courses ---------- */
+.levels { display: flex; gap: 6px; }
+.pill.lvl-beginner { background: var(--success-soft); color: var(--success); }
+.pill.lvl-intermediate { background: var(--warn-soft); color: var(--warn); }
+.pill.lvl-advanced { background: var(--danger-soft); color: var(--danger); }
+.planned-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 12px; }
+.planned-card { padding: 16px 18px; display: flex; flex-direction: column; gap: 10px; border-style: dashed; }
+.planned-card h3 { font-size: 15.5px; margin: 0 0 4px; }
+.planned-card p { margin: 0; color: var(--text-2); font-size: 14px; flex: 1; }
+.planned-card .cicon { font-size: 14px; }
+.planned-card .vote { align-self: flex-start; }

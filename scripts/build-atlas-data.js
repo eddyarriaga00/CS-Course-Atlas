@@ -11,22 +11,34 @@ const { modules: catalog, PUBLISHED_TRACKS } = require('./lib/catalog').loadCata
 const byId = Object.fromEntries(catalog.map((m) => [m.id, m]));
 
 const TRACK_META = {
-  java: { title: { en: 'Java', es: 'Java' }, icon: 'J',
+  java: { title: { en: 'Java', es: 'Java' }, icon: 'J', level: 'beginner',
     blurb: { en: 'From variables and objects to collections, streams, testing, JDBC and the JVM.', es: 'De variables y objetos a colecciones, streams, pruebas, JDBC y la JVM.' } },
-  dsa: { title: { en: 'Data Structures & Algorithms', es: 'Estructuras de datos y algoritmos' }, icon: 'A',
+  dsa: { title: { en: 'Data Structures & Algorithms', es: 'Estructuras de datos y algoritmos' }, icon: 'A', level: 'intermediate',
     blurb: { en: 'Arrays to graphs, sorting to dynamic programming, with complexity analysis throughout.', es: 'De arreglos a grafos, de ordenamiento a programación dinámica, con análisis de complejidad.' } },
-  discrete: { title: { en: 'Discrete Math', es: 'Matemáticas discretas' }, icon: '∑',
+  discrete: { title: { en: 'Discrete Math', es: 'Matemáticas discretas' }, icon: '∑', level: 'beginner',
     blurb: { en: 'Logic and proofs, sets and relations, counting, probability and graph theory.', es: 'Lógica y demostraciones, conjuntos y relaciones, conteo, probabilidad y teoría de grafos.' } },
-  git: { title: { en: 'Git', es: 'Git' }, icon: 'G',
+  git: { title: { en: 'Git', es: 'Git' }, icon: 'G', level: 'beginner',
     blurb: { en: 'How Git really stores your work, and the branching workflow teams use every day.', es: 'Cómo Git guarda realmente tu trabajo y el flujo de ramas que los equipos usan a diario.' } },
-  assembly: { title: { en: 'x86-64 Assembly', es: 'Ensamblador x86-64' }, icon: '⚙',
+  assembly: { title: { en: 'x86-64 Assembly', es: 'Ensamblador x86-64' }, icon: '⚙', level: 'intermediate',
     blurb: { en: 'Registers, memory, calls and the stack: what your high-level code turns into.', es: 'Registros, memoria, llamadas y la pila: en qué se convierte tu código de alto nivel.' } }
 };
 const ORDER = ['java', 'dsa', 'discrete', 'git', 'assembly'];
+// Courses not written yet, beginner-friendly first. Shown as cards on the Courses page.
+const P = (id, icon, level, en, es, blurbEn, blurbEs) => ({ id, icon, level, title: { en, es }, blurb: { en: blurbEn, es: blurbEs } });
 const PLANNED = [
-  ['Theory of Computation', 'Teoría de la computación'], ['C++', 'C++'], ['Operating Systems', 'Sistemas operativos'],
-  ['Computer Networks', 'Redes de computadoras'], ['Computer Architecture', 'Arquitectura de computadoras'], ['Statistics for CS', 'Estadística para computación']
-].map(([en, esT]) => ({ en, es: esT }));
+  P('cybersecurity', '🛡', 'beginner', 'Cybersecurity Fundamentals', 'Fundamentos de ciberseguridad', 'How attacks work and how to defend: passwords and authentication, phishing, encryption, network security and safe coding.', 'Cómo funcionan los ataques y cómo defenderse: contraseñas y autenticación, phishing, cifrado, seguridad en redes y código seguro.'),
+  P('python', 'Py', 'beginner', 'Intro to Programming with Python', 'Introducción a la programación con Python', 'A true first course: variables, decisions, loops, functions and small projects, in the friendliest language.', 'Un verdadero primer curso: variables, decisiones, ciclos, funciones y pequeños proyectos, en el lenguaje más amigable.'),
+  P('web', '</>', 'beginner', 'Web Basics: HTML, CSS & JavaScript', 'Web básica: HTML, CSS y JavaScript', 'Build and publish real pages: structure with HTML, style with CSS, and make them interactive with JavaScript.', 'Crea y publica páginas reales: estructura con HTML, estilo con CSS e interactividad con JavaScript.'),
+  P('cli', '$_', 'beginner', 'Command Line & Linux', 'Línea de comandos y Linux', 'Move around the file system, use pipes and scripts, manage permissions and processes: the skills every course assumes.', 'Muévete por el sistema de archivos, usa tuberías y scripts, administra permisos y procesos: lo que todo curso da por sabido.'),
+  P('sql', 'DB', 'beginner', 'SQL & Databases', 'SQL y bases de datos', 'Store and query data: tables, SELECT and JOIN, keys and relationships, and designing a small database from scratch.', 'Guarda y consulta datos: tablas, SELECT y JOIN, llaves y relaciones, y diseñar una base de datos pequeña desde cero.'),
+  P('how-computers-work', '01', 'beginner', 'How Computers Work', 'Cómo funcionan las computadoras', 'Bits and bytes, number systems, memory, the CPU and what happens when a program runs.', 'Bits y bytes, sistemas numéricos, memoria, la CPU y qué pasa cuando se ejecuta un programa.'),
+  P('networks', '⇄', 'intermediate', 'Computer Networks', 'Redes de computadoras', 'From packets to the web: IP, TCP and UDP, DNS, HTTP and what happens when you open a website.', 'De los paquetes a la web: IP, TCP y UDP, DNS, HTTP y qué pasa cuando abres un sitio web.'),
+  P('os', 'OS', 'intermediate', 'Operating Systems', 'Sistemas operativos', 'Processes and threads, scheduling, memory management, file systems and concurrency.', 'Procesos e hilos, planificación, gestión de memoria, sistemas de archivos y concurrencia.'),
+  P('cpp', 'C+', 'intermediate', 'C++', 'C++', 'Pointers, memory, classes and the standard library, for performance-minded programming.', 'Punteros, memoria, clases y la biblioteca estándar, para programar pensando en el rendimiento.'),
+  P('architecture', '▣', 'intermediate', 'Computer Architecture', 'Arquitectura de computadoras', 'Logic gates to pipelines: how hardware executes instructions and why caches matter.', 'De las compuertas lógicas al pipeline: cómo el hardware ejecuta instrucciones y por qué importan las cachés.'),
+  P('statistics', 'σ', 'intermediate', 'Statistics for CS', 'Estadística para computación', 'Distributions, sampling, testing and the statistics behind experiments and machine learning.', 'Distribuciones, muestreo, pruebas y la estadística detrás de los experimentos y el aprendizaje automático.'),
+  P('theory', 'λ', 'advanced', 'Theory of Computation', 'Teoría de la computación', 'Automata, grammars, Turing machines and the limits of what computers can solve.', 'Autómatas, gramáticas, máquinas de Turing y los límites de lo que las computadoras pueden resolver.')
+];
 
 // A track is "available" (fully written, shown with lessons) when it is listed in publishedTracks.
 const tracks = ORDER.map((id) => ({ id, ...TRACK_META[id], status: PUBLISHED_TRACKS.includes(id) ? 'available' : 'soon', units: cur.tracks[id].map((u) => ({ id: u.id, title: u.title, modules: u.modules })) }));
