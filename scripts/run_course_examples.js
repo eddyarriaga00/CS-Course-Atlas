@@ -191,6 +191,19 @@ function transcriptScript(source) {
     return `${out.join('\n')}\n`;
 }
 
+// Git's "hint:" lines are advice whose wording changes between Git versions; leave them out of
+// recorded sessions so the same session matches on any recent Git.
+function dropGitHints(text) {
+    return String(text).split('\n').filter((line) => !/^hint:/.test(line)).join('\n');
+}
+
+function firstDifference(expected, actual) {
+    const a = expected.split('\n'), b = actual.split('\n');
+    let i = 0;
+    while (i < a.length && i < b.length && a[i] === b[i]) i += 1;
+    return `  first difference at line ${i + 1}:\n    expected: ${a[i] === undefined ? '(end)' : JSON.stringify(a[i])}\n    actual:   ${b[i] === undefined ? '(end)' : JSON.stringify(b[i])}`;
+}
+
 function shellQuote(text) {
     return `'${String(text).replace(/'/g, `'\\''`)}'`;
 }
@@ -235,7 +248,7 @@ async function main() {
             const result = await runProgram(job.language, job.example.code[job.language], workDir);
             fs.rmSync(workDir, { recursive: true, force: true });
             done += 1;
-            const actual = normalizeOutput(result.stdout);
+            const actual = normalizeOutput(job.language === 'bash' ? dropGitHints(result.stdout) : result.stdout);
             if (result.code !== 0 || result.signal) {
                 failures.push(`${job.label} [${job.language}] ${result.phase || 'run'} failed (exit ${result.code}${result.signal ? `, ${result.signal}` : ''}):\n${String(result.stderr || result.stdout).trim().split('\n').slice(0, 12).join('\n')}`);
                 continue;
@@ -248,7 +261,7 @@ async function main() {
             if (args.write) {
                 job.example.output[job.language] = actual;
             } else if (normalizeOutput(job.example.output[job.language]) !== actual) {
-                failures.push(`${job.label} [${job.language}] output differs from recorded expected output (re-run with --write if the change is intended)`);
+                failures.push(`${job.label} [${job.language}] output differs from recorded expected output (re-run with --write if the change is intended)\n${firstDifference(normalizeOutput(job.example.output[job.language]), actual)}`);
             }
             job.actual = actual;
         }
