@@ -13,6 +13,8 @@ const byId = Object.fromEntries(catalog.map((m) => [m.id, m]));
 const TRACK_META = {
   python: { title: { en: 'Intro to Programming with Python', es: 'Introducción a la programación con Python' }, icon: 'Py', level: 'beginner',
     blurb: { en: 'A true first course: print, variables, decisions, loops, functions, lists and dictionaries, all in runnable Python.', es: 'Un verdadero primer curso: print, variables, decisiones, ciclos, funciones, listas y diccionarios, todo en Python ejecutable.' } },
+  cli: { title: { en: 'Command Line & Linux', es: 'Línea de comandos y Linux' }, icon: '$_', level: 'beginner',
+    blurb: { en: 'Move around the file system, search and combine text with pipes, handle permissions and PATH, and automate with shell scripts.', es: 'Muévete por el sistema de archivos, busca y combina texto con tuberías, maneja permisos y PATH, y automatiza con scripts de shell.' } },
   java: { title: { en: 'Java', es: 'Java' }, icon: 'J', level: 'beginner',
     blurb: { en: 'From variables and objects to collections, streams, testing, JDBC and the JVM.', es: 'De variables y objetos a colecciones, streams, pruebas, JDBC y la JVM.' } },
   dsa: { title: { en: 'Data Structures & Algorithms', es: 'Estructuras de datos y algoritmos' }, icon: 'A', level: 'intermediate',
@@ -24,13 +26,12 @@ const TRACK_META = {
   assembly: { title: { en: 'x86-64 Assembly', es: 'Ensamblador x86-64' }, icon: '⚙', level: 'intermediate',
     blurb: { en: 'Registers, memory, calls and the stack: what your high-level code turns into.', es: 'Registros, memoria, llamadas y la pila: en qué se convierte tu código de alto nivel.' } }
 };
-const ORDER = ['python', 'java', 'discrete', 'git', 'dsa', 'assembly'];
+const ORDER = ['python', 'cli', 'java', 'discrete', 'git', 'dsa', 'assembly'];
 // Courses not written yet, beginner-friendly first. Shown as cards on the Courses page.
 const P = (id, icon, level, en, es, blurbEn, blurbEs) => ({ id, icon, level, title: { en, es }, blurb: { en: blurbEn, es: blurbEs } });
 const PLANNED = [
   P('cybersecurity', '🛡', 'beginner', 'Cybersecurity Fundamentals', 'Fundamentos de ciberseguridad', 'How attacks work and how to defend: passwords and authentication, phishing, encryption, network security and safe coding.', 'Cómo funcionan los ataques y cómo defenderse: contraseñas y autenticación, phishing, cifrado, seguridad en redes y código seguro.'),
   P('web', '</>', 'beginner', 'Web Basics: HTML, CSS & JavaScript', 'Web básica: HTML, CSS y JavaScript', 'Build and publish real pages: structure with HTML, style with CSS, and make them interactive with JavaScript.', 'Crea y publica páginas reales: estructura con HTML, estilo con CSS e interactividad con JavaScript.'),
-  P('cli', '$_', 'beginner', 'Command Line & Linux', 'Línea de comandos y Linux', 'Move around the file system, use pipes and scripts, manage permissions and processes: the skills every course assumes.', 'Muévete por el sistema de archivos, usa tuberías y scripts, administra permisos y procesos: lo que todo curso da por sabido.'),
   P('sql', 'DB', 'beginner', 'SQL & Databases', 'SQL y bases de datos', 'Store and query data: tables, SELECT and JOIN, keys and relationships, and designing a small database from scratch.', 'Guarda y consulta datos: tablas, SELECT y JOIN, llaves y relaciones, y diseñar una base de datos pequeña desde cero.'),
   P('how-computers-work', '01', 'beginner', 'How Computers Work', 'Cómo funcionan las computadoras', 'Bits and bytes, number systems, memory, the CPU and what happens when a program runs.', 'Bits y bytes, sistemas numéricos, memoria, la CPU y qué pasa cuando se ejecuta un programa.'),
   P('ai', 'AI', 'beginner', 'AI Fundamentals', 'Fundamentos de inteligencia artificial', 'How AI and machine learning actually work: data, models, training and testing, language models, and using AI tools well and safely.', 'Cómo funcionan realmente la IA y el aprendizaje automático: datos, modelos, entrenamiento y prueba, modelos de lenguaje, y usar herramientas de IA bien y con seguridad.'),

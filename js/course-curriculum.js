@@ -290,6 +290,48 @@ window.COURSE_CURRICULUM = {
           "python-collections"
         ]
       }
+    ],
+    "cli": [
+      {
+        "id": "cli-getting-around",
+        "title": {
+          "en": "Getting Around",
+          "es": "Moverte por el sistema"
+        },
+        "modules": [
+          "cli-files-folders"
+        ]
+      },
+      {
+        "id": "cli-working-with-text",
+        "title": {
+          "en": "Working with Text",
+          "es": "Trabajar con texto"
+        },
+        "modules": [
+          "cli-text-pipes"
+        ]
+      },
+      {
+        "id": "cli-system",
+        "title": {
+          "en": "Permissions and the Environment",
+          "es": "Permisos y el entorno"
+        },
+        "modules": [
+          "cli-permissions-env"
+        ]
+      },
+      {
+        "id": "cli-automation",
+        "title": {
+          "en": "Automating with Scripts",
+          "es": "Automatizar con scripts"
+        },
+        "modules": [
+          "cli-shell-scripts"
+        ]
+      }
     ]
   },
   "modules": {
@@ -14513,6 +14555,1168 @@ window.COURSE_CURRICULUM = {
           "explanation": {
             "en": "`b = a` makes both names refer to the same list, so appending through `b` changes what `a` sees. Use `b = a.copy()` for an independent list.",
             "es": "`b = a` hace que ambos nombres se refieran a la misma lista, así que agregar mediante `b` cambia lo que ve `a`. Usa `b = a.copy()` para una lista independiente."
+          }
+        }
+      ]
+    },
+    "cli-files-folders": {
+      "minutes": 75,
+      "prerequisites": [],
+      "whyItMatters": {
+        "en": "Almost every programming tool is started from a terminal: running Python files, using Git, installing packages, connecting to servers. The terminal looks plain, but it is just another way to do what you already do with folders and files, only faster and in a form you can repeat and automate. The handful of commands in this module are the ones professionals type hundreds of times a day.",
+        "es": "Casi todas las herramientas de programación se inician desde una terminal: ejecutar archivos de Python, usar Git, instalar paquetes, conectarse a servidores. La terminal parece sencilla, pero es solo otra forma de hacer lo que ya haces con carpetas y archivos, más rápida y de un modo que puedes repetir y automatizar. Los pocos comandos de este módulo son los que los profesionales escriben cientos de veces al día."
+      },
+      "objectives": {
+        "en": [
+          "Explain what the shell, the prompt and a command with arguments are, and read a command such as `ls -a projects`.",
+          "Find out where you are with `pwd` and move around with `cd`, `cd ..`, `cd ~` and `cd -`.",
+          "Create folders with `mkdir -p` and files with `touch`, `>` and `>>`, and show them with `ls` and `cat`.",
+          "Copy, rename, move and delete files and folders with `cp`, `cp -r`, `mv`, `rm`, `rm -r` and `rmdir`.",
+          "Use absolute and relative paths, `.`, `..` and `~`, and select many files at once with `*` and `?`."
+        ],
+        "es": [
+          "Explicar qué son la shell, el prompt y un comando con argumentos, y leer un comando como `ls -a projects`.",
+          "Saber dónde estás con `pwd` y moverte con `cd`, `cd ..`, `cd ~` y `cd -`.",
+          "Crear carpetas con `mkdir -p` y archivos con `touch`, `>` y `>>`, y mostrarlos con `ls` y `cat`.",
+          "Copiar, renombrar, mover y borrar archivos y carpetas con `cp`, `cp -r`, `mv`, `rm`, `rm -r` y `rmdir`.",
+          "Usar rutas absolutas y relativas, `.`, `..` y `~`, y seleccionar muchos archivos a la vez con `*` y `?`."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Know what files and folders are from using a computer",
+          "Open a terminal: Terminal on macOS, Windows Terminal with WSL or Git Bash on Windows, or any Linux terminal"
+        ],
+        "es": [
+          "Saber qué son archivos y carpetas por usar una computadora",
+          "Abrir una terminal: Terminal en macOS, Windows Terminal con WSL o Git Bash en Windows, o cualquier terminal de Linux"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "A command is a program name followed by options (`-r`, `-a`) and arguments (file or folder names), separated by spaces.",
+          "You are always \"in\" one folder, the working directory; `pwd` shows it and relative paths start from it.",
+          "`..` is the parent folder, `.` is the current one and `~` is your home folder.",
+          "`rm` does not use a trash can: deleted files are gone, so check with `ls` before deleting, especially with wildcards."
+        ],
+        "es": [
+          "Un comando es el nombre de un programa seguido de opciones (`-r`, `-a`) y argumentos (nombres de archivos o carpetas), separados por espacios.",
+          "Siempre estás \"dentro\" de una carpeta, el directorio de trabajo; `pwd` la muestra y las rutas relativas parten de ella.",
+          "`..` es la carpeta padre, `.` es la actual y `~` es tu carpeta personal.",
+          "`rm` no usa papelera: los archivos borrados desaparecen, así que revisa con `ls` antes de borrar, sobre todo con comodines."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Spaces in names: `mkdir my notes` creates two folders, `my` and `notes`. Use quotes (`mkdir \"my notes\"`) or avoid spaces (`my-notes`).",
+          "Using `>` when you meant `>>`: `>` replaces the whole file, `>>` adds to the end.",
+          "Running `rm -r` on the wrong folder: check `pwd` and `ls` first; there is no undo.",
+          "Forgetting that names are case-sensitive on Linux: `Notes.txt` and `notes.txt` are different files."
+        ],
+        "es": [
+          "Espacios en los nombres: `mkdir mis notas` crea dos carpetas, `mis` y `notas`. Usa comillas (`mkdir \"mis notas\"`) o evita los espacios (`mis-notas`).",
+          "Usar `>` cuando querías `>>`: `>` reemplaza todo el archivo, `>>` agrega al final.",
+          "Ejecutar `rm -r` en la carpeta equivocada: revisa `pwd` y `ls` antes; no se puede deshacer.",
+          "Olvidar que en Linux los nombres distinguen mayúsculas: `Notas.txt` y `notas.txt` son archivos distintos."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: open a terminal, print where you are with `pwd`, list your home folder with `ls`, then `cd` into another folder and back with `cd -`.",
+          "Core: build `school/math`, `school/english` and `school/science` with one `mkdir -p` command, then put a `todo.txt` with one line of text in each.",
+          "Core: copy `school` to `school-backup` with `cp -r`, rename `school-backup/english` to `school-backup/literature`, and check the result with `ls -R`.",
+          "Stretch: create ten files `day1.txt` to `day10.txt`, then use one `ls` with a wildcard to list only `day1.txt` and `day10.txt`, and another to list the one-digit days."
+        ],
+        "es": [
+          "Calentamiento: abre una terminal, muestra dónde estás con `pwd`, lista tu carpeta personal con `ls`, luego entra a otra carpeta con `cd` y vuelve con `cd -`.",
+          "Núcleo: crea `escuela/mate`, `escuela/ingles` y `escuela/ciencias` con un solo comando `mkdir -p`, y luego pon en cada una un `pendientes.txt` con una línea de texto.",
+          "Núcleo: copia `escuela` a `escuela-respaldo` con `cp -r`, renombra `escuela-respaldo/ingles` a `escuela-respaldo/literatura` y revisa el resultado con `ls -R`.",
+          "Extensión: crea diez archivos `dia1.txt` a `dia10.txt` y usa un `ls` con comodín para listar solo `dia1.txt` y `dia10.txt`, y otro para listar los días de un dígito."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "You type `cd ..` twice from `/home/ana/school/math`. Where are you now?",
+          "What is the difference between `echo hi > a.txt` and `echo hi >> a.txt`?",
+          "Why does `rm photos` fail when `photos` is a folder, and what are two ways to delete it?"
+        ],
+        "es": [
+          "Escribes `cd ..` dos veces desde `/home/ana/school/math`. ¿Dónde estás ahora?",
+          "¿Cuál es la diferencia entre `echo hola > a.txt` y `echo hola >> a.txt`?",
+          "¿Por qué falla `rm fotos` cuando `fotos` es una carpeta, y cuáles son dos formas de borrarla?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "The Shell and the Prompt",
+            "es": "La shell y el prompt"
+          },
+          "definition": {
+            "en": "The shell (here Bash) is the program that reads what you type in a terminal and runs it. The prompt, often ending in `$`, means it is waiting for a command. A command is a program name, then options that start with `-`, then arguments such as file names.",
+            "es": "La shell (aquí Bash) es el programa que lee lo que escribes en una terminal y lo ejecuta. El prompt, que suele terminar en `$`, indica que espera un comando. Un comando es el nombre de un programa, luego opciones que empiezan con `-` y luego argumentos como nombres de archivos."
+          }
+        },
+        {
+          "term": {
+            "en": "Navigating with pwd, cd and ls",
+            "es": "Navegar con pwd, cd y ls"
+          },
+          "definition": {
+            "en": "`pwd` (print working directory) shows the folder you are in, `cd` changes it, and `ls` lists what is inside a folder. `ls -a` also shows hidden names that start with a dot, and `ls -F` marks folders with `/`.",
+            "es": "`pwd` (print working directory) muestra la carpeta en la que estás, `cd` la cambia y `ls` lista lo que hay dentro de una carpeta. `ls -a` también muestra los nombres ocultos que empiezan con punto, y `ls -F` marca las carpetas con `/`."
+          }
+        },
+        {
+          "term": {
+            "en": "Creating Files and Folders",
+            "es": "Crear archivos y carpetas"
+          },
+          "definition": {
+            "en": "`mkdir name` creates a folder and `mkdir -p a/b/c` creates a whole chain of them. `touch file` creates an empty file, `echo text > file` writes text into a file (replacing it), `>>` appends, and `cat file` prints a file.",
+            "es": "`mkdir nombre` crea una carpeta y `mkdir -p a/b/c` crea toda una cadena de ellas. `touch archivo` crea un archivo vacío, `echo texto > archivo` escribe texto en un archivo (reemplazándolo), `>>` agrega al final y `cat archivo` imprime un archivo."
+          }
+        },
+        {
+          "term": {
+            "en": "Copying, Moving and Deleting",
+            "es": "Copiar, mover y borrar"
+          },
+          "definition": {
+            "en": "`cp from to` copies a file and `cp -r` copies a folder with everything inside. `mv from to` moves or renames. `rm file` deletes a file, `rm -r folder` deletes a folder and its contents, and `rmdir` deletes only empty folders. Nothing goes to a trash can.",
+            "es": "`cp origen destino` copia un archivo y `cp -r` copia una carpeta con todo su contenido. `mv origen destino` mueve o renombra. `rm archivo` borra un archivo, `rm -r carpeta` borra una carpeta y su contenido, y `rmdir` borra solo carpetas vacías. Nada va a una papelera."
+          }
+        },
+        {
+          "term": {
+            "en": "Paths and Wildcards",
+            "es": "Rutas y comodines"
+          },
+          "definition": {
+            "en": "A path names a file or folder. An absolute path starts at the root `/` (or `~`, your home); a relative path starts from where you are, using `.` for here and `..` for the parent. Wildcards match many names: `*` matches any text and `?` matches exactly one character.",
+            "es": "Una ruta nombra un archivo o carpeta. Una ruta absoluta empieza en la raíz `/` (o en `~`, tu carpeta personal); una relativa parte de donde estás, usando `.` para aquí y `..` para la carpeta padre. Los comodines coinciden con muchos nombres: `*` con cualquier texto y `?` con exactamente un carácter."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "The Unix Shell: Navigating Files and Directories (Software Carpentry)",
+            "es": "The Unix Shell: navegar archivos y directorios (Software Carpentry)"
+          },
+          "url": "https://swcarpentry.github.io/shell-novice/02-filedir.html"
+        },
+        {
+          "label": {
+            "en": "The Missing Semester: Course overview and the shell (MIT)",
+            "es": "The Missing Semester: la shell (MIT)"
+          },
+          "url": "https://missing.csail.mit.edu/2020/course-shell/"
+        },
+        {
+          "label": {
+            "en": "GNU Bash manual",
+            "es": "Manual de GNU Bash"
+          },
+          "url": "https://www.gnu.org/software/bash/manual/bash.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Which command shows the folder you are currently in?",
+            "es": "¿Qué comando muestra la carpeta en la que estás?"
+          },
+          "options": {
+            "en": [
+              "ls",
+              "pwd",
+              "cd",
+              "whereami"
+            ],
+            "es": [
+              "ls",
+              "pwd",
+              "cd",
+              "whereami"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`pwd` prints the working directory. `ls` lists its contents and `cd` changes it; there is no standard `whereami`.",
+            "es": "`pwd` imprime el directorio de trabajo. `ls` lista su contenido y `cd` lo cambia; no existe un `whereami` estándar."
+          }
+        },
+        {
+          "question": {
+            "en": "You are in `/home/ana/school/math`. What does `cd ../english` do?",
+            "es": "Estás en `/home/ana/school/math`. ¿Qué hace `cd ../english`?"
+          },
+          "options": {
+            "en": [
+              "Goes to /home/ana/english",
+              "Goes to /home/ana/school/english",
+              "Goes to /english",
+              "Fails: paths cannot contain .."
+            ],
+            "es": [
+              "Va a /home/ana/english",
+              "Va a /home/ana/school/english",
+              "Va a /english",
+              "Falla: las rutas no pueden contener .."
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`..` is the parent of `math`, which is `school`; from there `english` is `/home/ana/school/english`.",
+            "es": "`..` es la carpeta padre de `math`, que es `school`; desde ahí `english` es `/home/ana/school/english`."
+          }
+        },
+        {
+          "question": {
+            "en": "Which command deletes the folder `old` and everything inside it?",
+            "es": "¿Qué comando borra la carpeta `old` y todo lo que contiene?"
+          },
+          "options": {
+            "en": [
+              "rm old",
+              "rmdir old",
+              "rm -r old",
+              "del old"
+            ],
+            "es": [
+              "rm old",
+              "rmdir old",
+              "rm -r old",
+              "del old"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`rm` alone refuses folders and `rmdir` only removes empty ones. `rm -r` removes the folder recursively, with no undo.",
+            "es": "`rm` solo rechaza las carpetas y `rmdir` solo borra las vacías. `rm -r` borra la carpeta de forma recursiva, sin deshacer."
+          }
+        },
+        {
+          "question": {
+            "en": "A folder has `a.txt`, `b.txt` and `notes.md`. What does `ls *.txt` list?",
+            "es": "Una carpeta tiene `a.txt`, `b.txt` y `notes.md`. ¿Qué lista `ls *.txt`?"
+          },
+          "options": {
+            "en": [
+              "Only a.txt",
+              "a.txt and b.txt",
+              "All three files",
+              "Nothing: * is not allowed in ls"
+            ],
+            "es": [
+              "Solo a.txt",
+              "a.txt y b.txt",
+              "Los tres archivos",
+              "Nada: * no se permite en ls"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`*` matches any text, so `*.txt` matches every name ending in `.txt`. The shell expands it before `ls` runs.",
+            "es": "`*` coincide con cualquier texto, así que `*.txt` coincide con todo nombre que termine en `.txt`. La shell lo expande antes de ejecutar `ls`."
+          }
+        },
+        {
+          "question": {
+            "en": "What does `mv draft.txt final.txt` do when both are in the same folder?",
+            "es": "¿Qué hace `mv draft.txt final.txt` cuando ambos están en la misma carpeta?"
+          },
+          "options": {
+            "en": [
+              "Copies the file",
+              "Renames draft.txt to final.txt",
+              "Merges the two files",
+              "Moves it to a folder named final.txt"
+            ],
+            "es": [
+              "Copia el archivo",
+              "Renombra draft.txt a final.txt",
+              "Combina los dos archivos",
+              "Lo mueve a una carpeta llamada final.txt"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`mv` is both \"move\" and \"rename\". With a new name in the same folder it renames; if `final.txt` already existed it would be replaced.",
+            "es": "`mv` sirve para \"mover\" y para \"renombrar\". Con un nombre nuevo en la misma carpeta renombra; si `final.txt` ya existiera, se reemplazaría."
+          }
+        }
+      ]
+    },
+    "cli-text-pipes": {
+      "minutes": 80,
+      "prerequisites": [
+        "cli-files-folders"
+      ],
+      "whyItMatters": {
+        "en": "Most of what computers produce is text: logs, data files, configuration, program output. The command line has small tools that each do one job with text, and a pipe `|` lets you chain them, so \"which page of my site had the most errors yesterday?\" becomes one line instead of a program. This is the idea that makes the terminal powerful, and the same thinking, small pieces connected together, is how good programs are built.",
+        "es": "Casi todo lo que producen las computadoras es texto: registros, archivos de datos, configuración, salida de programas. La línea de comandos tiene herramientas pequeñas que hacen un solo trabajo con texto, y una tubería `|` te deja encadenarlas, así que \"¿qué página de mi sitio tuvo más errores ayer?\" se vuelve una línea en vez de un programa. Esta es la idea que hace poderosa a la terminal, y la misma forma de pensar, piezas pequeñas conectadas, es como se construyen los buenos programas."
+      },
+      "objectives": {
+        "en": [
+          "Read files with `cat`, `head -n`, `tail -n` and count lines, words and characters with `wc`.",
+          "Find matching lines with `grep`, using `-i`, `-n`, `-v`, `-c` and `-r`.",
+          "Chain commands with `|` so the output of one becomes the input of the next.",
+          "Send output to files with `>` and `>>`, send errors with `2>`, and explain standard input, output and error.",
+          "Summarize data with `sort`, `sort -n`, `uniq -c` and `cut -d -f`."
+        ],
+        "es": [
+          "Leer archivos con `cat`, `head -n`, `tail -n` y contar líneas, palabras y caracteres con `wc`.",
+          "Encontrar líneas que coinciden con `grep`, usando `-i`, `-n`, `-v`, `-c` y `-r`.",
+          "Encadenar comandos con `|` para que la salida de uno sea la entrada del siguiente.",
+          "Enviar la salida a archivos con `>` y `>>`, enviar errores con `2>` y explicar la entrada, salida y error estándar.",
+          "Resumir datos con `sort`, `sort -n`, `uniq -c` y `cut -d -f`."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Move around and create files with `cd`, `ls`, `echo` and `>`, from the previous module"
+        ],
+        "es": [
+          "Moverte y crear archivos con `cd`, `ls`, `echo` y `>`, del módulo anterior"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Each tool does one small job with lines of text; pipes (`|`) connect them into a pipeline.",
+          "`grep pattern file` prints only the lines that contain the pattern; `-v` flips it to the lines that do not.",
+          "`uniq` only merges neighbouring duplicates, so the usual recipe is `sort | uniq -c | sort -rn`.",
+          "Programs have two output streams: normal output (1) and errors (2). `>` redirects the first, `2>` the second."
+        ],
+        "es": [
+          "Cada herramienta hace un trabajo pequeño con líneas de texto; las tuberías (`|`) las conectan en una cadena.",
+          "`grep patrón archivo` imprime solo las líneas que contienen el patrón; `-v` lo invierte a las que no lo contienen.",
+          "`uniq` solo junta duplicados vecinos, por eso la receta habitual es `sort | uniq -c | sort -rn`.",
+          "Los programas tienen dos flujos de salida: la salida normal (1) y los errores (2). `>` redirige el primero y `2>` el segundo."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Using `uniq -c` without sorting first: equal lines that are not next to each other are counted separately.",
+          "Sorting numbers as text: `sort` puts `10` before `9`; use `sort -n` for numbers.",
+          "Redirecting a file into itself: `sort data.txt > data.txt` empties the file before `sort` reads it. Write to a new file instead.",
+          "Forgetting quotes around a pattern with spaces or special characters: `grep not found log.txt` searches for `not` in two files."
+        ],
+        "es": [
+          "Usar `uniq -c` sin ordenar antes: las líneas iguales que no están juntas se cuentan por separado.",
+          "Ordenar números como texto: `sort` pone `10` antes que `9`; usa `sort -n` para números.",
+          "Redirigir un archivo sobre sí mismo: `sort datos.txt > datos.txt` vacía el archivo antes de que `sort` lo lea. Escribe a un archivo nuevo.",
+          "Olvidar las comillas en un patrón con espacios o caracteres especiales: `grep not found log.txt` busca `not` en dos archivos."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: make a file with your 8 favourite songs, one per line, then show the first 3 with `head` and the last 2 with `tail`, and count them with `wc -l`.",
+          "Core: in a file of words, one per line, use `grep -c` to count how many contain the letter `a`, and `grep -v` to list the ones that do not.",
+          "Core: given a CSV of `name,city`, print each city with how many people live there, most common first.",
+          "Stretch: build a pipeline that prints the 3 longest lines of a file, longest first (hint: `awk '{ print length, $0 }'`, `sort -rn`, `head`, `cut`)."
+        ],
+        "es": [
+          "Calentamiento: crea un archivo con tus 8 canciones favoritas, una por línea, luego muestra las 3 primeras con `head` y las 2 últimas con `tail`, y cuéntalas con `wc -l`.",
+          "Núcleo: en un archivo de palabras, una por línea, usa `grep -c` para contar cuántas contienen la letra `a`, y `grep -v` para listar las que no.",
+          "Núcleo: dado un CSV de `nombre,ciudad`, imprime cada ciudad con cuántas personas viven ahí, de la más común a la menos común.",
+          "Extensión: construye una tubería que imprima las 3 líneas más largas de un archivo, de la más larga a la más corta (pista: `awk '{ print length, $0 }'`, `sort -rn`, `head`, `cut`)."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What does `grep -v \"^#\" config.txt` print, and when would that be useful?",
+          "Why does `sort | uniq -c` give different counts than `uniq -c` alone?",
+          "Where does an error message go when you run `ls missing > out.txt`, and why?"
+        ],
+        "es": [
+          "¿Qué imprime `grep -v \"^#\" config.txt` y cuándo sería útil?",
+          "¿Por qué `sort | uniq -c` da conteos distintos a `uniq -c` solo?",
+          "¿A dónde va un mensaje de error cuando ejecutas `ls faltante > salida.txt`, y por qué?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Viewing Files",
+            "es": "Ver archivos"
+          },
+          "definition": {
+            "en": "`cat` prints a whole file, `head -n 5` the first 5 lines, `tail -n 5` the last 5, and `less` lets you scroll a long file (press q to quit). `wc` counts lines, words and bytes; `wc -l` counts only lines.",
+            "es": "`cat` imprime un archivo completo, `head -n 5` las primeras 5 líneas, `tail -n 5` las últimas 5, y `less` te deja desplazarte por un archivo largo (pulsa q para salir). `wc` cuenta líneas, palabras y bytes; `wc -l` solo cuenta líneas."
+          }
+        },
+        {
+          "term": {
+            "en": "Searching with grep",
+            "es": "Buscar con grep"
+          },
+          "definition": {
+            "en": "`grep pattern files` prints every line that contains the pattern. Useful options: `-i` ignores case, `-n` shows line numbers, `-v` shows the lines that do not match, `-c` counts matches and `-r` searches every file in a folder.",
+            "es": "`grep patrón archivos` imprime cada línea que contiene el patrón. Opciones útiles: `-i` ignora mayúsculas, `-n` muestra números de línea, `-v` muestra las líneas que no coinciden, `-c` cuenta coincidencias y `-r` busca en todos los archivos de una carpeta."
+          }
+        },
+        {
+          "term": {
+            "en": "Pipes",
+            "es": "Tuberías"
+          },
+          "definition": {
+            "en": "A pipe `a | b` runs both commands and connects the output of `a` to the input of `b`, without a file in between. Long pipelines read left to right, each step transforming the lines a little.",
+            "es": "Una tubería `a | b` ejecuta ambos comandos y conecta la salida de `a` con la entrada de `b`, sin un archivo de por medio. Las tuberías largas se leen de izquierda a derecha y cada paso transforma un poco las líneas."
+          }
+        },
+        {
+          "term": {
+            "en": "Redirecting Output and Errors",
+            "es": "Redirigir la salida y los errores"
+          },
+          "definition": {
+            "en": "Every program has standard input (0), standard output (1) and standard error (2). `> file` sends output to a file (replacing it), `>> file` appends, `2> file` sends errors, `< file` reads input from a file, and `2>&1` sends errors wherever output is going.",
+            "es": "Todo programa tiene entrada estándar (0), salida estándar (1) y error estándar (2). `> archivo` envía la salida a un archivo (reemplazándolo), `>> archivo` agrega, `2> archivo` envía los errores, `< archivo` lee la entrada de un archivo y `2>&1` envía los errores a donde va la salida."
+          }
+        },
+        {
+          "term": {
+            "en": "Sorting, Counting and Cutting",
+            "es": "Ordenar, contar y recortar"
+          },
+          "definition": {
+            "en": "`sort` orders lines (`-n` as numbers, `-r` reversed, `-t, -k2` by the second comma-separated field), `uniq -c` counts runs of identical neighbouring lines, and `cut -d, -f1` keeps only the first comma-separated field of each line.",
+            "es": "`sort` ordena líneas (`-n` como números, `-r` al revés, `-t, -k2` por el segundo campo separado por comas), `uniq -c` cuenta grupos de líneas iguales vecinas y `cut -d, -f1` conserva solo el primer campo separado por comas de cada línea."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "The Unix Shell: Pipes and Filters (Software Carpentry)",
+            "es": "The Unix Shell: tuberías y filtros (Software Carpentry)"
+          },
+          "url": "https://swcarpentry.github.io/shell-novice/04-pipefilter.html"
+        },
+        {
+          "label": {
+            "en": "The Unix Shell: Finding Things (Software Carpentry)",
+            "es": "The Unix Shell: encontrar cosas (Software Carpentry)"
+          },
+          "url": "https://swcarpentry.github.io/shell-novice/07-find.html"
+        },
+        {
+          "label": {
+            "en": "GNU grep manual",
+            "es": "Manual de GNU grep"
+          },
+          "url": "https://www.gnu.org/software/grep/manual/grep.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Which command prints only the last 3 lines of `log.txt`?",
+            "es": "¿Qué comando imprime solo las últimas 3 líneas de `log.txt`?"
+          },
+          "options": {
+            "en": [
+              "head -n 3 log.txt",
+              "tail -n 3 log.txt",
+              "cat -3 log.txt",
+              "grep 3 log.txt"
+            ],
+            "es": [
+              "head -n 3 log.txt",
+              "tail -n 3 log.txt",
+              "cat -3 log.txt",
+              "grep 3 log.txt"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`tail` shows the end of a file and `-n 3` sets how many lines. `head` shows the beginning.",
+            "es": "`tail` muestra el final de un archivo y `-n 3` indica cuántas líneas. `head` muestra el principio."
+          }
+        },
+        {
+          "question": {
+            "en": "What does `grep -c error log.txt` print?",
+            "es": "¿Qué imprime `grep -c error log.txt`?"
+          },
+          "options": {
+            "en": [
+              "Every line with \"error\"",
+              "The number of lines containing \"error\"",
+              "The lines without \"error\"",
+              "The line numbers only"
+            ],
+            "es": [
+              "Cada línea con \"error\"",
+              "El número de líneas que contienen \"error\"",
+              "Las líneas sin \"error\"",
+              "Solo los números de línea"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`-c` makes grep print a count of matching lines instead of the lines themselves.",
+            "es": "`-c` hace que grep imprima la cantidad de líneas que coinciden en lugar de las líneas."
+          }
+        },
+        {
+          "question": {
+            "en": "A file has the lines b, a, b. What does `sort file | uniq -c` print?",
+            "es": "Un archivo tiene las líneas b, a, b. ¿Qué imprime `sort archivo | uniq -c`?"
+          },
+          "options": {
+            "en": [
+              "1 b, 1 a, 1 b",
+              "1 a and 2 b",
+              "2 b and 1 a",
+              "a, b"
+            ],
+            "es": [
+              "1 b, 1 a, 1 b",
+              "1 a y 2 b",
+              "2 b y 1 a",
+              "a, b"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Sorting gives a, b, b, so the two b lines are neighbours and `uniq -c` counts them together: `1 a`, `2 b`.",
+            "es": "Al ordenar queda a, b, b, así que las dos líneas b quedan juntas y `uniq -c` las cuenta juntas: `1 a`, `2 b`."
+          }
+        },
+        {
+          "question": {
+            "en": "Where does the error go in `ls nope > out.txt`?",
+            "es": "¿A dónde va el error en `ls nope > out.txt`?"
+          },
+          "options": {
+            "en": [
+              "Into out.txt",
+              "To the screen",
+              "Nowhere, it is hidden",
+              "Into a file named nope"
+            ],
+            "es": [
+              "A out.txt",
+              "A la pantalla",
+              "A ningún lado, se oculta",
+              "A un archivo llamado nope"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`>` only redirects standard output. Errors use standard error, which still goes to the terminal unless you add `2>`.",
+            "es": "`>` solo redirige la salida estándar. Los errores usan el error estándar, que sigue yendo a la terminal a menos que agregues `2>`."
+          }
+        },
+        {
+          "question": {
+            "en": "Which command sorts numbers so that 9 comes before 10?",
+            "es": "¿Qué comando ordena números para que 9 quede antes que 10?"
+          },
+          "options": {
+            "en": [
+              "sort",
+              "sort -n",
+              "sort -r",
+              "uniq"
+            ],
+            "es": [
+              "sort",
+              "sort -n",
+              "sort -r",
+              "uniq"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Plain `sort` compares text character by character, so \"10\" comes before \"9\". `-n` compares the values as numbers.",
+            "es": "El `sort` normal compara texto carácter por carácter, así que \"10\" va antes que \"9\". `-n` compara los valores como números."
+          }
+        }
+      ]
+    },
+    "cli-permissions-env": {
+      "minutes": 80,
+      "prerequisites": [
+        "cli-text-pipes"
+      ],
+      "whyItMatters": {
+        "en": "\"Permission denied\" and \"command not found\" are the two errors beginners hit most, and both have simple causes once you can see them. Permissions protect your files and decide what can be run; PATH decides which program a name refers to; exit codes are how scripts, Git hooks and build tools know whether a step worked. Understanding these three things turns confusing setup instructions into steps you can reason about and fix.",
+        "es": "\"Permission denied\" y \"command not found\" son los dos errores que más encuentran los principiantes, y ambos tienen causas simples una vez que puedes verlas. Los permisos protegen tus archivos y deciden qué se puede ejecutar; PATH decide a qué programa se refiere un nombre; los códigos de salida son la forma en que los scripts, los hooks de Git y las herramientas de compilación saben si un paso funcionó. Entender estas tres cosas convierte instrucciones de instalación confusas en pasos que puedes razonar y arreglar."
+      },
+      "objectives": {
+        "en": [
+          "Read a permission string such as `-rwxr-xr--` and change permissions with `chmod` in symbolic (`u+x`) and numeric (`644`, `755`) form.",
+          "Write a small script with a shebang line, make it executable and run it with `./script.sh`.",
+          "Create and export environment variables and add a folder to `PATH` so your own commands can be run by name.",
+          "Use `$?`, `&&` and `||` to react to a command succeeding or failing.",
+          "Find files by name and type with `find`, and act on the results."
+        ],
+        "es": [
+          "Leer una cadena de permisos como `-rwxr-xr--` y cambiar permisos con `chmod` en forma simbólica (`u+x`) y numérica (`644`, `755`).",
+          "Escribir un script pequeño con una línea shebang, hacerlo ejecutable y correrlo con `./script.sh`.",
+          "Crear y exportar variables de entorno y agregar una carpeta a `PATH` para poder ejecutar tus propios comandos por su nombre.",
+          "Usar `$?`, `&&` y `||` para reaccionar cuando un comando funciona o falla.",
+          "Encontrar archivos por nombre y tipo con `find`, y actuar sobre los resultados."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Create and edit files from the terminal, and use pipes and redirection, from the previous modules"
+        ],
+        "es": [
+          "Crear y editar archivos desde la terminal, y usar tuberías y redirección, de los módulos anteriores"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Permissions come in three groups (owner, group, others), each with read, write and execute: `rwx` is 7, `rw-` is 6, `r-x` is 5, `r--` is 4.",
+          "A script needs execute permission and a shebang (`#!/bin/bash`) to be run as `./script.sh`; `bash script.sh` works without either.",
+          "When you type a name, the shell searches the folders in `PATH`, left to right; \"command not found\" means none of them has it.",
+          "Exit code 0 means success and anything else means failure; `a && b` runs b only if a succeeded, `a || b` only if it failed."
+        ],
+        "es": [
+          "Los permisos vienen en tres grupos (dueño, grupo, otros), cada uno con lectura, escritura y ejecución: `rwx` es 7, `rw-` es 6, `r-x` es 5, `r--` es 4.",
+          "Un script necesita permiso de ejecución y un shebang (`#!/bin/bash`) para correrse como `./script.sh`; `bash script.sh` funciona sin ninguno de los dos.",
+          "Cuando escribes un nombre, la shell busca en las carpetas de `PATH`, de izquierda a derecha; \"command not found\" significa que ninguna lo tiene.",
+          "El código de salida 0 significa éxito y cualquier otro significa fallo; `a && b` ejecuta b solo si a funcionó, `a || b` solo si falló."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Fixing \"Permission denied\" with `chmod 777`: that lets everyone change the file. Use `chmod u+x` or `755` for scripts and `644` for normal files.",
+          "Typing `script.sh` instead of `./script.sh`: the current folder is not in PATH, so the shell does not look there.",
+          "Setting `PATH=~/bin` instead of `PATH=\"$HOME/bin:$PATH\"`: you replace the whole list and every normal command disappears until you open a new terminal.",
+          "Forgetting `export`: a plain `NAME=value` is visible to the shell but not to the programs it starts."
+        ],
+        "es": [
+          "Arreglar \"Permission denied\" con `chmod 777`: eso deja que cualquiera cambie el archivo. Usa `chmod u+x` o `755` para scripts y `644` para archivos normales.",
+          "Escribir `script.sh` en lugar de `./script.sh`: la carpeta actual no está en PATH, así que la shell no busca ahí.",
+          "Poner `PATH=~/bin` en lugar de `PATH=\"$HOME/bin:$PATH\"`: reemplazas toda la lista y todos los comandos normales desaparecen hasta que abres otra terminal.",
+          "Olvidar `export`: un `NOMBRE=valor` simple lo ve la shell pero no los programas que inicia."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: create `diary.txt`, check its permissions with `stat -c \"%A %n\"` (or `ls -l`), then remove read permission for others and check again.",
+          "Core: write `greet.sh` that prints \"Good morning, $USER\", give it a shebang, make it executable and run it with `./greet.sh`.",
+          "Core: make a `~/bin` folder, put a script called `today` in it, add the folder to PATH, and run `today` from any folder.",
+          "Stretch: write a one-liner that creates a folder `reports`, enters it and prints \"ready\", but prints \"could not create reports\" if any step fails."
+        ],
+        "es": [
+          "Calentamiento: crea `diario.txt`, revisa sus permisos con `stat -c \"%A %n\"` (o `ls -l`), luego quita el permiso de lectura a los otros y revisa de nuevo.",
+          "Núcleo: escribe `saludo.sh` que imprima \"Buenos días, $USER\", dale un shebang, hazlo ejecutable y córrelo con `./saludo.sh`.",
+          "Núcleo: crea una carpeta `~/bin`, pon ahí un script llamado `hoy`, agrega la carpeta a PATH y ejecuta `hoy` desde cualquier carpeta.",
+          "Extensión: escribe una línea que cree la carpeta `reportes`, entre en ella e imprima \"listo\", pero que imprima \"no se pudo crear reportes\" si algún paso falla."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What does `chmod 640 notes.txt` allow the owner, the group and everyone else to do?",
+          "Why does `./tool.sh` fail with \"Permission denied\" while `bash tool.sh` works?",
+          "In `mkdir out && cd out || echo failed`, when is \"failed\" printed?"
+        ],
+        "es": [
+          "¿Qué permite `chmod 640 notas.txt` al dueño, al grupo y a todos los demás?",
+          "¿Por qué `./tool.sh` falla con \"Permission denied\" mientras `bash tool.sh` funciona?",
+          "En `mkdir out && cd out || echo fallo`, ¿cuándo se imprime \"fallo\"?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "File Permissions",
+            "es": "Permisos de archivos"
+          },
+          "definition": {
+            "en": "Each file has an owner, a group and permissions for the owner (u), the group (g) and others (o): read (r=4), write (w=2) and execute (x=1). `ls -l` shows them as `-rw-r--r--`; `chmod u+x file` or `chmod 755 file` changes them.",
+            "es": "Cada archivo tiene un dueño, un grupo y permisos para el dueño (u), el grupo (g) y los otros (o): lectura (r=4), escritura (w=2) y ejecución (x=1). `ls -l` los muestra como `-rw-r--r--`; `chmod u+x archivo` o `chmod 755 archivo` los cambia."
+          }
+        },
+        {
+          "term": {
+            "en": "Running Scripts",
+            "es": "Ejecutar scripts"
+          },
+          "definition": {
+            "en": "A shell script is a text file of commands. Its first line, the shebang (`#!/bin/bash`), says which program runs it. With execute permission you start it as `./name.sh`; the `./` says \"the one in this folder\".",
+            "es": "Un script de shell es un archivo de texto con comandos. Su primera línea, el shebang (`#!/bin/bash`), dice qué programa lo ejecuta. Con permiso de ejecución lo inicias como `./nombre.sh`; el `./` significa \"el que está en esta carpeta\"."
+          }
+        },
+        {
+          "term": {
+            "en": "Environment Variables and PATH",
+            "es": "Variables de entorno y PATH"
+          },
+          "definition": {
+            "en": "Environment variables are named values every program inherits, such as `HOME`, `USER` and `PATH`. `export NAME=value` creates one. `PATH` is a colon-separated list of folders the shell searches for commands; `which name` shows which file a command runs.",
+            "es": "Las variables de entorno son valores con nombre que hereda todo programa, como `HOME`, `USER` y `PATH`. `export NOMBRE=valor` crea una. `PATH` es una lista de carpetas separadas por dos puntos donde la shell busca comandos; `which nombre` muestra qué archivo ejecuta un comando."
+          }
+        },
+        {
+          "term": {
+            "en": "Exit Codes and Chaining",
+            "es": "Códigos de salida y encadenamiento"
+          },
+          "definition": {
+            "en": "Every command finishes with an exit code: 0 for success, 1 to 255 for different failures. `$?` holds the last one. `a && b` runs b only if a succeeded, `a || b` runs b only if a failed, and `a ; b` runs both regardless.",
+            "es": "Todo comando termina con un código de salida: 0 para éxito, de 1 a 255 para distintos fallos. `$?` guarda el último. `a && b` ejecuta b solo si a funcionó, `a || b` ejecuta b solo si a falló y `a ; b` ejecuta ambos pase lo que pase."
+          }
+        },
+        {
+          "term": {
+            "en": "Finding Files",
+            "es": "Encontrar archivos"
+          },
+          "definition": {
+            "en": "`find folder -name \"pattern\"` walks through a folder and everything inside it and prints matching paths. Add `-type f` for files or `-type d` for folders, and `-delete` or `-exec` to act on what it finds.",
+            "es": "`find carpeta -name \"patrón\"` recorre una carpeta y todo lo que contiene e imprime las rutas que coinciden. Agrega `-type f` para archivos o `-type d` para carpetas, y `-delete` o `-exec` para actuar sobre lo que encuentra."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "The Unix Shell: Shell Scripts (Software Carpentry)",
+            "es": "The Unix Shell: scripts de shell (Software Carpentry)"
+          },
+          "url": "https://swcarpentry.github.io/shell-novice/06-script.html"
+        },
+        {
+          "label": {
+            "en": "The Missing Semester: Shell Tools and Scripting (MIT)",
+            "es": "The Missing Semester: herramientas de shell y scripts (MIT)"
+          },
+          "url": "https://missing.csail.mit.edu/2020/shell-tools/"
+        },
+        {
+          "label": {
+            "en": "GNU Coreutils: chmod invocation",
+            "es": "GNU Coreutils: uso de chmod"
+          },
+          "url": "https://www.gnu.org/software/coreutils/manual/html_node/chmod-invocation.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What permissions does `chmod 755 run.sh` give?",
+            "es": "¿Qué permisos da `chmod 755 run.sh`?"
+          },
+          "options": {
+            "en": [
+              "Everyone can read, write and run it",
+              "Owner: read, write, run; everyone else: read and run",
+              "Owner: read and write only",
+              "Only the owner can see it"
+            ],
+            "es": [
+              "Todos pueden leerlo, escribirlo y ejecutarlo",
+              "Dueño: leer, escribir, ejecutar; los demás: leer y ejecutar",
+              "Dueño: solo leer y escribir",
+              "Solo el dueño puede verlo"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "7 = 4+2+1 (rwx) for the owner, 5 = 4+1 (r-x) for the group and for others. It is the usual setting for scripts and programs.",
+            "es": "7 = 4+2+1 (rwx) para el dueño, 5 = 4+1 (r-x) para el grupo y para los otros. Es la configuración habitual para scripts y programas."
+          }
+        },
+        {
+          "question": {
+            "en": "You run `deploy.sh` and get \"command not found\", but the file is right there. Why?",
+            "es": "Ejecutas `deploy.sh` y obtienes \"command not found\", pero el archivo está ahí. ¿Por qué?"
+          },
+          "options": {
+            "en": [
+              "The file is empty",
+              "The current folder is not in PATH; use ./deploy.sh",
+              "Scripts must end in .exe",
+              "You need sudo"
+            ],
+            "es": [
+              "El archivo está vacío",
+              "La carpeta actual no está en PATH; usa ./deploy.sh",
+              "Los scripts deben terminar en .exe",
+              "Necesitas sudo"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "A bare name is searched for only in the PATH folders. `./deploy.sh` gives the exact location.",
+            "es": "Un nombre solo se busca únicamente en las carpetas de PATH. `./deploy.sh` da la ubicación exacta."
+          }
+        },
+        {
+          "question": {
+            "en": "What does `echo $?` print right after a successful command?",
+            "es": "¿Qué imprime `echo $?` justo después de un comando exitoso?"
+          },
+          "options": {
+            "en": [
+              "1",
+              "0",
+              "true",
+              "success"
+            ],
+            "es": [
+              "1",
+              "0",
+              "true",
+              "success"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Exit code 0 means success. Any non-zero code means some kind of failure.",
+            "es": "El código de salida 0 significa éxito. Cualquier código distinto de cero significa algún tipo de fallo."
+          }
+        },
+        {
+          "question": {
+            "en": "In `test -f config.txt || echo \"missing\"`, when is \"missing\" printed?",
+            "es": "En `test -f config.txt || echo \"missing\"`, ¿cuándo se imprime \"missing\"?"
+          },
+          "options": {
+            "en": [
+              "Always",
+              "When config.txt exists",
+              "When config.txt does not exist",
+              "Never"
+            ],
+            "es": [
+              "Siempre",
+              "Cuando config.txt existe",
+              "Cuando config.txt no existe",
+              "Nunca"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`||` runs the right side only when the left side fails, and `test -f` fails when the file does not exist.",
+            "es": "`||` ejecuta el lado derecho solo cuando el izquierdo falla, y `test -f` falla cuando el archivo no existe."
+          }
+        },
+        {
+          "question": {
+            "en": "Which command lists every `.txt` file in the current folder and all folders inside it?",
+            "es": "¿Qué comando lista todos los archivos `.txt` de la carpeta actual y de todas las carpetas dentro de ella?"
+          },
+          "options": {
+            "en": [
+              "ls *.txt",
+              "find . -name \"*.txt\"",
+              "grep .txt",
+              "cat *.txt"
+            ],
+            "es": [
+              "ls *.txt",
+              "find . -name \"*.txt\"",
+              "grep .txt",
+              "cat *.txt"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`ls *.txt` only looks in the current folder. `find` walks into every subfolder; the quotes stop the shell from expanding `*` too early.",
+            "es": "`ls *.txt` solo mira la carpeta actual. `find` entra en todas las subcarpetas; las comillas evitan que la shell expanda `*` antes de tiempo."
+          }
+        }
+      ]
+    },
+    "cli-shell-scripts": {
+      "minutes": 90,
+      "prerequisites": [
+        "cli-permissions-env"
+      ],
+      "whyItMatters": {
+        "en": "Anything you type twice in a terminal can become a script you run with one word: setting up a project, backing up homework, renaming a hundred photos, checking that a website is up. Shell scripts glue programs together, and they are everywhere in real software: install scripts, build steps, servers starting up and CI pipelines. You already know the commands; this module adds the decisions and repetition that turn them into small programs.",
+        "es": "Todo lo que escribes dos veces en una terminal puede volverse un script que ejecutas con una palabra: preparar un proyecto, respaldar tareas, renombrar cien fotos, revisar que un sitio web funcione. Los scripts de shell unen programas, y están en todo el software real: scripts de instalación, pasos de compilación, servidores que arrancan y pipelines de CI. Ya conoces los comandos; este módulo agrega las decisiones y la repetición que los convierten en pequeños programas."
+      },
+      "objectives": {
+        "en": [
+          "Create variables, use them with `\"$name\"`, capture command output with `$(...)`, and explain when quotes are needed.",
+          "Read script arguments with `$1`, `$2`, `$#` and `\"$@\"`, and print a usage message when they are missing.",
+          "Make decisions with `if`, `elif` and `else`, using `[ ]` tests on files, strings and numbers.",
+          "Repeat work with `for` loops over lists, files and number ranges, and with `while read` over lines.",
+          "Organize a script into functions with arguments, `local` variables and return codes."
+        ],
+        "es": [
+          "Crear variables, usarlas con `\"$nombre\"`, capturar la salida de un comando con `$(...)` y explicar cuándo hacen falta las comillas.",
+          "Leer los argumentos de un script con `$1`, `$2`, `$#` y `\"$@\"`, e imprimir un mensaje de uso cuando faltan.",
+          "Tomar decisiones con `if`, `elif` y `else`, usando pruebas `[ ]` sobre archivos, textos y números.",
+          "Repetir trabajo con ciclos `for` sobre listas, archivos y rangos de números, y con `while read` sobre líneas.",
+          "Organizar un script en funciones con argumentos, variables `local` y códigos de retorno."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Write and run a script with a shebang, and use exit codes, `&&` and `||`, from the previous module",
+          "Basic programming ideas such as variables, if and loops (the Python course covers them)"
+        ],
+        "es": [
+          "Escribir y ejecutar un script con shebang, y usar códigos de salida, `&&` y `||`, del módulo anterior",
+          "Ideas básicas de programación como variables, if y ciclos (el curso de Python las cubre)"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "No spaces around `=` when assigning (`name=\"Ana\"`), and always quote variables when using them (`\"$name\"`).",
+          "`$(command)` runs a command and puts its output into the line, for example `count=$(ls | wc -l)`.",
+          "`[ -f file ]`, `[ \"$a\" = \"$b\" ]` and `[ \"$n\" -gt 5 ]` are tests; `if` runs its block when the test succeeds (exit code 0).",
+          "`for f in *.txt; do ...; done` handles every matching file, and functions keep longer scripts readable."
+        ],
+        "es": [
+          "Sin espacios alrededor de `=` al asignar (`nombre=\"Ana\"`), y siempre pon comillas a las variables al usarlas (`\"$nombre\"`).",
+          "`$(comando)` ejecuta un comando y pone su salida en la línea, por ejemplo `cuenta=$(ls | wc -l)`.",
+          "`[ -f archivo ]`, `[ \"$a\" = \"$b\" ]` y `[ \"$n\" -gt 5 ]` son pruebas; `if` ejecuta su bloque cuando la prueba funciona (código de salida 0).",
+          "`for f in *.txt; do ...; done` procesa cada archivo que coincide, y las funciones mantienen legibles los scripts largos."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Writing `name = \"Ana\"` with spaces: the shell runs a command called `name` and fails. Assignments have no spaces.",
+          "Leaving variables unquoted: a file called `my notes.txt` becomes two arguments, `my` and `notes.txt`.",
+          "Comparing numbers with `>` inside `[ ]`: it redirects to a file named after the number. Use `-gt`, `-lt`, `-eq`.",
+          "Forgetting the spaces inside brackets: `[$n -gt 5]` fails; it must be `[ \"$n\" -gt 5 ]`."
+        ],
+        "es": [
+          "Escribir `nombre = \"Ana\"` con espacios: la shell ejecuta un comando llamado `nombre` y falla. Las asignaciones no llevan espacios.",
+          "Dejar variables sin comillas: un archivo llamado `mis notas.txt` se vuelve dos argumentos, `mis` y `notas.txt`.",
+          "Comparar números con `>` dentro de `[ ]`: redirige a un archivo con el nombre del número. Usa `-gt`, `-lt`, `-eq`.",
+          "Olvidar los espacios dentro de los corchetes: `[$n -gt 5]` falla; debe ser `[ \"$n\" -gt 5 ]`."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: write `hello.sh` that stores your name in a variable and prints \"Hello, NAME, today is a good day to code\".",
+          "Core: write `backup.sh FILE` that copies FILE to `FILE.bak`, but prints a usage message and exits with 1 if no argument is given or the file does not exist.",
+          "Core: write a loop that renames every `.jpeg` file in a folder to `.jpg` (hint: `\"${f%.jpeg}.jpg\"`).",
+          "Stretch: write `grade.sh` with a function `letter` that turns a score into A–F, then read `name,score` lines from a CSV and print each student with their letter."
+        ],
+        "es": [
+          "Calentamiento: escribe `hola.sh` que guarde tu nombre en una variable e imprima \"Hola, NOMBRE, hoy es un buen día para programar\".",
+          "Núcleo: escribe `respaldo.sh ARCHIVO` que copie ARCHIVO a `ARCHIVO.bak`, pero que imprima un mensaje de uso y salga con 1 si no se da un argumento o el archivo no existe.",
+          "Núcleo: escribe un ciclo que renombre cada archivo `.jpeg` de una carpeta a `.jpg` (pista: `\"${f%.jpeg}.jpg\"`).",
+          "Extensión: escribe `nota.sh` con una función `letra` que convierta una calificación en A–F, y luego lee líneas `nombre,calificación` de un CSV e imprime cada estudiante con su letra."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why does `name = \"Ana\"` fail while `name=\"Ana\"` works?",
+          "In a script run as `./copy.sh a.txt b.txt`, what are `$0`, `$1`, `$2` and `$#`?",
+          "What is the difference between `for f in $(ls)` and `for f in *`, and which one handles file names with spaces?"
+        ],
+        "es": [
+          "¿Por qué falla `nombre = \"Ana\"` mientras `nombre=\"Ana\"` funciona?",
+          "En un script ejecutado como `./copiar.sh a.txt b.txt`, ¿qué son `$0`, `$1`, `$2` y `$#`?",
+          "¿Cuál es la diferencia entre `for f in $(ls)` y `for f in *`, y cuál maneja nombres de archivo con espacios?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Variables and Quoting",
+            "es": "Variables y comillas"
+          },
+          "definition": {
+            "en": "`name=value` (no spaces) creates a variable and `$name` or `${name}` uses it. Double quotes keep spaces and still expand variables; single quotes keep everything literally. `$(command)` is replaced by the command's output.",
+            "es": "`nombre=valor` (sin espacios) crea una variable y `$nombre` o `${nombre}` la usa. Las comillas dobles conservan los espacios y aun así expanden variables; las simples conservan todo literalmente. `$(comando)` se reemplaza por la salida del comando."
+          }
+        },
+        {
+          "term": {
+            "en": "Script Arguments",
+            "es": "Argumentos de un script"
+          },
+          "definition": {
+            "en": "Words typed after a script's name are its arguments: `$1`, `$2` and so on, with `$0` the script name, `$#` the number of arguments and `\"$@\"` all of them, each kept as a separate word.",
+            "es": "Las palabras escritas después del nombre de un script son sus argumentos: `$1`, `$2` y así sucesivamente, con `$0` el nombre del script, `$#` la cantidad de argumentos y `\"$@\"` todos ellos, cada uno como una palabra separada."
+          }
+        },
+        {
+          "term": {
+            "en": "Conditions with if",
+            "es": "Condiciones con if"
+          },
+          "definition": {
+            "en": "`if command; then ... elif ...; else ...; fi` runs a block depending on a command's exit code. The `[ ]` test command checks files (`-f`, `-d`), strings (`=`, `!=`, `-z`) and numbers (`-eq`, `-lt`, `-gt`).",
+            "es": "`if comando; then ... elif ...; else ...; fi` ejecuta un bloque según el código de salida de un comando. El comando de prueba `[ ]` revisa archivos (`-f`, `-d`), textos (`=`, `!=`, `-z`) y números (`-eq`, `-lt`, `-gt`)."
+          }
+        },
+        {
+          "term": {
+            "en": "Loops",
+            "es": "Ciclos"
+          },
+          "definition": {
+            "en": "`for x in a b c; do ...; done` repeats for each word, `for f in *.txt` for each matching file and `for i in {1..5}` for a range. `while read -r line; do ...; done < file` processes a file line by line.",
+            "es": "`for x in a b c; do ...; done` repite para cada palabra, `for f in *.txt` para cada archivo que coincide y `for i in {1..5}` para un rango. `while read -r linea; do ...; done < archivo` procesa un archivo línea por línea."
+          }
+        },
+        {
+          "term": {
+            "en": "Functions",
+            "es": "Funciones"
+          },
+          "definition": {
+            "en": "`name() { ...; }` defines a function that is called like a command, with its own `$1`, `$2`. `local` keeps a variable inside the function, `echo` passes text back to `$(name ...)`, and `return N` sets its exit code.",
+            "es": "`nombre() { ...; }` define una función que se llama como un comando, con sus propios `$1`, `$2`. `local` mantiene una variable dentro de la función, `echo` devuelve texto a `$(nombre ...)` y `return N` define su código de salida."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "The Unix Shell: Loops (Software Carpentry)",
+            "es": "The Unix Shell: ciclos (Software Carpentry)"
+          },
+          "url": "https://swcarpentry.github.io/shell-novice/05-loop.html"
+        },
+        {
+          "label": {
+            "en": "Bash Guide for Beginners (The Linux Documentation Project)",
+            "es": "Guía de Bash para principiantes (The Linux Documentation Project)"
+          },
+          "url": "https://tldp.org/LDP/Bash-Beginners-Guide/html/"
+        },
+        {
+          "label": {
+            "en": "ShellCheck: finds bugs in shell scripts",
+            "es": "ShellCheck: encuentra errores en scripts de shell"
+          },
+          "url": "https://www.shellcheck.net/"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "Which line correctly stores the text Ana in a variable?",
+            "es": "¿Qué línea guarda correctamente el texto Ana en una variable?"
+          },
+          "options": {
+            "en": [
+              "name = \"Ana\"",
+              "name=\"Ana\"",
+              "$name=\"Ana\"",
+              "set name Ana"
+            ],
+            "es": [
+              "name = \"Ana\"",
+              "name=\"Ana\"",
+              "$name=\"Ana\"",
+              "set name Ana"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Assignments have no spaces around `=` and no `$` on the left. With spaces, the shell tries to run a command called `name`.",
+            "es": "Las asignaciones no llevan espacios alrededor de `=` ni `$` a la izquierda. Con espacios, la shell intenta ejecutar un comando llamado `name`."
+          }
+        },
+        {
+          "question": {
+            "en": "What does `echo '$HOME'` print?",
+            "es": "¿Qué imprime `echo '$HOME'`?"
+          },
+          "options": {
+            "en": [
+              "Your home folder path",
+              "The text $HOME",
+              "Nothing",
+              "An error"
+            ],
+            "es": [
+              "La ruta de tu carpeta personal",
+              "El texto $HOME",
+              "Nada",
+              "Un error"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Single quotes keep everything literally, so the variable is not expanded. Double quotes would print the path.",
+            "es": "Las comillas simples conservan todo literalmente, así que la variable no se expande. Las comillas dobles imprimirían la ruta."
+          }
+        },
+        {
+          "question": {
+            "en": "Which test is true when `$n` is greater than 10?",
+            "es": "¿Qué prueba es verdadera cuando `$n` es mayor que 10?"
+          },
+          "options": {
+            "en": [
+              "[ $n > 10 ]",
+              "[ \"$n\" -gt 10 ]",
+              "[ \"$n\" = 10 ]",
+              "[ -n 10 ]"
+            ],
+            "es": [
+              "[ $n > 10 ]",
+              "[ \"$n\" -gt 10 ]",
+              "[ \"$n\" = 10 ]",
+              "[ -n 10 ]"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Inside `[ ]`, numbers are compared with `-gt`, `-lt`, `-eq` and friends. `>` would redirect output to a file named 10.",
+            "es": "Dentro de `[ ]`, los números se comparan con `-gt`, `-lt`, `-eq` y similares. `>` redirigiría la salida a un archivo llamado 10."
+          }
+        },
+        {
+          "question": {
+            "en": "A script is run as `./go.sh red blue`. What is `$#`?",
+            "es": "Un script se ejecuta como `./go.sh red blue`. ¿Qué es `$#`?"
+          },
+          "options": {
+            "en": [
+              "0",
+              "1",
+              "2",
+              "3"
+            ],
+            "es": [
+              "0",
+              "1",
+              "2",
+              "3"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`$#` counts the arguments after the script name: red and blue. The script name itself is `$0` and is not counted.",
+            "es": "`$#` cuenta los argumentos después del nombre del script: red y blue. El nombre del script es `$0` y no se cuenta."
+          }
+        },
+        {
+          "question": {
+            "en": "What does `for f in *.txt; do echo \"$f\"; done` do?",
+            "es": "¿Qué hace `for f in *.txt; do echo \"$f\"; done`?"
+          },
+          "options": {
+            "en": [
+              "Prints the contents of each .txt file",
+              "Prints the name of each .txt file in the folder",
+              "Creates a file named *.txt",
+              "Prints *.txt once"
+            ],
+            "es": [
+              "Imprime el contenido de cada archivo .txt",
+              "Imprime el nombre de cada archivo .txt de la carpeta",
+              "Crea un archivo llamado *.txt",
+              "Imprime *.txt una vez"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The shell expands `*.txt` into the matching names and the loop runs once per name. To print contents you would use `cat \"$f\"`.",
+            "es": "La shell expande `*.txt` en los nombres que coinciden y el ciclo se ejecuta una vez por nombre. Para imprimir el contenido usarías `cat \"$f\"`."
           }
         }
       ]

@@ -39,6 +39,12 @@
    "title": "CS50's Introduction to Programming with Python (CS50P) 2022",
    "channel": "CS50",
    "count": ""
+  },
+  "cli": {
+   "id": "PLyzOVJj3bHQuloKGG59rS43e29ro7I57J",
+   "type": "playlist",
+   "title": "Missing Semester IAP 2020",
+   "channel": "Missing Semester"
   }
  },
  "modules": {
@@ -1278,6 +1284,186 @@
      "title": "What are Sets in Python? Python Tutorial for Absolute Beginners | Mosh",
      "channel": "Programming with Mosh",
      "length": "4:31"
+    }
+   }
+  },
+  "cli-files-folders": {
+   "series": {
+    "id": "PL-osiE80TeTvGhHkpvfmKWOiIPF8UVy6c",
+    "type": "playlist",
+    "title": "Linux/Mac Tutorials",
+    "channel": "Corey Schafer"
+   },
+   "topics": {
+    "The Shell and the Prompt": {
+     "id": "I4EWvMFj37g",
+     "type": "video",
+     "title": "Bash in 100 Seconds",
+     "channel": "Fireship",
+     "length": "2:33"
+    },
+    "Navigating with pwd, cd and ls": {
+     "id": "7pBFbROYYdg",
+     "type": "video",
+     "title": "Terminal Commands Lesson 01 - pwd, cd, ls, man, --help",
+     "channel": "DistroTube",
+     "length": "14:00"
+    },
+    "Creating Files and Folders": {
+     "id": "wPtiBOGyzhA",
+     "type": "video",
+     "title": "Bash Create, Copy, Move and Delete Files: mkdir, touch, cp, mv, rm | Command Line Step by Step #2",
+     "channel": "Small Steps Studio",
+     "length": "11:53"
+    },
+    "Copying, Moving and Deleting": {
+     "id": "eyV0gLFuCDQ",
+     "type": "video",
+     "title": "Move and Copy (mv and cp) - Linux Tutorial 9",
+     "channel": "Caleb Curry",
+     "length": "8:29"
+    },
+    "Paths and Wildcards": {
+     "id": "wt3DI7XWCKk",
+     "type": "video",
+     "title": "Linux bash wildcard basics",
+     "channel": "Networking with Rich",
+     "length": "5:21"
+    }
+   }
+  },
+  "cli-text-pipes": {
+   "series": {
+    "id": "PL-osiE80TeTvGhHkpvfmKWOiIPF8UVy6c",
+    "type": "playlist",
+    "title": "Linux/Mac Tutorials",
+    "channel": "Corey Schafer"
+   },
+   "topics": {
+    "Viewing Files": {
+     "id": "M-mXPbGHEMY",
+     "type": "video",
+     "title": "Linux Read Commands | cat, tac, head, tail, less, more (Beginner Guide)",
+     "channel": "TechStart Lab",
+     "length": "5:14"
+    },
+    "Searching with grep": {
+     "id": "Tc_jntovCM0",
+     "type": "video",
+     "title": "Linux Crash Course - The grep Command",
+     "channel": "Learn Linux TV",
+     "length": "14:57"
+    },
+    "Pipes": {
+     "id": "bKzonnwoR2I",
+     "type": "video",
+     "title": "Unix Pipeline (Brian Kernighan) - Computerphile",
+     "channel": "Computerphile",
+     "length": "5:16"
+    },
+    "Redirecting Output and Errors": {
+     "id": "-xoymZMe4XM",
+     "type": "video",
+     "title": "Redirection and Standard Output - Linux Tutorial 12",
+     "channel": "Caleb Curry",
+     "length": "5:24"
+    },
+    "Sorting, Counting and Cutting": {
+     "id": "nLa6jAbULe8",
+     "type": "video",
+     "title": "Linux Sysadmin Basics 4.1 -- Filtering Output and Finding Things (&&, cut, sort, uniq, wc, grep)",
+     "channel": "tutoriaLinux",
+     "length": "8:29"
+    }
+   }
+  },
+  "cli-permissions-env": {
+   "series": {
+    "id": "PL-osiE80TeTvGhHkpvfmKWOiIPF8UVy6c",
+    "type": "playlist",
+    "title": "Linux/Mac Tutorials",
+    "channel": "Corey Schafer"
+   },
+   "topics": {
+    "File Permissions": {
+     "id": "LnKoncbQBsM",
+     "type": "video",
+     "title": "Linux File Permissions in 5 Minutes | MUST Know!",
+     "channel": "Travis Media",
+     "length": "6:03"
+    },
+    "Running Scripts": {
+     "id": "KRkv1h6zM-8",
+     "type": "video",
+     "title": "5 Bash Script Basics, Explained Properly (#!, $1, if, for, exit)",
+     "channel": "Can Onurer",
+     "length": "6:39"
+    },
+    "Environment Variables and PATH": {
+     "id": "hk0RwVC6uts",
+     "type": "video",
+     "title": "What is $PATH on a Linux Shell? (The Linux Crash Course Series)",
+     "channel": "Learn Linux TV",
+     "length": "21:52"
+    },
+    "Exit Codes and Chaining": {
+     "id": "sAD4dq_jDTA",
+     "type": "video",
+     "title": "Bash exit codes & command chaining | #1 Practical Bash",
+     "channel": "kubucation",
+     "length": "5:55"
+    },
+    "Finding Files": {
+     "id": "skTiK_6DdqU",
+     "type": "video",
+     "title": "Linux Crash Course - The find command",
+     "channel": "Learn Linux TV",
+     "length": "25:56"
+    }
+   }
+  },
+  "cli-shell-scripts": {
+   "series": {
+    "id": "PL-osiE80TeTvGhHkpvfmKWOiIPF8UVy6c",
+    "type": "playlist",
+    "title": "Linux/Mac Tutorials",
+    "channel": "Corey Schafer"
+   },
+   "topics": {
+    "Variables and Quoting": {
+     "id": "VIUoHnFwEH4",
+     "type": "video",
+     "title": "bash quoting is really not that difficult!  (beginner - intermediate) anthony explains #426",
+     "channel": "anthonywritescode",
+     "length": "8:04"
+    },
+    "Script Arguments": {
+     "id": "vsRBWCfMf9A",
+     "type": "video",
+     "title": "Using BASH Script Arguments",
+     "channel": "theurbanpenguin",
+     "length": "9:00"
+    },
+    "Conditions with if": {
+     "id": "YrE1Qg-Aw0Q",
+     "type": "video",
+     "title": "How To Write Bash Scripts In Linux - Complete Guide (Part 5 - If Statements)",
+     "channel": "Learn Linux TV",
+     "length": "31:43"
+    },
+    "Loops": {
+     "id": "HvzI7c3eK5k",
+     "type": "video",
+     "title": "How To Write Bash Scripts In Linux - Complete Guide (Part 9 - For Loops)",
+     "channel": "Learn Linux TV",
+     "length": "12:33"
+    },
+    "Functions": {
+     "id": "6inWQZLF50I",
+     "type": "video",
+     "title": "How To Write Bash Scripts In Linux - Complete Guide (Part 12 - Functions)",
+     "channel": "Learn Linux TV",
+     "length": "9:39"
     }
    }
   }
