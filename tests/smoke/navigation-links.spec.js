@@ -31,11 +31,11 @@ test.describe('Critical Navigation Links', () => {
 
     test('module deep links and global search open modules beyond the first page', async ({ page }) => {
         await mockAuthAndProfileApi(page, { authenticated: false });
-        // matrix-grid-problems is the last DSA module, so it lives on the final page of the track.
-        await page.goto('/index.html?module=matrix-grid-problems');
-        await expect(page.locator('[data-module-card="matrix-grid-problems"]')).toBeVisible();
-
-        await page.evaluate(() => openModuleFromGlobalSearch('java-memory-jvm'));
+        // java-memory-jvm is the last Java module, so it lives on the final page of the track.
+        await page.goto('/index.html?module=java-memory-jvm');
         await expect(page.locator('[data-module-card="java-memory-jvm"]')).toBeVisible();
+
+        await page.evaluate(() => openModuleFromGlobalSearch('jdbc-basics'));
+        await expect(page.locator('[data-module-card="jdbc-basics"]')).toBeVisible();
     });
 });

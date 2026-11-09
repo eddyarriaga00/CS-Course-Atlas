@@ -234,6 +234,15 @@ const ASSEMBLY_MODULE_IDS = [
 ];
 
 const VALID_CATEGORY_FILTERS = new Set(['all', 'dsa', 'discrete', 'java', 'git', 'assembly']);
+// Tracks shown on the site. A track left out is hidden everywhere (modules, menus, filters, search,
+// generated pages) and its routes redirect to the first published track. Add it back once its rewrite ships.
+const PUBLISHED_TRACKS = ['java'];
+const PUBLISHED_TRACK_SET = new Set(PUBLISHED_TRACKS);
+const HIDDEN_TRACK_ROUTES = new Set(
+    [['/dsa', 'dsa'], ['/java', 'java'], ['/git', 'git'], ['/assembly', 'assembly'], ['/discrete-math', 'discrete']]
+        .filter(([, category]) => !PUBLISHED_TRACK_SET.has(category))
+        .map(([route]) => route)
+);
 const VALID_GLOSSARY_SORTS = new Set(['smart', 'az', 'za', 'category']);
 const DEFAULT_ROUTE = '/home';
 const ROUTE_ALIAS_MAP = {
@@ -835,7 +844,7 @@ const TRANSLATIONS = {
         'a11y.skipToContent': 'Skip to main content',
         // Hero
         'hero.title': 'CS Course Atlas: Learn Across Core CS Courses',
-        'hero.subtitle': 'A structured, beginner-friendly path through five core CS tracks: Data Structures & Algorithms, Java, Discrete Mathematics, Git, and x86-64 Assembly, by Eddy Arriaga-B. Its 45 modules are organized into units, and each one has clear learning objectives, worked code examples, graded practice, and a quiz.',
+        'hero.subtitle': 'A structured, beginner-friendly path through core CS courses, by Eddy Arriaga-B. It starts with the Java track: 13 modules organized into units, each with clear learning objectives, worked code examples in Java, C++, Python and JavaScript, graded practice, and a quiz. More tracks are on the way.',
         'hero.pretextCanvasAria': 'Decorative study intro rendered with Pretext text flow.',
         // Header buttons
         'btn.flashcards': 'Flashcards',
@@ -1552,7 +1561,7 @@ const TRANSLATIONS = {
         'a11y.skipToContent': 'Saltar al contenido principal',
         // Hero
         'hero.title': 'CS Course Atlas: Aprende en Cursos Clave de CS',
-        'hero.subtitle': 'Una ruta estructurada y amigable para principiantes a través de cinco rutas esenciales de computación: Estructuras de Datos y Algoritmos, Java, Matemáticas Discretas, Git y Ensamblador x86-64, por Eddy Arriaga-B. Sus 45 módulos están organizados en unidades, y cada uno incluye objetivos de aprendizaje claros, ejemplos de código resueltos, práctica graduada y un cuestionario.',
+        'hero.subtitle': 'Una ruta estructurada y amigable para principiantes a través de cursos esenciales de computación, por Eddy Arriaga-B. Empieza con la ruta de Java: 13 módulos organizados en unidades, cada uno con objetivos de aprendizaje claros, ejemplos de código resueltos en Java, C++, Python y JavaScript, práctica graduada y un cuestionario. Pronto llegarán más rutas.',
         'hero.pretextCanvasAria': 'Introduccion visual de estudio renderizada con flujo de texto de Pretext.',
         // Header buttons
         'btn.flashcards': 'Tarjetas',
@@ -2880,7 +2889,8 @@ function normalizeRoutePath(pathname) {
     if (normalized.length > 1 && normalized.endsWith('/')) {
         normalized = normalized.replace(/\/+$/g, '');
     }
-    return ROUTE_ALIAS_MAP[normalized] || DEFAULT_ROUTE;
+    const resolved = ROUTE_ALIAS_MAP[normalized] || DEFAULT_ROUTE;
+    return HIDDEN_TRACK_ROUTES.has(resolved) ? `/${PUBLISHED_TRACKS[0] === 'discrete' ? 'discrete-math' : PUBLISHED_TRACKS[0]}` : resolved;
 }
 
 function getRouteDocumentPath(route) {
@@ -3677,7 +3687,7 @@ function updateHomeLearningActions() {
 function startGuidedPath(pathKey) {
     const key = String(pathKey || '').toLowerCase();
     if (key === 'foundations') {
-        startGuestTrack('dsa');
+        startGuestTrack(PUBLISHED_TRACK_SET.has('dsa') ? 'dsa' : PUBLISHED_TRACKS[0]);
         return;
     }
     if (key === 'coursework') {
@@ -3806,7 +3816,36 @@ function initSocialButtonAnimations() {
     });
 }
 
+// Hide menu links and track filter buttons for tracks that are not published yet.
+function hideUnpublishedTrackControls() {
+    HIDDEN_TRACK_ROUTES.forEach((route) => {
+        document.querySelectorAll(`[data-route-key="${route}"]`).forEach((element) => {
+            element.hidden = true;
+        });
+    });
+    document.querySelectorAll('[data-topic-filter]').forEach((button) => {
+        const category = button.getAttribute('data-topic-filter');
+        if (category !== 'all' && !PUBLISHED_TRACK_SET.has(category)) button.hidden = true;
+    });
+    document.querySelectorAll('[data-requires-track]').forEach((element) => {
+        if (!PUBLISHED_TRACK_SET.has(element.getAttribute('data-requires-track'))) element.hidden = true;
+    });
+    // Static links straight to a module that is hidden (e.g. the home page link list).
+    document.querySelectorAll('a[href*="module="]').forEach((link) => {
+        const moduleId = new URL(link.getAttribute('href'), window.location.href).searchParams.get('module');
+        if (moduleId && !getModuleById(moduleId)) (link.closest('li') || link).hidden = true;
+    });
+}
+
+function getPublishedTrackNames(language) {
+    const labels = { dsa: 'DSA', java: 'Java', git: 'Git', assembly: 'Assembly', discrete: language === 'es' ? 'Matemáticas discretas' : 'Discrete Math' };
+    const names = PUBLISHED_TRACKS.map((track) => labels[track] || track);
+    const joiner = language === 'es' ? ' o ' : ' or ';
+    return names.length > 1 ? `${names.slice(0, -1).join(', ')}${joiner}${names[names.length - 1]}` : names[0];
+}
+
 function initRouteNavigation() {
+    hideUnpublishedTrackControls();
     const toggleButton = document.getElementById('sidebar-toggle');
     const closeButton = document.getElementById('sidebar-close');
     const collapseButton = document.getElementById('sidebar-collapse-toggle');
@@ -12934,6 +12973,10 @@ function normalizeModuleCatalog(moduleList) {
     });
 }
 
+// Drop modules of unpublished tracks before anything else reads the catalog.
+for (let index = modules.length - 1; index >= 0; index -= 1) {
+    if (!PUBLISHED_TRACK_SET.has(MODULE_CATEGORY_BY_ID[modules[index].id])) modules.splice(index, 1);
+}
 normalizeModuleCatalog(modules);
 // Compatibility anchor for validation scripts that slice the catalog runtime section.
 const flashcardDecks = null;
@@ -14394,7 +14437,8 @@ function sanitizeStoredModuleExampleSelections(selectionMap) {
 
 function sanitizeCategoryFilter(category) {
     const migrated = category === 'systems' ? 'java' : category;
-    return VALID_CATEGORY_FILTERS.has(migrated) ? migrated : 'all';
+    const valid = VALID_CATEGORY_FILTERS.has(migrated) && (migrated === 'all' || PUBLISHED_TRACK_SET.has(migrated));
+    return valid ? migrated : 'all';
 }
 
 function enforceAssemblyModuleLanguageDefaults() {
@@ -18559,6 +18603,8 @@ function applyAuthProviderAvailability() {
             ? providerState.reasons[0]
             : `${getAuthProviderLabel(providerKey)} sign-in is not configured.`;
         setAuthProviderButtonEnabled(button, Boolean(providerState.enabled), reason);
+        // The server says this provider is not set up: hide it instead of showing a dead button.
+        button.hidden = !providerState.enabled;
     });
 }
 
@@ -30026,8 +30072,8 @@ function renderInsights() {
                     : `Focus: ${focusText} • Style: ${styleText}`;
             } else {
                 highlightGoalNoteEl.textContent = appState.language === 'es'
-                    ? 'Empieza por DSA, Git o Java'
-                    : 'Start with DSA, Git, or Java';
+                    ? `Empieza por ${getPublishedTrackNames('es')}`
+                    : `Start with ${getPublishedTrackNames('en')}`;
             }
         }
         if (highlightFocusEl) {

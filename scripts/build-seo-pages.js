@@ -713,6 +713,17 @@ function backControlScript() {
     </script>`;
 }
 
+// Set in main() from PUBLISHED_TRACKS; null means every track is published.
+let publishedTrackSet = null;
+
+function trackNavLinks() {
+    return [['dsa', 'dsa.html', 'DSA'], ['java', 'java.html', 'Java'], ['git', 'git.html', 'Git'],
+        ['assembly', 'assembly.html', 'Assembly'], ['discrete', 'discrete-math.html', 'Discrete Math']]
+        .filter(([category]) => !publishedTrackSet || publishedTrackSet.has(category))
+        .map(([, href, label]) => `<a href="${href}">${label}</a>`)
+        .join('\n                    ');
+}
+
 function routePageHtml(routeConfig, modules) {
     const moduleLinks = routeConfig.moduleCategory === 'all'
         ? modules.slice(0, 12)
@@ -753,11 +764,7 @@ ${headTemplate({
                     <a href="index.html">Interactive App</a>
                     <a href="home.html">Home</a>
                     <a href="tracks.html">Tracks</a>
-                    <a href="dsa.html">DSA</a>
-                    <a href="java.html">Java</a>
-                    <a href="git.html">Git</a>
-                    <a href="assembly.html">Assembly</a>
-                    <a href="discrete-math.html">Discrete Math</a>
+                    ${trackNavLinks()}
                     <a href="modules/index.html">Module Directory</a>
                     <a href="sitemap.html">Sitemap</a>
                 </div>
@@ -1312,6 +1319,18 @@ function main() {
         };
     });
 
+    // Only publish pages for tracks listed in PUBLISHED_TRACKS in script.js.
+    const publishedMatch = source.match(/const PUBLISHED_TRACKS = \[([^\]]*)\];/);
+    const publishedTracks = publishedMatch
+        ? new Set((publishedMatch[1].match(/'([^']+)'/g) || []).map((item) => item.slice(1, -1)))
+        : null;
+    const isPublished = (category) => !publishedTracks || publishedTracks.has(category);
+    publishedTrackSet = publishedTracks;
+    for (let index = modules.length - 1; index >= 0; index -= 1) {
+        if (!isPublished(modules[index].category)) modules.splice(index, 1);
+    }
+    const routePages = ROUTE_PAGES.filter((page) => page.moduleCategory === 'all' || isPublished(page.moduleCategory));
+
     modules.sort((a, b) => sequence.indexOf(a.id) - sequence.indexOf(b.id));
     const indexById = new Map(modules.map((item, index) => [item.id, index]));
     const grouped = modules.reduce((acc, item) => {
@@ -1320,7 +1339,7 @@ function main() {
         return acc;
     }, {});
 
-    ROUTE_PAGES.forEach((routeConfig) => {
+    routePages.forEach((routeConfig) => {
         const html = routePageHtml(routeConfig, modules);
         writeFile(path.join(OUTPUT_DIR, routeConfig.filename), html);
     });
@@ -1331,14 +1350,14 @@ function main() {
         writeFile(path.join(MODULES_DIR, `${module.id}.html`), html);
     });
 
-    const sitemapEntries = buildSitemapEntries(ROUTE_PAGES, modules);
+    const sitemapEntries = buildSitemapEntries(routePages, modules);
     writeFile(path.join(OUTPUT_DIR, 'sitemap.html'), sitemapPageHtml(sitemapEntries));
     writeFile(path.join(OUTPUT_DIR, 'sitemap.xml'), generateSitemap(sitemapEntries));
     writeFile(path.join(OUTPUT_DIR, 'sitemap.xsl'), generateSitemapXsl());
     writeFile(path.join(OUTPUT_DIR, 'robots.txt'), generateRobots());
 
     console.log(
-        `Generated ${ROUTE_PAGES.length} route pages, ${modules.length} module pages, and sitemap assets in ${OUTPUT_DIR}.`
+        `Generated ${routePages.length} route pages, ${modules.length} module pages, and sitemap assets in ${OUTPUT_DIR}.`
     );
 }
 
