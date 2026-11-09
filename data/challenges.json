@@ -1892,5 +1892,505 @@
     ]
    ]
   }
+ ],
+ "intro-to-coding": [
+  {
+   "id": "fizzbuzz",
+   "title": {
+    "en": "FizzBuzz",
+    "es": "FizzBuzz"
+   },
+   "prompt": {
+    "en": "Write `fizzbuzz(n)` that returns a list for 1..n where multiples of 3 are `\"Fizz\"`, multiples of 5 are `\"Buzz\"`, multiples of both are `\"FizzBuzz\"`, and every other number is itself as text.",
+    "es": "Escribe `fizzbuzz(n)` que devuelva una lista para 1..n donde los múltiplos de 3 son `\"Fizz\"`, los de 5 son `\"Buzz\"`, los de ambos son `\"FizzBuzz\"` y cualquier otro número es él mismo como texto."
+   },
+   "starter": "def fizzbuzz(n):\n    result = []\n    # loop from 1 to n\n    return result\n",
+   "solution": "def fizzbuzz(n):\n    result = []\n    for i in range(1, n + 1):\n        if i % 15 == 0:\n            result.append(\"FizzBuzz\")\n        elif i % 3 == 0:\n            result.append(\"Fizz\")\n        elif i % 5 == 0:\n            result.append(\"Buzz\")\n        else:\n            result.append(str(i))\n    return result\n",
+   "hint": {
+    "en": "Check the \"both\" case (`i % 15 == 0`) first, otherwise 15 would stop at `\"Fizz\"`.",
+    "es": "Revisa primero el caso de \"ambos\" (`i % 15 == 0`), si no 15 se quedaría en `\"Fizz\"`."
+   },
+   "tests": [
+    [
+     "fizzbuzz(5)",
+     "['1', '2', 'Fizz', '4', 'Buzz']"
+    ],
+    [
+     "fizzbuzz(15)[-1]",
+     "'FizzBuzz'"
+    ],
+    [
+     "fizzbuzz(0)",
+     "[]"
+    ]
+   ]
+  },
+  {
+   "id": "digit-sum",
+   "title": {
+    "en": "Sum of digits",
+    "es": "Suma de dígitos"
+   },
+   "prompt": {
+    "en": "Write `digit_sum(n)` that adds up the digits of a non-negative integer using `%` and `//` (no converting to text). `digit_sum(4096)` is 19.",
+    "es": "Escribe `digit_sum(n)` que sume los dígitos de un entero no negativo usando `%` y `//` (sin convertir a texto). `digit_sum(4096)` es 19."
+   },
+   "starter": "def digit_sum(n):\n    pass\n",
+   "solution": "def digit_sum(n):\n    total = 0\n    while n > 0:\n        total += n % 10\n        n //= 10\n    return total\n",
+   "hint": {
+    "en": "`n % 10` is the last digit and `n // 10` drops it. Repeat while `n > 0`.",
+    "es": "`n % 10` es el último dígito y `n // 10` lo quita. Repite mientras `n > 0`."
+   },
+   "tests": [
+    [
+     "digit_sum(4096)",
+     "19"
+    ],
+    [
+     "digit_sum(0)",
+     "0"
+    ],
+    [
+     "digit_sum(7)",
+     "7"
+    ],
+    [
+     "digit_sum(99999)",
+     "45"
+    ]
+   ]
+  }
+ ],
+ "arrays-strings": [
+  {
+   "id": "two-sum",
+   "title": {
+    "en": "Two Sum",
+    "es": "Two Sum"
+   },
+   "prompt": {
+    "en": "Write `two_sum(nums, target)` that returns the indexes `[i, j]` (with `i < j`) of the two numbers that add up to `target`, or `[]` if none do. Aim for one pass with a dictionary.",
+    "es": "Escribe `two_sum(nums, target)` que devuelva los índices `[i, j]` (con `i < j`) de los dos números que suman `target`, o `[]` si no hay. Intenta una sola pasada con un diccionario."
+   },
+   "starter": "def two_sum(nums, target):\n    seen = {}  # value -> index\n    pass\n",
+   "solution": "def two_sum(nums, target):\n    seen = {}\n    for j, x in enumerate(nums):\n        if target - x in seen:\n            return [seen[target - x], j]\n        seen[x] = j\n    return []\n",
+   "hint": {
+    "en": "For each number `x`, ask whether `target - x` was already seen; store each value's index as you go.",
+    "es": "Para cada número `x`, pregunta si `target - x` ya se vio; guarda el índice de cada valor sobre la marcha."
+   },
+   "tests": [
+    [
+     "two_sum([2, 7, 11, 15], 9)",
+     "[0, 1]"
+    ],
+    [
+     "two_sum([3, 2, 4], 6)",
+     "[1, 2]"
+    ],
+    [
+     "two_sum([1, 2], 10)",
+     "[]"
+    ],
+    [
+     "two_sum([5, 5], 10)",
+     "[0, 1]"
+    ]
+   ]
+  },
+  {
+   "id": "palindrome",
+   "title": {
+    "en": "Valid palindrome",
+    "es": "Palíndromo válido"
+   },
+   "prompt": {
+    "en": "Write `is_palindrome(s)` that ignores case and anything that is not a letter or digit. `\"A man, a plan, a canal: Panama\"` is a palindrome.",
+    "es": "Escribe `is_palindrome(s)` que ignore mayúsculas y todo lo que no sea letra o dígito. `\"A man, a plan, a canal: Panama\"` es un palíndromo."
+   },
+   "starter": "def is_palindrome(s):\n    pass\n",
+   "solution": "def is_palindrome(s):\n    clean = [c.lower() for c in s if c.isalnum()]\n    return clean == clean[::-1]\n",
+   "hint": {
+    "en": "Keep only `c.isalnum()` characters in lower case, then compare the list with its reverse `[::-1]` (or use two pointers).",
+    "es": "Conserva solo los caracteres `c.isalnum()` en minúscula y compara la lista con su reverso `[::-1]` (o usa dos punteros)."
+   },
+   "tests": [
+    [
+     "is_palindrome('A man, a plan, a canal: Panama')",
+     "True"
+    ],
+    [
+     "is_palindrome('race a car')",
+     "False"
+    ],
+    [
+     "is_palindrome('')",
+     "True"
+    ],
+    [
+     "is_palindrome('0P')",
+     "False"
+    ]
+   ]
+  }
+ ],
+ "searching-algorithms": [
+  {
+   "id": "binary-search",
+   "title": {
+    "en": "Binary search",
+    "es": "Búsqueda binaria"
+   },
+   "prompt": {
+    "en": "Write `binary_search(nums, target)` for a sorted list. Return the index of `target`, or `-1` if it is missing. Do not use `.index()`.",
+    "es": "Escribe `binary_search(nums, target)` para una lista ordenada. Devuelve el índice de `target`, o `-1` si no está. No uses `.index()`."
+   },
+   "starter": "def binary_search(nums, target):\n    lo, hi = 0, len(nums) - 1\n    pass\n",
+   "solution": "def binary_search(nums, target):\n    lo, hi = 0, len(nums) - 1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if nums[mid] == target:\n            return mid\n        if nums[mid] < target:\n            lo = mid + 1\n        else:\n            hi = mid - 1\n    return -1\n",
+   "hint": {
+    "en": "Loop `while lo <= hi`, look at `mid = (lo + hi) // 2`, and throw away the half that cannot contain the target.",
+    "es": "Repite `while lo <= hi`, mira `mid = (lo + hi) // 2` y descarta la mitad que no puede contener el objetivo."
+   },
+   "tests": [
+    [
+     "binary_search([1, 3, 5, 7, 9, 11], 7)",
+     "3"
+    ],
+    [
+     "binary_search([1, 3, 5, 7, 9, 11], 4)",
+     "-1"
+    ],
+    [
+     "binary_search([], 1)",
+     "-1"
+    ],
+    [
+     "binary_search([2], 2)",
+     "0"
+    ]
+   ]
+  },
+  {
+   "id": "first-position",
+   "title": {
+    "en": "First occurrence",
+    "es": "Primera aparición"
+   },
+   "prompt": {
+    "en": "The sorted list may contain repeats. Write `first_index(nums, target)` that returns the **first** index of `target` (or `-1`) in O(log n).",
+    "es": "La lista ordenada puede tener repetidos. Escribe `first_index(nums, target)` que devuelva el **primer** índice de `target` (o `-1`) en O(log n)."
+   },
+   "starter": "def first_index(nums, target):\n    pass\n",
+   "solution": "def first_index(nums, target):\n    lo, hi, found = 0, len(nums) - 1, -1\n    while lo <= hi:\n        mid = (lo + hi) // 2\n        if nums[mid] >= target:\n            if nums[mid] == target:\n                found = mid\n            hi = mid - 1\n        else:\n            lo = mid + 1\n    return found\n",
+   "hint": {
+    "en": "When you find the target, remember the index but keep searching to the **left** (`hi = mid - 1`).",
+    "es": "Cuando encuentres el objetivo, guarda el índice pero sigue buscando a la **izquierda** (`hi = mid - 1`)."
+   },
+   "tests": [
+    [
+     "first_index([1, 2, 2, 2, 3], 2)",
+     "1"
+    ],
+    [
+     "first_index([5, 5, 5], 5)",
+     "0"
+    ],
+    [
+     "first_index([1, 3], 2)",
+     "-1"
+    ],
+    [
+     "first_index([1, 1, 2, 4, 4, 4, 9], 4)",
+     "3"
+    ]
+   ]
+  }
+ ],
+ "stacks-queues": [
+  {
+   "id": "balanced",
+   "title": {
+    "en": "Balanced brackets",
+    "es": "Paréntesis balanceados"
+   },
+   "prompt": {
+    "en": "Write `is_balanced(s)` that returns `True` when every `(`, `[` and `{` is closed by the matching bracket in the right order. Other characters are ignored.",
+    "es": "Escribe `is_balanced(s)` que devuelva `True` cuando cada `(`, `[` y `{` se cierra con su pareja en el orden correcto. Los demás caracteres se ignoran."
+   },
+   "starter": "def is_balanced(s):\n    stack = []\n    pass\n",
+   "solution": "def is_balanced(s):\n    pairs = {')': '(', ']': '[', '}': '{'}\n    stack = []\n    for c in s:\n        if c in '([{':\n            stack.append(c)\n        elif c in pairs:\n            if not stack or stack.pop() != pairs[c]:\n                return False\n    return not stack\n",
+   "hint": {
+    "en": "Push opening brackets. On a closing one, the top of the stack must be its partner. At the end the stack must be empty.",
+    "es": "Apila los de apertura. En uno de cierre, la cima de la pila debe ser su pareja. Al final la pila debe estar vacía."
+   },
+   "tests": [
+    [
+     "is_balanced('{[()()]}')",
+     "True"
+    ],
+    [
+     "is_balanced('([)]')",
+     "False"
+    ],
+    [
+     "is_balanced('((')",
+     "False"
+    ],
+    [
+     "is_balanced('print(a[0])')",
+     "True"
+    ],
+    [
+     "is_balanced(')')",
+     "False"
+    ]
+   ]
+  },
+  {
+   "id": "rpn",
+   "title": {
+    "en": "Evaluate postfix",
+    "es": "Evaluar notación postfija"
+   },
+   "prompt": {
+    "en": "Write `eval_rpn(tokens)` for Reverse Polish Notation with `+`, `-`, `*` and integer division `/` that truncates toward zero. `['2', '1', '+', '3', '*']` is 9.",
+    "es": "Escribe `eval_rpn(tokens)` para notación polaca inversa con `+`, `-`, `*` y división entera `/` que trunca hacia cero. `['2', '1', '+', '3', '*']` es 9."
+   },
+   "starter": "def eval_rpn(tokens):\n    stack = []\n    pass\n",
+   "solution": "def eval_rpn(tokens):\n    stack = []\n    for tok in tokens:\n        if tok in '+-*/' and len(tok) == 1:\n            b, a = stack.pop(), stack.pop()\n            if tok == '+':\n                stack.append(a + b)\n            elif tok == '-':\n                stack.append(a - b)\n            elif tok == '*':\n                stack.append(a * b)\n            else:\n                stack.append(int(a / b))\n        else:\n            stack.append(int(tok))\n    return stack[0]\n",
+   "hint": {
+    "en": "Numbers go on the stack. An operator pops `b` then `a` and pushes `a op b`. `int(a / b)` truncates toward zero.",
+    "es": "Los números van a la pila. Un operador saca `b` y luego `a` y apila `a op b`. `int(a / b)` trunca hacia cero."
+   },
+   "tests": [
+    [
+     "eval_rpn(['2', '1', '+', '3', '*'])",
+     "9"
+    ],
+    [
+     "eval_rpn(['4', '13', '5', '/', '+'])",
+     "6"
+    ],
+    [
+     "eval_rpn(['7', '-2', '/'])",
+     "-3"
+    ],
+    [
+     "eval_rpn(['42'])",
+     "42"
+    ]
+   ]
+  }
+ ],
+ "recursion": [
+  {
+   "id": "power",
+   "title": {
+    "en": "Fast power",
+    "es": "Potencia rápida"
+   },
+   "prompt": {
+    "en": "Write a recursive `power(x, n)` for integer `n >= 0` that uses x^n = (x^(n/2))² so it takes O(log n) calls. Do not use `**` or `pow`.",
+    "es": "Escribe un `power(x, n)` recursivo para un entero `n >= 0` que use x^n = (x^(n/2))² para tomar O(log n) llamadas. No uses `**` ni `pow`."
+   },
+   "starter": "def power(x, n):\n    # base case first\n    pass\n",
+   "solution": "def power(x, n):\n    if n == 0:\n        return 1\n    half = power(x, n // 2)\n    return half * half if n % 2 == 0 else half * half * x\n",
+   "hint": {
+    "en": "Base case `n == 0` returns 1. Compute `half = power(x, n // 2)` once, square it, and multiply by `x` once more if `n` is odd.",
+    "es": "El caso base `n == 0` devuelve 1. Calcula `half = power(x, n // 2)` una vez, elévalo al cuadrado y multiplica por `x` otra vez si `n` es impar."
+   },
+   "tests": [
+    [
+     "power(2, 10)",
+     "1024"
+    ],
+    [
+     "power(3, 0)",
+     "1"
+    ],
+    [
+     "power(5, 3)",
+     "125"
+    ],
+    [
+     "power(2, 100)",
+     "1267650600228229401496703205376"
+    ]
+   ]
+  },
+  {
+   "id": "subsets",
+   "title": {
+    "en": "All subsets",
+    "es": "Todos los subconjuntos"
+   },
+   "prompt": {
+    "en": "Write `subsets(items)` that returns every subset as a list of lists. Order does not matter inside the answer, but build it recursively.",
+    "es": "Escribe `subsets(items)` que devuelva cada subconjunto como lista de listas. El orden no importa, pero constrúyelo de forma recursiva."
+   },
+   "starter": "def subsets(items):\n    pass\n",
+   "solution": "def subsets(items):\n    if not items:\n        return [[]]\n    rest = subsets(items[1:])\n    return rest + [[items[0]] + s for s in rest]\n",
+   "hint": {
+    "en": "The subsets of `items` are the subsets of `items[1:]`, plus each of those with `items[0]` added in front.",
+    "es": "Los subconjuntos de `items` son los de `items[1:]`, más cada uno de ellos con `items[0]` agregado al frente."
+   },
+   "tests": [
+    [
+     "sorted(subsets([1, 2]))",
+     "[[], [1], [1, 2], [2]]"
+    ],
+    [
+     "subsets([])",
+     "[[]]"
+    ],
+    [
+     "len(subsets([1, 2, 3, 4]))",
+     "16"
+    ],
+    [
+     "sorted(map(sorted, subsets(['a', 'b', 'c'])))",
+     "[[], ['a'], ['a', 'b'], ['a', 'b', 'c'], ['a', 'c'], ['b'], ['b', 'c'], ['c']]"
+    ]
+   ]
+  }
+ ],
+ "sorting-algorithms": [
+  {
+   "id": "insertion-sort",
+   "title": {
+    "en": "Insertion sort",
+    "es": "Ordenamiento por inserción"
+   },
+   "prompt": {
+    "en": "Write `insertion_sort(nums)` that sorts the list **in place** with insertion sort and also returns it. Do not call `sort` or `sorted`.",
+    "es": "Escribe `insertion_sort(nums)` que ordene la lista **en su lugar** con inserción y también la devuelva. No llames a `sort` ni `sorted`."
+   },
+   "starter": "def insertion_sort(nums):\n    for i in range(1, len(nums)):\n        pass\n    return nums\n",
+   "solution": "def insertion_sort(nums):\n    for i in range(1, len(nums)):\n        key, j = nums[i], i - 1\n        while j >= 0 and nums[j] > key:\n            nums[j + 1] = nums[j]\n            j -= 1\n        nums[j + 1] = key\n    return nums\n",
+   "hint": {
+    "en": "Take `key = nums[i]`, shift bigger items one step right, then drop `key` into the gap.",
+    "es": "Toma `key = nums[i]`, mueve los elementos mayores un lugar a la derecha y coloca `key` en el hueco."
+   },
+   "tests": [
+    [
+     "insertion_sort([5, 2, 9, 1, 5, 6])",
+     "[1, 2, 5, 5, 6, 9]"
+    ],
+    [
+     "insertion_sort([])",
+     "[]"
+    ],
+    [
+     "insertion_sort([3, 2, 1])",
+     "[1, 2, 3]"
+    ],
+    [
+     "(lambda a: (insertion_sort(a), a)[1])([2, 1])",
+     "[1, 2]"
+    ]
+   ]
+  },
+  {
+   "id": "merge-sorted",
+   "title": {
+    "en": "Merge two sorted lists",
+    "es": "Combinar dos listas ordenadas"
+   },
+   "prompt": {
+    "en": "Write `merge(a, b)` that merges two sorted lists into one sorted list in O(len(a) + len(b)), the key step of merge sort.",
+    "es": "Escribe `merge(a, b)` que combine dos listas ordenadas en una lista ordenada en O(len(a) + len(b)), el paso clave de merge sort."
+   },
+   "starter": "def merge(a, b):\n    i = j = 0\n    out = []\n    pass\n",
+   "solution": "def merge(a, b):\n    i = j = 0\n    out = []\n    while i < len(a) and j < len(b):\n        if a[i] <= b[j]:\n            out.append(a[i])\n            i += 1\n        else:\n            out.append(b[j])\n            j += 1\n    return out + a[i:] + b[j:]\n",
+   "hint": {
+    "en": "Compare the fronts `a[i]` and `b[j]`, take the smaller, and at the end add whatever is left of either list.",
+    "es": "Compara los frentes `a[i]` y `b[j]`, toma el menor y al final agrega lo que quede de cualquiera de las listas."
+   },
+   "tests": [
+    [
+     "merge([1, 4, 7], [2, 3, 8, 9])",
+     "[1, 2, 3, 4, 7, 8, 9]"
+    ],
+    [
+     "merge([], [1])",
+     "[1]"
+    ],
+    [
+     "merge([2, 2], [2])",
+     "[2, 2, 2]"
+    ],
+    [
+     "merge([], [])",
+     "[]"
+    ]
+   ]
+  }
+ ],
+ "hash-tables": [
+  {
+   "id": "first-unique",
+   "title": {
+    "en": "First unique character",
+    "es": "Primer carácter único"
+   },
+   "prompt": {
+    "en": "Write `first_unique(s)` that returns the index of the first character that appears exactly once, or `-1`.",
+    "es": "Escribe `first_unique(s)` que devuelva el índice del primer carácter que aparece exactamente una vez, o `-1`."
+   },
+   "starter": "def first_unique(s):\n    counts = {}\n    pass\n",
+   "solution": "def first_unique(s):\n    counts = {}\n    for c in s:\n        counts[c] = counts.get(c, 0) + 1\n    for i, c in enumerate(s):\n        if counts[c] == 1:\n            return i\n    return -1\n",
+   "hint": {
+    "en": "Two passes: count every character in a dictionary, then find the first index whose count is 1.",
+    "es": "Dos pasadas: cuenta cada carácter en un diccionario y luego busca el primer índice cuyo conteo sea 1."
+   },
+   "tests": [
+    [
+     "first_unique('leetcode')",
+     "0"
+    ],
+    [
+     "first_unique('loveleetcode')",
+     "2"
+    ],
+    [
+     "first_unique('aabb')",
+     "-1"
+    ],
+    [
+     "first_unique('')",
+     "-1"
+    ]
+   ]
+  },
+  {
+   "id": "group-anagrams",
+   "title": {
+    "en": "Group anagrams",
+    "es": "Agrupar anagramas"
+   },
+   "prompt": {
+    "en": "Write `group_anagrams(words)` that groups words that are anagrams of each other. Return the groups as lists, each group in its original order, groups ordered by their first word's position.",
+    "es": "Escribe `group_anagrams(words)` que agrupe las palabras que son anagramas entre sí. Devuelve los grupos como listas, cada grupo en su orden original y los grupos ordenados por la posición de su primera palabra."
+   },
+   "starter": "def group_anagrams(words):\n    groups = {}\n    pass\n",
+   "solution": "def group_anagrams(words):\n    groups = {}\n    for w in words:\n        groups.setdefault(''.join(sorted(w)), []).append(w)\n    return list(groups.values())\n",
+   "hint": {
+    "en": "Anagrams share the same sorted letters, so use `''.join(sorted(w))` as the dictionary key. Dictionaries keep insertion order.",
+    "es": "Los anagramas comparten las mismas letras ordenadas, así que usa `''.join(sorted(w))` como clave. Los diccionarios conservan el orden de inserción."
+   },
+   "tests": [
+    [
+     "group_anagrams(['eat', 'tea', 'tan', 'ate', 'nat', 'bat'])",
+     "[['eat', 'tea', 'ate'], ['tan', 'nat'], ['bat']]"
+    ],
+    [
+     "group_anagrams([])",
+     "[]"
+    ],
+    [
+     "group_anagrams(['a'])",
+     "[['a']]"
+    ]
+   ]
+  }
  ]
 }

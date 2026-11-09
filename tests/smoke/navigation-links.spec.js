@@ -101,6 +101,24 @@ test.describe('Navigation', () => {
         await expect(page.locator('#main h1')).toHaveText('Combining Tables');
     });
 
+    test('flashcards you know come back for review when they are due', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html#flashcards');
+        await page.locator('#flash-module').selectOption('python-first-programs');
+        await page.locator('[data-action="flash-next"]').click();
+        await page.locator('[data-action="flash-again"]').click();
+        // Pretend two days went by.
+        await page.evaluate(() => { const k = Object.keys(localStorage).find((x) => x.endsWith('cardBox')); const v = JSON.parse(localStorage.getItem(k)); Object.values(v).forEach((c) => { c.due -= 2; }); localStorage.setItem(k, JSON.stringify(v)); });
+        await page.goto('/index.html#home');
+        await page.reload();
+        await expect(page.locator('.due-home')).toContainText('2 cards to review');
+        await page.locator('.due-home [data-action="go-flash"]').click();
+        await expect(page.locator('#flash-module')).toHaveValue('due');
+        await page.locator('[data-action="flash-next"]').click();
+        await page.locator('[data-action="flash-next"]').click();
+        await expect(page.locator('.due-empty')).toContainText('Review done for today');
+    });
+
     test('mixed review quizzes across completed modules', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html#m-python-first-programs');
