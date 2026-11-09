@@ -50,6 +50,9 @@ body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-a
 .topbar { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 30; height: var(--topbar); display: flex; align-items: center; gap: 12px;
   padding-block: 0; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
   background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+.skip-link { position: fixed; left: 12px; top: -48px; z-index: 100; padding: 8px 14px; border-radius: 8px; background: var(--accent); color: var(--on-accent); font-weight: 600; transition: top .15s; }
+.skip-link:focus { top: 12px; }
+#main:focus { outline: none; }
 .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: -.01em; white-space: nowrap; }
 .brand-mark { width: 28px; height: 28px; border-radius: 8px; background: var(--accent); color: var(--on-accent); display: grid; place-items: center; font-size: 14px; }
 .search { position: relative; flex: 1; max-width: 440px; margin-left: 24px; }
