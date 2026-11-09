@@ -20,7 +20,6 @@
   "cli-text-pipes",
   "cli-permissions-env",
   "cli-shell-scripts",
-  "intro-to-coding",
   "java-basics",
   "control-flow",
   "git-basics-workflow",
@@ -110,7 +109,6 @@
   "assembly-control-flow-procedures": "assembly",
   "assembly-arrays-strings-io": "assembly",
   "assembly-addressing-modes": "assembly",
-  "intro-to-coding": "dsa",
   "arrays-strings": "dsa",
   "linked-lists": "dsa",
   "stacks-queues": "dsa",
@@ -162,38 +160,6 @@
   "ai-language": "ai"
  },
  "modules": [
-  {
-   "id": "intro-to-coding",
-   "title": "Introduction to Coding",
-   "description": "Start here if you are brand new. This module explains what coding is, where it came from, what careers exist, how to choose your path and first language, how to set up your environment, and the core habits that make beginners successful.",
-   "difficulty": "beginner",
-   "topics": [
-    "What Coding Is",
-    "A Short History of Programming",
-    "How Code Becomes Running Software",
-    "How the Software Stack Fits Together",
-    "Career Paths in Technology",
-    "Choosing Your Learning Path",
-    "Choosing Your First Programming Language",
-    "Setting Up Your Development Environment",
-    "Your First Program",
-    "Core Building Blocks",
-    "Debugging and Problem Solving",
-    "Version Control and Collaboration Basics",
-    "How to Read Documentation and Error Messages",
-    "How to Ask Good Technical Questions",
-    "Beginner Pitfalls and How to Avoid Them",
-    "Project Selection and Portfolio Foundations",
-    "Study Systems and Habit Design",
-    "Preparing for CS Coursework and Internships",
-    "Learning Workflow and Portfolio Basics",
-    "30-Day Starter Plan"
-   ],
-   "es": {
-    "title": "Introducción a la codificación",
-    "description": "Comienza aquí si eres nuevo. Este módulo explica qué es la codificación, de dónde viene, qué carreras existen, cómo elegir su camino y su primer idioma, cómo configurar su entorno y los hábitos básicos que hacen que los principiantes tengan éxito."
-   }
-  },
   {
    "id": "arrays-strings",
    "title": "Arrays and Strings",
