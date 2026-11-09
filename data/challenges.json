@@ -2563,5 +2563,109 @@
     "greet.sh"
    ]
   }
+ ],
+ "git-basics-workflow": [
+  {
+   "id": "first-commit",
+   "lang": "bash",
+   "title": {
+    "en": "Your first commit",
+    "es": "Tu primer commit"
+   },
+   "prompt": {
+    "en": "The folder `notes` has two files. Turn it into a Git repository and commit both files with the message `First commit`.",
+    "es": "La carpeta `notes` tiene dos archivos. Conviértela en un repositorio de Git y haz commit de ambos con el mensaje `First commit`."
+   },
+   "setup": "mkdir notes\necho '# Notes' > notes/README.md\necho 'Learn Git' > notes/todo.txt\n",
+   "starter": "# Type one command per line, then press Run.\n",
+   "solution": "cd notes\ngit init -q\ngit add .\ngit commit -q -m \"First commit\"\n",
+   "hint": {
+    "en": "`cd notes`, `git init`, `git add .` (stage everything) and `git commit -m \"First commit\"`.",
+    "es": "`cd notes`, `git init`, `git add .` (prepara todo) y `git commit -m \"First commit\"`."
+   },
+   "output": false
+  },
+  {
+   "id": "commit-only-ready",
+   "lang": "bash",
+   "title": {
+    "en": "Commit only what is ready",
+    "es": "Haz commit solo de lo que está listo"
+   },
+   "prompt": {
+    "en": "In `project`, `README.md` was edited and two new files appeared. Commit **only** the README change with the message `Update README`. Leave `draft.md` and `todo.txt` uncommitted.",
+    "es": "En `project` se editó `README.md` y aparecieron dos archivos nuevos. Haz commit **solo** del cambio en README con el mensaje `Update README`. Deja `draft.md` y `todo.txt` sin commit."
+   },
+   "setup": "mkdir project\ncd project\ngit init -q\necho '# Project' > README.md\ngit add README.md\ngit commit -q -m 'Initial commit'\necho 'Now with setup steps.' >> README.md\necho 'idea' > draft.md\necho 'fix tests' > todo.txt\n",
+   "starter": "# Type one command per line, then press Run.\n",
+   "solution": "cd project\ngit add README.md\ngit commit -q -m \"Update README\"\n",
+   "hint": {
+    "en": "Stage just that file with `git add README.md`, then `git commit -m \"Update README\"`. Check with `git status -s` first and after.",
+    "es": "Prepara solo ese archivo con `git add README.md` y luego `git commit -m \"Update README\"`. Revisa con `git status -s` antes y después."
+   },
+   "output": false
+  },
+  {
+   "id": "undo-safely",
+   "lang": "bash",
+   "title": {
+    "en": "Undo safely",
+    "es": "Deshaz con cuidado"
+   },
+   "prompt": {
+    "en": "In `project`, `README.md` was overwritten by mistake and `secret.txt` was staged by accident. Bring `README.md` back to its committed version and unstage `secret.txt` (keep the file, just don't stage it).",
+    "es": "En `project`, `README.md` se sobrescribió por error y `secret.txt` se preparó por accidente. Devuelve `README.md` a su versión del commit y saca `secret.txt` del área de preparación (conserva el archivo, solo que no esté preparado)."
+   },
+   "setup": "mkdir project\ncd project\ngit init -q\necho '# Project' > README.md\ngit add README.md\ngit commit -q -m 'Initial commit'\necho 'oops' > README.md\necho 'password=123' > secret.txt\ngit add secret.txt\n",
+   "starter": "# Type one command per line, then press Run.\n",
+   "solution": "cd project\ngit restore README.md\ngit restore --staged secret.txt\n",
+   "hint": {
+    "en": "`git restore README.md` throws away the change in the file; `git restore --staged secret.txt` unstages it but keeps it on disk.",
+    "es": "`git restore README.md` descarta el cambio del archivo; `git restore --staged secret.txt` lo saca del área de preparación pero lo deja en el disco."
+   },
+   "output": false
+  }
+ ],
+ "git-branching-merging": [
+  {
+   "id": "feature-branch",
+   "lang": "bash",
+   "title": {
+    "en": "A feature branch",
+    "es": "Una rama de funcionalidad"
+   },
+   "prompt": {
+    "en": "In `project`, create and switch to a branch `add-about`. Add a file `about.md` containing `About me`, commit it as `Add about page`, then switch back to `main` and merge the branch.",
+    "es": "En `project`, crea y cámbiate a una rama `add-about`. Agrega un archivo `about.md` con el texto `About me`, haz commit como `Add about page`, vuelve a `main` y fusiona la rama."
+   },
+   "setup": "mkdir project\ncd project\ngit init -q\necho '# Project' > README.md\ngit add README.md\ngit commit -q -m 'Initial commit'\n",
+   "starter": "# Type one command per line, then press Run.\n",
+   "solution": "cd project\ngit switch -q -c add-about\necho \"About me\" > about.md\ngit add about.md\ngit commit -q -m \"Add about page\"\ngit switch -q main\ngit merge -q add-about\n",
+   "hint": {
+    "en": "`git switch -c add-about`, create the file with `echo \"About me\" > about.md`, `git add` + `git commit -m \"Add about page\"`, then `git switch main` and `git merge add-about`.",
+    "es": "`git switch -c add-about`, crea el archivo con `echo \"About me\" > about.md`, `git add` + `git commit -m \"Add about page\"`, luego `git switch main` y `git merge add-about`."
+   },
+   "output": false
+  },
+  {
+   "id": "merge-two-lines",
+   "lang": "bash",
+   "title": {
+    "en": "Merge work that happened in parallel",
+    "es": "Fusiona trabajo hecho en paralelo"
+   },
+   "prompt": {
+    "en": "In `project`, the branch `fix-readme` and `main` both got a new commit since they split. Merge `fix-readme` into `main` using Git's default merge message, then delete the `fix-readme` branch.",
+    "es": "En `project`, la rama `fix-readme` y `main` recibieron un commit nuevo cada una desde que se separaron. Fusiona `fix-readme` en `main` con el mensaje de merge por defecto de Git y luego borra la rama `fix-readme`."
+   },
+   "setup": "mkdir project\ncd project\ngit init -q\necho '# Project' > README.md\ngit add README.md\ngit commit -q -m 'Initial commit'\ngit switch -q -c fix-readme\necho '# Project (fixed)' > README.md\ngit commit -q -am 'Fix README title'\ngit switch -q main\necho 'Email us' > contact.md\ngit add contact.md\ngit commit -q -m 'Add contact page'\n",
+   "starter": "# Type one command per line, then press Run.\n",
+   "solution": "cd project\ngit merge -q fix-readme\ngit branch -d fix-readme\n",
+   "hint": {
+    "en": "Stay on `main`: `git merge fix-readme` makes a merge commit (`Merge branch 'fix-readme'`). Then `git branch -d fix-readme` removes the merged branch.",
+    "es": "Quédate en `main`: `git merge fix-readme` crea un commit de merge (`Merge branch 'fix-readme'`). Luego `git branch -d fix-readme` borra la rama ya fusionada."
+   },
+   "output": false
+  }
  ]
 }

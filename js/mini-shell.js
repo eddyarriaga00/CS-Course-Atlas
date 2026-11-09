@@ -13,7 +13,7 @@
 
   function createShell() {
     const fs = new Map([['/', { dir: true, mode: 0o755 }], ['/home', { dir: true, mode: 0o755 }], [HOME, { dir: true, mode: 0o755 }]]);
-    const sh = { fs, cwd: HOME, vars: { HOME, PWD: HOME, USER: 'learner' }, args: [], status: 0, steps: 0 };
+    const sh = { fs, cwd: HOME, vars: { HOME, PWD: HOME, USER: 'learner' }, args: [], status: 0, steps: 0, repos: {} };
     return sh;
   }
 
@@ -398,6 +398,7 @@
     false: () => ({ code: 1 }),
     bash: (sh, args) => runScriptFile(sh, args[0], args.slice(1), 'bash'),
     sh: (sh, args) => runScriptFile(sh, args[0], args.slice(1), 'sh'),
+    git: (sh, args) => gitCmd(sh, args),
   };
   function headTail(sh, args, stdin, name) {
     const [f, files] = flags(args, ['n', 'n:']);
@@ -424,6 +425,238 @@
     try { res = runSource(sh, sh.fs.get(p).data, null); } catch (e) { res = { out: '', err: `${file}: ${e.message}\n`, code: 2 }; }
     sh.cwd = saved.cwd; sh.vars = saved.vars; sh.args = saved.args;
     return { out: res.out, err: res.err, code: res.code };
+  }
+
+  /* ---------- a small Git ---------- */
+  // Enough Git for the practice terminal: init, status, add, commit, log, branch, switch/checkout,
+  // merge (fast-forward or a clean three-way merge) and restore. Repositories live in sh.repos keyed
+  // by their folder; the working tree is the simulated filesystem itself.
+  function findRepo(sh) {
+    let d = sh.cwd;
+    for (;;) { if (sh.repos[d]) return { root: d, repo: sh.repos[d] }; if (d === '/') return null; d = parent(d); }
+  }
+  const relOf = (root, abs) => (abs === root ? '' : abs.slice(root === '/' ? 1 : root.length + 1));
+  function ignored(sh, root, rel) {
+    const gi = sh.fs.get(root + '/.gitignore');
+    if (!gi || gi.dir) return false;
+    return gi.data.split('\n').map((l) => l.trim()).filter((l) => l && !l.startsWith('#')).some((pat) => {
+      const p = pat.replace(/\/$/, ''), re = globToRe(p.replace(/^\//, ''));
+      return rel.split('/').some((_, i, parts) => re.test(parts[i]) || re.test(parts.slice(0, i + 1).join('/')));
+    });
+  }
+  function workTree(sh, root) {
+    const files = new Map();
+    for (const [k, v] of sh.fs) {
+      if (v.dir || !(k.startsWith(root + '/'))) continue;
+      const rel = relOf(root, k);
+      if (rel === '.git' || rel.startsWith('.git/') || ignored(sh, root, rel)) continue;
+      files.set(rel, v.data);
+    }
+    return files;
+  }
+  const tipTree = (repo, ref) => { const c = repo.refs[ref]; return c == null ? new Map() : repo.commits[c].tree; };
+  const shortId = (n) => ((n + 1) * 2654435761 >>> 0).toString(16).padStart(8, '0').slice(0, 7);
+  function statusLines(sh, root, repo) {
+    const head = tipTree(repo, repo.head), wt = workTree(sh, root), idx = repo.index, out = [];
+    const paths = [...new Set([...head.keys(), ...idx.keys(), ...wt.keys()])].sort(cmpC);
+    const untracked = new Set();
+    for (const p of paths) {
+      if (!idx.has(p) && !head.has(p)) { untracked.add(p); continue; }
+      const x = idx.has(p) && !head.has(p) ? 'A' : !idx.has(p) && head.has(p) ? 'D' : idx.get(p) !== head.get(p) ? 'M' : ' ';
+      const y = !idx.has(p) ? ' ' : !wt.has(p) ? 'D' : wt.get(p) !== idx.get(p) ? 'M' : ' ';
+      if (x !== ' ' || y !== ' ') out.push(x + y + ' ' + p);
+      if (!idx.has(p) && wt.has(p)) untracked.add(p);
+    }
+    // Untracked files inside a folder with nothing tracked show as the folder ("?? docs/").
+    const shown = new Set();
+    for (const p of untracked) {
+      const parts = p.split('/');
+      let label = p;
+      for (let i = 1; i < parts.length; i++) {
+        const dir = parts.slice(0, i).join('/') + '/';
+        if (![...idx.keys(), ...head.keys()].some((k) => k.startsWith(dir))) { label = dir; break; }
+      }
+      shown.add(label);
+    }
+    // Like git: changed files first (by path), then untracked ones.
+    return out.sort((a, b) => cmpC(a.slice(3), b.slice(3))).concat([...shown].sort(cmpC).map((p) => '?? ' + p));
+  }
+  function setTree(sh, root, repo, from, to) {
+    // Moves the working tree from one commit's files to another's, keeping unrelated files.
+    for (const p of from.keys()) if (!to.has(p)) { sh.fs.delete(root + '/' + p); }
+    for (const [p, data] of to) {
+      const abs = root + '/' + p;
+      let d = parent(abs); const need = [];
+      while (!sh.fs.has(d)) { need.unshift(d); d = parent(d); }
+      need.forEach((x) => sh.fs.set(x, { dir: true, mode: 0o755 }));
+      const old = sh.fs.get(abs);
+      sh.fs.set(abs, { data, mode: old && !old.dir ? old.mode : 0o644 });
+    }
+    repo.index = new Map(to);
+  }
+  function ancestors(repo, c) { const seen = new Set(), stack = c == null ? [] : [c]; while (stack.length) { const x = stack.pop(); if (seen.has(x)) continue; seen.add(x); stack.push(...repo.commits[x].parents); } return seen; }
+  function gitCmd(sh, args) {
+    const sub = args[0], rest = args.slice(1);
+    const quiet = rest.includes('-q') || rest.includes('--quiet');
+    const opts = rest.filter((a) => a !== '-q' && a !== '--quiet');
+    if (!sub) return { err: 'usage: git <command> [<args>]\n', code: 1 };
+    if (sub === 'init') {
+      const dir = norm(sh, opts.find((a) => !a.startsWith('-')) || '.');
+      if (!sh.fs.has(dir)) { const r = CMDS.mkdir(sh, ['-p', dir]); if (r.code) return r; }
+      const existed = !!sh.repos[dir];
+      if (!existed) { sh.repos[dir] = { index: new Map(), commits: [], refs: {}, head: 'main' }; sh.fs.set(dir + '/.git', { dir: true, mode: 0o755 }); }
+      return { out: quiet ? '' : `${existed ? 'Reinitialized existing' : 'Initialized empty'} Git repository in ${dir}/.git/\n` };
+    }
+    const found = findRepo(sh);
+    if (!found) return { err: 'fatal: not a git repository (or any of the parent directories): .git\n', code: 128 };
+    const { root, repo } = found;
+    const relArg = (a) => relOf(root, norm(sh, a));
+    if (sub === 'status') {
+      const lines = statusLines(sh, root, repo);
+      if (opts.includes('-s') || opts.includes('--short')) return { out: joinLines(lines) };
+      const head = repo.refs[repo.head];
+      let out = `On branch ${repo.head}\n` + (head == null ? '\nNo commits yet\n' : '');
+      const staged = lines.filter((l) => l[0] !== ' ' && l[0] !== '?'), changed = lines.filter((l) => l[1] !== ' ' && l[0] !== '?'), untracked = lines.filter((l) => l[0] === '?');
+      const name = { A: 'new file:   ', M: 'modified:   ', D: 'deleted:    ' };
+      if (staged.length) out += '\nChanges to be committed:\n' + staged.map((l) => `\t${name[l[0]]}${l.slice(3)}\n`).join('');
+      if (changed.length) out += '\nChanges not staged for commit:\n' + changed.map((l) => `\t${name[l[1]]}${l.slice(3)}\n`).join('');
+      if (untracked.length) out += '\nUntracked files:\n' + untracked.map((l) => `\t${l.slice(3)}\n`).join('');
+      if (!lines.length) out += head == null ? '\nnothing to commit (create/copy files and use "git add" to track)\n' : 'nothing to commit, working tree clean\n';
+      else if (!staged.length) out += '\nno changes added to commit\n';
+      return { out };
+    }
+    if (sub === 'add') {
+      const wt = workTree(sh, root);
+      const targets = opts.filter((a) => !a.startsWith('-'));
+      if (!targets.length && !opts.includes('-A') && !opts.includes('--all')) return { err: 'Nothing specified, nothing added.\n', code: 0 };
+      const pats = targets.length ? targets.map(relArg) : [''];
+      for (const pr of pats) {
+        const inScope = (p) => pr === '' || p === pr || p.startsWith(pr + '/');
+        const hits = [...wt.keys()].filter(inScope), gone = [...repo.index.keys()].filter((p) => inScope(p) && !wt.has(p));
+        if (!hits.length && !gone.length) { const t = targets[pats.indexOf(pr)]; return { err: `fatal: pathspec '${t}' did not match any files\n`, code: 128 }; }
+        hits.forEach((p) => repo.index.set(p, wt.get(p))); gone.forEach((p) => repo.index.delete(p));
+      }
+      return {};
+    }
+    if (sub === 'commit') {
+      let msg = null;
+      for (let i = 0; i < opts.length; i++) {
+        if (opts[i] === '-m' || opts[i] === '--message') msg = opts[++i];
+        else if (/^-a?m$/.test(opts[i]) || opts[i] === '-am') { if (opts[i].includes('a')) for (const [p, d] of workTree(sh, root)) if (repo.index.has(p)) repo.index.set(p, d); msg = opts[++i]; }
+        else if (opts[i] === '-a' || opts[i] === '--all') { const wt = workTree(sh, root); for (const p of [...repo.index.keys()]) { if (wt.has(p)) repo.index.set(p, wt.get(p)); else repo.index.delete(p); } }
+      }
+      if (msg == null) return { err: 'error: the practice terminal cannot open an editor; use git commit -m "message"\n', code: 1 };
+      const head = repo.refs[repo.head], prev = tipTree(repo, repo.head);
+      const same = prev.size === repo.index.size && [...repo.index].every(([p, d]) => prev.get(p) === d);
+      if (same) return { out: statusLines(sh, root, repo).length ? `On branch ${repo.head}\nnothing added to commit\n` : `On branch ${repo.head}\nnothing to commit, working tree clean\n`, code: 1 };
+      const id = repo.commits.length;
+      repo.commits.push({ msg, parents: head == null ? [] : [head], tree: new Map(repo.index) });
+      repo.refs[repo.head] = id;
+      const changed = [...new Set([...prev.keys(), ...repo.index.keys()])].filter((p) => prev.get(p) !== repo.index.get(p)).length;
+      return { out: quiet ? '' : `[${repo.head}${head == null ? ' (root-commit)' : ''} ${shortId(id)}] ${msg}\n ${changed} file${changed === 1 ? '' : 's'} changed\n` };
+    }
+    if (sub === 'log') {
+      const oneline = opts.includes('--oneline');
+      const ref = opts.find((a) => !a.startsWith('-')) || repo.head;
+      if (repo.refs[ref] == null) return { err: repo.refs[ref] === undefined && ref !== repo.head ? `fatal: ambiguous argument '${ref}': unknown revision\n` : `fatal: your current branch '${ref}' does not have any commits yet\n`, code: 128 };
+      const tips = opts.includes('--all') ? Object.values(repo.refs).filter((c) => c != null) : [repo.refs[ref]];
+      const order = [...new Set(tips.flatMap((c) => [...ancestors(repo, c)]))].sort((a, b) => b - a);
+      return { out: order.map((c) => (oneline ? `${shortId(c)} ${repo.commits[c].msg}\n` : `commit ${shortId(c)}\n\n    ${repo.commits[c].msg}\n\n`)).join('').replace(/\n\n$/, '\n') };
+    }
+    if (sub === 'branch') {
+      const names = opts.filter((a) => !a.startsWith('-'));
+      if (opts.includes('-d') || opts.includes('-D')) {
+        const n = names[0];
+        if (repo.refs[n] === undefined) return { err: `error: branch '${n}' not found\n`, code: 1 };
+        if (n === repo.head) return { err: `error: cannot delete branch '${n}' used by worktree at '${root}'\n`, code: 1 };
+        const was = repo.refs[n]; delete repo.refs[n]; return { out: quiet ? '' : `Deleted branch ${n} (was ${shortId(was)}).\n` };
+      }
+      if (!names.length) return { out: joinLines(Object.keys(repo.refs).filter((n) => repo.refs[n] != null).sort(cmpC).map((n) => (n === repo.head ? '* ' : '  ') + n)) };
+      if (repo.refs[repo.head] == null) return { err: `fatal: not a valid object name: '${repo.head}'\n`, code: 128 };
+      if (repo.refs[names[0]] != null) return { err: `fatal: a branch named '${names[0]}' already exists\n`, code: 128 };
+      repo.refs[names[0]] = repo.refs[repo.head]; return {};
+    }
+    if (sub === 'switch' || sub === 'checkout') {
+      const create = opts.includes('-c') || opts.includes('-b') || opts.includes('--create');
+      const name = opts.filter((a) => !a.startsWith('-'))[0];
+      if (!name) return { err: `fatal: missing branch name\n`, code: 128 };
+      if (sub === 'checkout' && !create && repo.refs[name] === undefined && workTree(sh, root).has(relArg(name))) {
+        // git checkout <file>: same as restore.
+        return gitCmd(sh, ['restore', ...opts]);
+      }
+      if (create) { if (repo.refs[name] != null) return { err: `fatal: a branch named '${name}' already exists\n`, code: 128 }; repo.refs[name] = repo.refs[repo.head] ?? null; repo.head = name; return { err: quiet ? '' : `Switched to a new branch '${name}'\n` }; }
+      if (repo.refs[name] == null) return { err: sub === 'switch' ? `fatal: invalid reference: ${name}\n` : `error: pathspec '${name}' did not match any file(s) known to git\n`, code: 1 };
+      if (name === repo.head) return { err: quiet ? '' : `Already on '${name}'\n` };
+      const from = tipTree(repo, repo.head), to = tipTree(repo, name), wt = workTree(sh, root);
+      const dirty = statusLines(sh, root, repo).filter((l) => !l.startsWith('??')).map((l) => l.slice(3));
+      if (dirty.some((p) => from.get(p) !== to.get(p))) return { err: `error: Your local changes to the following files would be overwritten by checkout:\n${dirty.map((p) => '\t' + p + '\n').join('')}Please commit your changes or stash them before you switch branches.\nAborting\n`, code: 1 };
+      const keep = new Map(dirty.map((p) => [p, wt.get(p)]));
+      setTree(sh, root, repo, from, to);
+      for (const [p, d] of keep) if (d != null) sh.fs.set(root + '/' + p, { data: d, mode: 0o644 });
+      repo.head = name;
+      return { err: quiet ? '' : `Switched to branch '${name}'\n` };
+    }
+    if (sub === 'merge') {
+      const name = opts.filter((a) => !a.startsWith('-'))[0];
+      const mi = opts.indexOf('-m');
+      if (!name || repo.refs[name] == null) return { err: `merge: ${name || ''} - not something we can merge\n`, code: 1 };
+      const cur = repo.refs[repo.head], other = repo.refs[name];
+      if (statusLines(sh, root, repo).some((l) => !l.startsWith('??'))) return { err: 'error: Your local changes would be overwritten by merge. Commit them first.\n', code: 1 };
+      if (ancestors(repo, cur).has(other)) return { out: quiet ? '' : 'Already up to date.\n' };
+      if (cur == null || ancestors(repo, other).has(cur)) {
+        setTree(sh, root, repo, tipTree(repo, repo.head), repo.commits[other].tree); repo.refs[repo.head] = other;
+        return { out: quiet ? '' : `Updating ${shortId(cur ?? 0)}..${shortId(other)}\nFast-forward\n` };
+      }
+      const ca = ancestors(repo, cur), cb = ancestors(repo, other);
+      const base = Math.max(...[...ca].filter((x) => cb.has(x)));
+      const B = repo.commits[base].tree, O = repo.commits[cur].tree, T = repo.commits[other].tree, merged = new Map(), conflicts = [];
+      for (const p of new Set([...B.keys(), ...O.keys(), ...T.keys()])) {
+        const b = B.get(p), o = O.get(p), t2 = T.get(p);
+        const pick = o === t2 ? o : o === b ? t2 : t2 === b ? o : (conflicts.push(p), o);
+        if (pick != null) merged.set(p, pick);
+      }
+      if (conflicts.length) return { err: `CONFLICT (content): Merge conflict in ${conflicts[0]}\nThe practice terminal stops here: in a real terminal you would now edit the file, then git add and git commit.\n`, code: 1 };
+      setTree(sh, root, repo, O, merged);
+      const id = repo.commits.length;
+      repo.commits.push({ msg: mi >= 0 ? opts[mi + 1] : `Merge branch '${name}'`, parents: [cur, other], tree: new Map(merged) });
+      repo.refs[repo.head] = id;
+      return { out: quiet ? '' : "Merge made by the 'ort' strategy.\n" };
+    }
+    if (sub === 'restore') {
+      const staged = opts.includes('--staged') || opts.includes('-S');
+      const files = opts.filter((a) => !a.startsWith('-'));
+      if (!files.length) return { err: 'fatal: you must specify path(s) to restore\n', code: 128 };
+      const head = tipTree(repo, repo.head);
+      for (const f of files) {
+        const rel = relArg(f);
+        const scope = (p) => rel === '' || p === rel || p.startsWith(rel + '/');
+        if (staged) {
+          const ps = [...new Set([...repo.index.keys(), ...head.keys()])].filter(scope);
+          if (!ps.length) return { err: `error: pathspec '${f}' did not match any file(s) known to git\n`, code: 1 };
+          ps.forEach((p) => { if (head.has(p)) repo.index.set(p, head.get(p)); else repo.index.delete(p); });
+        } else {
+          const ps = [...repo.index.keys()].filter(scope);
+          if (!ps.length) return { err: `error: pathspec '${f}' did not match any file(s) known to git\n`, code: 1 };
+          ps.forEach((p) => { const abs = root + '/' + p, old = sh.fs.get(abs); sh.fs.set(abs, { data: repo.index.get(p), mode: old && !old.dir ? old.mode : 0o644 }); });
+        }
+      }
+      return {};
+    }
+    if (sub === 'config') return {};
+    return { err: `git: '${sub}' is not supported in the practice terminal\n`, code: 1 };
+  }
+  // What the grader compares: per repository, the current branch, each branch's first-parent
+  // commit messages and tracked files, and `git status --short`.
+  function gitState(sh) {
+    return Object.keys(sh.repos).sort(cmpC).map((root) => {
+      const repo = sh.repos[root], branches = {};
+      for (const n of Object.keys(repo.refs).filter((n) => repo.refs[n] != null).sort(cmpC)) {
+        const msgs = []; let c = repo.refs[n];
+        while (c != null) { msgs.push(repo.commits[c].msg); c = repo.commits[c].parents[0]; }
+        branches[n] = { commits: msgs, files: [...repo.commits[repo.refs[n]].tree.keys()].sort(cmpC) };
+      }
+      return { repo: relOf(HOME, root) || '.', head: repo.head, branches, status: statusLines(sh, root, repo) };
+    });
   }
 
   /* ---------- execution ---------- */
@@ -513,7 +746,7 @@
 
   // Everything under the home folder, as sorted lines: "dir/", "file [mode]: content".
   function snapshot(sh) {
-    return [...sh.fs.keys()].filter((k) => k.startsWith(HOME + '/')).sort(cmpC).map((k) => {
+    return [...sh.fs.keys()].filter((k) => k.startsWith(HOME + '/') && !/(^|\/)\.git(\/|$)/.test(k.slice(HOME.length + 1))).sort(cmpC).map((k) => {
       const v = sh.fs.get(k), rel = k.slice(HOME.length + 1);
       return v.dir ? { path: rel + '/', mode: v.mode.toString(8) } : { path: rel, mode: v.mode.toString(8), data: v.data };
     });
@@ -526,7 +759,7 @@
     const transcript = [];
     let out = '', error = null;
     try { out = runSource(sh, code, transcript).out; } catch (e) { error = e.message; }
-    return { transcript, out, files: snapshot(sh), error, cwd: sh.cwd };
+    return { transcript, out, files: snapshot(sh), git: gitState(sh), error, cwd: sh.cwd };
   }
 
   // Grades a command-line challenge: the learner's commands must leave the home folder like the
@@ -545,6 +778,21 @@
       if (f.mode !== g.mode) problems.push({ k: 'mode', p, want: f.mode, got: g.mode });
     }
     for (const p of gm.keys()) if (!wm.has(p)) problems.push({ k: 'extra', p });
+    const wr = new Map(want.git.map((r) => [r.repo, r])), gr = new Map(got.git.map((r) => [r.repo, r]));
+    for (const [name, w] of wr) {
+      const g = gr.get(name);
+      if (!g) { problems.push({ k: 'noRepo', p: name }); continue; }
+      if (g.head !== w.head) problems.push({ k: 'head', p: name, got: g.head, want: w.head });
+      for (const b of Object.keys(w.branches)) {
+        const gb = g.branches[b], wb = w.branches[b];
+        if (!gb) { problems.push({ k: 'noBranch', p: b }); continue; }
+        if (JSON.stringify(gb.commits) !== JSON.stringify(wb.commits)) problems.push({ k: 'commits', p: b, got: gb.commits, want: wb.commits });
+        else if (JSON.stringify(gb.files) !== JSON.stringify(wb.files)) problems.push({ k: 'tracked', p: b, got: gb.files, want: wb.files });
+      }
+      for (const b of Object.keys(g.branches)) if (!w.branches[b]) problems.push({ k: 'extraBranch', p: b });
+      if (JSON.stringify(g.status) !== JSON.stringify(w.status)) problems.push({ k: 'status', p: name, got: g.status, want: w.status });
+    }
+    for (const name of gr.keys()) if (!wr.has(name)) problems.push({ k: 'extraRepo', p: name });
     const outputOk = !ch.output || got.out === want.out;
     return { ok: !got.error && !problems.length && outputOk, problems, outputOk, wantOut: want.out, got, want };
   }

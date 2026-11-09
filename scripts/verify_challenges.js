@@ -29,22 +29,34 @@ const os = require('os');
 // Runs setup + solution in real Bash inside a throwaway home folder and snapshots it like the simulator does.
 function realBash(setup, code) {
   const home = fs.mkdtempSync(path.join(os.tmpdir(), 'atlas-sh-'));
-  const env = { PATH: process.env.PATH, HOME: home, LC_ALL: 'C', USER: 'learner' };
+  const gitcfg = path.join(os.tmpdir(), 'atlas-gitconfig-' + process.pid);
+  fs.writeFileSync(gitcfg, '[user]\n\tname = Learner\n\temail = learner@example.com\n[init]\n\tdefaultBranch = main\n[advice]\n\tdetachedHead = false\n');
+  const env = { PATH: process.env.PATH, HOME: home, LC_ALL: 'C', USER: 'learner', GIT_CONFIG_GLOBAL: gitcfg, GIT_CONFIG_NOSYSTEM: '1', GIT_AUTHOR_DATE: '2026-01-05T10:00:00Z', GIT_COMMITTER_DATE: '2026-01-05T10:00:00Z' };
   const run = (src) => spawnSync('bash', ['--norc', '--noprofile', '-c', 'umask 022; cd "$HOME"; ' + src], { cwd: home, env, encoding: 'utf8', timeout: 10000 });
   const s = run(setup);
   if (s.status !== 0) return { error: 'setup: ' + s.stderr };
   const r = run(code);
   if (r.stderr) return { error: r.stderr };
   const files = [];
+  const repos = [];
   const walk = (dir, rel) => fs.readdirSync(dir).sort().forEach((n) => {
+    if (n === '.git') { repos.push(rel || '.'); return; }
     const full = path.join(dir, n), st = fs.statSync(full), r2 = rel ? rel + '/' + n : n;
     if (st.isDirectory()) { files.push({ path: r2 + '/', mode: (st.mode & 0o777).toString(8) }); walk(full, r2); }
     else files.push({ path: r2, mode: (st.mode & 0o777).toString(8), data: fs.readFileSync(full, 'utf8') });
   });
   walk(home, '');
   files.sort((a, b) => (a.path.replace(/\/$/, '') < b.path.replace(/\/$/, '') ? -1 : 1));
+  // The same Git summary the simulator grades: head, branches (first-parent messages + tracked files), status.
+  const git = repos.sort().map((repo) => {
+    const g = (...a) => spawnSync('git', a, { cwd: path.join(home, repo === '.' ? '' : repo), env, encoding: 'utf8' }).stdout;
+    const lines = (x) => x.split('\n').filter(Boolean);
+    const branches = {};
+    for (const b of lines(g('for-each-ref', '--format=%(refname:short)', 'refs/heads/')).sort()) branches[b] = { commits: lines(g('log', '--first-parent', '--format=%s', b)), files: lines(g('ls-tree', '-r', '--name-only', b)).sort() };
+    return { repo, head: g('branch', '--show-current').trim(), branches, status: g('status', '--short').split('\n').filter(Boolean) };
+  });
   fs.rmSync(home, { recursive: true, force: true });
-  return { files, out: r.stdout.split(home).join(MiniShell.HOME) };
+  return { files, git, out: r.stdout.split(home).join(MiniShell.HOME) };
 }
 
 function grade(code, tests) {
@@ -97,7 +109,8 @@ for (const [moduleId, list] of Object.entries(data)) {
       if (real.error) { errors.push(`${where}: real bash failed: ${real.error}`); continue; }
       const sim = sol.want;
       if (JSON.stringify(real.files) !== JSON.stringify(sim.files)) errors.push(`${where}: simulator files differ from real bash:\n  sim:  ${JSON.stringify(sim.files)}\n  bash: ${JSON.stringify(real.files)}`);
-      if (real.out !== sim.out) errors.push(`${where}: simulator output differs from real bash: ${JSON.stringify(sim.out)} vs ${JSON.stringify(real.out)}`);
+      if (JSON.stringify(real.git) !== JSON.stringify(sim.git)) errors.push(`${where}: simulator git state differs from real git:\n  sim:  ${JSON.stringify(sim.git)}\n  git:  ${JSON.stringify(real.git)}`);
+      if (ch.output && real.out !== sim.out) errors.push(`${where}: simulator output differs from real bash: ${JSON.stringify(sim.out)} vs ${JSON.stringify(real.out)}`);
       continue;
     }
     if (ch.lang === 'sql') {

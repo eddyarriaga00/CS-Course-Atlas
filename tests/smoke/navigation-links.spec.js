@@ -173,6 +173,19 @@ test.describe('Navigation', () => {
         await expect(page.locator('#ch-1')).toHaveClass(/solved/);
     });
 
+    test('git challenges grade the repository state', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html#m-git-basics-workflow');
+        await page.locator('.tab[data-tab="challenges"]').click();
+        await expect(page.locator('[data-shell-setup="1"]')).toContainText('Git repository on branch main');
+        await page.locator('#ch-code-1').fill('cd project\ngit add .\ngit commit -m "Update README"');
+        await page.locator('[data-action="ch-run"][data-i="1"]').click();
+        await expect(page.locator('#ch-res-1')).toContainText('Files committed on main');
+        await page.locator('#ch-code-1').fill('cd project\ngit add README.md\ngit commit -m "Update README"');
+        await page.locator('[data-action="ch-run"][data-i="1"]').click();
+        await expect(page.locator('#ch-res-1 .ch-status.ok')).toBeVisible();
+    });
+
     test('mixed review quizzes across completed modules', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html#m-python-first-programs');
