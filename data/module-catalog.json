@@ -192,7 +192,7 @@
    ],
    "es": {
     "title": "Listas enlazadas",
-    "description": "Listas simple y doblemente enlazadas con centinelas, inserción y borrado reenlazando nodos, inversión en el lugar, detección de ciclos de Floyd y mezcla de listas ordenadas con un nodo ficticio."
+    "description": "Listas simple y doblemente enlazadas con centinelas, inserción y borrado reenlazando nodos, inversión in situ, detección de ciclos de Floyd y mezcla de listas ordenadas con un nodo ficticio."
    }
   },
   {
@@ -243,7 +243,7 @@
    ],
    "es": {
     "title": "Tablas hash y mapas",
-    "description": "Cómo las funciones hash asignan claves a cubetas, encadenamiento frente a sondeo lineal, las operaciones cotidianas de HashMap y HashSet, el contrato equals/hashCode y por qué el factor de carga provoca el rehash."
+    "description": "Cómo las funciones hash asignan claves a buckets, encadenamiento frente a sondeo lineal, las operaciones cotidianas de HashMap y HashSet, el contrato equals/hashCode y por qué el factor de carga provoca el rehashing."
    }
   },
   {
@@ -260,7 +260,7 @@
    ],
    "es": {
     "title": "Montículos y colas de prioridad",
-    "description": "Montículos mínimos y máximos sobre arreglos con subir y hundir, heapify en O(n), PriorityQueue con comparadores y patrones con montículos como top-k, mediana móvil y mezcla de listas ordenadas."
+    "description": "Montículos mínimos y máximos sobre arreglos con flotar (sift-up) y hundir (sift-down), heapify en O(n), PriorityQueue con comparadores y patrones con montículos como top-k, mediana en flujo y mezcla de listas ordenadas."
    }
   },
   {
@@ -277,7 +277,7 @@
    ],
    "es": {
     "title": "Algoritmos de ordenamiento",
-    "description": "Bubble sort, merge sort, quicksort, heap sort y radix sort seguidos pasada por pasada, con sus costos en el mejor, promedio y peor caso, la estabilidad y cuándo conviene cada uno."
+    "description": "Bubble sort, merge sort, quicksort, heap sort y radix sort trazados pasada por pasada, con sus costos en el mejor, promedio y peor caso, la estabilidad y cuándo conviene cada uno."
    }
   },
   {
@@ -294,7 +294,7 @@
    ],
    "es": {
     "title": "Algoritmos de búsqueda",
-    "description": "Búsqueda lineal y binaria con invariantes de ciclo, cotas inferior y superior para duplicados, búsqueda por interpolación y exponencial, y cómo elegir una estrategia a partir del número de consultas."
+    "description": "Búsqueda lineal y binaria con invariantes de ciclo, cotas inferior y superior para duplicados, búsqueda por interpolación y exponencial, y cómo elegir una estrategia según el número de comparaciones."
    }
   },
   {
@@ -311,7 +311,7 @@
    ],
    "es": {
     "title": "Fundamentos de recursión",
-    "description": "Casos base y pasos recursivos seguidos a través de la pila de llamadas, backtracking con elegir-explorar-deshacer, memoización que convierte llamadas exponenciales en lineales y el costo de la recursión en árbol."
+    "description": "Casos base y pasos recursivos trazados a través de la pila de llamadas, backtracking con elegir-explorar-deshacer, memoización que convierte llamadas exponenciales en lineales y el costo de la recursión en árbol."
    }
   },
   {
@@ -443,7 +443,7 @@
    ],
    "es": {
     "title": "Union-Find (conjuntos disjuntos)",
-    "description": "Sigue grupos que se fusionan con el tiempo mediante arreglos de padres, unión por rango y compresión de caminos, y úsalo para contar componentes conexas y detectar ciclos en tiempo casi constante."
+    "description": "Lleva el registro de grupos que se fusionan con el tiempo mediante arreglos de padres, unión por rango y compresión de caminos, y úsalo para contar componentes conexas y detectar ciclos en tiempo casi constante."
    }
   },
   {
@@ -901,7 +901,7 @@
    ],
    "es": {
     "title": "Problemas con matrices y cuadrículas",
-    "description": "Representa cuadrículas 2D, valida límites, muévete con vectores de dirección, encuentra caminos mínimos con BFS (también de múltiples orígenes) y cuenta regiones con marcado en el lugar."
+    "description": "Representa cuadrículas 2D, valida límites, muévete con vectores de dirección, encuentra caminos mínimos con BFS (también de múltiples fuentes) y cuenta regiones con marcado in situ."
    }
   },
   {

@@ -1724,7 +1724,7 @@ window.COURSE_CURRICULUM = {
         "es": [
           "Implementar recorridos de arreglos en una sola pasada (máximo, suma, sumas prefijas) que manejen arreglos vacíos y se mantengan entre los índices 0 y `length - 1`.",
           "Usar correctamente los métodos de `String` (`charAt`, `substring`, `indexOf`, `equals`) y `StringBuilder`, y explicar por qué `String` es inmutable.",
-          "Aplicar la técnica de dos punteros para invertir un arreglo en el lugar y comprobar palíndromos en tiempo O(n) y espacio extra O(1).",
+          "Aplicar la técnica de dos punteros para invertir un arreglo in situ y comprobar palíndromos en tiempo O(n) y espacio extra O(1).",
           "Implementar ventanas deslizantes de tamaño fijo y variable, como la suma máxima de k elementos consecutivos y la subcadena más larga sin caracteres repetidos."
         ]
       },
@@ -1773,7 +1773,7 @@ window.COURSE_CURRICULUM = {
         ],
         "es": [
           "Implementa `int secondLargest(int[] arr)` en una sola pasada; devuelve `Integer.MIN_VALUE` si el arreglo tiene menos de dos valores distintos. Prueba con {5, 5, 3}, {7} y {}.",
-          "Implementa `void reverse(int[] arr)` en el lugar con dos punteros y luego `boolean isPalindrome(String s)` que ignore mayúsculas y caracteres no alfanuméricos sin construir una cadena nueva (usa `Character.isLetterOrDigit`).",
+          "Implementa `void reverse(int[] arr)` in situ con dos punteros y luego `boolean isPalindrome(String s)` que ignore mayúsculas y caracteres no alfanuméricos sin construir una cadena nueva (usa `Character.isLetterOrDigit`).",
           "Implementa `int maxSumWindow(int[] arr, int k)` que devuelva la mayor suma de k elementos consecutivos en O(n), y luego `int lengthOfLongestSubstring(String s)` (sin caracteres repetidos) con una ventana de tamaño variable y una tabla `int[128]` de última aparición.",
           "Dado un `int[]` ordenado y un objetivo, devuelve los índices de dos elementos que sumen el objetivo usando dos punteros en tiempo O(n) y espacio O(1). Explica por qué avanzar `left` cuando la suma es demasiado pequeña nunca descarta un par válido."
         ]
@@ -1828,7 +1828,7 @@ window.COURSE_CURRICULUM = {
           },
           "definition": {
             "en": "A technique over a contiguous range [left, right] of an array or string whose summary (a sum, character counts) is updated incrementally as `right` extends and `left` shrinks, instead of being recomputed for every window.",
-            "es": "Técnica sobre un rango contiguo [left, right] de un arreglo o cadena cuyo resumen (una suma, conteos de caracteres) se actualiza de forma incremental al avanzar `right` y al reducir desde `left`, en lugar de recalcularse para cada ventana."
+            "es": "Técnica sobre un rango contiguo [left, right] de un arreglo o cadena cuyo resumen (una suma, conteos de caracteres) se actualiza de forma incremental al avanzar `right` y se reduce desde `left`, en lugar de recalcularse para cada ventana."
           }
         },
         {
@@ -1930,7 +1930,7 @@ window.COURSE_CURRICULUM = {
             ],
             "es": [
               "Encontrar el elemento máximo de un arreglo",
-              "Invertir un arreglo en el lugar",
+              "Invertir un arreglo in situ",
               "Comprobar si un arreglo está ordenado",
               "Encontrar el subarreglo más corto cuya suma sea ≥ un objetivo, cuando todos los números son positivos"
             ]
@@ -1988,7 +1988,7 @@ window.COURSE_CURRICULUM = {
           "correct": 0,
           "explanation": {
             "en": "`new String(...)` always creates a distinct object, so `==` (reference comparison) is false, while `equals` compares characters and is true. Expecting true for `==` comes from seeing two literals share one interned object.",
-            "es": "`new String(...)` siempre crea un objeto distinto, así que `==` (comparación de referencias) es false, mientras que `equals` compara caracteres y es true. Esperar true en `==` viene de ver que dos literales comparten el mismo objeto interno."
+            "es": "`new String(...)` siempre crea un objeto distinto, así que `==` (comparación de referencias) es false, mientras que `equals` compara caracteres y es true. Esperar true en `==` viene de haber visto que dos literales comparten un mismo objeto internado (interning)."
           }
         }
       ]
@@ -2000,7 +2000,7 @@ window.COURSE_CURRICULUM = {
       ],
       "whyItMatters": {
         "en": "Binary search is one of the most frequently tested interview patterns and powers `Arrays.binarySearch`, `Collections.binarySearch`, `TreeMap` lookups, database indexes, and `git bisect`. Knowing its invariant prevents the off-by-one bugs that make it notoriously easy to get wrong.",
-        "es": "La búsqueda binaria es uno de los patrones más evaluados en entrevistas y está detrás de `Arrays.binarySearch`, `Collections.binarySearch`, las búsquedas en `TreeMap`, los índices de bases de datos y `git bisect`. Conocer su invariante evita los errores de uno-más-uno-menos que la hacen famosa por ser fácil de escribir mal."
+        "es": "La búsqueda binaria es uno de los patrones más evaluados en entrevistas y está detrás de `Arrays.binarySearch`, `Collections.binarySearch`, las búsquedas en `TreeMap`, los índices de bases de datos y `git bisect`. Conocer su invariante evita los errores de desfase por uno (off-by-one) que la hacen famosa por lo fácil que es implementarla mal."
       },
       "objectives": {
         "en": [
@@ -2012,7 +2012,7 @@ window.COURSE_CURRICULUM = {
         "es": [
           "Implementar la búsqueda binaria iterativa con un invariante de ciclo explícito y explicar por qué `mid = left + (right - left) / 2` evita el desbordamiento de enteros.",
           "Adaptar la búsqueda binaria para devolver la primera o la última aparición de un objetivo (cota inferior y superior) en un arreglo con duplicados.",
-          "Rastrear la búsqueda exponencial en un arreglo ordenado, identificando cada cota duplicada y el rango exacto que se pasa a `Arrays.binarySearch`.",
+          "Trazar la búsqueda exponencial en un arreglo ordenado, identificando cada cota duplicada y el rango exacto que se pasa a `Arrays.binarySearch`.",
           "Elegir entre búsqueda lineal, binaria, por interpolación y exponencial según si los datos están ordenados, cómo se distribuyen las claves y si se conoce la longitud."
         ]
       },
@@ -2022,7 +2022,7 @@ window.COURSE_CURRICULUM = {
           "Compute log₂ of powers of two (for example, log₂ 1024 = 10)"
         ],
         "es": [
-          "Rastrear a mano un ciclo `while` siguiendo varias variables de índice",
+          "Trazar a mano un ciclo `while` siguiendo varias variables de índice",
           "Calcular log₂ de potencias de dos (por ejemplo, log₂ 1024 = 10)"
         ]
       },
@@ -2060,10 +2060,10 @@ window.COURSE_CURRICULUM = {
           "Implement `int mySqrt(int x)` returning ⌊√x⌋ by binary searching the answer range [0, x]; compute `mid * mid` as a `long` to avoid overflow, and test with 0, 1, 8, and `Integer.MAX_VALUE`."
         ],
         "es": [
-          "Rastrea a mano `binarySearch({2, 4, 6, 8, 10, 12, 14}, 12)` escribiendo `left`, `right` y `mid` en cada iteración. Repite con el objetivo 5 y anota el valor final de `left`: es el punto de inserción.",
+          "Traza a mano `binarySearch({2, 4, 6, 8, 10, 12, 14}, 12)` escribiendo `left`, `right` y `mid` en cada iteración. Repite con el objetivo 5 y anota el valor final de `left`: es el punto de inserción.",
           "Implementa `int lowerBound(int[] arr, int target)` que devuelva el primer índice cuyo valor sea ≥ target (o `arr.length`) y úsalo para contar las apariciones de un objetivo en O(log n).",
           "Implementa `int searchRotated(int[] arr, int target)` para un arreglo ordenado de valores distintos rotado en un pivote desconocido (por ejemplo, {4, 5, 6, 7, 0, 1, 2}) en O(log n), decidiendo en cada paso qué mitad está ordenada.",
-          "Implementa `int mySqrt(int x)` que devuelva ⌊√x⌋ buscando binariamente en el rango de respuestas [0, x]; calcula `mid * mid` como `long` para evitar desbordamiento y prueba con 0, 1, 8 e `Integer.MAX_VALUE`."
+          "Implementa `int mySqrt(int x)` que devuelva ⌊√x⌋ con búsqueda binaria sobre el rango de respuestas [0, x]; calcula `mid * mid` como `long` para evitar desbordamiento y prueba con 0, 1, 8 e `Integer.MAX_VALUE`."
         ]
       },
       "selfCheck": {
@@ -2116,7 +2116,7 @@ window.COURSE_CURRICULUM = {
           },
           "definition": {
             "en": "A search that checks indices 1, 2, 4, 8, … until it finds an element ≥ the target (or passes the end), then binary searches between the last two bounds. Its cost is O(log i), where i is the target's index.",
-            "es": "Búsqueda que revisa los índices 1, 2, 4, 8, … hasta hallar un elemento ≥ al objetivo (o pasar el final) y luego aplica búsqueda binaria entre las dos últimas cotas. Su costo es O(log i), donde i es el índice del objetivo."
+            "es": "Búsqueda que revisa los índices 1, 2, 4, 8, … hasta hallar un elemento ≥ objetivo (o pasar el final) y luego aplica búsqueda binaria entre las dos últimas cotas. Su costo es O(log i), donde i es el índice del objetivo."
           }
         },
         {
@@ -2167,10 +2167,10 @@ window.COURSE_CURRICULUM = {
               "About 20"
             ],
             "es": [
-              "Unas 1 000 000",
-              "Unas 500 000",
-              "Unas 1 000",
-              "Unas 20"
+              "Alrededor de 1 000 000",
+              "Alrededor de 500 000",
+              "Alrededor de 1 000",
+              "Alrededor de 20"
             ]
           },
           "correct": 3,
@@ -2276,7 +2276,7 @@ window.COURSE_CURRICULUM = {
           "correct": 1,
           "explanation": {
             "en": "bound goes 1 (4 < 12), 2 (6 < 12), 4 (10 < 12), then 8, which is ≥ length 7, so the loop stops. The call is `binarySearch(arr, 8 / 2, Math.min(9, 7), 12)` = indices 4 to 7 exclusive. Index 8 is out of bounds and is clipped by `Math.min`.",
-            "es": "bound pasa por 1 (4 < 12), 2 (6 < 12), 4 (10 < 12) y luego 8, que es ≥ a la longitud 7, así que el ciclo termina. La llamada es `binarySearch(arr, 8 / 2, Math.min(9, 7), 12)` = índices 4 a 7 excluido. El índice 8 está fuera de rango y `Math.min` lo recorta."
+            "es": "bound pasa por 1 (4 < 12), 2 (6 < 12), 4 (10 < 12) y luego 8, que es ≥ que la longitud 7, así que el ciclo termina. La llamada es `binarySearch(arr, 8 / 2, Math.min(9, 7), 12)` = índices 4 a 7 excluido. El índice 8 está fuera de rango y `Math.min` lo recorta."
           }
         }
       ]
@@ -2288,7 +2288,7 @@ window.COURSE_CURRICULUM = {
       ],
       "whyItMatters": {
         "en": "Stacks drive the JVM call stack, undo, expression parsing, and depth-first search; queues drive breadth-first search, task schedulers, and message pipelines. Balanced brackets, monotonic stacks, and a queue built from two stacks are standard interview problems.",
-        "es": "Las pilas sostienen la pila de llamadas de la JVM, deshacer, el análisis de expresiones y la búsqueda en profundidad; las colas sostienen la búsqueda en anchura, los planificadores de tareas y las tuberías de mensajes. Los paréntesis balanceados, las pilas monótonas y una cola hecha con dos pilas son problemas clásicos de entrevista."
+        "es": "Las pilas están detrás de la pila de llamadas de la JVM, la función de deshacer, el análisis de expresiones y la búsqueda en profundidad; las colas, detrás de la búsqueda en anchura, los planificadores de tareas y los pipelines de mensajes. Los paréntesis balanceados, las pilas monótonas y una cola hecha con dos pilas son problemas clásicos de entrevista."
       },
       "objectives": {
         "en": [
@@ -2311,7 +2311,7 @@ window.COURSE_CURRICULUM = {
         ],
         "es": [
           "Usar colecciones genéricas como `ArrayDeque<Integer>` y entender el autoboxing",
-          "Rastrear a mano ciclos sobre arreglos y cadenas"
+          "Trazar a mano ciclos sobre arreglos y cadenas"
         ]
       },
       "keyTakeaways": {
@@ -2325,7 +2325,7 @@ window.COURSE_CURRICULUM = {
           "Pila = LIFO, cola = FIFO. Con `ArrayDeque`, `push`, `pop`, `offer`, `poll` y `peek` son O(1) amortizado.",
           "Prefiere `ArrayDeque` a la clase heredada `Stack` (sincronizada, extiende `Vector`). `ArrayDeque` no acepta elementos `null`.",
           "`pop()` y `remove()` lanzan `NoSuchElementException` si el deque está vacío; `poll()` y `peek()` devuelven `null`.",
-          "`PriorityQueue` es por defecto un montículo binario de mínimos: `offer`/`poll` O(log n), `peek` O(1). Recorrerla o imprimirla no da el orden de prioridad."
+          "`PriorityQueue` es por defecto un montículo binario de mínimos: `offer`/`poll` O(log n), `peek` O(1). Recorrerla o imprimirla no muestra los elementos ordenados."
         ]
       },
       "pitfalls": {
@@ -2414,7 +2414,7 @@ window.COURSE_CURRICULUM = {
           },
           "definition": {
             "en": "Stacks support method calls, undo, bracket matching, expression evaluation, and iterative DFS; queues support BFS, job scheduling, and buffering between producers and consumers; priority queues support Dijkstra's algorithm, event simulation, and top-k problems.",
-            "es": "Las pilas sostienen las llamadas a métodos, deshacer, la verificación de paréntesis, la evaluación de expresiones y el DFS iterativo; las colas sostienen el BFS, la planificación de tareas y los búferes entre productores y consumidores; las colas de prioridad sostienen el algoritmo de Dijkstra, la simulación de eventos y los problemas top-k."
+            "es": "Las pilas sirven para las llamadas a métodos, la función de deshacer, la verificación de paréntesis, la evaluación de expresiones y el DFS iterativo; las colas, para el BFS, la planificación de tareas y los búferes entre productores y consumidores; las colas de prioridad, para el algoritmo de Dijkstra, la simulación de eventos y los problemas top-k."
           }
         }
       ],
@@ -2876,7 +2876,7 @@ window.COURSE_CURRICULUM = {
         ],
         "es": [
           "Implementar operaciones de lista simplemente enlazada—insertar al inicio, insertar después de un nodo, borrar por valor—manejando la lista vacía y el borrado de la cabeza.",
-          "Rastrear la inversión iterativa con los punteros `prev`, `current` y `next`, indicando el invariante que se cumple después de cada iteración.",
+          "Trazar la inversión iterativa con los punteros `prev`, `current` y `next`, indicando el invariante que se cumple después de cada iteración.",
           "Aplicar el algoritmo de la tortuga y la liebre de Floyd para detectar un ciclo y encontrar el nodo donde empieza, en tiempo O(n) y espacio O(1).",
           "Implementar la combinación de dos listas ordenadas con un nodo cabeza ficticio y analizarla como tiempo O(n + m) con espacio extra O(1)."
         ]
@@ -2901,7 +2901,7 @@ window.COURSE_CURRICULUM = {
         "es": [
           "El acceso por índice es O(n); insertar al inicio es O(1); insertar o borrar junto a un nodo conocido es O(1) (en una lista simple, borrar requiere el nodo anterior).",
           "Un nodo cabeza ficticio (centinela) elimina los casos especiales de insertar o borrar al inicio de la lista.",
-          "Algoritmo de Floyd: lento avanza 1 paso, rápido avanza 2; se encuentran si y solo si hay un ciclo. Luego se regresa un puntero a la cabeza y ambos avanzan de 1 en 1: se encuentran en la entrada del ciclo.",
+          "Algoritmo de Floyd: el puntero lento avanza 1 paso y el rápido avanza 2; se encuentran si y solo si hay un ciclo. Luego se regresa un puntero a la cabeza y ambos avanzan de 1 en 1: se encuentran en la entrada del ciclo.",
           "`LinkedList` de Java es doblemente enlazada e implementa `List` y `Deque`; en la mayoría de los casos `ArrayList` o `ArrayDeque` son más rápidas por la localidad de caché."
         ]
       },
@@ -2940,7 +2940,7 @@ window.COURSE_CURRICULUM = {
         "es": [
           "¿Por qué una lista doblemente enlazada puede borrar un nodo dado en O(1), mientras que una lista simple necesita el nodo anterior?",
           "¿Qué problema resuelve un nodo cabeza ficticio?",
-          "En el algoritmo de Floyd, ¿por qué el puntero rápido no puede saltar al lento indefinidamente dentro de un ciclo?"
+          "En el algoritmo de Floyd, ¿por qué el puntero rápido no puede saltarse al lento indefinidamente dentro de un ciclo?"
         ]
       },
       "definitions": [
@@ -3440,7 +3440,7 @@ window.COURSE_CURRICULUM = {
       ],
       "whyItMatters": {
         "en": "Recursion is how you will write tree and graph traversals, merge sort and quicksort, and every backtracking search (subsets, permutations, N-Queens, Sudoku). Memoizing a recursive solution is the first step toward dynamic programming.",
-        "es": "La recursión es la forma en que escribirás recorridos de árboles y grafos, merge sort y quicksort, y toda búsqueda con vuelta atrás (subconjuntos, permutaciones, N reinas, Sudoku). Memoizar una solución recursiva es el primer paso hacia la programación dinámica."
+        "es": "Con recursión escribirás los recorridos de árboles y grafos, merge sort y quicksort, y toda búsqueda con vuelta atrás (subconjuntos, permutaciones, N reinas, Sudoku). Memoizar una solución recursiva es el primer paso hacia la programación dinámica."
       },
       "objectives": {
         "en": [
@@ -3451,7 +3451,7 @@ window.COURSE_CURRICULUM = {
         ],
         "es": [
           "Escribir métodos recursivos con casos base explícitos y un paso recursivo que se acerque de forma demostrable a un caso base.",
-          "Rastrear una llamada recursiva dibujando la pila de llamadas, con los parámetros de cada marco y el valor que devuelve al deshacerse la pila.",
+          "Trazar una llamada recursiva dibujando la pila de llamadas, con los parámetros de cada marco y el valor que devuelve al deshacerse la pila.",
           "Implementar vuelta atrás (backtracking) para subconjuntos y permutaciones con el patrón elegir–explorar–deshacer, restaurando el estado tras cada llamada recursiva.",
           "Analizar la recursión ingenua frente a la memoizada con un árbol de recursión, por ejemplo reducir Fibonacci de tiempo exponencial a O(n) con un arreglo o un `HashMap` como caché."
         ]
@@ -3489,7 +3489,7 @@ window.COURSE_CURRICULUM = {
         "es": [
           "Agregar la lista de trabajo mutable directamente a los resultados (`result.add(slate)`) en lugar de una copia: todas las entradas son el mismo objeto y, tras la vuelta atrás, todas terminan vacías. Agrega `new ArrayList<>(slate)`.",
           "Olvidar deshacer una elección después de la llamada recursiva (quitar el último elemento, desmarcar una celda visitada), lo que filtra estado a las ramas hermanas y produce resultados faltantes o incorrectos.",
-          "Escribir un caso base que no cubre todas las entradas, por ejemplo `fib(n)` solo con `if (n == 1)`: `fib(2)` llama a `fib(0)`, que recursa hacia n negativos hasta `StackOverflowError`. Usa `if (n <= 1) return n;`."
+          "Escribir un caso base que no cubre todas las entradas, por ejemplo `fib(n)` solo con `if (n == 1)`: `fib(2)` llama a `fib(0)`, que sigue llamándose con n negativos hasta `StackOverflowError`. Usa `if (n <= 1) return n;`."
         ]
       },
       "practice": {
@@ -3739,7 +3739,7 @@ window.COURSE_CURRICULUM = {
           "Choose a sort for given constraints—nearly sorted data, a memory limit, small integer keys, a need for stability—and justify the choice."
         ],
         "es": [
-          "Rastrear bubble sort, merge sort y quicksort con partición de Lomuto sobre un arreglo pequeño, escribiendo el arreglo tras cada pasada, combinación o partición.",
+          "Trazar bubble sort, merge sort y quicksort con partición de Lomuto sobre un arreglo pequeño, escribiendo el arreglo tras cada pasada, combinación o partición.",
           "Analizar el tiempo en el mejor, promedio y peor caso, y el espacio extra, de bubble, merge, quick, heap y radix sort, y deducir el O(n log n) de merge sort a partir de T(n) = 2T(n/2) + O(n).",
           "Explicar la estabilidad, identificar cuáles de estos ordenamientos son estables y explicar por qué Java ordena objetos con TimSort, que es estable.",
           "Elegir un ordenamiento según las restricciones—datos casi ordenados, límite de memoria, claves enteras pequeñas, necesidad de estabilidad—y justificar la elección."
@@ -3751,7 +3751,7 @@ window.COURSE_CURRICULUM = {
           "Swap two array elements using a temporary variable"
         ],
         "es": [
-          "Rastrear llamadas recursivas que dividen un arreglo en mitades",
+          "Trazar llamadas recursivas que dividen un arreglo en mitades",
           "Intercambiar dos elementos de un arreglo con una variable temporal"
         ]
       },
@@ -3789,10 +3789,10 @@ window.COURSE_CURRICULUM = {
           "Implement `int kthSmallest(int[] arr, int k)` with quickselect (partition, then recurse into only one side) in average O(n) time, and explain why its worst case is O(n²) and how a random pivot helps."
         ],
         "es": [
-          "Rastrea bubble sort sobre {5, 1, 4, 2, 8}, escribiendo el arreglo tras cada pasada externa y marcando la pasada en la que `swapped` queda en false y el ciclo termina antes.",
+          "Traza bubble sort sobre {5, 1, 4, 2, 8}, escribiendo el arreglo tras cada pasada externa y marcando la pasada en la que `swapped` queda en false y el ciclo termina antes.",
           "Implementa quicksort con partición de Lomuto y pivote aleatorio. Mide su tiempo con arreglos ordenados, inversos, con todos los valores iguales y aleatorios de 100 000 `int`, y explica el resultado con valores iguales.",
           "Implementa radix sort LSD para `int` no negativos usando un counting sort estable por cada dígito en base 10, y compáralo con `Arrays.sort` sobre 10 000 valores aleatorios.",
-          "Implementa `int kthSmallest(int[] arr, int k)` con quickselect (particionar y recursar solo hacia un lado) en tiempo promedio O(n), y explica por qué su peor caso es O(n²) y cómo ayuda un pivote aleatorio."
+          "Implementa `int kthSmallest(int[] arr, int k)` con quickselect (particionar y luego recurrir solo a un lado) en tiempo promedio O(n), y explica por qué su peor caso es O(n²) y cómo ayuda un pivote aleatorio."
         ]
       },
       "selfCheck": {
@@ -3815,7 +3815,7 @@ window.COURSE_CURRICULUM = {
           },
           "definition": {
             "en": "A comparison sort that repeatedly scans the array and swaps adjacent out-of-order pairs, so each pass moves the largest remaining element to its final position. It is stable and in place, O(n²) on average and in the worst case, and O(n) on sorted input with an early-exit flag.",
-            "es": "Ordenamiento por comparación que recorre el arreglo repetidamente e intercambia pares adyacentes desordenados, de modo que cada pasada lleva el mayor elemento restante a su posición final. Es estable y en el lugar, O(n²) en promedio y en el peor caso, y O(n) con la entrada ordenada si usa una bandera de salida temprana."
+            "es": "Ordenamiento por comparación que recorre el arreglo repetidamente e intercambia pares adyacentes desordenados, de modo que cada pasada lleva el mayor elemento restante a su posición final. Es estable e in situ, O(n²) en promedio y en el peor caso, y O(n) con la entrada ordenada si usa una bandera de salida temprana."
           }
         },
         {
@@ -3835,7 +3835,7 @@ window.COURSE_CURRICULUM = {
           },
           "definition": {
             "en": "A divide-and-conquer sort that partitions the array around a pivot—smaller elements to its left, larger to its right—and recursively sorts each side. It is in place and not stable, O(n log n) on average, and O(n²) when partitions are consistently unbalanced.",
-            "es": "Ordenamiento de divide y vencerás que particiona el arreglo alrededor de un pivote—los menores a su izquierda y los mayores a su derecha—y ordena recursivamente cada lado. Es en el lugar y no estable, O(n log n) en promedio y O(n²) cuando las particiones quedan desbalanceadas de forma sistemática."
+            "es": "Ordenamiento de divide y vencerás que particiona el arreglo alrededor de un pivote—los menores a su izquierda y los mayores a su derecha—y ordena recursivamente cada lado. Es in situ y no estable, O(n log n) en promedio y O(n²) cuando las particiones quedan desbalanceadas de forma sistemática."
           }
         },
         {
@@ -3845,7 +3845,7 @@ window.COURSE_CURRICULUM = {
           },
           "definition": {
             "en": "A sort that builds a max-heap from the array in O(n), then repeatedly swaps the maximum (the root) to the end of the unsorted region and restores the heap with sift-down. It is O(n log n) in the worst case, uses O(1) extra space, and is not stable.",
-            "es": "Ordenamiento que construye un montículo de máximos con el arreglo en O(n) y luego intercambia repetidamente el máximo (la raíz) al final de la zona sin ordenar y restaura el montículo hundiendo el elemento. Es O(n log n) en el peor caso, usa espacio extra O(1) y no es estable."
+            "es": "Ordenamiento que construye un montículo de máximos con el arreglo en O(n) y luego lleva repetidamente el máximo (la raíz) al final de la zona sin ordenar mediante un intercambio y restaura el montículo con sift-down (hundimiento). Es O(n log n) en el peor caso, usa espacio extra O(1) y no es estable."
           }
         },
         {
@@ -4608,7 +4608,7 @@ window.COURSE_CURRICULUM = {
           "Representar una cuadrícula como `int[][]` o `char[][]`, recorrerla por filas y convertir entre (row, col) y el índice único `row * cols + col`.",
           "Implementar la generación de vecinos con un arreglo de vectores de dirección y una sola verificación `inBounds`, para movimiento en 4 y en 8 direcciones.",
           "Implementar BFS sobre una cuadrícula, incluido BFS de múltiples fuentes, que devuelva la cantidad mínima de pasos procesando la cola por niveles o llenando un arreglo `dist`.",
-          "Contar componentes conexas (islas) con DFS o BFS, y elegir entre marcar en el lugar o usar un arreglo `boolean[][] visited` aparte."
+          "Contar componentes conexas (islas) con DFS o BFS, y elegir entre marcar in situ o usar un arreglo `boolean[][] visited` aparte."
         ]
       },
       "skillsNeeded": {
@@ -4656,7 +4656,7 @@ window.COURSE_CURRICULUM = {
         ],
         "es": [
           "Escribe `List<int[]> neighbors(int[][] grid, int r, int c)` que devuelva todos los vecinos válidos en 4 direcciones usando `DIRS`, y pruébalo con una esquina, un borde, una celda interior y una cuadrícula de 1×1.",
-          "Implementa `int numIslands(char[][] grid)` que cuente las regiones de '1' conectadas en 4 direcciones usando BFS iterativo y marcado en el lugar.",
+          "Implementa `int numIslands(char[][] grid)` que cuente las regiones de '1' conectadas en 4 direcciones usando BFS iterativo y marcado in situ.",
           "Implementa `int[][] floodFill(int[][] image, int sr, int sc, int newColor)` con DFS y maneja el caso en que `newColor` es igual al color inicial (si no, la recursión nunca termina).",
           "Implementa `int orangesRotting(int[][] grid)` (0 = vacío, 1 = fresca, 2 = podrida; cada minuto la podredumbre pasa a los 4 vecinos) que devuelva los minutos hasta que no quede ninguna naranja fresca, o −1 si alguna nunca se pudre, con BFS de múltiples fuentes desde todas las podridas a la vez."
         ]
@@ -4670,7 +4670,7 @@ window.COURSE_CURRICULUM = {
         "es": [
           "¿Por qué BFS da la cantidad mínima de pasos en una cuadrícula sin pesos y DFS no?",
           "¿Cuál es la complejidad temporal de contar islas en una cuadrícula de R×C y por qué?",
-          "¿Cuándo conviene evitar el marcado en el lugar?"
+          "¿Cuándo conviene evitar el marcado in situ?"
         ]
       },
       "definitions": [
@@ -4717,7 +4717,7 @@ window.COURSE_CURRICULUM = {
         {
           "term": {
             "en": "In-Place Marking",
-            "es": "Marcado en el lugar"
+            "es": "Marcado in situ"
           },
           "definition": {
             "en": "Recording visited state by overwriting cells of the input grid itself, for example changing '1' to '0' once a cell is reached. It saves the O(R·C) memory of a separate visited array but destroys the original data.",
@@ -4871,7 +4871,7 @@ window.COURSE_CURRICULUM = {
           "correct": 0,
           "explanation": {
             "en": "BFS explores in order of distance, so the first time it reaches the exit is via a shortest path; DFS may reach it via a long detour first. Islands, flood fill, and reachability only need every connected cell visited, which DFS does fine.",
-            "es": "BFS explora en orden de distancia, así que la primera vez que llega a la salida lo hace por un camino más corto; DFS puede llegar antes por un rodeo largo. Islas, relleno y alcanzabilidad solo requieren visitar cada celda conectada, y DFS lo hace bien."
+            "es": "BFS explora en orden de distancia, así que la primera vez que llega a la salida lo hace por un camino de longitud mínima; DFS puede llegar antes por un rodeo largo. Islas, relleno y alcanzabilidad solo requieren visitar cada celda conectada, y DFS lo hace bien."
           }
         }
       ]
@@ -4883,7 +4883,7 @@ window.COURSE_CURRICULUM = {
       ],
       "whyItMatters": {
         "en": "Subsets, permutations, N-Queens, Sudoku and word-search problems are all solved with the same backtracking template, and they appear constantly in coding interviews. Backtracking is also the brute-force baseline you later speed up with pruning, memoization or dynamic programming, and constraint and SAT solvers are built on it.",
-        "es": "Subconjuntos, permutaciones, N-Reinas, Sudoku y búsqueda de palabras se resuelven con la misma plantilla de backtracking, y aparecen constantemente en entrevistas técnicas. Además, el backtracking es la solución de fuerza bruta de referencia que luego aceleras con poda, memoización o programación dinámica, y es la base de los solucionadores de restricciones y SAT."
+        "es": "Los problemas de subconjuntos, permutaciones, N reinas, Sudoku y búsqueda de palabras se resuelven con la misma plantilla de backtracking, y aparecen constantemente en entrevistas técnicas. Además, el backtracking es la solución de fuerza bruta de referencia que luego aceleras con poda, memoización o programación dinámica, y es la base de los solucionadores de restricciones y SAT."
       },
       "objectives": {
         "en": [
@@ -4895,8 +4895,8 @@ window.COURSE_CURRICULUM = {
         "es": [
           "Implementar subconjuntos, combinaciones y permutaciones con una sola plantilla elegir-explorar-deshacer, copiando el camino solo al registrar una solución.",
           "Trazar el árbol de decisiones para una entrada pequeña y contar sus hojas (2^n para subconjuntos, n! para permutaciones) para estimar el tiempo de ejecución.",
-          "Aplicar poda a combination sum y N-Reinas (`break` temprano con entrada ordenada, verificar restricciones antes de recursar) y medir cuántas llamadas ahorra.",
-          "Depurar fugas de estado causadas por un paso de deshacer faltante o por guardar una referencia a la lista compartida `path`."
+          "Aplicar poda a combination sum y a N reinas (`break` temprano con entrada ordenada, verificar restricciones antes de la llamada recursiva) y medir cuántas llamadas ahorra.",
+          "Depurar fugas de estado causadas por la falta de un paso de deshacer o por guardar una referencia a la lista compartida `path`."
         ]
       },
       "skillsNeeded": {
@@ -4918,7 +4918,7 @@ window.COURSE_CURRICULUM = {
         ],
         "es": [
           "Subconjuntos: 2^n resultados, tiempo total O(n·2^n) incluyendo las copias. Permutaciones: n! resultados, O(n·n!).",
-          "Cada cambio hecho antes de la llamada recursiva necesita su deshacer correspondiente después, para que el estado al regresar sea igual al estado al entrar.",
+          "Cada cambio hecho antes de la llamada recursiva debe deshacerse después de ella, para que el estado al regresar sea igual al estado al entrar.",
           "Registra `new ArrayList<>(path)`, nunca `path` en sí; de lo contrario todas las respuestas guardadas son la misma lista, que termina vacía.",
           "Poda lo antes posible: verifica las restricciones al elegir, no en la hoja. Ordenar la entrada permite hacer `break` cuando un candidato supera el objetivo restante y saltar duplicados con `i > start && nums[i] == nums[i - 1]`."
         ]
@@ -4946,7 +4946,7 @@ window.COURSE_CURRICULUM = {
           "Calentamiento: dibuja el árbol de decisiones que explora el método `build` del módulo para `nums = {1, 2, 3}` y escribe los 8 subconjuntos en el orden exacto en que se agregan a `answer`; luego ejecuta el programa para comprobarlo.",
           "Implementa `List<List<Integer>> permute(int[] nums)` con un arreglo `boolean[] used` y la plantilla elegir-explorar-deshacer; verifica que devuelve n! listas para n = 1 a 5.",
           "Implementa `List<List<Integer>> combinationSum2(int[] candidates, int target)` donde cada candidato se usa a lo sumo una vez y la entrada puede tener duplicados: ordena primero, salta valores iguales en la misma profundidad y haz `break` cuando un candidato supere el objetivo restante.",
-          "Implementa `int totalNQueens(int n)` colocando una reina por fila, con tres arreglos `boolean[]` (columnas, diagonales r − c + n − 1 y antidiagonales r + c) para verificar en O(1). Confirma 92 soluciones para n = 8 y cuenta las llamadas recursivas con y sin las verificaciones previas a recursar."
+          "Implementa `int totalNQueens(int n)` colocando una reina por fila, con tres arreglos `boolean[]` (columnas, diagonales r − c + n − 1 y antidiagonales r + c) para verificar en O(1). Confirma 92 soluciones para n = 8 y cuenta las llamadas recursivas con y sin las verificaciones previas a cada llamada recursiva."
         ]
       },
       "selfCheck": {
@@ -4979,7 +4979,7 @@ window.COURSE_CURRICULUM = {
           },
           "definition": {
             "en": "The backtracking template: apply a choice to the shared state, recurse to explore everything that follows from it, then reverse the choice so the state is exactly as before when the next option is tried.",
-            "es": "La plantilla del backtracking: aplicar una elección al estado compartido, recursar para explorar todo lo que se deriva de ella y luego revertirla para que el estado quede exactamente igual antes de probar la siguiente opción."
+            "es": "La plantilla del backtracking: aplicar una elección al estado compartido, hacer la llamada recursiva para explorar todo lo que se deriva de ella y luego revertirla para que el estado quede exactamente igual antes de probar la siguiente opción."
           }
         },
         {
@@ -5009,7 +5009,7 @@ window.COURSE_CURRICULUM = {
           },
           "definition": {
             "en": "Solving problems defined by variables, allowed values and constraints (Sudoku, N-Queens, graph coloring) by assigning one variable at a time and backtracking as soon as an assignment violates a constraint.",
-            "es": "Resolver problemas definidos por variables, valores permitidos y restricciones (Sudoku, N-Reinas, coloreo de grafos) asignando una variable a la vez y retrocediendo en cuanto una asignación viola una restricción."
+            "es": "Resolver problemas definidos por variables, valores permitidos y restricciones (Sudoku, N reinas, coloreo de grafos) asignando una variable a la vez y retrocediendo en cuanto una asignación viola una restricción."
           }
         }
       ],
@@ -5024,7 +5024,7 @@ window.COURSE_CURRICULUM = {
         {
           "label": {
             "en": "Wikipedia: Backtracking",
-            "es": "Wikipedia: Backtracking (vuelta atrás)"
+            "es": "Wikipedia: Backtracking (vuelta atrás, en inglés)"
           },
           "url": "https://en.wikipedia.org/wiki/Backtracking"
         },
@@ -5065,7 +5065,7 @@ window.COURSE_CURRICULUM = {
         {
           "question": {
             "en": "Generating every permutation of n distinct elements and storing each one as a new list takes how much time in total?",
-            "es": "Generar todas las permutaciones de n elementos distintos y guardar cada una como una lista nueva toma, en total, ¿cuánto tiempo?"
+            "es": "¿Cuánto tiempo toma en total generar todas las permutaciones de n elementos distintos y guardar cada una como una lista nueva?"
           },
           "options": {
             "en": [
@@ -5109,7 +5109,7 @@ window.COURSE_CURRICULUM = {
           "correct": 3,
           "explanation": {
             "en": "At one depth, starting a branch with the second 1 would rebuild combinations already produced by the first 1, so it is skipped. When `i == start`, the element is the first option at a new depth, and using it is legitimate. `i > 0` would also avoid the index error but would wrongly forbid [1, 1, 6]; reusing an index is prevented by recursing with `i + 1`, not by this check.",
-            "es": "En una misma profundidad, iniciar una rama con el segundo 1 reconstruiría combinaciones ya generadas por el primer 1, por eso se salta. Cuando `i == start`, el elemento es la primera opción de una nueva profundidad y usarlo es legítimo. `i > 0` también evitaría el error de índice, pero prohibiría por error [1, 1, 6]; reutilizar un índice se evita al recursar con `i + 1`, no con esta condición."
+            "es": "En una misma profundidad, iniciar una rama con el segundo 1 reconstruiría combinaciones ya generadas por el primer 1, por eso se salta. Cuando `i == start`, el elemento es la primera opción de una nueva profundidad y usarlo es legítimo. `i > 0` también evitaría el error de índice, pero prohibiría por error [1, 1, 6]; reutilizar un índice se evita al hacer la llamada recursiva con `i + 1`, no con esta condición."
           }
         },
         {
@@ -5140,7 +5140,7 @@ window.COURSE_CURRICULUM = {
         {
           "question": {
             "en": "In N-Queens with one queen per row, which check is a correct pruning step?",
-            "es": "En N-Reinas con una reina por fila, ¿cuál verificación es un paso de poda correcto?"
+            "es": "En N reinas con una reina por fila, ¿qué verificación es un paso de poda correcto?"
           },
           "options": {
             "en": [
@@ -5696,7 +5696,7 @@ window.COURSE_CURRICULUM = {
           "correct": 2,
           "explanation": {
             "en": "Resizes happen at sizes proportional to 1, 2, 4, …, n, so total rehash work is about 2n, giving O(n) total and O(1) amortized per insert. The O(n log n) argument overcounts: only the last resize costs about n; earlier ones are much cheaper.",
-            "es": "Los redimensionamientos ocurren en tamaños proporcionales a 1, 2, 4, …, n, así que el trabajo total de rehashing es cerca de 2n: O(n) en total y O(1) amortizado por inserción. El argumento O(n log n) sobrestima: solo el último redimensionamiento cuesta cerca de n; los anteriores son mucho más baratos."
+            "es": "Los redimensionamientos ocurren en tamaños proporcionales a 1, 2, 4, …, n, así que el trabajo total de rehashing ronda 2n: O(n) en total y O(1) amortizado por inserción. El argumento O(n log n) sobrestima: solo el último redimensionamiento cuesta alrededor de n; los anteriores son mucho más baratos."
           }
         },
         {
@@ -5808,7 +5808,7 @@ window.COURSE_CURRICULUM = {
         "es": [
           "Validar un BST comparando cada nodo solo con sus hijos directos: un nodo profundo del subárbol izquierdo puede ser mayor que un ancestro. Pasa límites (mín, máx) hacia abajo o verifica que la secuencia inorden sea estrictamente creciente.",
           "Mezclar convenciones de altura: contando aristas, un árbol vacío tiene altura −1 y un solo nodo, 0; contando nodos todo se corre en uno. Elige una convención y haz que el caso base coincida con ella.",
-          "Ejecutar el recorrido por niveles en un árbol vacío: `queue.offer(root)` con `root == null` lanza una excepción en `ArrayDeque`, y con `LinkedList` el null se extrae y `current.value` lanza `NullPointerException`. Retorna de inmediato si `root == null`."
+          "Ejecutar el recorrido por niveles en un árbol vacío: `queue.offer(root)` con `root == null` lanza una excepción en `ArrayDeque`, y con `LinkedList` el null se extrae y `current.value` lanza `NullPointerException`. Sal del método de inmediato si `root == null`."
         ]
       },
       "practice": {
@@ -6346,7 +6346,7 @@ window.COURSE_CURRICULUM = {
           "Apply a size-k heap to top-k and running-median problems and analyze their O(n log k) and O(log n) costs."
         ],
         "es": [
-          "Implementar un montículo mínimo binario sobre un arreglo con `offer` (flotar hacia arriba) y `poll` (hundir hacia abajo), usando padre (i − 1) / 2 e hijos 2i + 1 y 2i + 2.",
+          "Implementar un montículo mínimo binario sobre un arreglo con `offer` (flotar, sift-up) y `poll` (hundir, sift-down), usando padre (i − 1) / 2 e hijos 2i + 1 y 2i + 2.",
           "Trazar `buildMinHeap` sobre un arreglo pequeño y explicar por qué la construcción de abajo hacia arriba es O(n) y no O(n log n).",
           "Usar `PriorityQueue` con un `Comparator` para construir un montículo máximo y para ordenar objetos por un campo.",
           "Aplicar un montículo de tamaño k a problemas de top-k y de mediana en flujo, y analizar sus costos O(n log k) y O(log n)."
@@ -6384,8 +6384,8 @@ window.COURSE_CURRICULUM = {
         ],
         "es": [
           "Escribir el comparador de un montículo máximo como `(a, b) -> b - a`: la resta se desborda con valores grandes de signos opuestos y produce un orden incorrecto. Usa `Integer.compare(b, a)` o `Comparator.reverseOrder()`.",
-          "Imprimir un `PriorityQueue` o recorrerlo con for-each esperando una salida ordenada; solo llamar `poll()` repetidamente devuelve los elementos en orden de prioridad.",
-          "Cambiar el campo de prioridad de un objeto que ya está dentro de un `PriorityQueue`: el montículo no se reacomoda, el invariante se rompe y `poll` devuelve elementos incorrectos. Elimínalo y vuelve a insertarlo, o inserta una entrada nueva y descarta las obsoletas al extraerlas."
+          "Imprimir una `PriorityQueue` o recorrerla con for-each esperando una salida ordenada; solo llamar a `poll()` repetidamente devuelve los elementos en orden de prioridad.",
+          "Cambiar el campo de prioridad de un objeto que ya está dentro de una `PriorityQueue`: el montículo no se reacomoda, el invariante se rompe y `poll` devuelve elementos incorrectos. Elimínalo y vuelve a insertarlo, o inserta una entrada nueva y descarta las obsoletas al extraerlas."
         ]
       },
       "practice": {
@@ -6397,8 +6397,8 @@ window.COURSE_CURRICULUM = {
         ],
         "es": [
           "Calentamiento: traza a mano `buildMinHeap` sobre `{9, 5, 6, 2, 3}` escribiendo el arreglo después de cada llamada a `heapify`, y compáralo con la salida del programa.",
-          "Implementa `MinHeap` sobre un `int[]` que crece, con `offer`, `poll`, `peek` y `size`; pruébalo insertando 1000 enteros aleatorios y verificando que `poll` repetido los devuelve ordenados.",
-          "Implementa heapsort en el mismo arreglo: construye un montículo máximo de abajo hacia arriba y luego intercambia repetidamente la raíz con el último elemento del montículo, reduce su tamaño en uno y hunde la nueva raíz.",
+          "Implementa `MinHeap` sobre un `int[]` que crece, con `offer`, `poll`, `peek` y `size`; pruébalo insertando 1000 enteros aleatorios y verificando que, al llamar a `poll` repetidamente, salen ordenados.",
+          "Implementa heapsort in situ (en el mismo arreglo): construye un montículo máximo de abajo hacia arriba y luego intercambia repetidamente la raíz con el último elemento del montículo, reduce su tamaño en uno y hunde la nueva raíz.",
           "Implementa `MedianFinder` con `addNum(int num)` y `double findMedian()` usando un montículo máximo para la mitad inferior y uno mínimo para la superior, reequilibrando para que sus tamaños difieran a lo sumo en 1; cada `addNum` debe ser O(log n)."
         ]
       },
@@ -6462,7 +6462,7 @@ window.COURSE_CURRICULUM = {
           },
           "definition": {
             "en": "An abstract data type whose removal operation always returns the highest-priority element (`offer`, `poll`, `peek`); Java's `PriorityQueue` implements it with a binary min-heap ordered by natural ordering or a supplied `Comparator`.",
-            "es": "Un tipo abstracto de datos cuya operación de extracción siempre devuelve el elemento de mayor prioridad (`offer`, `poll`, `peek`); el `PriorityQueue` de Java lo implementa con un montículo mínimo binario ordenado por el orden natural o por un `Comparator` dado."
+            "es": "Un tipo abstracto de datos cuya operación de extracción siempre devuelve el elemento de mayor prioridad (`offer`, `poll`, `peek`); la `PriorityQueue` de Java lo implementa con un montículo mínimo binario ordenado por el orden natural o por un `Comparator` dado."
           }
         }
       ],
@@ -6593,7 +6593,7 @@ window.COURSE_CURRICULUM = {
         {
           "question": {
             "en": "Dijkstra's algorithm implemented with `java.util.PriorityQueue` usually pushes a new (vertex, distance) entry on every improvement and skips outdated entries when polled. Why?",
-            "es": "Dijkstra implementado con `java.util.PriorityQueue` suele insertar una entrada nueva (vértice, distancia) en cada mejora y descartar las entradas obsoletas al extraerlas. ¿Por qué?"
+            "es": "El algoritmo de Dijkstra implementado con `java.util.PriorityQueue` suele insertar una entrada nueva (vértice, distancia) en cada mejora y descartar las entradas obsoletas al extraerlas. ¿Por qué?"
           },
           "options": {
             "en": [
@@ -6606,7 +6606,7 @@ window.COURSE_CURRICULUM = {
               "`PriorityQueue` no puede guardar dos entradas para el mismo vértice",
               "`PriorityQueue` no tiene operación de disminuir clave y `remove(Object)` es O(n), así que insertar de forma diferida es más simple y sigue siendo O(E log V)",
               "Conservar entradas obsoletas permite que Dijkstra maneje aristas con peso negativo",
-              "Disminuir una clave en su lugar haría que el montículo quedara ordenado"
+              "Disminuir una clave in situ haría que el montículo quedara ordenado"
             ]
           },
           "correct": 1,
@@ -6625,7 +6625,7 @@ window.COURSE_CURRICULUM = {
       ],
       "whyItMatters": {
         "en": "Tries power autocomplete boxes, spell checkers and longest-prefix matching in IP routing tables, and they are the standard tool for interview problems such as Word Search II and prefix counting, where you need every key sharing a prefix without scanning the whole word list.",
-        "es": "Los tries impulsan el autocompletado, los correctores ortográficos y la coincidencia del prefijo más largo en tablas de enrutamiento IP, y son la herramienta estándar en problemas de entrevista como Word Search II y conteo de prefijos, donde necesitas todas las claves con un prefijo sin recorrer toda la lista de palabras."
+        "es": "Los tries (árboles de prefijos) impulsan el autocompletado, los correctores ortográficos y la coincidencia del prefijo más largo en tablas de enrutamiento IP, y son la herramienta estándar en problemas de entrevista como Word Search II y conteo de prefijos, donde necesitas todas las claves con un prefijo sin recorrer toda la lista de palabras."
       },
       "objectives": {
         "en": [
@@ -6884,7 +6884,7 @@ window.COURSE_CURRICULUM = {
           "correct": 0,
           "explanation": {
             "en": "\"coder\" still needs the path c-o-d-e-r, so only the flag changes. Removing c, o, d, e (or just e) would disconnect 'r' and make \"coder\" unreachable. Deletion is fully supported; it just prunes nodes only when they become useless.",
-            "es": "\"coder\" todavía necesita el camino c-o-d-e-r, así que solo cambia la marca. Eliminar c, o, d, e (o solo e) desconectaría 'r' y haría inalcanzable \"coder\". La eliminación sí está soportada; solo poda nodos cuando dejan de ser útiles."
+            "es": "\"coder\" todavía necesita el camino c-o-d-e-r, así que solo cambia la marca. Eliminar c, o, d, e (o solo e) desconectaría 'r' y haría inalcanzable \"coder\". Eliminar sí es posible; simplemente se podan los nodos solo cuando dejan de ser útiles."
           }
         }
       ]
@@ -7199,7 +7199,7 @@ window.COURSE_CURRICULUM = {
         "es": [
           "Elegir entre lista de adyacencia y matriz de adyacencia comparando espacio O(V + E) contra O(V²) y el costo de consultar una arista y recorrer vecinos.",
           "Implementar BFS y DFS (recursivo e iterativo) para hallar vértices alcanzables, componentes conexas y caminos más cortos sin pesos usando un arreglo de padres.",
-          "Implementar el algoritmo de Dijkstra con un `PriorityQueue` y eliminación diferida, y explicar por qué requiere pesos de arista no negativos.",
+          "Implementar el algoritmo de Dijkstra con una `PriorityQueue` y eliminación diferida, y explicar por qué requiere pesos de arista no negativos.",
           "Trazar los algoritmos de Kruskal y Prim sobre un grafo ponderado pequeño y enunciar sus tiempos O(E log E) y O(E log V)."
         ]
       },
@@ -7303,7 +7303,7 @@ window.COURSE_CURRICULUM = {
           },
           "definition": {
             "en": "A path of minimum total weight between two vertices; found with BFS for unweighted graphs, Dijkstra for non-negative weights, and Bellman–Ford when negative weights are allowed (it also detects negative cycles).",
-            "es": "Un camino de peso total mínimo entre dos vértices; se encuentra con BFS en grafos sin pesos, con Dijkstra cuando los pesos son no negativos y con Bellman–Ford cuando se permiten pesos negativos (que además detecta ciclos negativos)."
+            "es": "Un camino de peso total mínimo entre dos vértices; se encuentra con BFS en grafos sin pesos, con Dijkstra cuando los pesos son no negativos y con Bellman–Ford cuando se permiten pesos negativos (este último además detecta ciclos negativos)."
           }
         },
         {
@@ -7344,7 +7344,7 @@ window.COURSE_CURRICULUM = {
         {
           "question": {
             "en": "Using the module's directed `addEdge`, you call `addEdge(1, 2, 1)`, `addEdge(1, 3, 1)`, `addEdge(2, 4, 1)`, `addEdge(3, 4, 1)`, `addEdge(4, 1, 1)` and then `bfs(1)`. What is printed?",
-            "es": "Con el `addEdge` dirigido del módulo, llamas `addEdge(1, 2, 1)`, `addEdge(1, 3, 1)`, `addEdge(2, 4, 1)`, `addEdge(3, 4, 1)`, `addEdge(4, 1, 1)` y luego `bfs(1)`. ¿Qué se imprime?"
+            "es": "Con el `addEdge` dirigido del módulo, llamas a `addEdge(1, 2, 1)`, `addEdge(1, 3, 1)`, `addEdge(2, 4, 1)`, `addEdge(3, 4, 1)`, `addEdge(4, 1, 1)` y luego `bfs(1)`. ¿Qué se imprime?"
           },
           "options": {
             "en": [
@@ -7419,7 +7419,7 @@ window.COURSE_CURRICULUM = {
         {
           "question": {
             "en": "Which statement about Kruskal's algorithm is true?",
-            "es": "¿Cuál afirmación sobre el algoritmo de Kruskal es verdadera?"
+            "es": "¿Qué afirmación sobre el algoritmo de Kruskal es verdadera?"
           },
           "options": {
             "en": [
@@ -7476,7 +7476,7 @@ window.COURSE_CURRICULUM = {
       ],
       "whyItMatters": {
         "en": "Union-find answers \"are these two connected?\" while edges are being added, in nearly constant time per operation. It is the engine of Kruskal's MST, is used for connected-component labeling in images and percolation simulations, and solves interview problems such as number of provinces, redundant connection and accounts merge.",
-        "es": "Union-find responde \"¿están conectados estos dos?\" mientras se agregan aristas, en tiempo casi constante por operación. Es el motor del MST de Kruskal, se usa para etiquetar componentes conexas en imágenes y en simulaciones de percolación, y resuelve problemas de entrevista como número de provincias, conexión redundante y fusión de cuentas."
+        "es": "Union-find (conjuntos disjuntos) responde \"¿están conectados estos dos?\" mientras se agregan aristas, en tiempo casi constante por operación. Es el motor del MST de Kruskal, se usa para etiquetar componentes conexas en imágenes y en simulaciones de percolación, y resuelve problemas de entrevista como número de provincias, conexión redundante y fusión de cuentas."
       },
       "objectives": {
         "en": [
@@ -7537,7 +7537,7 @@ window.COURSE_CURRICULUM = {
         ],
         "es": [
           "Calentamiento: ejecuta `main` del módulo y escribe los arreglos `parent` y `rank` después de cada llamada a `union` y después de `find(2)`.",
-          "Implementa `UnionFind` con unión por tamaño (`size[]`), un `find` iterativo con división de caminos (`parent[x] = parent[parent[x]]`) e `int count()` que devuelva la cantidad actual de componentes.",
+          "Implementa `UnionFind` con unión por tamaño (`size[]`), un `find` iterativo con reducción a la mitad de caminos (path halving, `parent[x] = parent[parent[x]]`) e `int count()` que devuelva la cantidad actual de componentes.",
           "Dados n vértices y una lista de aristas no dirigidas, devuelve la primera arista cuyos extremos ya estén conectados (Redundant Connection), o `null` si el grafo es un bosque.",
           "Cuenta islas en una cuadrícula `char[][]` uniendo cada celda de tierra con sus vecinas de tierra a la derecha y abajo (id r · cols + c) y contando las raíces distintas entre las celdas de tierra. Luego usa tu estructura para implementar el MST de Kruskal sobre una lista de aristas con pesos y devuelve su peso total."
         ]
@@ -8644,8 +8644,8 @@ window.COURSE_CURRICULUM = {
           "Kruskal runs in O(E log E) (sort + union-find); Prim with a binary heap runs in O(E log V). Greedy coin change is optimal for {25, 10, 5, 1} but fails for {1, 3, 4} at amount 6 (4+1+1 vs 3+3)."
         ],
         "es": [
-          "Un algoritmo voraz es correcto solo si el problema tiene la propiedad de elección voraz y subestructura óptima; demuéstralo con un argumento de intercambio o de \"el voraz va adelante\" en lugar de suponerlo.",
-          "Selección de actividades: ordena por tiempo de fin y toma cada intervalo cuyo inicio sea ≥ al fin del último elegido. O(n log n), dominado por el ordenamiento.",
+          "Un algoritmo voraz es correcto solo si el problema tiene la propiedad de elección voraz y subestructura óptima; demuéstralo con un argumento de intercambio o de \"el voraz siempre va por delante\" en lugar de suponerlo.",
+          "Selección de actividades: ordena por tiempo de fin y toma cada intervalo cuyo inicio sea ≥ que el fin del último elegido. O(n log n), dominado por el ordenamiento.",
           "Huffman hace n − 1 fusiones de los dos nodos más livianos con un montículo mínimo: O(n log n), y el código libre de prefijos resultante es óptimo.",
           "Kruskal corre en O(E log E) (ordenamiento + union-find); Prim con montículo binario corre en O(E log V). El cambio voraz es óptimo para {25, 10, 5, 1} pero falla con {1, 3, 4} para el monto 6 (4+1+1 frente a 3+3)."
         ]
@@ -8670,7 +8670,7 @@ window.COURSE_CURRICULUM = {
           "Interview: given meeting intervals, implement `int minMeetingRooms(int[][] intervals)` in O(n log n) by sorting on start time and keeping a min-heap of end times."
         ],
         "es": [
-          "Calentamiento: con start = {1, 3, 0, 5, 8, 5} y finish = {2, 4, 6, 7, 9, 9}, sigue a mano la selección por menor fin y anota los intervalos elegidos y cuántos son.",
+          "Calentamiento: con start = {1, 3, 0, 5, 8, 5} y finish = {2, 4, 6, 7, 9, 9}, traza a mano la selección por menor tiempo de fin y anota los intervalos elegidos y cuántos son.",
           "Implementa `int maxNonOverlapping(int[][] intervals)` que ordene por fin con `Arrays.sort` y un comparador, y devuelva el máximo de intervalos sin solapamiento (se permite que se toquen en los extremos).",
           "Implementa `Map<Character, String> huffmanCodes(Map<Character, Integer> freq)` usando una `PriorityQueue<Node>`; asigna el código \"0\" cuando hay un solo símbolo e imprime la longitud total codificada.",
           "Entrevista: dados intervalos de reuniones, implementa `int minMeetingRooms(int[][] intervals)` en O(n log n) ordenando por inicio y manteniendo un montículo mínimo de tiempos de fin."
@@ -8734,14 +8734,14 @@ window.COURSE_CURRICULUM = {
         {
           "label": {
             "en": "cp-algorithms: Minimum spanning tree – Kruskal's algorithm",
-            "es": "cp-algorithms: Árbol de expansión mínima – algoritmo de Kruskal"
+            "es": "cp-algorithms: Árbol de expansión mínima – algoritmo de Kruskal (en inglés)"
           },
           "url": "https://cp-algorithms.com/graph/mst_kruskal.html"
         },
         {
           "label": {
             "en": "cp-algorithms: Minimum spanning tree – Prim's algorithm",
-            "es": "cp-algorithms: Árbol de expansión mínima – algoritmo de Prim"
+            "es": "cp-algorithms: Árbol de expansión mínima – algoritmo de Prim (en inglés)"
           },
           "url": "https://cp-algorithms.com/graph/mst_prim.html"
         },
@@ -8912,7 +8912,7 @@ window.COURSE_CURRICULUM = {
         ],
         "es": [
           "Escribir una función recursiva con casos base correctos y dibujar su árbol de llamadas a mano.",
-          "Usar arreglos o un `HashMap` como caché indexado por los argumentos de la función."
+          "Usar arreglos o un `HashMap` como caché indexada por los argumentos de la función."
         ]
       },
       "keyTakeaways": {
@@ -8923,7 +8923,7 @@ window.COURSE_CURRICULUM = {
           "LIS: the O(n²) table works; keeping the smallest tail of each length and binary searching it gives O(n log n)."
         ],
         "es": [
-          "La programación dinámica aplica cuando hay subestructura óptima y subproblemas superpuestos; el tiempo ≈ número de estados × costo por transición.",
+          "La programación dinámica se aplica cuando hay subestructura óptima y subproblemas superpuestos; el tiempo ≈ número de estados × costo por transición.",
           "Fibonacci recursivo ingenuo tarda O(φⁿ) ≈ O(1.618ⁿ); con memoización o tabulación es O(n), y O(1) de espacio extra con dos variables.",
           "Mochila 0/1: dp[i][w] = max(dp[i−1][w], v_i + dp[i−1][w − w_i]). O(n·W) es pseudopolinomial porque W es un valor numérico, no el tamaño de la entrada. La versión 1D debe recorrer w desde W hacia abajo hasta w_i.",
           "LIS: la tabla O(n²) funciona; guardar la menor cola para cada longitud y buscarla con búsqueda binaria da O(n log n)."
@@ -8936,7 +8936,7 @@ window.COURSE_CURRICULUM = {
           "A memo key that omits part of the state (caching by index only when the answer also depends on remaining capacity) returns wrong cached answers. Very deep memoized recursion can also throw `StackOverflowError`; switch to tabulation."
         ],
         "es": [
-          "Recorrer la capacidad hacia arriba en la mochila 0/1 en 1D permite reutilizar un ítem, y se resuelve sin aviso la mochila no acotada. Recorre desde W hacia abajo.",
+          "Recorrer la capacidad hacia arriba en la mochila 0/1 en 1D permite reutilizar un ítem, con lo que, sin ningún aviso, se resuelve en realidad la mochila no acotada. Recorre desde W hacia abajo.",
           "Casos base o centinelas incorrectos: inicializar la tabla de mínimo de monedas con 0 hace que montos imposibles parezcan gratis, y `Integer.MAX_VALUE + 1` se desborda a negativo. Usa `amount + 1` como \"infinito\".",
           "Una clave de memo que omite parte del estado (guardar solo por índice cuando la respuesta también depende de la capacidad restante) devuelve respuestas equivocadas. Una recursión memoizada muy profunda también puede lanzar `StackOverflowError`; pasa a tabulación."
         ]
@@ -8962,7 +8962,7 @@ window.COURSE_CURRICULUM = {
           "What distinguishes a DP problem from a divide-and-conquer problem like merge sort?"
         ],
         "es": [
-          "¿Cuál es el estado y la transición de la mochila 0/1, y por qué O(n·W) se llama pseudopolinomial?",
+          "¿Cuáles son el estado y la transición de la mochila 0/1, y por qué O(n·W) se llama pseudopolinomial?",
           "¿Cuándo elegirías memoización en lugar de tabulación, y viceversa?",
           "¿Qué distingue un problema de programación dinámica de uno de divide y vencerás como merge sort?"
         ]
@@ -8975,7 +8975,7 @@ window.COURSE_CURRICULUM = {
           },
           "definition": {
             "en": "A top-down technique in which a recursive function stores each subproblem's result in a cache keyed by its state and returns the cached value on later calls instead of recomputing it.",
-            "es": "Técnica de arriba hacia abajo en la que una función recursiva guarda el resultado de cada subproblema en un caché indexado por su estado y lo devuelve en llamadas posteriores en lugar de recalcularlo."
+            "es": "Técnica de arriba hacia abajo en la que una función recursiva guarda el resultado de cada subproblema en una caché indexada por su estado y lo devuelve en llamadas posteriores en lugar de recalcularlo."
           }
         },
         {
@@ -9744,7 +9744,7 @@ window.COURSE_CURRICULUM = {
       ],
       "whyItMatters": {
         "en": "Bit masks encode permission flags (Unix rwx bits, `java.lang.reflect.Modifier`), back `java.util.BitSet` and subset DP, and appear in hashing code such as `HashMap`'s `h ^ (h >>> 16)`. Bit tricks are also a staple of technical interviews.",
-        "es": "Las máscaras de bits codifican banderas de permisos (bits rwx de Unix, `java.lang.reflect.Modifier`), sostienen `java.util.BitSet` y la programación dinámica sobre subconjuntos, y aparecen en código de hashing como `h ^ (h >>> 16)` de `HashMap`. Los trucos de bits también son clásicos en entrevistas técnicas."
+        "es": "Las máscaras de bits codifican banderas de permisos (bits rwx de Unix, `java.lang.reflect.Modifier`), son la base de `java.util.BitSet` y de la programación dinámica sobre subconjuntos, y aparecen en código de hashing como `h ^ (h >>> 16)` de `HashMap`. Los trucos de bits también son clásicos en entrevistas técnicas."
       },
       "objectives": {
         "en": [
@@ -9892,7 +9892,7 @@ window.COURSE_CURRICULUM = {
         {
           "label": {
             "en": "Java 21 API: java.lang.Integer (bitCount, highestOneBit, toBinaryString)",
-            "es": "API de Java 21: java.lang.Integer (bitCount, highestOneBit, toBinaryString)"
+            "es": "API de Java 21: java.lang.Integer (bitCount, highestOneBit, toBinaryString; en inglés)"
           },
           "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Integer.html"
         }
@@ -9970,7 +9970,7 @@ window.COURSE_CURRICULUM = {
           "correct": 0,
           "explanation": {
             "en": "Each iteration clears exactly one set bit, so the loop runs popcount(n) times, at most 32. ⌊log₂ n⌋ + 1 is the bit length, which is what a shift-by-one loop would take.",
-            "es": "Cada iteración apaga exactamente un bit encendido, así que el ciclo corre popcount(n) veces, como máximo 32. ⌊log₂ n⌋ + 1 es la longitud en bits, que es lo que tardaría un ciclo que desplaza de a uno."
+            "es": "Cada iteración apaga exactamente un bit encendido, así que el ciclo corre popcount(n) veces, como máximo 32. ⌊log₂ n⌋ + 1 es la longitud en bits, que es lo que tardaría un ciclo que desplaza de uno en uno."
           }
         },
         {
@@ -11764,7 +11764,7 @@ window.COURSE_CURRICULUM = {
         ],
         "es": [
           "Implementar `build` recursivo, `update` puntual y consulta de rango para sumas con índices de hijos 2i + 1 y 2i + 2, y justificar reservar 4n nodos.",
-          "Seguir una consulta de rango y clasificar cada nodo visitado como solapamiento total, sin solapamiento o solapamiento parcial.",
+          "Trazar una consulta de rango y clasificar cada nodo visitado como solapamiento total, sin solapamiento o solapamiento parcial.",
           "Implementar propagación perezosa para suma en rango con consulta de suma, incluido el paso de empuje hacia los hijos.",
           "Analizar por qué una consulta visita O(log n) nodos y elegir entre sumas prefijas, árbol de Fenwick y árbol de segmentos según las operaciones requeridas."
         ]
@@ -11775,7 +11775,7 @@ window.COURSE_CURRICULUM = {
           "Pick the identity element of an associative operation (0 for sum, +∞ for min, 0 for gcd)."
         ],
         "es": [
-          "Seguir una recursión que divide un intervalo [l, r] en [l, mid] y [mid + 1, r].",
+          "Trazar una recursión que divide un intervalo [l, r] en [l, mid] y [mid + 1, r].",
           "Elegir el elemento neutro de una operación asociativa (0 para suma, +∞ para mínimo, 0 para mcd)."
         ]
       },
@@ -11790,7 +11790,7 @@ window.COURSE_CURRICULUM = {
           "Construcción O(n); actualización puntual O(log n); consulta de rango O(log n). La disposición recursiva necesita un arreglo de hasta 4n nodos.",
           "Sirve cualquier combinación asociativa (suma, mínimo, máximo, mcd, producto de matrices); un nodo disjunto de la consulta debe devolver el elemento neutro.",
           "La propagación perezosa mantiene las actualizaciones de rango en O(log n) guardando una marca pendiente en los nodos cubiertos por completo y empujándola a los hijos solo cuando una operación desciende. En suma por rango, el valor del nodo crece en delta × longitud del segmento.",
-          "Sin actualizaciones perezosas, un árbol iterativo de abajo hacia arriba de tamaño 2n (hojas en n..2n − 1) es más corto y rápido que la versión recursiva."
+          "Sin actualizaciones perezosas, un árbol iterativo de abajo hacia arriba de tamaño 2n (hojas en n..2n − 1) es más corto y más rápido que la versión recursiva."
         ]
       },
       "pitfalls": {
@@ -11816,7 +11816,7 @@ window.COURSE_CURRICULUM = {
           "Calentamiento: para arr = {2, 1, 5, 3}, dibuja el árbol de segmentos de sumas con la indexación del módulo (raíz 0, hijos 2i + 1 y 2i + 2) y anota en cada nodo su rango y su valor.",
           "Implementa `RangeMinTree` con `update(int i, int v)` y `min(int l, int r)`; pruébalo contra un recorrido de fuerza bruta O(n) en 1000 operaciones aleatorias.",
           "Agrega propagación perezosa: implementa `addRange(int l, int r, int delta)` y `sum(int l, int r)`, ambos en O(log n), usando un `long[]` para las sumas.",
-          "Examen: soporta actualizaciones puntuales y consultas de la suma máxima de un subarreglo dentro de [l, r] guardando (total, mejor prefijo, mejor sufijo, mejor) en cada nodo y escribiendo la función de combinación."
+          "Examen: admite actualizaciones puntuales y consultas de la suma máxima de un subarreglo dentro de [l, r] guardando (total, mejor prefijo, mejor sufijo, mejor) en cada nodo y escribiendo la función de combinación."
         ]
       },
       "selfCheck": {
@@ -11849,7 +11849,7 @@ window.COURSE_CURRICULUM = {
           },
           "definition": {
             "en": "A technique in which a range update that fully covers a node is recorded as a pending tag on that node instead of being applied to every descendant; the tag is pushed to the children only when a later operation needs to go below that node.",
-            "es": "Técnica en la que una actualización de rango que cubre por completo un nodo se registra como una marca pendiente en ese nodo en vez de aplicarse a todos sus descendientes; la marca se empuja a los hijos solo cuando una operación posterior necesita bajar por debajo del nodo."
+            "es": "Técnica en la que una actualización de rango que cubre por completo un nodo se registra como una marca pendiente en ese nodo en vez de aplicarse a todos sus descendientes; la marca se empuja a los hijos solo cuando una operación posterior necesita descender más allá de ese nodo."
           }
         },
         {
@@ -12025,7 +12025,7 @@ window.COURSE_CURRICULUM = {
       ],
       "whyItMatters": {
         "en": "A Fenwick tree maintains prefix sums under updates in about ten lines of code and n + 1 integers. It is the usual tool for counting inversions, rank and frequency queries over a stream, and many contest problems where a full segment tree is overkill.",
-        "es": "Un árbol de Fenwick mantiene sumas prefijas con actualizaciones en unas diez líneas de código y n + 1 enteros. Es la herramienta habitual para contar inversiones, consultas de rango y frecuencia sobre un flujo de datos, y muchos problemas de concurso donde un árbol de segmentos completo es excesivo."
+        "es": "Un árbol de Fenwick mantiene sumas prefijas con actualizaciones en unas diez líneas de código y n + 1 enteros. Es la herramienta habitual para contar inversiones, para consultas de posición (rank) y de frecuencia sobre un flujo de datos y para muchos problemas de concurso donde un árbol de segmentos completo es excesivo."
       },
       "objectives": {
         "en": [
@@ -12061,7 +12061,7 @@ window.COURSE_CURRICULUM = {
         "es": [
           "La actualización puntual y la consulta prefija son ambas O(log n); la memoria es de n + 1 valores y el índice 0 no se usa.",
           "Con índices desde 1, tree[i] guarda a[i − lowbit(i) + 1] + … + a[i]; por ejemplo, tree[12] guarda a[9..12].",
-          "Las consultas de rango requieren una operación invertible (suma, XOR). El mínimo o máximo de un rango arbitrario [l, r] no se soporta directamente; usa un árbol de segmentos.",
+          "Las consultas de rango requieren una operación invertible (suma, XOR). El mínimo o máximo de un rango arbitrario [l, r] no se admite directamente; usa un árbol de segmentos.",
           "Actualización de rango con consulta puntual: add(l, +d) y add(r + 1, −d) sobre un arreglo de diferencias, y luego a[i] = prefix(i). Dos BIT dan actualización de rango con suma de rango."
         ]
       },
@@ -12074,7 +12074,7 @@ window.COURSE_CURRICULUM = {
         "es": [
           "Usar el índice interno 0 en un BIT desde 1: `0 & -0` es 0, así que `i += i & -i` nunca avanza y el ciclo es infinito. Desplaza los índices del usuario en +1, como hace `update` del módulo.",
           "Tratar `update` como \"asignar\" cuando significa \"sumar delta\": para asignar a[i] = v debes sumar v − a[i], lo que exige guardar una copia del arreglo actual.",
-          "Guardar sumas o conteos de inversiones en `int`: n = 10⁵ elementos pueden producir unos 5 × 10⁹ inversiones, más que `Integer.MAX_VALUE`. Usa `long[]` y un resultado `long`."
+          "Guardar sumas o conteos de inversiones en `int`: n = 10⁵ elementos pueden producir unas 5 × 10⁹ inversiones, más que `Integer.MAX_VALUE`. Usa `long[]` y un resultado `long`."
         ]
       },
       "practice": {
@@ -12266,7 +12266,7 @@ window.COURSE_CURRICULUM = {
           "correct": 0,
           "explanation": {
             "en": "Each node pushes its finished total to its single parent once, so the build is linear. Calling `update` n times costs O(n log n), and summing each covered range directly also totals O(n log n).",
-            "es": "Cada nodo empuja su total ya completo a su único padre una vez, así que la construcción es lineal. Llamar a `update` n veces cuesta O(n log n), y sumar directamente cada rango cubierto también suma O(n log n)."
+            "es": "Cada nodo empuja su total ya completo a su único padre una vez, así que la construcción es lineal. Llamar a `update` n veces cuesta O(n log n), y sumar directamente cada rango cubierto también cuesta O(n log n) en total."
           }
         },
         {
@@ -12315,7 +12315,7 @@ window.COURSE_CURRICULUM = {
         "es": [
           "Calcular factores de balance tras una inserción en un AVL y elegir el caso de rotación correcto (LL, RR, LR, RL).",
           "Implementar `rotateLeft` y `rotateRight` y mostrar que conservan la secuencia inorden de las claves.",
-          "Explicar las invariantes rojo-negro y por qué acotan la altura por 2·log₂(n + 1).",
+          "Explicar los invariantes rojo-negro y por qué acotan la altura por 2·log₂(n + 1).",
           "Comparar AVL, rojo-negro, árboles B y árboles splay según cota de altura, costo de rebalanceo y uso típico (mapa en memoria, índice en disco, localidad de acceso)."
         ]
       },
@@ -12363,7 +12363,7 @@ window.COURSE_CURRICULUM = {
           "Exam: prove that an AVL tree of height h has at least N(h) = N(h − 1) + N(h − 2) + 1 nodes, and conclude that its height is O(log n)."
         ],
         "es": [
-          "Calentamiento: inserta 10, 20, 30, 40, 50, 25 en un AVL vacío a mano; dibuja el árbol tras cada rotación y nombra su caso (LL, RR, LR o RL).",
+          "Calentamiento: inserta a mano 10, 20, 30, 40, 50, 25 en un AVL vacío; dibuja el árbol tras cada rotación y nombra su caso (LL, RR, LR o RL).",
           "Implementa `boolean isAVL(Node root)` que verifique el orden de BST y la condición de altura en un solo recorrido O(n), devolviendo −1 desde el auxiliar si falla.",
           "Implementa la eliminación en AVL con rebalanceo en cada ancestro y prueba 10 000 inserciones y eliminaciones aleatorias contra `java.util.TreeSet`.",
           "Examen: demuestra que un AVL de altura h tiene al menos N(h) = N(h − 1) + N(h − 2) + 1 nodos y concluye que su altura es O(log n)."
@@ -12429,7 +12429,7 @@ window.COURSE_CURRICULUM = {
           },
           "definition": {
             "en": "Constant-time local restructurings (left or right) that swap the parent-child relation of two nodes and move one subtree between them, preserving the inorder order of keys while changing subtree heights.",
-            "es": "Reestructuraciones locales de tiempo constante (a la izquierda o a la derecha) que intercambian la relación padre-hijo entre dos nodos y mueven un subárbol entre ellos, conservando el orden inorden de las claves mientras cambian las alturas de los subárboles."
+            "es": "Reestructuraciones locales de tiempo constante (a la izquierda o a la derecha) que intercambian la relación padre-hijo entre dos nodos y mueven un subárbol entre ellos, conservando la secuencia inorden de las claves mientras cambian las alturas de los subárboles."
           }
         }
       ],
@@ -12444,7 +12444,7 @@ window.COURSE_CURRICULUM = {
         {
           "label": {
             "en": "Java 21 API: java.util.TreeMap (red-black tree implementation)",
-            "es": "API de Java 21: java.util.TreeMap (implementación con árbol rojo-negro)"
+            "es": "API de Java 21: java.util.TreeMap (implementación con árbol rojo-negro, en inglés)"
           },
           "url": "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/TreeMap.html"
         },
@@ -12592,7 +12592,7 @@ window.COURSE_CURRICULUM = {
       ],
       "whyItMatters": {
         "en": "Substring search powers grep and the find feature in editors, Rabin-Karp-style fingerprints are used for plagiarism and duplicate detection, and suffix arrays underlie genome read aligners. KMP and rolling-hash problems are common in interviews.",
-        "es": "La búsqueda de subcadenas impulsa grep y la función de buscar en los editores, las huellas al estilo Rabin-Karp se usan para detectar plagio y duplicados, y los arreglos de sufijos son la base de alineadores de lecturas genómicas. Los problemas de KMP y hash rodante son frecuentes en entrevistas."
+        "es": "La búsqueda de subcadenas impulsa grep y la función de buscar en los editores, las huellas al estilo Rabin-Karp se usan para detectar plagio y duplicados, y los arreglos de sufijos son la base de los alineadores de lecturas genómicas. Los problemas de KMP y hash rodante son frecuentes en entrevistas."
       },
       "objectives": {
         "en": [
@@ -12653,7 +12653,7 @@ window.COURSE_CURRICULUM = {
         ],
         "es": [
           "Calentamiento: calcula a mano el arreglo lps de \"aabaaab\" y luego confírmalo con `buildPrefixTable` del módulo.",
-          "Modifica `kmpSearch` para obtener `List<Integer> kmpSearchAll(String text, String pattern)` que devuelva cada inicio de coincidencia, incluidas las solapadas (\"aa\" en \"aaaa\" → [0, 1, 2]).",
+          "Modifica `kmpSearch` para convertirlo en `List<Integer> kmpSearchAll(String text, String pattern)` que devuelva cada inicio de coincidencia, incluidas las solapadas (\"aa\" en \"aaaa\" → [0, 1, 2]).",
           "Implementa Rabin-Karp `List<Integer> findAll(String text, String pattern)` con base 131 y módulo 1_000_000_007, confirmando cada coincidencia de hash con `text.regionMatches(i, pattern, 0, m)`.",
           "Entrevista: encuentra la subcadena más larga que aparece al menos dos veces en una cadena de longitud hasta 3·10⁴ (se permiten solapamientos), usando búsqueda binaria sobre la longitud y un hash rodante en tiempo esperado O(n log n)."
         ]
@@ -12698,7 +12698,7 @@ window.COURSE_CURRICULUM = {
           },
           "definition": {
             "en": "A pattern-matching algorithm that compares the pattern right to left and, on a mismatch, uses the bad-character and good-suffix rules to shift it by possibly many positions, making it sublinear on typical text.",
-            "es": "Algoritmo de búsqueda de patrones que compara el patrón de derecha a izquierda y, ante un desajuste, usa las reglas de mal carácter y buen sufijo para desplazarlo posiblemente muchas posiciones, por lo que es sublineal en texto típico."
+            "es": "Algoritmo de búsqueda de patrones que compara el patrón de derecha a izquierda y, ante un desajuste, usa las reglas de mal carácter y buen sufijo para desplazarlo, a veces muchas posiciones, por lo que es sublineal en texto típico."
           }
         },
         {
