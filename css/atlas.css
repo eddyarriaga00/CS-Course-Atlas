@@ -922,3 +922,7 @@ pre[tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 
 .cel-close { border: 0; background: none; color: var(--text-2); cursor: pointer; font: inherit; margin-top: 4px; }
 .shortcuts { box-sizing: border-box; max-width: calc(100vw - 24px); }
 .btn.btn-wrap { white-space: normal; text-align: center; height: auto; min-height: 40px; padding-top: 9px; padding-bottom: 9px; max-width: 100%; line-height: 1.35; }
+.mod-note { width: 100%; min-height: 110px; resize: vertical; border: 1px solid var(--border); border-radius: 10px; background: var(--surface-2, var(--bg)); color: var(--text); font: inherit; font-size: 14px; line-height: 1.5; padding: 10px 12px; box-sizing: border-box; margin-top: 6px; }
+.mod-note:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.mod-note-status { font-size: 12px; margin-top: 4px; min-height: 1em; }
+.mod-note-label h3 { margin: 0; }
