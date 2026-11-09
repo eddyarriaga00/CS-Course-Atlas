@@ -237,6 +237,15 @@ test.describe('Navigation', () => {
         await expect(page.locator('#backup-msg')).toContainText('Restored. 1 new');
     });
 
+    test('a whole course can be reviewed as one quiz', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html#course-sql');
+        await page.locator('[data-action="go-quiz"][data-id="course:sql"]').click();
+        await expect(page.locator('.quiz-top')).toContainText('SQL & Databases: whole course');
+        await expect(page.locator('.quiz-top')).toContainText('of 15');
+        await expect(page.locator('.q-from')).toContainText('SQL & Databases');
+    });
+
     test('mixed review quizzes across completed modules', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html#m-python-first-programs');
