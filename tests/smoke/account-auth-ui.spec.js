@@ -34,9 +34,9 @@ test.describe('Accounts', () => {
         const stats = page.locator('.stats a.stat-link');
         await expect(stats).toHaveCount(4);
         await expect(stats.nth(0)).toHaveAttribute('href', /^#(m-|course-)/);
-        for (const [i, hash] of [[1, '#plan'], [2, '#practice'], [3, '#notes']]) await expect(stats.nth(i)).toHaveAttribute('href', hash);
+        for (const [i, hash] of [[1, '#plan'], [2, '#quizzes'], [3, '#notes']]) await expect(stats.nth(i)).toHaveAttribute('href', hash);
         await stats.nth(2).click();
-        await expect(page).toHaveURL(/#practice$/);
+        await expect(page).toHaveURL(/#quizzes$/);
         await page.goto('/index.html#profile');
         await stats.nth(0).click();
         await expect(page).toHaveURL(/#m-oop-basics|#m-|#course-/);

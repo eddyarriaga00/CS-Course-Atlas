@@ -15,7 +15,7 @@ const CRITICAL_PAGES = [
     '/sitemap.xml'
 ];
 
-const ROUTES = ['home', 'courses', 'course-python', 'm-python-first-programs', 'm-python-collections', 'course-cli', 'm-cli-files-folders', 'm-cli-shell-scripts', 'course-web', 'm-web-html', 'm-web-project', 'course-sql', 'm-sql-joins', 'course-how-computers-work', 'm-hcw-hardware', 'course-cybersecurity', 'm-sec-attacks', 'course-ai', 'm-ai-neural', 'm-ai-language', 'course-java', 'course-git', 'course-discrete', 'course-dsa', 'm-java-basics', 'm-git-basics-workflow', 'm-discrete-graph-theory', 'practice', 'playground', 'plan', 'notes', 'glossary', 'roadmap'];
+const ROUTES = ['home', 'courses', 'course-python', 'm-python-first-programs', 'm-python-collections', 'course-cli', 'm-cli-files-folders', 'm-cli-shell-scripts', 'course-web', 'm-web-html', 'm-web-project', 'course-sql', 'm-sql-joins', 'course-how-computers-work', 'm-hcw-hardware', 'course-cybersecurity', 'm-sec-attacks', 'course-ai', 'm-ai-neural', 'm-ai-language', 'course-java', 'course-git', 'course-discrete', 'course-dsa', 'm-java-basics', 'm-git-basics-workflow', 'm-discrete-graph-theory', 'practice', 'quizzes', 'flashcards', 'playground', 'plan', 'notes', 'glossary', 'roadmap'];
 
 test.describe('Navigation', () => {
     test('critical pages return non-error HTTP responses', async ({ request }) => {
@@ -70,6 +70,25 @@ test.describe('Navigation', () => {
         await expect(page).toHaveURL(/#playground$/);
         await page.locator('[data-action="pg-run"]').click();
         await expect(page.frameLocator('#pg-frame').locator('#counter')).toHaveText('Clicked 2 times');
+    });
+
+    test('quizzes and flashcards are separate pages and remember known cards', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html#practice');
+        await expect(page.locator('a.hub-card')).toHaveCount(2);
+        await page.locator('a.hub-card[href="#flashcards"]').click();
+        await expect(page).toHaveURL(/#flashcards$/);
+        await expect(page.locator('.deck-known')).toContainText('0 of');
+        await page.keyboard.press('ArrowRight');
+        await expect(page.locator('.deck-known')).toContainText('1 of');
+        await page.reload();
+        await expect(page.locator('.deck-known')).toContainText('1 of');
+        await page.locator('.nav-item[href="#quizzes"]').click();
+        await expect(page).toHaveURL(/#quizzes$/);
+        await page.locator('.board-row').nth(2).click();
+        await expect(page.locator('.board-row.active')).toHaveCount(1);
+        await page.locator('.option').first().click();
+        await expect(page.locator('.feedback')).toBeVisible();
     });
 
     test('links from the generated pages open the right module', async ({ page }) => {
