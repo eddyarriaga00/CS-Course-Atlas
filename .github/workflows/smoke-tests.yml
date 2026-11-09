@@ -25,6 +25,12 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Setup Java (runs the Java predict-the-output challenges)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
       - name: Install dependencies
         run: npm ci
 

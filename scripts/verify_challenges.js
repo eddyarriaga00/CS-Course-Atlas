@@ -25,6 +25,9 @@ function gradeJs(code, tests) {
 }
 let count = 0;
 const MiniShell = require('../js/mini-shell.js');
+// Same comparison the site uses for predict-the-output answers: trailing spaces and blank lines at the end do not matter.
+const normOut = (x) => x.replace(/\r/g, '').split('\n').map((l) => l.replace(/\s+$/, '')).join('\n').replace(/\n+$/, '');
+const MiniShellPredictMatch = (a, b) => normOut(a) === normOut(b);
 const os = require('os');
 // Runs setup + solution in real Bash inside a throwaway home folder and snapshots it like the simulator does.
 function realBash(setup, code) {
@@ -96,6 +99,19 @@ for (const [moduleId, list] of Object.entries(data)) {
       else sol.results.filter((r) => !r.ok).forEach((r) => errors.push(`${where}: solution fails ${r.call}: got ${r.got}`));
       const start = gradeJs(ch.starter, ch.tests);
       if (!start.error && start.results.every((r) => r.ok)) errors.push(`${where}: starter already passes every test`);
+      continue;
+    }
+    if (ch.lang === 'predict') {
+      // Predict-the-output: the recorded answer must be exactly what the program prints when really run.
+      if (!ch.code || !ch.solution) { errors.push(`${where}: needs code and solution`); continue; }
+      if (ch.codeLang !== 'java') { errors.push(`${where}: unsupported codeLang ${ch.codeLang}`); continue; }
+      const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'atlas-java-'));
+      fs.writeFileSync(path.join(dir, 'Main.java'), ch.code);
+      const r = spawnSync('java', ['Main.java'], { cwd: dir, encoding: 'utf8', timeout: 60000 });
+      fs.rmSync(dir, { recursive: true, force: true });
+      if (r.error || r.status !== 0) errors.push(`${where}: java failed: ${(r.error && r.error.message) || r.stderr.slice(-300)}`);
+      else if (r.stdout !== ch.solution) errors.push(`${where}: recorded answer differs from the real output: ${JSON.stringify(r.stdout)}`);
+      if (MiniShellPredictMatch(ch.starter || '', ch.solution)) errors.push(`${where}: starter already matches`);
       continue;
     }
     if (ch.lang === 'bash') {

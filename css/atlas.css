@@ -892,3 +892,4 @@ pre[tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 
   .sheet-mod ul, .sheet-mod dl { font-size: 10.5px; }
   .sheet-page h1 { font-size: 22px; }
 }
+.ch-program { margin: 4px 0 12px; }

@@ -195,6 +195,19 @@ test.describe('Navigation', () => {
         await expect(page.locator('.sheet-mod').first()).toContainText('Key takeaways');
     });
 
+    test('java predict-the-output challenges check the typed answer', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html#m-control-flow');
+        await page.locator('.tab[data-tab="challenges"]').click();
+        await expect(page.locator('#ch-0 .ch-program')).toContainText('switch (day)');
+        await page.locator('#ch-code-0').fill('Tue');
+        await page.locator('[data-action="ch-run"][data-i="0"]').click();
+        await expect(page.locator('#ch-res-0')).toContainText('You wrote 1 line; the program prints 2.');
+        await page.locator('#ch-code-0').fill('Tue\nWed  \n');
+        await page.locator('[data-action="ch-run"][data-i="0"]').click();
+        await expect(page.locator('#ch-0')).toHaveClass(/solved/);
+    });
+
     test('mixed review quizzes across completed modules', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html#m-python-first-programs');

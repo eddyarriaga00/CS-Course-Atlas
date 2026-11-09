@@ -3796,5 +3796,551 @@
    },
    "output": false
   }
+ ],
+ "java-basics": [
+  {
+   "id": "int-division",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Integer division",
+    "es": "División entera"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        int a = 7, b = 2;\n        System.out.println(a / b);\n        System.out.println(a % b);\n        System.out.println(a / 2.0);\n        System.out.println((double) (a / b));\n    }\n}\n",
+   "starter": "",
+   "solution": "3\n1\n3.5\n3.0\n",
+   "hint": {
+    "en": "`int / int` drops the decimals; one `double` operand makes it real division. The cast in the last line happens after the integer division.",
+    "es": "`int / int` descarta los decimales; un operando `double` hace división real. En la última línea el cast ocurre después de la división entera."
+   }
+  },
+  {
+   "id": "string-concat",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Strings and +",
+    "es": "Cadenas y +"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        System.out.println(1 + 2 + \"3\");\n        System.out.println(\"1\" + 2 + 3);\n        System.out.println('a' + 1);\n        System.out.println(\"\" + 'a' + 1);\n    }\n}\n",
+   "starter": "",
+   "solution": "33\n123\n98\na1\n",
+   "hint": {
+    "en": "`+` works left to right: numbers add until a String appears, then everything is joined. A `char` plus an `int` is arithmetic ('a' is 97).",
+    "es": "`+` va de izquierda a derecha: los números se suman hasta que aparece un String y desde ahí todo se une. Un `char` más un `int` es aritmética ('a' es 97)."
+   }
+  }
+ ],
+ "control-flow": [
+  {
+   "id": "switch-fallthrough",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Switch fall-through",
+    "es": "Switch sin break"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        int day = 2;\n        switch (day) {\n            case 1: System.out.println(\"Mon\");\n            case 2: System.out.println(\"Tue\");\n            case 3: System.out.println(\"Wed\");\n                break;\n            default: System.out.println(\"Other\");\n        }\n    }\n}\n",
+   "starter": "",
+   "solution": "Tue\nWed\n",
+   "hint": {
+    "en": "Without `break`, execution falls through into the next case until it meets a `break`.",
+    "es": "Sin `break`, la ejecución sigue al siguiente caso hasta encontrar un `break`."
+   }
+  },
+  {
+   "id": "loop-continue",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "continue and break",
+    "es": "continue y break"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        for (int i = 1; i <= 10; i++) {\n            if (i % 3 == 0) continue;\n            if (i > 7) break;\n            System.out.print(i + \" \");\n        }\n        System.out.println();\n    }\n}\n",
+   "starter": "",
+   "solution": "1 2 4 5 7 \n",
+   "hint": {
+    "en": "`continue` skips to the next round (3 and 6); `break` leaves the loop the first time `i > 7` is reached, and 9 is never checked.",
+    "es": "`continue` salta a la siguiente vuelta (3 y 6); `break` sale del ciclo la primera vez que `i > 7`."
+   }
+  }
+ ],
+ "oop-basics": [
+  {
+   "id": "static-vs-instance",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "static vs instance fields",
+    "es": "Campos static y de instancia"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    static class Counter {\n        static int total = 0;\n        int mine = 0;\n        void hit() { mine++; total++; }\n    }\n    public static void main(String[] args) {\n        Counter a = new Counter();\n        Counter b = new Counter();\n        a.hit(); a.hit(); b.hit();\n        System.out.println(a.mine + \" \" + b.mine + \" \" + Counter.total);\n    }\n}\n",
+   "starter": "",
+   "solution": "2 1 3\n",
+   "hint": {
+    "en": "Each object has its own `mine`, but there is only one `static total` shared by all of them.",
+    "es": "Cada objeto tiene su propio `mine`, pero hay un solo `static total` compartido por todos."
+   }
+  },
+  {
+   "id": "override",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Which method runs?",
+    "es": "¿Qué método se ejecuta?"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    static class Animal {\n        String sound() { return \"...\"; }\n        String name() { return \"animal says \" + sound(); }\n    }\n    static class Dog extends Animal {\n        @Override String sound() { return \"Woof\"; }\n    }\n    public static void main(String[] args) {\n        Animal pet = new Dog();\n        System.out.println(pet.sound());\n        System.out.println(pet.name());\n    }\n}\n",
+   "starter": "",
+   "solution": "Woof\nanimal says Woof\n",
+   "hint": {
+    "en": "The object is a `Dog`, so its overridden `sound()` runs, even when called from a method inherited from `Animal`.",
+    "es": "El objeto es un `Dog`, así que se ejecuta su `sound()` sobrescrito, incluso cuando lo llama un método heredado de `Animal`."
+   }
+  }
+ ],
+ "exception-handling": [
+  {
+   "id": "finally-order",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "try, catch, finally",
+    "es": "try, catch, finally"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        try {\n            System.out.println(\"start\");\n            int x = 10 / 0;\n            System.out.println(\"after\");\n        } catch (ArithmeticException e) {\n            System.out.println(\"caught\");\n        } finally {\n            System.out.println(\"finally\");\n        }\n        System.out.println(\"end\");\n    }\n}\n",
+   "starter": "",
+   "solution": "start\ncaught\nfinally\nend\n",
+   "hint": {
+    "en": "The exception jumps straight to `catch`, skipping the rest of `try`; `finally` always runs; then the program continues.",
+    "es": "La excepción salta directo al `catch` y se salta el resto del `try`; `finally` siempre se ejecuta; luego el programa sigue."
+   }
+  },
+  {
+   "id": "return-finally",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "return meets finally",
+    "es": "return contra finally"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    static String check(int n) {\n        try {\n            if (n < 0) throw new IllegalArgumentException(\"negative\");\n            return \"ok\";\n        } catch (IllegalArgumentException e) {\n            return \"bad: \" + e.getMessage();\n        } finally {\n            System.out.println(\"checked \" + n);\n        }\n    }\n    public static void main(String[] args) {\n        System.out.println(check(5));\n        System.out.println(check(-1));\n    }\n}\n",
+   "starter": "",
+   "solution": "checked 5\nok\nchecked -1\nbad: negative\n",
+   "hint": {
+    "en": "`finally` runs before the method actually returns, so its line prints before the caller prints the result.",
+    "es": "`finally` se ejecuta antes de que el método regrese de verdad, así que su línea se imprime antes de que quien llama imprima el resultado."
+   }
+  }
+ ],
+ "generics": [
+  {
+   "id": "generic-max",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "A generic method",
+    "es": "Un método genérico"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    @SafeVarargs\n    static <T extends Comparable<T>> T max(T... items) {\n        T best = items[0];\n        for (T x : items) if (x.compareTo(best) > 0) best = x;\n        return best;\n    }\n    public static void main(String[] args) {\n        System.out.println(max(3, 9, 4));\n        System.out.println(max(\"pear\", \"apple\", \"fig\"));\n    }\n}\n",
+   "starter": "",
+   "solution": "9\npear\n",
+   "hint": {
+    "en": "`T extends Comparable<T>` lets the same method compare numbers and Strings; Strings compare alphabetically, so \"pear\" is the largest.",
+    "es": "`T extends Comparable<T>` deja que el mismo método compare números y Strings; los Strings se comparan alfabéticamente, así que \"pear\" es el mayor."
+   }
+  },
+  {
+   "id": "box-type",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "A generic box",
+    "es": "Una caja genérica"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    static class Box<T> {\n        private final T value;\n        Box(T value) { this.value = value; }\n        T get() { return value; }\n    }\n    public static void main(String[] args) {\n        Box<Integer> n = new Box<>(41);\n        Box<String> s = new Box<>(\"hi\");\n        System.out.println(n.get() + 1);\n        System.out.println(s.get() + 1);\n    }\n}\n",
+   "starter": "",
+   "solution": "42\nhi1\n",
+   "hint": {
+    "en": "`Box<Integer>.get()` returns an Integer, so `+ 1` adds; `Box<String>.get()` returns a String, so `+ 1` joins.",
+    "es": "`Box<Integer>.get()` devuelve un Integer, así que `+ 1` suma; `Box<String>.get()` devuelve un String, así que `+ 1` une."
+   }
+  }
+ ],
+ "collections-framework": [
+  {
+   "id": "set-order",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "HashSet vs TreeSet",
+    "es": "HashSet contra TreeSet"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        java.util.Set<String> tree = new java.util.TreeSet<>(java.util.List.of(\"pear\", \"apple\", \"fig\", \"apple\"));\n        System.out.println(tree);\n        System.out.println(tree.size());\n        java.util.List<String> list = new java.util.ArrayList<>(java.util.List.of(\"b\", \"a\", \"b\"));\n        System.out.println(list.size());\n    }\n}\n",
+   "starter": "",
+   "solution": "[apple, fig, pear]\n3\n3\n",
+   "hint": {
+    "en": "A Set keeps one copy of each value and a TreeSet keeps them sorted; a List keeps every element, duplicates included.",
+    "es": "Un Set guarda una copia de cada valor y un TreeSet los mantiene ordenados; una List guarda todos los elementos, incluidos los repetidos."
+   }
+  },
+  {
+   "id": "map-merge",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Counting with a Map",
+    "es": "Contar con un Map"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        java.util.Map<String, Integer> counts = new java.util.TreeMap<>();\n        for (String w : \"to be or not to be\".split(\" \")) counts.merge(w, 1, Integer::sum);\n        System.out.println(counts);\n        System.out.println(counts.getOrDefault(\"maybe\", 0));\n    }\n}\n",
+   "starter": "",
+   "solution": "{be=2, not=1, or=1, to=2}\n0\n",
+   "hint": {
+    "en": "`merge(w, 1, Integer::sum)` puts 1 the first time and adds 1 after that; a TreeMap prints its keys in sorted order.",
+    "es": "`merge(w, 1, Integer::sum)` pone 1 la primera vez y suma 1 después; un TreeMap imprime sus claves ordenadas."
+   }
+  }
+ ],
+ "lambda-streams": [
+  {
+   "id": "stream-pipeline",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "A stream pipeline",
+    "es": "Una tubería de streams"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        var result = java.util.stream.IntStream.rangeClosed(1, 10)\n            .filter(n -> n % 2 == 0)\n            .map(n -> n * n)\n            .boxed()\n            .toList();\n        System.out.println(result);\n        System.out.println(result.stream().mapToInt(Integer::intValue).sum());\n    }\n}\n",
+   "starter": "",
+   "solution": "[4, 16, 36, 64, 100]\n220\n",
+   "hint": {
+    "en": "Each step works on what the previous one produced: keep the even numbers, square them, collect them, then add them up.",
+    "es": "Cada paso trabaja sobre lo que produjo el anterior: quedarse con los pares, elevarlos al cuadrado, juntarlos y luego sumarlos."
+   }
+  },
+  {
+   "id": "lazy-streams",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Streams are lazy",
+    "es": "Los streams son perezosos"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        var found = java.util.stream.Stream.of(\"ant\", \"bee\", \"cat\", \"dog\")\n            .peek(s -> System.out.println(\"looking at \" + s))\n            .filter(s -> s.startsWith(\"c\"))\n            .findFirst();\n        System.out.println(found.get());\n    }\n}\n",
+   "starter": "",
+   "solution": "looking at ant\nlooking at bee\nlooking at cat\ncat\n",
+   "hint": {
+    "en": "Streams handle one element at a time and stop as soon as `findFirst` has an answer, so \"dog\" is never looked at.",
+    "es": "Los streams procesan un elemento a la vez y se detienen en cuanto `findFirst` tiene respuesta, así que \"dog\" nunca se revisa."
+   }
+  }
+ ],
+ "file-io": [
+  {
+   "id": "write-read",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Write, then read",
+    "es": "Escribir y luego leer"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        try {\n            java.nio.file.Path p = java.nio.file.Files.createTempFile(\"notes\", \".txt\");\n            java.nio.file.Files.writeString(p, \"one\\ntwo\\n\");\n            java.nio.file.Files.writeString(p, \"three\\n\", java.nio.file.StandardOpenOption.APPEND);\n            var lines = java.nio.file.Files.readAllLines(p);\n            System.out.println(lines.size() + \" \" + lines.get(2));\n            java.nio.file.Files.writeString(p, \"reset\\n\");\n            System.out.println(java.nio.file.Files.readAllLines(p));\n            java.nio.file.Files.delete(p);\n        } catch (java.io.IOException e) {\n            System.out.println(\"io error\");\n        }\n    }\n}\n",
+   "starter": "",
+   "solution": "3 three\n[reset]\n",
+   "hint": {
+    "en": "`APPEND` adds to the end; a plain `writeString` replaces the whole file.",
+    "es": "`APPEND` agrega al final; un `writeString` normal reemplaza todo el archivo."
+   }
+  },
+  {
+   "id": "missing-file",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "A file that is not there",
+    "es": "Un archivo que no existe"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        java.nio.file.Path p = java.nio.file.Path.of(\"no-such-file-atlas.txt\");\n        System.out.println(java.nio.file.Files.exists(p));\n        try {\n            java.nio.file.Files.readString(p);\n            System.out.println(\"read it\");\n        } catch (java.nio.file.NoSuchFileException e) {\n            System.out.println(\"missing: \" + e.getMessage());\n        } catch (java.io.IOException e) {\n            System.out.println(\"other\");\n        }\n    }\n}\n",
+   "starter": "",
+   "solution": "false\nmissing: no-such-file-atlas.txt\n",
+   "hint": {
+    "en": "Reading a missing file throws `NoSuchFileException` (a kind of IOException); its message is the path. The more specific `catch` must come first.",
+    "es": "Leer un archivo que no existe lanza `NoSuchFileException` (un tipo de IOException); su mensaje es la ruta. El `catch` más específico va primero."
+   }
+  }
+ ],
+ "testing-junit": [
+  {
+   "id": "assert-equals",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "A tiny assertEquals",
+    "es": "Un assertEquals pequeño"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        int passed = 0;\n        String[][] cases = { {\"abc\", \"cba\"}, {\"\", \"\"}, {\"ab\", \"ab\"} };\n        for (String[] c : cases) {\n            String got = new StringBuilder(c[0]).reverse().toString();\n            if (got.equals(c[1])) passed++;\n            else System.out.println(\"FAIL reverse(\\\"\" + c[0] + \"\\\"): expected <\" + c[1] + \"> but was <\" + got + \">\");\n        }\n        System.out.println(passed + \"/\" + cases.length + \" passed\");\n    }\n}\n",
+   "starter": "",
+   "solution": "FAIL reverse(\"ab\"): expected <ab> but was <ba>\n2/3 passed\n",
+   "hint": {
+    "en": "A test compares the expected value with what the code really returned. The third case has a wrong expectation, so it fails and prints both values, like JUnit does.",
+    "es": "Una prueba compara el valor esperado con lo que el código devolvió de verdad. El tercer caso tiene una expectativa equivocada, así que falla e imprime ambos valores, como hace JUnit."
+   }
+  },
+  {
+   "id": "equals-vs-same",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Equal or the same object?",
+    "es": "¿Iguales o el mismo objeto?"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        String a = new String(\"hi\");\n        String b = new String(\"hi\");\n        System.out.println(a.equals(b));\n        System.out.println(a == b);\n        System.out.println(java.util.List.of(1, 2).equals(java.util.List.of(1, 2)));\n    }\n}\n",
+   "starter": "",
+   "solution": "true\nfalse\ntrue\n",
+   "hint": {
+    "en": "`equals` compares contents (what `assertEquals` uses); `==` asks whether both names point to the very same object (what `assertSame` uses).",
+    "es": "`equals` compara contenidos (lo que usa `assertEquals`); `==` pregunta si ambos nombres apuntan al mismo objeto (lo que usa `assertSame`)."
+   }
+  }
+ ],
+ "jdbc-basics": [
+  {
+   "id": "placeholders",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Why placeholders",
+    "es": "Por qué los marcadores"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        String name = \"x' OR '1'='1\";\n        String unsafe = \"SELECT * FROM users WHERE name = '\" + name + \"'\";\n        System.out.println(unsafe);\n        String safe = \"SELECT * FROM users WHERE name = ?\";\n        System.out.println(safe.chars().filter(c -> c == '?').count() + \" parameter\");\n    }\n}\n",
+   "starter": "",
+   "solution": "SELECT * FROM users WHERE name = 'x' OR '1'='1'\n1 parameter\n",
+   "hint": {
+    "en": "Gluing input into SQL lets the input change the query (here it now matches every row). A `PreparedStatement` keeps `?` placeholders and sends the value separately.",
+    "es": "Pegar la entrada en el SQL deja que la entrada cambie la consulta (aquí ahora coincide con todas las filas). Un `PreparedStatement` usa marcadores `?` y envía el valor por separado."
+   }
+  },
+  {
+   "id": "try-with-resources",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Closing resources",
+    "es": "Cerrar recursos"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    static class Res implements AutoCloseable {\n        final String name;\n        Res(String name) { this.name = name; System.out.println(\"open \" + name); }\n        public void close() { System.out.println(\"close \" + name); }\n    }\n    public static void main(String[] args) {\n        try (Res conn = new Res(\"connection\"); Res stmt = new Res(\"statement\")) {\n            System.out.println(\"query\");\n        }\n    }\n}\n",
+   "starter": "",
+   "solution": "open connection\nopen statement\nquery\nclose statement\nclose connection\n",
+   "hint": {
+    "en": "try-with-resources closes everything automatically, in reverse order of opening, exactly how JDBC connections and statements should be closed.",
+    "es": "try-with-resources cierra todo automáticamente, en orden inverso al de apertura, justo como deben cerrarse las conexiones y sentencias JDBC."
+   }
+  }
+ ],
+ "multithreading": [
+  {
+   "id": "join",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Waiting with join",
+    "es": "Esperar con join"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        int[] total = {0};\n        Thread t = new Thread(() -> { for (int i = 1; i <= 100; i++) total[0] += i; });\n        t.start();\n        try { t.join(); } catch (InterruptedException e) { return; }\n        System.out.println(\"sum = \" + total[0]);\n    }\n}\n",
+   "starter": "",
+   "solution": "sum = 5050\n",
+   "hint": {
+    "en": "`join()` waits until the thread finishes, so the main thread reads the result only after all 100 additions are done.",
+    "es": "`join()` espera a que el hilo termine, así que el hilo principal lee el resultado solo después de las 100 sumas."
+   }
+  },
+  {
+   "id": "atomic",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Safe counting",
+    "es": "Contar de forma segura"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        var count = new java.util.concurrent.atomic.AtomicInteger();\n        Runnable work = () -> { for (int i = 0; i < 10000; i++) count.incrementAndGet(); };\n        Thread a = new Thread(work), b = new Thread(work);\n        a.start(); b.start();\n        try { a.join(); b.join(); } catch (InterruptedException e) { return; }\n        System.out.println(count.get());\n    }\n}\n",
+   "starter": "",
+   "solution": "20000\n",
+   "hint": {
+    "en": "`incrementAndGet` is atomic, so no update is lost even with two threads; with a plain `int` and `count++` the total could come out lower.",
+    "es": "`incrementAndGet` es atómico, así que no se pierde ninguna suma aunque haya dos hilos; con un `int` normal y `count++` el total podría salir menor."
+   }
+  }
+ ],
+ "java-memory-jvm": [
+  {
+   "id": "references",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Two names, one object",
+    "es": "Dos nombres, un objeto"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    static void change(int[] arr, int n) { arr[1] = 42; n = 42; }\n    public static void main(String[] args) {\n        int[] a = {1, 2, 3};\n        int[] b = a;\n        b[0] = 99;\n        int x = 5;\n        int y = x;\n        y = 6;\n        System.out.println(a[0] + \" \" + x);\n        change(a, x);\n        System.out.println(a[1] + \" \" + x);\n    }\n}\n",
+   "starter": "",
+   "solution": "99 5\n42 5\n",
+   "hint": {
+    "en": "Arrays live on the heap and variables hold a reference, so `b` and `a` are the same array. Primitives are copied, and Java always passes copies of values (here, a copy of the reference).",
+    "es": "Los arreglos viven en el heap y las variables guardan una referencia, así que `b` y `a` son el mismo arreglo. Los primitivos se copian, y Java siempre pasa copias de valores (aquí, una copia de la referencia)."
+   }
+  },
+  {
+   "id": "integer-cache",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Boxed numbers and ==",
+    "es": "Números en caja y =="
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        Integer a = 100, b = 100;\n        Integer c = 1000, d = 1000;\n        System.out.println(a == b);\n        System.out.println(c == d);\n        System.out.println(c.equals(d));\n    }\n}\n",
+   "starter": "",
+   "solution": "true\nfalse\ntrue\n",
+   "hint": {
+    "en": "Java reuses Integer objects from -128 to 127, so `==` happens to be true for 100 but not for 1000. Compare boxed values with `equals`.",
+    "es": "Java reutiliza los objetos Integer de -128 a 127, así que `==` resulta verdadero para 100 pero no para 1000. Compara valores en caja con `equals`."
+   }
+  }
+ ],
+ "design-patterns": [
+  {
+   "id": "singleton",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "A singleton",
+    "es": "Un singleton"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    static class Config {\n        static int created = 0;\n        private static Config instance;\n        int level = 1;\n        private Config() { created++; }\n        static Config get() { if (instance == null) instance = new Config(); return instance; }\n    }\n    public static void main(String[] args) {\n        Config a = Config.get();\n        Config b = Config.get();\n        a.level = 3;\n        System.out.println(b.level + \" \" + (a == b) + \" \" + Config.created);\n    }\n}\n",
+   "starter": "",
+   "solution": "3 true 1\n",
+   "hint": {
+    "en": "The private constructor runs only once; every `get()` returns that same object, so a change through `a` is seen through `b`.",
+    "es": "El constructor privado se ejecuta una sola vez; cada `get()` devuelve ese mismo objeto, así que un cambio hecho con `a` se ve desde `b`."
+   }
+  },
+  {
+   "id": "strategy",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Strategy pattern",
+    "es": "Patrón estrategia"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        java.util.Map<String, java.util.function.IntBinaryOperator> ops = new java.util.LinkedHashMap<>();\n        ops.put(\"add\", (x, y) -> x + y);\n        ops.put(\"max\", Math::max);\n        ops.put(\"pow\", (x, y) -> (int) Math.pow(x, y));\n        for (var e : ops.entrySet()) System.out.println(e.getKey() + \" \" + e.getValue().applyAsInt(2, 5));\n    }\n}\n",
+   "starter": "",
+   "solution": "add 7\nmax 5\npow 32\n",
+   "hint": {
+    "en": "Each strategy is a small object (here a lambda or method reference) with the same interface, so the caller can swap behaviors. LinkedHashMap keeps insertion order.",
+    "es": "Cada estrategia es un objeto pequeño (aquí una lambda o referencia a método) con la misma interfaz, así quien llama puede cambiar el comportamiento. LinkedHashMap conserva el orden de inserción."
+   }
+  }
  ]
 }
