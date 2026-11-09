@@ -119,6 +119,25 @@ test.describe('Navigation', () => {
         await expect(page.locator('.due-empty')).toContainText('Review done for today');
     });
 
+    test('finishing a course unlocks a printable certificate', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html#course-git');
+        await expect(page.locator('.cert-card')).toContainText('0 / 2 quizzes passed');
+        await page.evaluate(() => {
+            localStorage.setItem('atlas-done', JSON.stringify(['git-basics-workflow', 'git-branching-merging']));
+            localStorage.setItem('atlas-quizBest', JSON.stringify({ 'git-basics-workflow': 0.8, 'git-branching-merging': 0.4 }));
+        });
+        await page.reload();
+        await expect(page.locator('.cert-card')).toContainText('1 / 2 quizzes passed');
+        await page.evaluate(() => localStorage.setItem('atlas-quizBest', JSON.stringify({ 'git-basics-workflow': 0.8, 'git-branching-merging': 1 })));
+        await page.reload();
+        await page.locator('.cert-card a').click();
+        await expect(page).toHaveURL(/#cert-git$/);
+        await page.locator('#cert-name').fill('Ana Ruiz');
+        await expect(page.locator('.certificate')).toContainText('Ana Ruiz');
+        await expect(page.locator('.certificate')).toContainText('90% average quiz score');
+    });
+
     test('mixed review quizzes across completed modules', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html#m-python-first-programs');
