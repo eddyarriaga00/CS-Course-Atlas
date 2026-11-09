@@ -3798,6 +3798,123 @@ window.COURSE_EXAMPLES = {
           }
         }
       ]
+    },
+    "web-html": {
+      "main": {
+        "code": {
+          "html": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>Ana's Study Club</title>\n</head>\n<body>\n  <h1>Ana's Study Club</h1>\n  <p>We meet every <strong>Friday at 4 pm</strong> to study computer science together.</p>\n\n  <h2>This week</h2>\n  <ol>\n    <li>Review HTML elements</li>\n    <li>Build a page together</li>\n    <li>Share what we made</li>\n  </ol>\n\n  <h2>Members</h2>\n  <table>\n    <thead><tr><th>Name</th><th>Course</th></tr></thead>\n    <tbody>\n      <tr><td>Ana</td><td>Web Basics</td></tr>\n      <tr><td>Ben</td><td>Python</td></tr>\n    </tbody>\n  </table>\n\n  <h2>Join us</h2>\n  <form>\n    <label for=\"name\">Your name</label>\n    <input id=\"name\" name=\"name\" required>\n    <button>Sign me up</button>\n  </form>\n  <p>Questions? Read the <a href=\"https://developer.mozilla.org/\">MDN docs</a>.</p>\n</body>\n</html>\n"
+        },
+        "output": {
+          "html": "Ana's Study Club\n\nWe meet every Friday at 4 pm to study computer science together.\n\nThis week\nReview HTML elements\nBuild a page together\nShare what we made\nMembers\nName\tCourse\nAna\tWeb Basics\nBen\tPython\nJoin us\nYour name  Sign me up\n\nQuestions? Read the MDN docs."
+        }
+      },
+      "sets": [
+        {
+          "topic": "Elements and Tags",
+          "title": {
+            "en": "The smallest real web page",
+            "es": "La página web real más pequeña"
+          },
+          "description": {
+            "en": "A complete HTML document: the doctype, the head with its title and the body with a heading and a paragraph, plus nested elements and an attribute.",
+            "es": "Un documento HTML completo: el doctype, la cabecera con su título y el cuerpo con un título y un párrafo, además de elementos anidados y un atributo."
+          },
+          "explanation": {
+            "en": "Save this as `index.html`, double-click it, and your browser shows a web page. That is all a website is at its core: text files of HTML.\n\nWhat to notice:\n- `<!doctype html>` tells the browser to use modern HTML rules.\n- `<html lang=\"en\">` wraps everything; `lang` is an attribute that tells screen readers and translators which language the page is in.\n- `<head>` holds information *about* the page: the `<title>` is shown on the browser tab, not in the page. `<meta charset=\"utf-8\">` makes accents and emoji display correctly.\n- `<body>` holds what you see.\n- Elements nest like boxes: `<em>` sits inside `<p>`, which sits inside `<body>`. Close them in the reverse order you opened them.\n- `<br>` is an empty element: it has no content and no closing tag.\n- The comment `<!-- ... -->` is ignored by the browser.\n\nNotice that the line breaks and extra spaces in your file do not matter: the browser lays out text by elements, not by how you typed it.",
+            "es": "Guarda esto como `index.html`, haz doble clic y tu navegador muestra una página web. Eso es todo lo que es un sitio web en el fondo: archivos de texto con HTML.\n\nQué observar:\n- `<!doctype html>` le dice al navegador que use las reglas modernas de HTML.\n- `<html lang=\"en\">` envuelve todo; `lang` es un atributo que indica a los lectores de pantalla y traductores en qué idioma está la página.\n- `<head>` guarda información *sobre* la página: el `<title>` se ve en la pestaña del navegador, no en la página. `<meta charset=\"utf-8\">` hace que los acentos y emojis se vean bien.\n- `<body>` guarda lo que ves.\n- Los elementos se anidan como cajas: `<em>` va dentro de `<p>`, que va dentro de `<body>`. Ciérralos en el orden inverso al que los abriste.\n- `<br>` es un elemento vacío: no tiene contenido ni etiqueta de cierre.\n- El comentario `<!-- ... -->` lo ignora el navegador.\n\nFíjate en que los saltos de línea y los espacios extra de tu archivo no importan: el navegador acomoda el texto según los elementos, no según cómo lo escribiste."
+          },
+          "code": {
+            "html": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>My first page</title>\n</head>\n<body>\n  <!-- Everything inside body is shown on the page -->\n  <h1>Hello, web!</h1>\n  <p>This is my <em>very first</em> web page.</p>\n  <p>These    extra     spaces\n     and this line break are ignored,<br>but this br element starts a new line.</p>\n</body>\n</html>\n"
+          },
+          "output": {
+            "html": "Hello, web!\n\nThis is my very first web page.\n\nThese extra spaces and this line break are ignored,\nbut this br element starts a new line."
+          }
+        },
+        {
+          "topic": "Headings, Paragraphs and Lists",
+          "title": {
+            "en": "A recipe page",
+            "es": "Una página de receta"
+          },
+          "description": {
+            "en": "Organizes a recipe with a heading outline, paragraphs with strong and emphasized text, a bulleted ingredients list, numbered steps and a nested list.",
+            "es": "Organiza una receta con un esquema de títulos, párrafos con texto destacado y enfatizado, una lista de ingredientes con viñetas, pasos numerados y una lista anidada."
+          },
+          "explanation": {
+            "en": "Most web pages are mostly text, and these few elements give it structure.\n\nWhat to notice:\n- One `<h1>` names the page; `<h2>` starts each section. Headings form an outline that screen-reader users jump through and search engines read, so never skip levels just to get a smaller font.\n- `<strong>` means \"this is important\" and `<em>` means \"stress this word\". Browsers show them as bold and italic, but the meaning is what counts.\n- `<ul>` (unordered list) is for items where order does not matter, like ingredients; `<ol>` (ordered list) numbers the steps for you, so inserting a step renumbers the rest.\n- A list can contain another list: the nested `<ul>` sits *inside* an `<li>`.\n- The live preview uses the browser's default styles. In the next module CSS will change how all of this looks without touching the HTML.",
+            "es": "La mayoría de las páginas web son sobre todo texto, y estos pocos elementos le dan estructura.\n\nQué observar:\n- Un `<h1>` nombra la página; `<h2>` inicia cada sección. Los títulos forman un esquema que los usuarios de lectores de pantalla recorren y que leen los buscadores, así que nunca te saltes niveles solo para tener una letra más pequeña.\n- `<strong>` significa \"esto es importante\" y `<em>` significa \"enfatiza esta palabra\". Los navegadores los muestran en negrita y cursiva, pero lo que cuenta es el significado.\n- `<ul>` (lista no ordenada) es para elementos cuyo orden no importa, como ingredientes; `<ol>` (lista ordenada) numera los pasos por ti, así que insertar un paso renumera el resto.\n- Una lista puede contener otra: el `<ul>` anidado va *dentro* de un `<li>`.\n- La vista previa usa los estilos por defecto del navegador. En el siguiente módulo, CSS cambiará cómo se ve todo esto sin tocar el HTML."
+          },
+          "code": {
+            "html": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Pancakes</title></head>\n<body>\n  <h1>Weekend Pancakes</h1>\n  <p>Makes <strong>8 pancakes</strong>. Ready in <em>20 minutes</em>.</p>\n\n  <h2>Ingredients</h2>\n  <ul>\n    <li>1 cup flour</li>\n    <li>1 cup milk</li>\n    <li>1 egg</li>\n    <li>Toppings:\n      <ul>\n        <li>maple syrup</li>\n        <li>berries</li>\n      </ul>\n    </li>\n  </ul>\n\n  <h2>Steps</h2>\n  <ol>\n    <li>Mix the flour, milk and egg.</li>\n    <li>Heat a pan over medium heat.</li>\n    <li>Cook each side until golden.</li>\n  </ol>\n</body>\n</html>\n"
+          },
+          "output": {
+            "html": "Weekend Pancakes\n\nMakes 8 pancakes. Ready in 20 minutes.\n\nIngredients\n1 cup flour\n1 cup milk\n1 egg\nToppings:\nmaple syrup\nberries\nSteps\nMix the flour, milk and egg.\nHeat a pan over medium heat.\nCook each side until golden."
+          }
+        },
+        {
+          "topic": "Links and Images",
+          "title": {
+            "en": "Linking pages and showing pictures",
+            "es": "Enlazar páginas y mostrar imágenes"
+          },
+          "description": {
+            "en": "Links to another site, to a section on the same page and to an email address, and shows an image with useful alt text plus a figure with a caption.",
+            "es": "Enlaza a otro sitio, a una sección de la misma página y a una dirección de correo, y muestra una imagen con un texto alt útil y una figura con pie de foto."
+          },
+          "explanation": {
+            "en": "Links are what make the web a web.\n\nWhat to notice:\n- `<a href=\"https://...\">` links to another site. The text between the tags is what people click, so make it describe the destination (\"MDN's HTML guide\"), never \"click here\".\n- `href=\"#contact\"` jumps to the element with `id=\"contact\"` on the same page. `id` values must be unique.\n- `mailto:` opens the visitor's email app.\n- `<img>` has no closing tag. `src` says where the image is (here a tiny drawing written right in the page so it works anywhere; usually it is a file like `photo.jpg` in the same folder) and `alt` describes it.\n- `<figure>` and `<figcaption>` pair an image with a visible caption.\n- `width` and `height` reserve space so the page does not jump while images load.\n\nIn a real project, links between your own pages use relative paths like `href=\"about.html\"`, the same paths you learned in the Command Line course.",
+            "es": "Los enlaces son lo que hace de la web una red.\n\nQué observar:\n- `<a href=\"https://...\">` enlaza a otro sitio. El texto entre las etiquetas es lo que se pulsa, así que haz que describa el destino (\"la guía de HTML de MDN\"), nunca \"haz clic aquí\".\n- `href=\"#contact\"` salta al elemento con `id=\"contact\"` en la misma página. Los valores de `id` deben ser únicos.\n- `mailto:` abre la aplicación de correo del visitante.\n- `<img>` no tiene etiqueta de cierre. `src` dice dónde está la imagen (aquí un dibujo pequeño escrito en la propia página para que funcione en cualquier lugar; normalmente es un archivo como `foto.jpg` en la misma carpeta) y `alt` la describe.\n- `<figure>` y `<figcaption>` unen una imagen con un pie de foto visible.\n- `width` y `height` reservan espacio para que la página no salte mientras cargan las imágenes.\n\nEn un proyecto real, los enlaces entre tus propias páginas usan rutas relativas como `href=\"about.html\"`, las mismas rutas que aprendiste en el curso de Línea de comandos."
+          },
+          "code": {
+            "html": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Links and images</title></head>\n<body>\n  <h1>My corner of the web</h1>\n  <p>Learning HTML from <a href=\"https://developer.mozilla.org/en-US/docs/Web/HTML\">MDN's HTML guide</a>.</p>\n  <p><a href=\"#contact\">Jump to contact info</a></p>\n\n  <figure>\n    <img width=\"120\" height=\"80\" alt=\"A yellow sun over a green hill\"\n      src=\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 80'%3E%3Crect width='120' height='80' fill='%23bfe3ff'/%3E%3Ccircle cx='90' cy='22' r='12' fill='%23ffcc33'/%3E%3Cellipse cx='50' cy='85' rx='70' ry='30' fill='%2345b36b'/%3E%3C/svg%3E\">\n    <figcaption>My drawing of a sunny morning.</figcaption>\n  </figure>\n\n  <h2 id=\"contact\">Contact</h2>\n  <p>Email me at <a href=\"mailto:ana@example.com\">ana@example.com</a>.</p>\n</body>\n</html>\n"
+          },
+          "output": {
+            "html": "My corner of the web\n\nLearning HTML from MDN's HTML guide.\n\nJump to contact info\n\nMy drawing of a sunny morning.\nContact\n\nEmail me at ana@example.com."
+          }
+        },
+        {
+          "topic": "Tables",
+          "title": {
+            "en": "A class schedule table",
+            "es": "Una tabla de horario de clases"
+          },
+          "description": {
+            "en": "Builds a weekly schedule with a caption, a header row, a header cell for each row and a cell that spans two columns.",
+            "es": "Construye un horario semanal con título, fila de encabezado, una celda de encabezado por fila y una celda que ocupa dos columnas."
+          },
+          "explanation": {
+            "en": "Tables are for data that has rows and columns, like a schedule, a price list or test scores, not for laying out a page.\n\nWhat to notice:\n- `<caption>` is the table's title; screen readers announce it first.\n- `<thead>` holds the header row and `<tbody>` the data rows.\n- Each `<tr>` (table row) contains cells. `<th>` is a header cell and `<td>` a normal data cell.\n- `<th scope=\"row\">` in the first column says \"this cell labels its row\", so a screen reader can say \"Thursday, 9:00, Lab\".\n- `colspan=\"2\"` stretches one cell across two columns. (`rowspan` does the same vertically.)\n- Every row should end up with the same number of columns once spans are counted, or the table looks broken.\n\nWithout CSS the table has no borders; the preview shows the browser's plain default. Styling it comes in the CSS module.",
+            "es": "Las tablas son para datos que tienen filas y columnas, como un horario, una lista de precios o calificaciones, no para acomodar una página.\n\nQué observar:\n- `<caption>` es el título de la tabla; los lectores de pantalla lo anuncian primero.\n- `<thead>` contiene la fila de encabezado y `<tbody>` las filas de datos.\n- Cada `<tr>` (fila de tabla) contiene celdas. `<th>` es una celda de encabezado y `<td>` una celda de datos normal.\n- `<th scope=\"row\">` en la primera columna indica \"esta celda nombra su fila\", para que un lector de pantalla pueda decir \"Jueves, 9:00, Laboratorio\".\n- `colspan=\"2\"` estira una celda sobre dos columnas. (`rowspan` hace lo mismo en vertical.)\n- Cada fila debe tener al final el mismo número de columnas contando las extensiones, o la tabla se ve rota.\n\nSin CSS la tabla no tiene bordes; la vista previa muestra el estilo simple por defecto del navegador. Darle estilo llega en el módulo de CSS."
+          },
+          "code": {
+            "html": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Schedule</title></head>\n<body>\n  <table>\n    <caption>My week</caption>\n    <thead>\n      <tr><th>Day</th><th>9:00</th><th>11:00</th></tr>\n    </thead>\n    <tbody>\n      <tr><th scope=\"row\">Monday</th><td>Math</td><td>History</td></tr>\n      <tr><th scope=\"row\">Wednesday</th><td>Biology</td><td>Art</td></tr>\n      <tr><th scope=\"row\">Friday</th><td colspan=\"2\">Field trip</td></tr>\n    </tbody>\n  </table>\n</body>\n</html>\n"
+          },
+          "output": {
+            "html": "My week\nDay\t9:00\t11:00\nMonday\tMath\tHistory\nWednesday\tBiology\tArt\nFriday\tField trip"
+          }
+        },
+        {
+          "topic": "Forms",
+          "title": {
+            "en": "A sign-up form",
+            "es": "Un formulario de registro"
+          },
+          "description": {
+            "en": "A form with labeled text, email and number fields, radio buttons, a checkbox, a drop-down, a text area and a submit button, using built-in validation.",
+            "es": "Un formulario con campos de texto, correo y número con etiqueta, botones de opción, una casilla, una lista desplegable, un área de texto y un botón de enviar, con validación incorporada."
+          },
+          "explanation": {
+            "en": "Forms are how pages collect information: sign-ups, searches, comments, checkouts.\n\nWhat to notice:\n- Every field has a `<label>`. `for=\"email\"` points at `id=\"email\"`, so clicking the words focuses the box and screen readers announce the label.\n- The `type` changes the keyboard and checks: `type=\"email\"` requires an @, `type=\"number\"` with `min` and `max` only accepts that range, and on phones each shows a fitting keyboard.\n- `required` stops the form from submitting while the field is empty. Try pressing the button in the preview with the name empty.\n- Radio buttons with the same `name` form a group where only one can be picked; `<fieldset>` and `<legend>` give the group a title.\n- `name` is the key each value is sent under (`level=new`).\n- `<select>` makes a drop-down and `<textarea>` a multi-line box.\n- Without an `action`, submitting reloads the same page. In the JavaScript module you will handle the submit yourself.",
+            "es": "Los formularios son cómo las páginas recogen información: registros, búsquedas, comentarios, compras.\n\nQué observar:\n- Cada campo tiene un `<label>`. `for=\"email\"` apunta a `id=\"email\"`, así que hacer clic en el texto enfoca la caja y los lectores de pantalla anuncian la etiqueta.\n- El `type` cambia el teclado y las comprobaciones: `type=\"email\"` exige una @, `type=\"number\"` con `min` y `max` solo acepta ese rango, y en los teléfonos cada uno muestra un teclado adecuado.\n- `required` impide enviar el formulario mientras el campo está vacío. Prueba a pulsar el botón en la vista previa con el nombre vacío.\n- Los botones de opción con el mismo `name` forman un grupo donde solo se puede elegir uno; `<fieldset>` y `<legend>` le dan título al grupo.\n- `name` es la clave con la que se envía cada valor (`level=new`).\n- `<select>` crea una lista desplegable y `<textarea>` una caja de varias líneas.\n- Sin `action`, enviar recarga la misma página. En el módulo de JavaScript manejarás tú el envío."
+          },
+          "code": {
+            "html": "<!doctype html>\n<html lang=\"en\">\n<head><meta charset=\"utf-8\"><title>Sign up</title></head>\n<body>\n  <h1>Join the coding club</h1>\n  <form>\n    <p><label for=\"name\">Name</label><br>\n       <input id=\"name\" name=\"name\" required></p>\n    <p><label for=\"email\">Email</label><br>\n       <input id=\"email\" name=\"email\" type=\"email\" required></p>\n    <p><label for=\"age\">Age</label><br>\n       <input id=\"age\" name=\"age\" type=\"number\" min=\"10\" max=\"99\"></p>\n    <fieldset>\n      <legend>Experience</legend>\n      <label><input type=\"radio\" name=\"level\" value=\"new\" checked> Brand new</label>\n      <label><input type=\"radio\" name=\"level\" value=\"some\"> Some coding</label>\n    </fieldset>\n    <p><label for=\"track\">First course</label><br>\n       <select id=\"track\" name=\"track\">\n         <option>Python</option>\n         <option>Web Basics</option>\n       </select></p>\n    <p><label for=\"why\">Why do you want to join?</label><br>\n       <textarea id=\"why\" name=\"why\" rows=\"3\"></textarea></p>\n    <p><label><input type=\"checkbox\" name=\"news\"> Email me club news</label></p>\n    <button type=\"submit\">Sign up</button>\n  </form>\n</body>\n</html>\n"
+          },
+          "output": {
+            "html": "Join the coding club\n\nName\n\n\nEmail\n\n\nAge\n\n\nExperience\n Brand new  Some coding\n\nFirst course\n\nPython\nWeb Basics\n\nWhy do you want to join?\n\n\n Email me club news\n\nSign up"
+          }
+        }
+      ]
     }
   }
 };

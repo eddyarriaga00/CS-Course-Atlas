@@ -19,7 +19,8 @@
  * Checks: every program compiles, exits 0 within the timeout and prints something;
  * recorded outputs match; java/cpp/python/javascript print the same thing unless the
  * example sets `outputsMayDiffer` (e.g. hash iteration order).
- * Toolchain: java (17+), g++, python3, node, nasm + ld/gcc, bash + git.
+ * Toolchain: java (17+), g++, python3, node, nasm + ld/gcc, bash + git, and Playwright's
+ * Chromium for the html examples.
  */
 const fs = require('fs');
 const os = require('os');
@@ -29,7 +30,7 @@ const { spawnSync, spawn } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 const DEFAULT_DATA = path.join(ROOT, 'js', 'course-examples.js');
-const RUNNABLE = ['java', 'cpp', 'python', 'javascript', 'assembly', 'bash'];
+const RUNNABLE = ['java', 'cpp', 'python', 'javascript', 'assembly', 'bash', 'html'];
 const PARITY_LANGS = ['java', 'cpp', 'python', 'javascript'];
 const TIMEOUT_MS = 30000;
 
@@ -131,6 +132,24 @@ async function runProgram(language, source, workDir) {
         if (linked.code !== 0) return { ...linked, phase: 'link' };
         return run(binary, [], { cwd: workDir });
     }
+    if (language === 'html') {
+        // Web pages (Web Basics course): rendered in headless Chromium; the recorded output is
+        // the text the page shows once its scripts have run. A script error fails the example.
+        const browser = await htmlBrowser();
+        const page = await browser.newPage({ viewport: { width: 800, height: 600 } });
+        const errors = [];
+        page.on('pageerror', (error) => errors.push(String(error.message || error)));
+        try {
+            await page.setContent(source, { waitUntil: 'load', timeout: TIMEOUT_MS });
+            await page.waitForTimeout(150);
+            const text = await page.evaluate(() => document.body.innerText);
+            return errors.length ? { code: 1, stdout: text, stderr: errors.join('\n'), phase: 'page' } : { code: 0, stdout: text, stderr: '' };
+        } catch (error) {
+            return { code: 1, stdout: '', stderr: String(error.message || error), phase: 'page' };
+        } finally {
+            await page.close();
+        }
+    }
     if (language === 'bash') {
         // Terminal sessions (Git course): run in an empty folder with a throwaway HOME and a fixed
         // identity and clock, so commit hashes and output are the same on every machine.
@@ -215,6 +234,12 @@ function firstDifference(expected, actual) {
     return `  first difference at line ${i + 1}:\n    expected: ${a[i] === undefined ? '(end)' : JSON.stringify(a[i])}\n    actual:   ${b[i] === undefined ? '(end)' : JSON.stringify(b[i])}`;
 }
 
+let htmlBrowserPromise = null;
+function htmlBrowser() {
+    if (!htmlBrowserPromise) htmlBrowserPromise = require('@playwright/test').chromium.launch();
+    return htmlBrowserPromise;
+}
+
 function parsesAsBash(text) {
     return spawnSync('bash', ['-n'], { input: `${text}\n` }).status === 0;
 }
@@ -285,6 +310,7 @@ async function main() {
     console.log(`Running ${jobs.length} programs with ${args.jobs} workers...`);
     await Promise.all(Array.from({ length: args.jobs }, (_, index) => worker(index)));
     fs.rmSync(tempRoot, { recursive: true, force: true });
+    if (htmlBrowserPromise) await (await htmlBrowserPromise).close();
 
     // Cross-language parity: the four high-level languages should print the same lines.
     const byExample = new Map();

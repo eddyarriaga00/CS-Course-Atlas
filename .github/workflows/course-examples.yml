@@ -1,7 +1,7 @@
 name: Course Examples
 
 # Compiles and runs every course code example (Java, C++, Python, JavaScript,
-# NASM x86-64) and checks its output against the recorded expected output.
+# NASM x86-64, Bash sessions and web pages) and checks its output against the recorded expected output.
 on:
   pull_request:
     paths:
@@ -42,6 +42,9 @@ jobs:
 
       - name: Install NASM
         run: sudo apt-get update && sudo apt-get install -y nasm
+
+      - name: Install Playwright Chromium (for the web page examples)
+        run: npm ci && npx playwright install --with-deps chromium
 
       - name: Run every example
         run: node scripts/run_course_examples.js --jobs 4

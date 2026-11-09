@@ -83,6 +83,9 @@ for (const id of tracks.filter((t) => t.status === 'available').flatMap((t) => t
   };
 }
 const videos = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/course-videos.json'), 'utf8'));
+// Courses being written carry their final outline so their page can show the syllabus.
+const outlines = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/course-outlines.json'), 'utf8'));
+for (const p of PLANNED) if (outlines[p.id]) p.outline = outlines[p.id];
 const out = { tracks, planned: PLANNED, path: PATH, next: NEXT, modules, full, videos };
 const file = path.join(ROOT, 'data/atlas-data.json');
 const json = JSON.stringify(out);
