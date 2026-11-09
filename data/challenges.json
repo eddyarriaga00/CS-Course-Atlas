@@ -618,6 +618,41 @@
      "0"
     ]
    ]
+  },
+  {
+   "id": "to-hex",
+   "title": {
+    "en": "Decimal to hexadecimal",
+    "es": "Decimal a hexadecimal"
+   },
+   "prompt": {
+    "en": "Write `to_hex(n)` that returns the hexadecimal digits of a non-negative integer in upper case, without `hex()` or `format()`. `to_hex(255)` is `\"FF\"` and `to_hex(0)` is `\"0\"`.",
+    "es": "Escribe `to_hex(n)` que devuelva los dígitos hexadecimales de un entero no negativo en mayúsculas, sin `hex()` ni `format()`. `to_hex(255)` es `\"FF\"` y `to_hex(0)` es `\"0\"`."
+   },
+   "starter": "def to_hex(n):\n    digits = \"0123456789ABCDEF\"\n    pass\n",
+   "solution": "def to_hex(n):\n    digits = \"0123456789ABCDEF\"\n    if n == 0:\n        return \"0\"\n    out = \"\"\n    while n > 0:\n        out = digits[n % 16] + out\n        n //= 16\n    return out\n",
+   "hint": {
+    "en": "Same idea as binary, but divide by 16: `digits[n % 16]` is the next digit from the right.",
+    "es": "La misma idea que en binario, pero dividiendo entre 16: `digits[n % 16]` es el siguiente dígito desde la derecha."
+   },
+   "tests": [
+    [
+     "to_hex(255)",
+     "'FF'"
+    ],
+    [
+     "to_hex(0)",
+     "'0'"
+    ],
+    [
+     "to_hex(4096)",
+     "'1000'"
+    ],
+    [
+     "to_hex(48879)",
+     "'BEEF'"
+    ]
+   ]
   }
  ],
  "hcw-data": [
@@ -688,6 +723,37 @@
     [
      "rle('WWWWWWBBB')",
      "'6W3B'"
+    ]
+   ]
+  },
+  {
+   "id": "hex-color",
+   "title": {
+    "en": "Hex color to RGB",
+    "es": "Color hex a RGB"
+   },
+   "prompt": {
+    "en": "Write `hex_to_rgb(code)` that turns a color like `\"#4F46E5\"` into a tuple of three numbers `(79, 70, 229)`. Upper or lower case letters are both fine.",
+    "es": "Escribe `hex_to_rgb(code)` que convierta un color como `\"#4F46E5\"` en una tupla de tres números `(79, 70, 229)`. Sirven letras mayúsculas o minúsculas."
+   },
+   "starter": "def hex_to_rgb(code):\n    pass\n",
+   "solution": "def hex_to_rgb(code):\n    h = code.lstrip(\"#\")\n    return (int(h[0:2], 16), int(h[2:4], 16), int(h[4:6], 16))\n",
+   "hint": {
+    "en": "Each pair of hex digits is one byte (0–255). `int(\"4F\", 16)` reads a hex string as a number.",
+    "es": "Cada par de dígitos hex es un byte (0–255). `int(\"4F\", 16)` lee un texto hex como número."
+   },
+   "tests": [
+    [
+     "hex_to_rgb('#4F46E5')",
+     "(79, 70, 229)"
+    ],
+    [
+     "hex_to_rgb('#ffffff')",
+     "(255, 255, 255)"
+    ],
+    [
+     "hex_to_rgb('#000000')",
+     "(0, 0, 0)"
     ]
    ]
   }
@@ -762,6 +828,41 @@
      "(0, 1)"
     ]
    ]
+  },
+  {
+   "id": "full-adder",
+   "title": {
+    "en": "Add two binary numbers",
+    "es": "Suma dos números binarios"
+   },
+   "prompt": {
+    "en": "Write `add_binary(a, b)` that adds two binary strings bit by bit, from the right, carrying like a chain of full adders. Do not convert to `int`. `add_binary(\"1011\", \"110\")` is `\"10001\"`.",
+    "es": "Escribe `add_binary(a, b)` que sume dos textos binarios bit a bit, desde la derecha, con acarreo como una cadena de sumadores completos. No conviertas a `int`. `add_binary(\"1011\", \"110\")` es `\"10001\"`."
+   },
+   "starter": "def add_binary(a, b):\n    pass\n",
+   "solution": "def add_binary(a, b):\n    a, b = a.zfill(len(b)), b.zfill(len(a))\n    carry, out = 0, \"\"\n    for x, y in zip(reversed(a), reversed(b)):\n        total = int(x) + int(y) + carry\n        out = str(total % 2) + out\n        carry = total // 2\n    return (\"1\" + out) if carry else out\n",
+   "hint": {
+    "en": "Pad both with `zfill` to the same length, walk from the right, and keep `carry = total // 2`. A carry left at the end adds a leading 1.",
+    "es": "Rellena ambos con `zfill` al mismo largo, recorre desde la derecha y guarda `carry = total // 2`. Si al final queda acarreo, agrega un 1 al inicio."
+   },
+   "tests": [
+    [
+     "add_binary('1011', '110')",
+     "'10001'"
+    ],
+    [
+     "add_binary('0', '0')",
+     "'0'"
+    ],
+    [
+     "add_binary('1', '1')",
+     "'10'"
+    ],
+    [
+     "add_binary('1111', '1')",
+     "'10000'"
+    ]
+   ]
   }
  ],
  "hcw-software": [
@@ -824,6 +925,37 @@
     [
      "finish_order({'a': 2, 'b': 2}, 2)",
      "['a', 'b']"
+    ]
+   ]
+  },
+  {
+   "id": "resolve-path",
+   "title": {
+    "en": "Resolve a path",
+    "es": "Resuelve una ruta"
+   },
+   "prompt": {
+    "en": "Write `resolve(path)` that simplifies a Unix path the way the file system does: drop `.`, let `..` go up one folder (never above `/`), and squash repeated slashes. `resolve(\"/home/ana/../ben/./docs//\")` is `\"/home/ben/docs\"`.",
+    "es": "Escribe `resolve(path)` que simplifique una ruta de Unix como lo hace el sistema de archivos: quita `.`, que `..` suba una carpeta (nunca por encima de `/`) y junta barras repetidas. `resolve(\"/home/ana/../ben/./docs//\")` es `\"/home/ben/docs\"`."
+   },
+   "starter": "def resolve(path):\n    parts = []\n    pass\n",
+   "solution": "def resolve(path):\n    parts = []\n    for p in path.split(\"/\"):\n        if p == \"..\":\n            if parts:\n                parts.pop()\n        elif p and p != \".\":\n            parts.append(p)\n    return \"/\" + \"/\".join(parts)\n",
+   "hint": {
+    "en": "Split on `/` and use a list as a stack: push names, `pop()` for `..`, skip empty parts and `.`.",
+    "es": "Separa por `/` y usa una lista como pila: agrega nombres, `pop()` con `..`, y salta las partes vacías y `.`."
+   },
+   "tests": [
+    [
+     "resolve('/home/ana/../ben/./docs//')",
+     "'/home/ben/docs'"
+    ],
+    [
+     "resolve('/../..')",
+     "'/'"
+    ],
+    [
+     "resolve('/a/b/c/../../d')",
+     "'/a/d'"
     ]
    ]
   }
@@ -898,6 +1030,41 @@
      "False"
     ]
    ]
+  },
+  {
+   "id": "salted-hash",
+   "title": {
+    "en": "Salt and hash",
+    "es": "Sal y hash"
+   },
+   "prompt": {
+    "en": "Write `hash_password(password, salt)` that returns the SHA-256 hex digest of `salt + password` using `hashlib`, and `verify(password, salt, stored)` that returns whether a login attempt matches.",
+    "es": "Escribe `hash_password(password, salt)` que devuelva el resumen SHA-256 en hex de `salt + password` usando `hashlib`, y `verify(password, salt, stored)` que diga si un intento de inicio de sesión coincide."
+   },
+   "starter": "import hashlib\n\ndef hash_password(password, salt):\n    pass\n\ndef verify(password, salt, stored):\n    pass\n",
+   "solution": "import hashlib\n\ndef hash_password(password, salt):\n    return hashlib.sha256((salt + password).encode()).hexdigest()\n\ndef verify(password, salt, stored):\n    return hash_password(password, salt) == stored\n",
+   "hint": {
+    "en": "`hashlib.sha256((salt + password).encode()).hexdigest()`. To verify, hash the attempt with the same salt and compare. (Real systems use slow hashes like bcrypt; SHA-256 keeps this exercise simple.)",
+    "es": "`hashlib.sha256((salt + password).encode()).hexdigest()`. Para verificar, aplica el hash al intento con la misma sal y compara. (Los sistemas reales usan hashes lentos como bcrypt; SHA-256 mantiene simple el ejercicio.)"
+   },
+   "tests": [
+    [
+     "hash_password('hunter2', 'x9')[:12]",
+     "'bc099fbe522e'"
+    ],
+    [
+     "hash_password('a', 's1') != hash_password('a', 's2')",
+     "True"
+    ],
+    [
+     "verify('hunter2', 'x9', hash_password('hunter2', 'x9'))",
+     "True"
+    ],
+    [
+     "verify('hunter3', 'x9', hash_password('hunter2', 'x9'))",
+     "False"
+    ]
+   ]
   }
  ],
  "sec-crypto": [
@@ -966,6 +1133,37 @@
      "b''"
     ]
    ]
+  },
+  {
+   "id": "vigenere",
+   "title": {
+    "en": "Vigenère cipher",
+    "es": "Cifrado Vigenère"
+   },
+   "prompt": {
+    "en": "Write `vigenere(text, key)` that shifts each upper-case letter by the matching letter of `key` (A=0, B=1, …), repeating the key. Spaces and other characters stay, and do not use up a key letter. `vigenere(\"HELLO WORLD\", \"KEY\")` is `\"RIJVS UYVJN\"`.",
+    "es": "Escribe `vigenere(text, key)` que desplace cada letra mayúscula según la letra correspondiente de `key` (A=0, B=1, …), repitiendo la clave. Los espacios y otros caracteres se quedan y no gastan letra de la clave. `vigenere(\"HELLO WORLD\", \"KEY\")` es `\"RIJVS UYVJN\"`."
+   },
+   "starter": "def vigenere(text, key):\n    pass\n",
+   "solution": "def vigenere(text, key):\n    out, k = \"\", 0\n    for c in text:\n        if \"A\" <= c <= \"Z\":\n            shift = ord(key[k % len(key)]) - ord(\"A\")\n            out += chr((ord(c) - ord(\"A\") + shift) % 26 + ord(\"A\"))\n            k += 1\n        else:\n            out += c\n    return out\n",
+   "hint": {
+    "en": "Keep a separate counter `k` for key letters; only advance it when you encrypt a letter. The shift is `ord(key[k % len(key)]) - ord(\"A\")`.",
+    "es": "Lleva un contador `k` aparte para las letras de la clave; solo avánzalo cuando cifras una letra. El desplazamiento es `ord(key[k % len(key)]) - ord(\"A\")`."
+   },
+   "tests": [
+    [
+     "vigenere('HELLO WORLD', 'KEY')",
+     "'RIJVS UYVJN'"
+    ],
+    [
+     "vigenere('ABC', 'A')",
+     "'ABC'"
+    ],
+    [
+     "vigenere('ZZ', 'B')",
+     "'AA'"
+    ]
+   ]
   }
  ],
  "sec-attacks": [
@@ -1032,6 +1230,37 @@
     [
      "escape('plain')",
      "'plain'"
+    ]
+   ]
+  },
+  {
+   "id": "rate-limit",
+   "title": {
+    "en": "Rate-limit logins",
+    "es": "Limita los intentos"
+   },
+   "prompt": {
+    "en": "Write `blocked(attempts, limit)` that takes a list of login attempts as `(user, ok)` pairs, in order, and returns the sorted list of users who failed **more than** `limit` times in a row at some point.",
+    "es": "Escribe `blocked(attempts, limit)` que reciba una lista de intentos como pares `(user, ok)`, en orden, y devuelva la lista ordenada de usuarios que fallaron **más de** `limit` veces seguidas en algún momento."
+   },
+   "starter": "def blocked(attempts, limit):\n    streak = {}\n    pass\n",
+   "solution": "def blocked(attempts, limit):\n    streak, out = {}, set()\n    for user, ok in attempts:\n        streak[user] = 0 if ok else streak.get(user, 0) + 1\n        if streak[user] > limit:\n            out.add(user)\n    return sorted(out)\n",
+   "hint": {
+    "en": "Track each user's current run of failures in a dictionary; a success resets it to 0. Collect users whose run goes over the limit.",
+    "es": "Lleva en un diccionario la racha actual de fallos de cada usuario; un acierto la reinicia a 0. Junta a los usuarios cuya racha supera el límite."
+   },
+   "tests": [
+    [
+     "blocked([('ana', False), ('ana', False), ('ana', False), ('ben', False)], 2)",
+     "['ana']"
+    ],
+    [
+     "blocked([('ana', False), ('ana', True), ('ana', False)], 1)",
+     "[]"
+    ],
+    [
+     "blocked([], 3)",
+     "[]"
     ]
    ]
   }
@@ -1110,6 +1339,37 @@
      "True"
     ]
    ]
+  },
+  {
+   "id": "mask-email",
+   "title": {
+    "en": "Hide personal data",
+    "es": "Oculta datos personales"
+   },
+   "prompt": {
+    "en": "Write `mask_email(email)` that keeps the first letter of the name and the whole domain, replacing the rest of the name with `*`. `mask_email(\"ana.ruiz@example.com\")` is `\"a*******@example.com\"`.",
+    "es": "Escribe `mask_email(email)` que conserve la primera letra del nombre y todo el dominio, cambiando el resto del nombre por `*`. `mask_email(\"ana.ruiz@example.com\")` es `\"a*******@example.com\"`."
+   },
+   "starter": "def mask_email(email):\n    pass\n",
+   "solution": "def mask_email(email):\n    name, domain = email.split(\"@\", 1)\n    return name[0] + \"*\" * (len(name) - 1) + \"@\" + domain\n",
+   "hint": {
+    "en": "`email.split(\"@\", 1)` gives the name and the domain; `\"*\" * (len(name) - 1)` repeats the star.",
+    "es": "`email.split(\"@\", 1)` da el nombre y el dominio; `\"*\" * (len(name) - 1)` repite la estrella."
+   },
+   "tests": [
+    [
+     "mask_email('ana.ruiz@example.com')",
+     "'a*******@example.com'"
+    ],
+    [
+     "mask_email('b@x.org')",
+     "'b@x.org'"
+    ],
+    [
+     "mask_email('chen@mail.co')",
+     "'c***@mail.co'"
+    ]
+   ]
   }
  ],
  "ai-what": [
@@ -1174,6 +1434,37 @@
      "([], [])"
     ]
    ]
+  },
+  {
+   "id": "majority-baseline",
+   "title": {
+    "en": "The baseline to beat",
+    "es": "La línea base a superar"
+   },
+   "prompt": {
+    "en": "A model that always guesses the most common label is the baseline every real model must beat. Write `baseline_accuracy(labels)` that returns its accuracy (fraction of labels equal to the most common one), rounded to 2 decimals.",
+    "es": "Un modelo que siempre adivina la etiqueta más común es la línea base que todo modelo real debe superar. Escribe `baseline_accuracy(labels)` que devuelva su exactitud (fracción de etiquetas iguales a la más común), redondeada a 2 decimales."
+   },
+   "starter": "def baseline_accuracy(labels):\n    pass\n",
+   "solution": "def baseline_accuracy(labels):\n    counts = {}\n    for x in labels:\n        counts[x] = counts.get(x, 0) + 1\n    return round(max(counts.values()) / len(labels), 2)\n",
+   "hint": {
+    "en": "Count each label, take the biggest count and divide by how many labels there are.",
+    "es": "Cuenta cada etiqueta, toma el conteo mayor y divide entre cuántas etiquetas hay."
+   },
+   "tests": [
+    [
+     "baseline_accuracy(['spam', 'ok', 'ok', 'ok'])",
+     "0.75"
+    ],
+    [
+     "baseline_accuracy(['a', 'b'])",
+     "0.5"
+    ],
+    [
+     "baseline_accuracy(['cat'] * 9 + ['dog'])",
+     "0.9"
+    ]
+   ]
   }
  ],
  "ai-first-models": [
@@ -1236,6 +1527,37 @@
     [
      "mse([1.5], [0.5])",
      "1.0"
+    ]
+   ]
+  },
+  {
+   "id": "fit-line",
+   "title": {
+    "en": "Fit a line",
+    "es": "Ajusta una recta"
+   },
+   "prompt": {
+    "en": "Write `fit_line(xs, ys)` that returns the slope and intercept of the least-squares line, each rounded to 2 decimals. slope = Σ(x−x̄)(y−ȳ) / Σ(x−x̄)², intercept = ȳ − slope·x̄.",
+    "es": "Escribe `fit_line(xs, ys)` que devuelva la pendiente y la intersección de la recta de mínimos cuadrados, cada una redondeada a 2 decimales. pendiente = Σ(x−x̄)(y−ȳ) / Σ(x−x̄)², intersección = ȳ − pendiente·x̄."
+   },
+   "starter": "def fit_line(xs, ys):\n    pass\n",
+   "solution": "def fit_line(xs, ys):\n    mx, my = sum(xs) / len(xs), sum(ys) / len(ys)\n    num = sum((x - mx) * (y - my) for x, y in zip(xs, ys))\n    den = sum((x - mx) ** 2 for x in xs)\n    slope = num / den\n    return round(slope, 2), round(my - slope * mx, 2)\n",
+   "hint": {
+    "en": "Compute the means first, then the two sums with `zip(xs, ys)`; return `(round(slope, 2), round(intercept, 2))`.",
+    "es": "Calcula primero los promedios y luego las dos sumas con `zip(xs, ys)`; devuelve `(round(slope, 2), round(intercept, 2))`."
+   },
+   "tests": [
+    [
+     "fit_line([1, 2, 3, 4], [3, 5, 7, 9])",
+     "(2.0, 1.0)"
+    ],
+    [
+     "fit_line([0, 1, 2], [1, 1, 1])",
+     "(0.0, 1.0)"
+    ],
+    [
+     "fit_line([1, 2, 3], [2, 3, 5])",
+     "(1.5, 0.33)"
     ]
    ]
   }
@@ -1306,6 +1628,41 @@
      "0.881"
     ]
    ]
+  },
+  {
+   "id": "gd-step",
+   "title": {
+    "en": "Gradient descent",
+    "es": "Descenso de gradiente"
+   },
+   "prompt": {
+    "en": "To minimise f(w) = (w − 3)², repeat w = w − lr · 2(w − 3). Write `descend(w, lr, steps)` that does this `steps` times and returns `w` rounded to 4 decimals.",
+    "es": "Para minimizar f(w) = (w − 3)², repite w = w − lr · 2(w − 3). Escribe `descend(w, lr, steps)` que lo haga `steps` veces y devuelva `w` redondeado a 4 decimales."
+   },
+   "starter": "def descend(w, lr, steps):\n    pass\n",
+   "solution": "def descend(w, lr, steps):\n    for _ in range(steps):\n        w = w - lr * 2 * (w - 3)\n    return round(w, 4)\n",
+   "hint": {
+    "en": "The derivative of (w − 3)² is 2(w − 3). Each step moves `w` a little against it; after many steps `w` gets close to 3.",
+    "es": "La derivada de (w − 3)² es 2(w − 3). Cada paso mueve `w` un poco en contra de ella; tras muchos pasos `w` se acerca a 3."
+   },
+   "tests": [
+    [
+     "descend(0, 0.1, 1)",
+     "0.6"
+    ],
+    [
+     "descend(0, 0.1, 50)",
+     "3.0"
+    ],
+    [
+     "descend(10, 0.25, 2)",
+     "4.75"
+    ],
+    [
+     "descend(3, 0.1, 5)",
+     "3"
+    ]
+   ]
   }
  ],
  "ai-language": [
@@ -1368,6 +1725,37 @@
     [
      "tokenize('cab', ['c', 'a', 'b', 'ca'])",
      "['ca', 'b']"
+    ]
+   ]
+  },
+  {
+   "id": "next-word",
+   "title": {
+    "en": "Predict the next word",
+    "es": "Predice la siguiente palabra"
+   },
+   "prompt": {
+    "en": "Write `next_word(text, word)` that looks at every place `word` appears in `text` (split on spaces, lower case) and returns the word that most often comes right after it. Break ties alphabetically; return `None` if nothing follows it.",
+    "es": "Escribe `next_word(text, word)` que revise cada lugar donde aparece `word` en `text` (separado por espacios, en minúsculas) y devuelva la palabra que más veces viene justo después. Desempata alfabéticamente; devuelve `None` si nada la sigue."
+   },
+   "starter": "def next_word(text, word):\n    pass\n",
+   "solution": "def next_word(text, word):\n    words = text.lower().split()\n    counts = {}\n    for a, b in zip(words, words[1:]):\n        if a == word:\n            counts[b] = counts.get(b, 0) + 1\n    if not counts:\n        return None\n    return min(counts, key=lambda w: (-counts[w], w))\n",
+   "hint": {
+    "en": "`zip(words, words[1:])` gives every pair of neighbours. Count what follows `word`, then pick the highest count with `min(counts, key=lambda w: (-counts[w], w))`.",
+    "es": "`zip(words, words[1:])` da cada par de vecinas. Cuenta lo que sigue a `word` y elige el conteo más alto con `min(counts, key=lambda w: (-counts[w], w))`."
+   },
+   "tests": [
+    [
+     "next_word('the cat sat on the mat the cat ran', 'the')",
+     "'cat'"
+    ],
+    [
+     "next_word('a b a c', 'a')",
+     "'b'"
+    ],
+    [
+     "next_word('hello world', 'world')",
+     "None"
     ]
    ]
   }
@@ -2192,6 +2580,41 @@
      "False"
     ]
    ]
+  },
+  {
+   "id": "truth-table",
+   "title": {
+    "en": "Build a truth table",
+    "es": "Construye una tabla de verdad"
+   },
+   "prompt": {
+    "en": "Write `truth_table(f)` for a function of two booleans that returns the list of rows `(p, q, f(p, q))` in the usual order: `TT, TF, FT, FF`.",
+    "es": "Escribe `truth_table(f)` para una función de dos booleanos que devuelva la lista de filas `(p, q, f(p, q))` en el orden usual: `TT, TF, FT, FF`."
+   },
+   "starter": "def truth_table(f):\n    pass\n",
+   "solution": "def truth_table(f):\n    return [(p, q, f(p, q)) for p in (True, False) for q in (True, False)]\n",
+   "hint": {
+    "en": "A list comprehension with two `for` parts, `p` first and then `q`, both over `(True, False)`.",
+    "es": "Una comprensión de listas con dos partes `for`, primero `p` y luego `q`, ambas sobre `(True, False)`."
+   },
+   "tests": [
+    [
+     "truth_table(lambda p, q: p and q)",
+     "[(True, True, True), (True, False, False), (False, True, False), (False, False, False)]"
+    ],
+    [
+     "[row[2] for row in truth_table(lambda p, q: p or q)]",
+     "[True, True, True, False]"
+    ],
+    [
+     "len(truth_table(lambda p, q: not p))",
+     "4"
+    ],
+    [
+     "truth_table(lambda p, q: p == q)[1]",
+     "(True, False, False)"
+    ]
+   ]
   }
  ],
  "sets-relations-functions": [
@@ -2257,6 +2680,37 @@
     ],
     [
      "is_function([(1, 'a'), (1, 'a'), (2, 'a')], {1, 2})",
+     "True"
+    ]
+   ]
+  },
+  {
+   "id": "symmetric",
+   "title": {
+    "en": "Is the relation symmetric?",
+    "es": "¿La relación es simétrica?"
+   },
+   "prompt": {
+    "en": "A relation is a set of pairs. Write `is_symmetric(rel)` that returns `True` when every pair `(a, b)` has its mirror `(b, a)` in the set too.",
+    "es": "Una relación es un conjunto de pares. Escribe `is_symmetric(rel)` que devuelva `True` cuando cada par `(a, b)` también tiene su espejo `(b, a)` en el conjunto."
+   },
+   "starter": "def is_symmetric(rel):\n    pass\n",
+   "solution": "def is_symmetric(rel):\n    return all((b, a) in rel for a, b in rel)\n",
+   "hint": {
+    "en": "`all((b, a) in rel for a, b in rel)` checks every pair in one line.",
+    "es": "`all((b, a) in rel for a, b in rel)` revisa cada par en una línea."
+   },
+   "tests": [
+    [
+     "is_symmetric({(1, 2), (2, 1), (3, 3)})",
+     "True"
+    ],
+    [
+     "is_symmetric({(1, 2)})",
+     "False"
+    ],
+    [
+     "is_symmetric(set())",
      "True"
     ]
    ]
@@ -2326,6 +2780,37 @@
     [
      "is_connected([1, 2], [])",
      "False"
+    ]
+   ]
+  },
+  {
+   "id": "shortest-hops",
+   "title": {
+    "en": "Fewest hops",
+    "es": "Menos saltos"
+   },
+   "prompt": {
+    "en": "Write `hops(edges, start, goal)` for an undirected graph that returns the fewest edges needed to get from `start` to `goal`, or `-1` if it cannot be reached. Use breadth-first search.",
+    "es": "Escribe `hops(edges, start, goal)` para un grafo no dirigido que devuelva la menor cantidad de aristas para ir de `start` a `goal`, o `-1` si no se puede llegar. Usa búsqueda en anchura."
+   },
+   "starter": "from collections import deque\n\ndef hops(edges, start, goal):\n    pass\n",
+   "solution": "from collections import deque\n\ndef hops(edges, start, goal):\n    nbrs = {}\n    for u, v in edges:\n        nbrs.setdefault(u, []).append(v)\n        nbrs.setdefault(v, []).append(u)\n    dist, queue = {start: 0}, deque([start])\n    while queue:\n        x = queue.popleft()\n        if x == goal:\n            return dist[x]\n        for y in nbrs.get(x, []):\n            if y not in dist:\n                dist[y] = dist[x] + 1\n                queue.append(y)\n    return -1\n",
+   "hint": {
+    "en": "BFS visits vertices in order of distance: keep `dist` for each vertex you reach and a `deque` of vertices to explore.",
+    "es": "BFS visita los vértices en orden de distancia: guarda `dist` de cada vértice que alcanzas y una `deque` de vértices por explorar."
+   },
+   "tests": [
+    [
+     "hops([('A', 'B'), ('B', 'C'), ('C', 'D'), ('A', 'D')], 'A', 'C')",
+     "2"
+    ],
+    [
+     "hops([('A', 'B')], 'A', 'A')",
+     "0"
+    ],
+    [
+     "hops([('A', 'B'), ('C', 'D')], 'A', 'D')",
+     "-1"
     ]
    ]
   }
@@ -2398,6 +2883,41 @@
     [
      "p_sum(13)",
      "0.0"
+    ]
+   ]
+  },
+  {
+   "id": "birthday",
+   "title": {
+    "en": "The birthday problem",
+    "es": "El problema del cumpleaños"
+   },
+   "prompt": {
+    "en": "Write `shared_birthday(n)` that returns the probability that at least two of `n` people share a birthday (365 equally likely days), rounded to 3 decimals.",
+    "es": "Escribe `shared_birthday(n)` que devuelva la probabilidad de que al menos dos de `n` personas compartan cumpleaños (365 días igual de probables), redondeada a 3 decimales."
+   },
+   "starter": "def shared_birthday(n):\n    pass\n",
+   "solution": "def shared_birthday(n):\n    all_different = 1.0\n    for i in range(n):\n        all_different *= (365 - i) / 365\n    return round(1 - all_different, 3)\n",
+   "hint": {
+    "en": "Compute the chance that everyone is different, (365/365)·(364/365)·…, and subtract it from 1.",
+    "es": "Calcula la probabilidad de que todos sean distintos, (365/365)·(364/365)·…, y réstala de 1."
+   },
+   "tests": [
+    [
+     "shared_birthday(23)",
+     "0.507"
+    ],
+    [
+     "shared_birthday(1)",
+     "0.0"
+    ],
+    [
+     "shared_birthday(50)",
+     "0.97"
+    ],
+    [
+     "shared_birthday(366)",
+     "1.0"
     ]
    ]
   }
