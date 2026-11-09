@@ -2,6 +2,17 @@ const { test, expect } = require('@playwright/test');
 const { mockApi, RECOVERY_CODES } = require('./helpers/api-mock');
 
 test.describe('Accounts', () => {
+    test('Google accounts can delete themselves by typing DELETE', async ({ page }) => {
+        const calls = await mockApi(page);
+        await page.goto('/index.html?oauth_ticket=t1#profile');
+        await expect(page.locator('#delete-form')).toBeVisible();
+        await expect(page.locator('#del-pass')).toHaveCount(0); // no password to ask for
+        await page.locator('#del-confirm').fill('DELETE');
+        await page.locator('#delete-form button[type="submit"]').click();
+        await expect(page.locator('body')).not.toHaveClass(/signed-in/);
+        expect(calls.deleted).toEqual({ currentPassword: '', confirmation: 'DELETE' });
+    });
+
     test('GitHub sign-in shows only when the server has it switched on', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html');

@@ -1,183 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Contact and Support | CS Course Atlas</title>
-    <meta name="description" content="Contact and support options for CS Course Atlas.">
-    <meta name="robots" content="index,follow">
-    <meta name="theme-color" content="#4f46e5">
-    <link rel="canonical" href="https://eddyarriaga00.github.io/CS-Course-Atlas/contact-support.html">
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="CS Course Atlas">
-    <meta property="og:title" content="Contact and Support | CS Course Atlas">
-    <meta property="og:description" content="Contact and support options for CS Course Atlas.">
-    <meta property="og:url" content="https://eddyarriaga00.github.io/CS-Course-Atlas/contact-support.html">
-    <link rel="manifest" href="manifest.webmanifest">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/trust-pages.css?v=20261109">
-    <script>try { var th = JSON.parse(localStorage.getItem("atlas-theme")); if (th === "light" || th === "dark") document.documentElement.dataset.theme = th; } catch (e) {}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Contact and Support | CS Course Atlas</title>
+<meta name="description" content="Report a problem, suggest a fix to a lesson, ask about your account or your data. Usually answered within a few days.">
+<meta name="robots" content="index,follow">
+<meta name="theme-color" content="#4f46e5">
+<link rel="canonical" href="https://eddyarriaga00.github.io/CS-Course-Atlas/contact-support.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="CS Course Atlas">
+<meta property="og:title" content="Contact and Support | CS Course Atlas">
+<meta property="og:description" content="Report a problem, suggest a fix to a lesson, ask about your account or your data. Usually answered within a few days.">
+<meta property="og:url" content="https://eddyarriaga00.github.io/CS-Course-Atlas/contact-support.html">
+<link rel="icon" href="icons/icon-192.png" type="image/png">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/trust-pages.css?v=20261110">
+<script>try{var th=JSON.parse(localStorage.getItem('atlas-theme'));if(th==='light'||th==='dark')document.documentElement.dataset.theme=th;var lg=JSON.parse(localStorage.getItem('atlas-lang'));if(lg!=='es'&&lg!=='en')lg=(navigator.language||'').toLowerCase().indexOf('es')===0?'es':'en';document.documentElement.lang=lg;document.documentElement.dataset.lang=lg;}catch(e){document.documentElement.dataset.lang='en';}</script>
 </head>
 <body>
-    <header class="trust-header">
-        <div class="trust-shell trust-header-inner">
-            <a class="trust-home-link" href="index.html">Back to CS Course Atlas</a>
-            <nav class="trust-nav" aria-label="Trust pages">
-                <a class="trust-nav-link" href="privacy-policy.html">Privacy Policy</a>
-                <a class="trust-nav-link" href="terms-of-use.html">Terms of Use</a>
-                <a class="trust-nav-link is-active" href="contact-support.html">Contact / Support</a>
-                <a class="trust-nav-link" href="donations-refunds.html">Donations &amp; Refunds</a>
-            </nav>
-        </div>
-    </header>
-
-    <main class="trust-main">
-        <article class="trust-card">
-            <h1>Contact and Support</h1>
-            <p class="trust-meta">Last updated: March 11, 2026</p>
-            <p>Use this page for questions, bug reports, content corrections, or support needs related to CS Course Atlas.</p>
-
-            <div class="contact-grid">
-                <section class="contact-card">
-                    <h3>In-App Support</h3>
-                    <p>Use the form below to send a support request directly to the platform support queue.</p>
-                </section>
-                <section class="contact-card">
-                    <h3>Response Goal</h3>
-                    <p>Most requests receive an initial response within 2 to 5 business days.</p>
-                </section>
-                <section class="contact-card">
-                    <h3>Bug Reports</h3>
-                    <p>Include steps to reproduce, expected behavior, and what happened instead.</p>
-                </section>
-                <section class="contact-card">
-                    <h3>Billing Questions</h3>
-                    <p>For donation charge concerns, include transaction date, amount, and receipt ID.</p>
-                </section>
-            </div>
-
-            <form id="public-support-form" class="support-form" novalidate>
-                <div class="support-form-grid">
-                    <div class="support-field">
-                        <label for="support-email">Email (optional)</label>
-                        <input id="support-email" name="email" type="email" maxlength="255" placeholder="you@example.com">
-                    </div>
-                    <div class="support-field">
-                        <label for="support-module-id">Module (optional)</label>
-                        <select id="support-module-id" name="moduleId">
-                            <option value="">General support</option>
-                            <option value="java-basics">Java Fundamentals</option>
-                            <option value="control-flow">Control Flow Statements</option>
-                            <option value="oop-basics">Object-Oriented Programming</option>
-                            <option value="exception-handling">Exception Handling</option>
-                            <option value="generics">Java Generics</option>
-                            <option value="collections-framework">Java Collections Framework</option>
-                            <option value="lambda-streams">Lambda Expressions &amp; Streams</option>
-                            <option value="file-io">File Input/Output</option>
-                            <option value="testing-junit">Unit Testing with JUnit</option>
-                            <option value="jdbc-basics">Database Connectivity (JDBC)</option>
-                            <option value="multithreading">Multithreading Basics</option>
-                            <option value="java-memory-jvm">Java Memory and JVM Fundamentals</option>
-                            <option value="design-patterns">Design Patterns</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="support-field" style="margin-top:0.72rem;">
-                    <label for="support-topic">Topic</label>
-                    <input id="support-topic" name="topic" type="text" maxlength="200" placeholder="Example: Quiz grading bug or donation receipt question">
-                </div>
-
-                <div class="support-field" style="margin-top:0.72rem;">
-                    <label for="support-message">Message</label>
-                    <textarea id="support-message" name="message" maxlength="5000" required placeholder="Describe your issue clearly, including what you expected and what happened."></textarea>
-                </div>
-
-                <div class="support-actions">
-                    <button id="support-submit" class="support-submit" type="submit">Send Support Request</button>
-                    <p id="support-status" class="support-status" role="status" aria-live="polite"></p>
-                </div>
-            </form>
-
-            <div class="trust-note">Looking for an answer about a topic? Each module has a <a href="index.html#glossary">glossary</a> of terms, a quiz and video series, and the <a href="index.html#roadmap">roadmap</a> shows what is coming next.</div>
-
-            <div class="trust-footer">
-                <p>CS Course Atlas Contact and Support</p>
-            </div>
-        </article>
-    </main>
-
-    <script src="js/app-config.js"></script>
-    <script>
-        (function () {
-            const form = document.getElementById('public-support-form');
-            const submitButton = document.getElementById('support-submit');
-            const status = document.getElementById('support-status');
-            const emailInput = document.getElementById('support-email');
-            const moduleInput = document.getElementById('support-module-id');
-            const topicInput = document.getElementById('support-topic');
-            const messageInput = document.getElementById('support-message');
-
-            // index.html links here as contact-support.html?module=<id> from each module page.
-            const linkedModule = new URLSearchParams(location.search).get('module');
-            if (linkedModule && moduleInput.querySelector('option[value="' + CSS.escape(linkedModule) + '"]')) moduleInput.value = linkedModule;
-
-            function showStatus(kind, text) {
-                status.textContent = text;
-                status.className = 'support-status is-visible ' + kind;
-            }
-
-            form.addEventListener('submit', async function (event) {
-                event.preventDefault();
-                const message = messageInput.value.trim();
-                if (!message) {
-                    showStatus('error', 'Message is required.');
-                    messageInput.focus();
-                    return;
-                }
-
-                submitButton.disabled = true;
-                showStatus('success', 'Sending… (the server can take up to 30 seconds to wake up)');
-
-                const payload = {
-                    email: emailInput.value.trim() || null,
-                    moduleId: moduleInput.value || null,
-                    topic: topicInput.value.trim() || null,
-                    message,
-                    language: 'en'
-                };
-
-                try {
-                    const apiBase = (window.__APP_CONFIG && window.__APP_CONFIG.apiBaseUrl) || '';
-                    const response = await fetch(apiBase + '/api/support', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        credentials: 'omit',
-                        body: JSON.stringify(payload)
-                    });
-
-                    const data = await response.json().catch(function () {
-                        return {};
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(data.error || 'Unable to submit request right now.');
-                    }
-
-                    form.reset();
-                    const requestLabel = data && data.requestId ? ' Request ID: ' + data.requestId + '.' : '';
-                    showStatus('success', 'Support request submitted.' + requestLabel);
-                } catch (error) {
-                    showStatus('error', error.message || 'Unable to submit request right now.');
-                } finally {
-                    submitButton.disabled = false;
-                }
-            });
-        }());
-    </script>
+<a class="trust-skip" href="#main"><span data-l="en">Skip to content</span><span data-l="es">Saltar al contenido</span></a>
+<header class="trust-header">
+<div class="trust-shell trust-header-inner">
+<a class="trust-home-link" href="index.html"><span class="trust-logo" aria-hidden="true">◆</span><span>CS Course Atlas</span></a>
+<nav class="trust-nav" aria-label="Policies and support"><a class="trust-nav-link" href="privacy-policy.html"><span data-l="en">Privacy</span><span data-l="es">Privacidad</span></a><a class="trust-nav-link" href="terms-of-use.html"><span data-l="en">Terms</span><span data-l="es">Términos</span></a><a class="trust-nav-link is-active" href="contact-support.html" aria-current="page"><span data-l="en">Support</span><span data-l="es">Soporte</span></a><a class="trust-nav-link" href="donations-refunds.html"><span data-l="en">Donations</span><span data-l="es">Donaciones</span></a></nav>
+<div class="trust-langs" role="group" aria-label="Language">
+<button type="button" data-set-lang="en" class="trust-lang-en">EN</button><button type="button" data-set-lang="es" class="trust-lang-es">ES</button>
+</div>
+</div>
+</header>
+<main id="main" class="trust-main trust-shell" tabindex="-1">
+<div class="trust-doc" data-l="en" lang="en">
+<div class="trust-hero"><h1>Contact and Support</h1><p class="trust-lead">Found a mistake in a lesson, a bug, or need help with your account? Send a message here. It goes straight to the person who builds the site.</p></div>
+<section class="trust-glance"><div class="trust-glance-grid"><div class="trust-glance-item"><span class="trust-glance-ico" aria-hidden="true">🐞</span><p><b>Bug or wrong answer</b> Say which module, what you did, what you expected and what happened.</p></div><div class="trust-glance-item"><span class="trust-glance-ico" aria-hidden="true">✏️</span><p><b>Lesson fix or idea</b> Corrections, clearer explanations, better videos and course requests are all welcome.</p></div><div class="trust-glance-item"><span class="trust-glance-ico" aria-hidden="true">🔐</span><p><b>Account and data</b> Locked out with no recovery code, a copy of your data, or questions about privacy.</p></div><div class="trust-glance-item"><span class="trust-glance-ico" aria-hidden="true">⏱️</span><p><b>Response time</b> Usually within 2 to 5 days. Add your email if you want a reply.</p></div></div></section>
+</div>
+<div class="trust-doc" data-l="es" lang="es">
+<div class="trust-hero"><h1>Contacto y soporte</h1><p class="trust-lead">¿Encontraste un error en una lección, un fallo o necesitas ayuda con tu cuenta? Escribe aquí. El mensaje llega directo a la persona que construye el sitio.</p></div>
+<section class="trust-glance"><div class="trust-glance-grid"><div class="trust-glance-item"><span class="trust-glance-ico" aria-hidden="true">🐞</span><p><b>Fallo o respuesta incorrecta</b> Indica el módulo, qué hiciste, qué esperabas y qué pasó.</p></div><div class="trust-glance-item"><span class="trust-glance-ico" aria-hidden="true">✏️</span><p><b>Corrección o idea</b> Correcciones, explicaciones más claras, mejores videos y pedidos de cursos son bienvenidos.</p></div><div class="trust-glance-item"><span class="trust-glance-ico" aria-hidden="true">🔐</span><p><b>Cuenta y datos</b> Sin acceso y sin código de recuperación, una copia de tus datos o dudas de privacidad.</p></div><div class="trust-glance-item"><span class="trust-glance-ico" aria-hidden="true">⏱️</span><p><b>Tiempo de respuesta</b> Normalmente de 2 a 5 días. Agrega tu correo si quieres respuesta.</p></div></div></section>
+</div>
+<form id="public-support-form" class="support-form" novalidate>
+<div class="support-form-grid">
+<div class="support-field"><label for="support-email"><span data-l="en">Email (optional, only if you want a reply)</span><span data-l="es">Correo (opcional, solo si quieres respuesta)</span></label><input id="support-email" name="email" type="email" maxlength="255" autocomplete="email" placeholder="you@example.com"></div>
+<div class="support-field"><label for="support-module-id"><span data-l="en">Module (optional)</span><span data-l="es">Módulo (opcional)</span></label><select id="support-module-id" name="moduleId"><option value="">General</option></select></div>
+</div>
+<div class="support-field"><label for="support-topic"><span data-l="en">Subject</span><span data-l="es">Asunto</span></label><input id="support-topic" name="topic" type="text" maxlength="200"></div>
+<div class="support-field"><label for="support-message"><span data-l="en">Message</span><span data-l="es">Mensaje</span></label><textarea id="support-message" name="message" maxlength="5000" required></textarea></div>
+<div class="support-actions"><button id="support-submit" class="support-submit" type="submit"><span data-l="en">Send message</span><span data-l="es">Enviar mensaje</span></button><p id="support-status" class="support-status" role="status" aria-live="polite"></p></div>
+</form>
+<p class="trust-note"><span data-l="en">Looking for an answer about a topic? Each module has a <a href="index.html#glossary">glossary</a>, a quiz and videos. The <a href="index.html#roadmap">roadmap</a> shows what is coming next.</span><span data-l="es">¿Buscas una respuesta sobre un tema? Cada módulo tiene un <a href="index.html#glossary">glosario</a>, un cuestionario y videos. La <a href="index.html#roadmap">hoja de ruta</a> muestra lo que viene.</span></p>
+</main>
+<footer class="trust-site-footer"><div class="trust-shell">
+<a href="index.html"><span data-l="en">Back to the courses</span><span data-l="es">Volver a los cursos</span></a>
+<nav aria-label="Policies"><a href="privacy-policy.html"><span data-l="en">Privacy</span><span data-l="es">Privacidad</span></a><a href="terms-of-use.html"><span data-l="en">Terms</span><span data-l="es">Términos</span></a><a href="contact-support.html"><span data-l="en">Support</span><span data-l="es">Soporte</span></a><a href="donations-refunds.html"><span data-l="en">Donations</span><span data-l="es">Donaciones</span></a></nav>
+</div></footer>
+<script>
+(function(){
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-set-lang]'); if (!b) return;
+    var lg = b.getAttribute('data-set-lang');
+    document.documentElement.lang = lg; document.documentElement.dataset.lang = lg;
+    try { localStorage.setItem('atlas-lang', JSON.stringify(lg)); } catch (err) {}
+  });
+})();
+</script>
+<script src="js/app-config.js"></script>
+<script>
+(function () {
+  var T = {"en": {"general": "General", "topicPh": "Example: Quiz 3 in Linked Lists marks the right answer wrong", "messagePh": "What happened, and what did you expect?", "need": "Please write a message.", "sending": "Sending… the server can take up to 30 seconds to wake up.", "sent": "Thanks! Your message was sent.", "reqId": "Reference", "fail": "Could not send right now. Please try again in a minute."}, "es": {"general": "General", "topicPh": "Ejemplo: el cuestionario 3 de Listas enlazadas marca mal la respuesta correcta", "messagePh": "¿Qué pasó y qué esperabas?", "need": "Escribe un mensaje, por favor.", "sending": "Enviando… el servidor puede tardar hasta 30 segundos en activarse.", "sent": "¡Gracias! Tu mensaje se envió.", "reqId": "Referencia", "fail": "No se pudo enviar ahora. Inténtalo de nuevo en un minuto."}};
+  var form = document.getElementById('public-support-form'), submit = document.getElementById('support-submit'), status = document.getElementById('support-status');
+  var email = document.getElementById('support-email'), moduleSel = document.getElementById('support-module-id'), topic = document.getElementById('support-topic'), message = document.getElementById('support-message');
+  var lang = function () { return document.documentElement.dataset.lang === 'es' ? 'es' : 'en'; };
+  var linked = new URLSearchParams(location.search).get('module');
+  function texts() {
+    var t = T[lang()];
+    topic.placeholder = t.topicPh; message.placeholder = t.messagePh;
+    if (moduleSel.options[0]) moduleSel.options[0].textContent = t.general;
+  }
+  // Every course and module, grouped, straight from the site's course index (so the list never goes stale).
+  var modulesData = null;
+  function fillModules() {
+    if (!modulesData) return;
+    var keep = moduleSel.value || linked || '';
+    while (moduleSel.options.length > 1) moduleSel.remove(1);
+    Array.prototype.slice.call(moduleSel.querySelectorAll('optgroup')).forEach(function (g) { g.remove(); });
+    modulesData.tracks.filter(function (t) { return t.status === 'available'; }).forEach(function (t) {
+      var g = document.createElement('optgroup'); g.label = t.title[lang()] || t.title.en;
+      t.units.forEach(function (u) { u.modules.forEach(function (id) {
+        var m = modulesData.modules[id]; if (!m) return;
+        var o = document.createElement('option'); o.value = id; o.textContent = m.title[lang()] || m.title.en; g.appendChild(o);
+      }); });
+      moduleSel.appendChild(g);
+    });
+    if (keep && moduleSel.querySelector('option[value="' + CSS.escape(keep) + '"]')) moduleSel.value = keep;
+  }
+  fetch('data/atlas-data.json').then(function (r) { return r.json(); }).then(function (d) { modulesData = d; fillModules(); }).catch(function () {});
+  texts();
+  new MutationObserver(function () { texts(); fillModules(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-lang'] });
+  function show(kind, text) { status.textContent = text; status.className = 'support-status is-visible ' + kind; }
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    var t = T[lang()], msg = message.value.trim();
+    if (!msg) { show('error', t.need); message.focus(); return; }
+    submit.disabled = true; show('pending', t.sending);
+    try {
+      var api = (window.__APP_CONFIG && window.__APP_CONFIG.apiBaseUrl) || '';
+      var r = await fetch(api + '/api/support', { method: 'POST', headers: { 'Content-Type': 'application/json' }, credentials: 'omit',
+        body: JSON.stringify({ email: email.value.trim() || null, moduleId: moduleSel.value || null, topic: topic.value.trim() || null, message: msg, language: lang() }) });
+      var data = await r.json().catch(function () { return {}; });
+      if (!r.ok) throw new Error(data.error || t.fail);
+      form.reset(); linked = null; fillModules();
+      show('success', t.sent + (data && data.requestId ? ' ' + t.reqId + ': ' + data.requestId + '.' : ''));
+    } catch (err) { show('error', (err && err.message) || t.fail); } finally { submit.disabled = false; }
+  });
+})();
+</script>
 </body>
 </html>
