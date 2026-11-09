@@ -17,7 +17,7 @@ const CRITICAL_PAGES = [
     '/sitemap.xml'
 ];
 
-const ROUTES = ['home', 'courses', 'course-python', 'm-python-first-programs', 'm-python-collections', 'course-cli', 'm-cli-files-folders', 'm-cli-shell-scripts', 'course-web', 'm-web-html', 'm-web-project', 'course-sql', 'm-sql-joins', 'course-how-computers-work', 'm-hcw-hardware', 'course-cybersecurity', 'm-sec-attacks', 'course-ai', 'm-ai-neural', 'm-ai-language', 'course-java', 'course-git', 'course-discrete', 'course-dsa', 'm-java-basics', 'm-git-basics-workflow', 'm-discrete-graph-theory', 'practice', 'quizzes', 'flashcards', 'playground', 'plan', 'notes', 'glossary', 'roadmap'];
+const ROUTES = ['home', 'courses', 'course-python', 'm-python-first-programs', 'm-python-collections', 'course-cli', 'm-cli-files-folders', 'm-cli-shell-scripts', 'course-web', 'm-web-html', 'm-web-project', 'course-sql', 'm-sql-joins', 'course-how-computers-work', 'm-hcw-hardware', 'course-cybersecurity', 'm-sec-attacks', 'course-ai', 'm-ai-neural', 'm-ai-language', 'course-java', 'course-git', 'course-discrete', 'course-dsa', 'm-java-basics', 'm-git-basics-workflow', 'm-discrete-graph-theory', 'practice', 'quizzes', 'flashcards', 'challenges', 'playground', 'plan', 'notes', 'glossary', 'roadmap'];
 
 test.describe('Navigation', () => {
     test('critical pages return non-error HTTP responses', async ({ request }) => {
@@ -77,7 +77,7 @@ test.describe('Navigation', () => {
     test('quizzes and flashcards are separate pages and remember known cards', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html#practice');
-        await expect(page.locator('a.hub-card')).toHaveCount(2);
+        await expect(page.locator('a.hub-card')).toHaveCount(3);
         await page.locator('a.hub-card[href="#flashcards"]').click();
         await expect(page).toHaveURL(/#flashcards$/);
         await expect(page.locator('.deck-known')).toContainText('0 of');
