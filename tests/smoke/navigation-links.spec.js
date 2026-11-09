@@ -186,6 +186,15 @@ test.describe('Navigation', () => {
         await expect(page.locator('#ch-res-1 .ch-status.ok')).toBeVisible();
     });
 
+    test('each course has a printable cheat sheet', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html#course-sql');
+        await page.locator('.course-links a[href="#sheet-sql"]').click();
+        await expect(page.locator('#main h1')).toHaveText('SQL & Databases: cheat sheet');
+        await expect(page.locator('.sheet-mod')).toHaveCount(4);
+        await expect(page.locator('.sheet-mod').first()).toContainText('Key takeaways');
+    });
+
     test('mixed review quizzes across completed modules', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html#m-python-first-programs');

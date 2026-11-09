@@ -796,12 +796,12 @@ a.path-step.planned .path-go { color: var(--text-3); font-weight: 500; }
 .cert-course .cicon { width: max(22px, 4.4cqw); height: max(22px, 4.4cqw); font-size: max(10px, 1.9cqw); }
 .cert-detail { margin: 0; font-size: max(10px, 1.6cqw); color: #5d5a78; }
 .cert-foot { display: flex; justify-content: space-between; gap: 2cqw; width: 100%; margin-top: auto; padding-top: 1.6cqw; font-size: max(9px, 1.4cqw); color: #6b6880; border-top: 1px solid #ece6d4; }
+@page { margin: 12mm; }
 @media print {
-  @page { size: A4 landscape; margin: 10mm; }
   body { background: #fff !important; }
   .topbar, .sidebar, .bottom-nav, .scrim, .no-print, #toast, .skip-link { display: none !important; }
   .shell, main, .wrap { display: block !important; padding: 0 !important; margin: 0 !important; max-width: none !important; }
-  .certificate { box-shadow: none; max-width: none; width: 100%; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .certificate { box-shadow: none; max-width: none; width: 100%; aspect-ratio: auto; height: 182mm; padding: 6mm; -webkit-print-color-adjust: exact; print-color-adjust: exact; break-inside: avoid; }
 }
 
 /* ---------- Step-through visualizer (Python) ---------- */
@@ -870,3 +870,25 @@ pre[tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .course.live .cicon[data-track], :root:not([data-theme="light"]) .course-hero .cicon[data-track="java"] { background: color-mix(in srgb, var(--track) 62%, #000); } }
 :root[data-theme="dark"] .course.live .cicon[data-track], :root[data-theme="dark"] .course-hero .cicon[data-track="java"] { background: color-mix(in srgb, var(--track) 62%, #000); }
 .toolbar .lang:not([aria-pressed="true"]), .deck-tools .lang:not([aria-pressed="true"]) { color: var(--text-2); border: 1px solid var(--border); }
+
+/* Course cheat sheet */
+.course-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.course-links .chip-link { padding: 6px 14px; }
+.sheet { columns: 2 340px; column-gap: 28px; margin-top: 18px; }
+.sheet-mod { break-inside: avoid; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px 18px; margin: 0 0 18px; }
+.sheet-mod h2 { font-size: 17px; margin: 0 0 8px; letter-spacing: -.01em; }
+.sheet-mod h2 a { color: inherit; }
+.sheet-mod h2 .muted { font-weight: 500; font-size: 13px; }
+.sheet-mod h3 { font-size: 11.5px; text-transform: uppercase; letter-spacing: .07em; color: var(--text-3); margin: 12px 0 4px; }
+.sheet-mod ul { margin: 0; padding-left: 18px; font-size: 13.5px; line-height: 1.55; }
+.sheet-mod li { margin: 2px 0; }
+.sheet-pit li::marker { content: '⚠ '; }
+.sheet-mod dl { margin: 0; font-size: 13.5px; line-height: 1.5; }
+.sheet-mod dt { font-weight: 650; margin-top: 6px; }
+.sheet-mod dd { margin: 0; color: var(--text-2); }
+@media print {
+  .sheet { columns: 2; column-gap: 18px; }
+  .sheet-mod { border-color: #ccc; padding: 8px 10px; margin-bottom: 10px; font-size: 11px; }
+  .sheet-mod ul, .sheet-mod dl { font-size: 10.5px; }
+  .sheet-page h1 { font-size: 22px; }
+}
