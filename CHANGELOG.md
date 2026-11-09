@@ -2,6 +2,21 @@
 
 All notable changes to **CS Course Atlas** are documented in this file.
 
+## 2026-11-09
+
+### Practice everywhere
+- Auto-graded challenges in every beginner course (120 in total): Python (Pyodide), SQL (sql.js), HTML/CSS (DOM and computed-style checks), JavaScript (worker tests), and command line + Git in a practice terminal.
+- `js/mini-shell.js`: a small Bash-like shell and Git over an in-memory home folder. `scripts/verify_challenges.js` runs every command-line and Git solution in the simulator **and** in real Bash/Git and fails on any difference in files, permissions, output or repository state.
+- Playground: a Terminal language, a step-through visualizer for Python (also from any Python example), and share links that carry the code in the URL.
+- Flashcards with spaced repetition (Leitner boxes: 1, 3, 7, 16, 35 days) and a *Due for review* deck; timed quizzes (30 s per question).
+- Course certificates (every module done, every quiz ≥ 60%), printable or saved as PDF.
+- Home: a daily challenge, due-card reminder and challenge count; new achievements.
+
+### Site
+- Installable and offline-ready: service worker caching the app, opened lessons and the Python/SQL runtimes; real manifest icons.
+- Skip-to-content link; search covers challenges and pages (and opens the right tab); notes download as Markdown.
+- Validation: `npm run check:frontend`, `npm run check:examples` (includes `verify_challenges.js`), `npm run test:smoke` (24 tests, including offline, spaced repetition, certificates, timed quizzes, share links and terminal/Git challenges).
+
 ## 2026-03-27
 
 ### Mobile Left Menu Restored (Phone, 30-40 Commits Baseline)
