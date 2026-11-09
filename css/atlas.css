@@ -926,3 +926,8 @@ pre[tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 
 .mod-note:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
 .mod-note-status { font-size: 12px; margin-top: 4px; min-height: 1em; }
 .mod-note-label h3 { margin: 0; }
+.output-label { display: flex; align-items: center; gap: 10px; }
+.predict-toggle { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; font-weight: 500; text-transform: none; letter-spacing: normal; cursor: pointer; }
+.predict-toggle input { accent-color: var(--accent); }
+.veil { padding: 18px 16px; display: grid; gap: 10px; justify-items: start; color: #c9cde0; font-size: 14px; }
+.veil p { margin: 0; }
