@@ -480,6 +480,15 @@ function nextCourseLink(tid) {
   const after = order.slice(order.indexOf(tid) + 1).map(track).find((tr) => tr && tr.status === 'available');
   return after ? `<a class="btn" href="#course-${after.id}">${t('nextCourse', esc(L(after.title)))}</a>` : '';
 }
+function moduleSkeleton(id, spinner) {
+  const meta = DATA.modules[id], tr = track(meta.track), unit = tr?.units.find((u) => u.modules.includes(id));
+  if (!tr || !unit) return spinner;
+  return `<section class="wrap">
+    <div class="crumbs"><a href="#course-${tr.id}">${esc(L(tr.title))}</a><span>/</span><span>${esc(L(unit.title))}</span><span>/</span><span style="color:var(--text)">${esc(moduleTitle(id))}</span></div>
+    <h1>${esc(moduleTitle(id))}</h1><p class="lead">${fmt(L(meta.description))}</p>
+    <div class="mod-meta"><span class="pill">${t('difficulty')[meta.difficulty] || meta.difficulty}</span>${meta.minutes ? `<span class="pill">≈ ${meta.minutes} ${t('min')}</span>` : ''}<span class="pill">${meta.topics.length} ${t('topics')}</span></div>
+    ${spinner}</section>`;
+}
 function viewModule(id) {
   const meta = DATA.modules[id], c = DATA.full[id];
   if (!meta) return viewMissing();
@@ -1584,7 +1593,9 @@ function render(keepScroll) {
     history.replaceState(null, '', '#' + route);
   }
   if (route !== lastRoute) { state.tab = state.pendingTab || 'overview'; state.pendingTab = null; state.exIndex = 0; state.sideCollapsed.clear(); }
-  const loading = waitForLessons(lessonsFor(route));
+  let loading = waitForLessons(lessonsFor(route));
+  // A module whose lessons are still downloading shows its header right away (from the small index), so the page paints fast.
+  if (loading && route.startsWith('m-') && DATA.modules[route.slice(2)]) loading = moduleSkeleton(route.slice(2), loading);
   const html = loading || (route === 'home' ? viewHome() : route === 'courses' ? viewCourses() : route === 'practice' ? viewPractice() : route === 'quizzes' ? viewQuizzes() : route === 'flashcards' ? viewFlashcards() : route === 'challenges' ? viewChallenges() : route === 'profile' ? viewProfile() : route === 'playground' ? viewPlayground() : route === 'notes' ? viewNotes() : route === 'glossary' ? viewGlossary() : route === 'roadmap' ? viewRoadmap() : route === 'plan' ? viewPlan()
     : route.startsWith('cert-') ? viewCert(route.slice(5)) : route.startsWith('sheet-') ? viewSheet(route.slice(6)) : route.startsWith('course-') ? viewCourse(route.slice(7)) : route.startsWith('m-') ? viewModule(route.slice(2)) : viewMissing());
   renderChrome(route);
