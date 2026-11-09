@@ -19,6 +19,7 @@ const UI = {
     how4: 'Watch', how4Text: 'A hand-picked video for every topic from university and teaching channels.',
     nextTitle: 'After the beginner path', nextLead: 'Bigger languages, algorithms and how real systems work.',
     startJava: 'Start the Java course', browse: 'Browse courses', continueTitle: 'Continue where you left off', continueBtn: 'Continue', startBtn: 'Start',
+    certTitle: 'Course certificate', certLocked: 'Finish every module and pass every quiz with 60% or more to earn your certificate.', certModules: (a, b) => `${a} / ${b} modules complete`, certQuizzes: (a, b) => `${a} / ${b} quizzes passed`, certEarned: 'Certificate earned', certEarnedText: 'You finished every module and passed every quiz.', certView: 'View certificate', certOf: 'Certificate of completion', certThat: 'This certifies that', certDone: 'has completed the course', certDetail: (m, h, q) => `${m} modules · about ${h} hours · ${q}% average quiz score`, certOn: (d) => `Completed on ${d}`, certName: 'Name on the certificate', certPrint: 'Print or save as PDF', certNotYet: 'This certificate is not earned yet.', certBack: 'Back to the course', certFrom: 'CS Course Atlas',
     ofModules: (a, b) => `${a} of ${b} modules complete`, courseDone: 'Course complete. Nice work.',
     coursesTitle: 'Courses', coursesLead: 'New to programming? Follow the beginner path in order: all nine courses are ready. After it come Java and the next-level courses; the ones still being written show their outline, and you can vote for what you want next.',
     plannedTitle: 'Planned courses', plannedNote: 'Beginner courses first. Vote for the ones you want next.', javaTrack: 'Java course', studyTools: 'Study tools',
@@ -81,6 +82,7 @@ const UI = {
     how4: 'Mira', how4Text: 'Un video elegido para cada tema, de canales universitarios y de enseñanza.',
     nextTitle: 'Después de la ruta para principiantes', nextLead: 'Lenguajes más grandes, algoritmos y cómo funcionan los sistemas reales.',
     startJava: 'Empezar el curso de Java', browse: 'Ver cursos', continueTitle: 'Continúa donde te quedaste', continueBtn: 'Continuar', startBtn: 'Empezar',
+    certTitle: 'Certificado del curso', certLocked: 'Termina todos los módulos y aprueba cada cuestionario con 60% o más para obtener tu certificado.', certModules: (a, b) => `${a} / ${b} módulos completados`, certQuizzes: (a, b) => `${a} / ${b} cuestionarios aprobados`, certEarned: 'Certificado obtenido', certEarnedText: 'Terminaste todos los módulos y aprobaste cada cuestionario.', certView: 'Ver certificado', certOf: 'Certificado de finalización', certThat: 'Se certifica que', certDone: 'completó el curso', certDetail: (m, h, q) => `${m} módulos · unas ${h} horas · ${q}% de promedio en cuestionarios`, certOn: (d) => `Completado el ${d}`, certName: 'Nombre en el certificado', certPrint: 'Imprimir o guardar como PDF', certNotYet: 'Este certificado aún no se ha obtenido.', certBack: 'Volver al curso', certFrom: 'CS Course Atlas',
     ofModules: (a, b) => `${a} de ${b} módulos completados`, courseDone: 'Curso completado. ¡Buen trabajo!',
     coursesTitle: 'Cursos', coursesLead: '¿Nuevo en programación? Sigue la ruta para principiantes en orden: los nueve cursos están listos. Después vienen Java y los cursos del siguiente nivel; los que aún se escriben muestran su temario y puedes votar por lo que quieras primero.',
     plannedTitle: 'Cursos planeados', plannedNote: 'Primero los de nivel principiante. Vota por los que quieres primero.', javaTrack: 'Curso de Java', studyTools: 'Herramientas de estudio',
@@ -132,7 +134,7 @@ const state = {
   lang: store.get('lang', (navigator.language || '').toLowerCase().startsWith('es') ? 'es' : 'en'), user: null, authReady: false, syncedAt: null, done: new Set(store.get('done', [])),
   codeLang: store.get('codeLang', 'java'), notified: new Set(store.get('notified', [])), tab: 'overview', exIndex: 0, quiz: null, flash: null,
   notes: store.get('notes', {}), aces: new Set(store.get('aces', [])), langsSeen: new Set(store.get('langsSeen', ['java'])), votes: new Set(store.get('votes', [])),
-  plan: store.get('plan', { hours: 4, start: new Date().toISOString().slice(0, 10) }), quizBest: store.get('quizBest', {}), cardsKnown: new Set(store.get('cardsKnown', [])), cardBox: store.get('cardBox', {}), solved: new Set(store.get('solved', [])), chTries: {}, chModule: null, quizModule: null, flashModule: null, activity: store.get('activity', []), pg: null, sideCollapsed: new Set(), noteModule: null, glossLetter: 'all', glossQuery: '', glossCourse: 'all'
+  plan: store.get('plan', { hours: 4, start: new Date().toISOString().slice(0, 10) }), quizBest: store.get('quizBest', {}), cardsKnown: new Set(store.get('cardsKnown', [])), cardBox: store.get('cardBox', {}), certs: store.get('certs', {}), solved: new Set(store.get('solved', [])), chTries: {}, chModule: null, quizModule: null, flashModule: null, activity: store.get('activity', []), pg: null, sideCollapsed: new Set(), noteModule: null, glossLetter: 'all', glossQuery: '', glossCourse: 'all'
 };
 let DATA = null;
 const $ = (s, r = document) => r.querySelector(s);
@@ -199,11 +201,45 @@ const moduleOptions = (selected) => orderedTracks().map((tr) => `<optgroup label
 const moduleTitle = (id) => L(DATA.modules[id]?.title) || id;
 // Everything that belongs to the learner, in one plain object: saved locally and, when signed in, to the account.
 const progressSnapshot = () => ({ done: [...state.done], codeLang: state.codeLang, notified: [...state.notified], notes: state.notes, aces: [...state.aces],
-  langsSeen: [...state.langsSeen], votes: [...state.votes], plan: state.plan, quizBest: state.quizBest, cardsKnown: [...state.cardsKnown], cardBox: state.cardBox, solved: [...state.solved], activity: state.activity.slice(-200), lang: state.lang });
+  langsSeen: [...state.langsSeen], votes: [...state.votes], plan: state.plan, quizBest: state.quizBest, cardsKnown: [...state.cardsKnown], cardBox: state.cardBox, certs: state.certs, solved: [...state.solved], activity: state.activity.slice(-200), lang: state.lang });
 const save = () => { const snap = progressSnapshot(); Object.entries(snap).forEach(([k, v]) => store.set(k, v)); scheduleSync(); };
 function logActivity(kind, id, extra) { state.activity.push({ kind, id, at: Date.now(), ...(extra || {}) }); if (state.activity.length > 200) state.activity.splice(0, state.activity.length - 200); }
 function toast(msg, ms = 1800) { const el = $('#toast'); el.textContent = msg; el.hidden = false; clearTimeout(toast.timer); toast.timer = setTimeout(() => { el.hidden = true; }, ms); }
 function nextModule(tid = currentTrack()) { return trackIds(tid).find((id) => !state.done.has(id)) || null; }
+// A course certificate needs every module marked done and every module quiz passed (60%+).
+const CERT_PASS = 0.6;
+function certStatus(tid) {
+  const ids = trackIds(tid), quizIds = ids.filter((m) => DATA.modules[m]?.counts?.quiz !== 0);
+  const done = ids.filter((m) => state.done.has(m)).length, passed = quizIds.filter((m) => (state.quizBest[m] || 0) >= CERT_PASS).length;
+  const earned = ids.length > 0 && done === ids.length && passed === quizIds.length;
+  if (earned && !state.certs[tid]) { state.certs[tid] = Date.now(); save(); }
+  return { earned, done, total: ids.length, passed, quizzes: quizIds.length, at: state.certs[tid] };
+}
+function certCard(tid) {
+  const c = certStatus(tid);
+  if (c.earned) return `<div class="card cert-card earned"><span class="cert-seal" aria-hidden="true">🎓</span><div class="info"><b>${t('certEarned')}</b><span class="muted">${t('certEarnedText')}</span></div><a class="btn btn-sm" href="#cert-${tid}">${t('certView')}</a></div>`;
+  return `<div class="card cert-card"><span class="cert-seal" aria-hidden="true">🎓</span><div class="info"><b>${t('certTitle')}</b><span class="muted">${t('certLocked')}</span>
+    <div class="cert-reqs"><span class="${c.done === c.total ? 'ok' : ''}">${c.done === c.total ? '✓' : '○'} ${t('certModules', c.done, c.total)}</span><span class="${c.passed === c.quizzes ? 'ok' : ''}">${c.passed === c.quizzes ? '✓' : '○'} ${t('certQuizzes', c.passed, c.quizzes)}</span></div></div></div>`;
+}
+function viewCert(tid) {
+  const tr = track(tid); if (!tr || tr.status !== 'available') return viewMissing();
+  const c = certStatus(tid);
+  if (!c.earned) return `<section class="wrap"><h1>${t('certTitle')}</h1><p class="lead">${t('certNotYet')}</p>${certCard(tid)}<a class="btn btn-ghost" href="#course-${tid}">${t('certBack')}</a></section>`;
+  const name = store.get('certName', '') || state.user?.name || state.user?.username || '';
+  const ids = trackIds(tid), q = ids.map((m) => state.quizBest[m]).filter((x) => x != null), avg = q.length ? Math.round(100 * q.reduce((a, b) => a + b, 0) / q.length) : 0;
+  return `<section class="wrap cert-page"><div class="crumbs no-print"><a href="#course-${tid}">${esc(L(tr.title))}</a><span>/</span><span style="color:var(--text)">${t('certTitle')}</span></div>
+    <div class="cert-tools no-print"><label class="muted" for="cert-name">${t('certName')}</label><input class="input" id="cert-name" value="${esc(name)}" maxlength="60" autocomplete="name"><button class="btn" data-action="cert-print">${t('certPrint')}</button></div>
+    <div class="certificate" id="certificate"><div class="cert-inner">
+      <div class="cert-brand"><span class="brand-mark">◆</span>${t('certFrom')}</div>
+      <div class="cert-kicker">${t('certOf')}</div>
+      <p class="cert-that">${t('certThat')}</p>
+      <div class="cert-name" id="cert-name-out">${esc(name) || '&nbsp;'}</div>
+      <p class="cert-that">${t('certDone')}</p>
+      <div class="cert-course"><span class="cicon" data-track="${tid}">${esc(tr.icon)}</span>${esc(L(tr.title))}</div>
+      <p class="cert-detail">${t('certDetail', ids.length, trackStats(tr).hours, avg)}</p>
+      <div class="cert-foot"><span>${t('certOn', fmtDate(c.at, { year: 'numeric', month: 'long', day: 'numeric' }))}</span><span>${esc((location.host + location.pathname).replace(/index\.html$/, '').replace(/\/$/, ''))}</span></div>
+    </div></div></section>`;
+}
 function trackStats(tr) {
   const ids = tr.units.flatMap((u) => u.modules);
   const minutes = ids.reduce((s, id) => s + (DATA.modules[id]?.minutes || 0), 0);
@@ -383,6 +419,7 @@ function viewCourse(id) {
     <div class="course-stats"><div><b>${s.units}</b><span>${t('units')}</span></div><div><b>${s.count}</b><span>${t('modules')}</span></div>${s.hours ? `<div><b>≈ ${s.hours}</b><span>${t('hours')}</span></div>` : ''}${live ? `<div><b>${s.done}/${s.count}</b><span>${t('modulesComplete').toLowerCase()}</span></div>` : ''}</div>
     ${live ? `<div class="hero-actions"><a class="btn" href="#m-${next || trackIds(id)[0]}">${s.done ? t('continueBtn') : t('startBtn')}${next ? ': ' + esc(moduleTitle(next)) : ''}</a></div>`
       : `<div class="notice"><span class="pill soon">${t('comingSoon')}</span><p>${t('soonNotice')}</p><button class="btn btn-sm${state.notified.has(id) ? ' btn-ghost' : ''}" data-action="notify" data-id="${id}" ${state.notified.has(id) ? 'disabled' : ''}>${state.notified.has(id) ? t('notified') : t('notifyMe')}</button></div>`}
+    ${live ? certCard(id) : ''}
     ${DATA.videos?.courses?.[id] ? `<div class="section-head"><h2>${t('courseSeries')}</h2></div>${vidCard(DATA.videos.courses[id], true)}` : ''}
     <div class="section-head"><h2>${t('unitsTitle')}</h2></div>
     ${unitCards(tr, live)}
@@ -641,7 +678,7 @@ function viewProfile() {
       <a class="card stat stat-link" href="#notes"><div class="label">${t('notes')}<span class="stat-go">→</span></div><div class="value">${notesCount}</div><div class="muted">${t('modulesWithNotes')}</div></a></div>
     <div class="split"><div class="stack">
       <div class="card panel"><h2>${t('yourCourses')}</h2><div class="unit-progress">${DATA.tracks.map((tr) => { const ts = trackStats(tr), live = tr.status === 'available';
-        return `<a href="#course-${tr.id}"><div class="row-top"><span>${esc(L(tr.title))}</span><span>${live ? `${ts.done} / ${ts.count}` : t('comingSoon')}</span></div><div class="progress${live && ts.done === ts.count ? ' done' : ''}"><span style="width:${live ? pct(ts.done, ts.count) : 0}%"></span></div></a>`; }).join('')}</div></div>
+        return `<a href="#${live && state.certs[tr.id] ? 'cert' : 'course'}-${tr.id}"><div class="row-top"><span>${esc(L(tr.title))}${live && state.certs[tr.id] ? ` <span class="pill ok" title="${t('certEarned')}">🎓</span>` : ''}</span><span>${live ? `${ts.done} / ${ts.count}` : t('comingSoon')}</span></div><div class="progress${live && ts.done === ts.count ? ' done' : ''}"><span style="width:${live ? pct(ts.done, ts.count) : 0}%"></span></div></a>`; }).join('')}</div></div>
       ${liveTracks().map((tr) => `<div class="card panel"><h2>${t('progressUnit', L(tr.title))}</h2><div class="unit-progress">${tr.units.map((un, i) => { const d = un.modules.filter((m) => state.done.has(m)).length;
         return `<div><div class="row-top"><span>${i + 1} · ${esc(L(un.title))}</span><span>${d} / ${un.modules.length}</span></div><div class="progress${d === un.modules.length ? ' done' : ''}"><span style="width:${pct(d, un.modules.length)}%"></span></div></div>`; }).join('')}</div></div>`).join('')}
       <div class="card panel"><h2>${t('prefs')}</h2><div>
@@ -1013,6 +1050,7 @@ const ROADMAP = [
   ['live', 'exercises', { en: 'Auto-graded coding challenges', es: 'Retos de código con calificación automática' }, { en: 'Python, SQL, HTML, CSS and JavaScript challenges in every beginner course, checked instantly in your browser.', es: 'Retos de Python, SQL, HTML, CSS y JavaScript en cada curso para principiantes, revisados al instante en tu navegador.' }, ['Practice']],
   ['live', 'offline', { en: 'Install and study offline', es: 'Instalar y estudiar sin conexión' }, { en: 'Add the site to your home screen. Lessons you have opened, and the Python and SQL runners, keep working without internet.', es: 'Agrega el sitio a tu pantalla de inicio. Las lecciones que abriste y los ejecutores de Python y SQL siguen funcionando sin internet.' }, ['Access']],
   ['live', 'srs', { en: 'Spaced-repetition review', es: 'Repaso con repetición espaciada' }, { en: 'Flashcards you know come back after 1, 3, 7, 16 and 35 days, right before you would forget them.', es: 'Las tarjetas que sabes vuelven después de 1, 3, 7, 16 y 35 días, justo antes de que las olvides.' }, ['Practice']],
+  ['live', 'certificates', { en: 'Course certificates', es: 'Certificados de curso' }, { en: 'Finish every module and pass every quiz to earn a certificate you can print or save as a PDF.', es: 'Completa todos los módulos y aprueba cada cuestionario para obtener un certificado que puedes imprimir o guardar como PDF.' }, ['Account']],
   ['live', 'sync', { en: 'Accounts and progress sync', es: 'Cuentas y progreso sincronizado' }, { en: 'Google or email sign-in; progress follows you between devices.', es: 'Inicio con Google o correo; tu progreso te sigue entre dispositivos.' }, ['Account']],
   ['building', 'dsa', { en: 'Data Structures & Algorithms course', es: 'Curso de estructuras de datos y algoritmos' }, { en: '22 modules, from arrays to dynamic programming, with complexity analysis.', es: '22 módulos, de arreglos a programación dinámica, con análisis de complejidad.' }, ['Courses']],
   ['building', 'runner', { en: 'Run Java and C++', es: 'Ejecutar Java y C++' }, { en: 'A sandboxed code server so every example and exercise runs in the browser.', es: 'Un servidor aislado para que cada ejemplo y ejercicio se ejecute en el navegador.' }, ['Tools']],
@@ -1020,7 +1058,6 @@ const ROADMAP = [
   ['building', 'more-courses', { en: 'x86-64 Assembly', es: 'Ensamblador x86-64' }, { en: 'Rewritten to the same standard as Java, one course at a time.', es: 'Reescritos con el mismo nivel que Java, un curso a la vez.' }, ['Courses']],
   ['planned', 'visualizers', { en: 'Step-through visualizers', es: 'Visualizadores paso a paso' }, { en: 'Watch the stack, heap, arrays and trees change line by line.', es: 'Mira cómo cambian la pila, el heap, los arreglos y los árboles línea por línea.' }, ['Tools']],
   ['planned', 'tutor', { en: 'Hints from an AI tutor', es: 'Pistas de un tutor con IA' }, { en: 'Ask about any line of an example and get a hint, not the full answer.', es: 'Pregunta por cualquier línea de un ejemplo y recibe una pista, no la respuesta.' }, ['Learning']],
-  ['planned', 'certificates', { en: 'Course certificates', es: 'Certificados de curso' }, { en: 'Finish every module and quiz to earn a shareable certificate.', es: 'Completa todos los módulos y cuestionarios para obtener un certificado.' }, ['Account']],
   ['planned', 'classrooms', { en: 'Classrooms for teachers', es: 'Aulas para docentes' }, { en: 'Assign modules, see class progress and quiz results.', es: 'Asigna módulos y ve el progreso y los resultados de la clase.' }, ['Teaching']],
   ['planned', 'interview', { en: 'Interview prep mode', es: 'Modo de preparación para entrevistas' }, { en: 'Timed problem sets that mix topics, like a real technical interview.', es: 'Series de problemas con tiempo que mezclan temas, como una entrevista real.' }, ['Practice']],
   ['planned', 'discussions', { en: 'Questions on every module', es: 'Preguntas en cada módulo' }, { en: 'Ask and answer questions under each lesson.', es: 'Haz y responde preguntas debajo de cada lección.' }, ['Community']]
@@ -1127,6 +1164,7 @@ function mergeProgress(a) {
   const union = (key) => (a[key] || []).forEach((x) => state[key].add(x));
   ['done', 'notified', 'aces', 'langsSeen', 'votes', 'cardsKnown', 'solved'].forEach(union);
   Object.entries(a.notes || {}).forEach(([k, v]) => { if (v && !(state.notes[k] || '').trim()) state.notes[k] = v; });
+  Object.entries(a.certs || {}).forEach(([k, v]) => { if (v && (!state.certs[k] || v < state.certs[k])) state.certs[k] = v; });
   Object.entries(a.cardBox || {}).forEach(([k, v]) => { if (v && (!state.cardBox[k] || (v.at || 0) > (state.cardBox[k].at || 0))) state.cardBox[k] = v; });
   Object.entries(a.quizBest || {}).forEach(([k, v]) => { state.quizBest[k] = Math.max(v, state.quizBest[k] || 0); });
   const seen = new Set(state.activity.map((x) => `${x.kind}|${x.id}|${x.at}`));
@@ -1293,7 +1331,7 @@ function render(keepScroll) {
   if (route !== lastRoute) { state.tab = state.pendingTab || 'overview'; state.pendingTab = null; state.exIndex = 0; state.sideCollapsed.clear(); }
   const loading = waitForLessons(lessonsFor(route));
   const html = loading || (route === 'home' ? viewHome() : route === 'courses' ? viewCourses() : route === 'practice' ? viewPractice() : route === 'quizzes' ? viewQuizzes() : route === 'flashcards' ? viewFlashcards() : route === 'challenges' ? viewChallenges() : route === 'profile' ? viewProfile() : route === 'playground' ? viewPlayground() : route === 'notes' ? viewNotes() : route === 'glossary' ? viewGlossary() : route === 'roadmap' ? viewRoadmap() : route === 'plan' ? viewPlan()
-    : route.startsWith('course-') ? viewCourse(route.slice(7)) : route.startsWith('m-') ? viewModule(route.slice(2)) : viewMissing());
+    : route.startsWith('cert-') ? viewCert(route.slice(5)) : route.startsWith('course-') ? viewCourse(route.slice(7)) : route.startsWith('m-') ? viewModule(route.slice(2)) : viewMissing());
   renderChrome(route);
   $('#main').innerHTML = html;
   highlightCode();
@@ -1323,6 +1361,7 @@ document.addEventListener('click', (e) => {
   else if (a === 'open-signup') openSignIn('signup');
   else if (a === 'pw-eye') { const input = $('#' + el.dataset.v), show = input.type === 'password'; input.type = show ? 'text' : 'password'; el.textContent = show ? t('hide') : t('show'); el.setAttribute('aria-label', show ? t('hidePw') : t('showPw')); }
   else if (a === 'sign-out') signOut();
+  else if (a === 'cert-print') window.print();
   else if (a === 'calendar') downloadPlanCalendar();
   else if (a === 'toggle-done') { const id = el.dataset.id; if (state.done.has(id)) state.done.delete(id); else { state.done.add(id); logActivity('done', id); } save(); render(true);
     const tr = track(DATA.modules[id].track), st = trackStats(tr);
@@ -1364,6 +1403,7 @@ document.addEventListener('click', (e) => {
 });
 function selectCode() { const r = document.createRange(); r.selectNodeContents($('#code-block')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
 document.addEventListener('input', (e) => {
+  if (e.target.id === 'cert-name') { store.set('certName', e.target.value.trim()); $('#cert-name-out').innerHTML = esc(e.target.value.trim()) || '&nbsp;'; return; }
   if (e.target.classList?.contains('ch-code')) { const drafts = store.get('chDrafts', {}); drafts[e.target.dataset.key] = e.target.value; store.set('chDrafts', drafts); }
   if (e.target.id === 'note-text') { const fresh = !(state.notes[state.noteModule] || '').trim(); state.notes[state.noteModule] = e.target.value; if (fresh && e.target.value.trim()) logActivity('note', state.noteModule); save(); const n = e.target.value.trim() ? e.target.value.trim().split(/\s+/).length : 0; $('#note-status').textContent = n ? `${state.user ? t('savedAccount') : t('savedDevice')} · ${n} ${t('words')}` : ''; }
   if (e.target.id === 'gloss-course') { state.glossCourse = e.target.value; state.glossLetter = 'all'; render(true); }
