@@ -21,6 +21,7 @@ const UI = {
     startJava: 'Start the Java course', browse: 'Browse courses', continueTitle: 'Continue where you left off', continueBtn: 'Continue', startBtn: 'Start',
     certTitle: 'Course certificate', certLocked: 'Finish every module and pass every quiz with 60% or more to earn your certificate.', certModules: (a, b) => `${a} / ${b} modules complete`, certQuizzes: (a, b) => `${a} / ${b} quizzes passed`, certEarned: 'Certificate earned', certEarnedText: 'You finished every module and passed every quiz.', certView: 'View certificate', certOf: 'Certificate of completion', certThat: 'This certifies that', certDone: 'has completed the course', certDetail: (m, h, q) => `${m} modules · about ${h} hours · ${q}% average quiz score`, certOn: (d) => `Completed on ${d}`, certName: 'Name on the certificate', certPrint: 'Print or save as PDF', certNotYet: 'This certificate is not earned yet.', certBack: 'Back to the course', certFrom: 'CS Course Atlas',
     vizStep: 'Step through', vizHint: 'Run line by line and watch the variables change', vizSteps: (n) => `${n} steps recorded`, vizStepOf: (a, b) => `Step ${a} of ${b}`, vizBack: 'Back', vizNext: 'Next', vizFirst: 'First step', vizLast: 'Last step', vizClose: 'Close', vizAbout: (n) => `About to run line ${n}`, vizReturns: (f, v) => `${f}() returns <code>${v}</code>`, vizEnd: 'The program finished.', vizCrashed: (n) => `The program stopped with an error on line ${n}.`, vizGlobals: 'Global variables', vizNoVars: 'No variables yet', vizNothing: 'Nothing printed yet', vizCapped: 'Stopped after 600 steps. Try a smaller input to see the whole run.',
+    notesDownload: 'Download all (.md)', pgShare: 'Share', pgShareHint: 'Copy a link that opens this code in the playground', linkCopied: 'Link copied. Anyone who opens it sees this code.', copyThisLink: 'Copy this link:', pgShared: 'a shared link', pgBadLink: 'That code link is broken, so the playground opened as usual.', pgTooLong: 'This code is too long for a link (8,000 characters max).',
     ofModules: (a, b) => `${a} of ${b} modules complete`, courseDone: 'Course complete. Nice work.',
     coursesTitle: 'Courses', coursesLead: 'New to programming? Follow the beginner path in order: all nine courses are ready. After it come Java and the next-level courses; the ones still being written show their outline, and you can vote for what you want next.',
     plannedTitle: 'Planned courses', plannedNote: 'Beginner courses first. Vote for the ones you want next.', javaTrack: 'Java course', studyTools: 'Study tools',
@@ -85,6 +86,7 @@ const UI = {
     startJava: 'Empezar el curso de Java', browse: 'Ver cursos', continueTitle: 'Continúa donde te quedaste', continueBtn: 'Continuar', startBtn: 'Empezar',
     certTitle: 'Certificado del curso', certLocked: 'Termina todos los módulos y aprueba cada cuestionario con 60% o más para obtener tu certificado.', certModules: (a, b) => `${a} / ${b} módulos completados`, certQuizzes: (a, b) => `${a} / ${b} cuestionarios aprobados`, certEarned: 'Certificado obtenido', certEarnedText: 'Terminaste todos los módulos y aprobaste cada cuestionario.', certView: 'Ver certificado', certOf: 'Certificado de finalización', certThat: 'Se certifica que', certDone: 'completó el curso', certDetail: (m, h, q) => `${m} módulos · unas ${h} horas · ${q}% de promedio en cuestionarios`, certOn: (d) => `Completado el ${d}`, certName: 'Nombre en el certificado', certPrint: 'Imprimir o guardar como PDF', certNotYet: 'Este certificado aún no se ha obtenido.', certBack: 'Volver al curso', certFrom: 'CS Course Atlas',
     vizStep: 'Paso a paso', vizHint: 'Ejecuta línea por línea y mira cómo cambian las variables', vizSteps: (n) => `${n} pasos registrados`, vizStepOf: (a, b) => `Paso ${a} de ${b}`, vizBack: 'Atrás', vizNext: 'Siguiente', vizFirst: 'Primer paso', vizLast: 'Último paso', vizClose: 'Cerrar', vizAbout: (n) => `A punto de ejecutar la línea ${n}`, vizReturns: (f, v) => `${f}() devuelve <code>${v}</code>`, vizEnd: 'El programa terminó.', vizCrashed: (n) => `El programa se detuvo con un error en la línea ${n}.`, vizGlobals: 'Variables globales', vizNoVars: 'Aún no hay variables', vizNothing: 'Aún no se imprimió nada', vizCapped: 'Se detuvo tras 600 pasos. Prueba con una entrada más pequeña para ver toda la ejecución.',
+    notesDownload: 'Descargar todo (.md)', pgShare: 'Compartir', pgShareHint: 'Copia un enlace que abre este código en el editor', linkCopied: 'Enlace copiado. Quien lo abra verá este código.', copyThisLink: 'Copia este enlace:', pgShared: 'un enlace compartido', pgBadLink: 'Ese enlace de código está dañado, así que el editor se abrió como siempre.', pgTooLong: 'Este código es demasiado largo para un enlace (máximo 8.000 caracteres).',
     ofModules: (a, b) => `${a} de ${b} módulos completados`, courseDone: 'Curso completado. ¡Buen trabajo!',
     coursesTitle: 'Cursos', coursesLead: '¿Nuevo en programación? Sigue la ruta para principiantes en orden: los nueve cursos están listos. Después vienen Java y los cursos del siguiente nivel; los que aún se escriben muestran su temario y puedes votar por lo que quieras primero.',
     plannedTitle: 'Cursos planeados', plannedNote: 'Primero los de nivel principiante. Vota por los que quieres primero.', javaTrack: 'Curso de Java', studyTools: 'Herramientas de estudio',
@@ -771,10 +773,25 @@ function viewPlayground() {
         <button class="lang" data-action="pg-reset" style="margin-left:auto">${t('reset')}</button><button class="lang run" data-action="pg-run">${t('run')}</button></div>
         ${pg.from ? `<div class="pg-from">${esc(t('pgLoaded', pg.from))}</div>` : ''}
         <textarea id="pg-code" wrap="off" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Code editor">${esc(pg.code)}</textarea></div>
-      <div class="pg-out"><div class="code-bar"><span class="output-label" style="padding:6px 8px">${t('output')}</span><span class="pg-status" id="pg-status"></span>${pg.lang === 'python' ? `<button class="lang" data-action="pg-step" title="${t('vizHint')}">⇥ ${t('vizStep')}</button>` : ''}</div><pre id="pg-out"><span class="info">${pg.lang === 'javascript' ? 'Ctrl/⌘ + Enter' : ''}</span></pre></div>
+      <div class="pg-out"><div class="code-bar"><span class="output-label" style="padding:6px 8px">${t('output')}</span><span class="pg-status" id="pg-status"></span>${pg.lang === 'python' ? `<button class="lang" data-action="pg-step" title="${t('vizHint')}">⇥ ${t('vizStep')}</button>` : ''}<button class="lang" data-action="pg-share" title="${t('pgShareHint')}">🔗 ${t('pgShare')}</button></div><pre id="pg-out"><span class="info">${pg.lang === 'javascript' ? 'Ctrl/⌘ + Enter' : ''}</span></pre></div>
     </div></section>`;
 }
 let pgWorker = null;
+// Shareable playground links: #code/<language>/<code as base64url>. Everything stays in the URL; nothing is uploaded.
+const b64url = (str) => { let bin = ''; new TextEncoder().encode(str).forEach((b) => { bin += String.fromCharCode(b); }); return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, ''); };
+const unb64url = (s) => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/-/g, '+').replace(/_/g, '/')), (c) => c.charCodeAt(0)));
+function decodeShared(route) {
+  const [, lang, data] = route.split('/');
+  try { if (LANGS.some(([k]) => k === lang) && data) return { lang, code: unb64url(data).slice(0, 20000), expected: '', from: t('pgShared') }; } catch (e) { /* bad link */ }
+  toast(t('pgBadLink')); return null;
+}
+function sharePlayground() {
+  const pg = state.pg; pg.code = $('#pg-code').value;
+  if (pg.code.length > 8000) { toast(t('pgTooLong'), 2600); return; }
+  const url = location.origin + location.pathname + '#code/' + pg.lang + '/' + b64url(pg.code);
+  const done = () => toast(t('linkCopied'));
+  if (navigator.clipboard?.writeText) navigator.clipboard.writeText(url).then(done, () => window.prompt(t('copyThisLink'), url)); else window.prompt(t('copyThisLink'), url);
+}
 function runPlayground() {
   if (state.viz) vizClose();
   const pg = state.pg, out = $('#pg-out'), status = $('#pg-status');
@@ -1135,7 +1152,8 @@ function viewNotes() {
   if (!state.noteModule) state.noteModule = nextModule() || ids[0];
   const id = state.noteModule, text = state.notes[id] || '';
   const words = (x) => (x.trim() ? x.trim().split(/\s+/).length : 0);
-  return `<section class="wrap"><h1>${t('notes')}</h1><p class="lead">${state.user ? t('notesLeadIn') : t('notesLead')}</p>
+  const hasNotes = Object.entries(state.notes).some(([k, v]) => v && v.trim() && DATA.modules[k]);
+  return `<section class="wrap"><div class="page-head"><h1>${t('notes')}</h1>${hasNotes ? `<button class="btn btn-ghost btn-sm" data-action="notes-download">⤓ ${t('notesDownload')}</button>` : ''}</div><p class="lead">${state.user ? t('notesLeadIn') : t('notesLead')}</p>
     <div class="notes" style="margin-top:22px"><div class="card notes-list">${orderedTracks().map((tr) => `<div class="notes-course">${esc(L(tr.title))}</div>` + trackIds(tr.id).map((m) => `<button data-action="note-pick" data-id="${m}" aria-pressed="${m === id}">${dot(m)}<span>${esc(moduleTitle(m))}</span>${state.notes[m] ? `<span class="n">${words(state.notes[m])}</span>` : ''}</button>`).join('')).join('')}</div>
       <div class="card note-editor"><select class="select note-pick" id="note-module" aria-label="${t('module')}">${moduleOptions(id)}</select><div class="row-top"><b>${t('notesFor')} ${esc(moduleTitle(id))}</b><a class="muted" href="#m-${id}">${t('module')} →</a></div>
         <textarea id="note-text" placeholder="${t('notePlaceholder')}">${esc(text)}</textarea>
@@ -1441,6 +1459,7 @@ function highlightCode() {
 function render(keepScroll) {
   if (!DATA) return;
   let route = location.hash.slice(1) || 'home';
+  if (route.startsWith('code/')) { const shared = decodeShared(route); if (shared) { state.pg = shared; state.viz = null; } history.replaceState(null, '', '#playground'); route = 'playground'; }
   if (route === 'profile' && !state.user && !state.authReady) { renderChrome(route); $('#main').innerHTML = `<div class="loading">${t('checkingSession')}</div>`; lastRoute = route; return; }
   if (route === 'profile' && !state.user) {
     openSignIn();
@@ -1512,6 +1531,21 @@ document.addEventListener('click', (e) => {
   }
   else if (a === 'pg-reset') { state.pg = null; state.viz = null; render(true); }
   else if (a === 'pg-step') traceProgram();
+  else if (a === 'pg-share') sharePlayground();
+  else if (a === 'notes-download') {
+    // One Markdown file, grouped by course in path order.
+    const md = [`# ${t('notes')} · CS Course Atlas`, ''];
+    orderedTracks().concat(DATA.tracks.filter((tr) => !orderedTracks().includes(tr))).forEach((tr) => {
+      const mods = trackIds(tr.id).filter((m) => (state.notes[m] || '').trim());
+      if (!mods.length) return;
+      md.push(`## ${L(tr.title)}`, '');
+      mods.forEach((m) => md.push(`### ${moduleTitle(m)}`, '', state.notes[m].trim(), ''));
+    });
+    const a2 = document.createElement('a');
+    a2.href = URL.createObjectURL(new Blob([md.join('\n')], { type: 'text/markdown' }));
+    a2.download = 'cs-course-atlas-notes.md'; document.body.append(a2); a2.click(); a2.remove();
+    setTimeout(() => URL.revokeObjectURL(a2.href), 1000);
+  }
   else if (a === 'viz-go') vizGo(+el.dataset.v);
   else if (a === 'viz-close') vizClose();
   else if (a === 'note-pick') { state.noteModule = el.dataset.id; render(true); }
