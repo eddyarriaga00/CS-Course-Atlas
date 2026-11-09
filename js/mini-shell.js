@@ -4,7 +4,7 @@
  * runs every challenge solution here AND in real Bash and requires the same files, permissions
  * and output, so what learners see matches a real terminal for these commands.
  *
- * Supported: pwd cd ls mkdir touch echo printf cat cp mv rm rmdir head tail wc sort uniq grep
+ * Supported: pwd cd ls mkdir touch echo printf cat cp mv rm rmdir head tail wc sort uniq grep (-ivcnwEq)
  * chmod export unset true false bash/sh/./script, NAME=value, $VAR ${VAR} $1.. $@ $? ~, globs
  * (* ? [..]), quotes, pipes |, redirects > >> <, ; && || and one-level `for NAME in ...; do ...; done`.
  */
@@ -353,7 +353,7 @@
       return { out: joinLines(groups.filter((g) => (!f.d || g.n > 1) && (!f.u || g.n === 1)).map((g) => (f.c ? String(g.n).padStart(7) + ' ' : '') + g.l)) };
     },
     grep(sh, args, stdin) {
-      const [f, rest] = flags(args, ['i', 'v', 'c', 'n', 'w', 'E']);
+      const [f, rest] = flags(args, ['i', 'v', 'c', 'n', 'w', 'E', 'q']);
       if (!rest.length) return { err: 'Usage: grep [OPTION]... PATTERNS [FILE]...\n', code: 2 };
       const [pattern, ...files] = rest;
       let re;
@@ -367,7 +367,7 @@
         lines(r.data).forEach((l, i) => { if (re.test(l) !== !!f.v) { n++; any = true; if (!f.c) out += (multi ? r.name + ':' : '') + (f.n ? i + 1 + ':' : '') + l + '\n'; } });
         if (f.c) out += (multi ? r.name + ':' : '') + n + '\n';
       }
-      return { out, err, code: err ? 2 : any ? 0 : 1 };
+      return { out: f.q ? '' : out, err, code: f.q && any ? 0 : err ? 2 : any ? 0 : 1 };
     },
     chmod(sh, args) {
       if (args.length < 2) return { err: 'chmod: missing operand\n', code: 1 };

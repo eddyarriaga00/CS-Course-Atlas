@@ -3462,6 +3462,26 @@
     "es": "`cd downloads`, luego `mkdir texts`, `mv *.txt texts/` (el comodín toma cada .txt) y `rm -r old`."
    },
    "output": false
+  },
+  {
+   "id": "backup-copy",
+   "lang": "bash",
+   "title": {
+    "en": "Back up a folder",
+    "es": "Respalda una carpeta"
+   },
+   "prompt": {
+    "en": "Make a full copy of the `project` folder called `project-backup`, then delete `tmp.log` from the original `project` (the backup keeps its copy).",
+    "es": "Haz una copia completa de la carpeta `project` llamada `project-backup` y luego borra `tmp.log` del `project` original (el respaldo conserva su copia)."
+   },
+   "setup": "mkdir -p project/src\necho 'print(1)' > project/src/main.py\necho 'notes' > project/README.md\necho 'debug' > project/tmp.log\n",
+   "starter": "# Type one command per line, then press Run.\n",
+   "solution": "cp -r project project-backup\nrm project/tmp.log\n",
+   "hint": {
+    "en": "`cp -r project project-backup` copies a folder and everything in it (`-r` = recursive); then `rm project/tmp.log`.",
+    "es": "`cp -r project project-backup` copia una carpeta con todo su contenido (`-r` = recursivo); luego `rm project/tmp.log`."
+   },
+   "output": false
   }
  ],
  "cli-text-pipes": [
@@ -3504,6 +3524,26 @@
     "es": "`sort visitors.txt | uniq > unique.txt` (uniq solo quita repetidos contiguos, por eso primero se ordena). Luego `wc -l < unique.txt` imprime solo la cantidad."
    },
    "output": true
+  },
+  {
+   "id": "top-scores",
+   "lang": "bash",
+   "title": {
+    "en": "Top three scores",
+    "es": "Las tres mejores notas"
+   },
+   "prompt": {
+    "en": "Each line of `scores.txt` is a score and a name. Print the three highest lines, highest first.",
+    "es": "Cada línea de `scores.txt` es una nota y un nombre. Imprime las tres líneas más altas, de mayor a menor."
+   },
+   "setup": "printf '%s\\n' '72 Ben' '95 Ana' '88 Chen' '61 Eli' '91 Dara' > scores.txt\n",
+   "starter": "# Type one command per line, then press Run.\n",
+   "solution": "sort -rn scores.txt | head -n 3\n",
+   "hint": {
+    "en": "`sort -rn` sorts by number (`-n`) in reverse (`-r`); pipe it into `head -n 3`.",
+    "es": "`sort -rn` ordena por número (`-n`) al revés (`-r`); pásalo con una tubería a `head -n 3`."
+   },
+   "output": true
   }
  ],
  "cli-permissions-env": [
@@ -3544,6 +3584,26 @@
    "hint": {
     "en": "`export PROJECT=atlas` (no spaces around `=`), then `mkdir \"$PROJECT\" && echo \"$PROJECT\" > \"$PROJECT/name.txt\"`.",
     "es": "`export PROJECT=atlas` (sin espacios alrededor de `=`), luego `mkdir \"$PROJECT\" && echo \"$PROJECT\" > \"$PROJECT/name.txt\"`."
+   },
+   "output": false
+  },
+  {
+   "id": "alert-if-error",
+   "lang": "bash",
+   "title": {
+    "en": "React to an exit code",
+    "es": "Reacciona a un código de salida"
+   },
+   "prompt": {
+    "en": "In one line, write `alert` into `status.txt` if `app.log` contains `ERROR`, and `fine` otherwise. Use `grep -q` (quiet: it only sets the exit code) with `&&` and `||`.",
+    "es": "En una línea, escribe `alert` en `status.txt` si `app.log` contiene `ERROR`, y `fine` si no. Usa `grep -q` (silencioso: solo deja el código de salida) con `&&` y `||`."
+   },
+   "setup": "printf '%s\\n' 'INFO start' 'ERROR disk full' 'INFO stop' > app.log\n",
+   "starter": "# Type one command per line, then press Run.\n",
+   "solution": "grep -q ERROR app.log && echo alert > status.txt || echo fine > status.txt\n",
+   "hint": {
+    "en": "`grep -q ERROR app.log` succeeds (exit code 0) when it finds a match, so `&& echo alert > status.txt` runs; otherwise the part after `||` runs.",
+    "es": "`grep -q ERROR app.log` tiene éxito (código 0) si encuentra una coincidencia, así que corre `&& echo alert > status.txt`; si no, corre lo que va después de `||`."
    },
    "output": false
   }
@@ -3591,6 +3651,26 @@
    "loose": [
     "greet.sh"
    ]
+  },
+  {
+   "id": "count-each",
+   "lang": "bash",
+   "title": {
+    "en": "Count lines in each file",
+    "es": "Cuenta las líneas de cada archivo"
+   },
+   "prompt": {
+    "en": "For every `.txt` file in `notes`, print its line count followed by its name (like `wc -l` does), one file per line, using a `for` loop.",
+    "es": "Para cada archivo `.txt` en `notes`, imprime su cantidad de líneas seguida de su nombre (como hace `wc -l`), un archivo por línea, usando un ciclo `for`."
+   },
+   "setup": "mkdir notes\nprintf '%s\\n' a b c > notes/abc.txt\nprintf '%s\\n' x > notes/x.txt\nprintf '%s\\n' 1 2 > notes/two.txt\ntouch notes/skip.md\n",
+   "starter": "# Type one command per line, then press Run.\n",
+   "solution": "cd notes\nfor f in *.txt; do wc -l \"$f\"; done\n",
+   "hint": {
+    "en": "`cd notes`, then `for f in *.txt; do wc -l \"$f\"; done`. The glob gives the files in alphabetical order.",
+    "es": "`cd notes`, luego `for f in *.txt; do wc -l \"$f\"; done`. El comodín da los archivos en orden alfabético."
+   },
+   "output": true
   }
  ],
  "git-basics-workflow": [
@@ -3693,6 +3773,26 @@
    "hint": {
     "en": "Stay on `main`: `git merge fix-readme` makes a merge commit (`Merge branch 'fix-readme'`). Then `git branch -d fix-readme` removes the merged branch.",
     "es": "Quédate en `main`: `git merge fix-readme` crea un commit de merge (`Merge branch 'fix-readme'`). Luego `git branch -d fix-readme` borra la rama ya fusionada."
+   },
+   "output": false
+  },
+  {
+   "id": "experiment",
+   "lang": "bash",
+   "title": {
+    "en": "Experiment without risk",
+    "es": "Experimenta sin riesgo"
+   },
+   "prompt": {
+    "en": "In `project`, start a branch `experiment`, add `try.md` with the text `idea` and commit it as `Try an idea`. Then go back to `main`: `main` must not have the file or the commit.",
+    "es": "En `project`, crea una rama `experiment`, agrega `try.md` con el texto `idea` y haz commit como `Try an idea`. Luego vuelve a `main`: `main` no debe tener el archivo ni el commit."
+   },
+   "setup": "mkdir project\ncd project\ngit init -q\necho '# Project' > README.md\ngit add README.md\ngit commit -q -m 'Initial commit'\n",
+   "starter": "# Type one command per line, then press Run.\n",
+   "solution": "cd project\ngit switch -q -c experiment\necho idea > try.md\ngit add try.md\ngit commit -q -m \"Try an idea\"\ngit switch -q main\n",
+   "hint": {
+    "en": "`git switch -c experiment`, create and commit the file, then `git switch main`. Run `ls` to see `try.md` disappear: it lives only on the branch.",
+    "es": "`git switch -c experiment`, crea el archivo y haz commit, luego `git switch main`. Ejecuta `ls` para ver que `try.md` desaparece: solo vive en la rama."
    },
    "output": false
   }
