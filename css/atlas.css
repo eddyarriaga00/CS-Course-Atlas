@@ -931,3 +931,27 @@ pre[tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 
 .predict-toggle input { accent-color: var(--accent); }
 .veil { padding: 18px 16px; display: grid; gap: 10px; justify-items: start; color: #c9cde0; font-size: 14px; }
 .veil p { margin: 0; }
+
+/* Practice hub: stacked cards (icon + arrow on top, full-width text, stats pinned to the bottom) */
+@media (min-width: 701px) {
+  .hub-card { display: grid; grid-template-columns: auto 1fr auto; grid-template-rows: auto 1fr; column-gap: 14px; row-gap: 14px; align-items: center; }
+  .hub-card .hub-ico { grid-column: 1; grid-row: 1; }
+  .hub-card .hub-go { grid-column: 3; grid-row: 1; }
+  .hub-card .hub-body { grid-column: 1 / -1; grid-row: 2; display: flex; flex-direction: column; height: 100%; }
+  .hub-card .hub-body h2 { margin-top: 0; }
+  .hub-card .hub-body p { flex: 1; }
+  .hub-card .hub-body .progress { margin-top: auto; }
+}
+.hub-card { position: relative; overflow: hidden; }
+.hub-card::before { content: ''; position: absolute; inset: 0 0 auto 0; height: 3px; background: linear-gradient(90deg, var(--accent), color-mix(in srgb, var(--accent) 30%, transparent)); opacity: 0; transition: opacity .15s; }
+.hub-card:hover::before { opacity: 1; }
+.hub-stats { gap: 6px 16px; }
+@media (max-width: 1100px) and (min-width: 701px) { .practice-hub { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 900px) and (min-width: 701px) { .practice-hub { grid-template-columns: 1fr; } }
+@media (max-width: 700px) {
+  .hub-card { display: grid; grid-template-columns: auto 1fr auto; column-gap: 12px; row-gap: 10px; align-items: center; padding: 18px; }
+  .hub-card .hub-ico { grid-column: 1; grid-row: 1; width: 38px; height: 38px; font-size: 17px; }
+  .hub-card .hub-go { grid-column: 3; grid-row: 1; }
+  .hub-card .hub-body { grid-column: 1 / -1; grid-row: 2; }
+  .hub-card .hub-body h2 { margin-top: 0; }
+}
