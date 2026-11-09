@@ -246,6 +246,38 @@ test.describe('Navigation', () => {
         await expect(page.locator('.q-from')).toContainText('SQL & Databases');
     });
 
+    test('a module page downloads only its own lesson file', async ({ page }) => {
+        await mockApi(page);
+        const lessons = [];
+        page.on('request', (r) => { const u = r.url(); if (u.includes('/data/lessons/')) lessons.push(u.split('/').pop().split('?')[0]); });
+        await page.goto('/index.html#m-oop-basics');
+        await expect(page.locator('#main h1')).toHaveText('Object-Oriented Programming');
+        await page.locator('.tab[data-tab="quiz"]').click();
+        await expect(page.locator('.quiz')).toBeVisible();
+        expect(lessons).toContain('m-oop-basics.json');
+        expect(lessons).not.toContain('java.json');
+    });
+
+    test('notes written in a lesson show up on the Notes page', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html#m-python-functions');
+        await page.locator('#mod-note').fill('return ends the function');
+        await expect(page.locator('#mod-note-status')).toContainText('Saved');
+        await page.goto('/index.html#notes');
+        await page.locator('[data-action="note-pick"][data-id="python-functions"]').click();
+        await expect(page.locator('#note-text')).toHaveValue('return ends the function');
+    });
+
+    test('guess first hides example output until revealed', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html#m-java-basics');
+        await page.locator('.tab[data-tab="examples"]').click();
+        await page.locator('.predict-toggle input').check();
+        await expect(page.locator('.output .veil')).toBeVisible();
+        await page.locator('[data-action="reveal-output"]').click();
+        await expect(page.locator('.output pre')).toBeVisible();
+    });
+
     test('mixed review quizzes across completed modules', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html#m-python-first-programs');
