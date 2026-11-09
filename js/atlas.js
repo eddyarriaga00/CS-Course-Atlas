@@ -53,7 +53,7 @@ const UI = {
     pgLead: 'Write and run code right here. JavaScript, Python, SQL, web pages and a practice terminal run in your browser; Java and C++ will run on the CS Course Atlas server.',
     pgServer: 'Running this language needs the code server, which is on the roadmap. Here is the output this example prints:', pgServerNoExpected: 'Running this language needs the code server, which is on the roadmap. Switch to JavaScript or Python to run code now.',
     pgDone: (ms) => `Finished in ${ms} ms`, pgTimeout: 'Stopped after 3 seconds (infinite loop?)', pgEmpty: '(no output)', pgLoaded: (m) => `Loaded from ${m}`,
-    notesLeadIn: 'One page of notes per module, saved to your account and synced to every device you sign in on.', notesLead: 'One page of notes per module, saved on this device. With an account they sync everywhere.', notePlaceholder: 'What clicked? What confused you? Write it in your own words.', myNotes: 'My notes',
+    notesLeadIn: 'One page of notes per module, saved to your account and synced to every device you sign in on.', notesLead: 'One page of notes per module, saved on this device. With an account they sync everywhere.', notePlaceholder: 'What clicked? What confused you? Write it in your own words.', myNotes: 'My notes', predictMode: 'Guess first', predictFirst: 'What will this program print? Decide first, then check.', showOutput: 'Show the output',
     savedDevice: 'Saved on this device', notesFor: 'Notes for', words: 'words',
     glossaryLead: (n) => `${n} terms from the published courses, each linked to the module that teaches it.`, filterTerms: 'Filter terms', all: 'All', fromModule: (m) => `From ${m} →`,
     roadmapLead: 'Where CS Course Atlas is going. Vote for what you want next.', live: 'Live', building: 'In progress', planned: 'Planned', vote: '▲ Vote', voted: '▲ Voted',
@@ -120,7 +120,7 @@ const UI = {
     pgLead: 'Escribe y ejecuta código aquí mismo. JavaScript, Python, SQL, las páginas web y una terminal de práctica corren en tu navegador; Java y C++ correrán en el servidor de CS Course Atlas.',
     pgServer: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Esta es la salida que imprime el ejemplo:', pgServerNoExpected: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Cambia a JavaScript o Python para ejecutar código ahora.',
     pgDone: (ms) => `Terminó en ${ms} ms`, pgTimeout: 'Detenido después de 3 segundos (¿bucle infinito?)', pgEmpty: '(sin salida)', pgLoaded: (m) => `Cargado desde ${m}`,
-    notesLeadIn: 'Una página de notas por módulo, guardada en tu cuenta y sincronizada en cada dispositivo donde inicies sesión.', notesLead: 'Una página de notas por módulo, guardada en este dispositivo. Con una cuenta se sincronizan en todas partes.', notePlaceholder: '¿Qué entendiste? ¿Qué te confundió? Escríbelo con tus palabras.', myNotes: 'Mis notas',
+    notesLeadIn: 'Una página de notas por módulo, guardada en tu cuenta y sincronizada en cada dispositivo donde inicies sesión.', notesLead: 'Una página de notas por módulo, guardada en este dispositivo. Con una cuenta se sincronizan en todas partes.', notePlaceholder: '¿Qué entendiste? ¿Qué te confundió? Escríbelo con tus palabras.', myNotes: 'Mis notas', predictMode: 'Adivina primero', predictFirst: '¿Qué imprimirá este programa? Decide primero y luego revisa.', showOutput: 'Mostrar la salida',
     savedDevice: 'Guardado en este dispositivo', notesFor: 'Notas de', words: 'palabras',
     glossaryLead: (n) => `${n} términos de los cursos publicados, cada uno enlazado al módulo que lo enseña.`, filterTerms: 'Filtrar términos', all: 'Todos', fromModule: (m) => `De ${m} →`,
     roadmapLead: 'Hacia dónde va CS Course Atlas. Vota por lo que quieres primero.', live: 'Disponible', building: 'En progreso', planned: 'Planeado', vote: '▲ Votar', voted: '▲ Votado',
@@ -142,7 +142,7 @@ const state = {
   lang: store.get('lang', (navigator.language || '').toLowerCase().startsWith('es') ? 'es' : 'en'), user: null, authReady: false, syncedAt: null, done: new Set(store.get('done', [])),
   codeLang: store.get('codeLang', 'java'), notified: new Set(store.get('notified', [])), tab: 'overview', exIndex: 0, quiz: null, flash: null,
   notes: store.get('notes', {}), aces: new Set(store.get('aces', [])), langsSeen: new Set(store.get('langsSeen', ['java'])), votes: new Set(store.get('votes', [])),
-  plan: store.get('plan', { hours: 4, start: new Date().toISOString().slice(0, 10) }), quizBest: store.get('quizBest', {}), cardsKnown: new Set(store.get('cardsKnown', [])), cardBox: store.get('cardBox', {}), quizTimed: store.get('quizTimed', false), certs: store.get('certs', {}), solved: new Set(store.get('solved', [])), chTries: {}, chModule: null, quizModule: null, flashModule: null, activity: store.get('activity', []), pg: null, sideCollapsed: new Set(), noteModule: null, glossLetter: 'all', glossQuery: '', glossCourse: 'all'
+  plan: store.get('plan', { hours: 4, start: new Date().toISOString().slice(0, 10) }), quizBest: store.get('quizBest', {}), cardsKnown: new Set(store.get('cardsKnown', [])), cardBox: store.get('cardBox', {}), predictMode: store.get('predictMode', false), revealed: new Set(), quizTimed: store.get('quizTimed', false), certs: store.get('certs', {}), solved: new Set(store.get('solved', [])), chTries: {}, chModule: null, quizModule: null, flashModule: null, activity: store.get('activity', []), pg: null, sideCollapsed: new Set(), noteModule: null, glossLetter: 'all', glossQuery: '', glossCourse: 'all'
 };
 let DATA = null;
 const $ = (s, r = document) => r.querySelector(s);
@@ -543,7 +543,8 @@ function viewModule(id) {
           : lang === 'html' ? `<pre tabindex="0" class="code"><code id="code-block" class="language-html">${esc(code)}</code></pre>
         <div class="output preview"><div class="output-label">${t('preview')}</div><iframe class="web-preview" sandbox="allow-scripts allow-forms allow-modals" title="${t('preview')}" srcdoc="${esc(code)}"></iframe></div>`
           : `<pre tabindex="0" class="code"><code id="code-block" class="language-${lang}">${esc(code)}</code></pre>
-        <div class="output"><div class="output-label">${t('output')}</div><pre tabindex="0">${esc(out)}</pre></div>`}</div>
+        ${(() => { const veil = state.predictMode && !state.revealed.has(`${id}:${state.exIndex}:${lang}`);
+          return `<div class="output${veil ? ' veiled' : ''}"><div class="output-label">${t('output')}<label class="predict-toggle"><input type="checkbox" data-action="predict-mode" ${state.predictMode ? 'checked' : ''}> ${t('predictMode')}</label></div>${veil ? `<div class="veil"><p>${t('predictFirst')}</p><button class="btn btn-sm" data-action="reveal-output" data-key="${id}:${state.exIndex}:${lang}">${t('showOutput')}</button></div>` : `<pre tabindex="0">${esc(out)}</pre>`}</div>`; })()}`}</div>
       ${state.exIndex > 0 ? `<div class="card explain prose"><h2 class="h3">${t('explanation')}</h2>${rich(L(ex.explanation))}</div>` : ''}
       ${(() => { const v = state.exIndex === 0 ? null : modVideos(id)?.topics[ex.topic]; const list = v ? null : seriesFor(id);
         return v || list ? `<div class="watch"><div class="watch-label">${v ? t('watchTopic') : t('fullSeries')}</div>${v ? vidCard(v) : vidCard(list, true)}</div>` : ''; })()}`;
@@ -1778,6 +1779,8 @@ document.addEventListener('click', (e) => {
   else if (a === 'pg-step') traceProgram();
   else if (a === 'pg-share') sharePlayground();
   else if (a === 'shortcuts') openShortcuts();
+  else if (a === 'reveal-output') { state.revealed.add(el.dataset.key); render(true); }
+  else if (a === 'predict-mode') { state.predictMode = el.checked; store.set('predictMode', state.predictMode); render(true); }
   else if (a === 'ch-step') {
     // Debug your own challenge code: open it in the playground with the first test call and step through it.
     const i = Number(el.dataset.i), ch = DATA.full[state.chModule].challenges[i], code = $('#ch-code-' + i).value.replace(/\s+$/, '');
