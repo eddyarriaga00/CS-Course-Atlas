@@ -186,6 +186,27 @@ function loadLessons(tid) {
   }
   return lessonLoads[tid];
 }
+// A module page needs only its own lessons: fetch that module's small file unless its course is already loading.
+const moduleLoads = {};
+function loadModuleLessons(id) {
+  const m = DATA.modules[id];
+  if (DATA.full[id] || !m || !m.lessons) return Promise.resolve();
+  if (lessonLoads[m.track]) return lessonLoads[m.track];
+  if (!moduleLoads[id]) {
+    moduleLoads[id] = fetch(`data/lessons/m-${id}.json?v=${m.lessons}`)
+      .then((r) => { if (!r.ok) throw new Error(String(r.status)); return r.json(); })
+      .then((one) => { DATA.full[id] = one; })
+      .catch((err) => { delete moduleLoads[id]; throw err; });
+  }
+  return moduleLoads[id];
+}
+function waitForModule(id) {
+  if (DATA.full[id] || track(DATA.modules[id].track)?.status !== 'available') return null;
+  const route = location.hash;
+  loadModuleLessons(id).then(() => { if (location.hash === route) render(true); })
+    .catch(() => { if (location.hash === route) $('#main').innerHTML = `<div class="loading">${t('lessonsFailed')} <button class="btn btn-sm" onclick="location.reload()">${t('retry')}</button></div>`; });
+  return `<div class="loading" aria-busy="true"><span class="spinner"></span>${t('loadingLessons')}</div>`;
+}
 const lessonsReady = (tids) => tids.every((tid) => trackIds(tid).every((id) => DATA.full[id]));
 // Returns a loading screen (and re-renders when ready) if any of these courses' lessons are missing.
 function waitForLessons(tids) {
@@ -371,7 +392,7 @@ function dailyChallengeCard() {
   const open = pool.filter(([m, i]) => !solvedIndex(m, i));
   if (!open.length) return '';
   const [m, i] = open[today() % open.length], title = DATA.full[m]?.challenges?.[i]?.title;
-  if (!DATA.full[m]) loadLessons(DATA.modules[m].track).then(() => { if ((location.hash.slice(1) || 'home') === 'home') render(true); }).catch(() => {});
+  if (!DATA.full[m]) loadModuleLessons(m).then(() => { if ((location.hash.slice(1) || 'home') === 'home') render(true); }).catch(() => {});
   return `<a class="card plan-home daily-ch" href="#m-${m}" data-goto-tab="challenges" data-goto-ch="${i}"><span class="cicon" style="width:34px;height:34px;font-size:13px">{ }</span><div class="info"><span class="muted">${t('dailyTitle')}</span><b>${title ? esc(L(title)) : esc(moduleTitle(m))}</b><span class="muted">${esc(moduleTitle(m))}</span></div><span class="btn btn-sm">${t('dailyGo')}</span></a>`;
 }
 // Whether challenge number i of module m is solved (keys use the challenge id, which needs the lessons).
@@ -1680,7 +1701,7 @@ function render(keepScroll) {
     history.replaceState(null, '', '#' + route);
   }
   if (route !== lastRoute) { state.tab = state.pendingTab || 'overview'; state.pendingTab = null; state.exIndex = 0; state.sideCollapsed.clear(); }
-  let loading = waitForLessons(lessonsFor(route));
+  let loading = route.startsWith('m-') && DATA.modules[route.slice(2)] ? waitForModule(route.slice(2)) : waitForLessons(lessonsFor(route));
   // A module whose lessons are still downloading shows its header right away (from the small index), so the page paints fast.
   if (loading && route.startsWith('m-') && DATA.modules[route.slice(2)]) loading = moduleSkeleton(route.slice(2), loading);
   const html = loading || (route === 'home' ? viewHome() : route === 'courses' ? viewCourses() : route === 'practice' ? viewPractice() : route === 'quizzes' ? viewQuizzes() : route === 'flashcards' ? viewFlashcards() : route === 'challenges' ? viewChallenges() : route === 'profile' ? viewProfile() : route === 'playground' ? viewPlayground() : route === 'notes' ? viewNotes() : route === 'glossary' ? viewGlossary() : route === 'roadmap' ? viewRoadmap() : route === 'plan' ? viewPlan()
@@ -1968,10 +1989,11 @@ function applyLegacyLink() {
   q.delete('module'); q.delete('route');
   history.replaceState(null, '', url.pathname + url.search + '#' + hash);
 }
-// After the first page is on screen, quietly load the course the learner is most likely to open next.
+// After the first page is on screen, quietly load the module the learner is most likely to open next
+// (just that module's small file, not the whole course).
 function prefetchLessons() {
   const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 1200));
-  idle(() => { loadLessons(currentTrack()).catch(() => {}); });
+  idle(() => { const next = nextModule(currentTrack()) || trackIds(currentTrack())[0]; if (next) loadModuleLessons(next).catch(() => {}); });
 }
 (function boot() {
   applyLegacyLink();

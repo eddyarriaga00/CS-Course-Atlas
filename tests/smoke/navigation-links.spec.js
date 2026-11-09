@@ -95,7 +95,7 @@ test.describe('Navigation', () => {
 
     test('module pages show a loading state while their lessons download', async ({ page }) => {
         await mockApi(page);
-        await page.route('**/data/lessons/sql.json*', async (route) => { await new Promise((r) => setTimeout(r, 800)); await route.continue(); });
+        await page.route('**/data/lessons/m-sql-joins.json*', async (route) => { await new Promise((r) => setTimeout(r, 800)); await route.continue(); });
         await page.goto('/index.html#m-sql-joins');
         await expect(page.locator('#main .loading')).toBeVisible();
         await expect(page.locator('#main h1')).toHaveText('Combining Tables');
