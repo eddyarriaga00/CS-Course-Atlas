@@ -1425,7 +1425,8 @@ async function exchangeGitHubCodeForProfile(code, redirectUri) {
     }
     return {
         provider: 'github',
-        subject: safeString(userPayload?.id),
+        // GitHub's user id is a number; safeString only keeps strings, so convert it first.
+        subject: userPayload?.id != null ? String(userPayload.id) : '',
         email,
         emailVerified: true,
         name: safeString(userPayload?.name || userPayload?.login),
