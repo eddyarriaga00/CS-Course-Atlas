@@ -803,3 +803,35 @@ a.path-step.planned .path-go { color: var(--text-3); font-weight: 500; }
   .shell, main, .wrap { display: block !important; padding: 0 !important; margin: 0 !important; max-width: none !important; }
   .certificate { box-shadow: none; max-width: none; width: 100%; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
+
+/* ---------- Step-through visualizer (Python) ---------- */
+.viz { flex: 1; display: flex; flex-direction: column; min-height: 0; color: #d7dbe8; font-size: 13px; outline: none; }
+.viz-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,.08); }
+.viz-bar .lang[disabled] { opacity: .4; cursor: default; }
+.viz-count { font-variant-numeric: tabular-nums; color: #aab0c4; padding: 0 6px; }
+.viz-range { width: calc(100% - 20px); margin: 8px 10px 0; accent-color: var(--accent); }
+.viz-body { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; flex: 1; min-height: 0; }
+.viz-code { list-style: none; margin: 0; padding: 8px 0; max-height: 260px; overflow: auto; font-family: var(--mono, 'JetBrains Mono', monospace); font-size: 12.5px; line-height: 1.65; border-bottom: 1px solid rgba(255,255,255,.08); }
+.viz-code li { display: flex; gap: 12px; padding: 0 12px; white-space: pre; border-left: 3px solid transparent; }
+.viz-code .ln { color: #6f7590; min-width: 2ch; text-align: right; user-select: none; }
+.viz-code code { background: none; padding: 0; color: inherit; font: inherit; }
+.viz-code li.now { background: rgba(250, 204, 21, .14); border-left-color: #facc15; }
+.viz-code li.ret { background: rgba(74, 222, 128, .12); border-left-color: #4ade80; }
+.viz-code li.was { background: rgba(255,255,255,.04); }
+.viz-side { padding: 10px 12px 14px; display: grid; gap: 10px; align-content: start; overflow: auto; }
+.viz-note { color: #e6e9f2; font-weight: 600; }
+.viz-note code { background: rgba(255,255,255,.08); padding: 1px 6px; border-radius: 5px; }
+.viz-frame { border: 1px solid rgba(255,255,255,.1); border-radius: 10px; padding: 8px 10px; }
+.viz-frame.top { border-color: color-mix(in srgb, var(--accent) 55%, transparent); }
+.viz-fn { font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: #8f96b0; margin-bottom: 4px; font-weight: 700; }
+.viz-frame table { border-collapse: collapse; width: 100%; }
+.viz-frame th { text-align: left; font-weight: 600; padding: 3px 10px 3px 0; color: #c7cbe0; white-space: nowrap; vertical-align: top; width: 1%; font-family: var(--mono, monospace); }
+.viz-frame td { padding: 3px 0; word-break: break-word; }
+.viz-frame td code { background: none; padding: 0; color: #e6e9f2; }
+.viz-frame .ty { margin-left: 8px; font-size: 11px; color: #7d84a0; }
+.viz-frame tr.changed td code { color: #fde68a; }
+.viz-frame tr.changed th::after { content: ' •'; color: #facc15; }
+.viz-none { font-size: 12px; }
+.viz-printed pre { margin: 0; white-space: pre-wrap; font-size: 12.5px; color: #d7dbe8; }
+.viz-printed .err, .viz .err { color: #ff9b94; }
+@media (max-width: 520px) { .viz-bar { gap: 2px; padding: 6px; } .viz-bar [aria-label="First step"], .viz-bar [aria-label="Last step"], .viz-bar [aria-label="Primer paso"], .viz-bar [aria-label="Último paso"] { display: none; } .viz-count { padding: 0 2px; font-size: 12px; } }
