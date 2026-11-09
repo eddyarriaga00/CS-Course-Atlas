@@ -332,6 +332,18 @@ window.COURSE_CURRICULUM = {
           "cli-shell-scripts"
         ]
       }
+    ],
+    "web": [
+      {
+        "id": "web-structure",
+        "title": {
+          "en": "Structure with HTML",
+          "es": "Estructura con HTML"
+        },
+        "modules": [
+          "web-html"
+        ]
+      }
     ]
   },
   "modules": {
@@ -15717,6 +15729,298 @@ window.COURSE_CURRICULUM = {
           "explanation": {
             "en": "The shell expands `*.txt` into the matching names and the loop runs once per name. To print contents you would use `cat \"$f\"`.",
             "es": "La shell expande `*.txt` en los nombres que coinciden y el ciclo se ejecuta una vez por nombre. Para imprimir el contenido usarías `cat \"$f\"`."
+          }
+        }
+      ]
+    },
+    "web-html": {
+      "minutes": 80,
+      "prerequisites": [
+        "cli-files-folders"
+      ],
+      "whyItMatters": {
+        "en": "Every website you have ever used is HTML underneath: it is the language that says \"this is a heading, this is a link, this is a button\". It is also the friendliest place to start building things people can actually open, because a browser is all you need and you see the result instantly. HTML is not hard to learn, but writing it well (the right element for each job) is what makes pages fast, searchable and usable by everyone, including people using screen readers.",
+        "es": "Todo sitio web que has usado es HTML por debajo: es el lenguaje que dice \"esto es un título, esto es un enlace, esto es un botón\". También es el lugar más amable para empezar a construir cosas que la gente puede abrir de verdad, porque solo necesitas un navegador y ves el resultado al instante. HTML no es difícil de aprender, pero escribirlo bien (el elemento correcto para cada cosa) es lo que hace que las páginas sean rápidas, encontrables y usables por todos, incluidas las personas que usan lectores de pantalla."
+      },
+      "objectives": {
+        "en": [
+          "Write a complete HTML document with `<!doctype html>`, `<html>`, `<head>`, `<title>` and `<body>`, and explain what an element, a tag and an attribute are.",
+          "Structure text with `<h1>`–`<h6>`, `<p>`, `<strong>`, `<em>`, `<ul>`, `<ol>` and `<li>`.",
+          "Add links with `<a href>` and images with `<img src alt>`, and write useful `alt` text.",
+          "Show data in a table with `<table>`, `<thead>`, `<tr>`, `<th>` and `<td>`.",
+          "Build a form with `<label>`, `<input>` types, `<select>`, `<textarea>` and `<button>`."
+        ],
+        "es": [
+          "Escribir un documento HTML completo con `<!doctype html>`, `<html>`, `<head>`, `<title>` y `<body>`, y explicar qué son un elemento, una etiqueta y un atributo.",
+          "Estructurar texto con `<h1>`–`<h6>`, `<p>`, `<strong>`, `<em>`, `<ul>`, `<ol>` y `<li>`.",
+          "Agregar enlaces con `<a href>` e imágenes con `<img src alt>`, y escribir un texto `alt` útil.",
+          "Mostrar datos en una tabla con `<table>`, `<thead>`, `<tr>`, `<th>` y `<td>`.",
+          "Construir un formulario con `<label>`, tipos de `<input>`, `<select>`, `<textarea>` y `<button>`."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Use a text editor such as VS Code and open a file in a browser",
+          "No programming needed; the Python and Command Line courses help but are optional"
+        ],
+        "es": [
+          "Usar un editor de texto como VS Code y abrir un archivo en un navegador",
+          "No hace falta programar; los cursos de Python y Línea de comandos ayudan pero son opcionales"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "An element is an opening tag, content and a closing tag: `<p>Hello</p>`. Attributes like `href` and `alt` go inside the opening tag.",
+          "Pick elements for their meaning, not their look: one `<h1>` per page, headings in order, lists for lists, `<button>` for buttons.",
+          "Every image needs `alt` text that says what it shows; screen readers read it and browsers show it if the image fails.",
+          "Every form field needs a `<label>`; connect them with `for` and `id` so clicking the label focuses the field."
+        ],
+        "es": [
+          "Un elemento es una etiqueta de apertura, contenido y una etiqueta de cierre: `<p>Hola</p>`. Los atributos como `href` y `alt` van dentro de la etiqueta de apertura.",
+          "Elige elementos por su significado, no por su aspecto: un solo `<h1>` por página, títulos en orden, listas para listas, `<button>` para botones.",
+          "Toda imagen necesita un texto `alt` que diga qué muestra; los lectores de pantalla lo leen y el navegador lo muestra si la imagen falla.",
+          "Todo campo de formulario necesita un `<label>`; conéctalos con `for` e `id` para que hacer clic en la etiqueta enfoque el campo."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Forgetting a closing tag such as `</strong>`: the bold runs on through the rest of the page.",
+          "Choosing headings by size: `<h3>` because it looks smaller breaks the outline. Use the right level and change the size with CSS.",
+          "Writing `alt=\"image\"` or leaving it out: say what the picture shows, or use `alt=\"\"` for purely decorative images.",
+          "Using a `<div>` with a click handler as a button: it cannot be reached with the keyboard. Use `<button>`."
+        ],
+        "es": [
+          "Olvidar una etiqueta de cierre como `</strong>`: la negrita sigue por el resto de la página.",
+          "Elegir títulos por su tamaño: `<h3>` porque se ve más pequeño rompe el esquema. Usa el nivel correcto y cambia el tamaño con CSS.",
+          "Escribir `alt=\"imagen\"` o no ponerlo: di qué muestra la imagen, o usa `alt=\"\"` para imágenes solo decorativas.",
+          "Usar un `<div>` con un manejador de clic como botón: no se alcanza con el teclado. Usa `<button>`."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: make `about.html` with your name as an `<h1>`, a short paragraph about you and a list of three hobbies; open it in a browser.",
+          "Core: add a \"Favorite links\" section with three links that open real sites, and an image with good `alt` text.",
+          "Core: make a table of your weekly class schedule with a header row, days as columns and at least three rows.",
+          "Stretch: build a \"Contact me\" form with name, email, a topic `<select>`, a message `<textarea>` and a submit button, where every field has a label and name and email are `required`."
+        ],
+        "es": [
+          "Calentamiento: crea `sobre-mi.html` con tu nombre como `<h1>`, un párrafo corto sobre ti y una lista de tres pasatiempos; ábrelo en un navegador.",
+          "Núcleo: agrega una sección \"Enlaces favoritos\" con tres enlaces a sitios reales y una imagen con un buen texto `alt`.",
+          "Núcleo: haz una tabla con tu horario semanal de clases, con fila de encabezado, los días como columnas y al menos tres filas.",
+          "Extensión: construye un formulario \"Contáctame\" con nombre, correo, un `<select>` de tema, un `<textarea>` de mensaje y un botón de enviar, donde cada campo tenga etiqueta y nombre y correo sean `required`."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What is the difference between an element, a tag and an attribute in `<a href=\"/home\">Home</a>`?",
+          "Why should a page have exactly one `<h1>`, and what goes in `<head>` instead of `<body>`?",
+          "What happens when you click a `<label for=\"email\">` and why does that matter?"
+        ],
+        "es": [
+          "¿Cuál es la diferencia entre un elemento, una etiqueta y un atributo en `<a href=\"/home\">Inicio</a>`?",
+          "¿Por qué una página debe tener exactamente un `<h1>`, y qué va en `<head>` en lugar de `<body>`?",
+          "¿Qué pasa cuando haces clic en un `<label for=\"email\">` y por qué importa?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Elements and Tags",
+            "es": "Elementos y etiquetas"
+          },
+          "definition": {
+            "en": "HTML describes a page as nested elements. An element is usually an opening tag (`<p>`), content and a closing tag (`</p>`); some, like `<img>` and `<br>`, have no closing tag. Attributes (`name=\"value\"`) inside the opening tag add details such as a link's address.",
+            "es": "HTML describe una página como elementos anidados. Un elemento suele ser una etiqueta de apertura (`<p>`), contenido y una etiqueta de cierre (`</p>`); algunos, como `<img>` y `<br>`, no tienen cierre. Los atributos (`nombre=\"valor\"`) dentro de la etiqueta de apertura agregan detalles como la dirección de un enlace."
+          }
+        },
+        {
+          "term": {
+            "en": "Headings, Paragraphs and Lists",
+            "es": "Títulos, párrafos y listas"
+          },
+          "definition": {
+            "en": "`<h1>` to `<h6>` are headings from most to least important, `<p>` is a paragraph, `<strong>` and `<em>` mark importance and emphasis, `<ul>` is a bulleted list, `<ol>` a numbered list, and each item is an `<li>`.",
+            "es": "`<h1>` a `<h6>` son títulos del más al menos importante, `<p>` es un párrafo, `<strong>` y `<em>` marcan importancia y énfasis, `<ul>` es una lista con viñetas, `<ol>` una lista numerada y cada elemento es un `<li>`."
+          }
+        },
+        {
+          "term": {
+            "en": "Links and Images",
+            "es": "Enlaces e imágenes"
+          },
+          "definition": {
+            "en": "`<a href=\"address\">text</a>` makes a link to another page, a file, a spot on the same page (`#id`) or an email (`mailto:`). `<img src=\"file\" alt=\"description\">` shows an image; `alt` describes it for people who cannot see it.",
+            "es": "`<a href=\"dirección\">texto</a>` crea un enlace a otra página, un archivo, un punto de la misma página (`#id`) o un correo (`mailto:`). `<img src=\"archivo\" alt=\"descripción\">` muestra una imagen; `alt` la describe para quienes no pueden verla."
+          }
+        },
+        {
+          "term": {
+            "en": "Tables",
+            "es": "Tablas"
+          },
+          "definition": {
+            "en": "`<table>` shows data in rows and columns. `<tr>` is a row, `<th>` a header cell and `<td>` a data cell; `<thead>` and `<tbody>` group the header and body rows, and `<caption>` titles the table.",
+            "es": "`<table>` muestra datos en filas y columnas. `<tr>` es una fila, `<th>` una celda de encabezado y `<td>` una celda de datos; `<thead>` y `<tbody>` agrupan las filas de encabezado y de cuerpo, y `<caption>` le da título a la tabla."
+          }
+        },
+        {
+          "term": {
+            "en": "Forms",
+            "es": "Formularios"
+          },
+          "definition": {
+            "en": "`<form>` collects input. `<input>` has many `type`s (text, email, number, checkbox, radio, date), `<select>` is a drop-down, `<textarea>` is multi-line text and `<button>` submits. Each field needs a `<label>` and a `name`.",
+            "es": "`<form>` recoge datos. `<input>` tiene muchos `type` (text, email, number, checkbox, radio, date), `<select>` es una lista desplegable, `<textarea>` es texto de varias líneas y `<button>` envía. Cada campo necesita un `<label>` y un `name`."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "MDN: Getting started with HTML",
+            "es": "MDN: primeros pasos con HTML"
+          },
+          "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Structuring_content/Basic_HTML_syntax"
+        },
+        {
+          "label": {
+            "en": "MDN: HTML elements reference",
+            "es": "MDN: referencia de elementos HTML"
+          },
+          "url": "https://developer.mozilla.org/en-US/docs/Web/HTML/Element"
+        },
+        {
+          "label": {
+            "en": "web.dev: Learn HTML",
+            "es": "web.dev: aprende HTML"
+          },
+          "url": "https://web.dev/learn/html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "In `<a href=\"https://example.com\">Visit</a>`, what is `href`?",
+            "es": "En `<a href=\"https://example.com\">Visitar</a>`, ¿qué es `href`?"
+          },
+          "options": {
+            "en": [
+              "A tag",
+              "An attribute",
+              "An element",
+              "The link text"
+            ],
+            "es": [
+              "Una etiqueta",
+              "Un atributo",
+              "Un elemento",
+              "El texto del enlace"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`href` is an attribute of the `a` element: it sits inside the opening tag and holds the address. \"Visit\" is the content.",
+            "es": "`href` es un atributo del elemento `a`: va dentro de la etiqueta de apertura y guarda la dirección. \"Visitar\" es el contenido."
+          }
+        },
+        {
+          "question": {
+            "en": "Which element makes a numbered list?",
+            "es": "¿Qué elemento crea una lista numerada?"
+          },
+          "options": {
+            "en": [
+              "<ul>",
+              "<ol>",
+              "<li>",
+              "<list>"
+            ],
+            "es": [
+              "<ul>",
+              "<ol>",
+              "<li>",
+              "<list>"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`<ol>` is an ordered (numbered) list and `<ul>` an unordered (bulleted) one. Both contain `<li>` items.",
+            "es": "`<ol>` es una lista ordenada (numerada) y `<ul>` una no ordenada (con viñetas). Ambas contienen elementos `<li>`."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the `alt` attribute of an image for?",
+            "es": "¿Para qué sirve el atributo `alt` de una imagen?"
+          },
+          "options": {
+            "en": [
+              "The image size",
+              "A tooltip only",
+              "A text description for people who cannot see the image",
+              "The file name"
+            ],
+            "es": [
+              "El tamaño de la imagen",
+              "Solo un texto emergente",
+              "Una descripción en texto para quienes no pueden ver la imagen",
+              "El nombre del archivo"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Screen readers read `alt` aloud, and the browser shows it when the image fails to load. Describe what the image shows.",
+            "es": "Los lectores de pantalla leen `alt` en voz alta, y el navegador lo muestra cuando la imagen no carga. Describe lo que muestra la imagen."
+          }
+        },
+        {
+          "question": {
+            "en": "Which cell element is used for column headings in a table?",
+            "es": "¿Qué elemento de celda se usa para los encabezados de columna en una tabla?"
+          },
+          "options": {
+            "en": [
+              "<td>",
+              "<tr>",
+              "<th>",
+              "<thead>"
+            ],
+            "es": [
+              "<td>",
+              "<tr>",
+              "<th>",
+              "<thead>"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`<th>` is a header cell. `<td>` holds data, `<tr>` is a row and `<thead>` groups header rows.",
+            "es": "`<th>` es una celda de encabezado. `<td>` contiene datos, `<tr>` es una fila y `<thead>` agrupa filas de encabezado."
+          }
+        },
+        {
+          "question": {
+            "en": "How do you connect `<label>` to `<input id=\"email\">`?",
+            "es": "¿Cómo conectas `<label>` con `<input id=\"email\">`?"
+          },
+          "options": {
+            "en": [
+              "<label name=\"email\">",
+              "<label for=\"email\">",
+              "<label id=\"email\">",
+              "Labels connect automatically by position"
+            ],
+            "es": [
+              "<label name=\"email\">",
+              "<label for=\"email\">",
+              "<label id=\"email\">",
+              "Las etiquetas se conectan solas por posición"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The label's `for` must match the input's `id`. (Wrapping the input inside the label also works.)",
+            "es": "El `for` de la etiqueta debe coincidir con el `id` del campo. (Poner el campo dentro de la etiqueta también funciona.)"
           }
         }
       ]

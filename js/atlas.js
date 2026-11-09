@@ -45,7 +45,7 @@ const UI = {
     forgot: 'Forgot password?', newHere: 'New here?', create: 'Create an account', legal: 'By continuing you agree to the <a href="terms-of-use.html">Terms of Use</a> and <a href="privacy-policy.html">Privacy Policy</a>.',
     noResults: 'No matches', today: 'Today', yesterday: 'Yesterday', daysAgo: (n) => `${n} days ago`, completed: 'Completed', reviewed: 'Reviewed 12 flashcards', notFound: 'That page doesn’t exist.',
     glossary: 'Glossary', roadmap: 'Roadmap', whatsComing: 'What’s coming', tryIt: 'Try it ▸', run: 'Run ▸', reset: 'Reset', running: 'Running…',
-    pgLead: 'Write and run code right here. JavaScript and Python run in your browser; Java and C++ will run on the CS Course Atlas server.',
+    pgLead: 'Write and run code right here. JavaScript, Python and web pages run in your browser; Java and C++ will run on the CS Course Atlas server.',
     pgServer: 'Running this language needs the code server, which is on the roadmap. Here is the output this example prints:', pgServerNoExpected: 'Running this language needs the code server, which is on the roadmap. Switch to JavaScript or Python to run code now.',
     pgDone: (ms) => `Finished in ${ms} ms`, pgTimeout: 'Stopped after 3 seconds (infinite loop?)', pgEmpty: '(no output)', pgLoaded: (m) => `Loaded from ${m}`,
     notesLeadIn: 'One page of notes per module, saved to your account and synced to every device you sign in on.', notesLead: 'One page of notes per module, saved on this device. With an account they sync everywhere.', notePlaceholder: 'What clicked? What confused you? Write it in your own words.',
@@ -54,7 +54,7 @@ const UI = {
     roadmapLead: 'Where CS Course Atlas is going. Vote for what you want next.', live: 'Live', building: 'In progress', planned: 'Planned', vote: '▲ Vote', voted: '▲ Voted',
     achievements: 'Achievements', earned: (a, b) => `${a} of ${b} earned`,
     studyPlan: 'Study plan', planLead: 'Pick a course and how much time you have; we lay out the rest of it week by week.', hoursWeek: 'Hours per week', startOn: 'Start on', finishBy: 'Finish by', weeksLeft: 'weeks', modulesLeft: 'modules left', weekN: (n) => `Week ${n}`, thisWeek: 'This week', planHome: (d, c) => `At your pace you’ll finish ${c} by <b>${d}</b>.`, editPlan: 'Edit plan', allDone: 'Every module of this course is complete. Time for the next one.', addCalendar: 'Add to calendar', reminders: 'Weekly reminder', 
-    videos: 'Videos', fullSeries: 'Full video series', courseSeries: 'Full course series', watchTopic: 'Watch a video on this topic', watchWait: 'Watch while you wait', videosLead: 'A full series for the module, then one video per topic. All from university or well-known teaching channels; they open on YouTube.', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', pyLoading: 'Loading Python (first run only, a few seconds)…', pyTimeout: 'Stopped after 10 seconds (infinite loop?)', pyFailed: 'Could not load Python. Check your connection and try again.', pythonExamples: 'Runnable Python examples', showPw: 'Show password', hidePw: 'Hide password', show: 'Show', hide: 'Hide', signupSub: 'Free. Your progress, notes and quiz scores are saved and follow you to any device.', orSignupEmail: 'or sign up with email', createFree: 'Create free account', userHint: '3–32 characters: letters, numbers, dot, underscore or dash.', pwHint: 'At least 8 characters.', accountTitle: 'Account', displayName: 'Display name', saveChanges: 'Save changes', saved: 'Saved', changePw: 'Change password', currentPw: 'Current password', newPw: 'New password', pwChanged: 'Password changed', googleNoPw: 'You sign in with Google, so there is no password to manage here.', saveTitle: 'Keep your progress', saveText: 'It is only on this device right now. A free account saves it and syncs it everywhere.', expand: 'show modules', collapse: 'hide modules', fullSession: 'Full session', week1: 'week', coursesReady: 'courses ready', course: 'Course', trackCourse: (c) => `${c} course`, terminalExamples: 'Real terminal sessions', terminalHint: 'Run this in an empty folder. Lines starting with $ are what you type; the rest is what the computer printed when we ran the session for real. Copy gives you just the commands.', terminalOut: 'Terminal', report: 'Report a problem with this module', programs: 'programs', languagesWord: 'languages', waitLead: 'Series that cover these modules, each listed once.',
+    videos: 'Videos', fullSeries: 'Full video series', courseSeries: 'Full course series', watchTopic: 'Watch a video on this topic', watchWait: 'Watch while you wait', videosLead: 'A full series for the module, then one video per topic. All from university or well-known teaching channels; they open on YouTube.', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', pyLoading: 'Loading Python (first run only, a few seconds)…', pyTimeout: 'Stopped after 10 seconds (infinite loop?)', pyFailed: 'Could not load Python. Check your connection and try again.', pythonExamples: 'Runnable Python examples', syllabus: 'What you will learn', outlineNotice: 'This course is being written now. The outline below is final: each module will have a lesson, examples you can run, practice, a quiz and videos.', soonNoticePlanned: 'This course is planned. Vote for it so we know to write it sooner.', wantThis: '▲ I want this course', meanwhile: 'Get ready with these courses first', pathStep: 'beginner path step', levelWord: 'level', seeOutline: 'See outline', webExamples: 'Live web pages', preview: 'Live preview', rendered: 'Rendered', pgHtmlSample: 'A web page: edit it and press Run', showPw: 'Show password', hidePw: 'Hide password', show: 'Show', hide: 'Hide', signupSub: 'Free. Your progress, notes and quiz scores are saved and follow you to any device.', orSignupEmail: 'or sign up with email', createFree: 'Create free account', userHint: '3–32 characters: letters, numbers, dot, underscore or dash.', pwHint: 'At least 8 characters.', accountTitle: 'Account', displayName: 'Display name', saveChanges: 'Save changes', saved: 'Saved', changePw: 'Change password', currentPw: 'Current password', newPw: 'New password', pwChanged: 'Password changed', googleNoPw: 'You sign in with Google, so there is no password to manage here.', saveTitle: 'Keep your progress', saveText: 'It is only on this device right now. A free account saves it and syncs it everywhere.', expand: 'show modules', collapse: 'hide modules', fullSession: 'Full session', week1: 'week', coursesReady: 'courses ready', course: 'Course', trackCourse: (c) => `${c} course`, terminalExamples: 'Real terminal sessions', terminalHint: 'Run this in an empty folder. Lines starting with $ are what you type; the rest is what the computer printed when we ran the session for real. Copy gives you just the commands.', terminalOut: 'Terminal', report: 'Report a problem with this module', programs: 'programs', languagesWord: 'languages', waitLead: 'Series that cover these modules, each listed once.',
     signedInWith: (p) => `Signed in with ${p}`, syncedAt: (tm) => `Progress synced at ${tm}`, syncPending: 'Syncing progress…', day: 'day', acrossN: (n) => `across ${n} ${n === 1 ? 'quiz' : 'quizzes'}`, noQuizYet: 'No quizzes taken yet',
     modulesWithNotes: 'modules with notes', noActivity: 'Complete a module, take a quiz or write a note and it shows up here.', typeDelete: 'Type DELETE to confirm', deleteViaSupport: 'Ask support to delete it',
     privacy: 'Privacy', terms: 'Terms', contact: 'Contact', checkingSession: 'Checking your account…', emailOrUser: 'Email or username', username: 'Username', confirmPw: 'Confirm password',
@@ -107,7 +107,7 @@ const UI = {
     forgot: '¿Olvidaste tu contraseña?', newHere: '¿Eres nuevo?', create: 'Crear una cuenta', legal: 'Al continuar aceptas los <a href="terms-of-use.html">Términos de uso</a> y la <a href="privacy-policy.html">Política de privacidad</a>.',
     noResults: 'Sin resultados', today: 'Hoy', yesterday: 'Ayer', daysAgo: (n) => `Hace ${n} días`, completed: 'Completaste', reviewed: 'Repasaste 12 tarjetas', notFound: 'Esa página no existe.',
     glossary: 'Glosario', roadmap: 'Hoja de ruta', whatsComing: 'Lo que viene', tryIt: 'Probar ▸', run: 'Ejecutar ▸', reset: 'Restablecer', running: 'Ejecutando…',
-    pgLead: 'Escribe y ejecuta código aquí mismo. JavaScript y Python corren en tu navegador; Java y C++ correrán en el servidor de CS Course Atlas.',
+    pgLead: 'Escribe y ejecuta código aquí mismo. JavaScript, Python y las páginas web corren en tu navegador; Java y C++ correrán en el servidor de CS Course Atlas.',
     pgServer: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Esta es la salida que imprime el ejemplo:', pgServerNoExpected: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Cambia a JavaScript o Python para ejecutar código ahora.',
     pgDone: (ms) => `Terminó en ${ms} ms`, pgTimeout: 'Detenido después de 3 segundos (¿bucle infinito?)', pgEmpty: '(sin salida)', pgLoaded: (m) => `Cargado desde ${m}`,
     notesLeadIn: 'Una página de notas por módulo, guardada en tu cuenta y sincronizada en cada dispositivo donde inicies sesión.', notesLead: 'Una página de notas por módulo, guardada en este dispositivo. Con una cuenta se sincronizan en todas partes.', notePlaceholder: '¿Qué entendiste? ¿Qué te confundió? Escríbelo con tus palabras.',
@@ -116,7 +116,7 @@ const UI = {
     roadmapLead: 'Hacia dónde va CS Course Atlas. Vota por lo que quieres primero.', live: 'Disponible', building: 'En progreso', planned: 'Planeado', vote: '▲ Votar', voted: '▲ Votado',
     achievements: 'Logros', earned: (a, b) => `${a} de ${b} obtenidos`,
     studyPlan: 'Plan de estudio', planLead: 'Elige un curso y cuánto tiempo tienes; organizamos el resto semana a semana.', hoursWeek: 'Horas por semana', startOn: 'Empezar el', finishBy: 'Terminas el', weeksLeft: 'semanas', modulesLeft: 'módulos restantes', weekN: (n) => `Semana ${n}`, thisWeek: 'Esta semana', planHome: (d, c) => `A tu ritmo terminarás ${c} el <b>${d}</b>.`, editPlan: 'Editar plan', allDone: 'Completaste todos los módulos de este curso. Es hora del siguiente.', addCalendar: 'Agregar al calendario', reminders: 'Recordatorio semanal', 
-    videos: 'Videos', fullSeries: 'Serie completa de videos', courseSeries: 'Serie completa del curso', watchTopic: 'Mira un video sobre este tema', watchWait: 'Mira mientras esperas', videosLead: 'Una serie completa del módulo y un video por tema. Todos de canales universitarios o de enseñanza reconocidos; se abren en YouTube (en inglés).', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', pyLoading: 'Cargando Python (solo la primera vez, unos segundos)…', pyTimeout: 'Detenido después de 10 segundos (¿bucle infinito?)', pyFailed: 'No se pudo cargar Python. Revisa tu conexión e inténtalo de nuevo.', pythonExamples: 'Ejemplos de Python ejecutables', showPw: 'Mostrar contraseña', hidePw: 'Ocultar contraseña', show: 'Ver', hide: 'Ocultar', signupSub: 'Gratis. Tu progreso, notas y resultados se guardan y te siguen a cualquier dispositivo.', orSignupEmail: 'o regístrate con tu correo', createFree: 'Crear cuenta gratis', userHint: 'De 3 a 32 caracteres: letras, números, punto, guion bajo o guion.', pwHint: 'Al menos 8 caracteres.', accountTitle: 'Cuenta', displayName: 'Nombre visible', saveChanges: 'Guardar cambios', saved: 'Guardado', changePw: 'Cambiar contraseña', currentPw: 'Contraseña actual', newPw: 'Contraseña nueva', pwChanged: 'Contraseña cambiada', googleNoPw: 'Inicias sesión con Google, así que aquí no hay contraseña que administrar.', saveTitle: 'Conserva tu progreso', saveText: 'Por ahora solo está en este dispositivo. Una cuenta gratis lo guarda y lo sincroniza en todas partes.', expand: 'mostrar módulos', collapse: 'ocultar módulos', fullSession: 'Sesión completa', week1: 'semana', coursesReady: 'cursos listos', course: 'Curso', trackCourse: (c) => `Curso de ${c}`, terminalExamples: 'Sesiones reales de terminal', terminalHint: 'Ejecútalo en una carpeta vacía. Las líneas que empiezan con $ son lo que escribes; el resto es lo que imprimió la computadora al ejecutar la sesión de verdad. Copiar te da solo los comandos.', terminalOut: 'Terminal', report: 'Reportar un problema con este módulo', programs: 'programas', languagesWord: 'lenguajes', waitLead: 'Series que cubren estos módulos, cada una una sola vez.',
+    videos: 'Videos', fullSeries: 'Serie completa de videos', courseSeries: 'Serie completa del curso', watchTopic: 'Mira un video sobre este tema', watchWait: 'Mira mientras esperas', videosLead: 'Una serie completa del módulo y un video por tema. Todos de canales universitarios o de enseñanza reconocidos; se abren en YouTube (en inglés).', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', pyLoading: 'Cargando Python (solo la primera vez, unos segundos)…', pyTimeout: 'Detenido después de 10 segundos (¿bucle infinito?)', pyFailed: 'No se pudo cargar Python. Revisa tu conexión e inténtalo de nuevo.', pythonExamples: 'Ejemplos de Python ejecutables', syllabus: 'Lo que aprenderás', outlineNotice: 'Este curso se está escribiendo. El temario de abajo es definitivo: cada módulo tendrá una lección, ejemplos que puedes ejecutar, práctica, un cuestionario y videos.', soonNoticePlanned: 'Este curso está planeado. Vota por él para que sepamos escribirlo antes.', wantThis: '▲ Quiero este curso', meanwhile: 'Prepárate primero con estos cursos', pathStep: 'paso de la ruta', levelWord: 'nivel', seeOutline: 'Ver temario', webExamples: 'Páginas web en vivo', preview: 'Vista previa en vivo', rendered: 'Mostrado', pgHtmlSample: 'Una página web: edítala y pulsa Ejecutar', showPw: 'Mostrar contraseña', hidePw: 'Ocultar contraseña', show: 'Ver', hide: 'Ocultar', signupSub: 'Gratis. Tu progreso, notas y resultados se guardan y te siguen a cualquier dispositivo.', orSignupEmail: 'o regístrate con tu correo', createFree: 'Crear cuenta gratis', userHint: 'De 3 a 32 caracteres: letras, números, punto, guion bajo o guion.', pwHint: 'Al menos 8 caracteres.', accountTitle: 'Cuenta', displayName: 'Nombre visible', saveChanges: 'Guardar cambios', saved: 'Guardado', changePw: 'Cambiar contraseña', currentPw: 'Contraseña actual', newPw: 'Contraseña nueva', pwChanged: 'Contraseña cambiada', googleNoPw: 'Inicias sesión con Google, así que aquí no hay contraseña que administrar.', saveTitle: 'Conserva tu progreso', saveText: 'Por ahora solo está en este dispositivo. Una cuenta gratis lo guarda y lo sincroniza en todas partes.', expand: 'mostrar módulos', collapse: 'ocultar módulos', fullSession: 'Sesión completa', week1: 'semana', coursesReady: 'cursos listos', course: 'Curso', trackCourse: (c) => `Curso de ${c}`, terminalExamples: 'Sesiones reales de terminal', terminalHint: 'Ejecútalo en una carpeta vacía. Las líneas que empiezan con $ son lo que escribes; el resto es lo que imprimió la computadora al ejecutar la sesión de verdad. Copiar te da solo los comandos.', terminalOut: 'Terminal', report: 'Reportar un problema con este módulo', programs: 'programas', languagesWord: 'lenguajes', waitLead: 'Series que cubren estos módulos, cada una una sola vez.',
     signedInWith: (p) => `Sesión iniciada con ${p}`, syncedAt: (tm) => `Progreso sincronizado a las ${tm}`, syncPending: 'Sincronizando progreso…', day: 'día', acrossN: (n) => `en ${n} ${n === 1 ? 'cuestionario' : 'cuestionarios'}`, noQuizYet: 'Aún no haces cuestionarios',
     modulesWithNotes: 'módulos con notas', noActivity: 'Completa un módulo, haz un cuestionario o escribe una nota y aparecerá aquí.', typeDelete: 'Escribe DELETE para confirmar', deleteViaSupport: 'Pide a soporte que la elimine',
     privacy: 'Privacidad', terms: 'Términos', contact: 'Contacto', checkingSession: 'Revisando tu cuenta…', emailOrUser: 'Correo o usuario', username: 'Usuario', confirmPw: 'Confirmar contraseña',
@@ -150,7 +150,7 @@ function rich(text) {
     return html;
   }).join('');
 }
-const LANGS = [['java', 'Java'], ['cpp', 'C++'], ['python', 'Python'], ['javascript', 'JavaScript']];
+const LANGS = [['python', 'Python'], ['javascript', 'JavaScript'], ['html', 'HTML'], ['java', 'Java'], ['cpp', 'C++']];
 const track = (id) => DATA.tracks.find((x) => x.id === id);
 const trackIds = (tid) => (track(tid) ? track(tid).units.flatMap((u) => u.modules) : []);
 const liveTracks = () => DATA.tracks.filter((x) => x.status === 'available');
@@ -163,7 +163,7 @@ function routeTrack(route) {
   if (route.startsWith('course-') && track(route.slice(7))?.status === 'available') return route.slice(7);
   return currentTrack();
 }
-const LANG_LABEL = { java: 'Java', cpp: 'C++', python: 'Python', javascript: 'JavaScript', assembly: 'Assembly', bash: 'Terminal' };
+const LANG_LABEL = { java: 'Java', cpp: 'C++', python: 'Python', javascript: 'JavaScript', assembly: 'Assembly', bash: 'Terminal', html: 'HTML · CSS · JS' };
 const exampleLangs = (ex) => Object.keys(LANG_LABEL).filter((k) => ex.code && ex.code[k]);
 // Selects lessons/quizzes grouped by course.
 const moduleOptions = (selected) => liveTracks().map((tr) => `<optgroup label="${esc(L(tr.title))}">${trackIds(tr.id).map((m) => `<option value="${m}" ${m === selected ? 'selected' : ''}>${esc(moduleTitle(m))}</option>`).join('')}</optgroup>`).join('');
@@ -247,7 +247,7 @@ function courseCard(tr, big, step) {
 }
 const voteBtn = (id) => `<button class="vote" data-action="vote" data-id="course-${id}" aria-pressed="${state.votes.has('course-' + id)}">${state.votes.has('course-' + id) ? t('voted') : t('vote')}</button>`;
 function plannedCard(p, step) {
-  return `<div class="card planned-card">${step ? `<span class="step-tag">${t('stepN', step)}</span>` : ''}<div class="course-top"><span class="cicon" data-track="${p.id}">${esc(p.icon)}</span><div style="min-width:0"><h3>${esc(L(p.title))}</h3><span class="pill lvl-${p.level}">${t('difficulty')[p.level]}</span></div></div><p>${esc(L(p.blurb))}</p>
+  return `<div class="card planned-card">${step ? `<span class="step-tag">${t('stepN', step)}</span>` : ''}<div class="course-top"><span class="cicon" data-track="${p.id}">${esc(p.icon)}</span><div style="min-width:0"><h3><a class="stretch" href="#course-${p.id}">${esc(L(p.title))}</a></h3><span class="pill lvl-${p.level}">${t('difficulty')[p.level]}</span></div></div><p>${esc(L(p.blurb))}</p>
     <div class="facts"><span class="pill soon">${t('stepSoon')}</span>${voteBtn(p.id)}</div></div>`;
 }
 // A course id from the path: a track (live or outlined) or a planned course.
@@ -260,8 +260,8 @@ function pathStepper() {
     const inner = `<span class="path-no${live ? ' live' : ''}${done ? ' done' : ''}">${done ? '✓' : i + 1}</span>
       <div class="path-body"><div class="path-title"><span class="cicon" data-track="${st.id}">${esc(c.icon)}</span><b>${esc(L(c.title))}</b>${status}</div>
       <p>${esc(L(st.why))}</p>${live && s.done ? `<div class="progress"><span style="width:${pct(s.done, s.count)}%"></span></div>` : ''}</div>
-      ${live ? `<span class="path-go">${s.done ? t('continueBtn') : t('startBtn')} →</span>` : ''}`;
-    return live ? `<li><a class="path-step live" href="#course-${st.id}">${inner}</a></li>` : `<li><div class="path-step">${inner}</div></li>`;
+      <span class="path-go">${live ? (s.done ? t('continueBtn') : t('startBtn')) : t('seeOutline')} →</span>`;
+    return `<li><a class="path-step${live ? ' live' : ' planned'}" href="#course-${st.id}">${inner}</a></li>`;
   }).join('')}</ol>`;
 }
 function unitCards(tr, live) {
@@ -320,8 +320,24 @@ function viewCourses() {
     <div class="section-head"><h2>${t('nextTitle')}</h2><span class="muted">${t('nextLead')}</span></div>
     <div class="courses">${nextIds.filter(anyCourse).map((id) => anyCard(id)).join('')}</div></section>`;
 }
+function viewPlanned(p) {
+  const mods = p.outline || [], topics = mods.reduce((n, m) => n + m.topics.length, 0), step = DATA.path.findIndex((st) => st.id === p.id);
+  const voted = state.votes.has('course-' + p.id);
+  return `<section class="wrap">
+    <div class="crumbs"><a href="#courses">${t('courses')}</a><span>/</span><span style="color:var(--text)">${esc(L(p.title))}</span></div>
+    <div class="course-hero" style="margin-top:12px"><span class="cicon" data-track="${p.id}">${esc(p.icon)}</span>
+      <div style="min-width:0;flex:1"><h1 style="margin-top:0">${esc(L(p.title))}</h1><p class="lead">${esc(L(p.blurb))}</p></div></div>
+    <div class="course-stats">${step >= 0 ? `<div><b>${step + 1}</b><span>${t('pathStep')}</span></div>` : ''}${mods.length ? `<div><b>${mods.length}</b><span>${t('modules')}</span></div><div><b>${topics}</b><span>${t('topics')}</span></div>` : ''}<div><b>${t('difficulty')[p.level]}</b><span>${t('levelWord')}</span></div></div>
+    <div class="notice"><span class="pill soon">${t('stepSoon')}</span><p>${t(mods.length ? 'outlineNotice' : 'soonNoticePlanned')}</p>
+      <button class="btn btn-sm${voted ? ' btn-ghost' : ''}" data-action="vote" data-id="course-${p.id}" aria-pressed="${voted}">${voted ? t('voted') : t('wantThis')}</button></div>
+    ${mods.length ? `<div class="section-head"><h2>${t('syllabus')}</h2></div>
+    <div class="outline">${mods.map((m, i) => `<div class="card outline-mod"><div class="outline-top"><span class="path-no">${i + 1}</span><div><h3>${esc(L(m.title))}</h3><p>${esc(L(m.description))}</p></div></div>
+      <ul class="outline-topics">${m.topics.map((x) => `<li>${esc(x)}</li>`).join('')}</ul></div>`).join('')}</div>` : ''}
+    ${step >= 0 ? `<div class="section-head"><h2>${t('meanwhile')}</h2></div><div class="courses">${DATA.path.slice(0, step).filter((st) => track(st.id)?.status === 'available').map((st) => courseCard(track(st.id))).join('')}</div>` : ''}
+  </section>`;
+}
 function viewCourse(id) {
-  const tr = track(id); if (!tr) return viewMissing();
+  const tr = track(id); if (!tr) { const p = DATA.planned.find((x) => x.id === id); return p ? viewPlanned(p) : viewMissing(); }
   const s = trackStats(tr), live = tr.status === 'available', next = live ? nextModule(id) : null;
   if (live) store.set('lastTrack', id);
   return `<section class="wrap">
@@ -376,6 +392,8 @@ function viewModule(id) {
       ${lang === 'bash' ? `<p class="term-hint">${t('terminalHint')}</p>` : ''}
       <div class="code-card"><div class="code-bar">${langs.map((k) => `<button class="lang" data-code-lang="${k}" aria-pressed="${k === lang}">${LANG_LABEL[k]}</button>`).join('')}<button class="lang copy" data-action="copy">${t('copy')}</button>${lang === 'bash' ? '' : `<button class="lang run" data-action="try-it" data-id="${id}">${t('tryIt')}</button>`}</div>
         ${lang === 'bash' ? `<code id="code-block" hidden>${esc(code)}</code><pre class="code term">${transcriptHtml(out)}</pre>`
+          : lang === 'html' ? `<pre class="code"><code id="code-block" class="language-html">${esc(code)}</code></pre>
+        <div class="output preview"><div class="output-label">${t('preview')}</div><iframe class="web-preview" sandbox="allow-scripts allow-forms allow-modals" title="${t('preview')}" srcdoc="${esc(code)}"></iframe></div>`
           : `<pre class="code"><code id="code-block" class="language-${lang}">${esc(code)}</code></pre>
         <div class="output"><div class="output-label">${t('output')}</div><pre>${esc(out)}</pre></div>`}</div>
       ${state.exIndex > 0 ? `<div class="card explain prose"><h3>${t('explanation')}</h3>${rich(L(ex.explanation))}</div>` : ''}
@@ -398,7 +416,7 @@ function viewModule(id) {
   return `<section class="wrap">
     <div class="crumbs"><a href="#course-${tr.id}">${esc(L(tr.title))}</a><span>/</span><span>${esc(L(unit.title))}</span><span>/</span><span style="color:var(--text)">${esc(moduleTitle(id))}</span></div>
     <h1>${esc(moduleTitle(id))}</h1><p class="lead">${fmt(L(meta.description))}</p>
-    <div class="mod-meta"><span class="pill">${t('difficulty')[meta.difficulty] || meta.difficulty}</span>${meta.minutes ? `<span class="pill">≈ ${meta.minutes} ${t('min')}</span>` : ''}<span class="pill">${meta.topics.length} ${t('topics')}</span><span class="pill ok">${terminal ? t('terminalExamples') : exampleLangs(c.examples.main).length === 1 ? t('pythonExamples') : t('examples4')}</span>${done ? `<span class="pill accent">${t('marked')}</span>` : ''}</div>
+    <div class="mod-meta"><span class="pill">${t('difficulty')[meta.difficulty] || meta.difficulty}</span>${meta.minutes ? `<span class="pill">≈ ${meta.minutes} ${t('min')}</span>` : ''}<span class="pill">${meta.topics.length} ${t('topics')}</span><span class="pill ok">${terminal ? t('terminalExamples') : exampleLangs(c.examples.main).includes('html') ? t('webExamples') : exampleLangs(c.examples.main).length === 1 ? t('pythonExamples') : t('examples4')}</span>${done ? `<span class="pill accent">${t('marked')}</span>` : ''}</div>
     <div class="tabs" role="tablist">${tabs.map(([k, label, n]) => `<button class="tab" role="tab" data-tab="${k}" aria-selected="${state.tab === k}">${label}${n ? `<span class="count">${n}</span>` : ''}</button>`).join('')}</div>
     ${body}
     <div class="mod-foot"><button class="btn${done ? ' btn-ghost' : ''}" data-action="toggle-done" data-id="${id}">${done ? t('marked') : t('markDone')}</button>
@@ -454,6 +472,14 @@ function streakDays() {
 }
 function quizAverage() { const v = Object.values(state.quizBest); return v.length ? { avg: Math.round(100 * v.reduce((s, x) => s + x, 0) / v.length), n: v.length } : null; }
 function relDay(ms) { const days = Math.round((new Date().setHours(0, 0, 0, 0) - new Date(ms).setHours(0, 0, 0, 0)) / 864e5); return days <= 0 ? t('today') : days === 1 ? t('yesterday') : t('daysAgo', days); }
+// Where "keep going" should lead: the next unfinished module of the course you were last in
+// (or any started course), else the Courses page.
+function continueHref() {
+  const order = [currentTrack(), ...liveTracks().map((tr) => tr.id)];
+  for (const id of order) { const next = nextModule(id); if (next && trackStats(track(id)).done) return '#m-' + next; }
+  const first = DATA.path.find((st) => track(st.id)?.status === 'available');
+  return first ? '#course-' + first.id : '#courses';
+}
 function viewProfile() {
   const u = state.user, liveAll = liveIds(), s = { count: liveAll.length, done: liveAll.filter((m) => state.done.has(m)).length }, qa = quizAverage(), streak = streakDays(), days = activeDays();
   const seg = (opts, cur, action) => `<div class="seg">${opts.map(([v, label]) => `<button aria-pressed="${v === cur}" data-action="${action}" data-v="${v}">${label}</button>`).join('')}</div>`;
@@ -471,10 +497,10 @@ function viewProfile() {
         <div class="badges"><span class="pill${u.authProvider === 'google' ? ' google' : ''}">${t('signedInWith', provider)}</span><span class="pill sync" id="sync-pill">${syncLabel()}</span></div></div>
       <div class="profile-actions"><button class="btn btn-ghost" data-action="sign-out">${t('signOut')}</button></div></div>
     <div class="stats">
-      <div class="card stat"><div class="label">${t('modulesComplete')}</div><div class="value">${s.done} / ${s.count}</div><div class="progress"><span style="width:${pct(s.done, s.count)}%"></span></div></div>
-      <div class="card stat"><div class="label">${t('streak')}</div><div class="value">${streak} ${streak === 1 ? t('day') : t('days')}</div><div class="week">${week.map((on) => `<span${on ? ' class="on"' : ''}></span>`).join('')}</div></div>
-      <div class="card stat"><div class="label">${t('quizAvg')}</div><div class="value">${qa ? qa.avg + '%' : '—'}</div><div class="muted">${qa ? t('acrossN', qa.n) : t('noQuizYet')}</div></div>
-      <div class="card stat"><div class="label">${t('notes')}</div><div class="value">${notesCount}</div><div class="muted">${t('modulesWithNotes')}</div></div></div>
+      <a class="card stat stat-link" href="${continueHref()}" aria-label="${t('modulesComplete')}: ${t('continueBtn')}"><div class="label">${t('modulesComplete')}<span class="stat-go">→</span></div><div class="value">${s.done} / ${s.count}</div><div class="progress"><span style="width:${pct(s.done, s.count)}%"></span></div></a>
+      <a class="card stat stat-link" href="#plan"><div class="label">${t('streak')}<span class="stat-go">→</span></div><div class="value">${streak} ${streak === 1 ? t('day') : t('days')}</div><div class="week">${week.map((on) => `<span${on ? ' class="on"' : ''}></span>`).join('')}</div></a>
+      <a class="card stat stat-link" href="#practice"><div class="label">${t('quizAvg')}<span class="stat-go">→</span></div><div class="value">${qa ? qa.avg + '%' : '—'}</div><div class="muted">${qa ? t('acrossN', qa.n) : t('noQuizYet')}</div></a>
+      <a class="card stat stat-link" href="#notes"><div class="label">${t('notes')}<span class="stat-go">→</span></div><div class="value">${notesCount}</div><div class="muted">${t('modulesWithNotes')}</div></a></div>
     <div class="split"><div class="stack">
       <div class="card panel"><h2>${t('yourCourses')}</h2><div class="unit-progress">${DATA.tracks.map((tr) => { const ts = trackStats(tr), live = tr.status === 'available';
         return `<a href="#course-${tr.id}"><div class="row-top"><span>${esc(L(tr.title))}</span><span>${live ? `${ts.done} / ${ts.count}` : t('comingSoon')}</span></div><div class="progress${live && ts.done === ts.count ? ' done' : ''}"><span style="width:${live ? pct(ts.done, ts.count) : 0}%"></span></div></a>`; }).join('')}</div></div>
@@ -509,6 +535,29 @@ function viewProfile() {
     </div></div></section>`;
 }
 
+const PG_HTML = `<!doctype html>
+<html>
+<head>
+  <style>
+    body { font-family: system-ui, sans-serif; padding: 16px; }
+    h1 { color: #4f46e5; }
+    button { padding: 8px 14px; font-size: 16px; }
+  </style>
+</head>
+<body>
+  <h1>Hello, web!</h1>
+  <p>You clicked <b id="count">0</b> times.</p>
+  <button id="btn">Click me</button>
+  <script>
+    let clicks = 0;
+    document.querySelector('#btn').addEventListener('click', () => {
+      clicks += 1;
+      document.querySelector('#count').textContent = clicks;
+    });
+  </script>
+</body>
+</html>
+`;
 const PG_SAMPLE = `// JavaScript runs right here in your browser.
 // Try changing the numbers, then press Run.
 const scores = [72, 95, 88, 61, 79];
@@ -534,6 +583,18 @@ function runPlayground() {
   const pg = state.pg, out = $('#pg-out'), status = $('#pg-status');
   pg.code = $('#pg-code').value;
   if (pg.lang === 'python') { runPython(pg.code, out, status); return; }
+  if (pg.lang === 'html') {
+    // Web pages render in a sandboxed frame: scripts run, but the page cannot reach this site.
+    let frame = $('#pg-frame');
+    if (!frame) {
+      frame = document.createElement('iframe');
+      frame.id = 'pg-frame'; frame.className = 'web-preview pg-frame'; frame.title = t('preview');
+      frame.setAttribute('sandbox', 'allow-scripts allow-forms allow-modals');
+      out.hidden = true; out.after(frame);
+    }
+    frame.srcdoc = pg.code; status.textContent = t('rendered');
+    return;
+  }
   if (pg.lang !== 'javascript') {
     out.innerHTML = `<span class="info">${esc(pg.expected ? t('pgServer') : t('pgServerNoExpected'))}</span>${pg.expected ? '\n\n' + esc(pg.expected) : ''}`;
     return;
@@ -939,7 +1000,13 @@ document.addEventListener('click', (e) => {
     const langs = exampleLangs(ex), lang = langs.includes(state.codeLang) ? state.codeLang : langs[0];
     state.pg = { lang, code: ex.code[lang], expected: ex.output?.[lang] || '', from: moduleTitle(el.dataset.id) }; location.hash = '#playground'; }
   else if (a === 'pg-run') runPlayground();
-  else if (a === 'pg-lang') { state.pg.code = $('#pg-code').value; state.pg.lang = el.dataset.v; render(true); }
+  else if (a === 'pg-lang') {
+    const code = $('#pg-code').value, samples = [PG_SAMPLE, PG_HTML];
+    state.pg.lang = el.dataset.v;
+    // Switching between the starter samples swaps them; your own code is kept.
+    state.pg.code = samples.includes(code) ? (el.dataset.v === 'html' ? PG_HTML : PG_SAMPLE) : code;
+    render(true);
+  }
   else if (a === 'pg-reset') { state.pg = null; render(true); }
   else if (a === 'note-pick') { state.noteModule = el.dataset.id; render(true); }
   else if (a === 'gloss-letter') { state.glossLetter = el.dataset.v; render(true); }

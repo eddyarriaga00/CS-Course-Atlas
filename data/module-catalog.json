@@ -36,6 +36,7 @@
   "hash-tables",
   "trees-basics",
   "git-branching-merging",
+  "web-html",
   "heaps",
   "tries",
   "discrete-graph-theory",
@@ -114,7 +115,8 @@
   "cli-files-folders": "cli",
   "cli-text-pipes": "cli",
   "cli-permissions-env": "cli",
-  "cli-shell-scripts": "cli"
+  "cli-shell-scripts": "cli",
+  "web-html": "web"
  },
  "modules": [
   {
@@ -1026,6 +1028,23 @@
    "es": {
     "title": "Automatizar con scripts de shell",
     "description": "Convierte los comandos que repites en scripts: variables y comillas, argumentos, sentencias if, ciclos sobre archivos y funciones, terminando con un script que ordena una carpeta desordenada."
+   }
+  },
+  {
+   "id": "web-html",
+   "title": "HTML: The Structure of a Page",
+   "description": "Write real web pages from scratch: elements and tags, headings and lists, links and images, tables and forms, and how a browser turns them into what you see.",
+   "difficulty": "beginner",
+   "topics": [
+    "Elements and Tags",
+    "Headings, Paragraphs and Lists",
+    "Links and Images",
+    "Tables",
+    "Forms"
+   ],
+   "es": {
+    "title": "HTML: la estructura de una página",
+    "description": "Escribe páginas web reales desde cero: elementos y etiquetas, títulos y listas, enlaces e imágenes, tablas y formularios, y cómo el navegador los convierte en lo que ves."
    }
   }
  ]
