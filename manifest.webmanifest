@@ -1,14 +1,24 @@
 {
   "name": "CS Course Atlas",
   "short_name": "CS Atlas",
-  "description": "Free computer science courses, starting with Java: lessons, code examples in four languages, quizzes and video series.",
-  "start_url": "/CS-Course-Atlas/index.html",
-  "scope": "/CS-Course-Atlas/",
+  "description": "Free computer science courses from zero: Python, the command line, Git, the web, SQL, how computers work, cybersecurity, AI, discrete math and Java, in English and Spanish.",
+  "id": "./",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "any",
   "background_color": "#f7f7f8",
   "theme_color": "#4f46e5",
   "lang": "en-US",
-  "categories": ["education", "developer", "productivity"]
+  "categories": ["education", "developer", "productivity"],
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Flashcards", "url": "./index.html#flashcards", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Challenges", "url": "./index.html#challenges", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Playground", "url": "./index.html#playground", "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }] }
+  ]
 }
-
