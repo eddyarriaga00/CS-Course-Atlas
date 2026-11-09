@@ -207,6 +207,15 @@ function waitForModule(id) {
     .catch(() => { if (location.hash === route) $('#main').innerHTML = `<div class="loading">${t('lessonsFailed')} <button class="btn btn-sm" onclick="location.reload()">${t('retry')}</button></div>`; });
   return `<div class="loading" aria-busy="true"><span class="spinner"></span>${t('loadingLessons')}</div>`;
 }
+// The glossary loads one small file with every term (data/glossary.json) instead of every course's lessons.
+let glossaryLoad = null;
+function waitForGlossary() {
+  if (DATA.glossary) return null;
+  const route = location.hash;
+  glossaryLoad = glossaryLoad || fetch('data/glossary.json?v=' + DATA.glossaryVersion).then((r) => { if (!r.ok) throw new Error(String(r.status)); return r.json(); }).then((g) => { DATA.glossary = g; });
+  glossaryLoad.then(() => { if (location.hash === route) render(true); }).catch(() => { glossaryLoad = null; if (location.hash === route) $('#main').innerHTML = `<div class="loading">${t('lessonsFailed')} <button class="btn btn-sm" onclick="location.reload()">${t('retry')}</button></div>`; });
+  return `<div class="loading" aria-busy="true"><span class="spinner"></span>${t('loadingLessons')}</div>`;
+}
 const lessonsReady = (tids) => tids.every((tid) => trackIds(tid).every((id) => DATA.full[id]));
 // Returns a loading screen (and re-renders when ready) if any of these courses' lessons are missing.
 function waitForLessons(tids) {
@@ -1391,7 +1400,7 @@ function viewNotes() {
 }
 function allTerms() {
   const out = [];
-  liveIds().filter((id) => state.glossCourse === 'all' || DATA.modules[id].track === state.glossCourse).forEach((id) => (DATA.full[id].definitions || []).forEach((d) => out.push({ id, term: L(d.term), def: L(d.definition) })));
+  liveIds().filter((id) => state.glossCourse === 'all' || DATA.modules[id].track === state.glossCourse).forEach((id) => ((DATA.glossary || {})[id] || DATA.full[id]?.definitions || []).forEach((d) => out.push({ id, term: L(d.term), def: L(d.definition) })));
   return out.sort((a, b) => a.term.localeCompare(b.term, state.lang));
 }
 function glossaryGrid() {
@@ -1677,7 +1686,6 @@ function lessonsFor(route) {
   const tracksOf = (id) => coursePick(id) ? [coursePick(id)] : [...new Set((id === MIX ? mixIds() : id === DUE ? dueKeys().map((k) => k.split(':')[0]) : [id]).map((m) => DATA.modules[m].track))];
   if (route === 'quizzes') { if (!state.quizModule || !validPick(state.quizModule)) state.quizModule = practiceDefault(); return tracksOf(state.quizModule); }
   if (route === 'flashcards') { if (!state.flashModule || !validPick(state.flashModule)) state.flashModule = dueCount() ? DUE : practiceDefault(); return tracksOf(state.flashModule); }
-  if (route === 'glossary') return liveTracks().map((tr) => tr.id);
   if (route.startsWith('sheet-')) return [route.slice(6)].filter((id) => track(id)?.status === 'available');
   return [];
 }
@@ -1707,7 +1715,7 @@ function render(keepScroll) {
   const onePick = route === 'quizzes' ? state.quizModule : route === 'flashcards' ? state.flashModule : null;
   // A single module (its page, or one picked in Quizzes/Flashcards) needs only its own small lesson file.
   let loading = route.startsWith('m-') && DATA.modules[route.slice(2)] ? waitForModule(route.slice(2))
-    : onePick && DATA.modules[onePick] ? waitForModule(onePick) : waitForLessons(needTracks);
+    : onePick && DATA.modules[onePick] ? waitForModule(onePick) : route === 'glossary' ? waitForGlossary() : waitForLessons(needTracks);
   // A module whose lessons are still downloading shows its header right away (from the small index), so the page paints fast.
   if (loading && route.startsWith('m-') && DATA.modules[route.slice(2)]) loading = moduleSkeleton(route.slice(2), loading);
   const html = loading || (route === 'home' ? viewHome() : route === 'courses' ? viewCourses() : route === 'practice' ? viewPractice() : route === 'quizzes' ? viewQuizzes() : route === 'flashcards' ? viewFlashcards() : route === 'challenges' ? viewChallenges() : route === 'profile' ? viewProfile() : route === 'playground' ? viewPlayground() : route === 'notes' ? viewNotes() : route === 'glossary' ? viewGlossary() : route === 'roadmap' ? viewRoadmap() : route === 'plan' ? viewPlan()
