@@ -763,6 +763,16 @@ document.addEventListener('change', (e) => {
 document.addEventListener('keydown', (e) => {
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openSearch(); }
   if (e.key === 'Escape') closeSearch();
+  if (e.target.id === 'search-input' && ['ArrowDown', 'ArrowUp', 'Enter'].includes(e.key)) {
+    const items = [...document.querySelectorAll('#search-results .result[href]')];
+    if (!items.length) return;
+    e.preventDefault();
+    let i = items.findIndex((x) => x.classList.contains('kb'));
+    if (e.key === 'Enter') { (items[i] || items[0]).click(); return; }
+    items.forEach((x) => x.classList.remove('kb'));
+    i = e.key === 'ArrowDown' ? (i + 1) % items.length : (i <= 0 ? items.length - 1 : i - 1);
+    items[i].classList.add('kb'); items[i].scrollIntoView({ block: 'nearest' });
+  }
   if (e.target.id === 'flash' && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); e.target.click(); }
   if (e.target.id === 'pg-code') {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); runPlayground(); }
