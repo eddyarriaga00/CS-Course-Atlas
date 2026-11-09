@@ -1,6 +1,6 @@
 const UI = {
   en: {
-    signIn: 'Sign in', search: 'Search courses, modules, terms', home: 'Home', courses: 'Courses', allCourses: 'All courses', practice: 'Practice', account: 'Account', profile: 'Profile',
+    signIn: 'Sign in', skip: 'Skip to content', search: 'Search courses, modules, terms', home: 'Home', courses: 'Courses', allCourses: 'All courses', practice: 'Practice', account: 'Account', profile: 'Profile',
     flashcards: 'Flashcards', quizzes: 'Quizzes', playground: 'Playground', notes: 'Notes', support: 'Support', more: 'More', otherCourses: 'Other courses',
     soon: 'Soon', comingSoon: 'Coming soon', available: 'Available', modules: 'modules', moduleLower: 'module', units: 'units', unitsTitle: 'Units', unit: 'Unit', hours: 'hours', min: 'min', module: 'Module', term: 'Term',
     heroTitle: 'Learn computer science from zero.',
@@ -62,7 +62,7 @@ const UI = {
     serverSlow: 'The server is waking up. Try again in a few seconds.', signedOut: 'Signed out', accountDeleted: 'Your account was deleted', savedAccount: 'Saved to your account'
   },
   es: {
-    signIn: 'Iniciar sesión', search: 'Busca cursos, módulos, términos', home: 'Inicio', courses: 'Cursos', allCourses: 'Todos los cursos', practice: 'Práctica', account: 'Cuenta', profile: 'Perfil',
+    signIn: 'Iniciar sesión', skip: 'Saltar al contenido', search: 'Busca cursos, módulos, términos', home: 'Inicio', courses: 'Cursos', allCourses: 'Todos los cursos', practice: 'Práctica', account: 'Cuenta', profile: 'Perfil',
     flashcards: 'Tarjetas', quizzes: 'Cuestionarios', playground: 'Editor', notes: 'Notas', support: 'Soporte', more: 'Más', otherCourses: 'Otros cursos',
     soon: 'Pronto', comingSoon: 'Próximamente', available: 'Disponible', modules: 'módulos', moduleLower: 'módulo', units: 'unidades', unitsTitle: 'Unidades', unit: 'Unidad', hours: 'horas', min: 'min', module: 'Módulo', term: 'Término',
     heroTitle: 'Aprende ciencias de la computación desde cero.',
@@ -236,6 +236,7 @@ function renderChrome(route) {
   $('#lang-btn').textContent = state.lang === 'en' ? 'ES' : 'EN';
   $('#lang-btn').setAttribute('aria-label', state.lang === 'en' ? 'ES: cambiar a español' : 'EN: switch to English');
   $('#signin-open').textContent = t('signIn');
+  $('#skip-link').textContent = t('skip');
   const is = (r) => (route === r ? ' active' : '');
   $('#sidebar').innerHTML = `
     <a class="nav-item${is('home')}" href="#home"><span class="ico">⌂</span>${t('home')}</a>
@@ -1399,6 +1400,7 @@ document.addEventListener('keydown', (e) => {
     else if (e.key === 'Tab' && !e.shiftKey) { e.preventDefault(); const ta = e.target, st = ta.selectionStart; ta.setRangeText('    ', st, ta.selectionEnd, 'end'); state.pg.code = ta.value; }
   }
 });
+$('#skip-link').addEventListener('click', (e) => { e.preventDefault(); $('#main').focus(); });
 $('#menu-btn').addEventListener('click', () => document.body.classList.add('drawer-open'));
 $('#scrim').addEventListener('click', () => document.body.classList.remove('drawer-open'));
 $('#signin-open').addEventListener('click', () => openSignIn());
