@@ -23,7 +23,7 @@ const UI = {
     vizStep: 'Step through', vizHint: 'Run line by line and watch the variables change', vizSteps: (n) => `${n} steps recorded`, vizStepOf: (a, b) => `Step ${a} of ${b}`, vizBack: 'Back', vizNext: 'Next', vizFirst: 'First step', vizLast: 'Last step', vizClose: 'Close', vizAbout: (n) => `About to run line ${n}`, vizReturns: (f, v) => `${f}() returns <code>${v}</code>`, vizEnd: 'The program finished.', vizCrashed: (n) => `The program stopped with an error on line ${n}.`, vizGlobals: 'Global variables', vizNoVars: 'No variables yet', vizNothing: 'Nothing printed yet', vizCapped: 'Stopped after 600 steps. Try a smaller input to see the whole run.',
     notesDownload: 'Download all (.md)', pageKind: 'Page', challengeKind: 'Challenge', pgShare: 'Share', pgShareHint: 'Copy a link that opens this code in the playground', linkCopied: 'Link copied. Anyone who opens it sees this code.', copyThisLink: 'Copy this link:', pgShared: 'a shared link', pgBadLink: 'That code link is broken, so the playground opened as usual.', pgTooLong: 'This code is too long for a link (8,000 characters max).',
     gitNoRepo: (p) => `There is no Git repository in ${p}`, gitExtraRepo: (p) => `${p} should not be a Git repository`, gitHead: (a, b) => `You are on branch ${a}, expected ${b}`, gitNoBranch: (b) => `Branch ${b} is missing`, gitExtraBranch: (b) => `Branch ${b} should not exist`, gitCommits: (b, a, w) => `Commits on ${b}: ${a} (expected ${w})`, gitTracked: (b, a, w) => `Files committed on ${b}: ${a} (expected ${w})`, gitStatus: (a, w) => `git status -s shows ${a} (expected ${w})`, gitRepoNote: (r, h, n) => `[${r}: Git repository on branch ${h}, ${n} commit${n === 1 ? '' : 's'}]`,
-    termRan: (n) => `${n} command${n === 1 ? '' : 's'} ran in the practice terminal`, terminal: 'Terminal', startingFiles: 'Starting files', loadingWord: 'Loading…', emptyHome: '~/ (empty)', shellFailed: 'The practice terminal could not load. Check your connection and try again.', noCommands: 'No commands yet.', shMissing: (p) => `${p} is missing`, shExtra: (p) => `${p} should not be there`, shContent: (p) => `${p} has different contents`, shMode: (p, a, b) => `${p} has permissions ${a}, expected ${b}`, shNotExec: (p) => `${p} is not executable`, shExec: (p) => `${p} should not be executable`, shFilesLabel: 'Your files and folders end up right', shRepoLabel: 'Your files and Git repository end up right', shOutLabel: 'It prints the right output', nothingPrinted: '(nothing)',
+    dailyTitle: 'Today’s challenge', dailyGo: 'Solve it', termRan: (n) => `${n} command${n === 1 ? '' : 's'} ran in the practice terminal`, terminal: 'Terminal', startingFiles: 'Starting files', loadingWord: 'Loading…', emptyHome: '~/ (empty)', shellFailed: 'The practice terminal could not load. Check your connection and try again.', noCommands: 'No commands yet.', shMissing: (p) => `${p} is missing`, shExtra: (p) => `${p} should not be there`, shContent: (p) => `${p} has different contents`, shMode: (p, a, b) => `${p} has permissions ${a}, expected ${b}`, shNotExec: (p) => `${p} is not executable`, shExec: (p) => `${p} should not be executable`, shFilesLabel: 'Your files and folders end up right', shRepoLabel: 'Your files and Git repository end up right', shOutLabel: 'It prints the right output', nothingPrinted: '(nothing)',
     ofModules: (a, b) => `${a} of ${b} modules complete`, courseDone: 'Course complete. Nice work.',
     coursesTitle: 'Courses', coursesLead: 'New to programming? Follow the beginner path in order: all nine courses are ready. After it come Java and the next-level courses; the ones still being written show their outline, and you can vote for what you want next.',
     plannedTitle: 'Planned courses', plannedNote: 'Beginner courses first. Vote for the ones you want next.', javaTrack: 'Java course', studyTools: 'Study tools',
@@ -90,7 +90,7 @@ const UI = {
     vizStep: 'Paso a paso', vizHint: 'Ejecuta línea por línea y mira cómo cambian las variables', vizSteps: (n) => `${n} pasos registrados`, vizStepOf: (a, b) => `Paso ${a} de ${b}`, vizBack: 'Atrás', vizNext: 'Siguiente', vizFirst: 'Primer paso', vizLast: 'Último paso', vizClose: 'Cerrar', vizAbout: (n) => `A punto de ejecutar la línea ${n}`, vizReturns: (f, v) => `${f}() devuelve <code>${v}</code>`, vizEnd: 'El programa terminó.', vizCrashed: (n) => `El programa se detuvo con un error en la línea ${n}.`, vizGlobals: 'Variables globales', vizNoVars: 'Aún no hay variables', vizNothing: 'Aún no se imprimió nada', vizCapped: 'Se detuvo tras 600 pasos. Prueba con una entrada más pequeña para ver toda la ejecución.',
     notesDownload: 'Descargar todo (.md)', pageKind: 'Página', challengeKind: 'Reto', pgShare: 'Compartir', pgShareHint: 'Copia un enlace que abre este código en el editor', linkCopied: 'Enlace copiado. Quien lo abra verá este código.', copyThisLink: 'Copia este enlace:', pgShared: 'un enlace compartido', pgBadLink: 'Ese enlace de código está dañado, así que el editor se abrió como siempre.', pgTooLong: 'Este código es demasiado largo para un enlace (máximo 8.000 caracteres).',
     gitNoRepo: (p) => `No hay un repositorio de Git en ${p}`, gitExtraRepo: (p) => `${p} no debería ser un repositorio de Git`, gitHead: (a, b) => `Estás en la rama ${a}, se esperaba ${b}`, gitNoBranch: (b) => `Falta la rama ${b}`, gitExtraBranch: (b) => `La rama ${b} no debería existir`, gitCommits: (b, a, w) => `Commits en ${b}: ${a} (se esperaba ${w})`, gitTracked: (b, a, w) => `Archivos con commit en ${b}: ${a} (se esperaba ${w})`, gitStatus: (a, w) => `git status -s muestra ${a} (se esperaba ${w})`, gitRepoNote: (r, h, n) => `[${r}: repositorio de Git en la rama ${h}, ${n} commit${n === 1 ? '' : 's'}]`,
-    termRan: (n) => `${n} comando${n === 1 ? '' : 's'} en la terminal de práctica`, terminal: 'Terminal', startingFiles: 'Archivos iniciales', loadingWord: 'Cargando…', emptyHome: '~/ (vacío)', shellFailed: 'La terminal de práctica no se pudo cargar. Revisa tu conexión e inténtalo otra vez.', noCommands: 'Aún no hay comandos.', shMissing: (p) => `falta ${p}`, shExtra: (p) => `${p} no debería estar`, shContent: (p) => `${p} tiene otro contenido`, shMode: (p, a, b) => `${p} tiene permisos ${a}, se esperaba ${b}`, shNotExec: (p) => `${p} no es ejecutable`, shExec: (p) => `${p} no debería ser ejecutable`, shFilesLabel: 'Tus archivos y carpetas quedan bien', shRepoLabel: 'Tus archivos y tu repositorio de Git quedan bien', shOutLabel: 'Imprime la salida correcta', nothingPrinted: '(nada)',
+    dailyTitle: 'Reto de hoy', dailyGo: 'Resolverlo', termRan: (n) => `${n} comando${n === 1 ? '' : 's'} en la terminal de práctica`, terminal: 'Terminal', startingFiles: 'Archivos iniciales', loadingWord: 'Cargando…', emptyHome: '~/ (vacío)', shellFailed: 'La terminal de práctica no se pudo cargar. Revisa tu conexión e inténtalo otra vez.', noCommands: 'Aún no hay comandos.', shMissing: (p) => `falta ${p}`, shExtra: (p) => `${p} no debería estar`, shContent: (p) => `${p} tiene otro contenido`, shMode: (p, a, b) => `${p} tiene permisos ${a}, se esperaba ${b}`, shNotExec: (p) => `${p} no es ejecutable`, shExec: (p) => `${p} no debería ser ejecutable`, shFilesLabel: 'Tus archivos y carpetas quedan bien', shRepoLabel: 'Tus archivos y tu repositorio de Git quedan bien', shOutLabel: 'Imprime la salida correcta', nothingPrinted: '(nada)',
     ofModules: (a, b) => `${a} de ${b} módulos completados`, courseDone: 'Curso completado. ¡Buen trabajo!',
     coursesTitle: 'Cursos', coursesLead: '¿Nuevo en programación? Sigue la ruta para principiantes en orden: los nueve cursos están listos. Después vienen Java y los cursos del siguiente nivel; los que aún se escriben muestran su temario y puedes votar por lo que quieras primero.',
     plannedTitle: 'Cursos planeados', plannedNote: 'Primero los de nivel principiante. Vota por los que quieres primero.', javaTrack: 'Curso de Java', studyTools: 'Herramientas de estudio',
@@ -350,6 +350,19 @@ function unitCards(tr, live) {
       ? `<li><a href="#m-${id}">${dot(id)}${esc(moduleTitle(id))}<span class="mins">${DATA.modules[id].minutes || ''} ${t('min')}</span></a></li>`
       : `<li><div><span class="dot"></span>${esc(moduleTitle(id))}<span class="mins">${t('soon')}</span></div></li>`)).join('') + '</ul></div>').join('')}</div>`;
 }
+// One unsolved challenge a day, from the course you are in (or the rest of the path); the same all day.
+function dailyChallengeCard() {
+  const order = [currentTrack(), ...orderedTracks().map((tr) => tr.id)].filter((id, i, a) => a.indexOf(id) === i);
+  let pool = [];
+  for (const tid of order) { pool = trackIds(tid).filter(isLive).flatMap((m) => Array.from({ length: DATA.modules[m].counts?.challenges || 0 }, (_, i) => [m, i])); if (pool.some(([m, i]) => !solvedIndex(m, i))) break; }
+  const open = pool.filter(([m, i]) => !solvedIndex(m, i));
+  if (!open.length) return '';
+  const [m, i] = open[today() % open.length], title = DATA.full[m]?.challenges?.[i]?.title;
+  if (!DATA.full[m]) loadLessons(DATA.modules[m].track).then(() => { if ((location.hash.slice(1) || 'home') === 'home') render(true); }).catch(() => {});
+  return `<a class="card plan-home daily-ch" href="#m-${m}" data-goto-tab="challenges" data-goto-ch="${i}"><span class="cicon" style="width:34px;height:34px;font-size:13px">{ }</span><div class="info"><span class="muted">${t('dailyTitle')}</span><b>${title ? esc(L(title)) : esc(moduleTitle(m))}</b><span class="muted">${esc(moduleTitle(m))}</span></div><span class="btn btn-sm">${t('dailyGo')}</span></a>`;
+}
+// Whether challenge number i of module m is solved (keys use the challenge id, which needs the lessons).
+const solvedIndex = (m, i) => { const ch = DATA.full[m]?.challenges?.[i]; return ch ? state.solved.has(chKey(m, ch)) : [...state.solved].filter((k) => k.startsWith(m + '/')).length > i; };
 function viewHome() {
   const live = liveIds(), started = DATA.tracks.find((tr) => tr.id === currentTrack() && trackStats(tr).done) || liveTracks().find((tr) => trackStats(tr).done);
   const s = started ? trackStats(started) : null, next = started ? nextModule(started.id) : null;
@@ -368,6 +381,7 @@ function viewHome() {
       <span class="btn">${t('continueBtn')}</span></a>` : ''}
     ${!state.user && state.authReady && (state.done.size || Object.values(state.notes).some((x) => x && x.trim())) ? `<div class="card save-card"><div class="info"><b>${t('saveTitle')}</b><span>${t('saveText')}</span></div><button class="btn btn-sm" data-action="open-signup">${t('createFree')}</button></div>` : ''}
     ${!started ? '' : (() => { const p = buildPlan(); return p.finish ? `<div class="card plan-home"><span class="cicon" style="width:34px;height:34px;font-size:15px">▤</span><div class="info">${t('planHome', fmtDate(p.finish, { month: 'long', day: 'numeric' }), planTitle())}</div><a class="btn btn-ghost btn-sm" href="#plan">${t('editPlan')}</a></div>` : ''; })()}
+    ${started ? dailyChallengeCard() : ''}
     ${dueCount() ? `<div class="card plan-home due-home"><span class="cicon" style="width:34px;height:34px;font-size:15px">⏰</span><div class="info">${t('dueChip', dueCount())}</div><button class="btn btn-sm" data-action="go-flash" data-id="${DUE}">${t('reviewCards')}</button></div>` : ''}
     ${started ? '' : `<div class="section-head"><h2>${t('startFrom')}</h2></div>
     <div class="start-grid">${startCard(1, '#course-python')}${startCard(2, '#course-cli')}${startCard(3, '#course-java')}</div>`}
@@ -1287,7 +1301,11 @@ function achievements() {
     ['100', en ? 'Perfect quiz' : 'Cuestionario perfecto', en ? 'Score 5/5 on a quiz' : 'Saca 5/5', state.aces.size >= 1],
     ['4', en ? 'Polyglot' : 'Políglota', en ? 'View code in all 4 languages' : 'Ve código en los 4 lenguajes', state.langsSeen.size >= 4],
     ['✎', en ? 'Note taker' : 'Toma notas', en ? 'Write your first note' : 'Escribe tu primera nota', Object.values(state.notes).some((x) => x && x.trim())],
-    ['5', en ? '5-day streak' : 'Racha de 5 días', en ? 'Study 5 days in a row' : 'Estudia 5 días seguidos', streakDays() >= 5]
+    ['5', en ? '5-day streak' : 'Racha de 5 días', en ? 'Study 5 days in a row' : 'Estudia 5 días seguidos', streakDays() >= 5],
+    ['{ }', en ? 'First challenge' : 'Primer reto', en ? 'Solve a coding challenge' : 'Resuelve un reto de código', state.solved.size >= 1],
+    ['10', en ? 'Problem solver' : 'Resuelve problemas', en ? 'Solve 10 challenges' : 'Resuelve 10 retos', state.solved.size >= 10],
+    ['⟳', en ? 'It stuck' : 'Se quedó', en ? 'Remember 10 cards in a later review' : 'Recuerda 10 tarjetas en un repaso posterior', Object.values(state.cardBox).filter((c) => c.b >= 2).length >= 10],
+    ['🎓', en ? 'Certified' : 'Certificado', en ? 'Earn a course certificate' : 'Obtén un certificado de curso', Object.keys(state.certs).length >= 1]
   ];
 }
 
@@ -1540,6 +1558,7 @@ function render(keepScroll) {
   $('#main').innerHTML = html;
   armQuizTimer();
   fillShellSetups();
+  if (state.pendingCh != null && $('#ch-' + state.pendingCh)) { const el = $('#ch-' + state.pendingCh); state.pendingCh = null; setTimeout(() => el.scrollIntoView({ block: 'start', behavior: 'smooth' }), 50); el.classList.add('flash-target'); }
   if (route === 'playground' && state.pgAutoStep) { state.pgAutoStep = false; traceProgram(); }
   highlightCode();
   document.body.classList.remove('drawer-open');
@@ -1736,7 +1755,7 @@ $('#search-results').addEventListener('click', (e) => {
 });
 document.addEventListener('click', (e) => { if (!e.target.closest('#search') && !e.target.closest('#search-btn')) closeSearch(); });
 // Links can open a module on a specific tab (data-goto-tab="challenges").
-document.addEventListener('click', (e) => { const a = e.target.closest('a[data-goto-tab]'); if (a && !a.closest('#search-results')) state.pendingTab = a.dataset.gotoTab; }, true);
+document.addEventListener('click', (e) => { const a = e.target.closest('a[data-goto-tab]'); if (a && !a.closest('#search-results')) { state.pendingTab = a.dataset.gotoTab; state.pendingCh = a.dataset.gotoCh ?? null; } }, true);
 
 /* ---------- Boot ---------- */
 // Links from the generated SEO pages use ?route=/java&module=id; turn them into hash routes.
