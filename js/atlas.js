@@ -1823,7 +1823,7 @@ $('#theme-btn').addEventListener('click', () => {
   root.dataset.theme = dark ? 'light' : 'dark'; store.set('theme', root.dataset.theme);
   if (location.hash === '#profile') render(true);
 });
-window.addEventListener('hashchange', () => render());
+window.addEventListener('hashchange', () => { document.querySelectorAll('dialog[open]').forEach((d) => d.close()); render(); });
 // Offline support: the service worker caches the app, the lessons you open and the in-browser runtimes.
 if ('serviceWorker' in navigator && window.isSecureContext) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 
