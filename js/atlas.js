@@ -3,11 +3,24 @@ const UI = {
     signIn: 'Sign in', search: 'Search courses, modules, terms', home: 'Home', courses: 'Courses', allCourses: 'All courses', practice: 'Practice', account: 'Account', profile: 'Profile',
     flashcards: 'Flashcards', quizzes: 'Quizzes', playground: 'Playground', notes: 'Notes', support: 'Support', more: 'More', otherCourses: 'Other courses',
     soon: 'Soon', comingSoon: 'Coming soon', available: 'Available', modules: 'modules', moduleLower: 'module', units: 'units', unitsTitle: 'Units', unit: 'Unit', hours: 'hours', min: 'min', module: 'Module', term: 'Term',
-    heroTitle: 'Computer science, one clear course at a time.',
-    heroLead: 'Three courses are ready: Java and Discrete Math, with lessons and real code in four languages, and Git, taught through real terminal sessions. Each has practice, quizzes and videos. DSA and Assembly are on the way.',
+    heroTitle: 'Learn computer science from zero.',
+    heroLead: 'Free, step-by-step courses that start at the very beginning. Short lessons, code you can run right in your browser, quizzes and a video for every topic, in English and Spanish.',
+    startPython: 'Start with Python', noExperience: 'No experience needed. Free, no account required.', continueCourse: (c) => `Continue ${c}`,
+    startFrom: 'Where are you starting from?',
+    s1Title: 'I’m brand new', s1Text: 'Never written a line of code? Start with Python. The first lesson is one line long.', s1Cta: 'Start Python',
+    s2Title: 'I know a little code', s2Text: 'Comfortable with variables and loops? Learn Git next, then the math behind CS.', s2Cta: 'Open Git',
+    s3Title: 'I’m taking a CS class', s3Text: 'Study Java and Discrete Math alongside your class, with a quiz for every module.', s3Cta: 'Open Java',
+    pathTitle: 'The beginner path', pathLead: 'Nine courses in an order that makes sense. Each one builds on the one before it.',
+    stepN: (n) => `Step ${n}`, stepReady: 'Ready', stepSoon: 'Being written', stepDone: 'Complete',
+    howTitle: 'How every module works',
+    how1: 'Read', how1Text: 'A short lesson: why it matters, the key ideas and the mistakes to avoid.',
+    how2: 'Run', how2Text: 'Examples you can edit and run in your browser. Nothing to install.',
+    how3: 'Practice', how3Text: 'Practice problems, a quiz and flashcards so it sticks.',
+    how4: 'Watch', how4Text: 'A hand-picked video for every topic from university and teaching channels.',
+    nextTitle: 'After the beginner path', nextLead: 'Bigger languages, algorithms and how real systems work.',
     startJava: 'Start the Java course', browse: 'Browse courses', continueTitle: 'Continue where you left off', continueBtn: 'Continue', startBtn: 'Start',
     ofModules: (a, b) => `${a} of ${b} modules complete`, courseDone: 'Course complete. Nice work.',
-    coursesTitle: 'Courses', coursesLead: 'Each course is a sequence of units and modules. Java, Discrete Math and Git are fully available; the others are being written now.',
+    coursesTitle: 'Courses', coursesLead: 'New to programming? Follow the beginner path in order. Courses marked Ready are complete; the rest are being written now, and you can vote for the ones you want first.',
     plannedTitle: 'Planned courses', plannedNote: 'Beginner courses first. Vote for the ones you want next.', javaTrack: 'Java course', studyTools: 'Study tools',
     toolFlash: 'Spaced review of the key terms.', toolQuiz: 'Check yourself after each module.', toolPlay: 'Run Java, C++, Python and JS.', toolNotes: 'Your notes, saved per module.',
     notifyMe: 'Notify me when it opens', notified: 'Saved: it will show up here when it opens',
@@ -32,8 +45,8 @@ const UI = {
     forgot: 'Forgot password?', newHere: 'New here?', create: 'Create an account', legal: 'By continuing you agree to the <a href="terms-of-use.html">Terms of Use</a> and <a href="privacy-policy.html">Privacy Policy</a>.',
     noResults: 'No matches', today: 'Today', yesterday: 'Yesterday', daysAgo: (n) => `${n} days ago`, completed: 'Completed', reviewed: 'Reviewed 12 flashcards', notFound: 'That page doesn’t exist.',
     glossary: 'Glossary', roadmap: 'Roadmap', whatsComing: 'What’s coming', tryIt: 'Try it ▸', run: 'Run ▸', reset: 'Reset', running: 'Running…',
-    pgLead: 'Write and run code right here. JavaScript runs in your browser; Java, Python and C++ will run on the CS Course Atlas server.',
-    pgServer: 'Running this language needs the code server, which is on the roadmap. Here is the output this example prints:', pgServerNoExpected: 'Running this language needs the code server, which is on the roadmap. Switch to JavaScript to run code now.',
+    pgLead: 'Write and run code right here. JavaScript and Python run in your browser; Java and C++ will run on the CS Course Atlas server.',
+    pgServer: 'Running this language needs the code server, which is on the roadmap. Here is the output this example prints:', pgServerNoExpected: 'Running this language needs the code server, which is on the roadmap. Switch to JavaScript or Python to run code now.',
     pgDone: (ms) => `Finished in ${ms} ms`, pgTimeout: 'Stopped after 3 seconds (infinite loop?)', pgEmpty: '(no output)', pgLoaded: (m) => `Loaded from ${m}`,
     notesLeadIn: 'One page of notes per module, saved to your account and synced to every device you sign in on.', notesLead: 'One page of notes per module, saved on this device. With an account they sync everywhere.', notePlaceholder: 'What clicked? What confused you? Write it in your own words.',
     savedDevice: 'Saved on this device', notesFor: 'Notes for', words: 'words',
@@ -41,7 +54,7 @@ const UI = {
     roadmapLead: 'Where CS Course Atlas is going. Vote for what you want next.', live: 'Live', building: 'In progress', planned: 'Planned', vote: '▲ Vote', voted: '▲ Voted',
     achievements: 'Achievements', earned: (a, b) => `${a} of ${b} earned`,
     studyPlan: 'Study plan', planLead: 'Pick a course and how much time you have; we lay out the rest of it week by week.', hoursWeek: 'Hours per week', startOn: 'Start on', finishBy: 'Finish by', weeksLeft: 'weeks', modulesLeft: 'modules left', weekN: (n) => `Week ${n}`, thisWeek: 'This week', planHome: (d, c) => `At your pace you’ll finish ${c} by <b>${d}</b>.`, editPlan: 'Edit plan', allDone: 'Every module of this course is complete. Time for the next one.', addCalendar: 'Add to calendar', reminders: 'Weekly reminder', 
-    videos: 'Videos', fullSeries: 'Full video series', courseSeries: 'Full course series', watchTopic: 'Watch a video on this topic', watchWait: 'Watch while you wait', videosLead: 'A full series for the module, then one video per topic. All from university or well-known teaching channels; they open on YouTube.', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', showPw: 'Show password', hidePw: 'Hide password', show: 'Show', hide: 'Hide', signupSub: 'Free. Your progress, notes and quiz scores are saved and follow you to any device.', orSignupEmail: 'or sign up with email', createFree: 'Create free account', userHint: '3–32 characters: letters, numbers, dot, underscore or dash.', pwHint: 'At least 8 characters.', accountTitle: 'Account', displayName: 'Display name', saveChanges: 'Save changes', saved: 'Saved', changePw: 'Change password', currentPw: 'Current password', newPw: 'New password', pwChanged: 'Password changed', googleNoPw: 'You sign in with Google, so there is no password to manage here.', saveTitle: 'Keep your progress', saveText: 'It is only on this device right now. A free account saves it and syncs it everywhere.', expand: 'show modules', collapse: 'hide modules', fullSession: 'Full session', week1: 'week', coursesReady: 'courses ready', course: 'Course', trackCourse: (c) => `${c} course`, terminalExamples: 'Real terminal sessions', terminalHint: 'Run this in an empty folder. Lines starting with $ are what you type; the rest is what Git printed when we ran the session with real Git. Copy gives you just the commands.', terminalOut: 'Terminal', report: 'Report a problem with this module', programs: 'programs', languagesWord: 'languages', waitLead: 'Series that cover these modules, each listed once.',
+    videos: 'Videos', fullSeries: 'Full video series', courseSeries: 'Full course series', watchTopic: 'Watch a video on this topic', watchWait: 'Watch while you wait', videosLead: 'A full series for the module, then one video per topic. All from university or well-known teaching channels; they open on YouTube.', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', pyLoading: 'Loading Python (first run only, a few seconds)…', pyTimeout: 'Stopped after 10 seconds (infinite loop?)', pyFailed: 'Could not load Python. Check your connection and try again.', pythonExamples: 'Runnable Python examples', showPw: 'Show password', hidePw: 'Hide password', show: 'Show', hide: 'Hide', signupSub: 'Free. Your progress, notes and quiz scores are saved and follow you to any device.', orSignupEmail: 'or sign up with email', createFree: 'Create free account', userHint: '3–32 characters: letters, numbers, dot, underscore or dash.', pwHint: 'At least 8 characters.', accountTitle: 'Account', displayName: 'Display name', saveChanges: 'Save changes', saved: 'Saved', changePw: 'Change password', currentPw: 'Current password', newPw: 'New password', pwChanged: 'Password changed', googleNoPw: 'You sign in with Google, so there is no password to manage here.', saveTitle: 'Keep your progress', saveText: 'It is only on this device right now. A free account saves it and syncs it everywhere.', expand: 'show modules', collapse: 'hide modules', fullSession: 'Full session', week1: 'week', coursesReady: 'courses ready', course: 'Course', trackCourse: (c) => `${c} course`, terminalExamples: 'Real terminal sessions', terminalHint: 'Run this in an empty folder. Lines starting with $ are what you type; the rest is what Git printed when we ran the session with real Git. Copy gives you just the commands.', terminalOut: 'Terminal', report: 'Report a problem with this module', programs: 'programs', languagesWord: 'languages', waitLead: 'Series that cover these modules, each listed once.',
     signedInWith: (p) => `Signed in with ${p}`, syncedAt: (tm) => `Progress synced at ${tm}`, syncPending: 'Syncing progress…', day: 'day', acrossN: (n) => `across ${n} ${n === 1 ? 'quiz' : 'quizzes'}`, noQuizYet: 'No quizzes taken yet',
     modulesWithNotes: 'modules with notes', noActivity: 'Complete a module, take a quiz or write a note and it shows up here.', typeDelete: 'Type DELETE to confirm', deleteViaSupport: 'Ask support to delete it',
     privacy: 'Privacy', terms: 'Terms', contact: 'Contact', checkingSession: 'Checking your account…', emailOrUser: 'Email or username', username: 'Username', confirmPw: 'Confirm password',
@@ -52,11 +65,24 @@ const UI = {
     signIn: 'Iniciar sesión', search: 'Busca cursos, módulos, términos', home: 'Inicio', courses: 'Cursos', allCourses: 'Todos los cursos', practice: 'Práctica', account: 'Cuenta', profile: 'Perfil',
     flashcards: 'Tarjetas', quizzes: 'Cuestionarios', playground: 'Editor', notes: 'Notas', support: 'Soporte', more: 'Más', otherCourses: 'Otros cursos',
     soon: 'Pronto', comingSoon: 'Próximamente', available: 'Disponible', modules: 'módulos', moduleLower: 'módulo', units: 'unidades', unitsTitle: 'Unidades', unit: 'Unidad', hours: 'horas', min: 'min', module: 'Módulo', term: 'Término',
-    heroTitle: 'Ciencias de la computación, un curso claro a la vez.',
-    heroLead: 'Ya hay tres cursos listos: Java y Matemáticas discretas, con lecciones y código real en cuatro lenguajes, y Git, enseñado con sesiones reales de terminal. Todos tienen práctica, cuestionarios y videos. Pronto llegan DSA y Ensamblador.',
+    heroTitle: 'Aprende ciencias de la computación desde cero.',
+    heroLead: 'Cursos gratis, paso a paso, que empiezan desde el principio. Lecciones cortas, código que puedes ejecutar en tu navegador, cuestionarios y un video para cada tema, en español e inglés.',
+    startPython: 'Empieza con Python', noExperience: 'No necesitas experiencia. Gratis y sin cuenta.', continueCourse: (c) => `Continuar ${c}`,
+    startFrom: '¿Desde dónde empiezas?',
+    s1Title: 'Soy completamente nuevo', s1Text: '¿Nunca has escrito código? Empieza con Python. La primera lección es de una sola línea.', s1Cta: 'Empezar Python',
+    s2Title: 'Sé un poco de código', s2Text: '¿Ya manejas variables y ciclos? Aprende Git y luego las matemáticas de la computación.', s2Cta: 'Abrir Git',
+    s3Title: 'Estoy en una clase de CS', s3Text: 'Estudia Java y Matemáticas discretas junto a tu clase, con un cuestionario por módulo.', s3Cta: 'Abrir Java',
+    pathTitle: 'La ruta para principiantes', pathLead: 'Nueve cursos en un orden lógico. Cada uno se apoya en el anterior.',
+    stepN: (n) => `Paso ${n}`, stepReady: 'Listo', stepSoon: 'En preparación', stepDone: 'Completado',
+    howTitle: 'Cómo funciona cada módulo',
+    how1: 'Lee', how1Text: 'Una lección corta: por qué importa, las ideas clave y los errores a evitar.',
+    how2: 'Ejecuta', how2Text: 'Ejemplos que puedes editar y ejecutar en tu navegador. Nada que instalar.',
+    how3: 'Practica', how3Text: 'Ejercicios, un cuestionario y tarjetas para que se te quede.',
+    how4: 'Mira', how4Text: 'Un video elegido para cada tema, de canales universitarios y de enseñanza.',
+    nextTitle: 'Después de la ruta para principiantes', nextLead: 'Lenguajes más grandes, algoritmos y cómo funcionan los sistemas reales.',
     startJava: 'Empezar el curso de Java', browse: 'Ver cursos', continueTitle: 'Continúa donde te quedaste', continueBtn: 'Continuar', startBtn: 'Empezar',
     ofModules: (a, b) => `${a} de ${b} módulos completados`, courseDone: 'Curso completado. ¡Buen trabajo!',
-    coursesTitle: 'Cursos', coursesLead: 'Cada curso es una secuencia de unidades y módulos. Java, Matemáticas discretas y Git están completos; los demás se están escribiendo.',
+    coursesTitle: 'Cursos', coursesLead: '¿Nuevo en programación? Sigue la ruta para principiantes en orden. Los cursos marcados como Listo están completos; los demás se están escribiendo y puedes votar por los que quieras primero.',
     plannedTitle: 'Cursos planeados', plannedNote: 'Primero los de nivel principiante. Vota por los que quieres primero.', javaTrack: 'Curso de Java', studyTools: 'Herramientas de estudio',
     toolFlash: 'Repaso espaciado de los términos clave.', toolQuiz: 'Ponte a prueba después de cada módulo.', toolPlay: 'Ejecuta Java, C++, Python y JS.', toolNotes: 'Tus notas, guardadas por módulo.',
     notifyMe: 'Avísame cuando abra', notified: 'Guardado: aparecerá aquí cuando abra',
@@ -81,8 +107,8 @@ const UI = {
     forgot: '¿Olvidaste tu contraseña?', newHere: '¿Eres nuevo?', create: 'Crear una cuenta', legal: 'Al continuar aceptas los <a href="terms-of-use.html">Términos de uso</a> y la <a href="privacy-policy.html">Política de privacidad</a>.',
     noResults: 'Sin resultados', today: 'Hoy', yesterday: 'Ayer', daysAgo: (n) => `Hace ${n} días`, completed: 'Completaste', reviewed: 'Repasaste 12 tarjetas', notFound: 'Esa página no existe.',
     glossary: 'Glosario', roadmap: 'Hoja de ruta', whatsComing: 'Lo que viene', tryIt: 'Probar ▸', run: 'Ejecutar ▸', reset: 'Restablecer', running: 'Ejecutando…',
-    pgLead: 'Escribe y ejecuta código aquí mismo. JavaScript corre en tu navegador; Java, Python y C++ correrán en el servidor de CS Course Atlas.',
-    pgServer: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Esta es la salida que imprime el ejemplo:', pgServerNoExpected: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Cambia a JavaScript para ejecutar código ahora.',
+    pgLead: 'Escribe y ejecuta código aquí mismo. JavaScript y Python corren en tu navegador; Java y C++ correrán en el servidor de CS Course Atlas.',
+    pgServer: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Esta es la salida que imprime el ejemplo:', pgServerNoExpected: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Cambia a JavaScript o Python para ejecutar código ahora.',
     pgDone: (ms) => `Terminó en ${ms} ms`, pgTimeout: 'Detenido después de 3 segundos (¿bucle infinito?)', pgEmpty: '(sin salida)', pgLoaded: (m) => `Cargado desde ${m}`,
     notesLeadIn: 'Una página de notas por módulo, guardada en tu cuenta y sincronizada en cada dispositivo donde inicies sesión.', notesLead: 'Una página de notas por módulo, guardada en este dispositivo. Con una cuenta se sincronizan en todas partes.', notePlaceholder: '¿Qué entendiste? ¿Qué te confundió? Escríbelo con tus palabras.',
     savedDevice: 'Guardado en este dispositivo', notesFor: 'Notas de', words: 'palabras',
@@ -90,7 +116,7 @@ const UI = {
     roadmapLead: 'Hacia dónde va CS Course Atlas. Vota por lo que quieres primero.', live: 'Disponible', building: 'En progreso', planned: 'Planeado', vote: '▲ Votar', voted: '▲ Votado',
     achievements: 'Logros', earned: (a, b) => `${a} de ${b} obtenidos`,
     studyPlan: 'Plan de estudio', planLead: 'Elige un curso y cuánto tiempo tienes; organizamos el resto semana a semana.', hoursWeek: 'Horas por semana', startOn: 'Empezar el', finishBy: 'Terminas el', weeksLeft: 'semanas', modulesLeft: 'módulos restantes', weekN: (n) => `Semana ${n}`, thisWeek: 'Esta semana', planHome: (d, c) => `A tu ritmo terminarás ${c} el <b>${d}</b>.`, editPlan: 'Editar plan', allDone: 'Completaste todos los módulos de este curso. Es hora del siguiente.', addCalendar: 'Agregar al calendario', reminders: 'Recordatorio semanal', 
-    videos: 'Videos', fullSeries: 'Serie completa de videos', courseSeries: 'Serie completa del curso', watchTopic: 'Mira un video sobre este tema', watchWait: 'Mira mientras esperas', videosLead: 'Una serie completa del módulo y un video por tema. Todos de canales universitarios o de enseñanza reconocidos; se abren en YouTube (en inglés).', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', showPw: 'Mostrar contraseña', hidePw: 'Ocultar contraseña', show: 'Ver', hide: 'Ocultar', signupSub: 'Gratis. Tu progreso, notas y resultados se guardan y te siguen a cualquier dispositivo.', orSignupEmail: 'o regístrate con tu correo', createFree: 'Crear cuenta gratis', userHint: 'De 3 a 32 caracteres: letras, números, punto, guion bajo o guion.', pwHint: 'Al menos 8 caracteres.', accountTitle: 'Cuenta', displayName: 'Nombre visible', saveChanges: 'Guardar cambios', saved: 'Guardado', changePw: 'Cambiar contraseña', currentPw: 'Contraseña actual', newPw: 'Contraseña nueva', pwChanged: 'Contraseña cambiada', googleNoPw: 'Inicias sesión con Google, así que aquí no hay contraseña que administrar.', saveTitle: 'Conserva tu progreso', saveText: 'Por ahora solo está en este dispositivo. Una cuenta gratis lo guarda y lo sincroniza en todas partes.', expand: 'mostrar módulos', collapse: 'ocultar módulos', fullSession: 'Sesión completa', week1: 'semana', coursesReady: 'cursos listos', course: 'Curso', trackCourse: (c) => `Curso de ${c}`, terminalExamples: 'Sesiones reales de terminal', terminalHint: 'Ejecútalo en una carpeta vacía. Las líneas que empiezan con $ son lo que escribes; el resto es lo que Git imprimió al ejecutar la sesión con Git real. Copiar te da solo los comandos.', terminalOut: 'Terminal', report: 'Reportar un problema con este módulo', programs: 'programas', languagesWord: 'lenguajes', waitLead: 'Series que cubren estos módulos, cada una una sola vez.',
+    videos: 'Videos', fullSeries: 'Serie completa de videos', courseSeries: 'Serie completa del curso', watchTopic: 'Mira un video sobre este tema', watchWait: 'Mira mientras esperas', videosLead: 'Una serie completa del módulo y un video por tema. Todos de canales universitarios o de enseñanza reconocidos; se abren en YouTube (en inglés).', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', pyLoading: 'Cargando Python (solo la primera vez, unos segundos)…', pyTimeout: 'Detenido después de 10 segundos (¿bucle infinito?)', pyFailed: 'No se pudo cargar Python. Revisa tu conexión e inténtalo de nuevo.', pythonExamples: 'Ejemplos de Python ejecutables', showPw: 'Mostrar contraseña', hidePw: 'Ocultar contraseña', show: 'Ver', hide: 'Ocultar', signupSub: 'Gratis. Tu progreso, notas y resultados se guardan y te siguen a cualquier dispositivo.', orSignupEmail: 'o regístrate con tu correo', createFree: 'Crear cuenta gratis', userHint: 'De 3 a 32 caracteres: letras, números, punto, guion bajo o guion.', pwHint: 'Al menos 8 caracteres.', accountTitle: 'Cuenta', displayName: 'Nombre visible', saveChanges: 'Guardar cambios', saved: 'Guardado', changePw: 'Cambiar contraseña', currentPw: 'Contraseña actual', newPw: 'Contraseña nueva', pwChanged: 'Contraseña cambiada', googleNoPw: 'Inicias sesión con Google, así que aquí no hay contraseña que administrar.', saveTitle: 'Conserva tu progreso', saveText: 'Por ahora solo está en este dispositivo. Una cuenta gratis lo guarda y lo sincroniza en todas partes.', expand: 'mostrar módulos', collapse: 'ocultar módulos', fullSession: 'Sesión completa', week1: 'semana', coursesReady: 'cursos listos', course: 'Curso', trackCourse: (c) => `Curso de ${c}`, terminalExamples: 'Sesiones reales de terminal', terminalHint: 'Ejecútalo en una carpeta vacía. Las líneas que empiezan con $ son lo que escribes; el resto es lo que Git imprimió al ejecutar la sesión con Git real. Copiar te da solo los comandos.', terminalOut: 'Terminal', report: 'Reportar un problema con este módulo', programs: 'programas', languagesWord: 'lenguajes', waitLead: 'Series que cubren estos módulos, cada una una sola vez.',
     signedInWith: (p) => `Sesión iniciada con ${p}`, syncedAt: (tm) => `Progreso sincronizado a las ${tm}`, syncPending: 'Sincronizando progreso…', day: 'día', acrossN: (n) => `en ${n} ${n === 1 ? 'cuestionario' : 'cuestionarios'}`, noQuizYet: 'Aún no haces cuestionarios',
     modulesWithNotes: 'módulos con notas', noActivity: 'Completa un módulo, haz un cuestionario o escribe una nota y aparecerá aquí.', typeDelete: 'Escribe DELETE para confirmar', deleteViaSupport: 'Pide a soporte que la elimine',
     privacy: 'Privacidad', terms: 'Términos', contact: 'Contacto', checkingSession: 'Revisando tu cuenta…', emailOrUser: 'Correo o usuario', username: 'Usuario', confirmPw: 'Confirmar contraseña',
@@ -207,9 +233,10 @@ function renderChrome(route) {
 }
 
 /* ---------- Views ---------- */
-function courseCard(tr, big) {
+function courseCard(tr, big, step) {
   const s = trackStats(tr), live = tr.status === 'available';
   return `<a class="card course${live ? ' live' : ''}" href="#course-${tr.id}">
+    ${step ? `<span class="step-tag">${t('stepN', step)}</span>` : ''}
     <div class="course-top"><span class="cicon" data-track="${tr.id}">${esc(tr.icon)}</span><div style="min-width:0"><h3>${esc(L(tr.title))}</h3><div class="muted">${s.units} ${t('units')} · ${s.count} ${t('modules')}${s.hours ? ` · ≈ ${s.hours} ${t('hours')}` : ''}</div></div></div>
     <p>${esc(L(tr.blurb))}</p>
     ${tr.level ? `<div class="levels"><span class="pill lvl-${tr.level}">${t('difficulty')[tr.level]}${tr.id === 'java' ? ' → ' + t('difficulty').advanced : ''}</span></div>` : ''}
@@ -218,6 +245,25 @@ function courseCard(tr, big) {
       : `<div class="facts"><span class="pill soon">${t('comingSoon')}</span>${big && state.notified.has(tr.id) ? `<span class="muted">${t('notified')}</span>` : ''}</div>`}
   </a>`;
 }
+const voteBtn = (id) => `<button class="vote" data-action="vote" data-id="course-${id}" aria-pressed="${state.votes.has('course-' + id)}">${state.votes.has('course-' + id) ? t('voted') : t('vote')}</button>`;
+function plannedCard(p, step) {
+  return `<div class="card planned-card">${step ? `<span class="step-tag">${t('stepN', step)}</span>` : ''}<div class="course-top"><span class="cicon" data-track="${p.id}">${esc(p.icon)}</span><div style="min-width:0"><h3>${esc(L(p.title))}</h3><span class="pill lvl-${p.level}">${t('difficulty')[p.level]}</span></div></div><p>${esc(L(p.blurb))}</p>
+    <div class="facts"><span class="pill soon">${t('stepSoon')}</span>${voteBtn(p.id)}</div></div>`;
+}
+// A course id from the path: a track (live or outlined) or a planned course.
+const anyCourse = (id) => track(id) || DATA.planned.find((p) => p.id === id);
+const anyCard = (id, step) => (track(id) ? courseCard(track(id), true, step) : plannedCard(anyCourse(id), step));
+function pathStepper() {
+  return `<ol class="path">${DATA.path.map((st, i) => {
+    const tr = track(st.id), c = anyCourse(st.id), live = tr && tr.status === 'available', s = live ? trackStats(tr) : null, done = s && s.count && s.done === s.count;
+    const status = done ? `<span class="pill ok">${t('stepDone')}</span>` : live ? `<span class="pill ok">${t('stepReady')}</span>` : `<span class="pill soon">${t('stepSoon')}</span>`;
+    const inner = `<span class="path-no${live ? ' live' : ''}${done ? ' done' : ''}">${done ? '✓' : i + 1}</span>
+      <div class="path-body"><div class="path-title"><span class="cicon" data-track="${st.id}">${esc(c.icon)}</span><b>${esc(L(c.title))}</b>${status}</div>
+      <p>${esc(L(st.why))}</p>${live && s.done ? `<div class="progress"><span style="width:${pct(s.done, s.count)}%"></span></div>` : ''}</div>
+      ${live ? `<span class="path-go">${s.done ? t('continueBtn') : t('startBtn')} →</span>` : ''}`;
+    return live ? `<li><a class="path-step live" href="#course-${st.id}">${inner}</a></li>` : `<li><div class="path-step">${inner}</div></li>`;
+  }).join('')}</ol>`;
+}
 function unitCards(tr, live) {
   return `<div class="units">${tr.units.map((u, i) => `<div class="card unit"><div class="unit-top"><h3>${t('unit')} ${i + 1} · ${esc(L(u.title))}</h3><span class="pill">${u.modules.length} ${u.modules.length === 1 ? t('moduleLower') : t('modules')}</span></div><ul>` +
     u.modules.map((id) => (live
@@ -225,47 +271,54 @@ function unitCards(tr, live) {
       : `<li><div><span class="dot"></span>${esc(moduleTitle(id))}<span class="mins">${t('soon')}</span></div></li>`)).join('') + '</ul></div>').join('')}</div>`;
 }
 function viewHome() {
-  const cur = track(currentTrack()), s = trackStats(cur), next = nextModule(cur.id), live = liveIds();
+  const live = liveIds(), started = DATA.tracks.find((tr) => tr.id === currentTrack() && trackStats(tr).done) || liveTracks().find((tr) => trackStats(tr).done);
+  const s = started ? trackStats(started) : null, next = started ? nextModule(started.id) : null;
+  const first = DATA.path.find((st) => track(st.id)?.status === 'available')?.id || liveTracks()[0].id;
+  const startCard = (n, href) => `<a class="card start-card" href="${href}"><span class="start-no">${n}</span><h3>${t('s' + n + 'Title')}</h3><p>${t('s' + n + 'Text')}</p><span class="start-cta">${t('s' + n + 'Cta')} →</span></a>`;
+  const how = (n, ico) => `<div class="how"><span class="how-ico">${ico}</span><div><b>${t('how' + n)}</b><p>${t('how' + n + 'Text')}</p></div></div>`;
   return `<section class="wrap">
     <div class="hero"><div class="hero-text"><h1>${t('heroTitle')}</h1><p class="lead">${t('heroLead')}</p>
-      <div class="hero-actions"><a class="btn" href="#course-java">${t('startJava')}</a><a class="btn btn-ghost" href="#courses">${t('browse')}</a></div>
+      <div class="hero-actions">${started && next ? `<a class="btn" href="#m-${next}">${t('continueCourse', esc(L(started.title)))}</a>` : `<a class="btn" href="#course-${first}">${t('startPython')}</a>`}<a class="btn btn-ghost" href="#courses">${t('browse')}</a></div>
+      ${started ? '' : `<p class="hero-note">${t('noExperience')}</p>`}
       <div class="hero-facts"><span><b>${liveTracks().length}</b> ${t('coursesReady')}</span><span><b>${live.length}</b> ${t('modules')}</span><span><b>${live.reduce((n, id) => n + DATA.full[id].examples.sets.length + 1, 0)}</b> ${t('examples').toLowerCase()}</span><span><b>EN · ES</b></span></div></div>
       ${heroArt()}</div>
-    <a class="card continue" href="${next ? '#m-' + next : '#course-' + cur.id}"><div class="info"><div class="muted">${t('continueTitle')}</div>
-      <h3 style="margin-top:2px">${next ? esc(L(cur.title)) + ' · ' + esc(moduleTitle(next)) : t('courseDone')}</h3>
+    ${started ? `<a class="card continue" href="${next ? '#m-' + next : '#course-' + started.id}"><div class="info"><div class="muted">${t('continueTitle')}</div>
+      <h3 style="margin-top:2px">${next ? esc(L(started.title)) + ' · ' + esc(moduleTitle(next)) : t('courseDone')}</h3>
       <div class="progress"><span style="width:${pct(s.done, s.count)}%"></span></div><div class="muted" style="margin-top:6px">${t('ofModules', s.done, s.count)}</div></div>
-      <span class="btn">${s.done ? t('continueBtn') : t('startBtn')}</span></a>
+      <span class="btn">${t('continueBtn')}</span></a>` : ''}
     ${!state.user && state.authReady && (state.done.size || Object.values(state.notes).some((x) => x && x.trim())) ? `<div class="card save-card"><div class="info"><b>${t('saveTitle')}</b><span>${t('saveText')}</span></div><button class="btn btn-sm" data-action="open-signup">${t('createFree')}</button></div>` : ''}
-    ${(() => { const p = buildPlan(); return p.finish ? `<div class="card plan-home"><span class="cicon" style="width:34px;height:34px;font-size:15px">▤</span><div class="info">${t('planHome', fmtDate(p.finish, { month: 'long', day: 'numeric' }), L(track(planTrack()).title))}</div><a class="btn btn-ghost btn-sm" href="#plan">${t('editPlan')}</a></div>` : ''; })()}
-    <div class="section-head"><h2>${t('coursesTitle')}</h2><a class="muted" href="#courses">${t('allCourses')} →</a></div>
-    <div class="courses">${DATA.tracks.map((tr) => courseCard(tr)).join('')}</div>
-    <div class="section-head"><h2>${t('trackCourse', L(cur.title))}</h2><span class="muted">≈ ${s.hours} ${t('hours')} ${t('totalTime')}</span></div>
-    ${unitCards(cur, true)}
-    <div class="section-head"><h2>${t('studyTools')}</h2></div>
-    <div class="tools">
-      <a class="card tool" href="#practice"><div class="ico">▤</div><h3>${t('flashcards')}</h3><p>${t('toolFlash')}</p></a>
-      <a class="card tool" href="#practice"><div class="ico">✓</div><h3>${t('quizzes')}</h3><p>${t('toolQuiz')}</p></a>
-      <a class="card tool" href="#playground"><div class="ico">›_</div><h3>${t('playground')}</h3><p>${t('toolPlay')}</p></a>
-      <a class="card tool" href="#notes"><div class="ico">✎</div><h3>${t('notes')}</h3><p>${t('toolNotes')}</p></a>
-    </div></section>`;
+    ${!started ? '' : (() => { const p = buildPlan(); return p.finish ? `<div class="card plan-home"><span class="cicon" style="width:34px;height:34px;font-size:15px">▤</span><div class="info">${t('planHome', fmtDate(p.finish, { month: 'long', day: 'numeric' }), L(track(planTrack()).title))}</div><a class="btn btn-ghost btn-sm" href="#plan">${t('editPlan')}</a></div>` : ''; })()}
+    ${started ? '' : `<div class="section-head"><h2>${t('startFrom')}</h2></div>
+    <div class="start-grid">${startCard(1, '#course-python')}${startCard(2, '#course-git')}${startCard(3, '#course-java')}</div>`}
+    <div class="section-head"><h2>${t('pathTitle')}</h2><a class="muted" href="#courses">${t('allCourses')} →</a></div>
+    <p class="muted section-lead">${t('pathLead')}</p>
+    ${pathStepper()}
+    <div class="section-head"><h2>${t('howTitle')}</h2></div>
+    <div class="how-grid">${how(1, '¶')}${how(2, '▶')}${how(3, '✓')}${how(4, '◉')}</div>
+    <div class="section-head"><h2>${t('nextTitle')}</h2><a class="muted" href="#courses">${t('allCourses')} →</a></div>
+    <p class="muted section-lead">${t('nextLead')}</p>
+    <div class="courses">${DATA.next.filter((id) => track(id)).map((id) => courseCard(track(id))).join('')}</div>
+    </section>`;
 }
 function heroArt() {
-  return `<div class="hero-art" aria-hidden="true"><div class="win"><div class="win-bar"><i></i><i></i><i></i><span>Grades.java</span></div>
-<pre><span class="k">var</span> scores = List.<span class="f">of</span>(<span class="n">72</span>, <span class="n">95</span>, <span class="n">88</span>);
-<span class="k">double</span> avg = scores.<span class="f">stream</span>()
-    .<span class="f">mapToInt</span>(Integer::intValue)
-    .<span class="f">average</span>().<span class="f">orElse</span>(<span class="n">0</span>);
-System.out.<span class="f">printf</span>(<span class="s">"avg %.1f%n"</span>, avg);</pre>
-    <div class="win-out"><span>${t('output')}</span>avg 85.0</div></div>
-    <div class="float-card fc-1"><span class="tick-c">✓</span><div><b>${t('quiz')} · Streams</b><small>5 / 5</small></div></div>
-    <div class="float-card fc-2"><span class="play-c">▶</span><div><b>${t('watchTopic')}</b><small>Java Brains</small></div></div></div>`;
+  return `<div class="hero-art" aria-hidden="true"><div class="win"><div class="win-bar"><i></i><i></i><i></i><span>first.py</span></div>
+<pre>name = <span class="s">"Ada"</span>
+scores = [<span class="n">72</span>, <span class="n">95</span>, <span class="n">88</span>]
+average = <span class="f">sum</span>(scores) / <span class="f">len</span>(scores)
+<span class="k">if</span> average >= <span class="n">80</span>:
+    <span class="f">print</span>(<span class="s">"Great work,"</span>, name)
+<span class="f">print</span>(<span class="s">"Average:"</span>, <span class="f">round</span>(average, <span class="n">1</span>))</pre>
+    <div class="win-out"><span>${t('output')}</span>Great work, Ada<br>Average: 85.0</div></div>
+    <div class="float-card fc-1"><span class="tick-c">✓</span><div><b>${t('quiz')} · ${state.lang === 'es' ? 'Decisiones' : 'Decisions'}</b><small>5 / 5</small></div></div>
+    <div class="float-card fc-2"><span class="play-c">▶</span><div><b>${t('watchTopic')}</b><small>CS50P · Harvard</small></div></div></div>`;
 }
 function viewCourses() {
+  const nextIds = DATA.next.concat(DATA.tracks.map((x) => x.id).filter((id) => !DATA.next.includes(id) && !DATA.path.some((st) => st.id === id)));
   return `<section class="wrap"><h1>${t('coursesTitle')}</h1><p class="lead">${t('coursesLead')}</p>
-    <div class="courses" style="margin-top:24px">${DATA.tracks.map((tr) => courseCard(tr, true)).join('')}</div>
-    <div class="section-head"><h2>${t('plannedTitle')}</h2><span class="muted">${t('plannedNote')}</span></div>
-    <div class="planned-grid">${DATA.planned.map((p) => `<div class="card planned-card"><div class="course-top"><span class="cicon">${esc(p.icon)}</span><div style="min-width:0"><h3>${esc(L(p.title))}</h3><span class="pill lvl-${p.level}">${t('difficulty')[p.level]}</span></div></div><p>${esc(L(p.blurb))}</p>
-      <button class="vote" data-action="vote" data-id="course-${p.id}" aria-pressed="${state.votes.has('course-' + p.id)}">${state.votes.has('course-' + p.id) ? t('voted') : t('vote')}</button></div>`).join('')}</div></section>`;
+    <div class="section-head"><h2>${t('pathTitle')}</h2><span class="muted">${t('pathLead')}</span></div>
+    <div class="courses">${DATA.path.map((st, i) => anyCard(st.id, i + 1)).join('')}</div>
+    <div class="section-head"><h2>${t('nextTitle')}</h2><span class="muted">${t('nextLead')}</span></div>
+    <div class="courses">${nextIds.filter(anyCourse).map((id) => anyCard(id)).join('')}</div></section>`;
 }
 function viewCourse(id) {
   const tr = track(id); if (!tr) return viewMissing();
@@ -340,7 +393,7 @@ function viewModule(id) {
   return `<section class="wrap">
     <div class="crumbs"><a href="#course-${tr.id}">${esc(L(tr.title))}</a><span>/</span><span>${esc(L(unit.title))}</span><span>/</span><span style="color:var(--text)">${esc(moduleTitle(id))}</span></div>
     <h1>${esc(moduleTitle(id))}</h1><p class="lead">${fmt(L(meta.description))}</p>
-    <div class="mod-meta"><span class="pill">${t('difficulty')[meta.difficulty] || meta.difficulty}</span>${meta.minutes ? `<span class="pill">≈ ${meta.minutes} ${t('min')}</span>` : ''}<span class="pill">${meta.topics.length} ${t('topics')}</span><span class="pill ok">${terminal ? t('terminalExamples') : t('examples4')}</span>${done ? `<span class="pill accent">${t('marked')}</span>` : ''}</div>
+    <div class="mod-meta"><span class="pill">${t('difficulty')[meta.difficulty] || meta.difficulty}</span>${meta.minutes ? `<span class="pill">≈ ${meta.minutes} ${t('min')}</span>` : ''}<span class="pill">${meta.topics.length} ${t('topics')}</span><span class="pill ok">${terminal ? t('terminalExamples') : exampleLangs(c.examples.main).length === 1 ? t('pythonExamples') : t('examples4')}</span>${done ? `<span class="pill accent">${t('marked')}</span>` : ''}</div>
     <div class="tabs" role="tablist">${tabs.map(([k, label, n]) => `<button class="tab" role="tab" data-tab="${k}" aria-selected="${state.tab === k}">${label}${n ? `<span class="count">${n}</span>` : ''}</button>`).join('')}</div>
     ${body}
     <div class="mod-foot"><button class="btn${done ? ' btn-ghost' : ''}" data-action="toggle-done" data-id="${id}">${done ? t('marked') : t('markDone')}</button>
@@ -475,6 +528,7 @@ let pgWorker = null;
 function runPlayground() {
   const pg = state.pg, out = $('#pg-out'), status = $('#pg-status');
   pg.code = $('#pg-code').value;
+  if (pg.lang === 'python') { runPython(pg.code, out, status); return; }
   if (pg.lang !== 'javascript') {
     out.innerHTML = `<span class="info">${esc(pg.expected ? t('pgServer') : t('pgServerNoExpected'))}</span>${pg.expected ? '\n\n' + esc(pg.expected) : ''}`;
     return;
@@ -495,6 +549,51 @@ function runPlayground() {
     else out.insertAdjacentHTML('beforeend', m.t === 'err' ? `<span class="err">${esc(m.v)}</span>\n` : esc(m.v) + '\n');
   };
   w.onerror = (e) => { e.preventDefault(); out.insertAdjacentHTML('beforeend', `<span class="err">${esc(e.message || 'Error')}</span>\n`); finish(''); };
+}
+// Python runs in the browser with Pyodide (CPython compiled to WebAssembly). It is downloaded only the
+// first time someone runs Python, inside a worker so a runaway loop can be stopped without freezing the page.
+const PYODIDE_URL = 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/';
+let pyWorker = null, pyReady = false;
+function pythonWorker() {
+  if (pyWorker) return pyWorker;
+  const src = `importScripts('${PYODIDE_URL}pyodide.js');
+const ready = loadPyodide({ indexURL: '${PYODIDE_URL}' }).then((py) => {
+  py.setStdout({ batched: (s) => postMessage({ t: 'log', v: s }) });
+  py.setStderr({ batched: (s) => postMessage({ t: 'err', v: s }) });
+  py.setStdin({ stdin: () => null });
+  postMessage({ t: 'ready' });
+  return py;
+});
+ready.catch((err) => postMessage({ t: 'fail', v: String(err && err.message || err) }));
+onmessage = async (e) => {
+  const py = await ready;
+  const scope = py.globals.get('dict')();
+  try { await py.runPythonAsync(e.data, { globals: scope }); }
+  catch (err) { postMessage({ t: 'err', v: String(err.message || err).trim().split('\\n').filter((l, i, a) => i === a.length - 1 || l.includes('File "<exec>"')).map((l) => l.trim().replace('File "<exec>", ', '')).join('\\n') }); }
+  finally { scope.destroy(); postMessage({ t: 'done' }); }
+};`;
+  pyWorker = new Worker(URL.createObjectURL(new Blob([src], { type: 'text/javascript' })));
+  pyWorker.addEventListener('message', (e) => { if (e.data.t === 'ready') pyReady = true; });
+  return pyWorker;
+}
+function runPython(code, out, status) {
+  const w = pythonWorker();
+  out.textContent = '';
+  status.textContent = pyReady ? t('running') : t('pyLoading');
+  let started = performance.now(), timer = null;
+  const arm = () => { started = performance.now(); clearTimeout(timer); timer = setTimeout(() => { w.terminate(); pyWorker = null; pyReady = false; finish(t('pyTimeout')); }, 10000); };
+  const finish = (msg) => { clearTimeout(timer); w.removeEventListener('message', onMsg); if (!out.textContent) out.innerHTML = `<span class="info">${t('pgEmpty')}</span>`; status.textContent = msg; };
+  const onMsg = (e) => {
+    const m = e.data;
+    if (m.t === 'ready') { status.textContent = t('running'); arm(); }
+    else if (m.t === 'fail') { w.terminate(); pyWorker = null; finish(t('pyFailed')); }
+    else if (m.t === 'done') finish(t('pgDone', Math.round(performance.now() - started)));
+    else out.insertAdjacentHTML('beforeend', m.t === 'err' ? `<span class="err">${esc(m.v)}</span>\n` : esc(m.v) + '\n');
+  };
+  w.addEventListener('message', onMsg);
+  w.onerror = (e) => { e.preventDefault(); w.terminate(); pyWorker = null; finish(t('pyFailed')); };
+  if (pyReady) arm();
+  w.postMessage(code);
 }
 function viewNotes() {
   const ids = liveIds();
@@ -529,14 +628,14 @@ const ROADMAP = [
   ['live', 'git', { en: 'Git course', es: 'Curso de Git' }, { en: '2 modules taught through real terminal sessions, each one run with real Git to record its output.', es: '2 módulos enseñados con sesiones reales de terminal, cada una ejecutada con Git real para grabar su salida.' }, ['Courses']],
   ['live', 'discrete', { en: 'Discrete Math course', es: 'Curso de Matemáticas discretas' }, { en: 'Logic, sets, counting and graph theory, with every idea checked by code in 4 languages.', es: 'Lógica, conjuntos, conteo y teoría de grafos, con cada idea comprobada con código en 4 lenguajes.' }, ['Courses']],
   ['live', 'bilingual', { en: 'English and Spanish everywhere', es: 'Inglés y español en todo' }, { en: 'Every lesson, quiz and menu in both languages.', es: 'Cada lección, cuestionario y menú en ambos idiomas.' }, ['Access']],
-  ['live', 'js-playground', { en: 'JavaScript playground', es: 'Editor de JavaScript' }, { en: 'Run JavaScript in the browser and load any example into it.', es: 'Ejecuta JavaScript en el navegador y carga cualquier ejemplo.' }, ['Tools']],
+  ['live', 'js-playground', { en: 'JavaScript and Python playground', es: 'Editor de JavaScript y Python' }, { en: 'Run JavaScript and Python in the browser and load any example into it.', es: 'Ejecuta JavaScript y Python en el navegador y carga cualquier ejemplo.' }, ['Tools']],
   ['live', 'sync', { en: 'Accounts and progress sync', es: 'Cuentas y progreso sincronizado' }, { en: 'Google or email sign-in; progress follows you between devices.', es: 'Inicio con Google o correo; tu progreso te sigue entre dispositivos.' }, ['Account']],
   ['building', 'dsa', { en: 'Data Structures & Algorithms course', es: 'Curso de estructuras de datos y algoritmos' }, { en: '22 modules, from arrays to dynamic programming, with complexity analysis.', es: '22 módulos, de arreglos a programación dinámica, con análisis de complejidad.' }, ['Courses']],
-  ['building', 'runner', { en: 'Run Java, Python and C++', es: 'Ejecutar Java, Python y C++' }, { en: 'A sandboxed code server so every example and exercise runs in the browser.', es: 'Un servidor aislado para que cada ejemplo y ejercicio se ejecute en el navegador.' }, ['Tools']],
+  ['building', 'runner', { en: 'Run Java and C++', es: 'Ejecutar Java y C++' }, { en: 'A sandboxed code server so every example and exercise runs in the browser.', es: 'Un servidor aislado para que cada ejemplo y ejercicio se ejecute en el navegador.' }, ['Tools']],
   ['live', 'redesign', { en: 'New design on every device', es: 'Nuevo diseño en todos los dispositivos' }, { en: 'This design: faster, clearer, with a real phone layout and dark mode.', es: 'Este diseño: más rápido, más claro, con versión para teléfono y modo oscuro.' }, ['Design']],
   ['building', 'more-courses', { en: 'x86-64 Assembly', es: 'Ensamblador x86-64' }, { en: 'Rewritten to the same standard as Java, one course at a time.', es: 'Reescritos con el mismo nivel que Java, un curso a la vez.' }, ['Courses']],
   ['planned', 'cybersecurity', { en: 'Cybersecurity Fundamentals course', es: 'Curso de fundamentos de ciberseguridad' }, { en: 'Passwords, phishing, encryption, network security and safe coding, for beginners.', es: 'Contraseñas, phishing, cifrado, seguridad en redes y código seguro, para principiantes.' }, ['Courses']],
-  ['planned', 'beginner-courses', { en: 'More beginner courses', es: 'Más cursos para principiantes' }, { en: 'Python, Web Basics, Command Line & Linux, SQL, and How Computers Work.', es: 'Python, Web básica, Línea de comandos y Linux, SQL y Cómo funcionan las computadoras.' }, ['Courses']],
+  ['planned', 'beginner-courses', { en: 'More beginner courses', es: 'Más cursos para principiantes' }, { en: 'Command Line & Linux, Web Basics, SQL, How Computers Work and AI Fundamentals, in beginner-path order.', es: 'Línea de comandos y Linux, Web básica, SQL, Cómo funcionan las computadoras y Fundamentos de IA, en el orden de la ruta.' }, ['Courses']],
   ['planned', 'exercises', { en: 'Auto-graded coding exercises', es: 'Ejercicios de código con calificación automática' }, { en: 'Write a solution, run hidden tests, see which cases fail and why.', es: 'Escribe una solución, ejecuta pruebas ocultas y ve qué casos fallan y por qué.' }, ['Practice']],
   ['planned', 'srs', { en: 'Spaced-repetition review', es: 'Repaso con repetición espaciada' }, { en: 'Flashcards and quiz questions come back right before you would forget them.', es: 'Tarjetas y preguntas vuelven justo antes de que las olvides.' }, ['Practice']],
   ['planned', 'visualizers', { en: 'Step-through visualizers', es: 'Visualizadores paso a paso' }, { en: 'Watch the stack, heap, arrays and trees change line by line.', es: 'Mira cómo cambian la pila, el heap, los arreglos y los árboles línea por línea.' }, ['Tools']],
@@ -832,7 +931,8 @@ document.addEventListener('click', (e) => {
   else if (a === 'quiz-next') { const q = state.quiz, n = DATA.full[q.id].quiz.length; if (q.i < n - 1) { q.i += 1; q.picked = null; } else { q.finished = true; if (q.score === n) state.aces.add(q.id); state.quizBest[q.id] = Math.max(q.score / n, state.quizBest[q.id] || 0); logActivity('quiz', q.id, { score: q.score, n }); save(); } render(true); }
   else if (a === 'quiz-retry') { state.quiz = null; render(true); }
   else if (a === 'try-it') { const c = DATA.full[el.dataset.id], ex = state.exIndex === 0 ? c.examples.main : c.examples.sets[state.exIndex - 1];
-    state.pg = { lang: state.codeLang, code: ex.code[state.codeLang], expected: ex.output?.[state.codeLang] || '', from: moduleTitle(el.dataset.id) }; location.hash = '#playground'; }
+    const langs = exampleLangs(ex), lang = langs.includes(state.codeLang) ? state.codeLang : langs[0];
+    state.pg = { lang, code: ex.code[lang], expected: ex.output?.[lang] || '', from: moduleTitle(el.dataset.id) }; location.hash = '#playground'; }
   else if (a === 'pg-run') runPlayground();
   else if (a === 'pg-lang') { state.pg.code = $('#pg-code').value; state.pg.lang = el.dataset.v; render(true); }
   else if (a === 'pg-reset') { state.pg = null; render(true); }
@@ -919,7 +1019,7 @@ document.addEventListener('click', (e) => { if (!e.target.closest('#search') && 
 
 /* ---------- Boot ---------- */
 // Links from the generated SEO pages use ?route=/java&module=id; turn them into hash routes.
-const ROUTE_HASH = { '/home': 'home', '/tracks': 'courses', '/java': 'course-java', '/dsa': 'course-dsa', '/git': 'course-git', '/assembly': 'course-assembly', '/discrete-math': 'course-discrete',
+const ROUTE_HASH = { '/home': 'home', '/tracks': 'courses', '/java': 'course-java', '/dsa': 'course-dsa', '/git': 'course-git', '/assembly': 'course-assembly', '/discrete-math': 'course-discrete', '/python': 'course-python',
   '/flashcards': 'practice', '/quizzes': 'practice', '/playground': 'playground', '/notes': 'notes', '/support': 'roadmap', '/about': 'roadmap' };
 function applyLegacyLink() {
   const url = new URL(location.href), q = url.searchParams, mod = q.get('module'), route = q.get('route');

@@ -15,7 +15,7 @@ const CRITICAL_PAGES = [
     '/sitemap.xml'
 ];
 
-const ROUTES = ['home', 'courses', 'course-java', 'course-git', 'course-discrete', 'course-dsa', 'm-java-basics', 'm-git-basics-workflow', 'm-discrete-graph-theory', 'practice', 'playground', 'plan', 'notes', 'glossary', 'roadmap'];
+const ROUTES = ['home', 'courses', 'course-python', 'm-python-first-programs', 'm-python-collections', 'course-java', 'course-git', 'course-discrete', 'course-dsa', 'm-java-basics', 'm-git-basics-workflow', 'm-discrete-graph-theory', 'practice', 'playground', 'plan', 'notes', 'glossary', 'roadmap'];
 
 test.describe('Navigation', () => {
     test('critical pages return non-error HTTP responses', async ({ request }) => {
@@ -39,6 +39,22 @@ test.describe('Navigation', () => {
             }
         }
         expect(errors).toEqual([]);
+    });
+
+    test('a beginner lands on the path and starts with Python', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html#home');
+        await expect(page.locator('.path .path-step')).toHaveCount(9);
+        await expect(page.locator('.path-step').first()).toContainText('Python');
+        await page.locator('.hero-actions .btn').first().click();
+        await expect(page).toHaveURL(/#course-python$/);
+        await page.locator('.hero-actions .btn').first().click();
+        await expect(page).toHaveURL(/#m-python-first-programs$/);
+        await page.locator('.tab[data-tab="examples"]').click();
+        await page.locator('[data-action="try-it"]').click();
+        await expect(page).toHaveURL(/#playground$/);
+        await expect(page.locator('#pg-code')).toHaveValue(/print\(/);
+        await expect(page.locator('[data-action="pg-lang"][aria-pressed="true"]')).toHaveText(/Python/);
     });
 
     test('links from the generated pages open the right module', async ({ page }) => {
