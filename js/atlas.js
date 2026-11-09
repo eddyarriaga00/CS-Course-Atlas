@@ -711,7 +711,7 @@ function viewPractice() {
   return `<section class="wrap"><h1>${t('practice')}</h1><p class="lead">${t('practiceLead')}</p>
     <div class="practice-hub">
       <a class="card hub-card" href="#quizzes"><span class="hub-ico">✓</span><div class="hub-body"><h2>${t('quizzes')}</h2><p>${t('hubQuizText')}</p>
-        <div class="hub-stats"><span><b>${ids.length}</b> ${t('quizzes').toLowerCase()}</span><span><b>${quizzed}</b> ${t('taken')}</span><span><b>${qa ? qa.avg + '%' : '—'}</b> ${t('average')}</span></div></div><span class="hub-go">→</span></a>
+        <div class="hub-stats"><span><b>${ids.length}</b> ${t('quizzes').toLowerCase()}</span><span><b>${quizzed}</b> ${t('taken')}</span><span><b>${qa ? qa.avg + '%' : '—'}</b> ${t('average')}</span></div><div class="progress"><span style="width:${pct(quizzed, ids.length)}%"></span></div></div><span class="hub-go">→</span></a>
       <a class="card hub-card" href="#flashcards"><span class="hub-ico">▭</span><div class="hub-body"><h2>${t('flashcards')}</h2><p>${t('hubFlashText')}</p>
         <div class="hub-stats"><span><b>${totalCards}</b> ${t('cards')}</span><span><b>${knownCards}</b> ${t('known')}</span>${dueCount() ? `<span class="due-stat"><b>${dueCount()}</b> ${t('dueWord')}</span>` : ''}</div>
         <div class="progress"><span style="width:${pct(knownCards, totalCards)}%"></span></div></div><span class="hub-go">→</span></a>
