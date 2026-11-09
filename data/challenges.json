@@ -3837,6 +3837,26 @@
     "en": "`+` works left to right: numbers add until a String appears, then everything is joined. A `char` plus an `int` is arithmetic ('a' is 97).",
     "es": "`+` va de izquierda a derecha: los números se suman hasta que aparece un String y desde ahí todo se une. Un `char` más un `int` es aritmética ('a' es 97)."
    }
+  },
+  {
+   "id": "overflow",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "When an int overflows",
+    "es": "Cuando un int se desborda"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        int big = Integer.MAX_VALUE;\n        System.out.println(big);\n        System.out.println(big + 1);\n        long safe = (long) big + 1;\n        System.out.println(safe);\n    }\n}\n",
+   "starter": "",
+   "solution": "2147483647\n-2147483648\n2147483648\n",
+   "hint": {
+    "en": "An `int` has 32 bits; going past the largest value wraps around to the most negative one. Casting to `long` before adding avoids it.",
+    "es": "Un `int` tiene 32 bits; pasar del valor más grande da la vuelta al más negativo. Convertir a `long` antes de sumar lo evita."
+   }
   }
  ],
  "control-flow": [
@@ -3878,6 +3898,26 @@
    "hint": {
     "en": "`continue` skips to the next round (3 and 6); `break` leaves the loop the first time `i > 7` is reached, and 9 is never checked.",
     "es": "`continue` salta a la siguiente vuelta (3 y 6); `break` sale del ciclo la primera vez que `i > 7`."
+   }
+  },
+  {
+   "id": "ternary-chain",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "The ternary operator",
+    "es": "El operador ternario"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        for (int n : new int[] {-3, 0, 8}) {\n            String kind = n > 0 ? \"positive\" : n < 0 ? \"negative\" : \"zero\";\n            System.out.println(n + \" is \" + kind);\n        }\n    }\n}\n",
+   "starter": "",
+   "solution": "-3 is negative\n0 is zero\n8 is positive\n",
+   "hint": {
+    "en": "`a ? b : c` picks `b` when `a` is true; chaining a second `?:` in the false branch gives three outcomes.",
+    "es": "`a ? b : c` elige `b` si `a` es verdadero; encadenar otro `?:` en la rama falsa da tres resultados."
    }
   }
  ],
@@ -3921,6 +3961,26 @@
     "en": "The object is a `Dog`, so its overridden `sound()` runs, even when called from a method inherited from `Animal`.",
     "es": "El objeto es un `Dog`, así que se ejecuta su `sound()` sobrescrito, incluso cuando lo llama un método heredado de `Animal`."
    }
+  },
+  {
+   "id": "constructor-chain",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Constructor order",
+    "es": "Orden de los constructores"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    static class Animal { Animal() { System.out.println(\"Animal\"); } }\n    static class Dog extends Animal { Dog() { System.out.println(\"Dog\"); } }\n    static class Puppy extends Dog { Puppy() { super(); System.out.println(\"Puppy\"); } }\n    public static void main(String[] args) {\n        new Puppy();\n    }\n}\n",
+   "starter": "",
+   "solution": "Animal\nDog\nPuppy\n",
+   "hint": {
+    "en": "Every constructor first calls its parent's constructor (`super()`, written or not), so construction runs from the top of the hierarchy down.",
+    "es": "Cada constructor llama primero al constructor del padre (`super()`, escrito o no), así que la construcción va desde arriba de la jerarquía hacia abajo."
+   }
   }
  ],
  "exception-handling": [
@@ -3962,6 +4022,26 @@
    "hint": {
     "en": "`finally` runs before the method actually returns, so its line prints before the caller prints the result.",
     "es": "`finally` se ejecuta antes de que el método regrese de verdad, así que su línea se imprime antes de que quien llama imprima el resultado."
+   }
+  },
+  {
+   "id": "custom-exception",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Your own exception",
+    "es": "Tu propia excepción"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    static class InsufficientFunds extends Exception {\n        InsufficientFunds(String msg) { super(msg); }\n    }\n    static void withdraw(int balance, int amount) throws InsufficientFunds {\n        if (amount > balance) throw new InsufficientFunds(\"need \" + (amount - balance) + \" more\");\n    }\n    public static void main(String[] args) {\n        int[] balances = {50, 20};\n        for (int b : balances) {\n            try {\n                withdraw(b, 30);\n                System.out.println(\"ok \" + (b - 30));\n            } catch (InsufficientFunds e) {\n                System.out.println(e.getMessage());\n            }\n        }\n    }\n}\n",
+   "starter": "",
+   "solution": "ok 20\nneed 10 more\n",
+   "hint": {
+    "en": "A checked exception you define carries its own message; when it is thrown, the rest of the `try` is skipped and the loop goes on.",
+    "es": "Una excepción propia lleva su mensaje; cuando se lanza, se salta el resto del `try` y el ciclo continúa."
    }
   }
  ],
@@ -4005,6 +4085,26 @@
     "en": "`Box<Integer>.get()` returns an Integer, so `+ 1` adds; `Box<String>.get()` returns a String, so `+ 1` joins.",
     "es": "`Box<Integer>.get()` devuelve un Integer, así que `+ 1` suma; `Box<String>.get()` devuelve un String, así que `+ 1` une."
    }
+  },
+  {
+   "id": "wildcard-sum",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "A bounded wildcard",
+    "es": "Un comodín acotado"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    static double sum(java.util.List<? extends Number> nums) {\n        double total = 0;\n        for (Number n : nums) total += n.doubleValue();\n        return total;\n    }\n    public static void main(String[] args) {\n        System.out.println(sum(java.util.List.of(1, 2, 3)));\n        System.out.println(sum(java.util.List.of(1.5, 2.5)));\n    }\n}\n",
+   "starter": "",
+   "solution": "6.0\n4.0\n",
+   "hint": {
+    "en": "`List<? extends Number>` accepts a list of Integer or of Double; the method reads them as Numbers and returns a double, so even 6 prints as 6.0.",
+    "es": "`List<? extends Number>` acepta una lista de Integer o de Double; el método los lee como Number y devuelve un double, así que hasta 6 se imprime como 6.0."
+   }
   }
  ],
  "collections-framework": [
@@ -4046,6 +4146,26 @@
    "hint": {
     "en": "`merge(w, 1, Integer::sum)` puts 1 the first time and adds 1 after that; a TreeMap prints its keys in sorted order.",
     "es": "`merge(w, 1, Integer::sum)` pone 1 la primera vez y suma 1 después; un TreeMap imprime sus claves ordenadas."
+   }
+  },
+  {
+   "id": "deque-stack",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "ArrayDeque as stack and queue",
+    "es": "ArrayDeque como pila y cola"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        java.util.ArrayDeque<Integer> d = new java.util.ArrayDeque<>();\n        d.push(1); d.push(2); d.push(3);\n        System.out.println(d.pop());\n        d.offerLast(9);\n        System.out.println(d.pollFirst() + \" \" + d.pollLast());\n        System.out.println(d);\n    }\n}\n",
+   "starter": "",
+   "solution": "3\n2 9\n[1]\n",
+   "hint": {
+    "en": "`push`/`pop` work at the front (a stack), `offerLast` adds at the back; `pollFirst` and `pollLast` take from each end.",
+    "es": "`push`/`pop` trabajan al frente (una pila), `offerLast` agrega atrás; `pollFirst` y `pollLast` sacan de cada extremo."
    }
   }
  ],
@@ -4089,6 +4209,26 @@
     "en": "Streams handle one element at a time and stop as soon as `findFirst` has an answer, so \"dog\" is never looked at.",
     "es": "Los streams procesan un elemento a la vez y se detienen en cuanto `findFirst` tiene respuesta, así que \"dog\" nunca se revisa."
    }
+  },
+  {
+   "id": "grouping",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Grouping with streams",
+    "es": "Agrupar con streams"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        var words = java.util.List.of(\"apple\", \"avocado\", \"banana\", \"blueberry\", \"cherry\");\n        var byLetter = words.stream().collect(java.util.stream.Collectors.groupingBy(w -> w.charAt(0), java.util.TreeMap::new, java.util.stream.Collectors.counting()));\n        System.out.println(byLetter);\n    }\n}\n",
+   "starter": "",
+   "solution": "{a=2, b=2, c=1}\n",
+   "hint": {
+    "en": "`groupingBy(key, TreeMap::new, counting())` makes a sorted map from each first letter to how many words start with it.",
+    "es": "`groupingBy(clave, TreeMap::new, counting())` crea un mapa ordenado de cada primera letra a cuántas palabras empiezan con ella."
+   }
   }
  ],
  "file-io": [
@@ -4130,6 +4270,26 @@
    "hint": {
     "en": "Reading a missing file throws `NoSuchFileException` (a kind of IOException); its message is the path. The more specific `catch` must come first.",
     "es": "Leer un archivo que no existe lanza `NoSuchFileException` (un tipo de IOException); su mensaje es la ruta. El `catch` más específico va primero."
+   }
+  },
+  {
+   "id": "csv-split",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Parsing CSV lines",
+    "es": "Leer líneas CSV"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        String csv = \"name,score\\nAna,91\\nBen,78\\nChen,85\";\n        int total = 0, rows = 0;\n        for (String line : csv.split(\"\\n\")) {\n            if (line.startsWith(\"name\")) continue;\n            String[] parts = line.split(\",\");\n            total += Integer.parseInt(parts[1]);\n            rows++;\n        }\n        System.out.println(rows + \" rows, average \" + total / rows);\n    }\n}\n",
+   "starter": "",
+   "solution": "3 rows, average 84\n",
+   "hint": {
+    "en": "Skip the header, split each line on commas and parse the number. `total / rows` is integer division (254 / 3 = 84).",
+    "es": "Salta el encabezado, separa cada línea por comas y convierte el número. `total / rows` es división entera (254 / 3 = 84)."
    }
   }
  ],
@@ -4173,6 +4333,26 @@
     "en": "`equals` compares contents (what `assertEquals` uses); `==` asks whether both names point to the very same object (what `assertSame` uses).",
     "es": "`equals` compara contenidos (lo que usa `assertEquals`); `==` pregunta si ambos nombres apuntan al mismo objeto (lo que usa `assertSame`)."
    }
+  },
+  {
+   "id": "edge-cases",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Testing the edges",
+    "es": "Probar los bordes"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    static int clamp(int x, int lo, int hi) { return Math.max(lo, Math.min(hi, x)); }\n    public static void main(String[] args) {\n        int[][] cases = { {5, 1, 10}, {0, 1, 10}, {15, 1, 10}, {1, 1, 10}, {10, 1, 10} };\n        for (int[] c : cases) System.out.print(clamp(c[0], c[1], c[2]) + \" \");\n        System.out.println();\n    }\n}\n",
+   "starter": "",
+   "solution": "5 1 10 1 10 \n",
+   "hint": {
+    "en": "Good tests check inside the range, below it, above it and exactly on both edges, where off-by-one bugs hide.",
+    "es": "Las buenas pruebas revisan dentro del rango, debajo, encima y justo en ambos bordes, donde se esconden los errores de uno."
+   }
   }
  ],
  "jdbc-basics": [
@@ -4214,6 +4394,26 @@
    "hint": {
     "en": "try-with-resources closes everything automatically, in reverse order of opening, exactly how JDBC connections and statements should be closed.",
     "es": "try-with-resources cierra todo automáticamente, en orden inverso al de apertura, justo como deben cerrarse las conexiones y sentencias JDBC."
+   }
+  },
+  {
+   "id": "rows-to-objects",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Rows to objects",
+    "es": "De filas a objetos"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    record Student(int id, String name, double score) {}\n    public static void main(String[] args) {\n        Object[][] rows = { {1, \"Ana\", 91.5}, {2, \"Ben\", 78.0} };\n        var students = new java.util.ArrayList<Student>();\n        for (Object[] r : rows) students.add(new Student((Integer) r[0], (String) r[1], (Double) r[2]));\n        for (Student s : students) System.out.println(s);\n    }\n}\n",
+   "starter": "",
+   "solution": "Student[id=1, name=Ana, score=91.5]\nStudent[id=2, name=Ben, score=78.0]\n",
+   "hint": {
+    "en": "Code that reads a ResultSet usually turns each row into an object; a `record` gets a readable `toString()` for free.",
+    "es": "El código que lee un ResultSet suele convertir cada fila en un objeto; un `record` trae gratis un `toString()` legible."
    }
   }
  ],
@@ -4257,6 +4457,26 @@
     "en": "`incrementAndGet` is atomic, so no update is lost even with two threads; with a plain `int` and `count++` the total could come out lower.",
     "es": "`incrementAndGet` es atómico, así que no se pierde ninguna suma aunque haya dos hilos; con un `int` normal y `count++` el total podría salir menor."
    }
+  },
+  {
+   "id": "executor",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "A thread pool",
+    "es": "Un grupo de hilos"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        var pool = java.util.concurrent.Executors.newFixedThreadPool(3);\n        var futures = new java.util.ArrayList<java.util.concurrent.Future<Integer>>();\n        for (int i = 1; i <= 4; i++) { final int n = i; futures.add(pool.submit(() -> n * n)); }\n        int total = 0;\n        try { for (var f : futures) total += f.get(); } catch (Exception e) { return; }\n        pool.shutdown();\n        System.out.println(\"total \" + total);\n    }\n}\n",
+   "starter": "",
+   "solution": "total 30\n",
+   "hint": {
+    "en": "`submit` runs each task on the pool and returns a Future; `get()` waits for that result. The order the tasks finish does not change the sum.",
+    "es": "`submit` ejecuta cada tarea en el grupo y devuelve un Future; `get()` espera ese resultado. El orden en que terminan no cambia la suma."
+   }
   }
  ],
  "java-memory-jvm": [
@@ -4299,6 +4519,26 @@
     "en": "Java reuses Integer objects from -128 to 127, so `==` happens to be true for 100 but not for 1000. Compare boxed values with `equals`.",
     "es": "Java reutiliza los objetos Integer de -128 a 127, así que `==` resulta verdadero para 100 pero no para 1000. Compara valores en caja con `equals`."
    }
+  },
+  {
+   "id": "string-pool",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Strings and the pool",
+    "es": "Strings y el pool"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        String a = \"java\";\n        String b = \"java\";\n        String c = new String(\"java\");\n        String d = c.intern();\n        System.out.println((a == b) + \" \" + (a == c) + \" \" + (a == d));\n    }\n}\n",
+   "starter": "",
+   "solution": "true false true\n",
+   "hint": {
+    "en": "String literals are shared from the string pool; `new String` makes a separate object; `intern()` returns the pooled one.",
+    "es": "Los literales de String se comparten desde el pool; `new String` crea un objeto aparte; `intern()` devuelve el del pool."
+   }
   }
  ],
  "design-patterns": [
@@ -4340,6 +4580,26 @@
    "hint": {
     "en": "Each strategy is a small object (here a lambda or method reference) with the same interface, so the caller can swap behaviors. LinkedHashMap keeps insertion order.",
     "es": "Cada estrategia es un objeto pequeño (aquí una lambda o referencia a método) con la misma interfaz, así quien llama puede cambiar el comportamiento. LinkedHashMap conserva el orden de inserción."
+   }
+  },
+  {
+   "id": "observer",
+   "lang": "predict",
+   "codeLang": "java",
+   "title": {
+    "en": "Observer pattern",
+    "es": "Patrón observador"
+   },
+   "prompt": {
+    "en": "What does this program print? Type the output exactly, one line per line.",
+    "es": "¿Qué imprime este programa? Escribe la salida exacta, una línea por renglón."
+   },
+   "code": "public class Main {\n    public static void main(String[] args) {\n        var listeners = new java.util.ArrayList<java.util.function.Consumer<String>>();\n        listeners.add(msg -> System.out.println(\"email: \" + msg));\n        listeners.add(msg -> System.out.println(\"log: \" + msg.toUpperCase()));\n        for (String event : new String[] {\"signup\", \"logout\"}) listeners.forEach(l -> l.accept(event));\n    }\n}\n",
+   "starter": "",
+   "solution": "email: signup\nlog: SIGNUP\nemail: logout\nlog: LOGOUT\n",
+   "hint": {
+    "en": "Each event is sent to every registered listener in order; the publisher does not need to know what each one does.",
+    "es": "Cada evento se envía a todos los oyentes registrados, en orden; quien publica no necesita saber qué hace cada uno."
    }
   }
  ]
