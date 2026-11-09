@@ -8,7 +8,7 @@ const UI = {
     startJava: 'Start the Java course', browse: 'Browse courses', continueTitle: 'Continue where you left off', continueBtn: 'Continue', startBtn: 'Start',
     ofModules: (a, b) => `${a} of ${b} modules complete`, courseDone: 'Course complete. Nice work.',
     coursesTitle: 'Courses', coursesLead: 'Each course is a sequence of units and modules. Java, Discrete Math and Git are fully available; the others are being written now.',
-    plannedTitle: 'Planned after that', javaTrack: 'Java course', studyTools: 'Study tools',
+    plannedTitle: 'Planned courses', plannedNote: 'Beginner courses first. Vote for the ones you want next.', javaTrack: 'Java course', studyTools: 'Study tools',
     toolFlash: 'Spaced review of the key terms.', toolQuiz: 'Check yourself after each module.', toolPlay: 'Run Java, C++, Python and JS.', toolNotes: 'Your notes, saved per module.',
     notifyMe: 'Notify me when it opens', notified: 'Saved: it will show up here when it opens',
     soonNotice: 'This course is being written. The outline below is final; lessons, examples and quizzes are not published yet.',
@@ -57,7 +57,7 @@ const UI = {
     startJava: 'Empezar el curso de Java', browse: 'Ver cursos', continueTitle: 'Continúa donde te quedaste', continueBtn: 'Continuar', startBtn: 'Empezar',
     ofModules: (a, b) => `${a} de ${b} módulos completados`, courseDone: 'Curso completado. ¡Buen trabajo!',
     coursesTitle: 'Cursos', coursesLead: 'Cada curso es una secuencia de unidades y módulos. Java, Matemáticas discretas y Git están completos; los demás se están escribiendo.',
-    plannedTitle: 'Planeados después', javaTrack: 'Curso de Java', studyTools: 'Herramientas de estudio',
+    plannedTitle: 'Cursos planeados', plannedNote: 'Primero los de nivel principiante. Vota por los que quieres primero.', javaTrack: 'Curso de Java', studyTools: 'Herramientas de estudio',
     toolFlash: 'Repaso espaciado de los términos clave.', toolQuiz: 'Ponte a prueba después de cada módulo.', toolPlay: 'Ejecuta Java, C++, Python y JS.', toolNotes: 'Tus notas, guardadas por módulo.',
     notifyMe: 'Avísame cuando abra', notified: 'Guardado: aparecerá aquí cuando abra',
     soonNotice: 'Este curso se está escribiendo. El temario de abajo es definitivo; las lecciones, ejemplos y cuestionarios aún no se publican.',
@@ -212,6 +212,7 @@ function courseCard(tr, big) {
   return `<a class="card course${live ? ' live' : ''}" href="#course-${tr.id}">
     <div class="course-top"><span class="cicon" data-track="${tr.id}">${esc(tr.icon)}</span><div style="min-width:0"><h3>${esc(L(tr.title))}</h3><div class="muted">${s.units} ${t('units')} · ${s.count} ${t('modules')}${s.hours ? ` · ≈ ${s.hours} ${t('hours')}` : ''}</div></div></div>
     <p>${esc(L(tr.blurb))}</p>
+    ${tr.level ? `<div class="levels"><span class="pill lvl-${tr.level}">${t('difficulty')[tr.level]}${tr.id === 'java' ? ' → ' + t('difficulty').advanced : ''}</span></div>` : ''}
     ${live ? `<div class="progress${s.done === s.count ? ' done' : ''}"><span style="width:${pct(s.done, s.count)}%"></span></div>
       <div class="facts"><span class="pill ok">${t('available')}</span><span class="muted">${t('ofModules', s.done, s.count)}</span></div>`
       : `<div class="facts"><span class="pill soon">${t('comingSoon')}</span>${big && state.notified.has(tr.id) ? `<span class="muted">${t('notified')}</span>` : ''}</div>`}
@@ -262,8 +263,9 @@ System.out.<span class="f">printf</span>(<span class="s">"avg %.1f%n"</span>, av
 function viewCourses() {
   return `<section class="wrap"><h1>${t('coursesTitle')}</h1><p class="lead">${t('coursesLead')}</p>
     <div class="courses" style="margin-top:24px">${DATA.tracks.map((tr) => courseCard(tr, true)).join('')}</div>
-    <div class="section-head"><h2>${t('plannedTitle')}</h2></div>
-    <div class="planned">${DATA.planned.map((p) => `<span>${esc(L(p))}</span>`).join('')}</div></section>`;
+    <div class="section-head"><h2>${t('plannedTitle')}</h2><span class="muted">${t('plannedNote')}</span></div>
+    <div class="planned-grid">${DATA.planned.map((p) => `<div class="card planned-card"><div class="course-top"><span class="cicon">${esc(p.icon)}</span><div style="min-width:0"><h3>${esc(L(p.title))}</h3><span class="pill lvl-${p.level}">${t('difficulty')[p.level]}</span></div></div><p>${esc(L(p.blurb))}</p>
+      <button class="vote" data-action="vote" data-id="course-${p.id}" aria-pressed="${state.votes.has('course-' + p.id)}">${state.votes.has('course-' + p.id) ? t('voted') : t('vote')}</button></div>`).join('')}</div></section>`;
 }
 function viewCourse(id) {
   const tr = track(id); if (!tr) return viewMissing();
@@ -533,6 +535,8 @@ const ROADMAP = [
   ['building', 'runner', { en: 'Run Java, Python and C++', es: 'Ejecutar Java, Python y C++' }, { en: 'A sandboxed code server so every example and exercise runs in the browser.', es: 'Un servidor aislado para que cada ejemplo y ejercicio se ejecute en el navegador.' }, ['Tools']],
   ['live', 'redesign', { en: 'New design on every device', es: 'Nuevo diseño en todos los dispositivos' }, { en: 'This design: faster, clearer, with a real phone layout and dark mode.', es: 'Este diseño: más rápido, más claro, con versión para teléfono y modo oscuro.' }, ['Design']],
   ['building', 'more-courses', { en: 'x86-64 Assembly', es: 'Ensamblador x86-64' }, { en: 'Rewritten to the same standard as Java, one course at a time.', es: 'Reescritos con el mismo nivel que Java, un curso a la vez.' }, ['Courses']],
+  ['planned', 'cybersecurity', { en: 'Cybersecurity Fundamentals course', es: 'Curso de fundamentos de ciberseguridad' }, { en: 'Passwords, phishing, encryption, network security and safe coding, for beginners.', es: 'Contraseñas, phishing, cifrado, seguridad en redes y código seguro, para principiantes.' }, ['Courses']],
+  ['planned', 'beginner-courses', { en: 'More beginner courses', es: 'Más cursos para principiantes' }, { en: 'Python, Web Basics, Command Line & Linux, SQL, and How Computers Work.', es: 'Python, Web básica, Línea de comandos y Linux, SQL y Cómo funcionan las computadoras.' }, ['Courses']],
   ['planned', 'exercises', { en: 'Auto-graded coding exercises', es: 'Ejercicios de código con calificación automática' }, { en: 'Write a solution, run hidden tests, see which cases fail and why.', es: 'Escribe una solución, ejecuta pruebas ocultas y ve qué casos fallan y por qué.' }, ['Practice']],
   ['planned', 'srs', { en: 'Spaced-repetition review', es: 'Repaso con repetición espaciada' }, { en: 'Flashcards and quiz questions come back right before you would forget them.', es: 'Tarjetas y preguntas vuelven justo antes de que las olvides.' }, ['Practice']],
   ['planned', 'visualizers', { en: 'Step-through visualizers', es: 'Visualizadores paso a paso' }, { en: 'Watch the stack, heap, arrays and trees change line by line.', es: 'Mira cómo cambian la pila, el heap, los arreglos y los árboles línea por línea.' }, ['Tools']],
