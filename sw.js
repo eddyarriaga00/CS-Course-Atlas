@@ -8,7 +8,7 @@
  * - The account API (/api/) is never cached.
  */
 const CACHE = 'atlas-v2';
-const SHELL = ['./', 'index.html', 'preview.html', 'manifest.webmanifest', 'icons/icon-192.png'];
+const SHELL = ['./', 'index.html', 'preview.html', 'runner.html', 'manifest.webmanifest', 'icons/icon-192.png'];
 const CDN = ['https://cdn.jsdelivr.net/pyodide/', 'https://cdnjs.cloudflare.com/ajax/libs/', 'https://fonts.googleapis.com/', 'https://fonts.gstatic.com/'];
 
 self.addEventListener('install', (event) => {

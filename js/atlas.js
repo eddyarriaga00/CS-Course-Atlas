@@ -50,7 +50,7 @@ const UI = {
     forgot: 'Forgot password?', newHere: 'New here?', create: 'Create an account', legal: 'By continuing you agree to the <a href="terms-of-use.html">Terms of Use</a> and <a href="privacy-policy.html">Privacy Policy</a>.',
     noResults: 'No matches', today: 'Today', yesterday: 'Yesterday', daysAgo: (n) => `${n} days ago`, completed: 'Completed', reviewed: 'Reviewed 12 flashcards', notFound: 'That page doesn’t exist.',
     glossary: 'Glossary', roadmap: 'Roadmap', whatsComing: 'What’s coming', tryIt: 'Try it ▸', run: 'Run ▸', reset: 'Reset', running: 'Running…',
-    pgLead: 'Write and run code right here. JavaScript, Python, SQL, web pages and a practice terminal run in your browser; Java and C++ will run on the CS Course Atlas server.',
+    pgLead: 'Write and run code right here. Everything runs in your browser, nothing is uploaded: Python, Java, C++, JavaScript, SQL, web pages and a practice terminal. Java and C++ download their compilers the first time you run them.',
     pgServer: 'Running this language needs the code server, which is on the roadmap. Here is the output this example prints:', pgServerNoExpected: 'Running this language needs the code server, which is on the roadmap. Switch to JavaScript or Python to run code now.',
     pgDone: (ms) => `Finished in ${ms} ms`, pgTimeout: 'Stopped after 3 seconds (infinite loop?)', pgEmpty: '(no output)', pgLoaded: (m) => `Loaded from ${m}`,
     notesLeadIn: 'One page of notes per module, saved to your account and synced to every device you sign in on.', notesLead: 'One page of notes per module, saved on this device. With an account they sync everywhere.', notePlaceholder: 'What clicked? What confused you? Write it in your own words.', myNotes: 'My notes', predictMode: 'Guess first', predictFirst: 'What will this program print? Decide first, then check.', showOutput: 'Show the output',
@@ -59,7 +59,7 @@ const UI = {
     roadmapLead: 'Where CS Course Atlas is going. Vote for what you want next.', live: 'Live', building: 'In progress', planned: 'Planned', vote: '▲ Vote', voted: '▲ Voted',
     achievements: 'Achievements', earned: (a, b) => `${a} of ${b} earned`,
     studyPlan: 'Study plan', planLead: 'Pick a course and how much time you have; we lay out the rest of it week by week.', hoursWeek: 'Hours per week', startOn: 'Start on', finishBy: 'Finish by', weeksLeft: 'weeks', modulesLeft: 'modules left', weekN: (n) => `Week ${n}`, thisWeek: 'This week', planHome: (d, c) => `At your pace you’ll finish ${c} by <b>${d}</b>.`, editPlan: 'Edit plan', allDone: 'Every module of this course is complete. Time for the next one.', addCalendar: 'Add to calendar', reminders: 'Weekly reminder', 
-    videos: 'Videos', fullSeries: 'Full video series', courseSeries: 'Full course series', watchTopic: 'Watch a video on this topic', watchWait: 'Watch while you wait', videosLead: 'A full series for the module, then one video per topic. All from university or well-known teaching channels; they open on YouTube.', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', pyLoading: 'Loading Python (first run only, a few seconds)…', pyTimeout: 'Stopped after 10 seconds (infinite loop?)', pyFailed: 'Could not load Python. Check your connection and try again.', pythonExamples: 'Runnable Python examples', challenges: 'Challenges', seeTables: 'See the tables', sqlMatch: 'Your result matches. Nice work!', sqlNoMatch: (a, b) => `Not quite: your query returned ${a} row(s); the expected result has ${b}. Compare the two below.`, yourResult: 'Your result', expectedResult: 'Expected result', noRowsReturned: '(no rows returned)', sqlDiffers: 'Not quite: you have the right number of rows, but some values differ. Compare the two below.', sqlError: 'Your query has an error:', challengesPageLead: 'Write code, run terminal and Git commands, or predict what a program prints, and get it checked instantly. Everything runs in your browser.', nextUnsolved: 'Next challenge', allSolvedCh: 'Every challenge solved. Impressive.', solvedWord: 'solved', hubChallengeText: 'Code, terminal, Git and predict-the-output challenges, checked instantly with clear feedback.', challengesLead: 'Write the function, then run the tests. They run in your browser and check your answer instantly.', solvedOf: (a, b) => `${a} of ${b} solved.`, solved: 'Solved', runTests: 'Run tests', yourCode: 'your code', hint: 'Hint', showSolution: 'Show a solution', solutionAfter: 'A solution unlocks after two tries.', runningTests: 'Running the tests…', codeError: 'Your code has an error before the tests could run:', allPassed: 'All tests passed. Nice work!', passedOf: (a, b) => `${a} of ${b} tests passed. Check the ones marked ✗.`, got: 'got', expected: 'expected', printedOutput: 'Your print output', challengeSolved: '🎉 Challenge solved!', challengeSolvedIn: (m) => `Solved a challenge in ${m}`, mixedReview: 'Mixed review', quizKeys: 'Tip: press 1–4 to answer, Enter for next', mixedReviewOption: (n) => `★ Mixed review (${n} module${n === 1 ? '' : 's'})`, mixDeckDone: 'You know every card in this review.', dueOption: (n) => `⏰ Due for review (${n})`, dueEmpty: 'Nothing is due right now. Cards you mark come back after 1, 3, 7, 16 and 35 days, right before you would forget them.', dueNext: (d) => `Next card comes back ${d}.`, dueDone: 'Review done for today. These cards will come back later.', dueWord: 'due today', reviewedOf: (a, b) => `${a} of ${b} reviewed`, dueChip: (n) => `${n} card${n === 1 ? '' : 's'} to review`, inDays: (n) => (n <= 1 ? 'tomorrow' : `in ${n} days`), loadingLessons: 'Loading lessons…', lessonsFailed: 'Could not load these lessons. Check your connection.', practiceHub: 'Practice home', hubQuizText: 'A short quiz for every module, with an explanation for every answer.', hubFlashText: 'Every key term as a card. Mark the ones you know and keep reviewing the rest.', taken: 'taken', average: 'average', cards: 'cards', known: 'known', suggested: 'Suggested next', takeQuiz: 'Take the quiz', reviewCards: 'Review the cards', quizzesLead: 'Pick a module and check what stuck. Every answer comes with an explanation, and your best score is saved.', timedMode: 'Timed', timedHint: `${30} seconds per question, like a real test`, timeUp: 'Time’s up.', secondsLeft: 'Seconds left', flashLead: 'Flip each card, then mark it. Cards you know come back for review right before you would forget them.', yourScores: 'Your best scores', notTaken: 'not taken', knownOf: (a, b) => `${a} of ${b} known`, knownBadge: 'known', shuffle: 'Shuffle', resetDeck: 'Reset deck', flashKeys: 'Space flips · ← still learning · → I know it', deckDone: 'You know every card in this module.', sideBeginner: 'Beginner path', sideNext: 'Next level', pathTotals: (m, h) => `${m} modules, about ${h} hours of lessons in all.`, alsoPlanned: 'Also on the way:', sqlExamples: 'Real SQLite queries', sqlLoading: 'Loading SQLite (first run only)…', sqlFailed: 'Could not load SQLite. Check your connection and try again.', syllabus: 'What you will learn', outlineNotice: 'This course is being written now. The outline below is final: each module will have a lesson, examples you can run, practice, a quiz and videos.', soonNoticePlanned: 'This course is planned. Vote for it so we know to write it sooner.', wantThis: '▲ I want this course', meanwhile: 'Get ready with these courses first', pathStep: 'beginner path step', levelWord: 'level', seeOutline: 'See outline', webExamples: 'Live web pages', preview: 'Live preview', rendered: 'Rendered', pgHtmlSample: 'A web page: edit it and press Run', showPw: 'Show password', hidePw: 'Hide password', show: 'Show', hide: 'Hide', signupSub: 'Free. Your progress, notes and quiz scores are saved and follow you to any device.', orSignupEmail: 'or sign up with email', createFree: 'Create free account', userHint: '3–32 characters: letters, numbers, dot, underscore or dash.', pwHint: 'At least 8 characters.', accountTitle: 'Account', displayName: 'Display name', saveChanges: 'Save changes', saved: 'Saved', changePw: 'Change password', currentPw: 'Current password', newPw: 'New password', pwChanged: 'Password changed', googleNoPw: 'You sign in with Google, so there is no password to manage here.', saveTitle: 'Keep your progress', saveText: 'It is only on this device right now. A free account saves it and syncs it everywhere.', expand: 'show modules', collapse: 'hide modules', fullSession: 'Full session', week1: 'week', coursesReady: 'courses ready', course: 'Course', trackCourse: (c) => `${c} course`, terminalExamples: 'Real terminal sessions', terminalHint: 'Run this in an empty folder. Lines starting with $ are what you type; the rest is what the computer printed when we ran the session for real. Copy gives you just the commands.', terminalOut: 'Terminal', report: 'Report a problem with this module', programs: 'programs', languagesWord: 'languages', waitLead: 'Series that cover these modules, each listed once.',
+    videos: 'Videos', fullSeries: 'Full video series', courseSeries: 'Full course series', watchTopic: 'Watch a video on this topic', watchWait: 'Watch while you wait', videosLead: 'A full series for the module, then one video per topic. All from university or well-known teaching channels; they open on YouTube.', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', javaLoading: 'Loading Java (first run only, about 20 seconds)…', cppLoading: (p) => `Downloading the C++ compiler (first run only): ${p}%`, cppPreparing: 'Starting the C++ compiler…', compiling: 'Compiling…', compileFailed: 'Your code did not compile:', javaFailed: 'Could not load Java. Check your connection and try again.', cppFailed: 'Could not load the C++ compiler. Check your connection and try again.', cppNoExceptions: 'Tip: C++ exceptions (try, throw, catch) are not available in the browser playground. Check values with if statements instead.', javaBusy: 'Java is still running the previous program. Reload the page to stop it.', pgCompiledRan: (c, r) => `Compiled in ${c} ms, ran in ${r} ms`, pyLoading: 'Loading Python (first run only, a few seconds)…', pyTimeout: 'Stopped after 10 seconds (infinite loop?)', pyFailed: 'Could not load Python. Check your connection and try again.', pythonExamples: 'Runnable Python examples', challenges: 'Challenges', seeTables: 'See the tables', sqlMatch: 'Your result matches. Nice work!', sqlNoMatch: (a, b) => `Not quite: your query returned ${a} row(s); the expected result has ${b}. Compare the two below.`, yourResult: 'Your result', expectedResult: 'Expected result', noRowsReturned: '(no rows returned)', sqlDiffers: 'Not quite: you have the right number of rows, but some values differ. Compare the two below.', sqlError: 'Your query has an error:', challengesPageLead: 'Write code, run terminal and Git commands, or predict what a program prints, and get it checked instantly. Everything runs in your browser.', nextUnsolved: 'Next challenge', allSolvedCh: 'Every challenge solved. Impressive.', solvedWord: 'solved', hubChallengeText: 'Code, terminal, Git and predict-the-output challenges, checked instantly with clear feedback.', challengesLead: 'Write the function, then run the tests. They run in your browser and check your answer instantly.', solvedOf: (a, b) => `${a} of ${b} solved.`, solved: 'Solved', runTests: 'Run tests', yourCode: 'your code', hint: 'Hint', showSolution: 'Show a solution', solutionAfter: 'A solution unlocks after two tries.', runningTests: 'Running the tests…', codeError: 'Your code has an error before the tests could run:', allPassed: 'All tests passed. Nice work!', passedOf: (a, b) => `${a} of ${b} tests passed. Check the ones marked ✗.`, got: 'got', expected: 'expected', printedOutput: 'Your print output', challengeSolved: '🎉 Challenge solved!', challengeSolvedIn: (m) => `Solved a challenge in ${m}`, mixedReview: 'Mixed review', quizKeys: 'Tip: press 1–4 to answer, Enter for next', mixedReviewOption: (n) => `★ Mixed review (${n} module${n === 1 ? '' : 's'})`, mixDeckDone: 'You know every card in this review.', dueOption: (n) => `⏰ Due for review (${n})`, dueEmpty: 'Nothing is due right now. Cards you mark come back after 1, 3, 7, 16 and 35 days, right before you would forget them.', dueNext: (d) => `Next card comes back ${d}.`, dueDone: 'Review done for today. These cards will come back later.', dueWord: 'due today', reviewedOf: (a, b) => `${a} of ${b} reviewed`, dueChip: (n) => `${n} card${n === 1 ? '' : 's'} to review`, inDays: (n) => (n <= 1 ? 'tomorrow' : `in ${n} days`), loadingLessons: 'Loading lessons…', lessonsFailed: 'Could not load these lessons. Check your connection.', practiceHub: 'Practice home', hubQuizText: 'A short quiz for every module, with an explanation for every answer.', hubFlashText: 'Every key term as a card. Mark the ones you know and keep reviewing the rest.', taken: 'taken', average: 'average', cards: 'cards', known: 'known', suggested: 'Suggested next', takeQuiz: 'Take the quiz', reviewCards: 'Review the cards', quizzesLead: 'Pick a module and check what stuck. Every answer comes with an explanation, and your best score is saved.', timedMode: 'Timed', timedHint: `${30} seconds per question, like a real test`, timeUp: 'Time’s up.', secondsLeft: 'Seconds left', flashLead: 'Flip each card, then mark it. Cards you know come back for review right before you would forget them.', yourScores: 'Your best scores', notTaken: 'not taken', knownOf: (a, b) => `${a} of ${b} known`, knownBadge: 'known', shuffle: 'Shuffle', resetDeck: 'Reset deck', flashKeys: 'Space flips · ← still learning · → I know it', deckDone: 'You know every card in this module.', sideBeginner: 'Beginner path', sideNext: 'Next level', pathTotals: (m, h) => `${m} modules, about ${h} hours of lessons in all.`, alsoPlanned: 'Also on the way:', sqlExamples: 'Real SQLite queries', sqlLoading: 'Loading SQLite (first run only)…', sqlFailed: 'Could not load SQLite. Check your connection and try again.', syllabus: 'What you will learn', outlineNotice: 'This course is being written now. The outline below is final: each module will have a lesson, examples you can run, practice, a quiz and videos.', soonNoticePlanned: 'This course is planned. Vote for it so we know to write it sooner.', wantThis: '▲ I want this course', meanwhile: 'Get ready with these courses first', pathStep: 'beginner path step', levelWord: 'level', seeOutline: 'See outline', webExamples: 'Live web pages', preview: 'Live preview', rendered: 'Rendered', pgHtmlSample: 'A web page: edit it and press Run', showPw: 'Show password', hidePw: 'Hide password', show: 'Show', hide: 'Hide', signupSub: 'Free. Your progress, notes and quiz scores are saved and follow you to any device.', orSignupEmail: 'or sign up with email', createFree: 'Create free account', userHint: '3–32 characters: letters, numbers, dot, underscore or dash.', pwHint: 'At least 8 characters.', accountTitle: 'Account', displayName: 'Display name', saveChanges: 'Save changes', saved: 'Saved', changePw: 'Change password', currentPw: 'Current password', newPw: 'New password', pwChanged: 'Password changed', googleNoPw: 'You sign in with Google, so there is no password to manage here.', saveTitle: 'Keep your progress', saveText: 'It is only on this device right now. A free account saves it and syncs it everywhere.', expand: 'show modules', collapse: 'hide modules', fullSession: 'Full session', week1: 'week', coursesReady: 'courses ready', course: 'Course', trackCourse: (c) => `${c} course`, terminalExamples: 'Real terminal sessions', terminalHint: 'Run this in an empty folder. Lines starting with $ are what you type; the rest is what the computer printed when we ran the session for real. Copy gives you just the commands.', terminalOut: 'Terminal', report: 'Report a problem with this module', programs: 'programs', languagesWord: 'languages', waitLead: 'Series that cover these modules, each listed once.',
     signedInWith: (p) => `Signed in with ${p}`, syncedAt: (tm) => `Progress synced at ${tm}`, syncPending: 'Syncing progress…', day: 'day', acrossN: (n) => `across ${n} ${n === 1 ? 'quiz' : 'quizzes'}`, noQuizYet: 'No quizzes taken yet',
     modulesWithNotes: 'modules with notes', noActivity: 'Complete a module, take a quiz or write a note and it shows up here.', typeDelete: 'Type DELETE to confirm', deleteViaSupport: 'Ask support to delete it',
     privacy: 'Privacy', terms: 'Terms', contact: 'Contact', checkingSession: 'Checking your account…', emailOrUser: 'Email or username', username: 'Username', confirmPw: 'Confirm password',
@@ -118,7 +118,7 @@ const UI = {
     forgot: '¿Olvidaste tu contraseña?', newHere: '¿Eres nuevo?', create: 'Crear una cuenta', legal: 'Al continuar aceptas los <a href="terms-of-use.html">Términos de uso</a> y la <a href="privacy-policy.html">Política de privacidad</a>.',
     noResults: 'Sin resultados', today: 'Hoy', yesterday: 'Ayer', daysAgo: (n) => `Hace ${n} días`, completed: 'Completaste', reviewed: 'Repasaste 12 tarjetas', notFound: 'Esa página no existe.',
     glossary: 'Glosario', roadmap: 'Hoja de ruta', whatsComing: 'Lo que viene', tryIt: 'Probar ▸', run: 'Ejecutar ▸', reset: 'Restablecer', running: 'Ejecutando…',
-    pgLead: 'Escribe y ejecuta código aquí mismo. JavaScript, Python, SQL, las páginas web y una terminal de práctica corren en tu navegador; Java y C++ correrán en el servidor de CS Course Atlas.',
+    pgLead: 'Escribe y ejecuta código aquí mismo. Todo corre en tu navegador y nada se sube: Python, Java, C++, JavaScript, SQL, páginas web y una terminal de práctica. Java y C++ descargan su compilador la primera vez que los ejecutas.',
     pgServer: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Esta es la salida que imprime el ejemplo:', pgServerNoExpected: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Cambia a JavaScript o Python para ejecutar código ahora.',
     pgDone: (ms) => `Terminó en ${ms} ms`, pgTimeout: 'Detenido después de 3 segundos (¿bucle infinito?)', pgEmpty: '(sin salida)', pgLoaded: (m) => `Cargado desde ${m}`,
     notesLeadIn: 'Una página de notas por módulo, guardada en tu cuenta y sincronizada en cada dispositivo donde inicies sesión.', notesLead: 'Una página de notas por módulo, guardada en este dispositivo. Con una cuenta se sincronizan en todas partes.', notePlaceholder: '¿Qué entendiste? ¿Qué te confundió? Escríbelo con tus palabras.', myNotes: 'Mis notas', predictMode: 'Adivina primero', predictFirst: '¿Qué imprimirá este programa? Decide primero y luego revisa.', showOutput: 'Mostrar la salida',
@@ -127,7 +127,7 @@ const UI = {
     roadmapLead: 'Hacia dónde va CS Course Atlas. Vota por lo que quieres primero.', live: 'Disponible', building: 'En progreso', planned: 'Planeado', vote: '▲ Votar', voted: '▲ Votado',
     achievements: 'Logros', earned: (a, b) => `${a} de ${b} obtenidos`,
     studyPlan: 'Plan de estudio', planLead: 'Elige un curso y cuánto tiempo tienes; organizamos el resto semana a semana.', hoursWeek: 'Horas por semana', startOn: 'Empezar el', finishBy: 'Terminas el', weeksLeft: 'semanas', modulesLeft: 'módulos restantes', weekN: (n) => `Semana ${n}`, thisWeek: 'Esta semana', planHome: (d, c) => `A tu ritmo terminarás ${c} el <b>${d}</b>.`, editPlan: 'Editar plan', allDone: 'Completaste todos los módulos de este curso. Es hora del siguiente.', addCalendar: 'Agregar al calendario', reminders: 'Recordatorio semanal', 
-    videos: 'Videos', fullSeries: 'Serie completa de videos', courseSeries: 'Serie completa del curso', watchTopic: 'Mira un video sobre este tema', watchWait: 'Mira mientras esperas', videosLead: 'Una serie completa del módulo y un video por tema. Todos de canales universitarios o de enseñanza reconocidos; se abren en YouTube (en inglés).', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', pyLoading: 'Cargando Python (solo la primera vez, unos segundos)…', pyTimeout: 'Detenido después de 10 segundos (¿bucle infinito?)', pyFailed: 'No se pudo cargar Python. Revisa tu conexión e inténtalo de nuevo.', pythonExamples: 'Ejemplos de Python ejecutables', challenges: 'Retos', seeTables: 'Ver las tablas', sqlMatch: '¡Tu resultado coincide! Buen trabajo.', sqlNoMatch: (a, b) => `Todavía no: tu consulta devolvió ${a} fila(s); el resultado esperado tiene ${b}. Compara ambos abajo.`, yourResult: 'Tu resultado', expectedResult: 'Resultado esperado', noRowsReturned: '(no se devolvieron filas)', sqlDiffers: 'Todavía no: tienes el número correcto de filas, pero algunos valores son distintos. Compara ambos abajo.', sqlError: 'Tu consulta tiene un error:', challengesPageLead: 'Escribe código, ejecuta comandos de terminal y Git, o predice lo que imprime un programa, y obtén la revisión al instante. Todo corre en tu navegador.', nextUnsolved: 'Siguiente reto', allSolvedCh: 'Resolviste todos los retos. Impresionante.', solvedWord: 'resueltos', hubChallengeText: 'Retos de código, terminal, Git y de predecir la salida, revisados al instante con respuestas claras.', challengesLead: 'Escribe la función y luego ejecuta las pruebas. Corren en tu navegador y revisan tu respuesta al instante.', solvedOf: (a, b) => `${a} de ${b} resueltos.`, solved: 'Resuelto', runTests: 'Ejecutar pruebas', yourCode: 'tu código', hint: 'Pista', showSolution: 'Ver una solución', solutionAfter: 'Una solución se desbloquea tras dos intentos.', runningTests: 'Ejecutando las pruebas…', codeError: 'Tu código tiene un error antes de que corrieran las pruebas:', allPassed: '¡Todas las pruebas pasaron! Buen trabajo.', passedOf: (a, b) => `Pasaron ${a} de ${b} pruebas. Revisa las marcadas con ✗.`, got: 'obtuviste', expected: 'se esperaba', printedOutput: 'Lo que imprimiste', challengeSolved: '🎉 ¡Reto resuelto!', challengeSolvedIn: (m) => `Resolviste un reto en ${m}`, mixedReview: 'Repaso mixto', quizKeys: 'Consejo: pulsa 1–4 para responder y Enter para seguir', mixedReviewOption: (n) => `★ Repaso mixto (${n} módulo${n === 1 ? '' : 's'})`, mixDeckDone: 'Sabes todas las tarjetas de este repaso.', dueOption: (n) => `⏰ Para repasar (${n})`, dueEmpty: 'No hay nada pendiente ahora. Las tarjetas que marcas vuelven después de 1, 3, 7, 16 y 35 días, justo antes de que las olvides.', dueNext: (d) => `La próxima tarjeta vuelve ${d}.`, dueDone: 'Repaso terminado por hoy. Estas tarjetas volverán más adelante.', dueWord: 'para hoy', reviewedOf: (a, b) => `${a} de ${b} repasadas`, dueChip: (n) => `${n} tarjeta${n === 1 ? '' : 's'} para repasar`, inDays: (n) => (n <= 1 ? 'mañana' : `en ${n} días`), loadingLessons: 'Cargando lecciones…', lessonsFailed: 'No se pudieron cargar estas lecciones. Revisa tu conexión.', practiceHub: 'Inicio de práctica', hubQuizText: 'Un cuestionario corto por módulo, con una explicación para cada respuesta.', hubFlashText: 'Cada término clave como tarjeta. Marca las que sabes y sigue repasando las demás.', taken: 'hechos', average: 'promedio', cards: 'tarjetas', known: 'sabidas', suggested: 'Siguiente sugerido', takeQuiz: 'Hacer el cuestionario', reviewCards: 'Repasar las tarjetas', quizzesLead: 'Elige un módulo y comprueba qué aprendiste. Cada respuesta trae una explicación y se guarda tu mejor resultado.', timedMode: 'Con tiempo', timedHint: `${30} segundos por pregunta, como en un examen real`, timeUp: 'Se acabó el tiempo.', secondsLeft: 'Segundos restantes', flashLead: 'Voltea cada tarjeta y márcala. Las que sabes vuelven para repasar justo antes de que las olvides.', yourScores: 'Tus mejores resultados', notTaken: 'sin hacer', knownOf: (a, b) => `${a} de ${b} sabidas`, knownBadge: 'sabida', shuffle: 'Mezclar', resetDeck: 'Reiniciar mazo', flashKeys: 'Espacio voltea · ← aún aprendiendo · → la sé', deckDone: 'Sabes todas las tarjetas de este módulo.', sideBeginner: 'Ruta para principiantes', sideNext: 'Siguiente nivel', pathTotals: (m, h) => `${m} módulos, unas ${h} horas de lecciones en total.`, alsoPlanned: 'También en camino:', sqlExamples: 'Consultas reales de SQLite', sqlLoading: 'Cargando SQLite (solo la primera vez)…', sqlFailed: 'No se pudo cargar SQLite. Revisa tu conexión e inténtalo de nuevo.', syllabus: 'Lo que aprenderás', outlineNotice: 'Este curso se está escribiendo. El temario de abajo es definitivo: cada módulo tendrá una lección, ejemplos que puedes ejecutar, práctica, un cuestionario y videos.', soonNoticePlanned: 'Este curso está planeado. Vota por él para que sepamos escribirlo antes.', wantThis: '▲ Quiero este curso', meanwhile: 'Prepárate primero con estos cursos', pathStep: 'paso de la ruta', levelWord: 'nivel', seeOutline: 'Ver temario', webExamples: 'Páginas web en vivo', preview: 'Vista previa en vivo', rendered: 'Mostrado', pgHtmlSample: 'Una página web: edítala y pulsa Ejecutar', showPw: 'Mostrar contraseña', hidePw: 'Ocultar contraseña', show: 'Ver', hide: 'Ocultar', signupSub: 'Gratis. Tu progreso, notas y resultados se guardan y te siguen a cualquier dispositivo.', orSignupEmail: 'o regístrate con tu correo', createFree: 'Crear cuenta gratis', userHint: 'De 3 a 32 caracteres: letras, números, punto, guion bajo o guion.', pwHint: 'Al menos 8 caracteres.', accountTitle: 'Cuenta', displayName: 'Nombre visible', saveChanges: 'Guardar cambios', saved: 'Guardado', changePw: 'Cambiar contraseña', currentPw: 'Contraseña actual', newPw: 'Contraseña nueva', pwChanged: 'Contraseña cambiada', googleNoPw: 'Inicias sesión con Google, así que aquí no hay contraseña que administrar.', saveTitle: 'Conserva tu progreso', saveText: 'Por ahora solo está en este dispositivo. Una cuenta gratis lo guarda y lo sincroniza en todas partes.', expand: 'mostrar módulos', collapse: 'ocultar módulos', fullSession: 'Sesión completa', week1: 'semana', coursesReady: 'cursos listos', course: 'Curso', trackCourse: (c) => `Curso de ${c}`, terminalExamples: 'Sesiones reales de terminal', terminalHint: 'Ejecútalo en una carpeta vacía. Las líneas que empiezan con $ son lo que escribes; el resto es lo que imprimió la computadora al ejecutar la sesión de verdad. Copiar te da solo los comandos.', terminalOut: 'Terminal', report: 'Reportar un problema con este módulo', programs: 'programas', languagesWord: 'lenguajes', waitLead: 'Series que cubren estos módulos, cada una una sola vez.',
+    videos: 'Videos', fullSeries: 'Serie completa de videos', courseSeries: 'Serie completa del curso', watchTopic: 'Mira un video sobre este tema', watchWait: 'Mira mientras esperas', videosLead: 'Una serie completa del módulo y un video por tema. Todos de canales universitarios o de enseñanza reconocidos; se abren en YouTube (en inglés).', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', javaLoading: 'Cargando Java (solo la primera vez, unos 20 segundos)…', cppLoading: (p) => `Descargando el compilador de C++ (solo la primera vez): ${p}%`, cppPreparing: 'Iniciando el compilador de C++…', compiling: 'Compilando…', compileFailed: 'Tu código no compiló:', javaFailed: 'No se pudo cargar Java. Revisa tu conexión e inténtalo de nuevo.', cppFailed: 'No se pudo cargar el compilador de C++. Revisa tu conexión e inténtalo de nuevo.', cppNoExceptions: 'Consejo: las excepciones de C++ (try, throw, catch) no están disponibles en el playground del navegador. Revisa los valores con if.', javaBusy: 'Java sigue ejecutando el programa anterior. Recarga la página para detenerlo.', pgCompiledRan: (c, r) => `Compilado en ${c} ms, ejecutado en ${r} ms`, pyLoading: 'Cargando Python (solo la primera vez, unos segundos)…', pyTimeout: 'Detenido después de 10 segundos (¿bucle infinito?)', pyFailed: 'No se pudo cargar Python. Revisa tu conexión e inténtalo de nuevo.', pythonExamples: 'Ejemplos de Python ejecutables', challenges: 'Retos', seeTables: 'Ver las tablas', sqlMatch: '¡Tu resultado coincide! Buen trabajo.', sqlNoMatch: (a, b) => `Todavía no: tu consulta devolvió ${a} fila(s); el resultado esperado tiene ${b}. Compara ambos abajo.`, yourResult: 'Tu resultado', expectedResult: 'Resultado esperado', noRowsReturned: '(no se devolvieron filas)', sqlDiffers: 'Todavía no: tienes el número correcto de filas, pero algunos valores son distintos. Compara ambos abajo.', sqlError: 'Tu consulta tiene un error:', challengesPageLead: 'Escribe código, ejecuta comandos de terminal y Git, o predice lo que imprime un programa, y obtén la revisión al instante. Todo corre en tu navegador.', nextUnsolved: 'Siguiente reto', allSolvedCh: 'Resolviste todos los retos. Impresionante.', solvedWord: 'resueltos', hubChallengeText: 'Retos de código, terminal, Git y de predecir la salida, revisados al instante con respuestas claras.', challengesLead: 'Escribe la función y luego ejecuta las pruebas. Corren en tu navegador y revisan tu respuesta al instante.', solvedOf: (a, b) => `${a} de ${b} resueltos.`, solved: 'Resuelto', runTests: 'Ejecutar pruebas', yourCode: 'tu código', hint: 'Pista', showSolution: 'Ver una solución', solutionAfter: 'Una solución se desbloquea tras dos intentos.', runningTests: 'Ejecutando las pruebas…', codeError: 'Tu código tiene un error antes de que corrieran las pruebas:', allPassed: '¡Todas las pruebas pasaron! Buen trabajo.', passedOf: (a, b) => `Pasaron ${a} de ${b} pruebas. Revisa las marcadas con ✗.`, got: 'obtuviste', expected: 'se esperaba', printedOutput: 'Lo que imprimiste', challengeSolved: '🎉 ¡Reto resuelto!', challengeSolvedIn: (m) => `Resolviste un reto en ${m}`, mixedReview: 'Repaso mixto', quizKeys: 'Consejo: pulsa 1–4 para responder y Enter para seguir', mixedReviewOption: (n) => `★ Repaso mixto (${n} módulo${n === 1 ? '' : 's'})`, mixDeckDone: 'Sabes todas las tarjetas de este repaso.', dueOption: (n) => `⏰ Para repasar (${n})`, dueEmpty: 'No hay nada pendiente ahora. Las tarjetas que marcas vuelven después de 1, 3, 7, 16 y 35 días, justo antes de que las olvides.', dueNext: (d) => `La próxima tarjeta vuelve ${d}.`, dueDone: 'Repaso terminado por hoy. Estas tarjetas volverán más adelante.', dueWord: 'para hoy', reviewedOf: (a, b) => `${a} de ${b} repasadas`, dueChip: (n) => `${n} tarjeta${n === 1 ? '' : 's'} para repasar`, inDays: (n) => (n <= 1 ? 'mañana' : `en ${n} días`), loadingLessons: 'Cargando lecciones…', lessonsFailed: 'No se pudieron cargar estas lecciones. Revisa tu conexión.', practiceHub: 'Inicio de práctica', hubQuizText: 'Un cuestionario corto por módulo, con una explicación para cada respuesta.', hubFlashText: 'Cada término clave como tarjeta. Marca las que sabes y sigue repasando las demás.', taken: 'hechos', average: 'promedio', cards: 'tarjetas', known: 'sabidas', suggested: 'Siguiente sugerido', takeQuiz: 'Hacer el cuestionario', reviewCards: 'Repasar las tarjetas', quizzesLead: 'Elige un módulo y comprueba qué aprendiste. Cada respuesta trae una explicación y se guarda tu mejor resultado.', timedMode: 'Con tiempo', timedHint: `${30} segundos por pregunta, como en un examen real`, timeUp: 'Se acabó el tiempo.', secondsLeft: 'Segundos restantes', flashLead: 'Voltea cada tarjeta y márcala. Las que sabes vuelven para repasar justo antes de que las olvides.', yourScores: 'Tus mejores resultados', notTaken: 'sin hacer', knownOf: (a, b) => `${a} de ${b} sabidas`, knownBadge: 'sabida', shuffle: 'Mezclar', resetDeck: 'Reiniciar mazo', flashKeys: 'Espacio voltea · ← aún aprendiendo · → la sé', deckDone: 'Sabes todas las tarjetas de este módulo.', sideBeginner: 'Ruta para principiantes', sideNext: 'Siguiente nivel', pathTotals: (m, h) => `${m} módulos, unas ${h} horas de lecciones en total.`, alsoPlanned: 'También en camino:', sqlExamples: 'Consultas reales de SQLite', sqlLoading: 'Cargando SQLite (solo la primera vez)…', sqlFailed: 'No se pudo cargar SQLite. Revisa tu conexión e inténtalo de nuevo.', syllabus: 'Lo que aprenderás', outlineNotice: 'Este curso se está escribiendo. El temario de abajo es definitivo: cada módulo tendrá una lección, ejemplos que puedes ejecutar, práctica, un cuestionario y videos.', soonNoticePlanned: 'Este curso está planeado. Vota por él para que sepamos escribirlo antes.', wantThis: '▲ Quiero este curso', meanwhile: 'Prepárate primero con estos cursos', pathStep: 'paso de la ruta', levelWord: 'nivel', seeOutline: 'Ver temario', webExamples: 'Páginas web en vivo', preview: 'Vista previa en vivo', rendered: 'Mostrado', pgHtmlSample: 'Una página web: edítala y pulsa Ejecutar', showPw: 'Mostrar contraseña', hidePw: 'Ocultar contraseña', show: 'Ver', hide: 'Ocultar', signupSub: 'Gratis. Tu progreso, notas y resultados se guardan y te siguen a cualquier dispositivo.', orSignupEmail: 'o regístrate con tu correo', createFree: 'Crear cuenta gratis', userHint: 'De 3 a 32 caracteres: letras, números, punto, guion bajo o guion.', pwHint: 'Al menos 8 caracteres.', accountTitle: 'Cuenta', displayName: 'Nombre visible', saveChanges: 'Guardar cambios', saved: 'Guardado', changePw: 'Cambiar contraseña', currentPw: 'Contraseña actual', newPw: 'Contraseña nueva', pwChanged: 'Contraseña cambiada', googleNoPw: 'Inicias sesión con Google, así que aquí no hay contraseña que administrar.', saveTitle: 'Conserva tu progreso', saveText: 'Por ahora solo está en este dispositivo. Una cuenta gratis lo guarda y lo sincroniza en todas partes.', expand: 'mostrar módulos', collapse: 'ocultar módulos', fullSession: 'Sesión completa', week1: 'semana', coursesReady: 'cursos listos', course: 'Curso', trackCourse: (c) => `Curso de ${c}`, terminalExamples: 'Sesiones reales de terminal', terminalHint: 'Ejecútalo en una carpeta vacía. Las líneas que empiezan con $ son lo que escribes; el resto es lo que imprimió la computadora al ejecutar la sesión de verdad. Copiar te da solo los comandos.', terminalOut: 'Terminal', report: 'Reportar un problema con este módulo', programs: 'programas', languagesWord: 'lenguajes', waitLead: 'Series que cubren estos módulos, cada una una sola vez.',
     signedInWith: (p) => `Sesión iniciada con ${p}`, syncedAt: (tm) => `Progreso sincronizado a las ${tm}`, syncPending: 'Sincronizando progreso…', day: 'día', acrossN: (n) => `en ${n} ${n === 1 ? 'cuestionario' : 'cuestionarios'}`, noQuizYet: 'Aún no haces cuestionarios',
     modulesWithNotes: 'módulos con notas', noActivity: 'Completa un módulo, haz un cuestionario o escribe una nota y aparecerá aquí.', typeDelete: 'Escribe DELETE para confirmar', deleteViaSupport: 'Pide a soporte que la elimine',
     privacy: 'Privacidad', terms: 'Términos', contact: 'Contacto', checkingSession: 'Revisando tu cuenta…', emailOrUser: 'Correo o usuario', username: 'Usuario', confirmPw: 'Confirmar contraseña',
@@ -910,7 +910,7 @@ int main() {
     std::vector<int> scores = {72, 95, 88};
     int total = 0;
     for (int s : scores) total += s;
-    std::cout << "average: " << static_cast<double>(total) / scores.size() << "\n";
+    std::cout << "average: " << static_cast<double>(total) / scores.size() << "\\n";
 }
 `;
 const PG_TERM = `# A practice terminal: nothing here touches your computer.
@@ -983,12 +983,202 @@ function sharePlayground() {
   const done = () => toast(t('linkCopied'));
   if (navigator.clipboard?.writeText) navigator.clipboard.writeText(url).then(done, () => window.prompt(t('copyThisLink'), url)); else window.prompt(t('copyThisLink'), url);
 }
+// ---- Sandboxed code runner ----
+// Code people write (JavaScript, Python, C++ and challenge tests) never runs with this site's identity. It runs in
+// workers inside runner.html, a hidden iframe sandboxed WITHOUT allow-same-origin: an opaque origin with no cookies,
+// no localStorage, no IndexedDB, no Cache Storage (so it cannot tamper with the offline cache), and a security
+// policy that only lets it download the language runtimes from jsDelivr. It cannot reach the account server.
+// SandboxWorker mirrors the Worker API, so the runners below use it like a normal worker.
+let runnerFrame = null, runnerReady = null, runnerReadyResolve = null, sandboxSeq = 0;
+const sandboxWorkers = new Map();
+function sandboxRunner() {
+  if (!runnerReady) runnerReady = new Promise((resolve) => {
+    runnerReadyResolve = resolve;
+    runnerFrame = document.createElement('iframe');
+    runnerFrame.setAttribute('sandbox', 'allow-scripts');
+    runnerFrame.className = 'runner-frame'; runnerFrame.title = 'Code runner'; runnerFrame.tabIndex = -1;
+    runnerFrame.setAttribute('aria-hidden', 'true');
+    runnerFrame.src = 'runner.html';
+    document.body.append(runnerFrame);
+  });
+  return runnerReady;
+}
+addEventListener('message', (e) => {
+  if (!runnerFrame || e.source !== runnerFrame.contentWindow || !e.data || typeof e.data !== 'object') return;
+  const m = e.data;
+  if (m.ready) { runnerReadyResolve(); return; }
+  const w = sandboxWorkers.get(m.id);
+  if (w) w.emit(m.ev, m);
+});
+class SandboxWorker {
+  constructor(src, opts = {}) {
+    this.id = ++sandboxSeq; this.onmessage = null; this.onerror = null; this.listeners = new Set();
+    sandboxWorkers.set(this.id, this);
+    this.queue = sandboxRunner().then(() => runnerFrame.contentWindow.postMessage({ op: 'create', id: this.id, src, opts }, '*'));
+  }
+  postMessage(data) { this.queue = this.queue.then(() => runnerFrame.contentWindow.postMessage({ op: 'post', id: this.id, data }, '*')); }
+  terminate() { sandboxWorkers.delete(this.id); this.queue.then(() => runnerFrame.contentWindow.postMessage({ op: 'terminate', id: this.id }, '*')); }
+  addEventListener(type, fn) { if (type === 'message') this.listeners.add(fn); }
+  removeEventListener(type, fn) { this.listeners.delete(fn); }
+  emit(kind, m) {
+    if (kind === 'message') { const ev = { data: m.data }; if (this.onmessage) this.onmessage(ev); this.listeners.forEach((fn) => fn(ev)); }
+    else if (this.onerror) this.onerror({ message: m.message || 'Error', preventDefault() {} });
+  }
+}
+
+// Java runs in the browser with CheerpJ (a full Java 17 runtime in WebAssembly): javac compiles, then the
+// class runs. Loaded only the first time someone runs Java. Output arrives in CheerpJ's #console element.
+const CHEERPJ_URL = 'https://cjrtnc.leaningtech.com/5.0/loader.js';
+let javaLoading = null, javaRuns = 0, javaBusy = false;
+function loadJava() {
+  if (!javaLoading) javaLoading = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = CHEERPJ_URL;
+    s.onload = () => window.cheerpjInit({ version: 17, status: 'none' }).then(resolve, reject);
+    s.onerror = reject;
+    document.head.append(s);
+  }).catch((e) => { javaLoading = null; throw e; });
+  return javaLoading;
+}
+// Java cannot be interrupted once it runs (it shares this page's thread), so before compiling, every braced
+// while/for/do loop gets a cheap check that ends the program after 10 seconds instead of freezing the page.
+// The scanner skips strings, chars and comments, and inserts on the same line so error line numbers stay right.
+function guardJavaLoops(src) {
+  let out = '', i = 0;
+  const n = src.length;
+  while (i < n) {
+    const c = src[i], two = src.slice(i, i + 2);
+    if (two === '//') { const e = src.indexOf('\n', i); const j = e < 0 ? n : e; out += src.slice(i, j); i = j; continue; }
+    if (two === '/*') { const e = src.indexOf('*/', i + 2); const j = e < 0 ? n : e + 2; out += src.slice(i, j); i = j; continue; }
+    if (src.startsWith('"""', i)) { const e = src.indexOf('"""', i + 3); const j = e < 0 ? n : e + 3; out += src.slice(i, j); i = j; continue; }
+    if (c === '"' || c === "'") { let j = i + 1; while (j < n && src[j] !== c && src[j] !== '\n') j += src[j] === '\\' ? 2 : 1; out += src.slice(i, j + 1); i = j + 1; continue; }
+    const m = /^(while|for|do)\b/.exec(src.slice(i, i + 6));
+    if (m && !/[\w$]/.test(src[i - 1] || '')) {
+      let j = i + m[1].length;
+      if (m[1] !== 'do') {
+        while (j < n && /\s/.test(src[j])) j++;
+        if (src[j] !== '(') { out += src.slice(i, j); i = j; continue; }
+        let depth = 0;
+        for (; j < n; j++) { if (src[j] === '(') depth++; else if (src[j] === ')' && --depth === 0) { j++; break; } }
+      }
+      let k = j; while (k < n && /\s/.test(src[k])) k++;
+      if (src[k] === '{') { out += src.slice(i, k + 1) + ' AtlasLoopGuard.tick();'; i = k + 1; continue; }
+      out += src.slice(i, j); i = j; continue;
+    }
+    out += c; i++;
+  }
+  return out + '\nclass AtlasLoopGuard { static final long END = System.currentTimeMillis() + 10000; static int n; static void tick() { if ((++n & 4095) == 0 && System.currentTimeMillis() > END) throw new Error("Stopped after 10 seconds (infinite loop?)"); } }\n';
+}
+async function runJava(code, out, status) {
+  if (javaBusy) { status.textContent = t('javaBusy'); return; }
+  javaBusy = true; out.textContent = '';
+  const warm = Boolean(javaLoading);
+  status.textContent = warm ? t('compiling') : t('javaLoading');
+  try { await loadJava(); } catch (e) { out.innerHTML = `<span class="err">${t('javaFailed')}</span>`; status.textContent = ''; javaBusy = false; return; }
+  let con = $('#console');
+  if (!con) { con = document.createElement('pre'); con.id = 'console'; con.hidden = true; document.body.append(con); }
+  // The file must be named after its public class.
+  const cls = (code.match(/public\s+(?:final\s+|abstract\s+)*class\s+([A-Za-z_$][\w$]*)/) || code.match(/\bclass\s+([A-Za-z_$][\w$]*)/) || [])[1] || 'Main';
+  // CheerpJ's in-memory /str/ folder has no subfolders, so the source keeps its class name; each run compiles to its own folder.
+  const run = ++javaRuns, src = `/str/${cls}.java`, dir = `/files/r${run}/`;
+  window.cheerpOSAddStringFile(src, guardJavaLoops(code));
+  con.textContent = ''; status.textContent = t('compiling');
+  const t0 = performance.now();
+  try {
+    const compiled = await window.cheerpjRunMain('com.sun.tools.javac.Main', '', '-d', dir, src);
+    const compileMs = Math.round(performance.now() - t0);
+    if (compiled !== 0) {
+      out.innerHTML = `<span class="info">${t('compileFailed')}</span>\n<span class="err">${esc(con.textContent.replaceAll('/str/', ''))}</span>`;
+      status.textContent = ''; return;
+    }
+    con.textContent = ''; status.textContent = t('running');
+    const t1 = performance.now();
+    await window.cheerpjRunMain(cls, dir);
+    const text = con.textContent;
+    if (/AtlasLoopGuard/.test(text)) {
+      const printed = text.slice(0, text.search(/^Exception in thread /m)).replace(/\n$/, '');
+      out.innerHTML = esc(printed) + (printed ? '\n' : '') + `<span class="err">${t('pyTimeout')}</span>`;
+      status.textContent = t('pyTimeout'); return;
+    }
+    // Uncaught exceptions print a stack trace: show it in red.
+    const crash = text.search(/^Exception in thread /m);
+    out.innerHTML = crash < 0 ? esc(text) : esc(text.slice(0, crash)) + `<span class="err">${esc(text.slice(crash))}</span>`;
+    if (!text) out.innerHTML = `<span class="info">${t('pgEmpty')}</span>`;
+    status.textContent = t('pgCompiledRan', compileMs, Math.round(performance.now() - t1));
+  } catch (e) {
+    out.innerHTML = `<span class="err">${esc(String(e && e.message || e))}</span>`; status.textContent = '';
+  } finally { javaBusy = false; }
+}
+// C++ compiles with real Clang/LLVM built for WebAssembly (YoWASP), inside a worker that then runs the program
+// with a small WASI layer. The compiler (about 100 MB unpacked) downloads once and is cached by the browser.
+const CLANG_URL = 'https://cdn.jsdelivr.net/npm/@yowasp/clang@21.1.4-3/gen/bundle.js';
+const WASI_SHIM_URL = 'https://cdn.jsdelivr.net/npm/@bjorn3/browser_wasi_shim@0.4.2/+esm';
+let cppWorker = null;
+function cppWorkerFor() {
+  if (cppWorker) return cppWorker;
+  // A classic worker with dynamic import(): the sandbox's opaque origin cannot start blob module workers.
+  const src = `const libs = Promise.all([import('${CLANG_URL}'), import('${WASI_SHIM_URL}')]);
+const stream = (ConsoleStdout, kind) => { const dec = new TextDecoder(); return new ConsoleStdout((b) => postMessage({ t: kind, v: dec.decode(b, { stream: true }) })); };
+let lastPct = -1;
+onmessage = async (e) => {
+  let runClang, WASI, File, OpenFile, ConsoleStdout;
+  try { const [clang, shim] = await libs; ({ runClang } = clang); ({ WASI, File, OpenFile, ConsoleStdout } = shim); }
+  catch (x) { postMessage({ t: 'load-error', v: String(x && x.message || x) }); return; }
+  let err = '';
+  const dec = new TextDecoder();
+  let files;
+  try {
+    files = await runClang(['clang++', '-std=c++20', '-O1', '-fno-exceptions', 'main.cpp', '-o', 'main.wasm'], { 'main.cpp': e.data }, {
+      stderr: (b) => { if (b) err += dec.decode(b, { stream: true }); },
+      fetchProgress: ({ doneLength, totalLength }) => { const p = totalLength ? Math.floor(doneLength * 100 / totalLength) : 0; if (p !== lastPct) { lastPct = p; postMessage({ t: 'progress', p }); } }
+    });
+  } catch (x) { postMessage({ t: 'compile-error', v: err || String(x && x.message || x) }); return; }
+  postMessage({ t: 'compiled', warn: err });
+  const wasi = new WASI([], [], [new OpenFile(new File([])), stream(ConsoleStdout, 'out'), stream(ConsoleStdout, 'err')]);
+  try {
+    const inst = await WebAssembly.instantiate(await WebAssembly.compile(files['main.wasm']), { wasi_snapshot_preview1: wasi.wasiImport });
+    const code = wasi.start(inst);
+    postMessage({ t: 'done', code });
+  } catch (x) { postMessage({ t: 'crash', v: String(x && x.message || x) }); }
+};
+postMessage({ t: 'ready' });`;
+  cppWorker = new SandboxWorker(src);
+  return cppWorker;
+}
+function runCpp(code, out, status) {
+  const w = cppWorkerFor();
+  out.textContent = ''; status.textContent = t('cppPreparing');
+  const t0 = performance.now();
+  let t1 = 0, timer = null;
+  const finish = (msg) => { clearTimeout(timer); w.onmessage = null; if (!out.textContent) out.innerHTML = `<span class="info">${t('pgEmpty')}</span>`; status.textContent = msg; };
+  w.onmessage = (e) => {
+    const m = e.data;
+    if (m.t === 'progress') status.textContent = t('cppLoading', m.p);
+    else if (m.t === 'load-error') { w.terminate(); cppWorker = null; out.innerHTML = `<span class="err">${t('cppFailed')}</span>`; finish(''); }
+    else if (m.t === 'compile-error') {
+      const text = m.v.replace(/\/tmp\/[\w.-]+\.o: /g, '');
+      out.innerHTML = `<span class="info">${t('compileFailed')}</span>\n<span class="err">${esc(text)}</span>${/__cxa_|exceptions? (are )?disabled|cannot use '(try|throw)'/.test(text) ? `\n<span class="info">${t('cppNoExceptions')}</span>` : ''}`;
+      finish('');
+    } else if (m.t === 'compiled') {
+      t1 = performance.now(); status.textContent = t('running');
+      timer = setTimeout(() => { w.terminate(); cppWorker = null; finish(t('pyTimeout')); }, 10000);
+    } else if (m.t === 'out') out.insertAdjacentHTML('beforeend', esc(m.v));
+    else if (m.t === 'err') out.insertAdjacentHTML('beforeend', `<span class="err">${esc(m.v)}</span>`);
+    else if (m.t === 'crash') { out.insertAdjacentHTML('beforeend', `<span class="err">${esc(m.v)}</span>`); finish(''); }
+    else if (m.t === 'done') finish(t('pgCompiledRan', Math.round(t1 - t0), Math.round(performance.now() - t1)));
+  };
+  w.onerror = (e) => { e.preventDefault(); w.terminate(); cppWorker = null; out.innerHTML = `<span class="err">${t('cppFailed')}</span>`; finish(''); };
+  w.postMessage(code);
+}
+
 function runPlayground() {
   if (state.viz) vizClose();
   const pg = state.pg, out = $('#pg-out'), status = $('#pg-status');
   pg.code = $('#pg-code').value;
   if (pg.lang === 'python') { runPython(pg.code, out, status); return; }
   if (pg.lang === 'sql') { runSql(pg.code, out, status); return; }
+  if (pg.lang === 'java') { runJava(pg.code, out, status); return; }
+  if (pg.lang === 'cpp') { runCpp(pg.code, out, status); return; }
   if (pg.lang === 'bash') {
     out.innerHTML = `<span class="info">${t('loadingWord')}</span>`;
     loadMiniShell().then((M) => {
@@ -1019,10 +1209,9 @@ function runPlayground() {
   const prelude = "const __f=(v)=>typeof v==='string'?v:(()=>{try{return JSON.stringify(v)}catch(e){return String(v)}})();"
     + "console.log=console.info=console.warn=(...a)=>postMessage({t:'log',v:a.map(__f).join(' ')});console.error=(...a)=>postMessage({t:'err',v:a.map(__f).join(' ')});"
     + "const require=(m)=>{throw new Error('require(\"'+m+'\") is not available in the browser playground')};";
-  const url = URL.createObjectURL(new Blob([prelude + '\n' + pg.code + "\n;postMessage({t:'done'});"], { type: 'text/javascript' }));
   const started = performance.now();
-  const w = pgWorker = new Worker(url);
-  const finish = (msg) => { clearTimeout(timer); w.terminate(); URL.revokeObjectURL(url); if (!out.textContent) out.innerHTML = `<span class="info">${t('pgEmpty')}</span>`; status.textContent = msg; };
+  const w = pgWorker = new SandboxWorker(prelude + '\n' + pg.code + "\n;postMessage({t:'done'});");
+  const finish = (msg) => { clearTimeout(timer); w.terminate(); if (!out.textContent) out.innerHTML = `<span class="info">${t('pgEmpty')}</span>`; status.textContent = msg; };
   const timer = setTimeout(() => { finish(t('pgTimeout')); }, 3000);
   w.onmessage = (e) => {
     const m = e.data;
@@ -1053,7 +1242,7 @@ onmessage = async (e) => {
   catch (err) { postMessage({ t: 'err', v: String(err.message || err).trim().split('\\n').filter((l, i, a) => i === a.length - 1 || l.includes('File "<exec>"')).map((l) => l.trim().replace('File "<exec>", ', '')).join('\\n') }); }
   finally { scope.destroy(); postMessage({ t: 'done' }); }
 };`;
-  pyWorker = new Worker(URL.createObjectURL(new Blob([src], { type: 'text/javascript' })));
+  pyWorker = new SandboxWorker(src);
   pyWorker.addEventListener('message', (e) => { if (e.data.t === 'ready') pyReady = true; });
   return pyWorker;
 }
@@ -1238,9 +1427,8 @@ function runWebChallenge(i, id, ch, key, box, code) {
 // JavaScript challenges run in a throwaway worker with a time limit.
 function runJsChallenge(i, id, ch, key, box, code) {
   const harness = `;postMessage((${JSON.stringify(ch.tests)}).map(([call, want]) => { try { const got = eval(call); const g = JSON.stringify(got); return { call, ok: g === JSON.stringify(JSON.parse(want)), got: g === undefined ? String(got) : g, want }; } catch (e) { return { call, ok: false, got: String(e), want }; } }));`;
-  const url = URL.createObjectURL(new Blob([code + '\n' + harness], { type: 'text/javascript' }));
-  const w = new Worker(url);
-  const done = () => { clearTimeout(timer); w.terminate(); URL.revokeObjectURL(url); state.chTries[key] = (state.chTries[key] || 0) + 1; refreshChallengeHelp(i); };
+  const w = new SandboxWorker(code + '\n' + harness);
+  const done = () => { clearTimeout(timer); w.terminate(); state.chTries[key] = (state.chTries[key] || 0) + 1; refreshChallengeHelp(i); };
   const timer = setTimeout(() => { done(); box.innerHTML = `<div class="ch-status err">${t('pgTimeout')}</div>`; }, 3000);
   w.onmessage = (e) => { const v = verdict(e.data), bad = e.data.find((x) => !x.ok);
     box.innerHTML = v.html + (bad ? tipFrom(JS_TIPS, bad.got) || (bad.got === 'undefined' ? `<div class="err-tip">💡 ${fmt(t('undefTip'))}</div>` : '') : ''); done(); if (v.all) markSolved(i, id, ch, key); };
@@ -1496,7 +1684,7 @@ const ROADMAP = [
   ['live', 'visualizers', { en: 'Step-through visualizer for Python', es: 'Visualizador paso a paso para Python' }, { en: 'In the playground, step through any Python program line by line and watch each variable and function call change.', es: 'En el editor, recorre cualquier programa de Python línea por línea y mira cómo cambian cada variable y cada llamada a función.' }, ['Tools']],
   ['live', 'interview', { en: 'Timed quizzes', es: 'Cuestionarios con tiempo' }, { en: '30 seconds per question, on one module or a mixed review of everything you have finished, like a real test.', es: '30 segundos por pregunta, en un módulo o en un repaso mixto de todo lo que terminaste, como en un examen real.' }, ['Practice']],
   ['live', 'sync', { en: 'Accounts and progress sync', es: 'Cuentas y progreso sincronizado' }, { en: 'Google or email sign-in; progress follows you between devices.', es: 'Inicio con Google o correo; tu progreso te sigue entre dispositivos.' }, ['Account']],
-  ['building', 'runner', { en: 'Run Java and C++', es: 'Ejecutar Java y C++' }, { en: 'A sandboxed code server so every example and exercise runs in the browser.', es: 'Un servidor aislado para que cada ejemplo y ejercicio se ejecute en el navegador.' }, ['Tools']],
+  ['live', 'runner', { en: 'Run Java and C++', es: 'Ejecutar Java y C++' }, { en: 'Real compilers (javac and Clang) run inside your browser, so every Java and C++ example opens in the playground and runs. Your code never leaves your device.', es: 'Compiladores reales (javac y Clang) corren dentro de tu navegador, así que cada ejemplo de Java y C++ se abre en el editor y se ejecuta. Tu código nunca sale de tu dispositivo.' }, ['Tools']],
   ['live', 'redesign', { en: 'New design on every device', es: 'Nuevo diseño en todos los dispositivos' }, { en: 'This design: faster, clearer, with a real phone layout and dark mode.', es: 'Este diseño: más rápido, más claro, con versión para teléfono y modo oscuro.' }, ['Design']],
   ['building', 'more-courses', { en: 'x86-64 Assembly', es: 'Ensamblador x86-64' }, { en: 'Rewritten to the same standard as Java, one course at a time.', es: 'Reescritos con el mismo nivel que Java, un curso a la vez.' }, ['Courses']],
   ['planned', 'tutor', { en: 'Hints from an AI tutor', es: 'Pistas de un tutor con IA' }, { en: 'Ask about any line of an example and get a hint, not the full answer.', es: 'Pregunta por cualquier línea de un ejemplo y recibe una pista, no la respuesta.' }, ['Learning']],
@@ -1581,6 +1769,16 @@ function viewPlan() {
  * session token is also kept here and sent as a Bearer header: that is what keeps people signed in.
  * Progress is stored under the `atlas` key of /api/user-state; other keys there are left untouched. */
 const API = (window.__APP_CONFIG && window.__APP_CONFIG.apiBaseUrl) || '';
+// Java programs (CheerpJ) run on this page and make their HTTP requests with window.fetch. Only api() below, which
+// marks its requests with a private symbol, may reach the account server, so a Java program can never call it.
+const APP_FETCH = Symbol('app-fetch');
+(() => {
+  const nativeFetch = window.fetch.bind(window), apiOrigins = new Set([new URL(API || location.origin).origin, 'https://cs-course-atlas-api.onrender.com']);
+  const isApi = (u) => { try { const url = new URL(String(u && u.url || u), location.href); return apiOrigins.has(url.origin) && url.pathname.includes('/api/'); } catch (e) { return false; } };
+  window.fetch = (input, init) => (isApi(input) && !(init && init[APP_FETCH]) ? Promise.reject(new TypeError('Blocked: only the site may call its account server.')) : nativeFetch(input, init));
+  const open = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function (method, url, ...rest) { if (isApi(url)) throw new TypeError('Blocked: only the site may call its account server.'); return open.call(this, method, url, ...rest); };
+})();
 const auth = { token: store.get('session', ''), csrf: '', providers: null };
 async function api(path, opts = {}) {
   const headers = { Accept: 'application/json' };
@@ -1589,7 +1787,7 @@ async function api(path, opts = {}) {
   if (auth.csrf && opts.method && opts.method !== 'GET') headers['X-CSRF-Token'] = auth.csrf;
   const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), opts.timeout || 45000); // Render can take ~30 s to wake
   try {
-    const r = await fetch(API + path, { method: opts.method || 'GET', headers, credentials: 'include', body: opts.body ? JSON.stringify(opts.body) : undefined, signal: ctrl.signal });
+    const r = await fetch(API + path, { method: opts.method || 'GET', headers, credentials: 'include', body: opts.body ? JSON.stringify(opts.body) : undefined, signal: ctrl.signal, [APP_FETCH]: true });
     let data = null; try { data = await r.json(); } catch (e) { /* not JSON */ }
     if (!r.ok) { const err = new Error((data && data.error) || `HTTP ${r.status}`); err.status = r.status; throw err; }
     return data || {};
