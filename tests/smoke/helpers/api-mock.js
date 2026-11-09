@@ -1,4 +1,5 @@
 // Stands in for the Render API so the smoke tests run against the static site alone.
+const RECOVERY_CODES = ['K7QM-3XRP-W9TD', 'B4NC-7YHE-2QAZ', 'PX9R-M3TK-UVW5', 'Z8DF-KQ2M-RN7C', 'HC4W-9ZEP-6TYJ', 'Q2XV-NK8B-D5RG', 'TM6A-Y3UW-8FHS', 'G9PE-C7RZ-4MXK'];
 const USER = { id: 1, email: 'ana@example.com', username: 'ana', name: 'Ana Ruiz', authProvider: 'password' };
 
 async function mockApi(page, { remoteState = null } = {}) {
@@ -23,6 +24,20 @@ async function mockApi(page, { remoteState = null } = {}) {
             signedIn = true;
             return json({ ok: true, authenticated: true, user: USER, csrfToken: 'csrf', sessionToken: 'login-token' });
         }
+        if (pathname.endsWith('/auth/signup')) {
+            signedIn = true;
+            return json({ ok: true, authenticated: true, user: USER, csrfToken: 'csrf', sessionToken: 'signup-token', recoveryCodes: RECOVERY_CODES });
+        }
+        if (pathname.endsWith('/auth/recover')) {
+            const body = request.postDataJSON();
+            calls.recovered = body;
+            if (String(body.code).toUpperCase().replace(/[^A-Z0-9]/g, '') !== RECOVERY_CODES[0].replace(/-/g, '')) {
+                return json({ error: 'That recovery code does not match this account, or it was already used.' }, 400);
+            }
+            signedIn = true;
+            return json({ ok: true, authenticated: true, user: USER, csrfToken: 'csrf', sessionToken: 'recover-token', recoveryCodesLeft: 7 });
+        }
+        if (pathname.endsWith('/profile/recovery-codes')) return json({ ok: true, left: 7, total: 8 });
         if (pathname.endsWith('/auth/logout')) { signedIn = false; return json({ ok: true }); }
         if (pathname.endsWith('/user-state')) {
             if (request.method() === 'GET') return json({ ok: true, state: remoteState });
@@ -34,4 +49,4 @@ async function mockApi(page, { remoteState = null } = {}) {
     return calls;
 }
 
-module.exports = { mockApi, USER };
+module.exports = { mockApi, USER, RECOVERY_CODES };

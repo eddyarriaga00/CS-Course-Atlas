@@ -10,6 +10,7 @@ const REQUIRED_TABLES = [
     'support_requests',
     'email_change_verifications',
     'auth_throttles',
+    'password_recovery_codes',
     'oauth_identities'
 ];
 const SECURE_SSL_MODES = new Set(['require', 'verify-ca', 'verify-full']);

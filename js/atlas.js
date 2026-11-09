@@ -64,6 +64,7 @@ const UI = {
     modulesWithNotes: 'modules with notes', noActivity: 'Complete a module, take a quiz or write a note and it shows up here.', typeDelete: 'Type DELETE to confirm', deleteViaSupport: 'Ask support to delete it',
     privacy: 'Privacy', terms: 'Terms', contact: 'Contact', checkingSession: 'Checking your account…', emailOrUser: 'Email or username', username: 'Username', confirmPw: 'Confirm password',
     haveAccount: 'Have an account?', pwMismatch: 'The passwords don’t match.', working: 'One moment…', signinFailed: 'Sign-in didn’t complete. Please try again.', welcome: (n) => (n ? `Signed in as ${n}` : 'Signed in'),
+    rcTitle: 'Recovery codes', rcSub: 'Each code resets your password once if you forget it. Keep them somewhere safe, like a password manager or a printed page.', rcSaveTitle: 'Save your recovery codes', rcSaveText: 'If you ever forget your password, one of these codes lets you set a new one. Each works once. This is the only time they are shown.', rcCopy: 'Copy codes', rcCopied: 'Codes copied', rcDownload: 'Download .txt', rcDone: 'I saved them', rcLeft: (a, b) => `${a} of ${b} codes left.`, rcNone: 'You have no recovery codes yet. Make some so a forgotten password never locks you out.', rcLow: 'Running low: make a fresh set.', rcMake: 'Make new codes', rcMakeHint: 'Your old codes stop working when you make new ones.', rcFileHead: 'CS Course Atlas recovery codes', rcFileUse: 'Use one on the sign-in page: Forgot password? Each code works once.', recoverTitle: 'Reset your password', recoverSub: 'Use one of the recovery codes you saved when you created your account.', recoveryCode: 'Recovery code', recoverBtn: 'Reset password', backToSignIn: 'Back to sign in', noCode: 'No recovery code?', contactUs: 'Contact support', pwReset: (n) => `Password reset. You are signed in (${n} recovery code${n === 1 ? '' : 's'} left).`, codeHint: 'Like K7QM-3XRP-W9TD. Dashes and capitals are optional.',
     serverSlow: 'The server is waking up. Try again in a few seconds.', signedOut: 'Signed out', accountDeleted: 'Your account was deleted', savedAccount: 'Saved to your account'
   },
   es: {
@@ -131,6 +132,7 @@ const UI = {
     modulesWithNotes: 'módulos con notas', noActivity: 'Completa un módulo, haz un cuestionario o escribe una nota y aparecerá aquí.', typeDelete: 'Escribe DELETE para confirmar', deleteViaSupport: 'Pide a soporte que la elimine',
     privacy: 'Privacidad', terms: 'Términos', contact: 'Contacto', checkingSession: 'Revisando tu cuenta…', emailOrUser: 'Correo o usuario', username: 'Usuario', confirmPw: 'Confirmar contraseña',
     haveAccount: '¿Ya tienes cuenta?', pwMismatch: 'Las contraseñas no coinciden.', working: 'Un momento…', signinFailed: 'No se completó el inicio de sesión. Inténtalo de nuevo.', welcome: (n) => (n ? `Sesión iniciada como ${n}` : 'Sesión iniciada'),
+    rcTitle: 'Códigos de recuperación', rcSub: 'Cada código restablece tu contraseña una vez si la olvidas. Guárdalos en un lugar seguro, como un gestor de contraseñas o una hoja impresa.', rcSaveTitle: 'Guarda tus códigos de recuperación', rcSaveText: 'Si alguna vez olvidas tu contraseña, uno de estos códigos te permite crear una nueva. Cada uno funciona una vez. Esta es la única vez que se muestran.', rcCopy: 'Copiar códigos', rcCopied: 'Códigos copiados', rcDownload: 'Descargar .txt', rcDone: 'Ya los guardé', rcLeft: (a, b) => `Te quedan ${a} de ${b} códigos.`, rcNone: 'Todavía no tienes códigos de recuperación. Crea algunos para que una contraseña olvidada nunca te deje fuera.', rcLow: 'Te quedan pocos: crea un juego nuevo.', rcMake: 'Crear códigos nuevos', rcMakeHint: 'Tus códigos anteriores dejan de funcionar cuando creas nuevos.', rcFileHead: 'Códigos de recuperación de CS Course Atlas', rcFileUse: 'Usa uno en la página de inicio de sesión: ¿Olvidaste tu contraseña? Cada código funciona una vez.', recoverTitle: 'Restablece tu contraseña', recoverSub: 'Usa uno de los códigos de recuperación que guardaste al crear tu cuenta.', recoveryCode: 'Código de recuperación', recoverBtn: 'Restablecer contraseña', backToSignIn: 'Volver a iniciar sesión', noCode: '¿No tienes un código?', contactUs: 'Contacta a soporte', pwReset: (n) => `Contraseña restablecida. Iniciaste sesión (te quedan ${n} código${n === 1 ? '' : 's'}).`, codeHint: 'Como K7QM-3XRP-W9TD. Los guiones y las mayúsculas son opcionales.',
     serverSlow: 'El servidor se está activando. Inténtalo en unos segundos.', signedOut: 'Sesión cerrada', accountDeleted: 'Tu cuenta fue eliminada', savedAccount: 'Guardado en tu cuenta'
   }
 };
@@ -816,7 +818,11 @@ function viewProfile() {
           <div class="field"><label for="pw-cur">${t('currentPw')}</label><input class="input" id="pw-cur" type="password" autocomplete="current-password" required></div>
           <div class="field"><label for="pw-new">${t('newPw')}</label><input class="input" id="pw-new" type="password" autocomplete="new-password" minlength="8" required><small class="hint">${t('pwHint')}</small></div>
           <div class="field"><label for="pw-new2">${t('confirmPw')}</label><input class="input" id="pw-new2" type="password" autocomplete="new-password" required></div>
-          <div class="acct-actions"><button class="btn btn-sm btn-ghost" type="submit">${t('changePw')}</button><span class="form-status" id="password-status" role="status"></span></div></form>`
+          <div class="acct-actions"><button class="btn btn-sm btn-ghost" type="submit">${t('changePw')}</button><span class="form-status" id="password-status" role="status"></span></div></form>
+          <div class="sep"></div><form id="rc-form" class="acct-form"><h3 id="rc-section">${t('rcTitle')}</h3><p class="muted acct-note" style="margin:0">${t('rcSub')}</p>
+          <p class="rc-left" id="rc-left" role="status">${(queueMicrotask(loadRecoveryLeft), '')}</p>
+          <div class="field"><label for="rc-pass">${t('currentPw')}</label><input class="input" id="rc-pass" type="password" autocomplete="current-password" required><small class="hint">${t('rcMakeHint')}</small></div>
+          <div class="acct-actions"><button class="btn btn-sm btn-ghost" type="submit">${t('rcMake')}</button><span class="form-status" id="rc-status" role="status"></span></div></form>`
         : `<p class="muted acct-note">${t('googleNoPw')}</p>`}</div>
       <div class="card panel"><h2 style="display:flex;justify-content:space-between;gap:10px">${t('achievements')}<span class="muted" style="font-weight:500">${t('earned', ach.filter((x) => x[3]).length, ach.length)}</span></h2>
         <div class="badges-grid">${ach.map(([ico, name, how, got]) => `<div class="badge${got ? ' earned' : ''}"><span class="medal">${ico}</span><b>${esc(name)}</b><span>${esc(how)}</span></div>`).join('')}</div></div>
@@ -1603,6 +1609,7 @@ async function initAuth() {
   render(true);
 }
 function renderSignIn(err) {
+  if (state.signinMode === 'recover') return renderRecover(err);
   const signup = state.signinMode === 'signup', g = auth.providers && auth.providers.google;
   const tab = (mode, label) => `<button type="button" role="tab" class="auth-tab" data-action="signin-mode" data-v="${mode}" aria-selected="${state.signinMode === mode}">${label}</button>`;
   const pw = (id, label, ac, hint) => `<div class="field"><label for="${id}">${label}</label><div class="pw-wrap"><input id="${id}" type="password" autocomplete="${ac}" required${signup ? ' minlength="8" maxlength="128"' : ''}><button type="button" class="pw-eye" data-action="pw-eye" data-v="${id}" aria-label="${t('showPw')}">${t('show')}</button></div>${hint ? `<small class="hint">${hint}</small>` : ''}</div>`;
@@ -1612,31 +1619,85 @@ function renderSignIn(err) {
     <p class="muted" style="margin:0">${signup ? t('signupSub') : t('signinSub')}</p>
     <div id="google-wrap" class="google-wrap"${g && !g.enabled ? ' hidden' : ''}><button type="button" class="btn-google" data-action="oauth" data-v="google"><b>G</b>${t('google')}</button><div class="or">${signup ? t('orSignupEmail') : t('orEmail')}</div></div>
     <div class="field"><label for="si-email">${signup ? t('email') : t('emailOrUser')}</label><input id="si-email" name="email" type="${signup ? 'email' : 'text'}" autocomplete="${signup ? 'email' : 'username'}" required></div>
-    ${signup ? `<div class="field"><label for="si-user">${t('username')}</label><input id="si-user" name="username" autocomplete="username" minlength="3" maxlength="32" pattern="[A-Za-z0-9._\-]+" required><small class="hint">${t('userHint')}</small></div>` : ''}
+    ${signup ? `<div class="field"><label for="si-user">${t('username')}</label><input id="si-user" name="username" autocomplete="username" minlength="3" maxlength="32" pattern="[A-Za-z0-9._\\-]+" required><small class="hint">${t('userHint')}</small></div>` : ''}
     ${pw('si-pass', t('password'), signup ? 'new-password' : 'current-password', signup ? t('pwHint') : '')}
     ${signup ? pw('si-pass2', t('confirmPw'), 'new-password', '') : ''}
     <div class="form-error" id="signin-error" role="alert">${err ? esc(err) : ''}</div>
     <button type="submit" class="btn" style="height:44px" id="signin-submit">${signup ? t('createFree') : t('signIn')}</button>
-    ${signup ? '' : `<div class="signin-foot"><a href="contact-support.html">${t('forgot')}</a></div>`}
+    ${signup ? '' : `<div class="signin-foot"><button type="button" class="link-btn" data-action="signin-mode" data-v="recover">${t('forgot')}</button></div>`}
     <p class="legal">${t('legal')}</p>`;
+}
+// Forgot password: a one-time recovery code (shown at sign-up, or made on the Account page) sets a new password.
+function renderRecover(err) {
+  const pw = (id, label, ac, hint) => `<div class="field"><label for="${id}">${label}</label><div class="pw-wrap"><input id="${id}" type="password" autocomplete="${ac}" required minlength="8" maxlength="128"><button type="button" class="pw-eye" data-action="pw-eye" data-v="${id}" aria-label="${t('showPw')}">${t('show')}</button></div>${hint ? `<small class="hint">${hint}</small>` : ''}</div>`;
+  $('#signin-form').innerHTML = `
+    <div class="signin-top"><button type="button" class="link-btn" data-action="signin-mode" data-v="login">← ${t('backToSignIn')}</button><button type="button" class="icon-btn" data-action="close-signin" aria-label="Close">✕</button></div>
+    <h2 id="signin-title" class="recover-title">${t('recoverTitle')}</h2>
+    <p class="muted" style="margin:0">${t('recoverSub')}</p>
+    <div class="field"><label for="si-email">${t('emailOrUser')}</label><input id="si-email" name="email" type="text" autocomplete="username" required></div>
+    <div class="field"><label for="si-code">${t('recoveryCode')}</label><input id="si-code" class="code-input" name="code" autocomplete="one-time-code" autocapitalize="characters" spellcheck="false" maxlength="40" required><small class="hint">${t('codeHint')}</small></div>
+    ${pw('si-pass', t('newPw'), 'new-password', t('pwHint'))}
+    ${pw('si-pass2', t('confirmPw'), 'new-password', '')}
+    <div class="form-error" id="signin-error" role="alert">${err ? esc(err) : ''}</div>
+    <button type="submit" class="btn" style="height:44px" id="signin-submit">${t('recoverBtn')}</button>
+    <div class="signin-foot"><span>${t('noCode')} <a href="contact-support.html">${t('contactUs')}</a></span></div>`;
+}
+// Shows a fresh set of recovery codes once, with copy and download.
+function showRecoveryCodes(codes) {
+  let d = $('#rc-dialog');
+  if (!d) { d = document.createElement('dialog'); d.id = 'rc-dialog'; d.className = 'rc-dialog'; d.setAttribute('aria-labelledby', 'rc-title'); document.body.append(d); }
+  const text = `${t('rcFileHead')}\n${state.user ? (state.user.email || state.user.username || '') : ''}\n\n${codes.join('\n')}\n\n${t('rcFileUse')}\n`;
+  d.innerHTML = `<div class="rc-head"><span class="rc-icon" aria-hidden="true">🔑</span><h2 id="rc-title">${t('rcSaveTitle')}</h2></div>
+    <p class="muted">${t('rcSaveText')}</p>
+    <ol class="rc-codes">${codes.map((c) => `<li><code>${esc(c)}</code></li>`).join('')}</ol>
+    <div class="rc-actions"><button type="button" class="btn btn-sm btn-ghost" data-rc="copy">${t('rcCopy')}</button><button type="button" class="btn btn-sm btn-ghost" data-rc="download">${t('rcDownload')}</button><button type="button" class="btn btn-sm" data-rc="done">${t('rcDone')}</button></div>`;
+  d.onclick = async (e) => {
+    const b = e.target.closest('[data-rc]'); if (!b) return;
+    if (b.dataset.rc === 'copy') { try { await navigator.clipboard.writeText(text); toast(t('rcCopied')); } catch (err) { /* clipboard blocked: the codes are still on screen */ } }
+    else if (b.dataset.rc === 'download') { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' })); a.download = 'cs-course-atlas-recovery-codes.txt'; a.click(); setTimeout(() => URL.revokeObjectURL(a.href), 1000); }
+    else { d.close(); if ($('#rc-section')) loadRecoveryLeft(); }
+  };
+  d.oncancel = (e) => e.preventDefault(); // closed only on purpose, so nobody loses the codes by pressing Esc
+  if (!d.open) d.showModal();
+  d.querySelector('[data-rc="done"]').focus();
+}
+async function loadRecoveryLeft() {
+  const box = $('#rc-left'); if (!box) return;
+  try {
+    const r = await api('/api/profile/recovery-codes');
+    box.className = 'rc-left' + (r.left <= 2 ? ' low' : '');
+    box.textContent = r.left ? `${t('rcLeft', r.left, r.total)}${r.left <= 2 ? ' ' + t('rcLow') : ''}` : t('rcNone');
+  } catch (e) { box.textContent = ''; }
+}
+async function makeRecoveryCodes() {
+  const status = $('#rc-status');
+  status.className = 'form-status'; status.textContent = t('working');
+  try {
+    const r = await api('/api/profile/recovery-codes', { method: 'POST', body: { currentPassword: $('#rc-pass').value } });
+    $('#rc-form').reset(); status.textContent = ''; showRecoveryCodes(r.recoveryCodes);
+  } catch (e) { status.className = 'form-status err'; status.textContent = e.message; }
 }
 const USERNAME_RE = /^[A-Za-z0-9._-]{3,32}$/;
 async function submitSignIn() {
-  const signup = state.signinMode === 'signup', v = (id) => ($('#' + id) ? $('#' + id).value : '');
+  const signup = state.signinMode === 'signup', recover = state.signinMode === 'recover', v = (id) => ($('#' + id) ? $('#' + id).value : '');
   const btn = $('#signin-submit'), errBox = $('#signin-error');
+  if (recover && v('si-pass').length < 8) { errBox.textContent = t('pwHint'); $('#si-pass').focus(); return; }
+  if (recover && v('si-pass') !== v('si-pass2')) { errBox.textContent = t('pwMismatch'); $('#si-pass2').focus(); return; }
   if (signup && !USERNAME_RE.test(v('si-user'))) { errBox.textContent = t('userHint'); $('#si-user').focus(); return; }
   if (signup && v('si-pass').length < 8) { errBox.textContent = t('pwHint'); $('#si-pass').focus(); return; }
   if (signup && v('si-pass') !== v('si-pass2')) { errBox.textContent = t('pwMismatch'); $('#si-pass2').focus(); return; }
   btn.disabled = true; btn.textContent = t('working'); errBox.textContent = '';
   try {
-    const d = signup ? await api('/api/auth/signup', { method: 'POST', body: { email: v('si-email'), username: v('si-user'), password: v('si-pass'), confirmPassword: v('si-pass2') } })
+    const d = recover ? await api('/api/auth/recover', { method: 'POST', body: { email: v('si-email'), code: v('si-code'), newPassword: v('si-pass'), confirmPassword: v('si-pass2') } })
+      : signup ? await api('/api/auth/signup', { method: 'POST', body: { email: v('si-email'), username: v('si-user'), password: v('si-pass'), confirmPassword: v('si-pass2') } })
       : await api('/api/auth/login', { method: 'POST', body: { email: v('si-email'), password: v('si-pass') } });
     if (!applySession({ authenticated: true, ...d })) throw new Error(t('signinFailed'));
     store.set('hadSession', true); state.authReady = true;
-    $('#signin').close(); toast(t('welcome', state.user.name || state.user.username || ''));
+    $('#signin').close(); toast(recover ? t('pwReset', d.recoveryCodesLeft || 0) : t('welcome', state.user.name || state.user.username || ''), recover ? 4000 : 1800);
     await pullProgress(); render(true);
+    if (Array.isArray(d.recoveryCodes) && d.recoveryCodes.length) showRecoveryCodes(d.recoveryCodes);
   } catch (e) {
-    const keep = { 'si-email': v('si-email'), 'si-user': v('si-user') };
+    const keep = { 'si-email': v('si-email'), 'si-user': v('si-user'), 'si-code': v('si-code') };
     renderSignIn(e.name === 'AbortError' ? t('serverSlow') : e.message || t('signinFailed'));
     Object.entries(keep).forEach(([id, val]) => { if ($('#' + id)) $('#' + id).value = val; });
     if ($('#si-pass')) $('#si-pass').focus();
@@ -1961,6 +2022,7 @@ document.addEventListener('submit', (e) => {
   if (e.target.id === 'delete-form') { e.preventDefault(); deleteAccount(); }
   if (e.target.id === 'profile-form') { e.preventDefault(); saveProfile(); }
   if (e.target.id === 'password-form') { e.preventDefault(); changePassword(); }
+  if (e.target.id === 'rc-form') { e.preventDefault(); makeRecoveryCodes(); }
 });
 $('#lang-btn').addEventListener('click', () => { state.lang = state.lang === 'en' ? 'es' : 'en'; save(); render(true); });
 $('#theme-btn').addEventListener('click', () => {
