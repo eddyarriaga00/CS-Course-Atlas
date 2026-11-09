@@ -137,11 +137,17 @@ async function runProgram(language, source, workDir) {
         const home = path.join(workDir, 'home');
         fs.mkdirSync(home, { recursive: true });
         fs.writeFileSync(path.join(home, '.gitconfig'), GIT_CONFIG);
-        const sessionDir = path.join(workDir, 'session');
+        // The session folder lives in HOME, and the temporary HOME path is shown as /home/ana, so
+        // commands like pwd print the same path everywhere.
+        const sessionDir = path.join(home, 'practice');
         fs.mkdirSync(sessionDir, { recursive: true });
         const file = path.join(workDir, 'session.sh');
         fs.writeFileSync(file, transcriptScript(source));
-        return run('bash', ['--noprofile', '--norc', file], { cwd: sessionDir, env: { HOME: home, GIT_CONFIG_NOSYSTEM: '1', ...FIXED_GIT_CLOCK, LANG: 'C', LC_ALL: 'C', TERM: 'dumb' } });
+        const result = await run('bash', ['--noprofile', '--norc', file], { cwd: sessionDir, env: { HOME: home, USER: 'ana', PATH: process.env.PATH, GIT_CONFIG_NOSYSTEM: '1', ...FIXED_GIT_CLOCK, LANG: 'C', LC_ALL: 'C', TERM: 'dumb', TZ: 'UTC' } });
+        // Bash reports errors from a script as "<script>: line N: ..."; show them the way an
+        // interactive terminal does ("bash: ...").
+        const stdout = String(result.stdout).split(`${file}: line `).map((part, i) => (i === 0 ? part : part.replace(/^\d+: /, 'bash: '))).join('');
+        return { ...result, stdout: stdout.split(home).join('/home/ana') };
     }
     return { code: -1, stdout: '', stderr: `unsupported language ${language}` };
 }
@@ -174,7 +180,7 @@ const FIXED_GIT_CLOCK = {
 // trailing backslash, or a command with a here-document. Comment and blank lines are not echoed.
 function transcriptScript(source) {
     const lines = String(source).replace(/\r\n/g, '\n').split('\n');
-    const out = ['exec 2>&1'];
+    const out = ['exec 2>&1', 'umask 022'];
     for (let i = 0; i < lines.length; i += 1) {
         const line = lines[i];
         if (!line.trim() || /^\s*#/.test(line)) continue;
@@ -184,9 +190,14 @@ function transcriptScript(source) {
             while (i + 1 < lines.length) { i += 1; block.push(lines[i]); if (lines[i].trim() === heredoc[1]) break; }
         } else {
             while (/\\$/.test(block[block.length - 1]) && i + 1 < lines.length) { i += 1; block.push(lines[i]); }
+            // A loop, if or function spread over several lines is one command: keep adding lines
+            // until Bash can parse the block.
+            while (!parsesAsBash(block.join('\n')) && i + 1 < lines.length) { i += 1; block.push(lines[i]); }
         }
-        const shown = block.map((text, index) => (index === 0 ? `$ ${text}` : text)).join('\n');
-        out.push(`printf '%s\\n' ${shellQuote(shown)}`, block.join('\n'));
+        // Continuation lines get the "> " prompt a terminal shows for them.
+        const shown = block.map((text, index) => (index === 0 ? `$ ${text}` : `> ${text}`)).join('\n');
+        // Echo the command without disturbing $? for the command that follows.
+        out.push('__atlas_status=$?', `printf '%s\\n' ${shellQuote(shown)}`, '(exit $__atlas_status)', block.join('\n'));
     }
     return `${out.join('\n')}\n`;
 }
@@ -202,6 +213,10 @@ function firstDifference(expected, actual) {
     let i = 0;
     while (i < a.length && i < b.length && a[i] === b[i]) i += 1;
     return `  first difference at line ${i + 1}:\n    expected: ${a[i] === undefined ? '(end)' : JSON.stringify(a[i])}\n    actual:   ${b[i] === undefined ? '(end)' : JSON.stringify(b[i])}`;
+}
+
+function parsesAsBash(text) {
+    return spawnSync('bash', ['-n'], { input: `${text}\n` }).status === 0;
 }
 
 function shellQuote(text) {

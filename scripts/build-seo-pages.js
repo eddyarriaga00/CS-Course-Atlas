@@ -37,7 +37,8 @@ const CATEGORY_ROUTE_MAP = {
     git: '/git',
     assembly: '/assembly',
     discrete: '/discrete-math',
-    python: '/python'
+    python: '/python',
+    cli: '/command-line'
 };
 
 const CATEGORY_LABEL_MAP = {
@@ -46,7 +47,8 @@ const CATEGORY_LABEL_MAP = {
     git: 'Git',
     assembly: 'Assembly',
     discrete: 'Discrete Math',
-    python: 'Python'
+    python: 'Python',
+    cli: 'Command Line & Linux'
 };
 
 const ROUTE_PAGES = [
@@ -121,6 +123,15 @@ const ROUTE_PAGES = [
         heading: 'Intro to Programming with Python',
         lead: 'A true first course for complete beginners.',
         moduleCategory: 'python'
+    },
+    {
+        route: '/command-line',
+        filename: 'command-line.html',
+        title: 'Command Line & Linux | CS Course Atlas',
+        description: 'Learn the terminal from zero: files and folders, grep and pipes, permissions and PATH, and shell scripts, with real recorded sessions.',
+        heading: 'Command Line & Linux',
+        lead: 'The terminal skills every other course assumes.',
+        moduleCategory: 'cli'
     },
     {
         route: '/flashcards',
@@ -388,7 +399,8 @@ let publishedTrackSet = null;
 
 function trackNavLinks() {
     return [['dsa', 'dsa.html', 'DSA'], ['java', 'java.html', 'Java'], ['git', 'git.html', 'Git'],
-        ['assembly', 'assembly.html', 'Assembly'], ['discrete', 'discrete-math.html', 'Discrete Math']]
+        ['assembly', 'assembly.html', 'Assembly'], ['discrete', 'discrete-math.html', 'Discrete Math'],
+        ['python', 'python.html', 'Python'], ['cli', 'command-line.html', 'Command Line']]
         .filter(([category]) => !publishedTrackSet || publishedTrackSet.has(category))
         .map(([, href, label]) => `<a href="${href}">${label}</a>`)
         .join('\n                    ');

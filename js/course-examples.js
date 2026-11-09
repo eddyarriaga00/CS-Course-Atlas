@@ -2705,7 +2705,7 @@ window.COURSE_EXAMPLES = {
             "bash": "git init -q store\ncd store\necho \"total = price * qty\" > cart.txt\necho \"Welcome\" > README.md\ngit add cart.txt README.md\ngit commit -q -m \"Initial store\"\n\n# Two unrelated edits are waiting\necho \"total = price * qty - discount\" > cart.txt\necho \"Welcome to the store. Free shipping over \\$50.\" > README.md\ngit status --short\n\ngit add cart.txt\ngit commit -q -m \"fix: subtract the discount from the cart total\" \\\n  -m \"Customers with a coupon were charged full price.\"\ngit add README.md\ngit commit -q -m \"docs: mention free shipping in the README\"\ngit log --format=\"%h %s%n%w(0,8,8)%b\"\n\ngit log --oneline -- cart.txt\ngit log --oneline --grep=\"docs:\"\ngit revert --no-edit HEAD\ncat README.md cart.txt"
           },
           "output": {
-            "bash": "$ git init -q store\n$ cd store\n$ echo \"total = price * qty\" > cart.txt\n$ echo \"Welcome\" > README.md\n$ git add cart.txt README.md\n$ git commit -q -m \"Initial store\"\n$ echo \"total = price * qty - discount\" > cart.txt\n$ echo \"Welcome to the store. Free shipping over \\$50.\" > README.md\n$ git status --short\n M README.md\n M cart.txt\n$ git add cart.txt\n$ git commit -q -m \"fix: subtract the discount from the cart total\" \\\n  -m \"Customers with a coupon were charged full price.\"\n$ git add README.md\n$ git commit -q -m \"docs: mention free shipping in the README\"\n$ git log --format=\"%h %s%n%w(0,8,8)%b\"\ndf14a73 docs: mention free shipping in the README\n\n55b76c8 fix: subtract the discount from the cart total\n        Customers with a coupon were charged full price.\n\nf536d0e Initial store\n\n$ git log --oneline -- cart.txt\n55b76c8 fix: subtract the discount from the cart total\nf536d0e Initial store\n$ git log --oneline --grep=\"docs:\"\ndf14a73 docs: mention free shipping in the README\n$ git revert --no-edit HEAD\n[main 3b2c49e] Revert \"docs: mention free shipping in the README\"\n Date: Mon Jan 5 10:00:00 2026 +0000\n 1 file changed, 1 insertion(+), 1 deletion(-)\n$ cat README.md cart.txt\nWelcome\ntotal = price * qty - discount"
+            "bash": "$ git init -q store\n$ cd store\n$ echo \"total = price * qty\" > cart.txt\n$ echo \"Welcome\" > README.md\n$ git add cart.txt README.md\n$ git commit -q -m \"Initial store\"\n$ echo \"total = price * qty - discount\" > cart.txt\n$ echo \"Welcome to the store. Free shipping over \\$50.\" > README.md\n$ git status --short\n M README.md\n M cart.txt\n$ git add cart.txt\n$ git commit -q -m \"fix: subtract the discount from the cart total\" \\\n>   -m \"Customers with a coupon were charged full price.\"\n$ git add README.md\n$ git commit -q -m \"docs: mention free shipping in the README\"\n$ git log --format=\"%h %s%n%w(0,8,8)%b\"\ndf14a73 docs: mention free shipping in the README\n\n55b76c8 fix: subtract the discount from the cart total\n        Customers with a coupon were charged full price.\n\nf536d0e Initial store\n\n$ git log --oneline -- cart.txt\n55b76c8 fix: subtract the discount from the cart total\nf536d0e Initial store\n$ git log --oneline --grep=\"docs:\"\ndf14a73 docs: mention free shipping in the README\n$ git revert --no-edit HEAD\n[main 3b2c49e] Revert \"docs: mention free shipping in the README\"\n Date: Mon Jan 5 10:00:00 2026 +0000\n 1 file changed, 1 insertion(+), 1 deletion(-)\n$ cat README.md cart.txt\nWelcome\ntotal = price * qty - discount"
           }
         }
       ]
@@ -3327,6 +3327,474 @@ window.COURSE_EXAMPLES = {
           },
           "output": {
             "python": "7 visits from 4 people: ['Ana', 'Ben', 'Chen', 'Dana']\nafter adding: ['Ana', 'Ben', 'Chen', 'Dana', 'Eve']\ndid Ben visit? True\neither club: ['Ana', 'Ben', 'Chen', 'Dana']\nboth clubs:  ['Ana', 'Chen']\nmath only:   ['Ben']\nexactly one: ['Ben', 'Dana']\ntype of {}: dict | type of set(): set"
+          }
+        }
+      ]
+    },
+    "cli-files-folders": {
+      "main": {
+        "code": {
+          "bash": "# Organizing a school folder from the terminal, start to finish.\npwd\nmkdir -p school/math school/english\ncd school\nls\necho \"Homework: page 42, problems 1-10\" > math/homework.txt\necho \"Read chapter 3\" > english/reading.txt\necho \"Write one paragraph\" >> english/reading.txt\ncat english/reading.txt\ncp math/homework.txt math/homework-backup.txt\nmv english/reading.txt english/chapter3.txt\nls math\nls english\nrm math/homework-backup.txt\ncd ..\nfind school -type f | sort\n"
+        },
+        "output": {
+          "bash": "$ pwd\n/home/ana/practice\n$ mkdir -p school/math school/english\n$ cd school\n$ ls\nenglish\nmath\n$ echo \"Homework: page 42, problems 1-10\" > math/homework.txt\n$ echo \"Read chapter 3\" > english/reading.txt\n$ echo \"Write one paragraph\" >> english/reading.txt\n$ cat english/reading.txt\nRead chapter 3\nWrite one paragraph\n$ cp math/homework.txt math/homework-backup.txt\n$ mv english/reading.txt english/chapter3.txt\n$ ls math\nhomework-backup.txt\nhomework.txt\n$ ls english\nchapter3.txt\n$ rm math/homework-backup.txt\n$ cd ..\n$ find school -type f | sort\nschool/english/chapter3.txt\nschool/math/homework.txt"
+        }
+      },
+      "sets": [
+        {
+          "topic": "The Shell and the Prompt",
+          "title": {
+            "en": "Your first commands",
+            "es": "Tus primeros comandos"
+          },
+          "description": {
+            "en": "Uses `echo` to see how the shell splits a command into words, how quotes keep spaces, and how it fills in variables and arithmetic before running a command.",
+            "es": "Usa `echo` para ver cómo la shell divide un comando en palabras, cómo las comillas conservan los espacios y cómo sustituye variables y aritmética antes de ejecutar un comando."
+          },
+          "explanation": {
+            "en": "Each line after a `$` is one command you type and run with Enter. The shell reads the line, splits it into words at the spaces, and runs the program named by the first word, giving it the other words as arguments.\n\nWhat to notice:\n- `echo one     two      three` prints the words with single spaces: the shell split them into three separate arguments and threw the extra spaces away.\n- With quotes, the text is one argument, so the spaces survive.\n- `$HOME` and `$USER` are variables. The shell replaces them with their values *before* `echo` runs; inside double quotes this still happens.\n- `$((6 * 7))` is arithmetic done by the shell itself.\n- `type cd` tells you that `cd` is built into the shell rather than being a separate program.\n\nThe terminal never shows a \"Saved\" message or a success popup: a command that worked often prints nothing at all.",
+            "es": "Cada línea después de un `$` es un comando que escribes y ejecutas con Enter. La shell lee la línea, la divide en palabras en los espacios y ejecuta el programa nombrado por la primera palabra, pasándole las demás como argumentos.\n\nQué observar:\n- `echo one     two      three` imprime las palabras con espacios simples: la shell las separó en tres argumentos y descartó los espacios de más.\n- Con comillas, el texto es un solo argumento, así que los espacios se conservan.\n- `$HOME` y `$USER` son variables. La shell las reemplaza por sus valores *antes* de ejecutar `echo`; dentro de comillas dobles esto también ocurre.\n- `$((6 * 7))` es aritmética que hace la propia shell.\n- `type cd` te dice que `cd` está integrado en la shell en lugar de ser un programa aparte.\n\nLa terminal nunca muestra un mensaje de \"Guardado\" ni una ventana de éxito: un comando que funcionó muchas veces no imprime nada."
+          },
+          "code": {
+            "bash": "echo \"Hello from the shell\"\necho one     two      three\necho \"one     two      three\"\necho \"My home folder is $HOME\"\necho \"I am logged in as $USER\"\necho \"6 times 7 is $((6 * 7))\"\ntype cd\ntype echo\n"
+          },
+          "output": {
+            "bash": "$ echo \"Hello from the shell\"\nHello from the shell\n$ echo one     two      three\none two three\n$ echo \"one     two      three\"\none     two      three\n$ echo \"My home folder is $HOME\"\nMy home folder is /home/ana\n$ echo \"I am logged in as $USER\"\nI am logged in as ana\n$ echo \"6 times 7 is $((6 * 7))\"\n6 times 7 is 42\n$ type cd\ncd is a shell builtin\n$ type echo\necho is a shell builtin"
+          }
+        },
+        {
+          "topic": "Navigating with pwd, cd and ls",
+          "title": {
+            "en": "Finding your way around",
+            "es": "Orientarte"
+          },
+          "description": {
+            "en": "Builds a few folders, then walks into and out of them with `cd`, checking the location with `pwd` at every step and listing contents with `ls`.",
+            "es": "Crea algunas carpetas y luego entra y sale de ellas con `cd`, comprobando la ubicación con `pwd` en cada paso y listando el contenido con `ls`."
+          },
+          "explanation": {
+            "en": "Think of the terminal as a file explorer window that can only show one folder at a time: the working directory. `pwd` tells you which one it is, `ls` shows what is inside, and `cd` opens another folder.\n\nWhat to notice:\n- `cd projects` uses a relative path: it means \"the `projects` folder inside where I am now\".\n- `cd ..` goes up one level to the parent folder.\n- `cd ~` (or plain `cd`) always takes you back to your home folder, wherever you are.\n- `cd -` jumps back to the previous folder and prints its name, like a \"back\" button.\n- `ls -a` also shows `.` (this folder) and `..` (the parent). Names that start with a dot are hidden from a plain `ls`.\n- `ls -F` adds a `/` after folder names so you can tell them apart from files.\n\nIn your own terminal `ls` arranges names in columns; these recordings show one name per line, which is what `ls` does when its output is saved.\n\nWhen you feel lost, type `pwd`. It costs nothing and answers \"where am I?\".",
+            "es": "Piensa en la terminal como una ventana del explorador de archivos que solo puede mostrar una carpeta a la vez: el directorio de trabajo. `pwd` te dice cuál es, `ls` muestra lo que contiene y `cd` abre otra carpeta.\n\nQué observar:\n- `cd projects` usa una ruta relativa: significa \"la carpeta `projects` dentro de donde estoy ahora\".\n- `cd ..` sube un nivel, a la carpeta padre.\n- `cd ~` (o `cd` solo) siempre te regresa a tu carpeta personal, estés donde estés.\n- `cd -` vuelve a la carpeta anterior e imprime su nombre, como un botón de \"atrás\".\n- `ls -a` también muestra `.` (esta carpeta) y `..` (la carpeta padre). Los nombres que empiezan con punto se ocultan en un `ls` normal.\n- `ls -F` agrega una `/` después de los nombres de carpetas para distinguirlas de los archivos.\n\nEn tu propia terminal `ls` acomoda los nombres en columnas; estas grabaciones muestran un nombre por línea, que es lo que hace `ls` cuando su salida se guarda.\n\nCuando te sientas perdido, escribe `pwd`. No cuesta nada y responde \"¿dónde estoy?\"."
+          },
+          "code": {
+            "bash": "pwd\nmkdir -p projects/website/images projects/notes\necho \"<h1>Hi</h1>\" > projects/website/index.html\nls\ncd projects\npwd\nls -F\ncd website\npwd\nls -F\ncd ..\npwd\ncd ~\npwd\ncd -\nls -a\n"
+          },
+          "output": {
+            "bash": "$ pwd\n/home/ana/practice\n$ mkdir -p projects/website/images projects/notes\n$ echo \"<h1>Hi</h1>\" > projects/website/index.html\n$ ls\nprojects\n$ cd projects\n$ pwd\n/home/ana/practice/projects\n$ ls -F\nnotes/\nwebsite/\n$ cd website\n$ pwd\n/home/ana/practice/projects/website\n$ ls -F\nimages/\nindex.html\n$ cd ..\n$ pwd\n/home/ana/practice/projects\n$ cd ~\n$ pwd\n/home/ana\n$ cd -\n/home/ana/practice/projects\n$ ls -a\n.\n..\nnotes\nwebsite"
+          }
+        },
+        {
+          "topic": "Creating Files and Folders",
+          "title": {
+            "en": "Making things",
+            "es": "Crear cosas"
+          },
+          "description": {
+            "en": "Creates a club folder with an empty file, writes and appends lines with `>` and `>>`, reads them back with `cat`, and builds nested folders in one step with `mkdir -p`.",
+            "es": "Crea una carpeta de club con un archivo vacío, escribe y agrega líneas con `>` y `>>`, las lee con `cat` y crea carpetas anidadas en un paso con `mkdir -p`."
+          },
+          "explanation": {
+            "en": "You can create everything a file explorer can, and a little more.\n\nWhat to notice:\n- `mkdir club` makes one folder. `mkdir -p events/2026/spring` makes all three levels at once; without `-p` it would fail because `events` does not exist yet.\n- `touch members.txt` creates an empty file (`wc -c` shows it has 0 bytes).\n- `echo \"Ana\" > members.txt` sends the output of `echo` into the file instead of the screen. `>` *replaces* what was there.\n- `>>` *appends*, so Ben and Chen are added after Ana.\n- The last `>` on `notes.txt` shows the danger: the first line is gone.\n- `ls -R` lists a folder and every folder inside it, so you can see the whole tree.\n\nIn real work you will mostly create files in an editor, but `mkdir -p` and `>>` show up constantly in scripts and setup instructions.",
+            "es": "Puedes crear todo lo que crea un explorador de archivos, y un poco más.\n\nQué observar:\n- `mkdir club` crea una carpeta. `mkdir -p events/2026/spring` crea los tres niveles a la vez; sin `-p` fallaría porque `events` todavía no existe.\n- `touch members.txt` crea un archivo vacío (`wc -c` muestra que tiene 0 bytes).\n- `echo \"Ana\" > members.txt` envía la salida de `echo` al archivo en lugar de la pantalla. `>` *reemplaza* lo que había.\n- `>>` *agrega*, así que Ben y Chen se añaden después de Ana.\n- El último `>` sobre `notes.txt` muestra el peligro: la primera línea desaparece.\n- `ls -R` lista una carpeta y todas las carpetas que contiene, para que veas el árbol completo.\n\nEn el trabajo real crearás archivos sobre todo con un editor, pero `mkdir -p` y `>>` aparecen todo el tiempo en scripts e instrucciones de instalación."
+          },
+          "code": {
+            "bash": "mkdir club\ncd club\ntouch members.txt\nwc -c members.txt\necho \"Ana\" > members.txt\necho \"Ben\" >> members.txt\necho \"Chen\" >> members.txt\ncat members.txt\necho \"Meeting on Friday\" > notes.txt\necho \"Bring snacks\" > notes.txt\ncat notes.txt\nmkdir -p events/2026/spring\ntouch events/2026/spring/poster.txt\nls -R\n"
+          },
+          "output": {
+            "bash": "$ mkdir club\n$ cd club\n$ touch members.txt\n$ wc -c members.txt\n0 members.txt\n$ echo \"Ana\" > members.txt\n$ echo \"Ben\" >> members.txt\n$ echo \"Chen\" >> members.txt\n$ cat members.txt\nAna\nBen\nChen\n$ echo \"Meeting on Friday\" > notes.txt\n$ echo \"Bring snacks\" > notes.txt\n$ cat notes.txt\nBring snacks\n$ mkdir -p events/2026/spring\n$ touch events/2026/spring/poster.txt\n$ ls -R\n.:\nevents\nmembers.txt\nnotes.txt\n\n./events:\n2026\n\n./events/2026:\nspring\n\n./events/2026/spring:\nposter.txt"
+          }
+        },
+        {
+          "topic": "Copying, Moving and Deleting",
+          "title": {
+            "en": "Tidying up a photo folder",
+            "es": "Ordenar una carpeta de fotos"
+          },
+          "description": {
+            "en": "Copies, renames and moves files, copies a whole folder with `cp -r`, and deletes files and folders, including the error you get for a file that does not exist.",
+            "es": "Copia, renombra y mueve archivos, copia una carpeta completa con `cp -r` y borra archivos y carpetas, incluido el error que aparece con un archivo que no existe."
+          },
+          "explanation": {
+            "en": "Three commands do almost all file housekeeping: `cp` (copy), `mv` (move or rename) and `rm` (remove).\n\nWhat to notice:\n- `cp beach.jpg beach-copy.jpg` leaves the original and makes a second file.\n- `mv party.jpg photos/` moves the file into the folder; `mv` with a new name renames it, and it can move and rename at the same time.\n- Copying a folder needs `-r` (recursive): `cp -r photos photos-backup` copies the folder and everything inside.\n- `rm -r` deletes a folder and its contents; `rmdir` only deletes a folder that is already empty, which makes it a safe choice.\n- `rm missing.txt` prints an error and changes nothing. Read error messages: they usually say exactly what went wrong.\n\nThere is no recycle bin. A habit worth building: run `ls` with the same name or wildcard first, check the list, then replace `ls` with `rm`.",
+            "es": "Tres comandos hacen casi todo el orden de archivos: `cp` (copiar), `mv` (mover o renombrar) y `rm` (borrar).\n\nQué observar:\n- `cp beach.jpg beach-copy.jpg` deja el original y crea un segundo archivo.\n- `mv party.jpg photos/` mueve el archivo a la carpeta; `mv` con un nombre nuevo lo renombra, y puede mover y renombrar al mismo tiempo.\n- Copiar una carpeta necesita `-r` (recursivo): `cp -r photos photos-backup` copia la carpeta y todo lo que contiene.\n- `rm -r` borra una carpeta y su contenido; `rmdir` solo borra una carpeta que ya está vacía, lo que la hace una opción segura.\n- `rm missing.txt` imprime un error y no cambia nada. Lee los mensajes de error: casi siempre dicen exactamente qué salió mal.\n\nNo hay papelera de reciclaje. Un buen hábito: ejecuta primero `ls` con el mismo nombre o comodín, revisa la lista y luego cambia `ls` por `rm`."
+          },
+          "code": {
+            "bash": "mkdir photos empty\necho \"sand and sea\" > beach.jpg\necho \"cake\" > party.jpg\ncp beach.jpg beach-copy.jpg\nls\nmv party.jpg photos/\nmv beach-copy.jpg photos/beach-edited.jpg\nls photos\nrm beach.jpg\nls -F\ncp -r photos photos-backup\nls photos-backup\nrm -r photos-backup\nrm missing.txt\nrmdir empty\nls -F\n"
+          },
+          "output": {
+            "bash": "$ mkdir photos empty\n$ echo \"sand and sea\" > beach.jpg\n$ echo \"cake\" > party.jpg\n$ cp beach.jpg beach-copy.jpg\n$ ls\nbeach-copy.jpg\nbeach.jpg\nempty\nparty.jpg\nphotos\n$ mv party.jpg photos/\n$ mv beach-copy.jpg photos/beach-edited.jpg\n$ ls photos\nbeach-edited.jpg\nparty.jpg\n$ rm beach.jpg\n$ ls -F\nempty/\nphotos/\n$ cp -r photos photos-backup\n$ ls photos-backup\nbeach-edited.jpg\nparty.jpg\n$ rm -r photos-backup\n$ rm missing.txt\nrm: cannot remove 'missing.txt': No such file or directory\n$ rmdir empty\n$ ls -F\nphotos/"
+          }
+        },
+        {
+          "topic": "Paths and Wildcards",
+          "title": {
+            "en": "Naming many files at once",
+            "es": "Nombrar muchos archivos a la vez"
+          },
+          "description": {
+            "en": "Lists folders with absolute and relative paths and selects files with the `*` and `?` wildcards, including a wildcard that reaches into several folders.",
+            "es": "Lista carpetas con rutas absolutas y relativas y selecciona archivos con los comodines `*` y `?`, incluido un comodín que entra en varias carpetas."
+          },
+          "explanation": {
+            "en": "Every file has an address called a path. An absolute path starts at the top of the file system (`/`) or at your home folder (`~` or `$HOME`) and works from anywhere. A relative path starts from the folder you are in.\n\nWhat to notice:\n- From `notes/math`, `../history` means \"go up to `notes`, then into `history`\". `$HOME/practice/notes/history` names the same folder absolutely.\n- `*.txt` matches every name ending in `.txt`. The shell turns the pattern into the list of matching names before `ls` runs, so `echo *.txt` shows exactly what a command would receive.\n- `quiz?.pdf` matches `quiz`, exactly one character, then `.pdf`.\n- `../*/*.pdf` uses wildcards for folders too: any folder next to this one, any PDF inside it.\n- A pattern that matches nothing is passed through unchanged, which is why `ls *.doc` complains about a file literally named `*.doc`.\n\nWildcards are powerful with `rm`, which is exactly why you check them with `ls` or `echo` first.",
+            "es": "Todo archivo tiene una dirección llamada ruta. Una ruta absoluta empieza en la parte superior del sistema de archivos (`/`) o en tu carpeta personal (`~` o `$HOME`) y funciona desde cualquier lugar. Una ruta relativa parte de la carpeta en la que estás.\n\nQué observar:\n- Desde `notes/math`, `../history` significa \"sube a `notes` y luego entra a `history`\". `$HOME/practice/notes/history` nombra la misma carpeta de forma absoluta.\n- `*.txt` coincide con todo nombre que termine en `.txt`. La shell convierte el patrón en la lista de nombres que coinciden antes de ejecutar `ls`, así que `echo *.txt` muestra exactamente lo que recibiría un comando.\n- `quiz?.pdf` coincide con `quiz`, exactamente un carácter y luego `.pdf`.\n- `../*/*.pdf` usa comodines también para carpetas: cualquier carpeta junto a esta y cualquier PDF dentro.\n- Un patrón que no coincide con nada se pasa sin cambios, por eso `ls *.doc` se queja de un archivo llamado literalmente `*.doc`.\n\nLos comodines son muy potentes con `rm`, y justo por eso conviene revisarlos antes con `ls` o `echo`."
+          },
+          "code": {
+            "bash": "mkdir -p notes/math notes/history\ntouch notes/math/algebra.txt notes/math/geometry.txt notes/math/quiz1.pdf notes/math/quiz10.pdf\ntouch notes/history/rome.txt notes/history/quiz2.pdf\ncd notes/math\npwd\nls ../history\nls \"$HOME/practice/notes/history\"\necho *.txt\nls quiz?.pdf\nls quiz*.pdf\nls ../*/*.pdf\nls *.doc\ncd ../..\npwd\n"
+          },
+          "output": {
+            "bash": "$ mkdir -p notes/math notes/history\n$ touch notes/math/algebra.txt notes/math/geometry.txt notes/math/quiz1.pdf notes/math/quiz10.pdf\n$ touch notes/history/rome.txt notes/history/quiz2.pdf\n$ cd notes/math\n$ pwd\n/home/ana/practice/notes/math\n$ ls ../history\nquiz2.pdf\nrome.txt\n$ ls \"$HOME/practice/notes/history\"\nquiz2.pdf\nrome.txt\n$ echo *.txt\nalgebra.txt geometry.txt\n$ ls quiz?.pdf\nquiz1.pdf\n$ ls quiz*.pdf\nquiz1.pdf\nquiz10.pdf\n$ ls ../*/*.pdf\n../history/quiz2.pdf\n../math/quiz1.pdf\n../math/quiz10.pdf\n$ ls *.doc\nls: cannot access '*.doc': No such file or directory\n$ cd ../..\n$ pwd\n/home/ana/practice"
+          }
+        }
+      ]
+    },
+    "cli-text-pipes": {
+      "main": {
+        "code": {
+          "bash": "# Questions about a small website's access log, answered with one pipeline each.\ncat > access.log <<'EOF'\n08:01 GET /home 200\n08:02 GET /courses 200\n08:02 GET /login 500\n08:05 GET /home 200\n08:07 POST /login 200\n08:09 GET /missing 404\n08:10 GET /courses 200\n08:12 GET /login 500\n08:15 GET /home 200\nEOF\nwc -l access.log\nhead -n 3 access.log\ngrep \" 500\" access.log\ngrep -c \" 200\" access.log\ncut -d' ' -f3 access.log | sort | uniq -c | sort -rn\ngrep -v \" 200\" access.log > problems.txt\ncat problems.txt\n"
+        },
+        "output": {
+          "bash": "$ cat > access.log <<'EOF'\n> 08:01 GET /home 200\n> 08:02 GET /courses 200\n> 08:02 GET /login 500\n> 08:05 GET /home 200\n> 08:07 POST /login 200\n> 08:09 GET /missing 404\n> 08:10 GET /courses 200\n> 08:12 GET /login 500\n> 08:15 GET /home 200\n> EOF\n$ wc -l access.log\n9 access.log\n$ head -n 3 access.log\n08:01 GET /home 200\n08:02 GET /courses 200\n08:02 GET /login 500\n$ grep \" 500\" access.log\n08:02 GET /login 500\n08:12 GET /login 500\n$ grep -c \" 200\" access.log\n6\n$ cut -d' ' -f3 access.log | sort | uniq -c | sort -rn\n      3 /login\n      3 /home\n      2 /courses\n      1 /missing\n$ grep -v \" 200\" access.log > problems.txt\n$ cat problems.txt\n08:02 GET /login 500\n08:09 GET /missing 404\n08:12 GET /login 500"
+        }
+      },
+      "sets": [
+        {
+          "topic": "Viewing Files",
+          "title": {
+            "en": "Looking inside a file",
+            "es": "Mirar dentro de un archivo"
+          },
+          "description": {
+            "en": "Creates a list of ten tasks with a here-document, then reads all of it, the start, the end and a middle slice, and counts lines, words and bytes.",
+            "es": "Crea una lista de diez tareas con un here-document y luego lee todo, el principio, el final y un tramo del medio, y cuenta líneas, palabras y bytes."
+          },
+          "explanation": {
+            "en": "The `cat > tasks.txt <<'EOF'` line is a quick way to type several lines into a file: everything up to the line `EOF` becomes the file's content. You will see it in setup instructions all the time.\n\nWhat to notice:\n- `cat` prints the whole file. Fine for short files; for long ones use `less tasks.txt` and scroll (q quits).\n- `head -n 3` and `tail -n 2` show the first and last lines. `tail -f` (not shown) keeps watching a log file as it grows.\n- `head -n 6 tasks.txt | tail -n 2` prints lines 5 and 6: the first command keeps lines 1 to 6, the second keeps the last two of those. That is your first pipe.\n- `wc` prints lines, words and bytes; `wc -l` prints only the line count, the number you want most often.\n\nWhen someone says \"check the logs\", these four commands are usually what they mean.",
+            "es": "La línea `cat > tasks.txt <<'EOF'` es una forma rápida de escribir varias líneas en un archivo: todo hasta la línea `EOF` se vuelve el contenido del archivo. La verás todo el tiempo en instrucciones de instalación.\n\nQué observar:\n- `cat` imprime el archivo completo. Está bien para archivos cortos; para los largos usa `less tasks.txt` y desplázate (q sale).\n- `head -n 3` y `tail -n 2` muestran las primeras y las últimas líneas. `tail -f` (no se muestra) sigue vigilando un archivo de registro mientras crece.\n- `head -n 6 tasks.txt | tail -n 2` imprime las líneas 5 y 6: el primer comando conserva las líneas 1 a 6 y el segundo las dos últimas de esas. Esa es tu primera tubería.\n- `wc` imprime líneas, palabras y bytes; `wc -l` imprime solo la cantidad de líneas, el número que más vas a querer.\n\nCuando alguien dice \"revisa los logs\", estos cuatro comandos suelen ser lo que quiere decir."
+          },
+          "code": {
+            "bash": "cat > tasks.txt <<'EOF'\n1 buy notebook\n2 read chapter 1\n3 email the teacher\n4 finish math homework\n5 practice piano\n6 clean desk\n7 call grandma\n8 study for quiz\n9 water plants\n10 plan weekend\nEOF\ncat tasks.txt\nhead -n 3 tasks.txt\ntail -n 2 tasks.txt\nhead -n 6 tasks.txt | tail -n 2\nwc tasks.txt\nwc -l tasks.txt\n"
+          },
+          "output": {
+            "bash": "$ cat > tasks.txt <<'EOF'\n> 1 buy notebook\n> 2 read chapter 1\n> 3 email the teacher\n> 4 finish math homework\n> 5 practice piano\n> 6 clean desk\n> 7 call grandma\n> 8 study for quiz\n> 9 water plants\n> 10 plan weekend\n> EOF\n$ cat tasks.txt\n1 buy notebook\n2 read chapter 1\n3 email the teacher\n4 finish math homework\n5 practice piano\n6 clean desk\n7 call grandma\n8 study for quiz\n9 water plants\n10 plan weekend\n$ head -n 3 tasks.txt\n1 buy notebook\n2 read chapter 1\n3 email the teacher\n$ tail -n 2 tasks.txt\n9 water plants\n10 plan weekend\n$ head -n 6 tasks.txt | tail -n 2\n5 practice piano\n6 clean desk\n$ wc tasks.txt\n 10  34 168 tasks.txt\n$ wc -l tasks.txt\n10 tasks.txt"
+          }
+        },
+        {
+          "topic": "Searching with grep",
+          "title": {
+            "en": "Finding the lines you care about",
+            "es": "Encontrar las líneas que te importan"
+          },
+          "description": {
+            "en": "Searches a recipe and a notes folder with grep: plain matches, ignoring case, line numbers, inverted matches, counts and a recursive search through every file.",
+            "es": "Busca en una receta y en una carpeta de notas con grep: coincidencias simples, ignorando mayúsculas, con números de línea, invertidas, conteos y una búsqueda recursiva por todos los archivos."
+          },
+          "explanation": {
+            "en": "`grep` is the terminal's \"Find\": it reads lines and prints only the ones that contain your pattern.\n\nWhat to notice:\n- `grep sugar recipe.txt` finds lowercase \"sugar\" only. Searching is case-sensitive, so \"Sugar\" on the first line is missed until you add `-i`.\n- `-n` adds line numbers, which is how you jump to the right place in an editor.\n- `-v` inverts the search. `grep -v \"^#\"` hides comment lines: `^` means \"at the start of the line\".\n- `-c` counts matching lines instead of printing them.\n- `-r` searches every file in a folder and prints `file:line` for each match. Add `-l` to print only the file names.\n\nThe pattern is actually a small language called a regular expression. You do not need it yet, but `^` (line start) and `$` (line end) are worth remembering.",
+            "es": "`grep` es el \"Buscar\" de la terminal: lee líneas e imprime solo las que contienen tu patrón.\n\nQué observar:\n- `grep sugar recipe.txt` solo encuentra \"sugar\" en minúsculas. La búsqueda distingue mayúsculas, así que \"Sugar\" en la primera línea no aparece hasta que agregas `-i`.\n- `-n` agrega números de línea, que es como saltas al lugar correcto en un editor.\n- `-v` invierte la búsqueda. `grep -v \"^#\"` oculta las líneas de comentario: `^` significa \"al inicio de la línea\".\n- `-c` cuenta las líneas que coinciden en lugar de imprimirlas.\n- `-r` busca en todos los archivos de una carpeta e imprime `archivo:línea` por cada coincidencia. Agrega `-l` para imprimir solo los nombres de archivo.\n\nEl patrón es en realidad un pequeño lenguaje llamado expresión regular. Todavía no lo necesitas, pero vale la pena recordar `^` (inicio de línea) y `$` (fin de línea)."
+          },
+          "code": {
+            "bash": "cat > recipe.txt <<'EOF'\n# Sugar cookies\n2 cups flour\n1 cup sugar\n1 egg\n# bake at 180 C\nhalf cup brown sugar\nEOF\ngrep sugar recipe.txt\ngrep -i sugar recipe.txt\ngrep -n cup recipe.txt\ngrep -v \"^#\" recipe.txt\ngrep -c cup recipe.txt\nmkdir notes\necho \"TODO: finish lab report\" > notes/science.txt\necho \"Read pages 10-20\" > notes/history.txt\necho \"TODO: practice scales\" > notes/music.txt\ngrep -r TODO notes | sort\ngrep -rl TODO notes | sort\n"
+          },
+          "output": {
+            "bash": "$ cat > recipe.txt <<'EOF'\n> # Sugar cookies\n> 2 cups flour\n> 1 cup sugar\n> 1 egg\n> # bake at 180 C\n> half cup brown sugar\n> EOF\n$ grep sugar recipe.txt\n1 cup sugar\nhalf cup brown sugar\n$ grep -i sugar recipe.txt\n# Sugar cookies\n1 cup sugar\nhalf cup brown sugar\n$ grep -n cup recipe.txt\n2:2 cups flour\n3:1 cup sugar\n6:half cup brown sugar\n$ grep -v \"^#\" recipe.txt\n2 cups flour\n1 cup sugar\n1 egg\nhalf cup brown sugar\n$ grep -c cup recipe.txt\n3\n$ mkdir notes\n$ echo \"TODO: finish lab report\" > notes/science.txt\n$ echo \"Read pages 10-20\" > notes/history.txt\n$ echo \"TODO: practice scales\" > notes/music.txt\n$ grep -r TODO notes | sort\nnotes/music.txt:TODO: practice scales\nnotes/science.txt:TODO: finish lab report\n$ grep -rl TODO notes | sort\nnotes/music.txt\nnotes/science.txt"
+          }
+        },
+        {
+          "topic": "Pipes",
+          "title": {
+            "en": "Small tools, one pipeline",
+            "es": "Herramientas pequeñas, una tubería"
+          },
+          "description": {
+            "en": "Answers questions about a list of students by piping commands together, adding one step at a time so you can see what each step does to the lines.",
+            "es": "Responde preguntas sobre una lista de estudiantes encadenando comandos, agregando un paso a la vez para que veas qué le hace cada paso a las líneas."
+          },
+          "explanation": {
+            "en": "A pipe `|` takes what the command on its left prints and feeds it to the command on its right as input. No temporary files, and each tool stays simple.\n\nWhat to notice:\n- The pipeline is built up gradually. `grep Math` keeps the Math students, `| wc -l` then counts those lines. Read a pipeline left to right like a sentence.\n- `cut -d, -f2` keeps the second comma-separated field (the class), `sort` puts equal values next to each other, and `uniq` drops the repeats.\n- `sort -t, -k3 -rn` sorts by the third field as a number, highest first, and `head -n 2` keeps the top two: a \"top N\" recipe you will reuse constantly.\n- `echo ... | tr a-z A-Z` shows that pipes work with any command that prints text, not only files.\n\nWhen a pipeline does not work, delete steps from the end until the output looks right, then add them back one at a time.",
+            "es": "Una tubería `|` toma lo que imprime el comando de su izquierda y se lo pasa como entrada al comando de su derecha. Sin archivos temporales, y cada herramienta se mantiene simple.\n\nQué observar:\n- La tubería se construye poco a poco. `grep Math` conserva a los estudiantes de Math y luego `| wc -l` cuenta esas líneas. Lee una tubería de izquierda a derecha como una oración.\n- `cut -d, -f2` conserva el segundo campo separado por comas (la clase), `sort` junta los valores iguales y `uniq` quita los repetidos.\n- `sort -t, -k3 -rn` ordena por el tercer campo como número, de mayor a menor, y `head -n 2` conserva los dos primeros: una receta de \"los N mejores\" que vas a reutilizar todo el tiempo.\n- `echo ... | tr a-z A-Z` muestra que las tuberías funcionan con cualquier comando que imprima texto, no solo con archivos.\n\nCuando una tubería no funcione, borra pasos desde el final hasta que la salida se vea bien y luego agrégalos de nuevo uno por uno."
+          },
+          "code": {
+            "bash": "cat > students.csv <<'EOF'\nAna,Math,91\nBen,Art,78\nChen,Math,85\nDara,Music,88\nEli,Art,95\nFay,Math,72\nEOF\ngrep Math students.csv\ngrep Math students.csv | wc -l\ncut -d, -f2 students.csv\ncut -d, -f2 students.csv | sort | uniq\nsort -t, -k3 -rn students.csv | head -n 2\necho \"pipes connect programs\" | tr a-z A-Z\n"
+          },
+          "output": {
+            "bash": "$ cat > students.csv <<'EOF'\n> Ana,Math,91\n> Ben,Art,78\n> Chen,Math,85\n> Dara,Music,88\n> Eli,Art,95\n> Fay,Math,72\n> EOF\n$ grep Math students.csv\nAna,Math,91\nChen,Math,85\nFay,Math,72\n$ grep Math students.csv | wc -l\n3\n$ cut -d, -f2 students.csv\nMath\nArt\nMath\nMusic\nArt\nMath\n$ cut -d, -f2 students.csv | sort | uniq\nArt\nMath\nMusic\n$ sort -t, -k3 -rn students.csv | head -n 2\nEli,Art,95\nAna,Math,91\n$ echo \"pipes connect programs\" | tr a-z A-Z\nPIPES CONNECT PROGRAMS"
+          }
+        },
+        {
+          "topic": "Redirecting Output and Errors",
+          "title": {
+            "en": "Where output goes",
+            "es": "A dónde va la salida"
+          },
+          "description": {
+            "en": "Saves output to files, appends to them, separates normal output from error messages with `2>`, combines them with `2>&1`, and feeds a file into a command with `<`.",
+            "es": "Guarda la salida en archivos, agrega a ellos, separa la salida normal de los mensajes de error con `2>`, los combina con `2>&1` y pasa un archivo a un comando con `<`."
+          },
+          "explanation": {
+            "en": "Every program starts with three connections: standard input (where it reads), standard output (where normal results go) and standard error (where complaints go). In a terminal all of them are your keyboard and screen, and redirection rewires them.\n\nWhat to notice:\n- `> list.txt` and `>> list.txt` send standard output to a file, replacing or appending.\n- `ls real.txt missing.txt > found.txt` still prints the error on the screen: errors use a different stream, so a saved report is not silently polluted.\n- `2> errors.txt` sends only the errors to a file. `2>/dev/null` throws them away (`/dev/null` is a bin that discards everything).\n- `> all.txt 2>&1` means \"output to all.txt, and errors to the same place as output\". The order matters: the `>` must come first.\n- `wc -l < list.txt` feeds the file as input, so `wc` prints a count without a file name.",
+            "es": "Todo programa empieza con tres conexiones: la entrada estándar (de donde lee), la salida estándar (a donde van los resultados normales) y el error estándar (a donde van las quejas). En una terminal todas son tu teclado y tu pantalla, y la redirección las reconecta.\n\nQué observar:\n- `> list.txt` y `>> list.txt` envían la salida estándar a un archivo, reemplazando o agregando.\n- `ls real.txt missing.txt > found.txt` igual imprime el error en la pantalla: los errores usan otro flujo, así que un reporte guardado no se ensucia en silencio.\n- `2> errors.txt` envía solo los errores a un archivo. `2>/dev/null` los descarta (`/dev/null` es un bote que tira todo).\n- `> all.txt 2>&1` significa \"la salida a all.txt, y los errores al mismo lugar que la salida\". El orden importa: el `>` va primero.\n- `wc -l < list.txt` pasa el archivo como entrada, así que `wc` imprime un conteo sin nombre de archivo."
+          },
+          "code": {
+            "bash": "echo \"apples\" > list.txt\necho \"bread\" >> list.txt\necho \"milk\" >> list.txt\ncat list.txt\ntouch real.txt\nls real.txt missing.txt > found.txt\ncat found.txt\nls real.txt missing.txt 2> errors.txt\ncat errors.txt\nls real.txt missing.txt 2>/dev/null\nls real.txt missing.txt > all.txt 2>&1\ncat all.txt\nwc -l < list.txt\n"
+          },
+          "output": {
+            "bash": "$ echo \"apples\" > list.txt\n$ echo \"bread\" >> list.txt\n$ echo \"milk\" >> list.txt\n$ cat list.txt\napples\nbread\nmilk\n$ touch real.txt\n$ ls real.txt missing.txt > found.txt\nls: cannot access 'missing.txt': No such file or directory\n$ cat found.txt\nreal.txt\n$ ls real.txt missing.txt 2> errors.txt\nreal.txt\n$ cat errors.txt\nls: cannot access 'missing.txt': No such file or directory\n$ ls real.txt missing.txt 2>/dev/null\nreal.txt\n$ ls real.txt missing.txt > all.txt 2>&1\n$ cat all.txt\nls: cannot access 'missing.txt': No such file or directory\nreal.txt\n$ wc -l < list.txt\n3"
+          }
+        },
+        {
+          "topic": "Sorting, Counting and Cutting",
+          "title": {
+            "en": "Summarizing a survey",
+            "es": "Resumir una encuesta"
+          },
+          "description": {
+            "en": "Turns raw survey answers into a ranked summary with sort and uniq, shows the difference between text and numeric sorting, and pulls columns out of a CSV with cut.",
+            "es": "Convierte respuestas crudas de una encuesta en un resumen ordenado con sort y uniq, muestra la diferencia entre ordenar como texto y como número, y extrae columnas de un CSV con cut."
+          },
+          "explanation": {
+            "en": "`sort`, `uniq` and `cut` turn piles of lines into answers.\n\nWhat to notice:\n- `sort` alone orders lines alphabetically. On numbers that gives `10, 100, 25, 9`, because it compares characters; `sort -n` compares values and gives `9, 10, 25, 100`. `-r` reverses either one.\n- `uniq -c` on the raw answers counts \"pizza\" more than once, because the pizza lines are not next to each other. `uniq` only merges neighbours.\n- Sorting first fixes that, and `sort -rn` at the end ranks the counts. `sort | uniq -c | sort -rn` is one of the most useful lines in the whole terminal.\n- `cut -d, -f1,3` keeps fields 1 and 3 of a CSV; `tail -n +2` skips the header row (start from line 2).\n\nThese are the same steps as a spreadsheet's sort and pivot table, but they work on files with millions of lines.",
+            "es": "`sort`, `uniq` y `cut` convierten montones de líneas en respuestas.\n\nQué observar:\n- `sort` solo ordena líneas alfabéticamente. Con números eso da `10, 100, 25, 9`, porque compara caracteres; `sort -n` compara valores y da `9, 10, 25, 100`. `-r` invierte cualquiera de los dos.\n- `uniq -c` sobre las respuestas crudas cuenta \"pizza\" más de una vez, porque las líneas de pizza no están juntas. `uniq` solo une vecinas.\n- Ordenar antes lo arregla, y `sort -rn` al final ordena los conteos. `sort | uniq -c | sort -rn` es una de las líneas más útiles de toda la terminal.\n- `cut -d, -f1,3` conserva los campos 1 y 3 de un CSV; `tail -n +2` salta la fila de encabezado (empieza en la línea 2).\n\nSon los mismos pasos que ordenar y hacer una tabla dinámica en una hoja de cálculo, pero funcionan con archivos de millones de líneas."
+          },
+          "code": {
+            "bash": "printf \"%s\\n\" pizza tacos pizza sushi tacos pizza salad > answers.txt\nuniq -c answers.txt\nsort answers.txt | uniq -c\nsort answers.txt | uniq -c | sort -rn\nprintf \"%s\\n\" 10 9 100 25 > numbers.txt\nsort numbers.txt\nsort -n numbers.txt\nsort -rn numbers.txt | head -n 1\ncat > scores.csv <<'EOF'\nname,class,score\nAna,Math,91\nBen,Art,78\nChen,Math,85\nEOF\ntail -n +2 scores.csv | cut -d, -f1,3\n"
+          },
+          "output": {
+            "bash": "$ printf \"%s\\n\" pizza tacos pizza sushi tacos pizza salad > answers.txt\n$ uniq -c answers.txt\n      1 pizza\n      1 tacos\n      1 pizza\n      1 sushi\n      1 tacos\n      1 pizza\n      1 salad\n$ sort answers.txt | uniq -c\n      3 pizza\n      1 salad\n      1 sushi\n      2 tacos\n$ sort answers.txt | uniq -c | sort -rn\n      3 pizza\n      2 tacos\n      1 sushi\n      1 salad\n$ printf \"%s\\n\" 10 9 100 25 > numbers.txt\n$ sort numbers.txt\n10\n100\n25\n9\n$ sort -n numbers.txt\n9\n10\n25\n100\n$ sort -rn numbers.txt | head -n 1\n100\n$ cat > scores.csv <<'EOF'\n> name,class,score\n> Ana,Math,91\n> Ben,Art,78\n> Chen,Math,85\n> EOF\n$ tail -n +2 scores.csv | cut -d, -f1,3\nAna,91\nBen,78\nChen,85"
+          }
+        }
+      ]
+    },
+    "cli-permissions-env": {
+      "main": {
+        "code": {
+          "bash": "# Turning a script into your own command, step by step.\nmkdir -p bin\ncat > bin/hello <<'EOF'\n#!/bin/bash\necho \"Hello, $USER! Today you have $(ls \"$HOME/practice\" | wc -l) item(s) in practice.\"\nEOF\nstat -c \"%A %n\" bin/hello\n./bin/hello\nchmod u+x bin/hello\nstat -c \"%A %n\" bin/hello\n./bin/hello\nhello\nexport PATH=\"$HOME/practice/bin:$PATH\"\nhello\nwhich hello\nhello && echo \"it worked, exit code $?\"\n"
+        },
+        "output": {
+          "bash": "$ mkdir -p bin\n$ cat > bin/hello <<'EOF'\n> #!/bin/bash\n> echo \"Hello, $USER! Today you have $(ls \"$HOME/practice\" | wc -l) item(s) in practice.\"\n> EOF\n$ stat -c \"%A %n\" bin/hello\n-rw-r--r-- bin/hello\n$ ./bin/hello\nbash: ./bin/hello: Permission denied\n$ chmod u+x bin/hello\n$ stat -c \"%A %n\" bin/hello\n-rwxr--r-- bin/hello\n$ ./bin/hello\nHello, ana! Today you have 1 item(s) in practice.\n$ hello\nbash: hello: command not found\n$ export PATH=\"$HOME/practice/bin:$PATH\"\n$ hello\nHello, ana! Today you have 1 item(s) in practice.\n$ which hello\n/home/ana/practice/bin/hello\n$ hello && echo \"it worked, exit code $?\"\nHello, ana! Today you have 1 item(s) in practice.\nit worked, exit code 0"
+        }
+      },
+      "sets": [
+        {
+          "topic": "File Permissions",
+          "title": {
+            "en": "Who can do what",
+            "es": "Quién puede hacer qué"
+          },
+          "description": {
+            "en": "Reads permission strings, changes them with `chmod` in symbolic and numeric form, and shows how numbers like 600 and 700 keep files private.",
+            "es": "Lee cadenas de permisos, las cambia con `chmod` en forma simbólica y numérica, y muestra cómo números como 600 y 700 mantienen privados los archivos."
+          },
+          "explanation": {
+            "en": "`stat -c \"%A %n\"` prints the same permission string you see in the first column of `ls -l`, without the date and owner that change from computer to computer.\n\nHow to read `-rw-r--r--`:\n- The first character is the type: `-` for a file, `d` for a folder.\n- Then three groups of three: the owner, the group, and everyone else. Each group is read (`r`), write (`w`) and execute (`x`), or `-` for \"not allowed\".\n\nWhat to notice:\n- New files start as `rw-r--r--` (644): you can edit, everyone can read. Folders start as `rwxr-xr-x` (755), because \"execute\" on a folder means \"may enter it\".\n- `chmod o-r` removes read for others; `chmod g+w` adds write for the group.\n- Numbers are a shortcut: r=4, w=2, x=1, added up per group. `600` means only you can read and write.\n- Taking away your own `w` (`chmod u-w`) protects a file from accidental edits: writing to it then fails with \"Permission denied\" until you add it back.",
+            "es": "`stat -c \"%A %n\"` imprime la misma cadena de permisos que ves en la primera columna de `ls -l`, sin la fecha ni el dueño que cambian de una computadora a otra.\n\nCómo leer `-rw-r--r--`:\n- El primer carácter es el tipo: `-` para un archivo, `d` para una carpeta.\n- Luego tres grupos de tres: el dueño, el grupo y todos los demás. Cada grupo es lectura (`r`), escritura (`w`) y ejecución (`x`), o `-` para \"no permitido\".\n\nQué observar:\n- Los archivos nuevos empiezan como `rw-r--r--` (644): tú puedes editar y todos pueden leer. Las carpetas empiezan como `rwxr-xr-x` (755), porque \"ejecutar\" en una carpeta significa \"poder entrar\".\n- `chmod o-r` quita la lectura a los otros; `chmod g+w` agrega escritura al grupo.\n- Los números son un atajo: r=4, w=2, x=1, sumados por grupo. `600` significa que solo tú puedes leer y escribir.\n- Quitarte tu propia `w` (`chmod u-w`) protege un archivo de ediciones accidentales: escribir en él falla con \"Permission denied\" hasta que la vuelvas a agregar."
+          },
+          "code": {
+            "bash": "echo \"my secret plans\" > diary.txt\nmkdir private\nstat -c \"%A %n\" diary.txt private\nchmod o-r diary.txt\nstat -c \"%A %n\" diary.txt\nchmod g+w diary.txt\nstat -c \"%A %n\" diary.txt\nchmod 600 diary.txt\nstat -c \"%A %n\" diary.txt\nchmod 700 private\nstat -c \"%A %n\" private\necho \"one more line\" >> diary.txt\ncat diary.txt\n"
+          },
+          "output": {
+            "bash": "$ echo \"my secret plans\" > diary.txt\n$ mkdir private\n$ stat -c \"%A %n\" diary.txt private\n-rw-r--r-- diary.txt\ndrwxr-xr-x private\n$ chmod o-r diary.txt\n$ stat -c \"%A %n\" diary.txt\n-rw-r----- diary.txt\n$ chmod g+w diary.txt\n$ stat -c \"%A %n\" diary.txt\n-rw-rw---- diary.txt\n$ chmod 600 diary.txt\n$ stat -c \"%A %n\" diary.txt\n-rw------- diary.txt\n$ chmod 700 private\n$ stat -c \"%A %n\" private\ndrwx------ private\n$ echo \"one more line\" >> diary.txt\n$ cat diary.txt\nmy secret plans\none more line"
+          }
+        },
+        {
+          "topic": "Running Scripts",
+          "title": {
+            "en": "Your first script",
+            "es": "Tu primer script"
+          },
+          "description": {
+            "en": "Writes a script with a shebang, runs it with `bash`, hits \"Permission denied\", fixes it with `chmod u+x`, and passes it an argument.",
+            "es": "Escribe un script con shebang, lo ejecuta con `bash`, se topa con \"Permission denied\", lo arregla con `chmod u+x` y le pasa un argumento."
+          },
+          "explanation": {
+            "en": "A script is just the commands you would type, saved in a file so you can run them again.\n\nWhat to notice:\n- The first line `#!/bin/bash` is the shebang. When you run the file directly, the system reads it to know which program should execute the rest.\n- `bash countdown.sh` works right away: you are running `bash` and handing it the file to read.\n- `./countdown.sh` asks the system to run the file itself, which needs execute permission. Without it you get \"Permission denied\", the most common script error there is.\n- After `chmod u+x` the permissions show an `x` and `./countdown.sh` runs.\n- `$1` is the first word typed after the script's name, so `./countdown.sh 5` counts from 5. `${1:-3}` means \"use `$1`, or 3 if none was given\".\n- The `./` is required: it says \"the file in this folder\", because the shell does not search the current folder for commands.",
+            "es": "Un script es solo los comandos que escribirías, guardados en un archivo para poder ejecutarlos de nuevo.\n\nQué observar:\n- La primera línea `#!/bin/bash` es el shebang. Cuando ejecutas el archivo directamente, el sistema la lee para saber qué programa debe ejecutar el resto.\n- `bash countdown.sh` funciona de inmediato: estás ejecutando `bash` y dándole el archivo para leer.\n- `./countdown.sh` le pide al sistema que ejecute el archivo en sí, lo que necesita permiso de ejecución. Sin él obtienes \"Permission denied\", el error de scripts más común que existe.\n- Después de `chmod u+x` los permisos muestran una `x` y `./countdown.sh` funciona.\n- `$1` es la primera palabra escrita después del nombre del script, así que `./countdown.sh 5` cuenta desde 5. `${1:-3}` significa \"usa `$1`, o 3 si no se dio ninguno\".\n- El `./` es obligatorio: dice \"el archivo de esta carpeta\", porque la shell no busca comandos en la carpeta actual."
+          },
+          "code": {
+            "bash": "cat > countdown.sh <<'EOF'\n#!/bin/bash\nstart=${1:-3}\nfor ((n = start; n > 0; n--)); do\n  echo \"$n...\"\ndone\necho \"Liftoff!\"\nEOF\nbash countdown.sh\n./countdown.sh\nstat -c \"%A %n\" countdown.sh\nchmod u+x countdown.sh\nstat -c \"%A %n\" countdown.sh\n./countdown.sh\n./countdown.sh 5\n"
+          },
+          "output": {
+            "bash": "$ cat > countdown.sh <<'EOF'\n> #!/bin/bash\n> start=${1:-3}\n> for ((n = start; n > 0; n--)); do\n>   echo \"$n...\"\n> done\n> echo \"Liftoff!\"\n> EOF\n$ bash countdown.sh\n3...\n2...\n1...\nLiftoff!\n$ ./countdown.sh\nbash: ./countdown.sh: Permission denied\n$ stat -c \"%A %n\" countdown.sh\n-rw-r--r-- countdown.sh\n$ chmod u+x countdown.sh\n$ stat -c \"%A %n\" countdown.sh\n-rwxr--r-- countdown.sh\n$ ./countdown.sh\n3...\n2...\n1...\nLiftoff!\n$ ./countdown.sh 5\n5...\n4...\n3...\n2...\n1...\nLiftoff!"
+          }
+        },
+        {
+          "topic": "Environment Variables and PATH",
+          "title": {
+            "en": "How the shell finds programs",
+            "es": "Cómo encuentra la shell los programas"
+          },
+          "description": {
+            "en": "Shows the difference between a shell variable and an exported one, then adds a folder to PATH so a homemade command can be run by name from anywhere.",
+            "es": "Muestra la diferencia entre una variable de la shell y una exportada, y luego agrega una carpeta a PATH para poder ejecutar un comando casero por su nombre desde cualquier lugar."
+          },
+          "explanation": {
+            "en": "Variables hold text. Some are set for you (`HOME`, `USER`, `PATH`), and you can make your own.\n\nWhat to notice:\n- `COLOR=blue` creates a variable the shell can use (`echo $COLOR`), but a new program started from the shell (`bash -c ...`) does not see it.\n- `export COLOR` puts it in the environment, which every program started afterwards inherits. That is how tools read settings like API keys or `EDITOR`.\n- `PATH` is a list of folders separated by `:`. When you type `shout`, the shell looks in each folder in order and runs the first match. Before the change it finds nothing: \"command not found\".\n- `export PATH=\"$HOME/practice/tools:$PATH\"` puts your folder in front and keeps the old list after it. Never drop the `:$PATH` part.\n- `which shout` shows which file a name runs.\n\nTo make a change permanent, add the `export` line to `~/.bashrc` (or `~/.zshrc` on macOS) so every new terminal runs it.",
+            "es": "Las variables guardan texto. Algunas ya vienen definidas (`HOME`, `USER`, `PATH`) y puedes crear las tuyas.\n\nQué observar:\n- `COLOR=blue` crea una variable que la shell puede usar (`echo $COLOR`), pero un programa nuevo iniciado desde la shell (`bash -c ...`) no la ve.\n- `export COLOR` la pone en el entorno, que hereda todo programa que se inicie después. Así es como las herramientas leen configuraciones como claves de API o `EDITOR`.\n- `PATH` es una lista de carpetas separadas por `:`. Cuando escribes `shout`, la shell busca en cada carpeta en orden y ejecuta la primera coincidencia. Antes del cambio no encuentra nada: \"command not found\".\n- `export PATH=\"$HOME/practice/tools:$PATH\"` pone tu carpeta al frente y conserva la lista anterior después. Nunca quites la parte `:$PATH`.\n- `which shout` muestra qué archivo ejecuta un nombre.\n\nPara que un cambio sea permanente, agrega la línea `export` a `~/.bashrc` (o `~/.zshrc` en macOS) para que cada terminal nueva la ejecute."
+          },
+          "code": {
+            "bash": "COLOR=blue\necho \"In this shell: $COLOR\"\nbash -c 'echo \"In a new program: [$COLOR]\"'\nexport COLOR\nbash -c 'echo \"In a new program: [$COLOR]\"'\nmkdir tools\nprintf '#!/bin/bash\\necho \"$*!!!\" | tr a-z A-Z\\n' > tools/shout\nchmod +x tools/shout\nshout hello\nexport PATH=\"$HOME/practice/tools:$PATH\"\nshout hello there\nwhich shout\n"
+          },
+          "output": {
+            "bash": "$ COLOR=blue\n$ echo \"In this shell: $COLOR\"\nIn this shell: blue\n$ bash -c 'echo \"In a new program: [$COLOR]\"'\nIn a new program: []\n$ export COLOR\n$ bash -c 'echo \"In a new program: [$COLOR]\"'\nIn a new program: [blue]\n$ mkdir tools\n$ printf '#!/bin/bash\\necho \"$*!!!\" | tr a-z A-Z\\n' > tools/shout\n$ chmod +x tools/shout\n$ shout hello\nbash: shout: command not found\n$ export PATH=\"$HOME/practice/tools:$PATH\"\n$ shout hello there\nHELLO THERE!!!\n$ which shout\n/home/ana/practice/tools/shout"
+          }
+        },
+        {
+          "topic": "Exit Codes and Chaining",
+          "title": {
+            "en": "Did it work?",
+            "es": "¿Funcionó?"
+          },
+          "description": {
+            "en": "Prints exit codes with `$?` for commands that succeed and fail, then uses `&&` and `||` to run the next step only when it makes sense.",
+            "es": "Imprime códigos de salida con `$?` para comandos que funcionan y que fallan, y luego usa `&&` y `||` para ejecutar el siguiente paso solo cuando tiene sentido."
+          },
+          "explanation": {
+            "en": "Every command quietly returns a number when it finishes: its exit code. 0 means success; anything else means something went wrong, and different numbers can mean different problems.\n\nWhat to notice:\n- `$?` holds the exit code of the command that just ran. `ls` returns 2 for a missing file; `grep -q` returns 0 if it found a match and 1 if not, without printing anything (`-q` is quiet).\n- `&&` means \"and then, if that worked\". In `mkdir -p build && cd build && pwd`, each step only runs if the one before succeeded.\n- `||` means \"otherwise\". `cd nowhere || echo ...` prints the fallback message because `cd` failed.\n- `test -f file` (also written `[ -f file ]`) succeeds if the file exists. Combined with `&&` and `||` it makes a one-line if/else.\n\nScripts, Git hooks and build tools all depend on exit codes: a test runner that exits with 1 is how continuous integration knows to mark a build red.",
+            "es": "Todo comando devuelve en silencio un número al terminar: su código de salida. 0 significa éxito; cualquier otro significa que algo salió mal, y distintos números pueden indicar distintos problemas.\n\nQué observar:\n- `$?` guarda el código de salida del comando que acaba de ejecutarse. `ls` devuelve 2 para un archivo que no existe; `grep -q` devuelve 0 si encontró una coincidencia y 1 si no, sin imprimir nada (`-q` es silencioso).\n- `&&` significa \"y luego, si eso funcionó\". En `mkdir -p build && cd build && pwd`, cada paso solo se ejecuta si el anterior funcionó.\n- `||` significa \"si no\". `cd nowhere || echo ...` imprime el mensaje alternativo porque `cd` falló.\n- `test -f archivo` (también escrito `[ -f archivo ]`) funciona si el archivo existe. Combinado con `&&` y `||` hace un if/else de una línea.\n\nLos scripts, los hooks de Git y las herramientas de compilación dependen de los códigos de salida: un ejecutor de pruebas que sale con 1 es como la integración continua sabe que debe marcar una compilación en rojo."
+          },
+          "code": {
+            "bash": "echo \"hello\" > greeting.txt\nls greeting.txt\necho \"exit code: $?\"\nls nothing.txt\necho \"exit code: $?\"\ngrep -q hello greeting.txt\necho \"found hello: $?\"\ngrep -q goodbye greeting.txt\necho \"found goodbye: $?\"\nmkdir -p build && cd build && pwd\ncd nowhere || echo \"could not enter nowhere, still in $(basename \"$PWD\")\"\ncd ..\ntest -f greeting.txt && echo \"greeting.txt exists\" || echo \"greeting.txt is missing\"\ntest -f notes.txt && echo \"notes.txt exists\" || echo \"notes.txt is missing\"\n"
+          },
+          "output": {
+            "bash": "$ echo \"hello\" > greeting.txt\n$ ls greeting.txt\ngreeting.txt\n$ echo \"exit code: $?\"\nexit code: 0\n$ ls nothing.txt\nls: cannot access 'nothing.txt': No such file or directory\n$ echo \"exit code: $?\"\nexit code: 2\n$ grep -q hello greeting.txt\n$ echo \"found hello: $?\"\nfound hello: 0\n$ grep -q goodbye greeting.txt\n$ echo \"found goodbye: $?\"\nfound goodbye: 1\n$ mkdir -p build && cd build && pwd\n/home/ana/practice/build\n$ cd nowhere || echo \"could not enter nowhere, still in $(basename \"$PWD\")\"\nbash: cd: nowhere: No such file or directory\ncould not enter nowhere, still in build\n$ cd ..\n$ test -f greeting.txt && echo \"greeting.txt exists\" || echo \"greeting.txt is missing\"\ngreeting.txt exists\n$ test -f notes.txt && echo \"notes.txt exists\" || echo \"notes.txt is missing\"\nnotes.txt is missing"
+          }
+        },
+        {
+          "topic": "Finding Files",
+          "title": {
+            "en": "Where did I put that file?",
+            "es": "¿Dónde dejé ese archivo?"
+          },
+          "description": {
+            "en": "Searches a project folder with `find` by name, by type and with wildcards, counts the results with a pipe, and deletes every temporary file in one command.",
+            "es": "Busca en una carpeta de proyecto con `find` por nombre, por tipo y con comodines, cuenta los resultados con una tubería y borra todos los archivos temporales con un solo comando."
+          },
+          "explanation": {
+            "en": "`ls` shows one folder; `find` searches a folder and every folder inside it, as deep as it goes.\n\nWhat to notice:\n- `find project -name \"*.py\"` prints the path of every match. Keep the pattern in quotes so `find` receives the `*` instead of the shell expanding it first.\n- `-type d` finds folders and `-type f` finds files. Options combine: `-type f -name \"*.tmp\"`.\n- `-iname` ignores case, so `README.md` and `readme.txt` both match `\"readme*\"`.\n- Piping into `wc -l` counts the results, the same pipes from the previous module.\n- `-delete` removes everything `find` matched. Run the same `find` without `-delete` first and read the list, then add it.\n- `| sort` makes the order predictable; `find` lists files in whatever order the disk stores them.\n\nWhen you clone a big project and need \"the file that sets up the database\", `find . -iname \"*database*\"` is usually the fastest way there.",
+            "es": "`ls` muestra una carpeta; `find` busca en una carpeta y en todas las carpetas que contiene, tan profundo como haga falta.\n\nQué observar:\n- `find project -name \"*.py\"` imprime la ruta de cada coincidencia. Deja el patrón entre comillas para que `find` reciba el `*` en lugar de que la shell lo expanda primero.\n- `-type d` encuentra carpetas y `-type f` encuentra archivos. Las opciones se combinan: `-type f -name \"*.tmp\"`.\n- `-iname` ignora mayúsculas, así que `README.md` y `readme.txt` coinciden con `\"readme*\"`.\n- Pasar el resultado a `wc -l` cuenta los resultados, con las mismas tuberías del módulo anterior.\n- `-delete` borra todo lo que `find` encontró. Ejecuta primero el mismo `find` sin `-delete` y lee la lista, y luego agrégalo.\n- `| sort` hace que el orden sea predecible; `find` lista los archivos en el orden en que el disco los guarda.\n\nCuando clonas un proyecto grande y necesitas \"el archivo que configura la base de datos\", `find . -iname \"*database*\"` suele ser el camino más rápido."
+          },
+          "code": {
+            "bash": "mkdir -p project/src/utils project/tests project/docs\ntouch project/README.md project/docs/readme.txt\ntouch project/src/main.py project/src/utils/math_tools.py project/tests/test_main.py\ntouch project/src/cache.tmp project/tests/old.tmp\nfind project -name \"*.py\" | sort\nfind project -type d | sort\nfind project -iname \"readme*\" | sort\nfind project -type f | wc -l\nfind project -type f -name \"*.tmp\" | sort\nfind project -type f -name \"*.tmp\" -delete\nfind project -type f | wc -l\n"
+          },
+          "output": {
+            "bash": "$ mkdir -p project/src/utils project/tests project/docs\n$ touch project/README.md project/docs/readme.txt\n$ touch project/src/main.py project/src/utils/math_tools.py project/tests/test_main.py\n$ touch project/src/cache.tmp project/tests/old.tmp\n$ find project -name \"*.py\" | sort\nproject/src/main.py\nproject/src/utils/math_tools.py\nproject/tests/test_main.py\n$ find project -type d | sort\nproject\nproject/docs\nproject/src\nproject/src/utils\nproject/tests\n$ find project -iname \"readme*\" | sort\nproject/README.md\nproject/docs/readme.txt\n$ find project -type f | wc -l\n7\n$ find project -type f -name \"*.tmp\" | sort\nproject/src/cache.tmp\nproject/tests/old.tmp\n$ find project -type f -name \"*.tmp\" -delete\n$ find project -type f | wc -l\n5"
+          }
+        }
+      ]
+    },
+    "cli-shell-scripts": {
+      "main": {
+        "code": {
+          "bash": "# A script that tidies a messy downloads folder into one folder per file type.\nmkdir downloads\ntouch downloads/essay.docx downloads/notes.txt downloads/beach.jpg downloads/song.mp3\ntouch downloads/todo.txt downloads/selfie.jpg \"downloads/class schedule.pdf\"\ncat > tidy.sh <<'EOF'\n#!/bin/bash\n# Usage: ./tidy.sh FOLDER\nfolder=${1:?usage: ./tidy.sh FOLDER}\n\nkind_of() {\n  case \"${1##*.}\" in\n    jpg|png) echo images ;;\n    txt|docx|pdf) echo documents ;;\n    mp3) echo music ;;\n    *) echo other ;;\n  esac\n}\n\nmoved=0\nfor file in \"$folder\"/*; do\n  [ -f \"$file\" ] || continue\n  kind=$(kind_of \"$file\")\n  mkdir -p \"$folder/$kind\"\n  mv \"$file\" \"$folder/$kind/\"\n  moved=$((moved + 1))\ndone\necho \"Moved $moved files.\"\nfor dir in \"$folder\"/*/; do\n  echo \"$(basename \"$dir\"): $(ls \"$dir\" | wc -l)\"\ndone\nEOF\nchmod +x tidy.sh\n./tidy.sh\n./tidy.sh downloads\nfind downloads -type f | sort\n"
+        },
+        "output": {
+          "bash": "$ mkdir downloads\n$ touch downloads/essay.docx downloads/notes.txt downloads/beach.jpg downloads/song.mp3\n$ touch downloads/todo.txt downloads/selfie.jpg \"downloads/class schedule.pdf\"\n$ cat > tidy.sh <<'EOF'\n> #!/bin/bash\n> # Usage: ./tidy.sh FOLDER\n> folder=${1:?usage: ./tidy.sh FOLDER}\n>\n> kind_of() {\n>   case \"${1##*.}\" in\n>     jpg|png) echo images ;;\n>     txt|docx|pdf) echo documents ;;\n>     mp3) echo music ;;\n>     *) echo other ;;\n>   esac\n> }\n>\n> moved=0\n> for file in \"$folder\"/*; do\n>   [ -f \"$file\" ] || continue\n>   kind=$(kind_of \"$file\")\n>   mkdir -p \"$folder/$kind\"\n>   mv \"$file\" \"$folder/$kind/\"\n>   moved=$((moved + 1))\n> done\n> echo \"Moved $moved files.\"\n> for dir in \"$folder\"/*/; do\n>   echo \"$(basename \"$dir\"): $(ls \"$dir\" | wc -l)\"\n> done\n> EOF\n$ chmod +x tidy.sh\n$ ./tidy.sh\n./tidy.sh: line 3: 1: usage: ./tidy.sh FOLDER\n$ ./tidy.sh downloads\nMoved 7 files.\ndocuments: 4\nimages: 2\nmusic: 1\n$ find downloads -type f | sort\ndownloads/documents/class schedule.pdf\ndownloads/documents/essay.docx\ndownloads/documents/notes.txt\ndownloads/documents/todo.txt\ndownloads/images/beach.jpg\ndownloads/images/selfie.jpg\ndownloads/music/song.mp3"
+        }
+      },
+      "sets": [
+        {
+          "topic": "Variables and Quoting",
+          "title": {
+            "en": "Storing and using text",
+            "es": "Guardar y usar texto"
+          },
+          "description": {
+            "en": "Creates variables, uses them in double and single quotes, captures command output with `$(...)`, does arithmetic, and shows what goes wrong without quotes.",
+            "es": "Crea variables, las usa con comillas dobles y simples, captura la salida de comandos con `$(...)`, hace aritmética y muestra qué sale mal sin comillas."
+          },
+          "explanation": {
+            "en": "Shell variables hold text, and the rules are a little different from Python.\n\nWhat to notice:\n- `name=\"Ana\"` has no spaces around `=`. Adding spaces is the most common beginner error in shell scripts.\n- `\"Hi, $name\"` expands the variable inside double quotes; `'Hi, $name'` in single quotes prints it literally.\n- `${name}s` uses braces to show where the name ends, otherwise the shell would look for a variable called `names`.\n- `$(ls | wc -l)` runs the command and drops its output into the line. That is how scripts store results.\n- `$((count * 2))` does whole-number arithmetic.\n- `file=\"my notes.txt\"` then `touch $file` (no quotes) creates two files, `my` and `notes.txt`. With quotes, `touch \"$file\"` creates the one file you meant.\n\nThe rule that avoids most bugs: put double quotes around every `$variable` you use.",
+            "es": "Las variables de shell guardan texto, y las reglas son un poco distintas a las de Python.\n\nQué observar:\n- `name=\"Ana\"` no lleva espacios alrededor de `=`. Agregar espacios es el error de principiante más común en scripts de shell.\n- `\"Hi, $name\"` expande la variable dentro de comillas dobles; `'Hi, $name'` con comillas simples la imprime literalmente.\n- `${name}s` usa llaves para indicar dónde termina el nombre; si no, la shell buscaría una variable llamada `names`.\n- `$(ls | wc -l)` ejecuta el comando y pone su salida en la línea. Así guardan resultados los scripts.\n- `$((count * 2))` hace aritmética con números enteros.\n- `file=\"my notes.txt\"` y luego `touch $file` (sin comillas) crea dos archivos, `my` y `notes.txt`. Con comillas, `touch \"$file\"` crea el único archivo que querías.\n\nLa regla que evita la mayoría de los errores: pon comillas dobles alrededor de cada `$variable` que uses."
+          },
+          "code": {
+            "bash": "name=\"Ana\"\necho \"Hi, $name\"\necho 'Hi, $name'\necho \"Two of them: ${name}s\"\ntouch a.txt b.txt c.txt\ncount=$(ls | wc -l)\necho \"There are $count files here\"\necho \"Doubled: $((count * 2))\"\nfile=\"my notes.txt\"\ntouch $file\nls\nrm my notes.txt\ntouch \"$file\"\nls\n"
+          },
+          "output": {
+            "bash": "$ name=\"Ana\"\n$ echo \"Hi, $name\"\nHi, Ana\n$ echo 'Hi, $name'\nHi, $name\n$ echo \"Two of them: ${name}s\"\nTwo of them: Anas\n$ touch a.txt b.txt c.txt\n$ count=$(ls | wc -l)\n$ echo \"There are $count files here\"\nThere are 3 files here\n$ echo \"Doubled: $((count * 2))\"\nDoubled: 6\n$ file=\"my notes.txt\"\n$ touch $file\n$ ls\na.txt\nb.txt\nc.txt\nmy\nnotes.txt\n$ rm my notes.txt\n$ touch \"$file\"\n$ ls\na.txt\nb.txt\nc.txt\nmy notes.txt"
+          }
+        },
+        {
+          "topic": "Script Arguments",
+          "title": {
+            "en": "Scripts that take input",
+            "es": "Scripts que reciben datos"
+          },
+          "description": {
+            "en": "Writes a script that reports its arguments, then a greeting script that checks how many arguments it got and prints a usage message when something is missing.",
+            "es": "Escribe un script que reporta sus argumentos y luego un script de saludo que revisa cuántos argumentos recibió e imprime un mensaje de uso cuando falta algo."
+          },
+          "explanation": {
+            "en": "Arguments make a script reusable: instead of editing the file to change a name, you type the name after the script.\n\nWhat to notice:\n- `$0` is how the script was called, `$1` and `$2` are the first and second arguments, and `$#` is how many there are.\n- `\"$@\"` expands to all the arguments, each kept as its own word, so `\"New York\"` stays one argument. The `for` loop shows that it arrives as one item.\n- A good script checks its input first. `if [ $# -lt 1 ]` prints a usage line to standard error (`>&2`) and `exit 1` stops with a failure code, so other scripts can tell it failed.\n- `${2:-friend}` is a default value: use `$2` if it was given, otherwise \"friend\".\n\nThis pattern, check arguments, print usage, exit 1, is what every command-line tool you use does when you call it wrong.",
+            "es": "Los argumentos hacen reutilizable un script: en lugar de editar el archivo para cambiar un nombre, escribes el nombre después del script.\n\nQué observar:\n- `$0` es cómo se llamó al script, `$1` y `$2` son el primer y segundo argumento, y `$#` es cuántos hay.\n- `\"$@\"` se expande a todos los argumentos, cada uno como su propia palabra, así que `\"New York\"` sigue siendo un argumento. El ciclo `for` muestra que llega como un solo elemento.\n- Un buen script revisa sus datos primero. `if [ $# -lt 1 ]` imprime una línea de uso en el error estándar (`>&2`) y `exit 1` se detiene con un código de fallo, para que otros scripts sepan que falló.\n- `${2:-friend}` es un valor por defecto: usa `$2` si se dio, si no, \"friend\".\n\nEste patrón, revisar argumentos, imprimir uso, salir con 1, es lo que hace cada herramienta de línea de comandos que usas cuando la llamas mal."
+          },
+          "code": {
+            "bash": "cat > args.sh <<'EOF'\n#!/bin/bash\necho \"script: $0\"\necho \"first: $1, second: $2\"\necho \"count: $#\"\nfor arg in \"$@\"; do\n  echo \"  - $arg\"\ndone\nEOF\nchmod +x args.sh\n./args.sh apple \"New York\" 42\ncat > greet.sh <<'EOF'\n#!/bin/bash\nif [ $# -lt 1 ]; then\n  echo \"usage: ./greet.sh NAME [TITLE]\" >&2\n  exit 1\nfi\necho \"Hello, $1 the ${2:-friend}!\"\nEOF\nchmod +x greet.sh\n./greet.sh\necho \"exit code: $?\"\n./greet.sh Ana\n./greet.sh Ana explorer\n"
+          },
+          "output": {
+            "bash": "$ cat > args.sh <<'EOF'\n> #!/bin/bash\n> echo \"script: $0\"\n> echo \"first: $1, second: $2\"\n> echo \"count: $#\"\n> for arg in \"$@\"; do\n>   echo \"  - $arg\"\n> done\n> EOF\n$ chmod +x args.sh\n$ ./args.sh apple \"New York\" 42\nscript: ./args.sh\nfirst: apple, second: New York\ncount: 3\n  - apple\n  - New York\n  - 42\n$ cat > greet.sh <<'EOF'\n> #!/bin/bash\n> if [ $# -lt 1 ]; then\n>   echo \"usage: ./greet.sh NAME [TITLE]\" >&2\n>   exit 1\n> fi\n> echo \"Hello, $1 the ${2:-friend}!\"\n> EOF\n$ chmod +x greet.sh\n$ ./greet.sh\nusage: ./greet.sh NAME [TITLE]\n$ echo \"exit code: $?\"\nexit code: 1\n$ ./greet.sh Ana\nHello, Ana the friend!\n$ ./greet.sh Ana explorer\nHello, Ana the explorer!"
+          }
+        },
+        {
+          "topic": "Conditions with if",
+          "title": {
+            "en": "Making decisions",
+            "es": "Tomar decisiones"
+          },
+          "description": {
+            "en": "Checks whether files and folders exist, compares strings and numbers inside `[ ]`, and builds an if/elif/else that grades a score.",
+            "es": "Revisa si existen archivos y carpetas, compara textos y números dentro de `[ ]` y construye un if/elif/else que califica una puntuación."
+          },
+          "explanation": {
+            "en": "In the shell, `if` runs a command and checks its exit code: 0 means \"true\". The command is usually `[ ... ]`, a test whose only job is to succeed or fail.\n\nWhat to notice:\n- `[ -f report.txt ]` is true for an existing file, `[ -d drafts ]` for an existing folder, and `!` negates a test.\n- Strings are compared with `=` and `!=`; `[ -z \"$x\" ]` is true when a variable is empty.\n- Numbers use `-eq`, `-ne`, `-lt`, `-le`, `-gt`, `-ge`. Using `>` would redirect output to a file instead.\n- Spaces matter: `[`, each part of the test, and `]` must be separated by spaces, because `[` is a command and the rest are its arguments.\n- `elif` checks the next condition only when the earlier ones failed, so the first matching branch wins, the same as in Python.\n- The block ends with `fi` (`if` backwards). Indentation is for people; the shell does not need it.",
+            "es": "En la shell, `if` ejecuta un comando y revisa su código de salida: 0 significa \"verdadero\". El comando suele ser `[ ... ]`, una prueba cuyo único trabajo es funcionar o fallar.\n\nQué observar:\n- `[ -f report.txt ]` es verdadero para un archivo existente, `[ -d drafts ]` para una carpeta existente, y `!` niega una prueba.\n- Los textos se comparan con `=` y `!=`; `[ -z \"$x\" ]` es verdadero cuando una variable está vacía.\n- Los números usan `-eq`, `-ne`, `-lt`, `-le`, `-gt`, `-ge`. Usar `>` redirigiría la salida a un archivo.\n- Los espacios importan: `[`, cada parte de la prueba y `]` deben ir separados por espacios, porque `[` es un comando y el resto son sus argumentos.\n- `elif` revisa la siguiente condición solo cuando las anteriores fallaron, así que gana la primera rama que coincide, igual que en Python.\n- El bloque termina con `fi` (`if` al revés). La sangría es para las personas; la shell no la necesita."
+          },
+          "code": {
+            "bash": "touch report.txt\nif [ -f report.txt ]; then echo \"report.txt is here\"; fi\nif [ -d drafts ]; then echo \"drafts exists\"; else echo \"no drafts folder yet\"; fi\nif [ ! -d drafts ]; then mkdir drafts && echo \"created drafts\"; fi\nanswer=\"yes\"\nif [ \"$answer\" = \"yes\" ]; then echo \"You said yes\"; fi\nempty=\"\"\nif [ -z \"$empty\" ]; then echo \"empty is empty\"; fi\ncat > grade.sh <<'EOF'\n#!/bin/bash\nscore=$1\nif [ \"$score\" -ge 90 ]; then\n  echo \"$score: A\"\nelif [ \"$score\" -ge 80 ]; then\n  echo \"$score: B\"\nelif [ \"$score\" -ge 70 ]; then\n  echo \"$score: C\"\nelse\n  echo \"$score: keep practicing\"\nfi\nEOF\nchmod +x grade.sh\n./grade.sh 95\n./grade.sh 83\n./grade.sh 61\n"
+          },
+          "output": {
+            "bash": "$ touch report.txt\n$ if [ -f report.txt ]; then echo \"report.txt is here\"; fi\nreport.txt is here\n$ if [ -d drafts ]; then echo \"drafts exists\"; else echo \"no drafts folder yet\"; fi\nno drafts folder yet\n$ if [ ! -d drafts ]; then mkdir drafts && echo \"created drafts\"; fi\ncreated drafts\n$ answer=\"yes\"\n$ if [ \"$answer\" = \"yes\" ]; then echo \"You said yes\"; fi\nYou said yes\n$ empty=\"\"\n$ if [ -z \"$empty\" ]; then echo \"empty is empty\"; fi\nempty is empty\n$ cat > grade.sh <<'EOF'\n> #!/bin/bash\n> score=$1\n> if [ \"$score\" -ge 90 ]; then\n>   echo \"$score: A\"\n> elif [ \"$score\" -ge 80 ]; then\n>   echo \"$score: B\"\n> elif [ \"$score\" -ge 70 ]; then\n>   echo \"$score: C\"\n> else\n>   echo \"$score: keep practicing\"\n> fi\n> EOF\n$ chmod +x grade.sh\n$ ./grade.sh 95\n95: A\n$ ./grade.sh 83\n83: B\n$ ./grade.sh 61\n61: keep practicing"
+          }
+        },
+        {
+          "topic": "Loops",
+          "title": {
+            "en": "Doing it for every file",
+            "es": "Hacerlo para cada archivo"
+          },
+          "description": {
+            "en": "Loops over a list of words, a range of numbers and matching files (renaming them), and reads a CSV line by line with `while read`.",
+            "es": "Recorre una lista de palabras, un rango de números y archivos que coinciden (renombrándolos), y lee un CSV línea por línea con `while read`."
+          },
+          "explanation": {
+            "en": "Loops are where scripts start saving real time: the same steps for every file, every line or every number.\n\nWhat to notice:\n- `for color in red green blue` runs the body once per word, with `$color` set each time. `do` starts the body and `done` ends it.\n- `{1..5}` expands to `1 2 3 4 5`, a quick way to count.\n- `for f in *.jpeg` loops over matching files. `${f%.jpeg}` removes `.jpeg` from the end of the name, so `mv \"$f\" \"${f%.jpeg}.jpg\"` renames every photo in one go. The quotes protect names with spaces.\n- `while IFS=, read -r name score` reads one line at a time from the file given with `< scores.csv`, splitting it at commas into the two variables. `-r` keeps backslashes as they are.\n- `total=$((total + score))` keeps a running sum, the same pattern you would write in Python.\n\nBefore running a loop that changes files, replace the command with `echo` to see what it would do.",
+            "es": "Los ciclos son donde los scripts empiezan a ahorrar tiempo de verdad: los mismos pasos para cada archivo, cada línea o cada número.\n\nQué observar:\n- `for color in red green blue` ejecuta el cuerpo una vez por palabra, con `$color` asignado cada vez. `do` inicia el cuerpo y `done` lo termina.\n- `{1..5}` se expande a `1 2 3 4 5`, una forma rápida de contar.\n- `for f in *.jpeg` recorre los archivos que coinciden. `${f%.jpeg}` quita `.jpeg` del final del nombre, así que `mv \"$f\" \"${f%.jpeg}.jpg\"` renombra todas las fotos de una vez. Las comillas protegen los nombres con espacios.\n- `while IFS=, read -r name score` lee una línea a la vez del archivo indicado con `< scores.csv`, separándola en las comas en las dos variables. `-r` deja las barras invertidas como están.\n- `total=$((total + score))` lleva una suma acumulada, el mismo patrón que escribirías en Python.\n\nAntes de ejecutar un ciclo que cambia archivos, reemplaza el comando por `echo` para ver qué haría."
+          },
+          "code": {
+            "bash": "for color in red green blue; do echo \"I like $color\"; done\nfor i in {1..5}; do echo -n \"$i \"; done; echo\ntouch \"trip 1.jpeg\" \"trip 2.jpeg\" cat.jpeg\nfor f in *.jpeg; do echo mv \"$f\" \"${f%.jpeg}.jpg\"; done\nfor f in *.jpeg; do mv \"$f\" \"${f%.jpeg}.jpg\"; done\nls\nprintf \"Ana,91\\nBen,78\\nChen,85\\n\" > scores.csv\ntotal=0\nwhile IFS=, read -r name score; do\n  echo \"$name scored $score\"\n  total=$((total + score))\ndone < scores.csv\necho \"Total: $total\"\n"
+          },
+          "output": {
+            "bash": "$ for color in red green blue; do echo \"I like $color\"; done\nI like red\nI like green\nI like blue\n$ for i in {1..5}; do echo -n \"$i \"; done; echo\n1 2 3 4 5\n$ touch \"trip 1.jpeg\" \"trip 2.jpeg\" cat.jpeg\n$ for f in *.jpeg; do echo mv \"$f\" \"${f%.jpeg}.jpg\"; done\nmv cat.jpeg cat.jpg\nmv trip 1.jpeg trip 1.jpg\nmv trip 2.jpeg trip 2.jpg\n$ for f in *.jpeg; do mv \"$f\" \"${f%.jpeg}.jpg\"; done\n$ ls\ncat.jpg\ntrip 1.jpg\ntrip 2.jpg\n$ printf \"Ana,91\\nBen,78\\nChen,85\\n\" > scores.csv\n$ total=0\n$ while IFS=, read -r name score; do\n>   echo \"$name scored $score\"\n>   total=$((total + score))\n> done < scores.csv\nAna scored 91\nBen scored 78\nChen scored 85\n$ echo \"Total: $total\"\nTotal: 254"
+          }
+        },
+        {
+          "topic": "Functions",
+          "title": {
+            "en": "Naming a piece of work",
+            "es": "Darle nombre a un trabajo"
+          },
+          "description": {
+            "en": "Defines functions that take arguments, return text with `echo` and success or failure with `return`, keep variables `local`, and are reused inside a loop.",
+            "es": "Define funciones que reciben argumentos, devuelven texto con `echo` y éxito o fallo con `return`, mantienen variables `local` y se reutilizan dentro de un ciclo."
+          },
+          "explanation": {
+            "en": "A function gives a name to a group of commands, so a long script reads like a list of steps instead of a wall of commands.\n\nWhat to notice:\n- `greet() { ... }` defines the function and `greet Ana` calls it like any command. Inside, `$1` is the function's first argument, not the script's.\n- Functions \"return\" text by printing it: `$(square 7)` captures what `square` echoes.\n- `return` sets the exit code instead, so `is_even` can be used directly in an `if`: `return 0` is success (true), `return 1` is failure (false).\n- `local total=0` keeps the variable inside `sum_all`. The outer `total` is still \"outside\" afterwards, so the function did not overwrite it by accident.\n- `sum_all \"$@\"`-style calls pass any number of values; the function loops over them.\n- A function must be defined before the line that calls it, which is why scripts put functions at the top.",
+            "es": "Una función le da nombre a un grupo de comandos, para que un script largo se lea como una lista de pasos en lugar de un muro de comandos.\n\nQué observar:\n- `greet() { ... }` define la función y `greet Ana` la llama como cualquier comando. Dentro, `$1` es el primer argumento de la función, no el del script.\n- Las funciones \"devuelven\" texto imprimiéndolo: `$(square 7)` captura lo que `square` imprime con echo.\n- `return` define el código de salida, así que `is_even` se puede usar directamente en un `if`: `return 0` es éxito (verdadero) y `return 1` es fallo (falso).\n- `local total=0` mantiene la variable dentro de `sum_all`. El `total` de afuera sigue siendo \"outside\" después, así que la función no lo sobrescribió por accidente.\n- Las llamadas tipo `sum_all \"$@\"` pasan cualquier cantidad de valores; la función los recorre.\n- Una función debe definirse antes de la línea que la llama, por eso los scripts ponen las funciones arriba."
+          },
+          "code": {
+            "bash": "greet() { echo \"Hello, $1!\"; }\ngreet Ana\ngreet \"Ben Ortiz\"\nsquare() { echo $(( $1 * $1 )); }\necho \"7 squared is $(square 7)\"\nis_even() { if [ $(( $1 % 2 )) -eq 0 ]; then return 0; else return 1; fi; }\nfor n in 3 8 11 20; do if is_even \"$n\"; then echo \"$n is even\"; else echo \"$n is odd\"; fi; done\ntotal=\"outside\"\nsum_all() {\n  local total=0\n  for n in \"$@\"; do total=$((total + n)); done\n  echo \"$total\"\n}\necho \"Sum: $(sum_all 4 8 15 16 23 42)\"\necho \"total is still: $total\"\n"
+          },
+          "output": {
+            "bash": "$ greet() { echo \"Hello, $1!\"; }\n$ greet Ana\nHello, Ana!\n$ greet \"Ben Ortiz\"\nHello, Ben Ortiz!\n$ square() { echo $(( $1 * $1 )); }\n$ echo \"7 squared is $(square 7)\"\n7 squared is 49\n$ is_even() { if [ $(( $1 % 2 )) -eq 0 ]; then return 0; else return 1; fi; }\n$ for n in 3 8 11 20; do if is_even \"$n\"; then echo \"$n is even\"; else echo \"$n is odd\"; fi; done\n3 is odd\n8 is even\n11 is odd\n20 is even\n$ total=\"outside\"\n$ sum_all() {\n>   local total=0\n>   for n in \"$@\"; do total=$((total + n)); done\n>   echo \"$total\"\n> }\n$ echo \"Sum: $(sum_all 4 8 15 16 23 42)\"\nSum: 108\n$ echo \"total is still: $total\"\ntotal is still: outside"
           }
         }
       ]

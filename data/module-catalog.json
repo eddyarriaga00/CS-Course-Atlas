@@ -1,6 +1,7 @@
 {
  "publishedTracks": [
   "python",
+  "cli",
   "java",
   "discrete",
   "git"
@@ -10,6 +11,10 @@
   "python-decisions-loops",
   "python-functions",
   "python-collections",
+  "cli-files-folders",
+  "cli-text-pipes",
+  "cli-permissions-env",
+  "cli-shell-scripts",
   "intro-to-coding",
   "java-basics",
   "control-flow",
@@ -105,7 +110,11 @@
   "python-first-programs": "python",
   "python-decisions-loops": "python",
   "python-functions": "python",
-  "python-collections": "python"
+  "python-collections": "python",
+  "cli-files-folders": "cli",
+  "cli-text-pipes": "cli",
+  "cli-permissions-env": "cli",
+  "cli-shell-scripts": "cli"
  },
  "modules": [
   {
@@ -949,6 +958,74 @@
    "es": {
     "title": "Listas y diccionarios",
     "description": "Guarda muchos valores en un solo lugar: crea y modifica listas, usa métodos y rebanadas de listas, agrupa valores en tuplas, busca datos en diccionarios y quita duplicados con conjuntos."
+   }
+  },
+  {
+   "id": "cli-files-folders",
+   "title": "Files and Folders from the Terminal",
+   "description": "Meet the shell and move around your computer by typing: see where you are, list and open folders, and create, copy, move and delete files without a mouse.",
+   "difficulty": "beginner",
+   "topics": [
+    "The Shell and the Prompt",
+    "Navigating with pwd, cd and ls",
+    "Creating Files and Folders",
+    "Copying, Moving and Deleting",
+    "Paths and Wildcards"
+   ],
+   "es": {
+    "title": "Archivos y carpetas desde la terminal",
+    "description": "Conoce la shell y muévete por tu computadora escribiendo: mira dónde estás, lista y abre carpetas, y crea, copia, mueve y borra archivos sin usar el ratón."
+   }
+  },
+  {
+   "id": "cli-text-pipes",
+   "title": "Reading, Searching and Pipes",
+   "description": "Look inside files with cat, head, tail and wc, find lines with grep, and connect small commands with pipes and redirection to answer real questions about data.",
+   "difficulty": "beginner",
+   "topics": [
+    "Viewing Files",
+    "Searching with grep",
+    "Pipes",
+    "Redirecting Output and Errors",
+    "Sorting, Counting and Cutting"
+   ],
+   "es": {
+    "title": "Leer, buscar y tuberías",
+    "description": "Mira dentro de los archivos con cat, head, tail y wc, encuentra líneas con grep y conecta comandos pequeños con tuberías y redirección para responder preguntas reales sobre datos."
+   }
+  },
+  {
+   "id": "cli-permissions-env",
+   "title": "Permissions, Programs and the Environment",
+   "description": "Learn who may read, change and run a file, how the shell finds the programs you type, how environment variables and PATH work, and how commands report success or failure.",
+   "difficulty": "beginner",
+   "topics": [
+    "File Permissions",
+    "Running Scripts",
+    "Environment Variables and PATH",
+    "Exit Codes and Chaining",
+    "Finding Files"
+   ],
+   "es": {
+    "title": "Permisos, programas y el entorno",
+    "description": "Aprende quién puede leer, cambiar y ejecutar un archivo, cómo encuentra la shell los programas que escribes, cómo funcionan las variables de entorno y PATH, y cómo los comandos indican éxito o fallo."
+   }
+  },
+  {
+   "id": "cli-shell-scripts",
+   "title": "Automating with Shell Scripts",
+   "description": "Turn commands you repeat into scripts: variables and quoting, arguments, if statements, loops over files and functions, ending with a script that tidies a messy folder.",
+   "difficulty": "beginner",
+   "topics": [
+    "Variables and Quoting",
+    "Script Arguments",
+    "Conditions with if",
+    "Loops",
+    "Functions"
+   ],
+   "es": {
+    "title": "Automatizar con scripts de shell",
+    "description": "Convierte los comandos que repites en scripts: variables y comillas, argumentos, sentencias if, ciclos sobre archivos y funciones, terminando con un script que ordena una carpeta desordenada."
    }
   }
  ]
