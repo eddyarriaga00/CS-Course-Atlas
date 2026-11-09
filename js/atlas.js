@@ -232,7 +232,7 @@ function renderChrome(route) {
   const av = $('.avatar.sm'); if (av) av.textContent = state.user ? initials(state.user) : '';
   $('#search-input').placeholder = t('search');
   $('#lang-btn').textContent = state.lang === 'en' ? 'ES' : 'EN';
-  $('#lang-btn').setAttribute('aria-label', state.lang === 'en' ? 'Cambiar a español' : 'Switch to English');
+  $('#lang-btn').setAttribute('aria-label', state.lang === 'en' ? 'ES: cambiar a español' : 'EN: switch to English');
   $('#signin-open').textContent = t('signIn');
   const is = (r) => (route === r ? ' active' : '');
   $('#sidebar').innerHTML = `
@@ -1087,6 +1087,16 @@ function lessonsFor(route) {
   if (route === 'glossary') return liveTracks().map((tr) => tr.id);
   return [];
 }
+// Syntax highlighting is only needed on pages with code, so the library is loaded the first time one opens.
+const HLJS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js';
+let hljsLoading = null;
+function highlightCode() {
+  const code = $('#code-block');
+  if (!code || code.hidden) return;
+  if (window.hljs) { window.hljs.highlightElement(code); return; }
+  if (!hljsLoading) hljsLoading = new Promise((resolve) => { const s = document.createElement('script'); s.src = HLJS_URL; s.onload = s.onerror = resolve; document.head.append(s); });
+  hljsLoading.then(() => { const c = $('#code-block'); if (c && !c.hidden && window.hljs && !c.dataset.highlighted) window.hljs.highlightElement(c); });
+}
 function render(keepScroll) {
   if (!DATA) return;
   let route = location.hash.slice(1) || 'home';
@@ -1102,7 +1112,7 @@ function render(keepScroll) {
     : route.startsWith('course-') ? viewCourse(route.slice(7)) : route.startsWith('m-') ? viewModule(route.slice(2)) : viewMissing());
   renderChrome(route);
   $('#main').innerHTML = html;
-  const code = $('#code-block'); if (code && !code.hidden && window.hljs) window.hljs.highlightElement(code);
+  highlightCode();
   document.body.classList.remove('drawer-open');
   if (route !== lastRoute && !keepScroll) window.scrollTo(0, 0);
   lastRoute = route;

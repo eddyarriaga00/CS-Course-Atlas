@@ -1,9 +1,9 @@
 /* Layout: sticky top bar + course sidebar + reading column; phones get a drawer and a bottom tab bar. */
 :root {
   --bg: #f7f7f8; --surface: #ffffff; --surface-2: #f1f1f4; --border: #e4e4e9;
-  --text: #17171c; --text-2: #55555f; --text-3: #85858f;
+  --text: #17171c; --text-2: #55555f; --text-3: #6b6b76;
   --accent: #4f46e5; --accent-soft: #eef0ff; --accent-text: #3730a3; --on-accent: #ffffff;
-  --success: #15803d; --success-soft: #e8f6ec; --danger: #b42318; --danger-soft: #fdecea; --warn: #b45309; --warn-soft: #fdf3e3;
+  --success: #126b34; --success-soft: #e8f6ec; --danger: #b42318; --danger-soft: #fdecea; --warn: #b45309; --warn-soft: #fdf3e3;
   --code-bg: #0f1117; --code-line: #23252f; --code-text: #e6e6ef; --code-muted: #8b8fa3;
   --hl-key: #c4a7ff; --hl-str: #9fe0a8; --hl-com: #6f7590; --hl-num: #ffcf8a; --hl-fn: #8ccfff; --hl-type: #f5a3c7;
   --radius: 12px; --shadow: 0 1px 2px rgba(16,16,24,.05), 0 4px 16px rgba(16,16,24,.05);
@@ -15,7 +15,7 @@
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --bg: #0d0e12; --surface: #15161c; --surface-2: #1c1d25; --border: #2a2b35;
-    --text: #ececf1; --text-2: #a9a9b6; --text-3: #7d7e91;
+    --text: #ececf1; --text-2: #a9a9b6; --text-3: #8a8ba0;
     --accent: #8b8cf8; --accent-soft: #23244a; --accent-text: #c7c8ff; --on-accent: #12122a;
     --success: #4ade80; --success-soft: #16301f; --danger: #f97066; --danger-soft: #3a1714; --warn: #fbbf24; --warn-soft: #34270d;
     --code-bg: #0a0b0f; --shadow: 0 1px 2px rgba(0,0,0,.4);
@@ -24,7 +24,7 @@
 }
 :root[data-theme="dark"] {
   --bg: #0d0e12; --surface: #15161c; --surface-2: #1c1d25; --border: #2a2b35;
-  --text: #ececf1; --text-2: #a9a9b6; --text-3: #7d7e91;
+  --text: #ececf1; --text-2: #a9a9b6; --text-3: #8a8ba0;
   --accent: #8b8cf8; --accent-soft: #23244a; --accent-text: #c7c8ff; --on-accent: #12122a;
   --success: #4ade80; --success-soft: #16301f; --danger: #f97066; --danger-soft: #3a1714; --warn: #fbbf24; --warn-soft: #34270d;
   --code-bg: #0a0b0f; --shadow: 0 1px 2px rgba(0,0,0,.4);
