@@ -43,7 +43,8 @@ const CATEGORY_ROUTE_MAP = {
     sql: '/sql',
     'how-computers-work': '/how-computers-work',
     cybersecurity: '/cybersecurity',
-    ai: '/ai'
+    ai: '/ai',
+    networks: '/networks'
 };
 
 const CATEGORY_LABEL_MAP = {
@@ -58,7 +59,8 @@ const CATEGORY_LABEL_MAP = {
     sql: 'SQL & Databases',
     'how-computers-work': 'How Computers Work',
     cybersecurity: 'Cybersecurity Fundamentals',
-    ai: 'AI Fundamentals'
+    ai: 'AI Fundamentals',
+    networks: 'Computer Networks'
 };
 
 const ROUTE_PAGES = [
@@ -187,6 +189,15 @@ const ROUTE_PAGES = [
         heading: 'AI Fundamentals',
         lead: 'Understand the AI you use every day, and build some yourself.',
         moduleCategory: 'ai'
+    },
+    {
+        route: '/networks',
+        filename: 'networks.html',
+        title: 'Computer Networks | CS Course Atlas',
+        description: 'Learn how the internet works from packets up: IP addresses, subnets and routing, TCP and UDP, DNS, HTTP and HTTPS, and REST APIs, with every idea simulated in runnable Python.',
+        heading: 'Computer Networks',
+        lead: 'From packets to the web.',
+        moduleCategory: 'networks'
     },
     {
         route: '/flashcards',
@@ -455,7 +466,7 @@ let publishedTrackSet = null;
 function trackNavLinks() {
     return [['dsa', 'dsa.html', 'DSA'], ['java', 'java.html', 'Java'], ['git', 'git.html', 'Git'],
         ['assembly', 'assembly.html', 'Assembly'], ['discrete', 'discrete-math.html', 'Discrete Math'],
-        ['python', 'python.html', 'Python'], ['cli', 'command-line.html', 'Command Line'], ['web', 'web.html', 'Web Basics'], ['sql', 'sql.html', 'SQL'], ['how-computers-work', 'how-computers-work.html', 'How Computers Work'], ['cybersecurity', 'cybersecurity.html', 'Cybersecurity'], ['ai', 'ai.html', 'AI']]
+        ['python', 'python.html', 'Python'], ['cli', 'command-line.html', 'Command Line'], ['web', 'web.html', 'Web Basics'], ['sql', 'sql.html', 'SQL'], ['how-computers-work', 'how-computers-work.html', 'How Computers Work'], ['cybersecurity', 'cybersecurity.html', 'Cybersecurity'], ['ai', 'ai.html', 'AI'], ['networks', 'networks.html', 'Networks']]
         .filter(([category]) => !publishedTrackSet || publishedTrackSet.has(category))
         .map(([, href, label]) => `<a href="${href}">${label}</a>`)
         .join('\n                    ');

@@ -10,7 +10,8 @@
   "java",
   "discrete",
   "git",
-  "dsa"
+  "dsa",
+  "networks"
  ],
  "sequence": [
   "python-first-programs",

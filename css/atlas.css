@@ -587,6 +587,7 @@ pre.code.term { white-space: pre; }
 [data-track="how-computers-work"] { --track: #7c3aed; }
 [data-track="cybersecurity"] { --track: #15803d; }
 [data-track="ai"] { --track: #c026d3; }
+[data-track="networks"] { --track: #b45309; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) [data-track="python"] { --track: #6aa8e8; } :root:not([data-theme="light"]) [data-track="cli"] { --track: #94a3b8; } }
 :root[data-theme="dark"] [data-track="python"] { --track: #6aa8e8; }
 :root[data-theme="dark"] [data-track="cli"] { --track: #94a3b8; }
