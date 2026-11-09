@@ -64,7 +64,7 @@ const UI = {
     modulesWithNotes: 'modules with notes', noActivity: 'Complete a module, take a quiz or write a note and it shows up here.', typeDelete: 'Type DELETE to confirm', deleteViaSupport: 'Ask support to delete it',
     privacy: 'Privacy', terms: 'Terms', contact: 'Contact', checkingSession: 'Checking your account…', emailOrUser: 'Email or username', username: 'Username', confirmPw: 'Confirm password',
     haveAccount: 'Have an account?', pwMismatch: 'The passwords don’t match.', working: 'One moment…', signinFailed: 'Sign-in didn’t complete. Please try again.', welcome: (n) => (n ? `Signed in as ${n}` : 'Signed in'),
-    rcTitle: 'Recovery codes', rcSub: 'Each code resets your password once if you forget it. Keep them somewhere safe, like a password manager or a printed page.', rcSaveTitle: 'Save your recovery codes', rcSaveText: 'If you ever forget your password, one of these codes lets you set a new one. Each works once. This is the only time they are shown.', rcCopy: 'Copy codes', rcCopied: 'Codes copied', rcDownload: 'Download .txt', rcDone: 'I saved them', rcLeft: (a, b) => `${a} of ${b} codes left.`, rcNone: 'You have no recovery codes yet. Make some so a forgotten password never locks you out.', rcLow: 'Running low: make a fresh set.', rcMake: 'Make new codes', rcMakeHint: 'Your old codes stop working when you make new ones.', rcFileHead: 'CS Course Atlas recovery codes', rcFileUse: 'Use one on the sign-in page: Forgot password? Each code works once.', recoverTitle: 'Reset your password', recoverSub: 'Use one of the recovery codes you saved when you created your account.', recoveryCode: 'Recovery code', recoverBtn: 'Reset password', backToSignIn: 'Back to sign in', noCode: 'No recovery code?', contactUs: 'Contact support', pwReset: (n) => `Password reset. You are signed in (${n} recovery code${n === 1 ? '' : 's'} left).`, codeHint: 'Like K7QM-3XRP-W9TD. Dashes and capitals are optional.',
+    rcTitle: 'Recovery codes', rcSub: 'Each code resets your password once if you forget it. Keep them somewhere safe, like a password manager or a printed page.', rcSaveTitle: 'Save your recovery codes', rcSaveText: 'If you ever forget your password, one of these codes lets you set a new one. Each works once. This is the only time they are shown.', rcCopy: 'Copy codes', rcCopied: 'Codes copied', rcDownload: 'Download .txt', rcDone: 'I saved them', rcLeft: (a, b) => `${a} of ${b} codes left.`, rcNone: 'You have no recovery codes yet. Make some so a forgotten password never locks you out.', rcLow: 'Running low: make a fresh set.', rcMake: 'Make new codes', rcMakeHint: 'Your old codes stop working when you make new ones.', rcFileHead: 'CS Course Atlas recovery codes', rcFileUse: 'Use one on the sign-in page: Forgot password? Each code works once.', recoverTitle: 'Reset your password', recoverSub: 'Use one of the recovery codes you saved when you created your account.', recoveryCode: 'Recovery code', recoverBtn: 'Reset password', backToSignIn: 'Back to sign in', noCode: 'No recovery code?', contactUs: 'Contact support', pwReset: (n) => `Password reset. You are signed in (${n} recovery code${n === 1 ? '' : 's'} left).`, recoverOff: 'Password reset is being switched on. Until then, contact support and we will reset it for you.', codeHint: 'Like K7QM-3XRP-W9TD. Dashes and capitals are optional.',
     serverSlow: 'The server is waking up. Try again in a few seconds.', signedOut: 'Signed out', accountDeleted: 'Your account was deleted', savedAccount: 'Saved to your account'
   },
   es: {
@@ -132,7 +132,7 @@ const UI = {
     modulesWithNotes: 'módulos con notas', noActivity: 'Completa un módulo, haz un cuestionario o escribe una nota y aparecerá aquí.', typeDelete: 'Escribe DELETE para confirmar', deleteViaSupport: 'Pide a soporte que la elimine',
     privacy: 'Privacidad', terms: 'Términos', contact: 'Contacto', checkingSession: 'Revisando tu cuenta…', emailOrUser: 'Correo o usuario', username: 'Usuario', confirmPw: 'Confirmar contraseña',
     haveAccount: '¿Ya tienes cuenta?', pwMismatch: 'Las contraseñas no coinciden.', working: 'Un momento…', signinFailed: 'No se completó el inicio de sesión. Inténtalo de nuevo.', welcome: (n) => (n ? `Sesión iniciada como ${n}` : 'Sesión iniciada'),
-    rcTitle: 'Códigos de recuperación', rcSub: 'Cada código restablece tu contraseña una vez si la olvidas. Guárdalos en un lugar seguro, como un gestor de contraseñas o una hoja impresa.', rcSaveTitle: 'Guarda tus códigos de recuperación', rcSaveText: 'Si alguna vez olvidas tu contraseña, uno de estos códigos te permite crear una nueva. Cada uno funciona una vez. Esta es la única vez que se muestran.', rcCopy: 'Copiar códigos', rcCopied: 'Códigos copiados', rcDownload: 'Descargar .txt', rcDone: 'Ya los guardé', rcLeft: (a, b) => `Te quedan ${a} de ${b} códigos.`, rcNone: 'Todavía no tienes códigos de recuperación. Crea algunos para que una contraseña olvidada nunca te deje fuera.', rcLow: 'Te quedan pocos: crea un juego nuevo.', rcMake: 'Crear códigos nuevos', rcMakeHint: 'Tus códigos anteriores dejan de funcionar cuando creas nuevos.', rcFileHead: 'Códigos de recuperación de CS Course Atlas', rcFileUse: 'Usa uno en la página de inicio de sesión: ¿Olvidaste tu contraseña? Cada código funciona una vez.', recoverTitle: 'Restablece tu contraseña', recoverSub: 'Usa uno de los códigos de recuperación que guardaste al crear tu cuenta.', recoveryCode: 'Código de recuperación', recoverBtn: 'Restablecer contraseña', backToSignIn: 'Volver a iniciar sesión', noCode: '¿No tienes un código?', contactUs: 'Contacta a soporte', pwReset: (n) => `Contraseña restablecida. Iniciaste sesión (te quedan ${n} código${n === 1 ? '' : 's'}).`, codeHint: 'Como K7QM-3XRP-W9TD. Los guiones y las mayúsculas son opcionales.',
+    rcTitle: 'Códigos de recuperación', rcSub: 'Cada código restablece tu contraseña una vez si la olvidas. Guárdalos en un lugar seguro, como un gestor de contraseñas o una hoja impresa.', rcSaveTitle: 'Guarda tus códigos de recuperación', rcSaveText: 'Si alguna vez olvidas tu contraseña, uno de estos códigos te permite crear una nueva. Cada uno funciona una vez. Esta es la única vez que se muestran.', rcCopy: 'Copiar códigos', rcCopied: 'Códigos copiados', rcDownload: 'Descargar .txt', rcDone: 'Ya los guardé', rcLeft: (a, b) => `Te quedan ${a} de ${b} códigos.`, rcNone: 'Todavía no tienes códigos de recuperación. Crea algunos para que una contraseña olvidada nunca te deje fuera.', rcLow: 'Te quedan pocos: crea un juego nuevo.', rcMake: 'Crear códigos nuevos', rcMakeHint: 'Tus códigos anteriores dejan de funcionar cuando creas nuevos.', rcFileHead: 'Códigos de recuperación de CS Course Atlas', rcFileUse: 'Usa uno en la página de inicio de sesión: ¿Olvidaste tu contraseña? Cada código funciona una vez.', recoverTitle: 'Restablece tu contraseña', recoverSub: 'Usa uno de los códigos de recuperación que guardaste al crear tu cuenta.', recoveryCode: 'Código de recuperación', recoverBtn: 'Restablecer contraseña', backToSignIn: 'Volver a iniciar sesión', noCode: '¿No tienes un código?', contactUs: 'Contacta a soporte', pwReset: (n) => `Contraseña restablecida. Iniciaste sesión (te quedan ${n} código${n === 1 ? '' : 's'}).`, recoverOff: 'El restablecimiento de contraseña se está activando. Mientras tanto, contacta a soporte y la restableceremos por ti.', codeHint: 'Como K7QM-3XRP-W9TD. Los guiones y las mayúsculas son opcionales.',
     serverSlow: 'El servidor se está activando. Inténtalo en unos segundos.', signedOut: 'Sesión cerrada', accountDeleted: 'Tu cuenta fue eliminada', savedAccount: 'Guardado en tu cuenta'
   }
 };
@@ -208,14 +208,14 @@ function waitForModules(ids) {
   if (!ids.length) return null;
   const route = location.hash;
   Promise.all(ids.map(loadModuleLessons)).then(() => { if (location.hash === route) render(true); })
-    .catch(() => { if (location.hash === route) $('#main').innerHTML = `<div class="loading">${t('lessonsFailed')} <button class="btn btn-sm" onclick="location.reload()">${t('retry')}</button></div>`; });
+    .catch(() => { if (location.hash === route) $('#main').innerHTML = `<div class="loading">${t('lessonsFailed')} <button class="btn btn-sm" data-action="reload">${t('retry')}</button></div>`; });
   return `<div class="loading" aria-busy="true"><span class="spinner"></span>${t('loadingLessons')}</div>`;
 }
 function waitForModule(id) {
   if (DATA.full[id] || track(DATA.modules[id].track)?.status !== 'available') return null;
   const route = location.hash;
   loadModuleLessons(id).then(() => { if (location.hash === route) render(true); })
-    .catch(() => { if (location.hash === route) $('#main').innerHTML = `<div class="loading">${t('lessonsFailed')} <button class="btn btn-sm" onclick="location.reload()">${t('retry')}</button></div>`; });
+    .catch(() => { if (location.hash === route) $('#main').innerHTML = `<div class="loading">${t('lessonsFailed')} <button class="btn btn-sm" data-action="reload">${t('retry')}</button></div>`; });
   return `<div class="loading" aria-busy="true"><span class="spinner"></span>${t('loadingLessons')}</div>`;
 }
 // The glossary loads one small file with every term (data/glossary.json) instead of every course's lessons.
@@ -224,7 +224,7 @@ function waitForGlossary() {
   if (DATA.glossary) return null;
   const route = location.hash;
   glossaryLoad = glossaryLoad || fetch('data/glossary.json?v=' + DATA.glossaryVersion).then((r) => { if (!r.ok) throw new Error(String(r.status)); return r.json(); }).then((g) => { DATA.glossary = g; });
-  glossaryLoad.then(() => { if (location.hash === route) render(true); }).catch(() => { glossaryLoad = null; if (location.hash === route) $('#main').innerHTML = `<div class="loading">${t('lessonsFailed')} <button class="btn btn-sm" onclick="location.reload()">${t('retry')}</button></div>`; });
+  glossaryLoad.then(() => { if (location.hash === route) render(true); }).catch(() => { glossaryLoad = null; if (location.hash === route) $('#main').innerHTML = `<div class="loading">${t('lessonsFailed')} <button class="btn btn-sm" data-action="reload">${t('retry')}</button></div>`; });
   return `<div class="loading" aria-busy="true"><span class="spinner"></span>${t('loadingLessons')}</div>`;
 }
 const lessonsReady = (tids) => tids.every((tid) => trackIds(tid).every((id) => DATA.full[id]));
@@ -234,7 +234,7 @@ function waitForLessons(tids) {
   if (lessonsReady(tids)) return null;
   const route = location.hash;
   Promise.all(tids.map(loadLessons)).then(() => { if (location.hash === route) render(true); })
-    .catch(() => { if (location.hash === route) $('#main').innerHTML = `<div class="loading">${t('lessonsFailed')} <button class="btn btn-sm" onclick="location.reload()">${t('retry')}</button></div>`; });
+    .catch(() => { if (location.hash === route) $('#main').innerHTML = `<div class="loading">${t('lessonsFailed')} <button class="btn btn-sm" data-action="reload">${t('retry')}</button></div>`; });
   return `<div class="loading" aria-busy="true"><span class="spinner"></span>${t('loadingLessons')}</div>`;
 }
 const javaIds = () => trackIds('java');
@@ -561,7 +561,7 @@ function viewModule(id) {
       <div class="code-card"><div class="code-bar">${langs.map((k) => `<button class="lang" data-code-lang="${k}" aria-pressed="${k === lang}">${LANG_LABEL[k]}</button>`).join('')}<button class="lang copy" data-action="copy">${t('copy')}</button>${lang === 'python' ? `<button class="lang" data-action="try-step" data-id="${id}" title="${t('vizHint')}">⇥ ${t('vizStep')}</button>` : ''}${lang === 'bash' ? '' : `<button class="lang run" data-action="try-it" data-id="${id}">${t('tryIt')}</button>`}</div>
         ${lang === 'bash' ? `<code id="code-block" hidden>${esc(code)}</code><pre tabindex="0" class="code term">${transcriptHtml(out)}</pre>`
           : lang === 'html' ? `<pre tabindex="0" class="code"><code id="code-block" class="language-html">${esc(code)}</code></pre>
-        <div class="output preview"><div class="output-label">${t('preview')}</div><iframe class="web-preview" sandbox="allow-scripts allow-forms allow-modals" title="${t('preview')}" srcdoc="${esc(code)}"></iframe></div>`
+        <div class="output preview"><div class="output-label">${t('preview')}</div><iframe class="web-preview" sandbox="allow-scripts allow-forms allow-modals" title="${t('preview')}" src="preview.html" data-html="${esc(code)}"></iframe></div>`
           : `<pre tabindex="0" class="code"><code id="code-block" class="language-${lang}">${esc(code)}</code></pre>
         ${(() => { const veil = state.predictMode && !state.revealed.has(`${id}:${state.exIndex}:${lang}`);
           return `<div class="output${veil ? ' veiled' : ''}"><div class="output-label">${t('output')}<label class="predict-toggle"><input type="checkbox" data-action="predict-mode" ${state.predictMode ? 'checked' : ''}> ${t('predictMode')}</label></div>${veil ? `<div class="veil"><p>${t('predictFirst')}</p><button class="btn btn-sm" data-action="reveal-output" data-key="${id}:${state.exIndex}:${lang}">${t('showOutput')}</button></div>` : `<pre tabindex="0">${esc(out)}</pre>`}</div>`; })()}`}</div>
@@ -966,7 +966,7 @@ function runPlayground() {
       frame.setAttribute('sandbox', 'allow-scripts allow-forms allow-modals');
       out.hidden = true; out.after(frame);
     }
-    frame.srcdoc = pg.code; status.textContent = t('rendered');
+    showPreview(frame, pg.code); status.textContent = t('rendered');
     return;
   }
   if (pg.lang !== 'javascript') {
@@ -1168,6 +1168,15 @@ async function runSqlChallenge(i, id, ch, key, box, code) {
   if (ok) markSolved(i, id, ch, key);
   refreshChallengeHelp(i);
 }
+// Pages people write run in preview.html (its own document, so its own relaxed security policy) inside a
+// sandboxed frame. The frame says when it is ready and gets the page to show through postMessage.
+let previewRun = 0;
+function showPreview(frame, html) { frame.dataset.html = html; frame.src = 'preview.html?r=' + (++previewRun); }
+addEventListener('message', (e) => {
+  if (!e.data || e.data.type !== 'atlas-preview-ready') return;
+  const frame = [...document.querySelectorAll('iframe.web-preview')].find((f) => f.contentWindow === e.source);
+  if (frame) e.source.postMessage({ type: 'atlas-preview', html: frame.dataset.html || '' }, '*');
+});
 const testList = (results) => `<ul class="ch-tests">${results.map((x) => `<li class="${x.ok ? 'ok' : 'bad'}"><span class="mk">${x.ok ? '✓' : '✗'}</span>${x.label ? esc(L(x.label)) : `<code>${esc(x.call)}</code>`}${x.ok ? '' : x.note ? `<span class="gw">${esc(x.note)}</span>` : `<span class="gw">${t('got')} <code>${esc(x.got)}</code>${x.want != null ? ` · ${t('expected')} <code>${esc(x.want)}</code>` : ''}</span>`}</li>`).join('')}</ul>`;
 const verdict = (results) => { const passed = results.filter((x) => x.ok).length, all = passed === results.length; return { all, html: `<div class="ch-status ${all ? 'ok' : 'err'}">${all ? '🎉 ' + t('allPassed') : t('passedOf', passed, results.length)}</div>${testList(results)}` }; };
 // HTML/CSS challenges render in a sandboxed frame with scripts disabled; the checks read its DOM and computed styles.
@@ -1667,7 +1676,7 @@ async function loadRecoveryLeft() {
     const r = await api('/api/profile/recovery-codes');
     box.className = 'rc-left' + (r.left <= 2 ? ' low' : '');
     box.textContent = r.left ? `${t('rcLeft', r.left, r.total)}${r.left <= 2 ? ' ' + t('rcLow') : ''}` : t('rcNone');
-  } catch (e) { box.textContent = ''; }
+  } catch (e) { box.textContent = ''; if (e.status === 404 && $('#rc-form')) $('#rc-form').hidden = true; } // server not updated yet
 }
 async function makeRecoveryCodes() {
   const status = $('#rc-status');
@@ -1698,7 +1707,7 @@ async function submitSignIn() {
     if (Array.isArray(d.recoveryCodes) && d.recoveryCodes.length) showRecoveryCodes(d.recoveryCodes);
   } catch (e) {
     const keep = { 'si-email': v('si-email'), 'si-user': v('si-user'), 'si-code': v('si-code') };
-    renderSignIn(e.name === 'AbortError' ? t('serverSlow') : e.message || t('signinFailed'));
+    renderSignIn(e.name === 'AbortError' ? t('serverSlow') : recover && e.status === 404 ? t('recoverOff') : e.message || t('signinFailed'));
     Object.entries(keep).forEach(([id, val]) => { if ($('#' + id)) $('#' + id).value = val; });
     if ($('#si-pass')) $('#si-pass').focus();
   }
@@ -1813,6 +1822,7 @@ document.addEventListener('click', (e) => {
   if (el.dataset.ex != null) { state.exIndex = Number(el.dataset.ex); render(true); return; }
   if (el.dataset.codeLang) { state.codeLang = el.dataset.codeLang; state.langsSeen.add(el.dataset.codeLang); store.set('codeLangTouched', true); save(); render(true); return; }
   const a = el.dataset.action;
+  if (a === 'reload') { location.reload(); return; }
   if (a === 'side-toggle') {
     const id = el.dataset.v, opened = new Set(store.get('sideOpen', []));
     if (el.getAttribute('aria-expanded') === 'true') { opened.delete(id); state.sideCollapsed.add(id); } else { opened.add(id); state.sideCollapsed.delete(id); }

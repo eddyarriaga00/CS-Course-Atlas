@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<!-- Content Security Policy: only this site and the few CDNs it uses may run code. The theme script below is allowed by its hash; tests/smoke/security.spec.js checks the hash. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-8t9ySDSCR8gHZ8eW5bT+6uG7c+gdwGLbU29WrkU6p5k=' 'unsafe-eval' 'wasm-unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://cs-course-atlas-api.onrender.com https://cdn.jsdelivr.net https://cdnjs.cloudflare.com; worker-src 'self' blob:; frame-src 'self'; media-src 'self' data: blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self' https://cs-course-atlas-api.onrender.com">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>CS Course Atlas</title>
 <meta name="description" content="Free, structured computer science courses, starting with Java: 13 modules with lessons, worked code examples in Java, C++, Python and JavaScript, practice problems, quizzes and video series. In English and Spanish.">
@@ -20,11 +22,11 @@
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" id="font-css">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"></noscript>
 <link rel="preload" href="data/atlas-data.json" as="fetch" crossorigin="anonymous">
-<link rel="stylesheet" href="css/atlas.css?v=20261153">
-<script>try { var th = JSON.parse(localStorage.getItem('atlas-theme')); if (th === 'light' || th === 'dark') document.documentElement.dataset.theme = th; } catch (e) {}</script>
+<link rel="stylesheet" href="css/atlas.css?v=20261154">
+<script>try { var th = JSON.parse(localStorage.getItem('atlas-theme')); if (th === 'light' || th === 'dark') document.documentElement.dataset.theme = th; } catch (e) {} var fc = document.getElementById('font-css'); if (fc) fc.rel = 'stylesheet';</script>
 </head>
 <body>
 <a class="skip-link" href="#main" id="skip-link">Skip to content</a>
@@ -57,7 +59,7 @@
 </dialog>
 <div class="toast" id="toast" role="status" hidden></div>
 
-<script src="js/app-config.js?v=20261153" defer></script>
-<script src="js/atlas.js?v=20261153" defer></script>
+<script src="js/app-config.js?v=20261154" defer></script>
+<script src="js/atlas.js?v=20261154" defer></script>
 </body>
 </html>
