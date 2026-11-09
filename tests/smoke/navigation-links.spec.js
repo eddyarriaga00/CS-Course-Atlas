@@ -101,6 +101,20 @@ test.describe('Navigation', () => {
         await expect(page.locator('#main h1')).toHaveText('Combining Tables');
     });
 
+    test('mixed review quizzes across completed modules', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html#m-python-first-programs');
+        await page.locator('[data-action="toggle-done"]').click();
+        await page.goto('/index.html#quizzes');
+        await page.locator('#quiz-module').selectOption('mix');
+        await expect(page.locator('.q-from')).toContainText('Your First Python Programs');
+        for (let i = 0; i < 5; i += 1) {
+            await page.locator('.option').first().click();
+            await page.locator('[data-action="quiz-next"]').click();
+        }
+        await expect(page.locator('.score')).toContainText('/5');
+    });
+
     test('links from the generated pages open the right module', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html?route=%2Fjava&module=collections-framework');
