@@ -1946,13 +1946,19 @@ window.addEventListener('hashchange', () => { document.querySelectorAll('dialog[
 if ('serviceWorker' in navigator && window.isSecureContext) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
 
 /* ---------- Search ---------- */
-function openSearch() { $('#search').classList.add('open'); $('#search-input').focus(); loadAllForSearch(); }
+function openSearch() { $('#search').classList.add('open'); $('#search-input').focus(); }
+// Term names and challenge titles for search live in a small file loaded the first time someone searches.
+let searchLoad = null;
+function loadSearchList() {
+  if (!DATA || DATA.search) return;
+  searchLoad = searchLoad || fetch('data/search.json?v=' + DATA.searchVersion).then((r) => r.json()).then((x) => { DATA.search = x; const i = $('#search-input'); if (i.value.trim().length > 1) i.dispatchEvent(new Event('input')); }).catch(() => { searchLoad = null; });
+}
 // Terms come from the lesson files, so searching loads every course's lessons once.
-function loadAllForSearch() { if (DATA) liveTracks().forEach((tr) => loadLessons(tr.id).then(() => { const i = $('#search-input'); if (i.value.trim().length > 1) i.dispatchEvent(new Event('input')); }).catch(() => {})); }
 function closeSearch() { $('#search').classList.remove('open'); $('#search-results').hidden = true; }
 $('#search-btn').addEventListener('click', (e) => { e.stopPropagation(); openSearch(); });
-$('#search-input').addEventListener('focus', loadAllForSearch);
+$('#search-input').addEventListener('focus', loadSearchList);
 $('#search-input').addEventListener('input', (e) => {
+  loadSearchList();
   const q = e.target.value.trim().toLowerCase(), box = $('#search-results');
   if (q.length < 2 || !DATA) { box.hidden = true; return; }
   const hits = [];
@@ -1963,8 +1969,9 @@ $('#search-input').addEventListener('input', (e) => {
   [['practice', t('practice')], ['quizzes', t('quizzes')], ['flashcards', t('flashcards')], ['challenges', t('challenges')], ['playground', t('playground')], ['notes', t('notes')], ['glossary', t('glossary')], ['plan', t('studyPlan')], ['roadmap', t('roadmap')]]
     .forEach(([r, label]) => { if (label && label.toLowerCase().includes(q)) hits.unshift({ kind: t('pageKind'), label, href: '#' + r }); });
   liveTracks().forEach((tr) => { const label = `${t('cheatSheet')} · ${L(tr.title)}`; if (label.toLowerCase().includes(q) || (t('cheatSheet').toLowerCase().includes(q) && q.length > 3)) hits.push({ kind: t('pageKind'), label, href: '#sheet-' + tr.id }); });
-  Object.entries(DATA.full).forEach(([id, c]) => isLive(id) && (c.challenges || []).forEach((ch) => { if (L(ch.title).toLowerCase().includes(q)) hits.push({ kind: t('challengeKind'), label: `${L(ch.title)} · ${moduleTitle(id)}`, href: '#m-' + id, tab: 'challenges' }); }));
-  Object.entries(DATA.full).forEach(([id, c]) => (c.definitions || []).forEach((d) => { if (L(d.term).toLowerCase().includes(q)) hits.push({ kind: t('term'), label: `${L(d.term)} · ${moduleTitle(id)}`, href: '#m-' + id, tab: 'terms' }); }));
+  const lx = (en, es) => (state.lang === 'es' ? es || en : en);
+  (DATA.search?.challenges || []).forEach(([id, , en, es]) => { if (isLive(id) && lx(en, es).toLowerCase().includes(q)) hits.push({ kind: t('challengeKind'), label: `${lx(en, es)} · ${moduleTitle(id)}`, href: '#m-' + id, tab: 'challenges' }); });
+  (DATA.search?.terms || []).forEach(([id, en, es]) => { if (lx(en, es).toLowerCase().includes(q)) hits.push({ kind: t('term'), label: `${lx(en, es)} · ${moduleTitle(id)}`, href: '#m-' + id, tab: 'terms' }); });
   box.innerHTML = hits.length ? hits.slice(0, 12).map((h) => `<a class="result" href="${h.href}" ${h.tab ? `data-goto-tab="${h.tab}"` : ''}><span class="kind">${esc(h.kind)}</span><span>${esc(h.label)}</span>${h.soon ? `<span class="soon">${t('soon')}</span>` : ''}</a>`).join('') : `<div class="result muted">${t('noResults')}</div>`;
   box.hidden = false;
 });
