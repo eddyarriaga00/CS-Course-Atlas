@@ -161,6 +161,12 @@ The beginner path, in order, then the next level. Courses marked "in progress" s
 3. **Data and I/O**: Assembly Arrays, Strings, and Basic I/O
 
 
+## How the site loads
+- `data/atlas-data.json` is a small index (≈37 KB gzipped) loaded first.
+- Module pages fetch only their own `data/lessons/m-<module>.json`; pages that need a whole course (glossary, mixed and whole-course reviews) fetch `data/lessons/<course>.json`.
+- Search loads `data/search.json` (term names and challenge titles, ≈8 KB gzipped) the first time it is used; the command-line simulator `js/mini-shell.js` loads only for terminal and Git challenges.
+- All of these are versioned by content hash and cached by the service worker. `node scripts/build-atlas-data.js --check` (run in CI) fails if any of them is out of date.
+
 ## How the examples are checked
 Every example's output on the site is real, recorded by `scripts/run_course_examples.js` and re-checked in CI (`.github/workflows/course-examples.yml`):
 - Java, C++, Python, JavaScript and NASM programs are compiled and run.
@@ -183,6 +189,8 @@ Every example's output on the site is real, recorded by `scripts/run_course_exam
 - **Study plan** for one course or the whole beginner path, exportable to a calendar.
 - **Glossary**, per-module notes (downloadable as Markdown), search over courses, modules, terms, challenges and pages (Ctrl/⌘ K), dark mode and a phone layout.
 - **Shareable playground links** that carry the code in the URL.
+- **Help when code fails**: plain-language tips under Python, SQL and JavaScript errors (and when a function forgets to `return`), a Step through button to debug your own challenge code, and a *Guess first* switch that hides example output until you predict it.
+- **Notes in every lesson** (same notes as the Notes page) and a celebration with next steps when you finish a course.
 - **Keyboard shortcuts** everywhere (press `?` for the list), and an accessibility pass with zero axe violations in light and dark mode.
 - **Installable and offline-ready**: a service worker (`sw.js`) caches the app, the lessons you open and the Python/SQL runtimes.
 - **Accounts** (email or Google) that sync progress, notes, quiz scores, flashcard reviews and certificates across devices.

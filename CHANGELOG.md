@@ -19,6 +19,12 @@ All notable changes to **CS Course Atlas** are documented in this file.
 - Accessibility: zero axe violations in light/dark mode (contrast, heading order, ARIA, focusable scroll regions); the logo is a real home link, so Lighthouse accessibility is 100.
 - Performance: module pages paint their header from the index before the lessons arrive (live Lighthouse 94 → 97–99).
 
+### Final stretch
+- Plain-language tips for Python, SQL and JavaScript errors (challenges and playground), missing-`return` hints, Step through for your own challenge code, Guess first for example output.
+- Notes inside every lesson, a course-complete celebration with next steps, a starter sample for every playground language (fixing Python/SQL starting with JavaScript code), profile shows unit progress only for started courses.
+- Performance: per-module lesson files (a Java module page went from 296 KB to 23 KB of lesson data; live Lighthouse 81 → 99), single-module quizzes/flashcards load one module, search uses an 8 KB list instead of every course (~700 KB).
+- Fixes: dialogs close on navigation, dialogs and the next-course button no longer overflow phones, search opens the right tab.
+
 ### Site
 - Installable and offline-ready: service worker caching the app, opened lessons and the Python/SQL runtimes; real manifest icons.
 - Skip-to-content link; search covers challenges and pages (and opens the right tab); notes download as Markdown.
