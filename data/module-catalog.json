@@ -334,8 +334,8 @@
   },
   {
    "id": "propositional-logic-proofs",
-   "title": "Propositional Logic and Proof Basics",
-   "description": "Truth-value helpers for implication, conjunction, and biconditional are traced in a mini truth-table runner so you can connect symbolic logic to executable reasoning.",
+   "title": "Propositional Logic and Proofs",
+   "description": "Truth tables, implication and logical equivalence, each checked by brute force in code, and how they turn into a direct proof.",
    "difficulty": "beginner",
    "topics": [
     "Propositions",
@@ -345,14 +345,14 @@
     "Direct Proof"
    ],
    "es": {
-    "title": "Lógica proposicional y conceptos básicos de prueba",
-    "description": "Los ayudantes de valor de verdad para implicación, conjunción y bicondicional se rastrean en un mini corredor de tabla de verdad para que pueda conectar la lógica simbólica con el razonamiento ejecutable."
+    "title": "Lógica proposicional y demostraciones",
+    "description": "Tablas de verdad, implicación y equivalencia lógica, cada una comprobada por fuerza bruta en código, y cómo se convierten en una demostración directa."
    }
   },
   {
    "id": "sets-relations-functions",
-   "title": "Sets, Relations, and Functions",
-   "description": "Set union/intersection, Cartesian products, and injective checks run in one compact sample so you can connect formal definitions to concrete data structures.",
+   "title": "Sets, Relations and Functions",
+   "description": "Set operations and their sizes, Cartesian products, the properties of a relation, and when a function is one-to-one or onto.",
    "difficulty": "beginner",
    "topics": [
     "Set Operations",
@@ -363,13 +363,13 @@
    ],
    "es": {
     "title": "Conjuntos, relaciones y funciones",
-    "description": "Establezca uniones/intersecciones, productos cartesianos y comprobaciones inyectivas ejecutadas en una muestra compacta para que pueda conectar definiciones formales a estructuras de datos concretas."
+    "description": "Operaciones con conjuntos y sus tamaños, productos cartesianos, las propiedades de una relación, y cuándo una función es inyectiva o sobreyectiva."
    }
   },
   {
    "id": "combinatorics-discrete-probability",
    "title": "Combinatorics and Discrete Probability",
-   "description": "Factorial/permutation/combination helpers pair with basic probability calculations so counting principles and event models become practical problem-solving tools.",
+   "description": "Count without listing: factorials, permutations, combinations and binomial coefficients, then use those counts to compute the probability of an event.",
    "difficulty": "intermediate",
    "topics": [
     "Factorials",
@@ -380,7 +380,7 @@
    ],
    "es": {
     "title": "Combinatoria y probabilidad discreta",
-    "description": "Los ayudantes factoriales/permutación/combinación se combinan con cálculos de probabilidad básicos para que los principios de conteo y los modelos de eventos se conviertan en herramientas prácticas para la resolución de problemas."
+    "description": "Contar sin enumerar: factoriales, permutaciones, combinaciones y coeficientes binomiales, y usar esos conteos para calcular la probabilidad de un evento."
    }
   },
   {
@@ -807,8 +807,8 @@
   },
   {
    "id": "discrete-graph-theory",
-   "title": "Discrete Graph Theory Foundations",
-   "description": "Bridge discrete math and practical CS by modeling vertices/edges, traversing graphs, and reasoning about paths, cycles, and connectivity.",
+   "title": "Graph Theory",
+   "description": "Model real situations as graphs, then reason about them: degrees and the handshake lemma, paths and cycles, connected components and bridges, BFS and DFS, and what makes a graph a tree.",
    "difficulty": "intermediate",
    "topics": [
     "Graph Models",
@@ -818,8 +818,8 @@
     "Tree vs General Graph"
    ],
    "es": {
-    "title": "Fundamentos de la teoría de grafos discretos",
-    "description": "Conecte las matemáticas discretas y la informática práctica modelando vértices/aristas, recorriendo gráficos y razonando sobre rutas, ciclos y conectividad."
+    "title": "Teoría de grafos",
+    "description": "Modela situaciones reales como grafos y razona sobre ellos: grados y el lema del apretón de manos, caminos y ciclos, componentes conexas y puentes, BFS y DFS, y qué hace que un grafo sea un árbol."
    }
   },
   {
