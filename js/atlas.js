@@ -30,7 +30,7 @@ const UI = {
     why: 'Why it matters', objectives: 'By the end you can', before: 'Before you start', pitfalls: 'Common mistakes', takeaways: 'Key takeaways', resources: 'Further reading',
     prereq: 'Builds on', seeExamples: 'See the examples →', fullProgram: 'Full program', output: 'Output', copy: 'Copy', copied: 'Copied', explanation: 'What’s happening',
     practiceProblems: 'Practice problems', selfCheck: 'Check yourself', selfCheckHint: 'Answer out loud first, then check the lesson and examples.',
-    markDone: 'Mark module complete', marked: 'Completed ✓', unmarked: 'Marked as not complete', prev: '← Previous', next: 'Next →',
+    markDone: 'Mark module complete', marked: 'Completed ✓', unmarked: 'Marked as not complete', prev: '← Previous', next: 'Next →', nextCourse: (c) => `Next course: ${c} →`, reviewBtn: 'Review', wholePath: 'Whole beginner path (9 courses)', courseFinished: (c) => `🎉 You finished ${c}! Every module is complete.`,
     question: (a, b) => `Question ${a} of ${b}`, correct: 'Correct.', notQuite: 'Not quite.', nextQ: 'Next question', finish: 'See score', retry: 'Try again',
     scoreText: (a, b) => `${a} of ${b} correct`, again: 'Still learning', gotIt: 'I know it', tapFlip: 'Tap to see the definition', cardOf: (a, b) => `Card ${a} of ${b}`,
     practiceLead: 'Check what stuck. Quizzes give instant feedback; flashcards drill the terms from each module.', pickModule: 'Module',
@@ -92,7 +92,7 @@ const UI = {
     why: 'Por qué importa', objectives: 'Al terminar podrás', before: 'Antes de empezar', pitfalls: 'Errores comunes', takeaways: 'Ideas clave', resources: 'Lecturas recomendadas',
     prereq: 'Se basa en', seeExamples: 'Ver los ejemplos →', fullProgram: 'Programa completo', output: 'Salida', copy: 'Copiar', copied: 'Copiado', explanation: 'Qué está pasando',
     practiceProblems: 'Ejercicios', selfCheck: 'Ponte a prueba', selfCheckHint: 'Responde primero en voz alta y luego revisa la lección y los ejemplos.',
-    markDone: 'Marcar módulo como completado', marked: 'Completado ✓', unmarked: 'Marcado como no completado', prev: '← Anterior', next: 'Siguiente →',
+    markDone: 'Marcar módulo como completado', marked: 'Completado ✓', unmarked: 'Marcado como no completado', prev: '← Anterior', next: 'Siguiente →', nextCourse: (c) => `Siguiente curso: ${c} →`, reviewBtn: 'Repasar', wholePath: 'Toda la ruta para principiantes (9 cursos)', courseFinished: (c) => `🎉 ¡Terminaste ${c}! Completaste todos los módulos.`,
     question: (a, b) => `Pregunta ${a} de ${b}`, correct: 'Correcto.', notQuite: 'No exactamente.', nextQ: 'Siguiente pregunta', finish: 'Ver resultado', retry: 'Intentar de nuevo',
     scoreText: (a, b) => `${a} de ${b} correctas`, again: 'Aún aprendiendo', gotIt: 'La sé', tapFlip: 'Toca para ver la definición', cardOf: (a, b) => `Tarjeta ${a} de ${b}`,
     practiceLead: 'Comprueba qué aprendiste. Los cuestionarios corrigen al instante; las tarjetas repasan los términos de cada módulo.', pickModule: 'Módulo',
@@ -200,7 +200,7 @@ const progressSnapshot = () => ({ done: [...state.done], codeLang: state.codeLan
   langsSeen: [...state.langsSeen], votes: [...state.votes], plan: state.plan, quizBest: state.quizBest, cardsKnown: [...state.cardsKnown], activity: state.activity.slice(-200), lang: state.lang });
 const save = () => { const snap = progressSnapshot(); Object.entries(snap).forEach(([k, v]) => store.set(k, v)); scheduleSync(); };
 function logActivity(kind, id, extra) { state.activity.push({ kind, id, at: Date.now(), ...(extra || {}) }); if (state.activity.length > 200) state.activity.splice(0, state.activity.length - 200); }
-function toast(msg) { const el = $('#toast'); el.textContent = msg; el.hidden = false; clearTimeout(toast.timer); toast.timer = setTimeout(() => { el.hidden = true; }, 1800); }
+function toast(msg, ms = 1800) { const el = $('#toast'); el.textContent = msg; el.hidden = false; clearTimeout(toast.timer); toast.timer = setTimeout(() => { el.hidden = true; }, ms); }
 function nextModule(tid = currentTrack()) { return trackIds(tid).find((id) => !state.done.has(id)) || null; }
 function trackStats(tr) {
   const ids = tr.units.flatMap((u) => u.modules);
@@ -290,7 +290,7 @@ function pathStepper() {
     const inner = `<span class="path-no${live ? ' live' : ''}${done ? ' done' : ''}">${done ? '✓' : i + 1}</span>
       <div class="path-body"><div class="path-title"><span class="cicon" data-track="${st.id}">${esc(c.icon)}</span><b>${esc(L(c.title))}</b>${status}</div>
       <p>${esc(L(st.why))}</p>${live ? `<div class="path-meta">${s.count} ${t('modules')} · ≈ ${s.hours} ${t('hours')}${s.done ? ` · ${t('ofModules', s.done, s.count)}` : ''}</div>` : ''}${live && s.done ? `<div class="progress"><span style="width:${pct(s.done, s.count)}%"></span></div>` : ''}</div>
-      <span class="path-go">${live ? (s.done ? t('continueBtn') : t('startBtn')) : t('seeOutline')} →</span>`;
+      <span class="path-go">${live ? (done ? t('reviewBtn') : s.done ? t('continueBtn') : t('startBtn')) : t('seeOutline')} →</span>`;
     return `<li><a class="path-step${live ? ' live' : ' planned'}" href="#course-${st.id}">${inner}</a></li>`;
   }).join('')}</ol>`;
 }
@@ -317,7 +317,7 @@ function viewHome() {
       <div class="progress"><span style="width:${pct(s.done, s.count)}%"></span></div><div class="muted" style="margin-top:6px">${t('ofModules', s.done, s.count)}</div></div>
       <span class="btn">${t('continueBtn')}</span></a>` : ''}
     ${!state.user && state.authReady && (state.done.size || Object.values(state.notes).some((x) => x && x.trim())) ? `<div class="card save-card"><div class="info"><b>${t('saveTitle')}</b><span>${t('saveText')}</span></div><button class="btn btn-sm" data-action="open-signup">${t('createFree')}</button></div>` : ''}
-    ${!started ? '' : (() => { const p = buildPlan(); return p.finish ? `<div class="card plan-home"><span class="cicon" style="width:34px;height:34px;font-size:15px">▤</span><div class="info">${t('planHome', fmtDate(p.finish, { month: 'long', day: 'numeric' }), L(track(planTrack()).title))}</div><a class="btn btn-ghost btn-sm" href="#plan">${t('editPlan')}</a></div>` : ''; })()}
+    ${!started ? '' : (() => { const p = buildPlan(); return p.finish ? `<div class="card plan-home"><span class="cicon" style="width:34px;height:34px;font-size:15px">▤</span><div class="info">${t('planHome', fmtDate(p.finish, { month: 'long', day: 'numeric' }), planTitle())}</div><a class="btn btn-ghost btn-sm" href="#plan">${t('editPlan')}</a></div>` : ''; })()}
     ${started ? '' : `<div class="section-head"><h2>${t('startFrom')}</h2></div>
     <div class="start-grid">${startCard(1, '#course-python')}${startCard(2, '#course-cli')}${startCard(3, '#course-java')}</div>`}
     <div class="section-head"><h2>${t('pathTitle')}</h2><a class="muted" href="#courses">${t('allCourses')} →</a></div>
@@ -394,6 +394,12 @@ function transcriptHtml(text) {
 }
 function viewMissing() { return `<section class="wrap"><h1>${t('notFound')}</h1><a class="btn" href="#home">${t('home')}</a></section>`; }
 
+// At the end of a course, point to the next live course on the beginner path (or Java after it).
+function nextCourseLink(tid) {
+  const order = DATA.path.map((st) => st.id).concat(DATA.next);
+  const after = order.slice(order.indexOf(tid) + 1).map(track).find((tr) => tr && tr.status === 'available');
+  return after ? `<a class="btn" href="#course-${after.id}">${t('nextCourse', esc(L(after.title)))}</a>` : '';
+}
 function viewModule(id) {
   const meta = DATA.modules[id], c = DATA.full[id];
   if (!meta) return viewMissing();
@@ -452,7 +458,7 @@ function viewModule(id) {
     ${body}
     <div class="mod-foot"><button class="btn${done ? ' btn-ghost' : ''}" data-action="toggle-done" data-id="${id}">${done ? t('marked') : t('markDone')}</button>
       <a class="report" href="contact-support.html?module=${id}">${t('report')}</a>
-      <div class="pn">${idx > 0 ? `<a class="btn btn-ghost" href="#m-${ids[idx - 1]}">${t('prev')}</a>` : ''}${idx < ids.length - 1 ? `<a class="btn btn-ghost" href="#m-${ids[idx + 1]}">${t('next')}</a>` : ''}</div></div>
+      <div class="pn">${idx > 0 ? `<a class="btn btn-ghost" href="#m-${ids[idx - 1]}">${t('prev')}</a>` : ''}${idx < ids.length - 1 ? `<a class="btn btn-ghost" href="#m-${ids[idx + 1]}">${t('next')}</a>` : nextCourseLink(tr.id)}</div></div>
   </section>`;
 }
 
@@ -886,9 +892,12 @@ function waitGroups(tr) {
 const modVideos = (id) => (DATA.videos && DATA.videos.modules[id]) || null;
 // The module's own series, or the whole course's series when the module has none yet.
 const seriesFor = (id) => modVideos(id)?.series || DATA.videos?.courses?.[DATA.modules[id]?.track] || null;
-const planTrack = () => (track(state.plan.track)?.status === 'available' ? state.plan.track : currentTrack());
+const planTrack = () => (state.plan.track === 'path' || track(state.plan.track)?.status === 'available' ? state.plan.track : currentTrack());
+// The plan covers one course, or the whole beginner path in order.
+const planIds = () => (planTrack() === 'path' ? pathTracks().flatMap((tr) => trackIds(tr.id)) : trackIds(planTrack()));
+const planTitle = () => (planTrack() === 'path' ? t('wholePath') : L(track(planTrack()).title));
 function buildPlan() {
-  const cap = Math.max(1, Number(state.plan.hours)) * 60, left = trackIds(planTrack()).filter((id) => !state.done.has(id));
+  const cap = Math.max(1, Number(state.plan.hours)) * 60, left = planIds().filter((id) => !state.done.has(id));
   const weeks = []; let cur = { mods: [], used: 0 };
   left.forEach((id) => { const m = DATA.modules[id].minutes || 90; if (cur.mods.length && cur.used + m > cap) { weeks.push(cur); cur = { mods: [], used: 0 }; } cur.mods.push(id); cur.used += m; });
   if (cur.mods.length) weeks.push(cur);
@@ -901,14 +910,14 @@ function viewPlan() {
   const p = buildPlan();
   return `<section class="wrap"><h1>${t('studyPlan')}</h1><p class="lead">${t('planLead')}</p>
     <div class="card plan-controls">
-      <div class="field"><label for="plan-track">${t('course')}</label><select class="select" id="plan-track">${liveTracks().map((tr) => `<option value="${tr.id}" ${tr.id === planTrack() ? 'selected' : ''}>${esc(L(tr.title))}</option>`).join('')}</select></div>
+      <div class="field"><label for="plan-track">${t('course')}</label><select class="select" id="plan-track"><option value="path" ${planTrack() === 'path' ? 'selected' : ''}>${t('wholePath')}</option>${liveTracks().map((tr) => `<option value="${tr.id}" ${tr.id === planTrack() ? 'selected' : ''}>${esc(L(tr.title))}</option>`).join('')}</select></div>
       <div class="field"><label for="plan-hours">${t('hoursWeek')}</label><select class="select" id="plan-hours">${[2, 3, 4, 6, 8, 10, 15].map((h) => `<option value="${h}" ${Number(state.plan.hours) === h ? 'selected' : ''}>${h} h</option>`).join('')}</select></div>
       <div class="field"><label for="plan-start">${t('startOn')}</label><input class="select" id="plan-start" type="date" value="${state.plan.start}"></div>
       ${p.weeks.length ? `<button class="btn btn-ghost" style="margin-left:auto" data-action="calendar">${t('addCalendar')} ↓</button>` : ''}
     </div>
     ${p.weeks.length ? `<div class="plan-summary"><div><b>${fmtDate(p.finish, { month: 'long', day: 'numeric', year: 'numeric' })}</b><span>${t('finishBy')}</span></div><div><b>${p.weeks.length}</b><span>${p.weeks.length === 1 ? t('week1') : t('weeksLeft')}</span></div><div><b>${p.left.length}</b><span>${t('modulesLeft')}</span></div></div>
     <div class="weeks">${p.weeks.map((w, i) => `<div class="card week-card${i === 0 ? ' now' : ''}"><div class="wk"><b>${i === 0 ? t('thisWeek') : t('weekN', i + 1)}</b><span>${fmtDate(w.from)} – ${fmtDate(w.to)}</span></div>
-      <div class="mods">${w.mods.map((m) => `<a href="#m-${m}">${esc(moduleTitle(m))}</a>`).join('')}</div><span class="load">${Math.round(w.used / 6) / 10} h</span></div>`).join('')}</div>`
+      <div class="mods">${w.mods.map((m) => `<a href="#m-${m}">${planTrack() === 'path' ? `<span class="cmark mini" data-track="${DATA.modules[m].track}">${esc(track(DATA.modules[m].track).icon)}</span>` : ''}${esc(moduleTitle(m))}</a>`).join('')}</div><span class="load">${Math.round(w.used / 6) / 10} h</span></div>`).join('')}</div>`
       : `<div class="notice" style="background:var(--success-soft)"><p>${t('allDone')}</p></div>`}</section>`;
 }
 /* ---------- Accounts and sync ----------
@@ -1072,7 +1081,7 @@ function downloadPlanCalendar() {
   const icsText = (x) => String(x).replace(/[\\,;]/g, (c) => '\\' + c).replace(/\n/g, '\\n');
   const events = p.weeks.map((w, i) => { const end = new Date(w.from.getTime() + 864e5);
     return ['BEGIN:VEVENT', `UID:atlas-${planTrack()}-week-${i + 1}-${day(w.from)}@cscourseatlas`, `DTSTAMP:${stamp}`, `DTSTART;VALUE=DATE:${day(w.from)}`, `DTEND;VALUE=DATE:${day(end)}`,
-      `SUMMARY:${icsText(`${L(track(planTrack()).title)} · ${t('weekN', i + 1)}`)}`, `DESCRIPTION:${icsText(w.mods.map(moduleTitle).join('\n'))}`, 'END:VEVENT'].join('\r\n'); });
+      `SUMMARY:${icsText(`${planTitle()} · ${t('weekN', i + 1)}`)}`, `DESCRIPTION:${icsText(w.mods.map(moduleTitle).join('\n'))}`, 'END:VEVENT'].join('\r\n'); });
   const ics = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//CS Course Atlas//Study plan//EN', ...events, 'END:VCALENDAR'].join('\r\n');
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([ics], { type: 'text/calendar' })); a.download = `${planTrack()}-study-plan.ics`;
   document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 0);
@@ -1140,7 +1149,9 @@ document.addEventListener('click', (e) => {
   else if (a === 'pw-eye') { const input = $('#' + el.dataset.v), show = input.type === 'password'; input.type = show ? 'text' : 'password'; el.textContent = show ? t('hide') : t('show'); el.setAttribute('aria-label', show ? t('hidePw') : t('showPw')); }
   else if (a === 'sign-out') signOut();
   else if (a === 'calendar') downloadPlanCalendar();
-  else if (a === 'toggle-done') { const id = el.dataset.id; if (state.done.has(id)) state.done.delete(id); else { state.done.add(id); logActivity('done', id); } save(); render(true); toast(state.done.has(id) ? t('marked') : t('unmarked')); }
+  else if (a === 'toggle-done') { const id = el.dataset.id; if (state.done.has(id)) state.done.delete(id); else { state.done.add(id); logActivity('done', id); } save(); render(true);
+    const tr = track(DATA.modules[id].track), st = trackStats(tr);
+    if (state.done.has(id) && st.done === st.count) toast(t('courseFinished', L(tr.title)), 4000); else toast(state.done.has(id) ? t('marked') : t('unmarked')); }
   else if (a === 'notify') { state.notified.add(el.dataset.id); save(); render(true); toast(t('notified')); }
   else if (a === 'copy') {
     const text = $('#code-block')?.textContent || '';
