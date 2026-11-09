@@ -15,7 +15,7 @@ const CRITICAL_PAGES = [
     '/sitemap.xml'
 ];
 
-const ROUTES = ['home', 'courses', 'course-python', 'm-python-first-programs', 'm-python-collections', 'course-cli', 'm-cli-files-folders', 'm-cli-shell-scripts', 'course-java', 'course-git', 'course-discrete', 'course-dsa', 'm-java-basics', 'm-git-basics-workflow', 'm-discrete-graph-theory', 'practice', 'playground', 'plan', 'notes', 'glossary', 'roadmap'];
+const ROUTES = ['home', 'courses', 'course-python', 'm-python-first-programs', 'm-python-collections', 'course-cli', 'm-cli-files-folders', 'm-cli-shell-scripts', 'course-web', 'm-web-html', 'm-web-project', 'course-sql', 'course-java', 'course-git', 'course-discrete', 'course-dsa', 'm-java-basics', 'm-git-basics-workflow', 'm-discrete-graph-theory', 'practice', 'playground', 'plan', 'notes', 'glossary', 'roadmap'];
 
 test.describe('Navigation', () => {
     test('critical pages return non-error HTTP responses', async ({ request }) => {
@@ -55,6 +55,21 @@ test.describe('Navigation', () => {
         await expect(page).toHaveURL(/#playground$/);
         await expect(page.locator('#pg-code')).toHaveValue(/print\(/);
         await expect(page.locator('[data-action="pg-lang"][aria-pressed="true"]')).toHaveText(/Python/);
+    });
+
+    test('web examples show a live preview and open in the playground', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html#m-web-javascript');
+        await page.locator('.tab[data-tab="examples"]').click();
+        await page.locator('.chips .chip').nth(3).click();
+        const preview = page.frameLocator('iframe.web-preview');
+        await expect(preview.locator('#counter')).toHaveText('Clicked 2 times');
+        await preview.locator('#counter').click();
+        await expect(preview.locator('#counter')).toHaveText('Clicked 3 times');
+        await page.locator('[data-action="try-it"]').click();
+        await expect(page).toHaveURL(/#playground$/);
+        await page.locator('[data-action="pg-run"]').click();
+        await expect(page.frameLocator('#pg-frame').locator('#counter')).toHaveText('Clicked 2 times');
     });
 
     test('links from the generated pages open the right module', async ({ page }) => {
