@@ -4,6 +4,8 @@ const { mockApi } = require('./helpers/api-mock');
 const CRITICAL_PAGES = [
     '/index.html',
     '/data/atlas-data.json',
+    '/data/lessons/java.json',
+    '/data/lessons/python.json',
     '/css/atlas.css',
     '/js/atlas.js',
     '/manifest.webmanifest',
@@ -89,6 +91,14 @@ test.describe('Navigation', () => {
         await expect(page.locator('.board-row.active')).toHaveCount(1);
         await page.locator('.option').first().click();
         await expect(page.locator('.feedback')).toBeVisible();
+    });
+
+    test('module pages show a loading state while their lessons download', async ({ page }) => {
+        await mockApi(page);
+        await page.route('**/data/lessons/sql.json*', async (route) => { await new Promise((r) => setTimeout(r, 800)); await route.continue(); });
+        await page.goto('/index.html#m-sql-joins');
+        await expect(page.locator('#main .loading')).toBeVisible();
+        await expect(page.locator('#main h1')).toHaveText('Combining Tables');
     });
 
     test('links from the generated pages open the right module', async ({ page }) => {
