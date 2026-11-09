@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<!-- Only the language runtimes on jsDelivr may load. No other network access: code run here cannot reach
+     the account server or send data anywhere. tests/smoke/security.spec.js checks the script hash. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-lGCMJRu6NOtCsEiZEP+AwmW89yNZC9tUDruBmyDYTBQ=' 'unsafe-eval' 'wasm-unsafe-eval' blob: https://cdn.jsdelivr.net; worker-src blob:; connect-src https://cdn.jsdelivr.net; base-uri 'none'; form-action 'none'">
+<title>Code runner</title>
+</head>
+<body>
+<script>
+// Relays between the site and the workers that run people's code. This page is loaded in an iframe sandboxed
+// without allow-same-origin, so it and its workers have an opaque origin: no cookies, no storage, no site access.
+(function () {
+  var workers = new Map();
+  addEventListener('message', function (e) {
+    if (e.source !== parent || !e.data || typeof e.data !== 'object') return;
+    var m = e.data, w = workers.get(m.id);
+    if (m.op === 'create' && !w && typeof m.src === 'string') {
+      var url = URL.createObjectURL(new Blob([m.src], { type: 'text/javascript' }));
+      try { w = new Worker(url, m.opts && m.opts.type === 'module' ? { type: 'module' } : {}); }
+      catch (err) { parent.postMessage({ id: m.id, ev: 'error', message: String(err && err.message || err) }, '*'); return; }
+      workers.set(m.id, w);
+      w.onmessage = function (ev) { parent.postMessage({ id: m.id, ev: 'message', data: ev.data }, '*'); };
+      w.onerror = function (ev) { ev.preventDefault(); parent.postMessage({ id: m.id, ev: 'error', message: String(ev.message || 'Error') }, '*'); };
+    } else if (m.op === 'post' && w) {
+      w.postMessage(m.data);
+    } else if (m.op === 'terminate' && w) {
+      w.terminate(); workers.delete(m.id);
+    }
+  });
+  parent.postMessage({ ready: true }, '*');
+})();
+</script>
+</body>
+</html>

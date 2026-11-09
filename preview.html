@@ -4,10 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex">
-<!-- Learner pages render here, inside a sandboxed frame with no access to the site.
-     The site itself runs under a strict Content Security Policy; this page has its own,
-     relaxed one so the HTML, CSS and JavaScript people write runs exactly as typed. -->
-<meta http-equiv="Content-Security-Policy" content="default-src * data: blob: 'unsafe-inline' 'unsafe-eval'">
+<!-- Learner pages render here, inside a sandboxed frame with no access to the site (opaque origin).
+     Their own HTML, CSS and JavaScript run as typed, but nothing can leave the device: no network requests,
+     no form submissions, no outside images or fonts. So a shared page cannot phish people or send what they
+     type anywhere, and the site's frame-src stops the frame from navigating to another website. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' 'unsafe-eval'; style-src 'unsafe-inline'; img-src data: blob:; font-src data:; media-src data: blob:; connect-src 'none'; form-action 'none'; frame-src 'none'; base-uri 'none'">
 <title>Preview</title>
 </head>
 <body>

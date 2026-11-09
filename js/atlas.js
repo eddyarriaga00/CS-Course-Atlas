@@ -910,7 +910,7 @@ int main() {
     std::vector<int> scores = {72, 95, 88};
     int total = 0;
     for (int s : scores) total += s;
-    std::cout << "average: " << static_cast<double>(total) / scores.size() << "\n";
+    std::cout << "average: " << static_cast<double>(total) / scores.size() << "\\n";
 }
 `;
 const PG_TERM = `# A practice terminal: nothing here touches your computer.
@@ -983,6 +983,49 @@ function sharePlayground() {
   const done = () => toast(t('linkCopied'));
   if (navigator.clipboard?.writeText) navigator.clipboard.writeText(url).then(done, () => window.prompt(t('copyThisLink'), url)); else window.prompt(t('copyThisLink'), url);
 }
+// ---- Sandboxed code runner ----
+// Code people write (JavaScript, Python, C++ and challenge tests) never runs with this site's identity. It runs in
+// workers inside runner.html, a hidden iframe sandboxed WITHOUT allow-same-origin: an opaque origin with no cookies,
+// no localStorage, no IndexedDB, no Cache Storage (so it cannot tamper with the offline cache), and a security
+// policy that only lets it download the language runtimes from jsDelivr. It cannot reach the account server.
+// SandboxWorker mirrors the Worker API, so the runners below use it like a normal worker.
+let runnerFrame = null, runnerReady = null, runnerReadyResolve = null, sandboxSeq = 0;
+const sandboxWorkers = new Map();
+function sandboxRunner() {
+  if (!runnerReady) runnerReady = new Promise((resolve) => {
+    runnerReadyResolve = resolve;
+    runnerFrame = document.createElement('iframe');
+    runnerFrame.setAttribute('sandbox', 'allow-scripts');
+    runnerFrame.className = 'runner-frame'; runnerFrame.title = 'Code runner'; runnerFrame.tabIndex = -1;
+    runnerFrame.setAttribute('aria-hidden', 'true');
+    runnerFrame.src = 'runner.html';
+    document.body.append(runnerFrame);
+  });
+  return runnerReady;
+}
+addEventListener('message', (e) => {
+  if (!runnerFrame || e.source !== runnerFrame.contentWindow || !e.data || typeof e.data !== 'object') return;
+  const m = e.data;
+  if (m.ready) { runnerReadyResolve(); return; }
+  const w = sandboxWorkers.get(m.id);
+  if (w) w.emit(m.ev, m);
+});
+class SandboxWorker {
+  constructor(src, opts = {}) {
+    this.id = ++sandboxSeq; this.onmessage = null; this.onerror = null; this.listeners = new Set();
+    sandboxWorkers.set(this.id, this);
+    this.queue = sandboxRunner().then(() => runnerFrame.contentWindow.postMessage({ op: 'create', id: this.id, src, opts }, '*'));
+  }
+  postMessage(data) { this.queue = this.queue.then(() => runnerFrame.contentWindow.postMessage({ op: 'post', id: this.id, data }, '*')); }
+  terminate() { sandboxWorkers.delete(this.id); this.queue.then(() => runnerFrame.contentWindow.postMessage({ op: 'terminate', id: this.id }, '*')); }
+  addEventListener(type, fn) { if (type === 'message') this.listeners.add(fn); }
+  removeEventListener(type, fn) { this.listeners.delete(fn); }
+  emit(kind, m) {
+    if (kind === 'message') { const ev = { data: m.data }; if (this.onmessage) this.onmessage(ev); this.listeners.forEach((fn) => fn(ev)); }
+    else if (this.onerror) this.onerror({ message: m.message || 'Error', preventDefault() {} });
+  }
+}
+
 // Java runs in the browser with CheerpJ (a full Java 17 runtime in WebAssembly): javac compiles, then the
 // class runs. Loaded only the first time someone runs Java. Output arrives in CheerpJ's #console element.
 const CHEERPJ_URL = 'https://cjrtnc.leaningtech.com/5.0/loader.js';
@@ -1039,7 +1082,7 @@ const WASI_SHIM_URL = 'https://cdn.jsdelivr.net/npm/@bjorn3/browser_wasi_shim@0.
 let cppWorker = null;
 function cppWorkerFor() {
   if (cppWorker) return cppWorker;
-  // Dynamic imports: a blob module worker under the site's security policy refuses static cross-origin imports.
+  // A classic worker with dynamic import(): the sandbox's opaque origin cannot start blob module workers.
   const src = `const libs = Promise.all([import('${CLANG_URL}'), import('${WASI_SHIM_URL}')]);
 const stream = (ConsoleStdout, kind) => { const dec = new TextDecoder(); return new ConsoleStdout((b) => postMessage({ t: kind, v: dec.decode(b, { stream: true }) })); };
 let lastPct = -1;
@@ -1065,8 +1108,7 @@ onmessage = async (e) => {
   } catch (x) { postMessage({ t: 'crash', v: String(x && x.message || x) }); }
 };
 postMessage({ t: 'ready' });`;
-  const url = URL.createObjectURL(new Blob([src], { type: 'text/javascript' }));
-  cppWorker = new Worker(url, { type: 'module' });
+  cppWorker = new SandboxWorker(src);
   return cppWorker;
 }
 function runCpp(code, out, status) {
@@ -1133,10 +1175,9 @@ function runPlayground() {
   const prelude = "const __f=(v)=>typeof v==='string'?v:(()=>{try{return JSON.stringify(v)}catch(e){return String(v)}})();"
     + "console.log=console.info=console.warn=(...a)=>postMessage({t:'log',v:a.map(__f).join(' ')});console.error=(...a)=>postMessage({t:'err',v:a.map(__f).join(' ')});"
     + "const require=(m)=>{throw new Error('require(\"'+m+'\") is not available in the browser playground')};";
-  const url = URL.createObjectURL(new Blob([prelude + '\n' + pg.code + "\n;postMessage({t:'done'});"], { type: 'text/javascript' }));
   const started = performance.now();
-  const w = pgWorker = new Worker(url);
-  const finish = (msg) => { clearTimeout(timer); w.terminate(); URL.revokeObjectURL(url); if (!out.textContent) out.innerHTML = `<span class="info">${t('pgEmpty')}</span>`; status.textContent = msg; };
+  const w = pgWorker = new SandboxWorker(prelude + '\n' + pg.code + "\n;postMessage({t:'done'});");
+  const finish = (msg) => { clearTimeout(timer); w.terminate(); if (!out.textContent) out.innerHTML = `<span class="info">${t('pgEmpty')}</span>`; status.textContent = msg; };
   const timer = setTimeout(() => { finish(t('pgTimeout')); }, 3000);
   w.onmessage = (e) => {
     const m = e.data;
@@ -1167,7 +1208,7 @@ onmessage = async (e) => {
   catch (err) { postMessage({ t: 'err', v: String(err.message || err).trim().split('\\n').filter((l, i, a) => i === a.length - 1 || l.includes('File "<exec>"')).map((l) => l.trim().replace('File "<exec>", ', '')).join('\\n') }); }
   finally { scope.destroy(); postMessage({ t: 'done' }); }
 };`;
-  pyWorker = new Worker(URL.createObjectURL(new Blob([src], { type: 'text/javascript' })));
+  pyWorker = new SandboxWorker(src);
   pyWorker.addEventListener('message', (e) => { if (e.data.t === 'ready') pyReady = true; });
   return pyWorker;
 }
@@ -1352,9 +1393,8 @@ function runWebChallenge(i, id, ch, key, box, code) {
 // JavaScript challenges run in a throwaway worker with a time limit.
 function runJsChallenge(i, id, ch, key, box, code) {
   const harness = `;postMessage((${JSON.stringify(ch.tests)}).map(([call, want]) => { try { const got = eval(call); const g = JSON.stringify(got); return { call, ok: g === JSON.stringify(JSON.parse(want)), got: g === undefined ? String(got) : g, want }; } catch (e) { return { call, ok: false, got: String(e), want }; } }));`;
-  const url = URL.createObjectURL(new Blob([code + '\n' + harness], { type: 'text/javascript' }));
-  const w = new Worker(url);
-  const done = () => { clearTimeout(timer); w.terminate(); URL.revokeObjectURL(url); state.chTries[key] = (state.chTries[key] || 0) + 1; refreshChallengeHelp(i); };
+  const w = new SandboxWorker(code + '\n' + harness);
+  const done = () => { clearTimeout(timer); w.terminate(); state.chTries[key] = (state.chTries[key] || 0) + 1; refreshChallengeHelp(i); };
   const timer = setTimeout(() => { done(); box.innerHTML = `<div class="ch-status err">${t('pgTimeout')}</div>`; }, 3000);
   w.onmessage = (e) => { const v = verdict(e.data), bad = e.data.find((x) => !x.ok);
     box.innerHTML = v.html + (bad ? tipFrom(JS_TIPS, bad.got) || (bad.got === 'undefined' ? `<div class="err-tip">💡 ${fmt(t('undefTip'))}</div>` : '') : ''); done(); if (v.all) markSolved(i, id, ch, key); };
@@ -1695,6 +1735,16 @@ function viewPlan() {
  * session token is also kept here and sent as a Bearer header: that is what keeps people signed in.
  * Progress is stored under the `atlas` key of /api/user-state; other keys there are left untouched. */
 const API = (window.__APP_CONFIG && window.__APP_CONFIG.apiBaseUrl) || '';
+// Java programs (CheerpJ) run on this page and make their HTTP requests with window.fetch. Only api() below, which
+// marks its requests with a private symbol, may reach the account server, so a Java program can never call it.
+const APP_FETCH = Symbol('app-fetch');
+(() => {
+  const nativeFetch = window.fetch.bind(window), apiOrigins = new Set([new URL(API || location.origin).origin, 'https://cs-course-atlas-api.onrender.com']);
+  const isApi = (u) => { try { const url = new URL(String(u && u.url || u), location.href); return apiOrigins.has(url.origin) && url.pathname.includes('/api/'); } catch (e) { return false; } };
+  window.fetch = (input, init) => (isApi(input) && !(init && init[APP_FETCH]) ? Promise.reject(new TypeError('Blocked: only the site may call its account server.')) : nativeFetch(input, init));
+  const open = XMLHttpRequest.prototype.open;
+  XMLHttpRequest.prototype.open = function (method, url, ...rest) { if (isApi(url)) throw new TypeError('Blocked: only the site may call its account server.'); return open.call(this, method, url, ...rest); };
+})();
 const auth = { token: store.get('session', ''), csrf: '', providers: null };
 async function api(path, opts = {}) {
   const headers = { Accept: 'application/json' };
@@ -1703,7 +1753,7 @@ async function api(path, opts = {}) {
   if (auth.csrf && opts.method && opts.method !== 'GET') headers['X-CSRF-Token'] = auth.csrf;
   const ctrl = new AbortController(), timer = setTimeout(() => ctrl.abort(), opts.timeout || 45000); // Render can take ~30 s to wake
   try {
-    const r = await fetch(API + path, { method: opts.method || 'GET', headers, credentials: 'include', body: opts.body ? JSON.stringify(opts.body) : undefined, signal: ctrl.signal });
+    const r = await fetch(API + path, { method: opts.method || 'GET', headers, credentials: 'include', body: opts.body ? JSON.stringify(opts.body) : undefined, signal: ctrl.signal, [APP_FETCH]: true });
     let data = null; try { data = await r.json(); } catch (e) { /* not JSON */ }
     if (!r.ok) { const err = new Error((data && data.error) || `HTTP ${r.status}`); err.status = r.status; throw err; }
     return data || {};
