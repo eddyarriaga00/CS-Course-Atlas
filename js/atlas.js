@@ -53,7 +53,7 @@ const UI = {
     pgLead: 'Write and run code right here. JavaScript, Python, SQL, web pages and a practice terminal run in your browser; Java and C++ will run on the CS Course Atlas server.',
     pgServer: 'Running this language needs the code server, which is on the roadmap. Here is the output this example prints:', pgServerNoExpected: 'Running this language needs the code server, which is on the roadmap. Switch to JavaScript or Python to run code now.',
     pgDone: (ms) => `Finished in ${ms} ms`, pgTimeout: 'Stopped after 3 seconds (infinite loop?)', pgEmpty: '(no output)', pgLoaded: (m) => `Loaded from ${m}`,
-    notesLeadIn: 'One page of notes per module, saved to your account and synced to every device you sign in on.', notesLead: 'One page of notes per module, saved on this device. With an account they sync everywhere.', notePlaceholder: 'What clicked? What confused you? Write it in your own words.',
+    notesLeadIn: 'One page of notes per module, saved to your account and synced to every device you sign in on.', notesLead: 'One page of notes per module, saved on this device. With an account they sync everywhere.', notePlaceholder: 'What clicked? What confused you? Write it in your own words.', myNotes: 'My notes',
     savedDevice: 'Saved on this device', notesFor: 'Notes for', words: 'words',
     glossaryLead: (n) => `${n} terms from the published courses, each linked to the module that teaches it.`, filterTerms: 'Filter terms', all: 'All', fromModule: (m) => `From ${m} →`,
     roadmapLead: 'Where CS Course Atlas is going. Vote for what you want next.', live: 'Live', building: 'In progress', planned: 'Planned', vote: '▲ Vote', voted: '▲ Voted',
@@ -120,7 +120,7 @@ const UI = {
     pgLead: 'Escribe y ejecuta código aquí mismo. JavaScript, Python, SQL, las páginas web y una terminal de práctica corren en tu navegador; Java y C++ correrán en el servidor de CS Course Atlas.',
     pgServer: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Esta es la salida que imprime el ejemplo:', pgServerNoExpected: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Cambia a JavaScript o Python para ejecutar código ahora.',
     pgDone: (ms) => `Terminó en ${ms} ms`, pgTimeout: 'Detenido después de 3 segundos (¿bucle infinito?)', pgEmpty: '(sin salida)', pgLoaded: (m) => `Cargado desde ${m}`,
-    notesLeadIn: 'Una página de notas por módulo, guardada en tu cuenta y sincronizada en cada dispositivo donde inicies sesión.', notesLead: 'Una página de notas por módulo, guardada en este dispositivo. Con una cuenta se sincronizan en todas partes.', notePlaceholder: '¿Qué entendiste? ¿Qué te confundió? Escríbelo con tus palabras.',
+    notesLeadIn: 'Una página de notas por módulo, guardada en tu cuenta y sincronizada en cada dispositivo donde inicies sesión.', notesLead: 'Una página de notas por módulo, guardada en este dispositivo. Con una cuenta se sincronizan en todas partes.', notePlaceholder: '¿Qué entendiste? ¿Qué te confundió? Escríbelo con tus palabras.', myNotes: 'Mis notas',
     savedDevice: 'Guardado en este dispositivo', notesFor: 'Notas de', words: 'palabras',
     glossaryLead: (n) => `${n} términos de los cursos publicados, cada uno enlazado al módulo que lo enseña.`, filterTerms: 'Filtrar términos', all: 'Todos', fromModule: (m) => `De ${m} →`,
     roadmapLead: 'Hacia dónde va CS Course Atlas. Vota por lo que quieres primero.', live: 'Disponible', building: 'En progreso', planned: 'Planeado', vote: '▲ Votar', voted: '▲ Votado',
@@ -528,6 +528,7 @@ function viewModule(id) {
       <div class="block"><h2>${t('pitfalls')}</h2><ul class="pitfalls">${LL(c.pitfalls).map((x) => `<li>${fmt(x)}</li>`).join('')}</ul></div>
     </div><aside class="card aside"><h3>${t('takeaways')}</h3><ol>${LL(c.keyTakeaways).map((x) => `<li>${fmt(x)}</li>`).join('')}</ol>
       <button class="btn" data-tab="examples" style="width:100%">${t('seeExamples')}</button>
+      <div class="sep"></div><h3><label for="mod-note">${t('myNotes')}</label></h3><textarea id="mod-note" class="mod-note" data-id="${id}" placeholder="${t('notePlaceholder')}">${esc(state.notes[id] || '')}</textarea><div class="muted mod-note-status" id="mod-note-status">${(state.notes[id] || '').trim() ? (state.user ? t('savedAccount') : t('savedDevice')) : ''}</div>
       ${seriesFor(id) ? `<div class="sep"></div><h3>${t('fullSeries')}</h3>${vidCard(seriesFor(id), true)}` : ''}
       <div class="sep"></div><h3>${t('resources')}</h3><div class="res">${(c.resources || []).map((r) => `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(L(r.label))} ↗</a>`).join('')}</div></aside></div>`;
   } else if (state.tab === 'examples') {
@@ -1825,6 +1826,7 @@ document.addEventListener('input', (e) => {
   if (e.target.id === 'viz-range') { vizGo(+e.target.value); $('#viz-range').focus(); return; }
   if (e.target.id === 'cert-name') { store.set('certName', e.target.value.trim()); $('#cert-name-out').innerHTML = esc(e.target.value.trim()) || '&nbsp;'; return; }
   if (e.target.classList?.contains('ch-code')) { const drafts = store.get('chDrafts', {}); drafts[e.target.dataset.key] = e.target.value; store.set('chDrafts', drafts); }
+  if (e.target.id === 'mod-note') { const mid = e.target.dataset.id, fresh = !(state.notes[mid] || '').trim(); state.notes[mid] = e.target.value; if (fresh && e.target.value.trim()) logActivity('note', mid); save(); $('#mod-note-status').textContent = e.target.value.trim() ? (state.user ? t('savedAccount') : t('savedDevice')) : ''; return; }
   if (e.target.id === 'note-text') { const fresh = !(state.notes[state.noteModule] || '').trim(); state.notes[state.noteModule] = e.target.value; if (fresh && e.target.value.trim()) logActivity('note', state.noteModule); save(); const n = e.target.value.trim() ? e.target.value.trim().split(/\s+/).length : 0; $('#note-status').textContent = n ? `${state.user ? t('savedAccount') : t('savedDevice')} · ${n} ${t('words')}` : ''; }
   if (e.target.id === 'gloss-course') { state.glossCourse = e.target.value; state.glossLetter = 'all'; render(true); }
   if (e.target.id === 'gloss-q') { state.glossQuery = e.target.value; $('#gloss-grid').innerHTML = glossaryGrid(); }
