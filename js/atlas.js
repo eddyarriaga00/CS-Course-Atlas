@@ -200,6 +200,15 @@ function loadModuleLessons(id) {
   }
   return moduleLoads[id];
 }
+// Several modules (mixed review, due cards): fetch each one's small file instead of whole courses.
+function waitForModules(ids) {
+  ids = [...new Set(ids)].filter((id) => DATA.modules[id] && !DATA.full[id] && track(DATA.modules[id].track)?.status === 'available');
+  if (!ids.length) return null;
+  const route = location.hash;
+  Promise.all(ids.map(loadModuleLessons)).then(() => { if (location.hash === route) render(true); })
+    .catch(() => { if (location.hash === route) $('#main').innerHTML = `<div class="loading">${t('lessonsFailed')} <button class="btn btn-sm" onclick="location.reload()">${t('retry')}</button></div>`; });
+  return `<div class="loading" aria-busy="true"><span class="spinner"></span>${t('loadingLessons')}</div>`;
+}
 function waitForModule(id) {
   if (DATA.full[id] || track(DATA.modules[id].track)?.status !== 'available') return null;
   const route = location.hash;
@@ -1715,7 +1724,9 @@ function render(keepScroll) {
   const onePick = route === 'quizzes' ? state.quizModule : route === 'flashcards' ? state.flashModule : null;
   // A single module (its page, or one picked in Quizzes/Flashcards) needs only its own small lesson file.
   let loading = route.startsWith('m-') && DATA.modules[route.slice(2)] ? waitForModule(route.slice(2))
-    : onePick && DATA.modules[onePick] ? waitForModule(onePick) : route === 'glossary' ? waitForGlossary() : waitForLessons(needTracks);
+    : onePick && DATA.modules[onePick] ? waitForModule(onePick)
+    : onePick === MIX ? waitForModules(mixIds()) : onePick === DUE ? waitForModules(dueKeys().map((k) => k.split(':')[0]))
+    : route === 'glossary' ? waitForGlossary() : waitForLessons(needTracks);
   // A module whose lessons are still downloading shows its header right away (from the small index), so the page paints fast.
   if (loading && route.startsWith('m-') && DATA.modules[route.slice(2)]) loading = moduleSkeleton(route.slice(2), loading);
   const html = loading || (route === 'home' ? viewHome() : route === 'courses' ? viewCourses() : route === 'practice' ? viewPractice() : route === 'quizzes' ? viewQuizzes() : route === 'flashcards' ? viewFlashcards() : route === 'challenges' ? viewChallenges() : route === 'profile' ? viewProfile() : route === 'playground' ? viewPlayground() : route === 'notes' ? viewNotes() : route === 'glossary' ? viewGlossary() : route === 'roadmap' ? viewRoadmap() : route === 'plan' ? viewPlan()
