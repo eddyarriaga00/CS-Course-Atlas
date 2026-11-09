@@ -1,6 +1,7 @@
 {
  "publishedTracks": [
   "java",
+  "discrete",
   "git"
  ],
  "sequence": [

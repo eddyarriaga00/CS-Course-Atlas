@@ -15,7 +15,7 @@ const CRITICAL_PAGES = [
     '/sitemap.xml'
 ];
 
-const ROUTES = ['home', 'courses', 'course-java', 'course-git', 'course-dsa', 'm-java-basics', 'm-git-basics-workflow', 'practice', 'playground', 'plan', 'notes', 'glossary', 'roadmap'];
+const ROUTES = ['home', 'courses', 'course-java', 'course-git', 'course-discrete', 'course-dsa', 'm-java-basics', 'm-git-basics-workflow', 'm-discrete-graph-theory', 'practice', 'playground', 'plan', 'notes', 'glossary', 'roadmap'];
 
 test.describe('Navigation', () => {
     test('critical pages return non-error HTTP responses', async ({ request }) => {
