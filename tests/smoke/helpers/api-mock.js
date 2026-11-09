@@ -2,14 +2,14 @@
 const RECOVERY_CODES = ['K7QM-3XRP-W9TD', 'B4NC-7YHE-2QAZ', 'PX9R-M3TK-UVW5', 'Z8DF-KQ2M-RN7C', 'HC4W-9ZEP-6TYJ', 'Q2XV-NK8B-D5RG', 'TM6A-Y3UW-8FHS', 'G9PE-C7RZ-4MXK'];
 const USER = { id: 1, email: 'ana@example.com', username: 'ana', name: 'Ana Ruiz', authProvider: 'password' };
 
-async function mockApi(page, { remoteState = null, emailConfirmation = false } = {}) {
+async function mockApi(page, { remoteState = null, emailConfirmation = false, providers = { google: { enabled: true } } } = {}) {
     const calls = { puts: [], exchanged: null };
     let signedIn = false;
     await page.route('**/api/**', async (route) => {
         const request = route.request();
         const pathname = new URL(request.url()).pathname;
         const json = (body, status = 200) => route.fulfill({ status, contentType: 'application/json', body: JSON.stringify(body) });
-        if (pathname.endsWith('/auth/oauth/providers')) return json({ ok: true, providers: { google: { enabled: true } } });
+        if (pathname.endsWith('/auth/oauth/providers')) return json({ ok: true, providers });
         if (pathname.endsWith('/auth/oauth/exchange-ticket')) {
             calls.exchanged = request.postDataJSON();
             signedIn = true;

@@ -996,3 +996,9 @@ pre[tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 
 .hint.form-err { color: var(--danger, #b91c1c); }
 @media (max-width: 600px) { .confirm-bar .cf-form { width: 100%; } .confirm-bar #cf-code { flex: 1 1 auto; } }
 .runner-frame { position: absolute; width: 0; height: 0; border: 0; visibility: hidden; }
+.google-wrap { gap: 10px; }
+.btn-github { background: #1f2328; border-color: #1f2328; color: #fff; }
+.btn-github:hover { background: #32383f; }
+.btn-github svg { flex: none; }
+:root[data-theme="dark"] .btn-github { background: #f6f8fa; border-color: #f6f8fa; color: #1f2328; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn-github { background: #f6f8fa; border-color: #f6f8fa; color: #1f2328; } }
