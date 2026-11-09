@@ -2862,6 +2862,474 @@ window.COURSE_EXAMPLES = {
           }
         }
       ]
+    },
+    "python-first-programs": {
+      "main": {
+        "code": {
+          "python": "# A cafe receipt: variables, arithmetic, strings and formatted output together\ncustomer = \"Ana\"\ncoffee_price = 2.75\nmuffin_price = 3.10\ncoffees = 2\nmuffins = 1\n\nsubtotal = coffee_price * coffees + muffin_price * muffins\ntax = subtotal * 0.08\ntotal = subtotal + tax\n\nprint(\"=\" * 28)\nprint(f\"Receipt for {customer.upper()}\")\nprint(\"=\" * 28)\nprint(f\"{coffees} x coffee   ${coffee_price * coffees:6.2f}\")\nprint(f\"{muffins} x muffin   ${muffin_price * muffins:6.2f}\")\nprint(\"-\" * 28)\nprint(f\"Subtotal     ${subtotal:6.2f}\")\nprint(f\"Tax (8%)     ${tax:6.2f}\")\nprint(f\"Total        ${total:6.2f}\")\n\n# Splitting the bill between friends: whole dollars and the cents left over\npeople = 3\ncents = round(total * 100)\nprint(f\"Split {people} ways: ${cents // people / 100:.2f} each, {cents % people} cent(s) left over\")\nprint(\"Paid in full?\", total < 20)\n"
+        },
+        "output": {
+          "python": "============================\nReceipt for ANA\n============================\n2 x coffee   $  5.50\n1 x muffin   $  3.10\n----------------------------\nSubtotal     $  8.60\nTax (8%)     $  0.69\nTotal        $  9.29\nSplit 3 ways: $3.09 each, 2 cent(s) left over\nPaid in full? True"
+        }
+      },
+      "sets": [
+        {
+          "topic": "Printing and Comments",
+          "title": {
+            "en": "Talking to the screen",
+            "es": "Hablarle a la pantalla"
+          },
+          "description": {
+            "en": "Prints text, several values at once, custom separators and endings, empty lines and quotes inside strings, with comments explaining each line.",
+            "es": "Imprime texto, varios valores a la vez, separadores y finales personalizados, líneas vacías y comillas dentro de cadenas, con comentarios que explican cada línea."
+          },
+          "explanation": {
+            "en": "`print` is the first function everyone learns because it lets you see what your program is doing. Whatever you put between the parentheses is shown on its own line.\n\nWhat to notice:\n- Several values separated by commas are printed with one space between them. `sep=\"-\"` changes that separator.\n- `end=\" ... \"` replaces the usual new line, so the next `print` continues on the same line.\n- `print()` with nothing inside prints an empty line, handy for spacing output.\n- Inside a string, `\\n` means \"new line\" and `\\t` means \"tab\". To put double quotes inside text, surround the text with single quotes (or the other way round).\n- Comments (`#`) are for people. Python skips them, so a good comment says *why* the code does something, not what `print` does.\n\nText must be inside quotes. Without them, Python thinks the word is the name of a variable.",
+            "es": "`print` es la primera función que todos aprenden porque te deja ver qué está haciendo tu programa. Lo que pongas entre los paréntesis se muestra en su propia línea.\n\nQué observar:\n- Varios valores separados por comas se imprimen con un espacio entre ellos. `sep=\"-\"` cambia ese separador.\n- `end=\" ... \"` reemplaza el salto de línea habitual, así que el siguiente `print` continúa en la misma línea.\n- `print()` sin nada adentro imprime una línea vacía, útil para separar la salida.\n- Dentro de una cadena, `\\n` significa \"nueva línea\" y `\\t` significa \"tabulación\". Para poner comillas dobles dentro del texto, rodea el texto con comillas simples (o al revés).\n- Los comentarios (`#`) son para las personas. Python los salta, así que un buen comentario dice *por qué* el código hace algo, no qué hace `print`.\n\nEl texto debe ir entre comillas. Sin ellas, Python cree que la palabra es el nombre de una variable."
+          },
+          "code": {
+            "python": "# Lines starting with # are comments: Python skips them.\nprint(\"Hello, world!\")\nprint(\"Python\", \"is\", \"fun\")  # commas print values with one space between them\nprint(\"2026\", \"01\", \"15\", sep=\"-\")  # sep changes that space\nprint(\"Loading\", end=\" ... \")  # end replaces the usual new line\nprint(\"done\")\nprint()  # an empty line\nprint(\"Line one\\nLine two\")  # \\n inside a string starts a new line\nprint(\"Name:\\tAna\")  # \\t is a tab\nprint('She said \"hi\"')  # single quotes around text that contains double quotes\nprint(\"It's sunny\")  # and double quotes around text with an apostrophe\n"
+          },
+          "output": {
+            "python": "Hello, world!\nPython is fun\n2026-01-15\nLoading ... done\n\nLine one\nLine two\nName:\tAna\nShe said \"hi\"\nIt's sunny"
+          }
+        },
+        {
+          "topic": "Variables and Types",
+          "title": {
+            "en": "Names for values",
+            "es": "Nombres para los valores"
+          },
+          "description": {
+            "en": "Creates variables of the four basic types, checks them with `type()`, changes a variable, assigns several at once and swaps two values.",
+            "es": "Crea variables de los cuatro tipos básicos, las revisa con `type()`, cambia una variable, asigna varias a la vez e intercambia dos valores."
+          },
+          "explanation": {
+            "en": "A variable is a label you stick on a value so you can use it later. `age = 19` means \"from now on, `age` refers to 19\". It is not an equation: `age = age + 1` makes perfect sense in Python, because the right side is computed first and then stored.\n\nWhat to notice:\n- The four basic types are `str` (text), `int` (whole numbers), `float` (numbers with a decimal point) and `bool` (`True` or `False`). Python works out the type from the value, so you never write it yourself.\n- `type(x).__name__` prints just the type's name.\n- After `age = age + 1`, the old value is gone: a variable holds one value at a time. `age += 1` is a shorter way to write the same thing.\n- `a, b = b, a` swaps two variables in one line, because Python builds the right side before assigning.\n\nGood names say what the value means: `price`, `is_student`, `total_cost`. Python names use lowercase words joined by underscores and cannot start with a digit.",
+            "es": "Una variable es una etiqueta que le pegas a un valor para usarlo después. `edad = 19` significa \"de ahora en adelante, `edad` se refiere a 19\". No es una ecuación: `edad = edad + 1` tiene todo el sentido en Python, porque primero se calcula el lado derecho y luego se guarda.\n\nQué observar:\n- Los cuatro tipos básicos son `str` (texto), `int` (enteros), `float` (números con punto decimal) y `bool` (`True` o `False`). Python deduce el tipo a partir del valor, así que nunca lo escribes tú.\n- `type(x).__name__` imprime solo el nombre del tipo.\n- Después de `edad = edad + 1`, el valor anterior desaparece: una variable guarda un valor a la vez. `edad += 1` es una forma más corta de escribir lo mismo.\n- `a, b = b, a` intercambia dos variables en una línea, porque Python arma el lado derecho antes de asignar.\n\nLos buenos nombres dicen qué significa el valor: `precio`, `es_estudiante`, `costo_total`. En Python los nombres usan palabras en minúscula unidas con guion bajo y no pueden empezar con un dígito."
+          },
+          "code": {
+            "python": "name = \"Ana\"  # str: text\nage = 19  # int: a whole number\nheight = 1.68  # float: a number with a decimal point\nis_student = True  # bool: True or False\n\nprint(name, age, height, is_student)\nprint(type(name).__name__, type(age).__name__, type(height).__name__, type(is_student).__name__)\n\n# The right side is computed first, then stored: the old value is replaced\nage = age + 1\nprint(\"Next year Ana will be\", age)\nage += 1  # the same idea, written shorter\nprint(\"The year after:\", age)\n\n# Several variables in one line, and a swap without a temporary variable\nwidth, depth = 3, 5\nprint(\"before swap:\", width, depth)\nwidth, depth = depth, width\nprint(\"after swap: \", width, depth)\n"
+          },
+          "output": {
+            "python": "Ana 19 1.68 True\nstr int float bool\nNext year Ana will be 20\nThe year after: 21\nbefore swap: 3 5\nafter swap:  5 3"
+          }
+        },
+        {
+          "topic": "Numbers and Arithmetic",
+          "title": {
+            "en": "Python as a calculator",
+            "es": "Python como calculadora"
+          },
+          "description": {
+            "en": "Runs every arithmetic operator on the same two numbers, shows the order of operations, rounding, and why `0.1 + 0.2` is not exactly `0.3`.",
+            "es": "Aplica cada operador aritmético a los mismos dos números, muestra el orden de las operaciones, el redondeo y por qué `0.1 + 0.2` no es exactamente `0.3`."
+          },
+          "explanation": {
+            "en": "Python understands the usual math symbols plus three that are very useful in programs.\n\nWhat to notice:\n- `7 / 2` is `3.5`: plain division always gives a `float`, even `8 / 2` gives `4.0`.\n- `7 // 2` is `3`: floor division throws away the fraction. `7 % 2` is `1`: the remainder. Together they answer questions like \"how many full boxes and how many left over?\", as in the minutes example.\n- `2 ** 10` is 2 to the power 10. Python integers have no size limit, so `2 ** 100` works too.\n- Multiplication happens before addition, so `2 + 3 * 4` is 14. Use parentheses when you mean something else.\n- `0.1 + 0.2` prints `0.30000000000000004`. Computers store decimals in binary, where 0.1 cannot be written exactly. It is not a bug in Python; every language does this. Round when you show results.\n\n`%` has a classic use: `n % 2 == 0` is true exactly when `n` is even.",
+            "es": "Python entiende los símbolos matemáticos de siempre y tres más que son muy útiles en los programas.\n\nQué observar:\n- `7 / 2` es `3.5`: la división normal siempre da un `float`; incluso `8 / 2` da `4.0`.\n- `7 // 2` es `3`: la división entera descarta la parte decimal. `7 % 2` es `1`: el residuo. Juntos responden preguntas como \"¿cuántas cajas completas y cuántos sobran?\", como en el ejemplo de los minutos.\n- `2 ** 10` es 2 elevado a 10. Los enteros de Python no tienen límite de tamaño, así que `2 ** 100` también funciona.\n- La multiplicación va antes que la suma, así que `2 + 3 * 4` es 14. Usa paréntesis cuando quieras otra cosa.\n- `0.1 + 0.2` imprime `0.30000000000000004`. Las computadoras guardan los decimales en binario, donde 0.1 no se puede escribir exacto. No es un error de Python; todos los lenguajes lo hacen. Redondea al mostrar resultados.\n\n`%` tiene un uso clásico: `n % 2 == 0` es verdadero exactamente cuando `n` es par."
+          },
+          "code": {
+            "python": "a, b = 7, 2\nprint(\"a + b  =\", a + b)\nprint(\"a - b  =\", a - b)\nprint(\"a * b  =\", a * b)\nprint(\"a / b  =\", a / b)  # true division: always a float\nprint(\"a // b =\", a // b)  # floor division: drops the fraction\nprint(\"a % b  =\", a % b)  # remainder\nprint(\"a ** b =\", a ** b)  # power\n\nprint(\"2 + 3 * 4   =\", 2 + 3 * 4)  # * before +\nprint(\"(2 + 3) * 4 =\", (2 + 3) * 4)\nprint(\"2 ** 100    =\", 2 ** 100)  # ints can be as big as you like\n\nminutes = 135\nprint(f\"{minutes} minutes = {minutes // 60} h {minutes % 60} min\")\n\nprint(\"0.1 + 0.2 =\", 0.1 + 0.2)  # binary floats cannot store 0.1 exactly\nprint(\"rounded:  \", round(0.1 + 0.2, 2))\nprint(\"abs(-4) =\", abs(-4), \" max =\", max(3, 9, 4), \" min =\", min(3, 9, 4))\nfor n in [10, 7]:\n    print(n, \"is even\" if n % 2 == 0 else \"is odd\")\n"
+          },
+          "output": {
+            "python": "a + b  = 9\na - b  = 5\na * b  = 14\na / b  = 3.5\na // b = 3\na % b  = 1\na ** b = 49\n2 + 3 * 4   = 14\n(2 + 3) * 4 = 20\n2 ** 100    = 1267650600228229401496703205376\n135 minutes = 2 h 15 min\n0.1 + 0.2 = 0.30000000000000004\nrounded:   0.3\nabs(-4) = 4  max = 9  min = 3\n10 is even\n7 is odd"
+          }
+        },
+        {
+          "topic": "Strings",
+          "title": {
+            "en": "Working with text",
+            "es": "Trabajar con texto"
+          },
+          "description": {
+            "en": "Joins, repeats, measures, indexes and slices a string, uses common string methods, checks for a word with `in`, and builds a sentence with an f-string.",
+            "es": "Une, repite, mide, indexa y rebana una cadena, usa métodos comunes, busca una palabra con `in` y arma una oración con una f-string."
+          },
+          "explanation": {
+            "en": "Strings are sequences of characters, and most programs spend a lot of time building and cleaning them.\n\nWhat to notice:\n- `len(s)` counts the characters, spaces included.\n- Indexes start at 0: `s[0]` is the first character and `s[-1]` the last. A slice `s[0:6]` takes characters 0 to 5; the end is not included, so the length of the slice is `6 - 0`.\n- Methods are functions attached to a value, called with a dot: `s.upper()`, `s.replace(\"old\", \"new\")`. They return a new string; the original is unchanged, because strings cannot be modified in place.\n- `strip()` removes spaces at both ends, which is exactly what you want for text typed by a user.\n- `split()` breaks text into a list of words, and `\" \".join(words)` puts them back together.\n- `\"Py\" in s` checks whether one string appears inside another.\n- f-strings (`f\"...\"`) are the easiest way to mix text and values: anything inside `{}` is evaluated.",
+            "es": "Las cadenas son secuencias de caracteres, y la mayoría de los programas pasan mucho tiempo construyéndolas y limpiándolas.\n\nQué observar:\n- `len(s)` cuenta los caracteres, incluidos los espacios.\n- Los índices empiezan en 0: `s[0]` es el primer carácter y `s[-1]` el último. Una rebanada `s[0:6]` toma los caracteres del 0 al 5; el final no se incluye, así que el largo de la rebanada es `6 - 0`.\n- Los métodos son funciones unidas a un valor y se llaman con un punto: `s.upper()`, `s.replace(\"viejo\", \"nuevo\")`. Devuelven una cadena nueva; la original no cambia, porque las cadenas no se pueden modificar.\n- `strip()` quita los espacios de ambos extremos, justo lo que necesitas con texto escrito por un usuario.\n- `split()` separa el texto en una lista de palabras, y `\" \".join(palabras)` las vuelve a unir.\n- `\"Py\" in s` revisa si una cadena aparece dentro de otra.\n- Las f-strings (`f\"...\"`) son la forma más fácil de mezclar texto y valores: todo lo que está dentro de `{}` se evalúa."
+          },
+          "code": {
+            "python": "s = \"Python is fun\"\nprint(len(s), \"characters\")\nprint(\"first:\", s[0], \" last:\", s[-1])\nprint(\"slice [0:6]:\", s[0:6])\nprint(\"upper:\", s.upper())\nprint(\"replace:\", s.replace(\"fun\", \"powerful\"))\nprint(\"unchanged:\", s)  # methods return new strings\n\nmessy = \"   ana ruiz  \"\nclean = messy.strip().title()\nprint(f\"[{messy}] -> [{clean}]\")\n\nwords = s.split()\nprint(\"words:\", words, \"->\", len(words), \"words\")\nprint(\"joined with -:\", \"-\".join(words))\nprint(\"contains 'fun':\", \"fun\" in s)\n\nprint(\"ha\" * 3, \"+\", \"ab\" + \"cd\")\nitem, price, qty = \"notebook\", 2.5, 4\nprint(f\"{qty} x {item} = ${price * qty:.2f}\")\n"
+          },
+          "output": {
+            "python": "13 characters\nfirst: P  last: n\nslice [0:6]: Python\nupper: PYTHON IS FUN\nreplace: Python is powerful\nunchanged: Python is fun\n[   ana ruiz  ] -> [Ana Ruiz]\nwords: ['Python', 'is', 'fun'] -> 3 words\njoined with -: Python-is-fun\ncontains 'fun': True\nhahaha + abcd\n4 x notebook = $10.00"
+          }
+        },
+        {
+          "topic": "Input and Type Conversion",
+          "title": {
+            "en": "Asking the user",
+            "es": "Preguntarle al usuario"
+          },
+          "description": {
+            "en": "Reads a name and an age with `input()`, shows why typed numbers are strings, converts them with `int()` and `float()`, and checks text before converting it.",
+            "es": "Lee un nombre y una edad con `input()`, muestra por qué los números escritos son texto, los convierte con `int()` y `float()` y revisa el texto antes de convertirlo."
+          },
+          "explanation": {
+            "en": "`input(\"question \")` prints the question, waits for the user to type a line and press Enter, then returns what they typed. Always as a string, even if they typed digits.\n\nTo make this example run on its own, the first lines pretend the user typed \"Ana\", \"17\" and \"3.5\": `sys.stdin = io.StringIO(...)` replaces the keyboard with that text. In your own programs, delete those two lines and type the answers yourself. We also print each answer so the output looks like a real terminal.\n\nWhat to notice:\n- `type(age_text)` is `str`, and `age_text + age_text` is `\"1717\"`: the plus sign joins text.\n- `int(age_text)` turns `\"17\"` into the number 17, so arithmetic works. `float()` does the same for decimals.\n- `str(18)` turns a number back into text, needed if you join it with `+`.\n- `int(\"seventeen\")` would crash with `ValueError`. `\"17\".isdigit()` lets you check first; later modules show how to handle errors properly.\n\nRemember the pattern: read, convert, then compute.",
+            "es": "`input(\"pregunta \")` imprime la pregunta, espera a que el usuario escriba una línea y presione Enter, y devuelve lo que escribió. Siempre como texto, aunque haya escrito dígitos.\n\nPara que este ejemplo funcione solo, las primeras líneas simulan que el usuario escribió \"Ana\", \"17\" y \"3.5\": `sys.stdin = io.StringIO(...)` reemplaza el teclado con ese texto. En tus propios programas, borra esas dos líneas y escribe tú las respuestas. También imprimimos cada respuesta para que la salida parezca una terminal real.\n\nQué observar:\n- `type(texto_edad)` es `str`, y `texto_edad + texto_edad` es `\"1717\"`: el signo más une texto.\n- `int(texto_edad)` convierte `\"17\"` en el número 17, así funciona la aritmética. `float()` hace lo mismo con decimales.\n- `str(18)` convierte un número de vuelta en texto, necesario si lo unes con `+`.\n- `int(\"diecisiete\")` fallaría con `ValueError`. `\"17\".isdigit()` te deja revisarlo antes; en módulos siguientes verás cómo manejar errores bien.\n\nRecuerda el patrón: leer, convertir y luego calcular."
+          },
+          "code": {
+            "python": "import io\nimport sys\n\n# Pretend the user typed these three answers (delete these two lines to type them yourself)\nsys.stdin = io.StringIO(\"Ana\\n17\\n3.5\\n\")\n\nname = input(\"What is your name? \")\nprint(name)  # echo the answer so the output looks like a terminal\nage_text = input(\"How old are you? \")\nprint(age_text)\nhours_text = input(\"Hours of sleep last night? \")\nprint(hours_text)\n\nprint(\"age_text is a\", type(age_text).__name__, \"->\", age_text + age_text)\nage = int(age_text)  # convert before doing math\nhours = float(hours_text)\nprint(f\"Hi {name}! Next year you will be {age + 1}.\")\nprint(f\"You slept {hours} h, {8 - hours} h short of 8.\")\nprint(\"Joining needs str(): \" + \"age \" + str(age + 1))\n\nfor text in [\"42\", \"forty-two\", \"3.5\"]:\n    print(f\"{text!r}.isdigit() = {text.isdigit()}\")\n"
+          },
+          "output": {
+            "python": "What is your name? Ana\nHow old are you? 17\nHours of sleep last night? 3.5\nage_text is a str -> 1717\nHi Ana! Next year you will be 18.\nYou slept 3.5 h, 4.5 h short of 8.\nJoining needs str(): age 18\n'42'.isdigit() = True\n'forty-two'.isdigit() = False\n'3.5'.isdigit() = False"
+          }
+        }
+      ]
+    },
+    "python-decisions-loops": {
+      "main": {
+        "code": {
+          "python": "# A guessing game, played automatically: decisions and loops working together\nsecret = 37\nguesses = [50, 25, 40, 37, 12]  # what a player might type, in order\nmax_tries = 4\n\ntries = 0\nwon = False\nwhile tries < max_tries:\n    guess = guesses[tries]\n    tries += 1\n    if guess == secret:\n        won = True\n        print(f\"Try {tries}: {guess} -> correct!\")\n        break\n    elif guess < secret:\n        print(f\"Try {tries}: {guess} -> higher\")\n    else:\n        print(f\"Try {tries}: {guess} -> lower\")\n\nif won:\n    print(f\"You won in {tries} tries.\")\nelse:\n    print(f\"Out of tries. The number was {secret}.\")\n\n# The points table: fewer tries, more points (a for loop over a known range)\nfor t in range(1, max_tries + 1):\n    print(f\"win on try {t}: {100 - (t - 1) * 25} points\")\n"
+        },
+        "output": {
+          "python": "Try 1: 50 -> lower\nTry 2: 25 -> higher\nTry 3: 40 -> lower\nTry 4: 37 -> correct!\nYou won in 4 tries.\nwin on try 1: 100 points\nwin on try 2: 75 points\nwin on try 3: 50 points\nwin on try 4: 25 points"
+        }
+      },
+      "sets": [
+        {
+          "topic": "Booleans and Comparisons",
+          "title": {
+            "en": "True or False",
+            "es": "Verdadero o falso"
+          },
+          "description": {
+            "en": "Compares numbers and strings, combines conditions with `and`, `or` and `not`, and builds a readable rule for ticket prices.",
+            "es": "Compara números y cadenas, combina condiciones con `and`, `or` y `not`, y arma una regla legible para el precio de una entrada."
+          },
+          "explanation": {
+            "en": "Every decision in a program comes down to a question with a yes/no answer. In Python that answer is a boolean: `True` or `False`.\n\nWhat to notice:\n- Comparisons produce booleans you can print or store: `is_adult = age >= 18` is a perfectly normal variable.\n- `==` compares; `=` assigns. Mixing them up is the most common beginner mistake.\n- `5 == 5.0` is `True` (same number), but `\"5\" == 5` is `False` (text is never equal to a number).\n- Strings are compared alphabetically by character code, so `\"apple\" < \"banana\"` is `True`, and uppercase letters come before lowercase ones.\n- `and` is true only when both sides are; `or` when at least one is; `not` flips a value. `0 < x < 10` is a handy shortcut for \"between\".\n\nNaming conditions (`is_child`, `is_senior`) makes the final rule read like a sentence, and makes mistakes much easier to spot.",
+            "es": "Cada decisión en un programa se reduce a una pregunta con respuesta sí o no. En Python esa respuesta es un booleano: `True` o `False`.\n\nQué observar:\n- Las comparaciones producen booleanos que puedes imprimir o guardar: `es_adulto = edad >= 18` es una variable totalmente normal.\n- `==` compara; `=` asigna. Confundirlos es el error más común de los principiantes.\n- `5 == 5.0` es `True` (el mismo número), pero `\"5\" == 5` es `False` (el texto nunca es igual a un número).\n- Las cadenas se comparan alfabéticamente por código de carácter, así que `\"apple\" < \"banana\"` es `True`, y las mayúsculas van antes que las minúsculas.\n- `and` es verdadero solo si ambos lados lo son; `or`, si al menos uno lo es; `not` invierte un valor. `0 < x < 10` es un atajo práctico para \"entre\".\n\nPonerle nombre a las condiciones (`es_nino`, `es_mayor`) hace que la regla final se lea como una oración y que los errores sean mucho más fáciles de ver."
+          },
+          "code": {
+            "python": "age = 15\nprint(\"age >= 18:\", age >= 18)\nprint(\"age != 15:\", age != 15)\nprint(\"5 == 5.0:\", 5 == 5.0, \"  '5' == 5:\", \"5\" == 5)\nprint(\"'apple' < 'banana':\", \"apple\" < \"banana\", \"  'Zoo' < 'apple':\", \"Zoo\" < \"apple\")\n\nhas_ticket = True\nis_member = False\nprint(\"has_ticket and is_member:\", has_ticket and is_member)\nprint(\"has_ticket or is_member: \", has_ticket or is_member)\nprint(\"not is_member:\", not is_member)\nprint(\"0 < age < 18:\", 0 < age < 18)\n\n# Naming each condition makes the rule read like a sentence\nfor age in [8, 15, 30, 70]:\n    is_child = age < 12\n    is_senior = age >= 65\n    discount = is_child or is_senior\n    print(f\"age {age}: discount = {discount}\")\n"
+          },
+          "output": {
+            "python": "age >= 18: False\nage != 15: False\n5 == 5.0: True   '5' == 5: False\n'apple' < 'banana': True   'Zoo' < 'apple': True\nhas_ticket and is_member: False\nhas_ticket or is_member:  True\nnot is_member: True\n0 < age < 18: True\nage 8: discount = True\nage 15: discount = False\nage 30: discount = False\nage 70: discount = True"
+          }
+        },
+        {
+          "topic": "if, elif and else",
+          "title": {
+            "en": "Choosing a path",
+            "es": "Elegir un camino"
+          },
+          "description": {
+            "en": "Turns scores into letter grades with an if/elif/else chain, shows why the order of branches matters, and nests one decision inside another.",
+            "es": "Convierte puntajes en letras con una cadena if/elif/else, muestra por qué importa el orden de las ramas y anida una decisión dentro de otra."
+          },
+          "explanation": {
+            "en": "`if` lets your program take different paths. Python checks each condition from the top and runs the block of the first one that is true; everything else is skipped.\n\nWhat to notice:\n- The colon at the end of `if score >= 90:` and the indentation below it are required. The indented lines are the block that belongs to that branch.\n- The grade chain checks 90 first, then 80, then 70. A score of 85 fails the first test and passes the second, so it gets a B. Because earlier branches already handled higher scores, `elif score >= 80` really means \"between 80 and 89\".\n- `else` catches everything that did not match, so every score gets exactly one letter.\n- The \"wrong order\" version checks `>= 60` first. Then 95 gets a D, because the first true branch wins. When results look strange, check the order.\n- An `if` can sit inside another `if` block (a nested decision), as in the pass/fail message.\n\n`x if condition else y` is a one-line version for choosing between two values.",
+            "es": "`if` permite que tu programa tome caminos distintos. Python revisa cada condición desde arriba y ejecuta el bloque de la primera que sea verdadera; todo lo demás se salta.\n\nQué observar:\n- Los dos puntos al final de `if nota >= 90:` y la sangría debajo son obligatorios. Las líneas con sangría son el bloque de esa rama.\n- La cadena de calificaciones revisa primero 90, luego 80 y luego 70. Un puntaje de 85 no pasa la primera prueba y sí la segunda, así que recibe una B. Como las ramas anteriores ya trataron los puntajes altos, `elif nota >= 80` en realidad significa \"entre 80 y 89\".\n- `else` atrapa todo lo que no coincidió, así que cada puntaje recibe exactamente una letra.\n- La versión con el \"orden incorrecto\" revisa primero `>= 60`. Entonces 95 recibe una D, porque gana la primera rama verdadera. Cuando los resultados se vean raros, revisa el orden.\n- Un `if` puede ir dentro del bloque de otro `if` (una decisión anidada), como en el mensaje de aprobado o reprobado.\n\n`x if condición else y` es una versión de una línea para elegir entre dos valores."
+          },
+          "code": {
+            "python": "for score in [95, 85, 72, 64, 40]:\n    if score >= 90:\n        grade = \"A\"\n    elif score >= 80:  # only reached when score < 90\n        grade = \"B\"\n    elif score >= 70:\n        grade = \"C\"\n    elif score >= 60:\n        grade = \"D\"\n    else:\n        grade = \"F\"\n\n    if grade != \"F\":  # a decision inside the loop's block\n        message = \"pass with honors\" if grade == \"A\" else \"pass\"\n    else:\n        message = \"try again\"\n    print(f\"{score}: {grade} ({message})\")\n\n# The same idea in the wrong order: the first true branch wins\nscore = 95\nif score >= 60:\n    grade = \"D\"\nelif score >= 90:\n    grade = \"A\"\nelse:\n    grade = \"F\"\nprint(\"wrong order gives 95 a\", grade)\n"
+          },
+          "output": {
+            "python": "95: A (pass with honors)\n85: B (pass)\n72: C (pass)\n64: D (pass)\n40: F (try again)\nwrong order gives 95 a D"
+          }
+        },
+        {
+          "topic": "while Loops",
+          "title": {
+            "en": "Repeat until done",
+            "es": "Repetir hasta terminar"
+          },
+          "description": {
+            "en": "Counts down, doubles savings until a goal is reached, and validates input by asking again until the answer is acceptable.",
+            "es": "Hace una cuenta regresiva, duplica unos ahorros hasta llegar a una meta y valida la entrada preguntando de nuevo hasta que la respuesta sea aceptable."
+          },
+          "explanation": {
+            "en": "A `while` loop repeats its block as long as its condition is true, checking the condition before every round. Use it when you cannot know in advance how many rounds you need.\n\nWhat to notice:\n- The countdown changes `n` each round (`n -= 1`), so the condition `n > 0` eventually becomes false. Without that line the loop would never end.\n- The savings loop answers \"how many months until I reach 1000?\" We do not know the number of rounds beforehand, which is exactly when `while` fits.\n- Input validation is a classic `while` pattern: keep asking until the answer is valid. Here the pretend user types \"abc\", then \"-5\", then \"12\". Each invalid answer gets a message and the loop asks again.\n- `while True:` with a `break` inside is another common style; you will see it in the break and continue example.\n\nIf a program seems frozen, a loop's condition probably never becomes false. Stop it with Ctrl+C and check what changes inside the loop.",
+            "es": "Un ciclo `while` repite su bloque mientras su condición sea verdadera, revisándola antes de cada vuelta. Úsalo cuando no puedes saber de antemano cuántas vueltas necesitas.\n\nQué observar:\n- La cuenta regresiva cambia `n` en cada vuelta (`n -= 1`), así que la condición `n > 0` termina siendo falsa. Sin esa línea el ciclo nunca terminaría.\n- El ciclo de ahorros responde \"¿cuántos meses hasta llegar a 1000?\". No sabemos el número de vueltas de antemano, que es justo cuando conviene `while`.\n- La validación de entrada es un patrón clásico de `while`: seguir preguntando hasta que la respuesta sea válida. Aquí el usuario simulado escribe \"abc\", luego \"-5\" y luego \"12\". Cada respuesta inválida recibe un mensaje y el ciclo vuelve a preguntar.\n- `while True:` con un `break` adentro es otro estilo común; lo verás en el ejemplo de break y continue.\n\nSi un programa parece congelado, probablemente la condición de un ciclo nunca se vuelve falsa. Detenlo con Ctrl+C y revisa qué cambia dentro del ciclo."
+          },
+          "code": {
+            "python": "import io\nimport sys\n\nn = 5\nwhile n > 0:\n    print(n, end=\" \")\n    n -= 1  # without this line the loop would never end\nprint(\"liftoff!\")\n\nsavings, month = 100, 0\nwhile savings < 1000:\n    savings *= 2\n    month += 1\n    print(f\"month {month}: ${savings}\")\nprint(f\"Goal reached after {month} months\")\n\n# Ask again until the answer is a positive whole number\nsys.stdin = io.StringIO(\"abc\\n-5\\n12\\n\")  # pretend answers\nanswer = input(\"How many tickets? \")\nprint(answer)\nwhile not answer.isdigit() or int(answer) == 0:\n    print(\"Please type a whole number greater than 0.\")\n    answer = input(\"How many tickets? \")\n    print(answer)\nprint(f\"OK, {int(answer)} tickets.\")\n"
+          },
+          "output": {
+            "python": "5 4 3 2 1 liftoff!\nmonth 1: $200\nmonth 2: $400\nmonth 3: $800\nmonth 4: $1600\nGoal reached after 4 months\nHow many tickets? abc\nPlease type a whole number greater than 0.\nHow many tickets? -5\nPlease type a whole number greater than 0.\nHow many tickets? 12\nOK, 12 tickets."
+          }
+        },
+        {
+          "topic": "for Loops and range",
+          "title": {
+            "en": "Once for each item",
+            "es": "Una vez por cada elemento"
+          },
+          "description": {
+            "en": "Loops over a list of names, over the letters of a word and over number ranges, and adds up a running total.",
+            "es": "Recorre una lista de nombres, las letras de una palabra y rangos de números, y suma un total acumulado."
+          },
+          "explanation": {
+            "en": "A `for` loop runs its block once for every item in a sequence, with the loop variable set to that item. It stops by itself when the items run out, so it cannot loop forever.\n\nWhat to notice:\n- `for name in names:` visits each list item in order. The variable name is up to you; choose one that reads well (`for name in names`, `for score in scores`).\n- A string is a sequence too, so `for letter in \"hello\"` visits each character.\n- `range(5)` gives 0, 1, 2, 3, 4: five numbers, starting at 0, and the end is never included. `range(2, 11, 2)` starts at 2 and steps by 2 up to 10. `range(10, 0, -3)` counts down.\n- The running total is the most common loop pattern: start a variable at 0 before the loop and add to it inside.\n- `enumerate(names, start=1)` gives you a counter and the item together, so you never need to manage an index by hand.\n\nRule of thumb: use `for` when you know what you are looping over, `while` when you are waiting for a condition.",
+            "es": "Un ciclo `for` ejecuta su bloque una vez por cada elemento de una secuencia, con la variable del ciclo igual a ese elemento. Termina solo cuando se acaban los elementos, así que no puede repetirse para siempre.\n\nQué observar:\n- `for nombre in nombres:` visita cada elemento de la lista en orden. El nombre de la variable lo eliges tú; elige uno que se lea bien (`for nombre in nombres`, `for nota in notas`).\n- Una cadena también es una secuencia, así que `for letra in \"hola\"` visita cada carácter.\n- `range(5)` da 0, 1, 2, 3, 4: cinco números, empezando en 0, y el final nunca se incluye. `range(2, 11, 2)` empieza en 2 y avanza de 2 en 2 hasta 10. `range(10, 0, -3)` cuenta hacia atrás.\n- El total acumulado es el patrón de ciclo más común: inicia una variable en 0 antes del ciclo y súmale adentro.\n- `enumerate(nombres, start=1)` te da un contador y el elemento juntos, así nunca tienes que manejar un índice a mano.\n\nRegla práctica: usa `for` cuando sabes qué vas a recorrer y `while` cuando esperas que se cumpla una condición."
+          },
+          "code": {
+            "python": "names = [\"Ana\", \"Ben\", \"Chen\"]\nfor name in names:\n    print(\"Hello,\", name)\n\nfor letter in \"loop\":\n    print(letter.upper(), end=\" \")\nprint()\n\nprint(\"range(5):       \", list(range(5)))\nprint(\"range(2, 11, 2):\", list(range(2, 11, 2)))\nprint(\"range(10, 0, -3):\", list(range(10, 0, -3)))\n\nscores = [72, 95, 88, 61]\ntotal = 0  # running total: start at 0, add inside the loop\nfor score in scores:\n    total += score\nprint(f\"total {total}, average {total / len(scores):.1f}\")\n\nfor position, name in enumerate(names, start=1):\n    print(f\"{position}. {name}\")\n\nfor i in range(1, 4):\n    print(f\"7 x {i} = {7 * i}\")\n"
+          },
+          "output": {
+            "python": "Hello, Ana\nHello, Ben\nHello, Chen\nL O O P\nrange(5):        [0, 1, 2, 3, 4]\nrange(2, 11, 2): [2, 4, 6, 8, 10]\nrange(10, 0, -3): [10, 7, 4, 1]\ntotal 316, average 79.0\n1. Ana\n2. Ben\n3. Chen\n7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21"
+          }
+        },
+        {
+          "topic": "break and continue",
+          "title": {
+            "en": "Stopping early and skipping",
+            "es": "Parar antes y saltar"
+          },
+          "description": {
+            "en": "Searches a list and stops at the first match with `break`, skips invalid values with `continue`, and uses `while True` with a menu that ends on \"quit\".",
+            "es": "Busca en una lista y se detiene en la primera coincidencia con `break`, salta valores inválidos con `continue` y usa `while True` con un menú que termina con \"salir\"."
+          },
+          "explanation": {
+            "en": "Sometimes you know partway through a loop that you are done, or that the current item should be ignored. `break` and `continue` handle those two cases.\n\nWhat to notice:\n- The search loop stops as soon as it finds the first negative temperature. `break` jumps straight to the line after the loop, so the remaining items are never checked. That saves work and is the natural way to \"find the first\".\n- `for ... else` is a Python feature: the `else` block runs only if the loop finished without hitting `break`. It is the clean way to report \"not found\".\n- `continue` skips the rest of the current round. In the sum, empty strings and non-numbers are skipped, and only valid numbers are added.\n- `while True:` loops \"forever\" on purpose, and a `break` inside decides when to stop. Here a menu keeps reading commands until the pretend user types \"quit\".\n\nUse them sparingly: a loop with many `break`s and `continue`s becomes hard to follow. One clear exit is usually best.",
+            "es": "A veces sabes a mitad de un ciclo que ya terminaste, o que el elemento actual debe ignorarse. `break` y `continue` resuelven esos dos casos.\n\nQué observar:\n- El ciclo de búsqueda se detiene en cuanto encuentra la primera temperatura negativa. `break` salta directo a la línea después del ciclo, así que los elementos restantes nunca se revisan. Eso ahorra trabajo y es la forma natural de \"encontrar el primero\".\n- `for ... else` es una característica de Python: el bloque `else` se ejecuta solo si el ciclo terminó sin pasar por un `break`. Es la forma limpia de informar \"no se encontró\".\n- `continue` salta el resto de la vuelta actual. En la suma se saltan las cadenas vacías y lo que no son números, y solo se suman los números válidos.\n- `while True:` repite \"para siempre\" a propósito, y un `break` adentro decide cuándo parar. Aquí un menú sigue leyendo órdenes hasta que el usuario simulado escribe \"quit\".\n\nÚsalos con moderación: un ciclo con muchos `break` y `continue` se vuelve difícil de seguir. Normalmente lo mejor es una sola salida clara."
+          },
+          "code": {
+            "python": "import io\nimport sys\n\ntemps = [12, 8, 3, -2, 5, -7]\nfor t in temps:\n    if t < 0:\n        print(\"first freezing temperature:\", t)\n        break  # stop: we found what we wanted\nelse:\n    print(\"no freezing temperatures\")\n\nfor t in [12, 8, 3]:\n    if t < 0:\n        print(\"found\", t)\n        break\nelse:  # runs only when the loop did not break\n    print(\"no freezing temperatures in the second list\")\n\nentries = [\"10\", \"\", \"abc\", \"25\", \"7\"]\ntotal = 0\nfor entry in entries:\n    if not entry.isdigit():\n        print(f\"skipping {entry!r}\")\n        continue  # go straight to the next entry\n    total += int(entry)\nprint(\"sum of valid entries:\", total)\n\nsys.stdin = io.StringIO(\"add\\nlist\\nquit\\nadd\\n\")  # pretend commands\nwhile True:\n    command = input(\"> \")\n    print(command)\n    if command == \"quit\":\n        print(\"bye\")\n        break\n    print(f\"running {command}\")\n"
+          },
+          "output": {
+            "python": "first freezing temperature: -2\nno freezing temperatures in the second list\nskipping ''\nskipping 'abc'\nsum of valid entries: 42\n> add\nrunning add\n> list\nrunning list\n> quit\nbye"
+          }
+        }
+      ]
+    },
+    "python-functions": {
+      "main": {
+        "code": {
+          "python": "# A small trip planner built from functions that each do one job\nimport math\n\n\ndef km_to_miles(km):\n    return km * 0.621371\n\n\ndef trip_hours(km, speed_kmh=90):\n    return km / speed_kmh\n\n\ndef fuel_cost(km, liters_per_100km=6.5, price_per_liter=1.80):\n    liters = km * liters_per_100km / 100\n    return liters * price_per_liter\n\n\ndef format_hours(hours):\n    whole = math.floor(hours)\n    minutes = round((hours - whole) * 60)\n    return f\"{whole} h {minutes:02d} min\"\n\n\ndef describe_trip(name, km, speed_kmh=90):\n    hours = trip_hours(km, speed_kmh)\n    return (f\"{name}: {km} km ({km_to_miles(km):.0f} mi), \"\n            f\"{format_hours(hours)}, fuel ${fuel_cost(km):.2f}\")\n\n\ntrips = [(\"Beach\", 120), (\"Mountains\", 310), (\"City\", 45)]\nfor name, km in trips:\n    print(describe_trip(name, km))\n\nprint(describe_trip(\"Highway run\", 310, speed_kmh=110))\ntotal = sum(fuel_cost(km) for _, km in trips)\nprint(f\"Fuel for all three: ${total:.2f}\")\n"
+        },
+        "output": {
+          "python": "Beach: 120 km (75 mi), 1 h 20 min, fuel $14.04\nMountains: 310 km (193 mi), 3 h 27 min, fuel $36.27\nCity: 45 km (28 mi), 0 h 30 min, fuel $5.26\nHighway run: 310 km (193 mi), 2 h 49 min, fuel $36.27\nFuel for all three: $55.57"
+        }
+      },
+      "sets": [
+        {
+          "topic": "Defining Functions",
+          "title": {
+            "en": "Write it once, use it everywhere",
+            "es": "Escríbela una vez, úsala en todas partes"
+          },
+          "description": {
+            "en": "Defines a function, shows that defining it runs nothing, calls it several times, and uses one function inside another.",
+            "es": "Define una función, muestra que definirla no ejecuta nada, la llama varias veces y usa una función dentro de otra."
+          },
+          "explanation": {
+            "en": "A function is a named block of code. `def` creates it; calling it by name with parentheses runs it.\n\nWhat to notice:\n- The first line of output is \"start\". The `def` statements above it ran, but they only *created* the functions. Their bodies run later, each time they are called.\n- `print_banner()` is called twice and prints its box twice: write once, run as often as you like. If you later change the box style, you change it in one place.\n- `print_banner` without parentheses is the function itself (Python shows something like `<function print_banner ...>`). With parentheses it is a call. Forgetting the `()` is a common silent mistake.\n- Functions can call other functions: `welcome()` uses `print_banner()`. Big programs are built this way, from small pieces with clear names.\n- The text in triple quotes under `def` is a docstring: a description that `help(welcome)` and code editors show.\n\nName functions with a verb that says what they do (`print_banner`, `welcome`, `calculate_total`).",
+            "es": "Una función es un bloque de código con nombre. `def` la crea; llamarla por su nombre con paréntesis la ejecuta.\n\nQué observar:\n- La primera línea de la salida es \"start\". Las sentencias `def` de arriba sí se ejecutaron, pero solo *crearon* las funciones. Sus cuerpos se ejecutan después, cada vez que se las llama.\n- `print_banner()` se llama dos veces e imprime su caja dos veces: se escribe una vez y se ejecuta cuantas veces quieras. Si luego cambias el estilo de la caja, lo cambias en un solo lugar.\n- `print_banner` sin paréntesis es la función misma (Python muestra algo como `<function print_banner ...>`). Con paréntesis es una llamada. Olvidar los `()` es un error común y silencioso.\n- Las funciones pueden llamar a otras: `welcome()` usa `print_banner()`. Los programas grandes se construyen así, con piezas pequeñas de nombres claros.\n- El texto entre comillas triples bajo `def` es un docstring: una descripción que muestran `help(welcome)` y los editores de código.\n\nNombra las funciones con un verbo que diga lo que hacen (`imprimir_banner`, `dar_bienvenida`, `calcular_total`)."
+          },
+          "code": {
+            "python": "def print_banner():\n    \"\"\"Print a decorative line.\"\"\"\n    print(\"*\" * 20)\n\n\ndef welcome():\n    \"\"\"Greet the user between two banners.\"\"\"\n    print_banner()\n    print(\"  Welcome to Python\")\n    print_banner()\n\n\nprint(\"start\")  # the defs above only created the functions\nwelcome()\nprint(\"calling it again:\")\nwelcome()\nprint(\"without parentheses:\", type(print_banner).__name__)\nprint(\"docstring:\", welcome.__doc__)\n"
+          },
+          "output": {
+            "python": "start\n********************\n  Welcome to Python\n********************\ncalling it again:\n********************\n  Welcome to Python\n********************\nwithout parentheses: function\ndocstring: Greet the user between two banners."
+          }
+        },
+        {
+          "topic": "Parameters and Return Values",
+          "title": {
+            "en": "Values in, result out",
+            "es": "Valores que entran, resultado que sale"
+          },
+          "description": {
+            "en": "Passes arguments into parameters, returns results and uses them in expressions, returns early from a function, and shows the difference between `return` and `print`.",
+            "es": "Pasa argumentos a parámetros, devuelve resultados y los usa en expresiones, sale antes de una función y muestra la diferencia entre `return` y `print`."
+          },
+          "explanation": {
+            "en": "Parameters make a function flexible: the same code works on different values. `return` makes it useful: the result comes back so the rest of the program can use it.\n\nWhat to notice:\n- In `rectangle_area(3, 4)`, the arguments 3 and 4 are assigned to the parameters `width` and `height` in order.\n- A returned value can be stored, printed or used inside a bigger expression, like `rectangle_area(3, 4) + rectangle_area(2, 5)`.\n- `return` ends the function immediately. `grade` returns as soon as it knows the answer, so it needs no `elif`/`else` chain.\n- `print_area` prints but returns nothing, so `result = print_area(3, 4)` stores `None`. That is the classic beginner bug: if you want to *use* a result, return it.\n- A function can return several values at once as a tuple, and the caller can unpack them into separate variables (`low, high = min_max(...)`).",
+            "es": "Los parámetros hacen flexible a una función: el mismo código sirve para valores distintos. `return` la hace útil: el resultado vuelve para que el resto del programa lo use.\n\nQué observar:\n- En `rectangle_area(3, 4)`, los argumentos 3 y 4 se asignan a los parámetros `width` y `height` en orden.\n- Un valor devuelto se puede guardar, imprimir o usar dentro de una expresión más grande, como `rectangle_area(3, 4) + rectangle_area(2, 5)`.\n- `return` termina la función de inmediato. `grade` devuelve en cuanto conoce la respuesta, así que no necesita una cadena de `elif`/`else`.\n- `print_area` imprime pero no devuelve nada, así que `resultado = print_area(3, 4)` guarda `None`. Es el error clásico de principiante: si quieres *usar* un resultado, devuélvelo.\n- Una función puede devolver varios valores a la vez como una tupla, y quien llama puede desempaquetarlos en variables separadas (`menor, mayor = min_max(...)`)."
+          },
+          "code": {
+            "python": "def rectangle_area(width, height):\n    return width * height\n\n\ndef grade(score):\n    if score >= 90:\n        return \"A\"  # return ends the function right here\n    if score >= 80:\n        return \"B\"\n    return \"C or below\"\n\n\ndef print_area(width, height):\n    print(\"area is\", width * height)  # prints, but returns nothing\n\n\ndef min_max(numbers):\n    return min(numbers), max(numbers)  # two values, returned as a tuple\n\n\narea = rectangle_area(3, 4)\nprint(\"area:\", area)\nprint(\"two rooms:\", rectangle_area(3, 4) + rectangle_area(2, 5))\nprint(grade(95), grade(85), grade(50))\n\nresult = print_area(3, 4)\nprint(\"print_area returned:\", result)\n\nlow, high = min_max([7, 2, 9, 4])\nprint(\"low\", low, \"high\", high)\n"
+          },
+          "output": {
+            "python": "area: 12\ntwo rooms: 22\nA B C or below\narea is 12\nprint_area returned: None\nlow 2 high 9"
+          }
+        },
+        {
+          "topic": "Default and Keyword Arguments",
+          "title": {
+            "en": "Optional arguments and named calls",
+            "es": "Argumentos opcionales y llamadas con nombre"
+          },
+          "description": {
+            "en": "Gives parameters defaults, overrides them by position or by name, mixes positional and keyword arguments, and shows the safe way to default to an empty list.",
+            "es": "Da valores por defecto a los parámetros, los reemplaza por posición o por nombre, combina argumentos posicionales y por nombre, y muestra la forma segura de usar una lista vacía por defecto."
+          },
+          "explanation": {
+            "en": "Defaults let a function have sensible behavior for the common case while still allowing changes. Keyword arguments make calls readable, especially when there are several numbers or booleans.\n\nWhat to notice:\n- `greet(\"Ana\")` uses the default greeting \"Hello\". `greet(\"Ben\", \"Hey\")` overrides it by position.\n- `order(size=\"large\", drink=\"tea\")` names each argument, so the order does not matter and the call explains itself. Compare it with `order(\"tea\", \"large\", True)`: what does `True` mean there?\n- Positional arguments must come before keyword arguments in a call.\n- Parameters with defaults must come after the ones without defaults in a definition.\n- The `add_item` example shows a famous trap. Default values are created once, when the function is defined. A default list would be shared by every call and keep growing. The fix is `items=None` and creating a fresh list inside, as the example does: each call starts with its own empty list.\n\n`print` itself uses keyword arguments: `sep` and `end` are parameters with defaults.",
+            "es": "Los valores por defecto le dan a una función un comportamiento sensato para el caso común y aun así permiten cambiarlo. Los argumentos por nombre hacen legibles las llamadas, sobre todo cuando hay varios números o booleanos.\n\nQué observar:\n- `greet(\"Ana\")` usa el saludo por defecto \"Hello\". `greet(\"Ben\", \"Hey\")` lo reemplaza por posición.\n- `order(size=\"large\", drink=\"tea\")` nombra cada argumento, así que el orden no importa y la llamada se explica sola. Compárala con `order(\"tea\", \"large\", True)`: ¿qué significa `True` ahí?\n- En una llamada, los argumentos posicionales deben ir antes que los argumentos por nombre.\n- En una definición, los parámetros con valor por defecto deben ir después de los que no lo tienen.\n- El ejemplo de `add_item` muestra una trampa famosa. Los valores por defecto se crean una sola vez, al definir la función. Una lista por defecto sería compartida por todas las llamadas y seguiría creciendo. La solución es `items=None` y crear una lista nueva adentro, como hace el ejemplo: cada llamada empieza con su propia lista vacía.\n\n`print` mismo usa argumentos por nombre: `sep` y `end` son parámetros con valor por defecto."
+          },
+          "code": {
+            "python": "def greet(name, greeting=\"Hello\"):\n    return f\"{greeting}, {name}!\"\n\n\ndef order(drink, size=\"medium\", iced=False):\n    style = \"iced \" if iced else \"\"\n    return f\"one {size} {style}{drink}\"\n\n\nprint(greet(\"Ana\"))\nprint(greet(\"Ben\", \"Hey\"))\nprint(greet(greeting=\"Welcome\", name=\"Chen\"))\n\nprint(order(\"coffee\"))\nprint(order(\"tea\", \"large\", True))  # works, but what does True mean?\nprint(order(size=\"large\", drink=\"tea\", iced=True))  # clearer\nprint(order(\"latte\", iced=True))  # positional first, then keyword\n\n\ndef add_item(item, items=None):\n    if items is None:  # a fresh list for every call\n        items = []\n    items.append(item)\n    return items\n\n\nprint(add_item(\"milk\"))\nprint(add_item(\"bread\"))  # not ['milk', 'bread']\n"
+          },
+          "output": {
+            "python": "Hello, Ana!\nHey, Ben!\nWelcome, Chen!\none medium coffee\none large iced tea\none large iced tea\none medium iced latte\n['milk']\n['bread']"
+          }
+        },
+        {
+          "topic": "Scope",
+          "title": {
+            "en": "Where a variable lives",
+            "es": "Dónde vive una variable"
+          },
+          "description": {
+            "en": "Shows local variables disappearing after a call, a local variable hiding a global with the same name, reading a global, and passing values in instead of relying on globals.",
+            "es": "Muestra variables locales que desaparecen tras una llamada, una variable local que oculta a una global con el mismo nombre, la lectura de una global y pasar valores en lugar de depender de globales."
+          },
+          "explanation": {
+            "en": "Every function call gets its own private space for variables. That is what lets you reuse names like `total` or `i` in many functions without them interfering.\n\nWhat to notice:\n- `count` is created inside `make_count()`. After the call, `\"count\" in globals()` is `False`: the local variable existed only during the call.\n- `score = 10` at the top is a global. Inside `try_to_change()`, `score = 99` creates a new local `score`; the global stays 10. The two variables just happen to share a name.\n- A function can *read* a global, as `show_tax()` reads `TAX_RATE`. Constants written in capitals are a common, acceptable use of globals.\n- `global score` lets a function reassign the global, but it makes code harder to follow: any function might change the value. The better habit, shown last, is to pass the value in and return the new one: `score = add_bonus(score, 5)`.\n\nRule of thumb: functions should get what they need through parameters and give results back with `return`.",
+            "es": "Cada llamada a una función tiene su propio espacio privado para variables. Eso es lo que te permite reutilizar nombres como `total` o `i` en muchas funciones sin que se estorben.\n\nQué observar:\n- `count` se crea dentro de `make_count()`. Después de la llamada, `\"count\" in globals()` es `False`: la variable local existió solo durante la llamada.\n- `score = 10` arriba es una global. Dentro de `try_to_change()`, `score = 99` crea una `score` local nueva; la global sigue siendo 10. Las dos variables solo comparten el nombre.\n- Una función puede *leer* una global, como `show_tax()` lee `TAX_RATE`. Las constantes escritas en mayúsculas son un uso común y aceptable de las globales.\n- `global score` permite que una función reasigne la global, pero hace el código más difícil de seguir: cualquier función podría cambiar el valor. El mejor hábito, que se muestra al final, es pasar el valor y devolver el nuevo: `score = add_bonus(score, 5)`.\n\nRegla práctica: las funciones deben recibir lo que necesitan por parámetros y entregar resultados con `return`."
+          },
+          "code": {
+            "python": "TAX_RATE = 0.08  # a global constant: fine to read anywhere\nscore = 10\n\n\ndef make_count():\n    count = 3  # local: exists only during this call\n    return count * 2\n\n\ndef try_to_change():\n    score = 99  # a NEW local variable that hides the global\n    return score\n\n\ndef show_tax(price):\n    return price * TAX_RATE  # reading a global is allowed\n\n\ndef add_bonus(current, bonus):\n    return current + bonus  # better: take the value in, give the result back\n\n\nprint(\"make_count() =\", make_count())\nprint(\"count exists after the call?\", \"count\" in globals())\nprint(\"try_to_change() =\", try_to_change(), \"but global score is still\", score)\nprint(\"tax on 50:\", show_tax(50))\nscore = add_bonus(score, 5)\nprint(\"after add_bonus:\", score)\n"
+          },
+          "output": {
+            "python": "make_count() = 6\ncount exists after the call? False\ntry_to_change() = 99 but global score is still 10\ntax on 50: 4.0\nafter add_bonus: 15"
+          }
+        },
+        {
+          "topic": "Modules and import",
+          "title": {
+            "en": "Using code that already exists",
+            "es": "Usar código que ya existe"
+          },
+          "description": {
+            "en": "Imports `math`, `random` and `datetime` three different ways, uses a fixed random seed so results repeat, and lists what a module offers.",
+            "es": "Importa `math`, `random` y `datetime` de tres formas distintas, usa una semilla aleatoria fija para que los resultados se repitan y muestra lo que ofrece un módulo."
+          },
+          "explanation": {
+            "en": "Python comes with a large standard library: modules for math, random numbers, dates, files, the internet and much more. Using them is usually better than writing your own: they are tested, fast and documented.\n\nWhat to notice:\n- `import math` loads the module, and you use its contents with a dot: `math.sqrt`, `math.pi`, `math.ceil`. The prefix makes it obvious where each name comes from.\n- `from random import choice, randint` imports specific names so you can call `choice(...)` directly.\n- `import datetime as dt` gives the module a shorter nickname.\n- Random results change every run, which makes programs hard to test. `random.seed(42)` fixes the starting point, so this example prints the same \"random\" values every time. Remove the seed in a real game.\n- `dir(math)` lists every name in a module, and `help(math.sqrt)` describes one of them.\n\nNever name your own file after a standard module (`random.py`, `math.py`): Python would import your file instead.",
+            "es": "Python trae una gran biblioteca estándar: módulos para matemáticas, números aleatorios, fechas, archivos, internet y mucho más. Usarlos suele ser mejor que escribir los tuyos: están probados, son rápidos y están documentados.\n\nQué observar:\n- `import math` carga el módulo, y usas su contenido con un punto: `math.sqrt`, `math.pi`, `math.ceil`. El prefijo deja claro de dónde viene cada nombre.\n- `from random import choice, randint` importa nombres específicos para que puedas llamar `choice(...)` directamente.\n- `import datetime as dt` le da al módulo un apodo más corto.\n- Los resultados aleatorios cambian en cada ejecución, lo que dificulta probar los programas. `random.seed(42)` fija el punto de partida, así que este ejemplo imprime los mismos valores \"aleatorios\" cada vez. Quita la semilla en un juego real.\n- `dir(math)` enumera todos los nombres de un módulo, y `help(math.sqrt)` describe uno de ellos.\n\nNunca nombres tu propio archivo como un módulo estándar (`random.py`, `math.py`): Python importaría tu archivo en su lugar."
+          },
+          "code": {
+            "python": "import math\nimport random\nfrom random import choice, randint\nimport datetime as dt\n\nprint(\"sqrt(16) =\", math.sqrt(16))\nprint(\"pi =\", round(math.pi, 4))\nprint(\"ceil(4.2) =\", math.ceil(4.2), \" floor(4.8) =\", math.floor(4.8))\nprint(\"hypotenuse of 3, 4:\", math.hypot(3, 4))\n\nrandom.seed(42)  # fixed seed: the same \"random\" values on every run\nrolls = []\nfor _ in range(5):\n    rolls.append(randint(1, 6))\nprint(\"dice rolls:\", rolls)\nprint(\"random pick:\", choice([\"rock\", \"paper\", \"scissors\"]))\n\nlaunch = dt.date(1969, 7, 20)\nprint(\"Apollo 11 landed on a\", launch.strftime(\"%A\"))\nprint(\"days from then to 2000-01-01:\", (dt.date(2000, 1, 1) - launch).days)\n\nprint(\"does math have sqrt and tau?\", \"sqrt\" in dir(math), \"tau\" in dir(math))\n"
+          },
+          "output": {
+            "python": "sqrt(16) = 4.0\npi = 3.1416\nceil(4.2) = 5  floor(4.8) = 4\nhypotenuse of 3, 4: 5.0\ndice rolls: [6, 1, 1, 6, 3]\nrandom pick: rock\nApollo 11 landed on a Sunday\ndays from then to 2000-01-01: 11122\ndoes math have sqrt and tau? True True"
+          }
+        }
+      ]
+    },
+    "python-collections": {
+      "main": {
+        "code": {
+          "python": "# A class gradebook: a dictionary of lists, plus a set and tuples\ngradebook = {\n    \"Ana\": [92, 88, 95],\n    \"Ben\": [75, 81, 68],\n    \"Chen\": [88, 94, 90],\n}\ngradebook[\"Dana\"] = [60, 72, 79]  # add a student\ngradebook[\"Ben\"].append(85)  # add a score to an existing list\n\n\ndef average(scores):\n    return sum(scores) / len(scores)\n\n\nreport = []  # a list of (name, average) tuples\nfor name, scores in gradebook.items():\n    report.append((name, average(scores)))\n    print(f\"{name:<5} {scores} -> {average(scores):.1f}\")\n\ndef by_average(pair):\n    return pair[1]  # sort compares what this returns: the average\n\n\nreport.sort(key=by_average, reverse=True)\nbest_name, best_avg = report[0]  # unpack the first tuple\nprint(f\"Top student: {best_name} ({best_avg:.1f})\")\n\nranking = []\npassed = set()\nfor name, avg in report:\n    ranking.append(name)\n    if avg >= 75:\n        passed.add(name)\nprint(\"Ranking:\", ranking)\nprint(\"Passed:\", sorted(passed))\nprint(\"Needs help:\", sorted(set(gradebook) - passed))\n"
+        },
+        "output": {
+          "python": "Ana   [92, 88, 95] -> 91.7\nBen   [75, 81, 68, 85] -> 77.2\nChen  [88, 94, 90] -> 90.7\nDana  [60, 72, 79] -> 70.3\nTop student: Ana (91.7)\nRanking: ['Ana', 'Chen', 'Ben', 'Dana']\nPassed: ['Ana', 'Ben', 'Chen']\nNeeds help: ['Dana']"
+        }
+      },
+      "sets": [
+        {
+          "topic": "Lists",
+          "title": {
+            "en": "Many values, one name",
+            "es": "Muchos valores, un solo nombre"
+          },
+          "description": {
+            "en": "Creates a list, reads items by index from the front and the back, replaces an item, checks membership, loops over the list and adds up its numbers.",
+            "es": "Crea una lista, lee elementos por índice desde el inicio y el final, reemplaza un elemento, revisa pertenencia, recorre la lista y suma sus números."
+          },
+          "explanation": {
+            "en": "A list keeps values in order under one name, so a program can handle 3 items or 3 million with the same code.\n\nWhat to notice:\n- Indexes start at 0, so `playlist[0]` is the first song. Negative indexes count from the end: `playlist[-1]` is the last item, which saves you from computing `len(playlist) - 1`.\n- Lists are mutable: `playlist[1] = \"Yellow\"` replaces the second song in place.\n- `\"Hello\" in playlist` checks membership and gives `True` or `False`.\n- `len`, `sum`, `min` and `max` work on whole lists, so the totals need no loop at all.\n- A list can hold any type, even other lists. `week[0][1]` reads row 0, column 1 of a small table.\n- The `IndexError` at the end is caught on purpose, to show what happens when you read past the end: a list of 4 items has no index 4.",
+            "es": "Una lista guarda valores en orden bajo un solo nombre, así un programa puede manejar 3 elementos o 3 millones con el mismo código.\n\nQué observar:\n- Los índices empiezan en 0, así que `playlist[0]` es la primera canción. Los índices negativos cuentan desde el final: `playlist[-1]` es el último elemento, lo que te ahorra calcular `len(playlist) - 1`.\n- Las listas son modificables: `playlist[1] = \"Yellow\"` reemplaza la segunda canción en el lugar.\n- `\"Hello\" in playlist` revisa la pertenencia y da `True` o `False`.\n- `len`, `sum`, `min` y `max` funcionan sobre listas completas, así que los totales no necesitan ningún ciclo.\n- Una lista puede contener cualquier tipo, incluso otras listas. `week[0][1]` lee la fila 0, columna 1 de una tabla pequeña.\n- El `IndexError` del final se atrapa a propósito, para mostrar qué pasa al leer más allá del final: una lista de 4 elementos no tiene índice 4."
+          },
+          "code": {
+            "python": "playlist = [\"Hello\", \"Imagine\", \"Respect\", \"Hey Jude\"]\nprint(\"songs:\", len(playlist))\nprint(\"first:\", playlist[0], \"| last:\", playlist[-1])\n\nplaylist[1] = \"Yellow\"  # lists can be changed\nprint(\"after replacing:\", playlist)\nprint(\"has 'Hello'?\", \"Hello\" in playlist, \"| has 'Imagine'?\", \"Imagine\" in playlist)\n\nfor number, song in enumerate(playlist, start=1):\n    print(f\"{number}. {song}\")\n\nminutes = [3.5, 4.0, 2.75, 7.1]\nprint(f\"total {sum(minutes)} min, shortest {min(minutes)}, longest {max(minutes)}\")\n\nweek = [[8, 7, 9], [6, 8, 7]]  # a list of lists: 2 rows, 3 columns\nprint(\"row 0, column 1:\", week[0][1])\n\ntry:\n    print(playlist[4])\nexcept IndexError as error:\n    print(\"IndexError:\", error)\n"
+          },
+          "output": {
+            "python": "songs: 4\nfirst: Hello | last: Hey Jude\nafter replacing: ['Hello', 'Yellow', 'Respect', 'Hey Jude']\nhas 'Hello'? True | has 'Imagine'? False\n1. Hello\n2. Yellow\n3. Respect\n4. Hey Jude\ntotal 17.35 min, shortest 2.75, longest 7.1\nrow 0, column 1: 7\nIndexError: list index out of range"
+          }
+        },
+        {
+          "topic": "List Methods and Slicing",
+          "title": {
+            "en": "Changing and slicing lists",
+            "es": "Cambiar y rebanar listas"
+          },
+          "description": {
+            "en": "Adds, inserts, removes and pops items, sorts in place versus with `sorted`, and takes slices from the front, the back and with a step.",
+            "es": "Agrega, inserta, quita y saca elementos, ordena en el lugar frente a `sorted`, y toma rebanadas del inicio, del final y con salto."
+          },
+          "explanation": {
+            "en": "Lists come with methods that change them in place, and slices that copy part of them.\n\nWhat to notice:\n- `append(x)` adds to the end, `insert(i, x)` adds at a position, `remove(x)` deletes the first matching value, and `pop()` removes and *returns* the last item (`pop(0)` the first). `pop` is how you take items off a list one at a time.\n- `queue.sort()` reorders the list itself and returns `None`. `sorted(numbers)` leaves `numbers` untouched and gives back a new list. Use `reverse=True` for descending order.\n- `count` and `index` search the list: how many times a value appears, and where it first appears.\n- Slices: `nums[:3]` is the first three, `nums[-2:]` the last two, `nums[::2]` every second item, and `nums[::-1]` the list reversed. A slice is always a new list.\n- `copy = nums[:]` (or `nums.copy()`) makes an independent copy. `alias = nums` does not: both names point to the same list, so changing one changes \"both\".",
+            "es": "Las listas traen métodos que las cambian en el lugar, y rebanadas que copian una parte.\n\nQué observar:\n- `append(x)` agrega al final, `insert(i, x)` agrega en una posición, `remove(x)` borra el primer valor igual, y `pop()` quita y *devuelve* el último elemento (`pop(0)`, el primero). `pop` es la forma de sacar elementos de una lista uno por uno.\n- `queue.sort()` reordena la lista misma y devuelve `None`. `sorted(numbers)` deja `numbers` igual y devuelve una lista nueva. Usa `reverse=True` para orden descendente.\n- `count` e `index` buscan en la lista: cuántas veces aparece un valor y dónde aparece primero.\n- Rebanadas: `nums[:3]` son los tres primeros, `nums[-2:]` los dos últimos, `nums[::2]` uno de cada dos y `nums[::-1]` la lista invertida. Una rebanada siempre es una lista nueva.\n- `copia = nums[:]` (o `nums.copy()`) hace una copia independiente. `alias = nums` no: ambos nombres apuntan a la misma lista, así que cambiar uno cambia \"los dos\"."
+          },
+          "code": {
+            "python": "queue = [\"Ana\", \"Ben\"]\nqueue.append(\"Chen\")  # add to the end\nqueue.insert(0, \"Dana\")  # add at position 0\nprint(\"queue:\", queue)\nqueue.remove(\"Ben\")  # remove by value\nserved = queue.pop(0)  # remove and return the first item\nprint(\"served:\", served, \"| still waiting:\", queue)\n\nnumbers = [5, 3, 8, 1, 8]\nprint(\"sorted copy:\", sorted(numbers), \"| original:\", numbers)\nnumbers.sort(reverse=True)  # changes the list itself\nprint(\"after sort(reverse=True):\", numbers)\nprint(\"count of 8:\", numbers.count(8), \"| index of 3:\", numbers.index(3))\n\nnums = [0, 1, 2, 3, 4, 5, 6]\nprint(\"first three:\", nums[:3], \"| last two:\", nums[-2:])\nprint(\"every second:\", nums[::2], \"| reversed:\", nums[::-1])\n\nalias = nums  # NOT a copy: the same list\ncopy = nums[:]  # a real copy\nalias.append(7)\nprint(\"nums:\", nums)\nprint(\"copy:\", copy)\n"
+          },
+          "output": {
+            "python": "queue: ['Dana', 'Ana', 'Ben', 'Chen']\nserved: Dana | still waiting: ['Ana', 'Chen']\nsorted copy: [1, 3, 5, 8, 8] | original: [5, 3, 8, 1, 8]\nafter sort(reverse=True): [8, 8, 5, 3, 1]\ncount of 8: 2 | index of 3: 3\nfirst three: [0, 1, 2] | last two: [5, 6]\nevery second: [0, 2, 4, 6] | reversed: [6, 5, 4, 3, 2, 1, 0]\nnums: [0, 1, 2, 3, 4, 5, 6, 7]\ncopy: [0, 1, 2, 3, 4, 5, 6]"
+          }
+        },
+        {
+          "topic": "Tuples",
+          "title": {
+            "en": "Fixed groups of values",
+            "es": "Grupos fijos de valores"
+          },
+          "description": {
+            "en": "Stores coordinates and dates as tuples, unpacks them into variables, returns two values from a function, and shows that a tuple cannot be changed.",
+            "es": "Guarda coordenadas y fechas como tuplas, las desempaqueta en variables, devuelve dos valores desde una función y muestra que una tupla no se puede cambiar."
+          },
+          "explanation": {
+            "en": "A tuple is like a list that cannot change. Use it when a group of values belongs together and should stay that way: a point (x, y), a date (year, month, day), an RGB color.\n\nWhat to notice:\n- Tuples are written with parentheses, and indexing works like lists: `point[0]` is 3.\n- Unpacking assigns each item to its own variable: `x, y = point`. The number of names must match the number of items.\n- `for name, score in results:` unpacks each tuple in a list as the loop runs, which is clearer than writing `pair[0]` and `pair[1]`.\n- When a function returns `total, count`, it is really returning one tuple, and the caller can unpack it.\n- `point[0] = 10` raises `TypeError`: tuples are immutable. That is a feature: a value that cannot change by accident is easier to reason about, and tuples can be used as dictionary keys, where lists cannot.\n- A tuple with one item needs a trailing comma: `(5,)`. Without it, `(5)` is just the number 5 in parentheses.",
+            "es": "Una tupla es como una lista que no puede cambiar. Úsala cuando un grupo de valores va junto y debe quedarse así: un punto (x, y), una fecha (año, mes, día), un color RGB.\n\nQué observar:\n- Las tuplas se escriben con paréntesis y los índices funcionan como en las listas: `point[0]` es 3.\n- Desempaquetar asigna cada elemento a su propia variable: `x, y = point`. La cantidad de nombres debe coincidir con la cantidad de elementos.\n- `for name, score in results:` desempaqueta cada tupla de una lista mientras el ciclo avanza, lo que es más claro que escribir `pair[0]` y `pair[1]`.\n- Cuando una función devuelve `total, count`, en realidad devuelve una sola tupla, y quien llama puede desempaquetarla.\n- `point[0] = 10` lanza `TypeError`: las tuplas son inmutables. Es una ventaja: un valor que no puede cambiar por accidente es más fácil de entender, y las tuplas se pueden usar como claves de diccionario, las listas no.\n- Una tupla de un solo elemento necesita una coma final: `(5,)`. Sin ella, `(5)` es solo el número 5 entre paréntesis."
+          },
+          "code": {
+            "python": "point = (3, 4)\nprint(\"point:\", point, \"| x =\", point[0])\nx, y = point  # unpacking\nprint(f\"distance from origin: {(x ** 2 + y ** 2) ** 0.5}\")\n\nbirthday = (2007, 3, 14)\nyear, month, day = birthday\nprint(f\"born {day}/{month}/{year}\")\n\nresults = [(\"Ana\", 92), (\"Ben\", 85), (\"Chen\", 78)]\nfor name, score in results:  # unpack each tuple in the loop\n    print(f\"{name}: {score}\")\n\n\ndef total_and_count(numbers):\n    return sum(numbers), len(numbers)  # one tuple with two values\n\n\ntotal, count = total_and_count([4, 8, 6])\nprint(\"total\", total, \"count\", count, \"average\", total / count)\n\ntry:\n    point[0] = 10\nexcept TypeError as error:\n    print(\"TypeError:\", error)\n\nprint(\"type of (5):\", type((5)).__name__, \"| type of (5,):\", type((5,)).__name__)\n"
+          },
+          "output": {
+            "python": "point: (3, 4) | x = 3\ndistance from origin: 5.0\nborn 14/3/2007\nAna: 92\nBen: 85\nChen: 78\ntotal 18 count 3 average 6.0\nTypeError: 'tuple' object does not support item assignment\ntype of (5): int | type of (5,): tuple"
+          }
+        },
+        {
+          "topic": "Dictionaries",
+          "title": {
+            "en": "Look things up by name",
+            "es": "Buscar por nombre"
+          },
+          "description": {
+            "en": "Builds a phone book, reads, adds, updates and deletes entries, handles a missing key safely, loops over keys and values, and counts words.",
+            "es": "Arma una agenda telefónica, lee, agrega, actualiza y borra entradas, maneja una clave inexistente de forma segura, recorre claves y valores y cuenta palabras."
+          },
+          "explanation": {
+            "en": "A dictionary stores pairs: each key leads to a value. Instead of remembering that Ben is at position 1, you just ask for `phones[\"Ben\"]`.\n\nWhat to notice:\n- Reading uses the key in square brackets. Assigning to a key adds it if it is new or replaces the value if it already exists. `del` removes it.\n- Asking for a missing key with `[]` raises `KeyError`. `\"Zoe\" in phones` checks first, and `phones.get(\"Zoe\", \"unknown\")` returns a default instead of failing.\n- `for name, number in phones.items():` walks through every pair. Dictionaries remember the order in which keys were added.\n- Counting is the classic dictionary pattern: `counts[word] = counts.get(word, 0) + 1` starts each new word at 0 and adds 1. Sorting the pairs by count gives the most common words.\n- Looking up a key is fast even with millions of entries, while searching a list gets slower as it grows. Use a dictionary whenever you find yourself searching a list for \"the item with this name\".",
+            "es": "Un diccionario guarda pares: cada clave lleva a un valor. En lugar de recordar que Ben está en la posición 1, simplemente pides `phones[\"Ben\"]`.\n\nQué observar:\n- Para leer se usa la clave entre corchetes. Asignar a una clave la agrega si es nueva o reemplaza el valor si ya existe. `del` la quita.\n- Pedir una clave inexistente con `[]` lanza `KeyError`. `\"Zoe\" in phones` revisa primero, y `phones.get(\"Zoe\", \"unknown\")` devuelve un valor por defecto en lugar de fallar.\n- `for name, number in phones.items():` recorre cada par. Los diccionarios recuerdan el orden en que se agregaron las claves.\n- Contar es el patrón clásico de diccionarios: `counts[word] = counts.get(word, 0) + 1` empieza cada palabra nueva en 0 y le suma 1. Ordenar los pares por conteo da las palabras más comunes.\n- Buscar una clave es rápido incluso con millones de entradas, mientras que buscar en una lista se vuelve más lento a medida que crece. Usa un diccionario cuando te encuentres buscando en una lista \"el elemento con este nombre\"."
+          },
+          "code": {
+            "python": "phones = {\"Ana\": \"555-0101\", \"Ben\": \"555-0199\"}\nprint(\"Ana:\", phones[\"Ana\"])\nphones[\"Chen\"] = \"555-0123\"  # add a new key\nphones[\"Ben\"] = \"555-0100\"  # update an existing key\ndel phones[\"Ana\"]  # remove a key\nprint(phones)\n\nprint(\"is Zoe there?\", \"Zoe\" in phones)\nprint(\"Zoe:\", phones.get(\"Zoe\", \"unknown\"))  # no KeyError\ntry:\n    phones[\"Zoe\"]\nexcept KeyError as error:\n    print(\"KeyError:\", error)\n\nfor name, number in phones.items():\n    print(f\"{name} -> {number}\")\nprint(\"names:\", list(phones.keys()), \"| count:\", len(phones))\n\ntext = \"the cat and the dog and the bird\"\ncounts = {}\nfor word in text.split():\n    counts[word] = counts.get(word, 0) + 1\nprint(counts)\ndef by_count(pair):\n    return pair[1]\n\n\nmost_common = sorted(counts.items(), key=by_count, reverse=True)[:2]\nprint(\"most common:\", most_common)\n"
+          },
+          "output": {
+            "python": "Ana: 555-0101\n{'Ben': '555-0100', 'Chen': '555-0123'}\nis Zoe there? False\nZoe: unknown\nKeyError: 'Zoe'\nBen -> 555-0100\nChen -> 555-0123\nnames: ['Ben', 'Chen'] | count: 2\n{'the': 3, 'cat': 1, 'and': 2, 'dog': 1, 'bird': 1}\nmost common: [('the', 3), ('and', 2)]"
+          }
+        },
+        {
+          "topic": "Sets",
+          "title": {
+            "en": "Unique items and comparisons",
+            "es": "Elementos únicos y comparaciones"
+          },
+          "description": {
+            "en": "Removes duplicates with a set, checks membership, and compares two clubs with union, intersection and difference.",
+            "es": "Quita duplicados con un conjunto, revisa pertenencia y compara dos clubes con unión, intersección y diferencia."
+          },
+          "explanation": {
+            "en": "A set is a collection where every item appears at most once, and where order does not matter. It answers questions like \"how many different visitors?\" or \"who is in both groups?\" in one line.\n\nWhat to notice:\n- `set(visits)` drops the duplicates: 7 visits came from 4 different people. Sets have no order, so we wrap them in `sorted()` before printing to get the same output every time.\n- `add` puts an item in; adding one that is already there changes nothing.\n- `\"Ben\" in visitors` is a very fast membership check, even for huge sets.\n- With two sets you can do the operations from math class: `|` (union: in either), `&` (intersection: in both), `-` (difference: in the first but not the second) and `^` (in exactly one of them).\n- `{}` is an empty *dictionary*, not a set; write `set()` for an empty set.\n\nSets connect directly to the Discrete Math course: these are the same union, intersection and difference you see there, running as code.",
+            "es": "Un conjunto es una colección donde cada elemento aparece como máximo una vez y donde el orden no importa. Responde preguntas como \"¿cuántos visitantes distintos?\" o \"¿quién está en ambos grupos?\" en una línea.\n\nQué observar:\n- `set(visits)` quita los duplicados: 7 visitas vinieron de 4 personas distintas. Los conjuntos no tienen orden, así que los envolvemos en `sorted()` antes de imprimir para obtener siempre la misma salida.\n- `add` mete un elemento; agregar uno que ya está no cambia nada.\n- `\"Ben\" in visitors` es una revisión de pertenencia muy rápida, incluso con conjuntos enormes.\n- Con dos conjuntos puedes hacer las operaciones de la clase de matemáticas: `|` (unión: en cualquiera), `&` (intersección: en ambos), `-` (diferencia: en el primero pero no en el segundo) y `^` (en exactamente uno de ellos).\n- `{}` es un *diccionario* vacío, no un conjunto; escribe `set()` para un conjunto vacío.\n\nLos conjuntos conectan directamente con el curso de Matemáticas discretas: son la misma unión, intersección y diferencia que ves allí, funcionando como código."
+          },
+          "code": {
+            "python": "visits = [\"Ana\", \"Ben\", \"Ana\", \"Chen\", \"Ben\", \"Ana\", \"Dana\"]\nvisitors = set(visits)\nprint(f\"{len(visits)} visits from {len(visitors)} people: {sorted(visitors)}\")\n\nvisitors.add(\"Eve\")\nvisitors.add(\"Ana\")  # already there: nothing changes\nprint(\"after adding:\", sorted(visitors))\nprint(\"did Ben visit?\", \"Ben\" in visitors)\n\nmath_club = {\"Ana\", \"Ben\", \"Chen\"}\nart_club = {\"Chen\", \"Dana\", \"Ana\"}\nprint(\"either club:\", sorted(math_club | art_club))\nprint(\"both clubs: \", sorted(math_club & art_club))\nprint(\"math only:  \", sorted(math_club - art_club))\nprint(\"exactly one:\", sorted(math_club ^ art_club))\n\nempty = set()\nprint(\"type of {}:\", type({}).__name__, \"| type of set():\", type(empty).__name__)\n"
+          },
+          "output": {
+            "python": "7 visits from 4 people: ['Ana', 'Ben', 'Chen', 'Dana']\nafter adding: ['Ana', 'Ben', 'Chen', 'Dana', 'Eve']\ndid Ben visit? True\neither club: ['Ana', 'Ben', 'Chen', 'Dana']\nboth clubs:  ['Ana', 'Chen']\nmath only:   ['Ben']\nexactly one: ['Ben', 'Dana']\ntype of {}: dict | type of set(): set"
+          }
+        }
+      ]
     }
   }
 };

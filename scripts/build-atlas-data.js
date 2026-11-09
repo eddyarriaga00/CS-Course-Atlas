@@ -11,6 +11,8 @@ const { modules: catalog, PUBLISHED_TRACKS } = require('./lib/catalog').loadCata
 const byId = Object.fromEntries(catalog.map((m) => [m.id, m]));
 
 const TRACK_META = {
+  python: { title: { en: 'Intro to Programming with Python', es: 'Introducción a la programación con Python' }, icon: 'Py', level: 'beginner',
+    blurb: { en: 'A true first course: print, variables, decisions, loops, functions, lists and dictionaries, all in runnable Python.', es: 'Un verdadero primer curso: print, variables, decisiones, ciclos, funciones, listas y diccionarios, todo en Python ejecutable.' } },
   java: { title: { en: 'Java', es: 'Java' }, icon: 'J', level: 'beginner',
     blurb: { en: 'From variables and objects to collections, streams, testing, JDBC and the JVM.', es: 'De variables y objetos a colecciones, streams, pruebas, JDBC y la JVM.' } },
   dsa: { title: { en: 'Data Structures & Algorithms', es: 'Estructuras de datos y algoritmos' }, icon: 'A', level: 'intermediate',
@@ -22,12 +24,11 @@ const TRACK_META = {
   assembly: { title: { en: 'x86-64 Assembly', es: 'Ensamblador x86-64' }, icon: '⚙', level: 'intermediate',
     blurb: { en: 'Registers, memory, calls and the stack: what your high-level code turns into.', es: 'Registros, memoria, llamadas y la pila: en qué se convierte tu código de alto nivel.' } }
 };
-const ORDER = ['java', 'dsa', 'discrete', 'git', 'assembly'];
+const ORDER = ['python', 'java', 'discrete', 'git', 'dsa', 'assembly'];
 // Courses not written yet, beginner-friendly first. Shown as cards on the Courses page.
 const P = (id, icon, level, en, es, blurbEn, blurbEs) => ({ id, icon, level, title: { en, es }, blurb: { en: blurbEn, es: blurbEs } });
 const PLANNED = [
   P('cybersecurity', '🛡', 'beginner', 'Cybersecurity Fundamentals', 'Fundamentos de ciberseguridad', 'How attacks work and how to defend: passwords and authentication, phishing, encryption, network security and safe coding.', 'Cómo funcionan los ataques y cómo defenderse: contraseñas y autenticación, phishing, cifrado, seguridad en redes y código seguro.'),
-  P('python', 'Py', 'beginner', 'Intro to Programming with Python', 'Introducción a la programación con Python', 'A true first course: variables, decisions, loops, functions and small projects, in the friendliest language.', 'Un verdadero primer curso: variables, decisiones, ciclos, funciones y pequeños proyectos, en el lenguaje más amigable.'),
   P('web', '</>', 'beginner', 'Web Basics: HTML, CSS & JavaScript', 'Web básica: HTML, CSS y JavaScript', 'Build and publish real pages: structure with HTML, style with CSS, and make them interactive with JavaScript.', 'Crea y publica páginas reales: estructura con HTML, estilo con CSS e interactividad con JavaScript.'),
   P('cli', '$_', 'beginner', 'Command Line & Linux', 'Línea de comandos y Linux', 'Move around the file system, use pipes and scripts, manage permissions and processes: the skills every course assumes.', 'Muévete por el sistema de archivos, usa tuberías y scripts, administra permisos y procesos: lo que todo curso da por sabido.'),
   P('sql', 'DB', 'beginner', 'SQL & Databases', 'SQL y bases de datos', 'Store and query data: tables, SELECT and JOIN, keys and relationships, and designing a small database from scratch.', 'Guarda y consulta datos: tablas, SELECT y JOIN, llaves y relaciones, y diseñar una base de datos pequeña desde cero.'),
@@ -39,6 +40,24 @@ const PLANNED = [
   P('statistics', 'σ', 'intermediate', 'Statistics for CS', 'Estadística para computación', 'Distributions, sampling, testing and the statistics behind experiments and machine learning.', 'Distribuciones, muestreo, pruebas y la estadística detrás de los experimentos y el aprendizaje automático.'),
   P('theory', 'λ', 'advanced', 'Theory of Computation', 'Teoría de la computación', 'Automata, grammars, Turing machines and the limits of what computers can solve.', 'Autómatas, gramáticas, máquinas de Turing y los límites de lo que las computadoras pueden resolver.')
 ];
+
+// The recommended order for someone starting from zero. Each step is a course id
+// (a live track or a planned course) and the reason it comes at that point.
+const S = (id, en, es) => ({ id, why: { en, es } });
+const PATH = [
+  S('python', 'Your first programming language: learn to think in small, clear steps.', 'Tu primer lenguaje de programación: aprende a pensar en pasos pequeños y claros.'),
+  S('cli', 'The terminal every other course uses: files, folders, commands and scripts.', 'La terminal que usan todos los demás cursos: archivos, carpetas, comandos y scripts.'),
+  S('git', 'Save every version of your work and share it, like every software team does.', 'Guarda cada versión de tu trabajo y compártela, como hace todo equipo de software.'),
+  S('web', 'Turn code into something people can open: pages with HTML, CSS and JavaScript.', 'Convierte código en algo que la gente puede abrir: páginas con HTML, CSS y JavaScript.'),
+  S('sql', 'Almost every app stores data. Learn to save it and ask it questions.', 'Casi toda app guarda datos. Aprende a guardarlos y a hacerles preguntas.'),
+  S('how-computers-work', 'What is really going on underneath: bits, memory and the CPU.', 'Lo que pasa realmente por debajo: bits, memoria y la CPU.'),
+  S('cybersecurity', 'Keep yourself and the things you build safe.', 'Mantén seguros a ti y a lo que construyes.'),
+  S('discrete', 'The math of computer science: logic, counting and graphs, ready for algorithms.', 'Las matemáticas de la computación: lógica, conteo y grafos, listas para algoritmos.')
+];
+// After the beginner path: the courses that build on it, in order.
+const NEXT = ['java', 'dsa', 'networks', 'os', 'cpp', 'assembly', 'architecture', 'statistics', 'theory'];
+const known = new Set([...ORDER, ...PLANNED.map((p) => p.id)]);
+for (const id of [...PATH.map((s) => s.id), ...NEXT]) if (!known.has(id)) throw new Error(`path step ${id} is not a course`);
 
 // A track is "available" (fully written, shown with lessons) when it is listed in publishedTracks.
 const tracks = ORDER.map((id) => ({ id, ...TRACK_META[id], status: PUBLISHED_TRACKS.includes(id) ? 'available' : 'soon', units: cur.tracks[id].map((u) => ({ id: u.id, title: u.title, modules: u.modules })) }));
@@ -61,7 +80,7 @@ for (const id of tracks.filter((t) => t.status === 'available').flatMap((t) => t
   };
 }
 const videos = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/course-videos.json'), 'utf8'));
-const out = { tracks, planned: PLANNED, modules, full, videos };
+const out = { tracks, planned: PLANNED, path: PATH, next: NEXT, modules, full, videos };
 const file = path.join(ROOT, 'data/atlas-data.json');
 const json = JSON.stringify(out);
 if (process.argv.includes('--check')) {

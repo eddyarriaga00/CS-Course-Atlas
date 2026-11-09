@@ -1,10 +1,15 @@
 {
  "publishedTracks": [
+  "python",
   "java",
   "discrete",
   "git"
  ],
  "sequence": [
+  "python-first-programs",
+  "python-decisions-loops",
+  "python-functions",
+  "python-collections",
   "intro-to-coding",
   "java-basics",
   "control-flow",
@@ -96,7 +101,11 @@
   "binary-indexed-trees": "dsa",
   "advanced-trees": "dsa",
   "string-algorithms": "dsa",
-  "bit-manipulation": "dsa"
+  "bit-manipulation": "dsa",
+  "python-first-programs": "python",
+  "python-decisions-loops": "python",
+  "python-functions": "python",
+  "python-collections": "python"
  },
  "modules": [
   {
@@ -872,6 +881,74 @@
    "es": {
     "title": "Problemas de Matrices y Cuadriculas",
     "description": "Aprende patrones confiables para recorrer cuadriculas 2D con validacion de limites, vectores de direccion, BFS por capas y marcado en sitio."
+   }
+  },
+  {
+   "id": "python-first-programs",
+   "title": "Your First Python Programs",
+   "description": "Write and run real programs from the first minute: print output, store values in variables, do arithmetic, work with text, and read what the user types.",
+   "difficulty": "beginner",
+   "topics": [
+    "Printing and Comments",
+    "Variables and Types",
+    "Numbers and Arithmetic",
+    "Strings",
+    "Input and Type Conversion"
+   ],
+   "es": {
+    "title": "Tus primeros programas en Python",
+    "description": "Escribe y ejecuta programas reales desde el primer minuto: muestra resultados, guarda valores en variables, haz cálculos, trabaja con texto y lee lo que escribe el usuario."
+   }
+  },
+  {
+   "id": "python-decisions-loops",
+   "title": "Decisions and Loops",
+   "description": "Make programs choose and repeat: compare values, branch with if, elif and else, repeat with while and for, and stop or skip with break and continue.",
+   "difficulty": "beginner",
+   "topics": [
+    "Booleans and Comparisons",
+    "if, elif and else",
+    "while Loops",
+    "for Loops and range",
+    "break and continue"
+   ],
+   "es": {
+    "title": "Decisiones y ciclos",
+    "description": "Haz que tus programas elijan y repitan: compara valores, ramifica con if, elif y else, repite con while y for, y detén o salta con break y continue."
+   }
+  },
+  {
+   "id": "python-functions",
+   "title": "Functions",
+   "description": "Package code into named, reusable pieces: define functions, pass arguments and return results, use default and keyword arguments, understand scope, and import modules.",
+   "difficulty": "beginner",
+   "topics": [
+    "Defining Functions",
+    "Parameters and Return Values",
+    "Default and Keyword Arguments",
+    "Scope",
+    "Modules and import"
+   ],
+   "es": {
+    "title": "Funciones",
+    "description": "Empaqueta código en piezas con nombre y reutilizables: define funciones, pasa argumentos y devuelve resultados, usa argumentos por defecto y por nombre, entiende el alcance e importa módulos."
+   }
+  },
+  {
+   "id": "python-collections",
+   "title": "Lists and Dictionaries",
+   "description": "Store many values in one place: build and change lists, use list methods and slices, group values in tuples, look things up in dictionaries, and remove duplicates with sets.",
+   "difficulty": "beginner",
+   "topics": [
+    "Lists",
+    "List Methods and Slicing",
+    "Tuples",
+    "Dictionaries",
+    "Sets"
+   ],
+   "es": {
+    "title": "Listas y diccionarios",
+    "description": "Guarda muchos valores en un solo lugar: crea y modifica listas, usa métodos y rebanadas de listas, agrupa valores en tuplas, busca datos en diccionarios y quita duplicados con conjuntos."
    }
   }
  ]

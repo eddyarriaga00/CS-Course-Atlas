@@ -36,7 +36,8 @@ const CATEGORY_ROUTE_MAP = {
     java: '/java',
     git: '/git',
     assembly: '/assembly',
-    discrete: '/discrete-math'
+    discrete: '/discrete-math',
+    python: '/python'
 };
 
 const CATEGORY_LABEL_MAP = {
@@ -44,7 +45,8 @@ const CATEGORY_LABEL_MAP = {
     java: 'Java',
     git: 'Git',
     assembly: 'Assembly',
-    discrete: 'Discrete Math'
+    discrete: 'Discrete Math',
+    python: 'Python'
 };
 
 const ROUTE_PAGES = [
@@ -110,6 +112,15 @@ const ROUTE_PAGES = [
         heading: 'Discrete Math Track',
         lead: 'Math foundations that support algorithms and systems courses.',
         moduleCategory: 'discrete'
+    },
+    {
+        route: '/python',
+        filename: 'python.html',
+        title: 'Intro to Programming with Python | CS Course Atlas',
+        description: 'A first programming course in Python: variables, decisions, loops, functions, lists and dictionaries, with runnable examples.',
+        heading: 'Intro to Programming with Python',
+        lead: 'A true first course for complete beginners.',
+        moduleCategory: 'python'
     },
     {
         route: '/flashcards',

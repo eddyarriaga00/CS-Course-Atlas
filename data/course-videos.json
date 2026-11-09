@@ -32,6 +32,13 @@
    "title": "Modern x64 Assembly",
    "channel": "Creel",
    "count": "16"
+  },
+  "python": {
+   "id": "PLhQjrBD2T3817j24-GogXmWqO5Q5vYy0V",
+   "type": "playlist",
+   "title": "CS50's Introduction to Programming with Python (CS50P) 2022",
+   "channel": "CS50",
+   "count": ""
   }
  },
  "modules": {
@@ -1089,6 +1096,190 @@
   "assembly-arrays-strings-io": {
    "series": null,
    "topics": {}
+  },
+  "python-first-programs": {
+   "series": {
+    "id": "PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7",
+    "type": "playlist",
+    "title": "Python Programming Beginner Tutorials",
+    "channel": "Corey Schafer",
+    "count": ""
+   },
+   "topics": {
+    "Printing and Comments": {
+     "id": "IdXTxbBfDbc",
+     "type": "video",
+     "title": "Python Print Function: Visually Explained | #Python Course 4",
+     "channel": "Data with Baraa",
+     "length": "21:29"
+    },
+    "Variables and Types": {
+     "id": "LKFrQXaoSMQ",
+     "type": "video",
+     "title": "Python variables for beginners ❎",
+     "channel": "Bro Code",
+     "length": "13:31"
+    },
+    "Numbers and Arithmetic": {
+     "id": "jc7TBgMS_kw",
+     "type": "video",
+     "title": "Math in Python is easy! 📐",
+     "channel": "Bro Code",
+     "length": "13:51"
+    },
+    "Strings": {
+     "id": "k9TUPpGqYTo",
+     "type": "video",
+     "title": "Python Tutorial for Beginners 2: Strings - Working with Textual Data",
+     "channel": "Corey Schafer",
+     "length": "21:12"
+    },
+    "Input and Type Conversion": {
+     "id": "DB9Cq6TSTuQ",
+     "type": "video",
+     "title": "Python user input ⌨️",
+     "channel": "Bro Code",
+     "length": "7:18"
+    }
+   }
+  },
+  "python-decisions-loops": {
+   "series": {
+    "id": "PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7",
+    "type": "playlist",
+    "title": "Python Programming Beginner Tutorials",
+    "channel": "Corey Schafer",
+    "count": ""
+   },
+   "topics": {
+    "Booleans and Comparisons": {
+     "id": "mrryXQnlYN8",
+     "type": "video",
+     "title": "Python Booleans (Comparison & Logical Operators) #6",
+     "channel": "Programiz",
+     "length": "9:49"
+    },
+    "if, elif and else": {
+     "id": "Zp5MuPOtsSY",
+     "type": "video",
+     "title": "Control Flow in Python - If Elif Else Statements",
+     "channel": "Programming with Mosh",
+     "length": "16:08"
+    },
+    "while Loops": {
+     "id": "rRTjPnVooxE",
+     "type": "video",
+     "title": "While loops in Python are easy! ♾️",
+     "channel": "Bro Code",
+     "length": "6:58"
+    },
+    "for Loops and range": {
+     "id": "94UHCEmprCY",
+     "type": "video",
+     "title": "Python For Loops - Python Tutorial for Absolute Beginners",
+     "channel": "Programming with Mosh",
+     "length": "14:42"
+    },
+    "break and continue": {
+     "id": "Xnzjr0Pcx-A",
+     "type": "video",
+     "title": "break and continue | Intro to CS - Python | Khan Academy",
+     "channel": "Khan Academy",
+     "length": "5:16"
+    }
+   }
+  },
+  "python-functions": {
+   "series": {
+    "id": "PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7",
+    "type": "playlist",
+    "title": "Python Programming Beginner Tutorials",
+    "channel": "Corey Schafer",
+    "count": ""
+   },
+   "topics": {
+    "Defining Functions": {
+     "id": "9Os0o3wzS_I",
+     "type": "video",
+     "title": "Python Tutorial for Beginners 8: Functions",
+     "channel": "Corey Schafer",
+     "length": "21:48"
+    },
+    "Parameters and Return Values": {
+     "id": "ZnBQfF5JFDM",
+     "type": "video",
+     "title": "Python return statement 🔙",
+     "channel": "Bro Code",
+     "length": "3:31"
+    },
+    "Default and Keyword Arguments": {
+     "id": "Gf-Ws2cXEuA",
+     "type": "video",
+     "title": "Python Arguments in Functions (Positional, Keywords & Default Arguments) #13",
+     "channel": "Programiz",
+     "length": "6:15"
+    },
+    "Scope": {
+     "id": "AC0Ql1mOw4s",
+     "type": "video",
+     "title": "Local and global scope | Intro to CS - Python | Khan Academy",
+     "channel": "Khan Academy",
+     "length": "4:56"
+    },
+    "Modules and import": {
+     "id": "CqvZ3vGoGs0",
+     "type": "video",
+     "title": "Python Tutorial for Beginners 9: Import Modules and Exploring The Standard Library",
+     "channel": "Corey Schafer",
+     "length": "21:57"
+    }
+   }
+  },
+  "python-collections": {
+   "series": {
+    "id": "PL-osiE80TeTskrapNbzXhwoFUiLCjGgY7",
+    "type": "playlist",
+    "title": "Python Programming Beginner Tutorials",
+    "channel": "Corey Schafer",
+    "count": ""
+   },
+   "topics": {
+    "Lists": {
+     "id": "9OeznAkyQz4",
+     "type": "video",
+     "title": "How to Use Lists in Python",
+     "channel": "Programming with Mosh",
+     "length": "18:49"
+    },
+    "List Methods and Slicing": {
+     "id": "ajrtAuDg3yw",
+     "type": "video",
+     "title": "Python Tutorial: Slicing Lists and Strings",
+     "channel": "Corey Schafer",
+     "length": "10:44"
+    },
+    "Tuples": {
+     "id": "w6hL_dszMxk",
+     "type": "video",
+     "title": "Python tuples 📋",
+     "channel": "Bro Code",
+     "length": "3:09"
+    },
+    "Dictionaries": {
+     "id": "daefaLgNkw0",
+     "type": "video",
+     "title": "Python Tutorial for Beginners 5: Dictionaries - Working with Key-Value Pairs",
+     "channel": "Corey Schafer",
+     "length": "9:59"
+    },
+    "Sets": {
+     "id": "t9j8lCUGZXo",
+     "type": "video",
+     "title": "What are Sets in Python? Python Tutorial for Absolute Beginners | Mosh",
+     "channel": "Programming with Mosh",
+     "length": "4:31"
+    }
+   }
   }
  }
 }

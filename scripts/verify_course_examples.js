@@ -58,8 +58,8 @@ function main() {
         // Modules without curated examples fall back to the generated ones at runtime.
         if (!entry) continue;
         const track = MODULE_CATEGORY_BY_ID[module.id];
-        // Git is taught as terminal sessions, not programs.
-        const langs = track === 'git' ? ['bash'] : track === 'assembly' ? ['assembly', ...LANGS] : LANGS;
+        // Git is taught as terminal sessions and the Python course only in Python.
+        const langs = track === 'git' ? ['bash'] : track === 'python' ? ['python'] : track === 'assembly' ? ['assembly', ...LANGS] : LANGS;
         checkCode(`${module.id} main`, entry.main, langs);
         programCount += langs.length;
         const topics = Array.isArray(module.topics) ? module.topics : [];

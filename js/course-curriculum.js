@@ -248,6 +248,48 @@ window.COURSE_CURRICULUM = {
           "assembly-arrays-strings-io"
         ]
       }
+    ],
+    "python": [
+      {
+        "id": "python-first-steps",
+        "title": {
+          "en": "First Steps",
+          "es": "Primeros pasos"
+        },
+        "modules": [
+          "python-first-programs"
+        ]
+      },
+      {
+        "id": "python-control-flow",
+        "title": {
+          "en": "Decisions and Loops",
+          "es": "Decisiones y ciclos"
+        },
+        "modules": [
+          "python-decisions-loops"
+        ]
+      },
+      {
+        "id": "python-organizing-code",
+        "title": {
+          "en": "Organizing Code",
+          "es": "Organizar el código"
+        },
+        "modules": [
+          "python-functions"
+        ]
+      },
+      {
+        "id": "python-working-with-data",
+        "title": {
+          "en": "Working with Data",
+          "es": "Trabajar con datos"
+        },
+        "modules": [
+          "python-collections"
+        ]
+      }
     ]
   },
   "modules": {
@@ -13311,6 +13353,1166 @@ window.COURSE_CURRICULUM = {
           "explanation": {
             "en": "Business rules belong to the Model so they hold no matter which controller, UI or batch job calls it. A View or Controller check can improve the user experience, but if it is the only check, another entry point can bypass it.",
             "es": "Las reglas de negocio pertenecen al Modelo para que se cumplan sin importar qué controlador, interfaz o proceso por lotes lo invoque. Una validación en la Vista o el Controlador puede mejorar la experiencia, pero si es la única, otro punto de entrada puede saltársela."
+          }
+        }
+      ]
+    },
+    "python-first-programs": {
+      "minutes": 90,
+      "prerequisites": [],
+      "whyItMatters": {
+        "en": "Every program, from a game to a website, is built from the same few pieces you meet here: values, variables, arithmetic and text. Python lets you write them with almost no ceremony, so you spend your first hours thinking about the problem instead of the syntax. Once these feel natural, every other language is mostly the same ideas with different spelling.",
+        "es": "Todo programa, desde un juego hasta un sitio web, se construye con las mismas pocas piezas que verás aquí: valores, variables, aritmética y texto. Python te deja escribirlas casi sin ceremonia, así que tus primeras horas las dedicas a pensar en el problema y no en la sintaxis. Cuando estas piezas te resulten naturales, cualquier otro lenguaje será casi lo mismo con otra ortografía."
+      },
+      "objectives": {
+        "en": [
+          "Write a program that prints several lines of output, using `print` with multiple values, `sep` and `end`.",
+          "Create variables of type `str`, `int`, `float` and `bool`, and use `type()` to check what a value is.",
+          "Predict the result of `/`, `//`, `%` and `**`, and apply the order of operations.",
+          "Build text with f-strings, slicing and string methods such as `upper`, `replace` and `split`.",
+          "Read input with `input()` and convert it with `int()`, `float()` and `str()` before doing math."
+        ],
+        "es": [
+          "Escribir un programa que imprime varias líneas, usando `print` con varios valores, `sep` y `end`.",
+          "Crear variables de tipo `str`, `int`, `float` y `bool`, y usar `type()` para saber qué es un valor.",
+          "Predecir el resultado de `/`, `//`, `%` y `**`, y aplicar el orden de las operaciones.",
+          "Construir texto con f-strings, rebanadas (slicing) y métodos como `upper`, `replace` y `split`.",
+          "Leer datos con `input()` y convertirlos con `int()`, `float()` y `str()` antes de hacer cálculos."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Use a computer and type on a keyboard; no programming experience is needed",
+          "Install Python from python.org or open an online editor such as the CS Course Atlas playground"
+        ],
+        "es": [
+          "Usar una computadora y escribir con el teclado; no se necesita experiencia programando",
+          "Instalar Python desde python.org o abrir un editor en línea como el editor de CS Course Atlas"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "A program runs top to bottom, one line at a time; a variable holds the value it was given most recently.",
+          "`/` always gives a `float` (`7 / 2` is `3.5`), `//` drops the fraction (`3`) and `%` gives the remainder (`1`).",
+          "`input()` always returns a string, so `\"5\" + \"5\"` is `\"55\"`; convert with `int()` or `float()` before doing math.",
+          "f-strings such as `f\"Total: {price * qty}\"` put values inside text, and `:.2f` rounds a number to two decimals."
+        ],
+        "es": [
+          "Un programa se ejecuta de arriba abajo, una línea a la vez; una variable guarda el último valor que se le asignó.",
+          "`/` siempre da un `float` (`7 / 2` es `3.5`), `//` descarta la parte decimal (`3`) y `%` da el residuo (`1`).",
+          "`input()` siempre devuelve texto, así que `\"5\" + \"5\"` es `\"55\"`; convierte con `int()` o `float()` antes de calcular.",
+          "Las f-strings como `f\"Total: {precio * cantidad}\"` meten valores dentro del texto, y `:.2f` redondea a dos decimales."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Forgetting the quotes around text: `print(hello)` looks for a variable called `hello` and fails with `NameError`; write `print(\"hello\")`.",
+          "Adding a number to a string: `\"Age: \" + 17` raises `TypeError`; use an f-string (`f\"Age: {17}\"`) or `str(17)`.",
+          "Doing math on raw input: `input()` returns `\"17\"`, so `age + 1` fails; write `age = int(input(...))`.",
+          "Expecting `0.1 + 0.2` to print `0.3`: floats are stored in binary and print `0.30000000000000004`; use `round()` or `:.2f` when showing money."
+        ],
+        "es": [
+          "Olvidar las comillas del texto: `print(hola)` busca una variable llamada `hola` y falla con `NameError`; escribe `print(\"hola\")`.",
+          "Sumar un número a un texto: `\"Edad: \" + 17` lanza `TypeError`; usa una f-string (`f\"Edad: {17}\"`) o `str(17)`.",
+          "Hacer cálculos con la entrada sin convertir: `input()` devuelve `\"17\"`, así que `edad + 1` falla; escribe `edad = int(input(...))`.",
+          "Esperar que `0.1 + 0.2` imprima `0.3`: los float se guardan en binario e imprimen `0.30000000000000004`; usa `round()` o `:.2f` para mostrar dinero."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: print your name, your favorite food and your age on three lines, then on one line separated by ` | ` using `sep`.",
+          "Core: given `minutes = 135`, print it as hours and minutes (`2 h 15 min`) using `//` and `%`.",
+          "Core: ask for a price and a quantity with `input()`, and print the total with two decimals, for example `Total: $7.50`.",
+          "Stretch: ask for a full name and print the initials in upper case, for example `Ana María Ruiz` becomes `AMR` (use `split()` and indexing)."
+        ],
+        "es": [
+          "Calentamiento: imprime tu nombre, tu comida favorita y tu edad en tres líneas, y luego en una sola línea separadas por ` | ` usando `sep`.",
+          "Núcleo: dado `minutos = 135`, imprímelo en horas y minutos (`2 h 15 min`) usando `//` y `%`.",
+          "Núcleo: pide un precio y una cantidad con `input()` e imprime el total con dos decimales, por ejemplo `Total: $7.50`.",
+          "Extensión: pide un nombre completo e imprime las iniciales en mayúsculas, por ejemplo `Ana María Ruiz` da `AMR` (usa `split()` e índices)."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What does `print(7 / 2, 7 // 2, 7 % 2)` print, and why are the three results different?",
+          "Why does `input(\"Age? \") + 1` fail, and how do you fix it?",
+          "What is the difference between `name` and `\"name\"` in Python code?"
+        ],
+        "es": [
+          "¿Qué imprime `print(7 / 2, 7 // 2, 7 % 2)` y por qué los tres resultados son distintos?",
+          "¿Por qué falla `input(\"¿Edad? \") + 1` y cómo se arregla?",
+          "¿Cuál es la diferencia entre `nombre` y `\"nombre\"` en el código de Python?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Printing and Comments",
+            "es": "Imprimir y comentarios"
+          },
+          "definition": {
+            "en": "`print()` shows values on the screen, separated by spaces and followed by a new line (change these with `sep=` and `end=`). A comment starts with `#`; Python ignores everything after it on that line, so you can explain your code to people.",
+            "es": "`print()` muestra valores en pantalla, separados por espacios y seguidos de un salto de línea (se cambian con `sep=` y `end=`). Un comentario empieza con `#`; Python ignora todo lo que sigue en esa línea, así puedes explicar tu código a las personas."
+          }
+        },
+        {
+          "term": {
+            "en": "Variables and Types",
+            "es": "Variables y tipos"
+          },
+          "definition": {
+            "en": "A variable is a name that refers to a value, created with `=` (as in `age = 19`). Every value has a type: `str` for text, `int` for whole numbers, `float` for decimals and `bool` for `True`/`False`. `type(x)` tells you which one.",
+            "es": "Una variable es un nombre que se refiere a un valor y se crea con `=` (como en `edad = 19`). Cada valor tiene un tipo: `str` para texto, `int` para enteros, `float` para decimales y `bool` para `True`/`False`. `type(x)` te dice cuál es."
+          }
+        },
+        {
+          "term": {
+            "en": "Numbers and Arithmetic",
+            "es": "Números y aritmética"
+          },
+          "definition": {
+            "en": "Python uses `+ - * /` as in math, plus `//` (whole-number division), `%` (remainder) and `**` (power). Multiplication and division happen before addition and subtraction; parentheses change the order.",
+            "es": "Python usa `+ - * /` como en matemáticas, además de `//` (división entera), `%` (residuo) y `**` (potencia). La multiplicación y la división van antes que la suma y la resta; los paréntesis cambian el orden."
+          }
+        },
+        {
+          "term": {
+            "en": "Strings",
+            "es": "Cadenas de texto"
+          },
+          "definition": {
+            "en": "A string (`str`) is text inside quotes. You can join strings with `+`, repeat them with `*`, read one character with an index (`s[0]`), take a piece with a slice (`s[1:4]`), and transform them with methods such as `upper()`, `replace()` and `split()`.",
+            "es": "Una cadena (`str`) es texto entre comillas. Puedes unir cadenas con `+`, repetirlas con `*`, leer un carácter con un índice (`s[0]`), tomar un trozo con una rebanada (`s[1:4]`) y transformarlas con métodos como `upper()`, `replace()` y `split()`."
+          }
+        },
+        {
+          "term": {
+            "en": "Input and Type Conversion",
+            "es": "Entrada y conversión de tipos"
+          },
+          "definition": {
+            "en": "`input(\"prompt\")` shows the prompt, waits for the user to type a line, and returns it as a string. To use it as a number, convert it with `int()` or `float()`; `str()` turns a number back into text.",
+            "es": "`input(\"mensaje\")` muestra el mensaje, espera a que el usuario escriba una línea y la devuelve como texto. Para usarla como número, conviértela con `int()` o `float()`; `str()` convierte un número de vuelta a texto."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "The Python Tutorial: An Informal Introduction (python.org)",
+            "es": "El tutorial de Python: una introducción informal (python.org)"
+          },
+          "url": "https://docs.python.org/3/tutorial/introduction.html"
+        },
+        {
+          "label": {
+            "en": "Python built-in functions: print, input, int, float (python.org)",
+            "es": "Funciones integradas de Python: print, input, int, float (python.org)"
+          },
+          "url": "https://docs.python.org/3/library/functions.html"
+        },
+        {
+          "label": {
+            "en": "String methods reference (python.org)",
+            "es": "Referencia de métodos de cadenas (python.org)"
+          },
+          "url": "https://docs.python.org/3/library/stdtypes.html#string-methods"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What does `print(10 / 4)` print?",
+            "es": "¿Qué imprime `print(10 / 4)`?"
+          },
+          "options": {
+            "en": [
+              "2",
+              "2.5",
+              "2.0",
+              "3"
+            ],
+            "es": [
+              "2",
+              "2.5",
+              "2.0",
+              "3"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`/` is true division and always returns a `float`, so 10 / 4 is 2.5. Use `//` for whole-number division (2).",
+            "es": "`/` es la división real y siempre devuelve un `float`, así que 10 / 4 es 2.5. Usa `//` para la división entera (2)."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the value of `17 % 5`?",
+            "es": "¿Cuál es el valor de `17 % 5`?"
+          },
+          "options": {
+            "en": [
+              "3",
+              "2",
+              "3.4",
+              "12"
+            ],
+            "es": [
+              "3",
+              "2",
+              "3.4",
+              "12"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`%` gives the remainder: 17 = 3 × 5 + 2, so the remainder is 2.",
+            "es": "`%` da el residuo: 17 = 3 × 5 + 2, así que el residuo es 2."
+          }
+        },
+        {
+          "question": {
+            "en": "After `x = input()` the user types `5`. What is `x + x`?",
+            "es": "Tras `x = input()` el usuario escribe `5`. ¿Qué es `x + x`?"
+          },
+          "options": {
+            "en": [
+              "10",
+              "\"55\"",
+              "An error",
+              "5"
+            ],
+            "es": [
+              "10",
+              "\"55\"",
+              "Un error",
+              "5"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`input()` returns the string `\"5\"`, and `+` on strings joins them, giving `\"55\"`. Convert with `int(x)` to get 10.",
+            "es": "`input()` devuelve la cadena `\"5\"`, y `+` con cadenas las une, lo que da `\"55\"`. Convierte con `int(x)` para obtener 10."
+          }
+        },
+        {
+          "question": {
+            "en": "What does `\"python\"[1:4]` give?",
+            "es": "¿Qué da `\"python\"[1:4]`?"
+          },
+          "options": {
+            "en": [
+              "\"pyt\"",
+              "\"yth\"",
+              "\"ytho\"",
+              "\"pyth\""
+            ],
+            "es": [
+              "\"pyt\"",
+              "\"yth\"",
+              "\"ytho\"",
+              "\"pyth\""
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Indexes start at 0, and a slice includes the start but stops before the end: positions 1, 2 and 3 are y, t, h.",
+            "es": "Los índices empiezan en 0 y una rebanada incluye el inicio pero se detiene antes del final: las posiciones 1, 2 y 3 son y, t, h."
+          }
+        },
+        {
+          "question": {
+            "en": "Which line prints `Total: 7.50` when `total = 7.5`?",
+            "es": "¿Qué línea imprime `Total: 7.50` cuando `total = 7.5`?"
+          },
+          "options": {
+            "en": [
+              "print(\"Total: \" + total)",
+              "print(f\"Total: {total:.2f}\")",
+              "print(\"Total: {total}\")",
+              "print(f\"Total: total:.2f\")"
+            ],
+            "es": [
+              "print(\"Total: \" + total)",
+              "print(f\"Total: {total:.2f}\")",
+              "print(\"Total: {total}\")",
+              "print(f\"Total: total:.2f\")"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "An f-string evaluates what is inside the braces, and `:.2f` formats it with two decimals. The first option raises TypeError, and the others print the braces or the word literally.",
+            "es": "Una f-string evalúa lo que está entre llaves, y `:.2f` le da formato con dos decimales. La primera opción lanza TypeError y las otras imprimen las llaves o la palabra tal cual."
+          }
+        }
+      ]
+    },
+    "python-decisions-loops": {
+      "minutes": 100,
+      "prerequisites": [
+        "python-first-programs"
+      ],
+      "whyItMatters": {
+        "en": "A program that runs every line exactly once can only do one fixed thing. Decisions let it react to input (is the password right? is the grade a pass?), and loops let it handle any amount of data with the same few lines. Almost every program you will ever write is variables plus decisions plus loops.",
+        "es": "Un programa que ejecuta cada línea exactamente una vez solo puede hacer una cosa fija. Las decisiones le permiten reaccionar a la entrada (¿la contraseña es correcta? ¿la nota aprueba?), y los ciclos le permiten procesar cualquier cantidad de datos con las mismas pocas líneas. Casi todos los programas que escribirás son variables, decisiones y ciclos."
+      },
+      "objectives": {
+        "en": [
+          "Write conditions with `==`, `!=`, `<`, `>=` and combine them with `and`, `or` and `not`.",
+          "Choose between several cases with `if`, `elif` and `else`, putting the cases in the right order.",
+          "Repeat work with a `while` loop that is guaranteed to stop, and with a `for` loop over `range()` or a list.",
+          "Use `break` to leave a loop early and `continue` to skip to the next round."
+        ],
+        "es": [
+          "Escribir condiciones con `==`, `!=`, `<`, `>=` y combinarlas con `and`, `or` y `not`.",
+          "Elegir entre varios casos con `if`, `elif` y `else`, poniendo los casos en el orden correcto.",
+          "Repetir trabajo con un ciclo `while` que termina con seguridad y con un `for` sobre `range()` o una lista.",
+          "Usar `break` para salir antes de un ciclo y `continue` para pasar a la siguiente vuelta."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Variables, arithmetic and `print` from Your First Python Programs",
+          "Reading and converting input with `input()` and `int()`"
+        ],
+        "es": [
+          "Variables, aritmética y `print` de Tus primeros programas en Python",
+          "Leer y convertir datos con `input()` e `int()`"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "`=` stores a value; `==` asks whether two values are equal and gives `True` or `False`.",
+          "Python checks `if`/`elif` conditions from top to bottom and runs only the first one that is true, so put the most specific case first.",
+          "Indentation is part of the syntax: the indented lines under `if`, `while` or `for` are the ones that belong to it.",
+          "A `while` loop needs something inside it that eventually makes the condition false; `for` loops over a known sequence and stops by itself."
+        ],
+        "es": [
+          "`=` guarda un valor; `==` pregunta si dos valores son iguales y da `True` o `False`.",
+          "Python revisa las condiciones de `if`/`elif` de arriba abajo y ejecuta solo la primera verdadera, así que pon primero el caso más específico.",
+          "La sangría es parte de la sintaxis: las líneas con sangría bajo `if`, `while` o `for` son las que le pertenecen.",
+          "Un ciclo `while` necesita algo adentro que tarde o temprano haga falsa la condición; `for` recorre una secuencia conocida y termina solo."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Writing `if score = 90:` instead of `if score == 90:`; a single `=` is assignment and is a syntax error inside a condition.",
+          "Ordering `elif` branches from least to most specific, e.g. checking `score >= 60` before `score >= 90`, so the higher grades are never reached.",
+          "Forgetting to update the variable in a `while` loop, which makes it run forever; press Ctrl+C to stop a stuck program.",
+          "Expecting `range(1, 10)` to include 10: the end is never included, so write `range(1, 11)` for 1 to 10."
+        ],
+        "es": [
+          "Escribir `if nota = 90:` en lugar de `if nota == 90:`; un solo `=` es asignación y es un error de sintaxis en una condición.",
+          "Ordenar las ramas `elif` de la menos a la más específica, por ejemplo revisar `nota >= 60` antes de `nota >= 90`, así nunca se llega a las notas altas.",
+          "Olvidar actualizar la variable en un ciclo `while`, lo que lo hace eterno; presiona Ctrl+C para detener un programa atascado.",
+          "Esperar que `range(1, 10)` incluya el 10: el final nunca se incluye, así que escribe `range(1, 11)` para ir de 1 a 10."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: ask for a number and print whether it is positive, negative or zero.",
+          "Core: print the multiplication table of 7 from 7 × 1 to 7 × 10 with a `for` loop and `range`.",
+          "Core: write FizzBuzz for 1 to 20: print \"Fizz\" for multiples of 3, \"Buzz\" for multiples of 5, \"FizzBuzz\" for both, otherwise the number.",
+          "Stretch: keep asking for a password until the user types the right one or has failed 3 times, then print \"Welcome\" or \"Locked\"."
+        ],
+        "es": [
+          "Calentamiento: pide un número e imprime si es positivo, negativo o cero.",
+          "Núcleo: imprime la tabla del 7, de 7 × 1 a 7 × 10, con un ciclo `for` y `range`.",
+          "Núcleo: escribe FizzBuzz del 1 al 20: imprime \"Fizz\" para múltiplos de 3, \"Buzz\" para múltiplos de 5, \"FizzBuzz\" para ambos y si no, el número.",
+          "Extensión: pide una contraseña hasta que el usuario escriba la correcta o falle 3 veces, y luego imprime \"Bienvenido\" o \"Bloqueado\"."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What does `print(3 > 2 and 2 > 5)` print, and why?",
+          "Why does the order of `elif` branches matter in a grading program?",
+          "How many times does `for i in range(2, 10, 3): print(i)` print, and which numbers?"
+        ],
+        "es": [
+          "¿Qué imprime `print(3 > 2 and 2 > 5)` y por qué?",
+          "¿Por qué importa el orden de las ramas `elif` en un programa de calificaciones?",
+          "¿Cuántas veces imprime `for i in range(2, 10, 3): print(i)` y qué números?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Booleans and Comparisons",
+            "es": "Booleanos y comparaciones"
+          },
+          "definition": {
+            "en": "A boolean is `True` or `False`. Comparisons (`==`, `!=`, `<`, `<=`, `>`, `>=`) produce booleans, and `and`, `or` and `not` combine them. `and` needs both sides true; `or` needs at least one.",
+            "es": "Un booleano es `True` o `False`. Las comparaciones (`==`, `!=`, `<`, `<=`, `>`, `>=`) producen booleanos, y `and`, `or` y `not` los combinan. `and` necesita ambos lados verdaderos; `or`, al menos uno."
+          }
+        },
+        {
+          "term": {
+            "en": "if, elif and else",
+            "es": "if, elif y else"
+          },
+          "definition": {
+            "en": "`if condition:` runs the indented block only when the condition is true. `elif` adds more cases, checked in order, and `else` runs when none of them matched. At most one branch runs.",
+            "es": "`if condición:` ejecuta el bloque con sangría solo si la condición es verdadera. `elif` agrega más casos, revisados en orden, y `else` se ejecuta cuando ninguno coincidió. Se ejecuta como máximo una rama."
+          }
+        },
+        {
+          "term": {
+            "en": "while Loops",
+            "es": "Ciclos while"
+          },
+          "definition": {
+            "en": "`while condition:` repeats its block as long as the condition stays true, checking it before every round. Use it when you do not know in advance how many rounds you need, and make sure something inside eventually makes the condition false.",
+            "es": "`while condición:` repite su bloque mientras la condición siga siendo verdadera, revisándola antes de cada vuelta. Úsalo cuando no sabes de antemano cuántas vueltas necesitas, y asegúrate de que algo adentro termine haciendo falsa la condición."
+          }
+        },
+        {
+          "term": {
+            "en": "for Loops and range",
+            "es": "Ciclos for y range"
+          },
+          "definition": {
+            "en": "`for x in sequence:` runs its block once for each item, with `x` set to that item. `range(start, stop, step)` produces numbers from `start` up to, but not including, `stop`; `range(5)` is 0, 1, 2, 3, 4.",
+            "es": "`for x in secuencia:` ejecuta su bloque una vez por cada elemento, con `x` igual a ese elemento. `range(inicio, fin, paso)` produce números desde `inicio` hasta `fin` sin incluirlo; `range(5)` es 0, 1, 2, 3, 4."
+          }
+        },
+        {
+          "term": {
+            "en": "break and continue",
+            "es": "break y continue"
+          },
+          "definition": {
+            "en": "Inside a loop, `break` stops the loop immediately and continues after it, while `continue` skips the rest of the current round and starts the next one. Both are useful for searching and for skipping invalid data.",
+            "es": "Dentro de un ciclo, `break` detiene el ciclo de inmediato y sigue después de él, mientras que `continue` salta el resto de la vuelta actual y empieza la siguiente. Ambos sirven para buscar y para saltar datos inválidos."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "The Python Tutorial: More Control Flow Tools (python.org)",
+            "es": "El tutorial de Python: más herramientas de control de flujo (python.org)"
+          },
+          "url": "https://docs.python.org/3/tutorial/controlflow.html"
+        },
+        {
+          "label": {
+            "en": "Boolean operations and comparisons (python.org)",
+            "es": "Operaciones booleanas y comparaciones (python.org)"
+          },
+          "url": "https://docs.python.org/3/library/stdtypes.html#boolean-operations-and-or-not"
+        },
+        {
+          "label": {
+            "en": "CS50P Lecture 1: Conditionals and Lecture 2: Loops (Harvard)",
+            "es": "CS50P clase 1: condicionales y clase 2: ciclos (Harvard)"
+          },
+          "url": "https://cs50.harvard.edu/python/"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What does `print(5 == 5.0, \"5\" == 5)` print?",
+            "es": "¿Qué imprime `print(5 == 5.0, \"5\" == 5)`?"
+          },
+          "options": {
+            "en": [
+              "True True",
+              "True False",
+              "False False",
+              "An error"
+            ],
+            "es": [
+              "True True",
+              "True False",
+              "False False",
+              "Un error"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The int 5 and the float 5.0 are equal numbers, but the string \"5\" is text, and text is never equal to a number.",
+            "es": "El entero 5 y el float 5.0 son números iguales, pero la cadena \"5\" es texto, y el texto nunca es igual a un número."
+          }
+        },
+        {
+          "question": {
+            "en": "With `score = 95`, what does this print? `if score >= 60: print(\"D or better\") elif score >= 90: print(\"A\")`",
+            "es": "Con `nota = 95`, ¿qué imprime esto? `if nota >= 60: print(\"D o más\") elif nota >= 90: print(\"A\")`"
+          },
+          "options": {
+            "en": [
+              "A",
+              "D or better",
+              "Both lines",
+              "Nothing"
+            ],
+            "es": [
+              "A",
+              "D o más",
+              "Ambas líneas",
+              "Nada"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Only the first true branch runs. 95 >= 60 is true, so the `elif` is never checked: the more specific case must come first.",
+            "es": "Solo se ejecuta la primera rama verdadera. 95 >= 60 es verdadero, así que el `elif` nunca se revisa: el caso más específico debe ir primero."
+          }
+        },
+        {
+          "question": {
+            "en": "Which numbers does `list(range(1, 10, 2))` contain?",
+            "es": "¿Qué números contiene `list(range(1, 10, 2))`?"
+          },
+          "options": {
+            "en": [
+              "1, 3, 5, 7, 9",
+              "1, 3, 5, 7, 9, 11",
+              "2, 4, 6, 8",
+              "1, 2, 3, ..., 10"
+            ],
+            "es": [
+              "1, 3, 5, 7, 9",
+              "1, 3, 5, 7, 9, 11",
+              "2, 4, 6, 8",
+              "1, 2, 3, ..., 10"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Start at 1, add 2 each time, and stop before reaching 10.",
+            "es": "Empieza en 1, suma 2 cada vez y se detiene antes de llegar a 10."
+          }
+        },
+        {
+          "question": {
+            "en": "What is wrong with `n = 10` followed by `while n > 0: print(n)`?",
+            "es": "¿Qué está mal en `n = 10` seguido de `while n > 0: print(n)`?"
+          },
+          "options": {
+            "en": [
+              "Nothing",
+              "It never changes n, so it loops forever",
+              "while cannot use >",
+              "It prints nothing"
+            ],
+            "es": [
+              "Nada",
+              "Nunca cambia n, así que se repite para siempre",
+              "while no puede usar >",
+              "No imprime nada"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The condition stays true because `n` never decreases. Add `n -= 1` inside the loop.",
+            "es": "La condición sigue siendo verdadera porque `n` nunca disminuye. Agrega `n -= 1` dentro del ciclo."
+          }
+        },
+        {
+          "question": {
+            "en": "What does `continue` do inside a loop?",
+            "es": "¿Qué hace `continue` dentro de un ciclo?"
+          },
+          "options": {
+            "en": [
+              "Ends the program",
+              "Leaves the loop",
+              "Skips to the next round of the loop",
+              "Repeats the current round"
+            ],
+            "es": [
+              "Termina el programa",
+              "Sale del ciclo",
+              "Salta a la siguiente vuelta del ciclo",
+              "Repite la vuelta actual"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`continue` skips the rest of the current round; `break` is the one that leaves the loop.",
+            "es": "`continue` salta el resto de la vuelta actual; `break` es el que sale del ciclo."
+          }
+        }
+      ]
+    },
+    "python-functions": {
+      "minutes": 100,
+      "prerequisites": [
+        "python-decisions-loops"
+      ],
+      "whyItMatters": {
+        "en": "As programs grow, copying the same lines everywhere makes them long, buggy and hard to change. Functions let you write a piece of logic once, give it a clear name and use it anywhere. They are also how you use code other people wrote: every library, from math to web frameworks, is a collection of functions you call.",
+        "es": "A medida que los programas crecen, copiar las mismas líneas por todas partes los vuelve largos, con errores y difíciles de cambiar. Las funciones te permiten escribir una lógica una vez, darle un nombre claro y usarla en cualquier lugar. También son la forma de usar código que escribieron otros: toda biblioteca, desde math hasta los frameworks web, es una colección de funciones que llamas."
+      },
+      "objectives": {
+        "en": [
+          "Define a function with `def`, call it, and explain the difference between defining and calling.",
+          "Pass values in through parameters and get a result back with `return`, and tell `return` apart from `print`.",
+          "Give parameters default values and call functions with keyword arguments.",
+          "Predict which variables a function can see and change (local versus global scope).",
+          "Import and use functions from standard modules such as `math` and `random`."
+        ],
+        "es": [
+          "Definir una función con `def`, llamarla y explicar la diferencia entre definir y llamar.",
+          "Pasar valores mediante parámetros y obtener un resultado con `return`, y distinguir `return` de `print`.",
+          "Dar valores por defecto a los parámetros y llamar funciones con argumentos por nombre.",
+          "Predecir qué variables puede ver y cambiar una función (alcance local frente a global).",
+          "Importar y usar funciones de módulos estándar como `math` y `random`."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Variables, if/elif/else and loops from the earlier Python modules"
+        ],
+        "es": [
+          "Variables, if/elif/else y ciclos de los módulos anteriores de Python"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "`def name(params):` only defines a function; nothing runs until you call it with `name(arguments)`.",
+          "`return` hands a value back to the caller and ends the function; a function without `return` gives back `None`.",
+          "Variables created inside a function are local: they disappear when it returns and do not clash with variables outside.",
+          "A good function does one job, has a name that says what it does (a verb), and takes what it needs as parameters instead of reading globals."
+        ],
+        "es": [
+          "`def nombre(parámetros):` solo define una función; nada se ejecuta hasta que la llamas con `nombre(argumentos)`.",
+          "`return` devuelve un valor a quien llamó y termina la función; una función sin `return` devuelve `None`.",
+          "Las variables creadas dentro de una función son locales: desaparecen cuando termina y no chocan con las de afuera.",
+          "Una buena función hace una sola tarea, tiene un nombre que dice lo que hace (un verbo) y recibe lo que necesita como parámetros en lugar de leer variables globales."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Printing inside a function instead of returning: `print` shows a value but the caller gets `None`, so `total = add(2, 3)` stores `None`.",
+          "Forgetting the parentheses: `greet` refers to the function itself, while `greet()` calls it.",
+          "Using a mutable default such as `def add(item, items=[])`: the same list is reused across calls; use `items=None` and create the list inside.",
+          "Naming your own file `random.py` or `math.py`, which hides the standard module and makes `import random` load your file instead."
+        ],
+        "es": [
+          "Imprimir dentro de una función en lugar de devolver: `print` muestra un valor pero quien llama recibe `None`, así que `total = sumar(2, 3)` guarda `None`.",
+          "Olvidar los paréntesis: `saludar` se refiere a la función misma, mientras que `saludar()` la llama.",
+          "Usar un valor por defecto mutable como `def agregar(x, lista=[])`: se reutiliza la misma lista entre llamadas; usa `lista=None` y crea la lista adentro.",
+          "Llamar a tu propio archivo `random.py` o `math.py`, lo que oculta el módulo estándar y hace que `import random` cargue tu archivo."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: write `square(n)` that returns n × n, and print `square(4)` and `square(12)`.",
+          "Core: write `celsius_to_fahrenheit(c)` and use it in a loop to print a table from 0 °C to 100 °C in steps of 20.",
+          "Core: write `is_even(n)` that returns `True` or `False`, then use it to count the even numbers in a list.",
+          "Stretch: write `describe(name, age, city=\"unknown\")` and call it three ways: with all arguments, without `city`, and with keyword arguments in a different order."
+        ],
+        "es": [
+          "Calentamiento: escribe `cuadrado(n)` que devuelva n × n e imprime `cuadrado(4)` y `cuadrado(12)`.",
+          "Núcleo: escribe `celsius_a_fahrenheit(c)` y úsala en un ciclo para imprimir una tabla de 0 °C a 100 °C de 20 en 20.",
+          "Núcleo: escribe `es_par(n)` que devuelva `True` o `False` y úsala para contar los números pares de una lista.",
+          "Extensión: escribe `describir(nombre, edad, ciudad=\"desconocida\")` y llámala de tres formas: con todos los argumentos, sin `ciudad` y con argumentos por nombre en otro orden."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What is the difference between a function that prints its result and one that returns it?",
+          "If a function sets `x = 5` and the main program also has an `x`, which one changes?",
+          "Why is `import math` followed by `math.sqrt(16)` better than writing your own square root?"
+        ],
+        "es": [
+          "¿Cuál es la diferencia entre una función que imprime su resultado y una que lo devuelve?",
+          "Si una función asigna `x = 5` y el programa principal también tiene una `x`, ¿cuál cambia?",
+          "¿Por qué `import math` seguido de `math.sqrt(16)` es mejor que escribir tu propia raíz cuadrada?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Defining Functions",
+            "es": "Definir funciones"
+          },
+          "definition": {
+            "en": "`def name():` followed by an indented block creates a function: a named piece of code you can run as many times as you like by calling `name()`. Defining it does not run it.",
+            "es": "`def nombre():` seguido de un bloque con sangría crea una función: un trozo de código con nombre que puedes ejecutar tantas veces como quieras llamando a `nombre()`. Definirla no la ejecuta."
+          }
+        },
+        {
+          "term": {
+            "en": "Parameters and Return Values",
+            "es": "Parámetros y valores de retorno"
+          },
+          "definition": {
+            "en": "Parameters are the names in the definition (`def area(w, h)`) that receive the arguments passed in a call (`area(3, 4)`). `return value` sends a result back to the caller and ends the function.",
+            "es": "Los parámetros son los nombres de la definición (`def area(an, al)`) que reciben los argumentos que se pasan en una llamada (`area(3, 4)`). `return valor` envía un resultado a quien llamó y termina la función."
+          }
+        },
+        {
+          "term": {
+            "en": "Default and Keyword Arguments",
+            "es": "Argumentos por defecto y por nombre"
+          },
+          "definition": {
+            "en": "A default (`def greet(name, greeting=\"Hi\")`) is used when the caller leaves that argument out. A keyword argument names the parameter in the call (`greet(greeting=\"Hey\", name=\"Ana\")`), so order does not matter and the call reads clearly.",
+            "es": "Un valor por defecto (`def saludar(nombre, saludo=\"Hola\")`) se usa cuando quien llama omite ese argumento. Un argumento por nombre indica el parámetro en la llamada (`saludar(saludo=\"Hey\", nombre=\"Ana\")`), así el orden no importa y la llamada se lee clara."
+          }
+        },
+        {
+          "term": {
+            "en": "Scope",
+            "es": "Alcance"
+          },
+          "definition": {
+            "en": "Scope is where a name can be used. Variables assigned inside a function are local to that call; variables at the top level of the file are global. A function can read globals, but assigning to a name inside it creates a new local variable unless you declare `global`.",
+            "es": "El alcance es dónde se puede usar un nombre. Las variables asignadas dentro de una función son locales a esa llamada; las del nivel superior del archivo son globales. Una función puede leer globales, pero asignar un nombre dentro de ella crea una variable local nueva, salvo que declares `global`."
+          }
+        },
+        {
+          "term": {
+            "en": "Modules and import",
+            "es": "Módulos e import"
+          },
+          "definition": {
+            "en": "A module is a Python file full of functions and values. `import math` makes them available as `math.sqrt`, `math.pi` and so on; `from random import choice` imports one name directly. Python ships with hundreds of standard modules.",
+            "es": "Un módulo es un archivo de Python con funciones y valores. `import math` los pone a tu alcance como `math.sqrt`, `math.pi`, etc.; `from random import choice` importa un nombre directamente. Python incluye cientos de módulos estándar."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "The Python Tutorial: Defining Functions (python.org)",
+            "es": "El tutorial de Python: definir funciones (python.org)"
+          },
+          "url": "https://docs.python.org/3/tutorial/controlflow.html#defining-functions"
+        },
+        {
+          "label": {
+            "en": "The Python Tutorial: Modules (python.org)",
+            "es": "El tutorial de Python: módulos (python.org)"
+          },
+          "url": "https://docs.python.org/3/tutorial/modules.html"
+        },
+        {
+          "label": {
+            "en": "math module reference (python.org)",
+            "es": "Referencia del módulo math (python.org)"
+          },
+          "url": "https://docs.python.org/3/library/math.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What does `x = print(\"hi\")` store in `x`?",
+            "es": "¿Qué guarda `x = print(\"hola\")` en `x`?"
+          },
+          "options": {
+            "en": [
+              "\"hi\"",
+              "None",
+              "True",
+              "An error"
+            ],
+            "es": [
+              "\"hola\"",
+              "None",
+              "True",
+              "Un error"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`print` shows text but returns nothing, and \"nothing\" in Python is `None`. Functions that should give a value back must use `return`.",
+            "es": "`print` muestra texto pero no devuelve nada, y \"nada\" en Python es `None`. Las funciones que deben devolver un valor tienen que usar `return`."
+          }
+        },
+        {
+          "question": {
+            "en": "Given `def f(a, b=2): return a * b`, what is `f(3)`?",
+            "es": "Dado `def f(a, b=2): return a * b`, ¿qué es `f(3)`?"
+          },
+          "options": {
+            "en": [
+              "3",
+              "5",
+              "6",
+              "An error: b is missing"
+            ],
+            "es": [
+              "3",
+              "5",
+              "6",
+              "Un error: falta b"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`b` uses its default value 2 when it is not passed, so the result is 3 × 2.",
+            "es": "`b` usa su valor por defecto 2 cuando no se pasa, así que el resultado es 3 × 2."
+          }
+        },
+        {
+          "question": {
+            "en": "What prints? `x = 1` / `def change(): x = 99` / `change()` / `print(x)`",
+            "es": "¿Qué se imprime? `x = 1` / `def cambiar(): x = 99` / `cambiar()` / `print(x)`"
+          },
+          "options": {
+            "en": [
+              "1",
+              "99",
+              "None",
+              "An error"
+            ],
+            "es": [
+              "1",
+              "99",
+              "None",
+              "Un error"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Assigning `x = 99` inside the function creates a new local `x`; the global `x` is untouched.",
+            "es": "Asignar `x = 99` dentro de la función crea una `x` local nueva; la `x` global no cambia."
+          }
+        },
+        {
+          "question": {
+            "en": "Which line is a correct call with keyword arguments for `def area(width, height)`?",
+            "es": "¿Qué línea es una llamada correcta con argumentos por nombre para `def area(ancho, alto)`?"
+          },
+          "options": {
+            "en": [
+              "area(height=2, width=5)",
+              "area(height: 2, width: 5)",
+              "area(2 = height, 5 = width)",
+              "area[width=5, height=2]"
+            ],
+            "es": [
+              "area(alto=2, ancho=5)",
+              "area(alto: 2, ancho: 5)",
+              "area(2 = alto, 5 = ancho)",
+              "area[ancho=5, alto=2]"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "Keyword arguments are written `name=value` inside the parentheses, in any order.",
+            "es": "Los argumentos por nombre se escriben `nombre=valor` dentro de los paréntesis, en cualquier orden."
+          }
+        },
+        {
+          "question": {
+            "en": "After `import math`, how do you get the square root of 25?",
+            "es": "Después de `import math`, ¿cómo obtienes la raíz cuadrada de 25?"
+          },
+          "options": {
+            "en": [
+              "sqrt(25)",
+              "math.sqrt(25)",
+              "math(sqrt, 25)",
+              "25.sqrt()"
+            ],
+            "es": [
+              "sqrt(25)",
+              "math.sqrt(25)",
+              "math(sqrt, 25)",
+              "25.sqrt()"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`import math` keeps the functions inside the `math` name, so you write `math.sqrt`. `from math import sqrt` would let you write `sqrt(25)`.",
+            "es": "`import math` mantiene las funciones dentro del nombre `math`, así que escribes `math.sqrt`. `from math import sqrt` te dejaría escribir `sqrt(25)`."
+          }
+        }
+      ]
+    },
+    "python-collections": {
+      "minutes": 110,
+      "prerequisites": [
+        "python-functions"
+      ],
+      "whyItMatters": {
+        "en": "Real programs work with collections: a playlist, the students in a class, the prices in a shop, the words in a text. Lists and dictionaries are how Python holds them, and choosing the right one makes code short and fast. They are also the building blocks for everything in Data Structures & Algorithms.",
+        "es": "Los programas reales trabajan con colecciones: una lista de reproducción, los estudiantes de una clase, los precios de una tienda, las palabras de un texto. Las listas y los diccionarios son la forma en que Python las guarda, y elegir la adecuada hace que el código sea corto y rápido. También son la base de todo lo que verás en Estructuras de datos y algoritmos."
+      },
+      "objectives": {
+        "en": [
+          "Create, index, change and loop over lists, and add or remove items with `append`, `insert`, `remove` and `pop`.",
+          "Sort, reverse, count and slice lists, and tell methods that change a list from functions that return a new one.",
+          "Use tuples for fixed groups of values and unpack them into variables.",
+          "Store and look up data by key in a dictionary, update it, and loop over its keys and values.",
+          "Use sets to remove duplicates and to find common or different items between two collections."
+        ],
+        "es": [
+          "Crear, indexar, modificar y recorrer listas, y agregar o quitar elementos con `append`, `insert`, `remove` y `pop`.",
+          "Ordenar, invertir, contar y rebanar listas, y distinguir los métodos que cambian una lista de las funciones que devuelven una nueva.",
+          "Usar tuplas para grupos fijos de valores y desempaquetarlas en variables.",
+          "Guardar y buscar datos por clave en un diccionario, actualizarlo y recorrer sus claves y valores.",
+          "Usar conjuntos para quitar duplicados y encontrar elementos comunes o distintos entre dos colecciones."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Loops and functions from the earlier Python modules"
+        ],
+        "es": [
+          "Ciclos y funciones de los módulos anteriores de Python"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Lists are ordered and changeable (`[1, 2, 3]`); tuples are ordered and fixed (`(1, 2)`); dictionaries map keys to values (`{\"Ana\": 92}`); sets hold unique items (`{1, 2}`).",
+          "`items.sort()` changes the list and returns `None`, while `sorted(items)` returns a new sorted list and leaves the original alone.",
+          "Looking up `d[key]` in a dictionary is fast no matter how big it is; use `d.get(key, default)` when the key might be missing.",
+          "Assigning a list to another name (`b = a`) does not copy it: both names refer to the same list. Use `a.copy()` or `list(a)` for a real copy."
+        ],
+        "es": [
+          "Las listas son ordenadas y modificables (`[1, 2, 3]`); las tuplas son ordenadas y fijas (`(1, 2)`); los diccionarios asocian claves con valores (`{\"Ana\": 92}`); los conjuntos guardan elementos únicos (`{1, 2}`).",
+          "`elementos.sort()` cambia la lista y devuelve `None`, mientras que `sorted(elementos)` devuelve una lista nueva ordenada y deja la original igual.",
+          "Buscar `d[clave]` en un diccionario es rápido sin importar su tamaño; usa `d.get(clave, por_defecto)` cuando la clave podría no existir.",
+          "Asignar una lista a otro nombre (`b = a`) no la copia: ambos nombres se refieren a la misma lista. Usa `a.copy()` o `list(a)` para una copia real."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Indexing past the end: a list of 3 items has indexes 0, 1 and 2, so `items[3]` raises `IndexError`; use `items[-1]` for the last one.",
+          "Writing `items = items.sort()`, which stores `None`; call `items.sort()` on its own line or use `sorted(items)`.",
+          "Reading a missing dictionary key with `d[\"Zoe\"]`, which raises `KeyError`; check with `\"Zoe\" in d` or use `d.get(\"Zoe\")`.",
+          "Removing items from a list while looping over the same list, which skips elements; loop over a copy (`for x in items[:]`) or build a new list."
+        ],
+        "es": [
+          "Indexar más allá del final: una lista de 3 elementos tiene los índices 0, 1 y 2, así que `elementos[3]` lanza `IndexError`; usa `elementos[-1]` para el último.",
+          "Escribir `elementos = elementos.sort()`, que guarda `None`; llama a `elementos.sort()` en su propia línea o usa `sorted(elementos)`.",
+          "Leer una clave inexistente con `d[\"Zoe\"]`, que lanza `KeyError`; revisa con `\"Zoe\" in d` o usa `d.get(\"Zoe\")`.",
+          "Quitar elementos de una lista mientras la recorres, lo que salta elementos; recorre una copia (`for x in elementos[:]`) o arma una lista nueva."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: make a list of five favorite movies, print the first and the last, then add one and remove one.",
+          "Core: given a list of test scores, print the highest, the lowest, the average and the scores sorted from best to worst.",
+          "Core: count how many times each word appears in a sentence using a dictionary, then print the word counts.",
+          "Stretch: given two lists of students (math club, science club), print who is in both, who is only in math, and the total number of different students, using sets."
+        ],
+        "es": [
+          "Calentamiento: crea una lista de cinco películas favoritas, imprime la primera y la última, y luego agrega una y quita otra.",
+          "Núcleo: dada una lista de notas, imprime la más alta, la más baja, el promedio y las notas ordenadas de mejor a peor.",
+          "Núcleo: cuenta cuántas veces aparece cada palabra de una oración usando un diccionario, y luego imprime los conteos.",
+          "Extensión: dadas dos listas de estudiantes (club de matemáticas y club de ciencias), imprime quiénes están en ambos, quiénes solo en matemáticas y el total de estudiantes distintos, usando conjuntos."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What is the difference between `items.sort()` and `sorted(items)`?",
+          "When would you choose a dictionary instead of a list?",
+          "Why does changing `b` also change `a` after `b = a`, and how do you avoid it?"
+        ],
+        "es": [
+          "¿Cuál es la diferencia entre `elementos.sort()` y `sorted(elementos)`?",
+          "¿Cuándo elegirías un diccionario en lugar de una lista?",
+          "¿Por qué cambiar `b` también cambia `a` después de `b = a`, y cómo se evita?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Lists",
+            "es": "Listas"
+          },
+          "definition": {
+            "en": "A list is an ordered, changeable collection written with square brackets: `scores = [72, 95, 88]`. Items are numbered from 0, can be read or replaced by index, and the list can grow or shrink.",
+            "es": "Una lista es una colección ordenada y modificable que se escribe con corchetes: `notas = [72, 95, 88]`. Los elementos se numeran desde 0, se pueden leer o reemplazar por índice y la lista puede crecer o achicarse."
+          }
+        },
+        {
+          "term": {
+            "en": "List Methods and Slicing",
+            "es": "Métodos y rebanadas de listas"
+          },
+          "definition": {
+            "en": "Methods such as `append`, `insert`, `remove`, `pop`, `sort` and `reverse` change a list in place. A slice `items[start:stop]` returns a new list with the items from `start` up to, but not including, `stop`.",
+            "es": "Métodos como `append`, `insert`, `remove`, `pop`, `sort` y `reverse` cambian una lista en el lugar. Una rebanada `elementos[inicio:fin]` devuelve una lista nueva con los elementos desde `inicio` hasta `fin` sin incluirlo."
+          }
+        },
+        {
+          "term": {
+            "en": "Tuples",
+            "es": "Tuplas"
+          },
+          "definition": {
+            "en": "A tuple is an ordered collection that cannot be changed after it is created, written with parentheses: `point = (3, 4)`. Tuples are used for fixed groups of values, like coordinates or a function returning two results, and can be unpacked: `x, y = point`.",
+            "es": "Una tupla es una colección ordenada que no se puede cambiar después de crearla y se escribe con paréntesis: `punto = (3, 4)`. Se usan para grupos fijos de valores, como coordenadas o una función que devuelve dos resultados, y se pueden desempaquetar: `x, y = punto`."
+          }
+        },
+        {
+          "term": {
+            "en": "Dictionaries",
+            "es": "Diccionarios"
+          },
+          "definition": {
+            "en": "A dictionary maps keys to values: `ages = {\"Ana\": 19, \"Ben\": 20}`. You look values up by key (`ages[\"Ana\"]`), add or change them by assigning, and loop over `items()` to get each key with its value.",
+            "es": "Un diccionario asocia claves con valores: `edades = {\"Ana\": 19, \"Ben\": 20}`. Buscas valores por clave (`edades[\"Ana\"]`), los agregas o cambias asignando, y recorres `items()` para obtener cada clave con su valor."
+          }
+        },
+        {
+          "term": {
+            "en": "Sets",
+            "es": "Conjuntos"
+          },
+          "definition": {
+            "en": "A set is an unordered collection with no duplicates: `{\"red\", \"blue\"}`. Adding an item that is already there does nothing. Sets support fast membership checks and math-style operations: union `|`, intersection `&` and difference `-`.",
+            "es": "Un conjunto es una colección sin orden y sin duplicados: `{\"rojo\", \"azul\"}`. Agregar un elemento que ya está no hace nada. Los conjuntos permiten revisar pertenencia rápidamente y operaciones como en matemáticas: unión `|`, intersección `&` y diferencia `-`."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "The Python Tutorial: Data Structures (python.org)",
+            "es": "El tutorial de Python: estructuras de datos (python.org)"
+          },
+          "url": "https://docs.python.org/3/tutorial/datastructures.html"
+        },
+        {
+          "label": {
+            "en": "Sorting HOW TO (python.org)",
+            "es": "Guía de ordenamiento (python.org)"
+          },
+          "url": "https://docs.python.org/3/howto/sorting.html"
+        },
+        {
+          "label": {
+            "en": "CS50P Lecture 2: Loops, lists and dictionaries (Harvard)",
+            "es": "CS50P clase 2: ciclos, listas y diccionarios (Harvard)"
+          },
+          "url": "https://cs50.harvard.edu/python/"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What is `[\"a\", \"b\", \"c\", \"d\"][1:3]`?",
+            "es": "¿Qué es `[\"a\", \"b\", \"c\", \"d\"][1:3]`?"
+          },
+          "options": {
+            "en": [
+              "[\"a\", \"b\", \"c\"]",
+              "[\"b\", \"c\"]",
+              "[\"b\", \"c\", \"d\"]",
+              "\"b\""
+            ],
+            "es": [
+              "[\"a\", \"b\", \"c\"]",
+              "[\"b\", \"c\"]",
+              "[\"b\", \"c\", \"d\"]",
+              "\"b\""
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "A slice starts at index 1 (\"b\") and stops before index 3, so it contains \"b\" and \"c\".",
+            "es": "Una rebanada empieza en el índice 1 (\"b\") y se detiene antes del índice 3, así que contiene \"b\" y \"c\"."
+          }
+        },
+        {
+          "question": {
+            "en": "What does `x = [3, 1, 2].sort()` store in `x`?",
+            "es": "¿Qué guarda `x = [3, 1, 2].sort()` en `x`?"
+          },
+          "options": {
+            "en": [
+              "[1, 2, 3]",
+              "[3, 2, 1]",
+              "None",
+              "[3, 1, 2]"
+            ],
+            "es": [
+              "[1, 2, 3]",
+              "[3, 2, 1]",
+              "None",
+              "[3, 1, 2]"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "`sort()` sorts the list in place and returns `None`. Use `sorted([3, 1, 2])` to get a new sorted list.",
+            "es": "`sort()` ordena la lista en el lugar y devuelve `None`. Usa `sorted([3, 1, 2])` para obtener una lista nueva ordenada."
+          }
+        },
+        {
+          "question": {
+            "en": "Given `d = {\"Ana\": 90}`, what does `d.get(\"Ben\", 0)` return?",
+            "es": "Dado `d = {\"Ana\": 90}`, ¿qué devuelve `d.get(\"Ben\", 0)`?"
+          },
+          "options": {
+            "en": [
+              "None",
+              "0",
+              "90",
+              "KeyError"
+            ],
+            "es": [
+              "None",
+              "0",
+              "90",
+              "KeyError"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`get` returns the default you give when the key is missing, instead of raising `KeyError` like `d[\"Ben\"]` would.",
+            "es": "`get` devuelve el valor por defecto que le das cuando falta la clave, en lugar de lanzar `KeyError` como haría `d[\"Ben\"]`."
+          }
+        },
+        {
+          "question": {
+            "en": "What is `len(set([1, 2, 2, 3, 3, 3]))`?",
+            "es": "¿Qué es `len(set([1, 2, 2, 3, 3, 3]))`?"
+          },
+          "options": {
+            "en": [
+              "6",
+              "3",
+              "1",
+              "4"
+            ],
+            "es": [
+              "6",
+              "3",
+              "1",
+              "4"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "A set keeps one copy of each value, leaving {1, 2, 3}.",
+            "es": "Un conjunto conserva una copia de cada valor, lo que deja {1, 2, 3}."
+          }
+        },
+        {
+          "question": {
+            "en": "After `a = [1, 2]` and `b = a` and `b.append(3)`, what is `a`?",
+            "es": "Después de `a = [1, 2]`, `b = a` y `b.append(3)`, ¿qué es `a`?"
+          },
+          "options": {
+            "en": [
+              "[1, 2]",
+              "[1, 2, 3]",
+              "[3]",
+              "An error"
+            ],
+            "es": [
+              "[1, 2]",
+              "[1, 2, 3]",
+              "[3]",
+              "Un error"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`b = a` makes both names refer to the same list, so appending through `b` changes what `a` sees. Use `b = a.copy()` for an independent list.",
+            "es": "`b = a` hace que ambos nombres se refieran a la misma lista, así que agregar mediante `b` cambia lo que ve `a`. Usa `b = a.copy()` para una lista independiente."
           }
         }
       ]
