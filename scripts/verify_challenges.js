@@ -23,6 +23,18 @@ function gradeJs(code, tests) {
     }) };
   } catch (e) { return { error: String(e) }; }
 }
+const JavaTools = require('./lib/java_tools.js');
+function gradeJava(code, tests) {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'atlas-jch-'));
+  try {
+    fs.writeFileSync(path.join(dir, 'Solution.java'), JavaTools.guardJavaLoops(code));
+    fs.writeFileSync(path.join(dir, 'AtlasTests.java'), JavaTools.buildJavaTests(tests));
+    const c = spawnSync('javac', ['-d', 'out', 'Solution.java', 'AtlasTests.java'], { cwd: dir, encoding: 'utf8', timeout: 120000 });
+    if (c.status !== 0) return { error: c.stderr.split('\n').filter((l) => !l.startsWith('Picked up')).join('\n').slice(0, 600) };
+    const r = spawnSync('java', ['-cp', 'out', 'AtlasTests'], { cwd: dir, encoding: 'utf8', timeout: 60000 });
+    return JavaTools.parseJavaTests(r.stdout || '', tests);
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+}
 let count = 0;
 const MiniShell = require('../js/mini-shell.js');
 // Same comparison the site uses for predict-the-output answers: trailing spaces and blank lines at the end do not matter.
@@ -99,6 +111,18 @@ for (const [moduleId, list] of Object.entries(data)) {
       else sol.results.filter((r) => !r.ok).forEach((r) => errors.push(`${where}: solution fails ${r.call}: got ${r.got}`));
       const start = gradeJs(ch.starter, ch.tests);
       if (!start.error && start.results.every((r) => r.ok)) errors.push(`${where}: starter already passes every test`);
+      continue;
+    }
+    if (ch.lang === 'java') {
+      // Java coding challenges: the learner's class Solution is called by AtlasTests, built from the tests with the
+      // same scripts/lib/java_tools.js the site uses, and run with the real JDK.
+      if (!Array.isArray(ch.tests) || ch.tests.length < 3) errors.push(`${where}: needs at least 3 tests`);
+      const sol = gradeJava(ch.solution, ch.tests);
+      if (sol.error) errors.push(`${where}: solution does not compile: ${sol.error}`);
+      else sol.results.filter((r) => !r.ok).forEach((r) => errors.push(`${where}: solution fails ${r.call}: got ${r.got}, want ${r.want}`));
+      const start = gradeJava(ch.starter, ch.tests);
+      if (start.error) errors.push(`${where}: starter must compile (it should only fail the tests): ${start.error}`);
+      else if (start.results.every((r) => r.ok)) errors.push(`${where}: starter already passes every test`);
       continue;
     }
     if (ch.lang === 'predict') {
