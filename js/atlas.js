@@ -1796,6 +1796,8 @@ function openShortcuts() {
   d.showModal();
 }
 $('#skip-link').addEventListener('click', (e) => { e.preventDefault(); $('#main').focus(); });
+// The logo is a real link to the home page (so it also works without JavaScript and in new tabs); in the app it just switches route.
+$('#brand-link').addEventListener('click', (e) => { if (e.ctrlKey || e.metaKey || e.shiftKey || e.button) return; e.preventDefault(); location.hash = '#home'; });
 $('#menu-btn').addEventListener('click', () => document.body.classList.add('drawer-open'));
 $('#scrim').addEventListener('click', () => document.body.classList.remove('drawer-open'));
 $('#signin-open').addEventListener('click', () => openSignIn());
