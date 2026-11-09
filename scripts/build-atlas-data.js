@@ -110,7 +110,9 @@ for (const t of tracks.filter((x) => x.status === 'available')) {
   lessonFiles[t.id] = json;
   t.lessons = crypto.createHash('sha1').update(json).digest('hex').slice(0, 10);   // cache-busting version
 }
-const out = { tracks, planned: PLANNED, path: PATH, next: NEXT, modules, videos, harness, webChecks };
+// The command-line simulator is a separate file loaded on demand; its hash busts caches when it changes.
+const shellVersion = require('crypto').createHash('sha1').update(fs.readFileSync(path.join(ROOT, 'js/mini-shell.js'))).digest('hex').slice(0, 10);
+const out = { tracks, planned: PLANNED, path: PATH, next: NEXT, modules, videos, harness, webChecks, shellVersion };
 const file = path.join(ROOT, 'data/atlas-data.json');
 const lessonDir = path.join(ROOT, 'data/lessons');
 const json = JSON.stringify(out);

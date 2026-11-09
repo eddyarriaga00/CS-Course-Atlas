@@ -174,7 +174,7 @@ Every example's output on the site is real, recorded by `scripts/run_course_exam
 - **Beginner path** on the home page and Courses page, with a "where are you starting from?" chooser, per-course progress and next-course links.
 - **Lessons** with objectives, key takeaways, common mistakes, practice, self-checks, terms and further reading.
 - **Runnable examples in the browser**: Python (Pyodide), JavaScript, SQL (sql.js) and live HTML/CSS/JS previews, each with a Try it button that opens the playground.
-- **Auto-graded challenges** in every beginner course: Python (graded in Pyodide), SQL (result sets compared in sql.js), HTML/CSS (DOM and computed-style checks) and JavaScript (worker tests). `scripts/verify_challenges.js` proves every solution passes and every starter fails.
+- **Auto-graded challenges** across the beginner path: Python (graded in Pyodide), command line (a practice terminal, `js/mini-shell.js`, checked against real Bash), SQL (result sets compared in sql.js), HTML/CSS (DOM and computed-style checks) and JavaScript (worker tests). `scripts/verify_challenges.js` proves every solution passes and every starter fails.
 - **Step-through visualizer** for Python: run any program line by line and watch each variable and call frame change (Playground → Step through, or straight from a Python example).
 - **Practice**: per-module quizzes with a best-score board and an optional 30-second timer, mixed review across completed modules, and flashcards with **spaced repetition** (cards come back after 1, 3, 7, 16 and 35 days in a *Due for review* deck).
 - **Course certificates**: finish every module and pass every quiz (60%+) to unlock a certificate you can print or save as PDF.

@@ -159,6 +159,20 @@ test.describe('Navigation', () => {
         await expect(page.locator('[data-action="pg-lang"][aria-pressed="true"]')).toHaveText('Python');
     });
 
+    test('command-line challenges run in the practice terminal', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html#m-cli-files-folders');
+        await page.locator('.tab[data-tab="challenges"]').click();
+        await expect(page.locator('[data-shell-setup="1"]')).toContainText('junk.tmp');
+        await page.locator('#ch-code-1').fill('cd downloads\nmkdir texts\nmv *.txt texts/');
+        await page.locator('[data-action="ch-run"][data-i="1"]').click();
+        await expect(page.locator('#ch-res-1')).toContainText('should not be there');
+        await page.locator('#ch-code-1').fill('cd downloads\nmkdir texts\nmv *.txt texts/\nrm -r old');
+        await page.locator('[data-action="ch-run"][data-i="1"]').click();
+        await expect(page.locator('#ch-res-1 .ch-status.ok')).toBeVisible();
+        await expect(page.locator('#ch-1')).toHaveClass(/solved/);
+    });
+
     test('mixed review quizzes across completed modules', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html#m-python-first-programs');

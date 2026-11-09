@@ -22,6 +22,7 @@ const UI = {
     certTitle: 'Course certificate', certLocked: 'Finish every module and pass every quiz with 60% or more to earn your certificate.', certModules: (a, b) => `${a} / ${b} modules complete`, certQuizzes: (a, b) => `${a} / ${b} quizzes passed`, certEarned: 'Certificate earned', certEarnedText: 'You finished every module and passed every quiz.', certView: 'View certificate', certOf: 'Certificate of completion', certThat: 'This certifies that', certDone: 'has completed the course', certDetail: (m, h, q) => `${m} modules · about ${h} hours · ${q}% average quiz score`, certOn: (d) => `Completed on ${d}`, certName: 'Name on the certificate', certPrint: 'Print or save as PDF', certNotYet: 'This certificate is not earned yet.', certBack: 'Back to the course', certFrom: 'CS Course Atlas',
     vizStep: 'Step through', vizHint: 'Run line by line and watch the variables change', vizSteps: (n) => `${n} steps recorded`, vizStepOf: (a, b) => `Step ${a} of ${b}`, vizBack: 'Back', vizNext: 'Next', vizFirst: 'First step', vizLast: 'Last step', vizClose: 'Close', vizAbout: (n) => `About to run line ${n}`, vizReturns: (f, v) => `${f}() returns <code>${v}</code>`, vizEnd: 'The program finished.', vizCrashed: (n) => `The program stopped with an error on line ${n}.`, vizGlobals: 'Global variables', vizNoVars: 'No variables yet', vizNothing: 'Nothing printed yet', vizCapped: 'Stopped after 600 steps. Try a smaller input to see the whole run.',
     notesDownload: 'Download all (.md)', pageKind: 'Page', challengeKind: 'Challenge', pgShare: 'Share', pgShareHint: 'Copy a link that opens this code in the playground', linkCopied: 'Link copied. Anyone who opens it sees this code.', copyThisLink: 'Copy this link:', pgShared: 'a shared link', pgBadLink: 'That code link is broken, so the playground opened as usual.', pgTooLong: 'This code is too long for a link (8,000 characters max).',
+    terminal: 'Terminal', startingFiles: 'Starting files', loadingWord: 'Loading…', emptyHome: '~/ (empty)', shellFailed: 'The practice terminal could not load. Check your connection and try again.', noCommands: 'No commands yet.', shMissing: (p) => `${p} is missing`, shExtra: (p) => `${p} should not be there`, shContent: (p) => `${p} has different contents`, shMode: (p, a, b) => `${p} has permissions ${a}, expected ${b}`, shNotExec: (p) => `${p} is not executable`, shExec: (p) => `${p} should not be executable`, shFilesLabel: 'Your files and folders end up right', shOutLabel: 'It prints the right output', nothingPrinted: '(nothing)',
     ofModules: (a, b) => `${a} of ${b} modules complete`, courseDone: 'Course complete. Nice work.',
     coursesTitle: 'Courses', coursesLead: 'New to programming? Follow the beginner path in order: all nine courses are ready. After it come Java and the next-level courses; the ones still being written show their outline, and you can vote for what you want next.',
     plannedTitle: 'Planned courses', plannedNote: 'Beginner courses first. Vote for the ones you want next.', javaTrack: 'Java course', studyTools: 'Study tools',
@@ -87,6 +88,7 @@ const UI = {
     certTitle: 'Certificado del curso', certLocked: 'Termina todos los módulos y aprueba cada cuestionario con 60% o más para obtener tu certificado.', certModules: (a, b) => `${a} / ${b} módulos completados`, certQuizzes: (a, b) => `${a} / ${b} cuestionarios aprobados`, certEarned: 'Certificado obtenido', certEarnedText: 'Terminaste todos los módulos y aprobaste cada cuestionario.', certView: 'Ver certificado', certOf: 'Certificado de finalización', certThat: 'Se certifica que', certDone: 'completó el curso', certDetail: (m, h, q) => `${m} módulos · unas ${h} horas · ${q}% de promedio en cuestionarios`, certOn: (d) => `Completado el ${d}`, certName: 'Nombre en el certificado', certPrint: 'Imprimir o guardar como PDF', certNotYet: 'Este certificado aún no se ha obtenido.', certBack: 'Volver al curso', certFrom: 'CS Course Atlas',
     vizStep: 'Paso a paso', vizHint: 'Ejecuta línea por línea y mira cómo cambian las variables', vizSteps: (n) => `${n} pasos registrados`, vizStepOf: (a, b) => `Paso ${a} de ${b}`, vizBack: 'Atrás', vizNext: 'Siguiente', vizFirst: 'Primer paso', vizLast: 'Último paso', vizClose: 'Cerrar', vizAbout: (n) => `A punto de ejecutar la línea ${n}`, vizReturns: (f, v) => `${f}() devuelve <code>${v}</code>`, vizEnd: 'El programa terminó.', vizCrashed: (n) => `El programa se detuvo con un error en la línea ${n}.`, vizGlobals: 'Variables globales', vizNoVars: 'Aún no hay variables', vizNothing: 'Aún no se imprimió nada', vizCapped: 'Se detuvo tras 600 pasos. Prueba con una entrada más pequeña para ver toda la ejecución.',
     notesDownload: 'Descargar todo (.md)', pageKind: 'Página', challengeKind: 'Reto', pgShare: 'Compartir', pgShareHint: 'Copia un enlace que abre este código en el editor', linkCopied: 'Enlace copiado. Quien lo abra verá este código.', copyThisLink: 'Copia este enlace:', pgShared: 'un enlace compartido', pgBadLink: 'Ese enlace de código está dañado, así que el editor se abrió como siempre.', pgTooLong: 'Este código es demasiado largo para un enlace (máximo 8.000 caracteres).',
+    terminal: 'Terminal', startingFiles: 'Archivos iniciales', loadingWord: 'Cargando…', emptyHome: '~/ (vacío)', shellFailed: 'La terminal de práctica no se pudo cargar. Revisa tu conexión e inténtalo otra vez.', noCommands: 'Aún no hay comandos.', shMissing: (p) => `falta ${p}`, shExtra: (p) => `${p} no debería estar`, shContent: (p) => `${p} tiene otro contenido`, shMode: (p, a, b) => `${p} tiene permisos ${a}, se esperaba ${b}`, shNotExec: (p) => `${p} no es ejecutable`, shExec: (p) => `${p} no debería ser ejecutable`, shFilesLabel: 'Tus archivos y carpetas quedan bien', shOutLabel: 'Imprime la salida correcta', nothingPrinted: '(nada)',
     ofModules: (a, b) => `${a} de ${b} módulos completados`, courseDone: 'Curso completado. ¡Buen trabajo!',
     coursesTitle: 'Cursos', coursesLead: '¿Nuevo en programación? Sigue la ruta para principiantes en orden: los nueve cursos están listos. Después vienen Java y los cursos del siguiente nivel; los que aún se escriben muestran su temario y puedes votar por lo que quieras primero.',
     plannedTitle: 'Cursos planeados', plannedNote: 'Primero los de nivel principiante. Vota por los que quieres primero.', javaTrack: 'Curso de Java', studyTools: 'Herramientas de estudio',
@@ -982,8 +984,9 @@ function challengeHtml(id, ch, i) {
   return `<div class="card challenge${solved ? ' solved' : ''}" id="ch-${i}">
     <div class="ch-head"><span class="ch-no">${i + 1}</span><h3>${esc(L(ch.title))}</h3>${solved ? `<span class="pill ok">✓ ${t('solved')}</span>` : ''}</div>
     <p class="ch-prompt">${fmt(L(ch.prompt))}</p>
+    ${ch.lang === 'bash' ? `<details class="ch-tables" open><summary>${t('startingFiles')}</summary><pre class="code ch-setup" data-shell-setup="${i}"><code>${t('loadingWord')}</code></pre></details>` : ''}
     ${ch.lang === 'sql' ? `<details class="ch-tables"><summary>${t('seeTables')}</summary><pre class="code"><code>${esc(ch.setup)}</code></pre></details>` : ''}
-    <div class="ch-editor"><div class="code-bar"><span class="lang" aria-pressed="true">${{ sql: 'SQL', html: 'HTML', css: 'HTML · CSS', js: 'JavaScript' }[ch.lang] || 'Python'}</span><button class="lang" data-action="ch-reset" data-i="${i}">${t('reset')}</button><button class="lang run" data-action="ch-run" data-i="${i}">▶ ${t('runTests')}</button></div>
+    <div class="ch-editor"><div class="code-bar"><span class="lang" aria-pressed="true">${{ sql: 'SQL', html: 'HTML', css: 'HTML · CSS', js: 'JavaScript', bash: t('terminal') }[ch.lang] || 'Python'}</span><button class="lang" data-action="ch-reset" data-i="${i}">${t('reset')}</button><button class="lang run" data-action="ch-run" data-i="${i}">▶ ${t('runTests')}</button></div>
       <textarea class="ch-code" id="ch-code-${i}" data-key="${esc(key)}" spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off" aria-label="${esc(L(ch.title))}: ${t('yourCode')}">${esc(chDraft(id, ch))}</textarea></div>
     <div class="ch-result" id="ch-res-${i}" aria-live="polite"></div>
     <div class="ch-help"><details><summary>${t('hint')}</summary><p>${fmt(L(ch.hint))}</p></details>
@@ -1007,7 +1010,7 @@ async function runSqlChallenge(i, id, ch, key, box, code) {
   if (ok) markSolved(i, id, ch, key);
   refreshChallengeHelp(i);
 }
-const testList = (results) => `<ul class="ch-tests">${results.map((x) => `<li class="${x.ok ? 'ok' : 'bad'}"><span class="mk">${x.ok ? '✓' : '✗'}</span>${x.label ? esc(L(x.label)) : `<code>${esc(x.call)}</code>`}${x.ok ? '' : `<span class="gw">${t('got')} <code>${esc(x.got)}</code>${x.want != null ? ` · ${t('expected')} <code>${esc(x.want)}</code>` : ''}</span>`}</li>`).join('')}</ul>`;
+const testList = (results) => `<ul class="ch-tests">${results.map((x) => `<li class="${x.ok ? 'ok' : 'bad'}"><span class="mk">${x.ok ? '✓' : '✗'}</span>${x.label ? esc(L(x.label)) : `<code>${esc(x.call)}</code>`}${x.ok ? '' : x.note ? `<span class="gw">${esc(x.note)}</span>` : `<span class="gw">${t('got')} <code>${esc(x.got)}</code>${x.want != null ? ` · ${t('expected')} <code>${esc(x.want)}</code>` : ''}</span>`}</li>`).join('')}</ul>`;
 const verdict = (results) => { const passed = results.filter((x) => x.ok).length, all = passed === results.length; return { all, html: `<div class="ch-status ${all ? 'ok' : 'err'}">${all ? '🎉 ' + t('allPassed') : t('passedOf', passed, results.length)}</div>${testList(results)}` }; };
 // HTML/CSS challenges render in a sandboxed frame with scripts disabled; the checks read its DOM and computed styles.
 let webChecker = null;
@@ -1034,6 +1037,39 @@ function runJsChallenge(i, id, ch, key, box, code) {
   w.onmessage = (e) => { const v = verdict(e.data); box.innerHTML = v.html; done(); if (v.all) markSolved(i, id, ch, key); };
   w.onerror = (e) => { e.preventDefault(); box.innerHTML = `<div class="ch-status err">${t('codeError')}</div><pre class="ch-err">${esc(e.message || 'Error')}</pre>`; done(); };
 }
+// Command-line challenges run in a simulated shell (js/mini-shell.js), loaded the first time it is needed.
+let shellLoading = null;
+function loadMiniShell() {
+  if (window.MiniShell) return Promise.resolve(window.MiniShell);
+  shellLoading = shellLoading || new Promise((resolve, reject) => { const s = document.createElement('script'); s.src = 'js/mini-shell.js?v=' + (DATA.shellVersion || '1'); s.onload = () => resolve(window.MiniShell); s.onerror = () => { shellLoading = null; reject(new Error('load')); }; document.head.append(s); });
+  return shellLoading;
+}
+// Shows what the home folder looks like before the learner starts: a tree, then the text files.
+function shellTree(files) {
+  if (!files.length) return t('emptyHome');
+  const tree = files.map((f) => '  '.repeat(f.path.replace(/\/$/, '').split('/').length - 1) + f.path.replace(/\/$/, '').split('/').pop() + (f.path.endsWith('/') ? '/' : ''));
+  const texts = files.filter((f) => f.data && f.data.length < 2000).map((f) => `\n── ${f.path} ──\n${f.data.replace(/\n$/, '')}`);
+  return '~/\n' + tree.map((l) => '  ' + l).join('\n') + (texts.length ? '\n' + texts.join('\n') : '');
+}
+function fillShellSetups() {
+  const boxes = document.querySelectorAll('[data-shell-setup]');
+  if (!boxes.length) return;
+  loadMiniShell().then((M) => boxes.forEach((b) => { const ch = DATA.full[state.chModule]?.challenges?.[+b.dataset.shellSetup]; if (ch) b.firstChild.textContent = shellTree(M.runChallengeShell(ch.setup || '', '').files); }))
+    .catch(() => boxes.forEach((b) => { b.firstChild.textContent = t('shellFailed'); }));
+}
+async function runShellChallenge(i, id, ch, key, box, code) {
+  let M; try { M = await loadMiniShell(); } catch (e) { box.innerHTML = `<div class="ch-status err">${t('shellFailed')}</div>`; return; }
+  state.chTries[key] = (state.chTries[key] || 0) + 1;
+  const g = M.gradeShell(ch, code);
+  const term = g.got.error ? `<span class="t-err">${esc(g.got.error)}</span>` : g.got.transcript.length ? g.got.transcript.map((x) => `<span class="t-cmd"><span class="t-ps">$</span> ${esc(x.cmd)}</span>\n${esc(x.out)}${x.err ? `<span class="t-err">${esc(x.err)}</span>` : ''}`).join('') : `<span class="muted">${t('noCommands')}</span>`;
+  const say = (p) => ({ missing: t('shMissing', p.p), extra: t('shExtra', p.p), content: t('shContent', p.p), mode: t('shMode', p.p, p.got, p.want), notExec: t('shNotExec', p.p), exec: t('shExec', p.p) }[p.k]);
+  const results = [{ label: { en: t('shFilesLabel'), es: t('shFilesLabel') }, ok: !g.problems.length, note: g.problems.slice(0, 4).map(say).join(' · ') + (g.problems.length > 4 ? ' …' : '') }];
+  if (ch.output) results.push({ label: { en: t('shOutLabel'), es: t('shOutLabel') }, ok: g.outputOk, got: g.got.out.trim() || t('nothingPrinted'), want: g.wantOut.trim() });
+  const v = verdict(results);
+  box.innerHTML = `${v.html}<div class="ch-printed"><span class="muted">${t('terminal')}</span><pre class="transcript">${term}</pre></div>`;
+  if (v.all && !g.got.error) markSolved(i, id, ch, key);
+  refreshChallengeHelp(i);
+}
 function markSolved(i, id, ch, key) {
   if (state.solved.has(key)) return;
   state.solved.add(key); logActivity('challenge', id, { ch: ch.id }); save();
@@ -1046,6 +1082,7 @@ function markSolved(i, id, ch, key) {
 async function runChallenge(i) {
   const id = state.chModule, ch = DATA.full[id].challenges[i], key = chKey(id, ch), box = $('#ch-res-' + i), code = $('#ch-code-' + i).value;
   if (ch.lang === 'sql') return runSqlChallenge(i, id, ch, key, box, code);
+  if (ch.lang === 'bash') return runShellChallenge(i, id, ch, key, box, code);
   if (ch.lang === 'html' || ch.lang === 'css') return runWebChallenge(i, id, ch, key, box, code);
   if (ch.lang === 'js') return runJsChallenge(i, id, ch, key, box, code);
   const program = `${code}\n__TESTS = ${JSON.stringify(ch.tests)}\n${DATA.harness}`;
@@ -1184,7 +1221,7 @@ const ROADMAP = [
   ['live', 'discrete', { en: 'Discrete Math course', es: 'Curso de Matemáticas discretas' }, { en: 'Logic, sets, counting and graph theory, with every idea checked by code in 4 languages.', es: 'Lógica, conjuntos, conteo y teoría de grafos, con cada idea comprobada con código en 4 lenguajes.' }, ['Courses']],
   ['live', 'bilingual', { en: 'English and Spanish everywhere', es: 'Inglés y español en todo' }, { en: 'Every lesson, quiz and menu in both languages.', es: 'Cada lección, cuestionario y menú en ambos idiomas.' }, ['Access']],
   ['live', 'js-playground', { en: 'Playground for Python, JavaScript, SQL and web pages', es: 'Editor para Python, JavaScript, SQL y páginas web' }, { en: 'Run Python, JavaScript, SQL and HTML right in your browser; every example has a Try it button.', es: 'Ejecuta Python, JavaScript, SQL y HTML en tu navegador; cada ejemplo tiene un botón Pruébalo.' }, ['Tools']],
-  ['live', 'exercises', { en: 'Auto-graded coding challenges', es: 'Retos de código con calificación automática' }, { en: 'Python, SQL, HTML, CSS and JavaScript challenges in every beginner course, checked instantly in your browser.', es: 'Retos de Python, SQL, HTML, CSS y JavaScript en cada curso para principiantes, revisados al instante en tu navegador.' }, ['Practice']],
+  ['live', 'exercises', { en: 'Auto-graded coding challenges', es: 'Retos de código con calificación automática' }, { en: 'Python, command-line, SQL, HTML, CSS and JavaScript challenges across the beginner path, checked instantly in your browser.', es: 'Retos de Python, línea de comandos, SQL, HTML, CSS y JavaScript en la ruta para principiantes, revisados al instante en tu navegador.' }, ['Practice']],
   ['live', 'offline', { en: 'Install and study offline', es: 'Instalar y estudiar sin conexión' }, { en: 'Add the site to your home screen. Lessons you have opened, and the Python and SQL runners, keep working without internet.', es: 'Agrega el sitio a tu pantalla de inicio. Las lecciones que abriste y los ejecutores de Python y SQL siguen funcionando sin internet.' }, ['Access']],
   ['live', 'srs', { en: 'Spaced-repetition review', es: 'Repaso con repetición espaciada' }, { en: 'Flashcards you know come back after 1, 3, 7, 16 and 35 days, right before you would forget them.', es: 'Las tarjetas que sabes vuelven después de 1, 3, 7, 16 y 35 días, justo antes de que las olvides.' }, ['Practice']],
   ['live', 'certificates', { en: 'Course certificates', es: 'Certificados de curso' }, { en: 'Finish every module and pass every quiz to earn a certificate you can print or save as a PDF.', es: 'Completa todos los módulos y aprueba cada cuestionario para obtener un certificado que puedes imprimir o guardar como PDF.' }, ['Account']],
@@ -1473,6 +1510,7 @@ function render(keepScroll) {
   renderChrome(route);
   $('#main').innerHTML = html;
   armQuizTimer();
+  fillShellSetups();
   if (route === 'playground' && state.pgAutoStep) { state.pgAutoStep = false; traceProgram(); }
   highlightCode();
   document.body.classList.remove('drawer-open');

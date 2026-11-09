@@ -847,3 +847,10 @@ a.path-step.planned .path-go { color: var(--text-3); font-weight: 500; }
 .page-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .page-head h1 { margin-bottom: 0; }
 .page-head + .lead { margin-top: 10px; }
+
+/* Command-line challenges */
+.ch-printed pre.transcript, pre.ch-setup { background: var(--code-bg); color: #a9adbd; border-radius: 10px; padding: 12px 14px; margin: 6px 0 0; font-size: 12.5px; line-height: 1.6; white-space: pre-wrap; overflow-x: auto; }
+pre.ch-setup code { color: #c9cde0; background: none; padding: 0; }
+.transcript .t-cmd { color: var(--code-text, #e6e9f2); font-weight: 500; }
+.transcript .t-ps { color: #7ee787; user-select: none; }
+.transcript .t-err { color: #ff9b94; }

@@ -24,6 +24,28 @@ function gradeJs(code, tests) {
   } catch (e) { return { error: String(e) }; }
 }
 let count = 0;
+const MiniShell = require('../js/mini-shell.js');
+const os = require('os');
+// Runs setup + solution in real Bash inside a throwaway home folder and snapshots it like the simulator does.
+function realBash(setup, code) {
+  const home = fs.mkdtempSync(path.join(os.tmpdir(), 'atlas-sh-'));
+  const env = { PATH: process.env.PATH, HOME: home, LC_ALL: 'C', USER: 'learner' };
+  const run = (src) => spawnSync('bash', ['--norc', '--noprofile', '-c', 'umask 022; cd "$HOME"; ' + src], { cwd: home, env, encoding: 'utf8', timeout: 10000 });
+  const s = run(setup);
+  if (s.status !== 0) return { error: 'setup: ' + s.stderr };
+  const r = run(code);
+  if (r.stderr) return { error: r.stderr };
+  const files = [];
+  const walk = (dir, rel) => fs.readdirSync(dir).sort().forEach((n) => {
+    const full = path.join(dir, n), st = fs.statSync(full), r2 = rel ? rel + '/' + n : n;
+    if (st.isDirectory()) { files.push({ path: r2 + '/', mode: (st.mode & 0o777).toString(8) }); walk(full, r2); }
+    else files.push({ path: r2, mode: (st.mode & 0o777).toString(8), data: fs.readFileSync(full, 'utf8') });
+  });
+  walk(home, '');
+  files.sort((a, b) => (a.path.replace(/\/$/, '') < b.path.replace(/\/$/, '') ? -1 : 1));
+  fs.rmSync(home, { recursive: true, force: true });
+  return { files, out: r.stdout.split(home).join(MiniShell.HOME) };
+}
 
 function grade(code, tests) {
   const program = `${code}\n__TESTS = ${JSON.stringify(tests)}\n${harness}`;
@@ -62,6 +84,20 @@ for (const [moduleId, list] of Object.entries(data)) {
       else sol.results.filter((r) => !r.ok).forEach((r) => errors.push(`${where}: solution fails ${r.call}: got ${r.got}`));
       const start = gradeJs(ch.starter, ch.tests);
       if (!start.error && start.results.every((r) => r.ok)) errors.push(`${where}: starter already passes every test`);
+      continue;
+    }
+    if (ch.lang === 'bash') {
+      // Command-line challenges run in js/mini-shell.js on the site. Here the solution must pass there,
+      // the starter must fail, and real Bash must end with the same files, permissions and output.
+      const sol = MiniShell.gradeShell(ch, ch.solution);
+      if (!sol.ok) errors.push(`${where}: solution does not pass in the simulator: ${JSON.stringify(sol.problems)} ${sol.got.error || ''}`);
+      if (sol.got.transcript.some((x) => x.err)) errors.push(`${where}: solution prints errors in the simulator: ${sol.got.transcript.map((x) => x.err).join('')}`);
+      if (MiniShell.gradeShell(ch, ch.starter).ok) errors.push(`${where}: starter already passes`);
+      const real = realBash(ch.setup || '', ch.solution);
+      if (real.error) { errors.push(`${where}: real bash failed: ${real.error}`); continue; }
+      const sim = sol.want;
+      if (JSON.stringify(real.files) !== JSON.stringify(sim.files)) errors.push(`${where}: simulator files differ from real bash:\n  sim:  ${JSON.stringify(sim.files)}\n  bash: ${JSON.stringify(real.files)}`);
+      if (real.out !== sim.out) errors.push(`${where}: simulator output differs from real bash: ${JSON.stringify(sim.out)} vs ${JSON.stringify(real.out)}`);
       continue;
     }
     if (ch.lang === 'sql') {
