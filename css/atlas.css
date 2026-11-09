@@ -765,3 +765,5 @@ a.path-step.planned .path-go { color: var(--text-3); font-weight: 500; }
 .ch-tables pre { margin-top: 8px; white-space: pre-wrap; }
 .ch-compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 12px; margin-top: 8px; font-size: 13px; }
 .ch-compare pre { white-space: pre; overflow-x: auto; }
+.ch-frame { height: 220px; margin-top: 10px; border: 1px solid var(--border); border-radius: 10px; }
+.ch-prev-label { font-size: 12.5px; margin-top: 10px; }

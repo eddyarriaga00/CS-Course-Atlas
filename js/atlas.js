@@ -794,7 +794,7 @@ function challengeHtml(id, ch, i) {
     <div class="ch-head"><span class="ch-no">${i + 1}</span><h3>${esc(L(ch.title))}</h3>${solved ? `<span class="pill ok">✓ ${t('solved')}</span>` : ''}</div>
     <p class="ch-prompt">${fmt(L(ch.prompt))}</p>
     ${ch.lang === 'sql' ? `<details class="ch-tables"><summary>${t('seeTables')}</summary><pre class="code"><code>${esc(ch.setup)}</code></pre></details>` : ''}
-    <div class="ch-editor"><div class="code-bar"><span class="lang" aria-pressed="true">${ch.lang === 'sql' ? 'SQL' : 'Python'}</span><button class="lang" data-action="ch-reset" data-i="${i}">${t('reset')}</button><button class="lang run" data-action="ch-run" data-i="${i}">▶ ${t('runTests')}</button></div>
+    <div class="ch-editor"><div class="code-bar"><span class="lang" aria-pressed="true">${{ sql: 'SQL', html: 'HTML', css: 'HTML · CSS', js: 'JavaScript' }[ch.lang] || 'Python'}</span><button class="lang" data-action="ch-reset" data-i="${i}">${t('reset')}</button><button class="lang run" data-action="ch-run" data-i="${i}">▶ ${t('runTests')}</button></div>
       <textarea class="ch-code" id="ch-code-${i}" data-key="${esc(key)}" spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off" aria-label="${esc(L(ch.title))}: ${t('yourCode')}">${esc(chDraft(id, ch))}</textarea></div>
     <div class="ch-result" id="ch-res-${i}" aria-live="polite"></div>
     <div class="ch-help"><details><summary>${t('hint')}</summary><p>${fmt(L(ch.hint))}</p></details>
@@ -818,6 +818,33 @@ async function runSqlChallenge(i, id, ch, key, box, code) {
   if (ok) markSolved(i, id, ch, key);
   refreshChallengeHelp(i);
 }
+const testList = (results) => `<ul class="ch-tests">${results.map((x) => `<li class="${x.ok ? 'ok' : 'bad'}"><span class="mk">${x.ok ? '✓' : '✗'}</span>${x.label ? esc(L(x.label)) : `<code>${esc(x.call)}</code>`}${x.ok ? '' : `<span class="gw">${t('got')} <code>${esc(x.got)}</code>${x.want != null ? ` · ${t('expected')} <code>${esc(x.want)}</code>` : ''}</span>`}</li>`).join('')}</ul>`;
+const verdict = (results) => { const passed = results.filter((x) => x.ok).length, all = passed === results.length; return { all, html: `<div class="ch-status ${all ? 'ok' : 'err'}">${all ? '🎉 ' + t('allPassed') : t('passedOf', passed, results.length)}</div>${testList(results)}` }; };
+// HTML/CSS challenges render in a sandboxed frame with scripts disabled; the checks read its DOM and computed styles.
+let webChecker = null;
+function runWebChallenge(i, id, ch, key, box, code) {
+  webChecker = webChecker || new Function(DATA.webChecks + '\nreturn runWebChecks;')();
+  box.innerHTML = `<div class="ch-status"><span class="spinner"></span>${t('runningTests')}</div><iframe class="web-preview ch-frame" sandbox="allow-same-origin" title="${t('preview')}"></iframe>`;
+  const frame = box.querySelector('iframe');
+  frame.addEventListener('load', () => {
+    const results = webChecker(frame.contentDocument, frame.contentWindow, ch.checks), v = verdict(results);
+    state.chTries[key] = (state.chTries[key] || 0) + 1;
+    box.firstElementChild.outerHTML = v.html + `<div class="muted ch-prev-label">${t('preview')}</div>`;
+    if (v.all) markSolved(i, id, ch, key);
+    refreshChallengeHelp(i);
+  }, { once: true });
+  frame.srcdoc = code;
+}
+// JavaScript challenges run in a throwaway worker with a time limit.
+function runJsChallenge(i, id, ch, key, box, code) {
+  const harness = `;postMessage((${JSON.stringify(ch.tests)}).map(([call, want]) => { try { const got = eval(call); const g = JSON.stringify(got); return { call, ok: g === JSON.stringify(JSON.parse(want)), got: g === undefined ? String(got) : g, want }; } catch (e) { return { call, ok: false, got: String(e), want }; } }));`;
+  const url = URL.createObjectURL(new Blob([code + '\n' + harness], { type: 'text/javascript' }));
+  const w = new Worker(url);
+  const done = () => { clearTimeout(timer); w.terminate(); URL.revokeObjectURL(url); state.chTries[key] = (state.chTries[key] || 0) + 1; refreshChallengeHelp(i); };
+  const timer = setTimeout(() => { done(); box.innerHTML = `<div class="ch-status err">${t('pgTimeout')}</div>`; }, 3000);
+  w.onmessage = (e) => { const v = verdict(e.data); box.innerHTML = v.html; done(); if (v.all) markSolved(i, id, ch, key); };
+  w.onerror = (e) => { e.preventDefault(); box.innerHTML = `<div class="ch-status err">${t('codeError')}</div><pre class="ch-err">${esc(e.message || 'Error')}</pre>`; done(); };
+}
 function markSolved(i, id, ch, key) {
   if (state.solved.has(key)) return;
   state.solved.add(key); logActivity('challenge', id, { ch: ch.id }); save();
@@ -830,6 +857,8 @@ function markSolved(i, id, ch, key) {
 async function runChallenge(i) {
   const id = state.chModule, ch = DATA.full[id].challenges[i], key = chKey(id, ch), box = $('#ch-res-' + i), code = $('#ch-code-' + i).value;
   if (ch.lang === 'sql') return runSqlChallenge(i, id, ch, key, box, code);
+  if (ch.lang === 'html' || ch.lang === 'css') return runWebChallenge(i, id, ch, key, box, code);
+  if (ch.lang === 'js') return runJsChallenge(i, id, ch, key, box, code);
   const program = `${code}\n__TESTS = ${JSON.stringify(ch.tests)}\n${DATA.harness}`;
   const r = await runPythonCapture(program, (s) => { box.innerHTML = `<div class="ch-status"><span class="spinner"></span>${s === 'loading' ? t('pyLoading') : t('runningTests')}</div>`; });
   if (r.failed) { box.innerHTML = `<div class="ch-status err">${t('pyFailed')}</div>`; return; }
