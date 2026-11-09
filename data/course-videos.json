@@ -57,6 +57,12 @@
    "type": "playlist",
    "title": "Intro to SQL: Querying and managing data | Computer Programming | Khan Academy",
    "channel": "Khan Academy"
+  },
+  "how-computers-work": {
+   "id": "PL8dPuuaLjXtNlUrzyH5r6jN9ulIgZBpdo",
+   "type": "playlist",
+   "title": "Computer Science",
+   "channel": "CrashCourse"
   }
  },
  "modules": {
@@ -1836,6 +1842,186 @@
      "title": "Understand SQL Transactions in 5 Minutes",
      "channel": "Unwired",
      "length": "4:43"
+    }
+   }
+  },
+  "hcw-binary": {
+   "series": {
+    "id": "PLzdnOPI1iJNcsRwJhvksEo1tJqjIqWbN-",
+    "type": "playlist",
+    "title": "How Computers Work",
+    "channel": "CodeAI"
+   },
+   "topics": {
+    "Bits and Bytes": {
+     "id": "Xpk67YzOn5w",
+     "type": "video",
+     "title": "Why Do Computers Use 1s and 0s? Binary and Transistors Explained.",
+     "channel": "Basics Explained, H3Vtux",
+     "length": "7:00"
+    },
+    "Binary Numbers": {
+     "id": "LpuPe81bc2w",
+     "type": "video",
+     "title": "Binary Numbers and Base Systems as Fast as Possible",
+     "channel": "Techquickie",
+     "length": "5:20"
+    },
+    "Hexadecimal": {
+     "id": "onGJrgJYG2E",
+     "type": "video",
+     "title": "How does Hexadecimal work? And why do we use it?",
+     "channel": "NoBS Code",
+     "length": "5:35"
+    },
+    "Negative Numbers": {
+     "id": "4qH4unVtJkE",
+     "type": "video",
+     "title": "Twos complement: Negative numbers in binary",
+     "channel": "Ben Eater",
+     "length": "13:49"
+    },
+    "Binary Arithmetic": {
+     "id": "WN8i5cwjkSE",
+     "type": "video",
+     "title": "Binary Addition & Overflow - Computerphile",
+     "channel": "Computerphile",
+     "length": "7:00"
+    }
+   }
+  },
+  "hcw-data": {
+   "series": {
+    "id": "PLzdnOPI1iJNcsRwJhvksEo1tJqjIqWbN-",
+    "type": "playlist",
+    "title": "How Computers Work",
+    "channel": "CodeAI"
+   },
+   "topics": {
+    "Text and Unicode": {
+     "id": "MijmeoH9LT4",
+     "type": "video",
+     "title": "Characters, Symbols and the Unicode Miracle - Computerphile",
+     "channel": "Computerphile",
+     "length": "9:37"
+    },
+    "Floating-Point Numbers": {
+     "id": "PZRI1IfStY0",
+     "type": "video",
+     "title": "Floating Point Numbers - Computerphile",
+     "channel": "Computerphile",
+     "length": "9:16"
+    },
+    "Images and Color": {
+     "id": "15aqFQQVBWU",
+     "type": "video",
+     "title": "Images, Pixels and RGB",
+     "channel": "CodeAI",
+     "length": "5:50"
+    },
+    "Sound": {
+     "id": "1RIA9U5oXro",
+     "type": "video",
+     "title": "How Digital Audio Works - Computerphile",
+     "channel": "Computerphile",
+     "length": "12:25"
+    },
+    "Compression": {
+     "id": "OtDxDvCpPL4",
+     "type": "video",
+     "title": "Compression: Crash Course Computer Science #21",
+     "channel": "CrashCourse",
+     "length": "12:48"
+    }
+   }
+  },
+  "hcw-hardware": {
+   "series": {
+    "id": "PLzdnOPI1iJNcsRwJhvksEo1tJqjIqWbN-",
+    "type": "playlist",
+    "title": "How Computers Work",
+    "channel": "CodeAI"
+   },
+   "topics": {
+    "Logic Gates": {
+     "id": "INEtYZqtjTo",
+     "type": "video",
+     "title": "Understanding Logic Gates",
+     "channel": "Spanning Tree",
+     "length": "7:28"
+    },
+    "From Gates to an Adder": {
+     "id": "wvJc9CZcvBc",
+     "type": "video",
+     "title": "Learn how computers add numbers and build a 4 bit adder circuit",
+     "channel": "Ben Eater",
+     "length": "13:39"
+    },
+    "Memory and Storage": {
+     "id": "p3q5zWCw8J4",
+     "type": "video",
+     "title": "How computer memory works - Kanawat Senanan",
+     "channel": "TED-Ed",
+     "length": "5:05"
+    },
+    "The CPU and Instructions": {
+     "id": "jx-w2o-Lj8g",
+     "type": "video",
+     "title": "How Do CPUs Work?",
+     "channel": "ExplainingComputers",
+     "length": "10:40"
+    },
+    "The Fetch-Decode-Execute Cycle": {
+     "id": "Z5JC9Ve1sfI",
+     "type": "video",
+     "title": "The Fetch-Execute Cycle: What's Your Computer Actually Doing?",
+     "channel": "Tom Scott",
+     "length": "9:04"
+    }
+   }
+  },
+  "hcw-software": {
+   "series": {
+    "id": "PLzdnOPI1iJNcsRwJhvksEo1tJqjIqWbN-",
+    "type": "playlist",
+    "title": "How Computers Work",
+    "channel": "CodeAI"
+   },
+   "topics": {
+    "Compilers and Interpreters": {
+     "id": "_C5AHaS1mOA",
+     "type": "video",
+     "title": "Interpreters and Compilers (Bits and Bytes, Episode 6)",
+     "channel": "Bits and Bytes TVO",
+     "length": "3:36"
+    },
+    "The Operating System": {
+     "id": "MtxP2pyCvYA",
+     "type": "video",
+     "title": "Every operating system concept in one video…",
+     "channel": "Fireship",
+     "length": "11:31"
+    },
+    "Processes and Memory": {
+     "id": "5OJRqkYbK-4",
+     "type": "video",
+     "title": "Stack vs Heap Memory - Simple Explanation",
+     "channel": "Alex Hyett",
+     "length": "5:28"
+    },
+    "Files and File Systems": {
+     "id": "KN8YgJnShPM",
+     "type": "video",
+     "title": "Files & File Systems: Crash Course Computer Science #20",
+     "channel": "CrashCourse",
+     "length": "12:03"
+    },
+    "How the Internet Moves Data": {
+     "id": "AYdF7b3nMto",
+     "type": "video",
+     "title": "The Internet: Packets, Routing & Reliability",
+     "channel": "CodeAI",
+     "length": "6:26"
     }
    }
   }

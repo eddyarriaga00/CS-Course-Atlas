@@ -1148,7 +1148,7 @@ document.addEventListener('click', (e) => { if (!e.target.closest('#search') && 
 
 /* ---------- Boot ---------- */
 // Links from the generated SEO pages use ?route=/java&module=id; turn them into hash routes.
-const ROUTE_HASH = { '/home': 'home', '/tracks': 'courses', '/java': 'course-java', '/dsa': 'course-dsa', '/git': 'course-git', '/assembly': 'course-assembly', '/discrete-math': 'course-discrete', '/python': 'course-python', '/command-line': 'course-cli', '/web': 'course-web', '/sql': 'course-sql',
+const ROUTE_HASH = { '/home': 'home', '/tracks': 'courses', '/java': 'course-java', '/dsa': 'course-dsa', '/git': 'course-git', '/assembly': 'course-assembly', '/discrete-math': 'course-discrete', '/python': 'course-python', '/command-line': 'course-cli', '/web': 'course-web', '/sql': 'course-sql', '/how-computers-work': 'course-how-computers-work',
   '/flashcards': 'practice', '/quizzes': 'practice', '/playground': 'playground', '/notes': 'notes', '/support': 'roadmap', '/about': 'roadmap' };
 function applyLegacyLink() {
   const url = new URL(location.href), q = url.searchParams, mod = q.get('module'), route = q.get('route');

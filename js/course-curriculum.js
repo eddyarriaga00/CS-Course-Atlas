@@ -416,6 +416,48 @@ window.COURSE_CURRICULUM = {
           "sql-design"
         ]
       }
+    ],
+    "how-computers-work": [
+      {
+        "id": "hcw-bits",
+        "title": {
+          "en": "Bits and Numbers",
+          "es": "Bits y números"
+        },
+        "modules": [
+          "hcw-binary"
+        ]
+      },
+      {
+        "id": "hcw-representation",
+        "title": {
+          "en": "Representing Everything",
+          "es": "Representarlo todo"
+        },
+        "modules": [
+          "hcw-data"
+        ]
+      },
+      {
+        "id": "hcw-machine",
+        "title": {
+          "en": "The Hardware",
+          "es": "El hardware"
+        },
+        "modules": [
+          "hcw-hardware"
+        ]
+      },
+      {
+        "id": "hcw-system",
+        "title": {
+          "en": "The Software Stack",
+          "es": "La pila de software"
+        },
+        "modules": [
+          "hcw-software"
+        ]
+      }
     ]
   },
   "modules": {
@@ -18129,6 +18171,1174 @@ window.COURSE_CURRICULUM = {
           "explanation": {
             "en": "The index keeps emails sorted so lookups by email skip the full table scan. Inserts get slightly slower because the index must be updated too.",
             "es": "El índice mantiene ordenados los correos para que las búsquedas por correo eviten recorrer toda la tabla. Las inserciones se vuelven algo más lentas porque también hay que actualizar el índice."
+          }
+        }
+      ]
+    },
+    "hcw-binary": {
+      "minutes": 75,
+      "prerequisites": [
+        "python-first-programs"
+      ],
+      "whyItMatters": {
+        "en": "Everything a computer stores, numbers, text, photos, music, this page, is a long row of bits: tiny switches that are either off (0) or on (1). Understanding how a row of switches can mean the number 200 or the letter A takes the mystery out of computers, and it explains real things you will meet as a programmer: why a byte holds 0 to 255, why colors are written as #FF8800, why numbers sometimes \"overflow\" and wrap around, and why memory sizes come in powers of two.",
+        "es": "Todo lo que guarda una computadora, números, texto, fotos, música, esta página, es una larga fila de bits: pequeños interruptores que están apagados (0) o encendidos (1). Entender cómo una fila de interruptores puede significar el número 200 o la letra A le quita el misterio a las computadoras, y explica cosas reales que encontrarás al programar: por qué un byte guarda de 0 a 255, por qué los colores se escriben como #FF8800, por qué los números a veces \"se desbordan\" y dan la vuelta, y por qué los tamaños de memoria vienen en potencias de dos."
+      },
+      "objectives": {
+        "en": [
+          "Explain what a bit and a byte are and how many values n bits can represent (2ⁿ).",
+          "Convert numbers between decimal and binary by hand and with Python's `bin()` and `int(text, 2)`.",
+          "Read and write hexadecimal, and explain why programmers use it as shorthand for binary.",
+          "Describe how two's complement stores negative numbers and what overflow is.",
+          "Add binary numbers column by column with carries, and relate it to how a CPU adds."
+        ],
+        "es": [
+          "Explicar qué son un bit y un byte y cuántos valores pueden representar n bits (2ⁿ).",
+          "Convertir números entre decimal y binario a mano y con `bin()` e `int(texto, 2)` de Python.",
+          "Leer y escribir hexadecimal, y explicar por qué los programadores lo usan como abreviatura del binario.",
+          "Describir cómo el complemento a dos guarda números negativos y qué es el desbordamiento.",
+          "Sumar números binarios columna por columna con acarreos, y relacionarlo con cómo suma una CPU."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Basic Python: variables, loops and functions (Python course)",
+          "Place value in ordinary numbers (ones, tens, hundreds)"
+        ],
+        "es": [
+          "Python básico: variables, ciclos y funciones (curso de Python)",
+          "El valor posicional en los números normales (unidades, decenas, centenas)"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "A bit is 0 or 1; a byte is 8 bits and can hold 2⁸ = 256 different values (0–255).",
+          "Binary is place value with powers of 2: 1101 = 8 + 4 + 0 + 1 = 13.",
+          "One hex digit is exactly 4 bits, so a byte is two hex digits: 255 = 0xFF = 11111111.",
+          "Computers store negative integers in two's complement: flip the bits and add 1. A fixed number of bits means values can overflow and wrap around."
+        ],
+        "es": [
+          "Un bit es 0 o 1; un byte son 8 bits y puede guardar 2⁸ = 256 valores distintos (0–255).",
+          "El binario es valor posicional con potencias de 2: 1101 = 8 + 4 + 0 + 1 = 13.",
+          "Un dígito hexadecimal son exactamente 4 bits, así que un byte son dos dígitos hex: 255 = 0xFF = 11111111.",
+          "Las computadoras guardan los enteros negativos en complemento a dos: invierte los bits y suma 1. Un número fijo de bits significa que los valores pueden desbordarse y dar la vuelta."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Reading binary left to right as if it were decimal: the leftmost bit is the biggest power of 2, not the ones place.",
+          "Forgetting that counting starts at 0: 8 bits give 256 values, but the largest is 255.",
+          "Mixing up `0x10` (sixteen) and `10` (ten): the prefix tells you the base.",
+          "Assuming Python integers overflow like those in C or Java: Python grows them as needed, so overflow has to be simulated with a mask such as `& 0xFF`."
+        ],
+        "es": [
+          "Leer el binario de izquierda a derecha como si fuera decimal: el bit de más a la izquierda es la mayor potencia de 2, no las unidades.",
+          "Olvidar que se cuenta desde 0: 8 bits dan 256 valores, pero el mayor es 255.",
+          "Confundir `0x10` (dieciséis) con `10` (diez): el prefijo indica la base.",
+          "Suponer que los enteros de Python se desbordan como en C o Java: Python los agranda según haga falta, así que el desbordamiento se simula con una máscara como `& 0xFF`."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: write the numbers 0 to 15 in 4-bit binary by hand, then check with `format(n, \"04b\")`.",
+          "Core: convert 45, 100 and 255 to binary and hex by hand, then 0b101010 and 0x2F to decimal.",
+          "Core: write a function `to_binary(n)` that builds the binary string using `% 2` and `// 2`, without `bin()`.",
+          "Stretch: write `add_bits(a, b)` that adds two binary strings column by column with a carry, and compare its result to `bin(int(a, 2) + int(b, 2))`."
+        ],
+        "es": [
+          "Calentamiento: escribe a mano los números del 0 al 15 en binario de 4 bits y compruébalos con `format(n, \"04b\")`.",
+          "Núcleo: convierte 45, 100 y 255 a binario y hex a mano, y luego 0b101010 y 0x2F a decimal.",
+          "Núcleo: escribe una función `to_binary(n)` que construya el texto binario usando `% 2` y `// 2`, sin `bin()`.",
+          "Extensión: escribe `add_bits(a, b)` que sume dos textos binarios columna por columna con acarreo, y compara su resultado con `bin(int(a, 2) + int(b, 2))`."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "How many different values can 10 bits represent, and why is a kilobyte often 1024 bytes?",
+          "What is 1011 in decimal, and what is 0xA in binary?",
+          "In 8-bit two's complement, why is 11111111 equal to −1?"
+        ],
+        "es": [
+          "¿Cuántos valores distintos pueden representar 10 bits, y por qué un kilobyte suele ser 1024 bytes?",
+          "¿Cuánto es 1011 en decimal, y cuánto es 0xA en binario?",
+          "En complemento a dos de 8 bits, ¿por qué 11111111 es igual a −1?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Bits and Bytes",
+            "es": "Bits y bytes"
+          },
+          "definition": {
+            "en": "A bit (binary digit) is the smallest unit of data: 0 or 1, stored as a voltage, a magnetic spot or a charge. A byte is 8 bits. With n bits there are 2ⁿ combinations, so a byte has 256 and memory sizes grow in powers of two.",
+            "es": "Un bit (dígito binario) es la unidad mínima de datos: 0 o 1, guardado como un voltaje, un punto magnético o una carga. Un byte son 8 bits. Con n bits hay 2ⁿ combinaciones, así que un byte tiene 256 y los tamaños de memoria crecen en potencias de dos."
+          }
+        },
+        {
+          "term": {
+            "en": "Binary Numbers",
+            "es": "Números binarios"
+          },
+          "definition": {
+            "en": "Base 2: each position is worth twice the one to its right (1, 2, 4, 8, ...). To convert to decimal, add the place values that have a 1; to convert from decimal, repeatedly divide by 2 and read the remainders backwards.",
+            "es": "Base 2: cada posición vale el doble que la de su derecha (1, 2, 4, 8, ...). Para convertir a decimal, suma los valores de las posiciones que tienen un 1; para convertir desde decimal, divide entre 2 una y otra vez y lee los residuos al revés."
+          }
+        },
+        {
+          "term": {
+            "en": "Hexadecimal",
+            "es": "Hexadecimal"
+          },
+          "definition": {
+            "en": "Base 16, with digits 0–9 and A–F (10–15). One hex digit stands for exactly 4 bits, so long binary values are written compactly in hex, as in colors (#FF8800), memory addresses and byte dumps. In code it is written with a `0x` prefix.",
+            "es": "Base 16, con dígitos 0–9 y A–F (10–15). Un dígito hex representa exactamente 4 bits, así que los valores binarios largos se escriben de forma compacta en hex, como en los colores (#FF8800), las direcciones de memoria y los volcados de bytes. En código se escribe con el prefijo `0x`."
+          }
+        },
+        {
+          "term": {
+            "en": "Negative Numbers",
+            "es": "Números negativos"
+          },
+          "definition": {
+            "en": "Most computers use two's complement: in n bits, the top bit counts as −2ⁿ⁻¹ instead of +2ⁿ⁻¹. To negate a number, flip every bit and add 1. 8 bits then hold −128 to 127, and going past the end overflows and wraps around.",
+            "es": "La mayoría de las computadoras usan complemento a dos: en n bits, el bit superior cuenta como −2ⁿ⁻¹ en lugar de +2ⁿ⁻¹. Para negar un número, invierte cada bit y suma 1. Así 8 bits guardan de −128 a 127, y pasarse del final desborda y da la vuelta."
+          }
+        },
+        {
+          "term": {
+            "en": "Binary Arithmetic",
+            "es": "Aritmética binaria"
+          },
+          "definition": {
+            "en": "Binary addition works like decimal addition with only two digits: 0+0=0, 0+1=1, 1+1=10 (write 0, carry 1). Shifting left by one place multiplies by 2 and shifting right divides by 2, which is why `<<` and `>>` are fast.",
+            "es": "La suma binaria funciona como la decimal con solo dos dígitos: 0+0=0, 0+1=1, 1+1=10 (escribe 0, lleva 1). Desplazar a la izquierda una posición multiplica por 2 y desplazar a la derecha divide entre 2, por eso `<<` y `>>` son rápidos."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Khan Academy: Bits and binary",
+            "es": "Khan Academy: bits y binario"
+          },
+          "url": "https://www.khanacademy.org/computing/computers-and-internet/xcae6f4a7ff015e7d:digital-information"
+        },
+        {
+          "label": {
+            "en": "CS50: Lecture 0 notes (binary)",
+            "es": "CS50: notas de la clase 0 (binario)"
+          },
+          "url": "https://cs50.harvard.edu/x/notes/0/"
+        },
+        {
+          "label": {
+            "en": "Python docs: Built-in functions bin, hex, int",
+            "es": "Documentación de Python: funciones bin, hex, int"
+          },
+          "url": "https://docs.python.org/3/library/functions.html"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What is the binary number 1010 in decimal?",
+            "es": "¿Cuánto es el número binario 1010 en decimal?"
+          },
+          "options": {
+            "en": [
+              "5",
+              "10",
+              "12",
+              "1010"
+            ],
+            "es": [
+              "5",
+              "10",
+              "12",
+              "1010"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "8 + 0 + 2 + 0 = 10: the 1s are in the 8s and 2s places.",
+            "es": "8 + 0 + 2 + 0 = 10: los 1 están en las posiciones del 8 y del 2."
+          }
+        },
+        {
+          "question": {
+            "en": "How many different values can one byte hold?",
+            "es": "¿Cuántos valores distintos puede guardar un byte?"
+          },
+          "options": {
+            "en": [
+              "8",
+              "255",
+              "256",
+              "1024"
+            ],
+            "es": [
+              "8",
+              "255",
+              "256",
+              "1024"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "8 bits give 2⁸ = 256 combinations, from 0 to 255.",
+            "es": "8 bits dan 2⁸ = 256 combinaciones, de 0 a 255."
+          }
+        },
+        {
+          "question": {
+            "en": "What is 0xFF in decimal?",
+            "es": "¿Cuánto es 0xFF en decimal?"
+          },
+          "options": {
+            "en": [
+              "15",
+              "16",
+              "255",
+              "256"
+            ],
+            "es": [
+              "15",
+              "16",
+              "255",
+              "256"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "F is 15, so 0xFF = 15 × 16 + 15 = 255, which is also 11111111 in binary.",
+            "es": "F es 15, así que 0xFF = 15 × 16 + 15 = 255, que también es 11111111 en binario."
+          }
+        },
+        {
+          "question": {
+            "en": "In 8-bit two's complement, what is 11111110?",
+            "es": "En complemento a dos de 8 bits, ¿qué es 11111110?"
+          },
+          "options": {
+            "en": [
+              "254",
+              "−2",
+              "−126",
+              "−1"
+            ],
+            "es": [
+              "254",
+              "−2",
+              "−126",
+              "−1"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The top bit is set, so it is negative. Flip the bits (00000001) and add 1 (00000010) to get 2, so the value is −2.",
+            "es": "El bit superior está encendido, así que es negativo. Invierte los bits (00000001) y suma 1 (00000010) para obtener 2, así que el valor es −2."
+          }
+        },
+        {
+          "question": {
+            "en": "What is 0110 + 0011 in binary?",
+            "es": "¿Cuánto es 0110 + 0011 en binario?"
+          },
+          "options": {
+            "en": [
+              "0111",
+              "1001",
+              "1010",
+              "0101"
+            ],
+            "es": [
+              "0111",
+              "1001",
+              "1010",
+              "0101"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "6 + 3 = 9, and 9 in binary is 1001. Column by column: 0+1=1, 1+1=0 carry 1, 1+0+1=0 carry 1, 0+0+1=1.",
+            "es": "6 + 3 = 9, y 9 en binario es 1001. Columna por columna: 0+1=1, 1+1=0 lleva 1, 1+0+1=0 lleva 1, 0+0+1=1."
+          }
+        }
+      ]
+    },
+    "hcw-data": {
+      "minutes": 80,
+      "prerequisites": [
+        "hcw-binary"
+      ],
+      "whyItMatters": {
+        "en": "A computer only stores bits, yet it shows you emoji, photos, songs and video. The bridge is an agreed code for each kind of data, and those codes explain everyday puzzles: why 0.1 + 0.2 is not exactly 0.3, why a photo is megabytes but a text file is kilobytes, why some characters turn into question marks, and how a ZIP file shrinks without losing anything. Knowing them makes you a programmer who understands the data, not one who is surprised by it.",
+        "es": "Una computadora solo guarda bits, y aun así te muestra emojis, fotos, canciones y video. El puente es un código acordado para cada tipo de dato, y esos códigos explican misterios cotidianos: por qué 0.1 + 0.2 no es exactamente 0.3, por qué una foto ocupa megabytes y un texto kilobytes, por qué algunos caracteres se vuelven signos de interrogación y cómo un ZIP se encoge sin perder nada. Conocerlos te hace un programador que entiende los datos, no uno al que lo sorprenden."
+      },
+      "objectives": {
+        "en": [
+          "Explain how characters map to numbers (code points) and how UTF-8 stores them as 1 to 4 bytes.",
+          "Explain why floating-point numbers are approximations and compare decimals safely.",
+          "Describe an image as a grid of pixels with red, green and blue values, and compute its raw size.",
+          "Describe digital sound as samples taken many times a second, and compute its size.",
+          "Explain lossless compression with run-length encoding and compare it with lossy compression."
+        ],
+        "es": [
+          "Explicar cómo los caracteres se asignan a números (puntos de código) y cómo UTF-8 los guarda en 1 a 4 bytes.",
+          "Explicar por qué los números de punto flotante son aproximaciones y comparar decimales con seguridad.",
+          "Describir una imagen como una cuadrícula de píxeles con valores de rojo, verde y azul, y calcular su tamaño sin comprimir.",
+          "Describir el sonido digital como muestras tomadas muchas veces por segundo, y calcular su tamaño.",
+          "Explicar la compresión sin pérdida con codificación por longitud de series y compararla con la compresión con pérdida."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Binary, hex and bytes from module 1",
+          "Python loops, lists and functions"
+        ],
+        "es": [
+          "Binario, hex y bytes del módulo 1",
+          "Ciclos, listas y funciones de Python"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Unicode gives every character a number (A is 65, é is 233, 😀 is 128512); UTF-8 stores those numbers in 1 to 4 bytes, with plain English in 1.",
+          "Floats store binary fractions, so many decimals like 0.1 cannot be exact. Compare floats with a tolerance and use whole cents for money.",
+          "An image is width × height pixels, each usually 3 bytes (red, green, blue), so raw images are big.",
+          "Lossless compression (ZIP, PNG) recovers the original exactly; lossy compression (JPEG, MP3) throws away detail people barely notice."
+        ],
+        "es": [
+          "Unicode da a cada carácter un número (A es 65, é es 233, 😀 es 128512); UTF-8 guarda esos números en 1 a 4 bytes, con el inglés simple en 1.",
+          "Los floats guardan fracciones binarias, así que muchos decimales como 0.1 no pueden ser exactos. Compara floats con una tolerancia y usa centavos enteros para el dinero.",
+          "Una imagen son ancho × alto píxeles, cada uno normalmente de 3 bytes (rojo, verde, azul), así que las imágenes sin comprimir son grandes.",
+          "La compresión sin pérdida (ZIP, PNG) recupera el original exactamente; la compresión con pérdida (JPEG, MP3) descarta detalles que la gente apenas nota."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Assuming one character is one byte: `len(\"é\")` is 1 character but `len(\"é\".encode())` is 2 bytes.",
+          "Testing floats with `==`: `0.1 + 0.2 == 0.3` is False. Use `math.isclose` or round.",
+          "Storing money as floats: rounding errors add up. Store whole cents as integers, or use `decimal`.",
+          "Decoding bytes with the wrong encoding, which produces garbled text such as \"Ã©\" instead of \"é\"."
+        ],
+        "es": [
+          "Suponer que un carácter es un byte: `len(\"é\")` es 1 carácter pero `len(\"é\".encode())` son 2 bytes.",
+          "Comparar floats con `==`: `0.1 + 0.2 == 0.3` es False. Usa `math.isclose` o redondea.",
+          "Guardar dinero como floats: los errores de redondeo se acumulan. Guarda centavos enteros como enteros, o usa `decimal`.",
+          "Decodificar bytes con la codificación equivocada, lo que produce texto revuelto como \"Ã©\" en lugar de \"é\"."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: print the code point of every letter in your name with `ord`, then rebuild the name from the numbers with `chr`.",
+          "Core: show the UTF-8 bytes of \"año\", \"€\" and an emoji, and explain why each has a different number of bytes.",
+          "Core: compute the raw size in megabytes of a 1920×1080 color image and of one minute of CD-quality stereo sound.",
+          "Stretch: write `rle_decode` for the run-length encoder in the examples and check that decoding an encoded string gives back the original."
+        ],
+        "es": [
+          "Calentamiento: imprime el punto de código de cada letra de tu nombre con `ord`, y luego reconstruye el nombre a partir de los números con `chr`.",
+          "Núcleo: muestra los bytes UTF-8 de \"año\", \"€\" y un emoji, y explica por qué cada uno tiene distinta cantidad de bytes.",
+          "Núcleo: calcula el tamaño sin comprimir en megabytes de una imagen a color de 1920×1080 y de un minuto de sonido estéreo con calidad de CD.",
+          "Extensión: escribe `rle_decode` para el codificador por longitud de series de los ejemplos y comprueba que decodificar un texto codificado devuelve el original."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What is the difference between a character, a code point and a byte?",
+          "Why does `0.1 + 0.2` print `0.30000000000000004`?",
+          "Why does run-length encoding make \"aaaaabbb\" smaller but \"abcdef\" bigger?"
+        ],
+        "es": [
+          "¿Cuál es la diferencia entre un carácter, un punto de código y un byte?",
+          "¿Por qué `0.1 + 0.2` imprime `0.30000000000000004`?",
+          "¿Por qué la codificación por longitud de series hace más pequeño \"aaaaabbb\" pero más grande \"abcdef\"?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Text and Unicode",
+            "es": "Texto y Unicode"
+          },
+          "definition": {
+            "en": "Unicode assigns a number, a code point, to every character in every writing system (`ord(\"A\")` is 65). An encoding turns code points into bytes; UTF-8, used by almost the whole web, uses 1 byte for ASCII and up to 4 for other characters.",
+            "es": "Unicode asigna un número, un punto de código, a cada carácter de cada sistema de escritura (`ord(\"A\")` es 65). Una codificación convierte puntos de código en bytes; UTF-8, que usa casi toda la web, usa 1 byte para ASCII y hasta 4 para otros caracteres."
+          }
+        },
+        {
+          "term": {
+            "en": "Floating-Point Numbers",
+            "es": "Números de punto flotante"
+          },
+          "definition": {
+            "en": "Computers store decimals as binary scientific notation (sign, exponent, fraction), usually in 64 bits. That covers huge and tiny numbers but only about 15–17 significant digits, and fractions like 0.1 that are endless in binary get rounded.",
+            "es": "Las computadoras guardan los decimales como notación científica binaria (signo, exponente, fracción), normalmente en 64 bits. Eso cubre números enormes y diminutos, pero solo unos 15–17 dígitos significativos, y fracciones como 0.1, que son infinitas en binario, se redondean."
+          }
+        },
+        {
+          "term": {
+            "en": "Images and Color",
+            "es": "Imágenes y color"
+          },
+          "definition": {
+            "en": "A bitmap image is a grid of pixels. Each pixel's color is usually three numbers from 0 to 255 for red, green and blue light (RGB), so one pixel takes 3 bytes and the raw size is width × height × 3 bytes.",
+            "es": "Una imagen de mapa de bits es una cuadrícula de píxeles. El color de cada píxel suele ser tres números del 0 al 255 para la luz roja, verde y azul (RGB), así que un píxel ocupa 3 bytes y el tamaño sin comprimir es ancho × alto × 3 bytes."
+          }
+        },
+        {
+          "term": {
+            "en": "Sound",
+            "es": "Sonido"
+          },
+          "definition": {
+            "en": "Sound is a pressure wave. To store it, the computer measures the wave many times a second (the sample rate, 44,100 for CDs) and stores each measurement as a number (16 bits for CDs). Playing the numbers back rebuilds the wave.",
+            "es": "El sonido es una onda de presión. Para guardarlo, la computadora mide la onda muchas veces por segundo (la frecuencia de muestreo, 44,100 en los CD) y guarda cada medida como un número (16 bits en los CD). Reproducir los números reconstruye la onda."
+          }
+        },
+        {
+          "term": {
+            "en": "Compression",
+            "es": "Compresión"
+          },
+          "definition": {
+            "en": "Storing data in fewer bits. Lossless methods (run-length encoding, ZIP, PNG) find repetition and rebuild the original exactly; lossy methods (JPEG, MP3, video codecs) discard detail people are unlikely to notice to get much smaller files.",
+            "es": "Guardar datos en menos bits. Los métodos sin pérdida (codificación por longitud de series, ZIP, PNG) encuentran repeticiones y reconstruyen el original exactamente; los métodos con pérdida (JPEG, MP3, códecs de video) descartan detalles que la gente difícilmente notará para obtener archivos mucho más pequeños."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Joel Spolsky: The Absolute Minimum About Unicode",
+            "es": "Joel Spolsky: lo mínimo absoluto sobre Unicode"
+          },
+          "url": "https://www.joelonsoftware.com/2003/10/08/the-absolute-minimum-every-software-developer-absolutely-positively-must-know-about-unicode-and-character-sets-no-excuses/"
+        },
+        {
+          "label": {
+            "en": "Python docs: Floating-point arithmetic: issues and limitations",
+            "es": "Documentación de Python: aritmética de punto flotante"
+          },
+          "url": "https://docs.python.org/3/tutorial/floatingpoint.html"
+        },
+        {
+          "label": {
+            "en": "Khan Academy: Storing images and sound",
+            "es": "Khan Academy: guardar imágenes y sonido"
+          },
+          "url": "https://www.khanacademy.org/computing/computers-and-internet/xcae6f4a7ff015e7d:digital-information"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What does `ord(\"A\")` return?",
+            "es": "¿Qué devuelve `ord(\"A\")`?"
+          },
+          "options": {
+            "en": [
+              "\"A\"",
+              "65",
+              "1",
+              "0x41A"
+            ],
+            "es": [
+              "\"A\"",
+              "65",
+              "1",
+              "0x41A"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "`ord` gives a character's Unicode code point; for A it is 65 (0x41). `chr(65)` goes back.",
+            "es": "`ord` da el punto de código Unicode de un carácter; para A es 65 (0x41). `chr(65)` hace lo contrario."
+          }
+        },
+        {
+          "question": {
+            "en": "How many bytes does \"é\" take in UTF-8?",
+            "es": "¿Cuántos bytes ocupa \"é\" en UTF-8?"
+          },
+          "options": {
+            "en": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ],
+            "es": [
+              "1",
+              "2",
+              "3",
+              "4"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Only ASCII characters (code points below 128) fit in 1 byte; é (233) needs 2.",
+            "es": "Solo los caracteres ASCII (puntos de código menores a 128) caben en 1 byte; é (233) necesita 2."
+          }
+        },
+        {
+          "question": {
+            "en": "What is the safest way to check if two floats are equal?",
+            "es": "¿Cuál es la forma más segura de comprobar si dos floats son iguales?"
+          },
+          "options": {
+            "en": [
+              "a == b",
+              "math.isclose(a, b)",
+              "str(a) == str(b)",
+              "int(a) == int(b)"
+            ],
+            "es": [
+              "a == b",
+              "math.isclose(a, b)",
+              "str(a) == str(b)",
+              "int(a) == int(b)"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Tiny rounding errors make `==` unreliable; `isclose` allows a small tolerance.",
+            "es": "Los pequeños errores de redondeo hacen que `==` no sea confiable; `isclose` permite una pequeña tolerancia."
+          }
+        },
+        {
+          "question": {
+            "en": "How many bytes does a raw 100 × 100 RGB image take?",
+            "es": "¿Cuántos bytes ocupa una imagen RGB de 100 × 100 sin comprimir?"
+          },
+          "options": {
+            "en": [
+              "100",
+              "10,000",
+              "30,000",
+              "300"
+            ],
+            "es": [
+              "100",
+              "10,000",
+              "30,000",
+              "300"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "10,000 pixels × 3 bytes (red, green, blue) = 30,000 bytes.",
+            "es": "10,000 píxeles × 3 bytes (rojo, verde, azul) = 30,000 bytes."
+          }
+        },
+        {
+          "question": {
+            "en": "Which kind of compression can be undone exactly?",
+            "es": "¿Qué tipo de compresión se puede deshacer exactamente?"
+          },
+          "options": {
+            "en": [
+              "JPEG",
+              "MP3",
+              "Lossless, like ZIP or PNG",
+              "Any compression"
+            ],
+            "es": [
+              "JPEG",
+              "MP3",
+              "Sin pérdida, como ZIP o PNG",
+              "Cualquier compresión"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "Lossless compression keeps all the information. JPEG and MP3 are lossy: they throw some away for good.",
+            "es": "La compresión sin pérdida conserva toda la información. JPEG y MP3 son con pérdida: descartan parte para siempre."
+          }
+        }
+      ]
+    },
+    "hcw-hardware": {
+      "minutes": 90,
+      "prerequisites": [
+        "hcw-data"
+      ],
+      "whyItMatters": {
+        "en": "A processor has billions of transistors, but each one is just a switch, and the ideas that connect them fit in a few pages. Seeing how switches become logic gates, gates become an adder, and a simple loop of fetch, decode and execute runs every program turns the computer from magic into machinery. It also explains why some code is fast and some is slow, and it is the foundation for later courses on architecture, operating systems and assembly.",
+        "es": "Un procesador tiene miles de millones de transistores, pero cada uno es solo un interruptor, y las ideas que los conectan caben en unas pocas páginas. Ver cómo los interruptores se vuelven compuertas lógicas, las compuertas un sumador, y un ciclo simple de buscar, decodificar y ejecutar corre cada programa convierte a la computadora de magia en maquinaria. También explica por qué algún código es rápido y otro lento, y es la base de cursos posteriores de arquitectura, sistemas operativos y ensamblador."
+      },
+      "objectives": {
+        "en": [
+          "Describe the AND, OR, NOT and XOR gates with truth tables and combine them into new functions.",
+          "Build a half adder and a full adder from gates and chain full adders to add multi-bit numbers.",
+          "Compare registers, cache, RAM and storage by speed, size and whether they keep data without power.",
+          "Explain what machine instructions, registers and the program counter are.",
+          "Trace the fetch-decode-execute cycle of a tiny CPU running a loop."
+        ],
+        "es": [
+          "Describir las compuertas AND, OR, NOT y XOR con tablas de verdad y combinarlas en funciones nuevas.",
+          "Construir un medio sumador y un sumador completo con compuertas y encadenar sumadores completos para sumar números de varios bits.",
+          "Comparar registros, caché, RAM y almacenamiento por velocidad, tamaño y si conservan los datos sin energía.",
+          "Explicar qué son las instrucciones de máquina, los registros y el contador de programa.",
+          "Seguir el ciclo de buscar, decodificar y ejecutar de una CPU pequeña que corre un ciclo."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Binary numbers and binary addition (module 1)",
+          "Python functions, lists and dictionaries"
+        ],
+        "es": [
+          "Números binarios y suma binaria (módulo 1)",
+          "Funciones, listas y diccionarios de Python"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "A transistor is a switch; a few switches make a gate; every computation is built from gates such as AND, OR and NOT.",
+          "A full adder adds two bits plus a carry; chaining 64 of them adds 64-bit numbers.",
+          "Memory is a hierarchy: registers and cache are tiny and fast, RAM is bigger and slower, disks are huge, slow and keep data without power.",
+          "A CPU endlessly repeats: fetch the instruction at the program counter, decode it, execute it, move on (or jump)."
+        ],
+        "es": [
+          "Un transistor es un interruptor; unos pocos interruptores forman una compuerta; todo cálculo se construye con compuertas como AND, OR y NOT.",
+          "Un sumador completo suma dos bits más un acarreo; encadenar 64 de ellos suma números de 64 bits.",
+          "La memoria es una jerarquía: los registros y la caché son diminutos y rápidos, la RAM es más grande y lenta, los discos son enormes, lentos y conservan los datos sin energía.",
+          "Una CPU repite sin parar: buscar la instrucción en el contador de programa, decodificarla, ejecutarla y seguir (o saltar)."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Thinking the CPU \"understands\" Python: it only runs simple machine instructions; your code is translated into them (module 4).",
+          "Confusing memory (RAM, temporary, lost at power-off) with storage (disk, permanent).",
+          "Expecting more GHz to always mean faster: waiting for memory often matters more than clock speed, which is why caches exist.",
+          "Mixing up XOR and OR: XOR is 1 only when the inputs differ; OR is also 1 when both are 1."
+        ],
+        "es": [
+          "Pensar que la CPU \"entiende\" Python: solo ejecuta instrucciones de máquina simples; tu código se traduce a ellas (módulo 4).",
+          "Confundir la memoria (RAM, temporal, se pierde al apagar) con el almacenamiento (disco, permanente).",
+          "Esperar que más GHz siempre signifique más rápido: esperar a la memoria suele importar más que la velocidad del reloj, por eso existen las cachés.",
+          "Confundir XOR con OR: XOR es 1 solo cuando las entradas son distintas; OR también es 1 cuando ambas son 1."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: print the truth table of NAND (NOT AND), then build NOT, AND and OR using only NAND.",
+          "Core: use the full adder from the examples to build a 4-bit subtractor (hint: add the two's complement).",
+          "Core: estimate how long 1 billion RAM reads take at 100 ns each, versus cache reads at 1 ns.",
+          "Stretch: add a `MUL` instruction to the tiny CPU and write a program that computes 5 factorial."
+        ],
+        "es": [
+          "Calentamiento: imprime la tabla de verdad de NAND (NOT AND) y luego construye NOT, AND y OR usando solo NAND.",
+          "Núcleo: usa el sumador completo de los ejemplos para construir un restador de 4 bits (pista: suma el complemento a dos).",
+          "Núcleo: estima cuánto tardan mil millones de lecturas de RAM a 100 ns cada una, frente a lecturas de caché a 1 ns.",
+          "Extensión: agrega una instrucción `MUL` a la CPU pequeña y escribe un programa que calcule 5 factorial."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "What are the outputs of XOR for the four input pairs, and why is XOR the \"sum\" bit of a half adder?",
+          "Why do computers need both RAM and a disk?",
+          "What does the program counter hold, and what does a jump instruction change?"
+        ],
+        "es": [
+          "¿Cuáles son las salidas de XOR para los cuatro pares de entradas, y por qué XOR es el bit de \"suma\" de un medio sumador?",
+          "¿Por qué las computadoras necesitan tanto RAM como disco?",
+          "¿Qué guarda el contador de programa, y qué cambia una instrucción de salto?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Logic Gates",
+            "es": "Compuertas lógicas"
+          },
+          "definition": {
+            "en": "Tiny circuits, made of a few transistors, that compute a bit from input bits. AND outputs 1 if both inputs are 1, OR if at least one is, NOT flips its input and XOR outputs 1 if the inputs differ. A truth table lists the output for every input.",
+            "es": "Circuitos diminutos, hechos de unos pocos transistores, que calculan un bit a partir de bits de entrada. AND da 1 si ambas entradas son 1, OR si al menos una lo es, NOT invierte su entrada y XOR da 1 si las entradas son distintas. Una tabla de verdad lista la salida para cada entrada."
+          }
+        },
+        {
+          "term": {
+            "en": "From Gates to an Adder",
+            "es": "De compuertas a un sumador"
+          },
+          "definition": {
+            "en": "A half adder adds two bits: the sum is `a XOR b` and the carry is `a AND b`. A full adder also adds an incoming carry. Chaining full adders, each passing its carry to the next, adds numbers of any width (a ripple-carry adder).",
+            "es": "Un medio sumador suma dos bits: la suma es `a XOR b` y el acarreo es `a AND b`. Un sumador completo además suma un acarreo de entrada. Encadenar sumadores completos, cada uno pasando su acarreo al siguiente, suma números de cualquier ancho (un sumador con acarreo en cascada)."
+          }
+        },
+        {
+          "term": {
+            "en": "Memory and Storage",
+            "es": "Memoria y almacenamiento"
+          },
+          "definition": {
+            "en": "The memory hierarchy: registers inside the CPU (a few bytes, instant), caches (megabytes, nanoseconds), RAM (gigabytes, about 100 ns, lost when power is off) and storage such as SSDs and disks (terabytes, microseconds to milliseconds, permanent).",
+            "es": "La jerarquía de memoria: registros dentro de la CPU (unos bytes, instantáneos), cachés (megabytes, nanosegundos), RAM (gigabytes, unos 100 ns, se pierde al apagar) y almacenamiento como SSD y discos (terabytes, de microsegundos a milisegundos, permanente)."
+          }
+        },
+        {
+          "term": {
+            "en": "The CPU and Instructions",
+            "es": "La CPU y las instrucciones"
+          },
+          "definition": {
+            "en": "The CPU executes machine instructions: very simple steps such as load a value, add two registers, store to memory or jump. Registers are its few fast storage slots, and the program counter (PC) holds the address of the next instruction.",
+            "es": "La CPU ejecuta instrucciones de máquina: pasos muy simples como cargar un valor, sumar dos registros, guardar en memoria o saltar. Los registros son sus pocos espacios rápidos de almacenamiento, y el contador de programa (PC) guarda la dirección de la siguiente instrucción."
+          }
+        },
+        {
+          "term": {
+            "en": "The Fetch-Decode-Execute Cycle",
+            "es": "El ciclo de buscar, decodificar y ejecutar"
+          },
+          "definition": {
+            "en": "The loop every CPU runs billions of times a second: fetch the instruction the program counter points to, decode what it means, execute it, and advance the program counter, unless the instruction was a jump that set it somewhere else.",
+            "es": "El ciclo que toda CPU ejecuta miles de millones de veces por segundo: busca la instrucción a la que apunta el contador de programa, decodifica qué significa, la ejecuta y avanza el contador de programa, a menos que la instrucción fuera un salto que lo puso en otro lugar."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Nand to Tetris: build a computer from first principles",
+            "es": "Nand to Tetris: construye una computadora desde cero"
+          },
+          "url": "https://www.nand2tetris.org/"
+        },
+        {
+          "label": {
+            "en": "Crash Course Computer Science (PBS)",
+            "es": "Crash Course Computer Science (PBS)"
+          },
+          "url": "https://thecrashcourse.com/topic/computerscience/"
+        },
+        {
+          "label": {
+            "en": "Latency numbers every programmer should know",
+            "es": "Latencias que todo programador debería conocer"
+          },
+          "url": "https://gist.github.com/jboner/2841832"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What does AND output when the inputs are 1 and 0?",
+            "es": "¿Qué da AND cuando las entradas son 1 y 0?"
+          },
+          "options": {
+            "en": [
+              "0",
+              "1",
+              "10",
+              "It depends"
+            ],
+            "es": [
+              "0",
+              "1",
+              "10",
+              "Depende"
+            ]
+          },
+          "correct": 0,
+          "explanation": {
+            "en": "AND is 1 only when both inputs are 1.",
+            "es": "AND es 1 solo cuando ambas entradas son 1."
+          }
+        },
+        {
+          "question": {
+            "en": "In a half adder, which gate produces the carry bit?",
+            "es": "En un medio sumador, ¿qué compuerta produce el bit de acarreo?"
+          },
+          "options": {
+            "en": [
+              "OR",
+              "XOR",
+              "AND",
+              "NOT"
+            ],
+            "es": [
+              "OR",
+              "XOR",
+              "AND",
+              "NOT"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "A carry happens only when both bits are 1 (1 + 1 = 10), which is exactly AND. The sum bit is XOR.",
+            "es": "Hay acarreo solo cuando ambos bits son 1 (1 + 1 = 10), que es exactamente AND. El bit de suma es XOR."
+          }
+        },
+        {
+          "question": {
+            "en": "Which loses its contents when the power goes off?",
+            "es": "¿Qué pierde su contenido cuando se apaga la energía?"
+          },
+          "options": {
+            "en": [
+              "SSD",
+              "Hard disk",
+              "RAM",
+              "USB drive"
+            ],
+            "es": [
+              "SSD",
+              "Disco duro",
+              "RAM",
+              "Memoria USB"
+            ]
+          },
+          "correct": 2,
+          "explanation": {
+            "en": "RAM is volatile: fast, but it needs power to keep its bits. Storage devices keep data without power.",
+            "es": "La RAM es volátil: rápida, pero necesita energía para conservar sus bits. Los dispositivos de almacenamiento conservan los datos sin energía."
+          }
+        },
+        {
+          "question": {
+            "en": "What does the program counter hold?",
+            "es": "¿Qué guarda el contador de programa?"
+          },
+          "options": {
+            "en": [
+              "How many programs are running",
+              "The address of the next instruction",
+              "The result of the last addition",
+              "The number of loops"
+            ],
+            "es": [
+              "Cuántos programas se están ejecutando",
+              "La dirección de la siguiente instrucción",
+              "El resultado de la última suma",
+              "La cantidad de ciclos"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "After each instruction it moves to the next one; a jump instruction sets it to a different address, which is how loops and ifs work.",
+            "es": "Después de cada instrucción avanza a la siguiente; una instrucción de salto lo pone en otra dirección, que es como funcionan los ciclos y los if."
+          }
+        },
+        {
+          "question": {
+            "en": "How does a CPU repeat a loop?",
+            "es": "¿Cómo repite un ciclo una CPU?"
+          },
+          "options": {
+            "en": [
+              "It copies the instructions many times",
+              "A jump instruction sets the program counter back to an earlier instruction",
+              "The operating system restarts the program",
+              "It cannot; loops exist only in Python"
+            ],
+            "es": [
+              "Copia las instrucciones muchas veces",
+              "Una instrucción de salto devuelve el contador de programa a una instrucción anterior",
+              "El sistema operativo reinicia el programa",
+              "No puede; los ciclos solo existen en Python"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Loops are just conditional jumps backwards: \"if not done, go back to instruction 2\".",
+            "es": "Los ciclos son solo saltos condicionales hacia atrás: \"si no terminaste, vuelve a la instrucción 2\"."
+          }
+        }
+      ]
+    },
+    "hcw-software": {
+      "minutes": 85,
+      "prerequisites": [
+        "hcw-hardware"
+      ],
+      "whyItMatters": {
+        "en": "You now know what the hardware does; this module connects it to the code you write. Your Python is turned into simpler steps, the operating system gives your program memory and a slice of the CPU, files are bytes the OS organizes for you, and a web page arrives as numbered packets that find their way across the world. These are the layers every programmer works on top of, and understanding them makes error messages, slow programs and network problems far less mysterious.",
+        "es": "Ya sabes qué hace el hardware; este módulo lo conecta con el código que escribes. Tu Python se convierte en pasos más simples, el sistema operativo le da a tu programa memoria y una porción de la CPU, los archivos son bytes que el SO organiza por ti, y una página web llega como paquetes numerados que encuentran su camino por el mundo. Estas son las capas sobre las que trabaja todo programador, y entenderlas hace mucho menos misteriosos los mensajes de error, los programas lentos y los problemas de red."
+      },
+      "objectives": {
+        "en": [
+          "Explain the difference between compiling and interpreting, and inspect Python bytecode with `dis`.",
+          "Describe what an operating system does: running programs, managing memory, files and devices, and providing system calls.",
+          "Explain processes, the stack and the heap, and why programs can run \"at the same time\" on one CPU.",
+          "Describe files as named bytes, paths and directories, and read and write a file from Python.",
+          "Explain how data crosses the internet: IP addresses, packets, routing, DNS and protocols such as HTTP."
+        ],
+        "es": [
+          "Explicar la diferencia entre compilar e interpretar, e inspeccionar el bytecode de Python con `dis`.",
+          "Describir lo que hace un sistema operativo: ejecutar programas, administrar memoria, archivos y dispositivos, y ofrecer llamadas al sistema.",
+          "Explicar los procesos, la pila y el montículo, y por qué los programas pueden ejecutarse \"al mismo tiempo\" en una sola CPU.",
+          "Describir los archivos como bytes con nombre, rutas y directorios, y leer y escribir un archivo desde Python.",
+          "Explicar cómo cruzan los datos internet: direcciones IP, paquetes, enrutamiento, DNS y protocolos como HTTP."
+        ]
+      },
+      "skillsNeeded": {
+        "en": [
+          "Machine instructions and the CPU cycle (module 3)",
+          "Python functions and files; the Command Line course helps"
+        ],
+        "es": [
+          "Instrucciones de máquina y el ciclo de la CPU (módulo 3)",
+          "Funciones y archivos de Python; el curso de Línea de comandos ayuda"
+        ]
+      },
+      "keyTakeaways": {
+        "en": [
+          "Compilers translate a whole program to machine code ahead of time; interpreters run it step by step. Python compiles to bytecode and then interprets it.",
+          "The operating system shares the hardware between programs and is the only one allowed to touch devices; programs ask it through system calls.",
+          "Each running program is a process with its own memory; the OS switches between processes many times a second.",
+          "Data on the internet is split into packets with source and destination IP addresses; DNS turns names into addresses, and protocols like TCP and HTTP define the conversation."
+        ],
+        "es": [
+          "Los compiladores traducen todo un programa a código máquina por adelantado; los intérpretes lo ejecutan paso a paso. Python compila a bytecode y luego lo interpreta.",
+          "El sistema operativo reparte el hardware entre los programas y es el único que puede tocar los dispositivos; los programas se lo piden mediante llamadas al sistema.",
+          "Cada programa en ejecución es un proceso con su propia memoria; el SO cambia entre procesos muchas veces por segundo.",
+          "Los datos en internet se dividen en paquetes con direcciones IP de origen y destino; DNS convierte nombres en direcciones, y protocolos como TCP y HTTP definen la conversación."
+        ]
+      },
+      "pitfalls": {
+        "en": [
+          "Thinking \"interpreted\" means \"not compiled at all\": Python, Java and JavaScript all compile to an intermediate form first.",
+          "Forgetting to close files or relying on it: use `with open(...)` so the file is always closed and written.",
+          "Expecting recursion to go on forever: each call uses stack memory, and Python stops at about 1000 levels with `RecursionError`.",
+          "Assuming a website name is its address: the browser must first ask DNS for the IP address, and if DNS fails nothing loads."
+        ],
+        "es": [
+          "Pensar que \"interpretado\" significa \"nada compilado\": Python, Java y JavaScript compilan primero a una forma intermedia.",
+          "Olvidar cerrar los archivos o depender de ello: usa `with open(...)` para que el archivo siempre se cierre y se escriba.",
+          "Esperar que la recursión siga para siempre: cada llamada usa memoria de la pila, y Python se detiene en unos 1000 niveles con `RecursionError`.",
+          "Suponer que el nombre de un sitio es su dirección: el navegador primero debe pedirle a DNS la dirección IP, y si DNS falla no carga nada."
+        ]
+      },
+      "practice": {
+        "en": [
+          "Warm-up: use `dis.dis` on a function that adds two numbers and on one with an `if`, and find the jump instruction.",
+          "Core: write a program that saves a list of tasks to a text file, then reads it back and prints how many bytes the file takes.",
+          "Core: write a recursive function, find out how deep it can go before `RecursionError`, and explain why with the stack.",
+          "Stretch: split a message into numbered \"packets\" of 8 characters, shuffle them, and write code that puts them back in order, like TCP does."
+        ],
+        "es": [
+          "Calentamiento: usa `dis.dis` en una función que suma dos números y en una con un `if`, y encuentra la instrucción de salto.",
+          "Núcleo: escribe un programa que guarde una lista de tareas en un archivo de texto, luego la lea e imprima cuántos bytes ocupa el archivo.",
+          "Núcleo: escribe una función recursiva, averigua qué tan profundo puede ir antes de `RecursionError` y explica por qué con la pila.",
+          "Extensión: divide un mensaje en \"paquetes\" numerados de 8 caracteres, desordénalos y escribe código que los vuelva a ordenar, como hace TCP."
+        ]
+      },
+      "selfCheck": {
+        "en": [
+          "Why does a C program need to be recompiled for a different kind of CPU, while a Python script usually does not?",
+          "What is a system call, and name two things a program needs the OS for?",
+          "What happens, step by step, between typing a web address and seeing the page?"
+        ],
+        "es": [
+          "¿Por qué un programa en C necesita recompilarse para otro tipo de CPU, mientras que un script de Python normalmente no?",
+          "¿Qué es una llamada al sistema, y nombra dos cosas para las que un programa necesita al SO?",
+          "¿Qué pasa, paso a paso, entre escribir una dirección web y ver la página?"
+        ]
+      },
+      "definitions": [
+        {
+          "term": {
+            "en": "Compilers and Interpreters",
+            "es": "Compiladores e intérpretes"
+          },
+          "definition": {
+            "en": "A compiler translates source code into another form, often machine code, before the program runs (C, Rust). An interpreter reads and runs code as it goes. Python compiles source to bytecode, a simple instruction list, which its interpreter then executes.",
+            "es": "Un compilador traduce el código fuente a otra forma, a menudo código máquina, antes de que el programa se ejecute (C, Rust). Un intérprete lee y ejecuta el código sobre la marcha. Python compila el código fuente a bytecode, una lista simple de instrucciones, que luego ejecuta su intérprete."
+          }
+        },
+        {
+          "term": {
+            "en": "The Operating System",
+            "es": "El sistema operativo"
+          },
+          "definition": {
+            "en": "The software that manages the hardware and shares it between programs: it starts and stops processes, allocates memory, schedules CPU time, and controls files, networks and devices. Programs request these services through system calls.",
+            "es": "El software que administra el hardware y lo reparte entre los programas: inicia y detiene procesos, asigna memoria, reparte el tiempo de CPU y controla archivos, redes y dispositivos. Los programas piden estos servicios mediante llamadas al sistema."
+          }
+        },
+        {
+          "term": {
+            "en": "Processes and Memory",
+            "es": "Procesos y memoria"
+          },
+          "definition": {
+            "en": "A process is a running program with its own memory. Its memory has a stack (one frame per active function call, freed when it returns) and a heap (objects that live longer). The OS switches between processes so quickly they seem to run at once.",
+            "es": "Un proceso es un programa en ejecución con su propia memoria. Su memoria tiene una pila (un marco por cada llamada de función activa, que se libera al regresar) y un montículo (objetos que viven más tiempo). El SO cambia entre procesos tan rápido que parecen ejecutarse a la vez."
+          }
+        },
+        {
+          "term": {
+            "en": "Files and File Systems",
+            "es": "Archivos y sistemas de archivos"
+          },
+          "definition": {
+            "en": "A file is a named sequence of bytes kept on storage. The file system organizes files into directories, records their sizes and permissions, and maps names to where the bytes are on the disk. Programs open, read, write and close files through the OS.",
+            "es": "Un archivo es una secuencia de bytes con nombre guardada en el almacenamiento. El sistema de archivos organiza los archivos en directorios, registra sus tamaños y permisos, y relaciona los nombres con el lugar del disco donde están los bytes. Los programas abren, leen, escriben y cierran archivos a través del SO."
+          }
+        },
+        {
+          "term": {
+            "en": "How the Internet Moves Data",
+            "es": "Cómo mueve los datos internet"
+          },
+          "definition": {
+            "en": "Data is split into packets, each labeled with source and destination IP addresses, and routers pass them hop by hop toward the destination. TCP numbers packets and resends lost ones, DNS translates names like example.com into IP addresses, and HTTP is the request/response language of the web.",
+            "es": "Los datos se dividen en paquetes, cada uno etiquetado con direcciones IP de origen y destino, y los enrutadores los pasan salto a salto hacia el destino. TCP numera los paquetes y reenvía los perdidos, DNS traduce nombres como example.com a direcciones IP, y HTTP es el lenguaje de peticiones y respuestas de la web."
+          }
+        }
+      ],
+      "resources": [
+        {
+          "label": {
+            "en": "Python docs: dis — disassembler for Python bytecode",
+            "es": "Documentación de Python: dis, desensamblador de bytecode"
+          },
+          "url": "https://docs.python.org/3/library/dis.html"
+        },
+        {
+          "label": {
+            "en": "Operating Systems: Three Easy Pieces (free book)",
+            "es": "Operating Systems: Three Easy Pieces (libro gratuito)"
+          },
+          "url": "https://pages.cs.wisc.edu/~remzi/OSTEP/"
+        },
+        {
+          "label": {
+            "en": "MDN: How the web works",
+            "es": "MDN: cómo funciona la web"
+          },
+          "url": "https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Web_standards/How_the_web_works"
+        }
+      ],
+      "quiz": [
+        {
+          "question": {
+            "en": "What does Python do with your source code before running it?",
+            "es": "¿Qué hace Python con tu código fuente antes de ejecutarlo?"
+          },
+          "options": {
+            "en": [
+              "Nothing, it reads the text directly",
+              "Compiles it to bytecode",
+              "Compiles it to a .exe",
+              "Sends it to a server"
+            ],
+            "es": [
+              "Nada, lee el texto directamente",
+              "Lo compila a bytecode",
+              "Lo compila a un .exe",
+              "Lo envía a un servidor"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "CPython compiles source to bytecode (you can see it with `dis`) and its interpreter runs that bytecode.",
+            "es": "CPython compila el código fuente a bytecode (puedes verlo con `dis`) y su intérprete ejecuta ese bytecode."
+          }
+        },
+        {
+          "question": {
+            "en": "Why can't a normal program write straight to the disk hardware?",
+            "es": "¿Por qué un programa normal no puede escribir directamente en el hardware del disco?"
+          },
+          "options": {
+            "en": [
+              "Disks are read-only",
+              "Only the operating system may; programs ask it with system calls",
+              "Python does not support disks",
+              "It can, any program can"
+            ],
+            "es": [
+              "Los discos son de solo lectura",
+              "Solo el sistema operativo puede; los programas se lo piden con llamadas al sistema",
+              "Python no admite discos",
+              "Sí puede, cualquier programa puede"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "The OS protects the hardware and other programs. File writes go through system calls like open and write.",
+            "es": "El SO protege el hardware y a los demás programas. Las escrituras de archivos pasan por llamadas al sistema como open y write."
+          }
+        },
+        {
+          "question": {
+            "en": "Where are a function's local variables kept while it runs?",
+            "es": "¿Dónde se guardan las variables locales de una función mientras se ejecuta?"
+          },
+          "options": {
+            "en": [
+              "On the disk",
+              "In its frame on the call stack",
+              "In the DNS",
+              "In the CPU cache only"
+            ],
+            "es": [
+              "En el disco",
+              "En su marco en la pila de llamadas",
+              "En el DNS",
+              "Solo en la caché de la CPU"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Each call gets a stack frame for its locals; it is removed when the function returns.",
+            "es": "Cada llamada recibe un marco de pila para sus variables locales; se quita cuando la función regresa."
+          }
+        },
+        {
+          "question": {
+            "en": "What does DNS do?",
+            "es": "¿Qué hace DNS?"
+          },
+          "options": {
+            "en": [
+              "Encrypts web pages",
+              "Turns names like example.com into IP addresses",
+              "Stores your files",
+              "Speeds up the CPU"
+            ],
+            "es": [
+              "Cifra las páginas web",
+              "Convierte nombres como example.com en direcciones IP",
+              "Guarda tus archivos",
+              "Acelera la CPU"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "Computers route packets by IP address; DNS is the internet's phone book from names to addresses.",
+            "es": "Las computadoras enrutan paquetes por dirección IP; DNS es el directorio de internet que va de nombres a direcciones."
+          }
+        },
+        {
+          "question": {
+            "en": "Packets of a message arrive out of order. What puts them back in order?",
+            "es": "Los paquetes de un mensaje llegan desordenados. ¿Qué los vuelve a ordenar?"
+          },
+          "options": {
+            "en": [
+              "DNS",
+              "TCP, using sequence numbers",
+              "HTML",
+              "The router"
+            ],
+            "es": [
+              "DNS",
+              "TCP, usando números de secuencia",
+              "HTML",
+              "El enrutador"
+            ]
+          },
+          "correct": 1,
+          "explanation": {
+            "en": "TCP numbers every packet, reorders them on arrival and asks again for any that were lost.",
+            "es": "TCP numera cada paquete, los reordena al llegar y vuelve a pedir los que se perdieron."
           }
         }
       ]

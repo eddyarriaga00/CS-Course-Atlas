@@ -19,6 +19,8 @@ const TRACK_META = {
     blurb: { en: 'Build real pages and see them live: structure with HTML, style with CSS, interactivity with JavaScript, then publish your site.', es: 'Construye páginas reales y míralas en vivo: estructura con HTML, estilo con CSS, interactividad con JavaScript y luego publica tu sitio.' } },
   sql: { title: { en: 'SQL & Databases', es: 'SQL y bases de datos' }, icon: 'DB', level: 'beginner',
     blurb: { en: 'Store and query data with real SQLite: SELECT and WHERE, grouping and totals, joins across tables, and designing a database that keeps data correct.', es: 'Guarda y consulta datos con SQLite real: SELECT y WHERE, agrupar y totalizar, joins entre tablas y diseñar una base de datos que mantenga los datos correctos.' } },
+  'how-computers-work': { title: { en: 'How Computers Work', es: 'Cómo funcionan las computadoras' }, icon: '01', level: 'beginner',
+    blurb: { en: 'Bits and bytes, how text, images and sound become numbers, logic gates up to a working CPU, and what the OS and the internet do with your code.', es: 'Bits y bytes, cómo el texto, las imágenes y el sonido se vuelven números, de las compuertas lógicas a una CPU y qué hacen el SO e internet con tu código.' } },
   java: { title: { en: 'Java', es: 'Java' }, icon: 'J', level: 'beginner',
     blurb: { en: 'From variables and objects to collections, streams, testing, JDBC and the JVM.', es: 'De variables y objetos a colecciones, streams, pruebas, JDBC y la JVM.' } },
   dsa: { title: { en: 'Data Structures & Algorithms', es: 'Estructuras de datos y algoritmos' }, icon: 'A', level: 'intermediate',
@@ -30,12 +32,11 @@ const TRACK_META = {
   assembly: { title: { en: 'x86-64 Assembly', es: 'Ensamblador x86-64' }, icon: '⚙', level: 'intermediate',
     blurb: { en: 'Registers, memory, calls and the stack: what your high-level code turns into.', es: 'Registros, memoria, llamadas y la pila: en qué se convierte tu código de alto nivel.' } }
 };
-const ORDER = ['python', 'cli', 'web', 'sql', 'java', 'discrete', 'git', 'dsa', 'assembly'];
+const ORDER = ['python', 'cli', 'web', 'sql', 'how-computers-work', 'java', 'discrete', 'git', 'dsa', 'assembly'];
 // Courses not written yet, beginner-friendly first. Shown as cards on the Courses page.
 const P = (id, icon, level, en, es, blurbEn, blurbEs) => ({ id, icon, level, title: { en, es }, blurb: { en: blurbEn, es: blurbEs } });
 const PLANNED = [
   P('cybersecurity', '🛡', 'beginner', 'Cybersecurity Fundamentals', 'Fundamentos de ciberseguridad', 'How attacks work and how to defend: passwords and authentication, phishing, encryption, network security and safe coding.', 'Cómo funcionan los ataques y cómo defenderse: contraseñas y autenticación, phishing, cifrado, seguridad en redes y código seguro.'),
-  P('how-computers-work', '01', 'beginner', 'How Computers Work', 'Cómo funcionan las computadoras', 'Bits and bytes, number systems, memory, the CPU and what happens when a program runs.', 'Bits y bytes, sistemas numéricos, memoria, la CPU y qué pasa cuando se ejecuta un programa.'),
   P('ai', 'AI', 'beginner', 'AI Fundamentals', 'Fundamentos de inteligencia artificial', 'How AI and machine learning actually work: data, models, training and testing, language models, and using AI tools well and safely.', 'Cómo funcionan realmente la IA y el aprendizaje automático: datos, modelos, entrenamiento y prueba, modelos de lenguaje, y usar herramientas de IA bien y con seguridad.'),
   P('networks', '⇄', 'intermediate', 'Computer Networks', 'Redes de computadoras', 'From packets to the web: IP, TCP and UDP, DNS, HTTP and what happens when you open a website.', 'De los paquetes a la web: IP, TCP y UDP, DNS, HTTP y qué pasa cuando abres un sitio web.'),
   P('os', 'OS', 'intermediate', 'Operating Systems', 'Sistemas operativos', 'Processes and threads, scheduling, memory management, file systems and concurrency.', 'Procesos e hilos, planificación, gestión de memoria, sistemas de archivos y concurrencia.'),
