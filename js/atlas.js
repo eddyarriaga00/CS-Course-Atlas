@@ -1040,6 +1040,35 @@ function loadJava() {
   }).catch((e) => { javaLoading = null; throw e; });
   return javaLoading;
 }
+// Java cannot be interrupted once it runs (it shares this page's thread), so before compiling, every braced
+// while/for/do loop gets a cheap check that ends the program after 10 seconds instead of freezing the page.
+// The scanner skips strings, chars and comments, and inserts on the same line so error line numbers stay right.
+function guardJavaLoops(src) {
+  let out = '', i = 0;
+  const n = src.length;
+  while (i < n) {
+    const c = src[i], two = src.slice(i, i + 2);
+    if (two === '//') { const e = src.indexOf('\n', i); const j = e < 0 ? n : e; out += src.slice(i, j); i = j; continue; }
+    if (two === '/*') { const e = src.indexOf('*/', i + 2); const j = e < 0 ? n : e + 2; out += src.slice(i, j); i = j; continue; }
+    if (src.startsWith('"""', i)) { const e = src.indexOf('"""', i + 3); const j = e < 0 ? n : e + 3; out += src.slice(i, j); i = j; continue; }
+    if (c === '"' || c === "'") { let j = i + 1; while (j < n && src[j] !== c && src[j] !== '\n') j += src[j] === '\\' ? 2 : 1; out += src.slice(i, j + 1); i = j + 1; continue; }
+    const m = /^(while|for|do)\b/.exec(src.slice(i, i + 6));
+    if (m && !/[\w$]/.test(src[i - 1] || '')) {
+      let j = i + m[1].length;
+      if (m[1] !== 'do') {
+        while (j < n && /\s/.test(src[j])) j++;
+        if (src[j] !== '(') { out += src.slice(i, j); i = j; continue; }
+        let depth = 0;
+        for (; j < n; j++) { if (src[j] === '(') depth++; else if (src[j] === ')' && --depth === 0) { j++; break; } }
+      }
+      let k = j; while (k < n && /\s/.test(src[k])) k++;
+      if (src[k] === '{') { out += src.slice(i, k + 1) + ' AtlasLoopGuard.tick();'; i = k + 1; continue; }
+      out += src.slice(i, j); i = j; continue;
+    }
+    out += c; i++;
+  }
+  return out + '\nclass AtlasLoopGuard { static final long END = System.currentTimeMillis() + 10000; static int n; static void tick() { if ((++n & 4095) == 0 && System.currentTimeMillis() > END) throw new Error("Stopped after 10 seconds (infinite loop?)"); } }\n';
+}
 async function runJava(code, out, status) {
   if (javaBusy) { status.textContent = t('javaBusy'); return; }
   javaBusy = true; out.textContent = '';
@@ -1052,7 +1081,7 @@ async function runJava(code, out, status) {
   const cls = (code.match(/public\s+(?:final\s+|abstract\s+)*class\s+([A-Za-z_$][\w$]*)/) || code.match(/\bclass\s+([A-Za-z_$][\w$]*)/) || [])[1] || 'Main';
   // CheerpJ's in-memory /str/ folder has no subfolders, so the source keeps its class name; each run compiles to its own folder.
   const run = ++javaRuns, src = `/str/${cls}.java`, dir = `/files/r${run}/`;
-  window.cheerpOSAddStringFile(src, code);
+  window.cheerpOSAddStringFile(src, guardJavaLoops(code));
   con.textContent = ''; status.textContent = t('compiling');
   const t0 = performance.now();
   try {
@@ -1066,6 +1095,11 @@ async function runJava(code, out, status) {
     const t1 = performance.now();
     await window.cheerpjRunMain(cls, dir);
     const text = con.textContent;
+    if (/AtlasLoopGuard/.test(text)) {
+      const printed = text.slice(0, text.search(/^Exception in thread /m)).replace(/\n$/, '');
+      out.innerHTML = esc(printed) + (printed ? '\n' : '') + `<span class="err">${t('pyTimeout')}</span>`;
+      status.textContent = t('pyTimeout'); return;
+    }
     // Uncaught exceptions print a stack trace: show it in red.
     const crash = text.search(/^Exception in thread /m);
     out.innerHTML = crash < 0 ? esc(text) : esc(text.slice(0, crash)) + `<span class="err">${esc(text.slice(crash))}</span>`;
