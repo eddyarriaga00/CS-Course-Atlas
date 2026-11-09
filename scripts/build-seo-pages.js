@@ -5,7 +5,7 @@ const ROOT = process.cwd();
 const DEFAULT_OUTPUT_DIR = 'dist';
 const OUTPUT_DIR = path.resolve(ROOT, process.env.BUILD_OUT_DIR || DEFAULT_OUTPUT_DIR);
 const SITE_URL = 'https://eddyarriaga00.github.io/CS-Course-Atlas';
-const SOURCE_JS = path.join(ROOT, 'js', 'script.js');
+const { loadCatalog } = require('./lib/catalog');
 const MODULES_DIR = path.join(OUTPUT_DIR, 'modules');
 const GOOGLE_SITE_VERIFICATION_TOKEN = String(process.env.GOOGLE_SITE_VERIFICATION_TOKEN || '').trim();
 const STATIC_COPY_EXCLUDES = new Set([
@@ -224,49 +224,6 @@ function writeFile(filePath, contents) {
     fs.writeFileSync(filePath, contents, 'utf8');
 }
 
-function parseModuleCategoryMap(source) {
-    const map = new Map();
-    const match = source.match(/const MODULE_CATEGORY_BY_ID = \{([\s\S]*?)\n\};/m);
-    if (!match) return map;
-    const block = match[1];
-    const pattern = /'([^']+)':\s*'([^']+)'/g;
-    let capture = pattern.exec(block);
-    while (capture) {
-        map.set(capture[1], capture[2]);
-        capture = pattern.exec(block);
-    }
-    return map;
-}
-
-function parseModuleSequence(source) {
-    const output = [];
-    const match = source.match(/const MODULE_LEARNING_SEQUENCE = \[([\s\S]*?)\];/m);
-    if (!match) return output;
-    const block = match[1];
-    const pattern = /'([^']+)'/g;
-    let capture = pattern.exec(block);
-    while (capture) {
-        output.push(capture[1]);
-        capture = pattern.exec(block);
-    }
-    return output;
-}
-
-function parseModuleMetadata(source) {
-    const map = new Map();
-    const pattern = /id:\s*'((?:\\'|[^'])+)'\s*,\s*title:\s*'((?:\\'|[^'])+)'\s*,\s*description:\s*'((?:\\'|[^'])+)'\s*,\s*difficulty:\s*'((?:\\'|[^'])+)'/g;
-    let capture = pattern.exec(source);
-    while (capture) {
-        const id = capture[1].replace(/\\'/g, "'");
-        const title = capture[2].replace(/\\'/g, "'");
-        const description = capture[3].replace(/\\'/g, "'");
-        const difficulty = capture[4].replace(/\\'/g, "'");
-        map.set(id, { id, title, description, difficulty });
-        capture = pattern.exec(source);
-    }
-    return map;
-}
-
 function toAbsolute(pathname) {
     const normalized = String(pathname || '/').startsWith('/') ? pathname : `/${pathname}`;
     return `${SITE_URL}${normalized}`;
@@ -285,358 +242,60 @@ function truncateDescription(value, max = 155) {
 }
 
 function baseStyles() {
+    // Same tokens and type as css/atlas.css so these pages read as part of the site.
     return `
-        :root {
-            color-scheme: dark;
-            --seo-bg-top: #030712;
-            --seo-bg-base: #0f172a;
-            --seo-bg-bottom: #111827;
-            --seo-panel: rgba(15, 23, 42, 0.8);
-            --seo-panel-soft: rgba(30, 41, 59, 0.78);
-            --seo-border: rgba(148, 163, 184, 0.28);
-            --seo-border-strong: rgba(129, 140, 248, 0.66);
-            --seo-text: #e2e8f0;
-            --seo-muted: #cbd5e1;
-            --seo-link: #bfdbfe;
-            --seo-link-hover: #e0e7ff;
-            --seo-brand-a: #2563eb;
-            --seo-brand-b: #4f46e5;
-            --seo-brand-c: #7c3aed;
-            --seo-btn-grad-a: rgba(59, 130, 246, 0.28);
-            --seo-btn-grad-b: rgba(124, 58, 237, 0.26);
-        }
-        * { box-sizing: border-box; }
-        body.seo-page {
-            margin: 0;
-            min-height: 100vh;
-            font-family: "Pixelify Sans", "Silkscreen", "DotGothic16", monospace;
-            background:
-                radial-gradient(circle at 6% -10%, rgba(37, 99, 235, 0.3), transparent 45%),
-                radial-gradient(circle at 98% -10%, rgba(124, 58, 237, 0.28), transparent 48%),
-                linear-gradient(180deg, var(--seo-bg-top) 0%, var(--seo-bg-base) 56%, var(--seo-bg-bottom) 100%);
-            color: var(--seo-text);
-            line-height: 1.6;
-        }
-        body.seo-page::before {
-            content: "";
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            background:
-                radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.1), transparent 28%),
-                radial-gradient(circle at 80% 10%, rgba(99, 102, 241, 0.08), transparent 30%);
-            z-index: -1;
-        }
-        .shell {
-            max-width: 1240px;
-            margin: 0 auto;
-            padding: 1rem 1rem max(2.2rem, env(safe-area-inset-bottom));
-        }
-        .top-nav {
-            margin-bottom: 0.95rem;
-            border: 1px solid rgba(165, 180, 252, 0.45);
-            border-radius: 1rem;
-            background: linear-gradient(95deg, var(--seo-brand-a), var(--seo-brand-b), var(--seo-brand-c));
-            box-shadow: 0 18px 36px rgba(2, 6, 23, 0.34);
-            padding: 0.72rem 0.8rem;
-        }
-        .top-nav-inner {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 0.7rem;
-        }
-        .brand-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.45rem;
-            padding: 0.38rem 0.62rem;
-            border-radius: 999px;
-            border: 1px solid rgba(255, 255, 255, 0.24);
-            background: rgba(15, 23, 42, 0.46);
-            color: #f8fafc;
-            font-size: 0.77rem;
-            white-space: nowrap;
-        }
-        .brand-badge .brand-icon {
-            font-size: 0.95rem;
-            line-height: 1;
-        }
-        .nav-links {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            gap: 0.48rem;
-            flex-wrap: wrap;
-        }
-        .nav-links a,
-        .nav-links button {
-            -webkit-appearance: none;
-            appearance: none;
-            text-decoration: none;
-            color: #f8fafc;
-            border: 1px solid rgba(255, 255, 255, 0.24);
-            padding: 0.46rem 0.76rem;
-            border-radius: 999px;
-            background: rgba(15, 23, 42, 0.45);
-            font-size: 0.79rem;
-            font-weight: 700;
-            line-height: 1.15;
-            cursor: pointer;
-            transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease;
-            min-height: 2.3rem;
-            white-space: nowrap;
-        }
-        .nav-links a:hover,
-        .nav-links button:hover {
-            background: rgba(15, 23, 42, 0.68);
-            border-color: var(--seo-border-strong);
-            transform: translateY(-1px);
-        }
-        .nav-links a:focus-visible,
-        .nav-links button:focus-visible {
-            outline: 2px solid #93c5fd;
-            outline-offset: 2px;
-        }
-        .nav-links .back-control {
-            background: linear-gradient(120deg, rgba(15, 23, 42, 0.76), rgba(30, 41, 59, 0.72));
-            border-color: rgba(191, 219, 254, 0.68);
-        }
-        .hero {
-            border: 1px solid var(--seo-border);
-            background: linear-gradient(145deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.76));
-            border-radius: 1rem;
-            padding: 1rem 1.05rem;
-            box-shadow: 0 20px 44px rgba(2, 6, 23, 0.38);
-        }
-        .hero-kicker {
-            margin: 0;
-            font-size: 0.74rem;
-            text-transform: uppercase;
-            letter-spacing: 0.07em;
-            color: #bfdbfe;
-            opacity: 0.96;
-        }
-        h1 { margin: 0.3rem 0 0; font-size: clamp(1.45rem, 3.3vw, 2.08rem); color: #e0e7ff; line-height: 1.16; }
-        h2 { margin: 1rem 0 0.5rem; font-size: 1.03rem; color: #c7d2fe; line-height: 1.3; }
-        p { margin: 0.45rem 0; color: var(--seo-muted); }
-        .hero-meta-row {
-            margin-top: 0.55rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.45rem;
-        }
-        .chip {
-            display: inline-flex;
-            align-items: center;
-            border-radius: 999px;
-            border: 1px solid rgba(148, 163, 184, 0.35);
-            background: rgba(15, 23, 42, 0.55);
-            color: #dbeafe;
-            font-size: 0.74rem;
-            line-height: 1;
-            padding: 0.34rem 0.58rem;
-            white-space: nowrap;
-        }
-        .cta-row {
-            margin-top: 0.8rem;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 0.55rem;
-        }
-        .cta {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.35rem;
-            text-decoration: none;
-            color: #f8fafc;
-            background: linear-gradient(120deg, rgba(59, 130, 246, 0.36), rgba(124, 58, 237, 0.35));
-            border: 1px solid rgba(129, 140, 248, 0.52);
-            border-radius: 0.75rem;
-            padding: 0.58rem 0.75rem;
-            font-size: 0.8rem;
-            font-weight: 700;
-            transition: background-color 140ms ease, border-color 140ms ease, transform 140ms ease;
-            min-height: 2.6rem;
-            text-align: center;
-        }
-        .cta:hover {
-            background: linear-gradient(120deg, rgba(37, 99, 235, 0.45), rgba(109, 40, 217, 0.4));
-            border-color: rgba(165, 180, 252, 0.66);
-            transform: translateY(-1px);
-        }
-        ul {
-            margin: 0.45rem 0 0;
-            padding-left: 1.2rem;
-            list-style: disc;
-        }
-        li { margin: 0.26rem 0; }
-        a { color: var(--seo-link); }
-        a:hover { color: var(--seo-link-hover); }
-        .panel {
-            margin-top: 1rem;
-            border: 1px solid var(--seo-border);
-            border-radius: 0.95rem;
-            padding: 0.88rem 0.92rem;
-            background: linear-gradient(160deg, var(--seo-panel), var(--seo-panel-soft));
-            box-shadow: 0 14px 32px rgba(2, 6, 23, 0.22);
-        }
-        .meta { color: var(--seo-muted); font-size: 0.9rem; }
-        .module-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 0.75rem;
-        }
-        .module-card {
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 0.8rem;
-            padding: 0.66rem 0.72rem 0.72rem;
-            background: rgba(15, 23, 42, 0.58);
-            display: flex;
-            flex-direction: column;
-            gap: 0.4rem;
-        }
-        .module-card h3 {
-            margin: 0;
-            font-size: 0.95rem;
-            color: #dbeafe;
-            line-height: 1.3;
-        }
-        .module-card p {
-            margin: 0;
-            font-size: 0.83rem;
-            color: #cbd5e1;
-            flex: 1 1 auto;
-        }
-        .module-meta-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.34rem;
-        }
-        .module-link {
-            align-self: flex-start;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-            margin-top: 0.12rem;
-            text-decoration: none;
-            color: #e2e8f0;
-            border: 1px solid rgba(148, 163, 184, 0.34);
-            background: rgba(30, 41, 59, 0.62);
-            border-radius: 0.58rem;
-            padding: 0.35rem 0.52rem;
-            font-size: 0.74rem;
-            font-weight: 700;
-            min-height: 2rem;
-        }
-        .module-link:hover {
-            border-color: rgba(191, 219, 254, 0.7);
-            background: rgba(51, 65, 85, 0.7);
-        }
-        .detail-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 0.62rem;
-        }
-        .detail-card {
-            border: 1px solid rgba(148, 163, 184, 0.32);
-            border-radius: 0.76rem;
-            padding: 0.6rem 0.65rem;
-            background: rgba(15, 23, 42, 0.5);
-        }
-        .detail-card strong {
-            display: block;
-            color: #c7d2fe;
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .detail-card span {
-            display: block;
-            margin-top: 0.22rem;
-            color: #e2e8f0;
-            font-size: 0.9rem;
-        }
-        .link-list {
-            margin: 0;
-            padding-left: 1.05rem;
-        }
-        .link-list li {
-            margin: 0.35rem 0;
-        }
-        .footer {
-            margin-top: 1.2rem;
-            font-size: 0.8rem;
-            color: var(--seo-muted);
-        }
-        @media (max-width: 640px) {
-            .shell { padding: 0.72rem 0.66rem max(1.4rem, env(safe-area-inset-bottom)); }
-            .top-nav {
-                padding: 0.58rem 0.58rem 0.56rem;
-                border-radius: 0.88rem;
-                margin-bottom: 0.72rem;
-            }
-            .top-nav-inner {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 0.52rem;
-            }
-            .brand-badge {
-                justify-content: center;
-                width: 100%;
-            }
-            .nav-links {
-                flex-wrap: nowrap;
-                overflow-x: auto;
-                padding-bottom: 0.16rem;
-                justify-content: flex-start;
-                -webkit-overflow-scrolling: touch;
-                scrollbar-width: thin;
-            }
-            .nav-links a,
-            .nav-links button {
-                font-size: 0.74rem;
-                padding: 0.46rem 0.68rem;
-                min-height: 2.18rem;
-            }
-            .hero {
-                padding: 0.86rem 0.86rem 0.9rem;
-                border-radius: 0.92rem;
-            }
-            .hero-kicker {
-                font-size: 0.69rem;
-            }
-            h1 {
-                font-size: clamp(1.22rem, 6.2vw, 1.56rem);
-            }
-            .cta-row {
-                grid-template-columns: 1fr;
-                gap: 0.46rem;
-            }
-            .cta {
-                width: 100%;
-                min-height: 2.48rem;
-                font-size: 0.76rem;
-            }
-            .panel {
-                margin-top: 0.76rem;
-                padding: 0.78rem 0.78rem 0.82rem;
-                border-radius: 0.88rem;
-            }
-            .module-grid,
-            .detail-grid {
-                grid-template-columns: 1fr;
-                gap: 0.58rem;
-            }
-            .module-card {
-                padding: 0.62rem 0.62rem 0.66rem;
-            }
-        }
-    
-        .glossary-list { display: grid; gap: 0.35rem 0; margin: 0; }
-        .glossary-list dt { font-weight: 700; margin-top: 0.6rem; }
-        .glossary-list dd { margin: 0; opacity: 0.9; line-height: 1.55; }
+:root { --bg: #f7f7f8; --surface: #fff; --surface-2: #f1f1f4; --border: #e4e4e9; --text: #17171c; --text-2: #55555f; --text-3: #85858f;
+  --accent: #4f46e5; --accent-soft: #eef0ff; --accent-text: #3730a3; --on-accent: #fff; --java: #e76f00; color-scheme: light; }
+@media (prefers-color-scheme: dark) { :root { --bg: #0d0d12; --surface: #15151c; --surface-2: #1d1d26; --border: #2a2a35; --text: #ececf1; --text-2: #b4b4c0; --text-3: #85859a;
+  --accent: #8b85ff; --accent-soft: #23214a; --accent-text: #c7c4ff; --on-accent: #0d0d12; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
+a { color: var(--accent); }
+code { font: .86em "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; background: var(--surface-2); border: 1px solid var(--border); padding: 1px 5px; border-radius: 5px; color: var(--text); overflow-wrap: anywhere; }
+.seo-page { min-height: 100vh; }
+.shell { width: min(100% - 32px, 980px); margin: 0 auto; }
+.top-nav { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+.top-nav-inner { width: min(100% - 32px, 980px); margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 10px 18px; padding: 10px 0; flex-wrap: wrap; }
+.brand-badge { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; color: var(--text); text-decoration: none; font-size: 15px; }
+.brand-icon { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 8px; background: var(--accent); color: var(--on-accent); font-size: 0; }
+.brand-icon::before { content: "\\25C6"; font-size: 13px; }
+.nav-links { display: flex; gap: 4px; flex-wrap: wrap; align-items: center; }
+.nav-links a, .back-control { padding: 6px 10px; border-radius: 8px; font: 500 13.5px inherit; font-family: inherit; color: var(--text-2); text-decoration: none; background: none; border: 0; cursor: pointer; }
+.nav-links a:hover, .back-control:hover { background: var(--surface-2); color: var(--text); }
+main.shell { padding: 36px 0 64px; display: grid; gap: 16px; }
+.hero { padding: 30px 0 10px; }
+.hero-kicker { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); margin: 0 0 6px; }
+.hero h1 { font-size: clamp(32px, 5.5vw, 46px); line-height: 1.08; letter-spacing: -.028em; margin: 0 0 12px; }
+.hero p { color: var(--text-2); font-size: 18px; margin: 0; max-width: 70ch; }
+.hero-meta-row, .module-meta-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
+.chip { display: inline-flex; align-items: center; font-size: 12.5px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--surface-2); color: var(--text-2); }
+.cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.cta { display: inline-flex; align-items: center; justify-content: center; height: 42px; padding: 0 16px; border-radius: 10px; font-weight: 600; font-size: 14.5px; text-decoration: none; border: 1px solid var(--border); background: var(--surface); color: var(--text); }
+.cta:first-child { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; }
+.panel h2 { font-size: 20px; letter-spacing: -.01em; margin: 0 0 10px; }
+.panel h2:not(:first-child) { margin-top: 26px; }
+.panel p, .panel li, .meta { color: var(--text-2); }
+.panel ul, .panel ol { padding-left: 22px; margin: 0; }
+.panel li { margin: 5px 0; }
+.meta { font-size: 14px; }
+.module-grid, .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 12px; }
+.module-card, .detail-card { border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; background: var(--bg); }
+.module-card h3, .detail-card h3 { font-size: 15.5px; margin: 0 0 4px; }
+.module-card p { font-size: 14px; margin: 0; color: var(--text-2); }
+.detail-card b, .detail-card strong { display: block; }
+.module-link { color: var(--text); text-decoration: none; font-weight: 600; }
+.module-link:hover { color: var(--accent); }
+.link-list { list-style: none; padding: 0 !important; }
+.glossary-list { display: grid; gap: 10px; margin: 0; }
+.glossary-list dt { font-weight: 700; }
+.glossary-list dd { margin: 0 0 6px; color: var(--text-2); }
+.table-wrap { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border); }
+.footer { border-top: 1px solid var(--border); padding: 20px 0 40px; color: var(--text-3); font-size: 13px; }
+.footer a { color: var(--text-2); }
+@media (max-width: 640px) { .panel { padding: 18px; } .hero p { font-size: 16.5px; } .nav-links a:not([href$="index.html"]), .back-control { display: none; } .nav-links a[href$="modules/index.html"], .nav-links a[href="index.html"]:not(:first-of-type) { display: none; } }
 `;
 }
 
@@ -658,7 +317,7 @@ function headTemplate({ title, description, canonicalPath, assetPrefix = '' }) {
         <title>${safeTitle}</title>
         <meta name="description" content="${safeDescription}">
         <meta name="robots" content="index,follow,max-image-preview:large">
-        <meta name="theme-color" content="#1d4ed8">
+        <meta name="theme-color" content="#4f46e5">
         <meta name="application-name" content="CS Course Atlas">
         <meta name="apple-mobile-web-app-title" content="CS Course Atlas">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -673,14 +332,11 @@ function headTemplate({ title, description, canonicalPath, assetPrefix = '' }) {
         <meta property="twitter:card" content="summary_large_image">
         <meta property="twitter:title" content="${safeTitle}">
         <meta property="twitter:description" content="${safeDescription}">
-        <link rel="icon" href="data:,">
+        <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f46e5'/%3E%3Cpath d='M16 6l9 10-9 10-9-10z' fill='white'/%3E%3C/svg%3E">
         <link rel="manifest" href="${cssPrefix}manifest.webmanifest">
-        <link rel="stylesheet" href="${cssPrefix}css/utilities-fallback.css">
-        <link rel="stylesheet" href="${cssPrefix}css/tailwind.css">
-        <link rel="stylesheet" href="${cssPrefix}css/styles.css">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Pixelify+Sans:wght@400&family=Silkscreen:wght@400&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
         <style>${baseStyles()}</style>
     </head>`;
 }
@@ -758,13 +414,13 @@ ${headTemplate({
     <div class="shell">
         <nav class="top-nav" aria-label="Primary route pages">
             <div class="top-nav-inner">
-                <div class="brand-badge">
+                <a class="brand-badge" href="index.html">
                     <span class="brand-icon">&#x1F9ED;</span>
                     <span>CS Course Atlas</span>
-                </div>
+                </a>
                 <div class="nav-links">
                     ${backControlMarkup(appHref)}
-                    <a href="index.html">Interactive App</a>
+                    <a href="index.html">Open the app</a>
                     <a href="home.html">Home</a>
                     <a href="tracks.html">Tracks</a>
                     ${trackNavLinks()}
@@ -774,7 +430,7 @@ ${headTemplate({
             </div>
         </nav>
         <header class="hero">
-            <p class="hero-kicker">Crawlable Learning Route</p>
+            <p class="hero-kicker">CS Course Atlas</p>
             <h1>${escapeHtml(routeConfig.heading)}</h1>
             <p class="meta">${escapeHtml(routeConfig.lead)}</p>
             <div class="hero-meta-row">
@@ -782,10 +438,8 @@ ${headTemplate({
                 <span class="chip">${moduleLinks.length} Linked Module Pages</span>
             </div>
             <div class="cta-row">
-                <a class="cta" href="${appHref}">Open Interactive View</a>
+                <a class="cta" href="${appHref}">Open the app</a>
                 <a class="cta" href="modules/index.html">Browse Module Pages</a>
-                <a class="cta" href="sitemap.html">Open Sitemap Page</a>
-                <a class="cta" href="sitemap.xml">XML Sitemap</a>
             </div>
         </header>
         <section class="panel">
@@ -836,29 +490,28 @@ ${headTemplate({
     <div class="shell">
         <nav class="top-nav" aria-label="Directory navigation">
             <div class="top-nav-inner">
-                <div class="brand-badge">
+                <a class="brand-badge" href="../index.html">
                     <span class="brand-icon">&#x1F9ED;</span>
                     <span>CS Course Atlas</span>
-                </div>
+                </a>
                 <div class="nav-links">
                     ${backControlMarkup('../tracks.html')}
-                    <a href="../index.html">Interactive App</a>
+                    <a href="../index.html">Open the app</a>
                     <a href="../tracks.html">Track Pages</a>
                     <a href="../sitemap.html">Sitemap</a>
-                    <a href="../sitemap.xml">XML</a>
                 </div>
             </div>
         </nav>
         <header class="hero">
-            <p class="hero-kicker">Crawlable Module Hub</p>
+            <p class="hero-kicker">CS Course Atlas</p>
             <h1>CS Course Atlas Module Directory</h1>
-            <p class="meta">Crawlable module pages with direct links to interactive practice.</p>
+            <p class="meta">Every published module, each with a summary and a link to open it in the app.</p>
             <div class="hero-meta-row">
                 <span class="chip">${totalModules} Modules Indexed</span>
                 <span class="chip">${trackCount} Track Categories</span>
             </div>
             <div class="cta-row">
-                <a class="cta" href="../index.html?route=%2Ftracks">Open Interactive Track View</a>
+                <a class="cta" href="../index.html?route=%2Ftracks">Open the app</a>
                 <a class="cta" href="../home.html">Go to Home Landing Page</a>
                 <a class="cta" href="../sitemap.html">Open Sitemap</a>
             </div>
@@ -891,8 +544,11 @@ function findCurriculumUnit(curriculum, moduleId) {
 
 const en = (value) => (value && typeof value === 'object' ? (value.en || '') : '');
 const enList = (value) => (value && Array.isArray(value.en) ? value.en : []);
+// Course text marks code with backticks; show it as <code>.
+const richText = (value) => escapeHtml(value).replace(/`([^`]+)`/g, '<code>$1</code>');
+const paragraphs = (value) => String(value || '').split(/\n\n+/).map((block) => `<p>${richText(block)}</p>`).join('');
 const listMarkup = (items) => items.length
-    ? `<ul class="link-list">${items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`
+    ? `<ul>${items.map((item) => `<li>${richText(item)}</li>`).join('')}</ul>`
     : '';
 
 function moduleCurriculumSections(module, allModules, curriculum) {
@@ -904,7 +560,7 @@ function moduleCurriculumSections(module, allModules, curriculum) {
         .map((id) => `<li><a href="${encodeURIComponent(id)}.html">${escapeHtml(titleById.get(id))}</a></li>`)
         .join('');
     const glossary = (entry.definitions || [])
-        .map((definition) => `<dt>${escapeHtml(en(definition.term))}</dt><dd>${escapeHtml(en(definition.definition))}</dd>`)
+        .map((definition) => `<dt>${escapeHtml(en(definition.term))}</dt><dd>${richText(en(definition.definition))}</dd>`)
         .join('');
     const resources = (entry.resources || [])
         .filter((resource) => /^https:\/\//.test(String(resource.url || '')))
@@ -913,7 +569,7 @@ function moduleCurriculumSections(module, allModules, curriculum) {
     return `
         <section class="panel">
             <h2>Why It Matters</h2>
-            <p>${escapeHtml(en(entry.whyItMatters))}</p>
+            ${paragraphs(en(entry.whyItMatters))}
             ${prerequisites ? `<h3>Before You Start</h3><ul class="link-list">${prerequisites}</ul>` : ''}
         </section>
         <section class="panel">
@@ -979,24 +635,23 @@ ${headTemplate({
     <div class="shell">
         <nav class="top-nav" aria-label="Module page navigation">
             <div class="top-nav-inner">
-                <div class="brand-badge">
+                <a class="brand-badge" href="../index.html">
                     <span class="brand-icon">&#x1F9ED;</span>
                     <span>CS Course Atlas</span>
-                </div>
+                </a>
                 <div class="nav-links">
                     ${backControlMarkup(`../${trackPage}`)}
-                    <a href="../index.html">Interactive App</a>
+                    <a href="../index.html">Open the app</a>
                     <a href="../${trackPage}">${escapeHtml(categoryLabel)} Track Page</a>
                     <a href="index.html">Module Directory</a>
                     <a href="../sitemap.html">Sitemap</a>
-                    <a href="../sitemap.xml">XML</a>
                 </div>
             </div>
         </nav>
         <header class="hero">
-            <p class="hero-kicker">Crawlable Module Page</p>
+            <p class="hero-kicker">${escapeHtml(categoryLabel)} course${unitInfo ? ` · Unit ${unitInfo.number}` : ''}</p>
             <h1>${escapeHtml(module.title)}</h1>
-            <p class="meta">${escapeHtml(module.description)}</p>
+            <p class="meta">${richText(module.description)}</p>
             <div class="hero-meta-row">
                 <span class="chip">Track: ${escapeHtml(categoryLabel)}</span>
                 <span class="chip">Difficulty: ${escapeHtml(module.difficulty || 'mixed')}</span>
@@ -1004,32 +659,10 @@ ${headTemplate({
                 ${curriculumEntry?.minutes ? `<span class="chip">About ${curriculumEntry.minutes} min</span>` : ''}
             </div>
             <div class="cta-row">
-                <a class="cta" href="${appLink}">Open This Module in Interactive App</a>
-                <a class="cta" href="../${trackPage}">View ${escapeHtml(categoryLabel)} Track Landing Page</a>
-                <a class="cta" href="../sitemap.html">Open Sitemap</a>
+                <a class="cta" href="${appLink}">Open this module</a>
+                <a class="cta" href="../${trackPage}">${escapeHtml(categoryLabel)} course overview</a>
             </div>
         </header>
-        <section class="panel">
-            <h2>Module Snapshot</h2>
-            <div class="detail-grid">
-                <div class="detail-card">
-                    <strong>Track</strong>
-                    <span>${escapeHtml(categoryLabel)}</span>
-                </div>
-                <div class="detail-card">
-                    <strong>Difficulty</strong>
-                    <span>${escapeHtml(module.difficulty || 'mixed')}</span>
-                </div>
-                <div class="detail-card">
-                    <strong>Track Position</strong>
-                    <span>${trackIndex + 1} of ${trackModules.length}</span>
-                </div>
-                <div class="detail-card">
-                    <strong>Track Size</strong>
-                    <span>${trackModuleCount} modules</span>
-                </div>
-            </div>
-        </section>
         ${moduleCurriculumSections(module, allModules, curriculum)}
         <section class="panel">
             <h2>Continue Learning</h2>
@@ -1135,13 +768,13 @@ ${headTemplate({
     <div class="shell">
         <nav class="top-nav" aria-label="Sitemap navigation">
             <div class="top-nav-inner">
-                <div class="brand-badge">
+                <a class="brand-badge" href="index.html">
                     <span class="brand-icon">&#x1F9ED;</span>
                     <span>CS Course Atlas</span>
-                </div>
+                </a>
                 <div class="nav-links">
                     ${backControlMarkup('tracks.html')}
-                    <a href="index.html">Interactive App</a>
+                    <a href="index.html">Open the app</a>
                     <a href="tracks.html">Track Pages</a>
                     <a href="modules/index.html">Module Directory</a>
                     <a href="sitemap.xml">XML Sitemap</a>
@@ -1247,7 +880,7 @@ function generateSitemapXsl() {
             <body>
                 <div class="shell">
                     <nav class="top">
-                        <a href="index.html">Interactive App</a>
+                        <a href="index.html">Open the app</a>
                         <a href="tracks.html">Track Pages</a>
                         <a href="modules/index.html">Module Directory</a>
                         <a href="sitemap.html">HTML Sitemap</a>
@@ -1298,36 +931,19 @@ function main() {
     prepareOutputDirectory();
     copyStaticSourceFiles();
 
-    const source = fs.readFileSync(SOURCE_JS, 'utf8');
+    const catalog = loadCatalog();
     const curriculum = loadCourseCurriculum();
-    const categoryMap = parseModuleCategoryMap(source);
-    const sequence = parseModuleSequence(source);
-    const metadataMap = parseModuleMetadata(source);
+    const sequence = catalog.MODULE_LEARNING_SEQUENCE;
+    const metadataById = new Map(catalog.modules.map((module) => [module.id, module]));
 
     const modules = sequence.map((id) => {
-        const metadata = metadataMap.get(id);
-        const category = categoryMap.get(id) || 'dsa';
-        if (!metadata) {
-            return {
-                id,
-                title: id.replace(/-/g, ' ').replace(/\b\w/g, (letter) => letter.toUpperCase()),
-                description: `Study ${id.replace(/-/g, ' ')} in CS Course Atlas.`,
-                difficulty: 'mixed',
-                category
-            };
-        }
-        return {
-            ...metadata,
-            category
-        };
+        const { title, description, difficulty } = metadataById.get(id);
+        return { id, title, description, difficulty, category: catalog.MODULE_CATEGORY_BY_ID[id] || 'dsa' };
     });
 
-    // Only publish pages for tracks listed in PUBLISHED_TRACKS in script.js.
-    const publishedMatch = source.match(/const PUBLISHED_TRACKS = \[([^\]]*)\];/);
-    const publishedTracks = publishedMatch
-        ? new Set((publishedMatch[1].match(/'([^']+)'/g) || []).map((item) => item.slice(1, -1)))
-        : null;
-    const isPublished = (category) => !publishedTracks || publishedTracks.has(category);
+    // Only publish pages for tracks listed in publishedTracks in data/module-catalog.json.
+    const publishedTracks = new Set(catalog.PUBLISHED_TRACKS);
+    const isPublished = (category) => publishedTracks.has(category);
     publishedTrackSet = publishedTracks;
     for (let index = modules.length - 1; index >= 0; index -= 1) {
         if (!isPublished(modules[index].category)) modules.splice(index, 1);

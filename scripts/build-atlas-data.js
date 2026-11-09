@@ -1,15 +1,13 @@
 // Builds data/atlas-data.json, the single data file the site loads, from the course sources:
-// js/course-curriculum.js, js/course-examples.js, js/spanish-localization.js, the module
-// catalog in js/script.js and the vetted YouTube links in data/course-videos.json.
+// js/course-curriculum.js, js/course-examples.js, the module
+// catalog in data/module-catalog.json and the vetted YouTube links in data/course-videos.json.
 // Run: npm run build:data (also part of npm run build:site).
 const fs = require('fs'), vm = require('vm'), path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 const load = (f, key) => { const sb = { window: {} }; vm.runInNewContext(fs.readFileSync(path.join(ROOT, f), 'utf8'), sb); return sb.window[key]; };
 const cur = load('js/course-curriculum.js', 'COURSE_CURRICULUM');
 const ex = load('js/course-examples.js', 'COURSE_EXAMPLES').modules;
-const es = load('js/spanish-localization.js', 'SPANISH_LOCALIZATION').content.modules;
-const src = fs.readFileSync(path.join(ROOT, 'js/script.js'), 'utf8');
-const catalog = vm.runInNewContext('[' + src.match(/const modules = \[([\s\S]*?)\n\];/)[1] + ']', {});
+const catalog = require('./lib/catalog').loadCatalog().modules;
 const byId = Object.fromEntries(catalog.map((m) => [m.id, m]));
 
 const TRACK_META = {
@@ -34,7 +32,7 @@ const tracks = ORDER.map((id) => ({ id, ...TRACK_META[id], units: cur.tracks[id]
 const modules = {};
 for (const t of tracks) for (const u of t.units) for (const id of u.modules) {
   const m = byId[id];
-  modules[id] = { track: t.id, title: { en: m.title, es: es[id]?.title || m.title }, description: { en: m.description, es: es[id]?.description || m.description },
+  modules[id] = { track: t.id, title: { en: m.title, es: m.es.title }, description: { en: m.description, es: m.es.description },
     difficulty: m.difficulty, topics: m.topics, minutes: cur.modules[id]?.minutes || null };
 }
 const java = {};
