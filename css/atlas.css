@@ -1002,3 +1002,50 @@ pre[tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 
 .btn-github svg { flex: none; }
 :root[data-theme="dark"] .btn-github { background: #f6f8fa; border-color: #f6f8fa; color: #1f2328; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .btn-github { background: #f6f8fa; border-color: #f6f8fa; color: #1f2328; } }
+
+/* Guided projects */
+.project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr)); gap: 14px; }
+.project-card { display: flex; gap: 14px; align-items: flex-start; padding: 18px; color: inherit; text-decoration: none; transition: border-color .15s, transform .15s; }
+.project-card:hover { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); transform: translateY(-1px); }
+.project-card.complete { border-color: color-mix(in srgb, var(--success) 40%, var(--border)); }
+.project-ico { flex: none; display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; background: var(--accent-soft); font-size: 21px; }
+.project-ico.big { width: 64px; height: 64px; border-radius: 18px; font-size: 32px; }
+.project-body { flex: 1; min-width: 0; }
+.project-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.project-body h3 { margin: 0; font-size: 16.5px; letter-spacing: -.01em; }
+.project-body p { margin: 6px 0 10px; color: var(--text-2); font-size: 14px; line-height: 1.5; }
+.project-meta { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 12.5px; color: var(--text-3); margin-bottom: 10px; }
+.project-meta a { color: var(--accent); font-weight: 600; }
+.project-hero { display: flex; gap: 18px; align-items: flex-start; margin: 6px 0 18px; }
+.project-hero h1 { margin: 0 0 6px; }
+.project-hero .lead { margin: 0 0 10px; }
+.project-progress { display: flex; align-items: center; gap: 14px; margin: 0 0 14px; }
+.project-progress .progress { flex: 1; max-width: 420px; }
+.project-steps-nav { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0 0 22px; counter-reset: none; }
+.project-steps-nav li a { display: inline-block; padding: 6px 12px; border-radius: 99px; border: 1px solid var(--border); background: var(--surface); color: var(--text-2); font-size: 13px; font-weight: 600; text-decoration: none; }
+.project-steps-nav li.done a { border-color: color-mix(in srgb, var(--success) 45%, var(--border)); color: var(--success); }
+.project-steps-nav li.done a::before { content: "✓ "; }
+@media (max-width: 600px) { .project-hero { flex-direction: column; gap: 10px; } .project-ico.big { width: 52px; height: 52px; font-size: 26px; } }
+
+/* Beginner path on the home page: three stages of compact course tiles */
+.path-stages { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 4px; }
+.path-stage { background: var(--surface); border: 1px solid var(--border); border-radius: 18px; padding: 18px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 14px; }
+.path-stage-head h3 { margin: 2px 0 4px; font-size: 17px; letter-spacing: -.01em; }
+.path-stage-head p { margin: 0; font-size: 13.5px; line-height: 1.5; color: var(--text-2); }
+.path-stage-no { font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.path-tiles { display: grid; gap: 8px; }
+.path-tile { position: relative; display: flex; align-items: center; gap: 12px; padding: 10px 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg); color: inherit; text-decoration: none; overflow: hidden; transition: border-color .15s, background .15s; }
+.path-tile:hover { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); background: var(--accent-soft); }
+.path-tile .cicon { flex: none; }
+.path-tile-text { display: grid; min-width: 0; }
+.path-tile-text b { font-size: 14.5px; line-height: 1.3; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.path-tile-text small { font-size: 12.5px; color: var(--text-3); }
+.path-tile.done small { color: var(--success); font-weight: 600; }
+.path-tile.planned { opacity: .7; }
+.path-tile-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--surface-2); }
+.path-tile-bar span { display: block; height: 100%; background: var(--accent); }
+@media (max-width: 1100px) { .path-stages { grid-template-columns: 1fr; } .path-tiles { grid-template-columns: repeat(auto-fill, minmax(min(100%, 230px), 1fr)); } }
+.path-tile-text b { white-space: normal; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+.start-card .start-no { background: var(--accent-soft) !important; color: inherit !important; font-size: 18px; width: 40px; height: 40px; border-radius: 12px; }
+/* Long "Next challenge: <title>" labels wrap instead of pushing the page sideways on phones. */
+.ch-next { white-space: normal; max-width: 100%; height: auto; min-height: 40px; text-align: left; line-height: 1.35; padding-block: 8px; }

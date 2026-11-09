@@ -9,9 +9,9 @@ const UI = {
     startFrom: 'Where are you starting from?',
     s1Title: 'I’m brand new', s1Text: 'Never written a line of code? Start with Python. The first lesson is one line long.', s1Cta: 'Start Python',
     s2Title: 'I know a little code', s2Text: 'Comfortable with variables and loops? Pick up the tools every programmer uses: the command line, Git and building real websites.', s2Cta: 'Open Command Line',
-    s3Title: 'I’m taking a CS class', s3Text: 'Study Java and Discrete Math alongside your class, with a quiz for every module.', s3Cta: 'Open Java',
-    pathTitle: 'The beginner path', pathLead: 'Nine courses in an order that makes sense. Each one builds on the one before it.',
-    stepN: (n) => `Step ${n}`, stepReady: 'Ready', stepSoon: 'Being written', stepDone: 'Complete',
+    s3Title: 'I’m taking a CS class', s3Text: 'Study Java, Data Structures & Algorithms and Discrete Math alongside your class: auto-graded Java challenges, a quiz for every module and a video for every topic.', s3Cta: 'Open Java',
+    pathTitle: 'The beginner path', pathLead: 'Three stages, in an order that makes sense. Go left to right, or jump to what you need.',
+    stageCode: 'Start coding', stageCodeText: 'Write programs and use the tools every programmer uses.', stageBuild: 'Build things', stageBuildText: 'Make web pages people can open and store data that lasts.', stageUnderstand: 'Understand computers', stageUnderstandText: 'What happens underneath, how to stay safe, how AI works, and the math behind it all.', stageWord: (n) => `Stage ${n}`, stepN: (n) => `Step ${n}`, stepReady: 'Ready', stepSoon: 'Being written', stepDone: 'Complete',
     howTitle: 'How every module works',
     how1: 'Read', how1Text: 'A short lesson: why it matters, the key ideas and the mistakes to avoid.',
     how2: 'Run', how2Text: 'Examples you can edit and run in your browser. Nothing to install.',
@@ -64,7 +64,7 @@ const UI = {
     modulesWithNotes: 'modules with notes', noActivity: 'Complete a module, take a quiz or write a note and it shows up here.', typeDelete: 'Type DELETE to confirm', deleteViaSupport: 'Ask support to delete it',
     privacy: 'Privacy', terms: 'Terms', contact: 'Contact', checkingSession: 'Checking your account…', emailOrUser: 'Email or username', username: 'Username', confirmPw: 'Confirm password',
     haveAccount: 'Have an account?', pwMismatch: 'The passwords don’t match.', working: 'One moment…', signinFailed: 'Sign-in didn’t complete. Please try again.', welcome: (n) => (n ? `Signed in as ${n}` : 'Signed in'),
-    cfTitle: 'Confirm your email', cfText: (e) => `We sent a 6-digit code to <b>${e}</b>. Enter it here to confirm your account.`, cfCode: '6-digit code', cfBtn: 'Confirm', cfResend: 'Send a new code', cfSent: 'New code sent. Check your inbox (and spam).', cfDone: 'Email confirmed. Thank you!', cfLater: 'Later', emailConfirmed: 'Confirmed', emailNotConfirmed: 'Not confirmed', emailMeCode: 'Email me a code instead', emailCodeSent: 'If that account has a confirmed email, we sent it a 6-digit code. It works for 30 minutes.', needIdentity: 'Enter your email or username first.', rcTitle: 'Recovery codes', rcSub: 'Each code resets your password once if you forget it. Keep them somewhere safe, like a password manager or a printed page.', rcSaveTitle: 'Save your recovery codes', rcSaveText: 'If you ever forget your password, one of these codes lets you set a new one. Each works once. This is the only time they are shown.', rcCopy: 'Copy codes', rcCopied: 'Codes copied', rcDownload: 'Download .txt', rcDone: 'I saved them', rcLeft: (a, b) => `${a} of ${b} codes left.`, rcNone: 'You have no recovery codes yet. Make some so a forgotten password never locks you out.', rcLow: 'Running low: make a fresh set.', rcMake: 'Make new codes', rcMakeHint: 'Your old codes stop working when you make new ones.', rcFileHead: 'CS Course Atlas recovery codes', rcFileUse: 'Use one on the sign-in page: Forgot password? Each code works once.', recoverTitle: 'Reset your password', recoverSub: 'Use one of the recovery codes you saved when you created your account, or a code we email you.', recoveryCode: 'Recovery code', recoverBtn: 'Reset password', backToSignIn: 'Back to sign in', noCode: 'No recovery code?', contactUs: 'Contact support', pwReset: (n) => `Password reset. You are signed in (${n} recovery code${n === 1 ? '' : 's'} left).`, recoverOff: 'Password reset is being switched on. Until then, contact support and we will reset it for you.', codeHint: 'A recovery code like K7QM-3XRP-W9TD, or the 6-digit code from our email.',
+    cfTitle: 'Confirm your email', cfText: (e) => `We sent a 6-digit code to <b>${e}</b>. Enter it here to confirm your account.`, cfCode: '6-digit code', cfBtn: 'Confirm', cfResend: 'Send a new code', cfSent: 'New code sent. Check your inbox (and spam).', cfDone: 'Email confirmed. Thank you!', cfLater: 'Later', emailConfirmed: 'Confirmed', emailNotConfirmed: 'Not confirmed', emailMeCode: 'Email me a code instead', emailCodeSent: 'If that account has a confirmed email, we sent it a 6-digit code. It works for 30 minutes.', needIdentity: 'Enter your email or username first.', projects: 'Projects', projectsLead: 'Build something real, one checked step at a time. Each step adds to the code from the last one, and the site tells you instantly when it works.', hubProjectText: 'Multi-step builds: each step is checked instantly and adds to the last.', projectSteps: (n) => `${n} steps`, projectMinutes: (n) => `≈ ${n} min`, projectDone: '🏁 Project complete!', projectDoneIn: (m) => `Finished the project ${m}`, startProject: 'Start project', continueProject: 'Continue', projectCompleteLabel: 'Complete', stepOf: (a, b) => `${a} of ${b} steps done`, projectsForCourse: 'Build a project', projectCourse: 'Course', allProjects: 'All projects', rcTitle: 'Recovery codes', rcSub: 'Each code resets your password once if you forget it. Keep them somewhere safe, like a password manager or a printed page.', rcSaveTitle: 'Save your recovery codes', rcSaveText: 'If you ever forget your password, one of these codes lets you set a new one. Each works once. This is the only time they are shown.', rcCopy: 'Copy codes', rcCopied: 'Codes copied', rcDownload: 'Download .txt', rcDone: 'I saved them', rcLeft: (a, b) => `${a} of ${b} codes left.`, rcNone: 'You have no recovery codes yet. Make some so a forgotten password never locks you out.', rcLow: 'Running low: make a fresh set.', rcMake: 'Make new codes', rcMakeHint: 'Your old codes stop working when you make new ones.', rcFileHead: 'CS Course Atlas recovery codes', rcFileUse: 'Use one on the sign-in page: Forgot password? Each code works once.', recoverTitle: 'Reset your password', recoverSub: 'Use one of the recovery codes you saved when you created your account, or a code we email you.', recoveryCode: 'Recovery code', recoverBtn: 'Reset password', backToSignIn: 'Back to sign in', noCode: 'No recovery code?', contactUs: 'Contact support', pwReset: (n) => `Password reset. You are signed in (${n} recovery code${n === 1 ? '' : 's'} left).`, recoverOff: 'Password reset is being switched on. Until then, contact support and we will reset it for you.', codeHint: 'A recovery code like K7QM-3XRP-W9TD, or the 6-digit code from our email.',
     serverSlow: 'The server is waking up. Try again in a few seconds.', signedOut: 'Signed out', accountDeleted: 'Your account was deleted', savedAccount: 'Saved to your account'
   },
   es: {
@@ -77,9 +77,9 @@ const UI = {
     startFrom: '¿Desde dónde empiezas?',
     s1Title: 'Soy completamente nuevo', s1Text: '¿Nunca has escrito código? Empieza con Python. La primera lección es de una sola línea.', s1Cta: 'Empezar Python',
     s2Title: 'Sé un poco de código', s2Text: '¿Ya manejas variables y ciclos? Aprende las herramientas que usa todo programador: la línea de comandos, Git y crear sitios web reales.', s2Cta: 'Abrir Línea de comandos',
-    s3Title: 'Estoy en una clase de CS', s3Text: 'Estudia Java y Matemáticas discretas junto a tu clase, con un cuestionario por módulo.', s3Cta: 'Abrir Java',
-    pathTitle: 'La ruta para principiantes', pathLead: 'Nueve cursos en un orden lógico. Cada uno se apoya en el anterior.',
-    stepN: (n) => `Paso ${n}`, stepReady: 'Listo', stepSoon: 'En preparación', stepDone: 'Completado',
+    s3Title: 'Estoy en una clase de CS', s3Text: 'Estudia Java, Estructuras de datos y algoritmos y Matemáticas discretas junto a tu clase: retos de Java con calificación automática, un cuestionario por módulo y un video por tema.', s3Cta: 'Abrir Java',
+    pathTitle: 'La ruta para principiantes', pathLead: 'Tres etapas en un orden lógico. Ve de izquierda a derecha o salta a lo que necesites.',
+    stageCode: 'Empieza a programar', stageCodeText: 'Escribe programas y usa las herramientas de todo programador.', stageBuild: 'Construye cosas', stageBuildText: 'Crea páginas web que otros pueden abrir y guarda datos que perduran.', stageUnderstand: 'Entiende las computadoras', stageUnderstandText: 'Qué pasa por dentro, cómo protegerte, cómo funciona la IA y las matemáticas detrás de todo.', stageWord: (n) => `Etapa ${n}`, stepN: (n) => `Paso ${n}`, stepReady: 'Listo', stepSoon: 'En preparación', stepDone: 'Completado',
     howTitle: 'Cómo funciona cada módulo',
     how1: 'Lee', how1Text: 'Una lección corta: por qué importa, las ideas clave y los errores a evitar.',
     how2: 'Ejecuta', how2Text: 'Ejemplos que puedes editar y ejecutar en tu navegador. Nada que instalar.',
@@ -132,7 +132,7 @@ const UI = {
     modulesWithNotes: 'módulos con notas', noActivity: 'Completa un módulo, haz un cuestionario o escribe una nota y aparecerá aquí.', typeDelete: 'Escribe DELETE para confirmar', deleteViaSupport: 'Pide a soporte que la elimine',
     privacy: 'Privacidad', terms: 'Términos', contact: 'Contacto', checkingSession: 'Revisando tu cuenta…', emailOrUser: 'Correo o usuario', username: 'Usuario', confirmPw: 'Confirmar contraseña',
     haveAccount: '¿Ya tienes cuenta?', pwMismatch: 'Las contraseñas no coinciden.', working: 'Un momento…', signinFailed: 'No se completó el inicio de sesión. Inténtalo de nuevo.', welcome: (n) => (n ? `Sesión iniciada como ${n}` : 'Sesión iniciada'),
-    cfTitle: 'Confirma tu correo', cfText: (e) => `Enviamos un código de 6 dígitos a <b>${e}</b>. Escríbelo aquí para confirmar tu cuenta.`, cfCode: 'Código de 6 dígitos', cfBtn: 'Confirmar', cfResend: 'Enviar un código nuevo', cfSent: 'Código nuevo enviado. Revisa tu bandeja (y el spam).', cfDone: 'Correo confirmado. ¡Gracias!', cfLater: 'Después', emailConfirmed: 'Confirmado', emailNotConfirmed: 'Sin confirmar', emailMeCode: 'Mejor envíame un código por correo', emailCodeSent: 'Si esa cuenta tiene un correo confirmado, le enviamos un código de 6 dígitos. Funciona durante 30 minutos.', needIdentity: 'Primero escribe tu correo o usuario.', rcTitle: 'Códigos de recuperación', rcSub: 'Cada código restablece tu contraseña una vez si la olvidas. Guárdalos en un lugar seguro, como un gestor de contraseñas o una hoja impresa.', rcSaveTitle: 'Guarda tus códigos de recuperación', rcSaveText: 'Si alguna vez olvidas tu contraseña, uno de estos códigos te permite crear una nueva. Cada uno funciona una vez. Esta es la única vez que se muestran.', rcCopy: 'Copiar códigos', rcCopied: 'Códigos copiados', rcDownload: 'Descargar .txt', rcDone: 'Ya los guardé', rcLeft: (a, b) => `Te quedan ${a} de ${b} códigos.`, rcNone: 'Todavía no tienes códigos de recuperación. Crea algunos para que una contraseña olvidada nunca te deje fuera.', rcLow: 'Te quedan pocos: crea un juego nuevo.', rcMake: 'Crear códigos nuevos', rcMakeHint: 'Tus códigos anteriores dejan de funcionar cuando creas nuevos.', rcFileHead: 'Códigos de recuperación de CS Course Atlas', rcFileUse: 'Usa uno en la página de inicio de sesión: ¿Olvidaste tu contraseña? Cada código funciona una vez.', recoverTitle: 'Restablece tu contraseña', recoverSub: 'Usa uno de los códigos de recuperación que guardaste al crear tu cuenta, o un código que te enviamos por correo.', recoveryCode: 'Código de recuperación', recoverBtn: 'Restablecer contraseña', backToSignIn: 'Volver a iniciar sesión', noCode: '¿No tienes un código?', contactUs: 'Contacta a soporte', pwReset: (n) => `Contraseña restablecida. Iniciaste sesión (te quedan ${n} código${n === 1 ? '' : 's'}).`, recoverOff: 'El restablecimiento de contraseña se está activando. Mientras tanto, contacta a soporte y la restableceremos por ti.', codeHint: 'Un código de recuperación como K7QM-3XRP-W9TD, o el código de 6 dígitos de nuestro correo.',
+    cfTitle: 'Confirma tu correo', cfText: (e) => `Enviamos un código de 6 dígitos a <b>${e}</b>. Escríbelo aquí para confirmar tu cuenta.`, cfCode: 'Código de 6 dígitos', cfBtn: 'Confirmar', cfResend: 'Enviar un código nuevo', cfSent: 'Código nuevo enviado. Revisa tu bandeja (y el spam).', cfDone: 'Correo confirmado. ¡Gracias!', cfLater: 'Después', emailConfirmed: 'Confirmado', emailNotConfirmed: 'Sin confirmar', emailMeCode: 'Mejor envíame un código por correo', emailCodeSent: 'Si esa cuenta tiene un correo confirmado, le enviamos un código de 6 dígitos. Funciona durante 30 minutos.', needIdentity: 'Primero escribe tu correo o usuario.', projects: 'Proyectos', projectsLead: 'Construye algo real, un paso revisado a la vez. Cada paso se suma al código del anterior y el sitio te dice al instante si funciona.', hubProjectText: 'Construcciones de varios pasos: cada paso se revisa al instante y se suma al anterior.', projectSteps: (n) => `${n} pasos`, projectMinutes: (n) => `≈ ${n} min`, projectDone: '🏁 ¡Proyecto terminado!', projectDoneIn: (m) => `Terminaste el proyecto ${m}`, startProject: 'Empezar proyecto', continueProject: 'Continuar', projectCompleteLabel: 'Terminado', stepOf: (a, b) => `${a} de ${b} pasos hechos`, projectsForCourse: 'Construye un proyecto', projectCourse: 'Curso', allProjects: 'Todos los proyectos', rcTitle: 'Códigos de recuperación', rcSub: 'Cada código restablece tu contraseña una vez si la olvidas. Guárdalos en un lugar seguro, como un gestor de contraseñas o una hoja impresa.', rcSaveTitle: 'Guarda tus códigos de recuperación', rcSaveText: 'Si alguna vez olvidas tu contraseña, uno de estos códigos te permite crear una nueva. Cada uno funciona una vez. Esta es la única vez que se muestran.', rcCopy: 'Copiar códigos', rcCopied: 'Códigos copiados', rcDownload: 'Descargar .txt', rcDone: 'Ya los guardé', rcLeft: (a, b) => `Te quedan ${a} de ${b} códigos.`, rcNone: 'Todavía no tienes códigos de recuperación. Crea algunos para que una contraseña olvidada nunca te deje fuera.', rcLow: 'Te quedan pocos: crea un juego nuevo.', rcMake: 'Crear códigos nuevos', rcMakeHint: 'Tus códigos anteriores dejan de funcionar cuando creas nuevos.', rcFileHead: 'Códigos de recuperación de CS Course Atlas', rcFileUse: 'Usa uno en la página de inicio de sesión: ¿Olvidaste tu contraseña? Cada código funciona una vez.', recoverTitle: 'Restablece tu contraseña', recoverSub: 'Usa uno de los códigos de recuperación que guardaste al crear tu cuenta, o un código que te enviamos por correo.', recoveryCode: 'Código de recuperación', recoverBtn: 'Restablecer contraseña', backToSignIn: 'Volver a iniciar sesión', noCode: '¿No tienes un código?', contactUs: 'Contacta a soporte', pwReset: (n) => `Contraseña restablecida. Iniciaste sesión (te quedan ${n} código${n === 1 ? '' : 's'}).`, recoverOff: 'El restablecimiento de contraseña se está activando. Mientras tanto, contacta a soporte y la restableceremos por ti.', codeHint: 'Un código de recuperación como K7QM-3XRP-W9TD, o el código de 6 dígitos de nuestro correo.',
     serverSlow: 'El servidor se está activando. Inténtalo en unos segundos.', signedOut: 'Sesión cerrada', accountDeleted: 'Tu cuenta fue eliminada', savedAccount: 'Guardado en tu cuenta'
   }
 };
@@ -252,7 +252,7 @@ const LANG_LABEL = { java: 'Java', cpp: 'C++', python: 'Python', javascript: 'Ja
 const exampleLangs = (ex) => Object.keys(LANG_LABEL).filter((k) => ex.code && ex.code[k]);
 // Selects lessons/quizzes grouped by course.
 const moduleOptions = (selected) => orderedTracks().map((tr) => `<optgroup label="${esc(L(tr.title))}">${trackIds(tr.id).map((m) => `<option value="${m}" ${m === selected ? 'selected' : ''}>${esc(moduleTitle(m))}</option>`).join('')}</optgroup>`).join('');
-const moduleTitle = (id) => L(DATA.modules[id]?.title) || id;
+const moduleTitle = (id) => (id.startsWith('project:') ? L((DATA.projects || []).find((p) => 'project:' + p.id === id)?.title) : L(DATA.modules[id]?.title)) || id;
 // Everything that belongs to the learner, in one plain object: saved locally and, when signed in, to the account.
 const progressSnapshot = () => ({ done: [...state.done], codeLang: state.codeLang, notified: [...state.notified], notes: state.notes, aces: [...state.aces],
   langsSeen: [...state.langsSeen], votes: [...state.votes], plan: state.plan, quizBest: state.quizBest, cardsKnown: [...state.cardsKnown], cardBox: state.cardBox, certs: state.certs, solved: [...state.solved], activity: state.activity.slice(-200), lang: state.lang });
@@ -431,16 +431,23 @@ function plannedCard(p, step) {
 // A course id from the path: a track (live or outlined) or a planned course.
 const anyCourse = (id) => track(id) || DATA.planned.find((p) => p.id === id);
 const anyCard = (id, step) => (track(id) ? courseCard(track(id), true, step) : plannedCard(anyCourse(id), step));
+// The beginner path on the home page, grouped into three stages of compact course tiles.
+// Courses not listed in a stage (new ones added to DATA.path) land in the last stage.
+const PATH_STAGES = [['code', ['python', 'cli', 'git']], ['build', ['web', 'sql']], ['understand', ['how-computers-work', 'cybersecurity', 'ai', 'discrete']]];
 function pathStepper() {
-  return `<ol class="path">${DATA.path.map((st, i) => {
-    const tr = track(st.id), c = anyCourse(st.id), live = tr && tr.status === 'available', s = live ? trackStats(tr) : null, done = s && s.count && s.done === s.count;
-    const status = done ? `<span class="pill ok">${t('stepDone')}</span>` : live ? `<span class="pill ok">${t('stepReady')}</span>` : `<span class="pill soon">${t('stepSoon')}</span>`;
-    const inner = `<span class="path-no${live ? ' live' : ''}${done ? ' done' : ''}">${done ? '✓' : i + 1}</span>
-      <div class="path-body"><div class="path-title"><span class="cicon" data-track="${st.id}">${esc(c.icon)}</span><b>${esc(L(c.title))}</b>${status}</div>
-      <p>${esc(L(st.why))}</p>${live ? `<div class="path-meta">${s.count} ${t('modules')} · ≈ ${s.hours} ${t('hours')}${s.done ? ` · ${t('ofModules', s.done, s.count)}` : ''}</div>` : ''}${live && s.done ? `<div class="progress"><span style="width:${pct(s.done, s.count)}%"></span></div>` : ''}</div>
-      <span class="path-go">${live ? (done ? t('reviewBtn') : s.done ? t('continueBtn') : t('startBtn')) : t('seeOutline')} →</span>`;
-    return `<li><a class="path-step${live ? ' live' : ' planned'}" href="#course-${st.id}">${inner}</a></li>`;
-  }).join('')}</ol>`;
+  const ids = DATA.path.map((st) => st.id), placed = new Set(PATH_STAGES.flatMap(([, list]) => list));
+  const stages = PATH_STAGES.map(([key, list], i) => [key, list.filter((id) => ids.includes(id)).concat(i === PATH_STAGES.length - 1 ? ids.filter((id) => !placed.has(id)) : [])]);
+  const label = { code: 'stageCode', build: 'stageBuild', understand: 'stageUnderstand' };
+  const tile = (id) => {
+    const tr = track(id), c = anyCourse(id), live = tr && tr.status === 'available', s = live ? trackStats(tr) : null, done = s && s.count && s.done === s.count;
+    const why = DATA.path.find((st) => st.id === id)?.why;
+    return `<a class="path-tile${live ? '' : ' planned'}${done ? ' done' : ''}" href="#course-${id}" title="${esc(L(why) || '')}">
+      <span class="cicon" data-track="${id}">${esc(c.icon)}</span>
+      <span class="path-tile-text"><b>${esc(L(c.title))}</b><small>${!live ? t('stepSoon') : done ? '✓ ' + t('stepDone') : s.done ? t('ofModules', s.done, s.count) : `${s.count} ${t('modules')} · ≈ ${s.hours} h`}</small></span>
+      ${live && s.done && !done ? `<span class="path-tile-bar"><span style="width:${pct(s.done, s.count)}%"></span></span>` : ''}</a>`;
+  };
+  return `<div class="path-stages">${stages.map(([key, list], i) => `<section class="path-stage"><div class="path-stage-head"><span class="path-stage-no">${t('stageWord', i + 1)}</span><h3>${t(label[key])}</h3><p>${t(label[key] + 'Text')}</p></div>
+    <div class="path-tiles">${list.map(tile).join('')}</div></section>`).join('')}</div>`;
 }
 function unitCards(tr, live) {
   return `<div class="units">${tr.units.map((u, i) => `<div class="card unit"><div class="unit-top"><h3>${t('unit')} ${i + 1} · ${esc(L(u.title))}</h3><span class="pill">${u.modules.length} ${u.modules.length === 1 ? t('moduleLower') : t('modules')}</span></div><ul>` +
@@ -465,7 +472,7 @@ function viewHome() {
   const live = liveIds(), started = DATA.tracks.find((tr) => tr.id === currentTrack() && trackStats(tr).done) || liveTracks().find((tr) => trackStats(tr).done);
   const s = started ? trackStats(started) : null, next = started ? nextModule(started.id) : null;
   const first = DATA.path.find((st) => track(st.id)?.status === 'available')?.id || liveTracks()[0].id;
-  const startCard = (n, href) => `<a class="card start-card" href="${href}"><span class="start-no">${n}</span><h3>${t('s' + n + 'Title')}</h3><p>${t('s' + n + 'Text')}</p><span class="start-cta">${t('s' + n + 'Cta')} →</span></a>`;
+  const startCard = (n, href) => `<a class="card start-card" href="${href}"><span class="start-no" aria-hidden="true">${['🌱', '🧰', '🎓'][n - 1]}</span><h3>${t('s' + n + 'Title')}</h3><p>${t('s' + n + 'Text')}</p><span class="start-cta">${t('s' + n + 'Cta')} →</span></a>`;
   const how = (n, ico) => `<div class="how"><span class="how-ico">${ico}</span><div><b>${t('how' + n)}</b><p>${t('how' + n + 'Text')}</p></div></div>`;
   return `<section class="wrap">
     <div class="hero"><div class="hero-text"><h1>${t('heroTitle')}</h1><p class="lead">${t('heroLead')}</p>
@@ -484,7 +491,7 @@ function viewHome() {
     ${started ? '' : `<div class="section-head"><h2>${t('startFrom')}</h2></div>
     <div class="start-grid">${startCard(1, '#course-python')}${startCard(2, '#course-cli')}${startCard(3, '#course-java')}</div>`}
     <div class="section-head"><h2>${t('pathTitle')}</h2><a class="muted" href="#courses">${t('allCourses')} →</a></div>
-    <p class="muted section-lead">${t('pathLead')} ${(() => { const st = pathTracks().map(trackStats); return t('pathTotals', st.reduce((n, x) => n + x.count, 0), st.reduce((n, x) => n + x.hours, 0)); })()}</p>
+    <p class="muted section-lead">${t('pathLead')}</p>
     ${pathStepper()}
     <div class="section-head"><h2>${t('howTitle')}</h2></div>
     <div class="how-grid">${how(1, '¶')}${how(2, '▶')}${how(3, '✓')}${how(4, '◉')}</div>
@@ -544,6 +551,7 @@ function viewCourse(id) {
     ${live ? `<div class="course-links"><a class="chip-link" href="#sheet-${id}">▤ ${t('cheatSheet')}</a><button class="chip-link" data-action="go-quiz" data-id="course:${id}">✓ ${t('courseQuizBtn')}</button><button class="chip-link" data-action="go-flash" data-id="course:${id}">▭ ${t('courseCardsBtn')}</button></div>` : ''}
     ${live ? certCard(id) : ''}
     ${DATA.videos?.courses?.[id] ? `<div class="section-head"><h2>${t('courseSeries')}</h2></div>${vidCard(DATA.videos.courses[id], true)}` : ''}
+    ${(() => { const ps = (DATA.projects || []).filter((p) => p.track === id); return ps.length ? `<div class="section-head"><h2>${t('projectsForCourse')}</h2><a class="muted" href="#projects">${t('allProjects')} →</a></div><div class="project-grid">${ps.map(projectCard).join('')}</div>` : ''; })()}
     <div class="section-head"><h2>${t('unitsTitle')}</h2></div>
     ${unitCards(tr, live)}
     ${!live && DATA.videos ? `<div class="section-head"><h2>${t('watchWait')}</h2></div><p class="muted" style="margin:-6px 0 14px">${t('waitLead')}</p><div class="vids grid-vids">${waitGroups(tr).map((g) => `<div class="wait-card card"><div class="wait-mods">${g.mods.map((m) => `<span>${esc(moduleTitle(m))}</span>`).join('')}</div>${vidCard(g.v, true)}</div>`).join('')}</div>` : ''}</section>`;
@@ -764,10 +772,55 @@ function viewPractice() {
       <a class="card hub-card" href="#challenges"><span class="hub-ico">{ }</span><div class="hub-body"><h2>${t('challenges')}</h2><p>${t('hubChallengeText')}</p>
         ${(() => { const total = liveIds().reduce((n, id) => n + (DATA.modules[id].counts?.challenges || 0), 0), solved = [...state.solved].filter((k) => isLive(k.split('/')[0])).length;
           return `<div class="hub-stats"><span><b>${total}</b> ${t('challenges').toLowerCase()}</span><span><b>${solved}</b> ${t('solvedWord')}</span></div><div class="progress"><span style="width:${pct(solved, total)}%"></span></div>`; })()}</div><span class="hub-go">→</span></a>
+      ${(DATA.projects || []).length ? (() => { const ps = DATA.projects, steps = ps.reduce((n, p) => n + p.steps, 0), solved = ps.reduce((n, p) => n + projectSolved(p), 0), done = ps.filter((p) => projectSolved(p) === p.steps).length;
+        return `<a class="card hub-card" href="#projects"><span class="hub-ico">🛠</span><div class="hub-body"><h2>${t('projects')}</h2><p>${t('hubProjectText')}</p><div class="hub-stats"><span><b>${ps.length}</b> ${t('projects').toLowerCase()}</span><span><b>${done}</b> ${t('projectCompleteLabel').toLowerCase()}</span></div><div class="progress"><span style="width:${pct(solved, steps)}%"></span></div></div><span class="hub-go">→</span></a>`; })() : ''}
     </div>
     <div class="card suggest"><div class="suggest-txt"><span class="muted">${t('suggested')}</span><b>${esc(moduleTitle(suggestion))}</b><span class="muted">${esc(L(track(DATA.modules[suggestion].track).title))}</span></div>
       <div class="suggest-actions"><button class="btn btn-sm" data-action="go-quiz" data-id="${suggestion}">${t('takeQuiz')}</button><button class="btn btn-sm btn-ghost" data-action="go-flash" data-id="${suggestion}">${t('reviewCards')}</button></div></div></section>`;
 }
+// ---- Guided projects: multi-step builds where every step is a challenge (same editors and graders) ----
+// The index (DATA.projects) comes with atlas-data.json; the steps load from data/projects.json the first time.
+let projectsLoad = null;
+const projectKey = (id) => 'project:' + id;
+const projectSolved = (p) => (DATA.full[projectKey(p.id)]?.challenges || []).filter((ch) => state.solved.has(chKey(projectKey(p.id), ch))).length
+  || [...state.solved].filter((k) => k.startsWith(projectKey(p.id) + '/')).length;
+function waitForProjects() {
+  if (DATA.projectsFull) return null;
+  const route = location.hash;
+  projectsLoad = projectsLoad || fetch('data/projects.json?v=' + DATA.projectsVersion).then((r) => { if (!r.ok) throw new Error(String(r.status)); return r.json(); })
+    .then((d) => { DATA.projectsFull = d.projects; d.projects.forEach((p) => { DATA.full[projectKey(p.id)] = { challenges: p.steps }; }); });
+  projectsLoad.then(() => { if (location.hash === route) render(true); }).catch(() => { projectsLoad = null; if (location.hash === route) $('#main').innerHTML = `<div class="loading">${t('lessonsFailed')} <button class="btn btn-sm" data-action="reload">${t('retry')}</button></div>`; });
+  return `<div class="loading" aria-busy="true"><span class="spinner"></span>${t('loadingLessons')}</div>`;
+}
+function projectCard(p) {
+  const done = projectSolved(p), tr = track(p.track);
+  return `<a class="card project-card${done === p.steps ? ' complete' : ''}" href="#project-${p.id}">
+    <span class="project-ico" aria-hidden="true">${esc(p.icon || '◆')}</span>
+    <div class="project-body"><div class="project-top"><h3>${esc(L(p.title))}</h3>${done === p.steps ? `<span class="pill ok">✓ ${t('projectCompleteLabel')}</span>` : ''}</div>
+      <p>${esc(L(p.blurb))}</p>
+      <div class="project-meta"><span>${tr ? esc(L(tr.title)) : ''}</span><span>${LANG_LABEL[p.lang === 'js' ? 'javascript' : p.lang] || p.lang}</span><span>${t('projectSteps', p.steps)}</span>${p.minutes ? `<span>${t('projectMinutes', p.minutes)}</span>` : ''}</div>
+      <div class="progress"><span style="width:${pct(done, p.steps)}%"></span></div></div></a>`;
+}
+function viewProjects() {
+  const list = DATA.projects || [];
+  const groups = orderedTracks().map((tr) => ({ tr, items: list.filter((p) => p.track === tr.id) })).filter((g) => g.items.length);
+  return `<section class="wrap"><div class="crumbs"><a href="#practice">${t('practice')}</a><span>/</span><span style="color:var(--text)">${t('projects')}</span></div>
+    <h1>${t('projects')}</h1><p class="lead">${t('projectsLead')}</p>
+    ${groups.map((g) => `<div class="section-head"><h2>${esc(L(g.tr.title))}</h2></div><div class="project-grid">${g.items.map(projectCard).join('')}</div>`).join('')}</section>`;
+}
+function viewProject(id) {
+  const p = (DATA.projects || []).find((x) => x.id === id), full = (DATA.projectsFull || []).find((x) => x.id === id);
+  if (!p || !full) return viewMissing();
+  const key = projectKey(id), done = projectSolved(p), tr = track(p.track);
+  state.chModule = key;
+  return `<section class="wrap project-page"><div class="crumbs"><a href="#projects">${t('projects')}</a><span>/</span><span style="color:var(--text)">${esc(L(p.title))}</span></div>
+    <div class="project-hero"><span class="project-ico big" aria-hidden="true">${esc(p.icon || '◆')}</span><div><h1>${esc(L(p.title))}</h1><p class="lead">${esc(L(p.blurb))}</p>
+      <div class="project-meta">${tr ? `<a href="#course-${tr.id}">${esc(L(tr.title))}</a>` : ''}<span>${t('projectSteps', p.steps)}</span>${p.minutes ? `<span>${t('projectMinutes', p.minutes)}</span>` : ''}</div></div></div>
+    <div class="project-progress"><div class="progress"><span style="width:${pct(done, p.steps)}%"></span></div><span class="muted ch-lead"><b>${t('stepOf', done, p.steps)}</b></span></div>
+    <ol class="project-steps-nav">${full.steps.map((st, i) => `<li class="${state.solved.has(chKey(key, st)) ? 'done' : ''}"><a href="#ch-${i}" data-action="jump-step" data-i="${i}">${i + 1}. ${esc(L(st.title))}</a></li>`).join('')}</ol>
+    ${full.steps.map((st, i) => challengeHtml(key, st, i)).join('')}</section>`;
+}
+
 const solvedIn = (id) => [...state.solved].filter((k) => k.startsWith(id + '/')).length;
 function viewChallenges() {
   const mods = orderedTracks().map((tr) => ({ tr, ids: trackIds(tr.id).filter((id) => DATA.modules[id].counts?.challenges) })).filter((g) => g.ids.length);
@@ -828,6 +881,7 @@ function viewProfile() {
   const ach = achievements(), recent = state.activity.slice(-6).reverse();
   const actLine = (a) => a.kind === 'done' ? `<span class="kind">✓</span><span>${t('completed')} <b style="color:var(--text)">${esc(moduleTitle(a.id))}</b></span>`
     : a.kind === 'quiz' ? `<span class="kind">%</span><span>${t('quiz')}: ${esc(moduleTitle(a.id))} · ${a.score}/${a.n}</span>`
+    : a.kind === 'project' ? `<span class="kind">🏁</span><span>${t('projectDoneIn', esc(moduleTitle(a.id)))}</span>`
     : a.kind === 'challenge' ? `<span class="kind">✓</span><span>${t('challengeSolvedIn', esc(moduleTitle(a.id)))}</span>`
     : `<span class="kind">✎</span><span>${t('notes')}: ${esc(moduleTitle(a.id))}</span>`;
   return `<section class="wrap">
@@ -1484,8 +1538,13 @@ function markSolved(i, id, ch, key) {
   const card = $('#ch-' + i); card.classList.add('solved');
   card.querySelector('.ch-head').insertAdjacentHTML('beforeend', `<span class="pill ok">✓ ${t('solved')}</span>`);
   toast(t('challengeSolved'));
-  const list = DATA.full[id].challenges, lead = $('.ch-lead b');
-  if (lead) lead.textContent = t('solvedOf', list.filter((c) => state.solved.has(chKey(id, c))).length, list.length);
+  const list = DATA.full[id].challenges, lead = $('.ch-lead b'), n = list.filter((c) => state.solved.has(chKey(id, c))).length;
+  if (id.startsWith('project:')) {
+    if (lead) lead.textContent = t('stepOf', n, list.length);
+    const bar = $('.project-progress .progress span'); if (bar) bar.style.width = pct(n, list.length) + '%';
+    const navItem = document.querySelectorAll('.project-steps-nav li')[i]; if (navItem) navItem.classList.add('done');
+    if (n === list.length) { logActivity('project', id); save(); toast(t('projectDone'), 3500); }
+  } else if (lead) lead.textContent = t('solvedOf', n, list.length);
 }
 async function runChallenge(i) {
   const id = state.chModule, ch = DATA.full[id].challenges[i], key = chKey(id, ch), box = $('#ch-res-' + i), code = $('#ch-code-' + i).value;
@@ -2043,11 +2102,11 @@ function render(keepScroll) {
   let loading = route.startsWith('m-') && DATA.modules[route.slice(2)] ? waitForModule(route.slice(2))
     : onePick && DATA.modules[onePick] ? waitForModule(onePick)
     : onePick === MIX ? waitForModules(mixIds()) : onePick === DUE ? waitForModules(dueKeys().map((k) => k.split(':')[0]))
-    : route === 'glossary' ? waitForGlossary() : waitForLessons(needTracks);
+    : route === 'glossary' ? waitForGlossary() : route === 'projects' || route.startsWith('project-') ? waitForProjects() : waitForLessons(needTracks);
   // A module whose lessons are still downloading shows its header right away (from the small index), so the page paints fast.
   if (loading && route.startsWith('m-') && DATA.modules[route.slice(2)]) loading = moduleSkeleton(route.slice(2), loading);
   const html = loading || (route === 'home' ? viewHome() : route === 'courses' ? viewCourses() : route === 'practice' ? viewPractice() : route === 'quizzes' ? viewQuizzes() : route === 'flashcards' ? viewFlashcards() : route === 'challenges' ? viewChallenges() : route === 'profile' ? viewProfile() : route === 'playground' ? viewPlayground() : route === 'notes' ? viewNotes() : route === 'glossary' ? viewGlossary() : route === 'roadmap' ? viewRoadmap() : route === 'plan' ? viewPlan()
-    : route.startsWith('cert-') ? viewCert(route.slice(5)) : route.startsWith('sheet-') ? viewSheet(route.slice(6)) : route.startsWith('course-') ? viewCourse(route.slice(7)) : route.startsWith('m-') ? viewModule(route.slice(2)) : viewMissing());
+    : route === 'projects' ? viewProjects() : route.startsWith('project-') ? viewProject(route.slice(8)) : route.startsWith('cert-') ? viewCert(route.slice(5)) : route.startsWith('sheet-') ? viewSheet(route.slice(6)) : route.startsWith('course-') ? viewCourse(route.slice(7)) : route.startsWith('m-') ? viewModule(route.slice(2)) : viewMissing());
   renderChrome(route);
   $('#main').innerHTML = html;
   armQuizTimer();
@@ -2070,6 +2129,7 @@ document.addEventListener('click', (e) => {
   if (el.dataset.codeLang) { state.codeLang = el.dataset.codeLang; state.langsSeen.add(el.dataset.codeLang); store.set('codeLangTouched', true); save(); render(true); return; }
   const a = el.dataset.action;
   if (a === 'reload') { location.reload(); return; }
+  if (a === 'jump-step') { e.preventDefault(); $('#ch-' + el.dataset.i)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
   if (a === 'cf-resend') { resendConfirm(); return; }
   if (a === 'cf-later') { state.confirmLater = true; updateConfirmBar(); return; }
   if (a === 'recover-email') { e.preventDefault(); recoverByEmail(); return; }
