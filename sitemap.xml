@@ -103,12 +103,6 @@
     <priority>0.4</priority>
   </url>
   <url>
-    <loc>https://eddyarriaga00.github.io/CS-Course-Atlas/index.html?module=intro-to-coding</loc>
-    <lastmod>2026-03-28</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
-  <url>
     <loc>https://eddyarriaga00.github.io/CS-Course-Atlas/index.html?module=java-basics</loc>
     <lastmod>2026-03-28</lastmod>
     <changefreq>weekly</changefreq>
