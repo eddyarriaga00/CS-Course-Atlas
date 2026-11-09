@@ -40,7 +40,8 @@ const CATEGORY_ROUTE_MAP = {
     python: '/python',
     cli: '/command-line',
     web: '/web',
-    sql: '/sql'
+    sql: '/sql',
+    'how-computers-work': '/how-computers-work'
 };
 
 const CATEGORY_LABEL_MAP = {
@@ -52,7 +53,8 @@ const CATEGORY_LABEL_MAP = {
     python: 'Python',
     cli: 'Command Line & Linux',
     web: 'Web Basics',
-    sql: 'SQL & Databases'
+    sql: 'SQL & Databases',
+    'how-computers-work': 'How Computers Work'
 };
 
 const ROUTE_PAGES = [
@@ -154,6 +156,15 @@ const ROUTE_PAGES = [
         heading: 'SQL & Databases',
         lead: 'Ask questions of data, then design your own database.',
         moduleCategory: 'sql'
+    },
+    {
+        route: '/how-computers-work',
+        filename: 'how-computers-work.html',
+        title: 'How Computers Work | CS Course Atlas',
+        description: 'Bits and bytes, binary and hex, how text, images and sound are stored, logic gates, a CPU built step by step, operating systems and the internet, with runnable Python.',
+        heading: 'How Computers Work',
+        lead: 'From bits to a running program.',
+        moduleCategory: 'how-computers-work'
     },
     {
         route: '/flashcards',
@@ -422,7 +433,7 @@ let publishedTrackSet = null;
 function trackNavLinks() {
     return [['dsa', 'dsa.html', 'DSA'], ['java', 'java.html', 'Java'], ['git', 'git.html', 'Git'],
         ['assembly', 'assembly.html', 'Assembly'], ['discrete', 'discrete-math.html', 'Discrete Math'],
-        ['python', 'python.html', 'Python'], ['cli', 'command-line.html', 'Command Line'], ['web', 'web.html', 'Web Basics'], ['sql', 'sql.html', 'SQL']]
+        ['python', 'python.html', 'Python'], ['cli', 'command-line.html', 'Command Line'], ['web', 'web.html', 'Web Basics'], ['sql', 'sql.html', 'SQL'], ['how-computers-work', 'how-computers-work.html', 'How Computers Work']]
         .filter(([category]) => !publishedTrackSet || publishedTrackSet.has(category))
         .map(([, href, label]) => `<a href="${href}">${label}</a>`)
         .join('\n                    ');

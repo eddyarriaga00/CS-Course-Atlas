@@ -4,6 +4,7 @@
   "cli",
   "web",
   "sql",
+  "how-computers-work",
   "java",
   "discrete",
   "git"
@@ -46,6 +47,10 @@
   "sql-summarizing",
   "sql-joins",
   "sql-design",
+  "hcw-binary",
+  "hcw-data",
+  "hcw-hardware",
+  "hcw-software",
   "heaps",
   "tries",
   "discrete-graph-theory",
@@ -132,7 +137,11 @@
   "sql-first-queries": "sql",
   "sql-summarizing": "sql",
   "sql-joins": "sql",
-  "sql-design": "sql"
+  "sql-design": "sql",
+  "hcw-binary": "how-computers-work",
+  "hcw-data": "how-computers-work",
+  "hcw-hardware": "how-computers-work",
+  "hcw-software": "how-computers-work"
  },
  "modules": [
   {
@@ -1180,6 +1189,74 @@
    "es": {
     "title": "Diseñar y modificar una base de datos",
     "description": "Construye tu propia base de datos: crea tablas con buenos tipos, inserta, actualiza y borra filas con seguridad, protege los datos con restricciones, divide los datos en tablas bien diseñadas y usa índices y transacciones."
+   }
+  },
+  {
+   "id": "hcw-binary",
+   "title": "Bits, Bytes and Number Systems",
+   "description": "Why computers use only 0s and 1s, how to count and convert in binary and hexadecimal, how negative numbers are stored, and how a computer adds.",
+   "difficulty": "beginner",
+   "topics": [
+    "Bits and Bytes",
+    "Binary Numbers",
+    "Hexadecimal",
+    "Negative Numbers",
+    "Binary Arithmetic"
+   ],
+   "es": {
+    "title": "Bits, bytes y sistemas numéricos",
+    "description": "Por qué las computadoras solo usan 0 y 1, cómo contar y convertir en binario y hexadecimal, cómo se guardan los números negativos y cómo suma una computadora."
+   }
+  },
+  {
+   "id": "hcw-data",
+   "title": "How Data Is Represented",
+   "description": "Everything is numbers underneath: how text becomes bytes with Unicode, how decimals are approximated, how images and sounds are stored as numbers, and how compression makes them smaller.",
+   "difficulty": "beginner",
+   "topics": [
+    "Text and Unicode",
+    "Floating-Point Numbers",
+    "Images and Color",
+    "Sound",
+    "Compression"
+   ],
+   "es": {
+    "title": "Cómo se representan los datos",
+    "description": "Todo son números por debajo: cómo el texto se vuelve bytes con Unicode, cómo se aproximan los decimales, cómo se guardan imágenes y sonidos como números y cómo la compresión los hace más pequeños."
+   }
+  },
+  {
+   "id": "hcw-hardware",
+   "title": "Inside the Machine",
+   "description": "From switches to a working processor: logic gates, building an adder out of gates, memory and storage, and a tiny CPU that fetches, decodes and executes instructions.",
+   "difficulty": "beginner",
+   "topics": [
+    "Logic Gates",
+    "From Gates to an Adder",
+    "Memory and Storage",
+    "The CPU and Instructions",
+    "The Fetch-Decode-Execute Cycle"
+   ],
+   "es": {
+    "title": "Dentro de la máquina",
+    "description": "De los interruptores a un procesador que funciona: compuertas lógicas, construir un sumador con compuertas, memoria y almacenamiento, y una CPU pequeña que busca, decodifica y ejecuta instrucciones."
+   }
+  },
+  {
+   "id": "hcw-software",
+   "title": "From Code to Running Program",
+   "description": "What happens between pressing Run and seeing output: compilers and interpreters, the operating system, processes and memory, files and file systems, and how data travels across the internet.",
+   "difficulty": "beginner",
+   "topics": [
+    "Compilers and Interpreters",
+    "The Operating System",
+    "Processes and Memory",
+    "Files and File Systems",
+    "How the Internet Moves Data"
+   ],
+   "es": {
+    "title": "Del código al programa en ejecución",
+    "description": "Qué pasa entre pulsar Ejecutar y ver la salida: compiladores e intérpretes, el sistema operativo, procesos y memoria, archivos y sistemas de archivos, y cómo viajan los datos por internet."
    }
   }
  ]
