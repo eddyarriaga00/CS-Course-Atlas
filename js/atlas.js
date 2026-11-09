@@ -787,6 +787,44 @@ function viewProfile() {
     </div></div></section>`;
 }
 
+const PG_PY = `# Python runs right here in your browser.
+# Change the numbers, then press Run (or try Step through).
+scores = [72, 95, 88, 61, 79]
+average = sum(scores) / len(scores)
+print("average:", round(average, 2))
+
+for s in scores:
+    letter = "A" if s >= 90 else "B" if s >= 80 else "C" if s >= 70 else "D"
+    print(s, "->", letter)
+`;
+const PG_SQL = `-- SQL runs in your browser on a fresh SQLite database.
+CREATE TABLE students (name TEXT, city TEXT, score REAL);
+INSERT INTO students VALUES ('Ana', 'Austin', 91.5), ('Ben', 'Denver', 78), ('Chen', 'Austin', 85.5);
+
+SELECT city, COUNT(*) AS students, ROUND(AVG(score), 1) AS average
+FROM students
+GROUP BY city
+ORDER BY average DESC;
+`;
+const PG_JAVA = `public class Main {
+    public static void main(String[] args) {
+        int[] scores = {72, 95, 88};
+        int total = 0;
+        for (int s : scores) total += s;
+        System.out.println("average: " + (double) total / scores.length);
+    }
+}
+`;
+const PG_CPP = `#include <iostream>
+#include <vector>
+
+int main() {
+    std::vector<int> scores = {72, 95, 88};
+    int total = 0;
+    for (int s : scores) total += s;
+    std::cout << "average: " << static_cast<double>(total) / scores.size() << "\n";
+}
+`;
 const PG_TERM = `# A practice terminal: nothing here touches your computer.
 # Change these commands, then press Run.
 pwd
@@ -1704,10 +1742,10 @@ document.addEventListener('click', (e) => {
   else if (a === 'pg-run') runPlayground();
   else if (a === 'pg-lang') {
     state.viz = null;
-    const code = $('#pg-code').value, samples = [PG_SAMPLE, PG_HTML, PG_TERM];
+    const code = $('#pg-code').value, byLang = { javascript: PG_SAMPLE, html: PG_HTML, bash: PG_TERM, python: PG_PY, sql: PG_SQL, java: PG_JAVA, cpp: PG_CPP };
     state.pg.lang = el.dataset.v;
-    // Switching between the starter samples swaps them; your own code is kept.
-    state.pg.code = samples.includes(code) ? (el.dataset.v === 'html' ? PG_HTML : el.dataset.v === 'bash' ? PG_TERM : PG_SAMPLE) : code;
+    // Switching languages swaps in that language's starter sample; your own code is kept.
+    state.pg.code = Object.values(byLang).includes(code) || !code.trim() ? (byLang[el.dataset.v] || '') : code;
     render(true);
   }
   else if (a === 'pg-reset') { state.pg = null; state.viz = null; render(true); }
