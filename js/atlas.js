@@ -1701,7 +1701,11 @@ function render(keepScroll) {
     history.replaceState(null, '', '#' + route);
   }
   if (route !== lastRoute) { state.tab = state.pendingTab || 'overview'; state.pendingTab = null; state.exIndex = 0; state.sideCollapsed.clear(); }
-  let loading = route.startsWith('m-') && DATA.modules[route.slice(2)] ? waitForModule(route.slice(2)) : waitForLessons(lessonsFor(route));
+  const needTracks = lessonsFor(route);   // also picks the default quiz/flashcard module
+  const onePick = route === 'quizzes' ? state.quizModule : route === 'flashcards' ? state.flashModule : null;
+  // A single module (its page, or one picked in Quizzes/Flashcards) needs only its own small lesson file.
+  let loading = route.startsWith('m-') && DATA.modules[route.slice(2)] ? waitForModule(route.slice(2))
+    : onePick && DATA.modules[onePick] ? waitForModule(onePick) : waitForLessons(needTracks);
   // A module whose lessons are still downloading shows its header right away (from the small index), so the page paints fast.
   if (loading && route.startsWith('m-') && DATA.modules[route.slice(2)]) loading = moduleSkeleton(route.slice(2), loading);
   const html = loading || (route === 'home' ? viewHome() : route === 'courses' ? viewCourses() : route === 'practice' ? viewPractice() : route === 'quizzes' ? viewQuizzes() : route === 'flashcards' ? viewFlashcards() : route === 'challenges' ? viewChallenges() : route === 'profile' ? viewProfile() : route === 'playground' ? viewPlayground() : route === 'notes' ? viewNotes() : route === 'glossary' ? viewGlossary() : route === 'roadmap' ? viewRoadmap() : route === 'plan' ? viewPlan()
