@@ -23,6 +23,8 @@ const TRACK_META = {
     blurb: { en: 'Bits and bytes, how text, images and sound become numbers, logic gates up to a working CPU, and what the OS and the internet do with your code.', es: 'Bits y bytes, cómo el texto, las imágenes y el sonido se vuelven números, de las compuertas lógicas a una CPU y qué hacen el SO e internet con tu código.' } },
   cybersecurity: { title: { en: 'Cybersecurity Fundamentals', es: 'Fundamentos de ciberseguridad' }, icon: '🛡', level: 'beginner',
     blurb: { en: 'Passwords and two-factor login, encryption from Caesar to HTTPS, how phishing, SQL injection and XSS work, and the habits that stop them.', es: 'Contraseñas e inicio de sesión en dos pasos, cifrado de César a HTTPS, cómo funcionan el phishing, la inyección SQL y el XSS, y los hábitos que los detienen.' } },
+  ai: { title: { en: 'AI Fundamentals', es: 'Fundamentos de inteligencia artificial' }, icon: 'AI', level: 'beginner',
+    blurb: { en: 'What AI really is, models you build in plain Python, a neural network trained from scratch, and how language models work and how to use them well.', es: 'Qué es realmente la IA, modelos que construyes en Python puro, una red neuronal entrenada desde cero, y cómo funcionan los modelos de lenguaje y cómo usarlos bien.' } },
   java: { title: { en: 'Java', es: 'Java' }, icon: 'J', level: 'beginner',
     blurb: { en: 'From variables and objects to collections, streams, testing, JDBC and the JVM.', es: 'De variables y objetos a colecciones, streams, pruebas, JDBC y la JVM.' } },
   dsa: { title: { en: 'Data Structures & Algorithms', es: 'Estructuras de datos y algoritmos' }, icon: 'A', level: 'intermediate',
@@ -34,11 +36,10 @@ const TRACK_META = {
   assembly: { title: { en: 'x86-64 Assembly', es: 'Ensamblador x86-64' }, icon: '⚙', level: 'intermediate',
     blurb: { en: 'Registers, memory, calls and the stack: what your high-level code turns into.', es: 'Registros, memoria, llamadas y la pila: en qué se convierte tu código de alto nivel.' } }
 };
-const ORDER = ['python', 'cli', 'web', 'sql', 'how-computers-work', 'cybersecurity', 'java', 'discrete', 'git', 'dsa', 'assembly'];
+const ORDER = ['python', 'cli', 'web', 'sql', 'how-computers-work', 'cybersecurity', 'ai', 'java', 'discrete', 'git', 'dsa', 'assembly'];
 // Courses not written yet, beginner-friendly first. Shown as cards on the Courses page.
 const P = (id, icon, level, en, es, blurbEn, blurbEs) => ({ id, icon, level, title: { en, es }, blurb: { en: blurbEn, es: blurbEs } });
 const PLANNED = [
-  P('ai', 'AI', 'beginner', 'AI Fundamentals', 'Fundamentos de inteligencia artificial', 'How AI and machine learning actually work: data, models, training and testing, language models, and using AI tools well and safely.', 'Cómo funcionan realmente la IA y el aprendizaje automático: datos, modelos, entrenamiento y prueba, modelos de lenguaje, y usar herramientas de IA bien y con seguridad.'),
   P('networks', '⇄', 'intermediate', 'Computer Networks', 'Redes de computadoras', 'From packets to the web: IP, TCP and UDP, DNS, HTTP and what happens when you open a website.', 'De los paquetes a la web: IP, TCP y UDP, DNS, HTTP y qué pasa cuando abres un sitio web.'),
   P('os', 'OS', 'intermediate', 'Operating Systems', 'Sistemas operativos', 'Processes and threads, scheduling, memory management, file systems and concurrency.', 'Procesos e hilos, planificación, gestión de memoria, sistemas de archivos y concurrencia.'),
   P('cpp', 'C+', 'intermediate', 'C++', 'C++', 'Pointers, memory, classes and the standard library, for performance-minded programming.', 'Punteros, memoria, clases y la biblioteca estándar, para programar pensando en el rendimiento.'),

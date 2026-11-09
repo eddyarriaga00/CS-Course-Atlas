@@ -42,7 +42,8 @@ const CATEGORY_ROUTE_MAP = {
     web: '/web',
     sql: '/sql',
     'how-computers-work': '/how-computers-work',
-    cybersecurity: '/cybersecurity'
+    cybersecurity: '/cybersecurity',
+    ai: '/ai'
 };
 
 const CATEGORY_LABEL_MAP = {
@@ -56,7 +57,8 @@ const CATEGORY_LABEL_MAP = {
     web: 'Web Basics',
     sql: 'SQL & Databases',
     'how-computers-work': 'How Computers Work',
-    cybersecurity: 'Cybersecurity Fundamentals'
+    cybersecurity: 'Cybersecurity Fundamentals',
+    ai: 'AI Fundamentals'
 };
 
 const ROUTE_PAGES = [
@@ -176,6 +178,15 @@ const ROUTE_PAGES = [
         heading: 'Cybersecurity Fundamentals',
         lead: 'How attacks work and how to stop them.',
         moduleCategory: 'cybersecurity'
+    },
+    {
+        route: '/ai',
+        filename: 'ai.html',
+        title: 'AI Fundamentals | CS Course Atlas',
+        description: 'Learn how AI really works from zero: data and features, models built in plain Python, a neural network trained from scratch, and how language models work and how to use them well.',
+        heading: 'AI Fundamentals',
+        lead: 'Understand the AI you use every day, and build some yourself.',
+        moduleCategory: 'ai'
     },
     {
         route: '/flashcards',
@@ -444,7 +455,7 @@ let publishedTrackSet = null;
 function trackNavLinks() {
     return [['dsa', 'dsa.html', 'DSA'], ['java', 'java.html', 'Java'], ['git', 'git.html', 'Git'],
         ['assembly', 'assembly.html', 'Assembly'], ['discrete', 'discrete-math.html', 'Discrete Math'],
-        ['python', 'python.html', 'Python'], ['cli', 'command-line.html', 'Command Line'], ['web', 'web.html', 'Web Basics'], ['sql', 'sql.html', 'SQL'], ['how-computers-work', 'how-computers-work.html', 'How Computers Work'], ['cybersecurity', 'cybersecurity.html', 'Cybersecurity']]
+        ['python', 'python.html', 'Python'], ['cli', 'command-line.html', 'Command Line'], ['web', 'web.html', 'Web Basics'], ['sql', 'sql.html', 'SQL'], ['how-computers-work', 'how-computers-work.html', 'How Computers Work'], ['cybersecurity', 'cybersecurity.html', 'Cybersecurity'], ['ai', 'ai.html', 'AI']]
         .filter(([category]) => !publishedTrackSet || publishedTrackSet.has(category))
         .map(([, href, label]) => `<a href="${href}">${label}</a>`)
         .join('\n                    ');

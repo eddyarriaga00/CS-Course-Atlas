@@ -69,6 +69,12 @@
    "type": "playlist",
    "title": "Cybersecurity Architecture Series",
    "channel": "IBM Technology"
+  },
+  "ai": {
+   "id": "PLzdnOPI1iJNeehd1RXhnVMBFi1WhWLx_Y",
+   "type": "playlist",
+   "title": "How AI Works",
+   "channel": "CodeAI"
   }
  },
  "modules": {
@@ -2208,6 +2214,186 @@
      "title": "Data protection explained in three minutes",
      "channel": "Information Commission's Office (ICO)",
      "length": "2:54"
+    }
+   }
+  },
+  "ai-what": {
+   "series": {
+    "id": "PLOspHqNVtKADfxkuDuHduUkDExBpEt3DF",
+    "type": "playlist",
+    "title": "AI Fundamentals",
+    "channel": "IBM Technology"
+   },
+   "topics": {
+    "AI, Machine Learning and Deep Learning": {
+     "id": "qYNweeDHiyU",
+     "type": "video",
+     "title": "AI, Machine Learning, Deep Learning and Generative AI Explained",
+     "channel": "IBM Technology",
+     "length": "10:01"
+    },
+    "Data and Features": {
+     "id": "GQXn_1HONBY",
+     "type": "video",
+     "title": "Machine Learning: Features and Labels",
+     "channel": "ByteMonk",
+     "length": "8:21"
+    },
+    "Rules Versus Learning": {
+     "id": "PeMlggyqz0Y",
+     "type": "video",
+     "title": "Machine Learning Explained in 100 Seconds",
+     "channel": "Fireship",
+     "length": "2:35"
+    },
+    "Training and Test Data": {
+     "id": "fwY9Qv96DJY",
+     "type": "video",
+     "title": "Machine Learning Tutorial Python - 7: Training and Testing Data",
+     "channel": "codebasics",
+     "length": "6:34"
+    },
+    "Bias in Data": {
+     "id": "gV0_raKR2UQ",
+     "type": "video",
+     "title": "Algorithmic Bias and Fairness: Crash Course AI #18",
+     "channel": "CrashCourse",
+     "length": "11:20"
+    }
+   }
+  },
+  "ai-first-models": {
+   "series": {
+    "id": "PLOspHqNVtKADfxkuDuHduUkDExBpEt3DF",
+    "type": "playlist",
+    "title": "AI Fundamentals",
+    "channel": "IBM Technology"
+   },
+   "topics": {
+    "Nearest Neighbors": {
+     "id": "HVXime0nQeI",
+     "type": "video",
+     "title": "StatQuest: K-nearest neighbors, Clearly Explained",
+     "channel": "StatQuest with Josh Starmer",
+     "length": "5:30"
+    },
+    "Linear Regression": {
+     "id": "sDv4f4s2SB8",
+     "type": "video",
+     "title": "Gradient Descent, Step-by-Step",
+     "channel": "StatQuest with Josh Starmer",
+     "length": "23:54"
+    },
+    "Classification and Accuracy": {
+     "id": "Kdsp6soqA7o",
+     "type": "video",
+     "title": "Machine Learning Fundamentals: The Confusion Matrix",
+     "channel": "StatQuest with Josh Starmer",
+     "length": "7:13"
+    },
+    "Overfitting": {
+     "id": "o3DztvnfAJg",
+     "type": "video",
+     "title": "Underfitting & Overfitting - Explained",
+     "channel": "NStatum",
+     "length": "2:53"
+    },
+    "Evaluating a Model": {
+     "id": "fSytzGwwBVw",
+     "type": "video",
+     "title": "Machine Learning Fundamentals: Cross Validation",
+     "channel": "StatQuest with Josh Starmer",
+     "length": "6:05"
+    }
+   }
+  },
+  "ai-neural": {
+   "series": {
+    "id": "PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi",
+    "type": "playlist",
+    "title": "Neural networks",
+    "channel": "3Blue1Brown"
+   },
+   "topics": {
+    "Neurons and Weights": {
+     "id": "aircAruvnKk",
+     "type": "video",
+     "title": "But what is a neural network? | Deep learning chapter 1",
+     "channel": "3Blue1Brown",
+     "length": "18:40"
+    },
+    "Activation Functions": {
+     "id": "Fu273ovPBmQ",
+     "type": "video",
+     "title": "Activation Functions In Neural Networks Explained | Deep Learning Tutorial",
+     "channel": "AssemblyAI",
+     "length": "6:43"
+    },
+    "Gradient Descent": {
+     "id": "IHZwWFHWa-w",
+     "type": "video",
+     "title": "Gradient descent, how neural networks learn | Deep Learning Chapter 2",
+     "channel": "3Blue1Brown",
+     "length": "20:33"
+    },
+    "A Tiny Network from Scratch": {
+     "id": "Ilg3gGewQ5U",
+     "type": "video",
+     "title": "Backpropagation, intuitively | Deep Learning Chapter 3",
+     "channel": "3Blue1Brown",
+     "length": "12:47"
+    },
+    "Deep Learning": {
+     "id": "yAzPUABBkg0",
+     "type": "video",
+     "title": "Deep Learning Explained Simply (In 14 Minutes)",
+     "channel": "The Gradient Descent",
+     "length": "14:08"
+    }
+   }
+  },
+  "ai-language": {
+   "series": {
+    "id": "PLOspHqNVtKADfxkuDuHduUkDExBpEt3DF",
+    "type": "playlist",
+    "title": "AI Fundamentals",
+    "channel": "IBM Technology"
+   },
+   "topics": {
+    "Tokens": {
+     "id": "OjrGu0L5K7M",
+     "type": "video",
+     "title": "What is an AI Token? | LLM Tokens explained in 2 minutes!",
+     "channel": "Azure Innovation Station | Azure AI Agents",
+     "length": "1:59"
+    },
+    "Predicting the Next Word": {
+     "id": "LPZh9BOjkQs",
+     "type": "video",
+     "title": "Large Language Models explained briefly",
+     "channel": "3Blue1Brown",
+     "length": "7:58"
+    },
+    "Writing Good Prompts": {
+     "id": "jC4v5AS4RIM",
+     "type": "video",
+     "title": "Master the Perfect ChatGPT Prompt Formula (in just 8 minutes)!",
+     "channel": "Jeff Su",
+     "length": "8:30"
+    },
+    "Limits and Hallucinations": {
+     "id": "005JLRt3gXI",
+     "type": "video",
+     "title": "Why do AI models hallucinate?",
+     "channel": "Claude",
+     "length": "5:14"
+    },
+    "Using AI Responsibly": {
+     "id": "7pnl4cYG4gQ",
+     "type": "video",
+     "title": "AI and Academic Integrity: What Students Need to Know",
+     "channel": "Jessica Bernards",
+     "length": "4:51"
     }
    }
   }
