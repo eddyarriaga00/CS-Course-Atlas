@@ -28,4 +28,14 @@ test.describe('Critical Navigation Links', () => {
         await expect(page).toHaveURL(/\/sitemap\.xml$/);
         await expect(page.locator('body')).toContainText('<urlset');
     });
+
+    test('module deep links and global search open modules beyond the first page', async ({ page }) => {
+        await mockAuthAndProfileApi(page, { authenticated: false });
+        // matrix-grid-problems is the last DSA module, so it lives on the final page of the track.
+        await page.goto('/index.html?module=matrix-grid-problems');
+        await expect(page.locator('[data-module-card="matrix-grid-problems"]')).toBeVisible();
+
+        await page.evaluate(() => openModuleFromGlobalSearch('java-memory-jvm'));
+        await expect(page.locator('[data-module-card="java-memory-jvm"]')).toBeVisible();
+    });
 });
