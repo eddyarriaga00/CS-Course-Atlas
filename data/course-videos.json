@@ -650,15 +650,6 @@
     }
    }
   },
-  "intro-to-coding": {
-   "series": {
-    "id": "PLhQjrBD2T383f9scHRNYJkior2VvYjpSL",
-    "type": "playlist",
-    "title": "CS50 Lectures 2021 (HDR)",
-    "channel": "CS50"
-   },
-   "topics": {}
-  },
   "arrays-strings": {
    "series": {
     "id": "PLBlnK6fEyqRhU6vNrQ-6ndkcbM7D7q-U8",

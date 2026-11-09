@@ -3,8 +3,8 @@
  * Fast structural check for js/course-examples.js (no compilers needed):
  * - every catalog module has a main example and exactly one example per topic,
  *   in topic order, with the topic string matching the catalog
- * - java/cpp/python/javascript code (+ assembly on the assembly track) and a
- *   recorded expected output for every language
+ * - java/cpp/python/javascript code (+ assembly on the assembly track; only
+ *   java/python on the dsa track) and a recorded expected output for every language
  * - English + Spanish title, description and explanation for every topic example
  * - no leftover placeholder/template code
  * Running the programs themselves: node scripts/run_course_examples.js
@@ -58,8 +58,9 @@ function main() {
         // Modules without curated examples fall back to the generated ones at runtime.
         if (!entry) continue;
         const track = MODULE_CATEGORY_BY_ID[module.id];
-        // Git and the command line are taught as terminal sessions, Web Basics as live pages and the Python course only in Python.
-        const langs = track === 'git' || track === 'cli' ? ['bash'] : track === 'web' ? ['html'] : track === 'sql' ? ['sql'] : ['how-computers-work', 'cybersecurity', 'ai'].includes(track) ? ['python'] : track === 'python' ? ['python'] : track === 'assembly' ? ['assembly', ...LANGS] : LANGS;
+        // Git and the command line are taught as terminal sessions, Web Basics as live pages, the Python course only in Python
+        // and Data Structures & Algorithms in Java and Python.
+        const langs = track === 'git' || track === 'cli' ? ['bash'] : track === 'web' ? ['html'] : track === 'sql' ? ['sql'] : ['how-computers-work', 'cybersecurity', 'ai'].includes(track) ? ['python'] : track === 'python' ? ['python'] : track === 'dsa' ? ['java', 'python'] : track === 'assembly' ? ['assembly', ...LANGS] : LANGS;
         checkCode(`${module.id} main`, entry.main, langs);
         programCount += langs.length;
         const topics = Array.isArray(module.topics) ? module.topics : [];

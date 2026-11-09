@@ -147,14 +147,13 @@ The beginner path, in order, then the next level. Courses marked "in progress" s
 2. **Object-Oriented Java**: Object-Oriented Programming, Exception Handling, Java Generics
 3. **Core Libraries**: Java Collections Framework, Lambda Expressions & Streams, File Input/Output
 4. **Professional Java**: Unit Testing with JUnit, Database Connectivity (JDBC), Multithreading Basics, Java Memory and JVM Fundamentals, Design Patterns
-#### Data Structures & Algorithms (22 modules, in progress)
-1. **Getting Started**: Introduction to Coding
-2. **Linear Data Structures**: Arrays and Strings, Searching Algorithms, Stacks and Queues, Linked Lists
-3. **Recursion and Sorting**: Recursion Fundamentals, Sorting Algorithms, Matrix and Grid Problem Solving, Backtracking Patterns
-4. **Hashing, Trees and Heaps**: Hash Tables and Maps, Binary Trees, Heaps and Priority Queues, Tries (Prefix Trees)
-5. **Graphs**: Graph Algorithms, Union-Find (Disjoint Set)
-6. **Algorithm Design Techniques**: Greedy Algorithms, Dynamic Programming, Bit Manipulation
-7. **Advanced Structures and Strings**: Segment Trees, Binary Indexed Trees (Fenwick Trees), Advanced Tree Structures, Advanced String Algorithms
+#### Data Structures & Algorithms (21 modules; examples in Java and Python)
+1. **Linear Data Structures**: Arrays and Strings, Searching Algorithms, Stacks and Queues, Linked Lists
+2. **Recursion and Sorting**: Recursion Fundamentals, Sorting Algorithms, Matrix and Grid Problem Solving, Backtracking Patterns
+3. **Hashing, Trees and Heaps**: Hash Tables and Maps, Binary Trees, Heaps and Priority Queues, Tries (Prefix Trees)
+4. **Graphs**: Graph Algorithms, Union-Find (Disjoint Set)
+5. **Algorithm Design Techniques**: Greedy Algorithms, Dynamic Programming, Bit Manipulation
+6. **Advanced Structures and Strings**: Segment Trees, Binary Indexed Trees (Fenwick Trees), Advanced Tree Structures, Advanced String Algorithms
 #### x86-64 Assembly (4 modules, in progress)
 1. **The Machine Model**: Assembly Registers and Memory Basics
 2. **Control Flow and Procedures**: Assembly Control Flow and Procedures, Assembly Addressing Modes and Stack Frames

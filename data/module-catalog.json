@@ -9,7 +9,8 @@
   "ai",
   "java",
   "discrete",
-  "git"
+  "git",
+  "dsa"
  ],
  "sequence": [
   "python-first-programs",
@@ -20,7 +21,6 @@
   "cli-text-pipes",
   "cli-permissions-env",
   "cli-shell-scripts",
-  "intro-to-coding",
   "java-basics",
   "control-flow",
   "git-basics-workflow",
@@ -110,7 +110,6 @@
   "assembly-control-flow-procedures": "assembly",
   "assembly-arrays-strings-io": "assembly",
   "assembly-addressing-modes": "assembly",
-  "intro-to-coding": "dsa",
   "arrays-strings": "dsa",
   "linked-lists": "dsa",
   "stacks-queues": "dsa",
@@ -163,41 +162,9 @@
  },
  "modules": [
   {
-   "id": "intro-to-coding",
-   "title": "Introduction to Coding",
-   "description": "Start here if you are brand new. This module explains what coding is, where it came from, what careers exist, how to choose your path and first language, how to set up your environment, and the core habits that make beginners successful.",
-   "difficulty": "beginner",
-   "topics": [
-    "What Coding Is",
-    "A Short History of Programming",
-    "How Code Becomes Running Software",
-    "How the Software Stack Fits Together",
-    "Career Paths in Technology",
-    "Choosing Your Learning Path",
-    "Choosing Your First Programming Language",
-    "Setting Up Your Development Environment",
-    "Your First Program",
-    "Core Building Blocks",
-    "Debugging and Problem Solving",
-    "Version Control and Collaboration Basics",
-    "How to Read Documentation and Error Messages",
-    "How to Ask Good Technical Questions",
-    "Beginner Pitfalls and How to Avoid Them",
-    "Project Selection and Portfolio Foundations",
-    "Study Systems and Habit Design",
-    "Preparing for CS Coursework and Internships",
-    "Learning Workflow and Portfolio Basics",
-    "30-Day Starter Plan"
-   ],
-   "es": {
-    "title": "Introducción a la codificación",
-    "description": "Comienza aquí si eres nuevo. Este módulo explica qué es la codificación, de dónde viene, qué carreras existen, cómo elegir su camino y su primer idioma, cómo configurar su entorno y los hábitos básicos que hacen que los principiantes tengan éxito."
-   }
-  },
-  {
    "id": "arrays-strings",
    "title": "Arrays and Strings",
-   "description": "This walkthrough dissects the `findMax`, `reverseString`, and `isPalindrome` helpers so you can watch loops, boundary guards, and two-pointer swaps combine into real array/string utilities.",
+   "description": "Traverse arrays safely, use the core String methods, and turn O(n²) scans into O(n) with two pointers, sliding windows and prefix sums; then sort with the library and custom comparators.",
    "difficulty": "beginner",
    "topics": [
     "Array Traversal",
@@ -207,14 +174,14 @@
     "Array Sorting"
    ],
    "es": {
-    "title": "Matrices y cadenas",
-    "description": "Este tutorial analiza los ayudantes `findMax`, `reverseString` e `isPalindrome` para que pueda observar cómo los bucles, las protecciones de límites y los intercambios de dos punteros se combinan en utilidades reales de matriz/cadena."
+    "title": "Arreglos y cadenas",
+    "description": "Recorre arreglos con seguridad, usa los métodos esenciales de las cadenas y convierte recorridos O(n²) en O(n) con dos punteros, ventanas deslizantes y sumas de prefijos; luego ordena con la biblioteca y con comparadores propios."
    }
   },
   {
    "id": "linked-lists",
    "title": "Linked Lists",
-   "description": "We narrate every pointer move in `reverseList`, `hasCycle`, and `mergeTwoLists`, showing how temp nodes, tortoise - hare detection, and dummy heads keep lists consistent.",
+   "description": "Singly and doubly linked lists with sentinels, insertion and deletion by relinking, in-place reversal, Floyd cycle detection and merging sorted lists with a dummy head.",
    "difficulty": "intermediate",
    "topics": [
     "Singly Linked Lists",
@@ -225,13 +192,13 @@
    ],
    "es": {
     "title": "Listas enlazadas",
-    "description": "Narramos cada movimiento del puntero en `reverseList`, `hasCycle` y `mergeTwoLists`, mostrando cómo los nodos temporales, la detección de tortugas y liebres y las cabezas ficticias mantienen las listas consistentes."
+    "description": "Listas simple y doblemente enlazadas con centinelas, inserción y borrado reenlazando nodos, inversión en el lugar, detección de ciclos de Floyd y mezcla de listas ordenadas con un nodo ficticio."
    }
   },
   {
    "id": "stacks-queues",
    "title": "Stacks and Queues",
-   "description": "The `ArrayStack` and `ArrayQueue` wrappers expose each push/pop/peek and enqueue/dequeue call so you can see how ArrayDeque underpins both LIFO and FIFO flows in `main`.",
+   "description": "LIFO stacks and FIFO queues built on arrays and ArrayDeque, circular buffers, deques and monotonic queues, priority queues, and classic stack problems such as balanced brackets and postfix evaluation.",
    "difficulty": "beginner",
    "topics": [
     "Stack Operations",
@@ -242,13 +209,13 @@
    ],
    "es": {
     "title": "Pilas y colas",
-    "description": "Los contenedores `ArrayStack` y `ArrayQueue` exponen cada llamada push/pop/peek y enqueue/dequeue para que pueda ver cómo ArrayDeque sustenta los flujos LIFO y FIFO en `main`."
+    "description": "Pilas LIFO y colas FIFO sobre arreglos y ArrayDeque, búferes circulares, deques y colas monótonas, colas de prioridad y problemas clásicos de pilas como paréntesis balanceados y evaluación posfija."
    }
   },
   {
    "id": "trees-basics",
    "title": "Binary Trees",
-   "description": "Follow `insertRecursive`, `inorder`, and `levelOrderTraversal` to see how the BST is built, how DFS prints sorted values, and how a queue drives breadth-first output.",
+   "description": "Preorder, inorder, postorder and level-order traversal, binary search tree insert, search and delete, why height decides the cost, path problems, and rebuilding a tree from two traversals.",
    "difficulty": "intermediate",
    "topics": [
     "Tree Traversal",
@@ -259,13 +226,13 @@
    ],
    "es": {
     "title": "Árboles binarios",
-    "description": "Siga `insertRecursive`, `inorder` y `levelOrderTraversal` para ver cómo se construye BST, cómo DFS imprime valores ordenados y cómo una cola genera una salida en amplitud."
+    "description": "Recorridos en preorden, inorden, postorden y por niveles, inserción, búsqueda y borrado en árboles binarios de búsqueda, por qué la altura decide el costo, problemas de caminos y reconstrucción de un árbol a partir de dos recorridos."
    }
   },
   {
    "id": "hash-tables",
    "title": "Hash Tables and Maps",
-   "description": "We count characters with `HashMap.merge` and then peel back a custom `SimpleHashTable` that hashes keys, stores chained entries, and resolves collisions bucket by bucket.",
+   "description": "How hash functions map keys to buckets, chaining versus linear probing, everyday HashMap and HashSet operations, the equals/hashCode contract, and why the load factor triggers rehashing.",
    "difficulty": "intermediate",
    "topics": [
     "Hash Functions",
@@ -276,13 +243,13 @@
    ],
    "es": {
     "title": "Tablas hash y mapas",
-    "description": "Contamos caracteres con `HashMap.merge` y luego retiramos una `SimpleHashTable` personalizada que codifica claves, almacena entradas encadenadas y resuelve colisiones segmento por segmento."
+    "description": "Cómo las funciones hash asignan claves a cubetas, encadenamiento frente a sondeo lineal, las operaciones cotidianas de HashMap y HashSet, el contrato equals/hashCode y por qué el factor de carga provoca el rehash."
    }
   },
   {
    "id": "heaps",
    "title": "Heaps and Priority Queues",
-   "description": "First `priorityQueueDemo` shows the library min-heap, then `heapify`/`buildMinHeap` rebuild the structure from an array so you can trace index math, swaps, and bottom-up heap construction.",
+   "description": "Array-based min-heaps and max-heaps with sift-up and sift-down, O(n) heapify, PriorityQueue with comparators, and heap patterns such as top-k, running median and merging sorted lists.",
    "difficulty": "intermediate",
    "topics": [
     "Min Heap",
@@ -292,14 +259,14 @@
     "Priority Queues"
    ],
    "es": {
-    "title": "Montones y colas prioritarias",
-    "description": "Primero, `priorityQueueDemo` muestra el montón mínimo de la biblioteca, luego `heapify`/`buildMinHeap` reconstruye la estructura a partir de una matriz para que pueda rastrear las matemáticas de índice, los intercambios y la construcción del montón ascendente."
+    "title": "Montículos y colas de prioridad",
+    "description": "Montículos mínimos y máximos sobre arreglos con subir y hundir, heapify en O(n), PriorityQueue con comparadores y patrones con montículos como top-k, mediana móvil y mezcla de listas ordenadas."
    }
   },
   {
    "id": "sorting-algorithms",
    "title": "Sorting Algorithms",
-   "description": "`bubbleSort`, `mergeSort`, and `quickSort` live in one class, letting us highlight each loop condition, partition, and merge so the control flow behind every comparison is crystal clear.",
+   "description": "Bubble, merge, quick, heap and radix sort traced pass by pass, with best, average and worst-case costs, stability, and when each one is the right choice.",
    "difficulty": "intermediate",
    "topics": [
     "Bubble Sort",
@@ -309,14 +276,14 @@
     "Radix Sort"
    ],
    "es": {
-    "title": "Algoritmos de clasificación",
-    "description": "`bubbleSort`, `mergeSort` y `quickSort` viven en una clase, lo que nos permite resaltar cada condición de bucle, partición y fusión para que el flujo de control detrás de cada comparación sea muy claro."
+    "title": "Algoritmos de ordenamiento",
+    "description": "Bubble sort, merge sort, quicksort, heap sort y radix sort seguidos pasada por pasada, con sus costos en el mejor, promedio y peor caso, la estabilidad y cuándo conviene cada uno."
    }
   },
   {
    "id": "searching-algorithms",
    "title": "Searching Algorithms",
-   "description": "Linear, binary, and exponential search are implemented side by side, so we break down pointer shifts, boundary tests, and the final `Arrays.binarySearch` call that finishes the exponential window.",
+   "description": "Linear and binary search with loop invariants, lower and upper bounds for duplicates, interpolation and exponential search, and how to choose a strategy from probe counts.",
    "difficulty": "beginner",
    "topics": [
     "Linear Search",
@@ -327,13 +294,13 @@
    ],
    "es": {
     "title": "Algoritmos de búsqueda",
-    "description": "La búsqueda lineal, binaria y exponencial se implementan en paralelo, por lo que desglosamos los cambios de puntero, las pruebas de límites y la llamada final a `Arrays.binarySearch` que finaliza la ventana exponencial."
+    "description": "Búsqueda lineal y binaria con invariantes de ciclo, cotas inferior y superior para duplicados, búsqueda por interpolación y exponencial, y cómo elegir una estrategia a partir del número de consultas."
    }
   },
   {
    "id": "recursion",
    "title": "Recursion Fundamentals",
-   "description": "Factorial, maze solving, and subset generation illustrate how base cases, choices, and backtracking fit together; we explain what each recursive frame is doing and when it unwinds.",
+   "description": "Base cases and recursive steps traced through the call stack, backtracking with choose-explore-unchoose, memoization that turns exponential calls into linear ones, and the cost of tree recursion.",
    "difficulty": "intermediate",
    "topics": [
     "Recursive Functions",
@@ -344,13 +311,13 @@
    ],
    "es": {
     "title": "Fundamentos de recursión",
-    "description": "El factorial, la resolución de laberintos y la generación de subconjuntos ilustran cómo encajan los casos base, las elecciones y el retroceso; Explicamos qué hace cada cuadro recursivo y cuándo se desenrolla."
+    "description": "Casos base y pasos recursivos seguidos a través de la pila de llamadas, backtracking con elegir-explorar-deshacer, memoización que convierte llamadas exponenciales en lineales y el costo de la recursión en árbol."
    }
   },
   {
    "id": "dynamic-programming",
    "title": "Dynamic Programming",
-   "description": "The memoized Fibonacci map, LIS DP array, and 0/1 knapsack table are spelled out step by step so you can follow how states are cached, transitions chosen, and answers read back.",
+   "description": "Define states and recurrences, solve them top-down with memoization and bottom-up with tables, and recognize optimal substructure and overlapping subproblems in knapsack, LIS and coin change.",
    "difficulty": "advanced",
    "topics": [
     "Memoization",
@@ -360,13 +327,13 @@
    ],
    "es": {
     "title": "Programación dinámica",
-    "description": "El mapa de Fibonacci memorizado, la matriz LIS DP y la tabla de mochila 0/1 se detallan paso a paso para que pueda seguir cómo se almacenan en caché los estados, se eligen las transiciones y se leen las respuestas."
+    "description": "Define estados y recurrencias, resuélvelos de arriba hacia abajo con memoización y de abajo hacia arriba con tablas, y reconoce la subestructura óptima y los subproblemas superpuestos en la mochila, la LIS y el cambio de monedas."
    }
   },
   {
    "id": "greedy-algorithms",
    "title": "Greedy Algorithms",
-   "description": "Activity selection walks through the start/finish arrays while `coinChange` repeatedly peels denominations, making it easy to see why each greedy comparison or subtraction works.",
+   "description": "When the locally best choice is globally optimal: exchange arguments, activity selection, Huffman coding and minimum spanning trees, plus coin systems where greedy fails.",
    "difficulty": "intermediate",
    "topics": [
     "Greedy Choice",
@@ -375,14 +342,14 @@
     "Minimum Spanning Tree"
    ],
    "es": {
-    "title": "Algoritmos codiciosos",
-    "description": "La selección de actividad recorre las matrices de inicio/fin mientras \"coinChange\" pela repetidamente las denominaciones, lo que facilita ver por qué funciona cada comparación o resta codiciosa."
+    "title": "Algoritmos voraces",
+    "description": "Cuándo la mejor elección local es óptima globalmente: argumentos de intercambio, selección de actividades, codificación de Huffman y árboles de expansión mínima, además de sistemas de monedas donde la estrategia voraz falla."
    }
   },
   {
    "id": "graph-algorithms",
    "title": "Graph Algorithms",
-   "description": "`Graph.addEdge`, `bfs`, and `dijkstra` all run in one demo, giving you line-by-line insight into adjacency lists, queue-based traversal, and heap-driven distance relaxation.",
+   "description": "Adjacency lists versus matrices, DFS and BFS with components and shortest unweighted paths, Dijkstra with a priority queue, and minimum spanning trees with Kruskal and Prim.",
    "difficulty": "advanced",
    "topics": [
     "Graph Representation",
@@ -392,8 +359,8 @@
     "Minimum Spanning Tree"
    ],
    "es": {
-    "title": "Algoritmos gráficos",
-    "description": "`Graph.addEdge`, `bfs` y `dijkstra` se ejecutan en una demostración, lo que le brinda información línea por línea sobre las listas de adyacencia, el recorrido basado en colas y la relajación de distancia impulsada por el montón."
+    "title": "Algoritmos de grafos",
+    "description": "Listas frente a matrices de adyacencia, DFS y BFS con componentes y caminos mínimos sin pesos, Dijkstra con cola de prioridad y árboles de expansión mínima con Kruskal y Prim."
    }
   },
   {
@@ -450,7 +417,7 @@
   {
    "id": "tries",
    "title": "Tries (Prefix Trees)",
-   "description": "The trie builds nodes character by character in `insert`, reuses them via `traverse`, and flags words/prefixes, so we spell out how each loop navigates the shared structure.",
+   "description": "Build a trie character by character, insert, search and delete words, answer prefix questions with counters, and power autocomplete with a depth-first search from the prefix node.",
    "difficulty": "intermediate",
    "topics": [
     "Trie Construction",
@@ -459,14 +426,14 @@
     "Auto-complete"
    ],
    "es": {
-    "title": "Intentos (árboles de prefijos)",
-    "description": "El trie construye nodos carácter por carácter en `insertar`, los reutiliza mediante `traverse` y marca palabras/prefijos, por lo que explicamos cómo cada bucle navega por la estructura compartida."
+    "title": "Tries (árboles de prefijos)",
+    "description": "Construye un trie carácter por carácter, inserta, busca y borra palabras, responde preguntas sobre prefijos con contadores e implementa el autocompletado con una búsqueda en profundidad desde el nodo del prefijo."
    }
   },
   {
    "id": "union-find",
    "title": "Union-Find (Disjoint Set)",
-   "description": "`find` performs recursive path compression and `union` compares ranks before reparenting nodes, letting you trace exactly how the disjoint-set forest flattens.",
+   "description": "Track groups that merge over time with parent arrays, union by rank and path compression, then use it to count connected components and detect cycles in near-constant time.",
    "difficulty": "intermediate",
    "topics": [
     "Union by Rank",
@@ -475,14 +442,14 @@
     "Cycle Detection"
    ],
    "es": {
-    "title": "Union-Find (conjunto disjunto)",
-    "description": "`find` realiza una compresión de ruta recursiva y `union` compara rangos antes de volver a emparentar los nodos, lo que le permite rastrear exactamente cómo se aplana el bosque de conjuntos disjuntos."
+    "title": "Union-Find (conjuntos disjuntos)",
+    "description": "Sigue grupos que se fusionan con el tiempo mediante arreglos de padres, unión por rango y compresión de caminos, y úsalo para contar componentes conexas y detectar ciclos en tiempo casi constante."
    }
   },
   {
    "id": "segment-trees",
    "title": "Segment Trees",
-   "description": "`build`, `update`, and `rangeSum` split ranges by midpoint, handle cover/disjoint/partial cases, and bubble results upward so the entire range-query story is easy to follow.",
+   "description": "Answer range queries in O(log n) while values change: build the tree, classify overlaps, update single points, and add to whole ranges with lazy propagation.",
    "difficulty": "advanced",
    "topics": [
     "Range Queries",
@@ -492,13 +459,13 @@
    ],
    "es": {
     "title": "Árboles de segmentos",
-    "description": "`build`, `update` y `rangeSum` dividen rangos por punto medio, manejan casos de cobertura/separados/parciales y distribuyen los resultados hacia arriba para que toda la historia de la consulta de rango sea fácil de seguir."
+    "description": "Responde consultas por rango en O(log n) mientras los valores cambian: construye el árbol, clasifica los solapamientos, actualiza puntos sueltos y suma a rangos completos con propagación perezosa."
    }
   },
   {
    "id": "binary-indexed-trees",
    "title": "Binary Indexed Trees (Fenwick Trees)",
-   "description": "The BIT demo emphasizes the lowbit trick: `update` climbs with `i += i & -i`, `prefixSum` walks downward, and `rangeSum` just subtracts prefixes so you can visualize the implicit tree.",
+   "description": "Fenwick trees in a single array: what each cell covers thanks to the lowest set bit, prefix and range sums, point updates, O(n) construction and counting inversions.",
    "difficulty": "advanced",
    "topics": [
     "Prefix Sums",
@@ -508,13 +475,13 @@
    ],
    "es": {
     "title": "Árboles indexados binarios (árboles de Fenwick)",
-    "description": "La demostración de BIT enfatiza el truco de los bits bajos: `update` sube con `i += i & -i`, `prefixSum` camina hacia abajo y `rangeSum` simplemente resta prefijos para que puedas visualizar el árbol implícito."
+    "description": "Árboles de Fenwick en un solo arreglo: qué cubre cada celda gracias al bit encendido más bajo, sumas de prefijos y de rango, actualizaciones puntuales, construcción en O(n) y conteo de inversiones."
    }
   },
   {
    "id": "advanced-trees",
    "title": "Advanced Tree Structures",
-   "description": "The AVL insert pipeline updates heights, checks balance factors, and triggers the correct rotations before an inorder traversal verifies the tree stayed sorted.",
+   "description": "Self-balancing search trees: rotations, AVL balance factors and their four cases, red-black invariants, B-trees for disk indexes, and self-adjusting splay trees.",
    "difficulty": "advanced",
    "topics": [
     "AVL Trees",
@@ -524,14 +491,14 @@
     "Tree Rotations"
    ],
    "es": {
-    "title": "Estructuras de árbol avanzadas",
-    "description": "La tubería de inserción AVL actualiza las alturas, verifica los factores de equilibrio y activa las rotaciones correctas antes de que un recorrido en orden verifique que el árbol permaneció ordenado."
+    "title": "Estructuras de árboles avanzadas",
+    "description": "Árboles de búsqueda autobalanceados: rotaciones, factores de balance AVL y sus cuatro casos, invariantes rojo-negro, árboles B para índices en disco y árboles splay autoajustables."
    }
   },
   {
    "id": "string-algorithms",
    "title": "Advanced String Algorithms",
-   "description": "We build the KMP prefix table and feed it into `kmpSearch`, pausing on each pointer jump so you understand how the `lps` array skips redundant comparisons.",
+   "description": "Pattern matching faster than brute force with KMP, Rabin-Karp and Boyer-Moore, plus suffix arrays and polynomial string hashing for substring questions.",
    "difficulty": "advanced",
    "topics": [
     "KMP Algorithm",
@@ -541,8 +508,8 @@
     "String Hashing"
    ],
    "es": {
-    "title": "Algoritmos de cadenas avanzados",
-    "description": "Construimos la tabla de prefijos KMP y la introducimos en `kmpSearch`, haciendo una pausa en cada salto del puntero para que comprenda cómo la matriz `lps` omite comparaciones redundantes."
+    "title": "Algoritmos avanzados de cadenas",
+    "description": "Búsqueda de patrones más rápida que la fuerza bruta con KMP, Rabin-Karp y Boyer-Moore, además de arreglos de sufijos y hashing polinómico de cadenas para preguntas sobre subcadenas."
    }
   },
   {
@@ -599,7 +566,7 @@
   {
    "id": "bit-manipulation",
    "title": "Bit Manipulation",
-   "description": "Functions like `isPowerOfTwo`, `countBits`, `singleNumber`, and `lowbit` expose masks and XOR tricks; we call out what each operation does to the underlying bits.",
+   "description": "Bitwise operators and two's complement, masks for flags and subsets, power-of-two tricks with n & (n - 1) and n & -n, XOR identities, and counting set bits.",
    "difficulty": "intermediate",
    "topics": [
     "Bitwise Operators",
@@ -610,7 +577,7 @@
    ],
    "es": {
     "title": "Manipulación de bits",
-    "description": "Funciones como `isPowerOfTwo`, `countBits`, `singleNumber` y `lowbit` exponen máscaras y trucos XOR; decimos lo que cada operación hace a los bits subyacentes."
+    "description": "Operadores a nivel de bits y complemento a dos, máscaras para banderas y subconjuntos, trucos con potencias de dos usando n & (n - 1) y n & -n, identidades de XOR y conteo de bits encendidos."
    }
   },
   {
@@ -906,7 +873,7 @@
   {
    "id": "backtracking-patterns",
    "title": "Backtracking Patterns",
-   "description": "Master the decision-tree template used in subsets, combinations, permutations, and constraint problems by tracking state, choices, and undo steps.",
+   "description": "One choose-explore-unchoose template for subsets, combinations and permutations, decision trees to estimate cost, pruning that saves most calls, and constraint search such as N-Queens and Sudoku.",
    "difficulty": "intermediate",
    "topics": [
     "Decision Trees",
@@ -916,14 +883,14 @@
     "Constraint Search"
    ],
    "es": {
-    "title": "Patrones de retroceso",
-    "description": "Domine la plantilla de árbol de decisiones utilizada en subconjuntos, combinaciones, permutaciones y problemas de restricciones mediante el seguimiento del estado, las opciones y los pasos de deshacer."
+    "title": "Patrones de backtracking",
+    "description": "Una sola plantilla elegir-explorar-deshacer para subconjuntos, combinaciones y permutaciones, árboles de decisión para estimar el costo, poda que ahorra la mayoría de las llamadas y búsqueda con restricciones como N reinas y Sudoku."
    }
   },
   {
    "id": "matrix-grid-problems",
    "title": "Matrix and Grid Problem Solving",
-   "description": "Learn reliable patterns for traversing 2D grids using boundary checks, direction vectors, BFS waves, and in-place marking strategies.",
+   "description": "Represent 2D grids, validate boundaries, move with direction vectors, find shortest paths with BFS (including multi-source), and count regions with in-place marking.",
    "difficulty": "intermediate",
    "topics": [
     "Grid Representation",
@@ -933,8 +900,8 @@
     "In-Place Marking"
    ],
    "es": {
-    "title": "Problemas de Matrices y Cuadriculas",
-    "description": "Aprende patrones confiables para recorrer cuadriculas 2D con validacion de limites, vectores de direccion, BFS por capas y marcado en sitio."
+    "title": "Problemas con matrices y cuadrículas",
+    "description": "Representa cuadrículas 2D, valida límites, muévete con vectores de dirección, encuentra caminos mínimos con BFS (también de múltiples orígenes) y cuenta regiones con marcado en el lugar."
    }
   },
   {
