@@ -716,6 +716,10 @@ a.path-step.planned .path-go { color: var(--text-3); font-weight: 500; }
 .kbd-hint { font-size: 12.5px; }
 @media (max-width: 900px) { .quiz-layout { grid-template-columns: 1fr; } .scoreboard { position: static; max-height: none; } }
 @media (max-width: 700px) { .practice-hub { grid-template-columns: 1fr; } .kbd-hint { display: none; } }
+.due-empty { text-align: center; padding: 32px 22px; display: grid; gap: 10px; justify-items: center; }
+.due-empty p { max-width: 46ch; margin: 0; }
+.due-ico { font-size: 34px; }
+.hub-stats .due-stat b { color: var(--accent); }
 .deck-done { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 14px; padding: 12px; border-radius: var(--radius); background: var(--success-soft); color: var(--success); font-weight: 600; }
 .spinner { display: inline-block; width: 18px; height: 18px; margin-right: 10px; vertical-align: -3px; border-radius: 50%; border: 2px solid var(--border); border-top-color: var(--accent); animation: spin .8s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
