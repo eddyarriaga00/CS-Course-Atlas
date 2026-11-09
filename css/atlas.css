@@ -719,3 +719,35 @@ a.path-step.planned .path-go { color: var(--text-3); font-weight: 500; }
 .cmark.mini { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 5px; font-size: 9px; font-weight: 700; margin-right: 6px; vertical-align: -3px; }
 .week-card .mods a { display: inline-flex; align-items: center; }
 .q-from { font-size: 12.5px; color: var(--text-3); margin: 10px 0 -4px; }
+
+/* ---------- Auto-graded challenges ---------- */
+.ch-lead { color: var(--text-2); margin: 0 0 16px; }
+.challenge { padding: 18px 20px; margin-bottom: 16px; }
+.challenge.solved { border-color: color-mix(in srgb, var(--success) 45%, var(--border)); }
+.ch-head { display: flex; align-items: center; gap: 10px; }
+.ch-head h3 { margin: 0; font-size: 17px; flex: 1; }
+.ch-no { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; font-weight: 700; font-size: 13px; background: var(--accent-soft); color: var(--accent-text); flex: none; }
+.challenge.solved .ch-no { background: var(--success); color: #fff; }
+.ch-prompt { margin: 10px 0 12px; color: var(--text-2); }
+.ch-editor { border-radius: var(--radius); overflow: hidden; background: var(--code-bg); border: 1px solid var(--code-line); }
+.ch-editor .code-bar { display: flex; gap: 4px; padding: 6px; border-bottom: 1px solid var(--code-line); }
+.ch-editor .code-bar .lang:nth-child(2) { margin-left: auto; }
+.ch-code { display: block; width: 100%; min-height: 150px; resize: vertical; border: 0; outline: none; padding: 14px 16px; background: transparent; color: var(--code-text); font: 13.5px/1.6 var(--font-code); tab-size: 4; }
+.ch-result:empty { display: none; }
+.ch-result { margin-top: 12px; }
+.ch-status { font-weight: 600; display: flex; align-items: center; }
+.ch-status.ok { color: var(--success); }
+.ch-status.err { color: var(--danger); }
+.ch-tests { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 4px; font-size: 13.5px; }
+.ch-tests li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 10px; padding: 6px 10px; border-radius: 8px; background: var(--surface-2); }
+.ch-tests li.ok .mk { color: var(--success); font-weight: 700; }
+.ch-tests li.bad { background: var(--danger-soft); }
+.ch-tests li.bad .mk { color: var(--danger); font-weight: 700; }
+.ch-tests .gw { color: var(--text-2); }
+.ch-err, .ch-printed pre { margin: 8px 0 0; padding: 10px 12px; border-radius: 8px; background: var(--code-bg); color: var(--code-text); font: 12.5px/1.5 var(--font-code); white-space: pre-wrap; }
+.ch-printed { margin-top: 10px; font-size: 13px; }
+.ch-help { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: flex-start; margin-top: 12px; font-size: 14px; }
+.ch-help details { flex: 1 1 260px; }
+.ch-help summary { cursor: pointer; color: var(--accent); font-weight: 600; }
+.ch-help details pre { margin-top: 8px; }
+.ch-lock { font-size: 13px; }

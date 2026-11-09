@@ -88,6 +88,10 @@ for (const id of tracks.filter((t) => t.status === 'available').flatMap((t) => t
   };
 }
 const videos = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/course-videos.json'), 'utf8'));
+// Auto-graded challenges (verified by scripts/verify_challenges.js) ride along with their module's lessons.
+const challenges = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/challenges.json'), 'utf8'));
+for (const [id, list] of Object.entries(challenges)) if (full[id]) full[id].challenges = list;
+const harness = fs.readFileSync(path.join(ROOT, 'scripts/lib/challenge_harness.py'), 'utf8');
 // Courses being written carry their final outline so their page can show the syllabus.
 const outlines = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/course-outlines.json'), 'utf8'));
 for (const p of PLANNED) if (outlines[p.id]) p.outline = outlines[p.id];
@@ -99,13 +103,13 @@ for (const t of tracks.filter((x) => x.status === 'available')) {
   const part = {};
   for (const id of t.units.flatMap((u) => u.modules)) {
     part[id] = full[id];
-    modules[id].counts = { examples: full[id].examples.sets.length + 1, terms: (full[id].definitions || []).length, quiz: (full[id].quiz || []).length };
+    modules[id].counts = { examples: full[id].examples.sets.length + 1, terms: (full[id].definitions || []).length, quiz: (full[id].quiz || []).length, challenges: (full[id].challenges || []).length };
   }
   const json = JSON.stringify(part);
   lessonFiles[t.id] = json;
   t.lessons = crypto.createHash('sha1').update(json).digest('hex').slice(0, 10);   // cache-busting version
 }
-const out = { tracks, planned: PLANNED, path: PATH, next: NEXT, modules, videos };
+const out = { tracks, planned: PLANNED, path: PATH, next: NEXT, modules, videos, harness };
 const file = path.join(ROOT, 'data/atlas-data.json');
 const lessonDir = path.join(ROOT, 'data/lessons');
 const json = JSON.stringify(out);
