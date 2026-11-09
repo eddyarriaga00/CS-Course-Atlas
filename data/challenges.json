@@ -70,6 +70,68 @@
      "''"
     ]
    ]
+  },
+  {
+   "id": "receipt-line",
+   "title": {
+    "en": "A receipt line",
+    "es": "Una línea de recibo"
+   },
+   "prompt": {
+    "en": "Write `receipt_line(item, price, qty)` that returns text like `\"3 x Pen = $4.50\"`: the quantity, the item, and the total with exactly two decimals.",
+    "es": "Escribe `receipt_line(item, price, qty)` que devuelva un texto como `\"3 x Pen = $4.50\"`: la cantidad, el artículo y el total con exactamente dos decimales."
+   },
+   "starter": "def receipt_line(item, price, qty):\n    pass\n",
+   "solution": "def receipt_line(item, price, qty):\n    total = price * qty\n    return f\"{qty} x {item} = ${total:.2f}\"\n",
+   "hint": {
+    "en": "Multiply first, then use an f-string with `:.2f` to show two decimals: `f\"{qty} x {item} = ${total:.2f}\"`.",
+    "es": "Multiplica primero y luego usa un f-string con `:.2f` para mostrar dos decimales: `f\"{qty} x {item} = ${total:.2f}\"`."
+   },
+   "tests": [
+    [
+     "receipt_line('Pen', 1.5, 3)",
+     "'3 x Pen = $4.50'"
+    ],
+    [
+     "receipt_line('Notebook', 2.25, 1)",
+     "'1 x Notebook = $2.25'"
+    ],
+    [
+     "receipt_line('Sticker', 0.1, 10)",
+     "'10 x Sticker = $1.00'"
+    ]
+   ]
+  },
+  {
+   "id": "shout",
+   "title": {
+    "en": "Make it loud",
+    "es": "Hazlo fuerte"
+   },
+   "prompt": {
+    "en": "Write `shout(text)` that removes spaces at both ends, turns the text to upper case and adds `\"!\"` at the end. `shout(\"  hello there \")` is `\"HELLO THERE!\"`.",
+    "es": "Escribe `shout(text)` que quite los espacios de ambos extremos, pase el texto a mayúsculas y agregue `\"!\"` al final. `shout(\"  hello there \")` es `\"HELLO THERE!\"`."
+   },
+   "starter": "def shout(text):\n    pass\n",
+   "solution": "def shout(text):\n    return text.strip().upper() + \"!\"\n",
+   "hint": {
+    "en": "String methods can be chained: `text.strip().upper()`, then add `\"!\"` with `+`.",
+    "es": "Los métodos de texto se pueden encadenar: `text.strip().upper()` y luego agrega `\"!\"` con `+`."
+   },
+   "tests": [
+    [
+     "shout('  hello there ')",
+     "'HELLO THERE!'"
+    ],
+    [
+     "shout('ok')",
+     "'OK!'"
+    ],
+    [
+     "shout('')",
+     "'!'"
+    ]
+   ]
   }
  ],
  "python-decisions-loops": [
@@ -144,6 +206,76 @@
     [
      "count_vowels('Hello, World!')",
      "3"
+    ]
+   ]
+  },
+  {
+   "id": "sum-evens",
+   "title": {
+    "en": "Add the even numbers",
+    "es": "Suma los pares"
+   },
+   "prompt": {
+    "en": "Write `sum_evens(n)` that returns the sum of all even numbers from 1 to `n` (including `n`). Use a `for` loop with `range`.",
+    "es": "Escribe `sum_evens(n)` que devuelva la suma de todos los números pares de 1 a `n` (incluido `n`). Usa un ciclo `for` con `range`."
+   },
+   "starter": "def sum_evens(n):\n    total = 0\n    # loop and add the even numbers\n    return total\n",
+   "solution": "def sum_evens(n):\n    total = 0\n    for i in range(1, n + 1):\n        if i % 2 == 0:\n            total += i\n    return total\n",
+   "hint": {
+    "en": "`for i in range(1, n + 1):` goes from 1 to n; `i % 2 == 0` is true for even numbers.",
+    "es": "`for i in range(1, n + 1):` va de 1 a n; `i % 2 == 0` es verdadero para los pares."
+   },
+   "tests": [
+    [
+     "sum_evens(10)",
+     "30"
+    ],
+    [
+     "sum_evens(1)",
+     "0"
+    ],
+    [
+     "sum_evens(7)",
+     "12"
+    ],
+    [
+     "sum_evens(100)",
+     "2550"
+    ]
+   ]
+  },
+  {
+   "id": "first-negative",
+   "title": {
+    "en": "Find the first negative",
+    "es": "Encuentra el primer negativo"
+   },
+   "prompt": {
+    "en": "Write `first_negative(numbers)` that returns the position (index) of the first negative number, or `-1` if there is none. Stop looking as soon as you find it.",
+    "es": "Escribe `first_negative(numbers)` que devuelva la posición (índice) del primer número negativo, o `-1` si no hay ninguno. Deja de buscar en cuanto lo encuentres."
+   },
+   "starter": "def first_negative(numbers):\n    pass\n",
+   "solution": "def first_negative(numbers):\n    for i in range(len(numbers)):\n        if numbers[i] < 0:\n            return i\n    return -1\n",
+   "hint": {
+    "en": "Loop over the indexes with `range(len(numbers))`; `return i` ends the loop early. After the loop, `return -1`.",
+    "es": "Recorre los índices con `range(len(numbers))`; `return i` termina el ciclo antes. Después del ciclo, `return -1`."
+   },
+   "tests": [
+    [
+     "first_negative([4, 7, -2, 5, -9])",
+     "2"
+    ],
+    [
+     "first_negative([1, 2, 3])",
+     "-1"
+    ],
+    [
+     "first_negative([])",
+     "-1"
+    ],
+    [
+     "first_negative([-1])",
+     "0"
     ]
    ]
   }
@@ -222,6 +354,68 @@
      "5"
     ]
    ]
+  },
+  {
+   "id": "greet-default",
+   "title": {
+    "en": "A default greeting",
+    "es": "Un saludo por defecto"
+   },
+   "prompt": {
+    "en": "Write `greet(name, greeting=\"Hello\")` that returns `\"Hello, Ana!\"` by default, or uses another greeting when one is given: `greet(\"Ana\", greeting=\"Hi\")` is `\"Hi, Ana!\"`.",
+    "es": "Escribe `greet(name, greeting=\"Hello\")` que devuelva `\"Hello, Ana!\"` por defecto, o use otro saludo si se da uno: `greet(\"Ana\", greeting=\"Hi\")` es `\"Hi, Ana!\"`."
+   },
+   "starter": "def greet(name):\n    pass\n",
+   "solution": "def greet(name, greeting=\"Hello\"):\n    return f\"{greeting}, {name}!\"\n",
+   "hint": {
+    "en": "Give the parameter a default value in the definition: `def greet(name, greeting=\"Hello\"):`.",
+    "es": "Dale un valor por defecto al parámetro en la definición: `def greet(name, greeting=\"Hello\"):`."
+   },
+   "tests": [
+    [
+     "greet('Ana')",
+     "'Hello, Ana!'"
+    ],
+    [
+     "greet('Ana', greeting='Hi')",
+     "'Hi, Ana!'"
+    ],
+    [
+     "greet('Ben', 'Welcome')",
+     "'Welcome, Ben!'"
+    ]
+   ]
+  },
+  {
+   "id": "stats",
+   "title": {
+    "en": "Min, max and average",
+    "es": "Mínimo, máximo y promedio"
+   },
+   "prompt": {
+    "en": "Write `stats(numbers)` that returns three values as a tuple: the smallest, the largest and the average rounded to 1 decimal. Use `min`, `max`, `sum` and `len`.",
+    "es": "Escribe `stats(numbers)` que devuelva tres valores como tupla: el menor, el mayor y el promedio redondeado a 1 decimal. Usa `min`, `max`, `sum` y `len`."
+   },
+   "starter": "def stats(numbers):\n    pass\n",
+   "solution": "def stats(numbers):\n    return min(numbers), max(numbers), round(sum(numbers) / len(numbers), 1)\n",
+   "hint": {
+    "en": "A function can return several values separated by commas; Python packs them into a tuple.",
+    "es": "Una función puede devolver varios valores separados por comas; Python los junta en una tupla."
+   },
+   "tests": [
+    [
+     "stats([72, 95, 88])",
+     "(72, 95, 85.0)"
+    ],
+    [
+     "stats([5])",
+     "(5, 5, 5.0)"
+    ],
+    [
+     "stats([1, 2])",
+     "(1, 2, 1.5)"
+    ]
+   ]
   }
  ],
  "python-collections": [
@@ -284,6 +478,68 @@
     [
      "top_student({})",
      "None"
+    ]
+   ]
+  },
+  {
+   "id": "dedupe",
+   "title": {
+    "en": "Remove duplicates, keep order",
+    "es": "Quita duplicados, conserva el orden"
+   },
+   "prompt": {
+    "en": "Write `dedupe(items)` that returns a new list without repeats, keeping the order in which each item first appeared. `dedupe([3, 1, 3, 2, 1])` is `[3, 1, 2]`.",
+    "es": "Escribe `dedupe(items)` que devuelva una lista nueva sin repetidos, conservando el orden en que apareció cada elemento. `dedupe([3, 1, 3, 2, 1])` es `[3, 1, 2]`."
+   },
+   "starter": "def dedupe(items):\n    pass\n",
+   "solution": "def dedupe(items):\n    seen = set()\n    result = []\n    for x in items:\n        if x not in seen:\n            seen.add(x)\n            result.append(x)\n    return result\n",
+   "hint": {
+    "en": "Keep a `set` of what you have seen (fast to check) and a list for the result; only append items not seen yet.",
+    "es": "Guarda un `set` con lo que ya viste (rápido de consultar) y una lista para el resultado; solo agrega lo que no habías visto."
+   },
+   "tests": [
+    [
+     "dedupe([3, 1, 3, 2, 1])",
+     "[3, 1, 2]"
+    ],
+    [
+     "dedupe([])",
+     "[]"
+    ],
+    [
+     "dedupe(['a', 'a', 'a'])",
+     "['a']"
+    ]
+   ]
+  },
+  {
+   "id": "invert",
+   "title": {
+    "en": "Flip a dictionary",
+    "es": "Invierte un diccionario"
+   },
+   "prompt": {
+    "en": "Write `group_by_grade(grades)` that takes `{name: grade}` and returns `{grade: [names]}` with each list in alphabetical order. `{\"Ana\": \"A\", \"Ben\": \"B\", \"Cy\": \"A\"}` gives `{\"A\": [\"Ana\", \"Cy\"], \"B\": [\"Ben\"]}`.",
+    "es": "Escribe `group_by_grade(grades)` que reciba `{nombre: nota}` y devuelva `{nota: [nombres]}` con cada lista en orden alfabético. `{\"Ana\": \"A\", \"Ben\": \"B\", \"Cy\": \"A\"}` da `{\"A\": [\"Ana\", \"Cy\"], \"B\": [\"Ben\"]}`."
+   },
+   "starter": "def group_by_grade(grades):\n    groups = {}\n    pass\n",
+   "solution": "def group_by_grade(grades):\n    groups = {}\n    for name in sorted(grades):\n        groups.setdefault(grades[name], []).append(name)\n    return groups\n",
+   "hint": {
+    "en": "Loop over `sorted(grades)` so names arrive in order, and use `groups.setdefault(grade, []).append(name)`.",
+    "es": "Recorre `sorted(grades)` para que los nombres lleguen en orden y usa `groups.setdefault(grade, []).append(name)`."
+   },
+   "tests": [
+    [
+     "group_by_grade({'Ana': 'A', 'Ben': 'B', 'Cy': 'A'})",
+     "{'A': ['Ana', 'Cy'], 'B': ['Ben']}"
+    ],
+    [
+     "group_by_grade({})",
+     "{}"
+    ],
+    [
+     "group_by_grade({'Zed': 'C', 'Al': 'C'})",
+     "{'C': ['Al', 'Zed']}"
     ]
    ]
   }
