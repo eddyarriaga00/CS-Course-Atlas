@@ -32,7 +32,7 @@ const UI = {
     practiceProblems: 'Practice problems', selfCheck: 'Check yourself', selfCheckHint: 'Answer out loud first, then check the lesson and examples.',
     markDone: 'Mark module complete', marked: 'Completed ✓', unmarked: 'Marked as not complete', prev: '← Previous', next: 'Next →',
     question: (a, b) => `Question ${a} of ${b}`, correct: 'Correct.', notQuite: 'Not quite.', nextQ: 'Next question', finish: 'See score', retry: 'Try again',
-    scoreText: (a, b) => `${a} of ${b} correct`, again: 'Again', gotIt: 'Got it', tapFlip: 'Tap to see the definition', cardOf: (a, b) => `Card ${a} of ${b}`,
+    scoreText: (a, b) => `${a} of ${b} correct`, again: 'Still learning', gotIt: 'I know it', tapFlip: 'Tap to see the definition', cardOf: (a, b) => `Card ${a} of ${b}`,
     practiceLead: 'Check what stuck. Quizzes give instant feedback; flashcards drill the terms from each module.', pickModule: 'Module',
     editProfile: 'Edit profile', signOut: 'Sign out', modulesComplete: 'Modules complete', streak: 'Study streak', days: 'days', quizAvg: 'Quiz average', across: 'across 4 quizzes',
     timeStudied: 'Time studied', thisMonth: 'this month', yourCourses: 'Your courses', progressUnit: (c) => `${c} progress by unit`, recent: 'Recent activity', prefs: 'Preferences',
@@ -54,7 +54,7 @@ const UI = {
     roadmapLead: 'Where CS Course Atlas is going. Vote for what you want next.', live: 'Live', building: 'In progress', planned: 'Planned', vote: '▲ Vote', voted: '▲ Voted',
     achievements: 'Achievements', earned: (a, b) => `${a} of ${b} earned`,
     studyPlan: 'Study plan', planLead: 'Pick a course and how much time you have; we lay out the rest of it week by week.', hoursWeek: 'Hours per week', startOn: 'Start on', finishBy: 'Finish by', weeksLeft: 'weeks', modulesLeft: 'modules left', weekN: (n) => `Week ${n}`, thisWeek: 'This week', planHome: (d, c) => `At your pace you’ll finish ${c} by <b>${d}</b>.`, editPlan: 'Edit plan', allDone: 'Every module of this course is complete. Time for the next one.', addCalendar: 'Add to calendar', reminders: 'Weekly reminder', 
-    videos: 'Videos', fullSeries: 'Full video series', courseSeries: 'Full course series', watchTopic: 'Watch a video on this topic', watchWait: 'Watch while you wait', videosLead: 'A full series for the module, then one video per topic. All from university or well-known teaching channels; they open on YouTube.', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', pyLoading: 'Loading Python (first run only, a few seconds)…', pyTimeout: 'Stopped after 10 seconds (infinite loop?)', pyFailed: 'Could not load Python. Check your connection and try again.', pythonExamples: 'Runnable Python examples', sideBeginner: 'Beginner path', sideNext: 'Next level', pathTotals: (m, h) => `${m} modules, about ${h} hours of lessons in all.`, alsoPlanned: 'Also on the way:', sqlExamples: 'Real SQLite queries', sqlLoading: 'Loading SQLite (first run only)…', sqlFailed: 'Could not load SQLite. Check your connection and try again.', syllabus: 'What you will learn', outlineNotice: 'This course is being written now. The outline below is final: each module will have a lesson, examples you can run, practice, a quiz and videos.', soonNoticePlanned: 'This course is planned. Vote for it so we know to write it sooner.', wantThis: '▲ I want this course', meanwhile: 'Get ready with these courses first', pathStep: 'beginner path step', levelWord: 'level', seeOutline: 'See outline', webExamples: 'Live web pages', preview: 'Live preview', rendered: 'Rendered', pgHtmlSample: 'A web page: edit it and press Run', showPw: 'Show password', hidePw: 'Hide password', show: 'Show', hide: 'Hide', signupSub: 'Free. Your progress, notes and quiz scores are saved and follow you to any device.', orSignupEmail: 'or sign up with email', createFree: 'Create free account', userHint: '3–32 characters: letters, numbers, dot, underscore or dash.', pwHint: 'At least 8 characters.', accountTitle: 'Account', displayName: 'Display name', saveChanges: 'Save changes', saved: 'Saved', changePw: 'Change password', currentPw: 'Current password', newPw: 'New password', pwChanged: 'Password changed', googleNoPw: 'You sign in with Google, so there is no password to manage here.', saveTitle: 'Keep your progress', saveText: 'It is only on this device right now. A free account saves it and syncs it everywhere.', expand: 'show modules', collapse: 'hide modules', fullSession: 'Full session', week1: 'week', coursesReady: 'courses ready', course: 'Course', trackCourse: (c) => `${c} course`, terminalExamples: 'Real terminal sessions', terminalHint: 'Run this in an empty folder. Lines starting with $ are what you type; the rest is what the computer printed when we ran the session for real. Copy gives you just the commands.', terminalOut: 'Terminal', report: 'Report a problem with this module', programs: 'programs', languagesWord: 'languages', waitLead: 'Series that cover these modules, each listed once.',
+    videos: 'Videos', fullSeries: 'Full video series', courseSeries: 'Full course series', watchTopic: 'Watch a video on this topic', watchWait: 'Watch while you wait', videosLead: 'A full series for the module, then one video per topic. All from university or well-known teaching channels; they open on YouTube.', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', pyLoading: 'Loading Python (first run only, a few seconds)…', pyTimeout: 'Stopped after 10 seconds (infinite loop?)', pyFailed: 'Could not load Python. Check your connection and try again.', pythonExamples: 'Runnable Python examples', practiceHub: 'Practice home', hubQuizText: 'A short quiz for every module, with an explanation for every answer.', hubFlashText: 'Every key term as a card. Mark the ones you know and keep reviewing the rest.', taken: 'taken', average: 'average', cards: 'cards', known: 'known', suggested: 'Suggested next', takeQuiz: 'Take the quiz', reviewCards: 'Review the cards', quizzesLead: 'Pick a module and check what stuck. Every answer comes with an explanation, and your best score is saved.', flashLead: 'Flip each card, then mark it. Cards you know are remembered on this device and in your account.', yourScores: 'Your best scores', notTaken: 'not taken', knownOf: (a, b) => `${a} of ${b} known`, knownBadge: 'known', shuffle: 'Shuffle', resetDeck: 'Reset deck', flashKeys: 'Space flips · ← still learning · → I know it', deckDone: 'You know every card in this module.', sideBeginner: 'Beginner path', sideNext: 'Next level', pathTotals: (m, h) => `${m} modules, about ${h} hours of lessons in all.`, alsoPlanned: 'Also on the way:', sqlExamples: 'Real SQLite queries', sqlLoading: 'Loading SQLite (first run only)…', sqlFailed: 'Could not load SQLite. Check your connection and try again.', syllabus: 'What you will learn', outlineNotice: 'This course is being written now. The outline below is final: each module will have a lesson, examples you can run, practice, a quiz and videos.', soonNoticePlanned: 'This course is planned. Vote for it so we know to write it sooner.', wantThis: '▲ I want this course', meanwhile: 'Get ready with these courses first', pathStep: 'beginner path step', levelWord: 'level', seeOutline: 'See outline', webExamples: 'Live web pages', preview: 'Live preview', rendered: 'Rendered', pgHtmlSample: 'A web page: edit it and press Run', showPw: 'Show password', hidePw: 'Hide password', show: 'Show', hide: 'Hide', signupSub: 'Free. Your progress, notes and quiz scores are saved and follow you to any device.', orSignupEmail: 'or sign up with email', createFree: 'Create free account', userHint: '3–32 characters: letters, numbers, dot, underscore or dash.', pwHint: 'At least 8 characters.', accountTitle: 'Account', displayName: 'Display name', saveChanges: 'Save changes', saved: 'Saved', changePw: 'Change password', currentPw: 'Current password', newPw: 'New password', pwChanged: 'Password changed', googleNoPw: 'You sign in with Google, so there is no password to manage here.', saveTitle: 'Keep your progress', saveText: 'It is only on this device right now. A free account saves it and syncs it everywhere.', expand: 'show modules', collapse: 'hide modules', fullSession: 'Full session', week1: 'week', coursesReady: 'courses ready', course: 'Course', trackCourse: (c) => `${c} course`, terminalExamples: 'Real terminal sessions', terminalHint: 'Run this in an empty folder. Lines starting with $ are what you type; the rest is what the computer printed when we ran the session for real. Copy gives you just the commands.', terminalOut: 'Terminal', report: 'Report a problem with this module', programs: 'programs', languagesWord: 'languages', waitLead: 'Series that cover these modules, each listed once.',
     signedInWith: (p) => `Signed in with ${p}`, syncedAt: (tm) => `Progress synced at ${tm}`, syncPending: 'Syncing progress…', day: 'day', acrossN: (n) => `across ${n} ${n === 1 ? 'quiz' : 'quizzes'}`, noQuizYet: 'No quizzes taken yet',
     modulesWithNotes: 'modules with notes', noActivity: 'Complete a module, take a quiz or write a note and it shows up here.', typeDelete: 'Type DELETE to confirm', deleteViaSupport: 'Ask support to delete it',
     privacy: 'Privacy', terms: 'Terms', contact: 'Contact', checkingSession: 'Checking your account…', emailOrUser: 'Email or username', username: 'Username', confirmPw: 'Confirm password',
@@ -94,7 +94,7 @@ const UI = {
     practiceProblems: 'Ejercicios', selfCheck: 'Ponte a prueba', selfCheckHint: 'Responde primero en voz alta y luego revisa la lección y los ejemplos.',
     markDone: 'Marcar módulo como completado', marked: 'Completado ✓', unmarked: 'Marcado como no completado', prev: '← Anterior', next: 'Siguiente →',
     question: (a, b) => `Pregunta ${a} de ${b}`, correct: 'Correcto.', notQuite: 'No exactamente.', nextQ: 'Siguiente pregunta', finish: 'Ver resultado', retry: 'Intentar de nuevo',
-    scoreText: (a, b) => `${a} de ${b} correctas`, again: 'Otra vez', gotIt: 'Lo sé', tapFlip: 'Toca para ver la definición', cardOf: (a, b) => `Tarjeta ${a} de ${b}`,
+    scoreText: (a, b) => `${a} de ${b} correctas`, again: 'Aún aprendiendo', gotIt: 'La sé', tapFlip: 'Toca para ver la definición', cardOf: (a, b) => `Tarjeta ${a} de ${b}`,
     practiceLead: 'Comprueba qué aprendiste. Los cuestionarios corrigen al instante; las tarjetas repasan los términos de cada módulo.', pickModule: 'Módulo',
     editProfile: 'Editar perfil', signOut: 'Cerrar sesión', modulesComplete: 'Módulos completados', streak: 'Racha de estudio', days: 'días', quizAvg: 'Promedio en cuestionarios', across: 'en 4 cuestionarios',
     timeStudied: 'Tiempo de estudio', thisMonth: 'este mes', yourCourses: 'Tus cursos', progressUnit: (c) => `Progreso en ${c} por unidad`, recent: 'Actividad reciente', prefs: 'Preferencias',
@@ -116,7 +116,7 @@ const UI = {
     roadmapLead: 'Hacia dónde va CS Course Atlas. Vota por lo que quieres primero.', live: 'Disponible', building: 'En progreso', planned: 'Planeado', vote: '▲ Votar', voted: '▲ Votado',
     achievements: 'Logros', earned: (a, b) => `${a} de ${b} obtenidos`,
     studyPlan: 'Plan de estudio', planLead: 'Elige un curso y cuánto tiempo tienes; organizamos el resto semana a semana.', hoursWeek: 'Horas por semana', startOn: 'Empezar el', finishBy: 'Terminas el', weeksLeft: 'semanas', modulesLeft: 'módulos restantes', weekN: (n) => `Semana ${n}`, thisWeek: 'Esta semana', planHome: (d, c) => `A tu ritmo terminarás ${c} el <b>${d}</b>.`, editPlan: 'Editar plan', allDone: 'Completaste todos los módulos de este curso. Es hora del siguiente.', addCalendar: 'Agregar al calendario', reminders: 'Recordatorio semanal', 
-    videos: 'Videos', fullSeries: 'Serie completa de videos', courseSeries: 'Serie completa del curso', watchTopic: 'Mira un video sobre este tema', watchWait: 'Mira mientras esperas', videosLead: 'Una serie completa del módulo y un video por tema. Todos de canales universitarios o de enseñanza reconocidos; se abren en YouTube (en inglés).', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', pyLoading: 'Cargando Python (solo la primera vez, unos segundos)…', pyTimeout: 'Detenido después de 10 segundos (¿bucle infinito?)', pyFailed: 'No se pudo cargar Python. Revisa tu conexión e inténtalo de nuevo.', pythonExamples: 'Ejemplos de Python ejecutables', sideBeginner: 'Ruta para principiantes', sideNext: 'Siguiente nivel', pathTotals: (m, h) => `${m} módulos, unas ${h} horas de lecciones en total.`, alsoPlanned: 'También en camino:', sqlExamples: 'Consultas reales de SQLite', sqlLoading: 'Cargando SQLite (solo la primera vez)…', sqlFailed: 'No se pudo cargar SQLite. Revisa tu conexión e inténtalo de nuevo.', syllabus: 'Lo que aprenderás', outlineNotice: 'Este curso se está escribiendo. El temario de abajo es definitivo: cada módulo tendrá una lección, ejemplos que puedes ejecutar, práctica, un cuestionario y videos.', soonNoticePlanned: 'Este curso está planeado. Vota por él para que sepamos escribirlo antes.', wantThis: '▲ Quiero este curso', meanwhile: 'Prepárate primero con estos cursos', pathStep: 'paso de la ruta', levelWord: 'nivel', seeOutline: 'Ver temario', webExamples: 'Páginas web en vivo', preview: 'Vista previa en vivo', rendered: 'Mostrado', pgHtmlSample: 'Una página web: edítala y pulsa Ejecutar', showPw: 'Mostrar contraseña', hidePw: 'Ocultar contraseña', show: 'Ver', hide: 'Ocultar', signupSub: 'Gratis. Tu progreso, notas y resultados se guardan y te siguen a cualquier dispositivo.', orSignupEmail: 'o regístrate con tu correo', createFree: 'Crear cuenta gratis', userHint: 'De 3 a 32 caracteres: letras, números, punto, guion bajo o guion.', pwHint: 'Al menos 8 caracteres.', accountTitle: 'Cuenta', displayName: 'Nombre visible', saveChanges: 'Guardar cambios', saved: 'Guardado', changePw: 'Cambiar contraseña', currentPw: 'Contraseña actual', newPw: 'Contraseña nueva', pwChanged: 'Contraseña cambiada', googleNoPw: 'Inicias sesión con Google, así que aquí no hay contraseña que administrar.', saveTitle: 'Conserva tu progreso', saveText: 'Por ahora solo está en este dispositivo. Una cuenta gratis lo guarda y lo sincroniza en todas partes.', expand: 'mostrar módulos', collapse: 'ocultar módulos', fullSession: 'Sesión completa', week1: 'semana', coursesReady: 'cursos listos', course: 'Curso', trackCourse: (c) => `Curso de ${c}`, terminalExamples: 'Sesiones reales de terminal', terminalHint: 'Ejecútalo en una carpeta vacía. Las líneas que empiezan con $ son lo que escribes; el resto es lo que imprimió la computadora al ejecutar la sesión de verdad. Copiar te da solo los comandos.', terminalOut: 'Terminal', report: 'Reportar un problema con este módulo', programs: 'programas', languagesWord: 'lenguajes', waitLead: 'Series que cubren estos módulos, cada una una sola vez.',
+    videos: 'Videos', fullSeries: 'Serie completa de videos', courseSeries: 'Serie completa del curso', watchTopic: 'Mira un video sobre este tema', watchWait: 'Mira mientras esperas', videosLead: 'Una serie completa del módulo y un video por tema. Todos de canales universitarios o de enseñanza reconocidos; se abren en YouTube (en inglés).', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', pyLoading: 'Cargando Python (solo la primera vez, unos segundos)…', pyTimeout: 'Detenido después de 10 segundos (¿bucle infinito?)', pyFailed: 'No se pudo cargar Python. Revisa tu conexión e inténtalo de nuevo.', pythonExamples: 'Ejemplos de Python ejecutables', practiceHub: 'Inicio de práctica', hubQuizText: 'Un cuestionario corto por módulo, con una explicación para cada respuesta.', hubFlashText: 'Cada término clave como tarjeta. Marca las que sabes y sigue repasando las demás.', taken: 'hechos', average: 'promedio', cards: 'tarjetas', known: 'sabidas', suggested: 'Siguiente sugerido', takeQuiz: 'Hacer el cuestionario', reviewCards: 'Repasar las tarjetas', quizzesLead: 'Elige un módulo y comprueba qué aprendiste. Cada respuesta trae una explicación y se guarda tu mejor resultado.', flashLead: 'Voltea cada tarjeta y márcala. Las que sabes se recuerdan en este dispositivo y en tu cuenta.', yourScores: 'Tus mejores resultados', notTaken: 'sin hacer', knownOf: (a, b) => `${a} de ${b} sabidas`, knownBadge: 'sabida', shuffle: 'Mezclar', resetDeck: 'Reiniciar mazo', flashKeys: 'Espacio voltea · ← aún aprendiendo · → la sé', deckDone: 'Sabes todas las tarjetas de este módulo.', sideBeginner: 'Ruta para principiantes', sideNext: 'Siguiente nivel', pathTotals: (m, h) => `${m} módulos, unas ${h} horas de lecciones en total.`, alsoPlanned: 'También en camino:', sqlExamples: 'Consultas reales de SQLite', sqlLoading: 'Cargando SQLite (solo la primera vez)…', sqlFailed: 'No se pudo cargar SQLite. Revisa tu conexión e inténtalo de nuevo.', syllabus: 'Lo que aprenderás', outlineNotice: 'Este curso se está escribiendo. El temario de abajo es definitivo: cada módulo tendrá una lección, ejemplos que puedes ejecutar, práctica, un cuestionario y videos.', soonNoticePlanned: 'Este curso está planeado. Vota por él para que sepamos escribirlo antes.', wantThis: '▲ Quiero este curso', meanwhile: 'Prepárate primero con estos cursos', pathStep: 'paso de la ruta', levelWord: 'nivel', seeOutline: 'Ver temario', webExamples: 'Páginas web en vivo', preview: 'Vista previa en vivo', rendered: 'Mostrado', pgHtmlSample: 'Una página web: edítala y pulsa Ejecutar', showPw: 'Mostrar contraseña', hidePw: 'Ocultar contraseña', show: 'Ver', hide: 'Ocultar', signupSub: 'Gratis. Tu progreso, notas y resultados se guardan y te siguen a cualquier dispositivo.', orSignupEmail: 'o regístrate con tu correo', createFree: 'Crear cuenta gratis', userHint: 'De 3 a 32 caracteres: letras, números, punto, guion bajo o guion.', pwHint: 'Al menos 8 caracteres.', accountTitle: 'Cuenta', displayName: 'Nombre visible', saveChanges: 'Guardar cambios', saved: 'Guardado', changePw: 'Cambiar contraseña', currentPw: 'Contraseña actual', newPw: 'Contraseña nueva', pwChanged: 'Contraseña cambiada', googleNoPw: 'Inicias sesión con Google, así que aquí no hay contraseña que administrar.', saveTitle: 'Conserva tu progreso', saveText: 'Por ahora solo está en este dispositivo. Una cuenta gratis lo guarda y lo sincroniza en todas partes.', expand: 'mostrar módulos', collapse: 'ocultar módulos', fullSession: 'Sesión completa', week1: 'semana', coursesReady: 'cursos listos', course: 'Curso', trackCourse: (c) => `Curso de ${c}`, terminalExamples: 'Sesiones reales de terminal', terminalHint: 'Ejecútalo en una carpeta vacía. Las líneas que empiezan con $ son lo que escribes; el resto es lo que imprimió la computadora al ejecutar la sesión de verdad. Copiar te da solo los comandos.', terminalOut: 'Terminal', report: 'Reportar un problema con este módulo', programs: 'programas', languagesWord: 'lenguajes', waitLead: 'Series que cubren estos módulos, cada una una sola vez.',
     signedInWith: (p) => `Sesión iniciada con ${p}`, syncedAt: (tm) => `Progreso sincronizado a las ${tm}`, syncPending: 'Sincronizando progreso…', day: 'día', acrossN: (n) => `en ${n} ${n === 1 ? 'cuestionario' : 'cuestionarios'}`, noQuizYet: 'Aún no haces cuestionarios',
     modulesWithNotes: 'módulos con notas', noActivity: 'Completa un módulo, haz un cuestionario o escribe una nota y aparecerá aquí.', typeDelete: 'Escribe DELETE para confirmar', deleteViaSupport: 'Pide a soporte que la elimine',
     privacy: 'Privacidad', terms: 'Términos', contact: 'Contacto', checkingSession: 'Revisando tu cuenta…', emailOrUser: 'Correo o usuario', username: 'Usuario', confirmPw: 'Confirmar contraseña',
@@ -130,9 +130,9 @@ const store = {
 };
 const state = {
   lang: store.get('lang', (navigator.language || '').toLowerCase().startsWith('es') ? 'es' : 'en'), user: null, authReady: false, syncedAt: null, done: new Set(store.get('done', [])),
-  codeLang: store.get('codeLang', 'java'), notified: new Set(store.get('notified', [])), tab: 'overview', exIndex: 0, quiz: null, flash: null, practiceModule: null,
+  codeLang: store.get('codeLang', 'java'), notified: new Set(store.get('notified', [])), tab: 'overview', exIndex: 0, quiz: null, flash: null,
   notes: store.get('notes', {}), aces: new Set(store.get('aces', [])), langsSeen: new Set(store.get('langsSeen', ['java'])), votes: new Set(store.get('votes', [])),
-  plan: store.get('plan', { hours: 4, start: new Date().toISOString().slice(0, 10) }), quizBest: store.get('quizBest', {}), activity: store.get('activity', []), pg: null, sideCollapsed: new Set(), noteModule: null, glossLetter: 'all', glossQuery: ''
+  plan: store.get('plan', { hours: 4, start: new Date().toISOString().slice(0, 10) }), quizBest: store.get('quizBest', {}), cardsKnown: new Set(store.get('cardsKnown', [])), quizModule: null, flashModule: null, activity: store.get('activity', []), pg: null, sideCollapsed: new Set(), noteModule: null, glossLetter: 'all', glossQuery: ''
 };
 let DATA = null;
 const $ = (s, r = document) => r.querySelector(s);
@@ -173,7 +173,7 @@ const moduleOptions = (selected) => liveTracks().map((tr) => `<optgroup label="$
 const moduleTitle = (id) => L(DATA.modules[id]?.title) || id;
 // Everything that belongs to the learner, in one plain object: saved locally and, when signed in, to the account.
 const progressSnapshot = () => ({ done: [...state.done], codeLang: state.codeLang, notified: [...state.notified], notes: state.notes, aces: [...state.aces],
-  langsSeen: [...state.langsSeen], votes: [...state.votes], plan: state.plan, quizBest: state.quizBest, activity: state.activity.slice(-200), lang: state.lang });
+  langsSeen: [...state.langsSeen], votes: [...state.votes], plan: state.plan, quizBest: state.quizBest, cardsKnown: [...state.cardsKnown], activity: state.activity.slice(-200), lang: state.lang });
 const save = () => { const snap = progressSnapshot(); Object.entries(snap).forEach(([k, v]) => store.set(k, v)); scheduleSync(); };
 function logActivity(kind, id, extra) { state.activity.push({ kind, id, at: Date.now(), ...(extra || {}) }); if (state.activity.length > 200) state.activity.splice(0, state.activity.length - 200); }
 function toast(msg) { const el = $('#toast'); el.textContent = msg; el.hidden = false; clearTimeout(toast.timer); toast.timer = setTimeout(() => { el.hidden = true; }, 1800); }
@@ -220,7 +220,9 @@ function renderChrome(route) {
     ${liveTracks().filter((tr) => !inPath(tr.id)).map((tr) => sideCourse(tr, route)).join('')}
     ${DATA.tracks.filter((x) => x.status !== 'available').map((x) => `<a class="nav-item${is('course-' + x.id)}" href="#course-${x.id}"><span class="ico">${esc(x.icon)}</span>${esc(L(x.title))}<span class="tag">${t('soon')}</span></a>`).join('')}
     <div class="nav-label">${t('practice')}</div>
-    <a class="nav-item${is('practice')}" href="#practice"><span class="ico">✓</span>${t('quizzes')} · ${t('flashcards')}</a>
+    <a class="nav-item${is('practice')}" href="#practice"><span class="ico">◎</span>${t('practiceHub')}</a>
+    <a class="nav-item${is('quizzes')}" href="#quizzes"><span class="ico">✓</span>${t('quizzes')}</a>
+    <a class="nav-item${is('flashcards')}" href="#flashcards"><span class="ico">▭</span>${t('flashcards')}</a>
     <a class="nav-item${is('playground')}" href="#playground"><span class="ico">›_</span>${t('playground')}</a>
     <a class="nav-item${is('plan')}" href="#plan"><span class="ico">▤</span>${t('studyPlan')}</a>
     <a class="nav-item${is('notes')}" href="#notes"><span class="ico">✎</span>${t('notes')}</a>
@@ -233,7 +235,7 @@ function renderChrome(route) {
   const tab = (href, ico, label, on) => `<a href="#${href}" class="${on ? 'active' : ''}"><span class="ico">${ico}</span>${label}</a>`;
   $('#bottom-nav').innerHTML = tab('home', '⌂', t('home'), route === 'home')
     + tab('courses', '▦', t('courses'), route === 'courses' || route.startsWith('course-') || route.startsWith('m-'))
-    + tab('practice', '✓', t('practice'), route === 'practice') + tab('profile', '◯', t('account'), route === 'profile');
+    + tab('practice', '✓', t('practice'), ['practice', 'quizzes', 'flashcards'].includes(route)) + tab('profile', '◯', t('account'), route === 'profile');
 }
 
 /* ---------- Views ---------- */
@@ -449,22 +451,69 @@ function quizHtml(id) {
     ${q.picked != null ? `<div class="feedback"><b style="color:${q.picked === item.correct ? 'var(--success)' : 'var(--danger)'}">${q.picked === item.correct ? t('correct') : t('notQuite')}</b> ${fmt(L(item.explanation))}</div>
       <div class="quiz-actions"><button class="btn" data-action="quiz-next">${q.i < qs.length - 1 ? t('nextQ') : t('finish')}</button></div>` : ''}</div>`;
 }
+const cardKey = (id, i) => `${id}:${i}`;
+const shuffled = (arr) => { const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+// "I know it" marks the card as known (synced with the account); "Still learning" un-marks it. Both move on.
+function flashStep(knowIt) {
+  const f = state.flash; if (!f) return;
+  const key = cardKey(f.id, f.order[f.pos]);
+  if (knowIt) state.cardsKnown.add(key); else state.cardsKnown.delete(key);
+  f.pos = (f.pos + 1) % f.order.length; f.flipped = false;
+  save(); render(true);
+}
+function deckStats(id) {
+  const n = (DATA.full[id].definitions || []).length;
+  let known = 0; for (let i = 0; i < n; i++) if (state.cardsKnown.has(cardKey(id, i))) known++;
+  return { n, known };
+}
 function flashHtml(id) {
   const cards = DATA.full[id].definitions || [];
-  if (!state.flash || state.flash.id !== id) state.flash = { id, i: 0, flipped: false };
-  const f = state.flash, card = cards[f.i];
-  return `<div class="flash${f.flipped ? ' flipped' : ''}" id="flash" role="button" tabindex="0" aria-label="${t('tapFlip')}" data-action="flip">
-      <div class="flash-inner"><div class="flash-face"><div><div class="muted" style="margin-bottom:8px">${t('cardOf', f.i + 1, cards.length)}</div><h3>${esc(L(card.term))}</h3><p class="muted" style="margin-top:10px">${t('tapFlip')}</p></div></div>
+  if (!state.flash || state.flash.id !== id) state.flash = { id, order: cards.map((_, i) => i), pos: 0, flipped: false, shuffled: false };
+  const f = state.flash, idx = f.order[f.pos], card = cards[idx], d = deckStats(id), known = state.cardsKnown.has(cardKey(id, idx));
+  return `<div class="deck-top"><span class="muted">${t('cardOf', f.pos + 1, cards.length)}</span><span class="deck-known">${t('knownOf', d.known, d.n)}</span></div>
+    <div class="progress deck-progress${d.known === d.n ? ' done' : ''}"><span style="width:${pct(d.known, d.n)}%"></span></div>
+    <div class="flash${f.flipped ? ' flipped' : ''}" id="flash" role="button" tabindex="0" aria-label="${t('tapFlip')}" data-action="flip">
+      <div class="flash-inner"><div class="flash-face">${known ? `<span class="flash-badge">✓ ${t('knownBadge')}</span>` : ''}<div><div class="muted flash-course">${esc(L(track(DATA.modules[id].track).title))}</div><h3>${esc(L(card.term))}</h3><p class="muted" style="margin-top:10px">${t('tapFlip')}</p></div></div>
       <div class="flash-face back"><p>${fmt(L(card.definition))}</p></div></div></div>
-    <div class="flash-controls"><button class="btn btn-ghost" data-action="flash-again">${t('again')}</button><button class="btn" data-action="flash-next">${t('gotIt')}</button></div>`;
+    <div class="flash-controls"><button class="btn btn-ghost" data-action="flash-again">← ${t('again')}</button><button class="btn" data-action="flash-next">${t('gotIt')} →</button></div>
+    ${d.known === d.n && d.n ? `<div class="deck-done">🎉 ${t('deckDone')} <button class="btn btn-sm" data-action="go-quiz" data-id="${id}">${t('takeQuiz')}</button></div>` : ''}
+    <div class="deck-tools"><button class="lang" data-action="flash-shuffle" aria-pressed="${f.shuffled}">⇄ ${t('shuffle')}</button><button class="lang" data-action="flash-reset">${t('resetDeck')}</button><span class="muted kbd-hint">${t('flashKeys')}</span></div>`;
 }
+const practiceDefault = () => nextModule() || liveIds()[0];
 function viewPractice() {
-  const ids = liveIds();
-  if (!state.practiceModule) state.practiceModule = nextModule() || ids[0];
-  const id = state.practiceModule;
+  const ids = liveIds(), qa = quizAverage();
+  const totalCards = ids.reduce((n, id) => n + (DATA.full[id].definitions || []).length, 0);
+  const knownCards = [...state.cardsKnown].filter((k) => DATA.full[k.split(':')[0]]).length;
+  const quizzed = Object.keys(state.quizBest).filter((id) => DATA.full[id]).length;
+  const suggestion = ids.find((id) => state.done.has(id) && !(id in state.quizBest)) || nextModule() || ids[0];
   return `<section class="wrap"><h1>${t('practice')}</h1><p class="lead">${t('practiceLead')}</p>
-    <div class="toolbar"><label class="muted" for="practice-module">${t('pickModule')}</label><select class="select" id="practice-module">${moduleOptions(id)}</select></div>
-    <div class="split"><div>${quizHtml(id)}</div><div>${flashHtml(id)}</div></div></section>`;
+    <div class="practice-hub">
+      <a class="card hub-card" href="#quizzes"><span class="hub-ico">✓</span><div class="hub-body"><h2>${t('quizzes')}</h2><p>${t('hubQuizText')}</p>
+        <div class="hub-stats"><span><b>${ids.length}</b> ${t('quizzes').toLowerCase()}</span><span><b>${quizzed}</b> ${t('taken')}</span><span><b>${qa ? qa.avg + '%' : '—'}</b> ${t('average')}</span></div></div><span class="hub-go">→</span></a>
+      <a class="card hub-card" href="#flashcards"><span class="hub-ico">▭</span><div class="hub-body"><h2>${t('flashcards')}</h2><p>${t('hubFlashText')}</p>
+        <div class="hub-stats"><span><b>${totalCards}</b> ${t('cards')}</span><span><b>${knownCards}</b> ${t('known')}</span></div>
+        <div class="progress"><span style="width:${pct(knownCards, totalCards)}%"></span></div></div><span class="hub-go">→</span></a>
+    </div>
+    <div class="card suggest"><div class="suggest-txt"><span class="muted">${t('suggested')}</span><b>${esc(moduleTitle(suggestion))}</b><span class="muted">${esc(L(track(DATA.modules[suggestion].track).title))}</span></div>
+      <div class="suggest-actions"><button class="btn btn-sm" data-action="go-quiz" data-id="${suggestion}">${t('takeQuiz')}</button><button class="btn btn-sm btn-ghost" data-action="go-flash" data-id="${suggestion}">${t('reviewCards')}</button></div></div></section>`;
+}
+function viewQuizzes() {
+  if (!state.quizModule || !DATA.full[state.quizModule]) state.quizModule = practiceDefault();
+  const id = state.quizModule;
+  const board = pathTracks().concat(liveTracks().filter((tr) => !inPath(tr.id))).map((tr) => `<div class="board-course"><div class="board-title"><span class="cmark" data-track="${tr.id}">${esc(tr.icon)}</span>${esc(L(tr.title))}</div>
+    ${trackIds(tr.id).map((m) => { const best = state.quizBest[m]; return `<button class="board-row${m === id ? ' active' : ''}" data-action="quiz-choose" data-id="${m}"><span>${esc(moduleTitle(m))}</span><span class="pill${best == null ? '' : best === 1 ? ' ok' : ' soon'}">${best == null ? t('notTaken') : Math.round(best * 100) + '%'}</span></button>`; }).join('')}</div>`).join('');
+  return `<section class="wrap"><div class="crumbs"><a href="#practice">${t('practice')}</a><span>/</span><span style="color:var(--text)">${t('quizzes')}</span></div>
+    <h1>${t('quizzes')}</h1><p class="lead">${t('quizzesLead')}</p>
+    <div class="toolbar"><label class="muted" for="quiz-module">${t('pickModule')}</label><select class="select" id="quiz-module">${moduleOptions(id)}</select></div>
+    <div class="quiz-layout"><div>${quizHtml(id)}</div><aside class="card scoreboard"><h3>${t('yourScores')}</h3>${board}</aside></div></section>`;
+}
+function viewFlashcards() {
+  if (!state.flashModule || !DATA.full[state.flashModule]) state.flashModule = practiceDefault();
+  const id = state.flashModule;
+  return `<section class="wrap"><div class="crumbs"><a href="#practice">${t('practice')}</a><span>/</span><span style="color:var(--text)">${t('flashcards')}</span></div>
+    <h1>${t('flashcards')}</h1><p class="lead">${t('flashLead')}</p>
+    <div class="toolbar"><label class="muted" for="flash-module">${t('pickModule')}</label><select class="select" id="flash-module">${moduleOptions(id)}</select></div>
+    <div class="deck">${flashHtml(id)}</div></section>`;
 }
 const initials = (u) => (String(u?.name || u?.username || u?.email || '?').trim().split(/[\s@._-]+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('') || '?').toUpperCase();
 const dayKey = (ms) => { const d = new Date(ms); return `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()}`; };
@@ -504,7 +553,7 @@ function viewProfile() {
     <div class="stats">
       <a class="card stat stat-link" href="${continueHref()}" aria-label="${t('modulesComplete')}: ${t('continueBtn')}"><div class="label">${t('modulesComplete')}<span class="stat-go">→</span></div><div class="value">${s.done} / ${s.count}</div><div class="progress"><span style="width:${pct(s.done, s.count)}%"></span></div></a>
       <a class="card stat stat-link" href="#plan"><div class="label">${t('streak')}<span class="stat-go">→</span></div><div class="value">${streak} ${streak === 1 ? t('day') : t('days')}</div><div class="week">${week.map((on) => `<span${on ? ' class="on"' : ''}></span>`).join('')}</div></a>
-      <a class="card stat stat-link" href="#practice"><div class="label">${t('quizAvg')}<span class="stat-go">→</span></div><div class="value">${qa ? qa.avg + '%' : '—'}</div><div class="muted">${qa ? t('acrossN', qa.n) : t('noQuizYet')}</div></a>
+      <a class="card stat stat-link" href="#quizzes"><div class="label">${t('quizAvg')}<span class="stat-go">→</span></div><div class="value">${qa ? qa.avg + '%' : '—'}</div><div class="muted">${qa ? t('acrossN', qa.n) : t('noQuizYet')}</div></a>
       <a class="card stat stat-link" href="#notes"><div class="label">${t('notes')}<span class="stat-go">→</span></div><div class="value">${notesCount}</div><div class="muted">${t('modulesWithNotes')}</div></a></div>
     <div class="split"><div class="stack">
       <div class="card panel"><h2>${t('yourCourses')}</h2><div class="unit-progress">${DATA.tracks.map((tr) => { const ts = trackStats(tr), live = tr.status === 'available';
@@ -870,7 +919,7 @@ function clearSession() { state.user = null; auth.token = ''; auth.csrf = ''; re
 let remoteState = null, syncTimer = null;
 function mergeProgress(a) {
   const union = (key) => (a[key] || []).forEach((x) => state[key].add(x));
-  ['done', 'notified', 'aces', 'langsSeen', 'votes'].forEach(union);
+  ['done', 'notified', 'aces', 'langsSeen', 'votes', 'cardsKnown'].forEach(union);
   Object.entries(a.notes || {}).forEach(([k, v]) => { if (v && !(state.notes[k] || '').trim()) state.notes[k] = v; });
   Object.entries(a.quizBest || {}).forEach(([k, v]) => { state.quizBest[k] = Math.max(v, state.quizBest[k] || 0); });
   const seen = new Set(state.activity.map((x) => `${x.kind}|${x.id}|${x.at}`));
@@ -1016,7 +1065,7 @@ function render(keepScroll) {
     history.replaceState(null, '', '#' + route);
   }
   if (route !== lastRoute) { state.tab = 'overview'; state.exIndex = 0; state.sideCollapsed.clear(); }
-  const html = route === 'home' ? viewHome() : route === 'courses' ? viewCourses() : route === 'practice' ? viewPractice() : route === 'profile' ? viewProfile() : route === 'playground' ? viewPlayground() : route === 'notes' ? viewNotes() : route === 'glossary' ? viewGlossary() : route === 'roadmap' ? viewRoadmap() : route === 'plan' ? viewPlan()
+  const html = route === 'home' ? viewHome() : route === 'courses' ? viewCourses() : route === 'practice' ? viewPractice() : route === 'quizzes' ? viewQuizzes() : route === 'flashcards' ? viewFlashcards() : route === 'profile' ? viewProfile() : route === 'playground' ? viewPlayground() : route === 'notes' ? viewNotes() : route === 'glossary' ? viewGlossary() : route === 'roadmap' ? viewRoadmap() : route === 'plan' ? viewPlan()
     : route.startsWith('course-') ? viewCourse(route.slice(7)) : route.startsWith('m-') ? viewModule(route.slice(2)) : viewMissing();
   renderChrome(route);
   $('#main').innerHTML = html;
@@ -1073,7 +1122,12 @@ document.addEventListener('click', (e) => {
   else if (a === 'gloss-letter') { state.glossLetter = el.dataset.v; render(true); }
   else if (a === 'vote') { const id = el.dataset.id; if (state.votes.has(id)) state.votes.delete(id); else state.votes.add(id); save(); render(true); }
   else if (a === 'flip') { state.flash.flipped = !state.flash.flipped; $('#flash').classList.toggle('flipped', state.flash.flipped); }
-  else if (a === 'flash-next' || a === 'flash-again') { const n = DATA.full[state.flash.id].definitions.length; state.flash.i = (state.flash.i + 1) % n; state.flash.flipped = false; render(true); }
+  else if (a === 'flash-next' || a === 'flash-again') { flashStep(a === 'flash-next'); }
+  else if (a === 'flash-shuffle') { const f = state.flash; f.shuffled = !f.shuffled; f.order = f.shuffled ? shuffled(f.order) : [...f.order].sort((x, y) => x - y); f.pos = 0; f.flipped = false; render(true); }
+  else if (a === 'flash-reset') { const f = state.flash, n = DATA.full[f.id].definitions.length; for (let i = 0; i < n; i++) state.cardsKnown.delete(cardKey(f.id, i)); f.pos = 0; f.flipped = false; save(); render(true); }
+  else if (a === 'quiz-choose') { state.quizModule = el.dataset.id; state.quiz = null; render(true); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+  else if (a === 'go-quiz') { state.quizModule = el.dataset.id; state.quiz = null; location.hash = '#quizzes'; }
+  else if (a === 'go-flash') { state.flashModule = el.dataset.id; state.flash = null; location.hash = '#flashcards'; }
   else if (a === 'set-lang') { state.lang = el.dataset.v; save(); render(true); }
   else if (a === 'set-theme') { const v = el.dataset.v; if (v === 'system') delete document.documentElement.dataset.theme; else document.documentElement.dataset.theme = v; store.set('theme', v); render(true); }
 });
@@ -1084,7 +1138,8 @@ document.addEventListener('input', (e) => {
   if (e.target.id === 'pg-code' && state.pg) state.pg.code = e.target.value;
 });
 document.addEventListener('change', (e) => {
-  if (e.target.id === 'practice-module') { state.practiceModule = e.target.value; state.quiz = null; state.flash = null; render(true); }
+  if (e.target.id === 'quiz-module') { state.quizModule = e.target.value; state.quiz = null; render(true); }
+  if (e.target.id === 'flash-module') { state.flashModule = e.target.value; state.flash = null; render(true); }
   if (e.target.id === 'note-module') { state.noteModule = e.target.value; render(true); }
   if (e.target.id === 'pref-code-lang') { state.codeLang = e.target.value; store.set('codeLangTouched', true); save(); }
   if (e.target.id === 'plan-hours' || e.target.id === 'plan-start' || e.target.id === 'plan-track') { state.plan[e.target.id.slice(5)] = e.target.value; store.set('planTouched', true); save(); render(true); }
@@ -1103,6 +1158,12 @@ document.addEventListener('keydown', (e) => {
     items[i].classList.add('kb'); items[i].scrollIntoView({ block: 'nearest' });
   }
   if (e.target.id === 'flash' && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); e.target.click(); }
+  // Flashcards page: Space flips, arrows rate the card (unless typing in a field).
+  if (lastRoute === 'flashcards' && state.flash && !/INPUT|TEXTAREA|SELECT/.test(e.target.tagName) && !e.ctrlKey && !e.metaKey) {
+    if (e.key === ' ' && e.target.id !== 'flash') { e.preventDefault(); $('#flash')?.click(); }
+    else if (e.key === 'ArrowRight') { e.preventDefault(); flashStep(true); }
+    else if (e.key === 'ArrowLeft') { e.preventDefault(); flashStep(false); }
+  }
   if (e.target.id === 'pg-code') {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); runPlayground(); }
     else if (e.key === 'Tab' && !e.shiftKey) { e.preventDefault(); const ta = e.target, st = ta.selectionStart; ta.setRangeText('    ', st, ta.selectionEnd, 'end'); state.pg.code = ta.value; }
