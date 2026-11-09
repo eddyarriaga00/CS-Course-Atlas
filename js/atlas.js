@@ -152,7 +152,10 @@ const t = (k, ...a) => { const v = UI[state.lang][k] ?? UI.en[k]; return typeof 
 const L = (o) => o == null ? '' : typeof o === 'string' ? o : (o[state.lang] ?? o.en ?? '');
 const LL = (o) => (o && (o[state.lang] || o.en)) || [];
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-const fmt = (s) => esc(s).replace(/`([^`]+)`/g, '<code class="ic">$1</code>');
+// Inline formatting for lesson text: `code` and **bold**. Bold needs a space or punctuation around it, so math
+// such as 2**31 stays as written, and it never applies inside code.
+const fmt = (s) => esc(s).split(/(`[^`]+`)/).map((part, i) => (i % 2 ? `<code class="ic">${part.slice(1, -1)}</code>`
+  : part.replace(/(^|[\s(¿¡"'“‘])\*\*(\S(?:[^*\n]*?\S)?)\*\*(?=$|[\s.,;:!?)"'”’])/g, '$1<strong>$2</strong>'))).join('');
 function rich(text) {
   return String(text || '').split(/\n\n+/).map((block) => {
     let html = '', list = [];
@@ -1040,74 +1043,65 @@ function loadJava() {
   }).catch((e) => { javaLoading = null; throw e; });
   return javaLoading;
 }
-// Java cannot be interrupted once it runs (it shares this page's thread), so before compiling, every braced
-// while/for/do loop gets a cheap check that ends the program after 10 seconds instead of freezing the page.
-// The scanner skips strings, chars and comments, and inserts on the same line so error line numbers stay right.
-function guardJavaLoops(src) {
-  let out = '', i = 0;
-  const n = src.length;
-  while (i < n) {
-    const c = src[i], two = src.slice(i, i + 2);
-    if (two === '//') { const e = src.indexOf('\n', i); const j = e < 0 ? n : e; out += src.slice(i, j); i = j; continue; }
-    if (two === '/*') { const e = src.indexOf('*/', i + 2); const j = e < 0 ? n : e + 2; out += src.slice(i, j); i = j; continue; }
-    if (src.startsWith('"""', i)) { const e = src.indexOf('"""', i + 3); const j = e < 0 ? n : e + 3; out += src.slice(i, j); i = j; continue; }
-    if (c === '"' || c === "'") { let j = i + 1; while (j < n && src[j] !== c && src[j] !== '\n') j += src[j] === '\\' ? 2 : 1; out += src.slice(i, j + 1); i = j + 1; continue; }
-    const m = /^(while|for|do)\b/.exec(src.slice(i, i + 6));
-    if (m && !/[\w$]/.test(src[i - 1] || '')) {
-      let j = i + m[1].length;
-      if (m[1] !== 'do') {
-        while (j < n && /\s/.test(src[j])) j++;
-        if (src[j] !== '(') { out += src.slice(i, j); i = j; continue; }
-        let depth = 0;
-        for (; j < n; j++) { if (src[j] === '(') depth++; else if (src[j] === ')' && --depth === 0) { j++; break; } }
-      }
-      let k = j; while (k < n && /\s/.test(src[k])) k++;
-      if (src[k] === '{') { out += src.slice(i, k + 1) + ' AtlasLoopGuard.tick();'; i = k + 1; continue; }
-      out += src.slice(i, j); i = j; continue;
-    }
-    out += c; i++;
-  }
-  return out + '\nclass AtlasLoopGuard { static final long END = System.currentTimeMillis() + 10000; static int n; static void tick() { if ((++n & 4095) == 0 && System.currentTimeMillis() > END) throw new Error("Stopped after 10 seconds (infinite loop?)"); } }\n';
+// Loop guard and challenge test builder, shared with scripts/verify_challenges.js (scripts/lib/java_tools.js).
+let javaToolsCache = null;
+const javaTools = () => javaToolsCache || (javaToolsCache = new Function(DATA.javaTools + '\nreturn { guardJavaLoops, buildJavaTests, parseJavaTests };')());
+// Compiles the given files ({ 'Name.java': source }) and runs mainClass. Learner code gets the loop guard.
+// Returns { error } (Java failed to load or is busy), { compileError }, or { output, timedOut, compileMs, runMs }.
+async function javaCompileRun(files, mainClass, onStatus) {
+  if (javaBusy) return { error: t('javaBusy') };
+  javaBusy = true;
+  try {
+    onStatus(javaLoading ? t('compiling') : t('javaLoading'));
+    try { await loadJava(); } catch (e) { return { error: t('javaFailed') }; }
+    let con = $('#console');
+    if (!con) { con = document.createElement('pre'); con.id = 'console'; con.hidden = true; document.body.append(con); }
+    // CheerpJ's in-memory /str/ folder has no subfolders, so sources keep their class names; each run compiles to its own folder.
+    const dir = `/files/r${++javaRuns}/`, paths = Object.entries(files).map(([name, src]) => { window.cheerpOSAddStringFile('/str/' + name, src); return '/str/' + name; });
+    con.textContent = ''; onStatus(t('compiling'));
+    const t0 = performance.now();
+    const compiled = await window.cheerpjRunMain('com.sun.tools.javac.Main', '', '-d', dir, ...paths);
+    const compileMs = Math.round(performance.now() - t0);
+    if (compiled !== 0) return { compileError: con.textContent.replaceAll('/str/', '') };
+    con.textContent = ''; onStatus(t('running'));
+    const t1 = performance.now();
+    await window.cheerpjRunMain(mainClass, dir);
+    const output = con.textContent;
+    return { output, timedOut: /AtlasLoopGuard/.test(output), compileMs, runMs: Math.round(performance.now() - t1) };
+  } catch (e) { return { error: String(e && e.message || e) }; } finally { javaBusy = false; }
 }
 async function runJava(code, out, status) {
-  if (javaBusy) { status.textContent = t('javaBusy'); return; }
-  javaBusy = true; out.textContent = '';
-  const warm = Boolean(javaLoading);
-  status.textContent = warm ? t('compiling') : t('javaLoading');
-  try { await loadJava(); } catch (e) { out.innerHTML = `<span class="err">${t('javaFailed')}</span>`; status.textContent = ''; javaBusy = false; return; }
-  let con = $('#console');
-  if (!con) { con = document.createElement('pre'); con.id = 'console'; con.hidden = true; document.body.append(con); }
+  out.textContent = '';
   // The file must be named after its public class.
   const cls = (code.match(/public\s+(?:final\s+|abstract\s+)*class\s+([A-Za-z_$][\w$]*)/) || code.match(/\bclass\s+([A-Za-z_$][\w$]*)/) || [])[1] || 'Main';
-  // CheerpJ's in-memory /str/ folder has no subfolders, so the source keeps its class name; each run compiles to its own folder.
-  const run = ++javaRuns, src = `/str/${cls}.java`, dir = `/files/r${run}/`;
-  window.cheerpOSAddStringFile(src, guardJavaLoops(code));
-  con.textContent = ''; status.textContent = t('compiling');
-  const t0 = performance.now();
-  try {
-    const compiled = await window.cheerpjRunMain('com.sun.tools.javac.Main', '', '-d', dir, src);
-    const compileMs = Math.round(performance.now() - t0);
-    if (compiled !== 0) {
-      out.innerHTML = `<span class="info">${t('compileFailed')}</span>\n<span class="err">${esc(con.textContent.replaceAll('/str/', ''))}</span>`;
-      status.textContent = ''; return;
-    }
-    con.textContent = ''; status.textContent = t('running');
-    const t1 = performance.now();
-    await window.cheerpjRunMain(cls, dir);
-    const text = con.textContent;
-    if (/AtlasLoopGuard/.test(text)) {
-      const printed = text.slice(0, text.search(/^Exception in thread /m)).replace(/\n$/, '');
-      out.innerHTML = esc(printed) + (printed ? '\n' : '') + `<span class="err">${t('pyTimeout')}</span>`;
-      status.textContent = t('pyTimeout'); return;
-    }
-    // Uncaught exceptions print a stack trace: show it in red.
-    const crash = text.search(/^Exception in thread /m);
-    out.innerHTML = crash < 0 ? esc(text) : esc(text.slice(0, crash)) + `<span class="err">${esc(text.slice(crash))}</span>`;
-    if (!text) out.innerHTML = `<span class="info">${t('pgEmpty')}</span>`;
-    status.textContent = t('pgCompiledRan', compileMs, Math.round(performance.now() - t1));
-  } catch (e) {
-    out.innerHTML = `<span class="err">${esc(String(e && e.message || e))}</span>`; status.textContent = '';
-  } finally { javaBusy = false; }
+  const r = await javaCompileRun({ [cls + '.java']: javaTools().guardJavaLoops(code) }, cls, (msg) => { status.textContent = msg; });
+  if (r.error) { out.innerHTML = `<span class="err">${esc(r.error)}</span>`; status.textContent = ''; return; }
+  if (r.compileError != null) { out.innerHTML = `<span class="info">${t('compileFailed')}</span>\n<span class="err">${esc(r.compileError)}</span>`; status.textContent = ''; return; }
+  const text = r.output, crash = text.search(/^Exception in thread /m);
+  if (r.timedOut) {
+    const printed = text.slice(0, crash).replace(/\n$/, '');
+    out.innerHTML = esc(printed) + (printed ? '\n' : '') + `<span class="err">${t('pyTimeout')}</span>`;
+    status.textContent = t('pyTimeout'); return;
+  }
+  // Uncaught exceptions print a stack trace: show it in red.
+  out.innerHTML = crash < 0 ? esc(text) : esc(text.slice(0, crash)) + `<span class="err">${esc(text.slice(crash))}</span>`;
+  if (!text) out.innerHTML = `<span class="info">${t('pgEmpty')}</span>`;
+  status.textContent = t('pgCompiledRan', r.compileMs, r.runMs);
+}
+// Java challenges: the learner writes class Solution; AtlasTests (built from the challenge's tests) calls it.
+async function runJavaChallenge(i, id, ch, key, box, code) {
+  const J = javaTools(), spin = (msg) => { box.innerHTML = `<div class="ch-status"><span class="spinner"></span>${esc(msg === t('running') ? t('runningTests') : msg)}</div>`; };
+  const r = await javaCompileRun({ 'Solution.java': J.guardJavaLoops(code), 'AtlasTests.java': J.buildJavaTests(ch.tests) }, 'AtlasTests', spin);
+  state.chTries[key] = (state.chTries[key] || 0) + 1;
+  if (r.error) box.innerHTML = `<div class="ch-status err">${esc(r.error)}</div>`;
+  else if (r.compileError != null) box.innerHTML = `<div class="ch-status err">${t('compileFailed')}</div><pre class="ch-err">${esc(r.compileError.trim())}</pre>`;
+  else {
+    const { results, printed } = J.parseJavaTests(r.output, ch.tests), v = verdict(results);
+    box.innerHTML = v.html + (r.timedOut ? `<div class="ch-status err">${t('pyTimeout')}</div>` : '')
+      + (printed.trim() && !r.timedOut ? `<div class="ch-printed"><span class="muted">${t('printedOutput')}</span><pre>${esc(printed.trim())}</pre></div>` : '');
+    if (v.all) markSolved(i, id, ch, key);
+  }
+  refreshChallengeHelp(i);
 }
 // C++ compiles with real Clang/LLVM built for WebAssembly (YoWASP), inside a worker that then runs the program
 // with a small WASI layer. The compiler (about 100 MB unpacked) downloads once and is cached by the browser.
@@ -1374,7 +1368,7 @@ function challengeHtml(id, ch, i) {
     ${ch.lang === 'bash' ? `<details class="ch-tables" open><summary>${t('startingFiles')}</summary><pre tabindex="0" class="code ch-setup" data-shell-setup="${i}"><code>${t('loadingWord')}</code></pre></details>` : ''}
     ${ch.lang === 'predict' ? `<div class="code-card ch-program"><div class="code-bar"><span class="lang is-on">${LANG_LABEL[ch.codeLang] || ch.codeLang}</span></div><pre tabindex="0" class="code"><code class="language-${ch.codeLang}">${esc(ch.code)}</code></pre></div>` : ''}
     ${ch.lang === 'sql' ? `<details class="ch-tables"><summary>${t('seeTables')}</summary><pre tabindex="0" class="code"><code>${esc(ch.setup)}</code></pre></details>` : ''}
-    <div class="ch-editor"><div class="code-bar"><span class="lang is-on">${{ sql: 'SQL', html: 'HTML', css: 'HTML · CSS', js: 'JavaScript', bash: t('terminal'), predict: t('yourAnswer') }[ch.lang] || 'Python'}</span><button class="lang" data-action="ch-reset" data-i="${i}">${t('reset')}</button>${!ch.lang ? `<button class="lang" data-action="ch-step" data-i="${i}" title="${t('chStepHint')}">⇥ ${t('vizStep')}</button>` : ''}<button class="lang run" data-action="ch-run" data-i="${i}">▶ ${ch.lang === 'predict' ? t('checkAnswer') : t('runTests')}</button></div>
+    <div class="ch-editor"><div class="code-bar"><span class="lang is-on">${{ sql: 'SQL', html: 'HTML', css: 'HTML · CSS', js: 'JavaScript', java: 'Java', bash: t('terminal'), predict: t('yourAnswer') }[ch.lang] || 'Python'}</span><button class="lang" data-action="ch-reset" data-i="${i}">${t('reset')}</button>${!ch.lang ? `<button class="lang" data-action="ch-step" data-i="${i}" title="${t('chStepHint')}">⇥ ${t('vizStep')}</button>` : ''}<button class="lang run" data-action="ch-run" data-i="${i}">▶ ${ch.lang === 'predict' ? t('checkAnswer') : t('runTests')}</button></div>
       <textarea class="ch-code" id="ch-code-${i}" data-key="${esc(key)}" spellcheck="false" autocapitalize="off" autocomplete="off" wrap="off" aria-label="${esc(L(ch.title))}: ${ch.lang === 'predict' ? t('yourAnswer') : t('yourCode')}"${ch.lang === 'predict' ? ` placeholder="${t('predictPlaceholder')}"` : ''}>${esc(chDraft(id, ch))}</textarea></div>
     <div class="ch-result" id="ch-res-${i}" aria-live="polite"></div>
     <div class="ch-help"><details><summary>${t('hint')}</summary><p>${fmt(L(ch.hint))}</p></details>
@@ -1501,6 +1495,7 @@ async function runChallenge(i) {
   if (ch.lang === 'predict') return runPredictChallenge(i, id, ch, key, box, code);
   if (ch.lang === 'html' || ch.lang === 'css') return runWebChallenge(i, id, ch, key, box, code);
   if (ch.lang === 'js') return runJsChallenge(i, id, ch, key, box, code);
+  if (ch.lang === 'java') return runJavaChallenge(i, id, ch, key, box, code);
   const program = `${code}\n__TESTS = ${JSON.stringify(ch.tests)}\n${DATA.harness}`;
   const r = await runPythonCapture(program, (s) => { box.innerHTML = `<div class="ch-status"><span class="spinner"></span>${s === 'loading' ? t('pyLoading') : t('runningTests')}</div>`; });
   if (r.failed) { box.innerHTML = `<div class="ch-status err">${t('pyFailed')}</div>`; return; }

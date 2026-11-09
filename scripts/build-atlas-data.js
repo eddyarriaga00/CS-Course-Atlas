@@ -93,6 +93,8 @@ const challenges = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/challenges.j
 for (const [id, list] of Object.entries(challenges)) if (full[id]) full[id].challenges = list;
 const harness = fs.readFileSync(path.join(ROOT, 'scripts/lib/challenge_harness.py'), 'utf8');
 const webChecks = fs.readFileSync(path.join(ROOT, 'scripts/lib/web_checks.js'), 'utf8');
+// Java challenge tests and the loop guard, shared with scripts/verify_challenges.js.
+const javaTools = fs.readFileSync(path.join(ROOT, 'scripts/lib/java_tools.js'), 'utf8');
 // Courses being written carry their final outline so their page can show the syllabus.
 const outlines = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/course-outlines.json'), 'utf8'));
 for (const p of PLANNED) if (outlines[p.id]) p.outline = outlines[p.id];
@@ -129,7 +131,7 @@ for (const t of tracks.filter((x) => x.status === 'available')) for (const id of
 const glossaryJson = JSON.stringify(glossary);
 const glossaryVersion = crypto.createHash('sha1').update(glossaryJson).digest('hex').slice(0, 10);
 const searchVersion = crypto.createHash('sha1').update(searchJson).digest('hex').slice(0, 10);
-const out = { tracks, planned: PLANNED, path: PATH, next: NEXT, modules, videos, harness, webChecks, shellVersion, searchVersion, glossaryVersion };
+const out = { tracks, planned: PLANNED, path: PATH, next: NEXT, modules, videos, harness, webChecks, javaTools, shellVersion, searchVersion, glossaryVersion };
 const file = path.join(ROOT, 'data/atlas-data.json');
 const lessonDir = path.join(ROOT, 'data/lessons');
 const json = JSON.stringify(out);

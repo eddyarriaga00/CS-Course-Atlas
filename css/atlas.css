@@ -329,7 +329,7 @@ dialog.signin::backdrop { background: rgba(10,10,20,.55); backdrop-filter: blur(
   .bottom-nav { display: grid; grid-template-columns: repeat(4, 1fr); position: fixed; z-index: 30; left: 0; right: 0; bottom: 0;
     padding: 6px max(8px, env(safe-area-inset-right, 0px)) calc(6px + env(safe-area-inset-bottom, 0px)) max(8px, env(safe-area-inset-left, 0px));
     background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid var(--border); }
-  .bottom-nav a { display: grid; justify-items: center; gap: 2px; padding: 6px 0; font-size: 11px; font-weight: 600; color: var(--text-3); border-radius: 10px; }
+  .bottom-nav a { display: grid; justify-items: center; gap: 2px; padding: 6px 0; font-size: 11px; font-weight: 600; color: var(--text-2); border-radius: 10px; }
   .bottom-nav a.active { color: var(--accent); }
   .bottom-nav .ico { font-size: 18px; line-height: 1; }
   .toast { bottom: calc(84px + env(safe-area-inset-bottom, 0px)); }

@@ -3354,6 +3354,1290 @@
    ]
   }
  ],
+ "linked-lists": [
+  {
+   "id": "reverse-list",
+   "title": {
+    "en": "Reverse a linked list",
+    "es": "Invertir una lista enlazada"
+   },
+   "prompt": {
+    "en": "Write `reverse_list(head)` that reverses a singly linked list in place by rewiring the `next` pointers and returns the new head. `ListNode`, `from_list` and `to_list` are already defined for you: `to_list(reverse_list(from_list([1, 2, 3])))` is `[3, 2, 1]`. An empty list is `None`.",
+    "es": "Escribe `reverse_list(head)` que invierta una lista simplemente enlazada en el sitio, reconectando los punteros `next`, y devuelva la nueva cabeza. `ListNode`, `from_list` y `to_list` ya están definidos: `to_list(reverse_list(from_list([1, 2, 3])))` es `[3, 2, 1]`. Una lista vacía es `None`."
+   },
+   "starter": "class ListNode:\n    def __init__(self, val, next=None):\n        self.val = val\n        self.next = next\n\n\ndef from_list(values):\n    head = None\n    for v in reversed(values):\n        head = ListNode(v, head)\n    return head\n\n\ndef to_list(head):\n    out = []\n    while head:\n        out.append(head.val)\n        head = head.next\n    return out\n\n\ndef reverse_list(head):\n    prev = None\n    pass\n",
+   "solution": "class ListNode:\n    def __init__(self, val, next=None):\n        self.val = val\n        self.next = next\n\n\ndef from_list(values):\n    head = None\n    for v in reversed(values):\n        head = ListNode(v, head)\n    return head\n\n\ndef to_list(head):\n    out = []\n    while head:\n        out.append(head.val)\n        head = head.next\n    return out\n\n\ndef reverse_list(head):\n    prev = None\n    current = head\n    while current:\n        nxt = current.next\n        current.next = prev\n        prev = current\n        current = nxt\n    return prev\n",
+   "hint": {
+    "en": "Walk the list with `prev` and `current`. Save `current.next` before you overwrite it, point `current.next` back at `prev`, then move both one step forward. When `current` is `None`, `prev` is the new head.",
+    "es": "Recorre la lista con `prev` y `current`. Guarda `current.next` antes de sobrescribirlo, haz que `current.next` apunte a `prev` y avanza ambos un paso. Cuando `current` sea `None`, `prev` es la nueva cabeza."
+   },
+   "tests": [
+    [
+     "to_list(reverse_list(from_list([1, 2, 3, 4, 5])))",
+     "[5, 4, 3, 2, 1]"
+    ],
+    [
+     "to_list(reverse_list(from_list([7])))",
+     "[7]"
+    ],
+    [
+     "to_list(reverse_list(from_list([])))",
+     "[]"
+    ],
+    [
+     "to_list(reverse_list(from_list([1, 2, 2, 3])))",
+     "[3, 2, 2, 1]"
+    ],
+    [
+     "to_list(reverse_list(from_list([1, 2])))",
+     "[2, 1]"
+    ]
+   ]
+  },
+  {
+   "id": "has-cycle",
+   "title": {
+    "en": "Detect a cycle",
+    "es": "Detectar un ciclo"
+   },
+   "prompt": {
+    "en": "Write `has_cycle(head)` that returns `True` when following `next` pointers loops forever and `False` when it reaches `None`. Use O(1) extra space (no set of visited nodes). The helper `with_cycle(values, pos)` builds a list whose last node points back to index `pos` (`-1` means no cycle): `has_cycle(with_cycle([3, 2, 0, -4], 1))` is `True`.",
+    "es": "Escribe `has_cycle(head)` que devuelva `True` cuando seguir los punteros `next` da vueltas para siempre y `False` cuando se llega a `None`. Usa espacio extra O(1) (sin un conjunto de nodos visitados). La función auxiliar `with_cycle(values, pos)` construye una lista cuyo último nodo apunta de vuelta al índice `pos` (`-1` significa sin ciclo): `has_cycle(with_cycle([3, 2, 0, -4], 1))` es `True`."
+   },
+   "starter": "class ListNode:\n    def __init__(self, val, next=None):\n        self.val = val\n        self.next = next\n\n\ndef with_cycle(values, pos):\n    # Builds a list from values; the last node points back to index pos (-1 = no cycle).\n    nodes = [ListNode(v) for v in values]\n    for a, b in zip(nodes, nodes[1:]):\n        a.next = b\n    if nodes and pos >= 0:\n        nodes[-1].next = nodes[pos]\n    return nodes[0] if nodes else None\n\n\ndef has_cycle(head):\n    slow = fast = head\n    pass\n",
+   "solution": "class ListNode:\n    def __init__(self, val, next=None):\n        self.val = val\n        self.next = next\n\n\ndef with_cycle(values, pos):\n    # Builds a list from values; the last node points back to index pos (-1 = no cycle).\n    nodes = [ListNode(v) for v in values]\n    for a, b in zip(nodes, nodes[1:]):\n        a.next = b\n    if nodes and pos >= 0:\n        nodes[-1].next = nodes[pos]\n    return nodes[0] if nodes else None\n\n\ndef has_cycle(head):\n    slow = fast = head\n    while fast and fast.next:\n        slow = slow.next\n        fast = fast.next.next\n        if slow is fast:\n            return True\n    return False\n",
+   "hint": {
+    "en": "Floyd's tortoise and hare: `slow` moves one node per step and `fast` moves two. If `fast` reaches the end there is no cycle; if the two ever point to the same node (`is`), there is one.",
+    "es": "La tortuga y la liebre de Floyd: `slow` avanza un nodo por paso y `fast` avanza dos. Si `fast` llega al final no hay ciclo; si alguna vez apuntan al mismo nodo (`is`), lo hay."
+   },
+   "tests": [
+    [
+     "has_cycle(with_cycle([3, 2, 0, -4], 1))",
+     "True"
+    ],
+    [
+     "has_cycle(with_cycle([1, 2, 3, 4], -1))",
+     "False"
+    ],
+    [
+     "has_cycle(with_cycle([1], 0))",
+     "True"
+    ],
+    [
+     "has_cycle(with_cycle([1], -1))",
+     "False"
+    ],
+    [
+     "has_cycle(with_cycle([], -1))",
+     "False"
+    ],
+    [
+     "has_cycle(with_cycle([5, 5, 5], 2))",
+     "True"
+    ]
+   ]
+  }
+ ],
+ "matrix-grid-problems": [
+  {
+   "id": "num-islands",
+   "title": {
+    "en": "Number of islands",
+    "es": "Número de islas"
+   },
+   "prompt": {
+    "en": "Write `count_islands(grid)` where `grid` is a list of equal-length strings of `'1'` (land) and `'0'` (water). An island is a group of land cells joined up, down, left or right (not diagonally). Return how many islands there are: `count_islands(['110', '010', '001'])` is `2`.",
+    "es": "Escribe `count_islands(grid)` donde `grid` es una lista de cadenas de igual longitud con `'1'` (tierra) y `'0'` (agua). Una isla es un grupo de celdas de tierra unidas arriba, abajo, a la izquierda o a la derecha (no en diagonal). Devuelve cuántas islas hay: `count_islands(['110', '010', '001'])` es `2`."
+   },
+   "starter": "def count_islands(grid):\n    rows = len(grid)\n    cols = len(grid[0]) if grid else 0\n    seen = set()\n    pass\n",
+   "solution": "def count_islands(grid):\n    rows = len(grid)\n    cols = len(grid[0]) if grid else 0\n    seen = set()\n\n    def sink(r, c):\n        stack = [(r, c)]\n        seen.add((r, c))\n        while stack:\n            r, c = stack.pop()\n            for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n                nr, nc = r + dr, c + dc\n                if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == '1' and (nr, nc) not in seen:\n                    seen.add((nr, nc))\n                    stack.append((nr, nc))\n\n    count = 0\n    for r in range(rows):\n        for c in range(cols):\n            if grid[r][c] == '1' and (r, c) not in seen:\n                count += 1\n                sink(r, c)\n    return count\n",
+   "hint": {
+    "en": "Scan every cell in row-major order. Each time you find land you have not visited, count one island and flood the whole island (DFS or BFS over the four direction vectors) so its other cells are marked as seen.",
+    "es": "Recorre cada celda fila por fila. Cada vez que encuentres tierra no visitada, cuenta una isla e inunda toda la isla (DFS o BFS con los cuatro vectores de dirección) para marcar como vistas sus demás celdas."
+   },
+   "tests": [
+    [
+     "count_islands(['11000', '11000', '00100', '00011'])",
+     "3"
+    ],
+    [
+     "count_islands(['110', '010', '001'])",
+     "2"
+    ],
+    [
+     "count_islands(['000', '000'])",
+     "0"
+    ],
+    [
+     "count_islands(['1'])",
+     "1"
+    ],
+    [
+     "count_islands([])",
+     "0"
+    ],
+    [
+     "count_islands(['111', '101', '111'])",
+     "1"
+    ]
+   ]
+  },
+  {
+   "id": "maze-bfs",
+   "title": {
+    "en": "Shortest path in a maze",
+    "es": "Camino más corto en un laberinto"
+   },
+   "prompt": {
+    "en": "Write `shortest_path(grid)` where `grid` is a list of strings with `'.'` for open cells and `'#'` for walls. Moving up, down, left or right costs one step. Return the fewest steps from the top-left cell to the bottom-right cell, or `-1` if it cannot be reached (also when either corner is a wall). `shortest_path(['..', '#.'])` is `2`.",
+    "es": "Escribe `shortest_path(grid)` donde `grid` es una lista de cadenas con `'.'` para celdas libres y `'#'` para muros. Moverse arriba, abajo, a la izquierda o a la derecha cuesta un paso. Devuelve el menor número de pasos desde la celda superior izquierda hasta la inferior derecha, o `-1` si no se puede llegar (también cuando alguna de las dos esquinas es un muro). `shortest_path(['..', '#.'])` es `2`."
+   },
+   "starter": "from collections import deque\n\n\ndef shortest_path(grid):\n    rows, cols = len(grid), len(grid[0])\n    pass\n",
+   "solution": "from collections import deque\n\n\ndef shortest_path(grid):\n    rows, cols = len(grid), len(grid[0])\n    if grid[0][0] == '#' or grid[rows - 1][cols - 1] == '#':\n        return -1\n    dist = {(0, 0): 0}\n    queue = deque([(0, 0)])\n    while queue:\n        r, c = queue.popleft()\n        if (r, c) == (rows - 1, cols - 1):\n            return dist[(r, c)]\n        for dr, dc in ((1, 0), (-1, 0), (0, 1), (0, -1)):\n            nr, nc = r + dr, c + dc\n            if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == '.' and (nr, nc) not in dist:\n                dist[(nr, nc)] = dist[(r, c)] + 1\n                queue.append((nr, nc))\n    return -1\n",
+   "hint": {
+    "en": "Use BFS with a `deque`: it reaches cells in order of distance, so the first time you reach the goal is the shortest path. Store each cell's distance when you enqueue it, and never enqueue a cell twice.",
+    "es": "Usa BFS con un `deque`: visita las celdas en orden de distancia, así que la primera vez que llegas a la meta es el camino más corto. Guarda la distancia de cada celda al encolarla y nunca encoles una celda dos veces."
+   },
+   "tests": [
+    [
+     "shortest_path(['..', '#.'])",
+     "2"
+    ],
+    [
+     "shortest_path(['...', '##.', '...'])",
+     "4"
+    ],
+    [
+     "shortest_path(['.#', '#.'])",
+     "-1"
+    ],
+    [
+     "shortest_path(['.'])",
+     "0"
+    ],
+    [
+     "shortest_path(['#.', '..'])",
+     "-1"
+    ],
+    [
+     "shortest_path(['....', '.##.', '.#..', '...#', '#...'])",
+     "7"
+    ]
+   ]
+  }
+ ],
+ "backtracking-patterns": [
+  {
+   "id": "permutations",
+   "title": {
+    "en": "All permutations",
+    "es": "Todas las permutaciones"
+   },
+   "prompt": {
+    "en": "Write `permutations(nums)` that returns every ordering of the distinct numbers in `nums` as a list of lists. Use the choose, explore, unchoose pattern and do not import `itertools`. The order of the answer does not matter (the tests sort it): `permutations([1, 2])` gives `[[1, 2], [2, 1]]`. The only permutation of `[]` is `[]`.",
+    "es": "Escribe `permutations(nums)` que devuelva cada ordenación de los números distintos de `nums` como lista de listas. Usa el patrón elegir, explorar, deshacer y no importes `itertools`. El orden de la respuesta no importa (las pruebas la ordenan): `permutations([1, 2])` da `[[1, 2], [2, 1]]`. La única permutación de `[]` es `[]`."
+   },
+   "starter": "def permutations(nums):\n    result = []\n    path = []\n    pass\n",
+   "solution": "def permutations(nums):\n    result = []\n    path = []\n    used = [False] * len(nums)\n\n    def backtrack():\n        if len(path) == len(nums):\n            result.append(path[:])\n            return\n        for i, x in enumerate(nums):\n            if not used[i]:\n                used[i] = True\n                path.append(x)\n                backtrack()\n                path.pop()\n                used[i] = False\n\n    backtrack()\n    return result\n",
+   "hint": {
+    "en": "Keep a shared `path` and a `used` flag per position. When `path` is full, record a copy (`path[:]`). Otherwise try each unused number: mark it, append, recurse, then pop and unmark.",
+    "es": "Mantén un `path` compartido y una marca `used` por posición. Cuando `path` esté completo, guarda una copia (`path[:]`). Si no, prueba cada número sin usar: márcalo, añádelo, recurre y después quítalo y desmárcalo."
+   },
+   "tests": [
+    [
+     "sorted(permutations([1, 2, 3]))",
+     "[[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]"
+    ],
+    [
+     "sorted(permutations([5]))",
+     "[[5]]"
+    ],
+    [
+     "sorted(permutations([]))",
+     "[[]]"
+    ],
+    [
+     "sorted(permutations([2, 1]))",
+     "[[1, 2], [2, 1]]"
+    ],
+    [
+     "len(permutations([1, 2, 3, 4, 5]))",
+     "120"
+    ]
+   ]
+  },
+  {
+   "id": "n-queens",
+   "title": {
+    "en": "Count N-Queens solutions",
+    "es": "Contar soluciones de N reinas"
+   },
+   "prompt": {
+    "en": "Write `n_queens(n)` that returns how many ways you can place `n` queens on an `n` by `n` board so that no two share a row, column or diagonal. `n_queens(4)` is `2` and `n_queens(8)` is `92`.",
+    "es": "Escribe `n_queens(n)` que devuelva de cuántas formas se pueden colocar `n` reinas en un tablero de `n` por `n` sin que dos compartan fila, columna o diagonal. `n_queens(4)` es `2` y `n_queens(8)` es `92`."
+   },
+   "starter": "def n_queens(n):\n    count = 0\n    pass\n",
+   "solution": "def n_queens(n):\n    cols, diag, anti = set(), set(), set()\n\n    def place(row):\n        if row == n:\n            return 1\n        total = 0\n        for c in range(n):\n            if c in cols or row - c in diag or row + c in anti:\n                continue\n            cols.add(c)\n            diag.add(row - c)\n            anti.add(row + c)\n            total += place(row + 1)\n            cols.remove(c)\n            diag.remove(row - c)\n            anti.remove(row + c)\n        return total\n\n    return place(0)\n",
+   "hint": {
+    "en": "Place one queen per row, recursing row by row. Prune before recursing: keep sets of used columns, of `row - col` (one diagonal direction) and of `row + col` (the other). Undo all three after the recursive call.",
+    "es": "Coloca una reina por fila, recursando fila a fila. Poda antes de recursar: guarda conjuntos con las columnas usadas, con `row - col` (una dirección diagonal) y con `row + col` (la otra). Deshaz los tres después de la llamada recursiva."
+   },
+   "tests": [
+    [
+     "n_queens(4)",
+     "2"
+    ],
+    [
+     "n_queens(1)",
+     "1"
+    ],
+    [
+     "n_queens(2)",
+     "0"
+    ],
+    [
+     "n_queens(3)",
+     "0"
+    ],
+    [
+     "n_queens(6)",
+     "4"
+    ],
+    [
+     "n_queens(8)",
+     "92"
+    ]
+   ]
+  }
+ ],
+ "trees-basics": [
+  {
+   "id": "max-depth",
+   "title": {
+    "en": "Tree height",
+    "es": "Altura de un árbol"
+   },
+   "prompt": {
+    "en": "Write `max_depth(root)` that returns the number of nodes on the longest path from the root down to a leaf. An empty tree (`None`) has depth 0 and a single node has depth 1. `TreeNode` and `from_level` (build a tree from level-order values, `None` for a missing child) are defined for you: `max_depth(from_level([3, 9, 20, None, None, 15, 7]))` is `3`.",
+    "es": "Escribe `max_depth(root)` que devuelva el número de nodos del camino más largo desde la raíz hasta una hoja. Un árbol vacío (`None`) tiene profundidad 0 y un solo nodo tiene profundidad 1. `TreeNode` y `from_level` (construye un árbol a partir de valores por niveles, `None` para un hijo ausente) ya están definidos: `max_depth(from_level([3, 9, 20, None, None, 15, 7]))` es `3`."
+   },
+   "starter": "class TreeNode:\n    def __init__(self, val, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\n\n\ndef from_level(values):\n    # Builds a tree from level-order values; None marks a missing child.\n    if not values or values[0] is None:\n        return None\n    root = TreeNode(values[0])\n    queue = [root]\n    i = 1\n    for node in queue:\n        if i < len(values) and values[i] is not None:\n            node.left = TreeNode(values[i])\n            queue.append(node.left)\n        i += 1\n        if i < len(values) and values[i] is not None:\n            node.right = TreeNode(values[i])\n            queue.append(node.right)\n        i += 1\n        if i >= len(values):\n            break\n    return root\n\n\ndef max_depth(root):\n    pass\n",
+   "solution": "class TreeNode:\n    def __init__(self, val, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\n\n\ndef from_level(values):\n    # Builds a tree from level-order values; None marks a missing child.\n    if not values or values[0] is None:\n        return None\n    root = TreeNode(values[0])\n    queue = [root]\n    i = 1\n    for node in queue:\n        if i < len(values) and values[i] is not None:\n            node.left = TreeNode(values[i])\n            queue.append(node.left)\n        i += 1\n        if i < len(values) and values[i] is not None:\n            node.right = TreeNode(values[i])\n            queue.append(node.right)\n        i += 1\n        if i >= len(values):\n            break\n    return root\n\n\ndef max_depth(root):\n    if root is None:\n        return 0\n    return 1 + max(max_depth(root.left), max_depth(root.right))\n",
+   "hint": {
+    "en": "Think recursively: the depth of a tree is 1 for the root plus the larger of its two subtree depths. The base case is the empty tree.",
+    "es": "Piensa en recursión: la profundidad de un árbol es 1 por la raíz más la mayor de las profundidades de sus dos subárboles. El caso base es el árbol vacío."
+   },
+   "tests": [
+    [
+     "max_depth(from_level([3, 9, 20, None, None, 15, 7]))",
+     "3"
+    ],
+    [
+     "max_depth(from_level([]))",
+     "0"
+    ],
+    [
+     "max_depth(from_level([1]))",
+     "1"
+    ],
+    [
+     "max_depth(from_level([1, 2, None, 3, None, 4]))",
+     "4"
+    ],
+    [
+     "max_depth(from_level([1, 2, 3, 4, 5, 6, 7]))",
+     "3"
+    ]
+   ]
+  },
+  {
+   "id": "validate-bst",
+   "title": {
+    "en": "Validate a BST",
+    "es": "Validar un BST"
+   },
+   "prompt": {
+    "en": "Write `is_bst(root)` that returns `True` when the tree is a binary search tree: for every node, all values in its left subtree are smaller and all values in its right subtree are larger (no duplicates). An empty tree is valid. `TreeNode` and `from_level` are defined for you: `is_bst(from_level([2, 1, 3]))` is `True`, but `is_bst(from_level([5, 4, 6, None, None, 3, 7]))` is `False` because 3 sits in the right subtree of 5.",
+    "es": "Escribe `is_bst(root)` que devuelva `True` cuando el árbol sea un árbol binario de búsqueda: para cada nodo, todos los valores de su subárbol izquierdo son menores y todos los de su subárbol derecho son mayores (sin duplicados). Un árbol vacío es válido. `TreeNode` y `from_level` ya están definidos: `is_bst(from_level([2, 1, 3]))` es `True`, pero `is_bst(from_level([5, 4, 6, None, None, 3, 7]))` es `False` porque el 3 está en el subárbol derecho del 5."
+   },
+   "starter": "class TreeNode:\n    def __init__(self, val, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\n\n\ndef from_level(values):\n    # Builds a tree from level-order values; None marks a missing child.\n    if not values or values[0] is None:\n        return None\n    root = TreeNode(values[0])\n    queue = [root]\n    i = 1\n    for node in queue:\n        if i < len(values) and values[i] is not None:\n            node.left = TreeNode(values[i])\n            queue.append(node.left)\n        i += 1\n        if i < len(values) and values[i] is not None:\n            node.right = TreeNode(values[i])\n            queue.append(node.right)\n        i += 1\n        if i >= len(values):\n            break\n    return root\n\n\ndef is_bst(root):\n    pass\n",
+   "solution": "class TreeNode:\n    def __init__(self, val, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\n\n\ndef from_level(values):\n    # Builds a tree from level-order values; None marks a missing child.\n    if not values or values[0] is None:\n        return None\n    root = TreeNode(values[0])\n    queue = [root]\n    i = 1\n    for node in queue:\n        if i < len(values) and values[i] is not None:\n            node.left = TreeNode(values[i])\n            queue.append(node.left)\n        i += 1\n        if i < len(values) and values[i] is not None:\n            node.right = TreeNode(values[i])\n            queue.append(node.right)\n        i += 1\n        if i >= len(values):\n            break\n    return root\n\n\ndef is_bst(root, low=float('-inf'), high=float('inf')):\n    if root is None:\n        return True\n    if not (low < root.val < high):\n        return False\n    return is_bst(root.left, low, root.val) and is_bst(root.right, root.val, high)\n",
+   "hint": {
+    "en": "Comparing each node only with its children is not enough. Pass down an allowed range `(low, high)`: going left, the node's value becomes the new upper bound; going right, it becomes the new lower bound.",
+    "es": "Comparar cada nodo solo con sus hijos no basta. Pasa hacia abajo un rango permitido `(low, high)`: al ir a la izquierda, el valor del nodo pasa a ser el nuevo límite superior; al ir a la derecha, el nuevo límite inferior."
+   },
+   "tests": [
+    [
+     "is_bst(from_level([2, 1, 3]))",
+     "True"
+    ],
+    [
+     "is_bst(from_level([5, 1, 4, None, None, 3, 6]))",
+     "False"
+    ],
+    [
+     "is_bst(from_level([5, 4, 6, None, None, 3, 7]))",
+     "False"
+    ],
+    [
+     "is_bst(from_level([]))",
+     "True"
+    ],
+    [
+     "is_bst(from_level([1, 1]))",
+     "False"
+    ],
+    [
+     "is_bst(from_level([8, 3, 10, 1, 6, None, 14, None, None, 4, 7, 13]))",
+     "True"
+    ]
+   ]
+  }
+ ],
+ "heaps": [
+  {
+   "id": "k-smallest",
+   "title": {
+    "en": "K smallest numbers",
+    "es": "Los k números más pequeños"
+   },
+   "prompt": {
+    "en": "Write `k_smallest(nums, k)` that returns the `k` smallest values of `nums` in ascending order, using the `heapq` module instead of sorting the whole list. Assume `0 <= k <= len(nums)`. `k_smallest([5, 1, 4, 2, 3], 2)` is `[1, 2]`.",
+    "es": "Escribe `k_smallest(nums, k)` que devuelva los `k` valores más pequeños de `nums` en orden ascendente, usando el módulo `heapq` en lugar de ordenar toda la lista. Supón que `0 <= k <= len(nums)`. `k_smallest([5, 1, 4, 2, 3], 2)` es `[1, 2]`."
+   },
+   "starter": "import heapq\n\n\ndef k_smallest(nums, k):\n    pass\n",
+   "solution": "import heapq\n\n\ndef k_smallest(nums, k):\n    heap = list(nums)\n    heapq.heapify(heap)\n    return [heapq.heappop(heap) for _ in range(k)]\n",
+   "hint": {
+    "en": "`heapq.heapify` turns a list into a min-heap in O(n); then `heapq.heappop` removes the current minimum in O(log n). Copy `nums` first so you do not change the caller's list.",
+    "es": "`heapq.heapify` convierte una lista en un montículo mínimo en O(n); después `heapq.heappop` saca el mínimo actual en O(log n). Copia `nums` primero para no modificar la lista de quien llama."
+   },
+   "tests": [
+    [
+     "k_smallest([5, 1, 4, 2, 3], 2)",
+     "[1, 2]"
+    ],
+    [
+     "k_smallest([7, 7, 3, 7, 1], 3)",
+     "[1, 3, 7]"
+    ],
+    [
+     "k_smallest([4, 2], 0)",
+     "[]"
+    ],
+    [
+     "k_smallest([9], 1)",
+     "[9]"
+    ],
+    [
+     "k_smallest([-1, 10, -5, 0], 4)",
+     "[-5, -1, 0, 10]"
+    ]
+   ]
+  },
+  {
+   "id": "running-median",
+   "title": {
+    "en": "Running median",
+    "es": "Mediana en curso"
+   },
+   "prompt": {
+    "en": "Numbers arrive one at a time. Write `running_median(nums)` that returns a list with the median after each new number: the middle value when the count is odd, the average of the two middle values when it is even. Aim for O(log n) per number with two heaps. `running_median([5, 15, 1, 3])` is `[5, 10.0, 5, 4.0]`.",
+    "es": "Los números llegan de uno en uno. Escribe `running_median(nums)` que devuelva una lista con la mediana después de cada número nuevo: el valor central cuando la cantidad es impar y el promedio de los dos centrales cuando es par. Busca O(log n) por número con dos montículos. `running_median([5, 15, 1, 3])` es `[5, 10.0, 5, 4.0]`."
+   },
+   "starter": "import heapq\n\n\ndef running_median(nums):\n    low = []   # max-heap of the smaller half (store negatives)\n    high = []  # min-heap of the larger half\n    pass\n",
+   "solution": "import heapq\n\n\ndef running_median(nums):\n    low = []   # max-heap of the smaller half (store negatives)\n    high = []  # min-heap of the larger half\n    medians = []\n    for x in nums:\n        heapq.heappush(low, -x)\n        heapq.heappush(high, -heapq.heappop(low))\n        if len(high) > len(low):\n            heapq.heappush(low, -heapq.heappop(high))\n        if len(low) > len(high):\n            medians.append(-low[0])\n        else:\n            medians.append((-low[0] + high[0]) / 2)\n    return medians\n",
+   "hint": {
+    "en": "Keep the smaller half in a max-heap (`heapq` is a min-heap, so push `-x`) and the larger half in a min-heap. After each insert, rebalance so `low` has the same size as `high` or one more. The median is then the top of `low`, or the average of both tops.",
+    "es": "Guarda la mitad menor en un montículo máximo (`heapq` es de mínimos, así que mete `-x`) y la mitad mayor en uno mínimo. Tras cada inserción, reequilibra para que `low` tenga el mismo tamaño que `high` o uno más. La mediana es entonces la cima de `low`, o el promedio de ambas cimas."
+   },
+   "tests": [
+    [
+     "running_median([5, 15, 1, 3])",
+     "[5, 10.0, 5, 4.0]"
+    ],
+    [
+     "running_median([])",
+     "[]"
+    ],
+    [
+     "running_median([42])",
+     "[42]"
+    ],
+    [
+     "running_median([2, 2, 2])",
+     "[2, 2.0, 2]"
+    ],
+    [
+     "running_median([1, 2, 3, 4, 5, 6])",
+     "[1, 1.5, 2, 2.5, 3, 3.5]"
+    ],
+    [
+     "running_median([10, -10, 0, 7])",
+     "[10, 0.0, 0, 3.5]"
+    ]
+   ]
+  }
+ ],
+ "tries": [
+  {
+   "id": "trie-basics",
+   "title": {
+    "en": "Build a trie",
+    "es": "Construir un trie"
+   },
+   "prompt": {
+    "en": "Complete the `Trie` class: `insert(word)` adds a word, `search(word)` returns `True` only if that exact word was inserted, and `starts_with(prefix)` returns `True` if any inserted word begins with `prefix`. Each operation should take O(L) for a key of length L. The `Node` class and `build(words)` (a trie with those words inserted) are given: `build(['apple']).search('app')` is `False` but `build(['apple']).starts_with('app')` is `True`.",
+    "es": "Completa la clase `Trie`: `insert(word)` añade una palabra, `search(word)` devuelve `True` solo si esa palabra exacta se insertó y `starts_with(prefix)` devuelve `True` si alguna palabra insertada empieza por `prefix`. Cada operación debe costar O(L) para una clave de longitud L. La clase `Node` y `build(words)` (un trie con esas palabras insertadas) ya están dados: `build(['apple']).search('app')` es `False` pero `build(['apple']).starts_with('app')` es `True`."
+   },
+   "starter": "class Node:\n    def __init__(self):\n        self.children = {}\n        self.is_word = False\n\n\nclass Trie:\n    def __init__(self):\n        self.root = Node()\n\n    def insert(self, word):\n        pass\n\n    def search(self, word):\n        pass\n\n    def starts_with(self, prefix):\n        pass\n\n\ndef build(words):\n    trie = Trie()\n    for w in words:\n        trie.insert(w)\n    return trie\n",
+   "solution": "class Node:\n    def __init__(self):\n        self.children = {}\n        self.is_word = False\n\n\nclass Trie:\n    def __init__(self):\n        self.root = Node()\n\n    def insert(self, word):\n        node = self.root\n        for c in word:\n            node = node.children.setdefault(c, Node())\n        node.is_word = True\n\n    def _walk(self, s):\n        node = self.root\n        for c in s:\n            node = node.children.get(c)\n            if node is None:\n                return None\n        return node\n\n    def search(self, word):\n        node = self._walk(word)\n        return node is not None and node.is_word\n\n    def starts_with(self, prefix):\n        return self._walk(prefix) is not None\n\n\ndef build(words):\n    trie = Trie()\n    for w in words:\n        trie.insert(w)\n    return trie\n",
+   "hint": {
+    "en": "`insert` walks down from the root, creating a child with `setdefault` when a letter is missing, and marks the last node with `is_word = True`. `search` and `starts_with` share the same walk; they differ only in whether the final node must have `is_word` set.",
+    "es": "`insert` baja desde la raíz creando un hijo con `setdefault` cuando falta una letra, y marca el último nodo con `is_word = True`. `search` y `starts_with` comparten el mismo recorrido; solo difieren en si el nodo final debe tener `is_word` activado."
+   },
+   "tests": [
+    [
+     "build(['apple']).search('apple')",
+     "True"
+    ],
+    [
+     "build(['apple']).search('app')",
+     "False"
+    ],
+    [
+     "build(['apple']).starts_with('app')",
+     "True"
+    ],
+    [
+     "build(['apple', 'app']).search('app')",
+     "True"
+    ],
+    [
+     "build(['car', 'cat']).starts_with('co')",
+     "False"
+    ],
+    [
+     "build([]).search('a')",
+     "False"
+    ]
+   ]
+  },
+  {
+   "id": "autocomplete",
+   "title": {
+    "en": "Autocomplete",
+    "es": "Autocompletar"
+   },
+   "prompt": {
+    "en": "The `Trie` below already has a working `insert`. Write its method `complete(prefix)` that returns every inserted word starting with `prefix`, in alphabetical order and without duplicates. Walk to the prefix's node, then collect the words below it with a DFS. `build(['car', 'card', 'cat', 'dog']).complete('car')` is `['car', 'card']`.",
+    "es": "El `Trie` de abajo ya tiene un `insert` que funciona. Escribe su método `complete(prefix)` que devuelva todas las palabras insertadas que empiezan por `prefix`, en orden alfabético y sin duplicados. Baja hasta el nodo del prefijo y después recoge las palabras que cuelgan de él con un DFS. `build(['car', 'card', 'cat', 'dog']).complete('car')` es `['car', 'card']`."
+   },
+   "starter": "class Node:\n    def __init__(self):\n        self.children = {}\n        self.is_word = False\n\n\nclass Trie:\n    def __init__(self):\n        self.root = Node()\n\n    def insert(self, word):\n        node = self.root\n        for c in word:\n            node = node.children.setdefault(c, Node())\n        node.is_word = True\n\n    def complete(self, prefix):\n        pass\n\n\ndef build(words):\n    trie = Trie()\n    for w in words:\n        trie.insert(w)\n    return trie\n",
+   "solution": "class Node:\n    def __init__(self):\n        self.children = {}\n        self.is_word = False\n\n\nclass Trie:\n    def __init__(self):\n        self.root = Node()\n\n    def insert(self, word):\n        node = self.root\n        for c in word:\n            node = node.children.setdefault(c, Node())\n        node.is_word = True\n\n    def complete(self, prefix):\n        node = self.root\n        for c in prefix:\n            if c not in node.children:\n                return []\n            node = node.children[c]\n        words = []\n\n        def dfs(n, path):\n            if n.is_word:\n                words.append(path)\n            for c in sorted(n.children):\n                dfs(n.children[c], path + c)\n\n        dfs(node, prefix)\n        return words\n\n\ndef build(words):\n    trie = Trie()\n    for w in words:\n        trie.insert(w)\n    return trie\n",
+   "hint": {
+    "en": "If a letter of the prefix is missing, the answer is `[]`. From the prefix node, a DFS that carries the letters spelled so far adds the path whenever `is_word` is set. Visiting children in `sorted` order gives alphabetical output, and a word appears once because it ends at one node.",
+    "es": "Si falta una letra del prefijo, la respuesta es `[]`. Desde el nodo del prefijo, un DFS que lleva las letras formadas hasta ahora añade el camino cada vez que `is_word` está activo. Visitar los hijos en orden `sorted` da la salida alfabética, y cada palabra aparece una vez porque termina en un solo nodo."
+   },
+   "tests": [
+    [
+     "build(['car', 'card', 'cat', 'dog']).complete('car')",
+     "['car', 'card']"
+    ],
+    [
+     "build(['tea', 'ten', 'tent', 'to', 'in']).complete('te')",
+     "['tea', 'ten', 'tent']"
+    ],
+    [
+     "build(['car', 'card']).complete('x')",
+     "[]"
+    ],
+    [
+     "build(['b', 'a', 'ab']).complete('')",
+     "['a', 'ab', 'b']"
+    ],
+    [
+     "build(['go', 'go', 'gone']).complete('go')",
+     "['go', 'gone']"
+    ],
+    [
+     "build([]).complete('a')",
+     "[]"
+    ]
+   ]
+  }
+ ],
+ "graph-algorithms": [
+  {
+   "id": "bfs-distance",
+   "title": {
+    "en": "Fewest edges between two nodes",
+    "es": "Menos aristas entre dos nodos"
+   },
+   "prompt": {
+    "en": "Write `shortest_path(n, edges, start, goal)` for an undirected graph with nodes `0` to `n - 1` and `edges` as `[u, v]` pairs. Return the smallest number of edges on a path from `start` to `goal`, or `-1` if there is none. Build an adjacency list first. `shortest_path(4, [[0, 1], [1, 2], [0, 3], [3, 2]], 0, 2)` is `2`.",
+    "es": "Escribe `shortest_path(n, edges, start, goal)` para un grafo no dirigido con nodos de `0` a `n - 1` y `edges` como pares `[u, v]`. Devuelve el menor número de aristas de un camino de `start` a `goal`, o `-1` si no existe. Construye primero una lista de adyacencia. `shortest_path(4, [[0, 1], [1, 2], [0, 3], [3, 2]], 0, 2)` es `2`."
+   },
+   "starter": "from collections import deque\n\n\ndef shortest_path(n, edges, start, goal):\n    graph = [[] for _ in range(n)]\n    pass\n",
+   "solution": "from collections import deque\n\n\ndef shortest_path(n, edges, start, goal):\n    graph = [[] for _ in range(n)]\n    for u, v in edges:\n        graph[u].append(v)\n        graph[v].append(u)\n    dist = [-1] * n\n    dist[start] = 0\n    queue = deque([start])\n    while queue:\n        u = queue.popleft()\n        for v in graph[u]:\n            if dist[v] == -1:\n                dist[v] = dist[u] + 1\n                queue.append(v)\n    return dist[goal]\n",
+   "hint": {
+    "en": "Add each edge in both directions to `graph`. Then run BFS from `start` with a `deque` and a `dist` list initialised to `-1`: a node gets its distance the first time it is discovered, and `-1` doubles as \"not visited\".",
+    "es": "Añade cada arista en ambos sentidos a `graph`. Después haz BFS desde `start` con un `deque` y una lista `dist` inicializada a `-1`: un nodo recibe su distancia la primera vez que se descubre, y `-1` sirve también como \"no visitado\"."
+   },
+   "tests": [
+    [
+     "shortest_path(4, [[0, 1], [1, 2], [0, 3], [3, 2]], 0, 2)",
+     "2"
+    ],
+    [
+     "shortest_path(5, [[0, 1], [1, 2], [2, 3], [3, 4], [0, 4]], 0, 3)",
+     "2"
+    ],
+    [
+     "shortest_path(3, [[0, 1]], 0, 2)",
+     "-1"
+    ],
+    [
+     "shortest_path(1, [], 0, 0)",
+     "0"
+    ],
+    [
+     "shortest_path(4, [[0, 1], [0, 1], [1, 2], [2, 3]], 3, 0)",
+     "3"
+    ]
+   ]
+  },
+  {
+   "id": "dijkstra",
+   "title": {
+    "en": "Dijkstra's shortest paths",
+    "es": "Caminos mínimos con Dijkstra"
+   },
+   "prompt": {
+    "en": "Write `dijkstra(n, edges, source)` for a directed graph with nodes `0` to `n - 1` and `edges` as `[u, v, w]` triples with non-negative weight `w`. Return a list with the cheapest total weight from `source` to every node, using `-1` for nodes that cannot be reached. Use `heapq` as the priority queue. `dijkstra(3, [[0, 1, 4], [0, 2, 1], [2, 1, 2]], 0)` is `[0, 3, 1]`.",
+    "es": "Escribe `dijkstra(n, edges, source)` para un grafo dirigido con nodos de `0` a `n - 1` y `edges` como ternas `[u, v, w]` con peso `w` no negativo. Devuelve una lista con el menor peso total desde `source` hasta cada nodo, usando `-1` para los nodos inalcanzables. Usa `heapq` como cola de prioridad. `dijkstra(3, [[0, 1, 4], [0, 2, 1], [2, 1, 2]], 0)` es `[0, 3, 1]`."
+   },
+   "starter": "import heapq\n\n\ndef dijkstra(n, edges, source):\n    graph = [[] for _ in range(n)]\n    pass\n",
+   "solution": "import heapq\n\n\ndef dijkstra(n, edges, source):\n    graph = [[] for _ in range(n)]\n    for u, v, w in edges:\n        graph[u].append((v, w))\n    dist = [None] * n\n    heap = [(0, source)]\n    while heap:\n        d, u = heapq.heappop(heap)\n        if dist[u] is not None:\n            continue\n        dist[u] = d\n        for v, w in graph[u]:\n            if dist[v] is None:\n                heapq.heappush(heap, (d + w, v))\n    return [-1 if d is None else d for d in dist]\n",
+   "hint": {
+    "en": "Push `(distance, node)` pairs onto a heap, starting with `(0, source)`. Pop the smallest; if that node is already settled, skip it (lazy deletion). Otherwise its distance is final, so record it and push each neighbour with `d + w`.",
+    "es": "Mete pares `(distancia, nodo)` en un montículo, empezando por `(0, source)`. Saca el menor; si ese nodo ya está fijado, sáltalo (borrado perezoso). Si no, su distancia es definitiva: guárdala y mete cada vecino con `d + w`."
+   },
+   "tests": [
+    [
+     "dijkstra(3, [[0, 1, 4], [0, 2, 1], [2, 1, 2]], 0)",
+     "[0, 3, 1]"
+    ],
+    [
+     "dijkstra(5, [[0, 1, 2], [0, 2, 5], [1, 2, 1], [2, 3, 3], [1, 3, 7]], 0)",
+     "[0, 2, 3, 6, -1]"
+    ],
+    [
+     "dijkstra(1, [], 0)",
+     "[0]"
+    ],
+    [
+     "dijkstra(3, [[1, 0, 1], [1, 2, 1]], 0)",
+     "[0, -1, -1]"
+    ],
+    [
+     "dijkstra(3, [[0, 1, 0], [1, 2, 0], [0, 2, 5]], 0)",
+     "[0, 0, 0]"
+    ]
+   ]
+  }
+ ],
+ "union-find": [
+  {
+   "id": "count-components",
+   "title": {
+    "en": "Count connected components",
+    "es": "Contar componentes conexas"
+   },
+   "prompt": {
+    "en": "Write `count_components(n, edges)` that returns how many connected components an undirected graph with nodes `0` to `n - 1` has, using union-find: a `parent` list, a `find` with path compression and a `union` that links two roots. `count_components(5, [[0, 1], [1, 2], [3, 4]])` is `2`.",
+    "es": "Escribe `count_components(n, edges)` que devuelva cuántas componentes conexas tiene un grafo no dirigido con nodos de `0` a `n - 1`, usando union-find: una lista `parent`, un `find` con compresión de caminos y un `union` que une dos raíces. `count_components(5, [[0, 1], [1, 2], [3, 4]])` es `2`."
+   },
+   "starter": "def count_components(n, edges):\n    parent = list(range(n))\n    pass\n",
+   "solution": "def count_components(n, edges):\n    parent = list(range(n))\n\n    def find(x):\n        while parent[x] != x:\n            parent[x] = parent[parent[x]]\n            x = parent[x]\n        return x\n\n    components = n\n    for u, v in edges:\n        ru, rv = find(u), find(v)\n        if ru != rv:\n            parent[ru] = rv\n            components -= 1\n    return components\n",
+   "hint": {
+    "en": "Start with `n` components, each node its own root. For each edge, find both roots; if they differ, link one root under the other and subtract one. Edges inside an existing component change nothing.",
+    "es": "Empieza con `n` componentes, cada nodo su propia raíz. Para cada arista, busca ambas raíces; si son distintas, cuelga una raíz de la otra y resta uno. Las aristas dentro de una componente ya existente no cambian nada."
+   },
+   "tests": [
+    [
+     "count_components(5, [[0, 1], [1, 2], [3, 4]])",
+     "2"
+    ],
+    [
+     "count_components(5, [[0, 1], [1, 2], [2, 3], [3, 4]])",
+     "1"
+    ],
+    [
+     "count_components(3, [])",
+     "3"
+    ],
+    [
+     "count_components(1, [])",
+     "1"
+    ],
+    [
+     "count_components(4, [[0, 1], [1, 0], [0, 1], [2, 3]])",
+     "2"
+    ],
+    [
+     "count_components(6, [[0, 1], [1, 2], [2, 0], [4, 5]])",
+     "3"
+    ]
+   ]
+  },
+  {
+   "id": "redundant-edge",
+   "title": {
+    "en": "Redundant connection",
+    "es": "Conexión redundante"
+   },
+   "prompt": {
+    "en": "Edges `[u, v]` of an undirected graph with nodes numbered from `1` arrive one by one. Write `redundant_edge(edges)` that returns the first edge whose two endpoints are already connected, because adding it would close a cycle. Return `[]` if no edge does. `redundant_edge([[1, 2], [1, 3], [2, 3]])` is `[2, 3]`.",
+    "es": "Las aristas `[u, v]` de un grafo no dirigido con nodos numerados desde `1` llegan una a una. Escribe `redundant_edge(edges)` que devuelva la primera arista cuyos dos extremos ya están conectados, porque añadirla cerraría un ciclo. Devuelve `[]` si ninguna lo hace. `redundant_edge([[1, 2], [1, 3], [2, 3]])` es `[2, 3]`."
+   },
+   "starter": "def redundant_edge(edges):\n    parent = {}\n    pass\n",
+   "solution": "def redundant_edge(edges):\n    parent = {}\n    size = {}\n\n    def find(x):\n        parent.setdefault(x, x)\n        size.setdefault(x, 1)\n        root = x\n        while parent[root] != root:\n            root = parent[root]\n        while parent[x] != root:\n            parent[x], x = root, parent[x]\n        return root\n\n    for u, v in edges:\n        ru, rv = find(u), find(v)\n        if ru == rv:\n            return [u, v]\n        if size[ru] < size[rv]:\n            ru, rv = rv, ru\n        parent[rv] = ru\n        size[ru] += size[rv]\n    return []\n",
+   "hint": {
+    "en": "Process edges in order with union-find. Before linking `u` and `v`, compare `find(u)` and `find(v)`: if they are already the same root, this edge is the redundant one. A dictionary works well as `parent` when node numbers are not 0-based.",
+    "es": "Procesa las aristas en orden con union-find. Antes de unir `u` y `v`, compara `find(u)` y `find(v)`: si ya son la misma raíz, esta arista es la redundante. Un diccionario funciona bien como `parent` cuando los nodos no empiezan en 0."
+   },
+   "tests": [
+    [
+     "redundant_edge([[1, 2], [1, 3], [2, 3]])",
+     "[2, 3]"
+    ],
+    [
+     "redundant_edge([[1, 2], [2, 3], [3, 4], [1, 4], [1, 5]])",
+     "[1, 4]"
+    ],
+    [
+     "redundant_edge([[1, 2], [2, 3]])",
+     "[]"
+    ],
+    [
+     "redundant_edge([])",
+     "[]"
+    ],
+    [
+     "redundant_edge([[1, 2], [1, 2]])",
+     "[1, 2]"
+    ],
+    [
+     "redundant_edge([[3, 4], [1, 2], [2, 4], [5, 6], [1, 3], [5, 6]])",
+     "[1, 3]"
+    ]
+   ]
+  }
+ ],
+ "greedy-algorithms": [
+  {
+   "id": "activity-selection",
+   "title": {
+    "en": "Activity selection",
+    "es": "Selección de actividades"
+   },
+   "prompt": {
+    "en": "Each activity is a pair `[start, end]`. Write `max_activities(intervals)` that returns the largest number of activities one person can attend without overlaps. One activity may start exactly when another ends. `max_activities([[1, 3], [2, 5], [4, 7], [6, 8]])` is `2`.",
+    "es": "Cada actividad es un par `[inicio, fin]`. Escribe `max_activities(intervals)` que devuelva el mayor número de actividades a las que una persona puede asistir sin solapamientos. Una actividad puede empezar justo cuando termina otra. `max_activities([[1, 3], [2, 5], [4, 7], [6, 8]])` es `2`."
+   },
+   "starter": "def max_activities(intervals):\n    count = 0\n    pass\n",
+   "solution": "def max_activities(intervals):\n    count = 0\n    last_end = float('-inf')\n    for start, end in sorted(intervals, key=lambda iv: iv[1]):\n        if start >= last_end:\n            count += 1\n            last_end = end\n    return count\n",
+   "hint": {
+    "en": "Sort by end time. Always taking the activity that finishes first leaves the most room for the rest, so take every activity whose start is at or after the end of the last one you took.",
+    "es": "Ordena por hora de fin. Quedarte siempre con la actividad que termina antes deja el mayor hueco para las demás, así que toma cada actividad cuyo inicio sea igual o posterior al fin de la última que tomaste."
+   },
+   "tests": [
+    [
+     "max_activities([[1, 3], [2, 5], [4, 7], [6, 8]])",
+     "2"
+    ],
+    [
+     "max_activities([[1, 2], [2, 3], [3, 4]])",
+     "3"
+    ],
+    [
+     "max_activities([])",
+     "0"
+    ],
+    [
+     "max_activities([[5, 9]])",
+     "1"
+    ],
+    [
+     "max_activities([[1, 10], [2, 3], [4, 5], [6, 7]])",
+     "3"
+    ],
+    [
+     "max_activities([[1, 4], [1, 4], [1, 4]])",
+     "1"
+    ]
+   ]
+  },
+  {
+   "id": "huffman-cost",
+   "title": {
+    "en": "Huffman encoded length",
+    "es": "Longitud de la codificación Huffman"
+   },
+   "prompt": {
+    "en": "Given how often each symbol appears, write `huffman_bits(freqs)` that returns the total number of bits of the text when encoded with a Huffman code. Use the greedy step with `heapq`: repeatedly merge the two smallest weights; each merge of `a` and `b` adds `a + b` bits to the total. Assume at least two symbols. `huffman_bits([1, 2, 3])` is `9`.",
+    "es": "Dada la frecuencia de cada símbolo, escribe `huffman_bits(freqs)` que devuelva el número total de bits del texto codificado con un código Huffman. Usa el paso voraz con `heapq`: fusiona repetidamente los dos pesos más pequeños; cada fusión de `a` y `b` suma `a + b` bits al total. Supón al menos dos símbolos. `huffman_bits([1, 2, 3])` es `9`."
+   },
+   "starter": "import heapq\n\n\ndef huffman_bits(freqs):\n    heap = list(freqs)\n    pass\n",
+   "solution": "import heapq\n\n\ndef huffman_bits(freqs):\n    heap = list(freqs)\n    heapq.heapify(heap)\n    total = 0\n    while len(heap) > 1:\n        merged = heapq.heappop(heap) + heapq.heappop(heap)\n        total += merged\n        heapq.heappush(heap, merged)\n    return total\n",
+   "hint": {
+    "en": "Heapify the frequencies. While more than one weight is left, pop the two smallest, add their sum to the running total and push the sum back. Every merge pushes its symbols one level deeper, which is why adding the sum counts one more bit for each of their occurrences.",
+    "es": "Aplica `heapify` a las frecuencias. Mientras quede más de un peso, saca los dos menores, suma su total al acumulado y vuelve a meter la suma. Cada fusión baja sus símbolos un nivel, por eso sumar el total cuenta un bit más por cada una de sus apariciones."
+   },
+   "tests": [
+    [
+     "huffman_bits([1, 2, 3])",
+     "9"
+    ],
+    [
+     "huffman_bits([45, 13, 12, 16, 9, 5])",
+     "224"
+    ],
+    [
+     "huffman_bits([1, 1])",
+     "2"
+    ],
+    [
+     "huffman_bits([4, 4, 4, 4])",
+     "32"
+    ],
+    [
+     "huffman_bits([10, 1, 1, 1, 1])",
+     "22"
+    ]
+   ]
+  }
+ ],
+ "dynamic-programming": [
+  {
+   "id": "coin-change",
+   "title": {
+    "en": "Fewest coins",
+    "es": "Menos monedas"
+   },
+   "prompt": {
+    "en": "Write `min_coins(coins, amount)` that returns the fewest coins needed to make `amount`, with unlimited coins of each value in `coins`, or `-1` if it cannot be made. Fill a table bottom-up from 0 to `amount`. With `[1, 3, 4]` and 6 the answer is `2` (3 + 3), even though greedy would pick 4 + 1 + 1.",
+    "es": "Escribe `min_coins(coins, amount)` que devuelva el menor número de monedas para formar `amount`, con monedas ilimitadas de cada valor de `coins`, o `-1` si no se puede. Llena una tabla de abajo arriba de 0 a `amount`. Con `[1, 3, 4]` y 6 la respuesta es `2` (3 + 3), aunque el algoritmo voraz elegiría 4 + 1 + 1."
+   },
+   "starter": "def min_coins(coins, amount):\n    INF = float('inf')\n    best = [0] + [INF] * amount\n    pass\n",
+   "solution": "def min_coins(coins, amount):\n    INF = float('inf')\n    best = [0] + [INF] * amount\n    for a in range(1, amount + 1):\n        for c in coins:\n            if c <= a and best[a - c] + 1 < best[a]:\n                best[a] = best[a - c] + 1\n    return best[amount] if best[amount] != INF else -1\n",
+   "hint": {
+    "en": "`best[a]` is the fewest coins for amount `a`, with `best[0] = 0`. For each `a`, try every coin `c <= a`: `best[a] = min(best[a], best[a - c] + 1)`. Amounts still at infinity at the end cannot be made.",
+    "es": "`best[a]` es el menor número de monedas para la cantidad `a`, con `best[0] = 0`. Para cada `a`, prueba cada moneda `c <= a`: `best[a] = min(best[a], best[a - c] + 1)`. Las cantidades que siguen en infinito al final no se pueden formar."
+   },
+   "tests": [
+    [
+     "min_coins([1, 2, 5], 11)",
+     "3"
+    ],
+    [
+     "min_coins([1, 3, 4], 6)",
+     "2"
+    ],
+    [
+     "min_coins([2], 3)",
+     "-1"
+    ],
+    [
+     "min_coins([1], 0)",
+     "0"
+    ],
+    [
+     "min_coins([5, 10], 3)",
+     "-1"
+    ],
+    [
+     "min_coins([2, 5, 10, 1], 27)",
+     "4"
+    ]
+   ]
+  },
+  {
+   "id": "lis",
+   "title": {
+    "en": "Longest increasing subsequence",
+    "es": "Subsecuencia creciente más larga"
+   },
+   "prompt": {
+    "en": "Write `lis_length(nums)` that returns the length of the longest strictly increasing subsequence (elements in their original order, not necessarily next to each other). An O(n²) DP is fine. `lis_length([10, 9, 2, 5, 3, 7, 101, 18])` is `4`, for example `[2, 3, 7, 18]`.",
+    "es": "Escribe `lis_length(nums)` que devuelva la longitud de la subsecuencia estrictamente creciente más larga (elementos en su orden original, no necesariamente contiguos). Basta con una DP O(n²). `lis_length([10, 9, 2, 5, 3, 7, 101, 18])` es `4`, por ejemplo `[2, 3, 7, 18]`."
+   },
+   "starter": "def lis_length(nums):\n    ends_here = [1] * len(nums)\n    pass\n",
+   "solution": "def lis_length(nums):\n    ends_here = [1] * len(nums)\n    for i in range(len(nums)):\n        for j in range(i):\n            if nums[j] < nums[i]:\n                ends_here[i] = max(ends_here[i], ends_here[j] + 1)\n    return max(ends_here, default=0)\n",
+   "hint": {
+    "en": "Let `ends_here[i]` be the longest increasing subsequence that ends exactly at index `i`. It is 1 plus the best `ends_here[j]` over earlier `j` with `nums[j] < nums[i]`. The answer is the largest entry, or 0 for an empty list.",
+    "es": "Sea `ends_here[i]` la subsecuencia creciente más larga que termina justo en el índice `i`. Vale 1 más el mejor `ends_here[j]` entre los `j` anteriores con `nums[j] < nums[i]`. La respuesta es la entrada mayor, o 0 para una lista vacía."
+   },
+   "tests": [
+    [
+     "lis_length([10, 9, 2, 5, 3, 7, 101, 18])",
+     "4"
+    ],
+    [
+     "lis_length([0, 1, 0, 3, 2, 3])",
+     "4"
+    ],
+    [
+     "lis_length([7, 7, 7, 7])",
+     "1"
+    ],
+    [
+     "lis_length([])",
+     "0"
+    ],
+    [
+     "lis_length([5])",
+     "1"
+    ],
+    [
+     "lis_length([5, 4, 3, 2, 1])",
+     "1"
+    ]
+   ]
+  }
+ ],
+ "bit-manipulation": [
+  {
+   "id": "count-ones",
+   "title": {
+    "en": "Count the 1 bits",
+    "es": "Contar los bits a 1"
+   },
+   "prompt": {
+    "en": "Write `count_ones(n)` that returns how many bits are 1 in the binary form of a non-negative integer `n`, without `bin()` or string conversion. `count_ones(11)` is `3` because 11 is `1011`.",
+    "es": "Escribe `count_ones(n)` que devuelva cuántos bits valen 1 en la forma binaria de un entero no negativo `n`, sin `bin()` ni conversión a cadena. `count_ones(11)` es `3` porque 11 es `1011`."
+   },
+   "starter": "def count_ones(n):\n    count = 0\n    pass\n",
+   "solution": "def count_ones(n):\n    count = 0\n    while n:\n        n &= n - 1\n        count += 1\n    return count\n",
+   "hint": {
+    "en": "Kernighan's trick: `n & (n - 1)` clears the lowest 1 bit. Repeat it until `n` is 0 and count how many times you did it, one loop per set bit.",
+    "es": "El truco de Kernighan: `n & (n - 1)` borra el bit a 1 más bajo. Repítelo hasta que `n` sea 0 y cuenta cuántas veces lo hiciste: una vuelta por cada bit a 1."
+   },
+   "tests": [
+    [
+     "count_ones(11)",
+     "3"
+    ],
+    [
+     "count_ones(0)",
+     "0"
+    ],
+    [
+     "count_ones(1)",
+     "1"
+    ],
+    [
+     "count_ones(255)",
+     "8"
+    ],
+    [
+     "count_ones(2 ** 31)",
+     "1"
+    ],
+    [
+     "count_ones(1023 - 512)",
+     "9"
+    ]
+   ]
+  },
+  {
+   "id": "single-number",
+   "title": {
+    "en": "Single number",
+    "es": "Número único"
+   },
+   "prompt": {
+    "en": "In `nums` every value appears exactly twice except one, which appears once. Write `single_number(nums)` that returns that value in O(n) time and O(1) extra space, with no dictionary or set. `single_number([4, 1, 2, 1, 2])` is `4`.",
+    "es": "En `nums` cada valor aparece exactamente dos veces salvo uno, que aparece una sola vez. Escribe `single_number(nums)` que devuelva ese valor en tiempo O(n) y espacio extra O(1), sin diccionario ni conjunto. `single_number([4, 1, 2, 1, 2])` es `4`."
+   },
+   "starter": "def single_number(nums):\n    result = 0\n    pass\n",
+   "solution": "def single_number(nums):\n    result = 0\n    for x in nums:\n        result ^= x\n    return result\n",
+   "hint": {
+    "en": "Use XOR: `a ^ a == 0`, `a ^ 0 == a`, and the order does not matter. Combine every number with `^` and the pairs cancel out.",
+    "es": "Usa XOR: `a ^ a == 0`, `a ^ 0 == a` y el orden no importa. Combina todos los números con `^` y las parejas se anulan."
+   },
+   "tests": [
+    [
+     "single_number([4, 1, 2, 1, 2])",
+     "4"
+    ],
+    [
+     "single_number([2, 2, 1])",
+     "1"
+    ],
+    [
+     "single_number([7])",
+     "7"
+    ],
+    [
+     "single_number([-3, 5, 5])",
+     "-3"
+    ],
+    [
+     "single_number([0, 9, 9])",
+     "0"
+    ]
+   ]
+  }
+ ],
+ "segment-trees": [
+  {
+   "id": "range-sum-query",
+   "title": {
+    "en": "Range sum query",
+    "es": "Consulta de suma en un rango"
+   },
+   "prompt": {
+    "en": "`SumSegmentTree` is already built: `tree[node]` holds the sum of `nums[lo..hi]`, with children at `2 * node + 1` and `2 * node + 2`, as in `_build`. Write `query(l, r)` that returns `nums[l] + ... + nums[r]` (inclusive) by visiting O(log n) nodes. `SumSegmentTree([2, 1, 5, 3, 4]).query(1, 3)` is `9`.",
+    "es": "`SumSegmentTree` ya está construido: `tree[node]` guarda la suma de `nums[lo..hi]`, con hijos en `2 * node + 1` y `2 * node + 2`, como en `_build`. Escribe `query(l, r)` que devuelva `nums[l] + ... + nums[r]` (inclusivo) visitando O(log n) nodos. `SumSegmentTree([2, 1, 5, 3, 4]).query(1, 3)` es `9`."
+   },
+   "starter": "class SumSegmentTree:\n    def __init__(self, nums):\n        self.n = len(nums)\n        self.tree = [0] * (4 * max(self.n, 1))\n        if self.n:\n            self._build(nums, 0, 0, self.n - 1)\n\n    def _build(self, nums, node, lo, hi):\n        if lo == hi:\n            self.tree[node] = nums[lo]\n            return\n        mid = (lo + hi) // 2\n        self._build(nums, 2 * node + 1, lo, mid)\n        self._build(nums, 2 * node + 2, mid + 1, hi)\n        self.tree[node] = self.tree[2 * node + 1] + self.tree[2 * node + 2]\n\n    def query(self, l, r):\n        pass\n",
+   "solution": "class SumSegmentTree:\n    def __init__(self, nums):\n        self.n = len(nums)\n        self.tree = [0] * (4 * max(self.n, 1))\n        if self.n:\n            self._build(nums, 0, 0, self.n - 1)\n\n    def _build(self, nums, node, lo, hi):\n        if lo == hi:\n            self.tree[node] = nums[lo]\n            return\n        mid = (lo + hi) // 2\n        self._build(nums, 2 * node + 1, lo, mid)\n        self._build(nums, 2 * node + 2, mid + 1, hi)\n        self.tree[node] = self.tree[2 * node + 1] + self.tree[2 * node + 2]\n\n    def query(self, l, r):\n        return self._query(0, 0, self.n - 1, l, r)\n\n    def _query(self, node, lo, hi, l, r):\n        if r < lo or hi < l:\n            return 0\n        if l <= lo and hi <= r:\n            return self.tree[node]\n        mid = (lo + hi) // 2\n        return (self._query(2 * node + 1, lo, mid, l, r) +\n                self._query(2 * node + 2, mid + 1, hi, l, r))\n",
+   "hint": {
+    "en": "Write a recursive helper over `(node, lo, hi)`. No overlap with `[l, r]`: return 0. Total overlap: return `tree[node]` without going deeper. Partial overlap: split at `mid` and add the answers of both children.",
+    "es": "Escribe un auxiliar recursivo sobre `(node, lo, hi)`. Sin solapamiento con `[l, r]`: devuelve 0. Solapamiento total: devuelve `tree[node]` sin bajar más. Solapamiento parcial: divide en `mid` y suma las respuestas de ambos hijos."
+   },
+   "tests": [
+    [
+     "SumSegmentTree([2, 1, 5, 3, 4]).query(1, 3)",
+     "9"
+    ],
+    [
+     "SumSegmentTree([2, 1, 5, 3, 4]).query(0, 4)",
+     "15"
+    ],
+    [
+     "SumSegmentTree([2, 1, 5, 3, 4]).query(2, 2)",
+     "5"
+    ],
+    [
+     "SumSegmentTree([7]).query(0, 0)",
+     "7"
+    ],
+    [
+     "SumSegmentTree([-1, 3, -2, 8, 0, 6]).query(3, 5)",
+     "14"
+    ],
+    [
+     "[SumSegmentTree([1, 1, 1, 1]).query(0, r) for r in range(4)]",
+     "[1, 2, 3, 4]"
+    ]
+   ]
+  },
+  {
+   "id": "range-min-updates",
+   "title": {
+    "en": "Range minimum with updates",
+    "es": "Mínimo en rango con actualizaciones"
+   },
+   "prompt": {
+    "en": "Write the class `MinSegmentTree(nums)` with `update(i, value)` (set `nums[i] = value`) and `min_query(l, r)` (smallest value in `nums[l..r]`, inclusive), both in O(log n). The given `run(nums, ops)` builds the tree and applies operations such as `('min', 0, 2)` and `('set', 1, 9)`, returning the answers of the `'min'` ones: `run([5, 2, 8], [('min', 0, 2), ('set', 1, 9), ('min', 0, 2)])` is `[2, 5]`.",
+    "es": "Escribe la clase `MinSegmentTree(nums)` con `update(i, value)` (hace `nums[i] = value`) y `min_query(l, r)` (el menor valor de `nums[l..r]`, inclusivo), ambos en O(log n). La función dada `run(nums, ops)` construye el árbol y aplica operaciones como `('min', 0, 2)` y `('set', 1, 9)`, devolviendo las respuestas de las `'min'`: `run([5, 2, 8], [('min', 0, 2), ('set', 1, 9), ('min', 0, 2)])` es `[2, 5]`."
+   },
+   "starter": "class MinSegmentTree:\n    def __init__(self, nums):\n        self.n = len(nums)\n        self.tree = [0] * (4 * self.n)\n\n    def update(self, i, value):\n        pass\n\n    def min_query(self, l, r):\n        pass\n\n\ndef run(nums, ops):\n    st = MinSegmentTree(nums)\n    out = []\n    for op, a, b in ops:\n        if op == 'set':\n            st.update(a, b)\n        else:\n            out.append(st.min_query(a, b))\n    return out\n",
+   "solution": "class MinSegmentTree:\n    def __init__(self, nums):\n        self.n = len(nums)\n        self.tree = [0] * (4 * self.n)\n        self._build(nums, 0, 0, self.n - 1)\n\n    def _build(self, nums, node, lo, hi):\n        if lo == hi:\n            self.tree[node] = nums[lo]\n            return\n        mid = (lo + hi) // 2\n        self._build(nums, 2 * node + 1, lo, mid)\n        self._build(nums, 2 * node + 2, mid + 1, hi)\n        self.tree[node] = min(self.tree[2 * node + 1], self.tree[2 * node + 2])\n\n    def update(self, i, value, node=0, lo=0, hi=None):\n        if hi is None:\n            hi = self.n - 1\n        if lo == hi:\n            self.tree[node] = value\n            return\n        mid = (lo + hi) // 2\n        if i <= mid:\n            self.update(i, value, 2 * node + 1, lo, mid)\n        else:\n            self.update(i, value, 2 * node + 2, mid + 1, hi)\n        self.tree[node] = min(self.tree[2 * node + 1], self.tree[2 * node + 2])\n\n    def min_query(self, l, r, node=0, lo=0, hi=None):\n        if hi is None:\n            hi = self.n - 1\n        if r < lo or hi < l:\n            return float('inf')\n        if l <= lo and hi <= r:\n            return self.tree[node]\n        mid = (lo + hi) // 2\n        return min(self.min_query(l, r, 2 * node + 1, lo, mid),\n                   self.min_query(l, r, 2 * node + 2, mid + 1, hi))\n\n\ndef run(nums, ops):\n    st = MinSegmentTree(nums)\n    out = []\n    for op, a, b in ops:\n        if op == 'set':\n            st.update(a, b)\n        else:\n            out.append(st.min_query(a, b))\n    return out\n",
+   "hint": {
+    "en": "Same shape as a sum tree, with `min` instead of `+`. Build recursively, storing `min` of the two children. `update` walks from the root to the leaf for `i` and recomputes the minimums on the way back up. In `min_query`, a node with no overlap returns `float('inf')`, the neutral value for `min`.",
+    "es": "La misma forma que un árbol de sumas, con `min` en lugar de `+`. Construye recursivamente guardando el `min` de los dos hijos. `update` baja de la raíz a la hoja de `i` y recalcula los mínimos al volver. En `min_query`, un nodo sin solapamiento devuelve `float('inf')`, el valor neutro de `min`."
+   },
+   "tests": [
+    [
+     "run([5, 2, 8], [('min', 0, 2), ('set', 1, 9), ('min', 0, 2)])",
+     "[2, 5]"
+    ],
+    [
+     "run([4, 7, 1, 9, 3], [('min', 0, 1), ('min', 1, 3), ('min', 3, 4), ('set', 2, 10), ('min', 1, 3), ('min', 2, 2)])",
+     "[4, 1, 3, 7, 10]"
+    ],
+    [
+     "run([6], [('min', 0, 0), ('set', 0, -2), ('min', 0, 0)])",
+     "[6, -2]"
+    ],
+    [
+     "run([3, 3, 3], [('set', 0, 1), ('set', 2, 0), ('min', 0, 1), ('min', 1, 2)])",
+     "[1, 0]"
+    ],
+    [
+     "run([1, 2], [])",
+     "[]"
+    ]
+   ]
+  }
+ ],
+ "binary-indexed-trees": [
+  {
+   "id": "fenwick-prefix",
+   "title": {
+    "en": "Fenwick tree prefix sums",
+    "es": "Sumas de prefijos con un árbol de Fenwick"
+   },
+   "prompt": {
+    "en": "Complete the `Fenwick` class (a binary indexed tree over `n` zeros). Positions passed in are 0-based; store them internally at `i + 1` in `self.tree`. `add(i, delta)` adds `delta` to position `i`, and `prefix_sum(i)` returns the sum of positions `0..i` (0 when `i` is `-1`). Both must run in O(log n). `range_sum` and `fenwick_from(nums)` are given: `fenwick_from([3, 2, -1, 6]).prefix_sum(2)` is `4`.",
+    "es": "Completa la clase `Fenwick` (un árbol indexado binario sobre `n` ceros). Las posiciones que se pasan empiezan en 0; guárdalas internamente en `i + 1` dentro de `self.tree`. `add(i, delta)` suma `delta` a la posición `i`, y `prefix_sum(i)` devuelve la suma de las posiciones `0..i` (0 cuando `i` es `-1`). Ambas deben ir en O(log n). `range_sum` y `fenwick_from(nums)` ya están dados: `fenwick_from([3, 2, -1, 6]).prefix_sum(2)` es `4`."
+   },
+   "starter": "class Fenwick:\n    def __init__(self, n):\n        self.tree = [0] * (n + 1)  # index 0 is unused\n\n    def add(self, i, delta):\n        pass\n\n    def prefix_sum(self, i):\n        pass\n\n    def range_sum(self, l, r):\n        return self.prefix_sum(r) - self.prefix_sum(l - 1)\n\n\ndef fenwick_from(nums):\n    fw = Fenwick(len(nums))\n    for i, x in enumerate(nums):\n        fw.add(i, x)\n    return fw\n",
+   "solution": "class Fenwick:\n    def __init__(self, n):\n        self.tree = [0] * (n + 1)  # index 0 is unused\n\n    def add(self, i, delta):\n        i += 1\n        while i < len(self.tree):\n            self.tree[i] += delta\n            i += i & -i\n\n    def prefix_sum(self, i):\n        i += 1\n        total = 0\n        while i > 0:\n            total += self.tree[i]\n            i -= i & -i\n        return total\n\n    def range_sum(self, l, r):\n        return self.prefix_sum(r) - self.prefix_sum(l - 1)\n\n\ndef fenwick_from(nums):\n    fw = Fenwick(len(nums))\n    for i, x in enumerate(nums):\n        fw.add(i, x)\n    return fw\n",
+   "hint": {
+    "en": "`i & -i` is the lowest set bit of `i`. In `add`, convert to 1-based and climb with `i += i & -i` while `i` is inside the array. In `prefix_sum`, convert to 1-based and descend with `i -= i & -i` until `i` is 0, adding `tree[i]` each time.",
+    "es": "`i & -i` es el bit a 1 más bajo de `i`. En `add`, pasa a base 1 y sube con `i += i & -i` mientras `i` esté dentro del arreglo. En `prefix_sum`, pasa a base 1 y baja con `i -= i & -i` hasta que `i` sea 0, sumando `tree[i]` cada vez."
+   },
+   "tests": [
+    [
+     "fenwick_from([3, 2, -1, 6]).prefix_sum(2)",
+     "4"
+    ],
+    [
+     "fenwick_from([3, 2, -1, 6]).range_sum(1, 3)",
+     "7"
+    ],
+    [
+     "[fenwick_from([1, 2, 3, 4, 5]).prefix_sum(i) for i in range(-1, 5)]",
+     "[0, 1, 3, 6, 10, 15]"
+    ],
+    [
+     "fenwick_from([5]).range_sum(0, 0)",
+     "5"
+    ],
+    [
+     "fenwick_from([1, 1, 1, 1, 1, 1, 1, 1]).range_sum(2, 6)",
+     "5"
+    ]
+   ]
+  },
+  {
+   "id": "count-inversions",
+   "title": {
+    "en": "Count inversions",
+    "es": "Contar inversiones"
+   },
+   "prompt": {
+    "en": "An inversion is a pair of positions `i < j` with `nums[i] > nums[j]`. Write `count_inversions(nums)` in O(n log n) with a Fenwick tree: compress the values to ranks `1..m`, scan from left to right, and for each value count how many earlier values are larger. `count_inversions([2, 4, 1, 3, 5])` is `3`.",
+    "es": "Una inversión es un par de posiciones `i < j` con `nums[i] > nums[j]`. Escribe `count_inversions(nums)` en O(n log n) con un árbol de Fenwick: comprime los valores a rangos `1..m`, recorre de izquierda a derecha y, para cada valor, cuenta cuántos valores anteriores son mayores. `count_inversions([2, 4, 1, 3, 5])` es `3`."
+   },
+   "starter": "def count_inversions(nums):\n    ranks = {v: i + 1 for i, v in enumerate(sorted(set(nums)))}\n    tree = [0] * (len(ranks) + 1)\n    pass\n",
+   "solution": "def count_inversions(nums):\n    ranks = {v: i + 1 for i, v in enumerate(sorted(set(nums)))}\n    tree = [0] * (len(ranks) + 1)\n\n    def add(i):\n        while i < len(tree):\n            tree[i] += 1\n            i += i & -i\n\n    def prefix(i):\n        total = 0\n        while i > 0:\n            total += tree[i]\n            i -= i & -i\n        return total\n\n    inversions = 0\n    for seen, x in enumerate(nums):\n        r = ranks[x]\n        inversions += seen - prefix(r)\n        add(r)\n    return inversions\n",
+   "hint": {
+    "en": "Keep a BIT of counts by rank. Before inserting the value with rank `r`, `prefix(r)` tells how many earlier values are less than or equal to it, so `seen - prefix(r)` of them are strictly larger. Then add 1 at rank `r`.",
+    "es": "Mantén un BIT de conteos por rango. Antes de insertar el valor de rango `r`, `prefix(r)` dice cuántos valores anteriores son menores o iguales, así que `vistos - prefix(r)` son estrictamente mayores. Después suma 1 en el rango `r`."
+   },
+   "tests": [
+    [
+     "count_inversions([2, 4, 1, 3, 5])",
+     "3"
+    ],
+    [
+     "count_inversions([5, 4, 3, 2, 1])",
+     "10"
+    ],
+    [
+     "count_inversions([])",
+     "0"
+    ],
+    [
+     "count_inversions([1, 1, 1])",
+     "0"
+    ],
+    [
+     "count_inversions([3, 1, 2, 3, 1])",
+     "5"
+    ],
+    [
+     "count_inversions([100, -5, 7])",
+     "2"
+    ]
+   ]
+  }
+ ],
+ "advanced-trees": [
+  {
+   "id": "rotations",
+   "title": {
+    "en": "AVL rotations",
+    "es": "Rotaciones AVL"
+   },
+   "prompt": {
+    "en": "Write `rotate_right(node)` and `rotate_left(node)`, the two rotations AVL trees use to rebalance. Each returns the new root of that subtree and must keep the BST order. `rotate_right` lifts `node.left` up; `rotate_left` lifts `node.right` up. `Node`, `bst_from(keys)` (plain BST insertion) and `preorder` are given: `preorder(rotate_right(bst_from([5, 3, 6, 2, 4])))` is `[3, 2, 5, 4, 6]`.",
+    "es": "Escribe `rotate_right(node)` y `rotate_left(node)`, las dos rotaciones que usan los árboles AVL para reequilibrarse. Cada una devuelve la nueva raíz de ese subárbol y debe conservar el orden de BST. `rotate_right` sube `node.left`; `rotate_left` sube `node.right`. `Node`, `bst_from(keys)` (inserción de BST sin equilibrar) y `preorder` ya están dados: `preorder(rotate_right(bst_from([5, 3, 6, 2, 4])))` es `[3, 2, 5, 4, 6]`."
+   },
+   "starter": "class Node:\n    def __init__(self, key, left=None, right=None):\n        self.key = key\n        self.left = left\n        self.right = right\n\n\ndef bst_from(keys):\n    # Plain BST insertion, no balancing.\n    root = None\n    for k in keys:\n        if root is None:\n            root = Node(k)\n            continue\n        node = root\n        while True:\n            side = 'left' if k < node.key else 'right'\n            child = getattr(node, side)\n            if child is None:\n                setattr(node, side, Node(k))\n                break\n            node = child\n    return root\n\n\ndef preorder(node):\n    return [node.key] + preorder(node.left) + preorder(node.right) if node else []\n\n\ndef rotate_right(node):\n    pass\n\n\ndef rotate_left(node):\n    pass\n",
+   "solution": "class Node:\n    def __init__(self, key, left=None, right=None):\n        self.key = key\n        self.left = left\n        self.right = right\n\n\ndef bst_from(keys):\n    # Plain BST insertion, no balancing.\n    root = None\n    for k in keys:\n        if root is None:\n            root = Node(k)\n            continue\n        node = root\n        while True:\n            side = 'left' if k < node.key else 'right'\n            child = getattr(node, side)\n            if child is None:\n                setattr(node, side, Node(k))\n                break\n            node = child\n    return root\n\n\ndef preorder(node):\n    return [node.key] + preorder(node.left) + preorder(node.right) if node else []\n\n\ndef rotate_right(node):\n    pivot = node.left\n    node.left = pivot.right\n    pivot.right = node\n    return pivot\n\n\ndef rotate_left(node):\n    pivot = node.right\n    node.right = pivot.left\n    pivot.left = node\n    return pivot\n",
+   "hint": {
+    "en": "For a right rotation, let `pivot = node.left`. The pivot's right subtree (keys between the pivot and `node`) becomes `node.left`, then `node` becomes `pivot.right`, and you return `pivot`. A left rotation is the mirror image.",
+    "es": "Para una rotación a la derecha, sea `pivot = node.left`. El subárbol derecho del pivote (claves entre el pivote y `node`) pasa a ser `node.left`, después `node` pasa a ser `pivot.right` y devuelves `pivot`. La rotación a la izquierda es la imagen especular."
+   },
+   "tests": [
+    [
+     "preorder(rotate_right(bst_from([5, 3, 6, 2, 4])))",
+     "[3, 2, 5, 4, 6]"
+    ],
+    [
+     "preorder(rotate_left(bst_from([2, 1, 4, 3, 5])))",
+     "[4, 2, 1, 3, 5]"
+    ],
+    [
+     "preorder(rotate_right(bst_from([3, 2, 1])))",
+     "[2, 1, 3]"
+    ],
+    [
+     "preorder(rotate_left(bst_from([1, 2, 3])))",
+     "[2, 1, 3]"
+    ],
+    [
+     "preorder(rotate_right(bst_from([2, 1])))",
+     "[1, 2]"
+    ],
+    [
+     "preorder(rotate_left(rotate_right(bst_from([5, 3, 6, 2, 4]))))",
+     "[5, 3, 2, 4, 6]"
+    ]
+   ]
+  },
+  {
+   "id": "is-balanced",
+   "title": {
+    "en": "Height-balanced check",
+    "es": "Comprobar si está equilibrado"
+   },
+   "prompt": {
+    "en": "Write `is_balanced(root)` that returns `True` when, at every node, the heights of the left and right subtrees differ by at most 1 (the AVL condition). An empty tree is balanced. Visit each node once (O(n)). `Node`, `bst_from(keys)` and `preorder` are given: `is_balanced(bst_from([2, 1, 3]))` is `True`, `is_balanced(bst_from([1, 2, 3]))` is `False`.",
+    "es": "Escribe `is_balanced(root)` que devuelva `True` cuando, en cada nodo, las alturas de los subárboles izquierdo y derecho difieren como mucho en 1 (la condición AVL). Un árbol vacío está equilibrado. Visita cada nodo una sola vez (O(n)). `Node`, `bst_from(keys)` y `preorder` ya están dados: `is_balanced(bst_from([2, 1, 3]))` es `True` e `is_balanced(bst_from([1, 2, 3]))` es `False`."
+   },
+   "starter": "class Node:\n    def __init__(self, key, left=None, right=None):\n        self.key = key\n        self.left = left\n        self.right = right\n\n\ndef bst_from(keys):\n    # Plain BST insertion, no balancing.\n    root = None\n    for k in keys:\n        if root is None:\n            root = Node(k)\n            continue\n        node = root\n        while True:\n            side = 'left' if k < node.key else 'right'\n            child = getattr(node, side)\n            if child is None:\n                setattr(node, side, Node(k))\n                break\n            node = child\n    return root\n\n\ndef preorder(node):\n    return [node.key] + preorder(node.left) + preorder(node.right) if node else []\n\n\ndef is_balanced(root):\n    pass\n",
+   "solution": "class Node:\n    def __init__(self, key, left=None, right=None):\n        self.key = key\n        self.left = left\n        self.right = right\n\n\ndef bst_from(keys):\n    # Plain BST insertion, no balancing.\n    root = None\n    for k in keys:\n        if root is None:\n            root = Node(k)\n            continue\n        node = root\n        while True:\n            side = 'left' if k < node.key else 'right'\n            child = getattr(node, side)\n            if child is None:\n                setattr(node, side, Node(k))\n                break\n            node = child\n    return root\n\n\ndef preorder(node):\n    return [node.key] + preorder(node.left) + preorder(node.right) if node else []\n\n\ndef is_balanced(root):\n    def height(node):\n        # Height of the subtree, or -1 as soon as it is unbalanced.\n        if node is None:\n            return 0\n        left = height(node.left)\n        right = height(node.right)\n        if left < 0 or right < 0 or abs(left - right) > 1:\n            return -1\n        return 1 + max(left, right)\n\n    return height(root) >= 0\n",
+   "hint": {
+    "en": "Calling a separate height function at every node costs O(n²). Instead write one recursive helper that returns the height, or a sentinel such as `-1` once any subtree is unbalanced, and stop as soon as you see it.",
+    "es": "Llamar a una función de altura aparte en cada nodo cuesta O(n²). En su lugar escribe un auxiliar recursivo que devuelva la altura, o un valor centinela como `-1` en cuanto algún subárbol esté desequilibrado, y para en cuanto lo veas."
+   },
+   "tests": [
+    [
+     "is_balanced(bst_from([2, 1, 3]))",
+     "True"
+    ],
+    [
+     "is_balanced(bst_from([1, 2, 3]))",
+     "False"
+    ],
+    [
+     "is_balanced(bst_from([]))",
+     "True"
+    ],
+    [
+     "is_balanced(bst_from([7]))",
+     "True"
+    ],
+    [
+     "is_balanced(bst_from([5, 3, 8, 1, 4, 9, 0]))",
+     "True"
+    ],
+    [
+     "is_balanced(bst_from([5, 3, 8, 1, 4, 0]))",
+     "False"
+    ],
+    [
+     "is_balanced(bst_from([4, 2, 6, 1, 7, 0, 8]))",
+     "False"
+    ]
+   ]
+  }
+ ],
+ "string-algorithms": [
+  {
+   "id": "prefix-function",
+   "title": {
+    "en": "KMP prefix function",
+    "es": "Función de prefijos de KMP"
+   },
+   "prompt": {
+    "en": "Write `prefix_function(p)` that returns the KMP `lps` list: `lps[i]` is the length of the longest proper prefix of `p[:i + 1]` that is also a suffix of it. It must run in O(len(p)). `prefix_function('abab')` is `[0, 0, 1, 2]`.",
+    "es": "Escribe `prefix_function(p)` que devuelva la lista `lps` de KMP: `lps[i]` es la longitud del prefijo propio más largo de `p[:i + 1]` que también es sufijo suyo. Debe ir en O(len(p)). `prefix_function('abab')` es `[0, 0, 1, 2]`."
+   },
+   "starter": "def prefix_function(p):\n    lps = [0] * len(p)\n    pass\n",
+   "solution": "def prefix_function(p):\n    lps = [0] * len(p)\n    k = 0\n    for i in range(1, len(p)):\n        while k > 0 and p[i] != p[k]:\n            k = lps[k - 1]\n        if p[i] == p[k]:\n            k += 1\n        lps[i] = k\n    return lps\n",
+   "hint": {
+    "en": "Keep `k`, the length of the current matched border. For each new `i`, while `p[i] != p[k]` and `k > 0`, fall back with `k = lps[k - 1]`; if the characters then match, extend `k` by one. Store `k` in `lps[i]`.",
+    "es": "Mantén `k`, la longitud del borde emparejado actual. Para cada `i` nuevo, mientras `p[i] != p[k]` y `k > 0`, retrocede con `k = lps[k - 1]`; si entonces los caracteres coinciden, amplía `k` en uno. Guarda `k` en `lps[i]`."
+   },
+   "tests": [
+    [
+     "prefix_function('abab')",
+     "[0, 0, 1, 2]"
+    ],
+    [
+     "prefix_function('aabaaab')",
+     "[0, 1, 0, 1, 2, 2, 3]"
+    ],
+    [
+     "prefix_function('abcd')",
+     "[0, 0, 0, 0]"
+    ],
+    [
+     "prefix_function('aaaa')",
+     "[0, 1, 2, 3]"
+    ],
+    [
+     "prefix_function('')",
+     "[]"
+    ],
+    [
+     "prefix_function('abacabab')",
+     "[0, 0, 1, 0, 1, 2, 3, 2]"
+    ]
+   ]
+  },
+  {
+   "id": "rabin-karp",
+   "title": {
+    "en": "Rabin-Karp occurrences",
+    "es": "Apariciones con Rabin-Karp"
+   },
+   "prompt": {
+    "en": "Write `count_occurrences(text, pattern)` that counts how many times a non-empty `pattern` appears in `text`, overlaps included, with Rabin-Karp: a rolling hash of each window updated in O(1), and a direct comparison only when the hashes match. `count_occurrences('abababa', 'aba')` is `3`.",
+    "es": "Escribe `count_occurrences(text, pattern)` que cuente cuántas veces aparece un `pattern` no vacío en `text`, incluidos los solapamientos, con Rabin-Karp: un hash rodante de cada ventana actualizado en O(1) y una comparación directa solo cuando los hashes coinciden. `count_occurrences('abababa', 'aba')` es `3`."
+   },
+   "starter": "def count_occurrences(text, pattern):\n    BASE, MOD = 256, 1_000_000_007\n    pass\n",
+   "solution": "def count_occurrences(text, pattern):\n    BASE, MOD = 256, 1_000_000_007\n    m, n = len(pattern), len(text)\n    if m > n:\n        return 0\n    high = pow(BASE, m - 1, MOD)\n    p_hash = w_hash = 0\n    for i in range(m):\n        p_hash = (p_hash * BASE + ord(pattern[i])) % MOD\n        w_hash = (w_hash * BASE + ord(text[i])) % MOD\n    count = 0\n    for start in range(n - m + 1):\n        if w_hash == p_hash and text[start:start + m] == pattern:\n            count += 1\n        if start + m < n:\n            w_hash = (w_hash - ord(text[start]) * high) % MOD\n            w_hash = (w_hash * BASE + ord(text[start + m])) % MOD\n    return count\n",
+   "hint": {
+    "en": "Hash a string as a base-256 number modulo a large prime. To slide the window one step, subtract the leaving character times `BASE ** (m - 1)` (precompute it with `pow(BASE, m - 1, MOD)`), multiply by `BASE` and add the entering character. Equal hashes may be a collision, so confirm with a slice comparison.",
+    "es": "Calcula el hash de una cadena como un número en base 256 módulo un primo grande. Para deslizar la ventana un paso, resta el carácter que sale por `BASE ** (m - 1)` (precalcúlalo con `pow(BASE, m - 1, MOD)`), multiplica por `BASE` y suma el carácter que entra. Hashes iguales pueden ser una colisión, así que confírmalo comparando el fragmento."
+   },
+   "tests": [
+    [
+     "count_occurrences('abababa', 'aba')",
+     "3"
+    ],
+    [
+     "count_occurrences('aaaa', 'aa')",
+     "3"
+    ],
+    [
+     "count_occurrences('hello world', 'xyz')",
+     "0"
+    ],
+    [
+     "count_occurrences('ab', 'abc')",
+     "0"
+    ],
+    [
+     "count_occurrences('a', 'a')",
+     "1"
+    ],
+    [
+     "count_occurrences('the cat sat on the mat', 'at')",
+     "3"
+    ]
+   ]
+  }
+ ],
  "cli-files-folders": [
   {
    "id": "project-skeleton",
