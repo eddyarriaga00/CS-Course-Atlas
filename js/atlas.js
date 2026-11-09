@@ -941,7 +941,7 @@ function runPlayground() {
     if (m.t === 'done') finish(t('pgDone', Math.round(performance.now() - started)));
     else out.insertAdjacentHTML('beforeend', m.t === 'err' ? `<span class="err">${esc(m.v)}</span>\n` : esc(m.v) + '\n');
   };
-  w.onerror = (e) => { e.preventDefault(); out.insertAdjacentHTML('beforeend', `<span class="err">${esc(e.message || 'Error')}</span>\n`); finish(''); };
+  w.onerror = (e) => { e.preventDefault(); out.insertAdjacentHTML('beforeend', `<span class="err">${esc(e.message || 'Error')}</span>\n` + tipFrom(JS_TIPS, e.message)); finish(''); };
 }
 // Python runs in the browser with Pyodide (CPython compiled to WebAssembly). It is downloaded only the
 // first time someone runs Python, inside a worker so a runaway loop can be stopped without freezing the page.
