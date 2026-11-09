@@ -39,7 +39,8 @@ const CATEGORY_ROUTE_MAP = {
     discrete: '/discrete-math',
     python: '/python',
     cli: '/command-line',
-    web: '/web'
+    web: '/web',
+    sql: '/sql'
 };
 
 const CATEGORY_LABEL_MAP = {
@@ -50,7 +51,8 @@ const CATEGORY_LABEL_MAP = {
     discrete: 'Discrete Math',
     python: 'Python',
     cli: 'Command Line & Linux',
-    web: 'Web Basics'
+    web: 'Web Basics',
+    sql: 'SQL & Databases'
 };
 
 const ROUTE_PAGES = [
@@ -143,6 +145,15 @@ const ROUTE_PAGES = [
         heading: 'Web Basics: HTML, CSS & JavaScript',
         lead: 'Build pages you can see and share.',
         moduleCategory: 'web'
+    },
+    {
+        route: '/sql',
+        filename: 'sql.html',
+        title: 'SQL & Databases | CS Course Atlas',
+        description: 'Learn SQL from zero with real SQLite: SELECT, WHERE, GROUP BY, joins, and designing tables with keys and constraints. Run every query in your browser.',
+        heading: 'SQL & Databases',
+        lead: 'Ask questions of data, then design your own database.',
+        moduleCategory: 'sql'
     },
     {
         route: '/flashcards',
@@ -411,7 +422,7 @@ let publishedTrackSet = null;
 function trackNavLinks() {
     return [['dsa', 'dsa.html', 'DSA'], ['java', 'java.html', 'Java'], ['git', 'git.html', 'Git'],
         ['assembly', 'assembly.html', 'Assembly'], ['discrete', 'discrete-math.html', 'Discrete Math'],
-        ['python', 'python.html', 'Python'], ['cli', 'command-line.html', 'Command Line'], ['web', 'web.html', 'Web Basics']]
+        ['python', 'python.html', 'Python'], ['cli', 'command-line.html', 'Command Line'], ['web', 'web.html', 'Web Basics'], ['sql', 'sql.html', 'SQL']]
         .filter(([category]) => !publishedTrackSet || publishedTrackSet.has(category))
         .map(([, href, label]) => `<a href="${href}">${label}</a>`)
         .join('\n                    ');

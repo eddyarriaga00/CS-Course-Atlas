@@ -3,6 +3,7 @@
   "python",
   "cli",
   "web",
+  "sql",
   "java",
   "discrete",
   "git"
@@ -41,6 +42,10 @@
   "web-css",
   "web-javascript",
   "web-project",
+  "sql-first-queries",
+  "sql-summarizing",
+  "sql-joins",
+  "sql-design",
   "heaps",
   "tries",
   "discrete-graph-theory",
@@ -123,7 +128,11 @@
   "web-html": "web",
   "web-css": "web",
   "web-javascript": "web",
-  "web-project": "web"
+  "web-project": "web",
+  "sql-first-queries": "sql",
+  "sql-summarizing": "sql",
+  "sql-joins": "sql",
+  "sql-design": "sql"
  },
  "modules": [
   {
@@ -1103,6 +1112,74 @@
    "es": {
     "title": "Construye y publica un sitio",
     "description": "Junta todo: estructura semántica de la página, accesibilidad, trabajar con datos JSON, una pequeña app interactiva y publicar tu sitio en internet gratis."
+   }
+  },
+  {
+   "id": "sql-first-queries",
+   "title": "Tables and Your First Queries",
+   "description": "What a relational database is, how data lives in tables of rows and columns, and how to read exactly the data you want with SELECT, WHERE, ORDER BY and LIMIT.",
+   "difficulty": "beginner",
+   "topics": [
+    "Tables, Rows and Columns",
+    "SELECT and FROM",
+    "Filtering with WHERE",
+    "Sorting and Limiting",
+    "Calculated Columns"
+   ],
+   "es": {
+    "title": "Tablas y tus primeras consultas",
+    "description": "Qué es una base de datos relacional, cómo viven los datos en tablas de filas y columnas, y cómo leer exactamente los datos que quieres con SELECT, WHERE, ORDER BY y LIMIT."
+   }
+  },
+  {
+   "id": "sql-summarizing",
+   "title": "Summarizing Data",
+   "description": "Turn rows into answers: count, sum, average, minimum and maximum, group rows with GROUP BY, filter groups with HAVING, find distinct values and handle missing data (NULL).",
+   "difficulty": "beginner",
+   "topics": [
+    "Aggregate Functions",
+    "GROUP BY",
+    "HAVING",
+    "DISTINCT",
+    "NULL Values"
+   ],
+   "es": {
+    "title": "Resumir datos",
+    "description": "Convierte filas en respuestas: contar, sumar, promediar, mínimo y máximo, agrupar filas con GROUP BY, filtrar grupos con HAVING, encontrar valores distintos y manejar datos faltantes (NULL)."
+   }
+  },
+  {
+   "id": "sql-joins",
+   "title": "Combining Tables",
+   "description": "Real data is split across related tables. Learn primary and foreign keys, combine tables with INNER JOIN and LEFT JOIN, join three tables, and answer questions with subqueries.",
+   "difficulty": "beginner",
+   "topics": [
+    "Primary and Foreign Keys",
+    "INNER JOIN",
+    "LEFT JOIN",
+    "Joining Three Tables",
+    "Subqueries"
+   ],
+   "es": {
+    "title": "Combinar tablas",
+    "description": "Los datos reales están repartidos en tablas relacionadas. Aprende llaves primarias y foráneas, combina tablas con INNER JOIN y LEFT JOIN, une tres tablas y responde preguntas con subconsultas."
+   }
+  },
+  {
+   "id": "sql-design",
+   "title": "Designing and Changing a Database",
+   "description": "Build your own database: create tables with good types, insert, update and delete rows safely, protect data with constraints, split data into well-designed tables, and use indexes and transactions.",
+   "difficulty": "beginner",
+   "topics": [
+    "CREATE TABLE and Types",
+    "INSERT, UPDATE and DELETE",
+    "Constraints",
+    "Normalization",
+    "Indexes and Transactions"
+   ],
+   "es": {
+    "title": "Diseñar y modificar una base de datos",
+    "description": "Construye tu propia base de datos: crea tablas con buenos tipos, inserta, actualiza y borra filas con seguridad, protege los datos con restricciones, divide los datos en tablas bien diseñadas y usa índices y transacciones."
    }
   }
  ]

@@ -45,7 +45,7 @@ const UI = {
     forgot: 'Forgot password?', newHere: 'New here?', create: 'Create an account', legal: 'By continuing you agree to the <a href="terms-of-use.html">Terms of Use</a> and <a href="privacy-policy.html">Privacy Policy</a>.',
     noResults: 'No matches', today: 'Today', yesterday: 'Yesterday', daysAgo: (n) => `${n} days ago`, completed: 'Completed', reviewed: 'Reviewed 12 flashcards', notFound: 'That page doesn’t exist.',
     glossary: 'Glossary', roadmap: 'Roadmap', whatsComing: 'What’s coming', tryIt: 'Try it ▸', run: 'Run ▸', reset: 'Reset', running: 'Running…',
-    pgLead: 'Write and run code right here. JavaScript, Python and web pages run in your browser; Java and C++ will run on the CS Course Atlas server.',
+    pgLead: 'Write and run code right here. JavaScript, Python, SQL and web pages run in your browser; Java and C++ will run on the CS Course Atlas server.',
     pgServer: 'Running this language needs the code server, which is on the roadmap. Here is the output this example prints:', pgServerNoExpected: 'Running this language needs the code server, which is on the roadmap. Switch to JavaScript or Python to run code now.',
     pgDone: (ms) => `Finished in ${ms} ms`, pgTimeout: 'Stopped after 3 seconds (infinite loop?)', pgEmpty: '(no output)', pgLoaded: (m) => `Loaded from ${m}`,
     notesLeadIn: 'One page of notes per module, saved to your account and synced to every device you sign in on.', notesLead: 'One page of notes per module, saved on this device. With an account they sync everywhere.', notePlaceholder: 'What clicked? What confused you? Write it in your own words.',
@@ -54,7 +54,7 @@ const UI = {
     roadmapLead: 'Where CS Course Atlas is going. Vote for what you want next.', live: 'Live', building: 'In progress', planned: 'Planned', vote: '▲ Vote', voted: '▲ Voted',
     achievements: 'Achievements', earned: (a, b) => `${a} of ${b} earned`,
     studyPlan: 'Study plan', planLead: 'Pick a course and how much time you have; we lay out the rest of it week by week.', hoursWeek: 'Hours per week', startOn: 'Start on', finishBy: 'Finish by', weeksLeft: 'weeks', modulesLeft: 'modules left', weekN: (n) => `Week ${n}`, thisWeek: 'This week', planHome: (d, c) => `At your pace you’ll finish ${c} by <b>${d}</b>.`, editPlan: 'Edit plan', allDone: 'Every module of this course is complete. Time for the next one.', addCalendar: 'Add to calendar', reminders: 'Weekly reminder', 
-    videos: 'Videos', fullSeries: 'Full video series', courseSeries: 'Full course series', watchTopic: 'Watch a video on this topic', watchWait: 'Watch while you wait', videosLead: 'A full series for the module, then one video per topic. All from university or well-known teaching channels; they open on YouTube.', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', pyLoading: 'Loading Python (first run only, a few seconds)…', pyTimeout: 'Stopped after 10 seconds (infinite loop?)', pyFailed: 'Could not load Python. Check your connection and try again.', pythonExamples: 'Runnable Python examples', syllabus: 'What you will learn', outlineNotice: 'This course is being written now. The outline below is final: each module will have a lesson, examples you can run, practice, a quiz and videos.', soonNoticePlanned: 'This course is planned. Vote for it so we know to write it sooner.', wantThis: '▲ I want this course', meanwhile: 'Get ready with these courses first', pathStep: 'beginner path step', levelWord: 'level', seeOutline: 'See outline', webExamples: 'Live web pages', preview: 'Live preview', rendered: 'Rendered', pgHtmlSample: 'A web page: edit it and press Run', showPw: 'Show password', hidePw: 'Hide password', show: 'Show', hide: 'Hide', signupSub: 'Free. Your progress, notes and quiz scores are saved and follow you to any device.', orSignupEmail: 'or sign up with email', createFree: 'Create free account', userHint: '3–32 characters: letters, numbers, dot, underscore or dash.', pwHint: 'At least 8 characters.', accountTitle: 'Account', displayName: 'Display name', saveChanges: 'Save changes', saved: 'Saved', changePw: 'Change password', currentPw: 'Current password', newPw: 'New password', pwChanged: 'Password changed', googleNoPw: 'You sign in with Google, so there is no password to manage here.', saveTitle: 'Keep your progress', saveText: 'It is only on this device right now. A free account saves it and syncs it everywhere.', expand: 'show modules', collapse: 'hide modules', fullSession: 'Full session', week1: 'week', coursesReady: 'courses ready', course: 'Course', trackCourse: (c) => `${c} course`, terminalExamples: 'Real terminal sessions', terminalHint: 'Run this in an empty folder. Lines starting with $ are what you type; the rest is what the computer printed when we ran the session for real. Copy gives you just the commands.', terminalOut: 'Terminal', report: 'Report a problem with this module', programs: 'programs', languagesWord: 'languages', waitLead: 'Series that cover these modules, each listed once.',
+    videos: 'Videos', fullSeries: 'Full video series', courseSeries: 'Full course series', watchTopic: 'Watch a video on this topic', watchWait: 'Watch while you wait', videosLead: 'A full series for the module, then one video per topic. All from university or well-known teaching channels; they open on YouTube.', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', pyLoading: 'Loading Python (first run only, a few seconds)…', pyTimeout: 'Stopped after 10 seconds (infinite loop?)', pyFailed: 'Could not load Python. Check your connection and try again.', pythonExamples: 'Runnable Python examples', sqlExamples: 'Real SQLite queries', sqlLoading: 'Loading SQLite (first run only)…', sqlFailed: 'Could not load SQLite. Check your connection and try again.', syllabus: 'What you will learn', outlineNotice: 'This course is being written now. The outline below is final: each module will have a lesson, examples you can run, practice, a quiz and videos.', soonNoticePlanned: 'This course is planned. Vote for it so we know to write it sooner.', wantThis: '▲ I want this course', meanwhile: 'Get ready with these courses first', pathStep: 'beginner path step', levelWord: 'level', seeOutline: 'See outline', webExamples: 'Live web pages', preview: 'Live preview', rendered: 'Rendered', pgHtmlSample: 'A web page: edit it and press Run', showPw: 'Show password', hidePw: 'Hide password', show: 'Show', hide: 'Hide', signupSub: 'Free. Your progress, notes and quiz scores are saved and follow you to any device.', orSignupEmail: 'or sign up with email', createFree: 'Create free account', userHint: '3–32 characters: letters, numbers, dot, underscore or dash.', pwHint: 'At least 8 characters.', accountTitle: 'Account', displayName: 'Display name', saveChanges: 'Save changes', saved: 'Saved', changePw: 'Change password', currentPw: 'Current password', newPw: 'New password', pwChanged: 'Password changed', googleNoPw: 'You sign in with Google, so there is no password to manage here.', saveTitle: 'Keep your progress', saveText: 'It is only on this device right now. A free account saves it and syncs it everywhere.', expand: 'show modules', collapse: 'hide modules', fullSession: 'Full session', week1: 'week', coursesReady: 'courses ready', course: 'Course', trackCourse: (c) => `${c} course`, terminalExamples: 'Real terminal sessions', terminalHint: 'Run this in an empty folder. Lines starting with $ are what you type; the rest is what the computer printed when we ran the session for real. Copy gives you just the commands.', terminalOut: 'Terminal', report: 'Report a problem with this module', programs: 'programs', languagesWord: 'languages', waitLead: 'Series that cover these modules, each listed once.',
     signedInWith: (p) => `Signed in with ${p}`, syncedAt: (tm) => `Progress synced at ${tm}`, syncPending: 'Syncing progress…', day: 'day', acrossN: (n) => `across ${n} ${n === 1 ? 'quiz' : 'quizzes'}`, noQuizYet: 'No quizzes taken yet',
     modulesWithNotes: 'modules with notes', noActivity: 'Complete a module, take a quiz or write a note and it shows up here.', typeDelete: 'Type DELETE to confirm', deleteViaSupport: 'Ask support to delete it',
     privacy: 'Privacy', terms: 'Terms', contact: 'Contact', checkingSession: 'Checking your account…', emailOrUser: 'Email or username', username: 'Username', confirmPw: 'Confirm password',
@@ -107,7 +107,7 @@ const UI = {
     forgot: '¿Olvidaste tu contraseña?', newHere: '¿Eres nuevo?', create: 'Crear una cuenta', legal: 'Al continuar aceptas los <a href="terms-of-use.html">Términos de uso</a> y la <a href="privacy-policy.html">Política de privacidad</a>.',
     noResults: 'Sin resultados', today: 'Hoy', yesterday: 'Ayer', daysAgo: (n) => `Hace ${n} días`, completed: 'Completaste', reviewed: 'Repasaste 12 tarjetas', notFound: 'Esa página no existe.',
     glossary: 'Glosario', roadmap: 'Hoja de ruta', whatsComing: 'Lo que viene', tryIt: 'Probar ▸', run: 'Ejecutar ▸', reset: 'Restablecer', running: 'Ejecutando…',
-    pgLead: 'Escribe y ejecuta código aquí mismo. JavaScript, Python y las páginas web corren en tu navegador; Java y C++ correrán en el servidor de CS Course Atlas.',
+    pgLead: 'Escribe y ejecuta código aquí mismo. JavaScript, Python, SQL y las páginas web corren en tu navegador; Java y C++ correrán en el servidor de CS Course Atlas.',
     pgServer: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Esta es la salida que imprime el ejemplo:', pgServerNoExpected: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Cambia a JavaScript o Python para ejecutar código ahora.',
     pgDone: (ms) => `Terminó en ${ms} ms`, pgTimeout: 'Detenido después de 3 segundos (¿bucle infinito?)', pgEmpty: '(sin salida)', pgLoaded: (m) => `Cargado desde ${m}`,
     notesLeadIn: 'Una página de notas por módulo, guardada en tu cuenta y sincronizada en cada dispositivo donde inicies sesión.', notesLead: 'Una página de notas por módulo, guardada en este dispositivo. Con una cuenta se sincronizan en todas partes.', notePlaceholder: '¿Qué entendiste? ¿Qué te confundió? Escríbelo con tus palabras.',
@@ -116,7 +116,7 @@ const UI = {
     roadmapLead: 'Hacia dónde va CS Course Atlas. Vota por lo que quieres primero.', live: 'Disponible', building: 'En progreso', planned: 'Planeado', vote: '▲ Votar', voted: '▲ Votado',
     achievements: 'Logros', earned: (a, b) => `${a} de ${b} obtenidos`,
     studyPlan: 'Plan de estudio', planLead: 'Elige un curso y cuánto tiempo tienes; organizamos el resto semana a semana.', hoursWeek: 'Horas por semana', startOn: 'Empezar el', finishBy: 'Terminas el', weeksLeft: 'semanas', modulesLeft: 'módulos restantes', weekN: (n) => `Semana ${n}`, thisWeek: 'Esta semana', planHome: (d, c) => `A tu ritmo terminarás ${c} el <b>${d}</b>.`, editPlan: 'Editar plan', allDone: 'Completaste todos los módulos de este curso. Es hora del siguiente.', addCalendar: 'Agregar al calendario', reminders: 'Recordatorio semanal', 
-    videos: 'Videos', fullSeries: 'Serie completa de videos', courseSeries: 'Serie completa del curso', watchTopic: 'Mira un video sobre este tema', watchWait: 'Mira mientras esperas', videosLead: 'Una serie completa del módulo y un video por tema. Todos de canales universitarios o de enseñanza reconocidos; se abren en YouTube (en inglés).', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', pyLoading: 'Cargando Python (solo la primera vez, unos segundos)…', pyTimeout: 'Detenido después de 10 segundos (¿bucle infinito?)', pyFailed: 'No se pudo cargar Python. Revisa tu conexión e inténtalo de nuevo.', pythonExamples: 'Ejemplos de Python ejecutables', syllabus: 'Lo que aprenderás', outlineNotice: 'Este curso se está escribiendo. El temario de abajo es definitivo: cada módulo tendrá una lección, ejemplos que puedes ejecutar, práctica, un cuestionario y videos.', soonNoticePlanned: 'Este curso está planeado. Vota por él para que sepamos escribirlo antes.', wantThis: '▲ Quiero este curso', meanwhile: 'Prepárate primero con estos cursos', pathStep: 'paso de la ruta', levelWord: 'nivel', seeOutline: 'Ver temario', webExamples: 'Páginas web en vivo', preview: 'Vista previa en vivo', rendered: 'Mostrado', pgHtmlSample: 'Una página web: edítala y pulsa Ejecutar', showPw: 'Mostrar contraseña', hidePw: 'Ocultar contraseña', show: 'Ver', hide: 'Ocultar', signupSub: 'Gratis. Tu progreso, notas y resultados se guardan y te siguen a cualquier dispositivo.', orSignupEmail: 'o regístrate con tu correo', createFree: 'Crear cuenta gratis', userHint: 'De 3 a 32 caracteres: letras, números, punto, guion bajo o guion.', pwHint: 'Al menos 8 caracteres.', accountTitle: 'Cuenta', displayName: 'Nombre visible', saveChanges: 'Guardar cambios', saved: 'Guardado', changePw: 'Cambiar contraseña', currentPw: 'Contraseña actual', newPw: 'Contraseña nueva', pwChanged: 'Contraseña cambiada', googleNoPw: 'Inicias sesión con Google, así que aquí no hay contraseña que administrar.', saveTitle: 'Conserva tu progreso', saveText: 'Por ahora solo está en este dispositivo. Una cuenta gratis lo guarda y lo sincroniza en todas partes.', expand: 'mostrar módulos', collapse: 'ocultar módulos', fullSession: 'Sesión completa', week1: 'semana', coursesReady: 'cursos listos', course: 'Curso', trackCourse: (c) => `Curso de ${c}`, terminalExamples: 'Sesiones reales de terminal', terminalHint: 'Ejecútalo en una carpeta vacía. Las líneas que empiezan con $ son lo que escribes; el resto es lo que imprimió la computadora al ejecutar la sesión de verdad. Copiar te da solo los comandos.', terminalOut: 'Terminal', report: 'Reportar un problema con este módulo', programs: 'programas', languagesWord: 'lenguajes', waitLead: 'Series que cubren estos módulos, cada una una sola vez.',
+    videos: 'Videos', fullSeries: 'Serie completa de videos', courseSeries: 'Serie completa del curso', watchTopic: 'Mira un video sobre este tema', watchWait: 'Mira mientras esperas', videosLead: 'Una serie completa del módulo y un video por tema. Todos de canales universitarios o de enseñanza reconocidos; se abren en YouTube (en inglés).', videoCount: (n) => `${n} videos`, onYoutube: 'YouTube', pyLoading: 'Cargando Python (solo la primera vez, unos segundos)…', pyTimeout: 'Detenido después de 10 segundos (¿bucle infinito?)', pyFailed: 'No se pudo cargar Python. Revisa tu conexión e inténtalo de nuevo.', pythonExamples: 'Ejemplos de Python ejecutables', sqlExamples: 'Consultas reales de SQLite', sqlLoading: 'Cargando SQLite (solo la primera vez)…', sqlFailed: 'No se pudo cargar SQLite. Revisa tu conexión e inténtalo de nuevo.', syllabus: 'Lo que aprenderás', outlineNotice: 'Este curso se está escribiendo. El temario de abajo es definitivo: cada módulo tendrá una lección, ejemplos que puedes ejecutar, práctica, un cuestionario y videos.', soonNoticePlanned: 'Este curso está planeado. Vota por él para que sepamos escribirlo antes.', wantThis: '▲ Quiero este curso', meanwhile: 'Prepárate primero con estos cursos', pathStep: 'paso de la ruta', levelWord: 'nivel', seeOutline: 'Ver temario', webExamples: 'Páginas web en vivo', preview: 'Vista previa en vivo', rendered: 'Mostrado', pgHtmlSample: 'Una página web: edítala y pulsa Ejecutar', showPw: 'Mostrar contraseña', hidePw: 'Ocultar contraseña', show: 'Ver', hide: 'Ocultar', signupSub: 'Gratis. Tu progreso, notas y resultados se guardan y te siguen a cualquier dispositivo.', orSignupEmail: 'o regístrate con tu correo', createFree: 'Crear cuenta gratis', userHint: 'De 3 a 32 caracteres: letras, números, punto, guion bajo o guion.', pwHint: 'Al menos 8 caracteres.', accountTitle: 'Cuenta', displayName: 'Nombre visible', saveChanges: 'Guardar cambios', saved: 'Guardado', changePw: 'Cambiar contraseña', currentPw: 'Contraseña actual', newPw: 'Contraseña nueva', pwChanged: 'Contraseña cambiada', googleNoPw: 'Inicias sesión con Google, así que aquí no hay contraseña que administrar.', saveTitle: 'Conserva tu progreso', saveText: 'Por ahora solo está en este dispositivo. Una cuenta gratis lo guarda y lo sincroniza en todas partes.', expand: 'mostrar módulos', collapse: 'ocultar módulos', fullSession: 'Sesión completa', week1: 'semana', coursesReady: 'cursos listos', course: 'Curso', trackCourse: (c) => `Curso de ${c}`, terminalExamples: 'Sesiones reales de terminal', terminalHint: 'Ejecútalo en una carpeta vacía. Las líneas que empiezan con $ son lo que escribes; el resto es lo que imprimió la computadora al ejecutar la sesión de verdad. Copiar te da solo los comandos.', terminalOut: 'Terminal', report: 'Reportar un problema con este módulo', programs: 'programas', languagesWord: 'lenguajes', waitLead: 'Series que cubren estos módulos, cada una una sola vez.',
     signedInWith: (p) => `Sesión iniciada con ${p}`, syncedAt: (tm) => `Progreso sincronizado a las ${tm}`, syncPending: 'Sincronizando progreso…', day: 'día', acrossN: (n) => `en ${n} ${n === 1 ? 'cuestionario' : 'cuestionarios'}`, noQuizYet: 'Aún no haces cuestionarios',
     modulesWithNotes: 'módulos con notas', noActivity: 'Completa un módulo, haz un cuestionario o escribe una nota y aparecerá aquí.', typeDelete: 'Escribe DELETE para confirmar', deleteViaSupport: 'Pide a soporte que la elimine',
     privacy: 'Privacidad', terms: 'Términos', contact: 'Contacto', checkingSession: 'Revisando tu cuenta…', emailOrUser: 'Correo o usuario', username: 'Usuario', confirmPw: 'Confirmar contraseña',
@@ -150,7 +150,7 @@ function rich(text) {
     return html;
   }).join('');
 }
-const LANGS = [['python', 'Python'], ['javascript', 'JavaScript'], ['html', 'HTML'], ['java', 'Java'], ['cpp', 'C++']];
+const LANGS = [['python', 'Python'], ['javascript', 'JavaScript'], ['html', 'HTML'], ['sql', 'SQL'], ['java', 'Java'], ['cpp', 'C++']];
 const track = (id) => DATA.tracks.find((x) => x.id === id);
 const trackIds = (tid) => (track(tid) ? track(tid).units.flatMap((u) => u.modules) : []);
 const liveTracks = () => DATA.tracks.filter((x) => x.status === 'available');
@@ -163,7 +163,7 @@ function routeTrack(route) {
   if (route.startsWith('course-') && track(route.slice(7))?.status === 'available') return route.slice(7);
   return currentTrack();
 }
-const LANG_LABEL = { java: 'Java', cpp: 'C++', python: 'Python', javascript: 'JavaScript', assembly: 'Assembly', bash: 'Terminal', html: 'HTML · CSS · JS' };
+const LANG_LABEL = { java: 'Java', cpp: 'C++', python: 'Python', javascript: 'JavaScript', assembly: 'Assembly', bash: 'Terminal', html: 'HTML · CSS · JS', sql: 'SQL' };
 const exampleLangs = (ex) => Object.keys(LANG_LABEL).filter((k) => ex.code && ex.code[k]);
 // Selects lessons/quizzes grouped by course.
 const moduleOptions = (selected) => liveTracks().map((tr) => `<optgroup label="${esc(L(tr.title))}">${trackIds(tr.id).map((m) => `<option value="${m}" ${m === selected ? 'selected' : ''}>${esc(moduleTitle(m))}</option>`).join('')}</optgroup>`).join('');
@@ -416,7 +416,7 @@ function viewModule(id) {
   return `<section class="wrap">
     <div class="crumbs"><a href="#course-${tr.id}">${esc(L(tr.title))}</a><span>/</span><span>${esc(L(unit.title))}</span><span>/</span><span style="color:var(--text)">${esc(moduleTitle(id))}</span></div>
     <h1>${esc(moduleTitle(id))}</h1><p class="lead">${fmt(L(meta.description))}</p>
-    <div class="mod-meta"><span class="pill">${t('difficulty')[meta.difficulty] || meta.difficulty}</span>${meta.minutes ? `<span class="pill">≈ ${meta.minutes} ${t('min')}</span>` : ''}<span class="pill">${meta.topics.length} ${t('topics')}</span><span class="pill ok">${terminal ? t('terminalExamples') : exampleLangs(c.examples.main).includes('html') ? t('webExamples') : exampleLangs(c.examples.main).length === 1 ? t('pythonExamples') : t('examples4')}</span>${done ? `<span class="pill accent">${t('marked')}</span>` : ''}</div>
+    <div class="mod-meta"><span class="pill">${t('difficulty')[meta.difficulty] || meta.difficulty}</span>${meta.minutes ? `<span class="pill">≈ ${meta.minutes} ${t('min')}</span>` : ''}<span class="pill">${meta.topics.length} ${t('topics')}</span><span class="pill ok">${terminal ? t('terminalExamples') : exampleLangs(c.examples.main).includes('html') ? t('webExamples') : exampleLangs(c.examples.main).includes('sql') ? t('sqlExamples') : exampleLangs(c.examples.main).length === 1 ? t('pythonExamples') : t('examples4')}</span>${done ? `<span class="pill accent">${t('marked')}</span>` : ''}</div>
     <div class="tabs" role="tablist">${tabs.map(([k, label, n]) => `<button class="tab" role="tab" data-tab="${k}" aria-selected="${state.tab === k}">${label}${n ? `<span class="count">${n}</span>` : ''}</button>`).join('')}</div>
     ${body}
     <div class="mod-foot"><button class="btn${done ? ' btn-ghost' : ''}" data-action="toggle-done" data-id="${id}">${done ? t('marked') : t('markDone')}</button>
@@ -583,6 +583,7 @@ function runPlayground() {
   const pg = state.pg, out = $('#pg-out'), status = $('#pg-status');
   pg.code = $('#pg-code').value;
   if (pg.lang === 'python') { runPython(pg.code, out, status); return; }
+  if (pg.lang === 'sql') { runSql(pg.code, out, status); return; }
   if (pg.lang === 'html') {
     // Web pages render in a sandboxed frame: scripts run, but the page cannot reach this site.
     let frame = $('#pg-frame');
@@ -641,6 +642,62 @@ onmessage = async (e) => {
   pyWorker = new Worker(URL.createObjectURL(new Blob([src], { type: 'text/javascript' })));
   pyWorker.addEventListener('message', (e) => { if (e.data.t === 'ready') pyReady = true; });
   return pyWorker;
+}
+// SQL runs in the browser with sql.js (SQLite compiled to WebAssembly), loaded on first use. Each run
+// starts from an empty database and prints results the same way the course examples do.
+const SQLJS_URL = 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/';
+let sqlJs = null;
+function loadSqlJs() {
+  if (!sqlJs) sqlJs = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = SQLJS_URL + 'sql-wasm.js';
+    s.onload = () => window.initSqlJs({ locateFile: (f) => SQLJS_URL + f }).then(resolve, reject);
+    s.onerror = reject;
+    document.head.append(s);
+  }).catch((e) => { sqlJs = null; throw e; });
+  return sqlJs;
+}
+function sqlTable(columns, rows) {
+  const cells = rows.map((r) => r.map((v) => (v === null ? 'NULL' : String(v))));
+  const widths = columns.map((c, i) => Math.max(c.length, ...cells.map((r) => r[i].length)));
+  const line = '+' + widths.map((w) => '-'.repeat(w + 2)).join('+') + '+';
+  const fmt = (vals) => '| ' + vals.map((v, i) => v.padEnd(widths[i])).join(' | ') + ' |';
+  return [line, fmt(columns), line, ...cells.map(fmt), line].join('\n');
+}
+// Results are separated by blank lines; BEGIN/COMMIT/ROLLBACK lines sit directly under the line above.
+function joinSqlParts(parts) {
+  return parts.reduce((acc, p, i) => acc + (i === 0 ? '' : (typeof parts[i - 1] === 'object' ? '\n' : '\n\n')) + (typeof p === 'object' ? p.quiet : p), '');
+}
+async function runSql(code, out, status) {
+  out.textContent = ''; status.textContent = t('sqlLoading');
+  let SQL;
+  try { SQL = await loadSqlJs(); } catch (e) { status.textContent = t('sqlFailed'); return; }
+  const started = performance.now(), db = new SQL.Database(), parts = [];
+  try {
+    db.run('PRAGMA foreign_keys = ON');
+    for (const stmt of db.iterateStatements(code)) {
+      const text = stmt.getSQL().trim(), kw = text.replace(/^[(\s]+/, '').split(/[\s;]/)[0].toUpperCase();
+      const shown = ['SELECT', 'WITH', 'UPDATE', 'DELETE', 'EXPLAIN', 'BEGIN', 'COMMIT', 'ROLLBACK'].includes(kw), quiet = ['BEGIN', 'COMMIT', 'ROLLBACK'].includes(kw);
+      const rows = [];
+      while (stmt.step()) rows.push(stmt.get());
+      const cols = stmt.getColumnNames();
+      stmt.free();
+      if (!shown) continue;
+      const lines = text.split('\n');
+      let block = 'sqlite> ' + lines[0] + lines.slice(1).map((l) => '\n   ...> ' + l).join('') + '\n';
+      if (kw === 'EXPLAIN') block += 'QUERY PLAN' + rows.map((r) => '\n`--' + r[r.length - 1]).join('');
+      else if (cols.length) block += rows.length ? sqlTable(cols, rows) : '(no rows)';
+      else if (!quiet) { const n = db.getRowsModified(); block += `(${n} row${n === 1 ? '' : 's'} ${kw === 'UPDATE' ? 'updated' : 'deleted'})`; }
+      parts.push(quiet ? { quiet: block.trimEnd() } : block);
+    }
+    out.textContent = joinSqlParts(parts);
+    status.textContent = t('pgDone', Math.round(performance.now() - started));
+  } catch (e) {
+    out.textContent = joinSqlParts(parts);
+    out.insertAdjacentHTML('beforeend', (parts.length ? '\n\n' : '') + `<span class="err">Error: ${esc(e.message)}</span>`);
+    status.textContent = '';
+  } finally { db.close(); }
+  if (!out.textContent) out.innerHTML = `<span class="info">${t('pgEmpty')}</span>`;
 }
 function runPython(code, out, status) {
   const w = pythonWorker();
@@ -1091,7 +1148,7 @@ document.addEventListener('click', (e) => { if (!e.target.closest('#search') && 
 
 /* ---------- Boot ---------- */
 // Links from the generated SEO pages use ?route=/java&module=id; turn them into hash routes.
-const ROUTE_HASH = { '/home': 'home', '/tracks': 'courses', '/java': 'course-java', '/dsa': 'course-dsa', '/git': 'course-git', '/assembly': 'course-assembly', '/discrete-math': 'course-discrete', '/python': 'course-python', '/command-line': 'course-cli', '/web': 'course-web',
+const ROUTE_HASH = { '/home': 'home', '/tracks': 'courses', '/java': 'course-java', '/dsa': 'course-dsa', '/git': 'course-git', '/assembly': 'course-assembly', '/discrete-math': 'course-discrete', '/python': 'course-python', '/command-line': 'course-cli', '/web': 'course-web', '/sql': 'course-sql',
   '/flashcards': 'practice', '/quizzes': 'practice', '/playground': 'playground', '/notes': 'notes', '/support': 'roadmap', '/about': 'roadmap' };
 function applyLegacyLink() {
   const url = new URL(location.href), q = url.searchParams, mod = q.get('module'), route = q.get('route');
