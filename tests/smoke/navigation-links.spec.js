@@ -44,7 +44,7 @@ test.describe('Navigation', () => {
     test('a beginner lands on the path and starts with Python', async ({ page }) => {
         await mockApi(page);
         await page.goto('/index.html#home');
-        await expect(page.locator('.path .path-step')).toHaveCount(8);
+        await expect(page.locator('.path .path-step')).toHaveCount(9);
         await expect(page.locator('.path-step').first()).toContainText('Python');
         await page.locator('.hero-actions .btn').first().click();
         await expect(page).toHaveURL(/#course-python$/);

@@ -33,6 +33,7 @@ const PLANNED = [
   P('cli', '$_', 'beginner', 'Command Line & Linux', 'Línea de comandos y Linux', 'Move around the file system, use pipes and scripts, manage permissions and processes: the skills every course assumes.', 'Muévete por el sistema de archivos, usa tuberías y scripts, administra permisos y procesos: lo que todo curso da por sabido.'),
   P('sql', 'DB', 'beginner', 'SQL & Databases', 'SQL y bases de datos', 'Store and query data: tables, SELECT and JOIN, keys and relationships, and designing a small database from scratch.', 'Guarda y consulta datos: tablas, SELECT y JOIN, llaves y relaciones, y diseñar una base de datos pequeña desde cero.'),
   P('how-computers-work', '01', 'beginner', 'How Computers Work', 'Cómo funcionan las computadoras', 'Bits and bytes, number systems, memory, the CPU and what happens when a program runs.', 'Bits y bytes, sistemas numéricos, memoria, la CPU y qué pasa cuando se ejecuta un programa.'),
+  P('ai', 'AI', 'beginner', 'AI Fundamentals', 'Fundamentos de inteligencia artificial', 'How AI and machine learning actually work: data, models, training and testing, language models, and using AI tools well and safely.', 'Cómo funcionan realmente la IA y el aprendizaje automático: datos, modelos, entrenamiento y prueba, modelos de lenguaje, y usar herramientas de IA bien y con seguridad.'),
   P('networks', '⇄', 'intermediate', 'Computer Networks', 'Redes de computadoras', 'From packets to the web: IP, TCP and UDP, DNS, HTTP and what happens when you open a website.', 'De los paquetes a la web: IP, TCP y UDP, DNS, HTTP y qué pasa cuando abres un sitio web.'),
   P('os', 'OS', 'intermediate', 'Operating Systems', 'Sistemas operativos', 'Processes and threads, scheduling, memory management, file systems and concurrency.', 'Procesos e hilos, planificación, gestión de memoria, sistemas de archivos y concurrencia.'),
   P('cpp', 'C+', 'intermediate', 'C++', 'C++', 'Pointers, memory, classes and the standard library, for performance-minded programming.', 'Punteros, memoria, clases y la biblioteca estándar, para programar pensando en el rendimiento.'),
@@ -52,6 +53,7 @@ const PATH = [
   S('sql', 'Almost every app stores data. Learn to save it and ask it questions.', 'Casi toda app guarda datos. Aprende a guardarlos y a hacerles preguntas.'),
   S('how-computers-work', 'What is really going on underneath: bits, memory and the CPU.', 'Lo que pasa realmente por debajo: bits, memoria y la CPU.'),
   S('cybersecurity', 'Keep yourself and the things you build safe.', 'Mantén seguros a ti y a lo que construyes.'),
+  S('ai', 'Understand the AI tools you use every day, and build a tiny model yourself.', 'Entiende las herramientas de IA que usas cada día y construye tú mismo un modelo pequeño.'),
   S('discrete', 'The math of computer science: logic, counting and graphs, ready for algorithms.', 'Las matemáticas de la computación: lógica, conteo y grafos, listas para algoritmos.')
 ];
 // After the beginner path: the courses that build on it, in order.
