@@ -4,6 +4,12 @@ All notable changes to **CS Course Atlas** are documented in this file.
 
 ## 2026-11-09
 
+### Data Structures & Algorithms course published
+- 21 modules, each with a full program and one run-verified example per topic (99 topics) in Java and Python with identical recorded output, plus English and Spanish explanations covering complexity, when to use each technique and common mistakes.
+- Dropped the `intro-to-coding` career-advice module (the Python course covers getting started); `java-basics` now builds on `python-first-programs`.
+- Rewrote the DSA module descriptions and fixed their Spanish titles; module pages show "Examples in Java and Python".
+- `scripts/verify_course_examples.js` requires exactly Java and Python on the DSA track.
+
 ### Practice everywhere
 - Auto-graded challenges in every beginner course (120 in total): Python (Pyodide), SQL (sql.js), HTML/CSS (DOM and computed-style checks), JavaScript (worker tests), and command line + Git in a practice terminal.
 - `js/mini-shell.js`: a small Bash-like shell and Git over an in-memory home folder. `scripts/verify_challenges.js` runs every command-line and Git solution in the simulator **and** in real Bash/Git and fails on any difference in files, permissions, output or repository state.
