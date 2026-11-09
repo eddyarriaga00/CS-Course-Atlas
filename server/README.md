@@ -97,6 +97,8 @@ This repo includes a production `render.yaml` for API hosting as `cs-course-atla
 - Sensitive auth/profile/user-state responses are marked `Cache-Control: no-store`.
 - API and auth/support routes have in-memory rate limiting by IP.
 - Login/signup also enforce persistent identity+IP lockout windows via SQL-backed throttling.
+- A second SQL-backed lockout per IP address (40 failed sign-in, sign-up or reset attempts in 15 minutes blocks that address for 30 minutes; `AUTH_IP_*` env vars) survives restarts and stops one address guessing across many accounts.
+- Dependency updates and security fixes arrive as weekly Dependabot pull requests (`.github/dependabot.yml`).
 - Login identifier format/length checks reduce abuse and malformed-auth payload pressure before DB work.
 - Mutating API payloads are inspected for prototype-pollution keys and abusive JSON shapes (depth/key/array/string caps).
 - API request surface limits block oversized headers, overlong request targets, and risky HTTP methods (`TRACE`/`TRACK`/`CONNECT`).

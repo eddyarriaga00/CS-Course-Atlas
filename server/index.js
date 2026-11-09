@@ -42,6 +42,10 @@ const AUTH_MAX_REQUESTS = readPositiveInteger(process.env.AUTH_MAX_REQUESTS, 12)
 const AUTH_IDENTITY_WINDOW_MS = readPositiveInteger(process.env.AUTH_IDENTITY_WINDOW_MS, 15 * 60 * 1000);
 const AUTH_IDENTITY_MAX_FAILURES = readPositiveInteger(process.env.AUTH_IDENTITY_MAX_FAILURES, 8);
 const AUTH_IDENTITY_BLOCK_MS = readPositiveInteger(process.env.AUTH_IDENTITY_BLOCK_MS, 30 * 60 * 1000);
+// Per-address lockout, stored in SQL so it survives restarts: catches one address guessing across many accounts.
+const AUTH_IP_WINDOW_MS = readPositiveInteger(process.env.AUTH_IP_WINDOW_MS, 15 * 60 * 1000);
+const AUTH_IP_MAX_FAILURES = readPositiveInteger(process.env.AUTH_IP_MAX_FAILURES, 40);
+const AUTH_IP_BLOCK_MS = readPositiveInteger(process.env.AUTH_IP_BLOCK_MS, 30 * 60 * 1000);
 const SUPPORT_WINDOW_MS = readPositiveInteger(process.env.SUPPORT_WINDOW_MS, 15 * 60 * 1000);
 const SUPPORT_MAX_REQUESTS = readPositiveInteger(process.env.SUPPORT_MAX_REQUESTS, 20);
 const SUPPORT_MAX_MESSAGE_LENGTH = readPositiveInteger(process.env.SUPPORT_MAX_MESSAGE_LENGTH, 5_000);
@@ -1813,7 +1817,19 @@ function buildAuthThrottleKey(identity, req) {
     return `auth:${identityHash}:${ipHash}`;
 }
 
+// "auth:<identity>:<ip>" -> "authip:<ip>", the address-wide counter that goes with an identity key.
+function ipThrottleKeyFor(throttleKey) {
+    const ipHash = String(throttleKey || '').split(':').pop();
+    return ipHash ? `authip:${ipHash}` : '';
+}
+
 async function assertAuthThrottleAllowed(throttleKey) {
+    if (!throttleKey) return;
+    await assertThrottleKeyAllowed(ipThrottleKeyFor(throttleKey));
+    await assertThrottleKeyAllowed(throttleKey);
+}
+
+async function assertThrottleKeyAllowed(throttleKey) {
     if (!throttleKey) return;
     try {
         const result = await query(
@@ -1858,7 +1874,19 @@ async function assertAuthThrottleAllowed(throttleKey) {
 }
 
 async function recordAuthFailure(throttleKey) {
-    if (!throttleKey) return;
+    if (!throttleKey) return { blocked: false, retryAfterSeconds: 0 };
+    const [ip, identity] = await Promise.all([
+        recordThrottleFailure(ipThrottleKeyFor(throttleKey), AUTH_IP_WINDOW_MS, AUTH_IP_MAX_FAILURES, AUTH_IP_BLOCK_MS),
+        recordThrottleFailure(throttleKey, AUTH_IDENTITY_WINDOW_MS, AUTH_IDENTITY_MAX_FAILURES, AUTH_IDENTITY_BLOCK_MS)
+    ]);
+    return {
+        blocked: ip.blocked || identity.blocked,
+        retryAfterSeconds: Math.max(ip.retryAfterSeconds, identity.retryAfterSeconds)
+    };
+}
+
+async function recordThrottleFailure(throttleKey, windowMs, maxFailures, blockMs) {
+    if (!throttleKey) return { blocked: false, retryAfterSeconds: 0 };
     try {
         const result = await query(
             `
@@ -1891,7 +1919,7 @@ async function recordAuthFailure(throttleKey) {
                 updated_at = NOW()
             RETURNING failure_count, blocked_until
             `,
-            [throttleKey, AUTH_IDENTITY_WINDOW_MS, AUTH_IDENTITY_MAX_FAILURES, AUTH_IDENTITY_BLOCK_MS]
+            [throttleKey, windowMs, maxFailures, blockMs]
         );
         const row = result.rows[0];
         const blockedUntilMs = row?.blocked_until ? new Date(row.blocked_until).getTime() : 0;

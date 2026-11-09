@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<!-- Learner pages render here, inside a sandboxed frame with no access to the site.
+     The site itself runs under a strict Content Security Policy; this page has its own,
+     relaxed one so the HTML, CSS and JavaScript people write runs exactly as typed. -->
+<meta http-equiv="Content-Security-Policy" content="default-src * data: blob: 'unsafe-inline' 'unsafe-eval'">
+<title>Preview</title>
+</head>
+<body>
+<script>
+(function () {
+  var done = false;
+  addEventListener('message', function (e) {
+    if (done || e.source !== parent || !e.data || e.data.type !== 'atlas-preview') return;
+    done = true;
+    document.open(); document.write(String(e.data.html)); document.close();
+  });
+  parent.postMessage({ type: 'atlas-preview-ready' }, '*');
+})();
+</script>
+</body>
+</html>
