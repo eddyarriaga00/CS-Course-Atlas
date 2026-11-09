@@ -223,7 +223,8 @@ details.check p { margin: 8px 0 0; color: var(--text-3); font-size: 13.5px; }
 .option.right { border-color: var(--success); background: var(--success-soft); }
 .option.wrong { border-color: var(--danger); background: var(--danger-soft); }
 .feedback { margin-top: 14px; padding: 14px; border-radius: 10px; background: var(--surface-2); font-size: 14px; color: var(--text-2); }
-.quiz-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px; }
+.quiz-actions { display: flex; justify-content: flex-end; align-items: center; gap: 12px; margin-top: 14px; }
+.quiz-actions .kbd-hint { margin-right: auto; }
 .score { text-align: center; padding: 20px 0 6px; }
 .score b { display: block; font-size: 44px; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
 .flash { perspective: 1200px; height: 240px; }
