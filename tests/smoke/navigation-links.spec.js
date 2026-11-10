@@ -51,13 +51,27 @@ test.describe('Navigation', () => {
         await expect(page.locator('.path-tile').first()).toContainText('Python');
         // The catalog groups every course by subject; picking a subject shows its courses as full cards.
         await expect(page.locator('.cat-group')).toHaveCount(7);
-        const total = await page.locator('.cat-tile').count();
-        await expect(page.locator('[data-action="home-cat"][data-v="all"] .chip-n')).toHaveText(String(total));
-        await page.locator('[data-action="home-cat"][data-v="languages"]').click();
+        const total = Number(await page.locator('.chip[data-action="home-cat"][data-v="all"] .chip-n').textContent());
+        expect(total).toBeGreaterThan(20);
+        await page.locator('.chip[data-action="home-cat"][data-v="languages"]').click();
         await expect(page.locator('.cat-group')).toHaveCount(0);
         await expect(page.locator('#catalog ~ .courses .card').first()).toContainText('Python');
-        await page.locator('[data-action="home-cat"][data-v="all"]').click();
+        await page.locator('.chip[data-action="home-cat"][data-v="all"]').click();
         await expect(page.locator('.cat-group')).toHaveCount(7);
+        // Filters narrow every subject; a combination with no courses offers a way back.
+        await page.locator('[data-action="cat-filter"][data-k="status"][data-v="live"]').click();
+        await expect(page.locator('.cat-tile.soon')).toHaveCount(0);
+        await expect(page.locator('.cat-tile').first()).toBeVisible();
+        await page.locator('[data-action="cat-filter"][data-k="level"][data-v="advanced"]').click();
+        await expect(page.locator('.cat-empty')).toBeVisible();
+        await page.locator('.cat-empty [data-k="clear"]').click();
+        await expect(page.locator('.cat-group')).toHaveCount(7);
+        // Long subjects show a few courses and a link to the rest; the Courses page lists everything.
+        await expect(page.locator('.cat-more').first()).toBeVisible();
+        await page.goto('/index.html#courses');
+        await expect(page.locator('.cat-more')).toHaveCount(0);
+        await expect(page.locator('.cat-tile')).toHaveCount(total);
+        await page.goto('/index.html#home');
         await page.locator('.hero-actions .btn').first().click();
         await expect(page).toHaveURL(/#course-python$/);
         await page.locator('.hero-actions .btn').first().click();

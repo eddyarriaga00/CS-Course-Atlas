@@ -6,7 +6,7 @@ const UI = {
     heroTitle: 'Learn computer science from zero.',
     heroLead: 'Free, step-by-step courses that start at the very beginning. Short lessons, code you can run right in your browser, challenges that check your work, and a video for every topic, in English and Spanish.',
     startPython: 'Start with Python', noExperience: 'No experience needed. Free, no account required.', continueCourse: (c) => `Continue ${c}`,
-    startFrom: 'Where are you starting from?', catalogTitle: 'All courses by subject', catalogLead: 'Every course, grouped by what it teaches. Pick a subject to see its courses in detail.', catAll: 'All subjects', nCourses: (n) => `${n} course${n === 1 ? '' : 's'}`, nSoon: (n) => `${n} coming soon`, catShowAll: 'Show all subjects',
+    startFrom: 'Where are you starting from?', catalogTitle: 'All courses by subject', catalogLead: 'Every course, grouped by what it teaches. Pick a subject to see its courses in detail.', catAll: 'All subjects', nCourses: (n) => `${n} course${n === 1 ? '' : 's'}`, nSoon: (n) => `${n} coming soon`, catShowAll: 'Show all subjects', catMore: (n) => `${n} more`, catAvail: 'Availability', catAny: (n) => `All (${n})`, catLive: (n) => `Available now (${n})`, catSoonN: (n) => `Coming soon (${n})`, catAnyLevel: 'Any level', catEmpty: 'No courses match these filters.', catClear: 'Clear filters',
     s1Title: 'I’m brand new', s1Text: 'Never written a line of code? Start with Python. The first lesson is one line long.', s1Cta: 'Start Python',
     s2Title: 'I know a little code', s2Text: 'Comfortable with variables and loops? Pick up the tools every programmer uses: the command line, Git and building real websites.', s2Cta: 'Open Command Line',
     s3Title: 'I’m taking a CS class', s3Text: 'Study Java, Data Structures & Algorithms and Discrete Math alongside your class: auto-graded Java challenges, a quiz for every module and a video for every topic.', s3Cta: 'Open Java',
@@ -74,7 +74,7 @@ const UI = {
     heroTitle: 'Aprende ciencias de la computación desde cero.',
     heroLead: 'Cursos gratis, paso a paso, que empiezan desde el principio. Lecciones cortas, código que puedes ejecutar en tu navegador, retos que revisan tu trabajo y un video para cada tema, en español e inglés.',
     startPython: 'Empieza con Python', noExperience: 'No necesitas experiencia. Gratis y sin cuenta.', continueCourse: (c) => `Continuar ${c}`,
-    startFrom: '¿Desde dónde empiezas?', catalogTitle: 'Todos los cursos por tema', catalogLead: 'Todos los cursos, agrupados por lo que enseñan. Elige un tema para ver sus cursos en detalle.', catAll: 'Todos los temas', nCourses: (n) => `${n} curso${n === 1 ? '' : 's'}`, nSoon: (n) => `${n} próximamente`, catShowAll: 'Ver todos los temas',
+    startFrom: '¿Desde dónde empiezas?', catalogTitle: 'Todos los cursos por tema', catalogLead: 'Todos los cursos, agrupados por lo que enseñan. Elige un tema para ver sus cursos en detalle.', catAll: 'Todos los temas', nCourses: (n) => `${n} curso${n === 1 ? '' : 's'}`, nSoon: (n) => `${n} próximamente`, catShowAll: 'Ver todos los temas', catMore: (n) => `${n} más`, catAvail: 'Disponibilidad', catAny: (n) => `Todos (${n})`, catLive: (n) => `Disponibles ya (${n})`, catSoonN: (n) => `Próximamente (${n})`, catAnyLevel: 'Cualquier nivel', catEmpty: 'Ningún curso coincide con estos filtros.', catClear: 'Quitar filtros',
     s1Title: 'Soy completamente nuevo', s1Text: '¿Nunca has escrito código? Empieza con Python. La primera lección es de una sola línea.', s1Cta: 'Empezar Python',
     s2Title: 'Sé un poco de código', s2Text: '¿Ya manejas variables y ciclos? Aprende las herramientas que usa todo programador: la línea de comandos, Git y crear sitios web reales.', s2Cta: 'Abrir Línea de comandos',
     s3Title: 'Estoy en una clase de CS', s3Text: 'Estudia Java, Estructuras de datos y algoritmos y Matemáticas discretas junto a tu clase: retos de Java con calificación automática, un cuestionario por módulo y un video por tema.', s3Cta: 'Abrir Java',
@@ -426,7 +426,7 @@ function courseCard(tr, big, step) {
 const voteBtn = (id) => `<button class="vote" data-action="vote" data-id="course-${id}" aria-pressed="${state.votes.has('course-' + id)}">${state.votes.has('course-' + id) ? t('voted') : t('vote')}</button>`;
 function plannedCard(p, step) {
   return `<div class="card planned-card">${step ? `<span class="step-tag">${t('stepN', step)}</span>` : ''}<div class="course-top"><span class="cicon" data-track="${p.id}">${esc(p.icon)}</span><div style="min-width:0"><h3><a class="stretch" href="#course-${p.id}">${esc(L(p.title))}</a></h3><span class="pill lvl-${p.level}">${t('difficulty')[p.level]}</span></div></div><p>${esc(L(p.blurb))}</p>
-    <div class="facts"><span class="pill soon">${t('stepSoon')}</span>${voteBtn(p.id)}</div></div>`;
+    <div class="facts"><span class="pill soon">${t(p.outline && p.outline.length ? 'stepSoon' : 'planned')}</span>${voteBtn(p.id)}</div></div>`;
 }
 // A course id from the path: a track (live or outlined) or a planned course.
 const anyCourse = (id) => track(id) || DATA.planned.find((p) => p.id === id);
@@ -471,11 +471,18 @@ const solvedIndex = (m, i) => { const ch = DATA.full[m]?.challenges?.[i]; return
 // The course catalog on the home page: every course (live, in progress or planned) grouped by subject
 // (DATA.categories, from the build script). "All subjects" shows compact tiles per subject; picking one
 // subject shows its courses as full cards. A new course only needs a category to land in the right place.
-function courseCatalog() {
-  const cats = DATA.categories.map((c) => ({ ...c, list: c.courses.filter(anyCourse) })).filter((c) => c.list.length);
+function courseCatalog(full) {
   const isLiveCourse = (id) => track(id)?.status === 'available';
+  const status = state.catStatus || 'all', level = state.catLevel || 'all';
+  // Availability and level filters apply to every subject; the counts on the buttons follow them.
+  const keep = (id) => (status === 'all' || (status === 'live') === isLiveCourse(id)) && (level === 'all' || anyCourse(id).level === level);
+  const all = DATA.categories.map((c) => ({ ...c, every: c.courses.filter(anyCourse) })).filter((c) => c.every.length);
+  // Live courses first inside each subject, then the ones still on the way.
+  const cats = all.map((c) => { const list = c.every.filter(keep); return { ...c, list: list.filter(isLiveCourse).concat(list.filter((id) => !isLiveCourse(id))) }; });
   const picked = cats.find((c) => c.id === state.homeCat);
+  const everyId = all.flatMap((c) => c.every), shown = cats.reduce((n, c) => n + c.list.length, 0);
   const chip = (id, label, n) => `<button class="chip" data-action="home-cat" data-v="${id}" aria-pressed="${(picked ? picked.id : 'all') === id}">${esc(label)}<span class="chip-n">${n}</span></button>`;
+  const opt = (k, v, label, on) => `<button class="seg-btn" data-action="cat-filter" data-k="${k}" data-v="${v}" aria-pressed="${on}">${esc(label)}</button>`;
   const tile = (id) => {
     const tr = track(id), c = anyCourse(id), live = isLiveCourse(id), s = live ? trackStats(tr) : null, done = s && s.count && s.done === s.count;
     return `<a class="cat-tile${live ? '' : ' soon'}${done ? ' done' : ''}" href="#course-${id}">
@@ -484,16 +491,23 @@ function courseCatalog() {
       <span class="pill lvl-${c.level}">${t('difficulty')[c.level]}</span>
       ${live && s.done && !done ? `<span class="path-tile-bar"><span style="width:${pct(s.done, s.count)}%"></span></span>` : ''}</a>`;
   };
-  const count = (c) => { const soon = c.list.filter((id) => !isLiveCourse(id)).length; return t('nCourses', c.list.length) + (soon ? ' · ' + t('nSoon', soon) : ''); };
-  // Live courses first inside each subject, then the ones still on the way.
-  const sorted = (c) => c.list.filter(isLiveCourse).concat(c.list.filter((id) => !isLiveCourse(id)));
-  const group = (c) => `<section class="cat-group" aria-labelledby="cat-${c.id}"><div class="cat-head"><span class="cicon cat-ico" aria-hidden="true">${esc(c.icon)}</span><h3 id="cat-${c.id}">${esc(L(c.title))}</h3><span class="muted">${count(c)}</span></div>
-    <div class="cat-tiles">${sorted(c).map(tile).join('')}</div></section>`;
-  return `<div class="section-head" id="catalog"><h2>${t('catalogTitle')}</h2><a class="muted" href="#courses">${t('allCourses')} →</a></div>
+  const count = (c) => { const soon = c.list.filter((id) => !isLiveCourse(id)).length; return t('nCourses', c.list.length) + (soon && soon < c.list.length ? ' · ' + t('nSoon', soon) : ''); };
+  // On the home page each subject shows its first few courses; the rest are one click away.
+  const LIMIT = 4;
+  const group = (c) => { const cut = !full && c.list.length > LIMIT + 1 ? LIMIT : c.list.length;
+    return `<section class="cat-group" aria-labelledby="cat-${c.id}"><div class="cat-head"><span class="cicon cat-ico" aria-hidden="true">${esc(c.icon)}</span><h3 id="cat-${c.id}">${esc(L(c.title))}</h3><span class="muted">${count(c)}</span></div>
+    <div class="cat-tiles">${c.list.slice(0, cut).map(tile).join('')}</div>${cut < c.list.length ? `<button class="cat-more" data-action="home-cat" data-v="${c.id}">${t('catMore', c.list.length - cut)} →</button>` : ''}</section>`; };
+  const filtered = status !== 'all' || level !== 'all';
+  const body = !shown || (picked && !picked.list.length) ? `<div class="card cat-empty"><p>${t('catEmpty')}</p><button class="btn btn-sm btn-ghost" data-action="cat-filter" data-k="clear" data-v="all">${t('catClear')}</button></div>`
+    : picked ? `<p class="muted cat-picked">${count(picked)}</p><div class="courses">${picked.list.map((id) => anyCard(id)).join('')}</div>`
+    : `<div class="cat-groups">${cats.filter((c) => c.list.length).map(group).join('')}</div>`;
+  return `<div class="section-head" id="catalog"><h2>${t('catalogTitle')}</h2>${full ? '' : `<a class="muted" href="#courses">${t('allCourses')} →</a>`}</div>
     <p class="muted section-lead">${t('catalogLead')}</p>
-    <div class="chips cat-chips" role="group" aria-label="${t('catalogTitle')}">${chip('all', t('catAll'), cats.reduce((n, c) => n + c.list.length, 0))}${cats.map((c) => chip(c.id, L(c.title), c.list.length)).join('')}</div>
-    ${picked ? `<p class="muted cat-picked">${count(picked)}</p><div class="courses">${sorted(picked).map((id) => anyCard(id)).join('')}</div>`
-      : `<div class="cat-groups">${cats.map(group).join('')}</div>`}`;
+    <div class="cat-filters"><div class="seg" role="group" aria-label="${t('catAvail')}">${opt('status', 'all', t('catAny', everyId.length), status === 'all')}${opt('status', 'live', t('catLive', everyId.filter(isLiveCourse).length), status === 'live')}${opt('status', 'soon', t('catSoonN', everyId.filter((id) => !isLiveCourse(id)).length), status === 'soon')}</div>
+      <div class="seg" role="group" aria-label="${t('levelWord')}">${opt('level', 'all', t('catAnyLevel'), level === 'all')}${['beginner', 'intermediate', 'advanced'].map((lv) => opt('level', lv, t('difficulty')[lv], level === lv)).join('')}</div>
+      ${filtered ? `<button class="link-btn" data-action="cat-filter" data-k="clear" data-v="all">${t('catClear')}</button>` : ''}</div>
+    <div class="chips cat-chips" role="group" aria-label="${t('catalogTitle')}">${chip('all', t('catAll'), shown)}${cats.map((c) => chip(c.id, L(c.title), c.list.length)).join('')}</div>
+    ${body}`;
 }
 function viewHome() {
   const live = liveIds(), started = DATA.tracks.find((tr) => tr.id === currentTrack() && trackStats(tr).done) || liveTracks().find((tr) => trackStats(tr).done);
@@ -520,7 +534,7 @@ function viewHome() {
     <div class="section-head"><h2>${t('pathTitle')}</h2></div>
     <p class="muted section-lead">${t('pathLead')}</p>
     ${pathStepper()}
-    ${courseCatalog()}
+    ${courseCatalog(false)}
     <div class="section-head"><h2>${t('howTitle')}</h2></div>
     <div class="how-grid">${how(1, '¶')}${how(2, '▶')}${how(3, '✓')}${how(4, '◉')}</div>
     </section>`;
@@ -538,12 +552,10 @@ average = <span class="f">sum</span>(scores) / <span class="f">len</span>(scores
     <div class="float-card fc-2"><span class="play-c">▶</span><div><b>${t('watchTopic')}</b><small>CS50P · Harvard</small></div></div></div>`;
 }
 function viewCourses() {
-  const nextIds = DATA.next.concat(DATA.tracks.map((x) => x.id).filter((id) => !DATA.next.includes(id) && !DATA.path.some((st) => st.id === id)));
   return `<section class="wrap"><h1>${t('coursesTitle')}</h1><p class="lead">${t('coursesLead')}</p>
     <div class="section-head"><h2>${t('pathTitle')}</h2><span class="muted">${t('pathLead')}</span></div>
     <div class="courses">${DATA.path.map((st, i) => anyCard(st.id, i + 1)).join('')}</div>
-    <div class="section-head"><h2>${t('nextTitle')}</h2><span class="muted">${t('nextLead')}</span></div>
-    <div class="courses">${nextIds.filter(anyCourse).map((id) => anyCard(id)).join('')}</div></section>`;
+    ${courseCatalog(true)}</section>`;
 }
 function viewPlanned(p) {
   const mods = p.outline || [], topics = mods.reduce((n, m) => n + m.topics.length, 0), step = DATA.path.findIndex((st) => st.id === p.id);
@@ -553,7 +565,7 @@ function viewPlanned(p) {
     <div class="course-hero" style="margin-top:12px"><span class="cicon" data-track="${p.id}">${esc(p.icon)}</span>
       <div style="min-width:0;flex:1"><h1 style="margin-top:0">${esc(L(p.title))}</h1><p class="lead">${esc(L(p.blurb))}</p></div></div>
     <div class="course-stats">${step >= 0 ? `<div><b>${step + 1}</b><span>${t('pathStep')}</span></div>` : ''}${mods.length ? `<div><b>${mods.length}</b><span>${t('modules')}</span></div><div><b>${topics}</b><span>${t('topics')}</span></div>` : ''}<div><b>${t('difficulty')[p.level]}</b><span>${t('levelWord')}</span></div></div>
-    <div class="notice"><span class="pill soon">${t('stepSoon')}</span><p>${t(mods.length ? 'outlineNotice' : 'soonNoticePlanned')}</p>
+    <div class="notice"><span class="pill soon">${t(mods.length ? 'stepSoon' : 'planned')}</span><p>${t(mods.length ? 'outlineNotice' : 'soonNoticePlanned')}</p>
       <button class="btn btn-sm${voted ? ' btn-ghost' : ''}" data-action="vote" data-id="course-${p.id}" aria-pressed="${voted}">${voted ? t('voted') : t('wantThis')}</button></div>
     ${mods.length ? `<div class="section-head"><h2>${t('syllabus')}</h2></div>
     <div class="outline">${mods.map((m, i) => `<div class="card outline-mod"><div class="outline-top"><span class="path-no">${i + 1}</span><div><h3>${esc(L(m.title))}</h3><p>${esc(L(m.description))}</p></div></div>
@@ -2120,7 +2132,7 @@ function render(keepScroll) {
     route = lastRoute && lastRoute !== 'profile' ? lastRoute : 'home';
     history.replaceState(null, '', '#' + route);
   }
-  if (route !== lastRoute) { state.tab = state.pendingTab || 'overview'; state.pendingTab = null; state.exIndex = 0; state.sideCollapsed.clear(); }
+  if (route !== lastRoute) { state.homeCat = 'all'; state.tab = state.pendingTab || 'overview'; state.pendingTab = null; state.exIndex = 0; state.sideCollapsed.clear(); }
   const needTracks = lessonsFor(route);   // also picks the default quiz/flashcard module
   const onePick = route === 'quizzes' ? state.quizModule : route === 'flashcards' ? state.flashModule : null;
   // A single module (its page, or one picked in Quizzes/Flashcards) needs only its own small lesson file.
@@ -2154,7 +2166,8 @@ document.addEventListener('click', (e) => {
   if (el.dataset.codeLang) { state.codeLang = el.dataset.codeLang; state.langsSeen.add(el.dataset.codeLang); store.set('codeLangTouched', true); save(); render(true); return; }
   const a = el.dataset.action;
   if (a === 'reload') { location.reload(); return; }
-  if (a === 'home-cat') { state.homeCat = el.dataset.v; render(true); const again = document.querySelector(`[data-action="home-cat"][data-v="${el.dataset.v}"]`); if (again) again.focus(); return; }
+  if (a === 'cat-filter') { const k = el.dataset.k; if (k === 'clear') { state.catStatus = 'all'; state.catLevel = 'all'; } else state[k === 'status' ? 'catStatus' : 'catLevel'] = el.dataset.v; render(true); const again = document.querySelector(`[data-action="cat-filter"][data-k="${k}"][data-v="${el.dataset.v}"]`); if (again) again.focus(); return; }
+  if (a === 'home-cat') { state.homeCat = el.dataset.v; render(true); const head = document.querySelector('#catalog'); if (el.classList.contains('cat-more') && head) head.scrollIntoView({ block: 'start' }); const again = document.querySelector(`[data-action="home-cat"][data-v="${el.dataset.v}"]`); if (again) again.focus(); return; }
   if (a === 'jump-step') { e.preventDefault(); $('#ch-' + el.dataset.i)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
   if (a === 'cf-resend') { resendConfirm(); return; }
   if (a === 'cf-later') { state.confirmLater = true; updateConfirmBar(); return; }
