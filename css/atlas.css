@@ -1089,3 +1089,14 @@ pre[tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 
   .cat-head .muted { font-size: 12px; }
 }
 @media (prefers-reduced-motion: reduce) { .cat-tile { transition: none; } .cat-tile:hover { transform: none; } }
+
+/* Catalog filters (availability, level), "N more" links and the empty state */
+.cat-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; margin-bottom: 12px; }
+.cat-filters .seg { max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+.cat-filters .seg::-webkit-scrollbar { display: none; }
+.cat-filters .seg button { cursor: pointer; white-space: nowrap; color: var(--text-2); }
+.cat-more { margin-top: 8px; width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px dashed var(--border); background: none; font: 600 13px var(--font-ui); color: var(--accent-text); cursor: pointer; text-align: center; }
+.cat-more:hover { border-color: var(--accent); background: var(--accent-soft); }
+.cat-empty { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 18px; }
+.cat-empty p { margin: 0; color: var(--text-2); }
+#catalog { scroll-margin-top: 76px; }
