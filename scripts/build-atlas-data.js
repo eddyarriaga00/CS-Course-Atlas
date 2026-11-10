@@ -65,7 +65,22 @@ const PATH = [
 ];
 // After the beginner path: the courses that build on it, in order.
 const NEXT = ['java', 'dsa', 'networks', 'os', 'cpp', 'assembly', 'architecture', 'statistics', 'theory'];
+// Subject areas for the course catalog on the home page. Every course (live or planned) belongs to exactly one,
+// so a new course only needs a line here to show up in the right place.
+const CATEGORIES = [
+  { id: 'languages', icon: '{ }', title: { en: 'Programming languages', es: 'Lenguajes de programación' }, courses: ['python', 'java', 'cpp'] },
+  { id: 'tools', icon: '$_', title: { en: 'Developer tools', es: 'Herramientas de desarrollo' }, courses: ['cli', 'git'] },
+  { id: 'web-data', icon: '</>', title: { en: 'Web & data', es: 'Web y datos' }, courses: ['web', 'sql'] },
+  { id: 'algorithms-math', icon: '∑', title: { en: 'Algorithms & math', es: 'Algoritmos y matemáticas' }, courses: ['dsa', 'discrete', 'statistics', 'theory'] },
+  { id: 'systems', icon: '01', title: { en: 'Computer systems', es: 'Sistemas de cómputo' }, courses: ['how-computers-work', 'networks', 'os', 'architecture', 'assembly'] },
+  { id: 'security-ai', icon: '🛡', title: { en: 'Security & AI', es: 'Seguridad e IA' }, courses: ['cybersecurity', 'ai'] }
+];
 const known = new Set([...ORDER, ...PLANNED.map((p) => p.id)]);
+{
+  const placed = CATEGORIES.flatMap((c) => c.courses);
+  for (const id of known) if (placed.filter((x) => x === id).length !== 1) throw new Error(`course ${id} must be in exactly one category (CATEGORIES in build-atlas-data.js)`);
+  for (const id of placed) if (!known.has(id)) throw new Error(`category lists unknown course ${id}`);
+}
 for (const id of [...PATH.map((s) => s.id), ...NEXT]) if (!known.has(id)) throw new Error(`path step ${id} is not a course`);
 
 // A track is "available" (fully written, shown with lessons) when it is listed in publishedTracks.
@@ -139,7 +154,7 @@ for (const t of tracks.filter((x) => x.status === 'available')) for (const id of
 const glossaryJson = JSON.stringify(glossary);
 const glossaryVersion = crypto.createHash('sha1').update(glossaryJson).digest('hex').slice(0, 10);
 const searchVersion = crypto.createHash('sha1').update(searchJson).digest('hex').slice(0, 10);
-const out = { tracks, planned: PLANNED, path: PATH, next: NEXT, modules, videos, harness, webChecks, javaTools, projects, projectsVersion, shellVersion, searchVersion, glossaryVersion };
+const out = { tracks, planned: PLANNED, path: PATH, next: NEXT, categories: CATEGORIES, modules, videos, harness, webChecks, javaTools, projects, projectsVersion, shellVersion, searchVersion, glossaryVersion };
 const file = path.join(ROOT, 'data/atlas-data.json');
 const lessonDir = path.join(ROOT, 'data/lessons');
 const json = JSON.stringify(out);
