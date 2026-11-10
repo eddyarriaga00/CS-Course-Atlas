@@ -6,7 +6,7 @@ const UI = {
     heroTitle: 'Learn computer science from zero.',
     heroLead: 'Free, step-by-step courses that start at the very beginning. Short lessons, code you can run right in your browser, challenges that check your work, and a video for every topic, in English and Spanish.',
     startPython: 'Start with Python', noExperience: 'No experience needed. Free, no account required.', continueCourse: (c) => `Continue ${c}`,
-    startFrom: 'Where are you starting from?',
+    startFrom: 'Where are you starting from?', catalogTitle: 'All courses by subject', catalogLead: 'Every course, grouped by what it teaches. Pick a subject to see its courses in detail.', catAll: 'All subjects', nCourses: (n) => `${n} course${n === 1 ? '' : 's'}`, nSoon: (n) => `${n} coming soon`, catShowAll: 'Show all subjects',
     s1Title: 'I’m brand new', s1Text: 'Never written a line of code? Start with Python. The first lesson is one line long.', s1Cta: 'Start Python',
     s2Title: 'I know a little code', s2Text: 'Comfortable with variables and loops? Pick up the tools every programmer uses: the command line, Git and building real websites.', s2Cta: 'Open Command Line',
     s3Title: 'I’m taking a CS class', s3Text: 'Study Java, Data Structures & Algorithms and Discrete Math alongside your class: auto-graded Java challenges, a quiz for every module and a video for every topic.', s3Cta: 'Open Java',
@@ -74,7 +74,7 @@ const UI = {
     heroTitle: 'Aprende ciencias de la computación desde cero.',
     heroLead: 'Cursos gratis, paso a paso, que empiezan desde el principio. Lecciones cortas, código que puedes ejecutar en tu navegador, retos que revisan tu trabajo y un video para cada tema, en español e inglés.',
     startPython: 'Empieza con Python', noExperience: 'No necesitas experiencia. Gratis y sin cuenta.', continueCourse: (c) => `Continuar ${c}`,
-    startFrom: '¿Desde dónde empiezas?',
+    startFrom: '¿Desde dónde empiezas?', catalogTitle: 'Todos los cursos por tema', catalogLead: 'Todos los cursos, agrupados por lo que enseñan. Elige un tema para ver sus cursos en detalle.', catAll: 'Todos los temas', nCourses: (n) => `${n} curso${n === 1 ? '' : 's'}`, nSoon: (n) => `${n} próximamente`, catShowAll: 'Ver todos los temas',
     s1Title: 'Soy completamente nuevo', s1Text: '¿Nunca has escrito código? Empieza con Python. La primera lección es de una sola línea.', s1Cta: 'Empezar Python',
     s2Title: 'Sé un poco de código', s2Text: '¿Ya manejas variables y ciclos? Aprende las herramientas que usa todo programador: la línea de comandos, Git y crear sitios web reales.', s2Cta: 'Abrir Línea de comandos',
     s3Title: 'Estoy en una clase de CS', s3Text: 'Estudia Java, Estructuras de datos y algoritmos y Matemáticas discretas junto a tu clase: retos de Java con calificación automática, un cuestionario por módulo y un video por tema.', s3Cta: 'Abrir Java',
@@ -468,6 +468,33 @@ function dailyChallengeCard() {
 }
 // Whether challenge number i of module m is solved (keys use the challenge id, which needs the lessons).
 const solvedIndex = (m, i) => { const ch = DATA.full[m]?.challenges?.[i]; return ch ? state.solved.has(chKey(m, ch)) : [...state.solved].filter((k) => k.startsWith(m + '/')).length > i; };
+// The course catalog on the home page: every course (live, in progress or planned) grouped by subject
+// (DATA.categories, from the build script). "All subjects" shows compact tiles per subject; picking one
+// subject shows its courses as full cards. A new course only needs a category to land in the right place.
+function courseCatalog() {
+  const cats = DATA.categories.map((c) => ({ ...c, list: c.courses.filter(anyCourse) })).filter((c) => c.list.length);
+  const isLiveCourse = (id) => track(id)?.status === 'available';
+  const picked = cats.find((c) => c.id === state.homeCat);
+  const chip = (id, label, n) => `<button class="chip" data-action="home-cat" data-v="${id}" aria-pressed="${(picked ? picked.id : 'all') === id}">${esc(label)}<span class="chip-n">${n}</span></button>`;
+  const tile = (id) => {
+    const tr = track(id), c = anyCourse(id), live = isLiveCourse(id), s = live ? trackStats(tr) : null, done = s && s.count && s.done === s.count;
+    return `<a class="cat-tile${live ? '' : ' soon'}${done ? ' done' : ''}" href="#course-${id}">
+      <span class="cicon" data-track="${id}">${esc(c.icon)}</span>
+      <span class="cat-tile-text"><b>${esc(L(c.title))}</b><small>${!live ? t('comingSoon') : done ? '✓ ' + t('stepDone') : s.done ? t('ofModules', s.done, s.count) : `${s.count} ${t('modules')} · ≈ ${s.hours} h`}</small></span>
+      <span class="pill lvl-${c.level}">${t('difficulty')[c.level]}</span>
+      ${live && s.done && !done ? `<span class="path-tile-bar"><span style="width:${pct(s.done, s.count)}%"></span></span>` : ''}</a>`;
+  };
+  const count = (c) => { const soon = c.list.filter((id) => !isLiveCourse(id)).length; return t('nCourses', c.list.length) + (soon ? ' · ' + t('nSoon', soon) : ''); };
+  // Live courses first inside each subject, then the ones still on the way.
+  const sorted = (c) => c.list.filter(isLiveCourse).concat(c.list.filter((id) => !isLiveCourse(id)));
+  const group = (c) => `<section class="cat-group" aria-labelledby="cat-${c.id}"><div class="cat-head"><span class="cicon cat-ico" aria-hidden="true">${esc(c.icon)}</span><h3 id="cat-${c.id}">${esc(L(c.title))}</h3><span class="muted">${count(c)}</span></div>
+    <div class="cat-tiles">${sorted(c).map(tile).join('')}</div></section>`;
+  return `<div class="section-head" id="catalog"><h2>${t('catalogTitle')}</h2><a class="muted" href="#courses">${t('allCourses')} →</a></div>
+    <p class="muted section-lead">${t('catalogLead')}</p>
+    <div class="chips cat-chips" role="group" aria-label="${t('catalogTitle')}">${chip('all', t('catAll'), cats.reduce((n, c) => n + c.list.length, 0))}${cats.map((c) => chip(c.id, L(c.title), c.list.length)).join('')}</div>
+    ${picked ? `<p class="muted cat-picked">${count(picked)}</p><div class="courses">${sorted(picked).map((id) => anyCard(id)).join('')}</div>`
+      : `<div class="cat-groups">${cats.map(group).join('')}</div>`}`;
+}
 function viewHome() {
   const live = liveIds(), started = DATA.tracks.find((tr) => tr.id === currentTrack() && trackStats(tr).done) || liveTracks().find((tr) => trackStats(tr).done);
   const s = started ? trackStats(started) : null, next = started ? nextModule(started.id) : null;
@@ -490,15 +517,12 @@ function viewHome() {
     ${dueCount() ? `<div class="card plan-home due-home"><span class="cicon" style="width:34px;height:34px;font-size:15px">⏰</span><div class="info">${t('dueChip', dueCount())}</div><button class="btn btn-sm" data-action="go-flash" data-id="${DUE}">${t('reviewCards')}</button></div>` : ''}
     ${started ? '' : `<div class="section-head"><h2>${t('startFrom')}</h2></div>
     <div class="start-grid">${startCard(1, '#course-python')}${startCard(2, '#course-cli')}${startCard(3, '#course-java')}</div>`}
-    <div class="section-head"><h2>${t('pathTitle')}</h2><a class="muted" href="#courses">${t('allCourses')} →</a></div>
+    <div class="section-head"><h2>${t('pathTitle')}</h2></div>
     <p class="muted section-lead">${t('pathLead')}</p>
     ${pathStepper()}
+    ${courseCatalog()}
     <div class="section-head"><h2>${t('howTitle')}</h2></div>
     <div class="how-grid">${how(1, '¶')}${how(2, '▶')}${how(3, '✓')}${how(4, '◉')}</div>
-    <div class="section-head"><h2>${t('nextTitle')}</h2><a class="muted" href="#courses">${t('allCourses')} →</a></div>
-    <p class="muted section-lead">${t('nextLead')}</p>
-    <div class="courses">${DATA.next.filter((id) => track(id)).map((id) => courseCard(track(id))).join('')}</div>
-    ${(() => { const upcoming = DATA.next.filter((id) => !track(id) && anyCourse(id)); return upcoming.length ? `<div class="also-planned"><span class="muted">${t('alsoPlanned')}</span>${upcoming.map((id) => `<a class="chip-link" href="#course-${id}"><span class="cicon" data-track="${id}">${esc(anyCourse(id).icon)}</span>${esc(L(anyCourse(id).title))}</a>`).join('')}</div>` : ''; })()}
     </section>`;
 }
 function heroArt() {
@@ -2130,6 +2154,7 @@ document.addEventListener('click', (e) => {
   if (el.dataset.codeLang) { state.codeLang = el.dataset.codeLang; state.langsSeen.add(el.dataset.codeLang); store.set('codeLangTouched', true); save(); render(true); return; }
   const a = el.dataset.action;
   if (a === 'reload') { location.reload(); return; }
+  if (a === 'home-cat') { state.homeCat = el.dataset.v; render(true); const again = document.querySelector(`[data-action="home-cat"][data-v="${el.dataset.v}"]`); if (again) again.focus(); return; }
   if (a === 'jump-step') { e.preventDefault(); $('#ch-' + el.dataset.i)?.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
   if (a === 'cf-resend') { resendConfirm(); return; }
   if (a === 'cf-later') { state.confirmLater = true; updateConfirmBar(); return; }
