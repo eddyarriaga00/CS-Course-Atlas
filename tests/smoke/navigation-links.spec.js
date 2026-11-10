@@ -50,14 +50,14 @@ test.describe('Navigation', () => {
         await expect(page.locator('.path-tile')).toHaveCount(9);
         await expect(page.locator('.path-tile').first()).toContainText('Python');
         // The catalog groups every course by subject; picking a subject shows its courses as full cards.
-        await expect(page.locator('.cat-group')).toHaveCount(6);
+        await expect(page.locator('.cat-group')).toHaveCount(7);
         const total = await page.locator('.cat-tile').count();
         await expect(page.locator('[data-action="home-cat"][data-v="all"] .chip-n')).toHaveText(String(total));
         await page.locator('[data-action="home-cat"][data-v="languages"]').click();
         await expect(page.locator('.cat-group')).toHaveCount(0);
         await expect(page.locator('#catalog ~ .courses .card').first()).toContainText('Python');
         await page.locator('[data-action="home-cat"][data-v="all"]').click();
-        await expect(page.locator('.cat-group')).toHaveCount(6);
+        await expect(page.locator('.cat-group')).toHaveCount(7);
         await page.locator('.hero-actions .btn').first().click();
         await expect(page).toHaveURL(/#course-python$/);
         await page.locator('.hero-actions .btn').first().click();
