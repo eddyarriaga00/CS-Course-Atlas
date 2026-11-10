@@ -9,6 +9,9 @@ const ROOT = path.resolve(__dirname, '..');
 const { modules } = require('./lib/catalog').loadCatalog();
 const harness = fs.readFileSync(path.join(__dirname, 'lib', 'challenge_harness.py'), 'utf8');
 const data = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'challenges.json'), 'utf8'));
+// Guided project steps are challenges too: check them the same way, as pseudo-modules "project:<id>".
+const projectsData = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'projects.json'), 'utf8')).projects || [];
+for (const pr of projectsData) data['project:' + pr.id] = pr.steps;
 const errors = [];
 const webJobs = [];   // html/css challenges, checked in Chromium after the loop
 const vm = require('vm');
@@ -91,7 +94,8 @@ function sqlRows(setup, query) {
 
 for (const [moduleId, list] of Object.entries(data)) {
   if (moduleId.startsWith('_')) continue;
-  if (!modules.some((m) => m.id === moduleId)) { errors.push(`${moduleId}: not a catalog module`); continue; }
+  if (!moduleId.startsWith('project:') && !modules.some((m) => m.id === moduleId)) { errors.push(`${moduleId}: not a catalog module`); continue; }
+  if (moduleId.startsWith('project:') && list.length < 3) errors.push(`${moduleId}: a project needs at least 3 steps`);
   const ids = new Set();
   for (const ch of list) {
     const where = `${moduleId}/${ch.id}`;

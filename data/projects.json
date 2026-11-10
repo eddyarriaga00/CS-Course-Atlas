@@ -1,0 +1,1804 @@
+{
+ "_about": "Guided projects: multi-step builds. Each step is a normal challenge (same format and graders as data/challenges.json). A step's starter usually carries the previous step's solution forward, so the project grows step by step. Checked by scripts/verify_challenges.js.",
+ "projects": [
+  {
+   "id": "py-gradebook",
+   "track": "python",
+   "icon": "📒",
+   "level": "beginner",
+   "minutes": 45,
+   "title": {
+    "en": "Build a grade book",
+    "es": "Construye un libro de calificaciones"
+   },
+   "blurb": {
+    "en": "Store students and scores, compute averages and letter grades, then print a ranked report card. Uses lists, dictionaries, functions and loops.",
+    "es": "Guarda estudiantes y notas, calcula promedios y letras, y luego imprime un boletín ordenado. Usa listas, diccionarios, funciones y ciclos."
+   },
+   "steps": [
+    {
+     "id": "average",
+     "title": {
+      "en": "Average of a list",
+      "es": "Promedio de una lista"
+     },
+     "prompt": {
+      "en": "Start the grade book with `average(scores)`: return the mean of a list of numbers rounded to 1 decimal, or `0.0` for an empty list.",
+      "es": "Empieza el libro con `average(scores)`: devuelve la media de una lista de números redondeada a 1 decimal, o `0.0` si la lista está vacía."
+     },
+     "starter": "def average(scores):\n    pass\n",
+     "solution": "def average(scores):\n    if not scores:\n        return 0.0\n    return round(sum(scores) / len(scores), 1)\n",
+     "hint": {
+      "en": "Check for an empty list first, then `round(sum(scores) / len(scores), 1)`.",
+      "es": "Revisa primero si la lista está vacía y luego `round(sum(scores) / len(scores), 1)`."
+     },
+     "tests": [
+      [
+       "average([90, 80, 70])",
+       "80.0"
+      ],
+      [
+       "average([95, 88])",
+       "91.5"
+      ],
+      [
+       "average([])",
+       "0.0"
+      ],
+      [
+       "average([100])",
+       "100.0"
+      ]
+     ]
+    },
+    {
+     "id": "letter",
+     "title": {
+      "en": "Letter grades",
+      "es": "Letras de calificación"
+     },
+     "prompt": {
+      "en": "Add `letter(avg)`: `A` for 90 or more, `B` for 80 or more, `C` for 70 or more, `D` for 60 or more, otherwise `F`. Keep `average` from step 1.",
+      "es": "Agrega `letter(avg)`: `A` desde 90, `B` desde 80, `C` desde 70, `D` desde 60 y si no `F`. Conserva `average` del paso 1."
+     },
+     "starter": "def average(scores):\n    if not scores:\n        return 0.0\n    return round(sum(scores) / len(scores), 1)\n\n\ndef letter(avg):\n    pass\n",
+     "solution": "def average(scores):\n    if not scores:\n        return 0.0\n    return round(sum(scores) / len(scores), 1)\n\n\ndef letter(avg):\n    if avg >= 90:\n        return \"A\"\n    if avg >= 80:\n        return \"B\"\n    if avg >= 70:\n        return \"C\"\n    if avg >= 60:\n        return \"D\"\n    return \"F\"\n",
+     "hint": {
+      "en": "Check from the highest grade down with `if` and `return`, so the first match wins.",
+      "es": "Revisa de la nota más alta hacia abajo con `if` y `return`, así gana la primera coincidencia."
+     },
+     "tests": [
+      [
+       "letter(95)",
+       "'A'"
+      ],
+      [
+       "letter(90)",
+       "'A'"
+      ],
+      [
+       "letter(89.9)",
+       "'B'"
+      ],
+      [
+       "letter(72.5)",
+       "'C'"
+      ],
+      [
+       "letter(60)",
+       "'D'"
+      ],
+      [
+       "letter(12)",
+       "'F'"
+      ]
+     ]
+    },
+    {
+     "id": "summary",
+     "title": {
+      "en": "Every student's result",
+      "es": "El resultado de cada estudiante"
+     },
+     "prompt": {
+      "en": "Add `summary(book)`, where `book` is a dictionary like `{\"Ana\": [90, 95], \"Ben\": [70, 65]}`. Return a dictionary from each name to a tuple `(average, letter)`.",
+      "es": "Agrega `summary(book)`, donde `book` es un diccionario como `{\"Ana\": [90, 95], \"Ben\": [70, 65]}`. Devuelve un diccionario de cada nombre a una tupla `(promedio, letra)`."
+     },
+     "starter": "def average(scores):\n    if not scores:\n        return 0.0\n    return round(sum(scores) / len(scores), 1)\n\n\ndef letter(avg):\n    if avg >= 90:\n        return \"A\"\n    if avg >= 80:\n        return \"B\"\n    if avg >= 70:\n        return \"C\"\n    if avg >= 60:\n        return \"D\"\n    return \"F\"\n\n\ndef summary(book):\n    result = {}\n    # fill result\n    return result\n",
+     "solution": "def average(scores):\n    if not scores:\n        return 0.0\n    return round(sum(scores) / len(scores), 1)\n\n\ndef letter(avg):\n    if avg >= 90:\n        return \"A\"\n    if avg >= 80:\n        return \"B\"\n    if avg >= 70:\n        return \"C\"\n    if avg >= 60:\n        return \"D\"\n    return \"F\"\n\n\ndef summary(book):\n    result = {}\n    for name, scores in book.items():\n        avg = average(scores)\n        result[name] = (avg, letter(avg))\n    return result\n",
+     "hint": {
+      "en": "Loop with `for name, scores in book.items():` and reuse your two functions.",
+      "es": "Recorre con `for name, scores in book.items():` y reutiliza tus dos funciones."
+     },
+     "tests": [
+      [
+       "summary({'Ana': [90, 95], 'Ben': [70, 65]})",
+       "{'Ana': (92.5, 'A'), 'Ben': (67.5, 'D')}"
+      ],
+      [
+       "summary({})",
+       "{}"
+      ],
+      [
+       "summary({'Cy': []})",
+       "{'Cy': (0.0, 'F')}"
+      ]
+     ]
+    },
+    {
+     "id": "report",
+     "title": {
+      "en": "The report card",
+      "es": "El boletín"
+     },
+     "prompt": {
+      "en": "Finish with `report(book)`: return a list of lines like `\"1. Ana 92.5 A\"`, best average first; break ties by name A→Z.",
+      "es": "Termina con `report(book)`: devuelve una lista de líneas como `\"1. Ana 92.5 A\"`, el mejor promedio primero; en empate, por nombre de la A a la Z."
+     },
+     "starter": "def average(scores):\n    if not scores:\n        return 0.0\n    return round(sum(scores) / len(scores), 1)\n\n\ndef letter(avg):\n    if avg >= 90:\n        return \"A\"\n    if avg >= 80:\n        return \"B\"\n    if avg >= 70:\n        return \"C\"\n    if avg >= 60:\n        return \"D\"\n    return \"F\"\n\n\ndef summary(book):\n    result = {}\n    for name, scores in book.items():\n        avg = average(scores)\n        result[name] = (avg, letter(avg))\n    return result\n\n\ndef report(book):\n    pass\n",
+     "solution": "def average(scores):\n    if not scores:\n        return 0.0\n    return round(sum(scores) / len(scores), 1)\n\n\ndef letter(avg):\n    if avg >= 90:\n        return \"A\"\n    if avg >= 80:\n        return \"B\"\n    if avg >= 70:\n        return \"C\"\n    if avg >= 60:\n        return \"D\"\n    return \"F\"\n\n\ndef summary(book):\n    result = {}\n    for name, scores in book.items():\n        avg = average(scores)\n        result[name] = (avg, letter(avg))\n    return result\n\n\ndef report(book):\n    rows = sorted(summary(book).items(), key=lambda item: (-item[1][0], item[0]))\n    return [f\"{i}. {name} {avg} {grade}\" for i, (name, (avg, grade)) in enumerate(rows, start=1)]\n",
+     "hint": {
+      "en": "`sorted(..., key=lambda item: (-average, name))` sorts high to low, then by name. `enumerate(rows, start=1)` numbers the lines.",
+      "es": "`sorted(..., key=lambda item: (-promedio, nombre))` ordena de mayor a menor y luego por nombre. `enumerate(rows, start=1)` numera las líneas."
+     },
+     "tests": [
+      [
+       "report({'Ana': [90, 95], 'Ben': [70, 65], 'Cy': [88, 92]})",
+       "['1. Ana 92.5 A', '2. Cy 90.0 A', '3. Ben 67.5 D']"
+      ],
+      [
+       "report({'Zoe': [80], 'Al': [80]})",
+       "['1. Al 80.0 B', '2. Zoe 80.0 B']"
+      ],
+      [
+       "report({})",
+       "[]"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "py-text-adventure",
+   "track": "python",
+   "icon": "🗝️",
+   "level": "beginner",
+   "minutes": 50,
+   "title": {
+    "en": "Build a text adventure",
+    "es": "Construye una aventura de texto"
+   },
+   "blurb": {
+    "en": "Rooms stored as dictionaries, commands that move you around, an inventory and a way to win. Uses dictionaries, lists, functions and loops.",
+    "es": "Habitaciones guardadas como diccionarios, comandos para moverte, un inventario y una forma de ganar. Usa diccionarios, listas, funciones y ciclos."
+   },
+   "steps": [
+    {
+     "id": "describe",
+     "title": {
+      "en": "Describe a room",
+      "es": "Describe una habitación"
+     },
+     "prompt": {
+      "en": "The world is the `ROOMS` dictionary: each room has a `desc`, its `exits` (direction → room) and its `items`. Write `describe(room)` that returns the description followed by the exits in A→Z order. Example: `describe(\"hall\")` returns `\"A dusty hall. Exits: east, north.\"`",
+      "es": "El mundo es el diccionario `ROOMS`: cada habitación tiene una `desc`, sus `exits` (dirección → habitación) y sus `items`. Escribe `describe(room)` que devuelva la descripción seguida de las salidas en orden de la A a la Z. Ejemplo: `describe(\"hall\")` devuelve `\"A dusty hall. Exits: east, north.\"`"
+     },
+     "starter": "ROOMS = {\n    \"hall\": {\"desc\": \"A dusty hall.\", \"exits\": {\"north\": \"library\", \"east\": \"kitchen\"}, \"items\": [\"lamp\"]},\n    \"library\": {\"desc\": \"Shelves of old books.\", \"exits\": {\"south\": \"hall\"}, \"items\": [\"key\"]},\n    \"kitchen\": {\"desc\": \"It smells of fresh bread.\", \"exits\": {\"west\": \"hall\", \"down\": \"cellar\"}, \"items\": []},\n    \"cellar\": {\"desc\": \"A locked chest sits in the dark.\", \"exits\": {\"up\": \"kitchen\"}, \"items\": []},\n}\n\ndef describe(room):\n    pass\n",
+     "solution": "ROOMS = {\n    \"hall\": {\"desc\": \"A dusty hall.\", \"exits\": {\"north\": \"library\", \"east\": \"kitchen\"}, \"items\": [\"lamp\"]},\n    \"library\": {\"desc\": \"Shelves of old books.\", \"exits\": {\"south\": \"hall\"}, \"items\": [\"key\"]},\n    \"kitchen\": {\"desc\": \"It smells of fresh bread.\", \"exits\": {\"west\": \"hall\", \"down\": \"cellar\"}, \"items\": []},\n    \"cellar\": {\"desc\": \"A locked chest sits in the dark.\", \"exits\": {\"up\": \"kitchen\"}, \"items\": []},\n}\n\ndef describe(room):\n    info = ROOMS[room]\n    exits = \", \".join(sorted(info[\"exits\"]))\n    return f\"{info['desc']} Exits: {exits}.\"\n",
+     "hint": {
+      "en": "`ROOMS[room]` is the room's dictionary. `sorted(...)` on the `exits` dictionary gives its keys in order, and `\", \".join(...)` glues them together.",
+      "es": "`ROOMS[room]` es el diccionario de la habitación. `sorted(...)` sobre el diccionario `exits` da sus claves en orden, y `\", \".join(...)` las une."
+     },
+     "tests": [
+      [
+       "describe('hall')",
+       "'A dusty hall. Exits: east, north.'"
+      ],
+      [
+       "describe('library')",
+       "'Shelves of old books. Exits: south.'"
+      ],
+      [
+       "describe('kitchen')",
+       "'It smells of fresh bread. Exits: down, west.'"
+      ],
+      [
+       "describe('cellar')",
+       "'A locked chest sits in the dark. Exits: up.'"
+      ]
+     ]
+    },
+    {
+     "id": "move",
+     "title": {
+      "en": "Move between rooms",
+      "es": "Muévete entre habitaciones"
+     },
+     "prompt": {
+      "en": "Add `move(room, direction)` that returns a tuple `(new_room, message)`. If the room has an exit that way, go there and the message is `describe(new_room)`. Otherwise stay put with the message `\"You can't go that way.\"` Example: `move(\"hall\", \"north\")` returns `(\"library\", \"Shelves of old books. Exits: south.\")`.",
+      "es": "Agrega `move(room, direction)` que devuelva una tupla `(new_room, message)`. Si la habitación tiene una salida en esa dirección, ve allí y el mensaje es `describe(new_room)`. Si no, quédate donde estás con el mensaje `\"You can't go that way.\"` Ejemplo: `move(\"hall\", \"north\")` devuelve `(\"library\", \"Shelves of old books. Exits: south.\")`."
+     },
+     "starter": "ROOMS = {\n    \"hall\": {\"desc\": \"A dusty hall.\", \"exits\": {\"north\": \"library\", \"east\": \"kitchen\"}, \"items\": [\"lamp\"]},\n    \"library\": {\"desc\": \"Shelves of old books.\", \"exits\": {\"south\": \"hall\"}, \"items\": [\"key\"]},\n    \"kitchen\": {\"desc\": \"It smells of fresh bread.\", \"exits\": {\"west\": \"hall\", \"down\": \"cellar\"}, \"items\": []},\n    \"cellar\": {\"desc\": \"A locked chest sits in the dark.\", \"exits\": {\"up\": \"kitchen\"}, \"items\": []},\n}\n\ndef describe(room):\n    info = ROOMS[room]\n    exits = \", \".join(sorted(info[\"exits\"]))\n    return f\"{info['desc']} Exits: {exits}.\"\n\ndef move(room, direction):\n    pass\n",
+     "solution": "ROOMS = {\n    \"hall\": {\"desc\": \"A dusty hall.\", \"exits\": {\"north\": \"library\", \"east\": \"kitchen\"}, \"items\": [\"lamp\"]},\n    \"library\": {\"desc\": \"Shelves of old books.\", \"exits\": {\"south\": \"hall\"}, \"items\": [\"key\"]},\n    \"kitchen\": {\"desc\": \"It smells of fresh bread.\", \"exits\": {\"west\": \"hall\", \"down\": \"cellar\"}, \"items\": []},\n    \"cellar\": {\"desc\": \"A locked chest sits in the dark.\", \"exits\": {\"up\": \"kitchen\"}, \"items\": []},\n}\n\ndef describe(room):\n    info = ROOMS[room]\n    exits = \", \".join(sorted(info[\"exits\"]))\n    return f\"{info['desc']} Exits: {exits}.\"\n\ndef move(room, direction):\n    exits = ROOMS[room][\"exits\"]\n    if direction not in exits:\n        return room, \"You can't go that way.\"\n    new_room = exits[direction]\n    return new_room, describe(new_room)\n",
+     "hint": {
+      "en": "Look the direction up in `ROOMS[room][\"exits\"]` with `in` (or `.get`). Return early when it is missing.",
+      "es": "Busca la dirección en `ROOMS[room][\"exits\"]` con `in` (o `.get`). Devuelve antes cuando no está."
+     },
+     "tests": [
+      [
+       "move('hall', 'north')",
+       "('library', 'Shelves of old books. Exits: south.')"
+      ],
+      [
+       "move('kitchen', 'down')",
+       "('cellar', 'A locked chest sits in the dark. Exits: up.')"
+      ],
+      [
+       "move('hall', 'west')",
+       "('hall', \"You can't go that way.\")"
+      ],
+      [
+       "move('cellar', 'up')",
+       "('kitchen', 'It smells of fresh bread. Exits: down, west.')"
+      ],
+      [
+       "move('library', 'up')",
+       "('library', \"You can't go that way.\")"
+      ]
+     ]
+    },
+    {
+     "id": "take",
+     "title": {
+      "en": "Pick things up",
+      "es": "Recoge objetos"
+     },
+     "prompt": {
+      "en": "Add an inventory. Write `take(room, inventory, item)` that returns `(new_inventory, message)`. If the item is in the room and not already carried, return a **new** list with the item added and `\"You take the ITEM.\"`. Otherwise return the inventory unchanged and `\"There is no ITEM here.\"`. Do not change `ROOMS` or the list you were given. Example: `take(\"hall\", [], \"lamp\")` returns `([\"lamp\"], \"You take the lamp.\")`.",
+      "es": "Agrega un inventario. Escribe `take(room, inventory, item)` que devuelva `(new_inventory, message)`. Si el objeto está en la habitación y aún no lo llevas, devuelve una lista **nueva** con el objeto agregado y `\"You take the ITEM.\"`. Si no, devuelve el inventario sin cambios y `\"There is no ITEM here.\"`. No cambies `ROOMS` ni la lista que recibes. Ejemplo: `take(\"hall\", [], \"lamp\")` devuelve `([\"lamp\"], \"You take the lamp.\")`."
+     },
+     "starter": "ROOMS = {\n    \"hall\": {\"desc\": \"A dusty hall.\", \"exits\": {\"north\": \"library\", \"east\": \"kitchen\"}, \"items\": [\"lamp\"]},\n    \"library\": {\"desc\": \"Shelves of old books.\", \"exits\": {\"south\": \"hall\"}, \"items\": [\"key\"]},\n    \"kitchen\": {\"desc\": \"It smells of fresh bread.\", \"exits\": {\"west\": \"hall\", \"down\": \"cellar\"}, \"items\": []},\n    \"cellar\": {\"desc\": \"A locked chest sits in the dark.\", \"exits\": {\"up\": \"kitchen\"}, \"items\": []},\n}\n\ndef describe(room):\n    info = ROOMS[room]\n    exits = \", \".join(sorted(info[\"exits\"]))\n    return f\"{info['desc']} Exits: {exits}.\"\n\ndef move(room, direction):\n    exits = ROOMS[room][\"exits\"]\n    if direction not in exits:\n        return room, \"You can't go that way.\"\n    new_room = exits[direction]\n    return new_room, describe(new_room)\n\ndef take(room, inventory, item):\n    pass\n",
+     "solution": "ROOMS = {\n    \"hall\": {\"desc\": \"A dusty hall.\", \"exits\": {\"north\": \"library\", \"east\": \"kitchen\"}, \"items\": [\"lamp\"]},\n    \"library\": {\"desc\": \"Shelves of old books.\", \"exits\": {\"south\": \"hall\"}, \"items\": [\"key\"]},\n    \"kitchen\": {\"desc\": \"It smells of fresh bread.\", \"exits\": {\"west\": \"hall\", \"down\": \"cellar\"}, \"items\": []},\n    \"cellar\": {\"desc\": \"A locked chest sits in the dark.\", \"exits\": {\"up\": \"kitchen\"}, \"items\": []},\n}\n\ndef describe(room):\n    info = ROOMS[room]\n    exits = \", \".join(sorted(info[\"exits\"]))\n    return f\"{info['desc']} Exits: {exits}.\"\n\ndef move(room, direction):\n    exits = ROOMS[room][\"exits\"]\n    if direction not in exits:\n        return room, \"You can't go that way.\"\n    new_room = exits[direction]\n    return new_room, describe(new_room)\n\ndef take(room, inventory, item):\n    if item in ROOMS[room][\"items\"] and item not in inventory:\n        return inventory + [item], f\"You take the {item}.\"\n    return inventory, f\"There is no {item} here.\"\n",
+     "hint": {
+      "en": "Check two things with `and`: the item is in `ROOMS[room][\"items\"]` and it is `not in inventory`. `inventory + [item]` builds a new list without touching the old one.",
+      "es": "Revisa dos cosas con `and`: el objeto está en `ROOMS[room][\"items\"]` y `not in inventory`. `inventory + [item]` crea una lista nueva sin tocar la anterior."
+     },
+     "tests": [
+      [
+       "take('hall', [], 'lamp')",
+       "(['lamp'], 'You take the lamp.')"
+      ],
+      [
+       "take('library', ['lamp'], 'key')",
+       "(['lamp', 'key'], 'You take the key.')"
+      ],
+      [
+       "take('hall', ['lamp'], 'lamp')",
+       "(['lamp'], 'There is no lamp here.')"
+      ],
+      [
+       "take('kitchen', [], 'key')",
+       "([], 'There is no key here.')"
+      ],
+      [
+       "take('hall', [], 'sword')",
+       "([], 'There is no sword here.')"
+      ],
+      [
+       "(lambda inv: (take('hall', inv, 'lamp'), inv))([])",
+       "((['lamp'], 'You take the lamp.'), [])"
+      ]
+     ]
+    },
+    {
+     "id": "play",
+     "title": {
+      "en": "Play to win",
+      "es": "Juega para ganar"
+     },
+     "prompt": {
+      "en": "Finish with `play(commands)`. Start in `\"hall\"` with an empty inventory and the message `describe(\"hall\")`. Run each command in order: `\"go DIRECTION\"` uses `move`, `\"take ITEM\"` uses `take`, anything else gives `\"I don't understand.\"`. As soon as you are in the `\"cellar\"` holding the `\"key\"`, stop and return `\"You open the chest with the key. You win!\"`. Otherwise return the last message. Example: `play([\"go west\"])` returns `\"You can't go that way.\"`",
+      "es": "Termina con `play(commands)`. Empieza en `\"hall\"` con el inventario vacío y el mensaje `describe(\"hall\")`. Ejecuta cada comando en orden: `\"go DIRECCIÓN\"` usa `move`, `\"take OBJETO\"` usa `take` y cualquier otra cosa da `\"I don't understand.\"`. En cuanto estés en el `\"cellar\"` con la `\"key\"`, detente y devuelve `\"You open the chest with the key. You win!\"`. Si no, devuelve el último mensaje. Ejemplo: `play([\"go west\"])` devuelve `\"You can't go that way.\"`"
+     },
+     "starter": "ROOMS = {\n    \"hall\": {\"desc\": \"A dusty hall.\", \"exits\": {\"north\": \"library\", \"east\": \"kitchen\"}, \"items\": [\"lamp\"]},\n    \"library\": {\"desc\": \"Shelves of old books.\", \"exits\": {\"south\": \"hall\"}, \"items\": [\"key\"]},\n    \"kitchen\": {\"desc\": \"It smells of fresh bread.\", \"exits\": {\"west\": \"hall\", \"down\": \"cellar\"}, \"items\": []},\n    \"cellar\": {\"desc\": \"A locked chest sits in the dark.\", \"exits\": {\"up\": \"kitchen\"}, \"items\": []},\n}\n\ndef describe(room):\n    info = ROOMS[room]\n    exits = \", \".join(sorted(info[\"exits\"]))\n    return f\"{info['desc']} Exits: {exits}.\"\n\ndef move(room, direction):\n    exits = ROOMS[room][\"exits\"]\n    if direction not in exits:\n        return room, \"You can't go that way.\"\n    new_room = exits[direction]\n    return new_room, describe(new_room)\n\ndef take(room, inventory, item):\n    if item in ROOMS[room][\"items\"] and item not in inventory:\n        return inventory + [item], f\"You take the {item}.\"\n    return inventory, f\"There is no {item} here.\"\n\ndef play(commands):\n    room = \"hall\"\n    inventory = []\n    message = describe(room)\n    # run each command here\n    return message\n",
+     "solution": "ROOMS = {\n    \"hall\": {\"desc\": \"A dusty hall.\", \"exits\": {\"north\": \"library\", \"east\": \"kitchen\"}, \"items\": [\"lamp\"]},\n    \"library\": {\"desc\": \"Shelves of old books.\", \"exits\": {\"south\": \"hall\"}, \"items\": [\"key\"]},\n    \"kitchen\": {\"desc\": \"It smells of fresh bread.\", \"exits\": {\"west\": \"hall\", \"down\": \"cellar\"}, \"items\": []},\n    \"cellar\": {\"desc\": \"A locked chest sits in the dark.\", \"exits\": {\"up\": \"kitchen\"}, \"items\": []},\n}\n\ndef describe(room):\n    info = ROOMS[room]\n    exits = \", \".join(sorted(info[\"exits\"]))\n    return f\"{info['desc']} Exits: {exits}.\"\n\ndef move(room, direction):\n    exits = ROOMS[room][\"exits\"]\n    if direction not in exits:\n        return room, \"You can't go that way.\"\n    new_room = exits[direction]\n    return new_room, describe(new_room)\n\ndef take(room, inventory, item):\n    if item in ROOMS[room][\"items\"] and item not in inventory:\n        return inventory + [item], f\"You take the {item}.\"\n    return inventory, f\"There is no {item} here.\"\n\ndef play(commands):\n    room = \"hall\"\n    inventory = []\n    message = describe(room)\n    for command in commands:\n        parts = command.split(\" \", 1)\n        if len(parts) == 2 and parts[0] == \"go\":\n            room, message = move(room, parts[1])\n        elif len(parts) == 2 and parts[0] == \"take\":\n            inventory, message = take(room, inventory, parts[1])\n        else:\n            message = \"I don't understand.\"\n        if room == \"cellar\" and \"key\" in inventory:\n            return \"You open the chest with the key. You win!\"\n    return message\n",
+     "hint": {
+      "en": "Keep `room`, `inventory` and `message` in variables and update them in a `for` loop. `command.split(\" \", 1)` separates the verb from the rest; check the win right after each command.",
+      "es": "Guarda `room`, `inventory` y `message` en variables y actualízalas en un ciclo `for`. `command.split(\" \", 1)` separa el verbo del resto; revisa si ganaste justo después de cada comando."
+     },
+     "tests": [
+      [
+       "play(['go north', 'take key', 'go south', 'go east', 'go down'])",
+       "'You open the chest with the key. You win!'"
+      ],
+      [
+       "play(['go east', 'go down'])",
+       "'A locked chest sits in the dark. Exits: up.'"
+      ],
+      [
+       "play(['go west'])",
+       "\"You can't go that way.\""
+      ],
+      [
+       "play(['dance'])",
+       "\"I don't understand.\""
+      ],
+      [
+       "play([])",
+       "'A dusty hall. Exits: east, north.'"
+      ],
+      [
+       "play(['take lamp', 'take lamp'])",
+       "'There is no lamp here.'"
+      ],
+      [
+       "play(['go north', 'take key', 'go south', 'go east', 'go down', 'go up'])",
+       "'You open the chest with the key. You win!'"
+      ],
+      [
+       "play(['go'])",
+       "\"I don't understand.\""
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cli-tidy-folder",
+   "track": "cli",
+   "icon": "🧹",
+   "level": "beginner",
+   "minutes": 35,
+   "title": {
+    "en": "Tidy a messy project folder",
+    "es": "Ordena una carpeta de proyecto desordenada"
+   },
+   "blurb": {
+    "en": "A project folder with everything dumped in one place. Make a clean structure, sort files by type with globs, find every TODO with grep and write a summary report, all from the terminal.",
+    "es": "Una carpeta de proyecto con todo tirado en un solo lugar. Crea una estructura limpia, ordena los archivos por tipo con comodines, encuentra cada TODO con grep y escribe un informe, todo desde la terminal."
+   },
+   "steps": [
+    {
+     "id": "structure",
+     "lang": "bash",
+     "title": {
+      "en": "Make the folders",
+      "es": "Crea las carpetas"
+     },
+     "prompt": {
+      "en": "Everything in `project` is mixed together (try `ls project`). Create three folders inside it, `src`, `docs` and `assets`, and delete the leftover `.tmp` files with one `rm` and a glob.",
+      "es": "Todo en `project` está mezclado (prueba `ls project`). Crea tres carpetas dentro, `src`, `docs` y `assets`, y borra los archivos `.tmp` sobrantes con un solo `rm` y un comodín."
+     },
+     "setup": "mkdir project\nprintf '%s\\n' 'print(\"Hello\")' '# TODO: add a menu' 'score = 0' '# TODO: save the score' > project/app.py\nprintf '%s\\n' 'def add(a, b):' '    return a + b' '# TODO: handle text input' > project/utils.py\nprintf '%s\\n' '# My game' 'A tiny game in Python.' > project/README.md\nprintf '%s\\n' 'Ideas for later' 'TODO: ask Ana for art' > project/notes.txt\nprintf '%s\\n' 'body { margin: 0; }' > project/style.css\ntouch project/logo.png project/photo.png project/old.tmp project/copy.tmp\n",
+     "starter": "# Type one command per line, then press Run.\n",
+     "solution": "mkdir project/src project/docs project/assets\nrm project/*.tmp\n",
+     "hint": {
+      "en": "`mkdir` takes several paths at once: `mkdir project/src project/docs project/assets`. `rm project/*.tmp` removes every file ending in `.tmp`.",
+      "es": "`mkdir` acepta varias rutas a la vez: `mkdir project/src project/docs project/assets`. `rm project/*.tmp` borra todos los archivos que terminan en `.tmp`."
+     },
+     "output": false
+    },
+    {
+     "id": "sort",
+     "lang": "bash",
+     "title": {
+      "en": "Sort files by type",
+      "es": "Ordena por tipo"
+     },
+     "prompt": {
+      "en": "Keep your commands from step 1 and add more. Move the Python files (`.py`) to `src`, the `.md` and `.txt` files to `docs`, and the `.png` and `.css` files to `assets`. Use globs, not one command per file.",
+      "es": "Conserva tus comandos del paso 1 y agrega más. Mueve los archivos de Python (`.py`) a `src`, los `.md` y `.txt` a `docs`, y los `.png` y `.css` a `assets`. Usa comodines, no un comando por archivo."
+     },
+     "setup": "mkdir project\nprintf '%s\\n' 'print(\"Hello\")' '# TODO: add a menu' 'score = 0' '# TODO: save the score' > project/app.py\nprintf '%s\\n' 'def add(a, b):' '    return a + b' '# TODO: handle text input' > project/utils.py\nprintf '%s\\n' '# My game' 'A tiny game in Python.' > project/README.md\nprintf '%s\\n' 'Ideas for later' 'TODO: ask Ana for art' > project/notes.txt\nprintf '%s\\n' 'body { margin: 0; }' > project/style.css\ntouch project/logo.png project/photo.png project/old.tmp project/copy.tmp\n",
+     "starter": "mkdir project/src project/docs project/assets\nrm project/*.tmp\n# now move the files into src, docs and assets\n",
+     "solution": "mkdir project/src project/docs project/assets\nrm project/*.tmp\nmv project/*.py project/src/\nmv project/*.md project/*.txt project/docs/\nmv project/*.png project/*.css project/assets/\n",
+     "hint": {
+      "en": "`mv` moves many files when the last argument is a folder: `mv project/*.md project/*.txt project/docs/`.",
+      "es": "`mv` mueve muchos archivos si el último argumento es una carpeta: `mv project/*.md project/*.txt project/docs/`."
+     },
+     "output": false
+    },
+    {
+     "id": "todos",
+     "lang": "bash",
+     "title": {
+      "en": "Find the TODOs",
+      "es": "Encuentra los TODO"
+     },
+     "prompt": {
+      "en": "Now find the unfinished work in the code. Save every line containing `TODO` in the `.py` files, with its file name and line number, to `project/docs/todo.txt`. Then print how many TODO lines each `.py` file has, like `project/src/app.py:2`.",
+      "es": "Ahora encuentra el trabajo pendiente en el código. Guarda cada línea que contenga `TODO` en los archivos `.py`, con su nombre de archivo y número de línea, en `project/docs/todo.txt`. Luego imprime cuántas líneas TODO tiene cada archivo `.py`, como `project/src/app.py:2`."
+     },
+     "setup": "mkdir project\nprintf '%s\\n' 'print(\"Hello\")' '# TODO: add a menu' 'score = 0' '# TODO: save the score' > project/app.py\nprintf '%s\\n' 'def add(a, b):' '    return a + b' '# TODO: handle text input' > project/utils.py\nprintf '%s\\n' '# My game' 'A tiny game in Python.' > project/README.md\nprintf '%s\\n' 'Ideas for later' 'TODO: ask Ana for art' > project/notes.txt\nprintf '%s\\n' 'body { margin: 0; }' > project/style.css\ntouch project/logo.png project/photo.png project/old.tmp project/copy.tmp\n",
+     "starter": "mkdir project/src project/docs project/assets\nrm project/*.tmp\nmv project/*.py project/src/\nmv project/*.md project/*.txt project/docs/\nmv project/*.png project/*.css project/assets/\n# now find the TODOs\n",
+     "solution": "mkdir project/src project/docs project/assets\nrm project/*.tmp\nmv project/*.py project/src/\nmv project/*.md project/*.txt project/docs/\nmv project/*.png project/*.css project/assets/\ngrep -n TODO project/src/*.py > project/docs/todo.txt\ngrep -c TODO project/src/*.py\n",
+     "hint": {
+      "en": "`grep -n TODO project/src/*.py > project/docs/todo.txt` adds line numbers (with several files, grep also adds the file name). `grep -c TODO project/src/*.py` counts the matching lines per file.",
+      "es": "`grep -n TODO project/src/*.py > project/docs/todo.txt` agrega los números de línea (con varios archivos, grep también agrega el nombre del archivo). `grep -c TODO project/src/*.py` cuenta las líneas que coinciden por archivo."
+     },
+     "output": true
+    },
+    {
+     "id": "report",
+     "lang": "bash",
+     "title": {
+      "en": "Write a report",
+      "es": "Escribe un informe"
+     },
+     "prompt": {
+      "en": "Finish with `project/report.txt`, exactly two lines: `Code files: N` (how many files are in `src`) and `TODO lines: N` (the total TODO lines in all `.py` files). Build it with `printf` and `>>`, then print it with `cat`. Your script still prints the counts from step 3 first.",
+      "es": "Termina con `project/report.txt`, exactamente dos líneas: `Code files: N` (cuántos archivos hay en `src`) y `TODO lines: N` (el total de líneas TODO en todos los `.py`). Créalo con `printf` y `>>` y luego muéstralo con `cat`. Tu script sigue imprimiendo primero los conteos del paso 3."
+     },
+     "setup": "mkdir project\nprintf '%s\\n' 'print(\"Hello\")' '# TODO: add a menu' 'score = 0' '# TODO: save the score' > project/app.py\nprintf '%s\\n' 'def add(a, b):' '    return a + b' '# TODO: handle text input' > project/utils.py\nprintf '%s\\n' '# My game' 'A tiny game in Python.' > project/README.md\nprintf '%s\\n' 'Ideas for later' 'TODO: ask Ana for art' > project/notes.txt\nprintf '%s\\n' 'body { margin: 0; }' > project/style.css\ntouch project/logo.png project/photo.png project/old.tmp project/copy.tmp\n",
+     "starter": "mkdir project/src project/docs project/assets\nrm project/*.tmp\nmv project/*.py project/src/\nmv project/*.md project/*.txt project/docs/\nmv project/*.png project/*.css project/assets/\ngrep -n TODO project/src/*.py > project/docs/todo.txt\ngrep -c TODO project/src/*.py\n# now write project/report.txt and print it\n",
+     "solution": "mkdir project/src project/docs project/assets\nrm project/*.tmp\nmv project/*.py project/src/\nmv project/*.md project/*.txt project/docs/\nmv project/*.png project/*.css project/assets/\ngrep -n TODO project/src/*.py > project/docs/todo.txt\ngrep -c TODO project/src/*.py\nprintf 'Code files: ' > project/report.txt\nls project/src | grep -c . >> project/report.txt\nprintf 'TODO lines: ' >> project/report.txt\ncat project/src/*.py | grep -c TODO >> project/report.txt\ncat project/report.txt\n",
+     "hint": {
+      "en": "`printf 'Code files: '` writes text with no newline, and a count can follow it on the same line: `ls project/src | grep -c . >> project/report.txt`. For the total, join the files first: `cat project/src/*.py | grep -c TODO`.",
+      "es": "`printf 'Code files: '` escribe texto sin salto de línea, y un conteo puede seguir en la misma línea: `ls project/src | grep -c . >> project/report.txt`. Para el total, junta primero los archivos: `cat project/src/*.py | grep -c TODO`."
+     },
+     "output": true
+    }
+   ]
+  },
+  {
+   "id": "web-homepage",
+   "track": "web",
+   "icon": "🏠",
+   "level": "beginner",
+   "minutes": 50,
+   "title": {
+    "en": "Build a personal homepage",
+    "es": "Construye tu página personal"
+   },
+   "blurb": {
+    "en": "A real one-page site: a semantic layout, a grid of project cards, rules that adapt to phones and an accessible contact form.",
+    "es": "Un sitio de una página de verdad: una estructura semántica, una cuadrícula de tarjetas de proyectos, reglas que se adaptan a los teléfonos y un formulario de contacto accesible."
+   },
+   "steps": [
+    {
+     "id": "structure",
+     "lang": "html",
+     "title": {
+      "en": "Page structure",
+      "es": "La estructura"
+     },
+     "prompt": {
+      "en": "Lay out the page with semantic elements. Inside `<body>` put a `<header>` with exactly one `<h1>` (your name) and a `<nav>` with a list of at least 3 links (`<a href=\"#about\">` and so on), then a `<main>` with a `<section>` that has an `<h2>` and a paragraph, and finally a `<footer>`.",
+      "es": "Arma la página con elementos semánticos. Dentro de `<body>` pon un `<header>` con exactamente un `<h1>` (tu nombre) y un `<nav>` con una lista de al menos 3 enlaces (`<a href=\"#about\">`, etc.), luego un `<main>` con una `<section>` que tenga un `<h2>` y un párrafo y, al final, un `<footer>`."
+     },
+     "starter": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>Ana Ruiz</title>\n</head>\n<body>\n  <!-- header (with h1 and nav), main and footer go here -->\n</body>\n</html>\n",
+     "solution": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>Ana Ruiz</title>\n</head>\n<body>\n  <header>\n    <h1>Ana Ruiz</h1>\n    <nav>\n      <ul>\n        <li><a href=\"#about\">About</a></li>\n        <li><a href=\"#projects\">Projects</a></li>\n        <li><a href=\"#contact\">Contact</a></li>\n      </ul>\n    </nav>\n  </header>\n  <main>\n    <section id=\"about\">\n      <h2>About me</h2>\n      <p>I am learning to build websites, one page at a time.</p>\n    </section>\n  </main>\n  <footer>\n    <p>© 2026 Ana Ruiz</p>\n  </footer>\n</body>\n</html>\n",
+     "hint": {
+      "en": "Semantic tags tell browsers and screen readers what each part is. Nest them: `<header><h1>…</h1><nav><ul><li><a href=\"#about\">About</a></li>…</ul></nav></header>`.",
+      "es": "Las etiquetas semánticas les dicen al navegador y a los lectores de pantalla qué es cada parte. Anídalas: `<header><h1>…</h1><nav><ul><li><a href=\"#about\">About</a></li>…</ul></nav></header>`."
+     },
+     "checks": [
+      {
+       "sel": "header h1",
+       "count": 1,
+       "label": {
+        "en": "exactly one <h1> inside <header>",
+        "es": "exactamente un <h1> dentro de <header>"
+       }
+      },
+      {
+       "sel": "header nav a",
+       "min": 3,
+       "attr": "href",
+       "label": {
+        "en": "3 or more links in <nav>, each with an href",
+        "es": "3 o más enlaces en <nav>, cada uno con href"
+       }
+      },
+      {
+       "sel": "main section h2",
+       "min": 1,
+       "label": {
+        "en": "a <section> with an <h2> inside <main>",
+        "es": "una <section> con un <h2> dentro de <main>"
+       }
+      },
+      {
+       "sel": "main section p",
+       "min": 1,
+       "label": {
+        "en": "a paragraph in that section",
+        "es": "un párrafo en esa sección"
+       }
+      },
+      {
+       "sel": "body > footer",
+       "count": 1,
+       "label": {
+        "en": "a <footer> at the end of the page",
+        "es": "un <footer> al final de la página"
+       }
+      }
+     ]
+    },
+    {
+     "id": "cards",
+     "lang": "css",
+     "title": {
+      "en": "A grid of cards",
+      "es": "Una cuadrícula de tarjetas"
+     },
+     "prompt": {
+      "en": "Add a `<section id=\"projects\">` to `<main>` with an `<h2>` and a `<div class=\"grid\">` holding at least 3 `<article class=\"card\">`, each with an `<h3>` and a `<p>`. In the `<style>` block make `.grid` a grid with a `gap` of 16px, and give `.card` a `padding` of 16px, a `1px solid` border and a `border-radius` of 8px.",
+      "es": "Agrega a `<main>` una `<section id=\"projects\">` con un `<h2>` y un `<div class=\"grid\">` que contenga al menos 3 `<article class=\"card\">`, cada uno con un `<h3>` y un `<p>`. En el bloque `<style>` haz que `.grid` sea una cuadrícula con un `gap` de 16px y dale a `.card` un `padding` de 16px, un borde `1px solid` y un `border-radius` de 8px."
+     },
+     "starter": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>Ana Ruiz</title>\n  <style>\n    /* style .grid and .card here */\n  </style>\n</head>\n<body>\n  <header>\n    <h1>Ana Ruiz</h1>\n    <nav>\n      <ul>\n        <li><a href=\"#about\">About</a></li>\n        <li><a href=\"#projects\">Projects</a></li>\n        <li><a href=\"#contact\">Contact</a></li>\n      </ul>\n    </nav>\n  </header>\n  <main>\n    <section id=\"about\">\n      <h2>About me</h2>\n      <p>I am learning to build websites, one page at a time.</p>\n    </section>\n    <!-- add the projects section here -->\n  </main>\n  <footer>\n    <p>© 2026 Ana Ruiz</p>\n  </footer>\n</body>\n</html>\n",
+     "solution": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <title>Ana Ruiz</title>\n  <style>\n    .grid { display: grid; gap: 16px; }\n    .card { padding: 16px; border: 1px solid #d0d7de; border-radius: 8px; }\n  </style>\n</head>\n<body>\n  <header>\n    <h1>Ana Ruiz</h1>\n    <nav>\n      <ul>\n        <li><a href=\"#about\">About</a></li>\n        <li><a href=\"#projects\">Projects</a></li>\n        <li><a href=\"#contact\">Contact</a></li>\n      </ul>\n    </nav>\n  </header>\n  <main>\n    <section id=\"about\">\n      <h2>About me</h2>\n      <p>I am learning to build websites, one page at a time.</p>\n    </section>\n    <section id=\"projects\">\n      <h2>Projects</h2>\n      <div class=\"grid\">\n        <article class=\"card\">\n          <h3>Weather app</h3>\n          <p>Shows the forecast for any city.</p>\n        </article>\n        <article class=\"card\">\n          <h3>Quiz game</h3>\n          <p>Ten questions about space.</p>\n        </article>\n        <article class=\"card\">\n          <h3>Recipe box</h3>\n          <p>My favorite recipes in one place.</p>\n        </article>\n      </div>\n    </section>\n  </main>\n  <footer>\n    <p>© 2026 Ana Ruiz</p>\n  </footer>\n</body>\n</html>\n",
+     "hint": {
+      "en": "`.grid { display: grid; gap: 16px; }` and `.card { padding: 16px; border: 1px solid #d0d7de; border-radius: 8px; }`.",
+      "es": "`.grid { display: grid; gap: 16px; }` y `.card { padding: 16px; border: 1px solid #d0d7de; border-radius: 8px; }`."
+     },
+     "checks": [
+      {
+       "sel": "#projects .grid > .card",
+       "min": 3,
+       "label": {
+        "en": "3 or more .card inside #projects .grid",
+        "es": "3 o más .card dentro de #projects .grid"
+       }
+      },
+      {
+       "sel": ".card h3",
+       "min": 3,
+       "label": {
+        "en": "every card has an <h3>",
+        "es": "cada tarjeta tiene un <h3>"
+       }
+      },
+      {
+       "sel": ".grid",
+       "count": 1,
+       "style": {
+        "display": "grid",
+        "rowGap": "16px",
+        "columnGap": "16px"
+       },
+       "label": {
+        "en": ".grid is a grid with a 16px gap",
+        "es": ".grid es una cuadrícula con gap de 16px"
+       }
+      },
+      {
+       "sel": ".card",
+       "min": 3,
+       "style": {
+        "paddingTop": "16px",
+        "paddingLeft": "16px"
+       },
+       "label": {
+        "en": "cards have 16px padding",
+        "es": "las tarjetas tienen padding de 16px"
+       }
+      },
+      {
+       "sel": ".card",
+       "min": 3,
+       "style": {
+        "borderTopWidth": "1px",
+        "borderTopStyle": "solid",
+        "borderTopLeftRadius": "8px"
+       },
+       "label": {
+        "en": "cards have a 1px solid border and 8px radius",
+        "es": "las tarjetas tienen borde 1px solid y radio de 8px"
+       }
+      },
+      {
+       "sel": "header h1",
+       "count": 1,
+       "label": {
+        "en": "the header from step 1 is still there",
+        "es": "el encabezado del paso 1 sigue ahí"
+       }
+      }
+     ]
+    },
+    {
+     "id": "responsive",
+     "lang": "css",
+     "title": {
+      "en": "Make it responsive",
+      "es": "Hazla adaptable"
+     },
+     "prompt": {
+      "en": "Make the page work on a phone. Add `<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">` to `<head>`. Then in CSS: `nav ul` becomes a wrapping flex row (`display: flex; flex-wrap: wrap`); `main` gets `max-width: 960px`, `margin: 0 auto` and `padding: 0 16px`; and `.grid` gets `grid-template-columns: repeat(auto-fit, minmax(220px, 1fr))` so the cards form as many columns as fit.",
+      "es": "Haz que la página funcione en un teléfono. Agrega `<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">` a `<head>`. Luego en CSS: `nav ul` se vuelve una fila flexible que se ajusta (`display: flex; flex-wrap: wrap`); `main` recibe `max-width: 960px`, `margin: 0 auto` y `padding: 0 16px`; y `.grid` recibe `grid-template-columns: repeat(auto-fit, minmax(220px, 1fr))` para que las tarjetas formen tantas columnas como quepan."
+     },
+     "starter": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <!-- add the viewport meta tag here -->\n  <title>Ana Ruiz</title>\n  <style>\n    .grid { display: grid; gap: 16px; }\n    .card { padding: 16px; border: 1px solid #d0d7de; border-radius: 8px; }\n    /* add the responsive rules here */\n  </style>\n</head>\n<body>\n  <header>\n    <h1>Ana Ruiz</h1>\n    <nav>\n      <ul>\n        <li><a href=\"#about\">About</a></li>\n        <li><a href=\"#projects\">Projects</a></li>\n        <li><a href=\"#contact\">Contact</a></li>\n      </ul>\n    </nav>\n  </header>\n  <main>\n    <section id=\"about\">\n      <h2>About me</h2>\n      <p>I am learning to build websites, one page at a time.</p>\n    </section>\n    <section id=\"projects\">\n      <h2>Projects</h2>\n      <div class=\"grid\">\n        <article class=\"card\">\n          <h3>Weather app</h3>\n          <p>Shows the forecast for any city.</p>\n        </article>\n        <article class=\"card\">\n          <h3>Quiz game</h3>\n          <p>Ten questions about space.</p>\n        </article>\n        <article class=\"card\">\n          <h3>Recipe box</h3>\n          <p>My favorite recipes in one place.</p>\n        </article>\n      </div>\n    </section>\n  </main>\n  <footer>\n    <p>© 2026 Ana Ruiz</p>\n  </footer>\n</body>\n</html>\n",
+     "solution": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <title>Ana Ruiz</title>\n  <style>\n    .grid { display: grid; gap: 16px; }\n    .card { padding: 16px; border: 1px solid #d0d7de; border-radius: 8px; }\n    nav ul { display: flex; flex-wrap: wrap; gap: 12px; list-style: none; padding: 0; }\n    main { max-width: 960px; margin: 0 auto; padding: 0 16px; }\n    .grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }\n  </style>\n</head>\n<body>\n  <header>\n    <h1>Ana Ruiz</h1>\n    <nav>\n      <ul>\n        <li><a href=\"#about\">About</a></li>\n        <li><a href=\"#projects\">Projects</a></li>\n        <li><a href=\"#contact\">Contact</a></li>\n      </ul>\n    </nav>\n  </header>\n  <main>\n    <section id=\"about\">\n      <h2>About me</h2>\n      <p>I am learning to build websites, one page at a time.</p>\n    </section>\n    <section id=\"projects\">\n      <h2>Projects</h2>\n      <div class=\"grid\">\n        <article class=\"card\">\n          <h3>Weather app</h3>\n          <p>Shows the forecast for any city.</p>\n        </article>\n        <article class=\"card\">\n          <h3>Quiz game</h3>\n          <p>Ten questions about space.</p>\n        </article>\n        <article class=\"card\">\n          <h3>Recipe box</h3>\n          <p>My favorite recipes in one place.</p>\n        </article>\n      </div>\n    </section>\n  </main>\n  <footer>\n    <p>© 2026 Ana Ruiz</p>\n  </footer>\n</body>\n</html>\n",
+     "hint": {
+      "en": "Without the viewport tag, phones pretend to be about 980px wide and shrink everything. `max-width` caps the width on big screens while still shrinking on small ones, and `auto-fit` + `minmax` needs no media query.",
+      "es": "Sin la etiqueta viewport, los teléfonos fingen medir unos 980px de ancho y encogen todo. `max-width` limita el ancho en pantallas grandes y aun así se encoge en las pequeñas, y `auto-fit` + `minmax` no necesita media queries."
+     },
+     "checks": [
+      {
+       "sel": "meta[name=\"viewport\"][content*=\"width=device-width\"]",
+       "count": 1,
+       "label": {
+        "en": "a viewport meta tag with width=device-width",
+        "es": "una etiqueta meta viewport con width=device-width"
+       }
+      },
+      {
+       "sel": "nav ul",
+       "count": 1,
+       "style": {
+        "display": "flex",
+        "flexWrap": "wrap"
+       },
+       "label": {
+        "en": "nav ul is a wrapping flex row",
+        "es": "nav ul es una fila flexible que se ajusta"
+       }
+      },
+      {
+       "sel": "main",
+       "count": 1,
+       "style": {
+        "maxWidth": "960px"
+       },
+       "label": {
+        "en": "main is at most 960px wide",
+        "es": "main mide como máximo 960px"
+       }
+      },
+      {
+       "sel": "main",
+       "count": 1,
+       "style": {
+        "paddingLeft": "16px",
+        "paddingRight": "16px"
+       },
+       "label": {
+        "en": "main has 16px padding on the sides",
+        "es": "main tiene padding de 16px a los lados"
+       }
+      },
+      {
+       "sel": ".grid",
+       "count": 1,
+       "style": {
+        "display": "grid"
+       },
+       "label": {
+        "en": ".grid is still a grid",
+        "es": ".grid sigue siendo una cuadrícula"
+       }
+      }
+     ]
+    },
+    {
+     "id": "contact",
+     "lang": "html",
+     "title": {
+      "en": "An accessible form",
+      "es": "Un formulario accesible"
+     },
+     "prompt": {
+      "en": "Add a `<section id=\"contact\">` with an `<h2>` and a `<form>` containing: a text `<input id=\"name\">`, an `<input id=\"email\" type=\"email\">` and a `<textarea id=\"message\">`, all `required`, each with its own `<label for=\"…\">` pointing at its id, and a `<button type=\"submit\">Send</button>`.",
+      "es": "Agrega una `<section id=\"contact\">` con un `<h2>` y un `<form>` que contenga: un `<input id=\"name\">` de texto, un `<input id=\"email\" type=\"email\">` y un `<textarea id=\"message\">`, todos `required`, cada uno con su propio `<label for=\"…\">` que apunte a su id, y un `<button type=\"submit\">Send</button>`."
+     },
+     "starter": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <title>Ana Ruiz</title>\n  <style>\n    .grid { display: grid; gap: 16px; }\n    .card { padding: 16px; border: 1px solid #d0d7de; border-radius: 8px; }\n    nav ul { display: flex; flex-wrap: wrap; gap: 12px; list-style: none; padding: 0; }\n    main { max-width: 960px; margin: 0 auto; padding: 0 16px; }\n    .grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }\n  </style>\n</head>\n<body>\n  <header>\n    <h1>Ana Ruiz</h1>\n    <nav>\n      <ul>\n        <li><a href=\"#about\">About</a></li>\n        <li><a href=\"#projects\">Projects</a></li>\n        <li><a href=\"#contact\">Contact</a></li>\n      </ul>\n    </nav>\n  </header>\n  <main>\n    <section id=\"about\">\n      <h2>About me</h2>\n      <p>I am learning to build websites, one page at a time.</p>\n    </section>\n    <section id=\"projects\">\n      <h2>Projects</h2>\n      <div class=\"grid\">\n        <article class=\"card\">\n          <h3>Weather app</h3>\n          <p>Shows the forecast for any city.</p>\n        </article>\n        <article class=\"card\">\n          <h3>Quiz game</h3>\n          <p>Ten questions about space.</p>\n        </article>\n        <article class=\"card\">\n          <h3>Recipe box</h3>\n          <p>My favorite recipes in one place.</p>\n        </article>\n      </div>\n    </section>\n    <!-- add the contact section here -->\n  </main>\n  <footer>\n    <p>© 2026 Ana Ruiz</p>\n  </footer>\n</body>\n</html>\n",
+     "solution": "<!doctype html>\n<html lang=\"en\">\n<head>\n  <meta charset=\"utf-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n  <title>Ana Ruiz</title>\n  <style>\n    .grid { display: grid; gap: 16px; }\n    .card { padding: 16px; border: 1px solid #d0d7de; border-radius: 8px; }\n    nav ul { display: flex; flex-wrap: wrap; gap: 12px; list-style: none; padding: 0; }\n    main { max-width: 960px; margin: 0 auto; padding: 0 16px; }\n    .grid { grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }\n    form { display: grid; gap: 8px; max-width: 480px; }\n  </style>\n</head>\n<body>\n  <header>\n    <h1>Ana Ruiz</h1>\n    <nav>\n      <ul>\n        <li><a href=\"#about\">About</a></li>\n        <li><a href=\"#projects\">Projects</a></li>\n        <li><a href=\"#contact\">Contact</a></li>\n      </ul>\n    </nav>\n  </header>\n  <main>\n    <section id=\"about\">\n      <h2>About me</h2>\n      <p>I am learning to build websites, one page at a time.</p>\n    </section>\n    <section id=\"projects\">\n      <h2>Projects</h2>\n      <div class=\"grid\">\n        <article class=\"card\">\n          <h3>Weather app</h3>\n          <p>Shows the forecast for any city.</p>\n        </article>\n        <article class=\"card\">\n          <h3>Quiz game</h3>\n          <p>Ten questions about space.</p>\n        </article>\n        <article class=\"card\">\n          <h3>Recipe box</h3>\n          <p>My favorite recipes in one place.</p>\n        </article>\n      </div>\n    </section>\n    <section id=\"contact\">\n      <h2>Contact</h2>\n      <form>\n        <label for=\"name\">Name</label>\n        <input id=\"name\" name=\"name\" type=\"text\" autocomplete=\"name\" required>\n        <label for=\"email\">Email</label>\n        <input id=\"email\" name=\"email\" type=\"email\" autocomplete=\"email\" required>\n        <label for=\"message\">Message</label>\n        <textarea id=\"message\" name=\"message\" rows=\"4\" required></textarea>\n        <button type=\"submit\">Send</button>\n      </form>\n    </section>\n  </main>\n  <footer>\n    <p>© 2026 Ana Ruiz</p>\n  </footer>\n</body>\n</html>\n",
+     "hint": {
+      "en": "`<label for=\"email\">Email</label>` is linked to `<input id=\"email\">`: screen readers read the label, and clicking it focuses the field. `type=\"email\"` and `required` give free checks before sending.",
+      "es": "`<label for=\"email\">Email</label>` queda unido a `<input id=\"email\">`: los lectores de pantalla leen la etiqueta y al hacer clic en ella se enfoca el campo. `type=\"email\"` y `required` dan revisiones gratis antes de enviar."
+     },
+     "checks": [
+      {
+       "sel": "#contact form",
+       "count": 1,
+       "label": {
+        "en": "a <form> inside #contact",
+        "es": "un <form> dentro de #contact"
+       }
+      },
+      {
+       "sel": "input#name[required]",
+       "count": 1,
+       "label": {
+        "en": "a required #name input",
+        "es": "un input #name obligatorio"
+       }
+      },
+      {
+       "sel": "input#email[type=\"email\"][required]",
+       "count": 1,
+       "label": {
+        "en": "a required email input with id email",
+        "es": "un input de correo obligatorio con id email"
+       }
+      },
+      {
+       "sel": "textarea#message[required]",
+       "count": 1,
+       "label": {
+        "en": "a required #message textarea",
+        "es": "un textarea #message obligatorio"
+       }
+      },
+      {
+       "sel": "label[for=\"name\"], label[for=\"email\"], label[for=\"message\"]",
+       "count": 3,
+       "label": {
+        "en": "a <label for> for each of the three fields",
+        "es": "un <label for> para cada uno de los tres campos"
+       }
+      },
+      {
+       "sel": "form button[type=\"submit\"]",
+       "count": 1,
+       "text": "Send",
+       "label": {
+        "en": "a submit button that says Send",
+        "es": "un botón de envío que dice Send"
+       }
+      },
+      {
+       "sel": "main",
+       "count": 1,
+       "style": {
+        "maxWidth": "960px"
+       },
+       "label": {
+        "en": "the responsive rules from step 3 are still there",
+        "es": "las reglas adaptables del paso 3 siguen ahí"
+       }
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sql-library",
+   "track": "sql",
+   "icon": "📚",
+   "level": "beginner",
+   "minutes": 40,
+   "title": {
+    "en": "Query a library database",
+    "es": "Consulta la base de datos de una biblioteca"
+   },
+   "blurb": {
+    "en": "A small library with books, members and loans. Filter the catalog, join loans to the people who have them, count overdue books and rank the top borrowers.",
+    "es": "Una pequeña biblioteca con libros, socios y préstamos. Filtra el catálogo, une los préstamos con quienes los tienen, cuenta los libros atrasados y ordena a quienes más piden prestado."
+   },
+   "steps": [
+    {
+     "id": "filter",
+     "lang": "sql",
+     "title": {
+      "en": "Search the catalog",
+      "es": "Busca en el catálogo"
+     },
+     "prompt": {
+      "en": "The library has three tables: `books`, `members` and `loans` (open **See the tables** to look at them). List the `title`, `author` and `year` of the `'Science Fiction'` books published in 1950 or later, oldest first.",
+      "es": "La biblioteca tiene tres tablas: `books`, `members` y `loans` (abre **Ver las tablas** para mirarlas). Lista `title`, `author` y `year` de los libros de `'Science Fiction'` publicados en 1950 o después, del más antiguo al más nuevo."
+     },
+     "setup": "CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT, author TEXT, year INTEGER, genre TEXT);\nCREATE TABLE members (id INTEGER PRIMARY KEY, name TEXT, city TEXT);\nCREATE TABLE loans (id INTEGER PRIMARY KEY, book_id INTEGER, member_id INTEGER, loaned TEXT, due TEXT, returned TEXT);\nINSERT INTO books VALUES (1, 'Dune', 'Frank Herbert', 1965, 'Science Fiction'), (2, 'Foundation', 'Isaac Asimov', 1951, 'Science Fiction'),\n  (3, 'Kindred', 'Octavia E. Butler', 1979, 'Science Fiction'), (4, 'Frankenstein', 'Mary Shelley', 1818, 'Science Fiction'),\n  (5, 'Pride and Prejudice', 'Jane Austen', 1813, 'Romance'), (6, 'One Hundred Years of Solitude', 'Gabriel García Márquez', 1967, 'Literary'),\n  (7, 'The Hobbit', 'J.R.R. Tolkien', 1937, 'Fantasy'), (8, 'A Brief History of Time', 'Stephen Hawking', 1988, 'Science');\nINSERT INTO members VALUES (1, 'Ana', 'Austin'), (2, 'Ben', 'Denver'), (3, 'Chen', 'Austin'), (4, 'Dara', 'Boston'), (5, 'Eli', 'Denver');\nINSERT INTO loans VALUES (1, 1, 1, '2026-01-05', '2026-01-19', '2026-01-18'), (2, 2, 1, '2026-02-01', '2026-02-15', NULL),\n  (3, 6, 1, '2026-02-20', '2026-03-06', NULL), (4, 7, 2, '2026-01-10', '2026-01-24', '2026-01-30'),\n  (5, 3, 2, '2026-02-10', '2026-02-24', NULL), (6, 5, 3, '2026-02-25', '2026-03-11', NULL),\n  (7, 8, 1, '2026-01-02', '2026-01-16', '2026-01-10'), (8, 4, 4, '2026-02-03', '2026-02-17', NULL),\n  (9, 1, 4, '2026-02-12', '2026-02-26', NULL), (10, 7, 3, '2026-01-20', '2026-02-03', '2026-02-01');",
+     "starter": "-- Write your query here\n",
+     "solution": "SELECT title, author, year FROM books WHERE genre = 'Science Fiction' AND year >= 1950 ORDER BY year;",
+     "hint": {
+      "en": "Two conditions in `WHERE` joined with `AND`, then `ORDER BY year`.",
+      "es": "Dos condiciones en `WHERE` unidas con `AND` y luego `ORDER BY year`."
+     },
+     "ordered": true
+    },
+    {
+     "id": "on-loan",
+     "lang": "sql",
+     "title": {
+      "en": "Who has which book",
+      "es": "Quién tiene cada libro"
+     },
+     "prompt": {
+      "en": "A loan that is still out has `returned` set to `NULL`. List the member `name` and book `title` of every loan still out, ordered by name and then title.",
+      "es": "Un préstamo que sigue afuera tiene `returned` en `NULL`. Lista el `name` del socio y el `title` del libro de cada préstamo que sigue afuera, ordenados por nombre y luego por título."
+     },
+     "setup": "CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT, author TEXT, year INTEGER, genre TEXT);\nCREATE TABLE members (id INTEGER PRIMARY KEY, name TEXT, city TEXT);\nCREATE TABLE loans (id INTEGER PRIMARY KEY, book_id INTEGER, member_id INTEGER, loaned TEXT, due TEXT, returned TEXT);\nINSERT INTO books VALUES (1, 'Dune', 'Frank Herbert', 1965, 'Science Fiction'), (2, 'Foundation', 'Isaac Asimov', 1951, 'Science Fiction'),\n  (3, 'Kindred', 'Octavia E. Butler', 1979, 'Science Fiction'), (4, 'Frankenstein', 'Mary Shelley', 1818, 'Science Fiction'),\n  (5, 'Pride and Prejudice', 'Jane Austen', 1813, 'Romance'), (6, 'One Hundred Years of Solitude', 'Gabriel García Márquez', 1967, 'Literary'),\n  (7, 'The Hobbit', 'J.R.R. Tolkien', 1937, 'Fantasy'), (8, 'A Brief History of Time', 'Stephen Hawking', 1988, 'Science');\nINSERT INTO members VALUES (1, 'Ana', 'Austin'), (2, 'Ben', 'Denver'), (3, 'Chen', 'Austin'), (4, 'Dara', 'Boston'), (5, 'Eli', 'Denver');\nINSERT INTO loans VALUES (1, 1, 1, '2026-01-05', '2026-01-19', '2026-01-18'), (2, 2, 1, '2026-02-01', '2026-02-15', NULL),\n  (3, 6, 1, '2026-02-20', '2026-03-06', NULL), (4, 7, 2, '2026-01-10', '2026-01-24', '2026-01-30'),\n  (5, 3, 2, '2026-02-10', '2026-02-24', NULL), (6, 5, 3, '2026-02-25', '2026-03-11', NULL),\n  (7, 8, 1, '2026-01-02', '2026-01-16', '2026-01-10'), (8, 4, 4, '2026-02-03', '2026-02-17', NULL),\n  (9, 1, 4, '2026-02-12', '2026-02-26', NULL), (10, 7, 3, '2026-01-20', '2026-02-03', '2026-02-01');",
+     "starter": "-- Your query from the last step, for reference:\n-- SELECT title, author, year FROM books WHERE genre = 'Science Fiction' AND year >= 1950 ORDER BY year;\n\n-- Write your new query here\n",
+     "solution": "SELECT m.name, b.title\nFROM loans l\nJOIN members m ON m.id = l.member_id\nJOIN books b ON b.id = l.book_id\nWHERE l.returned IS NULL\nORDER BY m.name, b.title;",
+     "hint": {
+      "en": "`loans` holds `member_id` and `book_id`: `JOIN members m ON m.id = l.member_id` and `JOIN books b ON b.id = l.book_id`. Test for missing values with `IS NULL`, never `= NULL`.",
+      "es": "`loans` guarda `member_id` y `book_id`: `JOIN members m ON m.id = l.member_id` y `JOIN books b ON b.id = l.book_id`. Revisa los valores faltantes con `IS NULL`, nunca con `= NULL`."
+     },
+     "ordered": true
+    },
+    {
+     "id": "overdue",
+     "lang": "sql",
+     "title": {
+      "en": "Count overdue loans",
+      "es": "Cuenta los atrasados"
+     },
+     "prompt": {
+      "en": "Today is `'2026-03-01'`. A loan is overdue when it is still out and its `due` date is before today. For each member with at least one overdue loan, show `name` and the number of overdue loans as `overdue`, most first, ties by name.",
+      "es": "Hoy es `'2026-03-01'`. Un préstamo está atrasado cuando sigue afuera y su fecha `due` es anterior a hoy. Para cada socio con al menos un préstamo atrasado, muestra `name` y la cantidad de préstamos atrasados como `overdue`, de más a menos y en empate por nombre."
+     },
+     "setup": "CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT, author TEXT, year INTEGER, genre TEXT);\nCREATE TABLE members (id INTEGER PRIMARY KEY, name TEXT, city TEXT);\nCREATE TABLE loans (id INTEGER PRIMARY KEY, book_id INTEGER, member_id INTEGER, loaned TEXT, due TEXT, returned TEXT);\nINSERT INTO books VALUES (1, 'Dune', 'Frank Herbert', 1965, 'Science Fiction'), (2, 'Foundation', 'Isaac Asimov', 1951, 'Science Fiction'),\n  (3, 'Kindred', 'Octavia E. Butler', 1979, 'Science Fiction'), (4, 'Frankenstein', 'Mary Shelley', 1818, 'Science Fiction'),\n  (5, 'Pride and Prejudice', 'Jane Austen', 1813, 'Romance'), (6, 'One Hundred Years of Solitude', 'Gabriel García Márquez', 1967, 'Literary'),\n  (7, 'The Hobbit', 'J.R.R. Tolkien', 1937, 'Fantasy'), (8, 'A Brief History of Time', 'Stephen Hawking', 1988, 'Science');\nINSERT INTO members VALUES (1, 'Ana', 'Austin'), (2, 'Ben', 'Denver'), (3, 'Chen', 'Austin'), (4, 'Dara', 'Boston'), (5, 'Eli', 'Denver');\nINSERT INTO loans VALUES (1, 1, 1, '2026-01-05', '2026-01-19', '2026-01-18'), (2, 2, 1, '2026-02-01', '2026-02-15', NULL),\n  (3, 6, 1, '2026-02-20', '2026-03-06', NULL), (4, 7, 2, '2026-01-10', '2026-01-24', '2026-01-30'),\n  (5, 3, 2, '2026-02-10', '2026-02-24', NULL), (6, 5, 3, '2026-02-25', '2026-03-11', NULL),\n  (7, 8, 1, '2026-01-02', '2026-01-16', '2026-01-10'), (8, 4, 4, '2026-02-03', '2026-02-17', NULL),\n  (9, 1, 4, '2026-02-12', '2026-02-26', NULL), (10, 7, 3, '2026-01-20', '2026-02-03', '2026-02-01');",
+     "starter": "-- Your query from the last step, for reference:\n-- SELECT m.name, b.title\n-- FROM loans l\n-- JOIN members m ON m.id = l.member_id\n-- JOIN books b ON b.id = l.book_id\n-- WHERE l.returned IS NULL\n-- ORDER BY m.name, b.title;\n\n-- Write your new query here\n",
+     "solution": "SELECT m.name, COUNT(*) AS overdue\nFROM loans l\nJOIN members m ON m.id = l.member_id\nWHERE l.returned IS NULL AND l.due < '2026-03-01'\nGROUP BY m.id, m.name\nORDER BY overdue DESC, m.name;",
+     "hint": {
+      "en": "Dates stored as `'YYYY-MM-DD'` text compare correctly with `<`. Filter in `WHERE`, then `GROUP BY` the member and `COUNT(*)`.",
+      "es": "Las fechas guardadas como texto `'YYYY-MM-DD'` se comparan bien con `<`. Filtra en `WHERE`, luego agrupa por socio con `GROUP BY` y usa `COUNT(*)`."
+     },
+     "ordered": true
+    },
+    {
+     "id": "top",
+     "lang": "sql",
+     "title": {
+      "en": "Top borrowers",
+      "es": "Quienes más piden"
+     },
+     "prompt": {
+      "en": "Rank the readers. Show the `name` and total number of loans (returned or not) as `loans` for the **3** members with the most loans, most first, ties by name.",
+      "es": "Ordena a los lectores. Muestra el `name` y el total de préstamos (devueltos o no) como `loans` de los **3** socios con más préstamos, de más a menos y en empate por nombre."
+     },
+     "setup": "CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT, author TEXT, year INTEGER, genre TEXT);\nCREATE TABLE members (id INTEGER PRIMARY KEY, name TEXT, city TEXT);\nCREATE TABLE loans (id INTEGER PRIMARY KEY, book_id INTEGER, member_id INTEGER, loaned TEXT, due TEXT, returned TEXT);\nINSERT INTO books VALUES (1, 'Dune', 'Frank Herbert', 1965, 'Science Fiction'), (2, 'Foundation', 'Isaac Asimov', 1951, 'Science Fiction'),\n  (3, 'Kindred', 'Octavia E. Butler', 1979, 'Science Fiction'), (4, 'Frankenstein', 'Mary Shelley', 1818, 'Science Fiction'),\n  (5, 'Pride and Prejudice', 'Jane Austen', 1813, 'Romance'), (6, 'One Hundred Years of Solitude', 'Gabriel García Márquez', 1967, 'Literary'),\n  (7, 'The Hobbit', 'J.R.R. Tolkien', 1937, 'Fantasy'), (8, 'A Brief History of Time', 'Stephen Hawking', 1988, 'Science');\nINSERT INTO members VALUES (1, 'Ana', 'Austin'), (2, 'Ben', 'Denver'), (3, 'Chen', 'Austin'), (4, 'Dara', 'Boston'), (5, 'Eli', 'Denver');\nINSERT INTO loans VALUES (1, 1, 1, '2026-01-05', '2026-01-19', '2026-01-18'), (2, 2, 1, '2026-02-01', '2026-02-15', NULL),\n  (3, 6, 1, '2026-02-20', '2026-03-06', NULL), (4, 7, 2, '2026-01-10', '2026-01-24', '2026-01-30'),\n  (5, 3, 2, '2026-02-10', '2026-02-24', NULL), (6, 5, 3, '2026-02-25', '2026-03-11', NULL),\n  (7, 8, 1, '2026-01-02', '2026-01-16', '2026-01-10'), (8, 4, 4, '2026-02-03', '2026-02-17', NULL),\n  (9, 1, 4, '2026-02-12', '2026-02-26', NULL), (10, 7, 3, '2026-01-20', '2026-02-03', '2026-02-01');",
+     "starter": "-- Your query from the last step, for reference:\n-- SELECT m.name, COUNT(*) AS overdue\n-- FROM loans l\n-- JOIN members m ON m.id = l.member_id\n-- WHERE l.returned IS NULL AND l.due < '2026-03-01'\n-- GROUP BY m.id, m.name\n-- ORDER BY overdue DESC, m.name;\n\n-- Write your new query here\n",
+     "solution": "SELECT m.name, COUNT(*) AS loans\nFROM loans l\nJOIN members m ON m.id = l.member_id\nGROUP BY m.id, m.name\nORDER BY loans DESC, m.name\nLIMIT 3;",
+     "hint": {
+      "en": "The same join and `GROUP BY` as before, without the overdue filter. `ORDER BY loans DESC, m.name` and then `LIMIT 3`.",
+      "es": "La misma unión y `GROUP BY` que antes, sin el filtro de atrasados. `ORDER BY loans DESC, m.name` y luego `LIMIT 3`."
+     },
+     "ordered": true
+    }
+   ]
+  },
+  {
+   "id": "net-http-client",
+   "track": "networks",
+   "icon": "🌐",
+   "level": "intermediate",
+   "minutes": 55,
+   "title": {
+    "en": "Build a mini HTTP client",
+    "es": "Construye un mini cliente HTTP"
+   },
+   "blurb": {
+    "en": "Write the text of an HTTP request, parse the head of a response, follow redirects through a pretend web server and stop asking twice with a cache.",
+    "es": "Escribe el texto de una petición HTTP, interpreta la cabecera de una respuesta, sigue redirecciones en un servidor de mentira y deja de pedir dos veces con una caché."
+   },
+   "steps": [
+    {
+     "id": "request",
+     "title": {
+      "en": "Build a request",
+      "es": "Arma una petición"
+     },
+     "prompt": {
+      "en": "HTTP/1.1 is plain text. Write `build_request(method, url, headers=None)` for `http://` URLs: a request line, a `Host` header, any extra headers in the order given, each line ending in `\\r\\n`, and a blank line at the end. An empty path becomes `/`. Example: `build_request(\"GET\", \"http://shop.test/cart?id=7\")` returns `\"GET /cart?id=7 HTTP/1.1\\r\\nHost: shop.test\\r\\n\\r\\n\"`.",
+      "es": "HTTP/1.1 es texto plano. Escribe `build_request(method, url, headers=None)` para URLs `http://`: una línea de petición, un encabezado `Host`, los encabezados extra en el orden dado, cada línea terminada en `\\r\\n` y una línea vacía al final. Una ruta vacía se vuelve `/`. Ejemplo: `build_request(\"GET\", \"http://shop.test/cart?id=7\")` devuelve `\"GET /cart?id=7 HTTP/1.1\\r\\nHost: shop.test\\r\\n\\r\\n\"`."
+     },
+     "starter": "def build_request(method, url, headers=None):\n    pass\n",
+     "solution": "def build_request(method, url, headers=None):\n    rest = url[len(\"http://\"):]\n    host, slash, path = rest.partition(\"/\")\n    lines = [f\"{method} /{path} HTTP/1.1\", f\"Host: {host}\"]\n    for name, value in (headers or {}).items():\n        lines.append(f\"{name}: {value}\")\n    return \"\\r\\n\".join(lines) + \"\\r\\n\\r\\n\"\n",
+     "hint": {
+      "en": "Cut off `\"http://\"`, then `rest.partition(\"/\")` splits host from path. Collect the lines in a list and finish with `\"\\r\\n\".join(lines) + \"\\r\\n\\r\\n\"`.",
+      "es": "Quita `\"http://\"` y luego `rest.partition(\"/\")` separa el host de la ruta. Junta las líneas en una lista y termina con `\"\\r\\n\".join(lines) + \"\\r\\n\\r\\n\"`."
+     },
+     "tests": [
+      [
+       "build_request('GET', 'http://shop.test/cart?id=7')",
+       "'GET /cart?id=7 HTTP/1.1\\r\\nHost: shop.test\\r\\n\\r\\n'"
+      ],
+      [
+       "build_request('GET', 'http://shop.test')",
+       "'GET / HTTP/1.1\\r\\nHost: shop.test\\r\\n\\r\\n'"
+      ],
+      [
+       "build_request('HEAD', 'http://shop.test/')",
+       "'HEAD / HTTP/1.1\\r\\nHost: shop.test\\r\\n\\r\\n'"
+      ],
+      [
+       "build_request('POST', 'http://api.test/v1/items', {'Content-Type': 'application/json', 'Accept': '*/*'})",
+       "'POST /v1/items HTTP/1.1\\r\\nHost: api.test\\r\\nContent-Type: application/json\\r\\nAccept: */*\\r\\n\\r\\n'"
+      ]
+     ]
+    },
+    {
+     "id": "response",
+     "title": {
+      "en": "Read a response",
+      "es": "Lee una respuesta"
+     },
+     "prompt": {
+      "en": "Add `parse_response(raw)` that returns `(status, headers, body)`: the status code as an `int`, a dictionary of headers with lowercase names and trimmed values, and the body (everything after the first blank line). Example: `parse_response(\"HTTP/1.1 404 Not Found\\r\\nServer: x\\r\\n\\r\\nnope\")` returns `(404, {\"server\": \"x\"}, \"nope\")`.",
+      "es": "Agrega `parse_response(raw)` que devuelva `(status, headers, body)`: el código de estado como `int`, un diccionario de encabezados con nombres en minúsculas y valores sin espacios sobrantes, y el cuerpo (todo lo que va después de la primera línea vacía). Ejemplo: `parse_response(\"HTTP/1.1 404 Not Found\\r\\nServer: x\\r\\n\\r\\nnope\")` devuelve `(404, {\"server\": \"x\"}, \"nope\")`."
+     },
+     "starter": "def build_request(method, url, headers=None):\n    rest = url[len(\"http://\"):]\n    host, slash, path = rest.partition(\"/\")\n    lines = [f\"{method} /{path} HTTP/1.1\", f\"Host: {host}\"]\n    for name, value in (headers or {}).items():\n        lines.append(f\"{name}: {value}\")\n    return \"\\r\\n\".join(lines) + \"\\r\\n\\r\\n\"\n\ndef parse_response(raw):\n    pass\n",
+     "solution": "def build_request(method, url, headers=None):\n    rest = url[len(\"http://\"):]\n    host, slash, path = rest.partition(\"/\")\n    lines = [f\"{method} /{path} HTTP/1.1\", f\"Host: {host}\"]\n    for name, value in (headers or {}).items():\n        lines.append(f\"{name}: {value}\")\n    return \"\\r\\n\".join(lines) + \"\\r\\n\\r\\n\"\n\ndef parse_response(raw):\n    head, _sep, body = raw.partition(\"\\r\\n\\r\\n\")\n    lines = head.split(\"\\r\\n\")\n    status = int(lines[0].split()[1])\n    headers = {}\n    for line in lines[1:]:\n        name, _colon, value = line.partition(\":\")\n        headers[name.strip().lower()] = value.strip()\n    return status, headers, body\n",
+     "hint": {
+      "en": "`raw.partition(\"\\r\\n\\r\\n\")` separates head and body. Split the head on `\"\\r\\n\"`: the first line's second word is the status; split each other line once on `\":\"`.",
+      "es": "`raw.partition(\"\\r\\n\\r\\n\")` separa la cabecera del cuerpo. Divide la cabecera con `\"\\r\\n\"`: la segunda palabra de la primera línea es el estado; divide cada una de las demás líneas una vez con `\":\"`."
+     },
+     "tests": [
+      [
+       "parse_response('HTTP/1.1 404 Not Found\\r\\nServer: x\\r\\n\\r\\nnope')",
+       "(404, {'server': 'x'}, 'nope')"
+      ],
+      [
+       "parse_response('HTTP/1.1 200 OK\\r\\nContent-Type:  text/html \\r\\nContent-Length: 5\\r\\n\\r\\nhello')",
+       "(200, {'content-type': 'text/html', 'content-length': '5'}, 'hello')"
+      ],
+      [
+       "parse_response('HTTP/1.1 204 No Content\\r\\n\\r\\n')",
+       "(204, {}, '')"
+      ],
+      [
+       "parse_response('HTTP/1.1 301 Moved Permanently\\r\\nLocation: http://a.test/x\\r\\n\\r\\n')",
+       "(301, {'location': 'http://a.test/x'}, '')"
+      ],
+      [
+       "parse_response('HTTP/1.1 200 OK\\r\\nX-Time: 10:30\\r\\n\\r\\nline1\\r\\n\\r\\nline2')",
+       "(200, {'x-time': '10:30'}, 'line1\\r\\n\\r\\nline2')"
+      ]
+     ]
+    },
+    {
+     "id": "redirects",
+     "title": {
+      "en": "Follow redirects",
+      "es": "Sigue redirecciones"
+     },
+     "prompt": {
+      "en": "`SITE` is a pretend web server: a dictionary from URL to the raw response it sends. Add `fetch(url, server)` that returns `(status, body, hops)`, where `hops` lists every URL requested. Follow a `301`, `302`, `307` or `308` to its `Location`. A URL missing from the server gives `(404, \"\", hops)`; visiting a URL twice is a loop, so stop with `(0, \"redirect loop\", hops)`. Example: `fetch(\"http://shop.test/new\", SITE)` returns `(200, \"Welcome\", [\"http://shop.test/new\", \"http://shop.test/\"])`.",
+      "es": "`SITE` es un servidor web de mentira: un diccionario de URL a la respuesta cruda que envía. Agrega `fetch(url, server)` que devuelva `(status, body, hops)`, donde `hops` enumera cada URL pedida. Sigue un `301`, `302`, `307` o `308` hasta su `Location`. Una URL que no está en el servidor da `(404, \"\", hops)`; visitar una URL dos veces es un ciclo, así que detente con `(0, \"redirect loop\", hops)`. Ejemplo: `fetch(\"http://shop.test/new\", SITE)` devuelve `(200, \"Welcome\", [\"http://shop.test/new\", \"http://shop.test/\"])`."
+     },
+     "starter": "def build_request(method, url, headers=None):\n    rest = url[len(\"http://\"):]\n    host, slash, path = rest.partition(\"/\")\n    lines = [f\"{method} /{path} HTTP/1.1\", f\"Host: {host}\"]\n    for name, value in (headers or {}).items():\n        lines.append(f\"{name}: {value}\")\n    return \"\\r\\n\".join(lines) + \"\\r\\n\\r\\n\"\n\ndef parse_response(raw):\n    head, _sep, body = raw.partition(\"\\r\\n\\r\\n\")\n    lines = head.split(\"\\r\\n\")\n    status = int(lines[0].split()[1])\n    headers = {}\n    for line in lines[1:]:\n        name, _colon, value = line.partition(\":\")\n        headers[name.strip().lower()] = value.strip()\n    return status, headers, body\n\nSITE = {\n    \"http://shop.test/\": \"HTTP/1.1 200 OK\\r\\nContent-Type: text/plain\\r\\n\\r\\nWelcome\",\n    \"http://shop.test/old\": \"HTTP/1.1 301 Moved Permanently\\r\\nLocation: http://shop.test/new\\r\\n\\r\\n\",\n    \"http://shop.test/new\": \"HTTP/1.1 302 Found\\r\\nLocation: http://shop.test/\\r\\n\\r\\n\",\n    \"http://shop.test/a\": \"HTTP/1.1 302 Found\\r\\nLocation: http://shop.test/b\\r\\n\\r\\n\",\n    \"http://shop.test/b\": \"HTTP/1.1 302 Found\\r\\nLocation: http://shop.test/a\\r\\n\\r\\n\",\n    \"http://shop.test/secret\": \"HTTP/1.1 403 Forbidden\\r\\nContent-Type: text/plain\\r\\n\\r\\nNo entry\",\n}\n\n\ndef fetch(url, server):\n    pass\n",
+     "solution": "def build_request(method, url, headers=None):\n    rest = url[len(\"http://\"):]\n    host, slash, path = rest.partition(\"/\")\n    lines = [f\"{method} /{path} HTTP/1.1\", f\"Host: {host}\"]\n    for name, value in (headers or {}).items():\n        lines.append(f\"{name}: {value}\")\n    return \"\\r\\n\".join(lines) + \"\\r\\n\\r\\n\"\n\ndef parse_response(raw):\n    head, _sep, body = raw.partition(\"\\r\\n\\r\\n\")\n    lines = head.split(\"\\r\\n\")\n    status = int(lines[0].split()[1])\n    headers = {}\n    for line in lines[1:]:\n        name, _colon, value = line.partition(\":\")\n        headers[name.strip().lower()] = value.strip()\n    return status, headers, body\n\nSITE = {\n    \"http://shop.test/\": \"HTTP/1.1 200 OK\\r\\nContent-Type: text/plain\\r\\n\\r\\nWelcome\",\n    \"http://shop.test/old\": \"HTTP/1.1 301 Moved Permanently\\r\\nLocation: http://shop.test/new\\r\\n\\r\\n\",\n    \"http://shop.test/new\": \"HTTP/1.1 302 Found\\r\\nLocation: http://shop.test/\\r\\n\\r\\n\",\n    \"http://shop.test/a\": \"HTTP/1.1 302 Found\\r\\nLocation: http://shop.test/b\\r\\n\\r\\n\",\n    \"http://shop.test/b\": \"HTTP/1.1 302 Found\\r\\nLocation: http://shop.test/a\\r\\n\\r\\n\",\n    \"http://shop.test/secret\": \"HTTP/1.1 403 Forbidden\\r\\nContent-Type: text/plain\\r\\n\\r\\nNo entry\",\n}\n\n\ndef fetch(url, server):\n    hops = []\n    while True:\n        if url in hops:\n            return 0, \"redirect loop\", hops\n        hops.append(url)\n        if url not in server:\n            return 404, \"\", hops\n        status, headers, body = parse_response(server[url])\n        if status in (301, 302, 307, 308) and \"location\" in headers:\n            url = headers[\"location\"]\n        else:\n            return status, body, hops\n",
+     "hint": {
+      "en": "A `while True` loop: check for a loop, append the URL to `hops`, parse the server's response with your `parse_response`, and either move `url` to `headers[\"location\"]` or return.",
+      "es": "Un ciclo `while True`: revisa si hay un ciclo, agrega la URL a `hops`, interpreta la respuesta del servidor con tu `parse_response` y luego mueve `url` a `headers[\"location\"]` o devuelve el resultado."
+     },
+     "tests": [
+      [
+       "fetch('http://shop.test/new', SITE)",
+       "(200, 'Welcome', ['http://shop.test/new', 'http://shop.test/'])"
+      ],
+      [
+       "fetch('http://shop.test/old', SITE)",
+       "(200, 'Welcome', ['http://shop.test/old', 'http://shop.test/new', 'http://shop.test/'])"
+      ],
+      [
+       "fetch('http://shop.test/', SITE)",
+       "(200, 'Welcome', ['http://shop.test/'])"
+      ],
+      [
+       "fetch('http://shop.test/a', SITE)",
+       "(0, 'redirect loop', ['http://shop.test/a', 'http://shop.test/b'])"
+      ],
+      [
+       "fetch('http://shop.test/secret', SITE)",
+       "(403, 'No entry', ['http://shop.test/secret'])"
+      ],
+      [
+       "fetch('http://shop.test/missing', SITE)",
+       "(404, '', ['http://shop.test/missing'])"
+      ]
+     ]
+    },
+    {
+     "id": "cache",
+     "title": {
+      "en": "Cache by URL",
+      "es": "Caché por URL"
+     },
+     "prompt": {
+      "en": "Asking the network twice for the same page is slow. Add `fetch_many(urls, server)` that fetches each URL in order with a cache: a dictionary from requested URL to `(status, body)`, storing only `200` answers. Return `(results, misses)`, where `results` is a list of `(status, body)` and `misses` counts the calls to `fetch`. Example: `fetch_many([\"http://shop.test/\", \"http://shop.test/\"], SITE)` returns `([(200, \"Welcome\"), (200, \"Welcome\")], 1)`.",
+      "es": "Pedir dos veces la misma página a la red es lento. Agrega `fetch_many(urls, server)` que pida cada URL en orden con una caché: un diccionario de la URL pedida a `(status, body)` que solo guarda respuestas `200`. Devuelve `(results, misses)`, donde `results` es una lista de `(status, body)` y `misses` cuenta las llamadas a `fetch`. Ejemplo: `fetch_many([\"http://shop.test/\", \"http://shop.test/\"], SITE)` devuelve `([(200, \"Welcome\"), (200, \"Welcome\")], 1)`."
+     },
+     "starter": "def build_request(method, url, headers=None):\n    rest = url[len(\"http://\"):]\n    host, slash, path = rest.partition(\"/\")\n    lines = [f\"{method} /{path} HTTP/1.1\", f\"Host: {host}\"]\n    for name, value in (headers or {}).items():\n        lines.append(f\"{name}: {value}\")\n    return \"\\r\\n\".join(lines) + \"\\r\\n\\r\\n\"\n\ndef parse_response(raw):\n    head, _sep, body = raw.partition(\"\\r\\n\\r\\n\")\n    lines = head.split(\"\\r\\n\")\n    status = int(lines[0].split()[1])\n    headers = {}\n    for line in lines[1:]:\n        name, _colon, value = line.partition(\":\")\n        headers[name.strip().lower()] = value.strip()\n    return status, headers, body\n\nSITE = {\n    \"http://shop.test/\": \"HTTP/1.1 200 OK\\r\\nContent-Type: text/plain\\r\\n\\r\\nWelcome\",\n    \"http://shop.test/old\": \"HTTP/1.1 301 Moved Permanently\\r\\nLocation: http://shop.test/new\\r\\n\\r\\n\",\n    \"http://shop.test/new\": \"HTTP/1.1 302 Found\\r\\nLocation: http://shop.test/\\r\\n\\r\\n\",\n    \"http://shop.test/a\": \"HTTP/1.1 302 Found\\r\\nLocation: http://shop.test/b\\r\\n\\r\\n\",\n    \"http://shop.test/b\": \"HTTP/1.1 302 Found\\r\\nLocation: http://shop.test/a\\r\\n\\r\\n\",\n    \"http://shop.test/secret\": \"HTTP/1.1 403 Forbidden\\r\\nContent-Type: text/plain\\r\\n\\r\\nNo entry\",\n}\n\n\ndef fetch(url, server):\n    hops = []\n    while True:\n        if url in hops:\n            return 0, \"redirect loop\", hops\n        hops.append(url)\n        if url not in server:\n            return 404, \"\", hops\n        status, headers, body = parse_response(server[url])\n        if status in (301, 302, 307, 308) and \"location\" in headers:\n            url = headers[\"location\"]\n        else:\n            return status, body, hops\n\ndef fetch_many(urls, server):\n    pass\n",
+     "solution": "def build_request(method, url, headers=None):\n    rest = url[len(\"http://\"):]\n    host, slash, path = rest.partition(\"/\")\n    lines = [f\"{method} /{path} HTTP/1.1\", f\"Host: {host}\"]\n    for name, value in (headers or {}).items():\n        lines.append(f\"{name}: {value}\")\n    return \"\\r\\n\".join(lines) + \"\\r\\n\\r\\n\"\n\ndef parse_response(raw):\n    head, _sep, body = raw.partition(\"\\r\\n\\r\\n\")\n    lines = head.split(\"\\r\\n\")\n    status = int(lines[0].split()[1])\n    headers = {}\n    for line in lines[1:]:\n        name, _colon, value = line.partition(\":\")\n        headers[name.strip().lower()] = value.strip()\n    return status, headers, body\n\nSITE = {\n    \"http://shop.test/\": \"HTTP/1.1 200 OK\\r\\nContent-Type: text/plain\\r\\n\\r\\nWelcome\",\n    \"http://shop.test/old\": \"HTTP/1.1 301 Moved Permanently\\r\\nLocation: http://shop.test/new\\r\\n\\r\\n\",\n    \"http://shop.test/new\": \"HTTP/1.1 302 Found\\r\\nLocation: http://shop.test/\\r\\n\\r\\n\",\n    \"http://shop.test/a\": \"HTTP/1.1 302 Found\\r\\nLocation: http://shop.test/b\\r\\n\\r\\n\",\n    \"http://shop.test/b\": \"HTTP/1.1 302 Found\\r\\nLocation: http://shop.test/a\\r\\n\\r\\n\",\n    \"http://shop.test/secret\": \"HTTP/1.1 403 Forbidden\\r\\nContent-Type: text/plain\\r\\n\\r\\nNo entry\",\n}\n\n\ndef fetch(url, server):\n    hops = []\n    while True:\n        if url in hops:\n            return 0, \"redirect loop\", hops\n        hops.append(url)\n        if url not in server:\n            return 404, \"\", hops\n        status, headers, body = parse_response(server[url])\n        if status in (301, 302, 307, 308) and \"location\" in headers:\n            url = headers[\"location\"]\n        else:\n            return status, body, hops\n\ndef fetch_many(urls, server):\n    cache = {}\n    results = []\n    misses = 0\n    for url in urls:\n        if url in cache:\n            results.append(cache[url])\n            continue\n        misses += 1\n        status, body, _hops = fetch(url, server)\n        if status == 200:\n            cache[url] = (status, body)\n        results.append((status, body))\n    return results, misses\n",
+     "hint": {
+      "en": "Check `if url in cache` first. On a miss, add 1 to `misses`, call `fetch`, and save the answer only when the status is `200`, so errors are asked for again next time.",
+      "es": "Revisa primero `if url in cache`. Si no está, suma 1 a `misses`, llama a `fetch` y guarda la respuesta solo si el estado es `200`, así los errores se vuelven a pedir la próxima vez."
+     },
+     "tests": [
+      [
+       "fetch_many(['http://shop.test/', 'http://shop.test/'], SITE)",
+       "([(200, 'Welcome'), (200, 'Welcome')], 1)"
+      ],
+      [
+       "fetch_many(['http://shop.test/old', 'http://shop.test/old', 'http://shop.test/'], SITE)",
+       "([(200, 'Welcome'), (200, 'Welcome'), (200, 'Welcome')], 2)"
+      ],
+      [
+       "fetch_many(['http://shop.test/secret', 'http://shop.test/secret'], SITE)",
+       "([(403, 'No entry'), (403, 'No entry')], 2)"
+      ],
+      [
+       "fetch_many([], SITE)",
+       "([], 0)"
+      ],
+      [
+       "fetch_many(['http://shop.test/a', 'http://shop.test/missing', 'http://shop.test/a'], SITE)[1]",
+       "3"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ai-spam-filter",
+   "track": "ai",
+   "icon": "📨",
+   "level": "intermediate",
+   "minutes": 55,
+   "title": {
+    "en": "Build a spam filter from scratch",
+    "es": "Construye un filtro de spam desde cero"
+   },
+   "blurb": {
+    "en": "Train a naive Bayes classifier with nothing but counting: split messages into words, count them per class, score new messages with smoothed log probabilities and decide spam or ham.",
+    "es": "Entrena un clasificador bayesiano ingenuo solo contando: divide los mensajes en palabras, cuéntalas por clase, puntúa mensajes nuevos con probabilidades logarítmicas suavizadas y decide si es spam o no."
+   },
+   "steps": [
+    {
+     "id": "tokenize",
+     "title": {
+      "en": "Split into words",
+      "es": "Divide en palabras"
+     },
+     "prompt": {
+      "en": "A model cannot read sentences, only tokens. Write `tokenize(text)` that lowercases the text and returns the list of runs of letters `a`–`z` and digits, in order. Punctuation and spaces are dropped. Example: `tokenize(\"WIN a FREE prize!!!\")` returns `[\"win\", \"a\", \"free\", \"prize\"]`.",
+      "es": "Un modelo no puede leer oraciones, solo tokens. Escribe `tokenize(text)` que pase el texto a minúsculas y devuelva la lista de secuencias de letras `a`–`z` y dígitos, en orden. Se descartan la puntuación y los espacios. Ejemplo: `tokenize(\"WIN a FREE prize!!!\")` devuelve `[\"win\", \"a\", \"free\", \"prize\"]`."
+     },
+     "starter": "import re\n\n\ndef tokenize(text):\n    pass\n",
+     "solution": "import re\n\n\ndef tokenize(text):\n    return re.findall(r\"[a-z0-9]+\", text.lower())\n",
+     "hint": {
+      "en": "`re.findall(r\"[a-z0-9]+\", text.lower())` returns every run of letters and digits.",
+      "es": "`re.findall(r\"[a-z0-9]+\", text.lower())` devuelve cada secuencia de letras y dígitos."
+     },
+     "tests": [
+      [
+       "tokenize('WIN a FREE prize!!!')",
+       "['win', 'a', 'free', 'prize']"
+      ],
+      [
+       "tokenize('')",
+       "[]"
+      ],
+      [
+       "tokenize('Call 555-0199 now.')",
+       "['call', '555', '0199', 'now']"
+      ],
+      [
+       "tokenize('  ...  ')",
+       "[]"
+      ],
+      [
+       "tokenize('Hello,world')",
+       "['hello', 'world']"
+      ]
+     ]
+    },
+    {
+     "id": "train",
+     "title": {
+      "en": "Count words per class",
+      "es": "Cuenta palabras por clase"
+     },
+     "prompt": {
+      "en": "Training data is a list of `(text, label)` pairs, where the label is `\"spam\"` or `\"ham\"` (not spam). Add `train(messages)` that returns `(word_counts, class_counts)`: `word_counts` maps each label to a dictionary of word → times seen in that class, and `class_counts` maps each label to its number of messages. Both labels are always present. Example: `train([(\"free free\", \"spam\")])` returns `({\"spam\": {\"free\": 2}, \"ham\": {}}, {\"spam\": 1, \"ham\": 0})`.",
+      "es": "Los datos de entrenamiento son una lista de pares `(text, label)`, donde la etiqueta es `\"spam\"` o `\"ham\"` (no es spam). Agrega `train(messages)` que devuelva `(word_counts, class_counts)`: `word_counts` asigna a cada etiqueta un diccionario de palabra → veces vista en esa clase, y `class_counts` asigna a cada etiqueta su número de mensajes. Las dos etiquetas siempre aparecen. Ejemplo: `train([(\"free free\", \"spam\")])` devuelve `({\"spam\": {\"free\": 2}, \"ham\": {}}, {\"spam\": 1, \"ham\": 0})`."
+     },
+     "starter": "import re\n\n\ndef tokenize(text):\n    return re.findall(r\"[a-z0-9]+\", text.lower())\n\nTRAINING = [\n    (\"Win a free prize now\", \"spam\"),\n    (\"Free money, click now!\", \"spam\"),\n    (\"Lunch at noon tomorrow?\", \"ham\"),\n    (\"Can you send the notes\", \"ham\"),\n    (\"See you at the game tomorrow\", \"ham\"),\n]\n\n\ndef train(messages):\n    pass\n",
+     "solution": "import re\n\n\ndef tokenize(text):\n    return re.findall(r\"[a-z0-9]+\", text.lower())\n\nTRAINING = [\n    (\"Win a free prize now\", \"spam\"),\n    (\"Free money, click now!\", \"spam\"),\n    (\"Lunch at noon tomorrow?\", \"ham\"),\n    (\"Can you send the notes\", \"ham\"),\n    (\"See you at the game tomorrow\", \"ham\"),\n]\n\n\ndef train(messages):\n    word_counts = {\"spam\": {}, \"ham\": {}}\n    class_counts = {\"spam\": 0, \"ham\": 0}\n    for text, label in messages:\n        class_counts[label] += 1\n        for word in tokenize(text):\n            word_counts[label][word] = word_counts[label].get(word, 0) + 1\n    return word_counts, class_counts\n",
+     "hint": {
+      "en": "Start both dictionaries with both labels. For each message add 1 to its class, then loop over `tokenize(text)` and use `counts.get(word, 0) + 1`.",
+      "es": "Empieza los dos diccionarios con ambas etiquetas. Por cada mensaje suma 1 a su clase y luego recorre `tokenize(text)` usando `counts.get(word, 0) + 1`."
+     },
+     "tests": [
+      [
+       "train([('free free', 'spam')])",
+       "({'spam': {'free': 2}, 'ham': {}}, {'spam': 1, 'ham': 0})"
+      ],
+      [
+       "train([])",
+       "({'spam': {}, 'ham': {}}, {'spam': 0, 'ham': 0})"
+      ],
+      [
+       "train([('Hi Ana', 'ham'), ('hi, WIN', 'spam'), ('hi again', 'ham')])",
+       "({'spam': {'hi': 1, 'win': 1}, 'ham': {'hi': 2, 'ana': 1, 'again': 1}}, {'spam': 1, 'ham': 2})"
+      ],
+      [
+       "train(TRAINING)[1]",
+       "{'spam': 2, 'ham': 3}"
+      ],
+      [
+       "train(TRAINING)[0]['spam']['now']",
+       "2"
+      ]
+     ]
+    },
+    {
+     "id": "score",
+     "title": {
+      "en": "Naive Bayes scores",
+      "es": "Puntajes de Bayes ingenuo"
+     },
+     "prompt": {
+      "en": "Add `score(text, model, label)` where `model` is what `train` returns. The score is `log(P(label))` plus, for every token of the text, `log((count + 1) / (total + V))`: `count` is how often the word appeared in that class, `total` is the number of words seen in that class, and `V` is the number of distinct words in all training data (the `+ 1` is Laplace smoothing, so unseen words do not give zero). Use `math.log` and round to 3 decimals. Example: `score(\"free\", train(TRAINING), \"spam\")` returns `-3.114`.",
+      "es": "Agrega `score(text, model, label)` donde `model` es lo que devuelve `train`. El puntaje es `log(P(label))` más, por cada token del texto, `log((count + 1) / (total + V))`: `count` es cuántas veces apareció la palabra en esa clase, `total` es el número de palabras vistas en esa clase y `V` es el número de palabras distintas en todos los datos de entrenamiento (el `+ 1` es el suavizado de Laplace, para que una palabra nueva no dé cero). Usa `math.log` y redondea a 3 decimales. Ejemplo: `score(\"free\", train(TRAINING), \"spam\")` devuelve `-3.114`."
+     },
+     "starter": "import re\n\n\ndef tokenize(text):\n    return re.findall(r\"[a-z0-9]+\", text.lower())\n\nTRAINING = [\n    (\"Win a free prize now\", \"spam\"),\n    (\"Free money, click now!\", \"spam\"),\n    (\"Lunch at noon tomorrow?\", \"ham\"),\n    (\"Can you send the notes\", \"ham\"),\n    (\"See you at the game tomorrow\", \"ham\"),\n]\n\n\ndef train(messages):\n    word_counts = {\"spam\": {}, \"ham\": {}}\n    class_counts = {\"spam\": 0, \"ham\": 0}\n    for text, label in messages:\n        class_counts[label] += 1\n        for word in tokenize(text):\n            word_counts[label][word] = word_counts[label].get(word, 0) + 1\n    return word_counts, class_counts\n\nimport math\n\n\ndef score(text, model, label):\n    pass\n",
+     "solution": "import re\n\n\ndef tokenize(text):\n    return re.findall(r\"[a-z0-9]+\", text.lower())\n\nTRAINING = [\n    (\"Win a free prize now\", \"spam\"),\n    (\"Free money, click now!\", \"spam\"),\n    (\"Lunch at noon tomorrow?\", \"ham\"),\n    (\"Can you send the notes\", \"ham\"),\n    (\"See you at the game tomorrow\", \"ham\"),\n]\n\n\ndef train(messages):\n    word_counts = {\"spam\": {}, \"ham\": {}}\n    class_counts = {\"spam\": 0, \"ham\": 0}\n    for text, label in messages:\n        class_counts[label] += 1\n        for word in tokenize(text):\n            word_counts[label][word] = word_counts[label].get(word, 0) + 1\n    return word_counts, class_counts\n\nimport math\n\n\ndef log_score(text, model, label):\n    word_counts, class_counts = model\n    vocab = set(word_counts[\"spam\"]) | set(word_counts[\"ham\"])\n    total_words = sum(word_counts[label].values())\n    score = math.log(class_counts[label] / sum(class_counts.values()))\n    for word in tokenize(text):\n        count = word_counts[label].get(word, 0)\n        score += math.log((count + 1) / (total_words + len(vocab)))\n    return score\n\n\ndef score(text, model, label):\n    return round(log_score(text, model, label), 3)\n",
+     "hint": {
+      "en": "`P(label)` is that class's message count over all messages. `V` is `len(set(spam_words) | set(ham_words))`. Adding logs is the same as multiplying probabilities, without numbers that shrink to zero. Keep the unrounded sum in a helper for the next step.",
+      "es": "`P(label)` es el número de mensajes de esa clase entre el total de mensajes. `V` es `len(set(palabras_spam) | set(palabras_ham))`. Sumar logaritmos equivale a multiplicar probabilidades, sin números que se encogen hasta cero. Guarda la suma sin redondear en una función auxiliar para el siguiente paso."
+     },
+     "tests": [
+      [
+       "score('free', train(TRAINING), 'spam')",
+       "-3.114"
+      ],
+      [
+       "score('free', train(TRAINING), 'ham')",
+       "-4.007"
+      ],
+      [
+       "score('', train(TRAINING), 'ham')",
+       "-0.511"
+      ],
+      [
+       "score('see you tomorrow', train(TRAINING), 'ham')",
+       "-8.11"
+      ],
+      [
+       "score('zebra', train(TRAINING), 'spam')",
+       "-4.212"
+      ],
+      [
+       "score('free prize now', train(TRAINING), 'spam') > score('free prize now', train(TRAINING), 'ham')",
+       "True"
+      ]
+     ]
+    },
+    {
+     "id": "classify",
+     "title": {
+      "en": "Spam or ham?",
+      "es": "¿Spam o no?"
+     },
+     "prompt": {
+      "en": "Finish the filter with `classify(text, model)`: return `\"spam\"` when the spam score is higher than the ham score, otherwise `\"ham\"` (a tie counts as ham, because losing a real message is worse). Compare the unrounded scores. Example: `classify(\"Claim your free prize\", train(TRAINING))` returns `\"spam\"`.",
+      "es": "Termina el filtro con `classify(text, model)`: devuelve `\"spam\"` cuando el puntaje de spam es mayor que el de ham y si no `\"ham\"` (un empate cuenta como ham, porque perder un mensaje real es peor). Compara los puntajes sin redondear. Ejemplo: `classify(\"Claim your free prize\", train(TRAINING))` devuelve `\"spam\"`."
+     },
+     "starter": "import re\n\n\ndef tokenize(text):\n    return re.findall(r\"[a-z0-9]+\", text.lower())\n\nTRAINING = [\n    (\"Win a free prize now\", \"spam\"),\n    (\"Free money, click now!\", \"spam\"),\n    (\"Lunch at noon tomorrow?\", \"ham\"),\n    (\"Can you send the notes\", \"ham\"),\n    (\"See you at the game tomorrow\", \"ham\"),\n]\n\n\ndef train(messages):\n    word_counts = {\"spam\": {}, \"ham\": {}}\n    class_counts = {\"spam\": 0, \"ham\": 0}\n    for text, label in messages:\n        class_counts[label] += 1\n        for word in tokenize(text):\n            word_counts[label][word] = word_counts[label].get(word, 0) + 1\n    return word_counts, class_counts\n\nimport math\n\n\ndef log_score(text, model, label):\n    word_counts, class_counts = model\n    vocab = set(word_counts[\"spam\"]) | set(word_counts[\"ham\"])\n    total_words = sum(word_counts[label].values())\n    score = math.log(class_counts[label] / sum(class_counts.values()))\n    for word in tokenize(text):\n        count = word_counts[label].get(word, 0)\n        score += math.log((count + 1) / (total_words + len(vocab)))\n    return score\n\n\ndef score(text, model, label):\n    return round(log_score(text, model, label), 3)\n\ndef classify(text, model):\n    pass\n",
+     "solution": "import re\n\n\ndef tokenize(text):\n    return re.findall(r\"[a-z0-9]+\", text.lower())\n\nTRAINING = [\n    (\"Win a free prize now\", \"spam\"),\n    (\"Free money, click now!\", \"spam\"),\n    (\"Lunch at noon tomorrow?\", \"ham\"),\n    (\"Can you send the notes\", \"ham\"),\n    (\"See you at the game tomorrow\", \"ham\"),\n]\n\n\ndef train(messages):\n    word_counts = {\"spam\": {}, \"ham\": {}}\n    class_counts = {\"spam\": 0, \"ham\": 0}\n    for text, label in messages:\n        class_counts[label] += 1\n        for word in tokenize(text):\n            word_counts[label][word] = word_counts[label].get(word, 0) + 1\n    return word_counts, class_counts\n\nimport math\n\n\ndef log_score(text, model, label):\n    word_counts, class_counts = model\n    vocab = set(word_counts[\"spam\"]) | set(word_counts[\"ham\"])\n    total_words = sum(word_counts[label].values())\n    score = math.log(class_counts[label] / sum(class_counts.values()))\n    for word in tokenize(text):\n        count = word_counts[label].get(word, 0)\n        score += math.log((count + 1) / (total_words + len(vocab)))\n    return score\n\n\ndef score(text, model, label):\n    return round(log_score(text, model, label), 3)\n\ndef classify(text, model):\n    if log_score(text, model, \"spam\") > log_score(text, model, \"ham\"):\n        return \"spam\"\n    return \"ham\"\n",
+     "hint": {
+      "en": "Two calls to your unrounded scoring helper, one per label, and a strict `>`.",
+      "es": "Dos llamadas a tu función auxiliar sin redondeo, una por etiqueta, y un `>` estricto."
+     },
+     "tests": [
+      [
+       "classify('Claim your free prize', train(TRAINING))",
+       "'spam'"
+      ],
+      [
+       "classify('See you at lunch tomorrow', train(TRAINING))",
+       "'ham'"
+      ],
+      [
+       "classify('', train(TRAINING))",
+       "'ham'"
+      ],
+      [
+       "classify('CLICK NOW', train(TRAINING))",
+       "'spam'"
+      ],
+      [
+       "classify('notes for the game', train(TRAINING))",
+       "'ham'"
+      ],
+      [
+       "[classify(t, train(TRAINING)) for t, _ in TRAINING] == [label for _, label in TRAINING]",
+       "True"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "sec-password-checker",
+   "track": "cybersecurity",
+   "icon": "🔐",
+   "level": "beginner",
+   "minutes": 45,
+   "title": {
+    "en": "Build a password checker",
+    "es": "Construye un verificador de contraseñas"
+   },
+   "blurb": {
+    "en": "Check length and character rules, catch passwords from a common-password list, estimate entropy in bits and combine it all into a strength report.",
+    "es": "Revisa la longitud y las reglas de caracteres, detecta contraseñas de una lista de contraseñas comunes, estima la entropía en bits y combínalo todo en un informe de fortaleza."
+   },
+   "steps": [
+    {
+     "id": "rules",
+     "title": {
+      "en": "Character rules",
+      "es": "Reglas de caracteres"
+     },
+     "prompt": {
+      "en": "Write `check_rules(password)` that returns the list of rules the password breaks, in this order: `\"length\"` (fewer than 12 characters), `\"lower\"` (no lowercase letter), `\"upper\"` (no uppercase letter), `\"digit\"` (no digit), `\"symbol\"` (nothing that is not a letter or digit). Example: `check_rules(\"sunshine\")` returns `[\"length\", \"upper\", \"digit\", \"symbol\"]`.",
+      "es": "Escribe `check_rules(password)` que devuelva la lista de reglas que la contraseña no cumple, en este orden: `\"length\"` (menos de 12 caracteres), `\"lower\"` (ninguna minúscula), `\"upper\"` (ninguna mayúscula), `\"digit\"` (ningún dígito), `\"symbol\"` (nada que no sea letra o dígito). Ejemplo: `check_rules(\"sunshine\")` devuelve `[\"length\", \"upper\", \"digit\", \"symbol\"]`."
+     },
+     "starter": "def check_rules(password):\n    problems = []\n    # check each rule in order\n    return problems\n",
+     "solution": "def check_rules(password):\n    problems = []\n    if len(password) < 12:\n        problems.append(\"length\")\n    if not any(c.islower() for c in password):\n        problems.append(\"lower\")\n    if not any(c.isupper() for c in password):\n        problems.append(\"upper\")\n    if not any(c.isdigit() for c in password):\n        problems.append(\"digit\")\n    if all(c.isalnum() for c in password):\n        problems.append(\"symbol\")\n    return problems\n",
+     "hint": {
+      "en": "`any(c.isupper() for c in password)` is `True` when at least one character is uppercase. A symbol is a character where `c.isalnum()` is `False`.",
+      "es": "`any(c.isupper() for c in password)` es `True` cuando al menos un carácter es mayúscula. Un símbolo es un carácter donde `c.isalnum()` es `False`."
+     },
+     "tests": [
+      [
+       "check_rules('sunshine')",
+       "['length', 'upper', 'digit', 'symbol']"
+      ],
+      [
+       "check_rules('Tr0ub4dor&3xyz')",
+       "[]"
+      ],
+      [
+       "check_rules('')",
+       "['length', 'lower', 'upper', 'digit', 'symbol']"
+      ],
+      [
+       "check_rules('ALLCAPS-AND-123')",
+       "['lower']"
+      ],
+      [
+       "check_rules('correcthorsebatterystaple')",
+       "['upper', 'digit', 'symbol']"
+      ],
+      [
+       "check_rules('Abc1!')",
+       "['length']"
+      ]
+     ]
+    },
+    {
+     "id": "common",
+     "title": {
+      "en": "Common passwords",
+      "es": "Contraseñas comunes"
+     },
+     "prompt": {
+      "en": "Attackers try leaked passwords first. Add `is_common(password)`: `True` if the password, ignoring case, is in `COMMON`, or becomes one after removing digits and the symbols `!@#$%^&*?.` from its end. Example: `is_common(\"Password123!\")` returns `True`.",
+      "es": "Los atacantes prueban primero las contraseñas filtradas. Agrega `is_common(password)`: `True` si la contraseña, sin importar mayúsculas, está en `COMMON`, o lo está después de quitarle dígitos y los símbolos `!@#$%^&*?.` del final. Ejemplo: `is_common(\"Password123!\")` devuelve `True`."
+     },
+     "starter": "def check_rules(password):\n    problems = []\n    if len(password) < 12:\n        problems.append(\"length\")\n    if not any(c.islower() for c in password):\n        problems.append(\"lower\")\n    if not any(c.isupper() for c in password):\n        problems.append(\"upper\")\n    if not any(c.isdigit() for c in password):\n        problems.append(\"digit\")\n    if all(c.isalnum() for c in password):\n        problems.append(\"symbol\")\n    return problems\n\nCOMMON = [\"123456\", \"password\", \"qwerty\", \"letmein\", \"dragon\", \"iloveyou\", \"monkey\", \"111111\", \"football\", \"welcome\"]\n\n\ndef is_common(password):\n    pass\n",
+     "solution": "def check_rules(password):\n    problems = []\n    if len(password) < 12:\n        problems.append(\"length\")\n    if not any(c.islower() for c in password):\n        problems.append(\"lower\")\n    if not any(c.isupper() for c in password):\n        problems.append(\"upper\")\n    if not any(c.isdigit() for c in password):\n        problems.append(\"digit\")\n    if all(c.isalnum() for c in password):\n        problems.append(\"symbol\")\n    return problems\n\nCOMMON = [\"123456\", \"password\", \"qwerty\", \"letmein\", \"dragon\", \"iloveyou\", \"monkey\", \"111111\", \"football\", \"welcome\"]\n\n\ndef is_common(password):\n    lowered = password.lower()\n    base = lowered.rstrip(\"0123456789!@#$%^&*?.\")\n    return lowered in COMMON or base in COMMON\n",
+     "hint": {
+      "en": "`password.lower()` ignores case and `.rstrip(\"0123456789!@#$%^&*?.\")` peels those characters off the end. Check both versions with `in COMMON`.",
+      "es": "`password.lower()` ignora mayúsculas y `.rstrip(\"0123456789!@#$%^&*?.\")` quita esos caracteres del final. Revisa ambas versiones con `in COMMON`."
+     },
+     "tests": [
+      [
+       "is_common('Password123!')",
+       "True"
+      ],
+      [
+       "is_common('QWERTY')",
+       "True"
+      ],
+      [
+       "is_common('123456')",
+       "True"
+      ],
+      [
+       "is_common('dragonfly')",
+       "False"
+      ],
+      [
+       "is_common('Tr0ub4dor&3xyz')",
+       "False"
+      ],
+      [
+       "is_common('2025welcome')",
+       "False"
+      ],
+      [
+       "is_common('Welcome2025')",
+       "True"
+      ]
+     ]
+    },
+    {
+     "id": "entropy",
+     "title": {
+      "en": "Entropy in bits",
+      "es": "Entropía en bits"
+     },
+     "prompt": {
+      "en": "Estimate how hard a password is to guess. The pool is the sum of the character sets it uses: 26 for lowercase, 26 for uppercase, 10 for digits and 33 for symbols (anything else). Add `entropy(password)` that returns `len(password) * log2(pool)` rounded to 1 decimal, or `0.0` for an empty password. Example: `entropy(\"abc\")` returns `14.1`.",
+      "es": "Estima qué tan difícil es adivinar una contraseña. El conjunto es la suma de los tipos de caracteres que usa: 26 por minúsculas, 26 por mayúsculas, 10 por dígitos y 33 por símbolos (cualquier otro). Agrega `entropy(password)` que devuelva `len(password) * log2(conjunto)` redondeado a 1 decimal, o `0.0` para una contraseña vacía. Ejemplo: `entropy(\"abc\")` devuelve `14.1`."
+     },
+     "starter": "def check_rules(password):\n    problems = []\n    if len(password) < 12:\n        problems.append(\"length\")\n    if not any(c.islower() for c in password):\n        problems.append(\"lower\")\n    if not any(c.isupper() for c in password):\n        problems.append(\"upper\")\n    if not any(c.isdigit() for c in password):\n        problems.append(\"digit\")\n    if all(c.isalnum() for c in password):\n        problems.append(\"symbol\")\n    return problems\n\nCOMMON = [\"123456\", \"password\", \"qwerty\", \"letmein\", \"dragon\", \"iloveyou\", \"monkey\", \"111111\", \"football\", \"welcome\"]\n\n\ndef is_common(password):\n    lowered = password.lower()\n    base = lowered.rstrip(\"0123456789!@#$%^&*?.\")\n    return lowered in COMMON or base in COMMON\n\nimport math\n\n\ndef entropy(password):\n    pass\n",
+     "solution": "def check_rules(password):\n    problems = []\n    if len(password) < 12:\n        problems.append(\"length\")\n    if not any(c.islower() for c in password):\n        problems.append(\"lower\")\n    if not any(c.isupper() for c in password):\n        problems.append(\"upper\")\n    if not any(c.isdigit() for c in password):\n        problems.append(\"digit\")\n    if all(c.isalnum() for c in password):\n        problems.append(\"symbol\")\n    return problems\n\nCOMMON = [\"123456\", \"password\", \"qwerty\", \"letmein\", \"dragon\", \"iloveyou\", \"monkey\", \"111111\", \"football\", \"welcome\"]\n\n\ndef is_common(password):\n    lowered = password.lower()\n    base = lowered.rstrip(\"0123456789!@#$%^&*?.\")\n    return lowered in COMMON or base in COMMON\n\nimport math\n\n\ndef entropy(password):\n    pool = 0\n    if any(c.islower() for c in password):\n        pool += 26\n    if any(c.isupper() for c in password):\n        pool += 26\n    if any(c.isdigit() for c in password):\n        pool += 10\n    if any(not c.isalnum() for c in password):\n        pool += 33\n    if pool == 0:\n        return 0.0\n    return round(len(password) * math.log2(pool), 1)\n",
+     "hint": {
+      "en": "Add to `pool` once per kind present, using `any(...)` like in step 1, then `round(len(password) * math.log2(pool), 1)`.",
+      "es": "Suma a `pool` una vez por cada tipo presente, con `any(...)` como en el paso 1, y luego `round(len(password) * math.log2(pool), 1)`."
+     },
+     "tests": [
+      [
+       "entropy('abc')",
+       "14.1"
+      ],
+      [
+       "entropy('')",
+       "0.0"
+      ],
+      [
+       "entropy('123456')",
+       "19.9"
+      ],
+      [
+       "entropy('Tr0ub4dor&3xyz')",
+       "92.0"
+      ],
+      [
+       "entropy('correcthorsebatterystaple')",
+       "117.5"
+      ],
+      [
+       "entropy('a b')",
+       "17.6"
+      ]
+     ]
+    },
+    {
+     "id": "report",
+     "title": {
+      "en": "The strength report",
+      "es": "El informe de fortaleza"
+     },
+     "prompt": {
+      "en": "Combine everything in `report(password)`. If it is common, return `\"weak: common password\"`. Otherwise, if the entropy is below 50 bits, return `\"weak: only BITS bits\"`. Otherwise, if it breaks any rule, return `\"fair: add \"` followed by the rules joined with `\", \"`. Otherwise return `\"strong: BITS bits\"`. Example: `report(\"letmein!\")` returns `\"weak: common password\"`.",
+      "es": "Combina todo en `report(password)`. Si es común, devuelve `\"weak: common password\"`. Si no, y la entropía es menor que 50 bits, devuelve `\"weak: only BITS bits\"`. Si no, y no cumple alguna regla, devuelve `\"fair: add \"` seguido de las reglas unidas con `\", \"`. Si no, devuelve `\"strong: BITS bits\"`. Ejemplo: `report(\"letmein!\")` devuelve `\"weak: common password\"`."
+     },
+     "starter": "def check_rules(password):\n    problems = []\n    if len(password) < 12:\n        problems.append(\"length\")\n    if not any(c.islower() for c in password):\n        problems.append(\"lower\")\n    if not any(c.isupper() for c in password):\n        problems.append(\"upper\")\n    if not any(c.isdigit() for c in password):\n        problems.append(\"digit\")\n    if all(c.isalnum() for c in password):\n        problems.append(\"symbol\")\n    return problems\n\nCOMMON = [\"123456\", \"password\", \"qwerty\", \"letmein\", \"dragon\", \"iloveyou\", \"monkey\", \"111111\", \"football\", \"welcome\"]\n\n\ndef is_common(password):\n    lowered = password.lower()\n    base = lowered.rstrip(\"0123456789!@#$%^&*?.\")\n    return lowered in COMMON or base in COMMON\n\nimport math\n\n\ndef entropy(password):\n    pool = 0\n    if any(c.islower() for c in password):\n        pool += 26\n    if any(c.isupper() for c in password):\n        pool += 26\n    if any(c.isdigit() for c in password):\n        pool += 10\n    if any(not c.isalnum() for c in password):\n        pool += 33\n    if pool == 0:\n        return 0.0\n    return round(len(password) * math.log2(pool), 1)\n\ndef report(password):\n    pass\n",
+     "solution": "def check_rules(password):\n    problems = []\n    if len(password) < 12:\n        problems.append(\"length\")\n    if not any(c.islower() for c in password):\n        problems.append(\"lower\")\n    if not any(c.isupper() for c in password):\n        problems.append(\"upper\")\n    if not any(c.isdigit() for c in password):\n        problems.append(\"digit\")\n    if all(c.isalnum() for c in password):\n        problems.append(\"symbol\")\n    return problems\n\nCOMMON = [\"123456\", \"password\", \"qwerty\", \"letmein\", \"dragon\", \"iloveyou\", \"monkey\", \"111111\", \"football\", \"welcome\"]\n\n\ndef is_common(password):\n    lowered = password.lower()\n    base = lowered.rstrip(\"0123456789!@#$%^&*?.\")\n    return lowered in COMMON or base in COMMON\n\nimport math\n\n\ndef entropy(password):\n    pool = 0\n    if any(c.islower() for c in password):\n        pool += 26\n    if any(c.isupper() for c in password):\n        pool += 26\n    if any(c.isdigit() for c in password):\n        pool += 10\n    if any(not c.isalnum() for c in password):\n        pool += 33\n    if pool == 0:\n        return 0.0\n    return round(len(password) * math.log2(pool), 1)\n\ndef report(password):\n    if is_common(password):\n        return \"weak: common password\"\n    bits = entropy(password)\n    if bits < 50:\n        return f\"weak: only {bits} bits\"\n    problems = check_rules(password)\n    if problems:\n        return \"fair: add \" + \", \".join(problems)\n    return f\"strong: {bits} bits\"\n",
+     "hint": {
+      "en": "Check the cases from worst to best with `if` and `return`, reusing `is_common`, `entropy` and `check_rules`.",
+      "es": "Revisa los casos del peor al mejor con `if` y `return`, reutilizando `is_common`, `entropy` y `check_rules`."
+     },
+     "tests": [
+      [
+       "report('letmein!')",
+       "'weak: common password'"
+      ],
+      [
+       "report('kitten7')",
+       "'weak: only 36.2 bits'"
+      ],
+      [
+       "report('correcthorsebatterystaple')",
+       "'fair: add upper, digit, symbol'"
+      ],
+      [
+       "report('Tr0ub4dor&3xyz')",
+       "'strong: 92.0 bits'"
+      ],
+      [
+       "report('')",
+       "'weak: only 0.0 bits'"
+      ],
+      [
+       "report('BlueCoffeeMug42')",
+       "'fair: add symbol'"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "java-bank",
+   "track": "java",
+   "icon": "🏦",
+   "level": "intermediate",
+   "minutes": 60,
+   "title": {
+    "en": "Build a bank account system",
+    "es": "Construye un sistema de cuentas bancarias"
+   },
+   "blurb": {
+    "en": "Model accounts with a class, guard every change with exceptions, keep a list of accounts that can transfer money safely, then add interest and print a report.",
+    "es": "Modela cuentas con una clase, protege cada cambio con excepciones, guarda una lista de cuentas que pueden transferir dinero de forma segura y luego agrega intereses e imprime un informe."
+   },
+   "steps": [
+    {
+     "id": "account",
+     "lang": "java",
+     "title": {
+      "en": "The Account class",
+      "es": "La clase Account"
+     },
+     "prompt": {
+      "en": "Money is kept in cents as a `long`. First write `static String money(long cents)`, which formats cents as dollars: `money(1250)` returns `\"$12.50\"`. Then finish the nested class `Account(String id, String owner, long balance)`: save the fields, and make `toString()` return `\"ID (OWNER): MONEY\"`. Example: `new Solution.Account(\"A1\", \"Ana\", 1250).toString()` returns `\"A1 (Ana): $12.50\"`.",
+      "es": "El dinero se guarda en centavos como `long`. Primero escribe `static String money(long cents)`, que da formato de dólares a los centavos: `money(1250)` devuelve `\"$12.50\"`. Luego termina la clase anidada `Account(String id, String owner, long balance)`: guarda los campos y haz que `toString()` devuelva `\"ID (DUEÑO): DINERO\"`. Ejemplo: `new Solution.Account(\"A1\", \"Ana\", 1250).toString()` devuelve `\"A1 (Ana): $12.50\"`."
+     },
+     "starter": "class Solution {\n    // Money is stored in cents (a long), so it never has rounding errors.\n    static String money(long cents) {\n        // format cents as $D.CC\n        return \"\";\n    }\n\n    static class Account {\n        private final String id;\n        private final String owner;\n        private long balance;   // in cents\n\n        Account(String id, String owner, long balance) {\n            // save the three fields\n            this.id = \"\";\n            this.owner = \"\";\n        }\n\n        String getId() {\n            return id;\n        }\n\n        String getOwner() {\n            return owner;\n        }\n\n        long getBalance() {\n            return balance;\n        }\n\n        @Override\n        public String toString() {\n            // like A1 (Ana): $12.50\n            return \"\";\n        }\n    }\n}\n",
+     "solution": "class Solution {\n    // Money is stored in cents (a long), so it never has rounding errors.\n    static String money(long cents) {\n        return String.format(\"$%d.%02d\", cents / 100, cents % 100);\n    }\n\n    static class Account {\n        private final String id;\n        private final String owner;\n        private long balance;   // in cents\n\n        Account(String id, String owner, long balance) {\n            this.id = id;\n            this.owner = owner;\n            this.balance = balance;\n        }\n\n        String getId() {\n            return id;\n        }\n\n        String getOwner() {\n            return owner;\n        }\n\n        long getBalance() {\n            return balance;\n        }\n\n        @Override\n        public String toString() {\n            return id + \" (\" + owner + \"): \" + money(balance);\n        }\n    }\n}\n",
+     "hint": {
+      "en": "`cents / 100` gives whole dollars and `cents % 100` the cents; `String.format(\"$%d.%02d\", ...)` pads the cents to two digits. In the constructor, `this.id = id;` saves a parameter into a field.",
+      "es": "`cents / 100` da los dólares enteros y `cents % 100` los centavos; `String.format(\"$%d.%02d\", ...)` rellena los centavos a dos dígitos. En el constructor, `this.id = id;` guarda un parámetro en un campo."
+     },
+     "tests": [
+      [
+       "Solution.money(1250)",
+       "\"$12.50\""
+      ],
+      [
+       "Solution.money(5)",
+       "\"$0.05\""
+      ],
+      [
+       "Solution.money(0)",
+       "\"$0.00\""
+      ],
+      [
+       "Solution.money(100000)",
+       "\"$1000.00\""
+      ],
+      [
+       "new Solution.Account(\"A1\", \"Ana\", 1250).toString()",
+       "\"A1 (Ana): $12.50\""
+      ],
+      [
+       "new Solution.Account(\"B2\", \"Ben\", 7).getBalance()",
+       "7"
+      ],
+      [
+       "new Solution.Account(\"B2\", \"Ben\", 7).getOwner()",
+       "\"Ben\""
+      ]
+     ]
+    },
+    {
+     "id": "validate",
+     "lang": "java",
+     "title": {
+      "en": "Deposits, withdrawals, exceptions",
+      "es": "Depósitos, retiros y excepciones"
+     },
+     "prompt": {
+      "en": "Accounts must never hold bad values. Make the constructor throw `IllegalArgumentException(\"opening balance cannot be negative\")` for a negative balance. Add `Account deposit(long amount)` and `Account withdraw(long amount)`: both throw `IllegalArgumentException(\"amount must be positive\")` when `amount <= 0`, and `withdraw` throws `IllegalStateException(\"insufficient funds\")` when the amount is more than the balance. Both return `this`. Example: `new Solution.Account(\"A1\", \"Ana\", 1000).deposit(250).withdraw(500).getBalance()` returns `750`.",
+      "es": "Las cuentas nunca deben tener valores inválidos. Haz que el constructor lance `IllegalArgumentException(\"opening balance cannot be negative\")` si el saldo es negativo. Agrega `Account deposit(long amount)` y `Account withdraw(long amount)`: ambos lanzan `IllegalArgumentException(\"amount must be positive\")` cuando `amount <= 0`, y `withdraw` lanza `IllegalStateException(\"insufficient funds\")` cuando el monto es mayor que el saldo. Ambos devuelven `this`. Ejemplo: `new Solution.Account(\"A1\", \"Ana\", 1000).deposit(250).withdraw(500).getBalance()` devuelve `750`."
+     },
+     "starter": "class Solution {\n    // Money is stored in cents (a long), so it never has rounding errors.\n    static String money(long cents) {\n        return String.format(\"$%d.%02d\", cents / 100, cents % 100);\n    }\n\n    static class Account {\n        private final String id;\n        private final String owner;\n        private long balance;   // in cents\n\n        Account(String id, String owner, long balance) {\n            this.id = id;\n            this.owner = owner;\n            this.balance = balance;\n        }\n\n        String getId() {\n            return id;\n        }\n\n        String getOwner() {\n            return owner;\n        }\n\n        long getBalance() {\n            return balance;\n        }\n\n        @Override\n        public String toString() {\n            return id + \" (\" + owner + \"): \" + money(balance);\n        }\n\n        Account deposit(long amount) {\n            // check the amount, then add it\n            return this;\n        }\n\n        Account withdraw(long amount) {\n            // check the amount and the balance, then subtract it\n            return this;\n        }\n    }\n}\n",
+     "solution": "class Solution {\n    // Money is stored in cents (a long), so it never has rounding errors.\n    static String money(long cents) {\n        return String.format(\"$%d.%02d\", cents / 100, cents % 100);\n    }\n\n    static class Account {\n        private final String id;\n        private final String owner;\n        private long balance;   // in cents\n\n        Account(String id, String owner, long balance) {\n            if (balance < 0) throw new IllegalArgumentException(\"opening balance cannot be negative\");\n            this.id = id;\n            this.owner = owner;\n            this.balance = balance;\n        }\n\n        String getId() {\n            return id;\n        }\n\n        String getOwner() {\n            return owner;\n        }\n\n        long getBalance() {\n            return balance;\n        }\n\n        @Override\n        public String toString() {\n            return id + \" (\" + owner + \"): \" + money(balance);\n        }\n\n        Account deposit(long amount) {\n            if (amount <= 0) throw new IllegalArgumentException(\"amount must be positive\");\n            balance += amount;\n            return this;   // returning this lets calls chain\n        }\n\n        Account withdraw(long amount) {\n            if (amount <= 0) throw new IllegalArgumentException(\"amount must be positive\");\n            if (amount > balance) throw new IllegalStateException(\"insufficient funds\");\n            balance -= amount;\n            return this;\n        }\n    }\n}\n",
+     "hint": {
+      "en": "Check first and change the balance last: `if (amount <= 0) throw new IllegalArgumentException(\"...\");`. A thrown exception stops the method, so the balance stays untouched.",
+      "es": "Revisa primero y cambia el saldo al final: `if (amount <= 0) throw new IllegalArgumentException(\"...\");`. Una excepción lanzada detiene el método, así que el saldo queda intacto."
+     },
+     "tests": [
+      [
+       "new Solution.Account(\"A1\", \"Ana\", 1000).deposit(250).withdraw(500).getBalance()",
+       "750"
+      ],
+      [
+       "new Solution.Account(\"A1\", \"Ana\", 1000).withdraw(1000).getBalance()",
+       "0"
+      ],
+      [
+       "new Solution.Account(\"A1\", \"Ana\", 1000).withdraw(1001)",
+       "java.lang.IllegalStateException: insufficient funds"
+      ],
+      [
+       "new Solution.Account(\"A1\", \"Ana\", 1000).deposit(0)",
+       "java.lang.IllegalArgumentException: amount must be positive"
+      ],
+      [
+       "new Solution.Account(\"A1\", \"Ana\", 1000).withdraw(-5)",
+       "java.lang.IllegalArgumentException: amount must be positive"
+      ],
+      [
+       "new Solution.Account(\"X9\", \"Xi\", -1)",
+       "java.lang.IllegalArgumentException: opening balance cannot be negative"
+      ],
+      [
+       "new Solution.Account(\"Z0\", \"Zoe\", 0).deposit(99)",
+       "Z0 (Zoe): $0.99"
+      ]
+     ]
+    },
+    {
+     "id": "bank",
+     "lang": "java",
+     "title": {
+      "en": "A bank of accounts",
+      "es": "Un banco de cuentas"
+     },
+     "prompt": {
+      "en": "Add a nested class `Bank` that keeps a `List<Account>`. `Bank open(String id, String owner, long balance)` adds an account and throws `IllegalArgumentException(\"duplicate id: ID\")` if the id is taken. `Account find(String id)` throws `NoSuchElementException(\"no account: ID\")` when missing. `Bank transfer(String fromId, String toId, long amount)` never throws: it moves the money and logs `\"ok: FROM -> TO MONEY\"`, or, if anything fails, changes no balance and logs `\"failed: \"` plus the exception's message. `getLog()` returns the log. `sample()` builds a test bank. Example: `Solution.sample().transfer(\"A1\", \"B2\", 2500).find(\"B2\").getBalance()` returns `3500`.",
+      "es": "Agrega una clase anidada `Bank` que guarde una `List<Account>`. `Bank open(String id, String owner, long balance)` agrega una cuenta y lanza `IllegalArgumentException(\"duplicate id: ID\")` si el id ya existe. `Account find(String id)` lanza `NoSuchElementException(\"no account: ID\")` si no está. `Bank transfer(String fromId, String toId, long amount)` nunca lanza: mueve el dinero y registra `\"ok: DESDE -> HACIA DINERO\"` o, si algo falla, no cambia ningún saldo y registra `\"failed: \"` más el mensaje de la excepción. `getLog()` devuelve el registro. `sample()` crea un banco de prueba. Ejemplo: `Solution.sample().transfer(\"A1\", \"B2\", 2500).find(\"B2\").getBalance()` devuelve `3500`."
+     },
+     "starter": "import java.util.*;\n\nclass Solution {\n    // Money is stored in cents (a long), so it never has rounding errors.\n    static String money(long cents) {\n        return String.format(\"$%d.%02d\", cents / 100, cents % 100);\n    }\n\n    static class Account {\n        private final String id;\n        private final String owner;\n        private long balance;   // in cents\n\n        Account(String id, String owner, long balance) {\n            if (balance < 0) throw new IllegalArgumentException(\"opening balance cannot be negative\");\n            this.id = id;\n            this.owner = owner;\n            this.balance = balance;\n        }\n\n        String getId() {\n            return id;\n        }\n\n        String getOwner() {\n            return owner;\n        }\n\n        long getBalance() {\n            return balance;\n        }\n\n        @Override\n        public String toString() {\n            return id + \" (\" + owner + \"): \" + money(balance);\n        }\n\n        Account deposit(long amount) {\n            if (amount <= 0) throw new IllegalArgumentException(\"amount must be positive\");\n            balance += amount;\n            return this;   // returning this lets calls chain\n        }\n\n        Account withdraw(long amount) {\n            if (amount <= 0) throw new IllegalArgumentException(\"amount must be positive\");\n            if (amount > balance) throw new IllegalStateException(\"insufficient funds\");\n            balance -= amount;\n            return this;\n        }\n    }\n\n    static class Bank {\n        private final List<Account> accounts = new ArrayList<>();\n        private final List<String> log = new ArrayList<>();\n\n        Bank open(String id, String owner, long balance) {\n            // refuse a duplicate id, then add a new Account\n            return this;\n        }\n\n        Account find(String id) {\n            // return the account with this id, or throw NoSuchElementException\n            return null;\n        }\n\n        Bank transfer(String fromId, String toId, long amount) {\n            // move the money and log \"ok: ...\" or \"failed: ...\"\n            return this;\n        }\n\n        List<String> getLog() {\n            return log;\n        }\n    }\n\n    static Bank sample() {\n        return new Bank().open(\"A1\", \"Ana\", 5000).open(\"B2\", \"Ben\", 1000);\n    }\n}\n",
+     "solution": "import java.util.*;\n\nclass Solution {\n    // Money is stored in cents (a long), so it never has rounding errors.\n    static String money(long cents) {\n        return String.format(\"$%d.%02d\", cents / 100, cents % 100);\n    }\n\n    static class Account {\n        private final String id;\n        private final String owner;\n        private long balance;   // in cents\n\n        Account(String id, String owner, long balance) {\n            if (balance < 0) throw new IllegalArgumentException(\"opening balance cannot be negative\");\n            this.id = id;\n            this.owner = owner;\n            this.balance = balance;\n        }\n\n        String getId() {\n            return id;\n        }\n\n        String getOwner() {\n            return owner;\n        }\n\n        long getBalance() {\n            return balance;\n        }\n\n        @Override\n        public String toString() {\n            return id + \" (\" + owner + \"): \" + money(balance);\n        }\n\n        Account deposit(long amount) {\n            if (amount <= 0) throw new IllegalArgumentException(\"amount must be positive\");\n            balance += amount;\n            return this;   // returning this lets calls chain\n        }\n\n        Account withdraw(long amount) {\n            if (amount <= 0) throw new IllegalArgumentException(\"amount must be positive\");\n            if (amount > balance) throw new IllegalStateException(\"insufficient funds\");\n            balance -= amount;\n            return this;\n        }\n    }\n\n    static class Bank {\n        private final List<Account> accounts = new ArrayList<>();\n        private final List<String> log = new ArrayList<>();\n\n        Bank open(String id, String owner, long balance) {\n            for (Account a : accounts) {\n                if (a.getId().equals(id)) throw new IllegalArgumentException(\"duplicate id: \" + id);\n            }\n            accounts.add(new Account(id, owner, balance));\n            return this;\n        }\n\n        Account find(String id) {\n            for (Account a : accounts) {\n                if (a.getId().equals(id)) return a;\n            }\n            throw new NoSuchElementException(\"no account: \" + id);\n        }\n\n        Bank transfer(String fromId, String toId, long amount) {\n            try {\n                Account from = find(fromId);\n                Account to = find(toId);   // look both up before any money moves\n                from.withdraw(amount);\n                to.deposit(amount);\n                log.add(\"ok: \" + fromId + \" -> \" + toId + \" \" + money(amount));\n            } catch (RuntimeException e) {\n                log.add(\"failed: \" + e.getMessage());\n            }\n            return this;\n        }\n\n        List<String> getLog() {\n            return log;\n        }\n    }\n\n    static Bank sample() {\n        return new Bank().open(\"A1\", \"Ana\", 5000).open(\"B2\", \"Ben\", 1000);\n    }\n}\n",
+     "hint": {
+      "en": "Wrap the transfer in `try { ... } catch (RuntimeException e) { log.add(\"failed: \" + e.getMessage()); }`. Find **both** accounts before withdrawing, so an unknown target cannot leave money half-moved.",
+      "es": "Envuelve la transferencia en `try { ... } catch (RuntimeException e) { log.add(\"failed: \" + e.getMessage()); }`. Busca **las dos** cuentas antes de retirar, así un destino desconocido no deja el dinero a medio mover."
+     },
+     "tests": [
+      [
+       "Solution.sample().transfer(\"A1\", \"B2\", 2500).find(\"B2\").getBalance()",
+       "3500"
+      ],
+      [
+       "Solution.sample().transfer(\"A1\", \"B2\", 2500).find(\"A1\").getBalance()",
+       "2500"
+      ],
+      [
+       "Solution.sample().transfer(\"B2\", \"A1\", 5000).find(\"B2\").getBalance()",
+       "1000"
+      ],
+      [
+       "Solution.sample().transfer(\"B2\", \"A1\", 5000).getLog()",
+       "[failed: insufficient funds]"
+      ],
+      [
+       "Solution.sample().transfer(\"A1\", \"Z9\", 100).find(\"A1\").getBalance()",
+       "5000"
+      ],
+      [
+       "Solution.sample().transfer(\"A1\", \"B2\", 250).transfer(\"A1\", \"Z9\", 100).getLog()",
+       "[ok: A1 -> B2 $2.50, failed: no account: Z9]"
+      ],
+      [
+       "Solution.sample().transfer(\"A1\", \"B2\", 0).getLog()",
+       "[failed: amount must be positive]"
+      ],
+      [
+       "Solution.sample().open(\"A1\", \"Bo\", 0)",
+       "java.lang.IllegalArgumentException: duplicate id: A1"
+      ],
+      [
+       "Solution.sample().find(\"Q7\")",
+       "java.util.NoSuchElementException: no account: Q7"
+      ]
+     ]
+    },
+    {
+     "id": "report",
+     "lang": "java",
+     "title": {
+      "en": "Interest and a report",
+      "es": "Intereses y un informe"
+     },
+     "prompt": {
+      "en": "Add two `Bank` methods. `Bank addInterest(double ratePercent)` adds `ratePercent`% of each balance, rounded to whole cents with `Math.round`, and throws `IllegalArgumentException(\"rate cannot be negative\")` for a negative rate. `List<String> report()` returns one `toString()` line per account, largest balance first (ties by id A→Z), then `\"Total: MONEY\"`. Example: `Solution.sample().addInterest(2.5).report()` returns `[A1 (Ana): $51.25, B2 (Ben): $10.25, Total: $61.50]`.",
+      "es": "Agrega dos métodos a `Bank`. `Bank addInterest(double ratePercent)` suma el `ratePercent`% de cada saldo, redondeado a centavos enteros con `Math.round`, y lanza `IllegalArgumentException(\"rate cannot be negative\")` si la tasa es negativa. `List<String> report()` devuelve una línea `toString()` por cuenta, el saldo más alto primero (en empate, por id de la A a la Z), y luego `\"Total: DINERO\"`. Ejemplo: `Solution.sample().addInterest(2.5).report()` devuelve `[A1 (Ana): $51.25, B2 (Ben): $10.25, Total: $61.50]`."
+     },
+     "starter": "import java.util.*;\n\nclass Solution {\n    // Money is stored in cents (a long), so it never has rounding errors.\n    static String money(long cents) {\n        return String.format(\"$%d.%02d\", cents / 100, cents % 100);\n    }\n\n    static class Account {\n        private final String id;\n        private final String owner;\n        private long balance;   // in cents\n\n        Account(String id, String owner, long balance) {\n            if (balance < 0) throw new IllegalArgumentException(\"opening balance cannot be negative\");\n            this.id = id;\n            this.owner = owner;\n            this.balance = balance;\n        }\n\n        String getId() {\n            return id;\n        }\n\n        String getOwner() {\n            return owner;\n        }\n\n        long getBalance() {\n            return balance;\n        }\n\n        @Override\n        public String toString() {\n            return id + \" (\" + owner + \"): \" + money(balance);\n        }\n\n        Account deposit(long amount) {\n            if (amount <= 0) throw new IllegalArgumentException(\"amount must be positive\");\n            balance += amount;\n            return this;   // returning this lets calls chain\n        }\n\n        Account withdraw(long amount) {\n            if (amount <= 0) throw new IllegalArgumentException(\"amount must be positive\");\n            if (amount > balance) throw new IllegalStateException(\"insufficient funds\");\n            balance -= amount;\n            return this;\n        }\n    }\n\n    static class Bank {\n        private final List<Account> accounts = new ArrayList<>();\n        private final List<String> log = new ArrayList<>();\n\n        Bank open(String id, String owner, long balance) {\n            for (Account a : accounts) {\n                if (a.getId().equals(id)) throw new IllegalArgumentException(\"duplicate id: \" + id);\n            }\n            accounts.add(new Account(id, owner, balance));\n            return this;\n        }\n\n        Account find(String id) {\n            for (Account a : accounts) {\n                if (a.getId().equals(id)) return a;\n            }\n            throw new NoSuchElementException(\"no account: \" + id);\n        }\n\n        Bank transfer(String fromId, String toId, long amount) {\n            try {\n                Account from = find(fromId);\n                Account to = find(toId);   // look both up before any money moves\n                from.withdraw(amount);\n                to.deposit(amount);\n                log.add(\"ok: \" + fromId + \" -> \" + toId + \" \" + money(amount));\n            } catch (RuntimeException e) {\n                log.add(\"failed: \" + e.getMessage());\n            }\n            return this;\n        }\n\n        List<String> getLog() {\n            return log;\n        }\n\n        Bank addInterest(double ratePercent) {\n            // add ratePercent % of each balance, rounded to whole cents\n            return this;\n        }\n\n        List<String> report() {\n            List<String> lines = new ArrayList<>();\n            // one line per account, richest first, then \"Total: $X.XX\"\n            return lines;\n        }\n    }\n\n    static Bank sample() {\n        return new Bank().open(\"A1\", \"Ana\", 5000).open(\"B2\", \"Ben\", 1000);\n    }\n}\n",
+     "solution": "import java.util.*;\n\nclass Solution {\n    // Money is stored in cents (a long), so it never has rounding errors.\n    static String money(long cents) {\n        return String.format(\"$%d.%02d\", cents / 100, cents % 100);\n    }\n\n    static class Account {\n        private final String id;\n        private final String owner;\n        private long balance;   // in cents\n\n        Account(String id, String owner, long balance) {\n            if (balance < 0) throw new IllegalArgumentException(\"opening balance cannot be negative\");\n            this.id = id;\n            this.owner = owner;\n            this.balance = balance;\n        }\n\n        String getId() {\n            return id;\n        }\n\n        String getOwner() {\n            return owner;\n        }\n\n        long getBalance() {\n            return balance;\n        }\n\n        @Override\n        public String toString() {\n            return id + \" (\" + owner + \"): \" + money(balance);\n        }\n\n        Account deposit(long amount) {\n            if (amount <= 0) throw new IllegalArgumentException(\"amount must be positive\");\n            balance += amount;\n            return this;   // returning this lets calls chain\n        }\n\n        Account withdraw(long amount) {\n            if (amount <= 0) throw new IllegalArgumentException(\"amount must be positive\");\n            if (amount > balance) throw new IllegalStateException(\"insufficient funds\");\n            balance -= amount;\n            return this;\n        }\n    }\n\n    static class Bank {\n        private final List<Account> accounts = new ArrayList<>();\n        private final List<String> log = new ArrayList<>();\n\n        Bank open(String id, String owner, long balance) {\n            for (Account a : accounts) {\n                if (a.getId().equals(id)) throw new IllegalArgumentException(\"duplicate id: \" + id);\n            }\n            accounts.add(new Account(id, owner, balance));\n            return this;\n        }\n\n        Account find(String id) {\n            for (Account a : accounts) {\n                if (a.getId().equals(id)) return a;\n            }\n            throw new NoSuchElementException(\"no account: \" + id);\n        }\n\n        Bank transfer(String fromId, String toId, long amount) {\n            try {\n                Account from = find(fromId);\n                Account to = find(toId);   // look both up before any money moves\n                from.withdraw(amount);\n                to.deposit(amount);\n                log.add(\"ok: \" + fromId + \" -> \" + toId + \" \" + money(amount));\n            } catch (RuntimeException e) {\n                log.add(\"failed: \" + e.getMessage());\n            }\n            return this;\n        }\n\n        List<String> getLog() {\n            return log;\n        }\n\n        Bank addInterest(double ratePercent) {\n            if (ratePercent < 0) throw new IllegalArgumentException(\"rate cannot be negative\");\n            for (Account a : accounts) {\n                long interest = Math.round(a.getBalance() * ratePercent / 100);\n                if (interest > 0) a.deposit(interest);\n            }\n            return this;\n        }\n\n        List<String> report() {\n            List<Account> sorted = new ArrayList<>(accounts);   // a copy, so the bank's order stays the same\n            sorted.sort(Comparator.comparingLong(Account::getBalance).reversed().thenComparing(Account::getId));\n            List<String> lines = new ArrayList<>();\n            long total = 0;\n            for (Account a : sorted) {\n                lines.add(a.toString());\n                total += a.getBalance();\n            }\n            lines.add(\"Total: \" + money(total));\n            return lines;\n        }\n    }\n\n    static Bank sample() {\n        return new Bank().open(\"A1\", \"Ana\", 5000).open(\"B2\", \"Ben\", 1000);\n    }\n}\n",
+     "hint": {
+      "en": "Sort a **copy** of the list with `Comparator.comparingLong(Account::getBalance).reversed().thenComparing(Account::getId)`. Interest that rounds to 0 cents should be skipped, because `deposit(0)` throws.",
+      "es": "Ordena una **copia** de la lista con `Comparator.comparingLong(Account::getBalance).reversed().thenComparing(Account::getId)`. Un interés que se redondea a 0 centavos debe saltarse, porque `deposit(0)` lanza una excepción."
+     },
+     "tests": [
+      [
+       "Solution.sample().addInterest(2.5).report()",
+       "[A1 (Ana): $51.25, B2 (Ben): $10.25, Total: $61.50]"
+      ],
+      [
+       "new Solution.Bank().report()",
+       "[Total: $0.00]"
+      ],
+      [
+       "Solution.sample().open(\"C3\", \"Cy\", 1000).report()",
+       "[A1 (Ana): $50.00, B2 (Ben): $10.00, C3 (Cy): $10.00, Total: $70.00]"
+      ],
+      [
+       "Solution.sample().transfer(\"A1\", \"B2\", 4500).report()",
+       "[B2 (Ben): $55.00, A1 (Ana): $5.00, Total: $60.00]"
+      ],
+      [
+       "new Solution.Bank().open(\"Z\", \"Zed\", 199).addInterest(1).find(\"Z\").getBalance()",
+       "201"
+      ],
+      [
+       "new Solution.Bank().open(\"Z\", \"Zed\", 0).addInterest(5).report()",
+       "[Z (Zed): $0.00, Total: $0.00]"
+      ],
+      [
+       "Solution.sample().addInterest(-1)",
+       "java.lang.IllegalArgumentException: rate cannot be negative"
+      ]
+     ]
+    }
+   ]
+  },
+  {
+   "id": "dsa-route-planner",
+   "track": "dsa",
+   "icon": "🧭",
+   "level": "intermediate",
+   "minutes": 60,
+   "title": {
+    "en": "Build a route planner",
+    "es": "Construye un planificador de rutas"
+   },
+   "blurb": {
+    "en": "Turn a list of roads into a graph, find the route with the fewest stops with BFS, the shortest distance with Dijkstra, and the actual path to drive.",
+    "es": "Convierte una lista de carreteras en un grafo, encuentra la ruta con menos paradas con BFS, la distancia más corta con Dijkstra y el camino exacto a seguir."
+   },
+   "steps": [
+    {
+     "id": "graph",
+     "title": {
+      "en": "Roads to a graph",
+      "es": "De carreteras a grafo"
+     },
+     "prompt": {
+      "en": "`ROADS` lists two-way roads as `(town, town, km)`. Write `build_graph(roads)` that returns an adjacency list: a dictionary from each town to a list of `(neighbor, km)` tuples sorted by neighbor. Example: `build_graph([(\"A\", \"B\", 4)])` returns `{\"A\": [(\"B\", 4)], \"B\": [(\"A\", 4)]}`.",
+      "es": "`ROADS` enumera carreteras de doble sentido como `(pueblo, pueblo, km)`. Escribe `build_graph(roads)` que devuelva una lista de adyacencia: un diccionario de cada pueblo a una lista de tuplas `(vecino, km)` ordenada por vecino. Ejemplo: `build_graph([(\"A\", \"B\", 4)])` devuelve `{\"A\": [(\"B\", 4)], \"B\": [(\"A\", 4)]}`."
+     },
+     "starter": "ROADS = [\n    (\"A\", \"B\", 4), (\"A\", \"C\", 2), (\"B\", \"C\", 1), (\"B\", \"D\", 5), (\"C\", \"D\", 8),\n    (\"C\", \"E\", 10), (\"D\", \"E\", 2), (\"D\", \"F\", 6), (\"E\", \"F\", 3), (\"G\", \"H\", 1),\n]\n\ndef build_graph(roads):\n    graph = {}\n    # add both directions of every road\n    return graph\n",
+     "solution": "ROADS = [\n    (\"A\", \"B\", 4), (\"A\", \"C\", 2), (\"B\", \"C\", 1), (\"B\", \"D\", 5), (\"C\", \"D\", 8),\n    (\"C\", \"E\", 10), (\"D\", \"E\", 2), (\"D\", \"F\", 6), (\"E\", \"F\", 3), (\"G\", \"H\", 1),\n]\n\ndef build_graph(roads):\n    graph = {}\n    for a, b, km in roads:\n        graph.setdefault(a, []).append((b, km))\n        graph.setdefault(b, []).append((a, km))\n    for town in graph:\n        graph[town].sort()\n    return graph\n",
+     "hint": {
+      "en": "Each road adds an entry in **both** directions. `graph.setdefault(town, [])` creates the list the first time; sort every list at the end.",
+      "es": "Cada carretera agrega una entrada en **ambas** direcciones. `graph.setdefault(town, [])` crea la lista la primera vez; ordena cada lista al final."
+     },
+     "tests": [
+      [
+       "build_graph([('A', 'B', 4)])",
+       "{'A': [('B', 4)], 'B': [('A', 4)]}"
+      ],
+      [
+       "build_graph([])",
+       "{}"
+      ],
+      [
+       "build_graph([('B', 'C', 1), ('A', 'C', 2)])",
+       "{'B': [('C', 1)], 'C': [('A', 2), ('B', 1)], 'A': [('C', 2)]}"
+      ],
+      [
+       "build_graph(ROADS)['C']",
+       "[('A', 2), ('B', 1), ('D', 8), ('E', 10)]"
+      ],
+      [
+       "len(build_graph(ROADS))",
+       "8"
+      ]
+     ]
+    },
+    {
+     "id": "bfs",
+     "title": {
+      "en": "Fewest stops (BFS)",
+      "es": "Menos paradas (BFS)"
+     },
+     "prompt": {
+      "en": "Add `fewest_stops(graph, start, goal)`: the smallest number of roads needed to get from `start` to `goal`, ignoring distances. Return `0` when they are the same town and `-1` when there is no way there. Example: `fewest_stops(build_graph(ROADS), \"A\", \"F\")` returns `3`.",
+      "es": "Agrega `fewest_stops(graph, start, goal)`: la menor cantidad de carreteras para ir de `start` a `goal`, sin importar las distancias. Devuelve `0` si son el mismo pueblo y `-1` si no hay forma de llegar. Ejemplo: `fewest_stops(build_graph(ROADS), \"A\", \"F\")` devuelve `3`."
+     },
+     "starter": "ROADS = [\n    (\"A\", \"B\", 4), (\"A\", \"C\", 2), (\"B\", \"C\", 1), (\"B\", \"D\", 5), (\"C\", \"D\", 8),\n    (\"C\", \"E\", 10), (\"D\", \"E\", 2), (\"D\", \"F\", 6), (\"E\", \"F\", 3), (\"G\", \"H\", 1),\n]\n\ndef build_graph(roads):\n    graph = {}\n    for a, b, km in roads:\n        graph.setdefault(a, []).append((b, km))\n        graph.setdefault(b, []).append((a, km))\n    for town in graph:\n        graph[town].sort()\n    return graph\n\nfrom collections import deque\n\n\ndef fewest_stops(graph, start, goal):\n    pass\n",
+     "solution": "ROADS = [\n    (\"A\", \"B\", 4), (\"A\", \"C\", 2), (\"B\", \"C\", 1), (\"B\", \"D\", 5), (\"C\", \"D\", 8),\n    (\"C\", \"E\", 10), (\"D\", \"E\", 2), (\"D\", \"F\", 6), (\"E\", \"F\", 3), (\"G\", \"H\", 1),\n]\n\ndef build_graph(roads):\n    graph = {}\n    for a, b, km in roads:\n        graph.setdefault(a, []).append((b, km))\n        graph.setdefault(b, []).append((a, km))\n    for town in graph:\n        graph[town].sort()\n    return graph\n\nfrom collections import deque\n\n\ndef fewest_stops(graph, start, goal):\n    queue = deque([(start, 0)])\n    seen = {start}\n    while queue:\n        town, stops = queue.popleft()\n        if town == goal:\n            return stops\n        for neighbor, _km in graph.get(town, []):\n            if neighbor not in seen:\n                seen.add(neighbor)\n                queue.append((neighbor, stops + 1))\n    return -1\n",
+     "hint": {
+      "en": "Breadth-first search: a `collections.deque` queue of `(town, stops)` and a `seen` set. The first time you pull `goal` off the queue, its `stops` is the answer.",
+      "es": "Búsqueda en anchura: una cola `collections.deque` de `(pueblo, paradas)` y un conjunto `seen`. La primera vez que sacas `goal` de la cola, sus `paradas` son la respuesta."
+     },
+     "tests": [
+      [
+       "fewest_stops(build_graph(ROADS), 'A', 'F')",
+       "3"
+      ],
+      [
+       "fewest_stops(build_graph(ROADS), 'A', 'B')",
+       "1"
+      ],
+      [
+       "fewest_stops(build_graph(ROADS), 'C', 'C')",
+       "0"
+      ],
+      [
+       "fewest_stops(build_graph(ROADS), 'A', 'H')",
+       "-1"
+      ],
+      [
+       "fewest_stops(build_graph(ROADS), 'H', 'G')",
+       "1"
+      ],
+      [
+       "fewest_stops(build_graph(ROADS), 'F', 'A')",
+       "3"
+      ]
+     ]
+    },
+    {
+     "id": "dijkstra",
+     "title": {
+      "en": "Shortest distance (Dijkstra)",
+      "es": "Distancia más corta (Dijkstra)"
+     },
+     "prompt": {
+      "en": "Fewest stops is not always shortest. Add `shortest_distance(graph, start, goal)` that returns the smallest total km from `start` to `goal`, `0` for the same town, or `-1` if it cannot be reached. Example: `shortest_distance(build_graph(ROADS), \"A\", \"B\")` returns `3` (A→C→B beats the direct 4 km road).",
+      "es": "Menos paradas no siempre es lo más corto. Agrega `shortest_distance(graph, start, goal)` que devuelva el menor total de km de `start` a `goal`, `0` si es el mismo pueblo o `-1` si no se puede llegar. Ejemplo: `shortest_distance(build_graph(ROADS), \"A\", \"B\")` devuelve `3` (A→C→B le gana a la carretera directa de 4 km)."
+     },
+     "starter": "ROADS = [\n    (\"A\", \"B\", 4), (\"A\", \"C\", 2), (\"B\", \"C\", 1), (\"B\", \"D\", 5), (\"C\", \"D\", 8),\n    (\"C\", \"E\", 10), (\"D\", \"E\", 2), (\"D\", \"F\", 6), (\"E\", \"F\", 3), (\"G\", \"H\", 1),\n]\n\ndef build_graph(roads):\n    graph = {}\n    for a, b, km in roads:\n        graph.setdefault(a, []).append((b, km))\n        graph.setdefault(b, []).append((a, km))\n    for town in graph:\n        graph[town].sort()\n    return graph\n\nfrom collections import deque\n\n\ndef fewest_stops(graph, start, goal):\n    queue = deque([(start, 0)])\n    seen = {start}\n    while queue:\n        town, stops = queue.popleft()\n        if town == goal:\n            return stops\n        for neighbor, _km in graph.get(town, []):\n            if neighbor not in seen:\n                seen.add(neighbor)\n                queue.append((neighbor, stops + 1))\n    return -1\n\nimport heapq\n\n\ndef shortest_distance(graph, start, goal):\n    pass\n",
+     "solution": "ROADS = [\n    (\"A\", \"B\", 4), (\"A\", \"C\", 2), (\"B\", \"C\", 1), (\"B\", \"D\", 5), (\"C\", \"D\", 8),\n    (\"C\", \"E\", 10), (\"D\", \"E\", 2), (\"D\", \"F\", 6), (\"E\", \"F\", 3), (\"G\", \"H\", 1),\n]\n\ndef build_graph(roads):\n    graph = {}\n    for a, b, km in roads:\n        graph.setdefault(a, []).append((b, km))\n        graph.setdefault(b, []).append((a, km))\n    for town in graph:\n        graph[town].sort()\n    return graph\n\nfrom collections import deque\n\n\ndef fewest_stops(graph, start, goal):\n    queue = deque([(start, 0)])\n    seen = {start}\n    while queue:\n        town, stops = queue.popleft()\n        if town == goal:\n            return stops\n        for neighbor, _km in graph.get(town, []):\n            if neighbor not in seen:\n                seen.add(neighbor)\n                queue.append((neighbor, stops + 1))\n    return -1\n\nimport heapq\n\n\ndef shortest_distance(graph, start, goal):\n    best = {start: 0}\n    heap = [(0, start)]\n    while heap:\n        dist, town = heapq.heappop(heap)\n        if town == goal:\n            return dist\n        if dist > best[town]:\n            continue\n        for neighbor, km in graph.get(town, []):\n            new_dist = dist + km\n            if new_dist < best.get(neighbor, float(\"inf\")):\n                best[neighbor] = new_dist\n                heapq.heappush(heap, (new_dist, neighbor))\n    return -1\n",
+     "hint": {
+      "en": "Dijkstra: a `heapq` priority queue of `(km_so_far, town)` and a `best` dictionary. Pop the closest town; skip it if you already found a shorter way; push each neighbor with `km_so_far + km`.",
+      "es": "Dijkstra: una cola de prioridad `heapq` de `(km_hasta_ahora, pueblo)` y un diccionario `best`. Saca el pueblo más cercano; sáltalo si ya encontraste un camino más corto; agrega cada vecino con `km_hasta_ahora + km`."
+     },
+     "tests": [
+      [
+       "shortest_distance(build_graph(ROADS), 'A', 'B')",
+       "3"
+      ],
+      [
+       "shortest_distance(build_graph(ROADS), 'A', 'F')",
+       "13"
+      ],
+      [
+       "shortest_distance(build_graph(ROADS), 'A', 'D')",
+       "8"
+      ],
+      [
+       "shortest_distance(build_graph(ROADS), 'E', 'E')",
+       "0"
+      ],
+      [
+       "shortest_distance(build_graph(ROADS), 'A', 'G')",
+       "-1"
+      ],
+      [
+       "shortest_distance(build_graph(ROADS), 'F', 'C')",
+       "11"
+      ]
+     ]
+    },
+    {
+     "id": "path",
+     "title": {
+      "en": "Show the route",
+      "es": "Muestra la ruta"
+     },
+     "prompt": {
+      "en": "A distance is not directions. Add `shortest_path(graph, start, goal)` that returns `(km, towns)`, where `towns` is the list of towns on a shortest route from `start` to `goal`. Return `(0, [start])` for the same town and `(-1, [])` when it cannot be reached. Example: `shortest_path(build_graph(ROADS), \"A\", \"D\")` returns `(8, [\"A\", \"C\", \"B\", \"D\"])`.",
+      "es": "Una distancia no son indicaciones. Agrega `shortest_path(graph, start, goal)` que devuelva `(km, towns)`, donde `towns` es la lista de pueblos de una ruta más corta de `start` a `goal`. Devuelve `(0, [start])` si es el mismo pueblo y `(-1, [])` si no se puede llegar. Ejemplo: `shortest_path(build_graph(ROADS), \"A\", \"D\")` devuelve `(8, [\"A\", \"C\", \"B\", \"D\"])`."
+     },
+     "starter": "ROADS = [\n    (\"A\", \"B\", 4), (\"A\", \"C\", 2), (\"B\", \"C\", 1), (\"B\", \"D\", 5), (\"C\", \"D\", 8),\n    (\"C\", \"E\", 10), (\"D\", \"E\", 2), (\"D\", \"F\", 6), (\"E\", \"F\", 3), (\"G\", \"H\", 1),\n]\n\ndef build_graph(roads):\n    graph = {}\n    for a, b, km in roads:\n        graph.setdefault(a, []).append((b, km))\n        graph.setdefault(b, []).append((a, km))\n    for town in graph:\n        graph[town].sort()\n    return graph\n\nfrom collections import deque\n\n\ndef fewest_stops(graph, start, goal):\n    queue = deque([(start, 0)])\n    seen = {start}\n    while queue:\n        town, stops = queue.popleft()\n        if town == goal:\n            return stops\n        for neighbor, _km in graph.get(town, []):\n            if neighbor not in seen:\n                seen.add(neighbor)\n                queue.append((neighbor, stops + 1))\n    return -1\n\nimport heapq\n\n\ndef shortest_distance(graph, start, goal):\n    best = {start: 0}\n    heap = [(0, start)]\n    while heap:\n        dist, town = heapq.heappop(heap)\n        if town == goal:\n            return dist\n        if dist > best[town]:\n            continue\n        for neighbor, km in graph.get(town, []):\n            new_dist = dist + km\n            if new_dist < best.get(neighbor, float(\"inf\")):\n                best[neighbor] = new_dist\n                heapq.heappush(heap, (new_dist, neighbor))\n    return -1\n\ndef shortest_path(graph, start, goal):\n    pass\n",
+     "solution": "ROADS = [\n    (\"A\", \"B\", 4), (\"A\", \"C\", 2), (\"B\", \"C\", 1), (\"B\", \"D\", 5), (\"C\", \"D\", 8),\n    (\"C\", \"E\", 10), (\"D\", \"E\", 2), (\"D\", \"F\", 6), (\"E\", \"F\", 3), (\"G\", \"H\", 1),\n]\n\ndef build_graph(roads):\n    graph = {}\n    for a, b, km in roads:\n        graph.setdefault(a, []).append((b, km))\n        graph.setdefault(b, []).append((a, km))\n    for town in graph:\n        graph[town].sort()\n    return graph\n\nfrom collections import deque\n\n\ndef fewest_stops(graph, start, goal):\n    queue = deque([(start, 0)])\n    seen = {start}\n    while queue:\n        town, stops = queue.popleft()\n        if town == goal:\n            return stops\n        for neighbor, _km in graph.get(town, []):\n            if neighbor not in seen:\n                seen.add(neighbor)\n                queue.append((neighbor, stops + 1))\n    return -1\n\nimport heapq\n\n\ndef shortest_distance(graph, start, goal):\n    best = {start: 0}\n    heap = [(0, start)]\n    while heap:\n        dist, town = heapq.heappop(heap)\n        if town == goal:\n            return dist\n        if dist > best[town]:\n            continue\n        for neighbor, km in graph.get(town, []):\n            new_dist = dist + km\n            if new_dist < best.get(neighbor, float(\"inf\")):\n                best[neighbor] = new_dist\n                heapq.heappush(heap, (new_dist, neighbor))\n    return -1\n\ndef shortest_path(graph, start, goal):\n    best = {start: 0}\n    previous = {}\n    heap = [(0, start)]\n    while heap:\n        dist, town = heapq.heappop(heap)\n        if town == goal:\n            route = [town]\n            while route[-1] != start:\n                route.append(previous[route[-1]])\n            return dist, route[::-1]\n        if dist > best[town]:\n            continue\n        for neighbor, km in graph.get(town, []):\n            new_dist = dist + km\n            if new_dist < best.get(neighbor, float(\"inf\")):\n                best[neighbor] = new_dist\n                previous[neighbor] = town\n                heapq.heappush(heap, (new_dist, neighbor))\n    return -1, []\n",
+     "hint": {
+      "en": "Run Dijkstra again, but whenever you improve `best[neighbor]`, also store `previous[neighbor] = town`. At the goal, follow `previous` back to `start` and reverse the list.",
+      "es": "Ejecuta Dijkstra otra vez, pero cada vez que mejores `best[neighbor]`, guarda también `previous[neighbor] = town`. Al llegar a la meta, sigue `previous` hacia atrás hasta `start` e invierte la lista."
+     },
+     "tests": [
+      [
+       "shortest_path(build_graph(ROADS), 'A', 'D')",
+       "(8, ['A', 'C', 'B', 'D'])"
+      ],
+      [
+       "shortest_path(build_graph(ROADS), 'A', 'F')",
+       "(13, ['A', 'C', 'B', 'D', 'E', 'F'])"
+      ],
+      [
+       "shortest_path(build_graph(ROADS), 'B', 'B')",
+       "(0, ['B'])"
+      ],
+      [
+       "shortest_path(build_graph(ROADS), 'A', 'H')",
+       "(-1, [])"
+      ],
+      [
+       "shortest_path(build_graph(ROADS), 'F', 'A')",
+       "(13, ['F', 'E', 'D', 'B', 'C', 'A'])"
+      ],
+      [
+       "shortest_path(build_graph(ROADS), 'G', 'H')",
+       "(1, ['G', 'H'])"
+      ]
+     ]
+    }
+   ]
+  }
+ ]
+}

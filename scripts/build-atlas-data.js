@@ -33,14 +33,15 @@ const TRACK_META = {
     blurb: { en: 'Logic and proofs, sets and relations, counting, probability and graph theory.', es: 'Lógica y demostraciones, conjuntos y relaciones, conteo, probabilidad y teoría de grafos.' } },
   git: { title: { en: 'Git', es: 'Git' }, icon: 'G', level: 'beginner',
     blurb: { en: 'How Git really stores your work, and the branching workflow teams use every day.', es: 'Cómo Git guarda realmente tu trabajo y el flujo de ramas que los equipos usan a diario.' } },
+  networks: { title: { en: 'Computer Networks', es: 'Redes de computadoras' }, icon: '⇄', level: 'intermediate',
+    blurb: { en: 'From packets to the web: IP addresses and routing, TCP and UDP, DNS, HTTP and HTTPS, and what happens when you open a website, all simulated in runnable Python.', es: 'De los paquetes a la web: direcciones IP y enrutamiento, TCP y UDP, DNS, HTTP y HTTPS, y qué pasa cuando abres un sitio web, todo simulado en Python ejecutable.' } },
   assembly: { title: { en: 'x86-64 Assembly', es: 'Ensamblador x86-64' }, icon: '⚙', level: 'intermediate',
     blurb: { en: 'Registers, memory, calls and the stack: what your high-level code turns into.', es: 'Registros, memoria, llamadas y la pila: en qué se convierte tu código de alto nivel.' } }
 };
-const ORDER = ['python', 'cli', 'web', 'sql', 'how-computers-work', 'cybersecurity', 'ai', 'java', 'discrete', 'git', 'dsa', 'assembly'];
+const ORDER = ['python', 'cli', 'web', 'sql', 'how-computers-work', 'cybersecurity', 'ai', 'java', 'discrete', 'git', 'dsa', 'networks', 'assembly'];
 // Courses not written yet, beginner-friendly first. Shown as cards on the Courses page.
 const P = (id, icon, level, en, es, blurbEn, blurbEs) => ({ id, icon, level, title: { en, es }, blurb: { en: blurbEn, es: blurbEs } });
 const PLANNED = [
-  P('networks', '⇄', 'intermediate', 'Computer Networks', 'Redes de computadoras', 'From packets to the web: IP, TCP and UDP, DNS, HTTP and what happens when you open a website.', 'De los paquetes a la web: IP, TCP y UDP, DNS, HTTP y qué pasa cuando abres un sitio web.'),
   P('os', 'OS', 'intermediate', 'Operating Systems', 'Sistemas operativos', 'Processes and threads, scheduling, memory management, file systems and concurrency.', 'Procesos e hilos, planificación, gestión de memoria, sistemas de archivos y concurrencia.'),
   P('cpp', 'C+', 'intermediate', 'C++', 'C++', 'Pointers, memory, classes and the standard library, for performance-minded programming.', 'Punteros, memoria, clases y la biblioteca estándar, para programar pensando en el rendimiento.'),
   P('architecture', '▣', 'intermediate', 'Computer Architecture', 'Arquitectura de computadoras', 'Logic gates to pipelines: how hardware executes instructions and why caches matter.', 'De las compuertas lógicas al pipeline: cómo el hardware ejecuta instrucciones y por qué importan las cachés.'),
@@ -95,6 +96,13 @@ const harness = fs.readFileSync(path.join(ROOT, 'scripts/lib/challenge_harness.p
 const webChecks = fs.readFileSync(path.join(ROOT, 'scripts/lib/web_checks.js'), 'utf8');
 // Java challenge tests and the loop guard, shared with scripts/verify_challenges.js.
 const javaTools = fs.readFileSync(path.join(ROOT, 'scripts/lib/java_tools.js'), 'utf8');
+// Guided projects: the small index (titles, course, step count) rides in atlas-data.json; the steps load on demand
+// from data/projects.json, cache-busted by its hash.
+const projectsFile = fs.readFileSync(path.join(ROOT, 'data/projects.json'), 'utf8');
+const projectsSrc = JSON.parse(projectsFile).projects || [];
+for (const pr of projectsSrc) if (!TRACK_META[pr.track]) throw new Error(`project ${pr.id}: unknown course ${pr.track}`);
+const projects = projectsSrc.map((pr) => ({ id: pr.id, track: pr.track, icon: pr.icon, level: pr.level, minutes: pr.minutes, title: pr.title, blurb: pr.blurb, steps: pr.steps.length, lang: pr.steps[0].lang || 'python' }));
+const projectsVersion = require('crypto').createHash('sha1').update(projectsFile).digest('hex').slice(0, 10);
 // Courses being written carry their final outline so their page can show the syllabus.
 const outlines = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/course-outlines.json'), 'utf8'));
 for (const p of PLANNED) if (outlines[p.id]) p.outline = outlines[p.id];
@@ -131,7 +139,7 @@ for (const t of tracks.filter((x) => x.status === 'available')) for (const id of
 const glossaryJson = JSON.stringify(glossary);
 const glossaryVersion = crypto.createHash('sha1').update(glossaryJson).digest('hex').slice(0, 10);
 const searchVersion = crypto.createHash('sha1').update(searchJson).digest('hex').slice(0, 10);
-const out = { tracks, planned: PLANNED, path: PATH, next: NEXT, modules, videos, harness, webChecks, javaTools, shellVersion, searchVersion, glossaryVersion };
+const out = { tracks, planned: PLANNED, path: PATH, next: NEXT, modules, videos, harness, webChecks, javaTools, projects, projectsVersion, shellVersion, searchVersion, glossaryVersion };
 const file = path.join(ROOT, 'data/atlas-data.json');
 const lessonDir = path.join(ROOT, 'data/lessons');
 const json = JSON.stringify(out);

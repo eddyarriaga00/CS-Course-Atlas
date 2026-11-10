@@ -2,6 +2,35 @@ const { test, expect } = require('@playwright/test');
 const { mockApi, RECOVERY_CODES } = require('./helpers/api-mock');
 
 test.describe('Accounts', () => {
+    test('Google accounts can delete themselves by typing DELETE', async ({ page }) => {
+        const calls = await mockApi(page);
+        await page.goto('/index.html?oauth_ticket=t1#profile');
+        await expect(page.locator('#delete-form')).toBeVisible();
+        await expect(page.locator('#del-pass')).toHaveCount(0); // no password to ask for
+        await page.locator('#del-confirm').fill('DELETE');
+        await page.locator('#delete-form button[type="submit"]').click();
+        await expect(page.locator('body')).not.toHaveClass(/signed-in/);
+        expect(calls.deleted).toEqual({ currentPassword: '', confirmation: 'DELETE' });
+    });
+
+    test('GitHub sign-in shows only when the server has it switched on', async ({ page }) => {
+        await mockApi(page);
+        await page.goto('/index.html');
+        await page.locator('#signin-open').click();
+        await expect(page.locator('[data-action="oauth"][data-v="google"]')).toBeVisible();
+        await expect(page.locator('[data-action="oauth"][data-v="github"]')).toHaveCount(0);
+
+        await page.unrouteAll({ behavior: 'ignoreErrors' });
+        await mockApi(page, { providers: { google: { enabled: true }, github: { enabled: true } } });
+        await page.reload();
+        await page.locator('#signin-open').click();
+        const gh = page.locator('[data-action="oauth"][data-v="github"]');
+        await expect(gh).toHaveText('Continue with GitHub');
+        await page.route('**/api/auth/oauth/github/start**', (route) => route.fulfill({ status: 200, contentType: 'text/plain', body: 'github start' }));
+        await gh.click();
+        await expect(page).toHaveURL(/\/api\/auth\/oauth\/github\/start\?returnTo=/);
+    });
+
     test('a new account confirms its email with the emailed code', async ({ page }) => {
         const calls = await mockApi(page, { emailConfirmation: true });
         await page.goto('/index.html');

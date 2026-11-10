@@ -1425,7 +1425,8 @@ async function exchangeGitHubCodeForProfile(code, redirectUri) {
     }
     return {
         provider: 'github',
-        subject: safeString(userPayload?.id),
+        // GitHub's user id is a number; safeString only keeps strings, so convert it first.
+        subject: userPayload?.id != null ? String(userPayload.id) : '',
         email,
         emailVerified: true,
         name: safeString(userPayload?.name || userPayload?.login),
@@ -3348,8 +3349,11 @@ app.get('/api/mail/setup', (req, res) => {
 app.post('/api/profile/delete-account', assertSameOrigin, requireAuth, requireCsrf, async (req, res) => {
     const currentPassword = String(req.body?.currentPassword || '');
     const confirmation = safeString(req.body?.confirmation).toUpperCase();
+    // Google and GitHub sign-ins have no password to check: the provider sign-in already proved who it is,
+    // so typing DELETE is the confirmation. Email-and-password accounts still re-enter their password.
+    const passwordless = req.auth.authProvider !== 'password';
 
-    if (!currentPassword) {
+    if (!currentPassword && !passwordless) {
         return res.status(400).json({ error: 'Current password is required.' });
     }
     if (currentPassword.length > PASSWORD_MAX_LENGTH) {
@@ -3366,7 +3370,7 @@ app.post('/api/profile/delete-account', assertSameOrigin, requireAuth, requireCs
                 [req.auth.userId]
             );
             const row = found.rows[0];
-            const isPasswordValid = row ? await verifyPassword(currentPassword, row.password_hash) : false;
+            const isPasswordValid = row && (passwordless || await verifyPassword(currentPassword, row.password_hash));
             if (!row || !isPasswordValid) {
                 throw createHttpError(401, 'Current password is incorrect.');
             }
