@@ -46,7 +46,18 @@ const PLANNED = [
   P('cpp', 'C+', 'intermediate', 'C++', 'C++', 'Pointers, memory, classes and the standard library, for performance-minded programming.', 'Punteros, memoria, clases y la biblioteca estándar, para programar pensando en el rendimiento.'),
   P('architecture', '▣', 'intermediate', 'Computer Architecture', 'Arquitectura de computadoras', 'Logic gates to pipelines: how hardware executes instructions and why caches matter.', 'De las compuertas lógicas al pipeline: cómo el hardware ejecuta instrucciones y por qué importan las cachés.'),
   P('statistics', 'σ', 'intermediate', 'Statistics for CS', 'Estadística para computación', 'Distributions, sampling, testing and the statistics behind experiments and machine learning.', 'Distribuciones, muestreo, pruebas y la estadística detrás de los experimentos y el aprendizaje automático.'),
-  P('theory', 'λ', 'advanced', 'Theory of Computation', 'Teoría de la computación', 'Automata, grammars, Turing machines and the limits of what computers can solve.', 'Autómatas, gramáticas, máquinas de Turing y los límites de lo que las computadoras pueden resolver.')
+  P('theory', 'λ', 'advanced', 'Theory of Computation', 'Teoría de la computación', 'Automata, grammars, Turing machines and the limits of what computers can solve.', 'Autómatas, gramáticas, máquinas de Turing y los límites de lo que las computadoras pueden resolver.'),
+  P('c', 'C', 'intermediate', 'C Programming', 'Programación en C', 'The language underneath everything: pointers, arrays, structs, manual memory and how programs really use the machine.', 'El lenguaje que está debajo de todo: punteros, arreglos, structs, memoria manual y cómo los programas usan realmente la máquina.'),
+  P('javascript', 'JS', 'beginner', 'JavaScript in Depth', 'JavaScript a fondo', 'Beyond the basics: functions and closures, objects and classes, async code with promises, modules and the DOM.', 'Más allá de lo básico: funciones y closures, objetos y clases, código asíncrono con promesas, módulos y el DOM.'),
+  P('backend', 'API', 'intermediate', 'Backend & APIs', 'Backend y APIs', 'Build the server side of an app: HTTP routes, REST APIs, a database behind them, logins and deploying it.', 'Construye el lado del servidor de una app: rutas HTTP, APIs REST, una base de datos detrás, inicios de sesión y despliegue.'),
+  P('data-analysis', 'DA', 'beginner', 'Data Analysis with Python', 'Análisis de datos con Python', 'Load, clean and explore real datasets, summarise them, and turn them into clear charts.', 'Carga, limpia y explora conjuntos de datos reales, resúmelos y conviértelos en gráficas claras.'),
+  P('software-engineering', 'SE', 'intermediate', 'Software Engineering', 'Ingeniería de software', 'How teams build software that lasts: testing, debugging, code review, clean design and working from requirements.', 'Cómo los equipos construyen software que perdura: pruebas, depuración, revisión de código, diseño limpio y trabajo a partir de requisitos.'),
+  P('docker', 'DK', 'intermediate', 'Docker & Deployment', 'Docker y despliegue', 'Package an app in a container, run it anywhere, automate tests and releases, and put it on the internet.', 'Empaqueta una app en un contenedor, ejecútala donde sea, automatiza pruebas y lanzamientos, y publícala en internet.'),
+  P('linear-algebra', 'Ax', 'intermediate', 'Linear Algebra for CS', 'Álgebra lineal para computación', 'Vectors, matrices and transformations, with the code behind graphics, search and machine learning.', 'Vectores, matrices y transformaciones, con el código detrás de los gráficos, las búsquedas y el aprendizaje automático.'),
+  P('interview-prep', 'IQ', 'intermediate', 'Coding Interview Prep', 'Preparación para entrevistas', 'The problem patterns interviews use, how to explain your thinking out loud, and timed practice sets.', 'Los patrones de problemas que usan las entrevistas, cómo explicar tu razonamiento en voz alta y prácticas con tiempo.'),
+  P('compilers', '⟨⟩', 'advanced', 'Compilers & Interpreters', 'Compiladores e intérpretes', 'Build a small language step by step: tokens, parsing, syntax trees, an interpreter and code generation.', 'Construye un lenguaje pequeño paso a paso: tokens, análisis sintáctico, árboles, un intérprete y generación de código.'),
+  P('distributed-systems', '⋮⋮', 'advanced', 'Distributed Systems', 'Sistemas distribuidos', 'Many machines acting as one: replication, consistency, consensus, failures and how large services stay up.', 'Muchas máquinas actuando como una: replicación, consistencia, consenso, fallos y cómo se mantienen en pie los grandes servicios.'),
+  P('machine-learning', 'ML', 'intermediate', 'Machine Learning', 'Aprendizaje automático', 'After AI Fundamentals: regression, classification, trees, neural networks and how to evaluate a model honestly.', 'Después de Fundamentos de IA: regresión, clasificación, árboles, redes neuronales y cómo evaluar un modelo con honestidad.')
 ];
 
 // The recommended order for someone starting from zero. Each step is a course id
@@ -64,16 +75,16 @@ const PATH = [
   S('discrete', 'The math of computer science: logic, counting and graphs, ready for algorithms.', 'Las matemáticas de la computación: lógica, conteo y grafos, listas para algoritmos.')
 ];
 // After the beginner path: the courses that build on it, in order.
-const NEXT = ['java', 'dsa', 'networks', 'os', 'cpp', 'assembly', 'architecture', 'statistics', 'theory'];
+const NEXT = ['java', 'dsa', 'networks', 'javascript', 'data-analysis', 'c', 'cpp', 'backend', 'software-engineering', 'docker', 'machine-learning', 'interview-prep', 'os', 'assembly', 'architecture', 'linear-algebra', 'statistics', 'compilers', 'distributed-systems', 'theory'];
 // Subject areas for the course catalog on the home page. Every course (live or planned) belongs to exactly one,
 // so a new course only needs a line here to show up in the right place.
 const CATEGORIES = [
-  { id: 'languages', icon: '{ }', title: { en: 'Programming languages', es: 'Lenguajes de programación' }, courses: ['python', 'java', 'cpp'] },
-  { id: 'tools', icon: '$_', title: { en: 'Developer tools', es: 'Herramientas de desarrollo' }, courses: ['cli', 'git'] },
-  { id: 'web-data', icon: '</>', title: { en: 'Web & data', es: 'Web y datos' }, courses: ['web', 'sql'] },
-  { id: 'algorithms-math', icon: '∑', title: { en: 'Algorithms & math', es: 'Algoritmos y matemáticas' }, courses: ['dsa', 'discrete', 'statistics', 'theory'] },
-  { id: 'systems', icon: '01', title: { en: 'Computer systems', es: 'Sistemas de cómputo' }, courses: ['how-computers-work', 'networks', 'os', 'architecture', 'assembly'] },
-  { id: 'security-ai', icon: '🛡', title: { en: 'Security & AI', es: 'Seguridad e IA' }, courses: ['cybersecurity', 'ai'] }
+  { id: 'languages', icon: '{ }', title: { en: 'Programming languages', es: 'Lenguajes de programación' }, courses: ['python', 'java', 'javascript', 'c', 'cpp'] },
+  { id: 'tools', icon: '$_', title: { en: 'Developer tools', es: 'Herramientas de desarrollo' }, courses: ['cli', 'git', 'software-engineering', 'docker'] },
+  { id: 'web-data', icon: '</>', title: { en: 'Web & data', es: 'Web y datos' }, courses: ['web', 'sql', 'backend', 'data-analysis'] },
+  { id: 'algorithms-math', icon: '∑', title: { en: 'Algorithms & math', es: 'Algoritmos y matemáticas' }, courses: ['dsa', 'discrete', 'interview-prep', 'linear-algebra', 'statistics', 'theory'] },
+  { id: 'systems', icon: '01', title: { en: 'Computer systems', es: 'Sistemas de cómputo' }, courses: ['how-computers-work', 'networks', 'os', 'architecture', 'assembly', 'compilers', 'distributed-systems'] },
+  { id: 'security-ai', icon: '🛡', title: { en: 'Security & AI', es: 'Seguridad e IA' }, courses: ['cybersecurity', 'ai', 'machine-learning'] }
 ];
 const known = new Set([...ORDER, ...PLANNED.map((p) => p.id)]);
 {
