@@ -316,8 +316,8 @@ dialog.signin::backdrop { background: rgba(10,10,20,.55); backdrop-filter: blur(
 @media (max-width: 860px) {
   .shell { grid-template-columns: 1fr; }
   .sidebar { position: fixed; z-index: 40; top: 0; left: 0; bottom: 0; width: min(86vw, 320px); height: auto; padding-top: calc(16px + env(safe-area-inset-top, 0px)); padding-left: max(12px, env(safe-area-inset-left, 0px));
-    transform: translateX(-100%); transition: transform .22s ease; box-shadow: 0 0 40px rgba(0,0,0,.25); background: var(--surface); }
-  body.drawer-open .sidebar { transform: none; }
+    transform: translateX(-100%); transition: transform .22s ease; background: var(--surface); }
+  body.drawer-open .sidebar { transform: none; box-shadow: 0 0 40px rgba(0,0,0,.25); }
   body.drawer-open .scrim { display: block; position: fixed; inset: 0; z-index: 35; background: rgba(0,0,0,.4); }
   .menu-btn { display: inline-grid; place-items: center; }
   .search { display: none; }
@@ -1100,3 +1100,25 @@ pre[tabindex]:focus-visible { outline: 2px solid var(--accent); outline-offset: 
 .cat-empty { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 18px; }
 .cat-empty p { margin: 0; color: var(--text-2); }
 #catalog { scroll-margin-top: 76px; }
+
+/* ---------- UI polish: icons, hero stats, missing page ---------- */
+.nav-item .ico, .bottom-nav .ico { display: grid; place-items: center; }
+.nav-item .ico svg { opacity: .8; }
+.nav-item.active .ico svg, .nav-item:hover .ico svg { opacity: 1; }
+.bottom-nav .ico svg { width: 22px; height: 22px; }
+.bottom-nav a.active .ico svg { stroke-width: 2.1; }
+.hero-facts { display: grid; grid-template-columns: repeat(5, auto); gap: 0; margin-top: 28px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); width: fit-content; max-width: 100%; overflow: hidden; }
+.hero-facts > div { display: grid; gap: 1px; padding: 10px 16px; border-left: 1px solid var(--border); }
+.hero-facts > div:first-child { border-left: 0; }
+.hero-facts b { font-size: 18px; margin: 0; letter-spacing: -.01em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.hero-facts span { font-size: 12.5px; white-space: nowrap; }
+@media (max-width: 1320px) {
+  .hero-facts { grid-template-columns: repeat(3, 1fr); width: 100%; max-width: 440px; }
+  .hero-facts > div:nth-child(4) { border-left: 0; }
+  .hero-facts > div:nth-child(n+4) { border-top: 1px solid var(--border); }
+  .hero-facts > div:nth-child(5) { grid-column: span 2; }
+}
+.missing { text-align: center; padding-top: 12vh; max-width: 560px; }
+.missing-code { display: inline-block; font-size: 13px; font-weight: 700; letter-spacing: .12em; color: var(--accent-text); background: var(--accent-soft); padding: 5px 12px; border-radius: 999px; margin-bottom: 14px; }
+.missing .lead { margin-inline: auto; }
+.missing .hero-actions { justify-content: center; }

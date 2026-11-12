@@ -48,7 +48,7 @@ const UI = {
     deleteTitle: 'Delete account', deleteText: 'Permanently removes your profile, progress and notes. This can’t be undone.', deleteBtn: 'Delete my account',
     signinTitle: 'Sign in', signinSub: 'Save your progress and pick up on any device.', google: 'Continue with Google', github: 'Continue with GitHub', orEmail: 'or use email', email: 'Email', password: 'Password',
     forgot: 'Forgot password?', newHere: 'New here?', create: 'Create an account', legal: 'By continuing you agree to the <a href="terms-of-use.html">Terms of Use</a> and <a href="privacy-policy.html">Privacy Policy</a>.',
-    noResults: 'No matches', today: 'Today', yesterday: 'Yesterday', daysAgo: (n) => `${n} days ago`, completed: 'Completed', reviewed: 'Reviewed 12 flashcards', notFound: 'That page doesn’t exist.',
+    noResults: 'No matches', today: 'Today', yesterday: 'Yesterday', daysAgo: (n) => `${n} days ago`, completed: 'Completed', reviewed: 'Reviewed 12 flashcards', notFound: 'That page doesn’t exist.', notFoundText: 'The link may be old, or the address has a typo. Everything is still here:', heroLangs: 'languages',
     glossary: 'Glossary', roadmap: 'Roadmap', whatsComing: 'What’s coming', tryIt: 'Try it ▸', run: 'Run ▸', reset: 'Reset', running: 'Running…',
     pgLead: 'Write and run code right here. Everything runs in your browser, nothing is uploaded: Python, Java, C++, JavaScript, SQL, web pages and a practice terminal. Java and C++ download their compilers the first time you run them.',
     pgServer: 'Running this language needs the code server, which is on the roadmap. Here is the output this example prints:', pgServerNoExpected: 'Running this language needs the code server, which is on the roadmap. Switch to JavaScript or Python to run code now.',
@@ -116,7 +116,7 @@ const UI = {
     deleteTitle: 'Eliminar cuenta', deleteText: 'Elimina para siempre tu perfil, tu progreso y tus notas. No se puede deshacer.', deleteBtn: 'Eliminar mi cuenta',
     signinTitle: 'Iniciar sesión', signinSub: 'Guarda tu progreso y continúa en cualquier dispositivo.', google: 'Continuar con Google', github: 'Continuar con GitHub', orEmail: 'o usa tu correo', email: 'Correo', password: 'Contraseña',
     forgot: '¿Olvidaste tu contraseña?', newHere: '¿Eres nuevo?', create: 'Crear una cuenta', legal: 'Al continuar aceptas los <a href="terms-of-use.html">Términos de uso</a> y la <a href="privacy-policy.html">Política de privacidad</a>.',
-    noResults: 'Sin resultados', today: 'Hoy', yesterday: 'Ayer', daysAgo: (n) => `Hace ${n} días`, completed: 'Completaste', reviewed: 'Repasaste 12 tarjetas', notFound: 'Esa página no existe.',
+    noResults: 'Sin resultados', today: 'Hoy', yesterday: 'Ayer', daysAgo: (n) => `Hace ${n} días`, completed: 'Completaste', reviewed: 'Repasaste 12 tarjetas', notFound: 'Esa página no existe.', notFoundText: 'Puede que el enlace sea antiguo o que la dirección tenga un error. Todo sigue aquí:', heroLangs: 'idiomas',
     glossary: 'Glosario', roadmap: 'Hoja de ruta', whatsComing: 'Lo que viene', tryIt: 'Probar ▸', run: 'Ejecutar ▸', reset: 'Restablecer', running: 'Ejecutando…',
     pgLead: 'Escribe y ejecuta código aquí mismo. Todo corre en tu navegador y nada se sube: Python, Java, C++, JavaScript, SQL, páginas web y una terminal de práctica. Java y C++ descargan su compilador la primera vez que los ejecutas.',
     pgServer: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Esta es la salida que imprime el ejemplo:', pgServerNoExpected: 'Ejecutar este lenguaje requiere el servidor de código, que está en la hoja de ruta. Cambia a JavaScript o Python para ejecutar código ahora.',
@@ -328,7 +328,7 @@ function sideCourse(tr, route) {
     return `<details class="side-unit"${u === focus ? ' open' : ''}><summary><span class="sv">${CHEVRON}</span><span class="un">${i + 1}. ${esc(L(u.title))}</span><span class="cnt${d === u.modules.length ? ' full' : ''}">${d}/${u.modules.length}</span></summary>`
       + u.modules.map((id) => `<a class="mod-link${activeMod === id ? ' active' : ''}" href="#m-${id}">${dot(id)}${esc(moduleTitle(id))}</a>`).join('') + '</details>'; }).join('')}</div>` : '';
   return `<div class="side-course${open ? ' open' : ''}${here ? ' here' : ''}"><div class="side-head">
-    <a class="course-switch" href="#course-${tr.id}"><span class="cmark" data-track="${tr.id}">${esc(tr.icon)}</span><span class="cs-txt"><b>${esc(L(tr.title))}</b><span>${t('ofModules', ts.done, ts.count)}</span><i class="mini-bar"><i style="width:${pct(ts.done, ts.count)}%"></i></i></span></a>
+    <a class="course-switch" href="#course-${tr.id}"><span class="cmark" data-track="${tr.id}">${esc(tr.icon)}</span><span class="cs-txt"><b>${esc(L(tr.title))}</b><span>${ts.done ? t('ofModules', ts.done, ts.count) : ts.count + ' ' + t('modules')}</span>${ts.done ? `<i class="mini-bar"><i style="width:${pct(ts.done, ts.count)}%"></i></i>` : ''}</span></a>
     <button class="side-toggle" data-action="side-toggle" data-v="${tr.id}" aria-expanded="${open}" aria-label="${esc(L(tr.title))}: ${open ? t('collapse') : t('expand')}">${CHEVRON}</button></div>${units}</div>`;
 }
 // "Confirm your email" bar under the header, shown to signed-in people whose address is not confirmed yet.
@@ -371,6 +371,22 @@ async function recoverByEmail() {
   try { await api('/api/auth/recover/email', { method: 'POST', body: { email: who, lang: state.lang } }); status.className = 'hint form-ok'; status.textContent = t('emailCodeSent'); $('#si-code').focus(); }
   catch (e) { status.className = 'hint form-err'; status.textContent = e.status === 404 ? t('recoverOff') : e.message; }
 }
+const NAV_ICON = {
+  home: '<path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V20h5v-6h4v6h5V9.5"/>',
+  grid: '<rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>',
+  target: '<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.5"/><circle cx="12" cy="12" r="1"/>',
+  check: '<circle cx="12" cy="12" r="8.5"/><path d="m8.5 12.2 2.4 2.4 4.6-5"/>',
+  cards: '<rect x="3.5" y="7" width="14" height="10" rx="2"/><path d="M7 4h11.5a2 2 0 0 1 2 2v8"/>',
+  code: '<path d="m8.5 7-5 5 5 5"/><path d="m15.5 7 5 5-5 5"/>',
+  term: '<rect x="3" y="4.5" width="18" height="15" rx="2.5"/><path d="m7 9.5 3 2.5-3 2.5"/><path d="M12.5 14.5H17"/>',
+  cal: '<rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',
+  pen: '<path d="M4 20h4L19.5 8.5a2.1 2.1 0 0 0-3-3L5 17l-1 3Z"/><path d="m14.5 7.5 3 3"/>',
+  book: '<path d="M5 4.5h11.5a2 2 0 0 1 2 2V20H7a2 2 0 0 1-2-2V4.5Z"/><path d="M5 17.5a2 2 0 0 1 2-2h11.5"/>',
+  user: '<circle cx="12" cy="8.5" r="4"/><path d="M4.5 20.5c1-4 4-5.5 7.5-5.5s6.5 1.5 7.5 5.5"/>',
+  spark: '<path d="M12 3.5 13.9 9.6 20 11.5l-6.1 1.9L12 19.5l-1.9-6.1L4 11.5l6.1-1.9L12 3.5Z"/>',
+  help: '<circle cx="12" cy="12" r="8.5"/><path d="M9.7 9.5a2.4 2.4 0 1 1 3.5 2.1c-.8.5-1.2 1-1.2 1.9"/><path d="M12 16.7v.1"/>'
+};
+const navIco = (k) => `<span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${NAV_ICON[k]}</svg></span>`;
 function renderChrome(route) {
   updateConfirmBar();
   document.documentElement.lang = state.lang;
@@ -383,31 +399,31 @@ function renderChrome(route) {
   $('#skip-link').textContent = t('skip');
   const is = (r) => (route === r ? ' active' : '');
   $('#sidebar').innerHTML = `
-    <a class="nav-item${is('home')}" href="#home"><span class="ico">⌂</span>${t('home')}</a>
-    <a class="nav-item${is('courses')}" href="#courses"><span class="ico">▦</span>${t('allCourses')}</a>
+    <a class="nav-item${is('home')}" href="#home">${navIco('home')}${t('home')}</a>
+    <a class="nav-item${is('courses')}" href="#courses">${navIco('grid')}${t('allCourses')}</a>
     <div class="nav-label">${t('sideBeginner')}</div>
     ${pathTracks().map((tr) => sideCourse(tr, route)).join('')}
     <div class="nav-label">${t('sideNext')}</div>
     ${liveTracks().filter((tr) => !inPath(tr.id)).map((tr) => sideCourse(tr, route)).join('')}
     ${DATA.tracks.filter((x) => x.status !== 'available').map((x) => `<a class="nav-item${is('course-' + x.id)}" href="#course-${x.id}"><span class="ico">${esc(x.icon)}</span>${esc(L(x.title))}<span class="tag">${t('soon')}</span></a>`).join('')}
     <div class="nav-label">${t('practice')}</div>
-    <a class="nav-item${is('practice')}" href="#practice"><span class="ico">◎</span>${t('practiceHub')}</a>
-    <a class="nav-item${is('quizzes')}" href="#quizzes"><span class="ico">✓</span>${t('quizzes')}</a>
-    <a class="nav-item${is('flashcards')}" href="#flashcards"><span class="ico">▭</span>${t('flashcards')}</a>
-    <a class="nav-item${is('challenges')}" href="#challenges"><span class="ico">{ }</span>${t('challenges')}</a>
-    <a class="nav-item${is('playground')}" href="#playground"><span class="ico">›_</span>${t('playground')}</a>
-    <a class="nav-item${is('plan')}" href="#plan"><span class="ico">▤</span>${t('studyPlan')}</a>
-    <a class="nav-item${is('notes')}" href="#notes"><span class="ico">✎</span>${t('notes')}</a>
-    <a class="nav-item${is('glossary')}" href="#glossary"><span class="ico">Aa</span>${t('glossary')}</a>
+    <a class="nav-item${is('practice')}" href="#practice">${navIco('target')}${t('practiceHub')}</a>
+    <a class="nav-item${is('quizzes')}" href="#quizzes">${navIco('check')}${t('quizzes')}</a>
+    <a class="nav-item${is('flashcards')}" href="#flashcards">${navIco('cards')}${t('flashcards')}</a>
+    <a class="nav-item${is('challenges')}" href="#challenges">${navIco('code')}${t('challenges')}</a>
+    <a class="nav-item${is('playground')}" href="#playground">${navIco('term')}${t('playground')}</a>
+    <a class="nav-item${is('plan')}" href="#plan">${navIco('cal')}${t('studyPlan')}</a>
+    <a class="nav-item${is('notes')}" href="#notes">${navIco('pen')}${t('notes')}</a>
+    <a class="nav-item${is('glossary')}" href="#glossary">${navIco('book')}${t('glossary')}</a>
     <div class="nav-label">${t('account')}</div>
-    <a class="nav-item${is('profile')}" href="#profile"><span class="ico">◯</span>${t('profile')}</a>
-    <a class="nav-item${is('roadmap')}" href="#roadmap"><span class="ico">↗</span>${t('whatsComing')}</a>
-    <a class="nav-item" href="contact-support.html"><span class="ico">?</span>${t('support')}</a>
+    <a class="nav-item${is('profile')}" href="#profile">${navIco('user')}${t('profile')}</a>
+    <a class="nav-item${is('roadmap')}" href="#roadmap">${navIco('spark')}${t('whatsComing')}</a>
+    <a class="nav-item" href="contact-support.html">${navIco('help')}${t('support')}</a>
     <div class="side-foot"><a href="privacy-policy.html">${t('privacy')}</a><a href="terms-of-use.html">${t('terms')}</a><a href="contact-support.html">${t('contact')}</a><button class="link-btn" data-action="shortcuts">⌨ ${t('scShort')}</button><button class="link-btn" data-action="backup">⤓ ${t('bkShort')}</button></div>`;
-  const tab = (href, ico, label, on) => `<a href="#${href}" class="${on ? 'active' : ''}"><span class="ico">${ico}</span>${label}</a>`;
-  $('#bottom-nav').innerHTML = tab('home', '⌂', t('home'), route === 'home')
-    + tab('courses', '▦', t('courses'), route === 'courses' || route.startsWith('course-') || route.startsWith('m-'))
-    + tab('practice', '✓', t('practice'), ['practice', 'quizzes', 'flashcards', 'challenges'].includes(route)) + tab('profile', '◯', t('account'), route === 'profile');
+  const tab = (href, ico, label, on) => `<a href="#${href}" class="${on ? 'active' : ''}"${on ? ' aria-current="page"' : ''}>${navIco(ico)}${label}</a>`;
+  $('#bottom-nav').innerHTML = tab('home', 'home', t('home'), route === 'home')
+    + tab('courses', 'grid', t('courses'), route === 'courses' || route.startsWith('course-') || route.startsWith('m-'))
+    + tab('practice', 'check', t('practice'), ['practice', 'quizzes', 'flashcards', 'challenges'].includes(route)) + tab('profile', 'user', t('account'), route === 'profile');
 }
 
 /* ---------- Views ---------- */
@@ -519,7 +535,7 @@ function viewHome() {
     <div class="hero"><div class="hero-text"><h1>${t('heroTitle')}</h1><p class="lead">${t('heroLead')}</p>
       <div class="hero-actions">${started && next ? `<a class="btn" href="#m-${next}">${t('continueCourse', esc(L(started.title)))}</a>` : `<a class="btn" href="#course-${first}">${t('startPython')}</a>`}<a class="btn btn-ghost" href="#courses">${t('browse')}</a></div>
       ${started ? '' : `<p class="hero-note">${t('noExperience')}</p>`}
-      <div class="hero-facts"><span><b>${liveTracks().length}</b> ${t('coursesReady')}</span><span><b>${live.length}</b> ${t('modules')}</span><span><b>${live.reduce((n, id) => n + (DATA.modules[id].counts?.examples || 0), 0)}</b> ${t('examples').toLowerCase()}</span><span><b>${live.reduce((n, id) => n + (DATA.modules[id].counts?.challenges || 0), 0)}</b> ${t('challenges').toLowerCase()}</span><span><b>EN · ES</b></span></div></div>
+      <div class="hero-facts">${[[liveTracks().length, t('coursesReady')], [live.length, t('modules')], [live.reduce((n, id) => n + (DATA.modules[id].counts?.examples || 0), 0), t('examples').toLowerCase()], [live.reduce((n, id) => n + (DATA.modules[id].counts?.challenges || 0), 0), t('challenges').toLowerCase()], ['EN · ES', t('heroLangs')]].map(([n, l]) => `<div><b>${n}</b><span>${l}</span></div>`).join('')}</div></div>
       ${heroArt()}</div>
     ${started ? `<a class="card continue" href="${next ? '#m-' + next : '#course-' + started.id}"><div class="info"><div class="muted">${t('continueTitle')}</div>
       <h3 style="margin-top:2px">${next ? esc(L(started.title)) + ' · ' + esc(moduleTitle(next)) : t('courseDone')}</h3>
@@ -601,7 +617,8 @@ function transcriptHtml(text) {
     return ps ? `<span class="t-cmd"><span class="t-ps">${ps}</span> ${esc(line.slice(2))}</span>` : `<span class="t-out">${esc(line)}</span>`;
   }).join('\n');
 }
-function viewMissing() { return `<section class="wrap"><h1>${t('notFound')}</h1><a class="btn" href="#home">${t('home')}</a></section>`; }
+function viewMissing() { return `<section class="wrap missing"><span class="missing-code" aria-hidden="true">404</span><h1>${t('notFound')}</h1><p class="lead">${t('notFoundText')}</p>
+  <div class="hero-actions"><a class="btn" href="#home">${t('home')}</a><a class="btn btn-ghost" href="#courses">${t('allCourses')}</a><a class="btn btn-ghost" href="#practice">${t('practice')}</a></div></section>`; }
 
 // At the end of a course, point to the next live course on the beginner path (or Java after it).
 function nextCourseLink(tid) {
