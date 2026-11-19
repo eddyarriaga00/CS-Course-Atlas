@@ -529,14 +529,16 @@ function viewHome() {
   const live = liveIds(), started = DATA.tracks.find((tr) => tr.id === currentTrack() && trackStats(tr).done) || liveTracks().find((tr) => trackStats(tr).done);
   const s = started ? trackStats(started) : null, next = started ? nextModule(started.id) : null;
   const first = DATA.path.find((st) => track(st.id)?.status === 'available')?.id || liveTracks()[0].id;
-  const startCard = (n, href) => `<a class="card start-card" href="${href}"><span class="start-no" aria-hidden="true">${['🌱', '🧰', '🎓'][n - 1]}</span><h3>${t('s' + n + 'Title')}</h3><p>${t('s' + n + 'Text')}</p><span class="start-cta">${t('s' + n + 'Cta')} →</span></a>`;
+  const startCard = (n, href) => `<a class="card start-card" href="${href}"><span class="start-no" aria-hidden="true">${navIco(['code', 'term', 'book'][n - 1])}</span><h3>${t('s' + n + 'Title')}</h3><p>${t('s' + n + 'Text')}</p><span class="start-cta">${t('s' + n + 'Cta')} →</span></a>`;
   const how = (n, ico) => `<div class="how"><span class="how-ico">${ico}</span><div><b>${t('how' + n)}</b><p>${t('how' + n + 'Text')}</p></div></div>`;
   return `<section class="wrap">
     <div class="hero"><div class="hero-text"><h1>${t('heroTitle')}</h1><p class="lead">${t('heroLead')}</p>
       <div class="hero-actions">${started && next ? `<a class="btn" href="#m-${next}">${t('continueCourse', esc(L(started.title)))}</a>` : `<a class="btn" href="#course-${first}">${t('startPython')}</a>`}<a class="btn btn-ghost" href="#courses">${t('browse')}</a></div>
       ${started ? '' : `<p class="hero-note">${t('noExperience')}</p>`}
+      </div>
+      ${coursePreview(started || track(first), next)}
       <div class="hero-facts">${[[liveTracks().length, t('coursesReady')], [live.length, t('modules')], [live.reduce((n, id) => n + (DATA.modules[id].counts?.examples || 0), 0), t('examples').toLowerCase()], [live.reduce((n, id) => n + (DATA.modules[id].counts?.challenges || 0), 0), t('challenges').toLowerCase()], ['EN · ES', t('heroLangs')]].map(([n, l]) => `<div><b>${n}</b><span>${l}</span></div>`).join('')}</div></div>
-      ${heroArt()}</div>
+
     ${started ? `<a class="card continue" href="${next ? '#m-' + next : '#course-' + started.id}"><div class="info"><div class="muted">${t('continueTitle')}</div>
       <h3 style="margin-top:2px">${next ? esc(L(started.title)) + ' · ' + esc(moduleTitle(next)) : t('courseDone')}</h3>
       <div class="progress"><span style="width:${pct(s.done, s.count)}%"></span></div><div class="muted" style="margin-top:6px">${t('ofModules', s.done, s.count)}</div></div>
@@ -555,17 +557,15 @@ function viewHome() {
     <div class="how-grid">${how(1, '¶')}${how(2, '▶')}${how(3, '✓')}${how(4, '◉')}</div>
     </section>`;
 }
-function heroArt() {
-  return `<div class="hero-art" aria-hidden="true"><div class="win"><div class="win-bar"><i></i><i></i><i></i><span>first.py</span></div>
-<pre>name = <span class="s">"Ada"</span>
-scores = [<span class="n">72</span>, <span class="n">95</span>, <span class="n">88</span>]
-average = <span class="f">sum</span>(scores) / <span class="f">len</span>(scores)
-<span class="k">if</span> average >= <span class="n">80</span>:
-    <span class="f">print</span>(<span class="s">"Great work,"</span>, name)
-<span class="f">print</span>(<span class="s">"Average:"</span>, <span class="f">round</span>(average, <span class="n">1</span>))</pre>
-    <div class="win-out"><span>${t('output')}</span>Great work, Ada<br>Average: 85.0</div></div>
-    <div class="float-card fc-1"><span class="tick-c">✓</span><div><b>${t('quiz')} · ${state.lang === 'es' ? 'Decisiones' : 'Decisions'}</b><small>5 / 5</small></div></div>
-    <div class="float-card fc-2"><span class="play-c">▶</span><div><b>${t('watchTopic')}</b><small>CS50P · Harvard</small></div></div></div>`;
+function coursePreview(course, next) {
+  const modules = trackIds(course.id).filter(isLive);
+  const start = Math.max(0, modules.indexOf(next));
+  const visible = modules.slice(start, start + 3);
+  return `<section class="course-preview">
+    <div class="preview-caption">${navIco('book')}<span>${t('syllabus')}</span></div>
+    <h2><a href="#course-${course.id}">${esc(L(course.title))}</a></h2>
+    <ol start="${start + 1}">${visible.map((id, i) => `<li><a href="#m-${id}"><span class="preview-index">${String(start + i + 1).padStart(2, '0')}</span><span>${esc(moduleTitle(id))}</span>${navIco(state.done.has(id) ? 'check' : 'book')}</a></li>`).join('')}</ol>
+  </section>`;
 }
 function viewCourses() {
   return `<section class="wrap"><h1>${t('coursesTitle')}</h1><p class="lead">${t('coursesLead')}</p>

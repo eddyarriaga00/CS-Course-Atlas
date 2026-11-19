@@ -415,7 +415,7 @@ def head(file, title, description):
 <title>{esc(title)} | CS Course Atlas</title>
 <meta name="description" content="{esc(description)}">
 <meta name="robots" content="index,follow">
-<meta name="theme-color" content="#4f46e5">
+<meta name="theme-color" content="#171717">
 <link rel="canonical" href="{url}">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="CS Course Atlas">
@@ -427,7 +427,7 @@ def head(file, title, description):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/trust-pages.css?v=20261110">
+<link rel="stylesheet" href="css/trust-pages.css?v=mono1">
 <script>{HEAD_SCRIPT}</script>
 </head>
 <body>

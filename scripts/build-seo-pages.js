@@ -332,10 +332,6 @@ function truncateDescription(value, max = 155) {
 function baseStyles() {
     // Same tokens and type as css/atlas.css so these pages read as part of the site.
     return `
-:root { --bg: #f7f7f8; --surface: #fff; --surface-2: #f1f1f4; --border: #e4e4e9; --text: #17171c; --text-2: #55555f; --text-3: #85858f;
-  --accent: #4f46e5; --accent-soft: #eef0ff; --accent-text: #3730a3; --on-accent: #fff; --java: #e76f00; color-scheme: light; }
-@media (prefers-color-scheme: dark) { :root { --bg: #0d0d12; --surface: #15151c; --surface-2: #1d1d26; --border: #2a2a35; --text: #ececf1; --text-2: #b4b4c0; --text-3: #85859a;
-  --accent: #8b85ff; --accent-soft: #23214a; --accent-text: #c7c4ff; --on-accent: #0d0d12; color-scheme: dark; } }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif; -webkit-font-smoothing: antialiased; }
 a { color: var(--accent); }
@@ -353,14 +349,14 @@ code { font: .86em "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace; b
 main.shell { padding: 36px 0 64px; display: grid; gap: 16px; }
 .hero { padding: 30px 0 10px; }
 .hero-kicker { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--text-3); margin: 0 0 6px; }
-.hero h1 { font-size: clamp(32px, 5.5vw, 46px); line-height: 1.08; letter-spacing: -.028em; margin: 0 0 12px; }
+.hero h1 { font-size: clamp(38px, 5.5vw, 66px); line-height: 1.02; letter-spacing: -.05em; margin: 0 0 12px; }
 .hero p { color: var(--text-2); font-size: 18px; margin: 0; max-width: 70ch; }
 .hero-meta-row, .module-meta-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 16px; }
 .chip { display: inline-flex; align-items: center; font-size: 12.5px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: var(--surface-2); color: var(--text-2); }
 .cta-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
 .cta { display: inline-flex; align-items: center; justify-content: center; height: 42px; padding: 0 16px; border-radius: 10px; font-weight: 600; font-size: 14.5px; text-decoration: none; border: 1px solid var(--border); background: var(--surface); color: var(--text); }
 .cta:first-child { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
-.panel { background: var(--surface); border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; }
+.panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px 24px; }
 .panel h2 { font-size: 20px; letter-spacing: -.01em; margin: 0 0 10px; }
 .panel h2:not(:first-child) { margin-top: 26px; }
 .panel p, .panel li, .meta { color: var(--text-2); }
@@ -368,7 +364,7 @@ main.shell { padding: 36px 0 64px; display: grid; gap: 16px; }
 .panel li { margin: 5px 0; }
 .meta { font-size: 14px; }
 .module-grid, .detail-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 12px; }
-.module-card, .detail-card { border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; background: var(--bg); }
+.module-card, .detail-card { border: 1px solid var(--border); border-radius: var(--radius); padding: 14px 16px; background: var(--bg); }
 .module-card h3, .detail-card h3 { font-size: 15.5px; margin: 0 0 4px; }
 .module-card p { font-size: 14px; margin: 0; color: var(--text-2); }
 .detail-card b, .detail-card strong { display: block; }
@@ -405,7 +401,7 @@ function headTemplate({ title, description, canonicalPath, assetPrefix = '' }) {
         <title>${safeTitle}</title>
         <meta name="description" content="${safeDescription}">
         <meta name="robots" content="index,follow,max-image-preview:large">
-        <meta name="theme-color" content="#4f46e5">
+        <meta name="theme-color" content="#171717">
         <meta name="application-name" content="CS Course Atlas">
         <meta name="apple-mobile-web-app-title" content="CS Course Atlas">
         <meta name="apple-mobile-web-app-capable" content="yes">
@@ -420,11 +416,13 @@ function headTemplate({ title, description, canonicalPath, assetPrefix = '' }) {
         <meta property="twitter:card" content="summary_large_image">
         <meta property="twitter:title" content="${safeTitle}">
         <meta property="twitter:description" content="${safeDescription}">
-        <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f46e5'/%3E%3Cpath d='M16 6l9 10-9 10-9-10z' fill='white'/%3E%3C/svg%3E">
+        <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23171717'/%3E%3Cpath d='M16 6l9 10-9 10-9-10z' fill='white'/%3E%3C/svg%3E">
         <link rel="manifest" href="${cssPrefix}manifest.webmanifest">
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="${cssPrefix}css/theme.css?v=mono1">
+        <script>try { const th = JSON.parse(localStorage.getItem('atlas-theme')); if (th === 'light' || th === 'dark') document.documentElement.dataset.theme = th; } catch {}</script>
         <style>${baseStyles()}</style>
     </head>`;
 }
@@ -906,64 +904,20 @@ function generateSitemapXsl() {
                 <meta charset="UTF-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
                 <title>CS Course Atlas XML Sitemap</title>
+                <link rel="stylesheet" href="css/theme.css?v=mono1" />
                 <style>
                     * { box-sizing: border-box; }
-                    body {
-                        margin: 0;
-                        min-height: 100vh;
-                        font-family: 'Pixelify Sans', 'Silkscreen', 'DotGothic16', monospace;
-                        background:
-                            radial-gradient(circle at 7% -10%, rgba(37, 99, 235, 0.28), transparent 42%),
-                            radial-gradient(circle at 95% -14%, rgba(124, 58, 237, 0.26), transparent 44%),
-                            linear-gradient(180deg, #030712 0%, #0f172a 58%, #111827 100%);
-                        color: #e2e8f0;
-                    }
-                    .shell { max-width: 1180px; margin: 0 auto; padding: 0.95rem; }
-                    .top {
-                        border: 1px solid rgba(165, 180, 252, 0.42);
-                        border-radius: 1rem;
-                        background: linear-gradient(95deg, #2563eb, #4f46e5, #7c3aed);
-                        padding: 0.6rem 0.72rem;
-                        margin-bottom: 0.85rem;
-                    }
-                    .top a {
-                        color: #f8fafc;
-                        text-decoration: none;
-                        border: 1px solid rgba(255, 255, 255, 0.25);
-                        border-radius: 999px;
-                        padding: 0.38rem 0.62rem;
-                        background: rgba(15, 23, 42, 0.45);
-                        display: inline-block;
-                        margin-right: 0.38rem;
-                        margin-bottom: 0.34rem;
-                        font-size: 0.8rem;
-                    }
-                    .hero {
-                        border: 1px solid rgba(148, 163, 184, 0.3);
-                        border-radius: 1rem;
-                        background: rgba(15, 23, 42, 0.84);
-                        padding: 0.9rem 0.95rem;
-                    }
-                    h1 { margin: 0; color: #e0e7ff; line-height: 1.2; font-size: clamp(1.25rem, 3.2vw, 1.9rem); }
-                    p { color: #cbd5e1; margin: 0.4rem 0 0; }
-                    .table-wrap {
-                        margin-top: 0.82rem;
-                        border: 1px solid rgba(148, 163, 184, 0.28);
-                        border-radius: 0.88rem;
-                        overflow: auto;
-                        background: rgba(15, 23, 42, 0.72);
-                    }
-                    a { color: #bfdbfe; }
+                    body { margin: 0; font: 16px/1.6 var(--font-ui); background: var(--bg); color: var(--text); }
+                    .shell { width: min(100% - 32px, 1100px); margin: 20px auto; }
+                    .top { display: flex; flex-wrap: wrap; gap: 12px; padding: 15px; border: 1px solid var(--border); }
+                    a { color: var(--accent); text-underline-offset: 3px; }
+                    .hero { padding: 30px 0; }
+                    h1 { font-size: clamp(28px, 4vw, 48px); letter-spacing: -.045em; margin: 0; }
+                    p { color: var(--text-2); }
+                    .table-wrap { border: 1px solid var(--border); overflow: auto; }
                     table { width: 100%; min-width: 640px; border-collapse: collapse; }
-                    th, td { text-align: left; padding: 0.52rem 0.62rem; border-bottom: 1px solid rgba(148, 163, 184, 0.26); }
-                    th { color: #c7d2fe; background: rgba(30, 41, 59, 0.78); position: sticky; top: 0; }
-                    td { color: #dbeafe; }
-                    @media (max-width: 640px) {
-                        .shell { padding: 0.7rem 0.62rem; }
-                        .top { padding: 0.54rem 0.56rem; border-radius: 0.88rem; margin-bottom: 0.68rem; }
-                        .top a { font-size: 0.74rem; padding: 0.34rem 0.56rem; }
-                        .hero { padding: 0.8rem 0.8rem 0.84rem; border-radius: 0.9rem; }
-                    }
+                    th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--border); }
+                    th { background: var(--surface-2); }
                 </style>
             </head>
             <body>
