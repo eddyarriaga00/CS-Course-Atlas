@@ -1,0 +1,40 @@
+/* One palette for the interactive campus, static course pages and help center. */
+:root {
+  color-scheme: light;
+  --bg: light-dark(#fff, #09080b);
+  --surface: light-dark(#fff, #141117);
+  --surface-2: light-dark(#f2f2f2, #211b28);
+  --border: light-dark(#d6d6d6, #39313f);
+  --text: light-dark(#121212, #faf7ff);
+  --text-2: light-dark(#424242, #d3cbd9);
+  --text-3: light-dark(#5d5d5d, #b5a7c0);
+  --accent: light-dark(#171717, #cf9aff);
+  --accent-soft: light-dark(#ececec, #30203f);
+  --accent-text: light-dark(#171717, #e3c5ff);
+  --on-accent: light-dark(#fff, #1c0c27);
+  --ink-panel: light-dark(#171717, #1f132a);
+  --ink-rule: light-dark(#474747, #513561);
+  --ink-title: light-dark(#fff, #ead2ff);
+  --ink-detail: light-dark(#d2d2d2, #cdbad9);
+  --track: var(--accent);
+  --success: var(--accent); --success-soft: var(--accent-soft);
+  --danger: var(--text); --danger-soft: var(--surface-2);
+  --warn: var(--text-2); --warn-soft: var(--surface-2);
+  --code-bg: light-dark(#161616, #100c15);
+  --code-line: light-dark(#393939, #382a43);
+  --code-text: light-dark(#f5f5f5, #f5e9ff);
+  --code-muted: light-dark(#b4b4b4, #c4b3cf);
+  --hl-key: light-dark(#fff, #d799ff);
+  --hl-str: light-dark(#dbdbdb, #ecd1ff);
+  --hl-com: var(--code-muted);
+  --hl-num: light-dark(#c6c6c6, #c5a4ff);
+  --hl-fn: var(--code-text); --hl-type: var(--hl-key);
+  --radius: 6px; --shadow: none;
+  --font-ui: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-code: "JetBrains Mono", ui-monospace, Menlo, Consolas, monospace;
+  --sidebar: 244px; --topbar: 64px;
+}
+:root[data-theme="dark"] { color-scheme: dark; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { color-scheme: dark; }
+}
