@@ -4,7 +4,9 @@ const UI = {
     flashcards: 'Flashcards', quizzes: 'Quizzes', playground: 'Playground', notes: 'Notes', support: 'Support', more: 'More', otherCourses: 'Other courses',
     soon: 'Soon', comingSoon: 'Coming soon', available: 'Available', modules: 'modules', moduleLower: 'module', units: 'units', unitsTitle: 'Units', unit: 'Unit', hours: 'hours', min: 'min', module: 'Module', term: 'Term',
     heroTitle: 'Learn computer science from zero.',
-    heroLead: 'Free, step-by-step courses that start at the very beginning. Short lessons, code you can run right in your browser, challenges that check your work, and a video for every topic, in English and Spanish.',
+    studioTitle: 'Computer science,', studioEm: 'from zero.', heroLead: 'Start with your first line of Python. Work your way up to algorithms, databases and networks with code you can run in your browser.',
+    sortLab: 'Algorithm lab', sortTitle: 'Selection sort', sortStep: 'Step through', sortReset: 'Replay', sortIntro: 'Find the smallest value and move it to the front.', sortMove: (v, n) => `Place ${v} in position ${n}. The first ${n} values are sorted.`, sortFinish: 'Sorted. Every value is in ascending order.',
+    readerFocus: 'Focus mode', readerExit: 'Exit focus', trackPosition: (i, n) => `Module ${i} of ${n}`, browsePath: 'View beginner path',
     startPython: 'Start with Python', noExperience: 'No experience needed. Free, no account required.', continueCourse: (c) => `Continue ${c}`,
     startFrom: 'Where are you starting from?', catalogTitle: 'All courses by subject', catalogLead: 'Every course, grouped by what it teaches. Pick a subject to see its courses in detail.', catAll: 'All subjects', nCourses: (n) => `${n} course${n === 1 ? '' : 's'}`, nSoon: (n) => `${n} coming soon`, catShowAll: 'Show all subjects', catMore: (n) => `${n} more`, catAvail: 'Availability', catAny: (n) => `All (${n})`, catLive: (n) => `Available now (${n})`, catSoonN: (n) => `Coming soon (${n})`, catAnyLevel: 'Any level', catEmpty: 'No courses match these filters.', catClear: 'Clear filters',
     s1Title: 'I’m brand new', s1Text: 'Never written a line of code? Start with Python. The first lesson is one line long.', s1Cta: 'Start Python',
@@ -72,7 +74,9 @@ const UI = {
     flashcards: 'Tarjetas', quizzes: 'Cuestionarios', playground: 'Editor', notes: 'Notas', support: 'Soporte', more: 'Más', otherCourses: 'Otros cursos',
     soon: 'Pronto', comingSoon: 'Próximamente', available: 'Disponible', modules: 'módulos', moduleLower: 'módulo', units: 'unidades', unitsTitle: 'Unidades', unit: 'Unidad', hours: 'horas', min: 'min', module: 'Módulo', term: 'Término',
     heroTitle: 'Aprende ciencias de la computación desde cero.',
-    heroLead: 'Cursos gratis, paso a paso, que empiezan desde el principio. Lecciones cortas, código que puedes ejecutar en tu navegador, retos que revisan tu trabajo y un video para cada tema, en español e inglés.',
+    studioTitle: 'Informática,', studioEm: 'desde cero.', heroLead: 'Empieza con tu primera línea de Python. Avanza hasta algoritmos, bases de datos y redes con código que puedes ejecutar en tu navegador.',
+    sortLab: 'Laboratorio de algoritmos', sortTitle: 'Ordenación por selección', sortStep: 'Avanzar', sortReset: 'Repetir', sortIntro: 'Busca el valor más pequeño y muévelo al principio.', sortMove: (v, n) => `Coloca ${v} en la posición ${n}. Los primeros ${n} valores están ordenados.`, sortFinish: 'Listo. Todos los valores están en orden ascendente.',
+    readerFocus: 'Modo de lectura', readerExit: 'Salir del modo de lectura', trackPosition: (i, n) => `Módulo ${i} de ${n}`, browsePath: 'Ver la ruta para principiantes',
     startPython: 'Empieza con Python', noExperience: 'No necesitas experiencia. Gratis y sin cuenta.', continueCourse: (c) => `Continuar ${c}`,
     startFrom: '¿Desde dónde empiezas?', catalogTitle: 'Todos los cursos por tema', catalogLead: 'Todos los cursos, agrupados por lo que enseñan. Elige un tema para ver sus cursos en detalle.', catAll: 'Todos los temas', nCourses: (n) => `${n} curso${n === 1 ? '' : 's'}`, nSoon: (n) => `${n} próximamente`, catShowAll: 'Ver todos los temas', catMore: (n) => `${n} más`, catAvail: 'Disponibilidad', catAny: (n) => `Todos (${n})`, catLive: (n) => `Disponibles ya (${n})`, catSoonN: (n) => `Próximamente (${n})`, catAnyLevel: 'Cualquier nivel', catEmpty: 'Ningún curso coincide con estos filtros.', catClear: 'Quitar filtros',
     s1Title: 'Soy completamente nuevo', s1Text: '¿Nunca has escrito código? Empieza con Python. La primera lección es de una sola línea.', s1Cta: 'Empezar Python',
@@ -397,6 +401,11 @@ function renderChrome(route) {
   $('#lang-btn').setAttribute('aria-label', state.lang === 'en' ? 'ES: cambiar a español' : 'EN: switch to English');
   $('#signin-open').textContent = t('signIn');
   $('#skip-link').textContent = t('skip');
+  document.body.classList.toggle('discovery', route === 'home' || route === 'courses');
+  document.body.classList.toggle('reading', route.startsWith('m-'));
+  document.body.classList.toggle('focus-reading', route.startsWith('m-') && store.get('readerFocus', false));
+  $('#primary-links').innerHTML = [['home','home'],['courses','courses'],['practice','practice'],['playground','playground']].map(([url, label]) =>
+    `<a href="#${url}"${route === url ? ' aria-current="page"' : ''}>${t(label)}</a>`).join('');
   const is = (r) => (route === r ? ' active' : '');
   $('#sidebar').innerHTML = `
     <a class="nav-item${is('home')}" href="#home">${navIco('home')}${t('home')}</a>
@@ -529,14 +538,20 @@ function viewHome() {
   const live = liveIds(), started = DATA.tracks.find((tr) => tr.id === currentTrack() && trackStats(tr).done) || liveTracks().find((tr) => trackStats(tr).done);
   const s = started ? trackStats(started) : null, next = started ? nextModule(started.id) : null;
   const first = DATA.path.find((st) => track(st.id)?.status === 'available')?.id || liveTracks()[0].id;
-  const startCard = (n, href) => `<a class="card start-card" href="${href}"><span class="start-no" aria-hidden="true">${navIco(['code', 'term', 'book'][n - 1])}</span><h3>${t('s' + n + 'Title')}</h3><p>${t('s' + n + 'Text')}</p><span class="start-cta">${t('s' + n + 'Cta')} →</span></a>`;
+  const startCard = (n, href) => {
+    const course = track(href.slice('#course-'.length));
+    const snippets = ['print("Hello, world!")', '$ git status', 'class Main { }'];
+    return `<a class="card start-card" href="${href}"><div class="starter-top">${navIco(['code','term','book'][n-1])}<span>${course.icon}</span></div>
+      <h3>${t('s' + n + 'Title')}</h3><p>${t('s' + n + 'Text')}</p>
+      <code class="starter-code">${esc(snippets[n-1])}</code><span class="start-cta">${t('s' + n + 'Cta')}</span></a>`;
+  };
   const how = (n, ico) => `<div class="how"><span class="how-ico">${ico}</span><div><b>${t('how' + n)}</b><p>${t('how' + n + 'Text')}</p></div></div>`;
-  return `<section class="wrap">
-    <div class="hero"><div class="hero-text"><h1>${t('heroTitle')}</h1><p class="lead">${t('heroLead')}</p>
+  return `<section class="wrap campus-home">
+    <div class="hero"><div class="studio-stage"><div class="hero-text"><h1>${t('studioTitle')} <em>${t('studioEm')}</em></h1><p class="lead">${t('heroLead')}</p>
       <div class="hero-actions">${started && next ? `<a class="btn" href="#m-${next}">${t('continueCourse', esc(L(started.title)))}</a>` : `<a class="btn" href="#course-${first}">${t('startPython')}</a>`}<a class="btn btn-ghost" href="#courses">${t('browse')}</a></div>
       ${started ? '' : `<p class="hero-note">${t('noExperience')}</p>`}
       </div>
-      ${coursePreview(started || track(first), next)}
+      ${sortLab()}</div>
       <div class="hero-facts">${[[liveTracks().length, t('coursesReady')], [live.length, t('modules')], [live.reduce((n, id) => n + (DATA.modules[id].counts?.examples || 0), 0), t('examples').toLowerCase()], [live.reduce((n, id) => n + (DATA.modules[id].counts?.challenges || 0), 0), t('challenges').toLowerCase()], ['EN · ES', t('heroLangs')]].map(([n, l]) => `<div><b>${n}</b><span>${l}</span></div>`).join('')}</div></div>
 
     ${started ? `<a class="card continue" href="${next ? '#m-' + next : '#course-' + started.id}"><div class="info"><div class="muted">${t('continueTitle')}</div>
@@ -557,21 +572,32 @@ function viewHome() {
     <div class="how-grid">${how(1, '¶')}${how(2, '▶')}${how(3, '✓')}${how(4, '◉')}</div>
     </section>`;
 }
-function coursePreview(course, next) {
-  const modules = trackIds(course.id).filter(isLive);
-  const start = Math.max(0, modules.indexOf(next));
-  const visible = modules.slice(start, start + 3);
-  return `<section class="course-preview">
-    <div class="preview-caption">${navIco('book')}<span>${t('syllabus')}</span></div>
-    <h2><a href="#course-${course.id}">${esc(L(course.title))}</a></h2>
-    <ol start="${start + 1}">${visible.map((id, i) => `<li><a href="#m-${id}"><span class="preview-index">${String(start + i + 1).padStart(2, '0')}</span><span>${esc(moduleTitle(id))}</span>${navIco(state.done.has(id) ? 'check' : 'book')}</a></li>`).join('')}</ol>
-  </section>`;
+// Each frame is one complete selection-sort pass, including passes with no swap.
+const sortFrames = (() => {
+  const frames = [[5, 2, 8, 3, 7, 1, 6, 4]];
+  for (let i = 0; i < frames[0].length - 1; i++) {
+    const values = [...frames[i]];
+    let min = i;
+    for (let j = i + 1; j < values.length; j++) if (values[j] < values[min]) min = j;
+    [values[i], values[min]] = [values[min], values[i]];
+    frames.push(values);
+  }
+  return frames;
+})();
+let sortPass = 0;
+function sortLab() {
+  const values = sortFrames[sortPass], last = sortPass === sortFrames.length - 1;
+  const caption = last ? t('sortFinish') : sortPass ? t('sortMove', values[sortPass-1], sortPass) : t('sortIntro');
+  return `<section class="sort-lab" aria-labelledby="sort-title"><div class="lab-top"><span>${navIco('term')}${t('sortLab')}</span><b>${sortPass} / ${sortFrames.length-1}</b></div>
+    <h2 id="sort-title">${t('sortTitle')}</h2>
+    <ol class="sort-chart">${values.map((v,i)=>`<li style="--height:${v*10}%" class="${i<sortPass||last?'placed':''}"><span>${v}</span></li>`).join('')}</ol>
+    <div class="lab-bottom"><p aria-live="polite">${caption}</p><button class="lab-step" data-action="sort-step">${last?t('sortReset'):t('sortStep')}</button></div></section>`;
 }
 function viewCourses() {
-  return `<section class="wrap"><h1>${t('coursesTitle')}</h1><p class="lead">${t('coursesLead')}</p>
-    <div class="section-head"><h2>${t('pathTitle')}</h2><span class="muted">${t('pathLead')}</span></div>
-    <div class="courses">${DATA.path.map((st, i) => anyCard(st.id, i + 1)).join('')}</div>
-    ${courseCatalog(true)}</section>`;
+  return `<section class="wrap course-directory"><header class="directory-title"><div><h1>${t('coursesTitle')}</h1><p class="lead">${t('coursesLead')}</p></div><button class="btn btn-ghost" data-action="browse-path">${t('browsePath')}</button></header>
+    ${courseCatalog(true)}
+    <div class="section-head" id="directory-path"><h2>${t('pathTitle')}</h2></div><p class="section-lead muted">${t('pathLead')}</p>
+    <div class="courses">${DATA.path.map((st, i) => anyCard(st.id, i + 1)).join('')}</div></section>`;
 }
 function viewPlanned(p) {
   const mods = p.outline || [], topics = mods.reduce((n, m) => n + m.topics.length, 0), step = DATA.path.findIndex((st) => st.id === p.id);
@@ -601,11 +627,11 @@ function viewCourse(id) {
     ${live ? `<div class="hero-actions"><a class="btn" href="#m-${next || trackIds(id)[0]}">${s.done ? t('continueBtn') : t('startBtn')}${next ? ': ' + esc(moduleTitle(next)) : ''}</a></div>`
       : `<div class="notice"><span class="pill soon">${t('comingSoon')}</span><p>${t('soonNotice')}</p><button class="btn btn-sm${state.notified.has(id) ? ' btn-ghost' : ''}" data-action="notify" data-id="${id}" ${state.notified.has(id) ? 'disabled' : ''}>${state.notified.has(id) ? t('notified') : t('notifyMe')}</button></div>`}
     ${live ? `<div class="course-links"><a class="chip-link" href="#sheet-${id}">▤ ${t('cheatSheet')}</a><button class="chip-link" data-action="go-quiz" data-id="course:${id}">✓ ${t('courseQuizBtn')}</button><button class="chip-link" data-action="go-flash" data-id="course:${id}">▭ ${t('courseCardsBtn')}</button></div>` : ''}
+    <div class="section-head"><h2>${t('unitsTitle')}</h2></div>
+    ${unitCards(tr, live)}
     ${live ? certCard(id) : ''}
     ${DATA.videos?.courses?.[id] ? `<div class="section-head"><h2>${t('courseSeries')}</h2></div>${vidCard(DATA.videos.courses[id], true)}` : ''}
     ${(() => { const ps = (DATA.projects || []).filter((p) => p.track === id); return ps.length ? `<div class="section-head"><h2>${t('projectsForCourse')}</h2><a class="muted" href="#projects">${t('allProjects')} →</a></div><div class="project-grid">${ps.map(projectCard).join('')}</div>` : ''; })()}
-    <div class="section-head"><h2>${t('unitsTitle')}</h2></div>
-    ${unitCards(tr, live)}
     ${!live && DATA.videos ? `<div class="section-head"><h2>${t('watchWait')}</h2></div><p class="muted" style="margin:-6px 0 14px">${t('waitLead')}</p><div class="vids grid-vids">${waitGroups(tr).map((g) => `<div class="wait-card card"><div class="wait-mods">${g.mods.map((m) => `<span>${esc(moduleTitle(m))}</span>`).join('')}</div>${vidCard(g.v, true)}</div>`).join('')}</div>` : ''}</section>`;
 }
 // A recorded terminal session: lines starting with "$ " are what you type, the rest is what Git prints.
@@ -691,10 +717,11 @@ function viewModule(id) {
     body = `<div style="max-width:720px">${quizHtml(id)}</div>`;
   }
   const done = state.done.has(id);
-  return `<section class="wrap">
+  return `<section class="wrap lesson-studio">
     <div class="crumbs"><a href="#course-${tr.id}">${esc(L(tr.title))}</a><span>/</span><span>${esc(L(unit.title))}</span><span>/</span><span style="color:var(--text)">${esc(moduleTitle(id))}</span></div>
-    <h1>${esc(moduleTitle(id))}</h1><p class="lead">${fmt(L(meta.description))}</p>
+    <header class="reader-heading"><div class="reader-toolbar"><span>${t('trackPosition',idx+1,ids.length)}</span><button class="focus-control" data-action="reader-focus" aria-pressed="${Boolean(store.get('readerFocus', false))}">${t(store.get('readerFocus',false)?'readerExit':'readerFocus')}</button></div><h1>${esc(moduleTitle(id))}</h1><p class="lead">${fmt(L(meta.description))}</p>
     <div class="mod-meta"><span class="pill">${t('difficulty')[meta.difficulty] || meta.difficulty}</span>${meta.minutes ? `<span class="pill">≈ ${meta.minutes} ${t('min')}</span>` : ''}<span class="pill">${meta.topics.length} ${t('topics')}</span><span class="pill ok">${terminal ? t('terminalExamples') : exampleLangs(c.examples.main).includes('html') ? t('webExamples') : exampleLangs(c.examples.main).includes('sql') ? t('sqlExamples') : exampleLangs(c.examples.main).length === 1 ? t('pythonExamples') : exampleLangs(c.examples.main).length === 2 ? t('examples2') : t('examples4')}</span>${done ? `<span class="pill accent">${t('marked')}</span>` : ''}</div>
+    </header>
     <div class="tabs" role="tablist">${tabs.map(([k, label, n]) => `<button class="tab" role="tab" data-tab="${k}" aria-selected="${state.tab === k}">${label}${n ? `<span class="count">${n}</span>` : ''}</button>`).join('')}</div>
     ${body}
     <div class="mod-foot"><button class="btn${done ? ' btn-ghost' : ''}" data-action="toggle-done" data-id="${id}">${done ? t('marked') : t('markDone')}</button>
@@ -2182,6 +2209,23 @@ document.addEventListener('click', (e) => {
   if (el.dataset.ex != null) { state.exIndex = Number(el.dataset.ex); render(true); return; }
   if (el.dataset.codeLang) { state.codeLang = el.dataset.codeLang; state.langsSeen.add(el.dataset.codeLang); store.set('codeLangTouched', true); save(); render(true); return; }
   const a = el.dataset.action;
+  if (a === 'sort-step') {
+    sortPass = (sortPass + 1) % sortFrames.length;
+    const lab = el.closest('.sort-lab');
+    const template = document.createElement('template');
+    template.innerHTML = sortLab();
+    const next = template.content;
+    lab.querySelector('.sort-chart').replaceWith(next.querySelector('.sort-chart'));
+    lab.querySelector('.lab-top b').textContent = next.querySelector('.lab-top b').textContent;
+    lab.querySelector('[aria-live]').textContent = next.querySelector('[aria-live]').textContent;
+    el.textContent = next.querySelector('.lab-step').textContent;
+    return;
+  }
+  if (a === 'browse-path') { $('#directory-path h2').setAttribute('tabindex','-1'); $('#directory-path h2').focus(); return; }
+  if (a === 'reader-focus') {
+    const on = document.body.classList.toggle('focus-reading');
+    store.set('readerFocus',on); el.setAttribute('aria-pressed',String(on)); el.textContent=t(on?'readerExit':'readerFocus'); return;
+  }
   if (a === 'reload') { location.reload(); return; }
   if (a === 'cat-filter') { const k = el.dataset.k; if (k === 'clear') { state.catStatus = 'all'; state.catLevel = 'all'; } else state[k === 'status' ? 'catStatus' : 'catLevel'] = el.dataset.v; render(true); const again = document.querySelector(`[data-action="cat-filter"][data-k="${k}"][data-v="${el.dataset.v}"]`); if (again) again.focus(); return; }
   if (a === 'home-cat') { state.homeCat = el.dataset.v; render(true); const head = document.querySelector('#catalog'); if (el.classList.contains('cat-more') && head) head.scrollIntoView({ block: 'start' }); const again = document.querySelector(`[data-action="home-cat"][data-v="${el.dataset.v}"]`); if (again) again.focus(); return; }
